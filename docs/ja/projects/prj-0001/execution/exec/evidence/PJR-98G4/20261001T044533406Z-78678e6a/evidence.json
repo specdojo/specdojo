@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-98G4",
+  "run_id": "20261001T044533406Z-78678e6a",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-01T04:45:33.406Z",
+    "completed_at": "2026-10-01T05:02:16.874Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-98g4-multi-repo-worktree-agent.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-git-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-protected-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-protection-handoff.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/specdojo-config-repos.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-task-repos.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec-task-repos.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec-task-repos.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 19,
+    "summary": ".../pjr-98g4-multi-repo-worktree-agent.md          |  42 ++++-\n docs/ja/specdojo/guides/docs-structure-guide.md    |  13 +-\n .../references/specdojo-config-reference.md        |  44 ++++-\n .../schemas/v1/specdojo-config.schema.yaml         |   6 +-\n src/exec-agent-git-state.ts                        |  41 +++++\n src/exec-agent-protected-config.ts                 |  45 +++++\n src/exec-evidence.ts                               |  95 +++++++++--\n src/exec-protection-handoff.ts                     |  68 +++++++-\n src/exec-run.ts                                    | 185 ++++++++++++++++-----\n src/exec-worktree-command.ts                       | 161 ++++++++++++------\n src/exec-worktree-ops.ts                           | 109 +++++++++++-\n src/exec-worktree.ts                               |  39 ++++-\n src/exec.ts                                        |   3 +\n src/specdojo-config.ts                             |  62 ++++++-\n .../schemas/specdojo-config-schema.test.ts         |   7 +\n tests/src/specdojo-config-repos.test.ts            |  70 ++++++++\n 16 files changed, 856 insertions(+), 134 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <changed .md/.ts/.yaml files>",
+      "status": "passed",
+      "summary": "All changed source, test, schema, and Markdown files formatted"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-98g4-multi-repo-worktree-agent.md",
+      "status": "passed",
+      "summary": "No markdownlint errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "OK: dct-index.yaml (only pre-existing based_on WARN lines unrelated to this change)"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index: 2272 entries"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "Register views regenerated without errors"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-98G4\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-fgmQj5/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-fgmQj5/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-fgmQj5/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-fgmQj5/docs/ja/projects/test/controls/p…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-98G4/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-98G4/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-98G4\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-Vx3lm5/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ZDZpd7/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-tWQVa1/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-0MnlTl/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-X1L1U9/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-q39iPF/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-y8gGcU/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-uQdwPA/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  119 passed (119)\n      Te…"
+    }
+  ],
+  "final_message": "PJR-98G4: implemented per-repository task worktrees (<worktree_base>/<task-id>/project/ and /<repo>/) for projects declaring repos, with removal/discard/orphan detection across repositories, reserved repo name 'project' (config + schema), worktree-aware repos[].path resolution, agent env SPECDOJO_REPO_* and prompt guidance, runner-appended provider extra-root args (claude/codex/antigravity/copilot; opencode unsupported without agent definition change), protected-config/Git-state checks and executor evidence per repository (<repo>:<path>), and a pre-integration guard that blocks tasks with pending product changes until PJR-0WAA. Added unit/integration tests and updated config reference, docs-structure-guide, and the PJR-98G4 ticket. The new tests were not run in the sandbox (left to parent test-unit/test-integration). During development, npx tsc --noEmit (src) and npx eslint on changed src files were also run; they overlap parent typecheck/lint-ts and are not listed as validations.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-98G4/20261001T044533406Z-78678e6a/executor.log",
+      "bytes": 6941,
+      "truncated": false
+    }
+  ]
+}

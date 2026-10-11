@@ -1,7 +1,7 @@
 import { spawnSync } from "node:child_process";
-import { existsSync, lstatSync, mkdirSync, unlinkSync } from "node:fs";
-import { isAbsolute, join, relative, resolve, sep } from "node:path";
-import { stripTerminalControlSequences } from "./exec-shared.js";
+import { appendFileSync, existsSync, lstatSync, mkdirSync, unlinkSync } from "node:fs";
+import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
+import { redactSensitiveText, stripTerminalControlSequences } from "./exec-shared.js";
 import { gitEnvironment } from "./git-environment.js";
 
 export { GIT_LOCAL_ENV_VARS, gitEnvironment } from "./git-environment.js";
@@ -11,6 +11,24 @@ export type ExecWorktree = {
   branch: string;
   name: string;
   created: boolean;
+  /**
+   * Worktrees of the product repositories declared in `repos`, in declaration order. Absent for
+   * projects without `repos`, which keep the single `<worktree_base>/<task-id>/` worktree.
+   */
+  repos?: ProductWorktree[];
+};
+
+/** Worktree of one declared product repository at `<worktree_base>/<task-id>/<name>/`. */
+export type ProductWorktree = {
+  /** Repository name from `repos[].name`. */
+  name: string;
+  /** Root of the product repository's main checkout (where the exec branch is created). */
+  repoRoot: string;
+  path: string;
+  branch: string;
+  created: boolean;
+  /** Declared `integration_branch`; undefined means the repository's current branch. */
+  integrationBranch?: string;
 };
 
 export type RegisteredWorktree = {
@@ -25,6 +43,9 @@ export type RegisteredWorktree = {
 // happens before git mutates anything, so retrying the same command is safe and idempotent.
 const INDEX_LOCK_RETRY_ATTEMPTS = 5;
 const INDEX_LOCK_RETRY_BASE_MS = 50;
+// dubious ownership と、`.git` がある cwd での not-a-repository は一時的に起き、すぐの
+// 再試行では収まらないことがある（並行実行中の統合段で確認した）。両方で上限を共有する。
+const TRANSIENT_GIT_RETRY_DELAYS_MS = [2000, 5000, 10000] as const;
 
 export function isGitIndexLockContention(stderr: string): boolean {
   return (
@@ -33,29 +54,119 @@ export function isGitIndexLockContention(stderr: string): boolean {
   );
 }
 
+export function isGitDubiousOwnership(stderr: string): boolean {
+  return /fatal:\s+detected dubious ownership in repository\b/i.test(stderr);
+}
+
+export function isGitNotRepositoryWithGitMetadata(stderr: string, repoRoot: string): boolean {
+  if (!/\bnot a git repository\b/i.test(stderr)) return false;
+  try {
+    const metadata = lstatSync(join(resolve(repoRoot), ".git"));
+    return metadata.isFile() || metadata.isDirectory();
+  } catch {
+    return false;
+  }
+}
+
 // Synchronously block the thread. gitResult is intentionally spawnSync-based (blocking), and we
 // want to wait for a contended index.lock to be released before retrying rather than busy-loop.
 function sleepSync(milliseconds: number): void {
   Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, milliseconds);
 }
 
+type RetryableGitResult = {
+  status: number | null;
+  stderr: unknown;
+};
+
+export type TransientGitRetryReason = "dubious ownership" | "not a git repository";
+
+// Kept as a public compatibility type for callers that only consume retry timing.
+export type DubiousOwnershipRetryNotice = {
+  attempt: number;
+  maxAttempts: number;
+  waitMilliseconds: number;
+};
+
+export type TransientGitRetryNotice = DubiousOwnershipRetryNotice & {
+  reason: TransientGitRetryReason;
+};
+
+export function transientGitFailureReason(
+  stderr: string,
+  repoRoot?: string,
+): TransientGitRetryReason | undefined {
+  if (isGitDubiousOwnership(stderr)) return "dubious ownership";
+  if (repoRoot !== undefined && isGitNotRepositoryWithGitMetadata(stderr, repoRoot)) {
+    return "not a git repository";
+  }
+  return undefined;
+}
+
+export function runGitWithTransientRetry<T extends RetryableGitResult>(
+  run: () => T,
+  onTransientFailureRetry: (notice: TransientGitRetryNotice) => void = () => undefined,
+  sleep: (milliseconds: number) => void = sleepSync,
+  repoRoot?: string,
+): T {
+  let indexLockRetries = 0;
+  let transientFailureRetries = 0;
+  let result = run();
+
+  while (result.status !== 0) {
+    const stderr = typeof result.stderr === "string" ? result.stderr : "";
+    const transientFailure = transientGitFailureReason(stderr, repoRoot);
+    if (
+      transientFailureRetries < TRANSIENT_GIT_RETRY_DELAYS_MS.length &&
+      transientFailure !== undefined
+    ) {
+      const waitMilliseconds = TRANSIENT_GIT_RETRY_DELAYS_MS[transientFailureRetries];
+      transientFailureRetries += 1;
+      onTransientFailureRetry({
+        attempt: transientFailureRetries,
+        maxAttempts: TRANSIENT_GIT_RETRY_DELAYS_MS.length,
+        waitMilliseconds,
+        reason: transientFailure,
+      });
+      sleep(waitMilliseconds);
+      result = run();
+      continue;
+    }
+    if (indexLockRetries < INDEX_LOCK_RETRY_ATTEMPTS && isGitIndexLockContention(stderr)) {
+      indexLockRetries += 1;
+      sleep(INDEX_LOCK_RETRY_BASE_MS * indexLockRetries); // 50, 100, 150, 200, 250 ms
+      result = run();
+      continue;
+    }
+    break;
+  }
+  return result;
+}
+
 export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof spawnSync> {
+  const cwd = resolve(repoRoot);
   const run = (): ReturnType<typeof spawnSync> =>
-    spawnSync("git", ["-C", repoRoot, ...args], {
+    spawnSync("git", ["-C", cwd, ...args], {
+      // `-C` だけに依存せず、子プロセス自体も対象 repository から起動する。linked worktree の
+      // `.git` が相対 gitdir の場合も、resume 中の diff を runner の cwd から切り離す。
+      cwd,
       encoding: "utf8",
       env: gitEnvironment(),
       stdio: ["ignore", "pipe", "pipe"],
     });
 
-  let result = run();
-  for (let attempt = 1; attempt <= INDEX_LOCK_RETRY_ATTEMPTS; attempt++) {
-    if (result.status === 0) break;
-    const stderr = typeof result.stderr === "string" ? result.stderr : "";
-    if (!isGitIndexLockContention(stderr)) break;
-    sleepSync(INDEX_LOCK_RETRY_BASE_MS * attempt); // 50, 100, 150, 200, 250 ms
-    result = run();
-  }
-  return result;
+  return runGitWithTransientRetry(
+    run,
+    ({ attempt, maxAttempts, waitMilliseconds, reason }) => {
+      const summary = summarizeGitArguments(args);
+      process.stderr.write(
+        `warning: git command failed with ${reason}; retrying in ${waitMilliseconds / 1000}s` +
+          ` (attempt ${attempt}/${maxAttempts}, cwd: ${repoRoot}${summary ? `, args: ${summary}` : ""})\n`,
+      );
+    },
+    sleepSync,
+    cwd,
+  );
 }
 
 // git 失敗メッセージは register イベントの reason、result の block_reason、実行ログの一覧行の
@@ -126,8 +237,9 @@ export function formatGitCommandFailure(args: readonly string[], stderr: string)
   return cause ? `${label} failed: ${cause}${detail}` : `${label} failed${detail}`;
 }
 
-// lefthook などの hook 出力から、block reason に載せる「失敗ステップ名 + 最初のエラー行」
-// を取り出す。罫線や ANSI 制御は監査ログには残す一方、短い理由には混ぜない。
+// lefthook などの hook 出力から、block reason に載せる失敗ステップ名と最初のエラー行を
+// 取り出し、Vitest の失敗テスト名・集計があれば末尾から補う。罫線や ANSI 制御は監査ログには
+// 残す一方、短い理由には混ぜない。
 export function summarizeGitHookFailure(output: string): string {
   const lines = stripTerminalControlSequences(output)
     .split(/\r?\n/)
@@ -158,13 +270,30 @@ export function summarizeGitHookFailure(output: string): string {
     .slice(stepIndex >= 0 ? stepIndex + 1 : 0)
     .find((line) => line !== step && !isDecoration(line) && !/[❯▶]\s*$/u.test(line));
 
-  if (step && errorLine) return `${step}: ${errorLine}`;
-  if (step) return step;
-  return (
-    lines.find((line) => /(?:\bCONFLICT\b|\bfatal:|\berror:|\bfailed\b)/i.test(line)) ??
-    lines.find((line) => !isDecoration(line)) ??
-    lines[0]!
-  );
+  const primary =
+    step && errorLine
+      ? `${step}: ${errorLine}`
+      : step ||
+        (lines.find((line) => /(?:\bCONFLICT\b|\bfatal:|\berror:|\bfailed\b)/i.test(line)) ??
+          lines.find((line) => !isDecoration(line)) ??
+          lines[0]!);
+  const tail = lines
+    .filter((line) => /^(?:FAIL\b|Test Files\b|Tests\b)/iu.test(line))
+    .filter((line) => line !== errorLine && !primary.includes(line))
+    .slice(-3);
+  const summary = [primary, ...tail].join("; ");
+  const limit = 400;
+  if (summary.length <= limit) return summary;
+  const marker = " … ";
+  const retained = limit - marker.length;
+  return `${summary.slice(0, Math.ceil(retained / 2))}${marker}${summary.slice(-Math.floor(retained / 2))}`;
+}
+
+/** Appends redacted Git/hook diagnostics to a run-scoped evidence log. */
+export function appendGitFailureLog(path: string | undefined, lines: readonly string[]): void {
+  if (!path) return;
+  mkdirSync(dirname(path), { recursive: true });
+  appendFileSync(path, redactSensitiveText(`${lines.join("\n")}\n`), "utf8");
 }
 
 // message は block reason 向けに要約する一方、調査に必要な stderr 全文は失わない。
@@ -397,11 +526,26 @@ export function generateWorktreeArtifacts(
   build(root);
 }
 
+/**
+ * Path of a task worktree. Without `repoDirName` (projects without `repos`) the worktree is
+ * `<base>/<task-name>/`; with it, each repository gets `<base>/<task-name>/<repoDirName>/`.
+ */
+export function execWorktreePath(
+  worktreeBase: string,
+  taskId: string,
+  repoDirName?: string,
+): string {
+  const name = worktreeNameFromTaskId(taskId);
+  return resolve(repoDirName ? join(worktreeBase, name, repoDirName) : join(worktreeBase, name));
+}
+
 export function ensureExecWorktree(opts: {
   repoRoot: string;
   worktreeBase: string;
   taskId: string;
   startPoint?: string;
+  /** Directory under `<base>/<task-name>/` for multi-repository tasks (see execWorktreePath). */
+  repoDirName?: string;
   installDependencies?: (worktreePath: string) => void;
   generateArtifacts?: (worktreePath: string) => void;
 }): ExecWorktree {
@@ -412,7 +556,7 @@ export function ensureExecWorktree(opts: {
   }
   const name = worktreeNameFromTaskId(opts.taskId);
   const branch = `exec/${name}`;
-  const worktreePath = resolve(join(opts.worktreeBase, name));
+  const worktreePath = execWorktreePath(opts.worktreeBase, opts.taskId, opts.repoDirName);
   const registered = listRegisteredWorktrees(repoRoot);
   const registeredAtPath = registered.find((item) => item.path === worktreePath);
 
@@ -434,7 +578,7 @@ export function ensureExecWorktree(opts: {
     throw new Error(`Worktree path already exists but is not registered: ${worktreePath}`);
   }
 
-  mkdirSync(opts.worktreeBase, { recursive: true });
+  mkdirSync(dirname(worktreePath), { recursive: true });
   const branchExists =
     gitResult(repoRoot, ["show-ref", "--verify", "--quiet", `refs/heads/${branch}`]).status === 0;
   const args = branchExists

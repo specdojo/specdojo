@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-H9R2",
+  "run_id": "20261002T004406925Z-4718f140",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-02T00:44:06.925Z",
+    "completed_at": "2026-10-02T00:50:19.086Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-resume.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-task-repos.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": "docs/ja/specdojo/guides/exec-operation-guide.md    |   2 +-\n docs/ja/specdojo/references/command-reference.md   |   2 +-\n src/exec-repo-integration.ts                       | 133 ++++++++++++++++++---\n tests/src/exec-register-resume.integration.test.ts |  76 +++++++++++-\n tests/src/exec-task-repos.integration.test.ts      |  69 +++++++++--\n 5 files changed, 256 insertions(+), 26 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-repo-integration.ts tests/src/exec-task-repos.integration.test.ts tests/src/exec-register-resume.integration.test.ts docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md",
+      "status": "passed",
+      "summary": "対象5ファイルを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write tests/src/exec-register-resume.integration.test.ts tests/src/exec-task-repos.integration.test.ts",
+      "status": "passed",
+      "summary": "追加テストの最終整形を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーはない。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "ドキュメント索引2306件を正常に生成した。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-H9R2\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/shared.md\nUpdated: /tmp/specdojo-register-resume-e2e-gmnCfP/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-gmnCfP/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-gmnCfP/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-gmnCfP/docs/ja/projects/test/controls/project-register/generated/pjr-views…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-H9R2/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-H9R2/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-H9R2\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-s2AYof/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-P5mTyx/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-UGiddx/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Bd7S8z/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-UO0Nqf/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-KMUe9H/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-LoloRx/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-8R4fTb/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  120 passed (120)\n      Te…"
+    }
+  ],
+  "final_message": "再開前同期で未コミット成果を安全に退避・復元し、競合時に成果を保持して停止する実装と回帰テストを追加した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-H9R2/20261002T004406925Z-4718f140/executor.log",
+      "bytes": 1386,
+      "truncated": false
+    }
+  ]
+}

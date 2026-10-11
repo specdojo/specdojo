@@ -1,0 +1,40 @@
+
+> specdojo@0.2.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-4f4a3ade62f7 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-4f4a3ade62f7
+stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+document resume: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md start_stage=1
+document incomplete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md failed_stage=1
+document start: docs/ja/product/090-operations/opr-agent-cli-update.md
+document resume: docs/ja/product/090-operations/opr-agent-cli-update.md start_stage=1
+document incomplete: docs/ja/product/090-operations/opr-agent-cli-update.md failed_stage=1
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md
+document start: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md
+document complete: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md
+document start: docs/ja/projects/prj-0001/030-project-management/pm-organization.md
+document complete: docs/ja/projects/prj-0001/030-project-management/pm-organization.md
+document start: docs/ja/projects/prj-0001/030-project-management/pm-plan.md
+document complete: docs/ja/projects/prj-0001/030-project-management/pm-plan.md
+document start: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
+document complete: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md
+grade pipeline complete: selected=10 processed=10 completed_now=8 incomplete=2 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-4f4a3ade62f7/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-24T16:06:02Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md	1	failed	351				codex-expert-executor	gemma-reporter	none	2	3	1
+2026-09-24T16:14:06Z	docs/ja/product/090-operations/opr-agent-cli-update.md	1	failed	483				codex-expert-executor	gemma-reporter	none	2	3	1
+2026-09-24T16:19:14Z	docs/ja/projects/prj-0001/020-project-definition/prj-overview.md	1	passed	308	pass	92	5	codex-expert-executor	gemma-reporter	none		
+2026-09-24T16:24:45Z	docs/ja/projects/prj-0001/020-project-definition/prj-scope.md	1	passed	329	needs-work	65	12	codex-expert-executor	gemma-reporter	none		
+2026-09-24T16:28:30Z	docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md	1	passed	223	needs-work	91	3	codex-expert-executor	gemma-reporter	none		
+2026-09-24T16:34:03Z	docs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md	1	passed	331	needs-work	76	8	codex-expert-executor	gemma-reporter	none		
+2026-09-24T16:38:32Z	docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md	1	passed	267	needs-work	71	10	codex-expert-executor	gemma-reporter	none		
+2026-09-24T16:43:04Z	docs/ja/projects/prj-0001/030-project-management/pm-organization.md	1	passed	270	needs-work	87	4	codex-expert-executor	gemma-reporter	none		
+2026-09-24T16:47:06Z	docs/ja/projects/prj-0001/030-project-management/pm-plan.md	1	passed	240	pass	97	1	codex-expert-executor	gemma-reporter	none		
+2026-09-24T16:51:28Z	docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md	1	passed	260	needs-work	79	6	codex-expert-executor	gemma-reporter	none		

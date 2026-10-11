@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3bac13bb1167435e9481a9ef0bde125f
+  ts: "2026-10-01T19:51:47Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-GENJ と PJR-9KST が別の worktree で作られ、develop で合わさって初めて npm test で 2 件の失敗が見つかったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 再開前の統合先の取り込みが統合済みのプロダクトの merge commit を作り直す
+    - field: description
+      from: ""
+      to: PJR-GENJ の再開前の統合先の取り込みが、統合済みのプロダクトの exec branch にも merge を作り、PJR-9KST の統合済みのリポジトリを作り直さない動作と食い違う。develop で両方を合わせた後、9KST の e2e 2 件（app2・project の失敗後の再開）が失敗する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-02"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_2b5ff53f936e4e6ab7cd32c353b423db
+  ts: "2026-10-01T19:52:38Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3bac13bb1167435e9481a9ef0bde125f
+- v: 1
+  id: reg_a69c6e1056e44674b9468b6012082873
+  ts: "2026-10-01T19:59:32Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2b5ff53f936e4e6ab7cd32c353b423db
+- v: 1
+  id: reg_9ed8a1a2882a4ec687256ff04a55edc3
+  ts: "2026-10-01T20:00:28Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor / claude-reporter）の結果を orchestrator が評価した。親検証 7 種と統合時の npm test の通過、develop での npm run build の成功を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-02"
+    - field: conclusion
+      from: "-"
+      to: bookkeepingPaths の呼び出しの型エラーを直し、再開前の統合先の取り込みから統合済みのリポジトリを除外した
+  previous_event_id: reg_a69c6e1056e44674b9468b6012082873

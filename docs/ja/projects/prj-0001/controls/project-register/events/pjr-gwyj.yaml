@@ -1,0 +1,124 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b83f9c0433a64de1ac62ea241e4358da
+  ts: "2026-09-28T23:20:52Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の判断で AY1R を第 1 段に絞り、残りを別項目にしたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 残りの rulebook のサンプル章を sample へ外出しする（AY1R 第 2 段）
+    - field: description
+      from: ""
+      to: PJR-AY1R の第 1 段（fully-guided が sample を参照できるようにし、bps・stsd の 2 件で試行）の後、残りの rulebook のサンプル章を sample へ外出しする。外部 sample を持たないものは参照先を空のままにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_6676d60501404f03a8153fd4a64b4533
+  ts: "2026-09-29T22:36:01Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b83f9c0433a64de1ac62ea241e4358da
+- v: 1
+  id: reg_3a09cbf9761248e2bc6524f83f3fe7a3
+  ts: "2026-09-29T22:51:25Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6676d60501404f03a8153fd4a64b4533
+- v: 1
+  id: reg_bf28efa59ce347399678f4fd2964c43b
+  ts: "2026-09-30T03:27:40Z"
+  action: wait
+  actor: orchestrator
+  from_status: review
+  to_status: waiting
+  reason: "review で差し戻し: sample を持たない tml・ifx-index の例を失い、grade も未実行のため作業 4・5 と grade を追加して再実行する"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "review で差し戻し: sample を持たない tml・ifx-index の例を失い、grade も未実行のため作業 4・5 と grade を追加して再実行する"
+  previous_event_id: reg_3a09cbf9761248e2bc6524f83f3fe7a3
+- v: 1
+  id: reg_c0434cf0700b499bb7f4f1a112ad40bd
+  ts: "2026-09-30T03:32:06Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_bf28efa59ce347399678f4fd2964c43b
+- v: 1
+  id: reg_1101238cf47d484b9ceb27e01dcab481
+  ts: "2026-09-30T04:03:04Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "review で差し戻し: sample を持たない tml・ifx-index の例を失い、grade も未実行のため作業 4・5 と grade を追加して再実行する"
+      to: agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)
+  previous_event_id: reg_c0434cf0700b499bb7f4f1a112ad40bd
+- v: 1
+  id: reg_d541032a662141e7a8f2348b4c98501c
+  ts: "2026-09-30T11:40:19Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: 2 回の exec run（agy-expert-executor / gemma-reporter）の結果を orchestrator が評価した。2 回目は blocked のため、新設した sample 2 件と frontmatter の更新だけを orchestrator が取り込み（0d9d23f0）、残りは破棄した
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-30"
+    - field: conclusion
+      from: "-"
+      to: 54 件の rulebook のサンプル章を外出しし、sample を持たなかった tml・ifx-index は sample を新設した。sample の網羅の確認と grade による比較は PJR-B7DG へ切り出した
+  previous_event_id: reg_1101238cf47d484b9ceb27e01dcab481

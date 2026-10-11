@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a4abd59ccf5f40c6b82f4322eed92244
+  ts: "2026-09-26T02:13:28Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: bps-sample を実例として作り直し bps-template と bps-recipe を整備する
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-26"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_6ccd2d78548542098a0820b039c94ffa
+  ts: "2026-09-26T04:24:20Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a4abd59ccf5f40c6b82f4322eed92244
+- v: 1
+  id: reg_34b0e044df5f4f6589c4739eb5278343
+  ts: "2026-09-26T04:40:13Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6ccd2d78548542098a0820b039c94ffa
+- v: 1
+  id: reg_447bb087c38a4e05aac9cc0c6c259527
+  ts: "2026-09-26T05:32:20Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: template と recipe の要否判断・整備を達成した。sample の grade は blocker が解消したが major 4 件が残るため、業務ロジックの不整合を PJR-6V3D へ分離する。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_34b0e044df5f4f6589c4739eb5278343

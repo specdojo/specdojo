@@ -1,0 +1,15 @@
+タスク「bps-sample の業務ロジックの不整合と存在しない参照先を解消する」に対する成果物 `docs/ja/specdojo/samples/bps-sample.md` の修正が完了しました。
+
+対応した内容は以下の通りです。
+1. **「確定」定義の統一**: 終了点の条件を「補充依頼が仕入グループへ引き渡され、参照可能になった時点、または補充不要が記録された時点」に変更し、`S-04` の完了と一致させました。「確定」は `S-03` における店主代表の承認を指す用語として統一しました。
+2. **`E-03` 受入観点の追加**: 8章の検証・受入観点に、`E-03` に対応する「未確定（仕入グループ未受領）のまま保留」および「再開後に承認された補充依頼」を第三者が確認できる旨を追記しました。
+3. **数量に関する用語の定義と統一**: 3章（前提条件）に「補充基準」「補充必要数」「依頼数量」の用語定義を追加し、本文中の「数量」という曖昧な表現を「依頼数量」に統一しました。
+4. **`H-01` の発注単位との関係の整理**: 「依頼数量」を算出する過程において「発注単位」を利用することを用語定義に明記し、`cdfd-uc-replenishment` の `H-01` の要件と完全に整合するようにしました。
+5. **前提条件と処理の重複解消**: 3章にあった「販売中の商品であること」「同じ数量単位で確認できること」は `S-01` での確認と重複していたため、前提条件からは削除しました。
+6. **CDFD プロセス列の修正**: `S-01` 〜 `S-04` のプロセス ID をすべて `P-06` へ統一しました。
+
+必要な静的検査（Prettier, Markdownlint, Index Build）はすべて完了・通過しています。
+
+<specdojo_executor_evidence>
+{"final_message":"bps-sample.md の業務ロジック不整合（確定の定義統一、数量用語の定義、H-01整合、E-03受入観点の追加など）を解消し、静的検査を通過しました。","validations":[{"command":"npx prettier --write docs/ja/specdojo/samples/bps-sample.md","status":"passed","summary":"Formatted successfully"},{"command":"npx markdownlint docs/ja/specdojo/samples/bps-sample.md","status":"passed","summary":"Lint passed without errors"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Index rebuilt successfully"}]}
+</specdojo_executor_evidence>

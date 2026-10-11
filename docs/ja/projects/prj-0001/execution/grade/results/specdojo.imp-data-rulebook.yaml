@@ -3,29 +3,75 @@ version: 1
 document: specdojo:imp-data-rulebook
 path: docs/ja/specdojo/rulebooks/imp-data-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 61
-graded_at: "2026-09-02T19:33:59.486Z"
-graded_by: codex-expert-executor
+score: 75
+graded_at: "2026-10-03T21:36:00.091Z"
+graded_by: agy-expert-executor
 content_hash: 02c6c4c2c61bc7658e0aa77d61450572c7680a1ff92dfdaa2cf33f4cd646fa49
 categories:
-  consistency:
-    score: 25
-  usability:
-    score: 75
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 75
+  implementation:
+    score: 100
   quality:
-    score: 50
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 1
+    score: 58
+  consistency:
     score: 25
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,14 +81,23 @@ viewpoints:
     level: 1
     score: 25
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -52,75 +107,75 @@ finding_counts:
   minor: 4
   note: 0
 findings:
-  - id: F010
-    severity: minor
-    rule: vp-ux-readability
-    line: 1
-    message: 詳細の委譲先が「インターフェース仕様、テスト仕様、運用設計」という一般名称だけで成果物IDや参照先が示されていないため、対応する成果物またはカタログ上の関係を明記する必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
-  - id: F004
+  - id: F001
     severity: minor
     rule: vp-arc-conciseness
-    line: 1
+    line: 25
+    anchor: ""
     message: 「変更要否」「影響度」「対応方針」「未解決事項」の定義は後続の章・カラム説明の言い換えに留まるため、複数解釈を防ぐ固有事項だけに絞るか各記述ガイドへ統合する必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
-  - id: F001
+  - id: F002
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
+    rule: vp-qe-verifiability
+    line: 32
+    anchor: ""
+    message: 高・中・低の使用を要求しながら各レベルを分ける条件や閾値がなく、作成者ごとに影響度判定が変わるため、整合性・可用性・移行難易度・利用者影響などについて各レベルの判定基準を定義する必要がある。
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 38
+    anchor: "| -------- | ----------------------------------- | ---- |"
     message: >-
       `type: project` の成果物IDを `imp-data` 固定としているが、参照先の命名標準は正規IDを `＜project-id＞:＜local-id＞` と定めているため、`imp-data` は
       local_id と明記し、Frontmatter の `id` は `＜project-id＞:imp-data` とする必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
-  - id: F002
+  - id: F004
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
+    rule: vp-qe-omissions-consistency
+    line: 55
+    anchor: "| 2   | 変更要求の概要 | ○    | 変更背景と要求内容を要約する                   |"
     message: >-
       成果物カタログでは `imp-data` が `imp-business` に依存するが、`based_on` を任意の変更要求・根拠資料としており依存元を要求していないため、`imp-business`
       を直接の根拠として記録する規則を追加する必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 55
+    anchor: "| 2   | 変更要求の概要 | ○    | 変更背景と要求内容を要約する                   |"
+    message: 成果物カタログで必須依存として定義された `imp-business` が Frontmatter の根拠要件から欠落しているため、`based_on` に同成果物を含める条件を明記する必要がある。
   - id: F006
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 1
-    message: 成果物カタログで必須依存として定義された `imp-business` が Frontmatter の根拠要件から欠落しているため、`based_on` に同成果物を含める条件を明記する必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
-  - id: F008
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 変更要求の概要に成功条件を要求しているが、参照 sample には背景・要求内容・狙いしかなく成功条件がないため、判定可能な成功条件を sample に追加する必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
-  - id: F005
-    severity: major
-    rule: vp-qe-verifiability
-    line: 1
-    message: 高・中・低の使用を要求しながら各レベルを分ける条件や閾値がなく、作成者ごとに影響度判定が変わるため、整合性・可用性・移行難易度・利用者影響などについて各レベルの判定基準を定義する必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
-  - id: F003
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
+    line: 90
+    anchor: ""
     message: 成果物カタログの完了条件であるデータ構造・整合性への技術的影響、データ検証・移行テストへの影響、データ変更の実装影響が必須カラムまたは必須記述として定義されていないため、対応する確認項目を本文要件へ追加する必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
   - id: F007
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 1
+    line: 90
+    anchor: ""
     message: データ構造・整合性、データ検証・移行テスト、実装影響を確認する必須項目がなく、成果物カタログの done_criteria を満たしたか判定できないため、影響詳細または対応方針の必須項目として追加する必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
-  - id: F011
+  - id: F008
     severity: minor
-    rule: vp-ux-language-consistency
-    line: 1
-    message: 文書内で定義された「影響度」およびサマリの「優先対応」と異なる「重要度」が突然使われ、どの値で並べるか判別できないため、「影響度」または定義した「優先度」に統一する必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
+    rule: vp-qe-kata-conformance
+    line: 80
+    anchor: "- 影響詳細は表形式で記載し、最低限次のカラムを含める。"
+    message: 変更要求の概要に成功条件を要求しているが、参照 sample には背景・要求内容・狙いしかなく成功条件がないため、判定可能な成功条件を sample に追加する必要がある。
   - id: F009
     severity: major
     rule: vp-qe-kata-conformance
-    line: 1
+    line: 116
+    anchor: ""
     message: >-
       影響度尺度を定義せず高・中・低を使用することを禁止しているが、参照 sample は評価観点を列挙するだけで尺度を定義せず各影響度を使用しているため、sample
       に判定尺度を追加するかRulebookの適用方法を明確化する必要がある。
-    anchor: "# 影響調査（データ）作成ルール"
+  - id: F010
+    severity: minor
+    rule: vp-ux-readability
+    line: 23
+    anchor: "| 対応方針       | 影響に対して採用する対処方針（実施、代替、見送りなど）                       |"
+    message: 詳細の委譲先が「インターフェース仕様、テスト仕様、運用設計」という一般名称だけで成果物IDや参照先が示されていないため、対応する成果物またはカタログ上の関係を明記する必要がある。
+  - id: F011
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 103
+    anchor: "- 実装詳細（SQL 全文、クラス名、API リクエスト構造）を記載しない。"
+    message: 文書内で定義された「影響度」およびサマリの「優先対応」と異なる「重要度」が突然使われ、どの値で並べるか判別できないため、「影響度」または定義した「優先度」に統一する必要がある。

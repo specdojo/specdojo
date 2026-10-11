@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a1b7e923c9d644bb96dcf3cb008943db
+  ts: "2026-10-05T22:00:11Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親検証が失敗したとき、出力の全文を evidence に残し、要約に末尾を含める
+    - field: description
+      from: ""
+      to: 親検証の出力は evidence に先頭から 1,000 文字までの要約としてだけ保存される（src/exec-parent-validation.ts の truncate）。vitest などは失敗したケースの名前と件数を出力の末尾に出すため、失敗の肝心な部分が毎回切り捨てられ、全文も残らない。2026-10-04〜06 の PJR-GBEV・PJR-D0KF・PJR-7MF6 の調査では、作業者がテストを流し直すかテストを一時的に書き換えて出力を取り出す必要があった。PJR-7MF6 の一時的な統合テストの失敗は、再開で evidence が上書きされ特定できなくなった
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"
+- v: 1
+  id: reg_64aa4c68638847168c93576f7c430812
+  ts: "2026-10-07T03:19:46Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a1b7e923c9d644bb96dcf3cb008943db
+- v: 1
+  id: reg_5e5edf0206f14437ba66e00fd424f8ba
+  ts: "2026-10-07T03:44:30Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_64aa4c68638847168c93576f7c430812
+- v: 1
+  id: reg_2f3534b690754981b8c7442eb5b4f3c6
+  ts: "2026-10-07T10:12:35Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認（保存・参照・秘匿・要約・resume での保持・reporter 入力との独立）"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: 失敗した親検証の stdout / stderr を秘匿処理のうえ各 1MiB まで evidence のログ（parent-validation-output）に保存し、resume ごとに attempt 番号で追記する。要約は先頭と末尾を残して中間を省略する。成功時は要約だけを残す
+  previous_event_id: reg_5e5edf0206f14437ba66e00fd424f8ba

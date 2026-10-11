@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { listFilesRecursive, readYaml } from "./exec-shared.js";
+import { acquirePoolSlot, releaseLock } from "./exec-slot-lock.js";
 import {
   specdojoRootDir,
   type AgentMode,
@@ -9,7 +10,11 @@ import {
 } from "./specdojo-config.js";
 import type { AgentLimitKind } from "./exec-limit.js";
 import type { Proficiency } from "./exec-types.js";
-import { resolveParentValidationDefinitions } from "./exec-parent-validation.js";
+import {
+  resolveParentValidationConcurrency,
+  resolveParentValidationDefinitions,
+  type ParentValidationEntry,
+} from "./exec-parent-validation.js";
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
@@ -75,8 +80,18 @@ export type ProviderOverride = {
 };
 
 export type ExecDefaultsConfig = {
+  run?: {
+    // Default execution location for register items. Omitted keeps the historical in-place
+    // behavior so existing repositories do not start creating worktrees after an upgrade.
+    register_execution?: "in-place" | "worktree";
+    // Maximum number of `exec run` processes that may run at once for one project, counting the
+    // primary run and every `--join` run (default 4). 1 disables `--join`.
+    max_concurrent_runs?: number;
+  };
   pipeline?: {
-    parent_validations?: string[];
+    // A string runs in the project repository; `{ id, repo }` runs in the named repository.
+    parent_validations?: ParentValidationEntry[];
+    parent_validation_concurrency?: number;
   };
   rate_limit_detection?: RateLimitDetection;
   rate_limit_policy?: RateLimitPolicy;
@@ -96,13 +111,9 @@ type CommandMemberAttributes = Pick<
 const PLACEHOLDER_PATTERN = /\{([a-z][a-z0-9_]*)\}/g;
 const BUILTIN_VARIABLE_NAMES = new Set(["nickname", "mode", "proficiency"]);
 
-// Mirror of the nickname pattern in docs/specdojo/schemas/v1/pm-members.schema.yaml
-// ($defs.Member.nickname). Defense in depth: a nickname is expanded into a provider's
-// command_template and the result is executed with { shell: true }. loadMemberRoster reads
-// pm-members.yaml without schema validation, so a roster edited to carry shell metacharacters
-// in a nickname could inject an arbitrary command. Re-check the value here, at the point where
-// it enters the command, and refuse to build a command for a nickname that the schema would
-// have rejected. Keep this pattern byte-for-byte in sync with the schema.
+// Mirror of the nickname pattern in docs/specdojo/schemas/v1/agent-members.schema.yaml.
+// The runtime loader validates the registry; this remains defense in depth immediately before
+// command_template interpolation and shell execution.
 const NICKNAME_PATTERN = /^[a-z0-9][a-z0-9_-]{0,62}$/;
 
 // True when the member has any command source: an explicit override or a provider
@@ -125,7 +136,7 @@ function buildCommandVariables(
   if (!NICKNAME_PATTERN.test(member.nickname)) {
     throw new Error(
       `Invalid nickname ${JSON.stringify(member.nickname)} for provider ${provider}: ` +
-        `must match ${NICKNAME_PATTERN.source} (pm-members.schema.yaml). ` +
+        `must match ${NICKNAME_PATTERN.source} (agent-members.schema.yaml). ` +
         `nickname is expanded into command_template and executed with shell: true; ` +
         `refusing to build a command.`,
     );
@@ -260,6 +271,122 @@ export function createProviderCapacityTracker(config: ExecDefaultsConfig): Provi
   };
 }
 
+export function providerSlotPoolPath(lockRoot: string, provider: AgentProvider): string {
+  return join(lockRoot, `provider-${provider}`);
+}
+
+export const DEFAULT_MAX_CONCURRENT_RUNS = 4;
+export const DEFAULT_REGISTER_EXECUTION = "in-place" as const;
+
+export type RegisterExecution = "in-place" | "worktree";
+
+// Preserve the historical default for repositories that have not opted into worktree execution.
+// Invalid YAML-sourced values are rejected instead of silently changing where agents write.
+export function resolveRegisterExecution(config: ExecDefaultsConfig): RegisterExecution {
+  const raw = config.run?.register_execution;
+  if (raw === undefined) return DEFAULT_REGISTER_EXECUTION;
+  if (raw !== "in-place" && raw !== "worktree") {
+    throw new Error(
+      `run.register_execution in exec-defaults must be "in-place" or "worktree": ${String(raw)}`,
+    );
+  }
+  return raw;
+}
+
+// Resolve how many `exec run` processes may run at once for one project. Invalid values fall back
+// to the default so a typo cannot silently disable the busy guard.
+export function resolveMaxConcurrentRuns(config: ExecDefaultsConfig): number {
+  const raw = config.run?.max_concurrent_runs;
+  if (typeof raw !== "number" || !Number.isInteger(raw) || raw < 1) {
+    return DEFAULT_MAX_CONCURRENT_RUNS;
+  }
+  return raw;
+}
+
+// Waits for provider capacity instead of dropping work. Register worktree runs already have a
+// fixed item-to-agent assignment, so unlike auto selection they cannot switch to another provider
+// when a cap is full; each pipeline stage queues until that provider has room.
+//
+// When `lockRoot` is given, the cap also holds across `exec run` processes: after taking an
+// in-process slot, the stage takes one of the provider's slot locks under
+// `<lockRoot>/provider-<name>/`. The in-process queue keeps arrival order within the process;
+// between processes the slot locks are polled without ordering guarantees.
+export class ProviderConcurrencyGate {
+  private readonly active = new Map<AgentProvider, number>();
+  private readonly waiters = new Map<AgentProvider, Array<() => void>>();
+
+  constructor(
+    private readonly config: ExecDefaultsConfig,
+    private readonly lockRoot?: string,
+    private readonly log: (line: string) => void = (line) => {
+      process.stdout.write(line);
+    },
+  ) {}
+
+  async run<T>(
+    provider: AgentProvider | undefined,
+    task: () => Promise<T>,
+    label?: string,
+  ): Promise<T> {
+    const release = await this.acquire(provider);
+    try {
+      const cap = resolveMaxConcurrency(this.config, provider);
+      if (!this.lockRoot || !provider || cap === undefined) return await task();
+      const suffix = label ? `: ${label}` : "";
+      const slot = await acquirePoolSlot(
+        providerSlotPoolPath(this.lockRoot, provider),
+        cap,
+        { actor: `provider:${provider}`, ...(label ? { label } : {}) },
+        {
+          onWait: () =>
+            this.log(
+              `  Waiting for ${provider} slot held by another exec run (max_concurrency: ${cap})${suffix}\n`,
+            ),
+        },
+      );
+      try {
+        return await task();
+      } finally {
+        releaseLock(slot);
+      }
+    } finally {
+      release();
+    }
+  }
+
+  private async acquire(provider: AgentProvider | undefined): Promise<() => void> {
+    const cap = resolveMaxConcurrency(this.config, provider);
+    if (!provider || cap === undefined) return () => undefined;
+
+    if ((this.active.get(provider) ?? 0) < cap) {
+      this.active.set(provider, (this.active.get(provider) ?? 0) + 1);
+      return () => this.release(provider);
+    }
+
+    await new Promise<void>((resolve) => {
+      const queue = this.waiters.get(provider) ?? [];
+      queue.push(resolve);
+      this.waiters.set(provider, queue);
+    });
+    return () => this.release(provider);
+  }
+
+  private release(provider: AgentProvider): void {
+    const queue = this.waiters.get(provider);
+    const next = queue?.shift();
+    if (queue?.length === 0) this.waiters.delete(provider);
+    if (next) {
+      // Transfer the existing slot directly so a newly arriving task cannot overtake the queue.
+      next();
+      return;
+    }
+
+    const nextActive = (this.active.get(provider) ?? 1) - 1;
+    if (nextActive > 0) this.active.set(provider, nextActive);
+    else this.active.delete(provider);
+  }
+}
+
 // ── Loaders ───────────────────────────────────────────────────────────────────
 
 export function defaultExecDefaultsPath(): string {
@@ -309,6 +436,8 @@ export function loadExecDefaultsConfig(
   }
 
   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
+  resolveParentValidationConcurrency(defaults.pipeline?.parent_validation_concurrency);
+  resolveRegisterExecution(defaults);
 
   return defaults;
 }

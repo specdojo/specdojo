@@ -1,0 +1,172 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_feed0665ea7f45f3817f7ff7e51daacd
+  ts: "2026-10-04T11:46:27Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: worktree の resume 前の同期で、衝突確認の git diff がリポジトリ外で実行される
+    - field: description
+      from: ""
+      to: exec run --register --resume は、reporter の再開前に integration target（project/prj-0001/develop）を worktree へ同期する。worktree に未 commit の変更があり develop に新しい commit がある状態で再開すると、同期後の衝突確認 git diff --name-only --diff-filter=U -z が Not a git repository で失敗し、resume refused になる（2026-10-04 の PJR-GBEV）。develop の変更（3 ファイル）と worktree の変更は重ならず、作業者が worktree で git merge を手で行うと衝突なく成功し、その後の resume も成功した
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_2ff98990175745f5884b1868870ef906
+  ts: "2026-10-04T13:21:13Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_feed0665ea7f45f3817f7ff7e51daacd
+- v: 1
+  id: reg_5d071bfd3f7144cfb86868afa9564b20
+  ts: "2026-10-04T13:37:58Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_2ff98990175745f5884b1868870ef906
+- v: 1
+  id: reg_1a1fcc6a109f4e11bc87cfd5d60f64cc
+  ts: "2026-10-05T21:44:11Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_5d071bfd3f7144cfb86868afa9564b20
+- v: 1
+  id: reg_9c06ea03308e46b7b8d14af02991d94a
+  ts: "2026-10-05T22:01:50Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  previous_event_id: reg_1a1fcc6a109f4e11bc87cfd5d60f64cc
+- v: 1
+  id: reg_4b937c8a5e0e4c2f89db71baf4626746
+  ts: "2026-10-05T22:36:36Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+      to: "-"
+  previous_event_id: reg_9c06ea03308e46b7b8d14af02991d94a
+- v: 1
+  id: reg_a4f5b4ef7b47406684625193ab197f39
+  ts: "2026-10-05T22:39:11Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-md"
+  previous_event_id: reg_4b937c8a5e0e4c2f89db71baf4626746
+- v: 1
+  id: reg_7355656e0372452ea3a51e1fe506c768
+  ts: "2026-10-05T22:48:45Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_a4f5b4ef7b47406684625193ab197f39
+- v: 1
+  id: reg_5e81dfc433154de5ba4c15ac347a166c
+  ts: "2026-10-05T22:52:43Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7355656e0372452ea3a51e1fe506c768
+- v: 1
+  id: reg_5da29f09d74f4520b6696992ce57c93a
+  ts: "2026-10-06T10:43:12Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と integration test を確認し、PJR-27Y0 の resume で同期の成功を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: Git 実行ヘルパーの cwd を対象リポジトリへ固定し、resume 前の同期が実行ディレクトリに依存しないようにした。PJR-27Y0 の resume で同期（merge）が成功することを実地で確認した
+  previous_event_id: reg_5e81dfc433154de5ba4c15ac347a166c

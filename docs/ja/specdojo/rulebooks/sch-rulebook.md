@@ -25,7 +25,7 @@ Schedule は「いつ・誰が・どの順で作業するか」を定義する�
 - 成果物カタログの `kind: work` エントリを実行タスクへ展開し、期間・担当・依存関係を付与する。成果物パスと完了条件はカタログが管理する（[[specdojo:schedule-design-guide]] の `成果物カタログとの責務分担` を参照）。
 - `sch-strategy-<track>.yaml` が存在するトラックでは、strategy と成果物カタログを SSOT とし、`sch-track-<track>.yaml` は `specdojo schedule build` で再生成可能な生成物として扱う。生成後の track を直接編集しない。
 - strategy を更新する場合は、DCT・Timeline・strategy の `approach_rules`・Kata の grade・標準 strategy profile を入力とする `schedule strategy generate` を使用する。
-- Schedule の `owner` には Role code のみを記載し、実行主体との対応は `pm-members.yaml` で管理する。
+- Schedule の `owner` には Role code のみを記載し、人間の実行主体との対応は `pm-members.yaml`、agent との対応は `.specdojo/agent-members.yaml` で管理する。
 
 ## 2. 位置づけと用語定義
 

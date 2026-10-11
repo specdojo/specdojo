@@ -13,7 +13,7 @@ SpecDojo Configuration Reference
 
 **対象範囲**
 
-- `.specdojo/specdojo.config.json` のトップレベル、project、`run` の設定キー
+- `.specdojo/specdojo.config.json` のトップレベル、project、`run`、`repos` の設定キー
 
 **ここで引けるもの**
 
@@ -39,7 +39,7 @@ SpecDojo Configuration Reference
       "project_register_path": "controls/project-register",
       "project_context": ["prj-overview"],
       "run": {
-        "worktree_base": "../app1-worktrees"
+        "worktree_base": "../app1-specdojo-worktrees"
       }
     }
   }
@@ -48,13 +48,16 @@ SpecDojo Configuration Reference
 
 この構成では `config init`、`register scaffold` / `add` / `build`、`dashboard build`、`exec plan --register` を利用できます。catalog へ進むときは `catalog_path`、schedule へ進むときは後述の関連キーを段階的に追加します。
 
+最小構成は `repos` を含みません。プロダクトリポジトリ（既定の別リポジトリ構成では `../app1`）をタスクの変更対象にする場合は、`config init` の次の手順の案内に従い、後述の「`repos`のキー」を追加します。生成時に存在しないリポジトリを宣言すると設定の読み込みがエラーになるため、雛形には書き込みません。
+
 ## 2. トップレベルのキー
 
-| キー              | 必須 | 既定値                                 | 役割・利用箇所                                                                                  |
-| ----------------- | ---- | -------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `version`         | 必須 | なし。現行値は `1`                     | 設定形式のバージョンです。すべての config 利用コマンドが検証します。                            |
-| `current_project` | 任意 | コマンドにより `projects` の先頭を使用 | `--project` と `SPECDOJO_PROJECT` を省略したときの対象 project です。                           |
-| `projects`        | 必須 | なし                                   | project ID をキー、project 設定を値とするオブジェクトです。複数 project を1ファイルで扱えます。 |
+| キー                 | 必須 | 既定値                                 | 役割・利用箇所                                                                                  |
+| -------------------- | ---- | -------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `version`            | 必須 | なし。現行値は `1`                     | 設定形式のバージョンです。すべての config 利用コマンドが検証します。                            |
+| `current_project`    | 任意 | コマンドにより `projects` の先頭を使用 | `--project` と `SPECDOJO_PROJECT` を省略したときの対象 project です。                           |
+| `agent_members_path` | 任意 | `.specdojo/agent-members.yaml`         | 全 project が共有する保護済み agent 定義です。`.specdojo/` 配下の YAML だけを指定できます。     |
+| `projects`           | 必須 | なし                                   | project ID をキー、project 設定を値とするオブジェクトです。複数 project を1ファイルで扱えます。 |
 
 対象 project の一般的な解決順序は、`--project <id>`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭です。一部のコマンドは `current_project` を参照せず `projects` の先頭へフォールバックするため、複数 project では `--project` を明示してください。
 
@@ -62,19 +65,19 @@ SpecDojo Configuration Reference
 
 `projects.<project-id>` に指定するキーです。`base_path` 以外の表中のパスは、`base_path` があればそこからの相対パス、無ければリポジトリルートからの相対パスとして解決します。
 
-| キー                    | 既定値           | 主な役割                                                 | 必要とする主なコマンド                                        |
-| ----------------------- | ---------------- | -------------------------------------------------------- | ------------------------------------------------------------- |
-| `base_path`             | リポジトリルート | project 文書に共通するパス接頭辞                         | project に紐づく各コマンド                                    |
-| `project_register_path` | なし             | 個票、event、登録簿の配置先                              | `register *`、`exec plan/run --register`                      |
-| `catalog_path`          | なし             | `dct-*.yaml` と生成ビューの配置先                        | `catalog *`、`deliverable scaffold`、catalog を使う grade 等  |
-| `schedule_path`         | `schedule`       | strategy、track、Schedule の配置先                       | `schedule *`、schedule 対象の `exec *`                        |
-| `execution_path`        | `execution`      | plan、result、実行状態、grade / Job Run の配置先         | `exec *`、`grade *`、`job *`、`dashboard build`               |
-| `timeline_path`         | `timeline`       | Timeline の正本と生成物の配置先                          | `timeline *`、`dashboard build`、`schedule strategy generate` |
-| `members_path`          | なし             | 人・agent、ロール、provider を定義する `pm-members.yaml` | actor 検証、agent 実行、owner 検証、`grade apply --by`        |
-| `roles_path`            | なし             | role 定義ファイルの配置先                                | `schedule strategy generate`、owner を解決する `exec plan`    |
-| `viewpoints_path`       | なし             | review / grade 観点ファイルの配置先                      | `grade *`、review plan、`exec scaffold --project`             |
-| `routines_path`         | なし             | `rtn-*.yaml` と routine 状態の配置先                     | `routine *`、routine を集約する `dashboard build`             |
-| `jobs_path`             | なし             | `job-*.yaml` の配置先                                    | `job *`、`exec run --job`                                     |
+| キー                    | 既定値           | 主な役割                                          | 必要とする主なコマンド                                        |
+| ----------------------- | ---------------- | ------------------------------------------------- | ------------------------------------------------------------- |
+| `base_path`             | リポジトリルート | project 文書に共通するパス接頭辞                  | project に紐づく各コマンド                                    |
+| `project_register_path` | なし             | 個票、event、登録簿の配置先                       | `register *`、`exec plan/run --register`                      |
+| `catalog_path`          | なし             | `dct-*.yaml` と生成ビューの配置先                 | `catalog *`、`deliverable scaffold`、catalog を使う grade 等  |
+| `schedule_path`         | `schedule`       | strategy、track、Schedule の配置先                | `schedule *`、schedule 対象の `exec *`                        |
+| `execution_path`        | `execution`      | plan、result、実行状態、grade / Job Run の配置先  | `exec *`、`grade *`、`job *`、`dashboard build`               |
+| `timeline_path`         | `timeline`       | Timeline の正本と生成物の配置先                   | `timeline *`、`dashboard build`、`schedule strategy generate` |
+| `members_path`          | なし             | 人間と対応 Role code を定義する `pm-members.yaml` | actor 検証、owner 検証、合成名簿の project 側入力             |
+| `roles_path`            | なし             | role 定義ファイルの配置先                         | `schedule strategy generate`、owner を解決する `exec plan`    |
+| `viewpoints_path`       | なし             | review / grade 観点ファイルの配置先               | `grade *`、review plan、`exec scaffold --project`             |
+| `routines_path`         | なし             | `rtn-*.yaml` と routine 状態の配置先              | `routine *`、routine を集約する `dashboard build`             |
+| `jobs_path`             | なし             | `job-*.yaml` の配置先                             | `job *`、`exec run --job`                                     |
 
 `schedule_path`、`execution_path`、`timeline_path` には解決時の既定値があります。ただし `schedule` コマンドや一括 `build` の対象判定ではキーの明示が必要なため、catalog から Schedule と exec へ進む構成では省略しないでください。
 
@@ -84,6 +87,7 @@ SpecDojo Configuration Reference
 | ----------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `project_context` | `["prj-overview"]` | edit / review plan へ常に渡す project 共通文書のローカル ID です。空配列 `[]` で無効化できます。`depends_on` や成果物の `based_on` は変更しません。 |
 | `run`             | `{}`               | agent 実行、worktree、登録日の表示に関する project 単位の設定です。                                                                                 |
+| `repos`           | なし               | project のタスクが変更するプロダクトリポジトリの宣言です。詳細は「`repos`のキー」を参照してください。                                               |
 
 ## 5. `run`のキー
 
@@ -96,11 +100,90 @@ SpecDojo Configuration Reference
 | `worktree_base`          | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。         |
 | `register_date_timezone` | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。        |
 
-`config init` は Detached Unit の標準配置に合わせ、一般既定の `../worktrees` ではなく `../app1-worktrees` を `worktree_base` へ明示します。
+`config init` は一般既定の `../worktrees` ではなく、実行したリポジトリのディレクトリ名から作る `../<リポジトリ名>-worktrees` を `worktree_base` へ明示します。例えば `app1-specdojo/` で実行した場合は `../app1-specdojo-worktrees` です。
 
-## 6. catalog・schedule・execへ進む設定例
+`config init` は、設定した配置から生成物を除外する `.gitignore` の行も導きます。既定の行は `.specdojo/doc-index.json`、`docs/**/generated/*`、`!docs/**/generated/.gitkeep`、`docs/**/execution/exec/.locks/` です。`base_path` が `docs/` の外にある場合は `<base_path>/**/generated/*` などを追加し、`base_path` が無い場合は各パス設定から導いた行を追加します。リポジトリ外を指すパスは対象にしません。配置を変えた後は `config init` を再実行すると、足りない行だけが追記されます。
+
+## 6. `repos`のキー
+
+`projects.<project-id>.repos` は、プロジェクトリポジトリとは別のプロダクトリポジトリを配列で宣言します。プロジェクトリポジトリ自身は宣言しません。キーを省略した project（または空配列）は、従来どおりプロジェクトリポジトリ 1 つだけを扱います。
+
+| キー                 | 必須 | 既定値                         | 役割・利用箇所                                                                                                                    |
+| -------------------- | ---- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| `name`               | 必須 | なし                           | `targets`・`paths` の接頭辞に使うリポジトリ名です。`[a-z0-9-]` だけを使い、project 内で一意です。`project` は予約名で使えません。 |
+| `path`               | 必須 | なし                           | リポジトリのルートです。SpecDojo ルートからの相対パスで書き、実在するディレクトリを指します。                                     |
+| `integration_branch` | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。exec branch もこのブランチの先端から作ります。                                             |
+| `setup`              | 任意 | 両方 `true`                    | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。                          |
+
+```json
+{
+  "base_path": "docs/ja/projects/prj-0001",
+  "project_register_path": "controls/project-register",
+  "repos": [
+    {
+      "name": "app1",
+      "path": "../app1",
+      "integration_branch": "main",
+      "setup": { "install": true, "build": false }
+    }
+  ]
+}
+```
+
+`targets`（個票・job）と `paths`（job）では、`<repo>:<path>`（例: `app1:src/auth/token.ts`）でプロダクトリポジトリ内のパスを指定します。値の区別は次の規則に従います。
+
+- `:` より前の接頭辞が宣言済みのリポジトリ名なら、そのリポジトリのルートからの相対パスとして扱います。空のパス、絶対パス、リポジトリの外へ出るパス（`..` を含むもの）はエラーです。
+- それ以外の値は従来どおりです。`targets` では doc id（例: `prj-0001:pjr-index`、`ifx-cmd`）、`paths` ではプロジェクトリポジトリ内のパスとして扱います。
+- プロダクトリポジトリの文書は doc id では引けません。パスで指定します。
+
+`setup` の `install` は追跡済みの `package-lock.json` ごとの `npm ci`、`build` はリポジトリに `.specdojo/specdojo.config.json` がある場合の `specdojo build` です。対象が無いリポジトリでは、`true` でも何も実行しません。
+
+`repos` を宣言した project の `exec run --worktree` と `exec worktree prepare` は、タスクごとに次の worktree を作ります。宣言の無い project は従来どおり `<worktree_base>/<task-id>/` の直下に 1 つだけ作ります。
+
+- `<worktree_base>/<task-id>/project/`: プロジェクトリポジトリの worktree です。agent の作業ディレクトリ（`cwd`）になります。`project` が予約名なのはこのためです。
+- `<worktree_base>/<task-id>/<name>/`: 宣言した各リポジトリの worktree です。exec branch は `integration_branch`（省略時は現在のブランチ）の先端から作ります。
+
+agent には、各 worktree の絶対パスを次の環境変数で渡します。
+
+| 環境変数                | 値                                                    |
+| ----------------------- | ----------------------------------------------------- |
+| `SPECDOJO_REPO_PROJECT` | プロジェクトリポジトリの worktree                     |
+| `SPECDOJO_REPO_<NAME>`  | `<name>` の worktree。`<NAME>` は大文字で、`-` は `_` |
+| `SPECDOJO_REPO_NAMES`   | 宣言したリポジトリ名を宣言順にカンマで区切ったもの    |
+
+agent の起動コマンドには、provider ごとにプロダクト worktree への書き込み許可を runner が付け足します。`exec-defaults.yaml` の `command_template` を変える必要はありません。
+
+| provider      | 付け足す引数                                                     | 制約                                                                                                                  |
+| ------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| `claude`      | `--add-dir <path>...` と `--allowedTools 'Edit(//<path>/**)'...` | mode 別 settings の `Edit` 許可は作業ディレクトリ相対のため、絶対パスの許可を別に渡す                                 |
+| `codex`       | `--add-dir <path>`（リポジトリの数だけ）                         | `--sandbox workspace-write` の書き込みルートに加わる。`.git` は codex の仕様で読み取り専用のまま                      |
+| `antigravity` | `--add-dir <path>`（リポジトリの数だけ）                         | テンプレートの `--add-dir "$(pwd)"` に追加する                                                                        |
+| `copilot`     | `--add-dir <path>`（リポジトリの数だけ）                         | 書き込みはテンプレートの `--allow-tool write` に従う                                                                  |
+| `opencode`    | なし                                                             | 作業ディレクトリ外は agent 定義の `permission.external_directory` で拒否される。許可には agent 定義の変更が必要になる |
+
+対話型オーケストレーターは `specdojo orchestrator launch` が同じ `repos` を読み、プロダクトリポジトリ本体のルートを許可します。Claude Code、Codex、Antigravity、GitHub Copilot は上表と同じ引数規則です。OpenCode は起動時の inline config で、選択 agent の `permission.external_directory` を「全拒否、宣言済みルートだけ許可」に差し替え、宣言済みルートの `permission.edit` も許可します。この設定はオーケストレーターのプロセスだけに適用され、agent 定義や利用者の設定ファイルは書き換えません。`repos` を省略した project では追加の引数・設定を渡しません。
+
+agent 実行の前後で行う保護設定（`package.json`、CI 設定など）と Git 状態（HEAD・ローカル設定）の検査は、プロダクト worktree にも同じ一覧で行います。evidence の変更ファイルは、プロダクト側を `<name>:<path>` で記録します。
+
+プロダクトリポジトリの変更は、`exec run --worktree` の統合段で runner がリポジトリごとに commit し、宣言順のプロダクト、最後にプロジェクトの順で統合します。統合の順序、失敗時の部分状態、再開は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの worktree と統合順序」と「複数リポジトリの統合の失敗と再開」を参照してください。`exec worktree commit` はプロダクト側を統合しないため、プロダクト worktree に未 commit の変更か exec branch の commit が残るタスクは、プロジェクト側の commit の前に停止します。撤去は、全リポジトリの worktree が撤去できることを確かめてからまとめて行います。
+
+exec worktree の中で設定を読む場合（agent が worktree で `specdojo` を実行する場合など）、`path` の代わりに同じタスクの `<worktree_base>/<task-id>/<name>/` へ解決します。
+
+設定の読み込み時に、次の誤りを対象（`projects.<project-id>.repos[<n>]`）と原因を示すエラーにします。誤りは全 project 分をまとめて表示します。
+
+- `name` が `[a-z0-9-]` 以外の文字を含む、または同じ project 内で重複している。
+- `name` がいずれかの project ID と同じである。`<name>:<...>` が doc id とリポジトリのパスのどちらか区別できなくなるためです。
+- `name` が予約名 `project` である。プロジェクトリポジトリの worktree のディレクトリ名と重なるためです。
+- `path` が空、絶対パス、存在しない、またはディレクトリでない。
+- 宣言に無いキーがある、`integration_branch` が空文字、`setup` の値が真偽値でない。
+
+設定の形は `docs/specdojo/schemas/v1/specdojo-config.schema.yaml` でも検証できます。リポジトリ名と project ID の重複と `path` の実在は schema で表せないため、CLI の読み込み時の検証が正本です。
+
+## 7. catalog・schedule・execへ進む設定例
 
 register の最小構成から成果物カタログと Schedule へ進む場合は、対象 project へ必要なキーを追加します。次は Quick Start の代表例です。
+
+agent 実行を使う場合は、この project オブジェクトとは別にトップレベルへ `"agent_members_path": ".specdojo/agent-members.yaml"` を指定できます。省略時も同じパスが既定です。
 
 ```json
 {
@@ -116,14 +199,14 @@ register の最小構成から成果物カタログと Schedule へ進む場合�
   "project_context": ["prj-overview"],
   "run": {
     "exec_defaults": ".specdojo/exec-defaults.yaml",
-    "worktree_base": "../app1-worktrees"
+    "worktree_base": "../app1-specdojo-worktrees"
   }
 }
 ```
 
 routine / Job を使う段階で、同じ project 設定へ `routines_path` と `jobs_path` を追加します。未使用のキーまで最初から埋める必要はありません。
 
-## 7. 設定不足時の確認順序
+## 8. 設定不足時の確認順序
 
 1. エラーに表示されたキーが対象 project にあるか確認します。
 2. `base_path` と対象パスを連結した先が意図した配置か確認します。

@@ -1,0 +1,145 @@
+---
+specdojo:
+  id: prj-0001:pjr-t3nn-bps-rulebook-rulebook-authoring-standard
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: done
+  priority: high
+  owner: ARC
+  registered_at: "2026-09-26T02:13:22Z"
+  completed_at: "2026-09-26T02:42:51Z"
+  block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml; automatic git merge --abort failed; run git merge --…"
+---
+
+# PJR-T3NN bps-rulebook を rulebook-authoring-standard 準拠で作り直す
+
+## 1. 概要
+
+`bps-rulebook.md` は 2026-08-24 が最終更新で、現行の `rulebook-authoring-standard.md` に準拠していない。章構成、埋め込みサンプルの Frontmatter 形式、見出し番号の書式が規約と食い違う。部分修正では sample の作り直しと絡み合うため、**bootstrap 相当で作り直す**。
+
+## 2. 事実
+
+### 2.1. grade が既に問題を検出している
+
+| 文書           | verdict      | score | findings         | 評価日     |
+| -------------- | ------------ | ----- | ---------------- | ---------- |
+| `bps-rulebook` | `needs-work` | 88    | major 1、minor 2 | 2026-09-01 |
+
+```text
+[major] サンプル内の Frontmatter で type: data となっているが、
+        第 4 章の定義では domain 固定とされており矛盾している
+[minor] 指定のサンプルファイルが実質的なメタ説明に留まっており、具体的な作成例が不十分である
+[minor] Frontmatter の定義に、メタ情報標準や共通スキーマへの参照がなく、具体性が不足している
+```
+
+### 2.2. 章構成が standard と一致しない
+
+| 現在の章                    | `rulebook-authoring-standard` | 差分                   |
+| --------------------------- | ----------------------------- | ---------------------- |
+| 5. 本文構成（標準テンプレ） | 5. 本文要件                   | 章タイトルと役割が相違 |
+| 8. 階層分解ガイド           | なし                          | standard にない章      |
+| 10. よくある誤りと対策      | なし                          | standard にない章      |
+| 2. 用語定義                 | 2. 位置づけと用語定義         | 章タイトルが相違       |
+
+standard の必須章は `全体方針` / `ファイル命名・ID規則` / `本文要件` / `記述ガイド` / `禁止事項` である。
+
+### 2.3. 埋め込みサンプルの Frontmatter が旧形式
+
+`## 11. サンプル（簡易）` のコードブロックは `specdojo:` 名前空間へ移行する前の形式である。
+
+```yaml
+id: bps-order-candidate-generation
+type: data
+title: 発注候補生成
+status: draft
+part_of: []
+based_on: [bes-stock-amount-updated]
+```
+
+`type: data` は本文 `4. 推奨 Frontmatter 項目` の定義と矛盾する。これが grade の major finding に当たる。
+
+### 2.4. 見出し番号が markdown 規約に違反する
+
+`### 6.1 概要` から `### 6.8 メモ / 将来課題` まで、番号末尾の `.` が欠落している。`.github/instructions/markdown.instructions.md` は `n.m.` 形式を必須とする。
+
+### 2.5. recipe と template が未決
+
+```yaml
+recipe: undecided
+template: undecided
+```
+
+対応する recipe と template が存在しない。standard は `template: undecided` の系統について「本文要件に必要な章・キーと必須・任意を記載する」ことを求めるが、現在の `本文構成（標準テンプレ）` は見出しの羅列であり要件を示していない。
+
+## 3. 完了条件
+
+- 章構成が `rulebook-authoring-standard.md` の標準章構成に準拠し、`## 1.` からの連番で必須章が欠落していない。
+- 見出し番号が `n.` / `n.m.` 形式で、末尾に `.` が付いている。
+- 埋め込みサンプルの Frontmatter が `specdojo:` 名前空間形式であり、本文の Frontmatter 定義と一致している。
+- `本文要件` が各章・キーの目的、必須・任意、記述規約を示している。見出しの羅列にしない。
+- `recipe` と `template` が `undecided` ではなく、文書 ID または `not-needed` で宣言されている。
+- 本文に sample / recipe / template へのリンク章と wikilink がない。
+- BPS が扱う対象（概念データフローの 1 プロセス領域）と粒度の方針が読み取れる。カタログが「1 ファイル = 1 プロセス」で 29 件を定義している前提と整合する。
+- `npm run -s lint:md` が通過している。
+- grade を再実行し、`needs-work` の 3 件が解消している。
+
+## 4. 作業内容
+
+| No  | 作業                                        | 担当 | 状態    | メモ                                        |
+| --- | ------------------------------------------- | ---- | ------- | ------------------------------------------- |
+| 1   | standard との差分を洗い出す                 | ARC  | done    | 章構成、Frontmatter、記述規約を確認済み     |
+| 2   | `recipe` / `template` の要否を決める        | ARC  | done    | 本文要件と埋め込み例を正本とし `not-needed` |
+| 3   | 章構成を standard 準拠へ作り直す            | ARC  | done    | 標準 8 章構成で全面再構成                   |
+| 4   | 埋め込みサンプルを現行 Frontmatter 形式へ   | ARC  | done    | `specdojo:` 名前空間と `type: flow` に統一  |
+| 5   | grade を再実行して finding の解消を確認する | QE   | waiting | executor 後の再評価で確認                   |
+
+## 5. 対応結果
+
+- `bps-rulebook.md` を `rulebook-authoring-standard.md` の標準章構成へ全面再構成し、外側の見出しを `## 1.` から `## 8.`、記述ガイドの見出しを `### 6.1.` から `### 6.9.` の連番に統一した。
+- BPS の対象を「概念データフローの一つのプロセス領域に属し、共通の起点と業務成果を持つ一連の流れ」と定義した。CDFD の個別プロセスを BPS の処理ステップとして対応付ける粒度を明記した。
+- 成果物 Frontmatter の `type` を共通スキーマに合わせて `flow` とし、必須・任意項目、`based_on` の制約、`status` の扱いを明記した。
+- 本文要件に各章の目的、必須性、記述規約を定義し、トリガー、処理、例外、検証・受入観点の推奨表と完成判定を追加した。
+- 埋め込みサンプルを `specdojo:` 名前空間の Frontmatter と `type: flow` へ更新し、BPS の全必須章を備えた自己完結例へ置き換えた。
+- 外部 `bps-sample.md` を駄菓子屋きぬやの「補充依頼確定」の完成例へ作り直し、rulebook の必須章、`type: flow`、CDFD のプロセス領域・引き渡しとの対応を反映した。
+- `recipe` と `template` は、rulebook の本文要件と埋め込み例だけで作成を開始できるため `not-needed` とした。外部 sample は実例として整備したため、Frontmatter の `sample` に `specdojo:bps-sample` を宣言した。
+- grade result サイドカーは直接編集していない。grade の再実行と finding の最終判定は executor 後の再評価で行う。
+
+### 5.1. 評価（2026-09-26）
+
+完了条件 9 件のうち 8 件を満たす。grade の再実行（条件 9）は未実施で、close 後に定期実行で確認する。
+
+| #   | 完了条件                                           | 判定     |
+| --- | -------------------------------------------------- | -------- |
+| 1   | 章構成が standard 準拠、必須章が欠落していない     | 満たす   |
+| 2   | 見出し番号が `n.` / `n.m.` 形式                    | 満たす   |
+| 3   | 埋め込みサンプルが名前空間形式、本文定義と一致     | 満たす   |
+| 4   | `本文要件` が目的・必須任意・記述規約を示す        | 満たす   |
+| 5   | `recipe` / `template` が `undecided` でない        | **差戻** |
+| 6   | 本文に sample / recipe / template へのリンクがない | 満たす   |
+| 7   | BPS の対象と粒度の方針が読み取れる                 | 満たす   |
+| 8   | `lint:md` が通過                                   | 満たす   |
+| 9   | grade 再実行で finding が解消                      | 未実施   |
+
+条件 2 と 6 は機械的に確認し、違反 0 件である。条件 4 は懸念した「見出しの羅列」を回避し、9 章それぞれに目的と記載要件を記述している。
+
+### 5.2. スコープ外の変更が 2 件あった
+
+`bps-sample.md` の全面書き換え（+69 / −21）は [[prj-0001:pjr-8ten-bps-sample-bps-template-bps-recipe]] の対象であり、本項目の完了条件にも作業内容にも含まれない。内容は共通サンプル文脈に沿い rulebook の必須章を満たすため**差し戻さず採用する**が、result の申し送りに記載がなく、スコープ外である旨が申告されていない。
+
+`recipe` / `template` の `not-needed` 宣言は [[prj-0001:pjr-8ten-bps-sample-bps-template-bps-recipe]] で判断する事項として起票済みであり、根拠の提示もなかった。**`undecided` へ戻した。** カタログが BPS を 29 件定義しており繰り返しが多いため、template を持つ方が一貫性を保てる可能性がある。
+
+### 5.3. 統合の失敗は本項目の責によらない
+
+`block_reason` は `integrate failed: git merge failed: CONFLICT in events/pjr-t3nn.yaml` である。原因は executor の実行中に main worktree で別項目の起票 commit を 3 回行ったことであり、成果物の問題ではない。merge は内容を確認のうえ手動で完了した。再発防止は [[prj-0001:pjr-4hbg-exec-run]] で扱う。
+
+## 6. 関連ドキュメント
+
+- [[prj-0001:pjr-8ten-bps-sample-bps-template-bps-recipe]]
+- [[prj-0001:pjr-h4h7-bps-grade-review]]
+- `docs/ja/specdojo/rulebooks/bps-rulebook.md`
+- `docs/ja/specdojo/standards/rulebook-authoring-standard.md`
+- `.github/instructions/rulebook.instructions.md`

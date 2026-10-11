@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-p7hy-multi-repo-single-item
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
-  priority: medium
+  item_status: done
+  priority: high
   owner: ARC
   registered_at: "2026-09-06T13:40:45Z"
   due_on: "2026-09-30"
+  completed_at: "2026-10-07T12:42:35Z"
+  conclusion: 後続の PJR-5822・PJR-9KST・PJR-6RN3・PJR-V96B・PJR-69VP で、統合順序・失敗パターンごとの回復・リポジトリ別の親検証・部分状態の扱い・実構成での確認がすべて満たされた。本項目での実装はない
 ---
 
 # PJR-P7HY 1つの項目が複数リポジトリを変更する場合の統合を扱う
@@ -78,15 +80,25 @@ worktree を整理した。統合順序をソース先行とすることで部�
 
 | No  | 作業                                   | 担当 | 状態 | メモ                                                      |
 | --- | -------------------------------------- | ---- | ---- | --------------------------------------------------------- |
-| 1   | 複数リポジトリ変更を許すかを判断する   | ARC  | open | 禁止する選択肢も検討する                                  |
-| 2   | 許す場合の統合順序を定める             | ARC  | open | 宣言順か依存関係か                                        |
-| 3   | 失敗パターンごとの回復手順を定める     | ARC  | open | 統合済みの範囲を記録する                                  |
-| 4   | 親検証のリポジトリ別割り当てを実装する | ARC  | open | [[prj-0001:pjr-qhka-docs-structure-detached-unit]] と共通 |
-| 5   | 実構成で動作を確認する                 | ARC  | open | 複数プロダクトの構成を用意する                            |
+| 1   | 複数リポジトリ変更を許すかを判断する   | ARC  | done | 禁止する選択肢も検討する                                  |
+| 2   | 許す場合の統合順序を定める             | ARC  | done | 宣言順か依存関係か                                        |
+| 3   | 失敗パターンごとの回復手順を定める     | ARC  | done | 統合済みの範囲を記録する                                  |
+| 4   | 親検証のリポジトリ別割り当てを実装する | ARC  | done | [[prj-0001:pjr-qhka-docs-structure-detached-unit]] と共通 |
+| 5   | 実構成で動作を確認する                 | ARC  | done | 複数プロダクトの構成を用意する                            |
 
 ## 7. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+本項目では実装を行っていない。起票（2026-09-06）の後、次の項目で完了条件をすべて満たしたため、orchestrator が対応関係を確認して完了とした（2026-10-07）。
+
+| 完了条件                                 | 満たした項目                                                                                                                      | 根拠                                                                                                                                                                           |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 統合順序が定まっている                   | [[prj-0001:pjr-5822-multi-repo-item-design]] とその実装                                                                           | [[specdojo:docs-structure-guide]] の「複数リポジトリの worktree と統合順序」。事前検査で全リポジトリの統合可否を確かめ、宣言順にプロダクトを統合してからプロジェクトを統合する |
+| 各失敗パターンの統合済みの範囲と回復手順 | [[prj-0001:pjr-9kst-multi-repo-resume-precheck-register-records]]、[[prj-0001:pjr-6rn3-resume-sync-remerges-integrated-products]] | 同ガイドの「複数リポジトリの統合の失敗と再開」。事前検査・n 番目のプロダクト・プロジェクトの失敗位置ごとに統合済みの範囲と再開の扱いを定める                                   |
+| 親検証をリポジトリごとに割り当てられる   | [[prj-0001:pjr-v96b-multi-repo-parent-validations]]                                                                               | `pipeline.parent_validations` の `{ id, repo }`                                                                                                                                |
+| 部分状態での `item_status`               | 同ガイド                                                                                                                          | 一部だけ統合済みの状態は `waiting` とし、`review` へ進めない。リポジトリ別の状態は `pipeline-state.json` の `stages.integrate.repos` に記録する                                |
+| 実構成での動作の確認                     | [[prj-0001:pjr-69vp-multi-repo-e2e-docs]]                                                                                         | 3 リポジトリ構成の e2e と、claude・codex・antigravity での 2 プロダクトへの書き込みの確認                                                                                      |
+
+検討事項の「1 つの項目で複数リポジトリの変更を許すか」は、[[prj-0001:pjr-5822-multi-repo-item-design]] で許す方針に決まった。
 
 ## 8. 関連ドキュメント
 

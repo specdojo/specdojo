@@ -1,0 +1,13 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 typecheck
+> tsc -b --noEmit
+
+tests/src/orch-command.test.ts(16,5): error TS2698: Spread types may only be created from object types.
+
+
+--- stderr ---

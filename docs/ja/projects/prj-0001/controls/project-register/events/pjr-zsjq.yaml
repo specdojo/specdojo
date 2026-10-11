@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9f9e8ebf124b49579c4e14e3f1c3ee4f
+  ts: "2026-10-06T12:58:02Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が oMLX に Qwen3.6 を導入し、PJR-VQB5 の評価への追加を依頼
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: oMLX の Qwen3.6 を grade の executor として評価する
+    - field: description
+      from: ""
+      to: oMLX に Qwen3.6 35B-A3B を導入した。opencode の agent（qwen36-expert-executor）と pm-members.yaml の member を追加し、PJR-VQB5 の 1.26 と同じ条件で grade の判定の精度・時間・字体の混入を計測して、Ornith・codex・agy と比べる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"
+- v: 1
+  id: reg_a55dba96a82e4ec98edd4eef06ee4648
+  ts: "2026-10-06T22:04:38Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: 利用者の判断で計測を打ち切り、結果を PJR-VQB5 に記録した
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: Qwen3.6 は grade の判定に使わない。thinking ON は判定が甘く、OFF は Ornith と同程度の精度で約2倍遅く、oMLX の memory guard に拒否されやすい。member は disabled にした
+  previous_event_id: reg_9f9e8ebf124b49579c4e14e3f1c3ee4f

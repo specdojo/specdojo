@@ -8,9 +8,11 @@ import addFormatsModule from "ajv-formats";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   createPipelineState,
+  integratedRepoNames,
   loadPipelineResumeCheckpoint,
   pipelineStateLocation,
   readPipelineState,
+  updatePipelineRepoIntegration,
   updatePipelineStage,
   writePipelineState,
 } from "../../src/exec-pipeline-state.js";
@@ -148,6 +150,53 @@ describe("pipeline state", () => {
     ).toBeUndefined();
   });
 
+  it("loads interrupted executor evidence as a resume lower-bound source without reusing it as succeeded", () => {
+    const { root, executionPath } = setup();
+    const taskId = "PJR-AB12";
+    const runId = "run-rate-limited";
+    const location = pipelineStateLocation({
+      repoRoot: root,
+      worktreePath: root,
+      executionPath,
+      taskId,
+      runId,
+    });
+    const evidenceRef = `execution/exec/evidence/${taskId}/${runId}/evidence.json`;
+    let state = createPipelineState({
+      taskId,
+      runId,
+      updatedAt: "2026-08-10T07:00:00Z",
+    });
+    state = updatePipelineStage(
+      state,
+      "executor",
+      { status: "rate_limited", attempts: 1, artifact_ref: evidenceRef },
+      "2026-08-10T07:01:00Z",
+    );
+    writePipelineState(location.path, state);
+    const interruptedEvidence: ExecEvidence = {
+      ...evidence(taskId, runId),
+      stage: {
+        ...evidence(taskId, runId).stage,
+        status: "rate_limited",
+        exit_code: 75,
+      },
+      attempt_changes: [{ path: "docs/partial.md", status: "M" }],
+    };
+    const evidencePath = join(root, evidenceRef);
+    mkdirSync(dirname(evidencePath), { recursive: true });
+    writeFileSync(evidencePath, `${JSON.stringify(interruptedEvidence)}\n`, "utf8");
+
+    const checkpoint = loadPipelineResumeCheckpoint({
+      worktreePath: root,
+      stateRef: location.ref,
+      taskId,
+    });
+
+    expect(checkpoint?.executorEvidence).toEqual(interruptedEvidence);
+    expect(checkpoint?.evidence).toBeUndefined();
+  });
+
   it("records the runner-owned integrate stage on a state that has none", () => {
     const { root, executionPath } = setup();
     const location = pipelineStateLocation({
@@ -202,6 +251,87 @@ describe("pipeline state", () => {
     addFormats(ajv);
     const validate = ajv.compile(schema);
     expect(validate(failed), JSON.stringify(validate.errors)).toBe(true);
+  });
+
+  it("records repository integration in declaration order while preserving old states", () => {
+    const created = createPipelineState({
+      taskId: "PJR-AB12",
+      runId: "run-repos",
+      updatedAt: "2026-08-10T07:00:00Z",
+    });
+    const running = updatePipelineStage(
+      created,
+      "integrate",
+      { status: "running", attempts: 1 },
+      "2026-08-10T07:01:00Z",
+    );
+    const firstFailed = updatePipelineRepoIntegration(
+      running,
+      "app1",
+      { status: "failed", error: "hook rejected merge" },
+      "2026-08-10T07:02:00Z",
+    );
+    const resumed = updatePipelineRepoIntegration(
+      firstFailed,
+      "app1",
+      {
+        status: "merged",
+        commit: "abc123",
+        merged_at: "2026-08-10T07:03:00Z",
+      },
+      "2026-08-10T07:03:00Z",
+    );
+    const completed = updatePipelineRepoIntegration(
+      resumed,
+      "project",
+      { status: "merged", merged_at: "2026-08-10T07:04:00Z" },
+      "2026-08-10T07:04:00Z",
+    );
+
+    expect(completed.stages.integrate?.repos).toEqual({
+      app1: {
+        status: "merged",
+        commit: "abc123",
+        merged_at: "2026-08-10T07:03:00Z",
+      },
+      project: {
+        status: "merged",
+        commit: null,
+        merged_at: "2026-08-10T07:04:00Z",
+      },
+    });
+    expect(Object.keys(completed.stages.integrate?.repos ?? {})).toEqual(["app1", "project"]);
+
+    const schema = load(readFileSync(schemaPath(), "utf8")) as Record<string, unknown>;
+    const ajv = new Ajv2020({ allErrors: true, strict: false });
+    addFormats(ajv);
+    const validate = ajv.compile(schema);
+    expect(validate(completed), JSON.stringify(validate.errors)).toBe(true);
+    // `repos` の無い旧形式も引き続き schema-valid。
+    expect(validate(running), JSON.stringify(validate.errors)).toBe(true);
+  });
+
+  // PJR-6RN3: 再開前の統合先の取り込みから、統合済みのリポジトリを除外するために使う。
+  it("lists only repositories recorded as merged or unchanged as integrated", () => {
+    const created = createPipelineState({
+      taskId: "PJR-AB12",
+      runId: "run-1",
+      updatedAt: "2026-08-10T07:00:00Z",
+    });
+    const records: Array<[string, "merged" | "unchanged" | "failed" | "pending"]> = [
+      ["app1", "merged"],
+      ["app2", "unchanged"],
+      ["app3", "failed"],
+      ["project", "pending"],
+    ];
+    const state = records.reduce(
+      (current, [repo, status]) =>
+        updatePipelineRepoIntegration(current, repo, { status }, "2026-08-10T07:01:00Z"),
+      created,
+    );
+
+    expect([...integratedRepoNames(state)]).toEqual(["app1", "app2"]);
+    expect(integratedRepoNames(created).size).toBe(0);
   });
 
   it("persists a schema-valid protection block separately from a process failure", () => {

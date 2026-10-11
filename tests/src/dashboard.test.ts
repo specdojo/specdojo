@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   buildDashboardMarkdown,
   buildDailyRoutineRows,
+  buildExecRecordsMarkdown,
+  collectExecRecords,
   collapseFrequentRoutineRows,
   formatZonedDateTime,
   buildTimelineGanttSvg,
@@ -283,6 +285,90 @@ describe("buildDashboardMarkdown", () => {
   });
 });
 
+// ---- exec records ------------------------------------------------------------
+
+describe("collectExecRecords", () => {
+  it("plan と result を stem ごとにまとめ、開始日時の新しい順に並べる", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-exec-records-"));
+
+    try {
+      const plans = join(root, "plans");
+      const results = join(root, "results");
+      mkdirSync(plans, { recursive: true });
+      mkdirSync(results, { recursive: true });
+      writeFileSync(
+        join(plans, "t-old-plan.md"),
+        "---\nspecdojo:\n  task_id: T-OLD\n  mode: edit\n---\n\n# Plan\n",
+        "utf8",
+      );
+      writeFileSync(
+        join(results, "t-old-result.md"),
+        '---\nspecdojo:\n  task_id: T-OLD\n  mode: edit\n  status: complete\n  started_at: "2026-01-01T00:00:00Z"\n---\n\n# Result\n',
+        "utf8",
+      );
+      writeFileSync(
+        join(results, "t-new-result.md"),
+        '---\nspecdojo:\n  task_id: T-NEW\n  mode: review\n  status: doing\n  started_at: "2026-02-01T00:00:00Z"\n---\n\n# Result\n',
+        "utf8",
+      );
+      writeFileSync(
+        join(plans, "t-plan-only-plan.md"),
+        "---\nspecdojo:\n  task_id: T-PLAN\n---\n\n# Plan\n",
+        "utf8",
+      );
+
+      const rows = collectExecRecords(root);
+
+      expect(rows).toEqual([
+        {
+          stem: "t-new",
+          taskId: "T-NEW",
+          mode: "review",
+          status: "doing",
+          startedAt: "2026-02-01T00:00:00Z",
+          resultFile: "t-new-result.md",
+        },
+        {
+          stem: "t-old",
+          taskId: "T-OLD",
+          mode: "edit",
+          status: "complete",
+          startedAt: "2026-01-01T00:00:00Z",
+          planFile: "t-old-plan.md",
+          resultFile: "t-old-result.md",
+        },
+        { stem: "t-plan-only", taskId: "T-PLAN", planFile: "t-plan-only-plan.md" },
+      ]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("exec ディレクトリが無い場合は空配列を返す", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-exec-records-"));
+
+    try {
+      expect(collectExecRecords(join(root, "missing"))).toEqual([]);
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("buildExecRecordsMarkdown", () => {
+  it("plan と result へ generated からの相対リンクを張る", () => {
+    const markdown = buildExecRecordsMarkdown("prj-test", [
+      { stem: "t-a", taskId: "T-A", planFile: "t-a-plan.md", resultFile: "t-a-result.md" },
+      { stem: "t-b", taskId: "T-B", planFile: "t-b-plan.md" },
+    ]);
+
+    expect(markdown).toContain("[plan](../exec/plans/t-a-plan.md)");
+    expect(markdown).toContain("[result](../exec/results/t-a-result.md)");
+    expect(markdown).toContain("| - | `T-B` | - | - | [plan](../exec/plans/t-b-plan.md) | - |");
+    expect(markdown.endsWith("\n")).toBe(false);
+  });
+});
+
 describe("sanitizeDashboardCell", () => {
   it("制御文字と ANSI を除去し、パイプをエスケープして長文を省略する", () => {
     const esc = String.fromCharCode(0x1b);
@@ -475,7 +561,7 @@ describe("daily briefing", () => {
 // ---- dashboardOutputFiles ----------------------------------------------------
 
 describe("dashboardOutputFiles", () => {
-  it("dashboard.md と Gantt SVG の 2 件を返す", () => {
+  it("dashboard.md・実行記録一覧・Gantt SVG の 3 件を返す", () => {
     const paths: DashboardPaths = {
       projectId: "prj-0001",
       projectPath: "docs/ja/projects/prj-0001",
@@ -483,8 +569,9 @@ describe("dashboardOutputFiles", () => {
       executionGeneratedPath: "docs/ja/projects/prj-0001/execution/generated",
     };
     const files = dashboardOutputFiles(paths);
-    expect(files).toHaveLength(2);
+    expect(files).toHaveLength(3);
     expect(files.some((f) => f.endsWith("dashboard.md"))).toBe(true);
+    expect(files.some((f) => f.endsWith("exec-records.md"))).toBe(true);
     expect(files.some((f) => f.endsWith("dashboard-timeline-gantt.svg"))).toBe(true);
   });
 });

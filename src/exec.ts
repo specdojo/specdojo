@@ -68,7 +68,6 @@ import {
   generateSinglePlan,
   resolveDeliverableTarget,
   finalizeResultSectionsForDeliverable,
-  reviewResultSectionsForDeliverable,
   targetDocIdsForScheduledTask,
   stemFromPlanPath,
 } from "./exec-plans.js";
@@ -76,11 +75,17 @@ import { resetResultForClaim, scaffoldResult } from "./exec-results.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./exec-provider-scaffold.js";
 import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./exec-register.js";
 import { scaffoldViewpoints } from "./review-plan.js";
-import { registerCycleCommand, registerResumeCommand, registerRunCommand } from "./exec-run.js";
+import {
+  registerCycleCommand,
+  registerResumeCommand,
+  registerRunCommand,
+  registerSlotsCommand,
+} from "./exec-run.js";
 import { buildTaskView } from "./exec-task-view.js";
 import { registerExecWorktreeCommands } from "./exec-worktree-command.js";
 import { registerExecTrialCommands } from "./exec-trial.js";
 import { discardStaleExecWorktree } from "./exec-worktree-ops.js";
+import { configuredProductRepos } from "./exec-task-repos.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import {
   buildPhaseModeIndex,
@@ -415,10 +420,6 @@ async function scaffoldClaimResult(opts: {
     scheduleNode?.phase_suffix,
     scheduleNode?.phase_set,
   );
-  const reviewSections =
-    mode === "review"
-      ? reviewResultSectionsForDeliverable(opts.catalogPath ?? "", localId)
-      : undefined;
   const finalizeSections =
     approach === "finalize" || approach === "bootstrap-finalize"
       ? finalizeResultSectionsForDeliverable(opts.catalogPath ?? "", localId, approach)
@@ -443,7 +444,6 @@ async function scaffoldClaimResult(opts: {
     execution,
     ...(approach ? { approach } : {}),
     ...(targets ? { targets } : {}),
-    ...(reviewSections ? { reviewSections } : {}),
     ...(finalizeSections ? { finalizeSections } : {}),
   });
   if (!result.created) {
@@ -612,6 +612,8 @@ function resetExecWorktreeForTask(args: {
       executionPath: args.executionPath,
     },
     worktreeTaskId,
+    // PJR-98G4: repos を宣言した project では、プロダクト側の worktree と exec branch も破棄する。
+    products: configuredProductRepos(args.schedulePath),
   });
   process.stdout.write(
     discarded
@@ -1188,6 +1190,7 @@ export function registerExecCommands(program: Command): void {
   registerRunCommand(exec);
   registerResumeCommand(exec);
   registerCycleCommand(exec);
+  registerSlotsCommand(exec);
   registerExecWorktreeCommands(exec);
   registerExecTrialCommands(exec);
 
@@ -1204,14 +1207,23 @@ export function registerExecCommands(program: Command): void {
     "Copy the provider's agent/settings templates (templates/<name>) into the repository",
   );
   scaffoldCmd.option("--dry-run", "Show planned files without writing", false);
+  scaffoldCmd.option(
+    "--global",
+    "Merge provider permissions into user-level settings (currently antigravity only)",
+    false,
+  );
   scaffoldCmd.action(async (opts) => {
     try {
+      if (opts.global && !opts.provider) {
+        throw new Error("--global requires --provider <name>");
+      }
       if (opts.provider) {
         await runProviderScaffold(String(opts.provider), {
           packageRoot: specdojoPackageRootDir(),
           repoRoot: specdojoRootDir(),
           force: !!opts.force,
           dryRun: !!opts.dryRun,
+          global: !!opts.global,
         });
         return;
       }

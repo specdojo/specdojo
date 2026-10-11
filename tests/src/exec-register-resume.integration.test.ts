@@ -11,16 +11,17 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { isAbsolute, join } from "node:path";
 import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../src/exec.js";
 import { gitEnvironment } from "../../src/exec-worktree.js";
 
-// PJR-6VFN: `exec run --register --worktree --resume` の E2E 検証。executor が成功した直後に
-// reporter だけが失敗した run を、worktree と executor の未コミット成果を保持したまま reporter
-// 段から再開できること、再開できない条件では破壊的操作を行わずに拒否することを、実際の CLI
-// 経路（register start/review/wait の実プロセス起動を含む）で確認する。
+// PJR-6VFN / PJR-PG6W: `exec run --register --worktree --resume` の E2E 検証。executor が
+// 成功した直後に reporter だけが失敗した run と、保護機構で executor が block された run を、
+// worktree と未コミット成果を保持したまま再開できること、再開できない条件では破壊的操作を
+// 行わずに拒否することを、実際の CLI 経路（register start/review/wait の実プロセス起動を含む）
+// で確認する。
 //
 // 一時リポジトリの構成方法（node_modules のシンボリックリンクと process.argv[1] の差し替え）は
 // exec-register-pipeline-e2e.integration.test.ts と同じ理由による。
@@ -53,8 +54,14 @@ const REGISTER_REL = `${PROJECT_BASE}/controls/project-register`;
 const SCHEDULE_REL = `${PROJECT_BASE}/schedule`;
 const EXECUTION_REL = `${PROJECT_BASE}/execution`;
 const TICKET_REL = `${REGISTER_REL}/pjr-cd34-resume-test.md`;
-const ARTIFACT_NAME = "pipeline-artifact.md";
+// register 由来のタスクは、既知の成果物ディレクトリ外（リポジトリ直下など）の新規ファイルを
+// agent の一時ファイルとして commit しない（PJR-FFPK）。成果物は docs/ 配下へ置く。
+const ARTIFACT_NAME = "docs/pipeline-artifact.md";
 const REPORTER_FAILURE_MARKER = "fail-reporter";
+const PROTECTED_WRITE_MARKER = "write-protected-config";
+// PJR-GENJ: wait の後に統合先で直す修正。親検証はこのファイルの有無で成否が決まる。
+const FIX_NAME = "docs/integration-fix.md";
+const OVERLAP_NAME = "docs/resume-overlap.md";
 
 const CONFIG = {
   version: 1,
@@ -133,9 +140,9 @@ function buildTicket(): string {
   ].join("\n");
 }
 
-// executor は worktree 内に成果物を1件書き、reporter はマーカーファイルがある間だけ失敗する。
-// これにより「executor 成功 + reporter 失敗」の run を決定論的に再現できる。
-function fakeAgentScript(markerPath: string): string {
+// executor は worktree 内に成果物を1件書き、保護対象マーカーがあれば agent-members.yaml も変更する。
+// reporter は失敗マーカーがある間だけ失敗するため、各再開段と保護機構の block を再現できる。
+function fakeAgentScript(markerPath: string, protectedWriteMarkerPath: string): string {
   return `
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
@@ -146,15 +153,35 @@ function arg(name) {
 
 const nickname = arg("nickname");
 const role = nickname.startsWith("exec-") ? "executor" : "reporter";
-readFileSync(0, "utf8");
+const prompt = readFileSync(0, "utf8");
 
 if (role === "executor") {
   writeFileSync(${JSON.stringify(ARTIFACT_NAME)}, "# executor artifact\\n", "utf8");
+  if (existsSync(${JSON.stringify(protectedWriteMarkerPath)})) {
+    const membersPath = ".specdojo/agent-members.yaml";
+    const members = readFileSync(membersPath, "utf8");
+    writeFileSync(membersPath, members.replace("    priority: 1", "    priority: 2"), "utf8");
+  }
+  const resumedWithCoverage = prompt.includes("incomplete lower bound, not an upper bound");
   process.stdout.write(
     "<specdojo_executor_evidence>" +
       JSON.stringify({
-        final_message: "${ARTIFACT_NAME} を追加した。",
+        final_message: existsSync(${JSON.stringify(FIX_NAME)})
+          ? "統合先の修正を取り込んで ${ARTIFACT_NAME} を確認した。"
+          : "${ARTIFACT_NAME} を追加した。",
         validations: [{ command: "npm run test:unit", status: "passed", summary: "全テスト成功。" }],
+        ...(resumedWithCoverage
+          ? {
+              target_coverage: [
+                {
+                  target: ${JSON.stringify(ARTIFACT_NAME)},
+                  status: "changed",
+                  path: ${JSON.stringify(ARTIFACT_NAME)},
+                  reason: "",
+                },
+              ],
+            }
+          : {}),
       }) +
       "</specdojo_executor_evidence>\\n",
   );
@@ -166,28 +193,39 @@ if (existsSync(${JSON.stringify(markerPath)})) {
   process.exit(1);
 }
 
+const evidenceTag = "<specdojo_executor_evidence>";
+const evidenceStart = prompt.lastIndexOf(evidenceTag) + evidenceTag.length;
+const evidenceEnd = prompt.indexOf("</specdojo_executor_evidence>", evidenceStart);
+const evidence = JSON.parse(prompt.slice(evidenceStart, evidenceEnd).trim());
 process.stdout.write(
   JSON.stringify({
     schema_version: 1,
     mode: "edit",
-    outcome: "complete",
     summary: ["reporter 再開で result を記入した。"],
-    changed_files: [{ path: ${JSON.stringify(ARTIFACT_NAME)}, summary: "成果物を追加した。" }],
+    changed_files: evidence.changes.map(({ path }) => ({
+      path,
+      summary: "変更内容を result に記録した。",
+    })),
     handoff: [],
     approach: "plan と executor evidence だけを根拠に結果を構成した。",
-    block_reason: "",
   }),
 );
 process.exit(0);
 `;
 }
 
-type Fixture = { root: string; markerPath: string; worktreeBase: string };
+type Fixture = {
+  root: string;
+  markerPath: string;
+  protectedWriteMarkerPath: string;
+  worktreeBase: string;
+};
 
 function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void> {
   return (async () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-register-resume-e2e-"));
     const markerPath = join(root, REPORTER_FAILURE_MARKER);
+    const protectedWriteMarkerPath = join(root, PROTECTED_WRITE_MARKER);
     // worktree の既定基準パスは複数 fixture で共有されるため、fixture ごとに専用の基準
     // ディレクトリを作って --worktree-base で明示する。reporter 失敗の検証では worktree を
     // 意図的に残すので、共有パスを使うと孤児 worktree が後続テストの checkpoint を壊す。
@@ -221,12 +259,30 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
       );
       symlinkSync(join(REAL_REPO_ROOT, "node_modules"), join(root, "node_modules"));
 
-      writeFileSync(join(root, "fake-agent.mjs"), fakeAgentScript(markerPath), "utf8");
+      writeFileSync(
+        join(root, "fake-agent.mjs"),
+        fakeAgentScript(markerPath, protectedWriteMarkerPath),
+        "utf8",
+      );
       writeFileSync(
         join(root, PROJECT_BASE, "pm-members.yaml"),
         [
+          "id: test:pm-members",
+          "type: project",
+          "status: draft",
+          "title: Members",
+          "rulebook: specdojo:pm-members-rulebook",
           "version: 1",
           "project_id: test",
+          "members: []",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      writeFileSync(
+        join(root, ".specdojo", "agent-members.yaml"),
+        [
+          "version: 1",
           "members:",
           "  - nickname: exec-1",
           "    display_name: exec-1",
@@ -271,7 +327,7 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
 
       process.chdir(root);
       process.argv[1] = join(REAL_REPO_ROOT, "src", "specdojo.ts");
-      await fn({ root, markerPath, worktreeBase });
+      await fn({ root, markerPath, protectedWriteMarkerPath, worktreeBase });
     } finally {
       process.chdir(originalCwd);
       process.argv[1] = originalArgv1;
@@ -301,6 +357,37 @@ async function runWithFailingReporter(markerPath: string, worktreeBase: string):
     "--worktree-base",
     worktreeBase,
   ]);
+}
+
+async function runWithProtectedExecutor(
+  protectedWriteMarkerPath: string,
+  worktreeBase: string,
+): Promise<void> {
+  writeFileSync(protectedWriteMarkerPath, "write protected config\n", "utf8");
+  await runExec([
+    "run",
+    "--project",
+    "test",
+    "--register",
+    "PJR-CD34",
+    "--executor-by",
+    "exec-1",
+    "--reporter-by",
+    "report-1",
+    "--worktree",
+    "--worktree-base",
+    worktreeBase,
+  ]);
+}
+
+function setExecutorPriority(root: string, priority: number): void {
+  const membersPath = join(root, ".specdojo", "agent-members.yaml");
+  const members = readFileSync(membersPath, "utf8");
+  writeFileSync(
+    membersPath,
+    members.replace("    priority: 1", `    priority: ${priority}`),
+    "utf8",
+  );
 }
 
 function worktreePathFor(root: string): string | null {
@@ -380,6 +467,357 @@ describe("exec run --register --worktree --resume", () => {
         // executor は再実行されず、run は1件のままで worktree は撤去されている。
         expect(readdirSync(evidenceDir)).toHaveLength(1);
         expect(worktreePathFor(root)).toBeNull();
+      });
+    },
+  );
+
+  it(
+    "merges a fix committed on the integration branch after the wait before re-running parent validations",
+    { timeout: 180_000 },
+    async () => {
+      await withRepo(async ({ root, markerPath, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        // PJR-GHKD: 実運用と同じ相対 gitdir の linked worktree で、resume 前の同期を通す。
+        git(root, "config", "worktree.useRelativePaths", "true");
+
+        // 親検証（test-unit）は統合先で直す修正ファイルが無い間だけ失敗する。
+        writeFileSync(
+          join(root, "package.json"),
+          `${JSON.stringify(
+            {
+              private: true,
+              scripts: {
+                "test:unit": `node -e "process.exit(require('fs').existsSync('${FIX_NAME}') ? 0 : 1)"`,
+              },
+            },
+            null,
+            2,
+          )}\n`,
+          "utf8",
+        );
+        writeFileSync(
+          join(root, ".specdojo", "exec-defaults.yaml"),
+          [
+            "providers:",
+            "  opencode:",
+            `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
+            "pipeline:",
+            "  parent_validations:",
+            "    - test-unit",
+            "",
+          ].join("\n"),
+          "utf8",
+        );
+        writeFileSync(
+          join(root, OVERLAP_NAME),
+          "executor line\nshared 1\nshared 2\nshared 3\nshared 4\nshared 5\nshared 6\nshared 7\nintegration line\n",
+          "utf8",
+        );
+        git(root, "add", "package.json", ".specdojo/exec-defaults.yaml");
+        git(root, "add", OVERLAP_NAME);
+        git(root, "commit", "-m", "configure parent validation");
+
+        await runWithFailingReporter(markerPath, worktreeBase);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
+        const worktreePath = worktreePathFor(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        const gitdir = readFileSync(join(worktreePath, ".git"), "utf8")
+          .trim()
+          .replace(/^gitdir:\s*/u, "");
+        expect(isAbsolute(gitdir)).toBe(false);
+        const evidenceDir = join(worktreePath, EXECUTION_REL, "exec", "evidence", "PJR-CD34");
+        const runId = readdirSync(evidenceDir)[0];
+        const readParentValidation = (): Record<string, unknown> | undefined => {
+          const evidence = JSON.parse(
+            readFileSync(join(evidenceDir, runId, "evidence.json"), "utf8"),
+          ) as { validations: Record<string, unknown>[] };
+          return evidence.validations.find((validation) => validation.source === "runner");
+        };
+        expect(readParentValidation()?.status).toBe("failed");
+
+        // executor の未 commit 成果と、統合先の修正を同じファイルの別 hunk に作る。
+        writeFileSync(
+          join(worktreePath, OVERLAP_NAME),
+          "executor changed\nshared 1\nshared 2\nshared 3\nshared 4\nshared 5\nshared 6\nshared 7\nintegration line\n",
+          "utf8",
+        );
+
+        // wait の後に統合先で不具合を直す。worktree にはまだ無い。
+        writeFileSync(join(root, FIX_NAME), "# fix on the integration branch\n", "utf8");
+        writeFileSync(
+          join(root, OVERLAP_NAME),
+          "executor line\nshared 1\nshared 2\nshared 3\nshared 4\nshared 5\nshared 6\nshared 7\nintegration changed\n",
+          "utf8",
+        );
+        git(root, "add", FIX_NAME, OVERLAP_NAME);
+        git(root, "commit", "-m", "fix on the integration branch");
+        expect(existsSync(join(worktreePath, FIX_NAME))).toBe(false);
+
+        rmSync(markerPath, { force: true });
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        expect(existsSync(join(root, ARTIFACT_NAME))).toBe(true);
+        expect(readFileSync(join(root, OVERLAP_NAME), "utf8")).toBe(
+          "executor changed\nshared 1\nshared 2\nshared 3\nshared 4\nshared 5\nshared 6\nshared 7\nintegration changed\n",
+        );
+        const mergedEvidence = JSON.parse(
+          readFileSync(
+            join(root, EXECUTION_REL, "exec", "evidence", "PJR-CD34", runId, "evidence.json"),
+            "utf8",
+          ),
+        ) as { validations: Record<string, unknown>[] };
+        expect(
+          mergedEvidence.validations.find((validation) => validation.source === "runner"),
+        ).toMatchObject({ id: "test-unit", status: "passed" });
+        expect(worktreePathFor(root)).toBeNull();
+      });
+    },
+  );
+
+  it(
+    "resumes a reporter-stage run from executor after syncing the integration branch",
+    { timeout: 180_000 },
+    async () => {
+      await withRepo(async ({ root, markerPath, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        await runWithFailingReporter(markerPath, worktreeBase);
+        const worktreePath = worktreePathFor(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        const evidenceDir = join(worktreePath, EXECUTION_REL, "exec", "evidence", "PJR-CD34");
+        const firstRunId = readdirSync(evidenceDir)[0];
+
+        writeFileSync(join(root, FIX_NAME), "# human-applied integration fix\n", "utf8");
+        git(root, "add", FIX_NAME);
+        git(root, "commit", "-m", "apply protected setting on integration branch");
+
+        rmSync(markerPath, { force: true });
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+          "--resume-from",
+          "executor",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        const runIds = readdirSync(join(root, EXECUTION_REL, "exec", "evidence", "PJR-CD34"));
+        expect(runIds).toHaveLength(2);
+        const resumedRunId = runIds.find((runId) => runId !== firstRunId) ?? "";
+        const resumedEvidence = JSON.parse(
+          readFileSync(
+            join(
+              root,
+              EXECUTION_REL,
+              "exec",
+              "evidence",
+              "PJR-CD34",
+              resumedRunId,
+              "evidence.json",
+            ),
+            "utf8",
+          ),
+        ) as { final_message: string };
+        expect(resumedEvidence.final_message).toContain("統合先の修正を取り込んで");
+        expect(worktreePathFor(root)).toBeNull();
+      });
+    },
+  );
+
+  it(
+    "resumes a protected-config block after the human applies the same change on the integration branch",
+    { timeout: 180_000 },
+    async () => {
+      await withRepo(async ({ root, protectedWriteMarkerPath, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+        await runWithProtectedExecutor(protectedWriteMarkerPath, worktreeBase);
+
+        expect(process.exitCode).toBe(1);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
+        const worktreePath = worktreePathFor(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        expect(
+          readFileSync(join(worktreePath, ".specdojo", "agent-members.yaml"), "utf8"),
+        ).toContain("    priority: 2");
+        expect(readFileSync(join(root, ".specdojo", "agent-members.yaml"), "utf8")).toContain(
+          "    priority: 1",
+        );
+        const firstRunId = readdirSync(
+          join(worktreePath, EXECUTION_REL, "exec", "evidence", "PJR-CD34"),
+        )[0];
+        const firstState = JSON.parse(
+          readFileSync(
+            join(
+              worktreePath,
+              EXECUTION_REL,
+              "exec",
+              "evidence",
+              "PJR-CD34",
+              firstRunId,
+              "pipeline-state.json",
+            ),
+            "utf8",
+          ),
+        ) as { stages: { executor: { status: string } } };
+        expect(firstState.stages.executor.status).toBe("blocked");
+
+        // 人が申し送りと同じ変更を統合先へ適用する。再開時の同期で worktree の同一差分が
+        // 解消されるため、再実行した executor は保護対象を書き換えていないと判定される。
+        rmSync(protectedWriteMarkerPath, { force: true });
+        setExecutorPriority(root, 2);
+        git(root, "add", ".specdojo/agent-members.yaml");
+        git(root, "commit", "-m", "apply protected config as a human");
+
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: review");
+        expect(readFileSync(join(root, ".specdojo", "agent-members.yaml"), "utf8")).toContain(
+          "    priority: 2",
+        );
+        expect(worktreePathFor(root)).toBeNull();
+      });
+    },
+  );
+
+  it(
+    "refuses a protected-config resume when the human and executor changes conflict",
+    { timeout: 180_000 },
+    async () => {
+      await withRepo(async ({ root, protectedWriteMarkerPath, worktreeBase }) => {
+        const stderr: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          stderr.push(String(chunk));
+          return true;
+        });
+
+        await runWithProtectedExecutor(protectedWriteMarkerPath, worktreeBase);
+        expect(process.exitCode).toBe(1);
+        const worktreePath = worktreePathFor(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        const before = git(worktreePath, "rev-parse", "HEAD");
+
+        rmSync(protectedWriteMarkerPath, { force: true });
+        setExecutorPriority(root, 3);
+        git(root, "add", ".specdojo/agent-members.yaml");
+        git(root, "commit", "-m", "apply different protected config as a human");
+
+        stderr.length = 0;
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        expect(stderr.join("")).toContain("uncommitted executor changes conflict with");
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
+        expect(worktreePathFor(root)).toBe(worktreePath);
+        expect(git(worktreePath, "rev-parse", "HEAD")).toBe(before);
+        expect(
+          readFileSync(join(worktreePath, ".specdojo", "agent-members.yaml"), "utf8"),
+        ).toContain("    priority: 2");
+        expect(readFileSync(join(root, ".specdojo", "agent-members.yaml"), "utf8")).toContain(
+          "    priority: 3",
+        );
+        expect(git(worktreePath, "stash", "list")).toBe("");
+      });
+    },
+  );
+
+  it(
+    "refuses the resume without losing executor results when restoring them conflicts",
+    { timeout: 180_000 },
+    async () => {
+      await withRepo(async ({ root, markerPath, worktreeBase }) => {
+        const stderr: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+          stderr.push(String(chunk));
+          return true;
+        });
+
+        writeFileSync(join(root, OVERLAP_NAME), "base\n", "utf8");
+        git(root, "add", OVERLAP_NAME);
+        git(root, "commit", "-m", "add overlap fixture");
+
+        await runWithFailingReporter(markerPath, worktreeBase);
+        const worktreePath = worktreePathFor(root) ?? "";
+        expect(worktreePath).not.toBe("");
+        const before = git(worktreePath, "rev-parse", "HEAD");
+        writeFileSync(join(worktreePath, OVERLAP_NAME), "executor edit\n", "utf8");
+        writeFileSync(join(root, OVERLAP_NAME), "integration edit\n", "utf8");
+        git(root, "add", OVERLAP_NAME);
+        git(root, "commit", "-m", "conflicting integration edit");
+
+        rmSync(markerPath, { force: true });
+        process.exitCode = undefined;
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-CD34",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+          "--resume",
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        expect(stderr.join("")).toContain("uncommitted executor changes conflict with");
+        expect(stderr.join("")).toContain(`resolve it in ${worktreePath}`);
+        expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain("item_status: waiting");
+        expect(worktreePathFor(root)).toBe(worktreePath);
+        expect(git(worktreePath, "rev-parse", "HEAD")).toBe(before);
+        expect(readFileSync(join(worktreePath, OVERLAP_NAME), "utf8")).toBe("executor edit\n");
+        expect(existsSync(join(worktreePath, ARTIFACT_NAME))).toBe(true);
+        expect(git(worktreePath, "stash", "list")).toBe("");
       });
     },
   );
@@ -509,6 +947,15 @@ describe("exec run --register --worktree --resume", () => {
             ),
           ),
         ).toBe(true);
+        const resultFiles = readdirSync(join(root, EXECUTION_REL, "exec", "results"));
+        expect(resultFiles).toHaveLength(1);
+        const result = readFileSync(
+          join(root, EXECUTION_REL, "exec", "results", resultFiles[0]),
+          "utf8",
+        );
+        expect(result.match(/## 2\. 変更ファイル\n\n([\s\S]*?)\n\n## 3\./u)?.[1]).toBe(
+          `- \`${ARTIFACT_NAME}\`: 変更内容を result に記録した。`,
+        );
         expect(worktreePathFor(root)).toBeNull();
       });
     },
@@ -552,7 +999,7 @@ describe("exec run --register --worktree --resume", () => {
       await runExec(["run", "--project", "test", "--register", "PJR-CD34", "--resume"]);
 
       expect(stdout.join("")).toContain(
-        "--resume and --force-restart require --worktree with --register.",
+        "--resume and --force-restart require register worktree mode; use --worktree or configure run.register_execution: worktree.",
       );
       expect(process.exitCode).toBe(1);
     });

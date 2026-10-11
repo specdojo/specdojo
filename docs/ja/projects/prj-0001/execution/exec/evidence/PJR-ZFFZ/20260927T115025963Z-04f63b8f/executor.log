@@ -1,0 +1,30 @@
+cdfd 3ファイルにあった状態定義・type 分類・データ正本の記述を、新しく作った STSD 2文書と CDSD 3文書へ移し、cdfd 側は移設先への参照だけにしました。プロジェクト全体の `lint:md` と `specdojo catalog validate` を含め、実行した検査はすべて通っています。result ファイルは編集していません。
+
+**新規作成（`docs/ja/product/010-business-specs/020-data-model/`、すべて `status: draft`）**
+
+| 文書 | 移した内容 |
+| --- | --- |
+| `stsd-register-entry.md` | register-lifecycle の 2.2（状態・日時・結論の記録）と 2.3（type 別の審査・承認）。状態8つ、遷移 `T-01`〜`T-18`、遷移数が多いため図は3つに分割 |
+| `stsd-routine-run.md` | routine の 2.1（due 判定）と 2.2（結果記録と次回判定）。状態5つ、遷移 `T-01`〜`T-08`、図は2つ |
+| `cdsd-planning.md` | register-lifecycle の 2.1（type 区分と Schedule の境界）、reporting 2.1 のうち Schedule と登録項目個票 |
+| `cdsd-execution.md` | reporting 2.1 の実行 event、routine の各データストア（定期処理定義、routine 実行状態、Job Definition、Job Run 履歴） |
+| `cdsd-sharing.md` | reporting 2.1 の残り（派生情報、監査履歴、費用・作業記録、監視結果、進捗報告・議事録） |
+
+**更新**
+- **`cdfd-register-lifecycle.md`**: 2.1〜2.3 を参照へ置き換えました。`based_on` に `prj-0001:cdfd-overview` を追加し、minor の指摘を解消しています（`cdfd-init` 経由で `depends_on` の推移閉包に入っていることを確認済み）。
+- **`note` の指摘4件（major）**: 問題の行ごと削除しました。`stsd-register-entry` では、`note` を審査・終了の対象外とし、`open` のまま記録を更新し続ける扱いにしています。
+- **`cdfd-routine.md`（2.1・2.2）、`cdfd-reporting.md`（2.1）**: 参照へ置き換えました。
+- **個票 `pjr-zffz-cdfd-3-stsd-cstd.md`**: 作業 2・3 を done にし、対応結果を記入しました。状態の frontmatter は変更していません。
+
+**確認が必要な点**
+- **`based_on` が空**: 新しい5文書の根拠になる業務データ辞書（`bdd-*`）がまだないためです。各文書に _TODO_ として残しました。
+- **却下・延期の遷移元を絞った**: CLI は対応中・待機中からも却下・延期できますが、STSD では起票済みと審査待ちからだけにしました。業務上認めるかは _ASSUMPTION_ として残しています。
+- **再開先を起票済みに限定**: 再開はすべて起票済みへ戻る遷移として定義しました。_ASSUMPTION_ として残しています。
+- **`note` の終了を CLI が拒否しない**: 現在のコードでは `note` を close できます。検証を追加するかは _UNDECIDED_ としました。
+- **実装にない区分値を追加**: `stsd-routine-run` の「未実行（`never`）」「試行中（`running`）」は私が追加した業務上の区分で、実装に同じ値はありません（_ASSUMPTION_ として明記）。
+- **CDSD の書式**: `cdsd-rulebook` は古い形式で template も未定のため、rulebook の標準列に「正本区分と更新責務」の表を足した構成にしました。
+- **`docs:build` は未実行**: sample 作成時のチェックには挙がっていますが、今回の plan では必須でないため実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Created stsd-register-entry, stsd-routine-run, cdsd-planning, cdsd-execution and cdsd-sharing under docs/ja/product/010-business-specs/020-data-model/ and moved the state, type-classification and data-source details there. Replaced cdfd-register-lifecycle 2.1-2.3, cdfd-routine 2.1-2.2 and cdfd-reporting 2.1 with references. Added prj-0001:cdfd-overview to based_on in cdfd-register-lifecycle. Removed the note-to-done definition behind the four major findings; the new STSD keeps note non-terminal (open). Updated the PJR-ZFFZ ticket work table and results section. Left the based_on of the new docs empty (bdd-* not created) as _TODO_.","validations":[{"command":"npx prettier --write <9 changed/new md files>","status":"passed","summary":"formatted 5 new docs; cdfd files and ticket formatted"},{"command":"npx markdownlint <9 changed/new md files>","status":"passed","summary":"no errors"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint <9 files>","status":"passed","summary":"pre-commit equivalent markdownlint passed"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"no errors; only pre-existing WARN for documents that do not exist yet"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2106 entries"},{"command":"npm run -s lint:md","status":"passed","summary":"no errors"},{"command":"npm run -s lint:fm","status":"passed","summary":"exit 0"},{"command":"npm run -s validate:history-links","status":"passed","summary":"exit 0"}]}
+</specdojo_executor_evidence>

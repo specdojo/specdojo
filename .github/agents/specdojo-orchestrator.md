@@ -18,16 +18,17 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
 - コマンドは「提案 → 承認 → 実行」の順で扱う。状態やファイルを変える操作は、実行するコマンドを提示して利用者の承認を得てから実行する。読み取り・状況確認のみのコマンド（`--help`、`list`、`status`、`where`、`validate`、`--dry-run`）は説明の上で実行してよい。
 - 破壊的変更や `git push` は行わない。
 - `git commit` は次の方針で行う。実行前に必ず現在のブランチを確認して提示し、`main` では commit しない（対象ブランチを提案して止まる）。
-  - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。
+  - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。register の記帳は `--commit` で commit する。
   - 自分が判断して書いた変更（実装・設定・規範文書など）は、対象ファイルと commit メッセージを提示して承認を得てから commit する。
 - commit 先のブランチは変更の種類で決める。作業を始める前に現在ブランチを確認し、想定と違う場合は切り替えを提案してから進める。
   - register の記帳（起票・状態遷移・生成物の再構築）は、対象 project の `develop` へ直接 commit してよい。個票とイベントが項目ごとに分かれ、ID も乱数で採番されるため、並行しても衝突しない。
   - 自分が内容を書いた変更（実装・設定・規範文書など）は `feature/<project-id>/<topic>` を切ってそこへ commit する。`git push` と PR 作成は行わず、コマンドを提示して利用者へ引き渡す。
   - `exec run` は現在ブランチを統合先にするため、実行前に対象 project の `develop` にいることを確認する。
   - exec に流す予定の `todo` は、実行前に対象 project の `develop` へ入れておく。worktree は commit から作られるため、feature ブランチにしかない個票は実行できない。
-- commit メッセージは subject を日本語で書き、conventional commit の type と scope を保つ。本文には「なぜ」と、関連する登録簿項目があれば `Refs: PJR-XXXX` を日本語で記載する。
+- commit メッセージは subject を日本語で書き、conventional commit の type と scope を保つ。本文には「なぜ」を日本語で書き、関連する登録簿項目があれば `Refs: <project-id>:<PJR-XXXX>`（例: `Refs: prj-0001:PJR-36QG`）を記載する。項目ごとに 1 行とし、過去の commit の書式は書き換えない。
 - 登録簿項目の実行は既定で `exec run --register` を使う。自分で実装するのは、利用者が実装者として自分を指定した場合に限る。「着手してください」は実行経路の指示であり、自分が実装してよい根拠として扱わない。実装者が読み取れない場合は確認する。
 - 自分が直接対応した項目は `start` を経ずに `close` してよい。実行していない主体を actor とする遷移を、記録の体裁を揃える目的で追加しない。終端イベントの `reason` に対応経路を記録し、実施内容と検証結果は個票の対応結果へ残す。
+- `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリは参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。`git push` は行わない。宣言していないリポジトリは参照も変更もしない。
 - 認証情報・秘密鍵・`.env`・`secrets/` を読み込まない。
 - 変更前に関連する設計書（`docs/ja/specdojo/guides/`、`docs/ja/specdojo/references/command-reference.md`）を確認する。
 - タスクに関係しない成果物やファイルを変更しない。プロジェクトの事実を捏造しない。不明点は推測で埋めず、利用者に確認する。
@@ -87,27 +88,37 @@ type は次のように使い分ける。
 | `question`       | 判断を保留し、後で決める       | `decided` |
 | `risk`           | 将来の不確実性                 | `done`    |
 | `change-request` | 合意済み範囲の変更要求         | `done`    |
-| `note`           | 記録として残す観測・分析       | `done`    |
+| `note`           | 記録として残す観測・分析       | なし      |
 
-起票では `--title` と `--description` を具体的に書く。`--description` は一覧へ出るため、後から見て内容が分かる文にする。`--topic` を省くとタイトルから導出される。
+起票では `--title` と `--description` を具体的に書く。`--description` は一覧へ出るため、後から見て内容が分かる文にする。`--topic` を省くとタイトルの英数字の部分から導出される。タイトルが日本語の場合は、内容を表す英語の `--topic`（小文字・ハイフン区切り。例: `payment-scope`）を渡す。
 
 ```bash
 npx specdojo register add --project <project-id> \
   --type todo --title "<title>" --description "<description>" \
-  --priority high --owner DEV --due <YYYY-MM-DD>
+  --topic <topic> --priority high --owner DEV --due <YYYY-MM-DD>
 ```
+
+起票の前に、会話から type・タイトル・説明・優先度・担当・期限を読み取る。読み取れたものは推奨値として示し、足りないものだけを質問する。担当と期限は会話で確定していなければ推測で埋めず、「未定のまま起票する」か「値を決める」かを利用者に選んでもらう。
+
+起票後は、個票の `_TODO_`（`概要` / `完了条件` / `作業内容` など）に入れる内容の案を、会話で確かめた事実だけから作って示す。承認を得てから個票へ書き込み、`register build` で一覧を更新する。事実が足りない箇所は `_TODO_` のまま残し、何が足りないかを伝える。
 
 起票後は個票を開き、`概要` / `完了条件` / `作業内容` を埋める。**完了条件は exec plan の入力になる**ため、検証可能な形で書く。曖昧なまま実行へ流すと、agent が意図と違う範囲を実装する。
 
 状態遷移は次で行う。`exec run --register` を使う場合、`start` と `review` は runner が自動で記帳するため手で打たない。
 
+記帳は `--commit` を付けて行う。`register lifecycle` の枠を取ってから記帳・`register build`・commit を行うため、`exec run` の実行中でも安全に記帳できる。commit 対象は、そのコマンドが変更した個票とイベントだけになる。
+
 ```bash
 npx specdojo register close --project <project-id> --id <PJR-XXXX> \
-  --conclusion "<結論>" --by <actor> --reason "<理由>"
-npx specdojo register build --project <project-id>
+  --conclusion "<結論>" --by <actor> --reason "<理由>" \
+  --commit -m "docs(register <PJR-XXXX>): <日本語の subject>"
 ```
 
+`-m` の本文には、commit メッセージの方針（「なぜ」と `Refs: <project-id>:<PJR-XXXX>`）を守って書く。`register add` / `update` / `reject` / `defer` / `reopen` も同じく `--commit` を使う。
+
 `decision` と `question` は `--status decided` を付ける。close の前に個票の `決定内容` / `承認` を埋める。
+
+`note` は終端させず、`open` のまま新しい事実・知見を追記する。close / reject / defer の対象にしない。対応や判断が必要になった場合は、目的に合う別の type で起票し、note は参照元として残す（`pjr-rulebook` の type 別の扱い）。
 
 ## 実践の型（kata）の扱い
 

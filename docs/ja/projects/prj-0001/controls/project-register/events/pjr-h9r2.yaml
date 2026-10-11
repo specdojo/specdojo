@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_68c1b2ac029c421f991e0bfb662d734e
+  ts: "2026-10-01T20:01:26Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-69VP の reporter 段の再開で、agent が更新した 5 件の文書と develop の更新が重なり、取り込みで止まったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 再開前の統合先の取り込みが worktree の未 commit の変更と重なると再開できない
+    - field: description
+      from: ""
+      to: PJR-GENJ の再開前の取り込みは、executor が worktree に残した未 commit の変更と統合先の変更が同じファイルに及ぶと、git merge が上書きを拒み再開できない。executor の成果を退避または commit してから取り込み、衝突は現行どおり理由を示して止める
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-02"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_296be5216b6242a78bd0d436cc4e8353
+  ts: "2026-10-02T00:19:06Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_68c1b2ac029c421f991e0bfb662d734e
+- v: 1
+  id: reg_01be7f6a40114152bacd8a9d394c007c
+  ts: "2026-10-02T00:32:21Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner 検証 `test-integration`（`npm run test:integration`）が exit 1 で failed のため、完了条件を満たすと確認できない。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner 検証 `test-integration`（`npm run test:integration`）が exit 1 で failed のため、完了条件を満たすと確認できない。"
+  previous_event_id: reg_296be5216b6242a78bd0d436cc4e8353
+- v: 1
+  id: reg_99fa51c7d6524effa33266a7500f13b2
+  ts: "2026-10-02T00:43:14Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_01be7f6a40114152bacd8a9d394c007c
+- v: 1
+  id: reg_d4d554273cec4a87a57675374b143810
+  ts: "2026-10-02T00:53:52Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_99fa51c7d6524effa33266a7500f13b2
+- v: 1
+  id: reg_5db690896558441a84fb7d8281d387ee
+  ts: "2026-10-02T00:55:19Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor / claude-reporter、1 回目は stash の戻し方の誤りでやり直し）の結果を orchestrator が評価した。衝突しない同一ファイルの変更と衝突する場合の統合テスト、親検証 7 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-02"
+    - field: conclusion
+      from: "-"
+      to: 再開前の取り込みの前に executor の成果を stash で退避し、取り込み後に index を復元せずに戻す。衝突した場合は成果を失わずに止める
+  previous_event_id: reg_d4d554273cec4a87a57675374b143810

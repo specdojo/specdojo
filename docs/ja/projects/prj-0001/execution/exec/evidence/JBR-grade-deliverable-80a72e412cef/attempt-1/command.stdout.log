@@ -1,0 +1,29 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-80a72e412cef project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-80a72e412cef
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
+document resume: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md start_stage=1
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+document resume: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md start_stage=1
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-sharing.md
+document start: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+document incomplete: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md failed_stage=1
+document start: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
+document complete: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
+document start: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
+document complete: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
+document start: docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md
+document complete: docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+grade pipeline complete: selected=10 processed=10 completed_now=9 incomplete=1 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-80a72e412cef/results.tsv

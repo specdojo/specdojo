@@ -3,6 +3,7 @@ import {
   existsSync,
   mkdirSync,
   mkdtempSync,
+  readdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
@@ -108,6 +109,9 @@ if (args[0] === "grade" && args[1] === "list") {
     process.stdout.write("docs/ja/specdojo/rulebooks/fixture-rulebook.md\\n");
     process.stdout.write("docs/ja/specdojo/samples/prj-overview-sample.md\\n");
   }
+  if (args.includes("--rubric-outdated")) {
+    process.stdout.write("docs/ja/specdojo/samples/prj-overview-sample.md\\n");
+  }
   if (args.includes("--incomplete")) {
     const statePath = process.env.FAKE_PIPELINE_STATE_FILE;
     if (existsSync(statePath)) {
@@ -126,6 +130,17 @@ if (args[0] === "grade" && args[1] === "plan") {
   writeFileSync(join(out, "fixture-grade-reporter-plan.md"), "reporter plan\\n");
   process.exit(0);
 }
+if (args[0] === "grade" && args[1] === "translation-plan") {
+  const out = value("--out");
+  mkdirSync(dirname(out), { recursive: true });
+  const translationIndex = value("--translation-index");
+  const inputCount = Number(process.env.FAKE_TRANSLATION_INPUT ?? 0);
+  const messages = translationIndex === undefined
+    ? Array.from({ length: inputCount }, (_, index) => "Finding " + (index + 1) + ".")
+    : ["Finding " + (Number(translationIndex) + 1) + "."];
+  writeFileSync(out, "# Grade finding translation\\n\\n" + JSON.stringify(messages, null, 2) + "\\n");
+  process.exit(0);
+}
 if (args[0] === "agent" && args[1] === "run") {
   const limiter = process.env.FAKE_RATE_LIMIT_FILE;
   if (limiter && existsSync(limiter)) {
@@ -135,9 +150,11 @@ if (args[0] === "agent" && args[1] === "run") {
   const out = value("--out");
   mkdirSync(dirname(out), { recursive: true });
   const plan = readFileSync(value("--plan"), "utf8");
-  writeFileSync(out, plan.includes("<grade_executor_output>")
-    ? "{\\\"rubric\\\":\\\"fixture\\\",\\\"documents\\\":[]}\\n"
-    : "[VIEWPOINT fixture]\\nLEVEL: 4\\n[END VIEWPOINT]\\n");
+  writeFileSync(out, plan.includes("Grade finding translation")
+    ? "[]\\n"
+    : plan.includes("<grade_executor_output>")
+      ? "{\\\"rubric\\\":\\\"fixture\\\",\\\"documents\\\":[]}\\n"
+      : "[VIEWPOINT fixture]\\nLEVEL: 4\\n[END VIEWPOINT]\\n");
   process.exit(0);
 }
 if (args[0] === "grade" && args[1] === "apply") {
@@ -146,6 +163,8 @@ if (args[0] === "grade" && args[1] === "apply") {
   writeFileSync(countPath, String(count));
   const failFrom = Number(process.env.FAKE_APPLY_FAIL_FROM ?? 0);
   if (failFrom > 0 && count >= failFrom) process.exit(1);
+  const failOnly = Number(process.env.FAKE_APPLY_FAIL_ONLY ?? 0);
+  if (failOnly > 0 && count === failOnly) process.exit(1);
   const score = count === 1 ? 80 : count === 2 ? 100 : 95;
   // apply は成果物を変更せず、grade result サイドカーだけを書く。
   const resultFile = process.env.FAKE_RESULT_FILE;
@@ -166,11 +185,35 @@ if (args[0] === "grade" && args[1] === "result") {
   if (resultFile && existsSync(resultFile)) process.stdout.write(readFileSync(resultFile, "utf8"));
   process.exit(0);
 }
+if (args[0] === "grade" && args[1] === "localize") {
+  const rejectionsOut = value("--rejections-out");
+  if (rejectionsOut) {
+    const translationIndex = value("--translation-index");
+    const rejectedIndex = process.env.FAKE_REJECT_TRANSLATION_INDEX;
+    const rejectRetry = process.env.FAKE_REJECT_TRANSLATION_RETRY === "1";
+    const shouldReject = rejectedIndex !== undefined &&
+      (translationIndex === undefined || (rejectRetry && translationIndex === rejectedIndex));
+    const rejections = shouldReject
+      ? [{ translation_index: Number(rejectedIndex), finding_id: "F002", reason: "missing-inline-code" }]
+      : [];
+    mkdirSync(dirname(rejectionsOut), { recursive: true });
+    writeFileSync(rejectionsOut, JSON.stringify({ version: 1, rejections }) + "\\n");
+  }
+  process.exit(0);
+}
 process.exit(1);
 `,
   );
   chmodSync(fakeSpecdojo, 0o755);
   return { root, fakeSpecdojo, stateFile, pipelineStateFile, argsFile, target, resultFile };
+}
+
+// 既存のテストは 3 段構成（検証用）の挙動を確かめる。PJR-W5JT で既定が単段になったため、
+// --stages を渡さない呼び出しでは 3 段を明示する。既定の単段は専用のテストで確かめる。
+function withStages(extraArguments: string[]): string[] {
+  return extraArguments.includes("--stages")
+    ? extraArguments
+    : ["--stages", "3", ...extraArguments];
 }
 
 function runPipeline(
@@ -191,7 +234,7 @@ function runPipeline(
       "docs/ja/specdojo/rulebooks/fixture-rulebook.md",
       "--specdojo-bin",
       fixture.fakeSpecdojo,
-      ...extraArguments,
+      ...withStages(extraArguments),
     ],
     {
       cwd: fixture.root,
@@ -216,7 +259,15 @@ function runDryRun(
 ) {
   return spawnSync(
     "bash",
-    [script, "--run-id", "fixture-dry-run", "--kind", kind, "--dry-run", ...extraArguments],
+    [
+      script,
+      "--run-id",
+      "fixture-dry-run",
+      "--kind",
+      kind,
+      "--dry-run",
+      ...withStages(extraArguments),
+    ],
     { cwd: fixture.root, encoding: "utf8", env: { ...process.env, ...extraEnv } },
   );
 }
@@ -240,8 +291,24 @@ describe("grade per-document pipeline", () => {
 
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain(
-      `stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=docs/ja/specdojo/${directory}/prj-overview-${kind}.md`,
+      `stage=1 executor=gemma-expert-executor reporter=machine reference=docs/ja/specdojo/${directory}/prj-overview-${kind}.md`,
     );
+  });
+
+  it("defaults to a single codex stage when --stages is omitted", () => {
+    const fixture = makeFixture();
+
+    const result = spawnSync(
+      "bash",
+      [script, "--run-id", "fixture-default-stages", "--kind", "rulebook", "--dry-run"],
+      { cwd: fixture.root, encoding: "utf8", env: { ...process.env } },
+    );
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("stages=1");
+    expect(result.stdout).toContain("stage=1 executor=codex-expert-executor");
+    expect(result.stdout).toContain("translation_by=gemma26-translator");
+    expect(result.stdout).not.toContain("stage=2 ");
   });
 
   it("prefers an explicit same-kind stage 1 reference", () => {
@@ -288,7 +355,7 @@ describe("grade per-document pipeline", () => {
       "default stage 1 reference not found for kind sample; continuing without a reference",
     );
     expect(result.stdout).toContain(
-      "stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none",
+      "stage=1 executor=gemma-expert-executor reporter=machine reference=none",
     );
   });
 
@@ -304,12 +371,38 @@ describe("grade per-document pipeline", () => {
 
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain(
-      "kind=all changed_only=true ungraded=true incomplete=false max_stage_failures=3 stages=3 documents=3",
+      "kind=all changed_only=true ungraded=true incomplete=false rubric_outdated=false embed_documents=false max_stage_failures=3 stages=3 documents=3",
     );
     expect(result.stdout).toContain("reference=per-kind");
     expect(result.stdout.match(/fixture-rulebook\.md/g)).toHaveLength(1);
     expect(result.stdout).toContain("docs/ja/specdojo/recipes/prj-overview-recipe.md");
     expect(result.stdout).toContain("docs/ja/specdojo/samples/prj-overview-sample.md");
+  });
+
+  it("selects only documents with an outdated rubric when --rubric-outdated is the only filter", () => {
+    const fixture = makeFixture();
+
+    const result = runDryRun(fixture, "all", [
+      "--rubric-outdated",
+      "--specdojo-bin",
+      fixture.fakeSpecdojo,
+    ]);
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain(
+      "kind=all changed_only=false ungraded=false incomplete=false rubric_outdated=true embed_documents=false max_stage_failures=3 stages=3 documents=1",
+    );
+    expect(result.stdout).toContain("docs/ja/specdojo/samples/prj-overview-sample.md");
+    expect(result.stdout).not.toContain("fixture-rulebook.md");
+  });
+
+  it("rejects a non-boolean --rubric-outdated value", () => {
+    const fixture = makeFixture();
+
+    const result = runDryRun(fixture, "rulebook", ["--rubric-outdated=yes"]);
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("--rubric-outdated must be true or false");
   });
 
   it("treats an empty filtered selection as a successful no-op", () => {
@@ -370,7 +463,7 @@ describe("grade per-document pipeline", () => {
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain("stages=1");
     expect(result.stdout).toContain(
-      "stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none",
+      "stage=1 executor=codex-expert-executor reporter=machine reference=none",
     );
     expect(result.stdout).not.toContain("stage=2 executor=");
     expect(result.stdout).not.toContain("stage=3 executor=");
@@ -387,7 +480,20 @@ describe("grade per-document pipeline", () => {
     expect(readFileSync(fixture.argsFile, "utf8")).toContain("--by codex-expert-executor");
   });
 
-  it("treats a current three-stage state as complete when switching to one stage", () => {
+  it("passes the document embedding option to every grade plan stage", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, {}, ["--stages", "1", "--embed-documents"]);
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("embed_documents=true");
+    expect(readFileSync(fixture.argsFile, "utf8")).toContain(
+      "grade plan --target kata --project prj-0001 --path docs/ja/specdojo/rulebooks/fixture-rulebook.md --out",
+    );
+    expect(readFileSync(fixture.argsFile, "utf8")).toContain("--embed-documents");
+  });
+
+  it("re-evaluates a current three-stage state when switching to one stage", () => {
     const fixture = makeFixture();
     writeFileSync(
       fixture.pipelineStateFile,
@@ -404,15 +510,17 @@ describe("grade per-document pipeline", () => {
     const result = runPipeline(fixture, {}, ["--stages", "1"]);
 
     expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain("migrated_stage_total=3");
-    expect(existsSync(fixture.stateFile)).toBe(false);
+    expect(result.stderr).toContain(
+      "reset incompatible state document=docs/ja/specdojo/rulebooks/fixture-rulebook.md persisted_stage_total=3 requested_stage_total=1; re-evaluating",
+    );
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("1");
     expect(existsSync(fixture.pipelineStateFile)).toBe(false);
     expect(
       readFileSync(
         join(fixture.root, "logs/grade/runs/per-document/fixture-run/results.tsv"),
         "utf8",
       ),
-    ).toContain("\t1\tresumed_completed\t");
+    ).toContain("\t1\tpassed\t");
   });
 
   it("routes deliverables through deliverable grade plans and apply", () => {
@@ -423,18 +531,46 @@ describe("grade per-document pipeline", () => {
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain("target=deliverable kind=none");
     expect(result.stdout).toContain(
-      "stage=1 executor=gemma-expert-executor reporter=gemma-reporter reference=none",
+      "stage=1 executor=gemma-expert-executor reporter=machine reference=none",
     );
     const invocations = readFileSync(fixture.argsFile, "utf8");
     expect(invocations).toContain("grade plan --target deliverable");
     expect(invocations).toContain("grade apply --target deliverable");
   });
 
+  it("exits with 1 and reports how to resume when a stage failure leaves a document incomplete", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "2" }, [], "fixture-incomplete");
+
+    expect(result.status, result.stderr).toBe(1);
+    expect(result.stdout).toContain("grade pipeline complete: selected=1 processed=1");
+    expect(result.stdout).toContain("incomplete=1");
+    expect(result.stderr).toContain(
+      "grade pipeline incomplete: incomplete=1 run_id=fixture-incomplete; rerun with --run-id fixture-incomplete",
+    );
+    expect(result.stderr).toContain(
+      "grade pipeline incomplete document: docs/ja/specdojo/rulebooks/fixture-rulebook.md failed_stage=2",
+    );
+    expect(result.stderr).not.toContain("grade pipeline aborted:");
+  });
+
+  it("exits with 0 when no document is left incomplete", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, {}, [], "fixture-complete");
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("incomplete=0");
+    expect(result.stderr).not.toContain("grade pipeline incomplete");
+    expect(result.stderr).not.toContain("grade pipeline aborted:");
+  });
+
   it("retries a failed stage in a new run without repeating completed stages", () => {
     const fixture = makeFixture();
 
     const failed = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "3" }, [], "fixture-failed");
-    expect(failed.status, failed.stderr).toBe(0);
+    expect(failed.status, failed.stderr).toBe(1);
     expect(failed.stdout).toContain("document incomplete:");
     expect(failed.stdout).toContain("failed_stage=3");
     expect(JSON.parse(readFileSync(fixture.pipelineStateFile, "utf8"))).toMatchObject({
@@ -448,7 +584,7 @@ describe("grade per-document pipeline", () => {
     expect(retried.stdout).toContain("start_stage=3");
     expect(retried.stdout).toContain("stage=1 document=");
     expect(retried.stdout).toContain("status=resumed_completed");
-    expect(readFileSync(fixture.stateFile, "utf8")).toBe("4");
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("5");
     expect(existsSync(fixture.pipelineStateFile)).toBe(false);
   });
 
@@ -457,7 +593,11 @@ describe("grade per-document pipeline", () => {
 
     for (const runId of ["fixture-failure-1", "fixture-failure-2", "fixture-failure-3"]) {
       const result = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "3" }, [], runId);
-      expect(result.status, result.stderr).toBe(0);
+      expect(result.status, result.stderr).toBe(1);
+      if (runId === "fixture-failure-3") {
+        expect(result.stdout).toContain("reason=failure_limit");
+        expect(result.stdout).toContain("consecutive_failures=3 max_failures=3");
+      }
     }
     expect(JSON.parse(readFileSync(fixture.pipelineStateFile, "utf8"))).toMatchObject({
       stage_completed: 2,
@@ -475,13 +615,14 @@ describe("grade per-document pipeline", () => {
     expect(reported.status, reported.stderr).toBe(0);
     expect(reported.stdout).toContain("documents=0 exhausted=1");
     expect(reported.stdout).toContain("selected=0 processed=0");
+    expect(reported.stdout).toContain("document retry exhausted:");
     expect(
       readFileSync(
         join(fixture.root, "logs/grade/runs/per-document/fixture-exhausted-report/results.tsv"),
         "utf8",
       ),
     ).toContain("\t3\tretry_exhausted\t");
-    expect(readFileSync(fixture.stateFile, "utf8")).toBe("5");
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("8");
   });
 
   it("does not reselect an exhausted ungraded document through the filter union", () => {
@@ -493,7 +634,7 @@ describe("grade per-document pipeline", () => {
       "fixture-stage-1-failure-3",
     ]) {
       const result = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "1" }, [], runId);
-      expect(result.status, result.stderr).toBe(0);
+      expect(result.status, result.stderr).toBe(1);
     }
     expect(JSON.parse(readFileSync(fixture.pipelineStateFile, "utf8"))).toMatchObject({
       stage_completed: 0,
@@ -511,7 +652,139 @@ describe("grade per-document pipeline", () => {
     expect(reported.status, reported.stderr).toBe(0);
     expect(reported.stdout).toContain("documents=0 exhausted=1");
     expect(reported.stdout).toContain("selected=0 processed=0");
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("6");
+  });
+
+  it("converts executor markers mechanically and starts the display translator afterward", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, { FAKE_TRANSLATION_INPUT: "1" }, ["--stages", "1"]);
+
+    expect(result.status, result.stderr).toBe(0);
+    const invocations = readFileSync(fixture.argsFile, "utf8").trim().split("\n");
+    const agentRuns = invocations.filter((line) => line.startsWith("agent run "));
+    expect(agentRuns).toHaveLength(2);
+    expect(agentRuns[0]).toContain("--by codex-expert-executor");
+    expect(agentRuns[1]).toContain("--by gemma26-translator");
+    const apply = invocations.find((line) => line.startsWith("grade apply "));
+    expect(apply).toContain("--analysis-from");
+    expect(apply).toContain("--submission-out");
+    expect(apply).not.toContain("--from ");
+    expect(invocations).toContainEqual(expect.stringMatching(/^grade translation-plan /));
+    expect(invocations).toContainEqual(expect.stringMatching(/^grade localize /));
+  });
+
+  it("does not start the display translator when there are no translatable findings", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, {}, ["--stages", "1"]);
+
+    expect(result.status, result.stderr).toBe(0);
+    const invocations = readFileSync(fixture.argsFile, "utf8").trim().split("\n");
+    const agentRuns = invocations.filter((line) => line.startsWith("agent run "));
+    expect(agentRuns).toHaveLength(1);
+    expect(agentRuns[0]).toContain("--by codex-expert-executor");
+    expect(invocations).toContainEqual(expect.stringMatching(/^grade translation-plan /));
+    expect(invocations).toContainEqual(expect.stringMatching(/^grade localize /));
+  });
+
+  it("retries only rejected translations one at a time", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(
+      fixture,
+      { FAKE_TRANSLATION_INPUT: "2", FAKE_REJECT_TRANSLATION_INDEX: "1" },
+      ["--stages", "1"],
+    );
+
+    expect(result.status, result.stderr).toBe(0);
+    const invocations = readFileSync(fixture.argsFile, "utf8").trim().split("\n");
+    const translationAgentRuns = invocations.filter(
+      (line) => line.startsWith("agent run ") && line.includes("--by gemma26-translator"),
+    );
+    expect(translationAgentRuns).toHaveLength(2);
+    expect(invocations).toContainEqual(
+      expect.stringMatching(/^grade translation-plan .*--translation-index 1 /),
+    );
+    expect(invocations).toContainEqual(
+      expect.stringMatching(/^grade localize .*--translation-index 1 /),
+    );
+    expect(invocations.some((line) => line.includes("--translation-index 0"))).toBe(false);
+  });
+
+  it("tries a rejected translation only once before keeping the canonical fallback", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(
+      fixture,
+      {
+        FAKE_TRANSLATION_INPUT: "2",
+        FAKE_REJECT_TRANSLATION_INDEX: "1",
+        FAKE_REJECT_TRANSLATION_RETRY: "1",
+      },
+      ["--stages", "1"],
+    );
+
+    expect(result.status, result.stderr).toBe(0);
+    const invocations = readFileSync(fixture.argsFile, "utf8").trim().split("\n");
+    expect(
+      invocations.filter(
+        (line) =>
+          line.startsWith("grade translation-plan ") && line.includes("--translation-index 1"),
+      ),
+    ).toHaveLength(1);
+    const logsRoot = join(fixture.root, "logs/grade/runs/per-document/fixture-run/documents");
+    const commandLog = readdirSync(logsRoot, { recursive: true, encoding: "utf8" }).find((path) =>
+      path.endsWith("stage-1/commands.log"),
+    );
+    expect(commandLog).toBeDefined();
+    expect(readFileSync(join(logsRoot, commandLog!), "utf8")).toContain(
+      "finding translation retry rejected index=1; using canonical message",
+    );
+  });
+
+  it("reruns the executor once when grade apply rejects the executor markers", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, { FAKE_APPLY_FAIL_ONLY: "1" });
+    expect(result.status, result.stderr).toBe(0);
+    // Stage 1: count 1 (rejected) -> executor rerun -> count 2 (success, score=100)
+    // Stage 2: count 3 (success, score=95)
+    // Stage 3: skipped because score < 96
     expect(readFileSync(fixture.stateFile, "utf8")).toBe("3");
+    const invocations = readFileSync(fixture.argsFile, "utf8");
+    expect(invocations.match(/^agent run .*--by gemma-expert-executor/gm)).toHaveLength(3);
+    expect(invocations).not.toContain("--by gemma-reporter");
+    const documentsDirectory = join(
+      fixture.root,
+      "logs/grade/runs/per-document/fixture-run/documents",
+    );
+    const savedFiles = readdirSync(documentsDirectory, { recursive: true, encoding: "utf8" });
+    expect(savedFiles).toContainEqual(
+      expect.stringMatching(/stage-1\/executor-output\.rejected\.txt$/),
+    );
+    expect(savedFiles).toContainEqual(expect.stringMatching(/stage-1\/apply-rejection\.log$/));
+  });
+
+  it("runs an explicitly selected LLM reporter and retries it once when apply fails", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(fixture, { FAKE_APPLY_FAIL_ONLY: "1" }, [
+      "--stages",
+      "1",
+      "--stage-1-reporter",
+      "gemma-reporter",
+    ]);
+
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain(
+      "stage=1 executor=codex-expert-executor reporter=gemma-reporter",
+    );
+    const invocations = readFileSync(fixture.argsFile, "utf8");
+    expect(invocations.match(/^agent run .*--by gemma-reporter/gm)).toHaveLength(2);
+    expect(invocations.match(/^agent run .*--by codex-expert-executor/gm)).toHaveLength(1);
+    expect(invocations).toMatch(/^grade apply .*--analysis-from .*--from /m);
+    expect(readFileSync(fixture.stateFile, "utf8")).toBe("2");
   });
 
   it("leaves the current stage incomplete on rate limit and resumes it", () => {
@@ -521,11 +794,51 @@ describe("grade per-document pipeline", () => {
 
     const limited = runPipeline(fixture, { FAKE_RATE_LIMIT_FILE: limiter });
     expect(limited.status).toBe(75);
+    expect(limited.stderr).toContain("grade pipeline aborted: reason=rate_limit exit_code=75");
+    expect(limited.stderr).toContain(
+      "current_document=docs/ja/specdojo/rulebooks/fixture-rulebook.md",
+    );
+    expect(limited.stdout).not.toContain("grade pipeline complete:");
     expect(existsSync(fixture.stateFile)).toBe(false);
 
     const resumed = runPipeline(fixture, { FAKE_RATE_LIMIT_FILE: limiter });
     expect(resumed.status, resumed.stderr).toBe(0);
     expect(readFileSync(fixture.stateFile, "utf8")).toBe("3");
+  });
+
+  it("preserves the grade exit code when the caller enables pipefail", () => {
+    const fixture = makeFixture();
+    const limiter = join(fixture.root, "rate-limit-piped-once");
+    writeFileSync(limiter, "1");
+
+    const result = spawnSync(
+      "bash",
+      [
+        "-o",
+        "pipefail",
+        "-c",
+        '"$1" --run-id fixture-piped --kind rulebook --path docs/ja/specdojo/rulebooks/fixture-rulebook.md --specdojo-bin "$2" --stages 3 | tail -20',
+        "grade-pipeline-test",
+        script,
+        fixture.fakeSpecdojo,
+      ],
+      {
+        cwd: fixture.root,
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          FAKE_STATE_FILE: fixture.stateFile,
+          FAKE_RESULT_FILE: fixture.resultFile,
+          FAKE_PIPELINE_STATE_FILE: fixture.pipelineStateFile,
+          FAKE_ARGS_FILE: fixture.argsFile,
+          FAKE_RATE_LIMIT_FILE: limiter,
+        },
+      },
+    );
+
+    expect(result.status).toBe(75);
+    expect(result.stderr).toContain("grade pipeline aborted: reason=rate_limit exit_code=75");
+    expect(result.stdout).not.toContain("grade pipeline complete:");
   });
 
   it("reuses the initial filtered selection when resuming", () => {

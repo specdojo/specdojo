@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7194783f9b0f41ca8de18f06acaf81f5
+  ts: "2026-10-06T12:29:04Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-JWXK の実モデルでの試験で訳文に英語が多く残ったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の翻訳で英語の語句をバッククォートで残させない
+    - field: description
+      from: ""
+      to: PJR-JWXK の実モデルでの試験で、gemma26 は元の文にないバッククォートで英語の語句を囲み、訳さずに残した。plan の指示で禁じ、訳文のインラインコードが元の文と同じ集合であることを点検に加える。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"
+- v: 1
+  id: reg_0f953540262746ddbdb966884a1b1a96
+  ts: "2026-10-06T12:29:42Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7194783f9b0f41ca8de18f06acaf81f5
+- v: 1
+  id: reg_6b234fea98834dfaaa4b382db1b0d59c
+  ts: "2026-10-06T12:41:16Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0f953540262746ddbdb966884a1b1a96
+- v: 1
+  id: reg_120c37cb90ae4b3b8f21005eea631f3b
+  ts: "2026-10-06T22:14:02Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分を確認し、実モデルで点検が意図どおり働くことを確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: 翻訳の指示で新たなバッククォートを禁じ、訳文のインラインコードが元の文と一致することを点検に加えた。gemma26-reporter では指示が守られないため、翻訳専用の agent への切り替えを後続の todo で扱う
+  previous_event_id: reg_6b234fea98834dfaaa4b382db1b0d59c

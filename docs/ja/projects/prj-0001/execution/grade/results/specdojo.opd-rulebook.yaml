@@ -3,24 +3,60 @@ version: 1
 document: specdojo:opd-rulebook
 path: docs/ja/specdojo/rulebooks/opd-rulebook.md
 target: kata
-rubric: grade-rubric-v1
-reference: specdojo:prj-overview-rulebook
+rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-09-03T00:32:30.551Z"
-graded_by: gemma-expert-executor
-content_hash: 1adc7d6b13fac3c365cdc2021c6e617501e762103e7fc05f4277bdc8b1a7ecda
+score: 95
+graded_at: "2026-10-05T21:03:30.235Z"
+graded_by: agy-expert-executor
+content_hash: 458e08e7efac1c749f300d278d5c5084e84a4bded94e9b2069859dd5bf092a03
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
@@ -29,12 +65,21 @@ viewpoints:
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
     level: 3
     score: 75
@@ -44,18 +89,45 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 79
+    anchor: "| 12   | 関連ドキュメント導線（`opr` 等）                   | ○    |"
+    message: 5章では `opd-＜term＞` でも全12章が必須とされているが、1.1の「差分を記述し重複記載を避ける」方針と矛盾している。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 8
+    anchor: "## 1. 全体方針"
+    message: 存在する `specdojo:opd-index-sample` が Frontmatter の `sample` リストから漏れている。
+  - id: F003
+    severity: minor
     rule: vp-qe-kata-conformance
-    line: 1
+    line: 9
+    anchor: ""
     message: "サンプルとして指定されている `specdojo:opd-sample` が、本ルールで定義した必須構成および Frontmatter (type: operations) に準拠していない。"
-    anchor: "# 運用方針・設計 作成ルール"
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 10
+    anchor: "`opd-index`（必要に応じて `opd-<term>`）は、恒常運用の方針と統制基準を一元化する SSOT とする。"
+    message: 指定されている term 系のサンプル群（opd-access-control-sample 等）も、本ルール5章で定義された全12章の必須構成を満たしていない。

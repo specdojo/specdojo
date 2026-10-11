@@ -1,0 +1,11 @@
+I have completed the implementation of `specdojo devcontainer scaffold` and the required documentation updates.
+
+- Created `src/devcontainer-command.ts` and `src/devcontainer-scaffold.ts` to provide the `devcontainer scaffold` CLI, integrating it in `src/specdojo.ts`.
+- Created templates `templates/devcontainer/devcontainer.json` and `templates/devcontainer/post-create.sh`.
+- Added unit tests in `tests/devcontainer-scaffold.test.ts` to verify the generated files, option reflections (`--provider`, `--ollama`, `--cron`, `--tmux`), and the prevention of overwriting existing `.devcontainer/` directories.
+- Updated `README.md` and `command-reference.md` to document the new `devcontainer scaffold` command.
+- Appended the decision change to `docs/ja/projects/prj-0001/controls/project-register/pjr-e8tt-initial-release-positioning.md` noting the addition of devcontainer to the initial release.
+
+<specdojo_executor_evidence>
+{"final_message":"Implemented devcontainer scaffold command, templates, tests, and updated documentation","validations":[{"command":"npx prettier --write README.md docs/ja/specdojo/references/command-reference.md src/devcontainer-command.ts src/devcontainer-scaffold.ts tests/devcontainer-scaffold.test.ts templates/devcontainer/devcontainer.json docs/ja/projects/prj-0001/controls/project-register/pjr-e8tt-initial-release-positioning.md","status":"passed","summary":"Formatted source files and documentation"},{"command":"npx markdownlint README.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-e8tt-initial-release-positioning.md","status":"passed","summary":"Linted markdown files"}]}
+</specdojo_executor_evidence>

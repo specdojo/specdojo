@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pr-rulebook
 path: docs/ja/specdojo/rulebooks/pr-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 91
-graded_at: "2026-09-03T05:49:11.261Z"
-graded_by: gemma-expert-executor
+score: 89
+graded_at: "2026-10-06T21:12:19.005Z"
+graded_by: agy-expert-executor
 content_hash: b9d5579d9ecb726f94a36b3a1378c4e4e64df38ba17e93e87ba6dd78dcb0c669
 categories:
-  consistency:
-    score: 88
-  usability:
-    score: 92
+  purpose:
+    score: 75
+  operations:
+    score: 81
+  planning:
+    score: 100
+  business:
+    score: 83
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,42 +89,133 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 5
+  minor: 12
   note: 0
 findings:
-  - id: F004
-    severity: minor
-    rule: vp-ux-readability
-    line: 1
-    message: 位置づけにおいて、報告のサイクル（頻度）および想定読者を明記し、運用の目的を明確にすることを推奨する。
-    anchor: "# 進捗報告 作成ルール"
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: "ファイル命名規則だけでなく、推奨される配置ディレクトリ（例: `docs/ja/projects/＜project-id＞/progress-reports/`）を明記することを推奨する。"
-    anchor: "# 進捗報告 作成ルール"
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: 推奨 Frontmatter 項目表に、適用ルールを明示するための `rulebook` 項目を追加することを推奨する。
-    anchor: "# 進捗報告 作成ルール"
   - id: F001
     severity: minor
-    rule: vp-qe-verifiability
-    line: 1
-    message: 記述ガイドにおいて、完了事項やリスクなどの報告における「根拠」として具体的に何を提示すべきか（成果物ID、定量値など）の基準を明記することを推奨する。
-    anchor: "# 進捗報告 作成ルール"
+    rule: vp-po-purpose-alignment
+    line: 7
+    anchor: "## 1. 全体方針"
+    message: >-
+      It is recommended to specify the target scope of the progress report (e.g., which project phases or teams are
+      covered) in addition to the purpose of standardizing the format.
+    message_ja: >-
+      It is recommended to specify the target scope of the progress report (e.g., which project phases or teams are
+      covered) in addition to the purpose of standardizing the format.
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 13
+    anchor: "## 2. 位置づけと用語定義（必要に応じて）"
+    message: >-
+      It is recommended to clarify who (e.g., PO or manager) is supposed to make what decisions or approvals (e.g.,
+      approval of next plans, agreement on risk responses) during the review.
+    message_ja: >-
+      It is recommended to clarify who (e.g., PO or manager) is supposed to make what decisions or approvals (e.g.,
+      approval of next plans, agreement on risk responses) during the review.
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 7
+    anchor: "## 1. 全体方針"
+    message: >-
+      It is recommended to provide guidelines on the publication scope of the report content (e.g., internal-only, for
+      customers) and how to handle confidential information.
+    message_ja: >-
+      It is recommended to provide guidelines on the publication scope of the report content (e.g., internal-only, for
+      customers) and how to handle confidential information.
+  - id: F004
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 7
+    anchor: "## 1. 全体方針"
+    message: >-
+      It is recommended to specify the granularity of items to be included in the progress report and the criteria for
+      out-of-scope items (e.g., minor daily updates) that do not need to be reported.
+    message_ja: >-
+      It is recommended to specify the granularity of items to be included in the progress report and the criteria for
+      out-of-scope items (e.g., minor daily updates) that do not need to be reported.
   - id: F005
     severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 13
+    anchor: "## 2. 位置づけと用語定義（必要に応じて）"
+    message: >-
+      It is recommended to explicitly state the stakeholders for the progress report, such as the intended readers and
+      the roles responsible for reviewing and reaching an agreement.
+    message_ja: >-
+      It is recommended to explicitly state the stakeholders for the progress report, such as the intended readers and
+      the roles responsible for reviewing and reaching an agreement.
+  - id: F006
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 43
+    anchor: "## 6. 記述ガイド"
+    message: 記述ガイドにおいて、完了事項やリスクなどの報告における「根拠」として具体的に何を提示すべきか（成果物ID、定量値など）の基準を明記することを推奨する。
+    message_ja: 記述ガイドにおいて、完了事項やリスクなどの報告における「根拠」として具体的に何を提示すべきか（成果物ID、定量値など）の基準を明記することを推奨する。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 18
+    anchor: "## 3. ファイル命名・ID規則"
+    message: "ファイル命名規則だけでなく、推奨される配置ディレクトリ（例: `docs/ja/projects/＜project-id＞/progress-reports/`）を明記することを推奨する。"
+    message_ja: "ファイル命名規則だけでなく、推奨される配置ディレクトリ（例: `docs/ja/projects/＜project-id＞/progress-reports/`）を明記することを推奨する。"
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 23
+    anchor: "## 4. 推奨 Frontmatter 項目"
+    message: 推奨 Frontmatter 項目表に、適用ルールを明示するための `rulebook` 項目を追加することを推奨する。
+    message_ja: 推奨 Frontmatter 項目表に、適用ルールを明示するための `rulebook` 項目を追加することを推奨する。
+  - id: F009
+    severity: minor
     rule: vp-ux-readability
-    line: 1
+    line: 13
+    anchor: "## 2. 位置づけと用語定義（必要に応じて）"
+    message: 位置づけにおいて、報告のサイクル（頻度）および想定読者を明記し、運用の目的を明確にすることを推奨する。
+    message_ja: 位置づけにおいて、報告のサイクル（頻度）および想定読者を明記し、運用の目的を明確にすることを推奨する。
+  - id: F010
+    severity: minor
+    rule: vp-ux-readability
+    line: 43
+    anchor: "## 6. 記述ガイド"
     message: 記述ガイドにおいて、各項目の書き方のポイントや、避けるべき具体例などを詳細に記述し、作成者の迷いを減らす工夫をすることを推奨する。
-    anchor: "# 進捗報告 作成ルール"
+    message_ja: 記述ガイドにおいて、各項目の書き方のポイントや、避けるべき具体例などを詳細に記述し、作成者の迷いを減らす工夫をすることを推奨する。
+  - id: F011
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 23
+    anchor: "## 4. 推奨 Frontmatter 項目"
+    message: >-
+      It is recommended to define the specific completion criteria (e.g., all mandatory fields are filled, required
+      evidence is provided) for transitioning the report status from `draft` to `ready`.
+    message_ja: >-
+      It is recommended to define the specific completion criteria (e.g., all mandatory fields are filled, required
+      evidence is provided) for transitioning the report status from `draft` to `ready`.
+  - id: F012
+    severity: minor
+    rule: vp-ops-operability
+    line: 13
+    anchor: "## 2. 位置づけと用語定義（必要に応じて）"
+    message: >-
+      It is recommended to clearly specify the operational structure, including the role responsible for creating the
+      progress reports and the contact point for inquiries about the format.
+    message_ja: >-
+      It is recommended to clearly specify the operational structure, including the role responsible for creating the
+      progress reports and the contact point for inquiries about the format.

@@ -1,0 +1,4 @@
+grade pipeline incomplete: incomplete=2 run_id=JBR-grade-deliverable-14bb240d0b61; rerun with --run-id JBR-grade-deliverable-14bb240d0b61 to retry the failed stages, or start a new run with --incomplete
+grade pipeline incomplete document: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md failed_stage=1
+grade pipeline incomplete document: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md failed_stage=1
+grade pipeline failed: run_id=JBR-grade-deliverable-14bb240d0b61 exit_code=1

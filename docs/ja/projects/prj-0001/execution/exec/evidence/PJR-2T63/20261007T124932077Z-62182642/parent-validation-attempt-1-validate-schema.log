@@ -1,0 +1,1296 @@
+parent validation: validate-schema
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 validate:schema
+> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary
+
+
+> specdojo@0.3.0 validate:schema:yaml
+> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline
+
+docs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)
+docs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)
+docs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)
+docs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-business-model-bps-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-business-model-br-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-data-flow-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-data-model-bdd-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-data-model-ccd-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-data-model-cdsd-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-data-model-cld-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-data-model-sld-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-data-model-stsd-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-external-interface-specs-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-glossary-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-impact-analysis-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-migration-planning-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-non-functional-requirements-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-operations-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-project-definition-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-project-management-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-system-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-system-design-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-system-functions-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-test-specs-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/dct-user-interface-model-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/ifx-cmd-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/ifx-cmd.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/pm-members-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/pm-members.schema.yaml (validation skipped: template)
+docs/ja/specdojo/templates/pm-roles-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2T63/docs/specdojo/schemas/v1/pm-roles.schema.yaml (validation skipped: template)
+docs/ja/specdojo/samples/bdd-sample.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-index.yaml: valid
+docs/ja/specdojo/samples/dct-index-sample.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-current-state.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-ccd.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-glossary.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-impact-analysis.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-migration-planning.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-planning.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-definition.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-project-management.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-functions.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: valid
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml: valid
+docs/ja/specdojo/samples/dct-sample.yaml: valid
+docs/ja/product/010-business-specs/060-glossary/gl-common.yaml: valid
+docs/ja/specdojo/samples/gl-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/bps-deliverable-evaluation-e8ef6378e7-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/bps-task-completion-d17c24e4f4-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-action-96f0bab377-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-agent-config-operation-7b25e34545-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-catalog-planning-713da80155-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-check-de77e19930-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-deprecation-8b91a1b905-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-derived-content-f01cc9b09e-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-do-96363482bc-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-init-4faa3ec7f6-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-multi-project-a66c0a6bdf-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-onboarding-61a4d6c9ef-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-orchestrator-0888f9bb68-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-overview-4f5ff02b38-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-plan-53594c9748-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-register-lifecycle-84e4c24a97-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-deliverable-20176468f7-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-register-7fa05372dd-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-execution-225183781b-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-planning-c998e41655-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-sharing-20fb2f3b70-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/opr-agent-cli-update-beb291d74a-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/pm-communication-plan-6a68d585dc-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/pm-organization-3bb06d1a82-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/pm-plan-1817063f8a-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/pm-quality-management-plan-2f81d713a1-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/pm-raci-16266dee97-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/prj-assumptions-constraints-dependencies-04a3c0d40b-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/prj-charter-e502ad9760-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/prj-comparison-of-alternatives-b69b62192a-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/prj-issues-and-approach-6ef704f034-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/prj-overview-0cce063d8f-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/prj-scope-b521ba27f3-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/prj-stakeholder-register-dd42317729-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/prj-success-criteria-and-acceptance-criteria-11b049ad8a-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/stsd-register-entry-461ba77e06-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/stsd-routine-run-72deff80c2-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-agent-settings-2403b993e9-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-antigravity-agent-settings-e0daf68b06-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-claude-agent-settings-f502b91867-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-codex-agent-settings-209779c515-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-critical-flows-a985cc0d3a-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-cross-cutting-policy-bd811cf36f-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-github-copilot-agent-settings-caeaa1d83f-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-index-920a4c50dc-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-job-execution-f206c7f9d3-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-opencode-agent-settings-7921b7f527-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-orchestrator-agent-settings-b1c21895d4-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-39e4cdf49b-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-usage-cd996e0bcb-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/tsd-index-f8017f063b-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-1333c3ab83-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-opencode-9fe49a1fb7-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-f7cad9fd9b-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-opencode-824c965487-done-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/bps-deliverable-evaluation.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/bps-task-completion.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdfd-action.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdfd-check.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdfd-do.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdfd-onboarding.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdfd-orchestrator.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdfd-overview.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdfd-plan.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-deliverable.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-register.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdsd-execution.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdsd-planning.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/cdsd-sharing.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/opr-agent-cli-update.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.cdfd-agent-config-operation.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.cdfd-catalog-planning.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.cdfd-deprecation.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.cdfd-derived-content.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.cdfd-init.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.cdfd-multi-project.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.cdfd-register-lifecycle.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-communication-plan.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-organization.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-plan.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-quality-management-plan.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-raci.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-assumptions-constraints-dependencies.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-charter.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-comparison-of-alternatives.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-issues-and-approach.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-overview.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-scope.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-stakeholder-register.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-success-criteria-and-acceptance-criteria.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.atc-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bac-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bac-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bdd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bds-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bes-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bes-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bes-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bes-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.bps-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.br-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.br-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ccd-mermaid-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ccd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-mermaid-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-overview-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-overview-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-overview-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-overview-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdsd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdsd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cld-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cld-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cnd-mermaid-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cnd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cnd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cop-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cop-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cop-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cop-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cpd-mermaid-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cpd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cpd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cstd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cstd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-mermaid-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.dct-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.dct-index-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.dct-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.dec-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.dec-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.dmd-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.dmd-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.dmd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.dmd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.etc-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.etc-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.etc-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.etc-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.exec-human-finalize-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.gl-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifd-mermaid-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-cmd-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-cmd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-file-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-file-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-msg-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-business-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-business-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-data-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-data-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-interface-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-interface-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-operations-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-operations-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-test-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-test-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.mip-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.mip-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.mm-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.mm-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.mtp-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.mtp-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-availability-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-availability-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-integrity-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-integrity-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-maintainability-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-maintainability-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-operations-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-operations-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-performance-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-performance-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-reliability-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-reliability-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-security-safety-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-security-safety-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-usability-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-usability-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ntp-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.ntp-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-access-control-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-incident-management-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-monitoring-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-access-control-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-backup-restore-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-batch-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-change-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-incident-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-monitoring-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-support-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.otp-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.otp-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.otp-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.otp-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-change-request-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-decision-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-index-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-issue-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-note-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-question-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-risk-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-todo-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-views-by-owner-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-views-by-priority-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-views-by-status-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-change-request-log-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-change-request-log-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-change-request-log-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-communication-plan-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-communication-plan-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-communication-plan-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-communication-plan-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-decision-log-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-issue-log-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-issue-log-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-issue-log-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-members-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-members-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-organization-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-organization-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-organization-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-organization-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-plan-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-plan-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-plan-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-plan-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-quality-management-plan-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-quality-management-plan-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-quality-management-plan-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-quality-management-plan-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-raci-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-raci-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-raci-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-raci-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-risk-register-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-risk-register-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-risk-register-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-roles-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-roles-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pr-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.pr-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-assumptions-constraints-dependencies-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-assumptions-constraints-dependencies-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-assumptions-constraints-dependencies-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-assumptions-constraints-dependencies-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-charter-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-charter-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-charter-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-charter-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-comparison-of-alternatives-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-comparison-of-alternatives-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-comparison-of-alternatives-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-comparison-of-alternatives-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-issues-and-approach-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-issues-and-approach-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-issues-and-approach-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-issues-and-approach-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-overview-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-overview-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-overview-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-overview-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-scope-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-scope-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-scope-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-scope-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-stakeholder-register-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-stakeholder-register-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-stakeholder-register-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-stakeholder-register-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sac-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sac-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sch-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sf-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sf-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sf-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sf-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sld-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sld-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-mermaid-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-recipe.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-template.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-critical-flows-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-critical-flows-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-cross-cutting-policy-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-cross-cutting-policy-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.tml-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.trc-requirements-to-specs-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.trc-requirements-to-specs-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.trc-requirements-to-tests-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.trc-requirements-to-tests-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsp-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsp-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.uis-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.uis-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.utc-index-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.utc-index-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.utc-rulebook.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/specdojo.utc-sample.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/stsd-register-entry.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/stsd-routine-run.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-agent-settings.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-antigravity-agent-settings.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-claude-agent-settings.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-codex-agent-settings.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-critical-flows.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-cross-cutting-policy.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-github-copilot-agent-settings.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-index.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-job-execution.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-opencode-agent-settings.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/sysd-orchestrator-agent-settings.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server-usage.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/tsd-index.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama-opencode.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx-opencode.yaml: valid
+docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx.yaml: valid
+docs/ja/specdojo/samples/ifx-cmd-sample.yaml: valid
+docs/ja/projects/prj-0001/jobs/job-exec-auto.yaml: valid
+docs/ja/projects/prj-0001/jobs/job-exec-cycle.yaml: valid
+docs/ja/projects/prj-0001/jobs/job-exec-resume.yaml: valid
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml: valid
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml: valid
+docs/ja/projects/prj-0001/jobs/job-register-sweep.yaml: valid
+docs/ja/projects/prj-0001/jobs/job-translate-updated-docs.yaml: valid
+docs/ja/projects/prj-0001/jobs/job-weekly-report.yaml: valid
+docs/ja/specdojo/samples/pm-members-sample.yaml: valid
+docs/ja/projects/prj-0001/030-project-management/pm-review-viewpoints.yaml: valid
+docs/ja/specdojo/defaults/pm-review-viewpoints.yaml: valid
+docs/ja/projects/prj-0001/030-project-management/pm-roles.yaml: valid
+docs/ja/specdojo/samples/pm-roles-sample.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0001.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0002.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0003.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0004.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0005.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0006.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0007.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0008.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0009.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0010.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0011.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0012.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0013.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0014.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0015.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0016.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0017.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0018.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0019.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0020.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0021.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0022.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0023.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0024.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0025.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0026.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0027.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0028.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0029.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0030.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0031.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0032.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0033.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0034.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0035.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0036.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0037.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0038.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0039.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0040.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0041.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0042.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0043.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0044.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0045.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0046.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0047.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0048.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0049.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0050.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0051.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0052.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0053.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0054.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0055.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0056.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0057.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0058.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0059.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0060.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0061.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0063.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0064.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0065.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0066.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0067.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0068.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0069.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0070.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0071.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0072.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0073.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0074.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0075.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0076.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0077.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0078.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0079.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0080.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0081.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0082.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0083.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0084.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0085.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0086.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0087.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0088.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0089.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0090.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0091.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0092.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0093.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0094.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0095.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0096.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0097.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0098.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0099.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-00qv.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0100.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0101.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0102.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0103.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0104.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0105.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0106.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0107.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0108.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0109.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0110.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0111.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0112.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0113.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0114.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0115.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0116.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0117.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0118.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0119.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0120.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0121.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0122.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0123.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0124.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0125.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0126.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0127.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0128.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0129.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0130.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0131.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0132.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0133.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0134.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0135.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0136.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0137.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0138.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0139.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0140.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0141.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0142.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0143.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0144.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0145.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0146.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0147.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0148.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0149.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0150.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0151.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0152.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0153.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0154.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0155.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0156.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0157.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0158.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0159.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0160.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0161.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0162.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0163.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-03m3.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-05gc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-06re.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-078k.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-07m5.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-08k1.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-09kk.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0da8.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0ecy.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0fct.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0fk2.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0w8s.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0waa.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0xej.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-0xxz.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-17s7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-199g.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-19hx.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-1d0c.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-1d5g.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-1f46.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-1jjd.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-1sxk.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-1y0g.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-1y9p.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-1z1h.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-20dv.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-21e8.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-23dt.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-25f4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-25sf.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-269z.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-26k4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-27y0.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-27z9.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-2bxd.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-2f3y.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-2h5f.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-2jye.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-2kpn.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-2m84.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-2t2s.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-2t63.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-2w38.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-2zvs.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-30sw.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-33sb.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-34mq.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-36cn.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-36qg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-37wn.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-3d7q.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-3hhw.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-3j5d.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-3kbg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-3m8s.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-3n21.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-3s8q.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-3xnm.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-44cw.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-49d2.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-49jk.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-4ahz.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-4hbg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-4nxr.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-4rr8.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-4tz7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-5822.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-5dm3.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-5erg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-5hhs.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-5kpc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-5n64.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-5ptx.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-5rs9.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-5w8c.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-5yw6.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-6776.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-69vp.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-6aax.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-6hf3.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-6pd7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-6rn3.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-6tka.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-6v3d.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-6vfn.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-6wfa.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-6xnj.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-76ag.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-78mq.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-7gak.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-7mf6.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-7mxj.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-7vkr.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-7wfe.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-7znh.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-86je.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-88k2.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-8myj.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-8pj4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-8qa1.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-8ten.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-8xqz.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-979n.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-98g4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9kst.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9m5n.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9p5q.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9py9.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9pz7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9qz2.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9rwg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9s41.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9s8f.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9xg4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9xvg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-9y7g.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-a12b.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-a45t.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-a4py.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-a99j.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-a9nc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-aak1.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-aar2.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ag7b.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ah2p.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-akj4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ankr.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-aq9g.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-aqmw.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-avsr.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ay1r.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-b1sj.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-b7dg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-bb92.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-bbpc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-bj97.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-bk4k.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-bkq0.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-bvps.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-bwyw.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-bx79.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-c0b7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-c44h.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-c915.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-cbqv.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-cf15.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-cjqm.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-cmyx.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ctv4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-d0kf.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-d4kg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-daw8.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-dctg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-dkx8.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-dpvv.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-e2q3.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-e6hg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-e6qj.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-e8fy.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-e8tt.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-e9h3.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ebtz.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-enk0.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-eqaq.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-eqdb.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-es57.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ewwx.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ex5e.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-excv.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ez9g.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ezaf.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-f1jg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-f346.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-f4c9.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ffpk.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-fkn1.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-fmz2.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-fpcm.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-frzb.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-fzc4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-g1qz.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-g2f4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-g8m9.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-g8tb.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ga2k.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gbev.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gdqc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-genj.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gh26.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ghkd.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gqfx.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-grb5.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gwy4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gwyj.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gx9d.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-h220.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-h4h7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-h5z7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-h95r.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-h9r2.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-hf4n.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-hg98.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-hqbk.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-hz4c.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-j3g0.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-jftc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-jfwq.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-jg9q.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-jhsc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-jswe.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-jt1y.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-jwxk.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-jxv7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-k1z5.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-k1zd.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-k332.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-k351.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-k4ta.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-k513.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-k6kb.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-k9kg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-kaqv.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-kata.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-kce0.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-kcmh.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-kefk.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-keqq.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-kk07.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-m35p.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-m8na.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-mbvm.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-me20.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-mgnw.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-mh9e.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-mp2p.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-mrjt.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-mwwp.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-mwxs.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-n03w.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-n22n.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-n8aw.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-nfv7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-njrh.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-nsxt.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-nw9v.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-nwpc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-p7hy.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-pg6w.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-pp0d.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ppyf.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-pzpa.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-q3f0.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-q3jg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-q3w9.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-q761.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-q828.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-q88a.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qcmp.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qd81.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qesv.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qf7t.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qhka.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qjad.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qm88.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qqxp.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qvgx.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-qw5t.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-r0xa.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-r1n2.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-r8wr.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-rcvs.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-rdnc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-reds.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-rf3b.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-rg7c.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-rp1k.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-rpsx.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-rzr3.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-s190.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-s5ya.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-say1.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-sdxb.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-seqc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-sj3x.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-smet.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-srqz.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-strg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-t0vq.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-t1jw.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-t2kk.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-t2m6.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3vq.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-t7em.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-t7zq.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-t84c.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ta5c.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-tbhh.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-tc43.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-td1g.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-tdb0.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-th4b.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-tndh.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-tpy9.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-tr8g.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-tt4j.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-tx1g.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-v8fv.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-v96b.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-vc94.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-veq4.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-vfd0.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-vh6r.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-vjp8.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-vqb5.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-vv3m.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-w5jt.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-w66b.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-wafc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-wjpx.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-wjzd.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-wpr3.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-wpwb.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-wre7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-wvns.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-wzma.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x2q7.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x3e8.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x40m.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-xgjk.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-xkks.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-xmma.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-xtan.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-xw9m.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-xxbc.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-xzeq.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-y013.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-y06y.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-y0ah.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-y3kp.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-y8p9.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ym9y.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ypns.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ysdv.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-ywph.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-z47x.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-z8t1.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-za91.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zffz.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zjzd.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zkna.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zp0b.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zpjz.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zrxg.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zsjq.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zwmh.yaml: valid
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-zyfz.yaml: valid
+docs/ja/projects/prj-0001/routines/rtn-daily-register-sweep.yaml: valid
+docs/ja/projects/prj-0001/routines/rtn-dashboard-refresh.yaml: valid
+docs/ja/projects/prj-0001/routines/rtn-exec-cycle.yaml: valid
+docs/ja/projects/prj-0001/routines/rtn-exec-limit-resume.yaml: valid
+docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml: valid
+docs/ja/projects/prj-0001/routines/rtn-grade-kata.yaml: valid
+docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml: valid
+docs/ja/projects/prj-0001/routines/rtn-translate-updated-docs.yaml: valid
+docs/ja/projects/prj-0001/routines/rtn-weekly-report.yaml: valid
+docs/ja/projects/prj-0001/schedule/sch-defaults.yaml: valid
+docs/ja/projects/prj-0001/schedule/sch-milestones.yaml: valid
+docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow-pdca.yaml: valid
+docs/ja/projects/prj-0001/schedule/sch-strategy-data-flow.yaml: valid
+docs/ja/projects/prj-0001/schedule/sch-strategy-launch.yaml: valid
+docs/ja/projects/prj-0001/schedule/sch-strategy-planning.yaml: valid
+docs/ja/projects/prj-0001/schedule/sch-track-data-flow-pdca.yaml: valid
+docs/ja/projects/prj-0001/schedule/sch-track-data-flow.yaml: valid
+docs/ja/projects/prj-0001/schedule/sch-track-launch.yaml: valid
+docs/ja/projects/prj-0001/schedule/sch-track-planning.yaml: valid
+docs/ja/projects/prj-0001/timeline/tml-index.yaml: valid
+docs/ja/specdojo/samples/tml-sample.yaml: valid
+
+
+--- stderr ---
+docs/ja/specdojo/templates/agent-members-template.yaml: missing yaml-language-server $schema modeline
+docs/ja/projects/prj-0001/030-project-management/pm-members.yaml: invalid
+  - /members/1: must NOT have additional properties
+  - /members/1: must NOT have additional properties
+  - /members/1: must NOT have additional properties
+  - /members/1: must NOT have additional properties
+  - /members/1: must NOT have additional properties
+  - /members/1: must NOT have additional properties
+  - /members/1: must NOT have additional properties
+  - /members/1/type: must be equal to constant
+  - /members/2: must NOT have additional properties
+  - /members/2: must NOT have additional properties
+  - /members/2: must NOT have additional properties
+  - /members/2: must NOT have additional properties
+  - /members/2: must NOT have additional properties
+  - /members/2: must NOT have additional properties
+  - /members/2: must NOT have additional properties
+  - /members/2/type: must be equal to constant
+  - /members/3: must NOT have additional properties
+  - /members/3: must NOT have additional properties
+  - /members/3: must NOT have additional properties
+  - /members/3: must NOT have additional properties
+  - /members/3: must NOT have additional properties
+  - /members/3: must NOT have additional properties
+  - /members/3/type: must be equal to constant
+  - /members/4: must NOT have additional properties
+  - /members/4: must NOT have additional properties
+  - /members/4: must NOT have additional properties
+  - /members/4: must NOT have additional properties
+  - /members/4: must NOT have additional properties
+  - /members/4: must NOT have additional properties
+  - /members/4: must NOT have additional properties
+  - /members/4/type: must be equal to constant
+  - /members/5: must NOT have additional properties
+  - /members/5: must NOT have additional properties
+  - /members/5: must NOT have additional properties
+  - /members/5: must NOT have additional properties
+  - /members/5: must NOT have additional properties
+  - /members/5: must NOT have additional properties
+  - /members/5: must NOT have additional properties
+  - /members/5/type: must be equal to constant
+  - /members/6: must NOT have additional properties
+  - /members/6: must NOT have additional properties
+  - /members/6: must NOT have additional properties
+  - /members/6: must NOT have additional properties
+  - /members/6: must NOT have additional properties
+  - /members/6: must NOT have additional properties
+  - /members/6/type: must be equal to constant
+  - /members/7: must NOT have additional properties
+  - /members/7: must NOT have additional properties
+  - /members/7: must NOT have additional properties
+  - /members/7: must NOT have additional properties
+  - /members/7: must NOT have additional properties
+  - /members/7: must NOT have additional properties
+  - /members/7: must NOT have additional properties
+  - /members/7/type: must be equal to constant
+  - /members/8: must NOT have additional properties
+  - /members/8: must NOT have additional properties
+  - /members/8: must NOT have additional properties
+  - /members/8: must NOT have additional properties
+  - /members/8: must NOT have additional properties
+  - /members/8: must NOT have additional properties
+  - /members/8: must NOT have additional properties
+  - /members/8/type: must be equal to constant
+  - /members/9: must NOT have additional properties
+  - /members/9: must NOT have additional properties
+  - /members/9: must NOT have additional properties
+  - /members/9: must NOT have additional properties
+  - /members/9: must NOT have additional properties
+  - /members/9: must NOT have additional properties
+  - /members/9: must NOT have additional properties
+  - /members/9/type: must be equal to constant
+  - /members/10: must NOT have additional properties
+  - /members/10: must NOT have additional properties
+  - /members/10: must NOT have additional properties
+  - /members/10: must NOT have additional properties
+  - /members/10: must NOT have additional properties
+  - /members/10: must NOT have additional properties
+  - /members/10: must NOT have additional properties
+  - /members/10/type: must be equal to constant
+  - /members/11: must NOT have additional properties
+  - /members/11: must NOT have additional properties
+  - /members/11: must NOT have additional properties
+  - /members/11: must NOT have additional properties
+  - /members/11: must NOT have additional properties
+  - /members/11: must NOT have additional properties
+  - /members/11/type: must be equal to constant
+  - /members/12: must NOT have additional properties
+  - /members/12: must NOT have additional properties
+  - /members/12: must NOT have additional properties
+  - /members/12: must NOT have additional properties
+  - /members/12: must NOT have additional properties
+  - /members/12/type: must be equal to constant
+  - /members/13: must NOT have additional properties
+  - /members/13: must NOT have additional properties
+  - /members/13: must NOT have additional properties
+  - /members/13: must NOT have additional properties
+  - /members/13: must NOT have additional properties
+  - /members/13: must NOT have additional properties
+  - /members/13: must NOT have additional properties
+  - /members/13/type: must be equal to constant
+  - /members/14: must NOT have additional properties
+  - /members/14: must NOT have additional properties
+  - /members/14: must NOT have additional properties
+  - /members/14: must NOT have additional properties
+  - /members/14: must NOT have additional properties
+  - /members/14: must NOT have additional properties
+  - /members/14: must NOT have additional properties
+  - /members/14/type: must be equal to constant
+  - /members/15: must NOT have additional properties
+  - /members/15: must NOT have additional properties
+  - /members/15: must NOT have additional properties
+  - /members/15: must NOT have additional properties
+  - /members/15: must NOT have additional properties
+  - /members/15: must NOT have additional properties
+  - /members/15/type: must be equal to constant
+  - /members/16: must NOT have additional properties
+  - /members/16: must NOT have additional properties
+  - /members/16: must NOT have additional properties
+  - /members/16: must NOT have additional properties
+  - /members/16: must NOT have additional properties
+  - /members/16: must NOT have additional properties
+  - /members/16: must NOT have additional properties
+  - /members/16/type: must be equal to constant
+  - /members/17: must NOT have additional properties
+  - /members/17: must NOT have additional properties
+  - /members/17: must NOT have additional properties
+  - /members/17: must NOT have additional properties
+  - /members/17: must NOT have additional properties
+  - /members/17: must NOT have additional properties
+  - /members/17: must NOT have additional properties
+  - /members/17/type: must be equal to constant
+  - /members/18: must NOT have additional properties
+  - /members/18: must NOT have additional properties
+  - /members/18: must NOT have additional properties
+  - /members/18: must NOT have additional properties
+  - /members/18: must NOT have additional properties
+  - /members/18: must NOT have additional properties
+  - /members/18: must NOT have additional properties
+  - /members/18/type: must be equal to constant
+  - /members/19: must NOT have additional properties
+  - /members/19: must NOT have additional properties
+  - /members/19: must NOT have additional properties
+  - /members/19: must NOT have additional properties
+  - /members/19: must NOT have additional properties
+  - /members/19: must NOT have additional properties
+  - /members/19: must NOT have additional properties
+  - /members/19/type: must be equal to constant
+  - /members/20: must NOT have additional properties
+  - /members/20: must NOT have additional properties
+  - /members/20: must NOT have additional properties
+  - /members/20: must NOT have additional properties
+  - /members/20: must NOT have additional properties
+  - /members/20: must NOT have additional properties
+  - /members/20: must NOT have additional properties
+  - /members/20/type: must be equal to constant
+  - /members/21: must NOT have additional properties
+  - /members/21: must NOT have additional properties
+  - /members/21: must NOT have additional properties
+  - /members/21: must NOT have additional properties
+  - /members/21: must NOT have additional properties
+  - /members/21: must NOT have additional properties
+  - /members/21: must NOT have additional properties
+  - /members/21/type: must be equal to constant
+  - /members/22: must NOT have additional properties
+  - /members/22: must NOT have additional properties
+  - /members/22: must NOT have additional properties
+  - /members/22: must NOT have additional properties
+  - /members/22: must NOT have additional properties
+  - /members/22: must NOT have additional properties
+  - /members/22: must NOT have additional properties
+  - /members/22/type: must be equal to constant
+  - /members/23: must NOT have additional properties
+  - /members/23: must NOT have additional properties
+  - /members/23: must NOT have additional properties
+  - /members/23: must NOT have additional properties
+  - /members/23: must NOT have additional properties
+  - /members/23: must NOT have additional properties
+  - /members/23: must NOT have additional properties
+  - /members/23/type: must be equal to constant
+  - /members/24: must NOT have additional properties
+  - /members/24: must NOT have additional properties
+  - /members/24: must NOT have additional properties
+  - /members/24: must NOT have additional properties
+  - /members/24: must NOT have additional properties
+  - /members/24: must NOT have additional properties
+  - /members/24: must NOT have additional properties
+  - /members/24/type: must be equal to constant
+  - /members/25: must NOT have additional properties
+  - /members/25: must NOT have additional properties
+  - /members/25: must NOT have additional properties
+  - /members/25: must NOT have additional properties
+  - /members/25: must NOT have additional properties
+  - /members/25: must NOT have additional properties
+  - /members/25: must NOT have additional properties
+  - /members/25/type: must be equal to constant
+  - /members/26: must NOT have additional properties
+  - /members/26: must NOT have additional properties
+  - /members/26: must NOT have additional properties
+  - /members/26: must NOT have additional properties
+  - /members/26: must NOT have additional properties
+  - /members/26: must NOT have additional properties
+  - /members/26/type: must be equal to constant
+  - /members/27: must NOT have additional properties
+  - /members/27: must NOT have additional properties
+  - /members/27: must NOT have additional properties
+  - /members/27: must NOT have additional properties
+  - /members/27: must NOT have additional properties
+  - /members/27: must NOT have additional properties
+  - /members/27: must NOT have additional properties
+  - /members/27/type: must be equal to constant
+  - /members/28: must NOT have additional properties
+  - /members/28: must NOT have additional properties
+  - /members/28: must NOT have additional properties
+  - /members/28: must NOT have additional properties
+  - /members/28: must NOT have additional properties
+  - /members/28: must NOT have additional properties
+  - /members/28: must NOT have additional properties
+  - /members/28/type: must be equal to constant
+  - /members/29: must NOT have additional properties
+  - /members/29: must NOT have additional properties
+  - /members/29: must NOT have additional properties
+  - /members/29: must NOT have additional properties
+  - /members/29: must NOT have additional properties
+  - /members/29: must NOT have additional properties
+  - /members/29: must NOT have additional properties
+  - /members/29/type: must be equal to constant
+  - /members/30: must NOT have additional properties
+  - /members/30: must NOT have additional properties
+  - /members/30: must NOT have additional properties
+  - /members/30: must NOT have additional properties
+  - /members/30: must NOT have additional properties
+  - /members/30: must NOT have additional properties
+  - /members/30/type: must be equal to constant
+  - /members/31: must NOT have additional properties
+  - /members/31: must NOT have additional properties
+  - /members/31: must NOT have additional properties
+  - /members/31: must NOT have additional properties
+  - /members/31: must NOT have additional properties
+  - /members/31: must NOT have additional properties
+  - /members/31: must NOT have additional properties
+  - /members/31/type: must be equal to constant
+  - /members/32: must NOT have additional properties
+  - /members/32: must NOT have additional properties
+  - /members/32: must NOT have additional properties
+  - /members/32: must NOT have additional properties
+  - /members/32: must NOT have additional properties
+  - /members/32: must NOT have additional properties
+  - /members/32: must NOT have additional properties
+  - /members/32/type: must be equal to constant
+  - /members/33: must NOT have additional properties
+  - /members/33: must NOT have additional properties
+  - /members/33: must NOT have additional properties
+  - /members/33: must NOT have additional properties
+  - /members/33: must NOT have additional properties
+  - /members/33: must NOT have additional properties
+  - /members/33: must NOT have additional properties
+  - /members/33/type: must be equal to constant
+  - /members/34: must NOT have additional properties
+  - /members/34: must NOT have additional properties
+  - /members/34: must NOT have additional properties
+  - /members/34: must NOT have additional properties
+  - /members/34: must NOT have additional properties
+  - /members/34: must NOT have additional properties
+  - /members/34: must NOT have additional properties
+  - /members/34/type: must be equal to constant
+  - /members/35: must NOT have additional properties
+  - /members/35: must NOT have additional properties
+  - /members/35: must NOT have additional properties
+  - /members/35: must NOT have additional properties
+  - /members/35: must NOT have additional properties
+  - /members/35: must NOT have additional properties
+  - /members/35: must NOT have additional properties
+  - /members/35/type: must be equal to constant
+  - /members/36: must NOT have additional properties
+  - /members/36: must NOT have additional properties
+  - /members/36: must NOT have additional properties
+  - /members/36: must NOT have additional properties
+  - /members/36: must NOT have additional properties
+  - /members/36: must NOT have additional properties
+  - /members/36: must NOT have additional properties
+  - /members/36/type: must be equal to constant
+  - /members/37: must NOT have additional properties
+  - /members/37: must NOT have additional properties
+  - /members/37: must NOT have additional properties
+  - /members/37: must NOT have additional properties
+  - /members/37: must NOT have additional properties
+  - /members/37: must NOT have additional properties
+  - /members/37/type: must be equal to constant

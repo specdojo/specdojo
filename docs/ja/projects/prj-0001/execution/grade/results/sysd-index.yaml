@@ -3,31 +3,84 @@ version: 1
 document: sysd-index
 path: docs/ja/product/040-system-design/sysd-index.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 67
-graded_at: "2026-09-19T16:45:51.883Z"
+score: 64
+graded_at: "2026-09-28T16:25:24.158Z"
 graded_by: codex-expert-executor
 content_hash: 21eb4cf38ac3c7ca9157dd2c5ceb0c29f1edfaeb09802bb7583af11ecbe68813
+source_hashes:
+  catalog-entry: 0215888fcdcef5830bb399382957cddd56a0df4ad20fabf4de0e88f729772749
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 75
+  operations:
+    score: 75
+  planning:
+    score: 67
+  business:
+    score: 75
   consistency:
     score: 38
+  architecture:
+    score: 75
   usability:
     score: 81
-  architecture:
-    score: 100
+  implementation:
+    score: 50
   quality:
-    score: 58
+    score: 56
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
   vp-arc-cross-document-consistency:
     level: 1
     score: 25
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
-    level: 4
-    score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-done-criteria:
     level: 1
     score: 25
@@ -46,6 +99,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,84 +116,156 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 7
-  minor: 4
+  major: 17
+  minor: 5
   note: 0
 findings:
-  - id: F007
-    severity: minor
-    rule: vp-qe-omissions-consistency
+  - id: F001
+    severity: major
+    rule: vp-po-decision-readiness
     line: 1
-    message: Frontmatter に rulebook が必須とする `title` がないため、共通メタデータを補う必要がある。
     anchor: "# SpecDojo システム設計"
-  - id: F009
-    severity: minor
-    rule: vp-ux-readability
-    line: 3
-    message: SSOT、CPM、CDFD、OPD、SYSD などの略語が本文内で定義されていないため、初出時の展開または用語定義への導線を追加する必要がある。
-    anchor: SpecDojo のシステム設計情報と、コード・設定ファイルを正本とする SSOT への入口を集約する。本文へ詳細仕様を複製せず、変更時に最初に確認・更新する場所を示す。
-  - id: F008
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 9
-    message: 第2節から第4節の見出しが rulebook の順序固定見出しから括弧内の説明を省略しているため、規定の見出し名へ統一する必要がある。
-    anchor: "## 2. SSOT 一覧"
+    message: "`status: draft` の承認対象、API・DB・監視 SSOT の未決事項、影響範囲、解消後の次アクションを明示する必要がある。"
+  - id: F002
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 41
+    anchor: "| 変更トリガー           | 最初に直す場所（SSOT）                       | 併せて確認する場所                 | 完了条件                      |"
+    message: 変更タスクを計画・完了判定できるよう、「代表実行」「経路を検証」「分離を確認」の対象ケース、実行手順、期待結果を具体化する必要がある。
   - id: F003
     severity: major
-    rule: vp-qe-done-criteria
-    line: 12
-    message: SSOT 一覧に API 定義と DB スキーマの参照先または非該当である旨がなく、DC-001 を確認できない。
-    anchor: "| 種別 | SSOT | 参照先 | 更新責任 | 備考 |"
-  - id: F006
+    rule: vp-pm-dependency-risk
+    line: 59
+    anchor: "| データフロー   | `cdfd-task-execution`       | task状態・実行ライフサイクル       |"
+    message: 廃止済み `cdfd-task-execution` と `cdfd-register-lifecycle` への依存を、現行の `cdfd-do`、`cdfd-plan` などへ更新し、後続作業への影響を解消する必要がある。
+  - id: F004
     severity: major
-    rule: vp-qe-omissions-consistency
+    rule: vp-ba-requirements-completeness
     line: 12
-    message: API、DB Schema、Observability の SSOT が一覧になく、存在しない場合の非該当宣言もないため、rulebook と成果物カタログが要求する参照範囲を満たしていない。
     anchor: "| 種別 | SSOT | 参照先 | 更新責任 | 備考 |"
-  - id: F001
+    message: API 定義、DB スキーマ、Observability の参照先または非該当理由を追加し、設計索引の利用者視点で必要な範囲を充足する必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 7
+    anchor: >-
+      対象は SpecDojo CLI、ドキュメント生成、agent 実行、Git / worktree 統合、定期処理である。ARC が構成と導線、DEV がコード・schema、PM がプロジェクト実行定義、OPS
+      が運用設定の更新責任を持つ。
+    message: 更新責任に加え、QE がテスト設計で確認する範囲と、PO が承認する対象を利用者・確認者として明示する必要がある。
+  - id: F006
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 34
-    message: >-
-      `npm run docs:index` は package scripts に存在しないため、実在する `npm run docs:generate` または `specdojo index build`
-      へ修正する必要がある。
     anchor: >-
       | 文書索引           | Markdown Frontmatter           | `npm run docs:index`      | VitePress参照用索引                  |
       コマンド生成      |
-  - id: F004
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 48
-    message: 運用文書ディレクトリだけが示され、運用・監視設定そのものの SSOT が特定できないため DC-004 を確認できない。
-    anchor: >-
-      | 運用手順変更           | `docs/ja/product/090-operations/`            | OPD、関連SYSD                      |
-      手順・完了条件・証跡を確認    |
-  - id: F005
-    severity: major
-    rule: vp-qe-verifiability
-    line: 41
-    message: 「代表実行成功」「経路を検証」「分離を確認」などの完了条件について、実行する検査・対象ケース・期待結果を明記しなければ判定者ごとに合否が変わる。
-    anchor: "| 変更トリガー           | 最初に直す場所（SSOT）                       | 併せて確認する場所                 | 完了条件                      |"
-  - id: F002
+    message: >-
+      `npm run docs:index` は package scripts に存在しないため、実在する `npm run docs:generate` または `specdojo index build`
+      へ修正する必要がある。
+  - id: F007
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 59
+    anchor: "| データフロー   | `cdfd-task-execution`       | task状態・実行ライフサイクル       |"
     message: >-
       `cdfd-task-execution` と `cdfd-register-lifecycle` は deprecated として trash 配下へ移動済みであり、現行の `cdfd-do` と `cdfd-plan`
       など後継 SSOT への参照へ更新する必要がある。
-    anchor: "| データフロー   | `cdfd-task-execution`       | task状態・実行ライフサイクル       |"
+  - id: F008
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 12
+    anchor: "| 種別 | SSOT | 参照先 | 更新責任 | 備考 |"
+    message: API 定義、DB migration/schema、監視・ログ設定について、実在する SSOT、更新責任、検証方法または非該当理由を明示する必要がある。
+  - id: F009
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 12
+    anchor: "| 種別 | SSOT | 参照先 | 更新責任 | 備考 |"
+    message: 実装者が API・DB・設定変更を開始できるよう、各 SSOT の対象ファイル、schema、生成・検証コマンドを実在する内容で補う必要がある。
   - id: F010
+    severity: major
+    rule: vp-dev-change-impact
+    line: 41
+    anchor: "| 変更トリガー           | 最初に直す場所（SSOT）                       | 併せて確認する場所                 | 完了条件                      |"
+    message: API、DB schema、設定 schema、Job、監視設定を変更する場合の SSOT、生成物、テスト、運用手順への影響を変更トリガーとして追加する必要がある。
+  - id: F011
+    severity: major
+    rule: vp-dev-testability
+    line: 34
+    anchor: >-
+      | 文書索引           | Markdown Frontmatter           | `npm run docs:index`      | VitePress参照用索引                  |
+      コマンド生成      |
+    message: "`npm run docs:index` を実在するコマンドへ修正し、各変更種別について実行する lint・schema・test・build コマンドと期待結果を明示する必要がある。"
+  - id: F012
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 12
+    anchor: "| 種別 | SSOT | 参照先 | 更新責任 | 備考 |"
+    message: SSOT 一覧に API 定義と DB スキーマの参照先または非該当である旨がなく、DC-001 を確認できない。
+  - id: F013
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 48
+    anchor: >-
+      | 運用手順変更           | `docs/ja/product/090-operations/`            | OPD、関連SYSD                      |
+      手順・完了条件・証跡を確認    |
+    message: 運用文書ディレクトリだけが示され、運用・監視設定そのものの SSOT が特定できないため DC-004 を確認できない。
+  - id: F014
+    severity: major
+    rule: vp-qe-verifiability
+    line: 41
+    anchor: "| 変更トリガー           | 最初に直す場所（SSOT）                       | 併せて確認する場所                 | 完了条件                      |"
+    message: 「代表実行成功」「経路を検証」「分離を確認」などの完了条件について、実行する検査・対象ケース・期待結果を明記しなければ判定者ごとに合否が変わる。
+  - id: F015
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# SpecDojo システム設計"
+    message: Frontmatter に rulebook が必須とする `title` がないため、共通メタデータを補う必要がある。
+  - id: F016
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "## 2. SSOT 一覧"
+    message: 第2節から第4節の見出しが rulebook の順序固定見出しから括弧内の説明を省略しているため、規定の見出し名へ統一する必要がある。
+  - id: F017
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 12
+    anchor: "| 種別 | SSOT | 参照先 | 更新責任 | 備考 |"
+    message: API、DB Schema、Observability の SSOT が一覧になく、存在しない場合の非該当宣言もないため、rulebook と成果物カタログが要求する参照範囲を満たしていない。
+  - id: F018
+    severity: minor
+    rule: vp-ux-readability
+    line: 3
+    anchor: SpecDojo のシステム設計情報と、コード・設定ファイルを正本とする SSOT への入口を集約する。本文へ詳細仕様を複製せず、変更時に最初に確認・更新する場所を示す。
+    message: SSOT、CPM、CDFD、OPD、SYSD などの略語が本文内で定義されていないため、初出時の展開または用語定義への導線を追加する必要がある。
+  - id: F019
     severity: minor
     rule: vp-ux-user-flow
     line: 52
-    message: 関連文書の ID がコード表記だけでリンク化されていないため、解決可能な wikilink または Markdown リンクへ変更する必要がある。
     anchor: "| 種別           | ドキュメントID              | 目的                               |"
-  - id: F011
+    message: 関連文書の ID がコード表記だけでリンク化されていないため、解決可能な wikilink または Markdown リンクへ変更する必要がある。
+  - id: F020
     severity: major
     rule: vp-ux-user-flow
     line: 59
-    message: データフローの導線が廃止済み文書を指しており、利用者が現行の Plan・Do 設計へ到達できないため後継文書への導線へ置き換える必要がある。
     anchor: "| データフロー   | `cdfd-task-execution`       | task状態・実行ライフサイクル       |"
+    message: データフローの導線が廃止済み文書を指しており、利用者が現行の Plan・Do 設計へ到達できないため後継文書への導線へ置き換える必要がある。
+  - id: F021
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# SpecDojo システム設計"
+    message: ready 化の前提として、API・DB・監視 SSOT、実在コマンド、現行関連文書への更新、確認者・承認者を公開前チェックとして明示する必要がある。
+  - id: F022
+    severity: major
+    rule: vp-ops-operability
+    line: 48
+    anchor: >-
+      | 運用手順変更           | `docs/ja/product/090-operations/`            | OPD、関連SYSD                      |
+      手順・完了条件・証跡を確認    |
+    message: 運用手順ディレクトリだけでなく、監視、ログ、通知、定期処理などの運用設定 SSOT、更新責任、検証・再生成手順を特定する必要がある。
 done_criteria:
   satisfied: 2
   total: 4

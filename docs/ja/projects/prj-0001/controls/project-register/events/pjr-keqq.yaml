@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3d86f30978ec4576ab91b3dc95b54a56
+  ts: "2026-10-04T06:29:15Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer テンプレートの named volume を本体とそろえ、共有の方針を決める
+    - field: description
+      from: ""
+      to: specdojo devcontainer scaffold のテンプレートは、opencode provider でも ~/.local/share/opencode を named volume にしないため、リビルドで OpenCode の API key（auth.json）が消える（本体は PJR-MP2P までに specdojo-opencode-data で対応済み）。volume 名は本体と同じ specdojo-* に固定され、利用リポジトリと本体で認証情報や git 設定を共有する。GitHub CLI の volume もない。テンプレートで作るコンテナの保存先の一覧と、dotfiles が VS Code のユーザー設定で自動導入されることも文書にない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_376b45dc7abd4942a70f10b03a472fe0
+  ts: "2026-10-04T06:55:05Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3d86f30978ec4576ab91b3dc95b54a56
+- v: 1
+  id: reg_7d7bbb131e7c4506aebc24e12f242eb9
+  ts: "2026-10-04T07:08:45Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_376b45dc7abd4942a70f10b03a472fe0
+- v: 1
+  id: reg_8fb4d4daec6a4562a4288e296b217f4d
+  ts: "2026-10-04T07:08:57Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: review
+  to_status: waiting
+  reason: "integrate failed: git merge failed: error: Your local changes to the following files would be overwritten by merge:"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git merge failed: error: Your local changes to the following files would be overwritten by merge:"
+  previous_event_id: reg_7d7bbb131e7c4506aebc24e12f242eb9
+- v: 1
+  id: reg_ff74efa8285e4180859331ed7c6059a3
+  ts: "2026-10-04T07:10:53Z"
+  action: start
+  actor: agy-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: git merge failed: error: Your local changes to the following files would be overwritten by merge:"
+      to: "-"
+  previous_event_id: reg_8fb4d4daec6a4562a4288e296b217f4d
+- v: 1
+  id: reg_18f30fb4c86544049a5eb916257cb527
+  ts: "2026-10-04T07:19:07Z"
+  action: review
+  actor: agy-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ff74efa8285e4180859331ed7c6059a3
+- v: 1
+  id: reg_e056d26d4eab45be88c634a2d4fef161
+  ts: "2026-10-04T08:25:41Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 利用者が分離の方針を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: scaffold の named volume を `<repository>-specdojo-`* としてリポジトリごとに分離し、OpenCode のデータと GitHub CLI の volume を追加した。保存先の一覧、分離の理由、dotfiles の自動導入、volume 名の衝突の注意をコマンドリファレンスに記載した
+  previous_event_id: reg_18f30fb4c86544049a5eb916257cb527

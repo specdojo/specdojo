@@ -1,13 +1,14 @@
 import { Command } from "commander";
 import { mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import yaml from "js-yaml";
 import { describe, expect, it } from "vitest";
 import {
   collectProjectMilestones,
   registerScheduleCommands,
   updateMilestonesFile,
+  withSchemaModeline,
 } from "../../src/schedule.js";
 
 function writeMilestoneStrategy(
@@ -236,6 +237,49 @@ describe("project milestone rebuild", () => {
       expect(result.errors).toHaveLength(1);
       expect(result.errors[0]).toContain("sch-strategy-broken.yaml");
       expect(result.errors[0]).toContain("missing required fields");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("schedule output schema modeline", () => {
+  it("prepends a modeline that resolves to the schema from the output directory", () => {
+    const outFile = resolve("docs/ja/projects/prj-0001/schedule/sch-track-launch.yaml");
+
+    const actual = withSchemaModeline(
+      outFile,
+      "docs/specdojo/schemas/v1/sch-track.schema.yaml",
+      "kind: track\n",
+    );
+
+    expect(actual).toBe(
+      "# yaml-language-server: $schema=../../../../specdojo/schemas/v1/sch-track.schema.yaml\nkind: track\n",
+    );
+  });
+
+  it("keeps the milestones modeline when the file is created and rebuilt", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-milestone-modeline-"));
+    try {
+      writeMilestoneStrategy(dir, "launch", "G-LAUNCH-first");
+      const initial = collectProjectMilestones(dir, dir, "prj-test");
+      updateMilestonesFile(dir, "prj-test", initial.milestones, false);
+      const created = readFileSync(join(dir, "sch-milestones.yaml"), "utf8");
+
+      writeMilestoneStrategy(dir, "data-flow", "G-DATA-FLOW-first");
+      const rebuilt = collectProjectMilestones(dir, dir, "prj-test");
+      updateMilestonesFile(dir, "prj-test", rebuilt.milestones, false);
+      const updated = readFileSync(join(dir, "sch-milestones.yaml"), "utf8");
+
+      const schemaPath = resolve("docs/specdojo/schemas/v1/sch-milestones.schema.yaml");
+      const firstLine = (content: string): string => content.split("\n")[0] ?? "";
+      const schemaRef = firstLine(updated).replace("# yaml-language-server: $schema=", "");
+      expect(firstLine(created)).toBe(firstLine(updated));
+      expect(firstLine(updated)).toMatch(
+        /^# yaml-language-server: \$schema=\S+sch-milestones\.schema\.yaml$/,
+      );
+      expect(resolve(dirname(join(dir, "sch-milestones.yaml")), schemaRef)).toBe(schemaPath);
+      expect(updated.match(/yaml-language-server/g)).toHaveLength(1);
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }

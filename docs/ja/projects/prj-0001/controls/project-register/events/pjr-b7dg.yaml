@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_665fae9847214f31adbf0e639dd29f6e
+  ts: "2026-09-30T11:39:31Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-GWYJ の 2 回の実行で、sample の網羅の確認と grade による比較が完了しなかったため、残課題として切り出す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: rulebook から削除した例が sample に含まれるかの確認と grade による比較
+    - field: description
+      from: ""
+      to: PJR-GWYJ で 52 件の rulebook から削除したサンプル章の要点が既存の sample に含まれるかを確かめ、欠けるものだけを反映する。外出しの前後を grade で比べ、vp-qe-kata-conformance と vp-arc-conciseness の finding を記録する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-30"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_43e32b28791b4bd6844d5f08de39a7ae
+  ts: "2026-09-30T15:15:40Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_665fae9847214f31adbf0e639dd29f6e
+- v: 1
+  id: reg_7f00b4d9d742490ba2c75e24c6636e6d
+  ts: "2026-09-30T15:26:01Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 外出し後の `grade` による比較（finding の記録）が sandbox の承認待ちにより実行できず、プランの完了条件を満たせていないため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 外出し後の `grade` による比較（finding の記録）が sandbox の承認待ちにより実行できず、プランの完了条件を満たせていないため。"
+  previous_event_id: reg_43e32b28791b4bd6844d5f08de39a7ae
+- v: 1
+  id: reg_39042ca1d7234f7f9ee6f84787ed604a
+  ts: "2026-09-30T22:03:30Z"
+  action: start
+  actor: orchestrator
+  from_status: waiting
+  to_status: in-progress
+  reason: 利用者の判断により、記述例が失われた 43 件の rulebook を復元したうえで、sample の分離は今後 bootstrap や rulebook-maintenance などで進めるため in-progress のまま残す
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7f00b4d9d742490ba2c75e24c6636e6d
+- v: 1
+  id: reg_33fe9b9c4e544e81ba860954dab92e8e
+  ts: "2026-10-07T11:01:32Z"
+  action: wait
+  actor: claude-orchestrator
+  from_status: in-progress
+  to_status: waiting
+  reason: grade による外出し前後の比較は agent を起動するため、codex の sandbox では実行できない。比較の実行者（orchestrator など）を決めてから再開する
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 外出し後の `grade` による比較（finding の記録）が sandbox の承認待ちにより実行できず、プランの完了条件を満たせていないため。"
+      to: grade による外出し前後の比較は agent を起動するため、codex の sandbox では実行できない。比較の実行者（orchestrator など）を決めてから再開する
+  previous_event_id: reg_39042ca1d7234f7f9ee6f84787ed604a

@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c1933dd379ac45fca2cac729c9bab42a
+  ts: "2026-09-29T21:34:44Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: v0.3.0 と一緒に docs-site を公開すると利用者が判断したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: "@specdojo/docs-site を npm へ公開する"
+    - field: description
+      from: ""
+      to: docs-site は npm に未公開で、docs-editing-guide・移行ガイド・docs-site の README の npm install の手順が失敗する。publish-docs-site.yml を追加した。npm 側の trusted publisher の設定と、staged publishing の承認による初回公開、導入の確認が残る
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-30"
+    - field: due
+      from: ""
+      to: _TODO_

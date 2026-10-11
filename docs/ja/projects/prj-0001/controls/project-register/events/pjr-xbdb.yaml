@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6a6ee344892842f5bc891d6bf0cde4a2
+  ts: "2026-10-09T13:28:56Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer scaffold の Emacs の設定が ~/.emacs.d があると読まれない
+    - field: description
+      from: ""
+      to: devcontainer scaffold --editor emacs の post-create は、init.el がどこにもないときテンプレートを ~/.config/emacs/init.el に置く。Emacs は ~/.emacs.d があると init.el がなくても ~/.config/emacs を読まないため、Emacs を起動したことがある環境やホームを引き継ぐ構成ではテンプレートが黙って無視される（2026-10-09 に実機で確認）。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-09"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_0ea9e0e107944444a62122d5bfef6c3d
+  ts: "2026-10-09T13:29:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6a6ee344892842f5bc891d6bf0cde4a2
+- v: 1
+  id: reg_d65065934f3443bf9f0771fbcaef0871
+  ts: "2026-10-09T13:40:11Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0ea9e0e107944444a62122d5bfef6c3d
+- v: 1
+  id: reg_9c954f7d849e4e7ca019593151c5ce5f
+  ts: "2026-10-09T13:41:22Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、完了条件と照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: 生成する post-create を、~/.emacs・~/.emacs.el・~/.emacs.d/init.el・~/.config/emacs/init.el のいずれかがあれば何もせず、なければ ~/.emacs.d の有無で実際に読まれる場所へ置くように直した。一時的な HOME で 3 通りを unit test で確かめた。
+  previous_event_id: reg_d65065934f3443bf9f0771fbcaef0871

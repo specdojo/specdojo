@@ -3,44 +3,99 @@ version: 1
 document: specdojo:cpd-rulebook
 path: docs/ja/specdojo/rulebooks/cpd-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 91
-graded_at: "2026-09-02T13:46:38.850Z"
-graded_by: gemma-expert-executor
+score: 68
+graded_at: "2026-09-29T22:17:43.695Z"
+graded_by: codex-expert-executor
 content_hash: 7f0a5b0c9f4c903d9cbc5efc7e1fc73862b098356dccb25047e893cf85c927ab
 categories:
-  consistency:
-    score: 100
-  usability:
-    score: 100
+  purpose:
+    score: 75
+  operations:
+    score: 63
+  planning:
+    score: 58
+  business:
+    score: 67
   architecture:
     score: 100
-  quality:
+  usability:
+    score: 83
+  implementation:
     score: 75
+  quality:
+    score: 50
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 2
+    score: 50
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-qe-verifiability:
+  vp-dev-implementation-readiness:
     level: 4
     score: 100
-  vp-qe-omissions-consistency:
-    level: 4
-    score: 100
-  vp-qe-kata-conformance:
+  vp-dev-change-impact:
     level: 2
     score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
   vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
     level: 4
     score: 100
-  vp-ux-language-consistency:
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,13 +103,111 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 0
+  major: 13
+  minor: 4
   note: 0
 findings:
   - id: F001
     severity: major
+    rule: vp-po-decision-readiness
+    line: 167
+    anchor: "### 7.4. 補足"
+    message: 「補足」に未確定論点を列挙することだけを定め、各論点の判断者、判断タイミング、影響、次アクション、承認・保留・差し戻しとの関係を定義していないため、POが判断できる状態を保証できない。
+  - id: F002
+    severity: major
+    rule: vp-po-publication-accountability
+    line: 38
+    anchor: "| status     | `draft`/`ready`/`deprecated`                   | ○    |"
+    message: "`status` の列挙だけで、CPDに含まれる構成情報の公開対象、非公開情報の確認方法、公開可否を最終判断する人間のPOまたは承認者を定義していない。"
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 133
+    anchor: "## 6. 本文構成（標準テンプレ）"
+    message: 標準章順と作業単位は示されているが、各作業またはレビューを担うRole codeと判断タイミングがなく、担当割当てと所要時間見積もりには別途補完が必要である。
+  - id: F004
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 40
+    anchor: "| based_on   | 根拠となる定義（用語集、外部IF、上位方針など） | 任意 |"
+    message: "`based_on` を任意とし、CND・外部IF・用語定義などの必須依存、依存変更時の影響、後続成果物やScheduleへの波及、PJR登録候補を記録する規則を定めていない。"
+  - id: F005
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 167
+    anchor: "### 7.4. 補足"
+    message: 境界や外部連携の未確定論点を一括して「補足」に列挙させるだけで、リスク・課題・変更要求・決定事項の区分、PJRへの転記条件、報告先、担当Role codeを定義していない。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 50
+    anchor: "## 4. CPDで合意すること（スコープ）"
+    message: 合意対象をコンテナ、コンポーネント、DB、外部連携、関係に限定し、対象者の業務課題、放置時の影響、期待価値、成功基準、各構成判断を採用した理由または上位文書への必須参照を求めていない。
+  - id: F007
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 52
+    anchor: "### 4.1. 合意したいこと"
+    message: 「合意したいこと」は列挙されているが、作成者、アーキテクチャ確認者、業務確認者、最終合意者と、それぞれが確認する対象を定義していない。
+  - id: F008
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 198
+    anchor: "## 11. サンプル（簡易）"
+    message: Frontmatterで外部sampleを宣言している一方、「サンプル（簡易）」以降に完成例をほぼ丸ごと再掲しており、外部sampleを正本として削除または最小輪郭へ縮約しても規則上の判断情報を失わない。
+  - id: F009
+    severity: major
+    rule: vp-dev-change-impact
+    line: 41
+    anchor: "| supersedes | 置き換え関係（古い図→新しい図）                | 任意 |"
+    message: "`supersedes` の任意記載以外に、コンポーネントや関係を変更した際のCND、外部IF、データ設計、Mermaid図、sampleなどへの影響確認と更新方針を定義していない。"
+  - id: F010
+    severity: major
+    rule: vp-dev-testability
+    line: 189
+    anchor: "## 10. レビュー観点（チェックリスト）"
+    message: レビューチェックリストだけで、Frontmatter検証、リンク検査、Mermaid構文・描画確認に使用するコマンド、対象ファイル、期待結果、エラー時対応を示していない。
+  - id: F011
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 189
+    anchor: "## 10. レビュー観点（チェックリスト）"
+    message: 「過不足なく」「必要十分」「意味が解釈一致する」とする項目に、合格と判定する具体条件または確認方法がなく、レビュー担当者によって判定が揺れる。
+  - id: F012
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 211
+    anchor: "## 12. 概要"
+    message: 標準構成を「概要」「C4コンポーネント図」「要素の説明」「補足」の4章と定義しているのに、埋め込み例は第12〜15章に加えて第16章「参照」を持ち、必須の章構成を一意に判定できない。
+  - id: F013
+    severity: major
     rule: vp-qe-kata-conformance
     line: 1
-    message: Frontmatter で指定されているサンプル (`specdojo:cpd-sample`) の構成と type が、本書の定義する標準構成 (`architecture` 固定、4章構成) と矛盾している。
     anchor: "# C4コンポーネント図 ドキュメント作成ルール"
+    message: Frontmatter で指定されているサンプル (`specdojo:cpd-sample`) の構成と type が、本書の定義する標準構成 (`architecture` 固定、4章構成) と矛盾している。
+  - id: F014
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# C4コンポーネント図 ドキュメント作成ルール"
+    message: >-
+      Frontmatterで指定した `specdojo:cpd-sample` の `rulebook` が `specdojo:cpd-mermaid-rulebook` を指しており、評価対象
+      `specdojo:cpd-rulebook` の完成例として関連付いていない。
+  - id: F015
+    severity: minor
+    rule: vp-ux-readability
+    line: 198
+    anchor: "## 11. サンプル（簡易）"
+    message: 「サンプル（簡易）」ではFrontmatterだけがコードブロック内にあり、「概要」以降が同階層の第12〜16章として続くため、例示範囲と規範本文の境界を初見の読者が判別しづらい。
+  - id: F016
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 38
+    anchor: "| status     | `draft`/`ready`/`deprecated`                   | ○    |"
+    message: "`status` の値だけを列挙し、`draft` から `ready` へ移す完了条件、未解決事項の許容基準、承認者、公開前確認を定義していない。"
+  - id: F017
+    severity: major
+    rule: vp-ops-operability
+    line: 41
+    anchor: "| supersedes | 置き換え関係（古い図→新しい図）                | 任意 |"
+    message: "`based_on` と `supersedes` の項目説明だけで、CPDの更新契機、再描画・再検証手順、変更履歴、問い合わせ導線、保守担当Role codeを定義していない。"

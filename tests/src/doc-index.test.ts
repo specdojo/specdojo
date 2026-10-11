@@ -1,8 +1,17 @@
 import { describe, expect, it } from "vitest";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import {
+  copyFileSync,
+  cpSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { basename, join } from "node:path";
 import { tmpdir } from "node:os";
-import fg from "fast-glob";
+import { globSync } from "tinyglobby";
 import {
   assertControlGeneratedIndexes,
   buildDocIndex,
@@ -651,21 +660,59 @@ describe("buildDocIndex", () => {
 
 describe("prj-0001 project register references", () => {
   it("個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する", () => {
-    const repoRoot = process.cwd();
-    const outputDir = mkdtempSync(join(tmpdir(), "specdojo-test-"));
-    const indexPath = join(outputDir, "doc-index.json");
+    const sourceRoot = process.cwd();
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-register-refs-"));
+    const indexPath = join(repoRoot, ".specdojo", "doc-index.json");
     const registerId = "prj-0001:pjr-index";
 
     try {
+      // hook の register/index build と共有生成物を読み書きしないよう、追跡対象の docs だけを
+      // fixture へ複製し、検査に必要な登録簿 index を fixture 内で用意する。
+      cpSync(join(sourceRoot, "docs"), join(repoRoot, "docs"), {
+        recursive: true,
+        filter: (path) => basename(path) !== "generated",
+      });
+      mkdirSync(join(repoRoot, ".specdojo"), { recursive: true });
+      const sourceIndexConfig = join(sourceRoot, ".specdojo", "index-config.yaml");
+      if (existsSync(sourceIndexConfig)) {
+        copyFileSync(sourceIndexConfig, join(repoRoot, ".specdojo", "index-config.yaml"));
+      }
+      const generatedRegisterDir = join(
+        repoRoot,
+        "docs",
+        "ja",
+        "projects",
+        "prj-0001",
+        "controls",
+        "project-register",
+        "generated",
+      );
+      mkdirSync(generatedRegisterDir, { recursive: true });
+      writeFileSync(
+        join(generatedRegisterDir, "pjr-index.md"),
+        [
+          "---",
+          "specdojo:",
+          `  id: ${registerId}`,
+          "  type: project",
+          "  status: ready",
+          "---",
+          "",
+          "# Project Register",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
       buildRepositoryOnlyDocIndex(join(repoRoot, "docs"), indexPath, repoRoot);
 
       const expectedPath =
         "docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md";
       expect(lookupDocIndex(registerId, indexPath)).toBe(expectedPath);
 
-      const registerFiles = fg.sync("docs/ja/projects/prj-0001/controls/project-register/*.md", {
+      const registerFiles = globSync("docs/ja/projects/prj-0001/controls/project-register/*.md", {
         cwd: repoRoot,
         absolute: true,
+        expandDirectories: false,
       });
       let partOfReferenceCount = 0;
       for (const file of registerFiles) {
@@ -679,9 +726,10 @@ describe("prj-0001 project register references", () => {
       }
       expect(partOfReferenceCount).toBeGreaterThan(0);
 
-      const markdownFiles = fg.sync("docs/**/*.md", {
+      const markdownFiles = globSync("docs/**/*.md", {
         cwd: repoRoot,
         absolute: true,
+        expandDirectories: false,
         ignore: ["**/generated/**"],
       });
       let wikilinkReferenceCount = 0;
@@ -697,7 +745,7 @@ describe("prj-0001 project register references", () => {
       }
       expect(wikilinkReferenceCount).toBeGreaterThan(0);
     } finally {
-      rmSync(outputDir, { recursive: true, force: true });
+      rmSync(repoRoot, { recursive: true, force: true });
     }
   }, 20_000);
 });

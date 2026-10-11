@@ -32,3 +32,135 @@
     - field: due
       from: ""
       to: "2026-11-14"
+- v: 1
+  id: reg_cba00bf5b932497cb34bbbffcc223f51
+  ts: "2026-09-27T00:59:17Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_848415587a2647bf935a687bbea136bf
+- v: 1
+  id: reg_cb8fac78bf4f43ba8d568df98da7903b
+  ts: "2026-09-27T01:11:27Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner validation `validate-schema` failed (exit 1). The plan requires all static checks and validations to pass before completion."
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner validation `validate-schema` failed (exit 1). The plan requires all static checks and validations to pass before completion."
+  previous_event_id: reg_cba00bf5b932497cb34bbbffcc223f51
+- v: 1
+  id: reg_7300374c054b4e0ea350a4a73582b36e
+  ts: "2026-09-27T02:07:17Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_cb8fac78bf4f43ba8d568df98da7903b
+- v: 1
+  id: reg_a314540e3ba54b5389d20d69a623f51e
+  ts: "2026-09-27T02:35:32Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner validation `test-integration` (npm run test:integration) failed."
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: runner validation `validate-schema` failed (exit 1). The plan requires all static checks and validations to pass before completion."
+      to: "agent exited with non-zero code: runner validation `test-integration` (npm run test:integration) failed."
+  previous_event_id: reg_7300374c054b4e0ea350a4a73582b36e
+- v: 1
+  id: reg_636946eab84a423ab26f84253ff7fc86
+  ts: "2026-09-27T03:14:21Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_a314540e3ba54b5389d20d69a623f51e
+- v: 1
+  id: reg_e60e96dafbed4fff82ad4c312f88d2c4
+  ts: "2026-09-27T03:26:56Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: 'integrate failed: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: test-schema.yaml'
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: runner validation `test-integration` (npm run test:integration) failed."
+      to: 'integrate failed: Deliverable status promotion to "ready" is human-only and must not be done by an agent run: test-schema.yaml'
+  previous_event_id: reg_636946eab84a423ab26f84253ff7fc86
+- v: 1
+  id: reg_95050293c57e4b0eb9567dc7dae2598a
+  ts: "2026-09-27T04:21:11Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_e60e96dafbed4fff82ad4c312f88d2c4
+- v: 1
+  id: reg_2a74faebe11e40c28e1c4c05f69a928f
+  ts: "2026-09-27T04:36:07Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_95050293c57e4b0eb9567dc7dae2598a
+- v: 1
+  id: reg_013a7da20c7e4f3780e374701456b447
+  ts: "2026-09-27T04:37:42Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: agy-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: sch-strategy-launch の recipe/rulebook/sample/template-consolidate へ review フェーズを追加し、schedule build で 14 成果物×4 の review タスク 56 件を生成した。owner は edit タスクを踏襲
+  previous_event_id: reg_2a74faebe11e40c28e1c4c05f69a928f

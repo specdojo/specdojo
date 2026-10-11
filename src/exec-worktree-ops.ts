@@ -9,7 +9,7 @@ import {
   rmSync,
   writeFileSync,
 } from "node:fs";
-import { join, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { load } from "js-yaml";
 import { acquireSchedulerLock, releaseSchedulerLock } from "./exec-events.js";
 import {
@@ -22,10 +22,27 @@ import { stripTerminalControlSequences } from "./exec-shared.js";
 import {
   agentProtectedConfigPaths,
   agentProtectedConfigViolation,
+  qualifiedRepoPaths,
+  type AgentRepoPathChanges,
 } from "./exec-agent-protected-config.js";
-import { recordProtectedConfigBlock } from "./exec-protection-handoff.js";
-import { specdojoPackageRootDir } from "./package-paths.js";
+import { recordProtectedConfigBlockAcrossRepos } from "./exec-protection-handoff.js";
 import {
+  assertNoPendingProductChanges,
+  discardStaleProductWorktrees,
+  ensureProductWorktrees,
+  productIntegrationTarget,
+  projectRepoDirName,
+  productWorktreeRemovalBlockers,
+  removeEmptyTaskDirectory,
+  removeProductWorktrees,
+  type ProductRepo,
+} from "./exec-task-repos.js";
+import { specdojoPackageRootDir } from "./package-paths.js";
+import { rebuildRegisterTicketFromEvents, unionRegisterEventLogs } from "./register-event-merge.js";
+import { displayIdFromRegisterEventFilename, REGISTER_EVENTS_DIRNAME } from "./register-events.js";
+import { displayIdFromTicketFilename } from "./register-item.js";
+import {
+  appendGitFailureLog,
   ensureExecWorktree,
   execBranchExists,
   findExecWorktree,
@@ -214,17 +231,47 @@ function assertNoAgentProtectedConfigChanges(
     ...statusPaths(worktree.path),
     ...committed,
   ]);
-  if (protectedPaths.length > 0) {
-    const reason = agentProtectedConfigViolation(protectedPaths);
+  const changes: AgentRepoPathChanges[] = [
+    ...(protectedPaths.length > 0
+      ? [{ repo: { root: worktree.path }, paths: protectedPaths }]
+      : []),
+    ...productProtectedConfigChanges(worktree),
+  ];
+  if (changes.length > 0) {
+    const reason = agentProtectedConfigViolation(qualifiedRepoPaths(changes));
     // commit 前の再検査でも、対象と提案差分を result の申し送りへ残してから block する。
-    recordProtectedConfigBlock({
+    recordProtectedConfigBlockAcrossRepos({
       resultPath: resolve(worktree.path, resultRel),
-      repoRoot: worktree.path,
-      paths: protectedPaths,
+      changes,
       reason,
     });
     throw new Error(reason);
   }
+}
+
+// プロダクト worktree の未 commit 差分と、統合先から進んだ exec branch の commit を保護パスで検査する。
+function productProtectedConfigChanges(worktree: ExecWorktree): AgentRepoPathChanges[] {
+  return (worktree.repos ?? []).flatMap((product) => {
+    if (!existsSync(product.path)) return [];
+    const target = productIntegrationTarget(product);
+    const base = gitResult(product.path, ["merge-base", "HEAD", target]);
+    const compareBase = typeof base.stdout === "string" ? base.stdout.trim() : "";
+    const committed =
+      base.status === 0 && compareBase
+        ? zeroSeparatedPaths(product.path, [
+            "diff",
+            "--no-renames",
+            "--name-only",
+            "-z",
+            `${compareBase}..HEAD`,
+          ])
+        : [];
+    const paths = agentProtectedConfigPaths(product.path, [
+      ...statusPaths(product.path),
+      ...committed,
+    ]);
+    return paths.length > 0 ? [{ repo: { name: product.name, root: product.path }, paths }] : [];
+  });
 }
 
 const DOC_INDEX_REL = ".specdojo/doc-index.json";
@@ -297,9 +344,9 @@ export function resolveCommitScope(
     };
   }
 
-  // register 由来のタスクは対象成果物を特定できず targets を持たない。許可リストを
-  // 導出する根拠が無いため、従来どおり除外リスト方式へフォールバックする（register の
-  // 通常経路である作業ツリー差分による commit と同じ範囲になる）。
+  // register 由来のタスクは許可リスト方式ではなく、作業ツリー差分による commit を使う。
+  // 個票が targets を宣言している場合でも、commit scope は従来どおり除外リスト方式へ
+  // フォールバックする（target coverage 検証は evidence 側で行い、ここでは使わない）。
   if (identity.origin === "register") return { scope: null, unresolvedTargets: [] };
 
   // schedule 由来の edit タスクは targets から commit 許可リストを導出する。targets が
@@ -317,6 +364,9 @@ export function resolveCommitScope(
   const unresolvedTargets: string[] = [];
   const lookup = headDocIndexLookup(worktree.path);
   for (const target of identity.targets ?? []) {
+    // `<repo>:<path>` はプロダクトリポジトリの対象で、プロダクト側の commit 対象に入る
+    // （exec-repo-integration）。プロジェクト側の doc id としては解決しない。
+    if (isProductRepoTarget(worktree, target)) continue;
     const fromIndex = lookup(target);
     if (fromIndex) {
       allowedFiles.add(fromIndex);
@@ -349,6 +399,100 @@ export function resolveCommitScope(
   };
 }
 
+// checkpoint 済みの HEAD の plan（human は result）frontmatter の targets。agent の working tree
+// 改変の影響を受けない。プロダクトリポジトリの commit 対象（`<repo>:<path>`）の導出に使う。
+export function taskTargetsAtHead(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+): string[] {
+  const { planRel, resultRel } = taskPaths(context, taskId);
+  const resultContent = readWorktreeHeadFile(worktree.path, resultRel);
+  const resultIdentity = resultContent ? parseResultTaskIdentity(resultContent) : null;
+  if (resultIdentity?.execution === "human") return resultIdentity.targets ?? [];
+  const planContent = readWorktreeHeadFile(worktree.path, planRel);
+  return (planContent ? parsePlanTaskIdentity(planContent) : null)?.targets ?? [];
+}
+
+// `<repo>:<path>` 形式で、接頭辞がタスクのプロダクト worktree のリポジトリ名である値。
+function isProductRepoTarget(worktree: ExecWorktree, target: string): boolean {
+  const separator = target.indexOf(":");
+  if (separator <= 0) return false;
+  const prefix = target.slice(0, separator);
+  return (worktree.repos ?? []).some((product) => product.name === prefix);
+}
+
+// register 由来のタスクで新規ファイルの作成を許す既知の成果物ディレクトリ。HEAD に追跡
+// ファイルを持つ最上位ディレクトリもこれに加える（利用プロジェクト固有の構成に追従するため）。
+export const REGISTER_NEW_FILE_DIR_PREFIXES: readonly string[] = [
+  "docs/",
+  "src/",
+  "tests/",
+  "tools/",
+  "scripts/",
+  "packages/",
+];
+
+// register 由来のタスクは作業ツリー差分を commit するため、agent が作業用に作った一時ファイル
+// （リポジトリ直下の modify.py、patch.js など）まで commit 対象に入る。HEAD に存在しない新規
+// ファイルは、既知の成果物ディレクトリ・HEAD の追跡済み最上位ディレクトリ・result・task の
+// evidence 配下・個票 targets から解決したパスに限り、それ以外を commit 範囲外とする。
+// 既存ファイルの変更と削除は従来どおり除外リスト方式で判定する。
+function registerNewFileIsAllowed(
+  worktree: ExecWorktree,
+  context: WorktreeOpsContext,
+  taskId: string,
+): (path: string) => boolean {
+  const { executionRel, planRel, resultRel } = taskPaths(context, taskId);
+  const topLevelDirs = zeroSeparatedPaths(worktree.path, [
+    "ls-tree",
+    "-d",
+    "--name-only",
+    "-z",
+    "HEAD",
+  ]).map((dir) => `${dir}/`);
+  const allowedDirPrefixes = [
+    ...REGISTER_NEW_FILE_DIR_PREFIXES,
+    ...topLevelDirs,
+    `${executionRel}/exec/evidence/${worktreeNameFromTaskId(taskId)}/`,
+  ];
+  const planContent = readWorktreeHeadFile(worktree.path, planRel);
+  const targets = (planContent ? parsePlanTaskIdentity(planContent) : null)?.targets ?? [];
+  const lookup = headDocIndexLookup(worktree.path);
+  const allowedFiles = new Set<string>([resultRel]);
+  for (const target of targets) {
+    const resolved = lookup(target);
+    if (resolved) allowedFiles.add(resolved);
+  }
+  return (path: string) =>
+    allowedFiles.has(path) || allowedDirPrefixes.some((prefix) => path.startsWith(prefix));
+}
+
+function pathsTrackedAtHead(worktreePath: string, paths: readonly string[]): Set<string> {
+  if (paths.length === 0) return new Set();
+  return new Set(
+    zeroSeparatedPaths(worktreePath, [
+      "ls-tree",
+      "-r",
+      "--name-only",
+      "--full-tree",
+      "-z",
+      "HEAD",
+      "--",
+      ...paths,
+    ]),
+  );
+}
+
+function isRegisterOriginTask(
+  context: WorktreeOpsContext,
+  worktree: ExecWorktree,
+  taskId: string,
+): boolean {
+  const planContent = readWorktreeHeadFile(worktree.path, taskPaths(context, taskId).planRel);
+  return (planContent ? parsePlanTaskIdentity(planContent) : null)?.origin === "register";
+}
+
 // worktree の変更を「commit するパス」「許可リスト外のため commit しないパス」に分ける。
 // 除外リスト（isCommitTargetPath）は許可リストの内側でも引き続き適用する。
 export function partitionCommitTargets(
@@ -361,7 +505,24 @@ export function partitionCommitTargets(
     isCommitTargetPath(path, executionRel, resultRel),
   );
   const { scope, unresolvedTargets } = resolveCommitScope(context, worktree, taskId);
-  if (!scope) return { targets: candidates, outOfScope: [], unresolvedTargets };
+  if (!scope) {
+    // 人間の作業は agent の一時ファイル対策の対象外とし、従来どおり除外リスト方式で commit する。
+    if (
+      !isRegisterOriginTask(context, worktree, taskId) ||
+      isHumanWorktreeExecution(context, worktree, taskId)
+    ) {
+      return { targets: candidates, outOfScope: [], unresolvedTargets };
+    }
+    const tracked = pathsTrackedAtHead(worktree.path, candidates);
+    const isAllowedNewFile = registerNewFileIsAllowed(worktree, context, taskId);
+    const targets: string[] = [];
+    const outOfScope: string[] = [];
+    for (const path of candidates) {
+      const allowed = tracked.has(path) || isAllowedNewFile(path);
+      (allowed ? targets : outOfScope).push(path);
+    }
+    return { targets, outOfScope, unresolvedTargets };
+  }
 
   const targets: string[] = [];
   const outOfScope: string[] = [];
@@ -404,6 +565,14 @@ export function stageCommitTargets(repoRoot: string, paths: readonly string[]): 
   const stageable = selectStageablePaths(repoRoot, paths);
   if (stageable.length === 0) return;
   gitOutput(repoRoot, ["add", "-A", "--", ...stageable]);
+}
+
+// runner が stage した対象だけを index から戻す。利用者や別処理が stage 済みの無関係な
+// パスは保持し、commit / hook の失敗を後続の exec run へ持ち越さない。
+export function unstageCommitTargets(repoRoot: string, paths: readonly string[]): void {
+  const unique = [...new Set(paths)];
+  if (unique.length === 0) return;
+  gitOutput(repoRoot, ["reset", "--quiet", "--", ...unique]);
 }
 
 // markdownlint-cli の終了コード。1 だけが記法違反を表し、それ以外は実行環境の問題である。
@@ -482,6 +651,7 @@ export function stabilizeCommitTargets(
   repoRoot: string,
   listRemainingPaths: () => string[],
   maxAttempts = MAX_COMMIT_STABILIZATION_ATTEMPTS,
+  failureLogPath?: string,
 ): void {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const paths = listRemainingPaths();
@@ -499,7 +669,23 @@ export function stabilizeCommitTargets(
     }
     if (staged.status !== 1) throw new Error("Failed to inspect post-hook worktree changes.");
 
-    gitOutput(repoRoot, ["commit", "--amend", "--no-edit", "--", ...paths]);
+    const commitArgs = ["commit", "--amend", "--no-edit", "--", ...paths];
+    const commit = gitResult(repoRoot, commitArgs);
+    if (commit.status !== 0) {
+      const output = [commit.stdout, commit.stderr]
+        .filter((part): part is string => typeof part === "string" && part.length > 0)
+        .join("\n");
+      appendGitFailureLog(failureLogPath, [
+        `=== ${new Date().toISOString()} git commit --amend ===`,
+        `exit: ${commit.status ?? "unknown"}`,
+        "--- stdout ---",
+        typeof commit.stdout === "string" ? commit.stdout : "",
+        "--- stderr ---",
+        typeof commit.stderr === "string" ? commit.stderr : "",
+        "",
+      ]);
+      throw new Error(`git commit --amend failed: ${summarizeGitHookFailure(output)}`);
+    }
   }
 
   const dirty = listRemainingPaths();
@@ -530,24 +716,40 @@ export function commitWorktreeChanges(params: {
   taskId: string;
   message?: string;
   dryRun?: boolean;
+  // commit-scope の警告を追記する evidence 側のログ（run ディレクトリの integrate.log）。
+  // worktree 内の evidence 配下を指す場合は、同じ commit に含まれる。
+  scopeLogPath?: string;
+  // commit hook 失敗の秘匿済み stdout / stderr を保存する run 単位のログ。
+  failureLogPath?: string;
+  // 呼び出し側（exec run の統合段）がプロダクトリポジトリの commit と統合を行う場合に true。
+  // false（手動の `exec worktree commit` など）では、プロダクトに未統合の変更が残るタスクの
+  // プロジェクト側だけを commit しない。統合後の撤去でプロダクトの変更を失わないため。
+  productsIntegratedByCaller?: boolean;
 }): { targets: string[]; committed: boolean } {
   const { context, worktree, taskId } = params;
   assertNoAgentProtectedConfigChanges(context, worktree, taskId);
-  const {
-    targets: paths,
-    outOfScope,
-    unresolvedTargets,
-  } = partitionCommitTargets(context, worktree, taskId);
-  for (const target of unresolvedTargets) {
-    process.stdout.write(`commit-scope: unresolved target doc id (not committable): ${target}\n`);
+  if (!params.productsIntegratedByCaller) assertNoPendingProductChanges(worktree);
+  let partition = partitionCommitTargets(context, worktree, taskId);
+  const scopeWarnings = [
+    ...partition.unresolvedTargets.map(
+      (target) => `commit-scope: unresolved target doc id (not committable): ${target}\n`,
+    ),
+    ...(partition.outOfScope.length > 0
+      ? [
+          `commit-scope: skipped non-target changes (left in worktree):\n${partition.outOfScope
+            .map((path) => `  ${path}`)
+            .join("\n")}\n`,
+        ]
+      : []),
+  ];
+  for (const warning of scopeWarnings) process.stdout.write(warning);
+  if (scopeWarnings.length > 0 && params.scopeLogPath && !params.dryRun) {
+    mkdirSync(resolve(params.scopeLogPath, ".."), { recursive: true });
+    appendFileSync(params.scopeLogPath, scopeWarnings.join(""), "utf8");
+    // 追記したログ自体を commit 対象に含めるため、分類をやり直す。
+    partition = partitionCommitTargets(context, worktree, taskId);
   }
-  if (outOfScope.length > 0) {
-    process.stdout.write(
-      `commit-scope: skipped non-target changes (left in worktree):\n${outOfScope
-        .map((path) => `  ${path}`)
-        .join("\n")}\n`,
-    );
-  }
+  const paths = partition.targets;
   if (paths.length === 0) {
     process.stdout.write("No commit-target changes.\n");
     return { targets: [], committed: false };
@@ -564,14 +766,35 @@ export function commitWorktreeChanges(params: {
     return { targets: paths, committed: false };
   }
   if (staged.status !== 1) throw new Error("Failed to inspect staged worktree changes.");
-  gitOutput(worktree.path, [
+  const commitArgs = [
     "commit",
     "-m",
     params.message?.trim() || `exec(${taskId}): apply task changes`,
     "--",
     ...paths,
-  ]);
-  stabilizeCommitTargets(worktree.path, () => commitTargetPaths(context, worktree, taskId));
+  ];
+  const commit = gitResult(worktree.path, commitArgs);
+  if (commit.status !== 0) {
+    const output = [commit.stdout, commit.stderr]
+      .filter((part): part is string => typeof part === "string" && part.length > 0)
+      .join("\n");
+    appendGitFailureLog(params.failureLogPath, [
+      `=== ${new Date().toISOString()} git commit task changes ===`,
+      `exit: ${commit.status ?? "unknown"}`,
+      "--- stdout ---",
+      typeof commit.stdout === "string" ? commit.stdout : "",
+      "--- stderr ---",
+      typeof commit.stderr === "string" ? commit.stderr : "",
+      "",
+    ]);
+    throw new Error(`git commit failed: ${summarizeGitHookFailure(output)}`);
+  }
+  stabilizeCommitTargets(
+    worktree.path,
+    () => commitTargetPaths(context, worktree, taskId),
+    undefined,
+    params.failureLogPath,
+  );
   return { targets: paths, committed: true };
 }
 
@@ -615,6 +838,117 @@ export function restoreRootWorkingCopies(repoRoot: string, snapshot: RootWorking
   }
 }
 
+// `git merge --abort` (reset --merge) refuses to run when a tracked file's cached stat no longer
+// matches the file even though its content is unchanged ("not uptodate"), which happens when another
+// process in the same working tree (for example a routine) touches files during the merge. Refresh
+// the index first so a stat-only drift cannot leave the tree mid-merge.
+export function abortMerge(repoRoot: string): ReturnType<typeof gitResult> {
+  gitResult(repoRoot, ["update-index", "-q", "--refresh"]);
+  return gitResult(repoRoot, ["merge", "--abort"]);
+}
+
+// `controls/project-register/events/pjr-xxxx.yaml` 形式のイベントファイルなら表示 ID を返す。
+function registerEventDisplayId(path: string): string | undefined {
+  if (basename(dirname(path)) !== REGISTER_EVENTS_DIRNAME) return undefined;
+  return displayIdFromRegisterEventFilename(basename(path));
+}
+
+// Resolve an in-progress merge whose conflicts are all on exec-branch-owned paths, then complete
+// the merge commit. Register event files are resolved as the union of both sides and the matching
+// ticket is rebuilt from the merge-target-only events; other paths take the exec branch side. Returns the resolved paths, or null when the
+// merge has no conflicts (for example a hook rejection), conflicts on other paths, or cannot be
+// completed; the caller then aborts the merge. The commit uses --no-verify because a regular
+// `git merge` does not run pre-commit either, and only the item's own bookkeeping was resolved.
+function resolveBranchOwnedConflicts(params: {
+  repoRoot: string;
+  branchOwnedPaths: string[];
+  message?: string;
+}): string[] | null {
+  const { repoRoot } = params;
+  const conflicted = zeroSeparatedPaths(repoRoot, ["diff", "--name-only", "--diff-filter=U", "-z"]);
+  if (conflicted.length === 0) return null;
+  const owned = new Set(params.branchOwnedPaths);
+  if (conflicted.some((path) => !owned.has(path))) return null;
+  const stagesOf = (path: string): (string | undefined)[] =>
+    gitOutput(repoRoot, ["ls-files", "-u", "-z", "--", path])
+      .split("\0")
+      .filter(Boolean)
+      .map((entry) => entry.split("\t")[0]?.split(" ")[2]);
+  // イベントファイルは両側の和集合で解決し、対応する個票はイベントから再構築する。
+  // 和集合で解決できないものは従来どおり exec branch 側で解決する。
+  const handled = new Set<string>();
+  for (const path of conflicted) {
+    const displayId = registerEventDisplayId(path);
+    if (!displayId) continue;
+    const stages = stagesOf(path);
+    if (!stages.includes("2") || !stages.includes("3")) continue;
+    const ours = gitResult(repoRoot, ["show", `:2:${path}`]);
+    const theirs = gitResult(repoRoot, ["show", `:3:${path}`]);
+    if (ours.status !== 0 || theirs.status !== 0) continue;
+    const union = unionRegisterEventLogs(String(ours.stdout), String(theirs.stdout), path);
+    if (!union.ok) {
+      process.stdout.write(
+        `  [integrate] could not union register events; using the exec branch side: ${union.reason}\n`,
+      );
+      continue;
+    }
+    writeFileSync(resolve(repoRoot, path), union.content, "utf8");
+    if (gitResult(repoRoot, ["add", "--", path]).status !== 0) return null;
+    handled.add(path);
+    process.stdout.write(
+      `  [integrate] merged register events as a union: ${path} ` +
+        `(kept ${union.oursOnlyIds.size} event(s) only on the merge target)\n`,
+    );
+    const ticketPath = conflicted.find(
+      (candidate) =>
+        dirname(candidate) === dirname(dirname(path)) &&
+        displayIdFromTicketFilename(basename(candidate)) === displayId,
+    );
+    if (!ticketPath || !stagesOf(ticketPath).includes("3")) continue;
+    const ticket = gitResult(repoRoot, ["show", `:3:${ticketPath}`]);
+    if (ticket.status !== 0) continue;
+    let rebuilt: ReturnType<typeof rebuildRegisterTicketFromEvents>;
+    try {
+      rebuilt = rebuildRegisterTicketFromEvents(
+        String(ticket.stdout),
+        union.events,
+        union.oursOnlyIds,
+      );
+    } catch (error) {
+      process.stdout.write(
+        `  [integrate] could not rebuild ${ticketPath} from events; using the exec branch side: ` +
+          `${error instanceof Error ? error.message : String(error)}\n`,
+      );
+      continue;
+    }
+    writeFileSync(resolve(repoRoot, ticketPath), rebuilt.content, "utf8");
+    if (gitResult(repoRoot, ["add", "--", ticketPath]).status !== 0) return null;
+    handled.add(ticketPath);
+    if (rebuilt.appliedFields.length > 0) {
+      process.stdout.write(
+        `  [integrate] rebuilt ${ticketPath} from merge-target events: ${rebuilt.appliedFields.join(", ")}\n`,
+      );
+    }
+  }
+  for (const path of conflicted) {
+    if (handled.has(path)) continue;
+    const stages = stagesOf(path);
+    const step = stages.includes("3")
+      ? gitResult(repoRoot, ["checkout", "--theirs", "--", path])
+      : gitResult(repoRoot, ["rm", "--quiet", "--", path]);
+    if (step.status !== 0) return null;
+    if (stages.includes("3") && gitResult(repoRoot, ["add", "--", path]).status !== 0) return null;
+  }
+  const unresolved = zeroSeparatedPaths(repoRoot, ["diff", "--name-only", "--diff-filter=U", "-z"]);
+  if (unresolved.length > 0) return null;
+  const commit = gitResult(repoRoot, [
+    "commit",
+    "--no-verify",
+    ...(params.message ? ["-m", params.message] : ["--no-edit"]),
+  ]);
+  return commit.status === 0 ? conflicted : null;
+}
+
 // Merge the task exec branch into the branch currently checked out at repoRoot.
 // Serializes with the scheduler lock so parallel merges do not race on root HEAD.
 // `releaseRootPaths` are root-side working copies of bookkeeping files that the exec branch also
@@ -625,6 +959,10 @@ export function mergeWorktreeIntoCurrent(params: {
   taskId: string;
   message?: string;
   releaseRootPaths?: string[];
+  // Paths owned by the exec branch (the item's own bookkeeping: ticket / event / plan / result).
+  // When the merge conflicts only on these paths, the conflict is resolved with the exec branch
+  // side (the latest bookkeeping after the resume) and the merge is completed instead of aborted.
+  resolveConflictsWithBranchPaths?: string[];
   ffOnly?: boolean;
   dryRun?: boolean;
   failureLogPath?: string;
@@ -702,9 +1040,24 @@ export function mergeWorktreeIntoCurrent(params: {
       const mergeInProgress =
         gitResult(context.repoRoot, ["rev-parse", "--verify", "--quiet", "MERGE_HEAD"]).status ===
         0;
-      const abortResult = mergeInProgress
-        ? gitResult(context.repoRoot, ["merge", "--abort"])
-        : undefined;
+      const resolved =
+        mergeInProgress && !params.ffOnly
+          ? resolveBranchOwnedConflicts({
+              repoRoot: context.repoRoot,
+              branchOwnedPaths: (params.resolveConflictsWithBranchPaths ?? []).map((path) =>
+                repoRelative(context.repoRoot, path),
+              ),
+              message: params.message,
+            })
+          : null;
+      if (resolved && resolved.length > 0) {
+        merged = true;
+        process.stdout.write(
+          `  [integrate] resolved bookkeeping conflicts with ${worktree.branch}: ${resolved.join(", ")}\n`,
+        );
+        return;
+      }
+      const abortResult = mergeInProgress ? abortMerge(context.repoRoot) : undefined;
 
       if (params.failureLogPath) {
         mkdirSync(resolve(params.failureLogPath, ".."), { recursive: true });
@@ -713,22 +1066,18 @@ export function mergeWorktreeIntoCurrent(params: {
               .filter((part): part is string => typeof part === "string" && part.length > 0)
               .join(abortResult.stdout && abortResult.stderr ? "\n" : "")
           : "";
-        appendFileSync(
-          params.failureLogPath,
-          [
-            `=== ${new Date().toISOString()} git ${mergeArgs.join(" ")} ===`,
-            `exit: ${mergeResult.status ?? "unknown"}`,
-            "--- stdout ---",
-            typeof mergeResult.stdout === "string" ? mergeResult.stdout : "",
-            "--- stderr ---",
-            typeof mergeResult.stderr === "string" ? mergeResult.stderr : "",
-            "--- merge --abort ---",
-            abortResult ? `exit: ${abortResult.status ?? "unknown"}` : "not required",
-            abortOutput,
-            "",
-          ].join("\n"),
-          "utf8",
-        );
+        appendGitFailureLog(params.failureLogPath, [
+          `=== ${new Date().toISOString()} git ${mergeArgs.join(" ")} ===`,
+          `exit: ${mergeResult.status ?? "unknown"}`,
+          "--- stdout ---",
+          typeof mergeResult.stdout === "string" ? mergeResult.stdout : "",
+          "--- stderr ---",
+          typeof mergeResult.stderr === "string" ? mergeResult.stderr : "",
+          "--- merge --abort ---",
+          abortResult ? `exit: ${abortResult.status ?? "unknown"}` : "not required",
+          abortOutput,
+          "",
+        ]);
       }
 
       const summary = summarizeGitHookFailure(mergeOutput);
@@ -799,6 +1148,12 @@ export function removeWorktree(params: {
   if (!params.force && !merged) {
     throw new Error(`Exec branch is not merged into current HEAD: ${worktree.branch}`);
   }
+  // プロダクト worktree もすべて撤去できることを先に確かめる。一部のリポジトリだけを撤去した
+  // 状態を作らないため、検査はどの worktree を消すよりも前に行う。
+  const productBlockers = params.force ? [] : productWorktreeRemovalBlockers(worktree);
+  if (productBlockers.length > 0) {
+    throw new Error(`Product worktrees cannot be removed: ${productBlockers.join("; ")}`);
+  }
   // Past the guards, any remaining uncommitted files are non-commit-target bookkeeping
   // (doc-index, generated/, events) that were intentionally excluded from the task commit.
   // git refuses to remove a worktree while those are dirty, so force past them: they are
@@ -811,6 +1166,7 @@ export function removeWorktree(params: {
     process.stderr.write(`Discarding regenerated files in worktree: ${leftover.join(", ")}\n`);
   }
   if (params.dryRun) {
+    removeProductWorktrees({ worktree, deleteBranch: params.deleteBranch, dryRun: true });
     process.stdout.write(
       `[dry-run] git worktree remove${forceGit ? " --force" : ""} ${worktree.path}\n`,
     );
@@ -818,12 +1174,14 @@ export function removeWorktree(params: {
     return;
   }
 
+  removeProductWorktrees({ worktree, deleteBranch: params.deleteBranch });
   gitOutput(context.repoRoot, [
     "worktree",
     "remove",
     ...(forceGit ? ["--force"] : []),
     worktree.path,
   ]);
+  removeEmptyTaskDirectory(worktree);
   if (params.deleteBranch) {
     try {
       gitOutput(context.repoRoot, ["branch", "-d", worktree.branch]);
@@ -925,11 +1283,17 @@ export function pruneOrphanedExecBranches(params: {
 export function discardStaleExecWorktree(params: {
   context: WorktreeOpsContext;
   worktreeTaskId: string;
+  /** Declared product repositories whose task worktrees/branches are discarded together. */
+  products?: readonly ProductRepo[];
 }): string | null {
   const { context, worktreeTaskId } = params;
   const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`;
   const existing = findExecWorktree(context.repoRoot, worktreeTaskId);
-  if (!existing && !execBranchExists(context.repoRoot, worktreeTaskId)) return null;
+  // プロダクト側の残骸は、プロジェクト側に残骸が無くても片付ける（作成途中で失敗した場合など）。
+  const discardedProducts = discardStaleProductWorktrees(params.products ?? [], worktreeTaskId);
+  if (!existing && !execBranchExists(context.repoRoot, worktreeTaskId)) {
+    return discardedProducts.length > 0 ? discardedProducts.join(", ") : null;
+  }
   if (existing) {
     if (resolve(context.repoRoot) === resolve(existing.path)) {
       throw new Error(`Refusing to discard the merge-target worktree as stale residue: ${branch}`);
@@ -937,13 +1301,14 @@ export function discardStaleExecWorktree(params: {
     // Force past any uncommitted/blocked state in the abandoned worktree; its branch is discarded
     // next, so nothing here is worth preserving.
     gitOutput(context.repoRoot, ["worktree", "remove", "--force", existing.path]);
+    if ((params.products ?? []).length > 0) removeEmptyTaskDirectory({ ...existing, repos: [] });
   }
   // The branch is unmerged (the scheduler reset the task to todo), so a safe `-d` would fail; use
   // `-D` to drop it deliberately.
   if (execBranchExists(context.repoRoot, worktreeTaskId)) {
     gitOutput(context.repoRoot, ["branch", "-D", branch]);
   }
-  return branch;
+  return [branch, ...discardedProducts].join(", ");
 }
 
 function copyCheckpointPath(sourceRoot: string, targetRoot: string, relPath: string): void {
@@ -979,13 +1344,44 @@ function restoreToHead(repoRoot: string, relPath: string): void {
 // the merge releases them (releaseRootWorkingCopies) right before the exec branch lands.
 // Consequently the prepare/start bookkeeping is reachable through the merge DAG without adding a
 // first-parent commit to the integration branch.
+//
+// PJR-98G4: with declared product repositories the project worktree moves to
+// `<base>/<task-name>/project/` and each product gets `<base>/<task-name>/<repo>/`. The checkpoint
+// commit stays in the project repository; product exec branches start from their integration
+// target.
 export function checkpointAndEnsureWorktree(params: {
   context: WorktreeOpsContext;
   worktreeTaskId: string;
   base: string;
   checkpointPaths: string[];
   commitMessage: string;
+  products?: readonly ProductRepo[];
+  failureLogPath?: string;
 }): ExecWorktree {
+  const products = params.products ?? [];
+  const worktree = checkpointAndEnsureProjectWorktree(params, projectRepoDirName(products));
+  if (products.length === 0) return worktree;
+  return {
+    ...worktree,
+    repos: ensureProductWorktrees({
+      products,
+      worktreeBase: params.base,
+      taskId: params.worktreeTaskId,
+    }),
+  };
+}
+
+function checkpointAndEnsureProjectWorktree(
+  params: {
+    context: WorktreeOpsContext;
+    worktreeTaskId: string;
+    base: string;
+    checkpointPaths: string[];
+    commitMessage: string;
+    failureLogPath?: string;
+  },
+  repoDirName: string | undefined,
+): ExecWorktree {
   const { context, worktreeTaskId, base } = params;
   const branch = `exec/${worktreeNameFromTaskId(worktreeTaskId)}`;
 
@@ -1001,20 +1397,33 @@ export function checkpointAndEnsureWorktree(params: {
     if (currentBranch(context.repoRoot) === branch) {
       throw new Error(`Prepare must run from a branch other than ${branch}.`);
     }
-    const staged = gitResult(context.repoRoot, ["diff", "--cached", "--quiet"]);
-    if (staged.status === 1) {
-      const stagedFiles = gitOutput(context.repoRoot, ["diff", "--cached", "--name-only"]).trim();
+    const paths = params.checkpointPaths.map((path) => repoRelative(context.repoRoot, path));
+    const stagedFiles = zeroSeparatedPaths(context.repoRoot, [
+      "diff",
+      "--cached",
+      "--no-renames",
+      "--name-only",
+      "-z",
+    ]);
+    const checkpointPaths = new Set(paths);
+    const overlapping = stagedFiles.filter((path) => checkpointPaths.has(path));
+    if (overlapping.length > 0) {
       throw new Error(
-        `Root index has staged changes; commit or unstage them first:\n${stagedFiles}`,
+        `Root index has staged checkpoint changes; commit or unstage them first:\n${overlapping.join("\n")}`,
       );
     }
-    if (staged.status !== 0) throw new Error("Failed to inspect staged changes in root worktree.");
+    if (stagedFiles.length > 0) {
+      process.stderr.write(
+        `Warning: root index has unrelated staged changes; preserving them while preparing the checkpoint:\n` +
+          `${stagedFiles.map((path) => `  ${path}`).join("\n")}\n`,
+      );
+    }
 
-    const paths = params.checkpointPaths.map((path) => repoRelative(context.repoRoot, path));
     const worktree = ensureExecWorktree({
       repoRoot: context.repoRoot,
       worktreeBase: base,
       taskId: worktreeTaskId,
+      repoDirName,
     });
     for (const path of paths) copyCheckpointPath(context.repoRoot, worktree.path, path);
     stageCommitTargets(worktree.path, paths);
@@ -1029,21 +1438,30 @@ export function checkpointAndEnsureWorktree(params: {
       ]);
       if (committed.status !== 0) {
         // A failing git hook (pre-commit / commit-msg) aborts the commit but leaves the staged
-        // paths in the index. Unstage everything so the residue does not trip the staged-changes
-        // guard for every subsequent task and abort the whole loop. The index was verified clean
-        // above, so a full reset only drops what this checkpoint (and its hooks) staged.
-        gitResult(worktree.path, ["reset", "--quiet"]);
+        // paths in the index. Unstage only this checkpoint so a hook or caller's unrelated staged
+        // paths remain intact.
+        unstageCommitTargets(worktree.path, paths);
         // hook（lefthook 等）の生出力には ANSI エスケープや制御文字が含まれうる。この detail は
         // register 経路で pjr-index の結論列・result の理由欄へ伝播するため、ここで除去して
         // 表示崩れを防ぐ（register 側の sanitize と二重だが、非 register の呼び出し元も守る）。
-        const detail = [committed.stdout, committed.stderr]
+        const output = [committed.stdout, committed.stderr]
           .map((part) =>
             typeof part === "string" ? stripTerminalControlSequences(part).trim() : "",
           )
           .filter(Boolean)
           .join("\n");
+        appendGitFailureLog(params.failureLogPath, [
+          `=== ${new Date().toISOString()} git commit checkpoint ===`,
+          `exit: ${committed.status ?? "unknown"}`,
+          "--- stdout ---",
+          typeof committed.stdout === "string" ? committed.stdout : "",
+          "--- stderr ---",
+          typeof committed.stderr === "string" ? committed.stderr : "",
+          "",
+        ]);
         throw new Error(
-          `Checkpoint commit failed (${params.commitMessage}); staged changes rolled back (likely a failing git hook):\n${detail}`,
+          `Checkpoint commit failed (${params.commitMessage}); staged changes rolled back ` +
+            `(likely a failing git hook): ${summarizeGitHookFailure(output)}`,
         );
       }
     } else if (checkpoint.status !== 0) {
@@ -1056,5 +1474,6 @@ export function checkpointAndEnsureWorktree(params: {
     repoRoot: context.repoRoot,
     worktreeBase: base,
     taskId: worktreeTaskId,
+    repoDirName,
   });
 }

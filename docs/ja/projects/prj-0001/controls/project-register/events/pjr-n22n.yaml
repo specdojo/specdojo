@@ -1,0 +1,166 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5759184c66bd4f2c95e4be86138a0966
+  ts: "2026-09-26T06:13:37Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: xrp と xrr テンプレートを review が評価しない前提へ改訂する
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: QE
+    - field: registered
+      from: ""
+      to: "2026-09-26"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_c63459e1e7314fa893c142c9d1add9e2
+  ts: "2026-09-27T11:48:40Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5759184c66bd4f2c95e4be86138a0966
+- v: 1
+  id: reg_e62c90e7a32e4056ba3233a323c7ddeb
+  ts: "2026-09-27T11:53:22Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 着手前判断（観点範囲拡大との適用順序、個票の作業 No.1）が未決定であり、`PJR-K351` / `PJR-WPWB` も open のまま。加えて、`xrr-*` の構成と判定（recommendation）は `src/exec-reporter.ts` の出力スキーマと `src/exec-results.ts` の `r…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 着手前判断（観点範囲拡大との適用順序、個票の作業 No.1）が未決定であり、`PJR-K351` / `PJR-WPWB` も open のまま。加えて、`xrr-*` の構成と判定（recommendation）は `src/exec-reporter.ts` の出力スキーマと `src/exec-results.ts` の `r…"
+  previous_event_id: reg_c63459e1e7314fa893c142c9d1add9e2
+- v: 1
+  id: reg_23a0ad2ce462485a9e4be7a23df77068
+  ts: "2026-09-27T15:13:48Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_e62c90e7a32e4056ba3233a323c7ddeb
+- v: 1
+  id: reg_19d507c8f2e042e59b3c280962491cf3
+  ts: "2026-09-27T15:28:12Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親 runner の検証 `typecheck`（`npm run typecheck`）が失敗している: `src/exec.ts(1162,9): error TS2353: Object literal may only specify known properties, and 'viewpointsPath' does n…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 着手前判断（観点範囲拡大との適用順序、個票の作業 No.1）が未決定であり、`PJR-K351` / `PJR-WPWB` も open のまま。加えて、`xrr-*` の構成と判定（recommendation）は `src/exec-reporter.ts` の出力スキーマと `src/exec-results.ts` の `r…"
+      to: "agent exited with non-zero code: 親 runner の検証 `typecheck`（`npm run typecheck`）が失敗している: `src/exec.ts(1162,9): error TS2353: Object literal may only specify known properties, and 'viewpointsPath' does n…"
+  previous_event_id: reg_23a0ad2ce462485a9e4be7a23df77068
+- v: 1
+  id: reg_3d24d2b6fa3a47dab9483d5e44751ea0
+  ts: "2026-09-27T20:30:54Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_19d507c8f2e042e59b3c280962491cf3
+- v: 1
+  id: reg_1a554203eb704f259f54b28069ee096d
+  ts: "2026-09-27T20:47:25Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner 検証 `test-unit`（`npm run test:unit`、source=runner）が failed。`tests/src/exec-reporter.test.ts` のテスト `accepts every task-completion verdict and rejects per-viewpoin…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 親 runner の検証 `typecheck`（`npm run typecheck`）が失敗している: `src/exec.ts(1162,9): error TS2353: Object literal may only specify known properties, and 'viewpointsPath' does n…"
+      to: "agent exited with non-zero code: runner 検証 `test-unit`（`npm run test:unit`、source=runner）が failed。`tests/src/exec-reporter.test.ts` のテスト `accepts every task-completion verdict and rejects per-viewpoin…"
+  previous_event_id: reg_3d24d2b6fa3a47dab9483d5e44751ea0
+- v: 1
+  id: reg_b3d2fcc52f814e08b3ac22f40d24d72b
+  ts: "2026-09-28T03:46:23Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_1a554203eb704f259f54b28069ee096d
+- v: 1
+  id: reg_a61f10e08efd409782c867d28e88f80f
+  ts: "2026-09-28T03:49:50Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b3d2fcc52f814e08b3ac22f40d24d72b
+- v: 1
+  id: reg_10452d88d1574e3fa702210ecf3d5d12
+  ts: "2026-09-28T09:14:53Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価。reporter の schema エラー表示の不具合と統合の記帳競合は orchestrator が対応した。未達の 2 条件は利用者の判断で KCMH の完了条件へ移した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: xrp 10 本と xrr を、観点ごとに評価せず grade の結果を入力にタスクの完了可否を判断する形へ改訂し、観点別詳細テンプレート 2 本を削除した。review の verdict を bps-task-completion の 6 区分に合わせ、共通規約に判断手順を集めた。review の試行と review-guide の追従は PJR-KCMH へ引き継ぐ
+  previous_event_id: reg_a61f10e08efd409782c867d28e88f80f

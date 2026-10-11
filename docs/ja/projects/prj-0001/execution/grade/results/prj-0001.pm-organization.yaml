@@ -1,0 +1,160 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:pm-organization
+path: docs/ja/projects/prj-0001/030-project-management/pm-organization.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 92
+graded_at: "2026-10-02T16:38:11.644Z"
+graded_by: agy-expert-executor
+content_hash: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+source_hashes:
+  catalog-entry: a49b5d9ecdd19174e5432e790a32e39f031034554616f2f952d47512cc09021f
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:prj-overview: a88ff7cd0188a42619a304502c5fb5dd2ac200a6222763d09e437f5d3cf80691
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
+    score: 63
+  architecture:
+    score: 100
+  usability:
+    score: 94
+  implementation:
+    score: 100
+  quality:
+    score: 94
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 1
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 9
+    anchor: "| 社会課題・価値 | 当事者、期待価値、優先順位、主要な合意を先に確認する        | `PO`           | `BA`、代表利用者  |"
+    message: >-
+      「社会課題・価値」の実行・確認を `BA` と代表利用者に割り当てているが、pm-raci.md の「社会課題、期待価値、優先順位の判断」は `PM` を `R`、`BA` を `C`
+      としており、実作業責任を誤読するため両文書の割当を整合させる必要がある。
+  - id: F002
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 28
+    anchor: "| Role code と責務             | [[prj-0001:pm-roles\\|ロール定義]]                             |"
+    message: 第2節の Role code・実行主体・RACI に関する正本指定が第3節の表で重複しているため、第2節を運用方針に限定するか第3節へ参照を集約すると判断情報を失わず簡潔にできる。
+  - id: F003
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 37
+    anchor: >-
+      当事者・協働組織・貢献者の参加、兼務による滞留、新しい実装・運用責任、公開範囲、AI Agent の権限が変わった場合に見直す。見直し時は、特定個人の無理な負担を前提にせず、必要な責任から分離し、人間の `PO`
+      に主要な最終判断を残す。
+    message: 「兼務による滞留」がどの状態で見直しを開始するか判定できないため、期限超過、未処理件数、引継ぎ不能など確認可能な条件を定める必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 37
+    anchor: >-
+      当事者・協働組織・貢献者の参加、兼務による滞留、新しい実装・運用責任、公開範囲、AI Agent の権限が変わった場合に見直す。見直し時は、特定個人の無理な負担を前提にせず、必要な責任から分離し、人間の `PO`
+      に主要な最終判断を残す。
+    message: 見直しトリガーごとの確認事項と更新先が示されていないため、変更時に pm-organization・pm-roles・pm-members・RACI・Schedule のどれを更新するかを明記する必要がある。
+done_criteria:
+  satisfied: 3
+  total: 3
+  detail_ref: prj-0001:pm-organization-grade-criteria

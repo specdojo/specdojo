@@ -5,12 +5,7 @@ import { ensureDir, safeSlug } from "./exec-shared.js";
 import type { AgentStageRole } from "./exec-types.js";
 
 export type PipelineStageStatus =
-  | "pending"
-  | "running"
-  | "succeeded"
-  | "failed"
-  | "rate_limited"
-  | "blocked";
+  "pending" | "running" | "succeeded" | "failed" | "rate_limited" | "blocked";
 
 // 統合段（commit → merge → worktree 撤去）は agent ではなく runner が実行する段。executor /
 // reporter と同じ粒度で記録し、agent 段が成功したまま統合だけ失敗した run を特定できるようにする。
@@ -25,9 +20,31 @@ export type PipelineStageState = {
   artifact_ref: string | null;
 };
 
+// PJR-0WAA: 複数リポジトリの統合で、リポジトリごとの統合状態を記録する。
+// - merged: 統合先へ merge 済み（`commit` は統合先の merge commit。プロジェクトは state 自体を
+//   含む merge commit になるため null）
+// - unchanged: exec branch に commit が無く、統合する変更が無い
+// - pending: 未統合
+// - failed: 事前検査または merge に失敗した
+export type PipelineRepoIntegrationStatus = "pending" | "merged" | "unchanged" | "failed";
+
+export type PipelineRepoIntegrationState = {
+  status: PipelineRepoIntegrationStatus;
+  commit: string | null;
+  merged_at: string | null;
+  error?: string;
+};
+
+// `repos` は `repos` を宣言した project の統合だけが書く任意項目。キーはリポジトリ名
+// （プロジェクトリポジトリは `project`）で、統合の順（宣言順のプロダクト、最後にプロジェクト）に並ぶ。
+// 旧形式の state（`repos` 無し）はプロジェクトリポジトリ 1 つの統合として読む。
+export type PipelineIntegrateStageState = PipelineStageState & {
+  repos?: Record<string, PipelineRepoIntegrationState>;
+};
+
 // integrate は統合段を持たない旧 run の state に存在しないため任意項目とする。
 export type PipelineStages = Record<AgentStageRole, PipelineStageState> & {
-  integrate?: PipelineStageState;
+  integrate?: PipelineIntegrateStageState;
 };
 
 // run の入力成果物への参照（worktree 相対・POSIX 区切り）。reporter だけを再開するとき、
@@ -130,6 +147,28 @@ function isStageState(value: unknown): value is PipelineStageState {
   );
 }
 
+function isRepoIntegrationState(value: unknown): value is PipelineRepoIntegrationState {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+  const repo = value as Record<string, unknown>;
+  return (
+    (repo.status === "pending" ||
+      repo.status === "merged" ||
+      repo.status === "unchanged" ||
+      repo.status === "failed") &&
+    (typeof repo.commit === "string" || repo.commit === null) &&
+    (typeof repo.merged_at === "string" || repo.merged_at === null) &&
+    (repo.error === undefined || typeof repo.error === "string")
+  );
+}
+
+function isIntegrateStageState(value: unknown): value is PipelineIntegrateStageState {
+  if (!isStageState(value)) return false;
+  const repos = (value as Record<string, unknown>).repos;
+  if (repos === undefined) return true;
+  if (!repos || typeof repos !== "object" || Array.isArray(repos)) return false;
+  return Object.values(repos).every(isRepoIntegrationState);
+}
+
 function isArtifactRefs(value: unknown): value is PipelineArtifactRefs {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const refs = value as Record<string, unknown>;
@@ -159,7 +198,7 @@ export function isPipelineState(value: unknown): value is PipelineState {
   }
   if (state.artifacts !== undefined && !isArtifactRefs(state.artifacts)) return false;
   const stages = state.stages as Record<string, unknown>;
-  if (stages.integrate !== undefined && !isStageState(stages.integrate)) return false;
+  if (stages.integrate !== undefined && !isIntegrateStageState(stages.integrate)) return false;
   return isStageState(stages.executor) && isStageState(stages.reporter);
 }
 
@@ -188,6 +227,49 @@ export function updatePipelineStage(
   return { ...state, updated_at: updatedAt, stages };
 }
 
+/**
+ * Record the integration state of one repository under `stages.integrate.repos`. Other repositories
+ * and the stage fields are kept; a repository recorded for the first time is appended (so the keys
+ * follow the integration order).
+ */
+export function updatePipelineRepoIntegration(
+  state: PipelineState,
+  repo: string,
+  patch: Partial<PipelineRepoIntegrationState>,
+  updatedAt: string,
+): PipelineState {
+  const integrate: PipelineIntegrateStageState = state.stages.integrate ?? emptyStage();
+  const current: PipelineRepoIntegrationState = integrate.repos?.[repo] ?? {
+    status: "pending",
+    commit: null,
+    merged_at: null,
+  };
+  const next: PipelineRepoIntegrationState = { ...current, ...patch };
+  // 成功へ変わった記録に、前回の失敗理由を残さない。
+  if (next.status !== "failed" && patch.error === undefined) delete next.error;
+  return {
+    ...state,
+    updated_at: updatedAt,
+    stages: {
+      ...state.stages,
+      integrate: { ...integrate, repos: { ...(integrate.repos ?? {}), [repo]: next } },
+    },
+  };
+}
+
+/**
+ * Names of the repositories recorded as integrated (`merged` or `unchanged`) under
+ * `stages.integrate.repos`. A state without per-repository records yields an empty set.
+ */
+export function integratedRepoNames(state: PipelineState): Set<string> {
+  const repos = state.stages.integrate?.repos ?? {};
+  return new Set(
+    Object.entries(repos)
+      .filter(([, entry]) => entry.status === "merged" || entry.status === "unchanged")
+      .map(([name]) => name),
+  );
+}
+
 function resolveArtifactRef(worktreePath: string, ref: string): string | null {
   const root = resolve(worktreePath);
   const path = resolve(root, ref);
@@ -196,11 +278,7 @@ function resolveArtifactRef(worktreePath: string, ref: string): string | null {
   return path;
 }
 
-function isSucceededExecutorEvidence(
-  value: unknown,
-  taskId: string,
-  runId: string,
-): value is ExecEvidence {
+function isExecutorEvidence(value: unknown, taskId: string, runId: string): value is ExecEvidence {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const evidence = value as Partial<ExecEvidence>;
   return (
@@ -208,7 +286,9 @@ function isSucceededExecutorEvidence(
     evidence.task_id === taskId &&
     evidence.run_id === runId &&
     evidence.stage?.role === "executor" &&
-    evidence.stage.status === "succeeded" &&
+    (evidence.stage.status === "succeeded" ||
+      evidence.stage.status === "failed" ||
+      evidence.stage.status === "rate_limited") &&
     Number.isSafeInteger(evidence.stage.attempts) &&
     evidence.stage.attempts >= 1
   );
@@ -221,6 +301,7 @@ export function loadPipelineResumeCheckpoint(input: {
 }): {
   state: PipelineState;
   statePath: string;
+  executorEvidence?: ExecEvidence;
   evidence?: ExecEvidence;
 } | null {
   const statePath = resolveArtifactRef(input.worktreePath, input.stateRef);
@@ -242,19 +323,21 @@ export function loadPipelineResumeCheckpoint(input: {
           .split(sep)
           .join("/")
       : null);
-  if (
-    (state.stages.executor.status !== "succeeded" && state.stages.executor.status !== "running") ||
-    !evidenceRef
-  ) {
-    return { state, statePath };
-  }
+  if (!evidenceRef) return { state, statePath };
   const evidencePath = resolveArtifactRef(input.worktreePath, evidenceRef);
   if (!evidencePath || !existsSync(evidencePath)) return { state, statePath };
   try {
     const evidence: unknown = JSON.parse(readFileSync(evidencePath, "utf8"));
-    return isSucceededExecutorEvidence(evidence, input.taskId, state.run_id)
-      ? { state, statePath, evidence }
-      : { state, statePath };
+    if (!isExecutorEvidence(evidence, input.taskId, state.run_id)) return { state, statePath };
+    return {
+      state,
+      statePath,
+      executorEvidence: evidence,
+      ...(evidence.stage.status === "succeeded" &&
+      (state.stages.executor.status === "succeeded" || state.stages.executor.status === "running")
+        ? { evidence }
+        : {}),
+    };
   } catch {
     return { state, statePath };
   }

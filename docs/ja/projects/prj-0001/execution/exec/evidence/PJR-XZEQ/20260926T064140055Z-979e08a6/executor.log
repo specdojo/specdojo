@@ -1,0 +1,186 @@
+タスク PJR-XZEQ を開始します。まず関連文書を並列で読み込みます。
+サブエージェントの結果を待ちます。
+[MESSAGE FROM agent:233fc7d5-e93e-4af1-b24c-db1211f1ec74 (Document researcher)]
+
+Here are the full contents of the requested files:
+
+---
+
+## 1. `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+
+```markdown
+---
+specdojo:
+  id: prj-0001:pjr-index
+  type: project-register
+  status: ready
+  project_id: prj-0001
+---
+
+# Project Register
+
+## 項目一覧
+
+<!-- markdownlint-disable line-length -->
+
+| id       | title                                                                                  | type | priority | owner | status  | depends_on | detail                                                                                         |
+| -------- | -------------------------------------------------------------------------------------- | ---- | -------- | ----- | ------- | ---------- | ---------------------------------------------------------------------------------------------- |
+| PJR-B8C9 | cdfd-overview を新規作成する                                                           | todo | high     | ARC   | closed  |            | [[prj-0001:pjr-b8c9-create-cdfd-overview\|個票]]                                              |
+| PJR-GMJJ | cdfd-check を新規作成する                                                              | todo | high     | ARC   | closed  |            | [[prj-0001:pjr-gmjj-create-cdfd-check\|個票]]                                                 |
+| PJR-CRWN | cdfd-action を新規作成する                                                             | todo | high     | ARC   | closed  |            | [[prj-0001:pjr-crwn-create-cdfd-action\|個票]]                                                |
+| PJR-H4H7 | BPS: grade / review の関係を定義する                                                   | todo | high     | ARC   | closed  |            | [[prj-0001:pjr-h4h7-bps-grade-review\|個票]]                                                  |
+| PJR-3Z82 | cdfd-overview の review phase の位置づけと cdfd-check / cdfd-action との接続を設計する  | todo | high     | ARC   | backlog |            | [[prj-0001:pjr-3z82-cdfd-overview-review-phase\|個票]]                                        |
+| PJR-XZEQ | cdfd-overview と cdfd-check と cdfd-action へ grade と review の関係を反映する          | todo | high     | ARC   | exec    | PJR-H4H7   | [[prj-0001:pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review\|個票]]                 |
+| PJR-F3JN | CDFD トリガー条件の具体化と他プロセスとの境界を明確にする                               | todo | high     | ARC   | backlog | PJR-XZEQ   | [[prj-0001:pjr-f3jn-cdfd-trigger-conditions\|個票]]                                           |
+| PJR-V4B6 | `exec-templates/` に exec-plan / review-plan テンプレート群と共通規約 include を新設する | todo | high     | ARC   | exec    |            | [[prj-0001:pjr-v4b6-exec-templates-exec-plan-review-plan-common-include\|個票]]               |
+| PJR-GXRG | register exec のスケジュール生成ロジックを実装する                                     | todo | high     | ARC   | exec    |            | [[prj-0001:pjr-gxrg-register-exec-schedule-generation\|個票]]                                 |
+| PJR-GVEW | register exec の plan scaffold ロジックを実装する                                      | todo | high     | ARC   | exec    | PJR-V4B6   | [[prj-0001:pjr-gvew-register-exec-plan-scaffold\|個票]]                                       |
+| PJR-QVNM | register exec の result scaffold ロジックを実装する                                    | todo | high     | ARC   | exec    | PJR-V4B6   | [[prj-0001:pjr-qvnm-register-exec-result-scaffold\|個票]]                                     |
+| PJR-LTN6 | register exec の pipeline runner を実装する                                            | todo | high     | ARC   | exec    |            | [[prj-0001:pjr-ltn6-register-exec-pipeline-runner\|個票]]                                     |
+| PJR-6RH9 | register exec の grade 評価ロジックを実装する                                          | todo | medium   | ARC   | exec    |            | [[prj-0001:pjr-6rh9-register-exec-grade-evaluation\|個票]]                                    |
+| PJR-NKQX | `cdfd-overview.md` のノード説明を充実させる                                            | todo | medium   | ARC   | backlog |            | [[prj-0001:pjr-nkqx-enrich-cdfd-overview-node-descriptions\|個票]]                            |
+| PJR-L5V2 | Rulebook: result-rulebook を新規作成する                                               | todo | medium   | ARC   | exec    |            | [[prj-0001:pjr-l5v2-create-result-rulebook\|個票]]                                            |
+| PJR-J8W7 | Rulebook: project-register-rulebook を新規作成する                                     | todo | medium   | ARC   | backlog |            | [[prj-0001:pjr-j8w7-create-project-register-rulebook\|個票]]                                  |
+| PJR-MMEP | テスト: specdojo validate のプロジェクトファイル検証テストを書く                        | todo | medium   | ARC   | backlog |            | [[prj-0001:pjr-mmep-test-specdojo-validate-project-files\|個票]]                              |
+| PJR-BWXV | index build の壊れたリンク検出とレポートを実装する                                     | todo | medium   | ARC   | backlog |            | [[prj-0001:pjr-bwxv-index-build-broken-link-detection\|個票]]                                 |
+
+<!-- markdownlint-enable line-length -->
+```
+
+---
+
+## 2. `docs/ja/projects/prj-0001/controls/project-register/pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md`
+
+```markdown
+---
+specdojo:
+  id: prj-0001:pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review
+  type: project-register-item
+  status: ready
+  project_id: prj-0001
+  register_ref: prj-0001:pjr-index
+  register_item_id: PJR-XZEQ
+---
+
+# PJR-XZEQ cdfd-overview と cdfd-check と cdfd-action へ grade と review の関係を反映する
+
+## 背景・目的
+
+[[prj-0001:pjr-h4h7-bps-grade-review|PJR-H4H7]] で作成した BPS 2 件
+（[[prj-0001:bps-grade-review-boundary|BPS: grade / review の境界]]、[[prj-0001:bps-grade-review-dataflow|BPS: grade → review データフロー]]）が設計の正本になった。
+
+現状の CDFD 3 本には BPS と整合しない記述がある。
+
+- `cdfd-check.md` は「review から独立して」と記述しており、BPS の「grade は review の結果（grade result）を事実として受け取る」と矛盾する。
+- `cdfd-overview.md` は review phase の所属を示していない。
+- `cdfd-action.md` は review の出力を明示していない可能性がある。
+
+## 完了条件
+
+1. `cdfd-overview.md` に review phase のノードとフローが BPS と整合する形で追加または修正されている。
+2. `cdfd-check.md` の「review から独立して」という記述が、BPS の定義（grade は grade result を事実として受け取る）と矛盾しない表現に修正されている。
+3. `cdfd-action.md` の review 関連の出力記述が BPS と整合している。
+4. 3 本の CDFD 間で用語と参照が統一されている。
+5. BPS 2 件の内容と矛盾する記述が CDFD に残っていない。
+
+## 作業内容
+
+_TODO_
+
+## 対応結果
+
+_TODO_
+```
+
+---
+
+## 3. `docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md`
+
+```markdown
+---
+specdojo:
+  id: prj-0001:pjr-h4h7-bps-grade-review
+  type: project-register-item
+  status: ready
+  project_id: prj-0001
+  register_ref: prj-0001:pjr-index
+  register_item_id: PJR-H4H7
+---
+
+# PJR-H4H7 BPS: grade / review の関係を定義する
+
+## 背景・目的
+
+specdojo の品質保証フローには **grade**（自動評価）と **review**（人間によるレビュー）の 2 つのフェーズがある。両者の責務境界・データフロー・判定権限が未定義のため、CDFD 設計の前提が曖昧になっている。
+
+本項目で BPS（Boundary / Process Specification）を 2 件作成し、grade と review の関係を正式に定義する。
+
+## 完了条件
+
+1. `bps-grade-review-boundary.md` が作成され、grade と review の責務境界が定義されている。
+2. `bps-grade-review-dataflow.md` が作成され、grade → review のデータフローが定義されている。
+3. 両 BPS が `draft` 以上のステータスになっている。
+
+## 作業内容
+
+BPS 2 件を新規作成した。
+
+- [[prj-0001:bps-grade-review-boundary|BPS: grade / review の境界]]
+- [[prj-0001:bps-grade-review-dataflow|BPS: grade → review データフロー]]
+
+## 対応結果
+
+完了。BPS 2 件を作成し、grade と review の責務境界およびデータフローを定義した。
+```
+
+---
+
+## 4. `docs/ja/projects/prj-0001/execution/exec/results/pjr-xzeq-20260926T063111Z-c1dc-result.md`
+
+```markdown
+---
+specdojo:
+  id: prj-0001:xep-pjr-xzeq-20260926t063111z-c1dc-result
+  type: exec-result
+  status: draft
+  project_id: prj-0001
+  plan_ref: prj-0001:xep-pjr-xzeq-20260926t063111z-c1dc
+  task_id: PJR-XZEQ
+  mode: edit
+  agent: executor
+  execution:
+    started_at: _TODO_
+    completed_at: _TODO_
+  approach: _TODO_
+  targets: _TODO_
+---
+
+# Edit Result
+
+## 1. 実施サマリ
+
+_TODO_
+
+## 2. 変更ファイル
+
+_TODO_
+
+## 3. 検証結果
+
+_TODO_
+
+## 4. 申し送り事項
+
+_TODO_
+```
+
+これで4つのファイルすべての内容を返しました。
+
+次に、BPS 2 件の実体（`bps-grade-review-boundary.md` と `bps-grade-review-dataflow.md`）を読み込む必要があります。これらは設計の正本です。
+サンドボックスの接続に問題があるようです。`view_file` で直接読みます。
+CDFD のサブエージェントがまだ動いています。BPS ファイルの場所を探しつつ待ちましょう。
+サンドボックスが不安定ですが、`view_file` は動作しているので直接パスを試します。
+BPS ファイルが見つかりません。`bps-` で始まるファイルを探します。
+BPS は `bps-grade-review-boundary.md` / `bps-grade-review-dataflow.md` という名前では存在しないようです。deliverable-catalog のカタログから `bps-grade-review` を検索してみます。
+BPS は `bps-deliverable-evaluation.md` と `bps-task-completion.md` のようです。個票のリンクに「grade / review の境界」と「grade → review データフロー」とあるので、これらが該当する可能性があります。全ファイルを読みましょう。
+BPS 2 件を読みました。今度は CDFD 3 本を読みます。

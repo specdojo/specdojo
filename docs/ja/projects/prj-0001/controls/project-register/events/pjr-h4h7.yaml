@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0dc075645b0a48828dc24bbfafb676c6
+  ts: "2026-09-26T02:13:29Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 成果物評価の BPS を作成し grade と review の関係を定義する
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: QE
+    - field: registered
+      from: ""
+      to: "2026-09-26"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_4c00a0dbf9064e99a679d2fc41d52bd5
+  ts: "2026-09-26T05:47:03Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0dc075645b0a48828dc24bbfafb676c6
+- v: 1
+  id: reg_d99144577a834203ac21116ae41580fe
+  ts: "2026-09-26T06:02:33Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4c00a0dbf9064e99a679d2fc41d52bd5
+- v: 1
+  id: reg_6c04eae0da6045e1ab02694873fe52c5
+  ts: "2026-09-26T06:13:29Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: P-08 と P-11 の BPS を 2 文書で作成した。PJR-2ZVS の 4 原則がいずれも判定可能な形で表現されている。展開項目を別途起票する。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_d99144577a834203ac21116ae41580fe

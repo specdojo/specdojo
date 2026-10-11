@@ -3,44 +3,99 @@ version: 1
 document: specdojo:cld-rulebook
 path: docs/ja/specdojo/rulebooks/cld-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 82
-graded_at: "2026-09-02T01:59:22.083Z"
-graded_by: gemma-expert-executor
+score: 63
+graded_at: "2026-10-02T21:28:30.795Z"
+graded_by: agy-expert-executor
 content_hash: 3924b7fab041e7f3164955e1c1b11008dc4a676f169e39f9c7578350d23b9fb5
 categories:
-  consistency:
+  purpose:
+    score: 75
+  operations:
+    score: 75
+  planning:
+    score: 67
+  business:
+    score: 67
+  architecture:
     score: 75
   usability:
-    score: 83
-  architecture:
-    score: 100
-  quality:
     score: 75
+  implementation:
+    score: 50
+  quality:
+    score: 50
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,31 +103,145 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 2
+  major: 10
+  minor: 13
   note: 0
 findings:
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 参照されているサンプル specdojo:cld-sample が具体例となっておらず、正本の適用方法を検証できない。
-    anchor: ""
   - id: F001
     severity: minor
-    rule: vp-arc-conciseness
-    line: 1
-    message: 第0章と第3章で分類種類の概要説明が重複しており、冗長である。
+    rule: vp-po-purpose-alignment
+    line: 13
     anchor: ""
+    message: プロジェクト全体における本ルールの位置づけや、上位のアーキテクチャ方針への参照が不足している。
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 分類一覧（Classification List）作成ルール"
+    message: recipe と template の要否が undecided のままで、判断者、判断による影響、解消後の次アクションが示されていない。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 11
+    anchor: ""
+    message: 公開対象の範囲や、最終的な承認責任を担う Role code が示されていない。
   - id: F004
     severity: minor
-    rule: vp-ux-readability
-    line: 1
-    message: 分類種類の定義が重複して記載されており、効率的な読み取りを妨げている。
+    rule: vp-pm-plan-feasibility
+    line: 63
+    anchor: 分類定義は、**「定義項目 / 内容」** の 2 列の表で記述します。
+    message: 記述作業の単位は読み取れるが、各作業の担当 Role code と成果物全体の完了条件が示されていない。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 16
+    anchor: "- 業務ロジックに基づいて固定的に存在する分類"
+    message: BDD、ステータス、用語集、画面、集計への依存を挙げているが, 参照先 ID と変更時の影響、PJR または Schedule への反映条件が示されていない。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 56
+    anchor: "- 分類を 分類定義 と 値の説明（値一覧） の二つの表で整理する。"
+    message: supersedes 以外に、分類変更で生じる課題、リスク、変更要求、決定記録の報告先と担当 Role code が示されていない。
+  - id: F007
+    severity: minor
+    rule: vp-ba-business-value
+    line: 13
     anchor: ""
-  - id: F002
+    message: ルールの適用により解決される具体的な業務課題や、期待される品質向上などの価値が明示されていない。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 84
+    anchor: ""
+    message: 「値を持つ分類」の判定条件と、分類定義および値一覧の各項目の必須・任意が示されておらず、成果物の必要要素を一意に決められない。
+  - id: F009
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 13
+    anchor: ""
+    message: 分類定義の作成者、業務内容の確認者、実装影響の確認者、最終合意者が示されていない。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 47
+    anchor: ""
+    message: 独立 YAML ドキュメントとして管理すると規定しているが、適用 schema、ルート構造、各キーの型制約、validate 手順が示されていない。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 18
+    anchor: "- 値は少数で変動しないことが多い"
+    message: 第1章と第4章で分類種類の概要説明が重複しており、冗長である。
+  - id: F012
+    severity: minor
+    rule: vp-arc-single-responsibility
+    line: 166
+    anchor: "supersedes: []"
+    message: 第5章のサンプルは独立した sample ドキュメントに移譲可能であり、ルールブック内に過剰な具体例を含んでいる。
+  - id: F013
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 47
+    anchor: ""
+    message: YAML 成果物のキー名、配列・オブジェクト構造、値型、出力ファイル名が定義されず、Markdown 表から実装用データ構造へ一意に変換できない。
+  - id: F014
+    severity: major
+    rule: vp-dev-change-impact
+    line: 16
+    anchor: "- 業務ロジックに基づいて固定的に存在する分類"
+    message: 分類値の追加・変更・廃止が BDD、画面、集計、schema、生成物へ与える影響と互換性維持の手順が示されていない。
+  - id: F015
+    severity: minor
+    rule: vp-dev-testability
+    line: 60
+    anchor: ""
+    message: ID、メタデータ、分類値を確認する schema または lint コマンド、期待結果、エラー時対応が示されていない。
+  - id: F016
+    severity: major
+    rule: vp-qe-verifiability
+    line: 28
+    anchor: "### 3. **動的分類（Dynamic Classification）**"
+    message: 「少数」「変動しないことが多い」などの主観的で曖昧な表現が用いられており、客観的な pass/fail 判定ができない。
+  - id: F017
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 1
-    message: メタデータの type が 「domain 固定」 とされる一方で、記述ルールやサンプルでは 「data」 が使用されており矛盾している。
+    line: 53
+    anchor: "## 2. 記述ルール（共通）"
+    message: "メタデータの type が 「domain 固定」 とされる一方で、ID規約（61行目）では 「type: data」 が使用されており矛盾している。"
+  - id: F018
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 11
     anchor: ""
+    message: 参照されているサンプル specdojo:cld-sample が具体例となっておらず、正本の適用方法を検証できない。
+  - id: F019
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 47
+    anchor: ""
+    message: target_format の省略により Markdown が既定となる一方、本文は cll-* の独立 YAML を規定しており、Kata と適用先が矛盾している。
+  - id: F020
+    severity: minor
+    rule: vp-ux-readability
+    line: 18
+    anchor: "- 値は少数で変動しないことが多い"
+    message: 分類種類の定義が重複して記載されており、効率的な読み取りを妨げている。
+  - id: F021
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 11
+    anchor: ""
+    message: 対象成果物の名称が本文の「分類一覧」と、sample の「分類定義」で統一されていない。
+  - id: F022
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 11
+    anchor: ""
+    message: draft から ready へ移行する条件、recipe と template の判断完了条件、sample と適用形式の整合確認、承認者が示されていない。
+  - id: F023
+    severity: minor
+    rule: vp-ops-operability
+    line: 119
+    anchor: "- 値が3〜5個以下"
+    message: コード値の追加・変更・廃止時の担当 Role code、変更履歴、利用先への通知、問い合わせおよび復旧手順が示されていない。

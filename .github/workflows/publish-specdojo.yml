@@ -2,15 +2,8 @@ name: Publish specdojo to npm
 
 on:
   push:
-    branches:
-      - main
-    paths:
-      - "src/**"
-      - "docs/ja/specdojo/**"
-      - "docs/specdojo/**"
-      - "package.json"
-      - "package-lock.json"
-      - ".github/workflows/publish-specdojo.yml"
+    tags:
+      - "v*"
   workflow_dispatch:
 
 permissions:
@@ -28,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
@@ -35,6 +30,31 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
           cache: npm
+
+      # main へ昇格しただけでは公開しない。公開はタグの push で明示する。
+      # タグが main 上の commit を指し、名前が package.json の版と一致することを確かめる。
+      # 手動実行（workflow_dispatch）でも、main 上の commit であることは確かめる。
+      - name: Verify the release ref
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "$GITHUB_REF_NAME ($GITHUB_SHA) is not on main. Tag a commit that has been promoted to main." >&2
+            exit 1
+          fi
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            expected="v$(node -p "require('./package.json').version")"
+            if [ "$GITHUB_REF_NAME" != "$expected" ]; then
+              echo "Tag $GITHUB_REF_NAME does not match package.json version (expected $expected)." >&2
+              exit 1
+            fi
+          fi
+
+      # staged publishing は npm CLI 11.15.0 以上を要求する。Node に同梱される npm が
+      # 条件を満たすとは限らないため、publish 前に明示的に更新する。
+      - name: Ensure npm supports staged publishing
+        run: npm install -g npm@^11.15.0
 
       - name: Install dependencies
         run: npm ci
@@ -73,6 +93,19 @@ jobs:
         if: steps.version_check.outputs.should_publish == 'true'
         run: npm pack --dry-run
 
-      - name: Publish to npm via Trusted Publishing
+      # 直接 publish せず staged publishing を使う。CI は公開候補を登録するだけで、
+      # 実際の公開は maintainer が npm stage approve（2FA 必須）で承認したときに行う。
+      # agent が編集した成果物を、公開前に tarball として検査する機会を残すためである。
+      - name: Stage the release via Trusted Publishing
         if: steps.version_check.outputs.should_publish == 'true'
-        run: npm publish --access public
+        run: npm stage publish --access public
+
+      - name: Show how to approve
+        if: steps.version_check.outputs.should_publish == 'true'
+        run: |
+          package_name='${{ steps.pkg.outputs.name }}'
+          echo "Staged $package_name@${{ steps.pkg.outputs.version }}."
+          echo "This version is NOT published yet. Approve it with 2FA:"
+          echo "  npm stage list $package_name"
+          echo "  npm stage download <stage-id>   # inspect the tarball"
+          echo "  npm stage approve <stage-id>"

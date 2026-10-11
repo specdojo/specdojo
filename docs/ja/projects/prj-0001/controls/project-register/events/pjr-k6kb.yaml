@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bf2a50bf76ce4623b22192f4074c6022
+  ts: "2026-10-02T12:14:32Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: v0.3.0 の公開後に、動作を変えずに大きなファイルと関数を分け、今日の 9KST・GENJ・6RN3・H9R2 のような初回と再開の経路の食い違いや並行作業の衝突を防ぐため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade.ts の責務ごとの分割
+    - field: description
+      from: ""
+      to: src/grade.ts（3,561 行）を CLI の登録・対象の探索・plan の生成・適用の責務ごとに分ける。動作は変えない（v0.3.0 の公開後）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-02"
+    - field: due
+      from: ""
+      to: _TODO_

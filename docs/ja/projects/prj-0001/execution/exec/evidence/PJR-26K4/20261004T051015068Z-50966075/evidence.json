@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-26K4",
+  "run_id": "20261004T051015068Z-50966075",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-04T05:10:15.068Z",
+    "completed_at": "2026-10-04T05:21:40.866Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-26k4-grade-plan-embed-documents.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/grade-per-document.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/grade/run-per-document.sh",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../pjr-26k4-grade-plan-embed-documents.md         |  17 +-\n docs/ja/specdojo/references/command-reference.md   |  14 +-\n src/grade.ts                                       | 174 ++++++++++++++++++++-\n tests/src/cli-verb-taxonomy.test.ts                |   4 +\n tests/src/grade.test.ts                            |  40 +++++\n tests/tools/grade-per-document.test.ts             |  17 +-\n tools/grade/run-per-document.sh                    |  27 +++-\n 7 files changed, 270 insertions(+), 23 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/grade.ts tests/src/grade.test.ts tests/src/cli-verb-taxonomy.test.ts tests/tools/grade-per-document.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-26k4-grade-plan-embed-documents.md",
+      "status": "passed",
+      "summary": "対象ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "bash -n tools/grade/run-per-document.sh",
+      "status": "passed",
+      "summary": "シェル構文を確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生物を生成可能"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "検証成功。既存の参照先未作成警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2364件の文書索引を生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade plan --target kata --project prj-0001 --path docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md --embed-documents --out logs/grade-smoke-pjr-26k4",
+      "status": "passed",
+      "summary": "埋め込みplanの生成と行番号・ツール不使用指示を確認。一時出力は削除済み"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-26K4\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/a.md\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/a.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-kM9x2p/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-kM9x2p/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml\nGenerated: /tmp/specdojo-register-pipeline-e2e-kM9x2p/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-pipeline-e2e-kM9x2p/docs/ja/projects/test/control…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-26K4/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-26K4/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-26K4\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-0kCFg1/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-JNwYYR/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-fH9Fsm/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8cKkW3/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-TlEZbv/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-u63zUT/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-Aa8829/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-xyStzR/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  120 passed (120)\n      Te…"
+    }
+  ],
+  "final_message": "grade planの文書埋め込みオプション、上限フォールバック、pipeline連携、文書およびテストを実装した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-26K4/20261004T051015068Z-50966075/executor.log",
+      "bytes": 2108,
+      "truncated": false
+    }
+  ]
+}

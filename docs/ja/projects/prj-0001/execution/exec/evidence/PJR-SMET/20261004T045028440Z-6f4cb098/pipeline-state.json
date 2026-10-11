@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SMET",
+  "run_id": "20261004T045028440Z-6f4cb098",
+  "updated_at": "2026-10-04T05:04:59.346Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-10-04T04:50:28.440Z",
+      "completed_at": "2026-10-04T04:59:21.704Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-SMET/20261004T045028440Z-6f4cb098/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-04T05:02:06.860Z",
+      "completed_at": "2026-10-04T05:04:59.346Z",
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-smet-20261004T045026Z-503a-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-smet-20261004T045026Z-503a-result.md"
+  }
+}

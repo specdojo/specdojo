@@ -3,29 +3,72 @@ version: 1
 document: specdojo:otp-index-rulebook
 path: docs/ja/specdojo/rulebooks/otp-index-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 76
-graded_at: "2026-09-03T01:37:37.628Z"
-graded_by: gemma-expert-executor
+score: 84
+graded_at: "2026-10-05T21:08:20.147Z"
+graded_by: agy-expert-executor
 content_hash: 2c402db5fb73065326f10205f091cca7ebbb76315732435afb0600218de6837f
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
+    score: 67
+  consistency:
     score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,36 +86,51 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 3
-  minor: 1
+  minor: 2
   note: 0
 findings:
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: ID指定が `otp-index` とのみされており、プロジェクト識別子（`＜project-id＞:`）を付与する標準的な ID 命名規則に準拠していない。
-    anchor: "# 運用切替計画（ハイパーケア含む） 作成ルール"
   - id: F001
     severity: major
     rule: vp-qe-verifiability
-    line: 1
+    line: 43
+    anchor: "| ---- | ------ | ---- |"
     message: Frontmatter `type` に `migration` 固定と記述されているが、提供サンプル では `project` となっており、正解が不明確で検証不能である。
-    anchor: "# 運用切替計画（ハイパーケア含む） 作成ルール"
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 33
+    anchor: "| type | `migration` 固定 | ○ |"
+    message: ID指定が `otp-index` とのみされており、プロジェクト識別子（`＜project-id＞:`）を付与する標準的な ID 命名規則に準拠していない。
   - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 37
+    anchor: "| based_on | 根拠となる仕様ID（ID配列。未指定は `[]` 可） | 任意 |"
+    message: Frontmatter項目に `rulebook` キーの定義がないが、サンプルでは使用されており、必須項目の定義に漏れがある。
+  - id: F004
     severity: major
     rule: vp-qe-kata-conformance
-    line: 1
+    line: 43
+    anchor: "| ---- | ------ | ---- |"
     message: "サンプル `specdojo:otp-index-sample` が、本ルールブックで定義した Frontmatter の `type: migration` 固定の制約を遵守していない。"
-    anchor: "# 運用切替計画（ハイパーケア含む） 作成ルール"
-  - id: F004
+  - id: F005
     severity: minor
     rule: vp-ux-readability
-    line: 1
+    line: 67
+    anchor: ""
     message: 記述ガイドが項目の列挙に留まっており、良例（`prj-overview-rulebook.md`）のような「事実と仮説を混ぜない」等の具体的な記述品質への指針が不足している。
-    anchor: "# 運用切替計画（ハイパーケア含む） 作成ルール"

@@ -1,0 +1,28 @@
+PJR-E2Q3 の実装は終わりましたが、完了条件の1つは未確認です。review を実際に1件実行し、reporter が新しい書式で result を記入することはまだ確かめていません。agent の実行が必要なため、この executor では行っていません。前回の試行はセッション上限で止まっており、成果物の変更は何もありませんでした。
+
+**方式と理由**
+- `exec run --plan` と `exec run --deliverable` に `--executor-by` / `--reporter-by` を付けると、executor と reporter の 2 段構成で実行するようにしました（既定の `agent_pipeline` を合成します）。
+- 別の実行経路は作っていません。in-place 実行には 2 段の処理（executor evidence、親 runner の検証、reporter による result 記入）が元からあり、足りなかったのは plan から作ったタスクにこの設定を渡す手段だけだったためです。
+- 片方だけ指定した場合、もう一方は `stage_role` から自動で選びます。
+- 次の場合は実行前にエラーにします。
+  - frontmatter に `task_id` がない plan。reporter が記入する result を用意できないためです。
+  - `--by` と `--executor-by` / `--reporter-by` の併用。
+  - `--by` に `stage_role` を持つ pipeline 用 agent を指定した場合。result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するメッセージを出します。
+
+**変更ファイル**
+- `src/exec-run.ts`：`resolveInPlaceAgentPipeline` を追加し、`runInPlaceMode` から呼ぶようにしました。CLI のヘルプ文も更新しました。
+- `tests/src/exec-run-resolve-command.test.ts`：上の関数の単体テストを8件追加しました。
+- `docs/ja/specdojo/guides/exec-operation-guide.md`、`docs/ja/specdojo/references/command-reference.md`：使い方を追記しました。`command-reference.md` はオプション表の列が広がったため、prettier が表全体を整形し直しています。
+- 個票：作業内容 No.1・No.2 を done にし、対応結果を記入しました。No.3 は open のままです。`item_status` などの状態項目は変えていません。
+
+**確認したこと**
+- 前回の試行で使った review plan で次を確認しました。
+  - `--executor-by claude-expert-review-executor --reporter-by claude-reporter --dry-run` で、executor と reporter の両方が解決されました。
+  - `--by claude-expert-review-executor --dry-run` は、案内付きのエラーで終了コード 1 になりました。
+- prettier、eslint、markdownlint、docs-lint、`catalog validate`（既存の WARN のみ）、`index build`、`validate:history-links` は通りました。
+- 型チェックと単体テストは親 runner が後で実行するため、ここでは実行していません。追加したテストもまだ一度も実行されていません。
+- 完了条件の `npm run check` も未実行です。
+
+<specdojo_executor_evidence>
+{"final_message":"exec run --plan / --deliverable に --executor-by / --reporter-by を付けると executor/reporter の 2 段構成で実行するようにした（in-place 実行で既定の agent_pipeline を合成）。frontmatter に task_id がない plan、--by と stage フラグの併用、--by への stage_role 付き agent の指定は、実行前に案内付きのエラーで拒否する。resolveInPlaceAgentPipeline の単体テストを tests/src/exec-run-resolve-command.test.ts に追加し、exec-operation-guide.md と command-reference.md に使い方を記載した。個票の作業内容 No.1・No.2 と対応結果を更新したが、状態項目は変更していない。確認済み: 前回の試行の review plan で dry-run を2通り実行し、pipeline 側は executor=claude-expert-review-executor / reporter=claude-reporter に解決、誤った --by は案内付きエラーで終了コード 1 になった。未確認: review の実行1件と、reporter が新しい書式で result を記入すること（個票 No.3。agent の実行が必要なため）、npm run check（完了条件）。型チェックと単体テストは親 runner に任せている。","validations":[{"command":"npx prettier --write src/exec-run.ts tests/src/exec-run-resolve-command.test.ts docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-e2q3-exec-plan-review-agent-pipeline.md","status":"passed","summary":"formatted"},{"command":"npx eslint src/exec-run.ts tests/src/exec-run-resolve-command.test.ts","status":"passed","summary":"no errors"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-e2q3-exec-plan-review-agent-pipeline.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"no errors"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-e2q3-exec-plan-review-agent-pipeline.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"no errors"},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"OK (pre-existing based_on WARN only)"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2151 entries"},{"command":"npm run -s validate:history-links","status":"passed","summary":"valid"},{"command":"npx tsx src/specdojo.ts exec run --project prj-0001 --plan docs/ja/projects/prj-0001/execution/exec/plans/stsd-register-entry-20260928T093919Z-6fd7-plan.md --executor-by claude-expert-review-executor --reporter-by claude-reporter --dry-run","status":"passed","summary":"executor と reporter のコマンドが解決され、終了コード 0"},{"command":"npx tsx src/specdojo.ts exec run --project prj-0001 --plan docs/ja/projects/prj-0001/execution/exec/plans/stsd-register-entry-20260928T093919Z-6fd7-plan.md --by claude-expert-review-executor --dry-run","status":"passed","summary":"想定どおり案内付きエラーで拒否され、終了コード 1"},{"command":"npm run check","status":"not_run","summary":"個票の完了条件。一部は親 runner の検証（typecheck、test:unit、test:integration、validate:schema）と重なり、未実行"}]}
+</specdojo_executor_evidence>

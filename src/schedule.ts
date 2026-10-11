@@ -1,5 +1,5 @@
 import { type Command } from "commander";
-import { join, resolve } from "node:path";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { existsSync, readdirSync, writeFileSync } from "node:fs";
 import yaml from "js-yaml";
 import {
@@ -21,6 +21,7 @@ import {
   type GeneratedTask,
 } from "./schedule-build.js";
 import { readYaml } from "./exec-shared.js";
+import { resolveSpecdojoPath } from "./template-resolution.js";
 import { generateStrategy, writeStrategyFile } from "./schedule-strategy-generate.js";
 
 type ResolvedScheduleContext = {
@@ -133,6 +134,20 @@ export function collectProjectMilestones(
   return { milestones, errors, warnings };
 }
 
+const TRACK_SCHEMA = "docs/specdojo/schemas/v1/sch-track.schema.yaml";
+const MILESTONES_SCHEMA = "docs/specdojo/schemas/v1/sch-milestones.schema.yaml";
+
+/**
+ * 生成した YAML の先頭へ schema modeline を付ける。validate:schema は modeline から schema を
+ * 解決するため、yaml.dump の結果だけを書き出すと再生成のたびに検証対象から外れる。
+ */
+export function withSchemaModeline(outFile: string, schemaPath: string, body: string): string {
+  const schemaRef = relative(dirname(outFile), resolveSpecdojoPath(schemaPath))
+    .split(sep)
+    .join("/");
+  return `# yaml-language-server: $schema=${schemaRef}\n${body}`;
+}
+
 export function updateMilestonesFile(
   schedulePath: string,
   projectId: string,
@@ -204,7 +219,11 @@ export function updateMilestonesFile(
   }
   doc.milestones = orderedMilestones.map((milestone) => ({ ...milestone }));
 
-  const outYaml = yaml.dump(doc, { lineWidth: 120, noRefs: true });
+  const outYaml = withSchemaModeline(
+    filePath,
+    MILESTONES_SCHEMA,
+    yaml.dump(doc, { lineWidth: 120, noRefs: true }),
+  );
 
   if (dryRun) {
     const label = fileCreated ? "created" : "updated";
@@ -489,12 +508,16 @@ export function registerScheduleCommands(program: Command): void {
         tasks,
       });
 
-      const outYaml = yaml.dump(outDoc, {
-        lineWidth: 120,
-        quotingType: '"' as const,
-        forceQuotes: false,
-        noRefs: true,
-      });
+      const outYaml = withSchemaModeline(
+        outFile,
+        TRACK_SCHEMA,
+        yaml.dump(outDoc, {
+          lineWidth: 120,
+          quotingType: '"' as const,
+          forceQuotes: false,
+          noRefs: true,
+        }),
+      );
 
       if (opts.dryRun) {
         process.stdout.write(outYaml);

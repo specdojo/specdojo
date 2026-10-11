@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: specdojo:bps-template
+path: docs/ja/specdojo/templates/bps-template.md
+target: kata
+rubric: grade-rubric-v1
+verdict: pass
+score: 91
+graded_at: "2026-09-26T21:17:28.188Z"
+graded_by: codex-expert-executor
+content_hash: f4e6ae97a6f33770405dfe8ff47d22fa163e666c3f482fd1d1244f8f2a061beb
+categories:
+  usability:
+    score: 100
+  architecture:
+    score: 100
+  quality:
+    score: 88
+  consistency:
+    score: 75
+viewpoints:
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 2
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 66
+    anchor: <!-- 正常系、条件付き処理、主要例外を少なくとも一行ずつ扱い、第三者が業務成果を受け入れられる条件を記述する。 -->
+    message: >-
+      「主要例外がない場合」を許容する58行目の指示に対し、検証・受入観点では主要例外を無条件に少なくとも一行要求しており、例外なしのBPSで完成条件が矛盾するため、「主要例外がある場合」に限定するか例外なし確認の記載方法を示してください。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 74
+    anchor: "| _UNDECIDED_: _ISSUE_ | _IMPACTED_SECTION_OR_ID_ | _ISSUE_CLASS_ | _DECISION_ROLE_ | _DECISION_TIMING_ |"
+    message: >-
+      「未決事項」の雛形が論点を`_UNDECIDED_`に固定しており、rulebookとrecipeが要求する`_TODO_`・`_UNDECIDED_`・`_ASSUMPTION_`の区別を骨組みから適用できないため、論点ラベルを可変プレースホルダーにして3区分の選択を注記してください。

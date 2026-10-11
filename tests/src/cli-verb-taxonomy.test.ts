@@ -20,7 +20,7 @@ describe("CLI generation verb taxonomy", () => {
     registerConfigCommands(program);
     registerExecCommands(program);
 
-    expect(subcommandNames(program, "config")).toEqual(["init", "scaffold"]);
+    expect(subcommandNames(program, "config")).toEqual(["init", "migrate-members", "scaffold"]);
     expect(subcommandNames(program, "exec")).toContain("scaffold");
   });
 
@@ -49,6 +49,8 @@ describe("CLI generation verb taxonomy", () => {
       "list",
       "plan",
       "apply",
+      "translation-plan",
+      "localize",
       "validate",
       "result",
       "state",
@@ -83,7 +85,11 @@ describe("CLI generation verb taxonomy", () => {
 
     expect(longs).toContain("--reference");
     expect(longs).toContain("--random-reference");
+    expect(longs).toContain("--embed-documents");
     expect(plan?.options.find((option) => option.long === "--random-reference")?.defaultValue).toBe(
+      false,
+    );
+    expect(plan?.options.find((option) => option.long === "--embed-documents")?.defaultValue).toBe(
       false,
     );
   });

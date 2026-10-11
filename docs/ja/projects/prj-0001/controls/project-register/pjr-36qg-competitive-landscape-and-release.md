@@ -22,7 +22,7 @@ Spec-Driven Development（SDD）領域の競合状況を記録する。位置づ
 公開作業は [[prj-0001:pjr-7vkr-npm-release]] と [[prj-0001:pjr-0143-vs-code-marketplace]] で扱う。
 本 note は競合の観測に絞る。
 
-本 note は状況の変化に応じて更新する。終端させない。初回調査は 2026-09-06 時点で、`Gas Town / Gas City` は 2026-09-24 に追加した。
+本 note は状況の変化に応じて更新する。終端させない。初回調査は 2026-09-06 時点で、`Gas Town / Gas City` は 2026-09-24、Claude Code / Codex の plan 機能との比較とチームでの利用は 2026-09-30、v0.3.0 の機能の比較、設計文書の領域の比較、ソフトウェア以外の領域への適用の評価は 2026-10-08 に追加した。
 
 ## 2. 競合の状況
 
@@ -508,6 +508,162 @@ SDD の入口機能では既存ツールに対抗しにくい。差別化の軸�
 この位置づけが妥当かは実際の利用者の反応を見ないと判断できない。
 
 2026-09-24 の追加調査（`Gas Town / Gas City`）を踏まえると、差別化の軸 2「実行の記帳」は慎重に扱う必要がある。実行基盤としては Gas City が同じ問題を解いており、規模で先行している。記帳が意味を持つのは、それが成果物体系と登録簿へ接続されている場合に限る。実行基盤そのものの機能比較へ持ち込まない。
+
+### 3.8. Claude Code / Codex の plan 機能との比較
+
+2026-09-30、v0.3.0 の公開を前に、利用者から「register と orchestrator は、beads・Spec Kit・Gas City・Kiro・Claude や Codex の plan と比べて優位性があるか」という問いがあった。これまでの比較に含めていなかった Claude Code と Codex の plan 機能を、公開情報（下記の URL）をもとに追加する。
+
+| 観点         | Claude Code の plan mode                                     | Codex の plan mode / ExecPlan（`PLANS.md`） | register + orchestrator                                                                  |
+| ------------ | ------------------------------------------------------------ | ------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 扱う単位     | 1 つのタスクの手順                                           | 1 つの長い作業の生きた計画書                | プロジェクトの記録全体（作業・判断・問い・リスク・観測・変更要求）                       |
+| 置き場所     | `~/.claude/plans/`（利用者の全体共通の場所で、Git 管理の外） | リポジトリ内                                | リポジトリ内の Markdown が正本                                                           |
+| 寿命         | セッションをまたいで残るが、タスクが終われば役目を終える     | 作業が終わるまで                            | 長期。判断の経緯まで残る                                                                 |
+| 判断の記録   | 計画の中だけ                                                 | 計画の中の Decision Log                     | decision / question を独立した記録として持ち、決定ログ・課題ログ・リスク登録簿を生成する |
+| 会話との関係 | 会話の中で作る                                               | 会話の中で作る                              | 会話の内容が個票になる。変更前に提示し、承認を得る規律がある                             |
+| 導入         | 設定不要                                                     | ファイル 1 つの規約                         | Node と設定                                                                              |
+
+**類似**: Codex の ExecPlan は、計画書をリポジトリに置き、Progress、Surprises & Discoveries、Decision Log、Outcomes & Retrospectives を作業の間ずっと更新する規約である。チャットの履歴ではなく計画書を正とする点、判断を書き残す点で、register の個票に最も近い。
+
+**独自**: register は、作業以外の記録（判断・保留・リスク・観測・変更要求）を種別ごとの型で残し、決定ログなどの統制文書を生成する。ExecPlan の Decision Log は 1 つの計画書の中の節であり、プロジェクトをまたいで判断を並べ、検索する台帳ではない。Claude Code の plan は Git 管理の外にあり、チームで追えない。register は `exec run --register` で、agent の実行・検証・統合を個票の状態遷移とイベントとして記録し、`git log` だけで誰が何をいつしたかを再構成できる。
+
+**位置づけ**: plan 機能は「このタスクをどう進めるか」を扱い、register は「プロジェクトで何をなぜ決めたか」を長く残す。競合ではなく補完の関係にある。exec の plan（`xep-*` テンプレートから生成する実行計画）は、タスクごとの計画として plan 機能と同じ役割を担う。
+
+**劣位**: 導入は plan 機能のほうが圧倒的に軽い。2026-09-27〜29 の 3 日間だけで、再開・統合・並行実行まわりの実行結果を失いかねない不具合を 10 件以上直しており（PJR-R0XA、PJR-CTV4、PJR-FFPK、PJR-GRB5 など）、成熟度は plan 機能に及ばない。オーケストレーターの振る舞いは定義の質に依存し、定義の誤り 1 つ（`note` の終端、PJR-XW9M）で orchestrator が誤った推奨をした。
+
+参照した公開情報:
+
+- <https://thepromptshelf.dev/blog/claude-code-plan-mode-complete-guide-2026/>
+- <https://continuumcode.ai/guides/claude-code-plan-mode/>
+- <https://developers.openai.com/cookbook/articles/codex_exec_plans>
+- <https://codex.danielvaughan.com/2026/04/19/the-execplan-pattern-structuring-long-codex-sessions-with-plans-md/>
+
+### 3.9. チームでの利用
+
+3.8. の検討で、orchestrator は当初「1 人か小さなチーム向け」と評価したが、利用者から「register は Git で登録簿を共有できるので、チームでも活用できるのではないか」という指摘があった。実装を確かめた結果、同じリポジトリで作業する開発チームであれば十分に使えると評価を改める。
+
+チームで使える根拠は次のとおり。
+
+| 仕組み                                 | チームで使うときの効果                                                                                |
+| -------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| 1 項目 1 ファイルの個票（正本）        | 別々の項目を同時に起票・更新しても、ファイルが分かれているため競合しない                              |
+| 乱数で振る ID                          | 別々のブランチで起票しても ID がぶつかりにくく、ぶつかっても `register renumber` で直せる             |
+| 追記型のイベント                       | 変更の履歴と実行者（`--by`）が残る。統合時にイベントが競合しても、両側の和集合で解決する（PJR-36CN）  |
+| 一覧やビューは生成物（ignore 済み）    | 一覧のファイルで競合しない。各自が `register build` で作り直す（PJR-HG98）                            |
+| ブランチと PR                          | 判断の記録（decision）もコードと同じ PR でレビューできる。重い決定は PR で承認する規則がある          |
+| docs サイト                            | 登録簿の一覧・ビュー・個票を GitHub Pages で閲覧でき、開発者以外もブラウザで読める                    |
+| 担当とロール（`owner`、PO / PM / DEV） | 人と agent の担当を同じ欄で扱える                                                                     |
+| 記帳の `--commit`                      | `register lifecycle` の枠を取って commit するため、agent の実行と並行して安全に記帳できる（PJR-9XG4） |
+
+PJR-HG98 の統合テストで、2 つの worktree で並行に起票・実行しても統合で競合しないことを確かめている。
+
+チームで使うときに足りない点は次のとおり。
+
+| 点                       | 内容                                                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| 同じ項目の同時編集       | 同じ個票を 2 人が別々のブランチで書き換えると、Markdown の競合になり、手で解決する必要がある                 |
+| リアルタイム性           | 他の人の起票や close は、push と pull をするまで見えない。通知もない                                         |
+| 権限                     | 誰でも close できる。`--by` は自己申告であり、「決定者は PO」といった権限を仕組みとしては強制していない      |
+| 開発者以外の起票         | 閲覧は docs サイトでできるが、起票には Git と CLI（または orchestrator）が要る                               |
+| オーケストレーターの運用 | 各メンバーが自分の agent で orchestrator を動かすため、承認の規律や使う agent をチーム内でそろえる運用が要る |
+
+**判定**: 同じリポジトリで作業する開発チームにとって、課題と判断がコードと同じ commit に残り、agent がそのまま読めるという利点（3.6.2.1.）は、チームでも変わらない。開発者以外が主に起票するチームや、リアルタイムの通知を必要とする運用には向かず、GitHub Issues などとの併用になる。この連携は [[prj-0001:pjr-5w8c-register-github-integration]] で扱う候補である。
+
+### 3.10. 価値の裏付けについて
+
+3.8. と 3.9. の評価は、公開情報と、本リポジトリでの利用者 1 人と orchestrator の経験にもとづく。他の利用者が同じ使いやすさを感じるかは確認していない。次の方法で確かめる余地がある。
+
+- 2〜3 週間かかる作業を題材に、Claude Code の plan や ExecPlan だけで進める場合と、register と orchestrator で進める場合を比べる。1 週間空けたあと再開するまでの時間、過去の判断を探して見つけられるか、誤った変更を途中で止められたかを測る。
+- v0.3.0 の公開後に 3〜5 人に試用してもらい、最初の起票までの時間と、1 週間後も使い続けているかを聞く。
+
+### 3.11. v0.3.0 の機能と SDD のツールの比較（2026-10-08）
+
+v0.3.0（`package.json` は 0.3.0、npm の公開版は 0.2.1）で出す機能を、公開情報で競合と比べた。競合の内部実装は確認していない。
+
+競合の現状は次のとおりである。Spec Kit は 2026-06 時点で 115k star、2026-08-21 に 1.0 を公開し、agent の統合 38、コミュニティの extension 157、preset 33 を持つ。OpenSpec は 2026-04 時点で 50k star で、2026-09-19 に GitHub Trending に載った。Kiro は IDE に加えて CLI とクラウドの sandbox で動く Web 版を持ち、外部サービスと連携する Powers を加えた。
+
+| v0.3.0 の機能                                                                                                           | Spec Kit / OpenSpec / Kiro                     | beads・Gas City・plan 機能                                       | 判定                                                                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| register と orchestrator（Markdown が正本の 7 種別の登録簿、提案・承認・実行、`--commit` の記帳）                       | 該当なし（変更提案単位の状態遷移のみ）         | beads は DB が正本で依存グラフを持つ。plan 機能は 1 タスクの計画 | 独自                                                                                                                                                    |
+| exec pipeline（executor と reporter の分離、worktree、親検証、再開、rate limit からの回復、N 個のプロダクトリポジトリ） | Kiro は並列実行と hooks、Spec Kit は workflows | Gas City がほぼ同じ問題をより大きな規模で解く                    | 劣位〜同等                                                                                                                                              |
+| 保護機構（agent による定義・フック・CI の変更を止める、agent の定義の `.specdojo/` への分離）                           | 確認できず                                     | 確認できず                                                       | 独自                                                                                                                                                    |
+| grade と review（28 観点の継続評価、review は最新の grade を入力にする）                                                | 確認できず                                     | gates や tests はあるが文書の品質評価ではない                    | 独自                                                                                                                                                    |
+| kata（rulebook 106 種と recipe・sample・template）                                                                      | 機能単位の 3〜4 文書、Spec Kit は preset 33    | なし                                                             | 範囲は独自、維持負担は劣位                                                                                                                              |
+| local LLM の段構成                                                                                                      | 確認できず                                     | Gas City は runtime の抽象のみ                                   | 弱まった。2026-10 の計測で、ローカルモデルは grade の判定に使える水準に届かなかった（[[prj-0001:pjr-vqb5-agent-grade-comparison]]）。要約と翻訳には有効 |
+| 導入（`config init` / `scaffold`、`devcontainer scaffold`、docs-site、docs-lint）                                       | Spec Kit は 1 行の導入、OpenSpec は 5 コマンド | beads はバイナリ 1 つ、plan 機能は設定不要                       | 劣位                                                                                                                                                    |
+| 日本語の kata・文書・対話                                                                                               | 英語中心                                       | 英語中心                                                         | 独自                                                                                                                                                    |
+
+当初は SpecDojo を SDD のツールとして Spec Kit と同じ土俵に置いて比べたが、利用者の指摘で位置づけを改めた。Spec Kit などは 1 つの機能を実装するまで（仕様 → 計画 → タスク → コード）を扱い、仕様は実装が済めば役目をほぼ終える。SpecDojo の主な機能は、プロジェクトの仕様と設計を成果物の体系として作るまでであり、それを運用・保守へつなぐ。工程として SpecDojo は Spec Kit の上流に立ち、重なるのは「spec」という言葉と市場での分類くらいである。比較の相手は 3.12. の領域にある。
+
+参照した公開情報:
+
+- <https://github.github.com/spec-kit/>
+- <https://github.github.com/spec-kit/history.html>
+- <https://codemyspec.com/blog/github-spec-kit-guide>
+- <https://ssojet.com/blog/best-spec-driven-development-tools>
+- <https://realpython.com/ref/ai-coding-tools/kiro/>
+- <https://www.gilricardo.com/blog/kiro-review-spec-driven-agentic-ide>
+- <https://agentic-ai.readthedocs.io/en/latest/Standards/openspec/>
+- <https://aitoolly.com/ai-news/article/2026-09-20-openspec-trends-on-github-advancing-specification-driven-development-for-ai-coding-assistants-by-fis>
+
+### 3.12. 設計文書・判断の記録・文書の維持の領域の比較（2026-10-08）
+
+3.11. の位置づけにもとづき、設計文書を作る、判断を残す、文書を保つ、の各領域の競合を公開情報で調べた。
+
+| 領域                 | 見つかったもの                                                                                                                                                                      | SpecDojo との違い                                                                                                                                |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 設計書を作る         | arc42 Toolkit。AI agent（Claude Code・Copilot・Cursor など）の skill として arc42 の 12 章を対話で作る。深さの 3 段階（LEAN / ESSENTIAL / THOROUGH）、C4 の図、整合性の lint を持つ | 発想が最も近い（型に沿って AI が書く）。範囲はアーキテクチャ文書だけで、要件・データ・テスト・トレーサビリティ、品質の継続評価、判断の台帳はない |
+| 設計書を作る（日本） | 生成 AI でソースコードから設計書を作る取り組みが主流                                                                                                                                | 方向が逆（コード → 文書）。SpecDojo は文書を先に作り正本とする                                                                                   |
+| 判断を残す           | ADR の系統（adr-tools、adrpy-ai、Vercel の adr-skill、Claude Code のセッション中の判断を ADR として残す skill など）                                                                | 判断だけを扱い、agent の skill として汎用品になりつつある。register は論点・リスク・作業も扱い、設計書と実行につながる                           |
+| 文書を保つ           | Swimm。コードと結びつけた文書のずれを CI で検知し更新案を出す（2,000 以上のチーム、商用）                                                                                           | 対象はコードに近い説明文書で、設計書の体系や型に照らした品質評価ではない                                                                         |
+| トレーサビリティ     | RTMX。AI 向けの要件トレーサビリティ（CSV、依存グラフ、MCP サーバ）                                                                                                                  | 要件とテストの対応に特化し、設計書の本文は扱わない                                                                                               |
+| 規制                 | EU AI Act の技術文書の要件（高リスクのシステムは 2026-08 から施行）                                                                                                                 | 保たれた設計文書と判断の監査証跡の需要が規制の側から生まれている                                                                                 |
+
+**判定**: 仕様の判断 → 設計書の体系 → 品質の継続評価 → 運用・保守を 1 つにつないだものは見つからなかった。各部分には専門の道具がある（arc42 Toolkit、ADR の skill、Swimm、RTMX）。寄せ集めと見られないよう、1 本の流れとして見せる必要がある。arc42 Toolkit の深さの 3 段階は、`approach` や規模別の kata の組と同じ問題への答えであり参考になる。
+
+**register を入口にする位置づけ**: 利用者の提案により、register を「仕様を決めるまで、そして仕様を保つための台帳」と位置づける。仕様を決めるまでは question・decision・todo・risk で論点と判断を残し、決まったら設計書（kata）へ反映し、運用・保守では change-request・issue と grade で設計書を保つ。kata を用意せずに始められ、使ううちに設計書の体系へ進める。一方、「登録簿」という言葉と種別の一覧だけでは「git に置く課題管理」と受け取られやすく、価値の核心である「判断が設計書につながること」が見えにくい。打ち出す言葉と、起票から設計書の更新・変更要求までを通すクイックスタートで補う必要がある。戦略は [[prj-0001:pjr-nyzr-adoption-strategy]] で決める。
+
+参照した公開情報:
+
+- <https://github.com/MSiccDev/arc42-toolkit>
+- <https://heise.de/-11267038>
+- <https://arxiv.org/html/2603.28735v1>
+- <https://docs.swimm.io/ide-integrations/vs-code/ide-plugins-vscode-keep-docs-up-to-date>
+- <https://falconer.com/guides/sync-documentation-code-changes/>
+- <https://pypi.org/project/rtmx/>
+- <https://weel.co.jp/media/design-document-creation/>
+- <https://book.st-hakky.com/business/efficient-specification-document-creation-automation-and-flowcharts>
+- <https://pypi.org/project/adrpy-ai/>
+- <https://codex.danielvaughan.com/2026/04/28/codex-cli-architecture-decision-records-adr-automated-governance/>
+- <https://agentskillsfinder.com/skills/adr-skill>
+
+### 3.13. ソフトウェア以外の領域への適用（2026-10-08）
+
+利用者から「仕様と設計を決める仕組みはソフトウェア開発に限らず使えるはずで、競合に対する優位性になるか」という問いがあり、公開情報と本リポジトリの kata の構成から評価した。
+
+**構造上の特長**: 3.11. と 3.12. で比べた道具は、いずれもソフトウェア専用である。Spec Kit / Kiro / OpenSpec は最終成果物がコードで、arc42 Toolkit・ADR の skill・Swimm・RTMX も対象がソフトウェアの文書に限られる。SpecDojo の中核は領域に依存しない。
+
+- register の種別（question・decision・risk・change-request など）は、論点と判断を残す一般的な型である。
+- kata の 4 種別（何を書くか・どう作るか・どの形から始めるか・完成形）は、文書体系の種類を問わない構造である。
+- `grade` による型に照らした品質評価と、提案・承認・実行の進め方も領域を問わない。
+
+kata を差し替えれば別の領域の文書体系にも使える設計であり、SDD のツールは構造上これを持たない。
+
+**優位として打ち出しにくい理由**:
+
+1. 現在の rulebook 106 種はソフトウェア寄りである。そのまま使えるのは `pjr`・`prj-*`・`pm-*`・`br`・`bps`/`bes`・`bac`・`gl` などの一部で、大半（C4 系、`ifx-*`、`imp-*`、`utc`/`itc`/`stc`、`sysd` など）はソフトウェア専用である。他の領域への適用は、現時点では機能ではなく可能性にとどまる。
+2. 利用者の前提が開発者である。git・worktree・npm・CLI・テストによる検証を前提とし、法務・研究・製造などの利用者には 3.7. で劣位とした開始の導線の弱さがさらに大きく効く。
+3. 領域が変わると競合も変わる。ソフトウェア以外では、Confluence や Notion の AI 機能、ISO 9001 などの文書管理、製造業の PLM、規制対応の文書管理が既にあり、git と Markdown を正本とすることはむしろ不利に働く。git 上で判断と規約の文書を管理する汎用の試み（Data-Olympus など）も現れている。
+4. 位置づけが薄まる。3.11. と 3.12. で「SDD の上流で仕様と設計の体系を担う」と絞り込み、寄せ集めと見られないよう 1 本の流れとして見せることを課題とした。「何にでも使える」を加えると、この絞り込みと逆に働く。3.10. のとおり、ソフトウェアでの価値も利用者 1 人の経験でしか確かめていない。
+
+**判定**: 見出しの差別化の軸にはせず、設計上の拡張性として扱う。README では、成果物の型へ広げる節で「kata を差し替えれば別の領域の文書体系にも使える」と添える程度にとどめるのが妥当と考える。
+
+**確かめる順序**: 適用を試すなら、一般の業界ではなく、git・Markdown・レビューの文化を共有する隣接領域から始める。候補はインフラ・運用の設計、データ分析・ML、研究開発の文書、規制対応の技術文書（3.12. の EU AI Act の線上）である。1 つの領域で手応えを得てから、優位として打ち出すかを [[prj-0001:pjr-nyzr-adoption-strategy]] で判断する。
+
+参照した公開情報:
+
+- <https://github.com/topics/decision-log>
+- <https://mcpmarket.com/zh/server/data-olympus>
+- <https://hackmd.io/blog/2026/04/22/AI-writes-your-docs-hackmd>
 
 ## 4. 関連ドキュメント
 

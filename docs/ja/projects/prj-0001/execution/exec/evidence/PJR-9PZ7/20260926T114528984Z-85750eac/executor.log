@@ -1,0 +1,16 @@
+打ち切り検出を修正しました。
+
+- 完走マーカー未到達、rate limit、signal、件数不一致を非0終了に変更
+- 処理中・完了済み・未着手文書を区別して出力
+- 異なる `stage_total` の状態を破棄し、再評価
+- Job 定義で終了コードを保持
+- `pipefail` / `PIPESTATUS` の運用手順を追記
+- 回帰テストを追加
+- 個票の作業内容・対応結果を更新
+- result ファイルとステータス項目は未変更
+
+親 runner が typecheck、unit、integration、schema 検証を実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"grade の途中終了を非0で検出し、状態移行・Job終了コード・運用手順・回帰テストを更新した","validations":[{"command":"bash -n tools/grade/run-per-document.sh","status":"passed","summary":"Shell構文に問題なし"},{"command":"npx prettier --check tests/tools/grade-per-document.test.ts docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-9pz7-grade-0.md","status":"passed","summary":"全対象がPrettier準拠"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-9pz7-grade-0.md","status":"passed","summary":"Markdown lint成功"},{"command":"node --import tsx src/specdojo.ts job validate --project prj-0001","status":"passed","summary":"8件のJob定義、エラー0件"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"プロジェクトカタログ検証成功"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"1999件の文書索引を生成"},{"command":"git diff --check","status":"passed","summary":"差分のwhitespaceエラーなし"}]}
+</specdojo_executor_evidence>

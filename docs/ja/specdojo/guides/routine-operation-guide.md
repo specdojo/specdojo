@@ -13,7 +13,9 @@ Routine Operation Guide
 
 routineは、既存の未完了Schedule/Register項目を探索するほか、再利用可能なJob Definitionから期間・revisionごとのJob Runを生成できます。週報や変更文書の翻訳は[Job実行設計](../../product/040-system-design/sysd-job-execution.md)を参照してください。
 
-継続品質評価は `job-grade-kata` や `job-grade-deliverable` の Job Definition から `action.kind: job` の routine で定期起動します。文書の選択、各文書の executor / reporter 実行、`grade apply --path --analysis-from` の逐次処理は `tools/grade/run-per-document.sh` が持ちます。定期 Job は `--stages 1` で codex 単段を選びます。Job runnerは`task.command`からその入口を直接起動してevidenceを記録し、成功後の結果判断だけを`task.analysis`のreporter agentへ委譲します。責務の切り分け基準は [Job定義標準](../standards/job-definition-standard.md) を参照します。
+継続品質評価は `job-grade-kata` や `job-grade-deliverable` の Job Definition から `action.kind: job` の routine で定期起動します。文書の選択、各文書の executor 実行、executor の marker を GradeSubmission へ機械変換する `grade apply --path --analysis-from` の逐次処理は `tools/grade/run-per-document.sh` が持ちます。このスクリプトと、このスクリプトを前提とする定期 Job は SpecDojo 本体リポジトリの開発用であり、スクリプトは npm package に含まれません。定期 Job は `--stages 1` で codex 単段を選びます。Job runnerは`task.command`からその入口を直接起動してevidenceを記録し、成功後の結果判断だけを`task.analysis`のreporter agentへ委譲します。責務の切り分け基準は [Job定義標準](../standards/job-definition-standard.md) を参照します。
+
+v0.3.0 の公開物における grade は試験的な機能です。利用者は `grade list` / `plan` / `apply` / `validate` / `result` などの部品を利用できますが、定期実行や通しの pipeline は自分で組み合わせます。成果物の grade には project の `catalog_path` が必要です。1 文書の最小手順は [CLI コマンドリファレンス](../references/command-reference.md#81-npm-package-で-1-文書を評価する)を参照してください。
 
 **対象読者**
 
@@ -111,21 +113,37 @@ Job Definition を持たないため、実行記録は `generated/routine-runs.j
 
 ### 1.2. grade の単段評価
 
-Kata と成果物の定期評価は、`codex-expert-executor` と `gemma-reporter` の単段で実行します。`job-grade-kata` と `job-grade-deliverable` は `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`limit: 15` を入力します。
+Kata と成果物の定期評価は、SpecDojo 本体リポジトリ内で executor の単段により実行します。GradeSubmission は LLM の reporter を通さず、`grade apply` が executor の英語 marker から機械的に生成します。正本の grade result を保存した後、英語 finding が1件以上ある場合だけ `gemma26-translator` が日本語へ翻訳し、表示用の `message_ja` を更新します。モデルには英語文だけの配列を渡し、件数、各訳文の仮名、元の文と訳文のインラインコードの多重集合の一致をコードで検証します。元にないインラインコードが増えた項目も不合格とし、不合格項目だけを1件ずつ1回再翻訳します。それでも不合格なら正本の英語を表示に使います。翻訳は判定値を変えません。`job-grade-kata` と `job-grade-deliverable` は本体リポジトリにだけある `tools/grade/run-per-document.sh --stages 1` を起動し、条件付きの後続段は持ちません。変更済み・未評価・段未完了・旧 rubric を横断的に再評価する `rtn-grade-recheck` は `kind: all`、`changed_only: true`、`ungraded: true`、`incomplete: true`、`rubric_outdated: true`、`limit: 15` を入力します。
 
-成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
+成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了・旧 rubric の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
 
 `rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日6時に実行し、いずれも `missed_run: skip` とします。`rtn-dashboard-refresh` は `action.kind: specdojo` で毎時 `dashboard build` を直接起動します（exec の実行ロックを取らないため、grade や register の実行中でも並行して動きます）。devcontainer の cron は毎時 `routine run --due` を呼びますが、各 routine の発火時刻は routine 側の cron で決まります。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
 
-両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v4 と同じ変更済み・未評価・再試行可能な段未完了の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
+`changed_only: true` は、本文の変更に加えて、観点定義の `comparison_sources` で宣言した突き合わせ先（成果物カタログの自身の項目、依存先、Schedule、メンバー定義、ロール定義、RACI、組織定義）の変更も検出します。検出範囲と検出しない変更は `command-reference.md` の `grade` の説明に従います。突き合わせ先の記録（`source_hashes`）を持たない既存の評価は一度だけ変更扱いになるため、導入直後は `rtn-grade-deliverable-recheck` の選択が上限の10件に張り付きます。2026-09-27 時点の成果物 46 件がすべて該当し、約5日で記録が揃います。その後は突き合わせ先を変更した日だけ、その突き合わせ先を持つ成果物が選ばれます。現在の宣言では Kata に適用される観点は突き合わせ先を持たないため、`rtn-grade-recheck` の選択は変わりません。
 
-| 段  | executor / reporter                        | 対象と役割                                 |
-| --- | ------------------------------------------ | ------------------------------------------ |
-| 1   | `codex-expert-executor` / `gemma-reporter` | 対象文書をリファレンスなしで評価し確定する |
+全件再評価の定期経路は持ちません。`rtn-grade-kata` は `enabled: false` のままとし、突き合わせ先の変更による評価の陳腐化は上記の `changed_only` で解消します。観点定義の変更など `changed_only` と `rubric_outdated` のどちらも検出しない変更を反映する場合は、SpecDojo 本体リポジトリでのみ `tools/grade/run-per-document.sh` を選択条件なしで手動実行します。npm package の利用者はこのスクリプトを使えません。全件は成果物 46 件、Kata 262 件で、Job の件数上限を外すと1回で308文書を評価します。
 
-Job runnerは、この入口をmaterialize済みの引数で1回起動し、コマンド、終了コード、stdout/stderrをevidenceへ記録します。コマンドが成功した場合だけanalysis reporterが、未完了の段、失敗の切り分け、verdict と score の偏りを判断します。executor、reporter、対象種別、件数上限はscriptの引数またはJobの`inputs`から解決します。
+`rubric_outdated: true` は、grade result サイドカーの `rubric` が現在の `grade_rubric.id` と異なる文書、または `rubric` の記録がない文書を選びます（`grade list --rubric-outdated`）。ルーブリックを改めたとき（PJR-K351 の `grade-rubric-v2` など）、旧版の結果は score を新版と比べられないため評価し直します。全件を一度に評価し直すと agent の利用上限に達するため、両 routine の既存の件数上限（Kata 15 件、成果物 10 件）の範囲で、夜間の余った利用枠を使って少しずつ進めます。辞書順で上限までを選ぶため、変更済みや未評価の文書と同じ枠を分け合います。評価者は各 Job 定義の既定（`codex-expert-executor`）のままとし、手動で評価し直した結果の評価者はそのまま残します。評価し直した文書は `rubric` が現在の版になり、次回以降は選ばれません。
 
-scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に同じJob Runをretryすると完了済みの処理を飛ばして再開します。通常の agent / apply 失敗は `<execution_path>/grade/pipeline/` に完了段、失敗段、本文ハッシュ、連続失敗回数を保存します。次の日次実行枠でも本文ハッシュが同じなら失敗段から再開し、本文が変われば古い到達状況を使わず1段目から評価します。3段構成から単段へ切り替えた時点で、現在本文に対して有効な `stage_total: 3` の state が残っている場合は、既存評価を完了済みとみなして state を削除します。rate limit は失敗回数に数えません。既定で同じ段が3回連続失敗すると再試行から外し、結果の `retry_exhausted` 行で人手対応を報告します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。
+旧 rubric の結果が残る件数は、次のコマンドの出力行数で数えます。0件になれば、評価し直しは完了です。2026-09-28 の導入時点では、Kata 232 件（rulebook 99、recipe 11、sample 87、template 35）と成果物 19 件が残っていました。1日あたり Kata 15 件、成果物 10 件を上限に進めると、Kata は約16日、成果物は約2日で揃います（ほかの選択条件と枠を分け合う日は延びます）。
+
+```bash
+npx tsx src/specdojo.ts grade list --target kata --project prj-0001 --rubric-outdated | wc -l
+npx tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --rubric-outdated | wc -l
+```
+
+両 routine では、Job の `task.precondition` が `grade list` を使って script の selection-v5 と同じ変更済み・未評価・再試行可能な段未完了・旧 rubric の和集合、辞書順、対象種別、件数上限を先に評価します。連続失敗上限に達した文書は `grade state --exhausted` で同じ和集合に加えてから件数上限を適用し、処理対象からは外して report-only 対象にします。処理対象も report-only 対象も0件なら Job Run、plan、result、evidence を作らず、command と analysis reporter も起動しません。routine はこの結果を `skipped` として受け取り、`routine-state.json` の `last_run` / `last_result` と、cron の場合は `last_scheduled_for` を更新します。
+
+| 段     | agent                               | 対象と役割                                                   |
+| ------ | ----------------------------------- | ------------------------------------------------------------ |
+| 判定   | `codex-expert-executor` / `machine` | 対象文書を英語で評価し、正本の判定を確定する                 |
+| 表示化 | `gemma26-translator`                | finding の英語原文だけを日本語へ翻訳し、表示文として付加する |
+
+Job runnerは、この入口をmaterialize済みの引数で1回起動し、コマンド、終了コード、stdout/stderrをevidenceへ記録します。コマンドが成功した場合だけanalysis reporterが、未完了の段、失敗の切り分け、verdict と score の偏りを判断します。executor、reporter（既定は機械変換の `machine`）、対象種別、件数上限はscriptの引数またはJobの`inputs`から解決します。
+
+scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に同じJob Runをretryすると完了済みの処理を飛ばして再開します。通常の agent / apply 失敗は `<execution_path>/grade/pipeline/` に完了段、失敗段、本文ハッシュ、連続失敗回数を保存します。次の日次実行枠でも本文ハッシュが同じなら失敗段から再開し、本文が変われば古い到達状況を使わず1段目から評価します。保存済み state の `stage_total` が現在の構成と異なる場合は、古い grade の日時にかかわらず完了扱いへ移行せず、state を削除して1段目から再評価します。rate limit は失敗回数に数えません。既定で同じ段が3回連続失敗すると再試行から外し、結果の `retry_exhausted` 行で人手対応を報告します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。
+
+Job Definition は script を `if` の条件として起動し、非0の終了コードを保存してそのまま Job runner へ返します。これにより、後続の `results.tsv` 表示が rate limit や中断の終了コードを0へ上書きしません。script が正常終了した場合だけ `grade pipeline complete:` と `results.tsv` が command evidence に揃い、analysis reporter が起動します。
 
 ## 2. due判定と実行
 

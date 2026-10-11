@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_45c9113cb7a741318efee141115fde3a
+  ts: "2026-10-09T11:49:21Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 公開物の試用で見えた申し送りと反証の細かな問題
+    - field: description
+      from: ""
+      to: 2026-10-09 の公開物の試用で、(1) reporter が runner の適用外の判定と矛盾する申し送り（catalog validate を実行せよ）を書く、(2) claude の executor が個票を更新したと報告し、変更の一覧に出ないため毎回確認の申し送りが付く、(3) 引数付きの npm run が適用外の申告の反証から漏れる、の 3 点を観測した。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-09"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_1ba04c23e11e47989ac421804be7bfe3
+  ts: "2026-10-09T12:04:34Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_45c9113cb7a741318efee141115fde3a
+- v: 1
+  id: reg_c43576feef244d4887462fc29fafd5b6
+  ts: "2026-10-09T12:18:07Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1ba04c23e11e47989ac421804be7bfe3
+- v: 1
+  id: reg_d0ba47822e9843988957f7df70de58e3
+  ts: "2026-10-09T12:32:13Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、完了条件と照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: runner の適用外の判定と、executor が変えた runner 管理の記録を reporter の入力（runner_context）へ渡し、矛盾した申し送りと不要な確認依頼を止めた。引数付きの npm run も not_applicable の反証の対象にした。
+  previous_event_id: reg_c43576feef244d4887462fc29fafd5b6

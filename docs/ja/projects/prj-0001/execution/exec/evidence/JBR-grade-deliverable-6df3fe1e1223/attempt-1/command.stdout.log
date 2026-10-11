@@ -1,0 +1,39 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-6df3fe1e1223 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-6df3fe1e1223
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-reporter
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
+document start: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
+document complete: docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-6df3fe1e1223/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-06T16:02:09Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md	1	passed	112	needs-work	63	16	agy-expert-executor	machine	none		
+2026-10-06T16:04:16Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-check.md	1	passed	125	needs-work	71	18	agy-expert-executor	machine	none		
+2026-10-06T16:05:46Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-do.md	1	passed	88	needs-work	82	12	agy-expert-executor	machine	none		
+2026-10-06T16:10:59Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md	1	passed	311	needs-work	53	21	agy-expert-executor	machine	none		
+2026-10-06T16:12:21Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md	1	passed	80	needs-work	91	5	agy-expert-executor	machine	none		
+2026-10-06T16:13:57Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	1	passed	94	needs-work	84	7	agy-expert-executor	machine	none		
+2026-10-06T16:15:56Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md	1	passed	117	needs-work	78	13	agy-expert-executor	machine	none		
+2026-10-06T16:17:39Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-deliverable.md	1	passed	101	pass	100	0	agy-expert-executor	machine	none		
+2026-10-06T16:19:31Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md	1	passed	110	needs-work	98	1	agy-expert-executor	machine	none		
+2026-10-06T16:21:04Z	docs/ja/product/010-business-specs/020-data-model/cdsd-execution.md	1	passed	92	needs-work	49	22	agy-expert-executor	machine	none		

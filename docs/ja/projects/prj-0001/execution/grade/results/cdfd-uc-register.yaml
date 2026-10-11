@@ -3,29 +3,89 @@ version: 1
 document: cdfd-uc-register
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-uc-register.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 95
-graded_at: "2026-09-20T05:11:28.995Z"
-graded_by: codex-expert-executor
-content_hash: 7d688ba3fe34dfe1f0921ef2d9e8b75179c31a9fd0acd24137af851d370f1bce
+score: 98
+graded_at: "2026-10-07T16:16:35.052Z"
+graded_by: agy-expert-executor
+content_hash: c1df04d5b03e29e8e669e24f2e41371c2f57585b0519274761981abccffcc3e9
+source_hashes:
+  catalog-entry: 8a53ffdb6f421d74c38da264ffdba25bd41365b815f90ced1591521939afb5a4
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cdfd-action: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
+  dependency:cdfd-check: e02cebf2a8ee62470a475fede1fcb6267cfcda9d93d320313a938f12c69ed3a8
+  dependency:cdfd-do: 77bdd115c5f0005404837c4d440bc2af468071ee4364c697383e1019a52a0a99
+  dependency:cdfd-plan: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 83
+    score: 88
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
@@ -46,6 +106,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -61,16 +130,15 @@ findings:
   - id: F001
     severity: major
     rule: vp-qe-verifiability
-    line: 193
-    message: H-01 の「権限を持つ人間の承認」は、具体的な責任ロールまたは権限の参照先が明示されておらず, また「実行計画と対応付いている」という証跡の確認方法が不明確なため, 受理可否を一意に判定できない。
+    line: 205
     anchor: >-
-      | H-02        | Do             | Check          |
-      対応済み登録項目、対応内容、検証結果、result、evidence、実行状態                                     |
-      登録項目への対応が完了し、対象と対応内容が登録簿で対応付き、`done_criteria` ごとの評価に使う result・evidence・実行状態を Check
-      が特定できる。                                                                                                |
-      評価対象が対応後に変更された、対応内容と実行記録を対応付けられない、必要な evidence
-      を取得できない、または実行状態から対応完了を確認できない。                                                                                         
-      |
+      | H-03         | PO と PM
+      の照合により完了条件の未充足事項が特定された。                                                                                                                   
+      | Plan           | 完了条件の未充足事項、再計画要求                                       |
+      再計画に基づく対応と評価が完了し、完了条件を照合できる評価結果と完了要求がそろった後、H-01
+      から横断順序を再開できる。                                                                      |
+    message: H-01 の「権限を持つ人間の承認」は、具体的な責任ロールまたは権限の参照先が明示されておらず、また「実行計画と対応付いている」という証跡の確認方法が不明確なため、受理可否を一意に判定できない。
+    message_ja: H-01 の「権限を持つ人間の承認」は、具体的な責任ロールまたは権限の参照先が明示されておらず、また「実行計画と対応付いている」という証跡の確認方法が不明確なため、受理可否を一意に判定できない。
 done_criteria:
   satisfied: 3
   total: 3

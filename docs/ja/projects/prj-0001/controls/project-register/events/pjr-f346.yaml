@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5e2a731736934e44b27ce95813dc858e
+  ts: "2026-09-28T11:22:25Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が今までの変更をドキュメントへ反映したいと依頼したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 2026-09-26〜28 の変更を利用者向けドキュメントへ反映する
+    - field: description
+      from: ""
+      to: exec の並行実行・再開・commit 範囲・統合、grade の rubric v2 と契機、review の grade 前提化と判定語彙、docs サイト、config init など 9/26〜28 に close した変更について、guides・references・README の記述が実装と食い違っていないかを確認し、古い記述を直す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-28"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_16a285c94a954c6d90c3fe9c891d9e78
+  ts: "2026-09-28T11:27:24Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5e2a731736934e44b27ce95813dc858e
+- v: 1
+  id: reg_11db5cdc7c6e4ecbad0583fffbfda39b
+  ts: "2026-09-28T11:48:00Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_16a285c94a954c6d90c3fe9c891d9e78
+- v: 1
+  id: reg_d36d1a4a216445db887b1d8cfccc5747
+  ts: "2026-09-28T14:14:57Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor の実行結果を評価し、orchestrator が docs:build を既定ヒープで実行して成功（130 秒）を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: 9/26〜28 に完了した変更について guides・references・README を横断確認し、11 文書を更新した（grade と review の役割分担、rubric v2 と --rubric-outdated、docs サイト、orchestrator 同期など）。旧語彙は移行説明と別義の用例だけが残る。4HBG・36CN・E2Q3 は着手時点で未完了のため対象外
+  previous_event_id: reg_11db5cdc7c6e4ecbad0583fffbfda39b

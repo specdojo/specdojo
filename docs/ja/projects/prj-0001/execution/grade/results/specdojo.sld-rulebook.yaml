@@ -3,29 +3,75 @@ version: 1
 document: specdojo:sld-rulebook
 path: docs/ja/specdojo/rulebooks/sld-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 51
-graded_at: "2026-09-03T10:09:34.385Z"
-graded_by: gemma-expert-executor
+score: 72
+graded_at: "2026-10-09T21:09:23.065Z"
+graded_by: agy-expert-executor
 content_hash: 50aa5e9b93a71eaab3cbea103f1adf9e723584d791b1f2cef93394196d9da1ad
 categories:
-  consistency:
-    score: 50
-  usability:
-    score: 50
+  purpose:
+    score: 75
+  operations:
+    score: 94
+  planning:
+    score: 92
+  business:
+    score: 92
   architecture:
     score: 100
+  usability:
+    score: 50
+  implementation:
+    score: 100
   quality:
-    score: 25
+    score: 50
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,48 +89,88 @@ viewpoints:
   vp-ux-language-consistency:
     level: 1
     score: 25
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 5
-  minor: 1
+  minor: 4
   note: 0
 findings:
-  - id: F005
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    message: サンプルでの名称不一致およびメタデータ定義の矛盾により、成果物の正体と分類が判別しにくい。
-    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
-  - id: F006
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 1
-    message: ルールブックの「保管場所一覧」とサンプルの「保管場所定義 / 業務データ辞書」の間で名称が統一されていない。
-    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: "`sld-sample.md` の `type: project` がルールブックの規定（`domain` または `data`）と矛盾している。"
-    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
+    rule: vp-po-decision-readiness
+    line: 67
+    anchor: "## 4. 本文構成（標準テンプレ）"
+    message: >-
+      The template does not define a section for pending issues or discussion points, lacking the necessary information
+      for PO approval decisions.
+    message_ja: テンプレートには保留中の問題や検討事項のセクションが定義されておらず、POの承認決定に必要な情報が不足しています。
   - id: F002
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 5
+    anchor: "## 1. メタデータ"
+    message: There is no requirement to specify the approver (PO) who bears the final decision and accountability.
+    message_ja: 最終的な決定権と責任を負う承認者（PO）を指定する要件がありません。
+  - id: F003
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 67
+    anchor: "## 4. 本文構成（標準テンプレ）"
+    message: >-
+      There are no items defined to identify dependencies on other processes or subsequent deliverables, nor are there
+      items to identify risks or issues.
+    message_ja: 他のプロセスや後続の成果物との依存関係を特定する項目や、リスクや問題を特定する項目が定義されていません。
+  - id: F004
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 67
+    anchor: "## 4. 本文構成（標準テンプレ）"
+    message: There are no items defined to clarify stakeholders, users, and reviewers of this document.
+    message_ja: このドキュメントのステークホルダー、ユーザー、およびレビュアーを明確にする項目が定義されていません。
+  - id: F005
     severity: major
     rule: vp-qe-verifiability
-    line: 1
+    line: 10
+    anchor: "| type | `domain` 固定                 | ○    |"
     message: "20行目の「`domain` 固定」という記述と 28行目の 「`type: data`」 という記述が矛盾しており、正しい設定値が判定不能である。"
-    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: サンプル `sld-sample.md` のメタデータがルールブックの規定に従っていない。
-    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
-  - id: F003
+    message_ja: "20行目の「`domain` 固定」という記述と 28行目の 「`type: data`」 という記述が矛盾しており、正しい設定値が判定不能である。"
+  - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
-    message: 他成果物との関係性を定義する「位置づけ」節が欠落しており、文書の役割が不明確である。
     anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
+    message: 他成果物との関係性を定義する「位置づけ」節が欠落しており、文書の役割が不明確である。
+    message_ja: 他成果物との関係性を定義する「位置づけ」節が欠落しており、文書の役割が不明確である。
+  - id: F007
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
+    message: サンプル `sld-sample.md` のメタデータがルールブックの規定に従っていない。
+    message_ja: サンプル `sld-sample.md` のメタデータがルールブックの規定に従っていない。
+  - id: F008
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
+    message: サンプルでの名称不一致およびメタデータ定義の矛盾により、成果物の正体と分類が判別しにくい。
+    message_ja: サンプルでの名称不一致およびメタデータ定義の矛盾により、成果物の正体と分類が判別しにくい。
+  - id: F009
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# 保管場所一覧 （Storage Locations List）作成ルール"
+    message: ルールブックの「保管場所一覧」とサンプルの「保管場所定義 / 業務データ辞書」の間で名称が統一されていない。
+    message_ja: ルールブックの「保管場所一覧」とサンプルの「保管場所定義 / 業務データ辞書」の間で名称が統一されていない。

@@ -1,0 +1,17 @@
+grade pipeline incomplete: incomplete=15 run_id=JBR-grade-kata-19d22fa1c5f5; rerun with --run-id JBR-grade-kata-19d22fa1c5f5 to retry the failed stages, or start a new run with --incomplete
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/atc-index-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/atc-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/bac-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/bds-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/cdsd-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/cld-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/cnd-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/cxd-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/dct-index-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/dct-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/dec-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/rulebooks/dmd-rulebook.md failed_stage=1
+grade pipeline failed: run_id=JBR-grade-kata-19d22fa1c5f5 exit_code=1

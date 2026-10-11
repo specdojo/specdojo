@@ -40,7 +40,6 @@
     "ghcr.io/devcontainers/features/copilot-cli:1": {},
     "ghcr.io/devcontainers/features/python:1": {},
     "ghcr.io/va-h/devcontainers-features/uv:1": {},
-    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
       "packages": "ripgrep,fd-find,gh,fzf,yq,shellcheck,shfmt,tmux",
       "upgradePackages": false
@@ -53,10 +52,12 @@
     "source=specdojo-codex,target=/home/node/.codex,type=volume",
     "source=specdojo-copilot,target=/home/node/.copilot,type=volume",
     "source=specdojo-opencode,target=/home/node/.config/opencode,type=volume",
+    "source=specdojo-opencode-data,target=/home/node/.local/share/opencode,type=volume",
     "source=specdojo-antigravity,target=/home/node/.config/antigravity,type=volume",
     "source=specdojo-gemini,target=/home/node/.gemini,type=volume",
     "source=specdojo-gh,target=/home/node/.config/gh,type=volume",
-    "source=${localEnv:HOME}/dotfiles/.emacs.d,target=/home/node/.emacs.d,type=bind"
+    "source=specdojo-emacs-data,target=/home/node/.local/share/emacs,type=volume",
+    "source=specdojo-nvim-data,target=/home/node/.local/share/nvim,type=volume"
   ],
 
   "containerEnv": {

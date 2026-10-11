@@ -254,9 +254,11 @@ export type ResolvedProjectPaths = {
 };
 
 // タスクの出自。schedule は成果物カタログ由来のタスクで、対象成果物を持ち targets から
-// commit 許可リストを導出する。register は登録簿項目（PJR-XXXX）の実行で、対象成果物を
-// 特定できないため targets を持たない。job はJob DefinitionからmaterializeしたRunで、
-// targetsまたは対象pathをRunスナップショットに保持する。省略時は schedule とみなす。
+// commit 許可リストを導出する。register は登録簿項目（PJR-XXXX）の実行で、個票が
+// targets を宣言していれば plan に転記して target coverage 検証を有効にする（宣言が
+// なければ targets を持たず検証は skip される）。job はJob Definitionから
+// materializeしたRunで、targetsまたは対象pathをRunスナップショットに保持する。
+// 省略時は schedule とみなす。
 export type TaskOrigin = "schedule" | "register" | "job";
 
 export type ExecPlanMeta = {

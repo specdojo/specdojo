@@ -1,0 +1,25 @@
+`tools/grade/run-per-document.sh` now ends with exit code 1 when a run finishes with incomplete documents, and 0 when none are left. I haven't run any tests myself: they're left to the parent runner (`npm run test:unit` and the others). My attempt at `bash -n` also didn't run because approval wasn't granted.
+
+**Starting point:** the ticket already said this work was done, but the script had none of these changes when I started. The earlier run was blocked because the parent's `npm run test:integration` failed. That suite only runs `*.integration.test.ts` files, and this ticket's tests are in the unit suite. I couldn't find the log explaining that earlier failure, so I don't know its cause.
+
+**Changes:**
+- **Script:** when a stage fails, the script now records the document and which stage failed. After printing the `grade pipeline complete` line and setting `pipeline_finished=true`, it checks whether any documents are incomplete. If there are, it writes these to standard error and exits with 1:
+  - `grade pipeline incomplete: incomplete=<n> run_id=<id>; rerun with --run-id <id> …`
+  - one `grade pipeline incomplete document: <path> failed_stage=<n>` line per document
+- **Abort handling (PJR-9PZ7):** unchanged. The new check comes after `pipeline_finished=true` is set, so the exit handler doesn't report the run as aborted.
+- **Report-only runs:** documents that hit the failure limit (`retry_exhausted`) aren't counted as incomplete, so a report-only `--incomplete` run still exits with 0.
+- **Tests (`tests/tools/grade-per-document.test.ts`):**
+  - Added a test for the incomplete case: exit 1, the stderr lines above, and no "aborted" message.
+  - Added a test for the complete case: exit 0.
+  - Changed three existing tests where a stage fails from expecting 0 to expecting 1.
+  - Prettier made no formatting changes.
+
+**Routine behaviour:** `job-grade-kata.yaml` runs the script inside an `if` and passes a non-zero exit code straight through. An incomplete run is therefore recorded as a failed job run, and the step that prints `results.tsv` is skipped. The job's analysis description assumes the reporter looks at failed stages in `results.tsv`, which no longer fits. Whether to keep that output on failure is a separate decision.
+
+I didn't edit the ticket file: its "作業内容" and "対応結果" sections already describe exactly this implementation and the routine behaviour.
+
+Changed files: `tools/grade/run-per-document.sh`, `tests/tools/grade-per-document.test.ts`
+
+<specdojo_executor_evidence>
+{"final_message":"run-per-document.sh now exits with 1 when documents are left incomplete after a full run (exit 0 when none are); it records each incomplete document and failed stage and writes them to stderr with --run-id resume instructions. Abort (EXIT trap) behaviour is unchanged. Added exit-code tests for the incomplete and complete cases and updated three existing tests to expect 1. Tests were not run by the executor; they are left to the parent runner.","validations":[{"command":"npx prettier --write tests/tools/grade-per-document.test.ts","status":"passed","summary":"No formatting changes (unchanged)"},{"command":"bash -n tools/grade/run-per-document.sh","status":"not_run","summary":"Not run because sandbox approval was not granted"}]}
+</specdojo_executor_evidence>

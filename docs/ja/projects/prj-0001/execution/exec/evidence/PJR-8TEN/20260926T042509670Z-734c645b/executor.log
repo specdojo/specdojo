@@ -1,0 +1,14 @@
+BPS の template / recipe を新規作成し、rulebook の参照と責務分離を更新しました。既存 sample は実例として成立しているため採用しています。
+
+変更対象:
+
+- [bps-template.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TEN/docs/ja/specdojo/templates/bps-template.md)
+- [bps-recipe.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TEN/docs/ja/specdojo/recipes/bps-recipe.md)
+- [bps-rulebook.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TEN/docs/ja/specdojo/rulebooks/bps-rulebook.md)
+- [PJR-8TEN 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TEN/docs/ja/projects/prj-0001/controls/project-register/pjr-8ten-bps-sample-bps-template-bps-recipe.md)
+
+Markdown、Frontmatter、カタログ、生成工程は通過しました。ただし grade 再評価は内部 Codex クライアントの sandbox 初期化エラー、VitePress build は Chromium 起動制約で未完了です。exec result は指示どおり編集していません。
+
+<specdojo_executor_evidence>
+{"final_message":"BPS template・recipe・rulebook整備は完了。正式grade再評価とVitePress描画はsandbox制約で未完了。","validations":[{"command":"npx prettier --write docs/ja/specdojo/rulebooks/bps-rulebook.md docs/ja/specdojo/templates/bps-template.md docs/ja/specdojo/recipes/bps-recipe.md","status":"passed","summary":"3文書を整形"},{"command":"npx markdownlint docs/ja/specdojo/rulebooks/bps-rulebook.md docs/ja/specdojo/templates/bps-template.md docs/ja/specdojo/recipes/bps-recipe.md","status":"passed","summary":"指摘なし"},{"command":"npm run -s lint:md","status":"passed","summary":"全Markdown検査成功"},{"command":"npm run -s lint:fm","status":"passed","summary":"Frontmatter検査成功"},{"command":"npm run build","status":"passed","summary":"CLIコンパイル成功"},{"command":"node dist/specdojo.js build","status":"passed","summary":"SpecDojoの全6生成工程が成功"},{"command":"node dist/specdojo.js catalog validate","status":"passed","summary":"検証成功。既存の未配置成果物に関する警告のみ"},{"command":"node dist/specdojo.js register build","status":"passed","summary":"登録簿派生文書を生成"},{"command":"node dist/specdojo.js index build","status":"passed","summary":"1967件の文書索引を生成"},{"command":"npm run docs:build","status":"failed","summary":"sandboxでtsx IPCソケット作成がEPERM"},{"command":"npm --prefix packages/docs-site run docs:build","status":"failed","summary":"既存Mermaid描画時のChromium起動がsandboxで拒否"},{"command":"tools/grade/run-per-document.sh --run-id PJR-8TEN-bps-sample --project prj-0001 --target kata --kind sample --path docs/ja/specdojo/samples/bps-sample.md --stages 1 --specdojo-bin dist/specdojo.js","status":"failed","summary":"内部Codexクライアントが読み取り専用領域で初期化できず、grade評価段が未完了"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

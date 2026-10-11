@@ -1,0 +1,40 @@
+`PJR-N22N` の成果物（テンプレート、コード、テスト、個票）は完成しました。個票の完了条件のうち「review を agent で 1 件実行して result を確認する」は未達です。前回実行の変更は作業ツリーに残っていなかったため、全体を作り直しました。前回は `scaffoldClaimResult` の引数から `viewpointsPath` を外したのに、呼び出し側が渡し続けて `typecheck` で失敗していました。今回は定義と呼び出しの両方から外しています。
+
+`typecheck` と unit / integration テストは指示どおり実行しておらず、親 runner の結果待ちです。
+
+**主な変更**
+- **`xrp-*` 9 本**
+  - 観点ごとの pass / fail / unclear 判定と、owner 以外のロールを絞る指示を削除しました。
+  - 新設の「評価結果」章に、評価対象・grade の `--target`・評価結果サイドカーのパスを plan 生成時に埋め込みます。
+  - 旧レビュー観点表は `done_criteria` を並べた「完了条件」表（ID は `DC-NNN`）に改めました。
+  - 実践の型メンテナンス系は、`--target kata` で実践の型そのものを評価対象にします。
+- **共通の判断手順**: `xep-common-conventions-template.md` に「review の判断手順」を追加し、9 本共通の正本にしました。
+  - 鮮度確認は `grade list --changed-only` で行い、`E-01` に対応します。
+  - 評価不能の判定（`E-02`）、review 中の成果物変更の検知、verdict 6 値の表も含みます。
+  - この節はマーカーで囲み、review plan にだけ残します。edit・登録簿・Job の plan からはコードで取り除きます。
+- **`xrr-template.md`**: 評価結果の確認 → 判断根拠 → 未充足事項・改善指示 → approach に応じた確認 → `verdict` の構成に改めました。
+  - `verdict` は `complete` / `complete-with-findings` / `incomplete` / `grade-stale` / `grade-unavailable` / `changed-during-review` の 6 値です。
+  - `bps-task-completion` の受入観点 6 区分と一対一に対応します。
+- **`*-viewpoint-detail-*` 2 本**: review が観点ごとに評価しなくなったため不要と判断し、削除しました。参照していたコードとテストからも外しています。
+- **reporter と result 描画**: 出力 schema（TS と公開 YAML）の review 部分を上記の構成に置き換えました。
+  - reporter には「`complete` 以外の verdict も記録済みの結果として `outcome=complete` で返す」と指示しています。
+  - 改訂前に作られた review result の `recommendation: _TODO_` も、引き続き未記入として検知します。
+- **テスト**: 旧仕様のテストを更新し、次の点を確かめるテストを追加しました。
+  - テンプレートに観点ごとの評価指示と owner 以外のロールを絞る指示がないこと。
+  - verdict と受入観点の対応。
+  - review 専用の節が edit plan に入らないこと。
+- **個票**: 作業内容と対応結果をこの実行の内容で更新しました。状態の項目は変更していません。
+
+**試行**
+`pm-plan` で review plan を `fully-guided` と `rulebook-maintenance` の 2 通り生成し、評価結果の各パスと `--target` が正しく埋まることを確認しました。`grade list --changed-only` を実行すると `pm-plan` が出力されるため、今 review すると `grade-stale` になります。
+
+**申し送り**
+- **未完了（個票 No.6）**: 生成したのは plan だけで、agent による review の実行と result の確認はしていません。
+- **index に残ったステージング**: 削除した 2 本は `git rm` で index にステージングされたままです。解除にはこの環境で承認が必要なため、そのままにしています。
+- **一時ファイル**: `/tmp/n22n-trial-review-plan.md` と `/tmp/n22n-trial-review-plan-rb.md` も、削除に承認が必要なため残っています。
+- **旧仕様のままの文書**: `review-guide.md` は旧来の観点別判定と `recommendation` を説明したままで、別途改訂が必要です。`sch-strategy-*.yaml` の `review` phase の位置づけ変更も、個票どおり別件です。
+- **既存の plan**: 未着手の review plan は旧指示のままなので、再生成が必要です。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-N22N: rewrote the 9 xrp templates to take the grade result as input (evaluation-result chapter, done-criteria table, no per-viewpoint pass/fail/unclear, no owner-only-role narrowing). Added a review-only judgement procedure (E-01 freshness via grade list --changed-only, E-02, change detection, 6-value verdict table) to xep-common-conventions-template.md; it is stripped from non-review plans. Rewrote xrr-template.md around a verdict that maps one-to-one to the 6 bps-task-completion acceptance viewpoints. Deleted both viewpoint-detail templates (staged by git rm; unstaging needs approval) and removed their code paths. Replaced review reporter output (`grade_check`/`rationale`/`improvements`/`approach`/`verdict`) in src/exec-reporter.ts, the public schema YAML, and src/exec-results.ts rendering and unfilled detection (legacy recommendation marker kept). Fixed the previous run's typecheck cause by removing `viewpointsPath` from `scaffoldClaimResult` and all its callers. Updated tests and the ticket's work and outcome sections. Generated trial review plans for pm-plan (fully-guided and rulebook-maintenance); agent-run review trial (ticket No.6) not done. review-guide.md not updated (out of scope). Temp trial plans remain in /tmp (rm needs approval).","validations":[{"command":"npx prettier --write <changed ts/md/yaml files>","status":"passed","summary":"all changed files formatted"},{"command":"npx markdownlint docs/ja/specdojo/exec-templates/xrp-*.md docs/ja/specdojo/exec-templates/xrr-template.md docs/ja/specdojo/exec-templates/xep-common-conventions-template.md","status":"passed","summary":"no errors"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-n22n-xrp-xrr-review.md","status":"passed","summary":"no errors"},{"command":"npx eslint src/exec-plans.ts src/exec-reporter.ts src/exec-results.ts src/exec-run.ts src/exec.ts tests/src/exec-plans.test.ts tests/src/exec-results.test.ts tests/src/exec-reporter.test.ts tests/src/exec-pipeline-e2e.integration.test.ts tests/src/exec-run-inplace.test.ts","status":"passed","summary":"no errors"},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"all dct files OK; 0 errors; only pre-existing `based_on` warnings"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2121 entries"},{"command":"npx tsx src/specdojo.ts exec validate --project prj-0001","status":"passed","summary":"OK: validation passed (pre-existing historical-event warnings only)"},{"command":"npm run -s validate:history-links","status":"passed","summary":"all history files valid"},{"command":"npx tsx src/specdojo.ts exec plan --project prj-0001 --deliverable pm-plan --mode review --approach fully-guided --out /tmp/n22n-trial-review-plan.md","status":"passed","summary":"trial plan shows evaluated path, target deliverable, existing sidecar path, DC table, review judgement procedure, no marker lines"},{"command":"npx tsx src/specdojo.ts exec plan --project prj-0001 --deliverable pm-plan --mode review --approach rulebook-maintenance --out /tmp/n22n-trial-review-plan-rb.md","status":"passed","summary":"trial plan shows target kata and sidecar specdojo.pm-plan-rulebook.yaml"},{"command":"npx tsx src/specdojo.ts grade list --project prj-0001 --target deliverable --path docs/ja/projects/prj-0001/030-project-management/pm-plan.md --changed-only","status":"passed","summary":"freshness command works; pm-plan is listed, so a review now would be grade-stale"},{"command":"npx markdownlint /tmp/n22n-trial-review-plan.md","status":"not_run","summary":"markdownlint-cli rejects paths outside the repo (RangeError); trial plan not linted"}]}
+</specdojo_executor_evidence>

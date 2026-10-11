@@ -3,44 +3,99 @@ version: 1
 document: specdojo:trc-requirements-to-specs-rulebook
 path: docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md
 target: kata
-rubric: grade-rubric-v1
-verdict: pass
-score: 93
-graded_at: "2026-09-03T13:03:15.710Z"
-graded_by: gemma-expert-executor
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 88
+graded_at: "2026-10-09T21:22:15.908Z"
+graded_by: agy-expert-executor
 content_hash: 55354ee18f2bdf54503ddbbecd462eec36d8ce34d0a1e6806357642d91d69dfe
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
-  quality:
+  usability:
+    score: 92
+  implementation:
     score: 100
+  quality:
+    score: 83
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 3
-    score: 75
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-qe-kata-conformance:
     level: 3
     score: 75
-  vp-qe-kata-conformance:
-    level: 4
-    score: 100
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,25 +103,46 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 3
+  major: 1
+  minor: 4
   note: 0
 findings:
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: 成果物間の関係性やプロジェクトフロー上の位置づけを明記する「位置づけ」節が不足しており、作成タイミングや目的の把握が不十分である（prj-overview-rulebook の第 2 章を参照）。
-    anchor: "# トレーサビリティ（要求→仕様）作成ルール"
   - id: F001
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: 対象ドキュメントIDが`＜project-id＞:ID`形式ではなく固定文字列で定義されており、プロジェクト間でのID一意性の担保という命名規則に反している。
-    anchor: "# トレーサビリティ（要求→仕様）作成ルール"
+    rule: vp-dev-testability
+    line: 103
+    anchor: "- 充足状況に曖昧語（例: ほぼ対応、だいたい完了）を使用しない。"
+    message: >-
+      The rulebook instructs regenerating the derived view upon updates, but lacks references to specific commands or
+      scripts to execute the regeneration, making it difficult to verify changes.
+    message_ja: ルールブックには更新時に派生ビューを再生成するよう指示されていますが、再生成を実行するための特定のコマンドやスクリプトへの参照がないため、変更の検証が困難です。
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 66
+    anchor: ""
+    message: >-
+      Section 1 prohibits manual editing, but Section 6 assumes manual writing by using phrases like 'specify' and
+      'describe', causing a contradiction in responsibilities between automatic generation and manual editing.
+    message_ja: セクション1では手動編集を禁止していますが、セクション6では「指定する」や「記述する」といったフレーズを使用して手動での記述を前提としており、自動生成と手動編集の間の責任において矛盾が生じています。
   - id: F003
     severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 24
+    anchor: "| ギャップ | 要求と仕様の間に残る不足・不整合・未確定事項 |"
+    message: 成果物間の関係性やプロジェクトフロー上の位置づけを明記する「位置づけ」節が不足しており、作成タイミングや目的の把握が不十分である（prj-overview-rulebook の第 2 章を参照）。
+    message_ja: 成果物間の関係性やプロジェクトフロー上の位置づけを明記する「位置づけ」節が不足しており、作成タイミングや目的の把握が不十分である（prj-overview-rulebook の第 2 章を参照）。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 36
+    anchor: "[document-metadata-standard.md](../standards/document-metadata-standard.md) に準拠し、以下を推奨する。"
+    message: 対象ドキュメントIDが`＜project-id＞:ID`形式ではなく固定文字列で定義されており、プロジェクト間でのID一意性の担保という命名規則に反している。
+    message_ja: 対象ドキュメントIDが`＜project-id＞:ID`形式ではなく固定文字列で定義されており、プロジェクト間でのID一意性の担保という命名規則に反している。
+  - id: F005
+    severity: minor
     rule: vp-ux-readability
-    line: 1
+    line: 106
+    anchor: "- 生成したトレース表を手編集し、成果物の `relations.satisfies` と異なる関係を持たせない。"
     message: 禁止事項に理由が添えられていないため、著者がルールの意図を理解しにくく、適用判断に迷う可能性がある。理由を添えた表形式への変更を推奨する。
-    anchor: "# トレーサビリティ（要求→仕様）作成ルール"
+    message_ja: 禁止事項に理由が添えられていないため、著者がルールの意図を理解しにくく、適用判断に迷う可能性がある。理由を添えた表形式への変更を推奨する。

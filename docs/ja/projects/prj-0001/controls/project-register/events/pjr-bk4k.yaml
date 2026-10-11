@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9c4ddfa63bb0441d92da79b47dbbb6e0
+  ts: "2026-10-07T11:43:26Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-69VP の実行で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: sandbox の外で行う確認を executor が not_run と記録すると完了できない
+    - field: description
+      from: ""
+      to: executor が実 agent CLI の起動など sandbox の外で人が行う確認を not_run と正しく記録すると、runner が同じコマンドを実行しないため、親検証がすべて通っても必ず waiting になる。PJR-69VP の 3 回目の実行で発生し、orchestrator が確認を実行して手で取り込んだ。人の確認として申し送る区分か、reporter 段の再開前に人の確認の結果を記録する手段が要る。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-07"
+- v: 1
+  id: reg_9451cf5db506414da1f07499c4c85d2a
+  ts: "2026-10-07T12:04:46Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9c4ddfa63bb0441d92da79b47dbbb6e0
+- v: 1
+  id: reg_7dd02281dd054605b53f17ebed8945ce
+  ts: "2026-10-07T12:20:14Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9451cf5db506414da1f07499c4c85d2a
+- v: 1
+  id: reg_57e0261b0ba7428eb3ad551a5a72eb59
+  ts: "2026-10-07T12:21:38Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認（schema・prompt の契約・機械判定・申し送り・trial の集計・テスト・ガイド）"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: executor の検証の状態に requires_human を加えた。sandbox の外で人が行う確認に限って使い、機械判定で block せず、result の申し送りに「人の確認が必要」として機械的に載せる。failed と runner が満たさない not_run は従来どおり block する
+  previous_event_id: reg_7dd02281dd054605b53f17ebed8945ce

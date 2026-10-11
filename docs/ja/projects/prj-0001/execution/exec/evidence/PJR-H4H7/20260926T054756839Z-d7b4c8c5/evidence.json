@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-H4H7",
+  "run_id": "20260926T054756839Z-d7b4c8c5",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-26T05:47:56.839Z",
+    "completed_at": "2026-09-26T05:58:11.576Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../project-register/pjr-h4h7-bps-grade-review.md   | 21 +++++++++++++--------\n 1 file changed, 13 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md",
+      "status": "passed",
+      "summary": "対象3文書を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md",
+      "status": "passed",
+      "summary": "対象3文書に違反なし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "リポジトリ全体のMarkdown lint成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:fm",
+      "status": "passed",
+      "summary": "Frontmatter検査成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログ検証成功。既存未作成成果物の警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec refresh --project prj-0001",
+      "status": "passed",
+      "summary": "Schedule実行状態の再生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ派生文書の生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts yaml-pages build",
+      "status": "passed",
+      "summary": "YAMLページ生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts dashboard build --project prj-0001",
+      "status": "passed",
+      "summary": "ダッシュボード生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "索引生成成功。新規BPS 2件のID解決を確認"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "failed",
+      "summary": "前段tsxのIPCソケット作成がsandboxでEPERM"
+    },
+    {
+      "source": "executor",
+      "command": "npm --prefix packages/docs-site run docs:build",
+      "status": "failed",
+      "summary": "既存CDFDのMermaid描画でChromium sandbox起動が拒否された。Markdown解析エラーではない"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-H4H7\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-aLl4cM/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-aLl4cM/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-aLl4cM/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-aLl4cM/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-H4H7/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-H4H7/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-H4H7\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-MxBGCm/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-vU1T9z/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Nodpl6/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-GedV3I/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-Y2S2AD/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-JodJot/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-mxHVjp/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-29Gz3e/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  107 passed (107)\n      Tes…"
+    }
+  ],
+  "final_message": "P-08成果物評価とP-11タスク完了のBPSを作成し、gradeは成果物品質を一度だけ評価、reviewは最新結果を事実として完了可否を判断する関係を定義した。個票も更新済み。VitePress buildのみsandboxのChromium起動制約で未完了。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-H4H7/20260926T054756839Z-d7b4c8c5/executor.log",
+      "bytes": 3329,
+      "truncated": false
+    }
+  ]
+}

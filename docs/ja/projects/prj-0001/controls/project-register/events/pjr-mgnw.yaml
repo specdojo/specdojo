@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_19bbdfefa9c44b4691f78d255d6469d8
+  ts: "2026-10-03T01:24:13Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の指摘により、アプリ版でインストールした後の手順が GUI の操作と合っていないと分かったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: oMLX の手順をアプリ版のメニューバーと Admin UI の操作に直す
+    - field: description
+      from: ""
+      to: tsd-omlx と tsd-omlx-opencode は、インストールはアプリ版を前提にしながら、起動と設定を CLI の omlx serve で説明している。アプリ版の初期設定・メニューバーからの起動・Admin UI での設定（待ち受け・API key・同時リクエスト数・モデル alias）に書き直し、CLI は別の手段として短くまとめる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-03"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_907ba6b79c6c4269af641ea333b2fb70
+  ts: "2026-10-03T01:25:00Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_19bbdfefa9c44b4691f78d255d6469d8
+- v: 1
+  id: reg_369968b58ef54f6897933552c665ea36
+  ts: "2026-10-03T01:25:36Z"
+  action: wait
+  actor: orchestrator
+  from_status: in-progress
+  to_status: waiting
+  reason: 個票の完了条件が commit されないまま exec run が始まったため、agent の起動前に orchestrator が止めた。直した個票で最初から実行し直す
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: 個票の完了条件が commit されないまま exec run が始まったため、agent の起動前に orchestrator が止めた。直した個票で最初から実行し直す
+  previous_event_id: reg_907ba6b79c6c4269af641ea333b2fb70
+- v: 1
+  id: reg_6974bc90f7764d40a60d7c51f8026ca3
+  ts: "2026-10-03T01:25:50Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_369968b58ef54f6897933552c665ea36
+- v: 1
+  id: reg_9463db809ea14e8b939050d5c402c8e0
+  ts: "2026-10-03T01:46:10Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6974bc90f7764d40a60d7c51f8026ca3
+- v: 1
+  id: reg_83636ceafe7548b9b43e8770f9e91a07
+  ts: "2026-10-06T10:44:17Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: tsd-omlx に _TODO_ が残っていないことと、実機での確認の commit を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: tsd-omlx と tsd-omlx-opencode を macOS アプリと Admin UI の操作を本筋とする手順へ書き直した。残っていた _TODO_（メニューバーの表示名）は利用者が実機で設定しながら解消した（40eb6b03b）
+    - field: block_reason
+      from: 個票の完了条件が commit されないまま exec run が始まったため、agent の起動前に orchestrator が止めた。直した個票で最初から実行し直す
+      to: "-"
+  previous_event_id: reg_9463db809ea14e8b939050d5c402c8e0

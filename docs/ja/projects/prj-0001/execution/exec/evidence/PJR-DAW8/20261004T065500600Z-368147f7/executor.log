@@ -1,0 +1,5 @@
+`--register-commit` の subject を100文字以内に切り詰める修正を実装しました。境界 unit test、長いタイトルの統合テスト、運用ガイド、個票の対応結果も更新済みです。親 runner 対象外の検証はすべて成功しました。
+
+<specdojo_executor_evidence>
+{"final_message":"register の自動 commit subject を100文字以内に収め、境界・統合テストと関連文書を更新した","validations":[{"command":"npx prettier --write src/exec-run.ts tests/src/exec-run.test.ts tests/src/exec-register-multiple-ids.integration.test.ts docs/ja/specdojo/guides/register-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-daw8-register-commit-header-length.md","status":"passed","summary":"変更した実装・テスト・文書を整形"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューの生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既存の欠落文書警告のみで検証成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2371件の文書インデックス生成成功"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証成功"}]}
+</specdojo_executor_evidence>

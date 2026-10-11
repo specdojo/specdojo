@@ -1,0 +1,137 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5a7f4724ddac4fbe9e2844740969e54a
+  ts: "2026-09-28T11:18:10Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-CTV4 の評価で残るリスクとして報告し、利用者が起票を承認したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合時の記帳競合でイベントを和集合で合わせる
+    - field: description
+      from: ""
+      to: PJR-CTV4 は統合時の記帳ファイルの競合を exec branch 側で丸ごと解決する。項目が waiting の間に統合先でイベントが追記されていると失われる。追記型のイベントは両側の和集合（同一イベントは 1 件）で解決する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-28"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_dbc8bf7b5e3346bc868ddbb8dcca22fa
+  ts: "2026-09-28T11:24:22Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5a7f4724ddac4fbe9e2844740969e54a
+- v: 1
+  id: reg_a5b990d6eaa84c2fb791d61ac1ca0a1b
+  ts: "2026-09-28T11:25:21Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json; agent must record the required change in…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json; agent must record the required change in…"
+  previous_event_id: reg_dbc8bf7b5e3346bc868ddbb8dcca22fa
+- v: 1
+  id: reg_befef92103834a9ab4b84f8e31825957
+  ts: "2026-09-28T14:28:15Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_a5b990d6eaa84c2fb791d61ac1ca0a1b
+- v: 1
+  id: reg_c7bfa750457a4513bf38d590716519c9
+  ts: "2026-09-28T14:34:03Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親 runner が実行した runner 検証 `id: test-integration`（`npm run test:integration`）が `status: failed`（exit 1）である。plan の共通規約により、runner 検証が failed の場合は reporter が結果を complete とす…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/doc-index.json; agent must record the required change in…"
+      to: "agent exited with non-zero code: 親 runner が実行した runner 検証 `id: test-integration`（`npm run test:integration`）が `status: failed`（exit 1）である。plan の共通規約により、runner 検証が failed の場合は reporter が結果を complete とす…"
+  previous_event_id: reg_befef92103834a9ab4b84f8e31825957
+- v: 1
+  id: reg_58c52670c4fc449f8b220503494ecbee
+  ts: "2026-09-28T15:08:58Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_c7bfa750457a4513bf38d590716519c9
+- v: 1
+  id: reg_26f77045b3314335a85aee1c6862080e
+  ts: "2026-09-28T15:12:36Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_58c52670c4fc449f8b220503494ecbee
+- v: 1
+  id: reg_54e57778a2aa4e35b9c64670cdaa14af
+  ts: "2026-09-28T15:15:55Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価。統合テストの準備漏れ（prepare の複製の解放）を orchestrator が worktree で直し、reporter の段から再開して全検証の通過を確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: 統合時にイベントファイルが競合した場合、両側のイベントを和集合（同一 id は 1 件、時刻順）で解決する register-event-merge を追加した。waiting 中に統合先で追記されたイベントが統合後も残ることを統合テストで確認した
+  previous_event_id: reg_26f77045b3314335a85aee1c6862080e

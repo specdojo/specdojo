@@ -3,40 +3,100 @@ version: 1
 document: cdfd-orchestrator
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
 target: deliverable
-rubric: grade-rubric-v1
-verdict: pass
-score: 94
-graded_at: "2026-09-20T04:54:14.700Z"
-graded_by: codex-expert-executor
-content_hash: 14acbb5607ba06a5db6a01afd17264afb673594dd21bf2d35509d1362ceed3b6
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 91
+graded_at: "2026-10-07T16:10:05.211Z"
+graded_by: agy-expert-executor
+content_hash: 1c0c4356f655ccdaf485fcbbbe8c03b97b6d604f8864da1574caddcdcfe6a814
+source_hashes:
+  catalog-entry: 41ffa9d01cc1b70debbefd962b011eeb2cd17df5bdcc0a1e51947c6570d681e6
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:cdfd-action: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
+  dependency:cdfd-check: e02cebf2a8ee62470a475fede1fcb6267cfcda9d93d320313a938f12c69ed3a8
+  dependency:cdfd-do: 77bdd115c5f0005404837c4d440bc2af468071ee4364c697383e1019a52a0a99
+  dependency:cdfd-plan: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
-  consistency:
-    score: 75
-  usability:
+  purpose:
     score: 100
+  operations:
+    score: 100
+  planning:
+    score: 83
+  business:
+    score: 100
+  consistency:
+    score: 63
   architecture:
     score: 100
-  quality:
+  usability:
     score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 88
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-done-criteria:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100
@@ -44,6 +104,15 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -54,31 +123,61 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 0
-  minor: 3
+  major: 5
+  minor: 0
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 13
-    message: rulebook 6.1 と recipe 4.2 は適用範囲への期間の明記を要求している一方、本節には対象期間または期間を限定しない旨がないため追記してください。
-    anchor: "## 2. 適用範囲"
-  - id: F002
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 13
-    message: rulebook と recipe が必須とする適用期間または期間を限定しない旨が適用範囲から欠落しているため追記してください。
-    anchor: "## 2. 適用範囲"
-  - id: F003
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 149
-    message: rulebook 6.7 と template が必須とする「停止範囲」列が例外表にないため、各例外で確定・起動してはならない後続プロセス、出力、委譲を独立した列として明示してください。
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 35
     anchor: >-
-      | `E-14-03` | `P-14-04`    | 要求先から失敗またはブロックの応答があり、要求で求めた出力または次の判断に必要な情報がそろわない。                             |
-      後続グループへの要求発行を止め、失敗・ブロック理由、判断依頼、再開位置を実行記録へ残して、人間の判断対象として提示する。                                                 |
-      失敗・ブロック原因が解消され、再実行、別要求、または中止のいずれかを人間が判断した後、再開する場合は `P-14-02` から要求を再判定する。 |
+      | プロセス ID | プロセス      | 業務目的                                                                                      
+      | 主な担当                                             |
+      起動条件                                                                                                     | 必須性 |
+    message: プロセス領域の表に完了条件が定義されていないため、各タスクの完了や進捗を客観的に判定できません。完了条件を明記してください。
+    message_ja: プロセス領域の表に完了条件が定義されていないため、各タスクの完了や進捗を客観的に判定できません。完了条件を明記してください。
+  - id: F002
+    severity: major
+    rule: vp-qe-verifiability
+    line: 35
+    anchor: >-
+      | プロセス ID | プロセス      | 業務目的                                                                                      
+      | 主な担当                                             |
+      起動条件                                                                                                     | 必須性 |
+    message: プロセスごとの完了条件が記載されていないため、各処理のテストや受入の合否を判定する基準が不足しています。
+    message_ja: プロセスごとの完了条件が記載されていないため、各処理のテストや受入の合否を判定する基準が不足しています。
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 13
+    anchor: "## 2. 適用範囲"
+    message: rulebook と recipe が必須とする適用期間または期間を限定しない旨が適用範囲から欠落しているため追記してください。
+    message_ja: rulebook と recipe が必須とする適用期間または期間を限定しない旨が適用範囲から欠落しているため追記してください。
+  - id: F004
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 35
+    anchor: >-
+      | プロセス ID | プロセス      | 業務目的                                                                                      
+      | 主な担当                                             |
+      起動条件                                                                                                     | 必須性 |
+    message: rulebook 6.2 が必須とする「完了条件」列がプロセス領域の表から欠落しているため、列を追加し各プロセスの完了条件を明記してください。
+    message_ja: rulebook 6.2 が必須とする「完了条件」列がプロセス領域の表から欠落しているため、列を追加し各プロセスの完了条件を明記してください。
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 145
+    anchor: >-
+      | 例外 ID   | 対象プロセス |
+      検出条件                                                                                                                      
+      |
+      本グループでの扱い                                                                                                                                                      
+      |
+      継続・再開条件                                                                                                                       
+      |
+    message: rulebook 6.7 と template が必須とする「停止範囲」列が例外表にないため、各例外で確定・起動してはならない後続プロセス、出力、委譲を独立した列として明示してください。
+    message_ja: rulebook 6.7 と template が必須とする「停止範囲」列が例外表にないため、各例外で確定・起動してはならない後続プロセス、出力、委譲を独立した列として明示してください。
 done_criteria:
   satisfied: 3
   total: 3

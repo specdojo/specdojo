@@ -3,29 +3,75 @@ version: 1
 document: specdojo:sysd-critical-flows-rulebook
 path: docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 71
-graded_at: "2026-09-03T11:27:21.981Z"
-graded_by: codex-expert-executor
+score: 83
+graded_at: "2026-10-09T21:15:42.925Z"
+graded_by: agy-expert-executor
 content_hash: 3451e14f76be74a1b18dec0f71523a606003bf3a60cd39125d9016a73b58e554
 categories:
-  consistency:
-    score: 50
-  usability:
-    score: 75
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 75
+  implementation:
+    score: 100
   quality:
-    score: 63
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
+    score: 75
+  consistency:
     score: 50
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,100 +89,102 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 11
+  major: 2
+  minor: 9
   note: 0
 findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 85
+    anchor: ""
+    message: フロー詳細の必須項目一覧が「本文構成」と「記述ガイド」でほぼ同文のまま反復されているため、前者を要件一覧、後者を判断基準と例に分担して重複を削減する必要がある。
+    message_ja: フロー詳細の必須項目一覧が「本文構成」と「記述ガイド」でほぼ同文のまま反復されているため、前者を要件一覧、後者を判断基準と例に分担して重複を削減する必要がある。
   - id: F002
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: >-
-      テスト導線を `ITS/ETS` および `its-index/ets-index` と記載しているが、成果物体系の正本は `ITC/ETC` および `itc-index/etc-index`
-      であり、参照先を一意に解決できない。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F014
+    rule: vp-qe-verifiability
+    line: 113
+    anchor: ""
+    message: 「一覧は最大5件まで」としながら「6件目以降は検討結果を反映してから追加する」としているため、整理後も6件以上を許容するのか、総数5件を厳守するのかを pass / fail 判定できる形で明確化する必要がある。
+    message_ja: 「一覧は最大5件まで」としながら「6件目以降は検討結果を反映してから追加する」としているため、整理後も6件以上を許容するのか、総数5件を厳守するのかを pass / fail 判定できる形で明確化する必要がある。
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 58
+    anchor: ""
+    message: Frontmatter 必須項目から成果物スキーマ必須の `rulebook` と `specdojo:` 名前空間が欠落し、反対に未定義の `title` を必須としているため, 項目表を正本の必須キーへ合わせる必要がある。
+    message_ja: Frontmatter 必須項目から成果物スキーマ必須の `rulebook` と `specdojo:` 名前空間が欠落し、反対に未定義の `title` を必須としているため, 項目表を正本の必須キーへ合わせる必要がある。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 113
+    anchor: ""
+    message: 最大5件という上限と6件目以降を追加できるように読める手順が併存しているため、例外の有無と整理後の許容件数を統一する必要がある。
+    message_ja: 最大5件という上限と6件目以降を追加できるように読める手順が併存しているため、例外の有無と整理後の許容件数を統一する必要がある。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 178
+    anchor: ""
+    message: 順序固定の構成では第5章を「関連ドキュメント導線（SDI/テスト/運用/DEC）」としている一方、生成見出しは「関連ドキュメント導線」とされているため、固定対象となる見出し名を統一する必要がある。
+    message_ja: 順序固定の構成では第5章を「関連ドキュメント導線（SDI/テスト/運用/DEC）」としている一方、生成見出しは「関連ドキュメント導線」とされているため、固定対象となる見出し名を統一する必要がある。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 301
+    anchor: ""
+    message: 各フローで `trace_id` 伝搬範囲を必須としているが、埋め込み例の scf-002 と scf-003 には伝搬範囲がなく、必須事項を満たす例になっていない。
+    message_ja: 各フローで `trace_id` 伝搬範囲を必須としているが、埋め込み例の scf-002 と scf-003 には伝搬範囲がなく、必須事項を満たす例になっていない。
+  - id: F007
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 2
+    anchor: ""
+    message: 指定されたサンプルファイルが rulebook の定義する構成に従っておらず、具体的な完成例として機能していない。
+    message_ja: 指定されたサンプルファイルが rulebook の定義する構成に従っておらず、具体的な完成例として機能していない。
+  - id: F008
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 147
+    anchor: ""
+    message: 記法例および埋め込み完成例の図が、必須としたシステム内外・サービス境界と主要識別子を示しておらず、図の適用例が自身の規約を満たしていない。
+    message_ja: 記法例および埋め込み完成例の図が、必須としたシステム内外・サービス境界と主要識別子を示しておらず、図の適用例が自身の規約を満たしていない。
+  - id: F009
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 199
+    anchor: ""
+    message: 埋め込み完成例の Frontmatter が `specdojo:` 名前空間と必須 `rulebook` を欠き、許可されない `title` を含むため、rulebook を適用した正しい成果物例として機能しない。
+    message_ja: 埋め込み完成例の Frontmatter が `specdojo:` 名前空間と必須 `rulebook` を欠き、許可されない `title` を含むため、rulebook を適用した正しい成果物例として機能しない。
+  - id: F010
+    severity: minor
+    rule: vp-ux-readability
+    line: 131
+    anchor: ""
+    message: フロー詳細の同一項目一覧が「本文構成」と「記述ガイド」に重複し、どちらが必須要件でどちらが補足説明か判別しにくいため、要件と具体化ガイドの役割を分ける必要がある。
+    message_ja: フロー詳細の同一項目一覧が「本文構成」と「記述ガイド」に重複し、どちらが必須要件でどちらが補足説明か判別しにくいため、要件と具体化ガイドの役割を分ける必要がある。
+  - id: F011
     severity: minor
     rule: vp-ux-language-consistency
-    line: 1
+    line: 19
+    anchor: ""
     message: >-
       内部・外部結合テストを `ITS/ETS`、`ITC/ETC`、`its-index/ets-index`、`itc-*/etc-*` と混在させているため、正本に合わせて `ITC/ETC` と `itc-/etc-`
       系へ統一する必要がある。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: 共通スキーマへの準拠を宣言しているが、必須の `specdojo:` 名前空間と `rulebook` を定義せず、スキーマで許可されない `title` を必須としているため、記載どおりの成果物はスキーマ不適合になる。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F006
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: Frontmatter 必須項目から成果物スキーマ必須の `rulebook` と `specdojo:` 名前空間が欠落し、反対に未定義の `title` を必須としているため, 項目表を正本の必須キーへ合わせる必要がある。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F003
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: 対応 sample は、本行で順序固定としている5章構成ではなく独自の「目的と適用範囲」「入力情報」「最小記述例」構成になっており、rulebook と整合していない。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F012
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 指定されたサンプルファイルが rulebook の定義する構成に従っておらず、具体的な完成例として機能していない。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F004
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 1
-    message: フロー詳細の必須項目一覧が「本文構成」と「記述ガイド」でほぼ同文のまま反復されているため、前者を要件一覧、後者を判断基準と例に分担して重複を削減する必要がある。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F013
-    severity: minor
-    rule: vp-ux-readability
-    line: 1
-    message: フロー詳細の同一項目一覧が「本文構成」と「記述ガイド」に重複し、どちらが必須要件でどちらが補足説明か判別しにくいため、要件と具体化ガイドの役割を分ける必要がある。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F005
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 1
-    message: 「一覧は最大5件まで」としながら「6件目以降は検討結果を反映してから追加する」としているため、整理後も6件以上を許容するのか、総数5件を厳守するのかを pass / fail 判定できる形で明確化する必要がある。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F007
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: 最大5件という上限と6件目以降を追加できるように読める手順が併存しているため、例外の有無と整理後の許容件数を統一する必要がある。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F011
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 記法例および埋め込み完成例の図が、必須としたシステム内外・サービス境界と主要識別子を示しておらず、図の適用例が自身の規約を満たしていない。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F010
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 埋め込み完成例の Frontmatter が `specdojo:` 名前空間と必須 `rulebook` を欠き、許可されない `title` を含むため、rulebook を適用した正しい成果物例として機能しない。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F009
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: 各フローで `trace_id` 伝搬範囲を必須としているが、埋め込み例の scf-002 と scf-003 には伝搬範囲がなく、必須事項を満たす例になっていない。
-    anchor: "# システム設計 重要フロー 作成ルール"
-  - id: F008
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: 順序固定の構成では第5章を「関連ドキュメント導線（SDI/テスト/運用/DEC）」としている一方、生成見出しは「関連ドキュメント導線」とされているため、固定対象となる見出し名を統一する必要がある。
-    anchor: "# システム設計 重要フロー 作成ルール"
+    message_ja: >-
+      内部・外部結合テストを `ITS/ETS`、`ITC/ETC`、`its-index/ets-index`、`itc-*/etc-*` と混在させているため、正本に合わせて `ITC/ETC` と `itc-/etc-`
+      系へ統一する必要がある。

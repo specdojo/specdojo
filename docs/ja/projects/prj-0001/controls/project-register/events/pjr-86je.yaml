@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_33c21341ef7f4e118a48692524a158fd
+  ts: "2026-10-04T08:46:04Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 日本語の文書に中国語の字体が混ざったことを検出する lint を追加する
+    - field: description
+      from: ""
+      to: ローカル LLM（oMLX の Ornith など）は日本語の出力に中国語の字体・語彙（`业`、`为`、`时`、`这个`、`问题` など）を混ぜることがあり、2026-10-04 の grade の計測では executor の出力の 6 回中 3〜4 回に現れた。agent が日本語の文書を書くと、そのままコミットされる。どの agent が混ぜても検出できるよう、docs-lint に中国語でしか使わない字体を検出する規則を追加する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_e1159074211d4fd5a844fe7cfe7bf603
+  ts: "2026-10-04T13:20:06Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_33c21341ef7f4e118a48692524a158fd
+- v: 1
+  id: reg_79473cafe66d4486b329438e3f191cfc
+  ts: "2026-10-04T13:32:18Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: reporter result rendering failed: reporter changed_files summaries (3) do not match evidence changes (4)"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: reporter result rendering failed: reporter changed_files summaries (3) do not match evidence changes (4)"
+  previous_event_id: reg_e1159074211d4fd5a844fe7cfe7bf603
+- v: 1
+  id: reg_687c62650529414598ddb5ff5fb8ae43
+  ts: "2026-10-05T21:41:35Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: reporter result rendering failed: reporter changed_files summaries (3) do not match evidence changes (4)"
+      to: "-"
+  previous_event_id: reg_79473cafe66d4486b329438e3f191cfc
+- v: 1
+  id: reg_8487f1922eb84bbd9bb45ce90d6ecf2a
+  ts: "2026-10-05T22:06:41Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_687c62650529414598ddb5ff5fb8ae43
+- v: 1
+  id: reg_6c052c127c2046d3bd932c3539718181
+  ts: "2026-10-06T10:43:30Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: ルールと unit test を確認し、npm run lint:md が全件で通ることを確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: markdownlint のカスタムルール MD061（no-chinese-glyphs）を追加し、日本語と字形の異なる簡体字 20 字を検出する。コードと URL は対象外、意図した箇所は disable コメントで除外する。統合後に残った 3 件の検出は orchestrator が修正した（d27af7c89）
+  previous_event_id: reg_8487f1922eb84bbd9bb45ce90d6ecf2a

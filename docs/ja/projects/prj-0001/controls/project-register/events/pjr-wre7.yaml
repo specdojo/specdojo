@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_61353579d7ba430cbef5c9bba2c38979
+  ts: "2026-10-03T02:59:26Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が 64K を使いたいとし、モデルの config.json から M3 Max 64GB でもメモリに余裕があると見積もれたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: oMLX の Ornith のコンテキストを 64K にする
+    - field: description
+      from: ""
+      to: Ornith-1.5（qwen3_5_moe）は 40 層中 10 層だけが通常の attention で、64K × 2 並列でも KV cache は約 2.7GB に収まる。tsd-omlx と tsd-omlx-opencode のコンテキストの既定を 32K から 64K にし、KV cache の見積もりと、メモリより prefill の時間と品質を見る判断の書き方に直す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-03"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_216d4fabee5946c2b8b367ddb8d7ce5e
+  ts: "2026-10-03T03:00:16Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_61353579d7ba430cbef5c9bba2c38979
+- v: 1
+  id: reg_cba374d2258e49c6b492fcfd5d2da1c6
+  ts: "2026-10-03T03:08:24Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_216d4fabee5946c2b8b367ddb8d7ce5e
+- v: 1
+  id: reg_427a2991c4844cd090707a5e7c58e06b
+  ts: "2026-10-03T03:09:48Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor / codex-reporter）の結果を orchestrator が評価した。設定値・見積もりの表・TurboQuant と 3〜4 並列の記述・opencode の limit.context と、親検証 7 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-03"
+    - field: conclusion
+      from: "-"
+      to: tsd-omlx と tsd-omlx-opencode のコンテキストの既定を 64K にし、config.json に基づく KV cache の見積もり（64K × 2 で約 2.7GB、合計約 24GB）と、prefill の時間・品質を見る判断の書き方に直した
+  previous_event_id: reg_cba374d2258e49c6b492fcfd5d2da1c6

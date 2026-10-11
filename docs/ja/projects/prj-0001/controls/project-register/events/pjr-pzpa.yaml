@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_58e09b7301bb48c298a0b46a3855e6d1
+  ts: "2026-10-06T22:14:59Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-WAFC の後続。翻訳専用の agent を追加したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の既定の翻訳の agent を gemma26-translator へ切り替える
+    - field: description
+      from: ""
+      to: PJR-WAFC の実モデルでの確認で、gemma26-reporter は reporter 向けの指示に引っ張られ英語の語句をバッククォートで残した。翻訳専用の gemma26-translator（792dfd222）を追加したので、grade の翻訳の既定の agent を切り替え、関連する文書とテストを合わせる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-07"
+- v: 1
+  id: reg_57770f12fd8448d9af964918a619eb15
+  ts: "2026-10-07T03:21:55Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_58e09b7301bb48c298a0b46a3855e6d1
+- v: 1
+  id: reg_ceb41b7f700647baac26a3684e0b53b1
+  ts: "2026-10-07T03:34:02Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_57770f12fd8448d9af964918a619eb15
+- v: 1
+  id: reg_68eea22161eb448499405195e3d46b83
+  ts: "2026-10-07T10:31:34Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分を確認し、Ollama の起動後に実モデルで翻訳を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: grade の既定の翻訳の agent を gemma26-translator に切り替えた。実モデルで 13 件中 12 件が翻訳され、gemma26-reporter（7 件）より改善した
+  previous_event_id: reg_ceb41b7f700647baac26a3684e0b53b1

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bx79-integrate-dubious-ownership-retry
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-24T12:38:20Z"
   due_on: "2026-10-17"
+  completed_at: "2026-09-26T11:42:50Z"
+  block_reason: "agent exited with non-zero code: runner validation `test-unit` failed (exit 1). The executor evidence shows `tests/tools/grade-per-document.test.ts` has 12 failures."
 ---
 
 # PJR-BX79 統合段の dubious ownership を 1 回だけ再試行する
@@ -39,6 +41,22 @@ integrate failed: git status failed: fatal: detected dubious ownership in reposi
 
 所有者は一致しており、事後に実行すると通る。git の所有者チェックは `st_uid` と euid の比較であるため、一致していれば `safe.directory` の設定有無に関わらず成立する。devcontainer の overlay ファイルシステムで所有者情報が一時的に異なって見える事象と考えられる。
 
+### 1.3. 3 回目は checkpoint 段で起きた（2026-09-26）
+
+[[prj-0001:pjr-1y9p-resume-executor-plan]] の実行で 3 回目が発生した。**統合段ではなく、agent を起動する前の checkpoint 段**だった。
+
+```text
+checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository
+  at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-1Y9P'
+  (args: --full-name -z -- 4 paths)
+```
+
+同じ項目をすぐ再実行すると再現しなかった。uid は今回も一致していた（worktree も実行ユーザも 1000）。
+
+`safe.directory` には `/workspaces/specdojo` と `/workspaces/specdojo-workspace/specdojo` だけが登録され、`worktrees/` 配下は登録されていない。ただし所有者が一致していれば git は `safe.directory` を参照しないため、**登録の漏れは原因ではない**。所有者の比較が一時的に食い違う（overlay 上のファイルの見え方など）と考える方が、再実行で通る事実と合う。
+
+**再試行を統合段だけに置くと、checkpoint 段の失敗を救えない。** 個々の git 呼び出しを包む層で、`dubious ownership` を検出したら 1 回だけ再試行する形にする。
+
 ### 1.2. なぜ対処するか
 
 人が見ていれば `--resume` で回復し、agent の枠も消費しない。実害は再開操作だけである。
@@ -49,7 +67,7 @@ integrate failed: git status failed: fatal: detected dubious ownership in reposi
 
 ## 2. 完了条件
 
-- 統合段の git コマンドが `dubious ownership` で失敗した場合に限り、1 回だけ再試行する。
+- worktree に対する git コマンドが `dubious ownership` で失敗した場合に限り、1 回だけ再試行する。**統合段だけでなく checkpoint 段も対象とする**。個々の git 呼び出しを包む層で扱う。
 - 再試行しても失敗した場合は、従来どおり失敗として扱い理由を報告する。握りつぶさない。
 - `dubious ownership` 以外の失敗では再試行しない。
 - 再試行が発生したことがログまたは evidence から分かる。
@@ -58,15 +76,37 @@ integrate failed: git status failed: fatal: detected dubious ownership in reposi
 
 ## 3. 作業内容
 
-| No  | 作業                                    | 担当 | 状態 | メモ                              |
-| --- | --------------------------------------- | ---- | ---- | --------------------------------- |
-| 1   | 統合段の git 実行に再試行の判定を入れる | DEV  | open | `dubious ownership` に限定する    |
-| 2   | 再試行の発生をログへ残す                | DEV  | open | 握りつぶしと区別できるようにする  |
-| 3   | 判定と挙動の単体テストを追加する        | DEV  | open | 該当する stderr と、しない stderr |
+| No  | 作業                                    | 担当 | 状態 | メモ                             |
+| --- | --------------------------------------- | ---- | ---- | -------------------------------- |
+| 1   | 統合段の git 実行に再試行の判定を入れる | DEV  | done | `dubious ownership` に限定した   |
+| 2   | 再試行の発生をログへ残す                | DEV  | done | 警告ログへ対象と引数を記録する   |
+| 3   | 判定と挙動の単体テストを追加する        | DEV  | done | 該当・非該当の stderr を検証した |
 
 ## 4. 対応結果
 
--
+`gitResult`（個々の git 呼び出しを包む層）で、stderr に `dubious ownership` を含む場合に限り 1 回だけ再試行する形にした（`be9f0dcd`）。
+
+| 観点         | 実装                                                                                                  |
+| ------------ | ----------------------------------------------------------------------------------------------------- |
+| 対象の段     | 統合段に加え、checkpoint 段の `git ls-files` も `gitOutput` → `gitResult` を通るため対象になる        |
+| 再試行の回数 | 1 回だけ。再試行しても失敗すれば従来どおり失敗として扱う                                              |
+| ほかの失敗   | 再試行しない。既存の index.lock 競合の再試行とは同じ関数で区別する                                    |
+| 記録         | 再試行したときに `warning: git command failed with dubious ownership; retrying once` を stderr に出す |
+
+### 4.1. 実行の経緯
+
+`codex-expert-executor` で PJR-9PZ7 と並行で実行した。実装は正しかったが、runner の `test-unit` 検証が `tests/tools/grade-per-document.test.ts` の 12 件で失敗した。**この失敗は本項目と無関係で、私が `593c36e8` で grade の段数の既定を変えた際にテストを実行しなかったことが原因だった。** `c6d050db` でテストを直したのち、worktree の成果を統合した。
+
+### 4.2. 検証
+
+| 検証                    | 結果                                       |
+| ----------------------- | ------------------------------------------ |
+| `exec-worktree.test.ts` | 23 件通過                                  |
+| `typecheck` / `lint:ts` | 通過                                       |
+| `test:unit`             | 1561 件すべて通過（develop へ統合後）      |
+| `test:integration`      | 110 件通過、1 件 skip（PJR-TDB0 で追跡中） |
+
+同じ並行実行で PJR-9PZ7 が checkpoint 段の `dubious ownership` で失敗しており、**4 回目の発生**だった。本項目の修正が入る前だったため救えていない。
 
 ## 5. 関連ドキュメント
 

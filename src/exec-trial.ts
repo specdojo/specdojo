@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { createHash, randomUUID } from "node:crypto";
 import { copyFileSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
-import { dirname, join, relative, resolve, sep } from "node:path";
+import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import type { Command } from "commander";
 import {
   defaultExecDefaultsPath,
@@ -23,18 +23,28 @@ import {
 } from "./exec-agent-git-state.js";
 import {
   recordExecutorEvidence,
+  recordParentValidationFailureOutput,
   type EvidenceValidation,
   type ExecEvidence,
 } from "./exec-evidence.js";
+import {
+  parentValidationLabels,
+  type ParentValidationFailureOutput,
+} from "./exec-parent-validation.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
 import {
   buildExecutorPrompt,
   isRateLimitError,
   loadRosterForExecutionPath,
-  runConfiguredParentValidations,
+  runConfiguredParentValidationBatch,
 } from "./exec-run.js";
 import { parsePlanTaskIdentity } from "./exec-plans.js";
-import { runReporterWithFormatRetry, type ReporterOutput } from "./exec-reporter.js";
+import {
+  deriveReporterFacts,
+  evidenceForReporter,
+  runReporterWithFormatRetry,
+  type ReporterOutput,
+} from "./exec-reporter.js";
 import { ensureDir, safeSlug } from "./exec-shared.js";
 import {
   ensureExecWorktree,
@@ -56,21 +66,12 @@ import {
 } from "./specdojo-config.js";
 
 type TrialStatus =
-  | "pending"
-  | "prepared"
-  | "running"
-  | "succeeded"
-  | "failed"
-  | "adopted"
-  | "discarded";
+  "pending" | "prepared" | "running" | "succeeded" | "failed" | "adopted" | "discarded";
 
 type ReporterMode = "none" | "shared" | "paired";
 type ReporterStatus = "not_run" | "succeeded" | "blocked" | "failed";
 type ReporterFailureCategory =
-  | "reported_blocked"
-  | "invalid_output"
-  | "invocation_failure"
-  | "rate_limit";
+  "evidence_blocked" | "invalid_output" | "invocation_failure" | "rate_limit";
 
 export type TrialAgentPair = {
   executor: string;
@@ -116,6 +117,7 @@ export type AgentTrialRecord = {
     validations_passed: number;
     validations_failed: number;
     validations_not_run: number;
+    validations_requires_human: number;
     files_changed: number;
     evidence_ref: string | null;
     final_message: string;
@@ -164,7 +166,7 @@ export type AgentComparisonRecord = {
   trials: AgentTrialRecord[];
   agent_selection: {
     policy: "manual";
-    target: "pm-members.yaml";
+    target: "agent-members.yaml";
     rationale: string;
   };
 };
@@ -401,8 +403,8 @@ function resolveMember(
   const member = roster?.members.find(
     (candidate) => candidate.type === "agent" && candidate.nickname === nickname,
   );
-  if (!member) throw new Error(`Agent nickname not found in pm-members.yaml: ${nickname}`);
-  if (member.disabled) throw new Error(`Agent is disabled in pm-members.yaml: ${nickname}`);
+  if (!member) throw new Error(`Agent nickname not found in agent-members.yaml: ${nickname}`);
+  if (member.disabled) throw new Error(`Agent is disabled in agent-members.yaml: ${nickname}`);
   if (
     (stageRole === "reporter" && member.stage_role !== "reporter") ||
     (stageRole === "executor" && member.stage_role === "reporter")
@@ -504,6 +506,7 @@ function blankTrial(params: {
       validations_passed: 0,
       validations_failed: 0,
       validations_not_run: 0,
+      validations_requires_human: 0,
       files_changed: 0,
       evidence_ref: null,
       final_message: "",
@@ -608,9 +611,9 @@ export function buildComparisonRecord(params: {
     ),
     agent_selection: {
       policy: "manual",
-      target: "pm-members.yaml",
+      target: "agent-members.yaml",
       rationale:
-        "A single comparison does not automatically change agent assignment. A human reviews objective and subjective results, then updates pm-members.yaml priority/capabilities when repeated evidence supports the change.",
+        "A single comparison does not automatically change agent assignment. A human reviews objective and subjective results, then updates agent-members.yaml priority/capabilities when repeated evidence supports the change.",
     },
   };
 }
@@ -633,10 +636,14 @@ export function updateObjectiveMetrics(
   trial.executor.validations_passed = 0;
   trial.executor.validations_failed = 0;
   trial.executor.validations_not_run = 0;
+  trial.executor.validations_requires_human = 0;
   for (const validation of executorValidations) {
     if (validation.status === "passed") trial.executor.validations_passed++;
     else if (validation.status === "failed") trial.executor.validations_failed++;
-    else trial.executor.validations_not_run++;
+    else if (validation.status === "not_run") trial.executor.validations_not_run++;
+    else if (validation.status === "requires_human") {
+      trial.executor.validations_requires_human++;
+    }
   }
 
   const parentValidations = evidence.validations.filter(
@@ -684,13 +691,22 @@ async function runOneTrial(params: {
   trial.executor.duration_ms = executorCompletedAt.getTime() - startedAt.getTime();
   trial.parent_validation.configured_ids = [...params.parentValidationIds];
   let parentValidations: EvidenceValidation[] = [];
+  let parentValidationFailureOutputs: ParentValidationFailureOutput[] = [];
   if (params.parentValidationIds.length === 0) {
     trial.parent_validation.status = "not_configured";
   } else if (outcome.exitCode !== 0) {
     trial.parent_validation.status = "not_run";
   } else {
     const parentValidationStartedAt = Date.now();
-    parentValidations = await runConfiguredParentValidations(params.execDefaults, worktree.path);
+    const parentValidationBatch = await runConfiguredParentValidationBatch(
+      params.execDefaults,
+      worktree.path,
+      {
+        label: `${params.record.task_id} (${trial.trial_id})`,
+      },
+    );
+    parentValidations = parentValidationBatch.validations;
+    parentValidationFailureOutputs = parentValidationBatch.failureOutputs;
     trial.parent_validation.duration_ms = Date.now() - parentValidationStartedAt;
     trial.parent_validation.status = parentValidations.some(
       (validation) => validation.status !== "passed",
@@ -715,20 +731,25 @@ async function runOneTrial(params: {
     stderr: outcome.stderr,
     parentValidations,
   });
+  evidenceRecorded.evidence = recordParentValidationFailureOutput({
+    worktreePath: worktree.path,
+    evidencePath: evidenceRecorded.evidencePath,
+    evidence: evidenceRecorded.evidence,
+    failureOutputs: parentValidationFailureOutputs,
+  });
   const centralizedEvidenceDir = join(
     comparisonDir(params.executionPath, params.record.comparison_id),
     "trials",
     trial.trial_id,
   );
   ensureDir(centralizedEvidenceDir);
-  const centralizedLogPath = join(centralizedEvidenceDir, "executor.log");
-  const worktreeLogPath = join(dirname(evidenceRecorded.evidencePath), "executor.log");
-  copyFileSync(worktreeLogPath, centralizedLogPath);
   const centralizedEvidencePath = join(centralizedEvidenceDir, "evidence.json");
-  evidenceRecorded.evidence.log_refs = evidenceRecorded.evidence.log_refs.map((ref) => ({
-    ...ref,
-    path: repoRelative(params.repoRoot, centralizedLogPath),
-  }));
+  evidenceRecorded.evidence.log_refs = evidenceRecorded.evidence.log_refs.map((ref) => {
+    const logName = basename(ref.path);
+    const centralizedLogPath = join(centralizedEvidenceDir, logName);
+    copyFileSync(join(dirname(evidenceRecorded.evidencePath), logName), centralizedLogPath);
+    return { ...ref, path: repoRelative(params.repoRoot, centralizedLogPath) };
+  });
   writeFileSync(
     centralizedEvidencePath,
     `${JSON.stringify(evidenceRecorded.evidence, null, 2)}\n`,
@@ -745,9 +766,14 @@ async function runOneTrial(params: {
 
   let reporterSucceeded = true;
   if (outcome.exitCode === 0 && params.reporterCommand) {
+    const reporterEvidence = evidenceForReporter(evidenceRecorded.evidence, {
+      repoRoot: params.repoRoot,
+      worktreePath: worktree.path,
+      executionPath: params.executionPath,
+    });
     const reporter = await runReporterWithFormatRetry({
       plan: params.plan,
-      evidence: evidenceRecorded.evidence,
+      evidence: reporterEvidence,
       mode: parsePlanTaskIdentity(params.plan)?.mode ?? "edit",
       invoke: async (reporterPrompt) => {
         const reporterOutcome = await spawnAgent(
@@ -781,16 +807,17 @@ async function runOneTrial(params: {
     trial.reporter.format_attempts = reporter.formatAttempts;
     trial.reporter.format_retries = Math.max(0, reporter.formatAttempts - 1);
     if (reporter.result === "success") {
+      const facts = deriveReporterFacts(reporterEvidence);
       trial.reporter.structured_output = true;
-      trial.reporter.outcome = reporter.output.outcome;
+      trial.reporter.outcome = facts.outcome;
       trial.reporter.output = reporter.output;
-      reporterSucceeded = reporter.output.outcome === "complete";
+      reporterSucceeded = facts.outcome === "complete";
       if (reporterSucceeded) {
         trial.reporter.status = "succeeded";
       } else {
         trial.reporter.status = "blocked";
-        trial.reporter.failure_category = "reported_blocked";
-        trial.reporter.failure_reason = reporter.output.block_reason;
+        trial.reporter.failure_category = "evidence_blocked";
+        trial.reporter.failure_reason = facts.block_reason;
       }
     } else {
       trial.reporter.status = "failed";
@@ -935,8 +962,10 @@ async function runTrials(opts: TrialRunOptions): Promise<void> {
       resolveRateLimitDetection(defaults, reporterMember.provider),
     );
   }
-  const parentValidationIds = defaults.pipeline?.parent_validations ?? [];
-  const prompt = `${buildExecutorPrompt(planContent, parentValidationIds).trimEnd()}${TRIAL_PROMPT_SUFFIX}`;
+  const parentValidationEntries = defaults.pipeline?.parent_validations ?? [];
+  // Labels are `<id>` for the project repository and `<repo>:<id>` for a product repository.
+  const parentValidationIds = parentValidationLabels(parentValidationEntries);
+  const prompt = `${buildExecutorPrompt(planContent, parentValidationEntries).trimEnd()}${TRIAL_PROMPT_SUFFIX}`;
   const requestedRevision = opts.base?.trim() || "HEAD";
   const headCommit = resolveBaseCommit(repoRoot, "HEAD");
   const baseCommit = resolveBaseCommit(repoRoot, requestedRevision);
@@ -1063,7 +1092,7 @@ function statusTrials(opts: TrialRecordOptions): void {
       validations_not_run: 0,
     };
     process.stdout.write(
-      `${trial.trial_id}\t${trial.status}\ttime(executor/parent/total)=${trial.executor.duration_ms ?? "-"}/${parentValidation.duration_ms ?? "-"}/${trial.duration_ms ?? "-"}ms\tfiles=${trial.executor.files_changed}\texecutor-validations(reported/passed/failed/not_run)=${trial.executor.validations_reported ?? trial.executor.validations.length}/${trial.executor.validations_passed}/${trial.executor.validations_failed}/${trial.executor.validations_not_run}\tparent-validations(status/passed/failed/not_run)=${parentValidation.status}/${parentValidation.validations_passed}/${parentValidation.validations_failed}/${parentValidation.validations_not_run}\treporter=${reporterStatus}/${trial.reporter.format_attempts}/${trial.reporter.failure_category ?? "-"}\n`,
+      `${trial.trial_id}\t${trial.status}\ttime(executor/parent/total)=${trial.executor.duration_ms ?? "-"}/${parentValidation.duration_ms ?? "-"}/${trial.duration_ms ?? "-"}ms\tfiles=${trial.executor.files_changed}\texecutor-validations(reported/passed/failed/not_run/requires_human)=${trial.executor.validations_reported ?? trial.executor.validations.length}/${trial.executor.validations_passed}/${trial.executor.validations_failed}/${trial.executor.validations_not_run}/${trial.executor.validations_requires_human ?? 0}\tparent-validations(status/passed/failed/not_run)=${parentValidation.status}/${parentValidation.validations_passed}/${parentValidation.validations_failed}/${parentValidation.validations_not_run}\treporter=${reporterStatus}/${trial.reporter.format_attempts}/${trial.reporter.failure_category ?? "-"}\n`,
     );
   }
 }

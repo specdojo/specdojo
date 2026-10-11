@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f421dc8cebdd4f37a2dd2c6c209db668
+  ts: "2026-09-27T12:46:35Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-ZFFZ で作成した stsd-register-entry の未決定事項を追跡するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register close で note の終端を拒否するかを決める
+    - field: description
+      from: ""
+      to: pjr-rulebook は note を done などへ遷移させないと定めるが、register close は type を区別せず note も done にできる。規則を CLI で強制するか、運用に委ねるかを決める。stsd-register-entry の _UNDECIDED_ に対応する
+    - field: type
+      from: ""
+      to: question
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_5997451076654712a42bb0ddc07f273a
+  ts: "2026-09-28T15:27:36Z"
+  action: close
+  actor: PO
+  from_status: open
+  to_status: decided
+  reason: orchestrator が推奨し利用者が承認した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: 候補 A。register close / reject / defer は note を拒否し、別の type での起票を案内する。実装は PJR-T2M6
+  previous_event_id: reg_f421dc8cebdd4f37a2dd2c6c209db668

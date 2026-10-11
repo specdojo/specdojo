@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3fc7878320b8468894af825e11b1b3e6
+  ts: "2026-10-08T03:45:29Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-NYZR の段階 0
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 仕様の判断台帳としてのクイックスタートを作る
+    - field: description
+      from: ""
+      to: question の起票 → decision で決める → 設計書を 1 つ更新 → 後日 change-request で直す、までを 10 分で体験できるクイックスタートを作る。kata を事前に用意しなくても始められることを示す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
+- v: 1
+  id: reg_b478a31cdc63444aacfbbba323227f9f
+  ts: "2026-10-08T14:34:57Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3fc7878320b8468894af825e11b1b3e6
+- v: 1
+  id: reg_a0ca84c478cc4d039b7ede247dacece1
+  ts: "2026-10-08T14:36:22Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_b478a31cdc63444aacfbbba323227f9f
+- v: 1
+  id: reg_390210f81a104b03afedf3617d86eb85
+  ts: "2026-10-08T14:38:41Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_a0ca84c478cc4d039b7ede247dacece1
+- v: 1
+  id: reg_1d40500f4e9d4643b83a61ccd828bad1
+  ts: "2026-10-08T14:45:54Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_390210f81a104b03afedf3617d86eb85
+- v: 1
+  id: reg_f6527b702589421fa5629a908556ee7d
+  ts: "2026-10-08T14:47:42Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 内容と公開物での確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: quick-start ガイドの冒頭に、init から question・decision・設計書の更新・change-request・ログの確認までを 10 分で体験する流れを加えた。公開物で手順どおりに動くことを確かめた
+  previous_event_id: reg_1d40500f4e9d4643b83a61ccd828bad1

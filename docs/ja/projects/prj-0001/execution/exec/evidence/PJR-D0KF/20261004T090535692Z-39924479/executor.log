@@ -1,0 +1,13 @@
+実装・テスト・関連文書は更新しましたが、完了条件は未達です。
+
+- `.agents/specdojo-orchestrator.agent.md` が読み取り専用で更新不能
+- `.specdojo/exec-defaults.yaml` は agent 保護設定パスのため、runner または人による適用が必要
+- 個票に未完了理由と次のアクションを記録済み
+- result ファイルは reporter の責務のため未編集
+- 親検証対象の lint・型検査・テスト・schema 検証は実行していません
+
+<specdojo_executor_evidence>
+{"final_message":"CLI・設定案・テスト・運用文書を更新したが、orchestrator SSOTが読み取り専用で、project既定もagent保護設定パスのためblocked。runnerまたは人による設定適用とorchestrator同期が必要。","validations":[{"command":"npx prettier --write <変更対象>","status":"passed","summary":"TypeScript、YAML、Markdownを整形"},{"command":"npx markdownlint <変更Markdown>","status":"passed","summary":"変更Markdownの静的検査に成功"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint <変更Markdown>","status":"passed","summary":"hook相当のMarkdown検査に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"既知の参照警告のみで検証成功"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿派生ビューを生成"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引を生成"},{"command":"node --import tsx src/specdojo.ts exec run --help","status":"passed","summary":"--in-placeと更新後のworktree関連説明を確認"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"update .agents/specdojo-orchestrator.agent.md via apply_patch","status":"failed","summary":"executorのファイル権限で読み取り専用のため拒否"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml; agent must record the required change in the result handoff for human or orchestrator application

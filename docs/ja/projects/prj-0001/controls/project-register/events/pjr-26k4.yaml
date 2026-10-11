@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7a90f9bcb0ea426a9a757b94ba1860cf
+  ts: "2026-10-04T01:48:15Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade plan に評価対象と参考資料の本文を埋め込むオプションを追加する
+    - field: description
+      from: ""
+      to: grade plan は評価対象と参考資料をパスで渡すため、executor が自分で読みに行き、対象外のファイルまで読んで遅くなり、読む範囲の違いで判定がばらつく。2026-10-04 の ornith の計測で、本文を行番号付きで埋め込みファイルを読ませない plan にしたところ、tool call が 2〜10 回から 0〜1 回になり、2 回実行した score の差が 5 点から 1〜3 点に縮まった
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_00ac1618d7a74986b8eb58eaf2860b0a
+  ts: "2026-10-04T05:09:21Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7a90f9bcb0ea426a9a757b94ba1860cf
+- v: 1
+  id: reg_5102ecb70f164a40b601316a68a2cde1
+  ts: "2026-10-04T05:28:49Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_00ac1618d7a74986b8eb58eaf2860b0a
+- v: 1
+  id: reg_49037d1014fb417f85206c79f4903905
+  ts: "2026-10-04T05:59:41Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 実際の grade と npm run check で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: grade plan --embed-documents を追加し、評価対象と参考資料を行番号付きで埋め込めるようにした。既定はパス参照のまま。実際の grade と npm run check で確認した
+  previous_event_id: reg_5102ecb70f164a40b601316a68a2cde1

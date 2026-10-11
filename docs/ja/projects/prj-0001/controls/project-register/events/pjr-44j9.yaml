@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_08988e8ba5674cd1b8e7b97d71cd543d
+  ts: "2026-10-08T14:22:00Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-P8TK の公開物での実地の確認で判明（判定基準 3）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec plan の共通規約が、新しい利用者の環境で実行できない検査を求める
+    - field: description
+      from: ""
+      to: 公開物での実地の確認（2026-10-08）で、init で作った新しいリポジトリで exec run を流すと、作業は済んだのに executor の検証の失敗で waiting になった。共通規約（xep-common-conventions-template.md）が、Markdown の変更に npx markdownlint（SpecDojo の依存ではない）を、docs/ja/projects/ 配下の変更に specdojo catalog validate（catalog_path がないと実行できない）を一律に求めるため。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
+- v: 1
+  id: reg_8c066c8dd2b748d4a96c2c5f45f7c013
+  ts: "2026-10-08T14:24:04Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_08988e8ba5674cd1b8e7b97d71cd543d
+- v: 1
+  id: reg_89dc73f67e6b485ab162aa36d02d59b7
+  ts: "2026-10-08T14:34:18Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8c066c8dd2b748d4a96c2c5f45f7c013
+- v: 1
+  id: reg_a39c7afb324743679cd96339402768d0
+  ts: "2026-10-08T14:47:59Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: 共通規約の検査に適用の条件（package.json の依存の有無、catalog_path の設定など）を付け、条件に当たらない検査は実行も記録もしないようにした。公開物での claude の試しでは、別の問題（PJR-TM1B・PJR-A0NE）で止まった
+  previous_event_id: reg_89dc73f67e6b485ab162aa36d02d59b7

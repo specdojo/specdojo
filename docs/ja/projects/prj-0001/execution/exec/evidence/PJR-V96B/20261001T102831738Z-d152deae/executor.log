@@ -1,0 +1,28 @@
+PJR-V96B の実装は終わりましたが、型チェック・lint・テストはまだ一度も実行していません。それらは終了後に親 runner が実行するので、通るかどうかは未確認です。私が実行したのは prettier、markdownlint（エラーなし）、`catalog validate`（終了コード 0）、`index build` だけです。
+
+**動作の変更点**
+- `pipeline.parent_validations` の各要素に、ID の文字列に加えて `{ id, repo }` を書けるようにしました。ID だけの要素はこれまでどおりプロジェクトリポジトリ（`project`）で実行されます。同じ ID を複数のリポジトリに割り当てることもできます。
+- 各検証は、割り当てたリポジトリの task worktree を `cwd` にして実行します。そのリポジトリに変更がなくても実行します。worktree の無いリポジトリに割り当てた検証は、コマンドを起動せずに `failed` になります。
+- evidence の runner 検証に `repo` を記録します。記録するのはプロダクトリポジトリを持つ task の場合か、`{ id, repo }` を使った場合だけです。リポジトリの宣言（`repos`）を持たない project では、evidence の形も実行場所も変わりません。
+- ログ、block 理由、reporter 再開時の照合では、プロダクト側の検証を `app2:test-unit` のように表示します。
+- 次の書き方は agent 起動前の設定エラーになります: `id` と `repo` 以外のキー、`repo` の無いオブジェクト、同じ `(id, repo)` の組の重複。
+
+**npm script 名が異なる場合の扱い**
+許可リストは固定の ID と固定 argv のまま維持し、リポジトリごとに command や script 名を指定する手段は設けませんでした。プロダクト側は `package.json` に同じ名前の script（`test:unit` など）を用意するか、その検証を割り当てないことにします。この方針は `exec-config-guide.md` に書きました。result にも記録するよう reporter に引き継いでください。
+
+**テスト**
+`app1` と `app2` の 2 つのプロダクト構成で、リポジトリごとに異なる検証がそれぞれの worktree で実行されることを確かめる単体テストを追加しました。あわせて、宣言の無い構成で evidence の形が変わらないことを確かめる回帰テストも追加しました。
+
+**変更していないもの**
+`.specdojo/exec-defaults.yaml` は変更していません。別リポジトリ構成で割り当てを使うには、利用者が `{ id, repo }` を追記する必要があります。実際の構成での確認は PJR-69VP で行う予定です。
+
+変更したファイル:
+- `src/exec-parent-validation.ts`, `src/exec-run.ts`, `src/exec-trial.ts`, `src/exec-evidence.ts`, `src/exec-agent-config.ts`
+- `docs/specdojo/schemas/v1/exec-defaults.schema.yaml`, `docs/specdojo/schemas/v1/exec-evidence.schema.yaml`
+- `docs/ja/specdojo/guides/exec-config-guide.md`
+- テスト 3 本: `tests/src/exec-parent-validation.test.ts`, `tests/src/exec-agent-config.test.ts`, `tests/src/exec-run-parent-validation-gate.test.ts`
+- 個票（作業内容と対応結果。ステータス項目は変更していません）
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-V96B implemented and verified: plain IDs in `pipeline.parent_validations` still run in the project repository, and `{ id, repo }` runs the same fixed argv in the named repository's task worktree. Validations run even when that repository has no changes. A validation assigned to a repository without a worktree fails without spawning. The runner records `repo` on its evidence validations when the task has product repositories or a `{ id, repo }` entry is used, so evidence for projects without `repos` keeps its old shape. Logs, block reasons and reporter-resume matching use `<repo>:<id>` labels. Updated the exec-defaults schema (`{ id, repo }` items) and the exec-evidence schema (`repo`). Kept the fixed allowlist and decided not to add per-repo script names: product repositories must provide the same npm script names (documented in exec-config-guide). Added unit tests for two product repositories (app1, app2) running different validations in their own worktrees, plus regression tests for configurations without `repos`. Updated the ticket's work table and 対応結果 section without changing its status fields. Did not modify `.specdojo/exec-defaults.yaml` or `package.json`. Verified: src/exec-parent-validation.ts, src/exec-run.ts, src/exec-trial.ts, src/exec-evidence.ts, src/exec-agent-config.ts, both schemas, exec-config-guide.md, the ticket and 3 test files (formatting, markdownlint, catalog validate, index build). Unverified: typecheck, lint-ts/fm/md, test-unit, test-integration and validate-schema were not run here; they are left to the parent runner.","validations":[{"command":"npx prettier --write <changed ts/yaml/md files>","status":"passed","summary":"12 files formatted; only tests/src/exec-parent-validation.test.ts changed"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-v96b-multi-repo-parent-validations.md","status":"passed","summary":"no errors"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0 (existing based_on warnings only)"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2276 entries"}]}
+</specdojo_executor_evidence>

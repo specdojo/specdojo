@@ -179,6 +179,17 @@ export function stripTerminalControlSequences(text: string): string {
   return text.replace(ANSI_ESCAPE, "").replace(CONTROL_CHARS, "");
 }
 
+/** Redacts common credential forms before subprocess output is persisted as evidence. */
+export function redactSensitiveText(value: string): string {
+  return value
+    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/giu, "Bearer [REDACTED]")
+    .replace(/\b(sk-(?:proj-)?[A-Za-z0-9_-]{8,}|gh[opsu]_[A-Za-z0-9_]{8,})\b/gu, "[REDACTED]")
+    .replace(
+      /\b(api[_-]?key|access[_-]?token|auth(?:orization)?|password|passwd|secret)\b(\s*[:=]\s*)([^\s,;]+)/giu,
+      "$1$2[REDACTED]",
+    );
+}
+
 export function parseKeyValuePairs(
   pairs: string[] | undefined,
 ): Record<string, string> | undefined {

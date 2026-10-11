@@ -1,0 +1,39 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-76cd128ca238 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-76cd128ca238
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+document complete: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+document start: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
+document complete: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
+document start: docs/ja/product/040-system-design/sysd-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-claude-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-claude-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-codex-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-codex-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-critical-flows.md
+document complete: docs/ja/product/040-system-design/sysd-critical-flows.md
+document start: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
+document complete: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
+document start: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-76cd128ca238/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-10T16:02:20Z	docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md	1	passed	124	needs-work	68	23	agy-expert-executor	machine	none		
+2026-10-10T16:03:40Z	docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md	1	passed	78	needs-work	64	24	agy-expert-executor	machine	none		
+2026-10-10T16:06:47Z	docs/ja/product/030-architecture/020-infrastructure/tsd-index.md	1	passed	185	needs-work	59	15	agy-expert-executor	machine	none		
+2026-10-10T16:09:39Z	docs/ja/product/040-system-design/sysd-agent-settings.md	1	passed	170	needs-work	66	26	agy-expert-executor	machine	none		
+2026-10-10T16:12:16Z	docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md	1	passed	154	needs-work	67	25	agy-expert-executor	machine	none		
+2026-10-10T16:15:21Z	docs/ja/product/040-system-design/sysd-claude-agent-settings.md	1	passed	183	needs-work	47	30	agy-expert-executor	machine	none		
+2026-10-10T16:16:41Z	docs/ja/product/040-system-design/sysd-codex-agent-settings.md	1	passed	78	needs-work	41	33	agy-expert-executor	machine	none		
+2026-10-10T16:18:57Z	docs/ja/product/040-system-design/sysd-critical-flows.md	1	passed	134	needs-work	55	20	agy-expert-executor	machine	none		
+2026-10-10T16:20:59Z	docs/ja/product/040-system-design/sysd-cross-cutting-policy.md	1	passed	120	needs-work	56	24	agy-expert-executor	machine	none		
+2026-10-10T16:22:22Z	docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md	1	passed	82	needs-work	52	32	agy-expert-executor	machine	none		

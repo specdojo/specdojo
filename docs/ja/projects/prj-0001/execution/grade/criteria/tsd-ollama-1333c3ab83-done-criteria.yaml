@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: tsd-ollama-grade-criteria
+document: tsd-ollama
+path: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+graded_at: "2026-10-09T16:06:27.490Z"
+graded_by: agy-expert-executor
+content_hash: 4a4215fc57910ea677d1c754cb5b5930ee23e6a62834f968d2c5797bea7564da
+summary:
+  satisfied: 0
+  unsatisfied: 5
+  total: 5
+criteria:
+  - id: DC-001
+    text: 採用技術の選定理由と制約が業務要件と整合していること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: 採用技術の選定理由と制約が業務要件と整合していることを説明する記載がない。
+  - id: DC-002
+    text: 技術スタック選定を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: 技術スタック選定を承認できる十分な情報（代替案比較、費用、ライセンスなど）が提示されていない。
+  - id: DC-003
+    text: 技術的制約・ライセンス・バージョン方針が識別できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: 技術的制約やハードウェア要件、バージョン方針が明示されていない。
+  - id: DC-004
+    text: テストフレームワーク・CI/CD環境の参照として使えること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 品質や速度などの採用基準や、環境が意図通り反映されたか判定可能な検証手順が不足している。
+  - id: DC-005
+    text: 開発環境構築・ライブラリ選定の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: 開発環境構築のための具体的なコマンドや、ロールバック、既存ファイルの上書きなどの作業条件が不十分である。

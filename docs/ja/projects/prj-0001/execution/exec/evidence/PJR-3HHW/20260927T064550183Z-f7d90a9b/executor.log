@@ -1,0 +1,27 @@
+`exec run` の中で、親 runner の検証（`parent_validations`）が同時に 1 本ずつしか走らないように変更しました。executor と reporter は従来どおり並行に動き、待たされるのは検証だけです。テストも追加しましたが、`typecheck`・`test-unit`・`test-integration`・`validate-schema` は親 runner が実行する取り決めなので、私はまだ実行していません。新しいテストの成否はまだわかりません。
+
+**変更内容**
+- **同時実行の上限**: 検証を 1 本ずつ通すゲートを `src/exec-parent-validation.ts` に追加しました。待っている項目は来た順に通します。同時数は新しい設定 `pipeline.parent_validation_concurrency` で変えられ、省略時は `1` です。不正な値は設定の読み込み時にエラーになります。
+- **対象の経路**: `runConfiguredParentValidations` をこのゲートで包みました。executor 成功後の検証、reporter 再開前の再検証、`exec trial` の検証がすべて対象になります。
+- **待機ログ**: 待つときに `Waiting for parent validation slot: <項目> (<検証 ID>); running: <実行中の項目>` を、順番が来たときに `Parent validation slot acquired: <項目>` を出します。項目名には evidence の `task_id` を使います。
+- **別プロセスの扱い**: 直列化の対象外としました。同じ project の `exec run` はもともと `exec-run.lock` で排他されるため、検証は重なりません。別 project の run どうしは重なり得ます。この判断はガイドに書きました。
+- **executor の `test-unit`**: executor が sandbox 内で実行する検証は runner からは制御できません。現在の `.specdojo/exec-defaults.yaml` では `test-unit` がすでに `parent_validations` に入っていて executor は実行しないため、設定は変えず、方針だけをガイドに明記しました。
+- **テスト**:
+  - `tests/src/exec-parent-validation.test.ts` に、直列化と待機ログ、例外時にも枠が解放されること、設定値の検証のテストを追加しました。
+  - 新規の `tests/src/exec-run-parent-validation-gate.test.ts` では、3 項目を並行で動かし、次の 3 点を確かめます。
+    - executor は並行のまま動く。
+    - 検証は重ならない。
+    - 同時数 2 の設定が効く。
+- **ドキュメント**: `exec-defaults.schema.yaml` に項目を追加しました。`exec-config-guide.md` と `register-operation-guide.md` には、直列化・待機ログ・別プロセスの扱いを追記しました。個票は 4 つの作業を `done` にし、「対応結果」を書きました。`item_status` と登録簿は変えていません。
+
+**実行した検査**
+- `npx prettier --write`（変更した全ファイル）とESLint（変更した TS ファイル）: いずれもエラーなし。
+- `npx markdownlint` と `node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint`（変更した Markdown）: いずれもエラーなし。
+- `catalog validate`: 成功（`OK: dct-index.yaml`）。`dct-user-interface-model.yaml` について「`based_on` を検証する文書が見つからない」という警告が出ますが、今回の変更とは関係ありません。
+- `index build`: 成功（2088 件）。
+
+**気をつける点**: `exec trial` の `parent_validation.duration_ms` に、枠を待っていた時間も含まれるようになりました。
+
+<specdojo_executor_evidence>
+{"final_message":"exec run 内の親検証を ParentValidationGate で直列化した（既定の同時数 1、pipeline.parent_validation_concurrency で変更可）。executor/reporter は並行のまま動く。待機ログ、schema、ガイド、テスト、個票を更新した。親検証は runner が実行するため未実行。","validations":[{"command":"npx prettier --write <changed files>","status":"passed","summary":"all changed ts/yaml/md files formatted"},{"command":"npx eslint <changed ts files>","status":"passed","summary":"no errors"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-3hhw-serialize-parent-validations.md","status":"passed","summary":"no errors"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint <changed md>","status":"passed","summary":"no errors"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK: dct-index.yaml (pre-existing unrelated based_on warnings)"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2088 entries"}]}
+</specdojo_executor_evidence>

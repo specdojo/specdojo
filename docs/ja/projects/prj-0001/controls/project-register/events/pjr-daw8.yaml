@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ea94f3c2fbb041febca818d955ff48b6
+  ts: "2026-10-04T03:46:03Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の自動 commit がタイトルの長さで commitlint に拒否される
+    - field: description
+      from: ""
+      to: "exec run --register --register-commit は個票タイトルから exec(register PJR-XXXX): `<title>` のヘッダーを作るが、長さを調整しない。PJR-27Z9（109 文字）で header-max-length（100）に拒否され、executor・親検証・reporter が成功した実行が commit incomplete として waiting になった"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_6e890cef62134cdea59ed62d49879cac
+  ts: "2026-10-04T06:53:49Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ea94f3c2fbb041febca818d955ff48b6
+- v: 1
+  id: reg_de8840a6f0d242d1a7c2a367986ea2f0
+  ts: "2026-10-04T07:01:26Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親 runner 検証 `lint-md` が失敗しました（`docs/ja/projects/prj-0001/controls/project-register/pjr-daw8-register-commit-header-length.md:44:116 error MD038/no-space-in-code Spaces…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 親 runner 検証 `lint-md` が失敗しました（`docs/ja/projects/prj-0001/controls/project-register/pjr-daw8-register-commit-header-length.md:44:116 error MD038/no-space-in-code Spaces…"
+  previous_event_id: reg_6e890cef62134cdea59ed62d49879cac
+- v: 1
+  id: reg_31110bc3cfe64f86a2be6875c4b63b9d
+  ts: "2026-10-04T07:10:51Z"
+  action: start
+  actor: agy-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: 親 runner 検証 `lint-md` が失敗しました（`docs/ja/projects/prj-0001/controls/project-register/pjr-daw8-register-commit-header-length.md:44:116 error MD038/no-space-in-code Spaces…"
+      to: "-"
+  previous_event_id: reg_de8840a6f0d242d1a7c2a367986ea2f0
+- v: 1
+  id: reg_d0570b3289c5495b9ff2cd1778b2e612
+  ts: "2026-10-04T07:16:04Z"
+  action: wait
+  actor: agy-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  previous_event_id: reg_31110bc3cfe64f86a2be6875c4b63b9d
+- v: 1
+  id: reg_6b7316f896d54194a5c9b24183d9e3aa
+  ts: "2026-10-04T07:21:35Z"
+  action: start
+  actor: agy-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+      to: "-"
+  previous_event_id: reg_d0570b3289c5495b9ff2cd1778b2e612
+- v: 1
+  id: reg_2e97af2061044804a059c07ecbce75ac
+  ts: "2026-10-04T07:25:52Z"
+  action: review
+  actor: agy-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6b7316f896d54194a5c9b24183d9e3aa
+- v: 1
+  id: reg_4ba0fc06a0364eeeb7b863e88a4c39f7
+  ts: "2026-10-05T21:59:23Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: テストで確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: register の自動 commit のヘッダーを header-max-length 内に収めるようにした（超える場合は末尾を … に置き換える）。unit test・integration test と npm run check で確認した。100 文字を超えるタイトルでの実地の確認は未実施
+  previous_event_id: reg_2e97af2061044804a059c07ecbce75ac

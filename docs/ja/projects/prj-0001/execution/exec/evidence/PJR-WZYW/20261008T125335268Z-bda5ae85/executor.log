@@ -1,0 +1,5 @@
+agent 名簿の独立読み込み、エラー伝播、provider スニペットの改名・案内修正、unit test 追加を完了しました。result ファイルと登録簿ステータスは pipeline 指示どおり変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"`members_path` がない project でも agent 名簿を読み込めるようにし、読み込みエラーを原因のまま表示するよう修正。provider 導入テンプレートと個票も更新した。","validations":[{"command":"npx prettier --write <変更した TS・YAML・Markdown ファイル>","status":"passed","summary":"全変更ファイルを整形済み。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"検証成功。既存の未配置文書に関する警告のみ。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成に成功。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2471件の索引生成に成功。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

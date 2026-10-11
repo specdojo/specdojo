@@ -3,34 +3,87 @@ version: 1
 document: cdfd-overview
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 77
-graded_at: "2026-09-20T05:01:28.643Z"
-graded_by: codex-expert-executor
-content_hash: 2424fc6bf88b17de009642ea4d7a07c0b27debe63012e93345cfc1d97248fa87
+score: 85
+graded_at: "2026-10-07T16:11:41.218Z"
+graded_by: agy-expert-executor
+content_hash: 9b8b4b2f64e2ef5c6ce0069204a94780e3ae43bc1b7d68004a654308d80abd7a
+source_hashes:
+  catalog-entry: 854431222424fde2670a168b9d6752915077799889159adc1ccafb04f8363cf1
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 75
+  operations:
+    score: 88
+  planning:
+    score: 100
+  business:
+    score: 100
   consistency:
     score: 38
-  usability:
-    score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 75
+    score: 88
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
     level: 1
     score: 25
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -44,6 +97,15 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -60,52 +122,65 @@ finding_counts:
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 38
-    message: >-
-      成果物カタログの `cdfd-onboarding` は repository からの導入、既存プロジェクトへの導入、Detached Unit を対象に含めるが、本書の P-01 は起点を「PO
-      が新しいプロジェクトを立ち上げた」に限定しており、詳細化範囲と起動条件を統一する必要がある。
-    anchor: "| `P-01` | プロジェクト初期セットアップ | プロジェクトの推進環境を整備する。 | PO、ARC | PO が新しいプロジェクトを立ち上げた |"
-  - id: F004
-    severity: major
-    rule: vp-qe-done-criteria
-    line: 65
-    message: DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。
-    anchor: <!-- prettier-ignore -->
-  - id: F006
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 65
-    message: 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。
-    anchor: <!-- prettier-ignore -->
+    rule: vp-po-decision-readiness
+    line: 29
+    anchor: SpecDojo を導入して Kata を配置し、その雛形から稼働構成の初期状態を整える。
+    message: PO が承認対象とする境界は示されているが、現行 14 領域・六グループに対する承認状態、未解決の Action の文書間不整合、その影響と差し戻し時の次アクションが明示されず、承認・保留・差し戻しを判断できない。
+    message_ja: PO が承認対象とする境界は示されているが、現行 14 領域・六グループに対する承認状態、未解決の Action の文書間不整合、その影響と差し戻し時の次アクションが明示されず、承認・保留・差し戻しを判断できない。
   - id: F002
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 54
+    anchor: "| `P-05` | 定期実行定義 | 定義された時期・条件に基づき、継続的な確認または実行を定義する。 | PM、OPS | 定期的に確認・実行する事項が判明した |"
+    message: >-
+      本書の Plan は Kata からの入力と図 5.2 のエッジを「rulebook・template」とする一方、`cdfd-plan.md` は P-04 のスケジュール戦略定義で「Kata
+      grade・作成要件」を必須入力としているため, Plan の主要入力とエッジへ Kata grade を反映する必要がある。
+    message_ja: >-
+      本書の Plan は Kata からの入力と図 5.2 のエッジを「rulebook・template」とする一方、`cdfd-plan.md` は P-04 のスケジュール戦略定義で「Kata
+      grade・作成要件」を必須入力としているため, Plan の主要入力とエッジへ Kata grade を反映する必要がある。
+  - id: F003
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 91
+    line: 99
+    anchor: ""
     message: >-
       本書は Action の主要入力を「参加者からの構成変更要求と承認結果」「参加者からの非推奨化の判断」とする一方、`cdfd-action` は承認結果と非推奨化判断を Action
       内部で生成しており、人間の判断境界を統一する必要がある。
-    anchor: "- **データストア**: 稼働構成、Kata、成果物カタログ、登録簿、実行記録、成果物、保管庫（trash）、評価結果、進捗報告"
-  - id: F003
+    message_ja: >-
+      本書は Action の主要入力を「参加者からの構成変更要求と承認結果」「参加者からの非推奨化の判断」とする一方、`cdfd-action` は承認結果と非推奨化判断を Action
+      内部で生成しており、人間の判断境界を統一する必要がある。
+  - id: F004
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 107
-    message: >-
-      `cdfd-orchestrator` は実行計画を主要入力として扱い、本書の図にも `実行計画 → Orchestrator` があるが, Orchestrator
-      の「主要入力」に実行計画がなく、入出力契約を統一する必要がある。
+    line: 114
     anchor: ""
+    message: >-
+      本書は Orchestrator の成果物カタログ入力を「完了条件・rulebook 参照」とする一方、`cdfd-orchestrator.md` は `done_criteria`・`evidence_refs`
+      を参照して要求を判定するため、成果物カタログから受け取る根拠情報の名称を統一する必要がある。
+    message_ja: >-
+      本書は Orchestrator の成果物カタログ入力を「完了条件・rulebook 参照」とする一方、`cdfd-orchestrator.md` は `done_criteria`・`evidence_refs`
+      を参照して要求を判定するため、成果物カタログから受け取る根拠情報の名称を統一する必要がある。
   - id: F005
     severity: major
     rule: vp-qe-done-criteria
-    line: 107
-    message: DC-003 が要求する主要入力と概念データフローの相互対応について、Orchestrator の図にある実行計画入力が「主要入力」から欠落している。
-    anchor: ""
-  - id: F007
-    severity: minor
+    line: 29
+    anchor: SpecDojo を導入して Kata を配置し、その雛形から稼働構成の初期状態を整える。
+    message: DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。
+    message_ja: DC-002（PO による対象範囲と領域分割の承認）を満たす承認記録が特定できず、未充足である。
+  - id: F006
+    severity: major
     rule: vp-qe-omissions-consistency
-    line: 107
-    message: Orchestrator のデータストアと図には実行計画があるが「主要入力」には記載されていないため、図の `実行計画 → Orchestrator` エッジに対応する入力を追加する必要がある。
-    anchor: ""
+    line: 29
+    anchor: SpecDojo を導入して Kata を配置し、その雛形から稼働構成の初期状態を整える。
+    message: 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。
+    message_ja: 現行の 14 領域・六グループへの改訂を PO が承認した記録を特定できず、現在の境界に対する承認記録を追加する必要がある。
+  - id: F007
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 5
+    anchor: "## 1. 目的"
+    message: "現行 14 領域・六グループに対する PO 承認記録がなく、Action の major な文書間不整合も残るため、`status: ready` の公開・配布判断を裏付ける前提が満たされていない。"
+    message_ja: "現行 14 領域・六グループに対する PO 承認記録がなく、Action の major な文書間不整合も残るため、`status: ready` の公開・配布判断を裏付ける前提が満たされていない。"
 done_criteria:
   satisfied: 2
   total: 4

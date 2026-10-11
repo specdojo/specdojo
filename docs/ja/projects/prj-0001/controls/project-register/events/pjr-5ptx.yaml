@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_74a49f71cf0346df8ab2e376c236a362
+  ts: "2026-09-29T11:48:49Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が v0.3.0 のリリースに向けた準備を依頼したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.3.0 のリリースノートと移行ガイドを作成し版を 0.3.0 に上げる
+    - field: description
+      from: ""
+      to: v0.2.1 以降に、観点の evaluation の改名（WPWB）、continuous 廃止と rubric v2（K351）、review の判定語彙の統一（XTAN）、review テンプレートの改訂（N22N）など利用者に影響する破壊的変更が入った。変更点と、観点を overlay・kata を eject した利用者の移行手順をまとめ、package の版を 0.3.0 に上げる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_22fa189c6aa84d2c9ad67149add913cd
+  ts: "2026-09-29T12:03:39Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_74a49f71cf0346df8ab2e376c236a362
+- v: 1
+  id: reg_f2d8fbd10d7f4156a611bbfd20055718
+  ts: "2026-09-29T12:16:41Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_22fa189c6aa84d2c9ad67149add913cd
+- v: 1
+  id: reg_80054ccb38074322b510d12620d577bc
+  ts: "2026-09-29T14:09:47Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: codex-expert-executor の成果を orchestrator が適用し、実行後に入れた項目を CHANGELOG と移行ガイドへ追記した
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: CHANGELOG.md（package に同梱）と v0.3.0 の移行ガイドを作成し、README から辿れるようにした。specdojo を 0.3.0、@specdojo/docs-site を 0.2.0 に上げた。npm run check と docs:build（98 秒）の成功を確認。main への PR・merge・公開は人の作業
+  previous_event_id: reg_f2d8fbd10d7f4156a611bbfd20055718

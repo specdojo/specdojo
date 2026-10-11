@@ -3,14 +3,24 @@ import { randomInt, randomUUID } from "node:crypto";
 import {
   existsSync,
   mkdirSync,
+  readdirSync,
   readFileSync,
   renameSync,
   unlinkSync,
   writeFileSync,
 } from "node:fs";
 import { basename, dirname, join, relative, resolve, sep } from "node:path";
-import fg from "fast-glob";
-import { getProjectRegisterPath, loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
+import {
+  getProjectExecutionPath,
+  getProjectRegisterPath,
+  loadConfig,
+  loadEnv,
+  specdojoRootDir,
+} from "./specdojo-config.js";
+import { execLifecyclePoolPath } from "./exec-run-lock.js";
+import { CrossProcessMutex } from "./exec-slot-lock.js";
+import { repoRelative, stageCommitTargets, worktreeStatusPaths } from "./exec-worktree-ops.js";
+import { gitOutput, gitResult } from "./exec-worktree.js";
 import {
   normalizeRegisterTimestamp,
   nowUtcTimestamp,
@@ -53,6 +63,7 @@ import {
   PJR_ID_RE,
   prependRegisterItemDescription,
   readRegisterItemContent,
+  REMOVE_REGISTER_ITEM_FIELD,
   registerItemFieldsFromItem,
   setRegisterItemDescription,
   setRegisterItemTitle,
@@ -88,6 +99,8 @@ export {
 export type RegisterPaths = {
   projectId: string;
   projectRegisterPath: string;
+  // CLI で解決した project の execution path。単体の生成・検証 helper では不要。
+  executionPath?: string;
   pjrIndexPath: string;
   generatedPath: string;
   controlsGeneratedPath: string;
@@ -119,6 +132,27 @@ function atomicWriteFile(path: string, content: string): void {
   } finally {
     if (existsSync(temporary)) unlinkSync(temporary);
   }
+}
+
+export function findMarkdownReferenceFiles(root: string): string[] {
+  const markdownFiles: string[] = [];
+  const docsJaPath = join(resolve(root), "docs", "ja");
+
+  function walk(directory: string): void {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      if (entry.name.startsWith(".")) continue;
+
+      const entryPath = join(directory, entry.name);
+      if (entry.isDirectory()) {
+        if (entry.name !== "generated") walk(entryPath);
+      } else if (entry.isFile() && entry.name.endsWith(".md")) {
+        markdownFiles.push(entryPath);
+      }
+    }
+  }
+
+  if (existsSync(docsJaPath)) walk(docsJaPath);
+  return markdownFiles.sort((left, right) => left.localeCompare(right));
 }
 
 function prepareRegisterEventFile(
@@ -197,6 +231,7 @@ export function resolveRegisterPaths(opts: { project?: string }): RegisterPaths 
   return {
     projectId,
     projectRegisterPath: absRegisterPath,
+    executionPath: resolve(baseDir, getProjectExecutionPath(project)),
     pjrIndexPath: join(absRegisterPath, "pjr-index.md"),
     generatedPath: join(absRegisterPath, "generated"),
     controlsGeneratedPath: join(dirname(absRegisterPath), "generated"),
@@ -433,6 +468,27 @@ function slugify(text: string): string {
   );
 }
 
+// 日本語主体のタイトルから ASCII の断片だけを topic にすると、個票名から内容を
+// 推測できなくなる。区切り記号は数えず、文字・数字の過半が非 ASCII で、抽出できた
+// ASCII 語が 1 語だけの場合を「意味を失う可能性がある既定 topic」とみなす。
+function derivedTopicNeedsWarning(title: string, topic: string): boolean {
+  const asciiWords = title.match(/[a-z0-9]+/giu) ?? [];
+  if (topic === "item" && asciiWords.length === 0) return true;
+  if (asciiWords.length !== 1) return false;
+
+  const lettersAndNumbers = [...title].filter((char) => /[\p{L}\p{N}]/u.test(char));
+  const asciiCount = lettersAndNumbers.filter((char) => /[a-z0-9]/iu.test(char)).length;
+  return lettersAndNumbers.length - asciiCount > asciiCount;
+}
+
+function printDerivedTopicWarning(topic: string): void {
+  process.stdout.write(
+    `Warning: derived topic "${topic}" may not describe the title. ` +
+      "Specify --topic with a lowercase, hyphen-separated English slug, or change it later " +
+      "with register update --topic.\n",
+  );
+}
+
 // ================================
 // Ticket Generation
 // ================================
@@ -465,9 +521,10 @@ function generateTicket(opts: {
   content = content.replace(/_PJR-XXXX_/g, opts.displayId);
   // Replace type-specific title placeholder
   const titlePh = getTitlePlaceholder(opts.type);
+  const safeTitle = inlineCodeAnglePlaceholders(opts.title);
   content = content.replace(
     new RegExp(titlePh.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "g"),
-    opts.title,
+    safeTitle,
   );
 
   return content;
@@ -1213,6 +1270,19 @@ function loadItemForUpdate(
   return view;
 }
 
+type TerminalRegisterCommand = "close" | "reject" | "defer";
+
+// note は未対応項目ではなく、open のまま更新し続ける記録である。終端操作による書き込みを
+// 始める前に共通ガードを通し、対応・回答・判断が必要な場合は別項目の起票へ誘導する。
+function assertTerminalOperationAllowed(item: PjrItem, command: TerminalRegisterCommand): void {
+  if (item.type !== "note") return;
+  throw new Error(
+    `Cannot ${command} ${item.id}: item type "note" is non-terminal and must remain open. ` +
+      `Create a todo, question, decision, or another appropriate item type when action, ` +
+      `an answer, or a decision is required.`,
+  );
+}
+
 // 更新後の項目値を個票 frontmatter へ書き戻す。未移行（source: index）の項目は、
 // 行から読んだ値も含めて全フィールドを書き込み、その場で個票正本へ移行する。
 // タイトル・説明は frontmatter に持たないため、H1 と概要段落を書き換える。
@@ -1237,6 +1307,9 @@ function applyItemUpdate(opts: {
   const label = opts.action ?? `→ ${opts.updated.status}`;
   const updates: RegisterItemFieldUpdates = {
     ...registerItemFieldsFromItem(opts.updated),
+    // block_reason は waiting の現在値にだけ属する。waiting 以外への遷移や、
+    // stale な個票に対する更新では削除し、削除前の値は event の差分へ残す。
+    ...(opts.updated.status === "waiting" ? {} : { block_reason: REMOVE_REGISTER_ITEM_FIELD }),
     ...opts.fieldUpdates,
   };
 
@@ -1335,7 +1408,7 @@ function isEscapedMarkdownCharacter(markdown: string, index: number): boolean {
 }
 
 function findClosingBacktickRun(markdown: string, start: number, length: number): number {
-  for (let cursor = start; cursor < markdown.length; ) {
+  for (let cursor = start; cursor < markdown.length;) {
     if (markdown[cursor] !== "`") {
       cursor++;
       continue;
@@ -1353,7 +1426,7 @@ function findClosingBacktickRun(markdown: string, start: number, length: number)
 function stripInlineCode(markdown: string): string {
   let result = "";
 
-  for (let cursor = 0; cursor < markdown.length; ) {
+  for (let cursor = 0; cursor < markdown.length;) {
     if (markdown[cursor] !== "`" || isEscapedMarkdownCharacter(markdown, cursor)) {
       result += markdown[cursor];
       cursor++;
@@ -1590,9 +1663,7 @@ export function planRetopic(paths: RegisterPaths, id: string, topic: string): Re
     },
   ];
   const root = specdojoRootDir();
-  const referenceFiles = fg
-    .sync("docs/ja/**/*.md", { cwd: root, absolute: true, ignore: ["**/generated/**"] })
-    .sort((a, b) => a.localeCompare(b));
+  const referenceFiles = findMarkdownReferenceFiles(root);
 
   for (const absPath of referenceFiles) {
     if (absPath === view.ticketPath) continue;
@@ -1623,6 +1694,7 @@ export function retopicPjrItem(opts: {
   id: string;
   topic: string;
   updated: PjrItem;
+  fieldUpdates?: RegisterItemFieldUpdates;
   dryRun: boolean;
   title?: string;
   description?: string;
@@ -1638,10 +1710,11 @@ export function retopicPjrItem(opts: {
   if (opts.description !== undefined) {
     ticketWrite.content = setRegisterItemDescription(ticketWrite.content, opts.description);
   }
-  ticketWrite.content = applyRegisterItemFields(
-    ticketWrite.content,
-    registerItemFieldsFromItem(opts.updated),
-  );
+  ticketWrite.content = applyRegisterItemFields(ticketWrite.content, {
+    ...registerItemFieldsFromItem(opts.updated),
+    ...(opts.updated.status === "waiting" ? {} : { block_reason: REMOVE_REGISTER_ITEM_FIELD }),
+    ...opts.fieldUpdates,
+  });
 
   if (opts.dryRun) {
     process.stdout.write(`Would change topic for ${opts.id}: ${plan.fromTopic} → ${opts.topic}\n`);
@@ -1756,9 +1829,7 @@ export function planRenumber(paths: RegisterPaths, fromId: string, toId: string)
   // 参照リンク・targets の付け替え（doc id を持つ個票がある場合のみ）。
   if (fromDocId && toDocId) {
     const root = specdojoRootDir();
-    const referenceFiles = fg
-      .sync("docs/ja/**/*.md", { cwd: root, absolute: true, ignore: ["**/generated/**"] })
-      .sort((a, b) => a.localeCompare(b));
+    const referenceFiles = findMarkdownReferenceFiles(root);
 
     for (const absPath of referenceFiles) {
       if (absPath === paths.pjrIndexPath) continue;
@@ -1913,6 +1984,183 @@ export function printCommandError(error: unknown): void {
 
 function addProjectOption(cmd: Command): Command {
   return cmd.option("--project <projectId>", "Project id in specdojo.config.json");
+}
+
+type RegisterMutationOptions = {
+  project?: string;
+  by?: string;
+  dryRun?: boolean;
+  commit?: boolean;
+  message?: string;
+};
+
+type RegisterMutationResult = {
+  id: string;
+  title: string;
+};
+
+type RegisterMutationContext = {
+  paths: RegisterPaths;
+  assertCommitTargetsClean: (targets: readonly string[]) => void;
+};
+
+function assertRegisterItemCommitTargetsClean(
+  context: RegisterMutationContext,
+  view: RegisterItemView,
+): void {
+  if (!view.ticketPath) return;
+  context.assertCommitTargetsClean([
+    view.ticketPath,
+    registerEventFilePath(context.paths.projectRegisterPath, view.id),
+  ]);
+}
+
+function addRegisterCommitOptions(cmd: Command): Command {
+  return cmd
+    .option(
+      "--commit",
+      "Take the register lifecycle lock, rebuild views, and commit only this command's changes",
+      false,
+    )
+    .option("-m, --message <message>", "Override the register commit message");
+}
+
+const REGISTER_COMMIT_SUBJECT_MAX_LENGTH = 100;
+const REGISTER_COMMIT_STABILIZATION_ATTEMPTS = 3;
+
+function defaultRegisterCommitMessage(command: string, result: RegisterMutationResult): string {
+  const prefix = `docs(register ${result.id}): ${command} `;
+  const flatTitle = result.title.replace(/\s+/g, " ").trim();
+  const subject = `${prefix}${flatTitle}`;
+  if (subject.length <= REGISTER_COMMIT_SUBJECT_MAX_LENGTH) return subject;
+  return `${subject.slice(0, REGISTER_COMMIT_SUBJECT_MAX_LENGTH - 1)}…`;
+}
+
+function rebuildRegisterViews(paths: RegisterPaths): void {
+  const validation = validateRegisterItemDocs(paths.projectRegisterPath);
+  const eventErrors = validateRegisterEventDocs(
+    paths.projectRegisterPath,
+    paths.registerDateTimeZone,
+  );
+  if (validation.errors.length > 0 || eventErrors.length > 0) {
+    throw new Error(
+      `Invalid register item files:\n${[...validation.errors, ...eventErrors].join("\n")}`,
+    );
+  }
+  writeDerivedViews(paths, "all");
+}
+
+function isGeneratedRegisterPath(repoRoot: string, paths: RegisterPaths, path: string): boolean {
+  const normalized = path.replaceAll("\\", "/");
+  const generatedPrefixes = [paths.generatedPath, paths.controlsGeneratedPath].map(
+    (target) => `${repoRelative(repoRoot, target)}/`,
+  );
+  return (
+    normalized === ".specdojo/doc-index.json" ||
+    generatedPrefixes.some((prefix) => normalized.startsWith(prefix))
+  );
+}
+
+function commitRegisterMutation(
+  repoRoot: string,
+  paths: RegisterPaths,
+  command: string,
+  result: RegisterMutationResult,
+  preexisting: ReadonlySet<string>,
+  message?: string,
+): void {
+  const changed = worktreeStatusPaths(repoRoot).filter(
+    (path) => !preexisting.has(path) && !isGeneratedRegisterPath(repoRoot, paths, path),
+  );
+  if (changed.length === 0) {
+    process.stdout.write(`No register changes to commit for ${result.id}.\n`);
+    return;
+  }
+
+  stageCommitTargets(repoRoot, changed);
+  const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...changed]);
+  if (staged.status === 0) {
+    process.stdout.write(`No register changes to commit for ${result.id}.\n`);
+    return;
+  }
+  if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
+
+  const commitMessage = message?.trim() || defaultRegisterCommitMessage(command, result);
+  if (commitMessage === "") throw new Error("Register commit message must not be empty");
+  gitOutput(repoRoot, ["commit", "-m", commitMessage, "--", ...changed]);
+
+  for (let attempt = 0; attempt < REGISTER_COMMIT_STABILIZATION_ATTEMPTS; attempt++) {
+    const remaining = worktreeStatusPaths(repoRoot).filter((path) => changed.includes(path));
+    if (remaining.length === 0) {
+      const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+      process.stdout.write(`Committed: ${sha} (${result.id})\n`);
+      return;
+    }
+    stageCommitTargets(repoRoot, remaining);
+    gitOutput(repoRoot, ["commit", "--amend", "--no-edit", "--", ...remaining]);
+  }
+
+  const remaining = worktreeStatusPaths(repoRoot).filter((path) => changed.includes(path));
+  if (remaining.length === 0) {
+    const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
+    process.stdout.write(`Committed: ${sha} (${result.id})\n`);
+    return;
+  }
+  throw new Error(
+    `Register commit incomplete: target paths remained dirty after hook stabilization:\n` +
+      remaining.map((path) => `  ${path}`).join("\n"),
+  );
+}
+
+async function runRegisterMutation(
+  command: string,
+  opts: RegisterMutationOptions,
+  mutate: (context: RegisterMutationContext) => RegisterMutationResult,
+): Promise<void> {
+  try {
+    const paths = resolveRegisterPaths(opts);
+    if (!opts.commit || opts.dryRun) {
+      mutate({ paths, assertCommitTargetsClean: () => undefined });
+      return;
+    }
+
+    const repoRoot = specdojoRootDir();
+    if (!paths.executionPath) {
+      throw new Error(`Execution path is not configured for project ${paths.projectId}`);
+    }
+    const mutex = new CrossProcessMutex(
+      execLifecyclePoolPath(paths.executionPath),
+      {
+        actor: registerEventActor(opts),
+        label: `register ${command}`,
+      },
+      {
+        onWait: () =>
+          process.stdout.write(
+            "Waiting for the register lifecycle lock held by another operation\n",
+          ),
+      },
+    );
+
+    await mutex.runExclusive(() => {
+      const preexisting = new Set(worktreeStatusPaths(repoRoot));
+      const assertCommitTargetsClean = (targets: readonly string[]): void => {
+        const overlapping = targets
+          .map((target) => repoRelative(repoRoot, target))
+          .filter((target) => preexisting.has(target));
+        if (overlapping.length === 0) return;
+        throw new Error(
+          `Cannot use --commit because register targets already have uncommitted changes:\n` +
+            overlapping.map((path) => `  ${path}`).join("\n"),
+        );
+      };
+      const result = mutate({ paths, assertCommitTargetsClean });
+      rebuildRegisterViews(paths);
+      commitRegisterMutation(repoRoot, paths, command, result, preexisting, opts.message);
+    });
+  } catch (error) {
+    printCommandError(error);
+  }
 }
 
 // CLI で明示された日時オプションを UTC の秒精度へ正規化する。未指定は undefined を返し、
@@ -2188,11 +2436,13 @@ export function registerRegisterCommands(program: Command): void {
   addCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   addCmd.option("--force", "Overwrite existing ticket file", false);
   addCmd.option("--dry-run", "Print the generated item file without writing", false);
-  addCmd.action((opts) => {
-    try {
-      const paths = resolveRegisterPaths(opts);
-
-      const topic = opts.topic?.trim() || slugify(opts.title);
+  addRegisterCommitOptions(addCmd);
+  addCmd.action(async (opts) => {
+    await runRegisterMutation("add", opts, ({ paths, assertCommitTargetsClean }) => {
+      const explicitTopic = opts.topic?.trim();
+      const topic = explicitTopic || slugify(opts.title);
+      const warnAboutDerivedTopic =
+        explicitTopic === undefined && derivedTopicNeedsWarning(opts.title, topic);
       if (!REGISTER_TOPIC_RE.test(topic)) {
         throw new Error(
           `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
@@ -2248,13 +2498,15 @@ export function registerRegisterCommands(program: Command): void {
           `Would create ${registerEventFilePath(paths.projectRegisterPath, displayId)}:\n` +
             `${appendRegisterEvent(undefined, addEvent)}\n`,
         );
-        return;
+        if (warnAboutDerivedTopic) printDerivedTopicWarning(topic);
+        return { id: displayId, title: opts.title };
       }
 
       if (!opts.force && existsSync(ticketPath)) {
         throw new Error(`Item file already exists (use --force to overwrite): ${ticketPath}`);
       }
       const eventPath = registerEventFilePath(paths.projectRegisterPath, displayId);
+      assertCommitTargetsClean([ticketPath, eventPath]);
       if (!opts.force && existsSync(eventPath)) {
         throw new Error(
           `Register event file already exists (use --force to overwrite): ${eventPath}`,
@@ -2272,9 +2524,9 @@ export function registerRegisterCommands(program: Command): void {
           process.stdout.write(`Generated: ${view.path}\n`);
         }
       }
-    } catch (error) {
-      printCommandError(error);
-    }
+      if (warnAboutDerivedTopic) printDerivedTopicWarning(topic);
+      return { id: displayId, title: opts.title };
+    });
   });
 
   // --- close ---
@@ -2290,11 +2542,14 @@ export function registerRegisterCommands(program: Command): void {
   closeCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   closeCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   closeCmd.option("--dry-run", "Print change without writing", false);
-  closeCmd.action((opts) => {
-    try {
-      const paths = resolveRegisterPaths(opts);
+  addRegisterCommitOptions(closeCmd);
+  closeCmd.action(async (opts) => {
+    await runRegisterMutation("close", opts, (context) => {
+      const { paths } = context;
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
+      assertTerminalOperationAllowed(item, "close");
+      assertRegisterItemCommitTargetsClean(context, view);
 
       const targetStatus =
         opts.status ?? (["decision", "question"].includes(item.type) ? "decided" : "done");
@@ -2326,9 +2581,8 @@ export function registerRegisterCommands(program: Command): void {
         eventReason: opts.reason?.trim() || opts.conclusion?.trim() || `closed as ${targetStatus}`,
       });
       updateTicketStatusForItem({ paths, item, targetStatus: "ready", dryRun: opts.dryRun });
-    } catch (error) {
-      printCommandError(error);
-    }
+      return { id: item.id, title: item.title };
+    });
   });
 
   // --- reject ---
@@ -2343,11 +2597,14 @@ export function registerRegisterCommands(program: Command): void {
   rejectCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   rejectCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   rejectCmd.option("--dry-run", "Print change without writing", false);
-  rejectCmd.action((opts) => {
-    try {
-      const paths = resolveRegisterPaths(opts);
+  addRegisterCommitOptions(rejectCmd);
+  rejectCmd.action(async (opts) => {
+    await runRegisterMutation("reject", opts, (context) => {
+      const { paths } = context;
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
+      assertTerminalOperationAllowed(item, "reject");
+      assertRegisterItemCommitTargetsClean(context, view);
 
       const completedAt =
         parseRegisterTimestampOption(opts.completed, "completed", CELL_NONE) ?? nowUtcTimestamp();
@@ -2373,9 +2630,8 @@ export function registerRegisterCommands(program: Command): void {
         eventReason: opts.reason?.trim() || opts.conclusion?.trim() || "item rejected",
       });
       updateTicketStatusForItem({ paths, item, targetStatus: "deprecated", dryRun: opts.dryRun });
-    } catch (error) {
-      printCommandError(error);
-    }
+      return { id: item.id, title: item.title };
+    });
   });
 
   // --- defer ---
@@ -2386,11 +2642,14 @@ export function registerRegisterCommands(program: Command): void {
   deferCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   deferCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   deferCmd.option("--dry-run", "Print change without writing", false);
-  deferCmd.action((opts) => {
-    try {
-      const paths = resolveRegisterPaths(opts);
+  addRegisterCommitOptions(deferCmd);
+  deferCmd.action(async (opts) => {
+    await runRegisterMutation("defer", opts, (context) => {
+      const { paths } = context;
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
+      assertTerminalOperationAllowed(item, "defer");
+      assertRegisterItemCommitTargetsClean(context, view);
 
       const updated: PjrItem = {
         ...item,
@@ -2406,9 +2665,8 @@ export function registerRegisterCommands(program: Command): void {
         eventActor: registerEventActor(opts),
         eventReason: opts.reason?.trim() || opts.conclusion?.trim() || "item deferred",
       });
-    } catch (error) {
-      printCommandError(error);
-    }
+      return { id: item.id, title: item.title };
+    });
   });
 
   // --- reopen ---
@@ -2423,11 +2681,13 @@ export function registerRegisterCommands(program: Command): void {
   reopenCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   reopenCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   reopenCmd.option("--dry-run", "Print change without writing", false);
-  reopenCmd.action((opts) => {
-    try {
-      const paths = resolveRegisterPaths(opts);
+  addRegisterCommitOptions(reopenCmd);
+  reopenCmd.action(async (opts) => {
+    await runRegisterMutation("reopen", opts, (context) => {
+      const { paths } = context;
       const view = loadItemForUpdate(paths, opts.id, "require-terminal");
       const item = view.item;
+      assertRegisterItemCommitTargetsClean(context, view);
 
       const validReopenStatuses = ["open", "in-progress", "waiting", "review"];
       if (!validReopenStatuses.includes(opts.status)) {
@@ -2445,9 +2705,8 @@ export function registerRegisterCommands(program: Command): void {
         eventActor: registerEventActor(opts),
         eventReason: opts.reason?.trim() || `reopened as ${opts.status}`,
       });
-    } catch (error) {
-      printCommandError(error);
-    }
+      return { id: item.id, title: item.title };
+    });
   });
 
   // --- start ---
@@ -2457,11 +2716,13 @@ export function registerRegisterCommands(program: Command): void {
   startCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   startCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   startCmd.option("--dry-run", "Print change without writing", false);
-  startCmd.action((opts) => {
-    try {
-      const paths = resolveRegisterPaths(opts);
+  addRegisterCommitOptions(startCmd);
+  startCmd.action(async (opts) => {
+    await runRegisterMutation("start", opts, (context) => {
+      const { paths } = context;
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
+      assertRegisterItemCommitTargetsClean(context, view);
       const updated: PjrItem = { ...item, status: "in-progress" };
       applyItemUpdate({
         paths,
@@ -2472,9 +2733,8 @@ export function registerRegisterCommands(program: Command): void {
         eventActor: registerEventActor(opts),
         eventReason: opts.reason?.trim() || "work started",
       });
-    } catch (error) {
-      printCommandError(error);
-    }
+      return { id: item.id, title: item.title };
+    });
   });
 
   // --- wait ---
@@ -2485,14 +2745,16 @@ export function registerRegisterCommands(program: Command): void {
   waitCmd.option("--conclusion <text>", "Deprecated alias for --reason");
   waitCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   waitCmd.option("--dry-run", "Print change without writing", false);
-  waitCmd.action((opts) => {
-    try {
+  addRegisterCommitOptions(waitCmd);
+  waitCmd.action(async (opts) => {
+    await runRegisterMutation("wait", opts, (context) => {
       if (opts.reason !== undefined && opts.conclusion !== undefined) {
         throw new Error("Specify only one of --reason or --conclusion");
       }
-      const paths = resolveRegisterPaths(opts);
+      const { paths } = context;
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
+      assertRegisterItemCommitTargetsClean(context, view);
       const reason = (opts.reason ?? opts.conclusion)?.trim();
       if (reason !== undefined && reason === "") {
         throw new Error("Waiting reason must not be empty");
@@ -2513,9 +2775,8 @@ export function registerRegisterCommands(program: Command): void {
         eventActor: registerEventActor(opts),
         eventReason: reason || "item waiting",
       });
-    } catch (error) {
-      printCommandError(error);
-    }
+      return { id: item.id, title: item.title };
+    });
   });
 
   // --- review ---
@@ -2525,11 +2786,13 @@ export function registerRegisterCommands(program: Command): void {
   reviewCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   reviewCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   reviewCmd.option("--dry-run", "Print change without writing", false);
-  reviewCmd.action((opts) => {
-    try {
-      const paths = resolveRegisterPaths(opts);
+  addRegisterCommitOptions(reviewCmd);
+  reviewCmd.action(async (opts) => {
+    await runRegisterMutation("review", opts, (context) => {
+      const { paths } = context;
       const view = loadItemForUpdate(paths, opts.id, "require-active");
       const item = view.item;
+      assertRegisterItemCommitTargetsClean(context, view);
       const updated: PjrItem = { ...item, status: "review" };
       applyItemUpdate({
         paths,
@@ -2540,9 +2803,8 @@ export function registerRegisterCommands(program: Command): void {
         eventActor: registerEventActor(opts),
         eventReason: opts.reason?.trim() || "ready for review",
       });
-    } catch (error) {
-      printCommandError(error);
-    }
+      return { id: item.id, title: item.title };
+    });
   });
 
   // --- update ---
@@ -2555,6 +2817,7 @@ export function registerRegisterCommands(program: Command): void {
   updateCmd.option("--owner <owner>", "Update owner or role");
   updateCmd.option("--due <date>", "Update due date (YYYY-MM-DD, -, or _TODO_)");
   updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
+  updateCmd.option("--block-reason <text>", "Update the waiting reason or use - to remove it");
   updateCmd.option(
     "--topic <topic>",
     "Update the topic slug in the ticket filename and document ID",
@@ -2562,9 +2825,10 @@ export function registerRegisterCommands(program: Command): void {
   updateCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   updateCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   updateCmd.option("--dry-run", "Print change without writing", false);
-  updateCmd.action((opts) => {
-    try {
-      const paths = resolveRegisterPaths(opts);
+  addRegisterCommitOptions(updateCmd);
+  updateCmd.action(async (opts) => {
+    await runRegisterMutation("update", opts, (context) => {
+      const { paths } = context;
       const view = loadItemForUpdate(paths, opts.id);
       const item = view.item;
 
@@ -2575,11 +2839,12 @@ export function registerRegisterCommands(program: Command): void {
         "owner",
         "due",
         "conclusion",
+        "blockReason",
         "topic",
       ].some((k) => opts[k] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --topic)",
+          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --block-reason, --topic)",
         );
       }
 
@@ -2600,6 +2865,24 @@ export function registerRegisterCommands(program: Command): void {
           `Invalid topic: "${topic}". Must use lowercase letters, numbers, and single hyphens`,
         );
       }
+      const blockReason = opts.blockReason?.trim();
+      if (blockReason !== undefined && blockReason === "") {
+        throw new Error("Block reason must not be empty; use - to remove it");
+      }
+      if (blockReason !== undefined && blockReason !== "-" && item.status !== "waiting") {
+        throw new Error(
+          `Cannot set block reason for ${item.id}: status is "${item.status}" (expected "waiting"). Use - to remove it.`,
+        );
+      }
+      const blockReasonUpdates: RegisterItemFieldUpdates | undefined =
+        blockReason === undefined
+          ? undefined
+          : {
+              block_reason:
+                blockReason === "-"
+                  ? REMOVE_REGISTER_ITEM_FIELD
+                  : inlineCodeAnglePlaceholders(blockReason),
+            };
 
       const updated: PjrItem = {
         ...item,
@@ -2614,19 +2897,27 @@ export function registerRegisterCommands(program: Command): void {
         ? ticketTopicFromFilename(opts.id, view.ticketFilename)
         : undefined;
       if (topic !== undefined && topic !== currentTopic) {
+        const retopicPlan = planRetopic(paths, opts.id, topic);
+        context.assertCommitTargetsClean([
+          retopicPlan.ticketRename.from,
+          ...retopicPlan.writes.map((write) => write.path),
+          registerEventFilePath(paths.projectRegisterPath, item.id),
+        ]);
         retopicPjrItem({
           paths,
           id: opts.id,
           topic,
           updated,
           dryRun: opts.dryRun,
+          ...(blockReasonUpdates ? { fieldUpdates: blockReasonUpdates } : {}),
           ...(opts.title !== undefined ? { title: opts.title } : {}),
           ...(opts.description !== undefined ? { description: opts.description } : {}),
           actor: registerEventActor(opts),
           reason: opts.reason?.trim() || "",
         });
-        return;
+        return { id: item.id, title: updated.title };
       }
+      assertRegisterItemCommitTargetsClean(context, view);
       applyItemUpdate({
         paths,
         view,
@@ -2635,13 +2926,13 @@ export function registerRegisterCommands(program: Command): void {
         action: "fields updated",
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
+        ...(blockReasonUpdates ? { fieldUpdates: blockReasonUpdates } : {}),
         eventAction: "update",
         eventActor: registerEventActor(opts),
         eventReason: opts.reason?.trim() || "fields updated",
       });
-    } catch (error) {
-      printCommandError(error);
-    }
+      return { id: item.id, title: updated.title };
+    });
   });
 
   // --- migrate ---
@@ -2837,9 +3128,20 @@ export function registerRegisterCommands(program: Command): void {
   renumberCmd.option("--by <actor>", "Actor recorded in the append-only register event");
   renumberCmd.option("--reason <text>", "Reason recorded in the append-only register event");
   renumberCmd.option("--dry-run", "Print planned changes without writing", false);
-  renumberCmd.action((opts) => {
-    try {
-      const paths = resolveRegisterPaths(opts);
+  addRegisterCommitOptions(renumberCmd);
+  renumberCmd.action(async (opts) => {
+    await runRegisterMutation("renumber", opts, (context) => {
+      const { paths } = context;
+      const source = loadItemForUpdate(paths, opts.id);
+      const renumberPlan = planRenumber(paths, opts.id, opts.to);
+      context.assertCommitTargetsClean([
+        ...(renumberPlan.ticketRename
+          ? [renumberPlan.ticketRename.from, renumberPlan.ticketRename.to]
+          : []),
+        ...renumberPlan.writes.map((write) => write.path),
+        registerEventFilePath(paths.projectRegisterPath, opts.id),
+        registerEventFilePath(paths.projectRegisterPath, opts.to),
+      ]);
       renumberPjrItem({
         paths,
         fromId: opts.id,
@@ -2848,8 +3150,7 @@ export function registerRegisterCommands(program: Command): void {
         actor: registerEventActor(opts),
         reason: opts.reason,
       });
-    } catch (error) {
-      printCommandError(error);
-    }
+      return { id: opts.to, title: source.item.title };
+    });
   });
 }

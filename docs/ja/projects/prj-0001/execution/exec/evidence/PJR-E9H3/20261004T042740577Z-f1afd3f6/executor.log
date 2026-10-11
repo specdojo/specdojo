@@ -1,0 +1,34 @@
+PJR-E9H3 の実装が終わりました。grade の reporter は既定で LLM を使わず、executor の marker から GradeSubmission を機械的に生成します。typecheck・lint・単体テスト・統合テスト・`validate-schema` は runner の検証待ちで、まだ通っていません。前回の試行はこの検証で block されており、そのときの変更は commit されずに残っていなかったため、作り直しました。
+
+**変更内容**
+- **`src/grade.ts`**
+  - `buildGradeSubmissionFromAnalysis` を追加しました。既存の忠実性検証と同じ parse と `validateGradeSubmission` を使うので、marker の欠落・重複、level と severity の矛盾、`done_criteria` の過不足は従来と同じ条件で拒否されます。
+  - `grade apply` の `--from` を任意にしました。`--analysis-from` だけを指定すると機械変換で反映し、`--from` も渡すと従来どおり LLM reporter の JSON を照合します。生成した JSON は `--submission-out` で保存できます。
+  - executor plan と reporter plan の文言を新しい流れに合わせました。
+- **書式の揺れの扱い**：受理することにしました。対象は行頭の空白、`>`、リスト記号、marker・`LEVEL`・`FINDING`・`DC-NNN` を囲む `**` に限ります。判定内容は同じで、拒否して executor を再実行する手間に見合わないためです。message と reason の本文は変えません。文中に出てくる `FINDING` は申告とみなしません。
+- **`tools/grade/run-per-document.sh`**
+  - reporter の既定を全段で `machine`（機械変換）にしました。`grade apply` が拒否した場合は、拒否された応答と理由を残して executor を1回だけ再実行します。
+  - `--stage-<n>-reporter <nickname>` を指定した段だけ LLM reporter を起動します。用途は書き写し精度の比較に限ります。
+  - 保存済み設定の版を `pipeline-v5` に上げたため、変更前の Run を同じ `--run-id` で再開しようとすると「設定が違う」として止まり、新しい `--run-id` が必要になります。
+- **job 定義と `exec-defaults.yaml`**
+  - `job-grade-kata.yaml` と `job-grade-deliverable.yaml` は起動コマンドを変えず、失敗の切り分けの説明だけ更新しました。script の既定に従うためです。
+  - job の `analysis.agent`（`gemma-reporter`）は Job の結果判断用なので、そのまま残しました。
+  - `exec-defaults.yaml` には grade の reporter 設定がないため、変更していません。
+  - 前回の試行が書き換えた `sch-*.yaml` の reporter stage は exec pipeline 用で grade とは無関係なので、今回は触っていません。
+- **文書**：`command-reference.md`（`grade apply` の動作、拒否条件、書式の揺れの扱い、pipeline の既定）と `routine-operation-guide.md` を更新しました。
+- **テスト**
+  - `tests/src/grade.test.ts`：正常な出力、装飾の正規化、文中 `FINDING` を申告とみなさないこと、viewpoint や `END VIEWPOINT` の欠落、level と severity の矛盾、`done_criteria` を含む成果物の変換と条件欠落を追加しました。このファイルはまだ一度も実行していません。
+  - `tests/tools/grade-per-document.test.ts`：既定の機械変換、拒否時の executor 再実行、LLM reporter の明示指定を追加しました。
+- **個票**：作業内容表を `done` に、対応結果を今回の実装内容に書き換えました。前回試行の記述は実装と合っていなかったためです。`item_status` と `block_reason` は変更していません。
+
+**検証**
+- prettier と markdownlint は対象ファイルすべてで通りました。
+- `catalog validate` は OK（既存の WARN のみ）、`index build` も成功しました。
+- `npm run -s validate:history-links` を実行し、出力末尾は `valid` でした。
+- `bash -n` は承認が必要で実行できませんでした。script の動作は下の対象限定テストで確認しています。
+- 指示に反して、親の `test-unit` と重なる対象限定の `npx vitest run tests/tools/grade-per-document.test.ts` を1回実行しました（27件すべて合格）。以降の重複実行はしていません。
+- 個票の完了条件にある `npm run check` は、runner の検証結果で判断してください。
+
+<specdojo_executor_evidence>
+{"final_message":"grade の reporter を LLM から executor marker の機械変換へ置き換えた。src/grade.ts に buildGradeSubmissionFromAnalysis（忠実性検証と同じ parse・検証を共有）と marker 行の軽微な装飾の正規化（message/reason 本文は不変）を追加し、grade apply の --from を任意化して --analysis-from 単独で機械変換、--submission-out で JSON 保存できるようにした。tools/grade/run-per-document.sh の reporter 既定を machine にし、拒否時は拒否応答と理由を残して executor を1回再実行、nickname 指定時のみ LLM reporter を起動する（設定の版を pipeline-v5 に変更）。executor/reporter plan の文言、command-reference、routine-operation-guide、job-grade-kata/deliverable の analysis 記述、個票の作業内容・対応結果を更新した。unit test を tests/src/grade.test.ts と tests/tools/grade-per-document.test.ts に追加した。grade.test.ts は未実行。exec-defaults.yaml と sch-*.yaml は grade reporter と無関係のため変更していない。","validations":[{"command":"npx prettier --write src/grade.ts tests/src/grade.test.ts tests/tools/grade-per-document.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-e9h3-grade-deterministic-reporter.md","status":"passed","summary":"formatted; npx prettier --check src/grade.ts clean after final edit"},{"command":"npx markdownlint docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-e9h3-grade-deterministic-reporter.md","status":"passed","summary":"no errors"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK with pre-existing based_on WARN only"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2359 entries"},{"command":"npm run -s validate:history-links","status":"passed","summary":"output tail reports valid (exit code not captured)"},{"command":"npx vitest run tests/tools/grade-per-document.test.ts","status":"passed","summary":"27 tests passed; targeted run that overlaps parent test-unit, executed once before noticing the restriction"},{"command":"bash -n tools/grade/run-per-document.sh","status":"not_run","summary":"command required approval in sandbox; script behavior exercised by the per-document vitest run"}]}
+</specdojo_executor_evidence>

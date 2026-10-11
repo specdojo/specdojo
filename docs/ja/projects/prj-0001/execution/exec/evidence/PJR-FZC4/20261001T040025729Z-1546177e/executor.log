@@ -1,0 +1,38 @@
+PJR-5822 の個票に調査結果を書きました。決定はしておらず、「決定内容」「採択理由」「承認」は `_TODO_` のまま残しています。コード・設定・ガイドは変更していません。
+
+**PJR-5822 に追加した内容**
+- **変更箇所の一覧**：完了条件の 6 領域について、変更が要る箇所をファイルと関数の単位でまとめました。現状と必要な変更を並べています。
+  - worktree の作成・撤去・命名
+  - agent の作業ディレクトリと各 provider の書き込み許可
+  - commit 対象の算出と保護設定の検査
+  - 親検証の実行場所
+  - 統合・再開・pipeline state
+  - `targets`・`paths` の解決と doc index
+- **論点ごとの比較**：8 つの論点それぞれに 3 案を、利点と懸念を添えて表にしました。推奨案とその理由は表の下に書いています。推奨案の要点は次のとおりです。
+  - 設計は N 個のリポジトリに対応させ、v0.3.0 で動作を確かめるのはプロダクト 1 つまでとする。
+  - リポジトリは `specdojo.config.json` の project で宣言する。
+  - `targets`・`paths` は `<repo>:<path>` の書式で指定する。
+  - worktree は `<task-id>/<repo>/` に置き、agent の `cwd` はプロジェクト側の worktree とする。
+  - 統合はプロダクトを先にし、リポジトリごとの統合状態を pipeline state に記録する。
+  - 統合が途中で失敗したら `item_status` を `waiting` に戻す。
+  - 親検証は `{ id, repo }` の形でリポジトリに割り当てる。
+  - `Refs:` は runner が付ける。
+- **単一リポジトリ構成の互換性**：リポジトリの宣言がない project は、今の動作のまま変わらない方法を書きました。
+- **todo の実施順**：HQBK → 98G4 → V96B と 0WAA（並行可）→ 30SW → 69VP を提案しました。分担については次の 2 点を変えるよう提案しています。
+  - 保護設定・Git 状態の検査と evidence の記録を PJR-98G4 に含める。
+  - プロジェクト側の merge commit の `Refs:` を修飾形に直す作業を PJR-30SW に含める。今の runner は修飾なしの `Refs: <item-id>` を付けています。
+- 関連ドキュメントの欄も埋めました。リンク先の ID はすべて doc index で見つかることを確かめています。
+
+**PJR-FZC4 の個票**：作業内容の 3 行を done にし、対応結果に実施内容・成果物・推奨案の要旨・残課題を書きました。登録簿の項目状態（`item_status`）は変えていません。
+
+**確認できていない点**：codex CLI で書き込み先を追加で指定できるか、opencode で作業ディレクトリ外への書き込み許可をタスクの worktree だけに絞れるかは、まだ確かめていません。PJR-5822 の表では codex を `_ASSUMPTION_` として明記し、opencode は確かめる作業として PJR-98G4 に回しました。
+
+**検証**：2 ファイルとも prettier と markdownlint を通りました。`catalog validate`・`index build`・`register build`・`validate:history-links` もエラーはありません（`catalog validate` の警告は、今回触っていないカタログ側に元からあるものです）。
+
+変更したファイル：
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-5822-multi-repo-item-design.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-fzc4-multi-repo-design-investigation.md`
+
+<specdojo_executor_evidence>
+{"final_message":"Wrote the multi-repo investigation into the PJR-5822 ticket: file/function-level change inventory across 6 areas, 8 decision points with 3 options each plus recommendations, single-repo compatibility, and todo order/allocation proposals; decision/approval sections left as _TODO_. Updated PJR-FZC4 work table and result section. No code/config/guide changes; item_status untouched.","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-5822-multi-repo-item-design.md docs/ja/projects/prj-0001/controls/project-register/pjr-fzc4-multi-repo-design-investigation.md","status":"passed","summary":"formatted 2 files"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-5822-multi-repo-item-design.md docs/ja/projects/prj-0001/controls/project-register/pjr-fzc4-multi-repo-design-investigation.md","status":"passed","summary":"no errors"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"OK; only pre-existing based_on warnings unrelated to the edited files"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2266 entries; all wikilink ids referenced in the edits resolve"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"generated views rebuilt with no tracked diff"},{"command":"npm run -s validate:history-links","status":"passed","summary":"all files valid"}]}
+</specdojo_executor_evidence>

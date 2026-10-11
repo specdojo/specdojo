@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cccd3f5cf15646179f6a4eb458094b7a
+  ts: "2026-10-04T07:26:49Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 並列の register 実行で、失敗した項目の遷移が他の項目の統合を妨げる
+    - field: description
+      from: ""
+      to: exec run --register A B --worktree --parallel 2 で A が親検証に失敗すると、A の waiting への遷移と plan・result がメインの作業ツリーに未 commit のまま残り、B の統合の git merge が「ローカルの変更が上書きされる」で失敗する（2026-10-04 の PJR-DAW8 と PJR-KEQQ）。resume では2件の統合 commit が同時に走り、pre-commit の全テストが並行して失敗した。直列に resume し直すと成功した
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_3ab5afaf71b04194b066e73d291f450b
+  ts: "2026-10-04T08:39:04Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cccd3f5cf15646179f6a4eb458094b7a
+- v: 1
+  id: reg_90a3d720d1064b4e9d1723360774dad8
+  ts: "2026-10-04T08:55:05Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため、完了条件を満たしていません。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため、完了条件を満たしていません。"
+  previous_event_id: reg_3ab5afaf71b04194b066e73d291f450b
+- v: 1
+  id: reg_354e75e1a2de4bcca3a0029f3f0a395c
+  ts: "2026-10-04T08:57:06Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しているため、完了条件を満たしていません。"
+      to: "-"
+  previous_event_id: reg_90a3d720d1064b4e9d1723360774dad8
+- v: 1
+  id: reg_afa08eb477404423b634ee6798bcc7b5
+  ts: "2026-10-04T09:03:55Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_354e75e1a2de4bcca3a0029f3f0a395c
+- v: 1
+  id: reg_9872010ef95647c6b41e41dfcbb1299d
+  ts: "2026-10-05T21:58:45Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 並列実行での失敗時の挙動を実地で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: 並列実行で片方が失敗しても失敗の遷移をそれぞれ commit し、他の項目の統合を妨げないようにした。2026-10-05 の第1陣（3並列）で、3件とも失敗した際に遷移が個別に commit され統合が妨げられないことを実地で確認した
+  previous_event_id: reg_afa08eb477404423b634ee6798bcc7b5

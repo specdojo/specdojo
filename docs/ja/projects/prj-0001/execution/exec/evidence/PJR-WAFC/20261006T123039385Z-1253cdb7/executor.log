@@ -1,0 +1,11 @@
+実装を完了しました。
+
+- 翻訳指示で、新しいバッククォートの追加を禁止し、通常の英語句を日本語へ訳すよう明記。
+- インラインコードを多重集合で照合し、追加分を `extra-inline-code` として拒否。
+- 拒否・正常系のテスト、関連文書、個票の対応結果を更新。
+- result ファイルは executor 指示どおり未編集です。
+- unit test、typecheck、lint は親 runner の検証に委ねています。
+
+<specdojo_executor_evidence>
+{"final_message":"grade finding翻訳のバッククォート追加防止、完全一致検証、テスト・関連文書更新を完了","validations":[{"command":"npx prettier --write src/grade-result.ts src/grade.ts tests/src/grade-result.test.ts tests/src/grade.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md docs/ja/projects/prj-0001/controls/project-register/pjr-jwxk-grade-translation-code-tokens.md docs/ja/projects/prj-0001/controls/project-register/pjr-vqb5-agent-grade-comparison.md docs/ja/projects/prj-0001/controls/project-register/pjr-wafc-grade-translation-no-added-code.md","status":"passed","summary":"変更したTypeScript・テスト・Markdownを整形"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"既存の未作成文書警告のみでcatalog検証成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2417件の文書索引を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

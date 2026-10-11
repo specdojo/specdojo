@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c4a9957e4e0244d3a3f54454fcdeaf01
+  ts: "2026-09-27T03:07:17Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-09-27 の PJR-HG98 再開で develop の成果を消す merge が作られたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: waiting からの再開前の develop 取り込みが統合時に他項目の成果を消す
+    - field: description
+      from: ""
+      to: syncExecBranchAfterWait は develop を exec branch へ -s ours で merge する。develop が exec branch の作成後に進んでいると、統合 merge がその差分を exec branch 側の削除とみなし、他項目の成果を消す。PJR-HG98 の再開で発生し、競合で停止したため実害はなかった
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_457f3b2a52cd4b4bb95bf01d113bc7d1
+  ts: "2026-09-27T06:26:50Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c4a9957e4e0244d3a3f54454fcdeaf01
+- v: 1
+  id: reg_fddef991c6184b888f4a8eefcce54c40
+  ts: "2026-09-27T06:37:44Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner validation `test-integration` (`npm run test:integration`) が failed となったため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner validation `test-integration` (`npm run test:integration`) が failed となったため。"
+  previous_event_id: reg_457f3b2a52cd4b4bb95bf01d113bc7d1
+- v: 1
+  id: reg_f99acbe792a444a4b7965ed700fd5137
+  ts: "2026-09-27T07:12:50Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_fddef991c6184b888f4a8eefcce54c40
+- v: 1
+  id: reg_2093da750d1d489eb148ddeb9a2a25fd
+  ts: "2026-09-27T07:32:39Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f99acbe792a444a4b7965ed700fd5137
+- v: 1
+  id: reg_99e52a19fe4444a682eae22bef84dc67
+  ts: "2026-09-27T07:46:00Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor の 2 回目の実行結果を orchestrator が評価し、runner の検証の全通過と統合で削除がないことを確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: syncExecBranchAfterWait の -s ours を通常 merge に改め、記帳ファイルの競合だけ統合先側で解決し、それ以外の競合は中断して worktree を保持する。ブランチ作成後に統合先へ入った成果が再開・統合後も残ることを統合テストで確認した
+  previous_event_id: reg_2093da750d1d489eb148ddeb9a2a25fd

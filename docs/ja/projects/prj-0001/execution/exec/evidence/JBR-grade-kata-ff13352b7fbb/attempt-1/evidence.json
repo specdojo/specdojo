@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-ff13352b7fbb",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-04T21:00:10.114Z",
+    "completed_at": "2026-10-04T21:19:26.260Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-action-96f0bab377-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-check-de77e19930-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-do-96363482bc-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-onboarding-61a4d6c9ef-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-overview-4f5ff02b38-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-deliverable-20176468f7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-register-7fa05372dd-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-execution-225183781b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-onboarding-61a4d6c9efa7.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-action.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-check.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-do.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-onboarding.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-overview.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-register.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-execution.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-cmd-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.mip-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.mm-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.mtp-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-availability-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-integrity-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-maintainability-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-operations-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-performance-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-reliability-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-security-safety-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-usability-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ntp-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-orchestrator-0888f9bb685a.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-plan-53594c974845.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-14bb240d0b61.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-ff13352b7fbb.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 36,
+    "summary": ".../cdfd-action-96f0bab377-done-criteria.yaml      |   6 +-\n .../cdfd-check-de77e19930-done-criteria.yaml       |   4 +-\n .../criteria/cdfd-do-96363482bc-done-criteria.yaml |  11 +-\n .../cdfd-onboarding-61a4d6c9ef-done-criteria.yaml  |   4 +-\n .../cdfd-overview-4f5ff02b38-done-criteria.yaml    |   4 +-\n ...fd-uc-deliverable-20176468f7-done-criteria.yaml |   2 +-\n .../cdfd-uc-register-7fa05372dd-done-criteria.yaml |   2 +-\n .../cdsd-execution-225183781b-done-criteria.yaml   |   8 +-\n .../pipeline/cdfd-onboarding-61a4d6c9efa7.json     |  14 --\n .../execution/grade/results/cdfd-action.yaml       | 166 ++++++++++------\n .../execution/grade/results/cdfd-check.yaml        | 174 ++++++++++------\n .../prj-0001/execution/grade/results/cdfd-do.yaml  | 103 +++++++---\n .../execution/grade/results/cdfd-onboarding.yaml   |   4 +-\n .../execution/grade/results/cdfd-overview.yaml     |  28 +--\n .../grade/results/cdfd-uc-deliverable.yaml         |   4 +-\n .../execution/grade/results/cdfd-uc-register.yaml  |   6 +-\n .../execution/grade/results/cdsd-execution.yaml    |  96 +++++----\n .../grade/results/specdojo.ifx-cmd-recipe.yaml     |  14 +-\n .../grade/results/specdojo.itc-rulebook.yaml       |  77 ++++++-\n .../grade/results/specdojo.mip-index-rulebook.yaml |  76 +++++--\n .../grade/results/specdojo.mm-rulebook.yaml        | 221 ++++++++++++++++++---\n .../grade/results/specdojo.mtp-rulebook.yaml       |  75 ++++++-\n .../specdojo.nfr-availability-rulebook.yaml        |  73 ++++++-\n .../grade/results/specdojo.nfr-index-rulebook.yaml |  84 ++++++--\n .../results/specdojo.nfr-integrity-rulebook.yaml   |  79 ++++++--\n .../specdojo.nfr-maintainability-rulebook.yaml     |  90 +++++++--\n .../results/specdojo.nfr-operations-rulebook.yaml  |  83 ++++++--\n .../results/specdojo.nfr-performance-rulebook.yaml |  95 ++++++++-\n .../results/specdojo.nfr-reliability-rulebook.yaml |  83 +++++++-\n .../specdojo.nfr-security-safety-rulebook.yaml     | 115 ++++++++---\n .../results/specdojo.nfr-usability-rulebook.yaml   |  79 ++++++--\n .../grade/results/specdojo.ntp-rulebook.yaml       | 159 +++++++++++++--\n 32 files changed, 1577 insertions(+), 462 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-ff13352b7fbb --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-ff13352b7fbb/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-ff13352b7fbb' \"$g…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-ff13352b7fbb --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-ff13352b7fbb/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-ff13352b7fbb' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-ff13352b7fbb/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-ff13352b7fbb/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.3.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-ff13352b7fbb project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-ff13352b7fbb\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ndocument start: docs/ja/specdojo/recipes/ifx-cmd-recipe.md\ndocument complete: docs/ja/specdojo/recipes/ifx-cmd-recipe.md\ndocument start: docs/ja/specdojo/rulebooks/itc-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/itc-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/mip-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/mip-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/mm-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/mm-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/mtp-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/mtp-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/nfr-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/nfr-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/ntp-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/ntp-rulebook.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-ff13352b7fbb/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-04T21:02:44Z\tdocs/ja/specdojo/recipes/ifx-cmd-recipe.md\t1\tpassed\t144\tneeds-work\t94\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:04:07Z\tdocs/ja/specdojo/rulebooks/itc-rulebook.md\t1\tpassed\t81\tneeds-work\t94\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:05:13Z\tdocs/ja/specdojo/rulebooks/mip-index-rulebook.md\t1\tpassed\t64\tneeds-work\t96\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:06:42Z\tdocs/ja/specdojo/rulebooks/mm-rulebook.md\t1\tpassed\t87\tpass\t77\t22\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:07:39Z\tdocs/ja/specdojo/rulebooks/mtp-rulebook.md\t1\tpassed\t55\tneeds-work\t94\t1\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:08:29Z\tdocs/ja/specdojo/rulebooks/nfr-availability-rulebook.md\t1\tpassed\t47\tneeds-work\t96\t1\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:09:50Z\tdocs/ja/specdojo/rulebooks/nfr-index-rulebook.md\t1\tpassed\t78\tneeds-work\t89\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:10:55Z\tdocs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md\t1\tpassed\t63\tneeds-work\t94\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:12:15Z\tdocs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md\t1\tpassed\t78\tneeds-work\t95\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:13:09Z\tdocs/ja/specdojo/rulebooks/nfr-operations-rulebook.md\t1\tpassed\t52\tneeds-work\t93\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:14:11Z\tdocs/ja/specdojo/rulebooks/nfr-performance-rulebook.md\t1\tpassed\t60\tneeds-work\t92\t4\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:15:44Z\tdocs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md\t1\tpassed\t92\tneeds-work\t93\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:16:54Z\tdocs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md\t1\tpassed\t68\tneeds-work\t84\t6\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:18:03Z\tdocs/ja/specdojo/rulebooks/nfr-usability-rulebook.md\t1\tpassed\t67\tneeds-work\t94\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-04T21:19:25Z\tdocs/ja/specdojo/rulebooks/ntp-rulebook.md\t1\tpassed\t80\tneeds-work\t67\t16\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-ff13352b7fbb/attempt-1/command.stdout.log",
+      "bytes": 4913,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-ff13352b7fbb/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

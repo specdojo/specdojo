@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-EZAF",
+  "run_id": "20261007T205339983Z-8e07b321",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-07T20:53:39.983Z",
+    "completed_at": "2026-10-07T20:58:52.281Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ezaf.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ezaf-devcontainer-template-codex-sandbox.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/devcontainer-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/devcontainer-scaffold.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../controls/project-register/events/pjr-ezaf.yaml     | 16 ++++++++++++++++\n .../pjr-ezaf-devcontainer-template-codex-sandbox.md    | 15 +++++++++------\n docs/ja/specdojo/references/command-reference.md       |  2 ++\n src/devcontainer-scaffold.ts                           |  4 ++++\n tests/devcontainer-scaffold.test.ts                    | 18 ++++++++++++++++++\n 5 files changed, 49 insertions(+), 6 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/devcontainer-scaffold.ts tests/devcontainer-scaffold.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-ezaf-devcontainer-template-codex-sandbox.md",
+      "status": "passed",
+      "summary": "対象4ファイルは整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "runDevcontainerScaffold smoke test for codex-project and claude-project",
+      "status": "passed",
+      "summary": "Codex 出力は runArgs=[\"--security-opt=seccomp=unconfined\"]、Claude のみの出力は runArgs なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "終了コード0。既存の欠落文書に関する警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2444件の文書インデックスを生成。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check",
+      "status": "not_run",
+      "summary": "重複実行を避け、typecheck・lint・schema・unit・integration は親 runner に委任。catalog と history-links は executor で実行済み。"
+    },
+    {
+      "source": "executor",
+      "command": "devcontainer up --workspace-folder . && devcontainer exec --workspace-folder . bash -lc 'command -v bwrap || echo \"no system bwrap\"; codex --version; codex sandbox -- sh -c \"ls -d /; touch /etc/x\"'",
+      "status": "requires_human",
+      "summary": "Docker と Dev Container CLI がないため、Host Mac で bubblewrap の有無、sandbox 起動、/etc への書き込み拒否を確認する。"
+    },
+    {
+      "source": "executor",
+      "command": "devcontainer exec --workspace-folder . bash -lc 'codex exec --sandbox workspace-write --skip-git-repo-check \"Run pwd with the shell and report the result.\"'",
+      "status": "requires_human",
+      "summary": "認証済み Codex と利用枠が必要なため、Host Mac の生成コンテナで実行確認する。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EZAF\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/tools/open-agent-worktree.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 122\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/deliverable-trash.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 91\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\n8.json: valid\n\n> specdojo@0.3.0 validate:schema:rulebook-enums\n> node packages/docs-lint/bin/specdojo-docs-lint.js rulebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EZAF\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/tools/grade-per-document.test.ts \u001b[2m(\u001b[22m\u001b[2m31 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 8166\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m runs all three stages for one document and skips it on resume \u001b[33m 544\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m routes deliverables through de\n… output omitted …\n-svg.test.ts\u001b[2m > \u001b[22m\u001b[2mMermaid SVG generation basics\u001b[2m > \u001b[22m\u001b[2mremoves a missing Markdown entry from the manifest without throwing\n\u001b[22m\u001b[39m[mermaid] skipping missing or generated Markdown: ja/removed.md\n\n\u001b[90mstderr\u001b[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts\u001b[2m > \u001b[22m\u001b[2mMermaid SVG generation basics\u001b[2m > \u001b[22m\u001b[2mignores generated Markdown and removes any stale manifest entry\n\u001b[22m\u001b[39m[mermaid] skipping missing or generated Markdown: ja/generated/invalid.md"
+    }
+  ],
+  "final_message": "Codex provider 指定時だけ `seccomp=unconfined` を生成する実装、unit test、コマンドリファレンス、PJR 個票を更新し、生成 JSON の条件分岐を確認した。Host Mac 上の devcontainer 実機確認、ベースイメージの bubblewrap 有無、実際の Codex sandbox／exec は未検証であり、人による確認が必要。result と evidence は編集していない。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EZAF/20261007T205339983Z-8e07b321/executor.log",
+      "bytes": 2600,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EZAF/20261007T205339983Z-8e07b321/parent-validation-attempt-1-lint-md.log",
+      "bytes": 370,
+      "truncated": false
+    }
+  ]
+}

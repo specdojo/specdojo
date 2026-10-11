@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f8ad3eb3f6cf41c1ac9a3bb4b2be54b9
+  ts: "2026-10-10T21:23:46Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-ME20 の作業 4 は枠を使い切った状態でしか確かめられないため切り出す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Antigravity 経由の claude と GPT が各社直の利用枠と別勘定かを実測する
+    - field: description
+      from: ""
+      to: agy CLI には利用枠を確認するコマンドがないため、Anthropic 直か OpenAI 直の枠を使い切った状態で agy-claude-* / agy-gpt-executor を起動し、実行できるかを確かめる。別勘定なら利用制限で exec が止まったときの退避経路にする。rate limit の文言を観測したら rate_limit_detection へ反映する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-11"
+    - field: due
+      from: ""
+      to: "2026-10-31"

@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d7288e0d27d84fbc9dc205fda9e9e7b5
+  ts: "2026-10-03T14:27:19Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer の設定の保存先（named volume・コンテナ内のみ・母艦と共有）を文書に明記する
+    - field: description
+      from: ""
+      to: devcontainer の各設定・認証情報が named volume に残るか、リビルドで消えるか、母艦と共有・コピーされるかが文書にない。opencode の API key がリビルドで消えた件を受け、保存先の一覧と、リビルド後に必要な再設定を guide か設計書に明記する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-03"
+- v: 1
+  id: reg_d2db72e18adc4eb1891639ad439a5c3b
+  ts: "2026-10-04T05:10:19Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d7288e0d27d84fbc9dc205fda9e9e7b5
+- v: 1
+  id: reg_8398e81816c1408dadf4c3fab557fd9f
+  ts: "2026-10-04T05:24:08Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d2db72e18adc4eb1891639ad439a5c3b
+- v: 1
+  id: reg_2ae4aca3e9444264beb1426dc731e98f
+  ts: "2026-10-04T06:23:58Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 利用者が文書の内容を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: tsd-home-mac-dev-server に設定・認証情報の保存先を named volume・コンテナ内のみ・母艦と共有/コピー・母艦のみの4分類で整理し、再作成後の作業を記載した。tsd-home-mac-dev-server-usage の一覧は正本への参照に置き換えた。docs:build と利用者の確認を経て close した
+  previous_event_id: reg_8398e81816c1408dadf4c3fab557fd9f

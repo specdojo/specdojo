@@ -1,0 +1,28 @@
+PJR-GENJ の修正は実装しましたが、まだ一度もテストを実行していません。追加したテストと型検査は、指示どおりこのあと親 runner が実行します。
+
+**原因と修正内容**
+- **原因**: register 項目を reporter 段や統合段から再開すると、統合先ブランチ（develop）の最新を取り込まないまま親検証を実行していました。そのため、wait の後に統合先で直した不具合が検証に反映されませんでした。
+- **修正**: 再開時は register の `start` 遷移と親検証の前に、統合先の最新を exec branch と worktree へ merge commit で取り込みます。複数リポジトリの project では、宣言順に各プロダクトの統合先を取り込み、最後にプロジェクトを取り込みます。worktree に残る executor の未コミット成果はそのまま保持します。
+- **再検証**: 新しい commit が入った場合は、記録済みの親検証が成功していても検証し直します。統合段の再開でも親検証を実行するようにし、失敗したら統合せずに `waiting` へ戻します。
+- **取り込めない場合**: 統合先の変更が未コミット成果と重なる場合や、項目自身の記帳ファイル以外で競合する場合は、merge を中止します。register の状態は変えずに再開を拒否し、理由を表示します。記帳ファイル同士の競合だけは統合先の内容を採用します。
+- **取り込まない場合**: merge 済みで worktree の撤去だけが残っている統合再開では、取り込みを行いません。
+
+**動作変更の注意点**
+- 以前は、前回の実行が途中で止まって worktree の記帳ファイル（個票や登録簿）が未コミットのまま残っていても、統合先がそれらを変更していれば再開できました。今後はその場合、取り込みの段階で再開を拒否します。
+- 複数リポジトリで後のリポジトリが競合したときは、先に取り込んだプロダクトの merge は残ります。
+
+**変更ファイル**
+- `src/exec-repo-integration.ts`: 取り込み処理（`syncWorktreeWithIntegrationTarget`、`syncTaskWorktreesWithIntegrationTargets`）を追加
+- `src/exec-run.ts`: register 再開時の取り込みと親検証のやり直し。統合段で親検証が失敗したときは、その理由を `waiting` の理由にする（`runnerBlockReason`）
+- `tests/src/exec-register-resume.integration.test.ts`: E2E テストを追加。wait の後に統合先で入れた修正が reporter 段再開時の親検証（`test-unit`）に反映され、項目が `review` まで進むことを確かめます。
+- `tests/src/exec-task-repos.integration.test.ts`: 取り込み処理のテスト 6 件を追加。宣言を持たない project と複数リポジトリの取り込み、差分がない場合、未コミット成果と重なる場合や競合時の中止、記帳ファイルの競合解決を確かめます。
+- `docs/ja/specdojo/guides/exec-operation-guide.md`、`docs/ja/specdojo/references/command-reference.md`: 再開時の取り込みについて追記
+- 個票 `pjr-genj-resume-validation-before-develop-sync.md`: 「対応結果」を記入
+
+**未対応**
+- Schedule タスク（`exec resume`）の再開には取り込みを入れていません。
+- 統合段からの再開を通す E2E テストはありません。完了条件は「reporter 段または統合段」のどちらかで確かめられれば満たせるため、reporter 段で確認しています。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-GENJ: register の reporter 段・統合段からの再開で、親検証の前に統合先ブランチの最新（複数リポジトリではプロダクトごとの統合先も）を exec branch と worktree へ取り込み、新しい commit が入った場合は親検証をやり直すようにした。統合段の再開でも親検証を実行し、失敗時は waiting へ戻す。未コミット成果と重なる場合や記帳ファイル以外の競合では merge を中止し、register の状態を変えずに再開を拒否する。以前は再開できた、記帳ファイルが未コミットのまま残る中断 run は、統合先がそれらを変更していれば拒否されるようになった。変更: `src/exec-repo-integration.ts`, `src/exec-run.ts`, `tests/src/exec-register-resume.integration.test.ts`（reporter 段再開の E2E）, `tests/src/exec-task-repos.integration.test.ts`（取り込み処理のテスト 6 件）, `docs/ja/specdojo/guides/exec-operation-guide.md`, `docs/ja/specdojo/references/command-reference.md`, 個票の対応結果。追加テストは executor では未実行で、親検証で実行される。未対応: Schedule タスクの再開、統合段再開の E2E テスト。","validations":[{"command":"npx prettier --write src/exec-run.ts src/exec-repo-integration.ts tests/src/exec-task-repos.integration.test.ts tests/src/exec-register-resume.integration.test.ts","status":"passed","summary":"整形完了（テスト 1 ファイルを整形）"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-genj-resume-validation-before-develop-sync.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"変更なし"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-genj-resume-validation-before-develop-sync.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"エラーなし"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"OK（既存の based_on 未作成文書の WARN のみ）"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2287 entries"}]}
+</specdojo_executor_evidence>

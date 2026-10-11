@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e8876f0f7cc5405d869f6753c63279bf
+  ts: "2026-10-01T15:29:49Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-GENJ の reporter 段の再開で、opencode（@opencode-ai/plugin 1.18.32）が生成したファイルにより agent-config-write で止まったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: opencode が生成するプラグインの導入ファイルを保護設定の検査が検出する
+    - field: description
+      from: ""
+      to: opencode の reporter が worktree の .opencode/ にプラグインを自動導入し、package.json・package-lock.json・node_modules とそれらを ignore する .gitignore を生成する。保護設定の検査がこれらを agent による変更として検出し、exec run が止まる。git が ignore する opencode の導入ファイルだけを安全なものとして除外する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-02"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_9ebe6ea38e304305b7051a96eddf6627
+  ts: "2026-10-02T00:08:18Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e8876f0f7cc5405d869f6753c63279bf
+- v: 1
+  id: reg_a71f6fbb1bfc4ac090245b0236da03c0
+  ts: "2026-10-02T00:18:31Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9ebe6ea38e304305b7051a96eddf6627
+- v: 1
+  id: reg_decf02b047274347b7f17d5e5cac2dc2
+  ts: "2026-10-02T00:42:42Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor / claude-reporter）の結果を orchestrator が評価した。ignore されていない場合と git の判定が失敗した場合に止まるテストと、親検証 7 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-02"
+    - field: conclusion
+      from: "-"
+      to: opencode の導入ファイルが git に ignore されている場合だけ保護設定の検査から除外し、agent 定義は引き続き保護する
+  previous_event_id: reg_a71f6fbb1bfc4ac090245b0236da03c0

@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_41ad19b5a20f4db0af1f2e0b6b7093f8
+  ts: "2026-09-28T22:13:16Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-09-29 の T2M6 で範囲外の変更が develop に入り、orchestrator が取り除いたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の plan が関連ドキュメントとして参照しただけの文書の grade finding を解消対象に展開する
+    - field: description
+      from: ""
+      to: 個票の wikilink 先すべての grade finding を plan に展開し解消を指示するため、関連ドキュメントとして参考に挙げた pjr-rulebook の finding を executor が直し、template_dispatch の新設など範囲外の設計変更を行った（XW9M、T2M6）
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_1a87f881e0a34fcdb217751a24515ca7
+  ts: "2026-09-28T22:31:10Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_41ad19b5a20f4db0af1f2e0b6b7093f8
+- v: 1
+  id: reg_0863b0f5b10042aea224f9c79de6be18
+  ts: "2026-09-28T22:40:54Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1a87f881e0a34fcdb217751a24515ca7
+- v: 1
+  id: reg_97804e5b4d2b40c2a7fd5d847f404587
+  ts: "2026-09-29T11:11:51Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor の実行結果を評価し、直後の QD81 の plan で finding が展開されないことを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: register の plan が finding を展開する対象を、個票の関連ドキュメントの wikilink から frontmatter の targets に改めた。targets のない個票では展開しない
+  previous_event_id: reg_0863b0f5b10042aea224f9c79de6be18

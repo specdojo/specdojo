@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-27Z9",
+  "run_id": "20261004T033218878Z-3d6f8710",
+  "stage": {
+    "role": "executor",
+    "actor": "agy-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-04T03:32:18.878Z",
+    "completed_at": "2026-10-04T03:34:19.769Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".devcontainer/devcontainer.json",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-27z9.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".devcontainer/devcontainer.json                             |  3 ++-\n .../020-infrastructure/tsd-home-mac-dev-server.md           |  1 +\n .../prj-0001/controls/project-register/events/pjr-27z9.yaml | 13 +++++++++++++\n .../project-register/pjr-27z9-codex-bwrap-proc-mount.md     |  6 ++++--\n 4 files changed, 20 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write .devcontainer/devcontainer.json docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md",
+      "status": "passed",
+      "summary": "Formatted 3 files"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md",
+      "status": "passed",
+      "summary": "No lint errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "Validated catalog with warnings"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index (2353 entries)"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/specdojo\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\ncommit-targets:\n  docs/a.md\nUpdated: /tmp/specdojo-register-resume-e2e-HeSPRj/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-HeSPRj/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-HeSPRj/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-HeSPRj/docs/ja/projects/test/c…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/specdojo/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/specdojo/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-t…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/specdojo\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-gOn2rV/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-9TuaR7/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-y70p4C/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-5wAaVD/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-pny5LF/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-oupapZ/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-9DGgdz/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-VeOleX/outputs/partial.txt\n\n Test Files  120 passed (120)\n      Tests  1815 passed (1…"
+    }
+  ],
+  "final_message": "devcontainer の runArgs に --security-opt=systempaths=unconfined を追加し、tsd-home-mac-dev-server と pjr-27z9-codex-bwrap-proc-mount に対応結果と意図を反映しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-27Z9/20261004T033218878Z-3d6f8710/executor.log",
+      "bytes": 2146,
+      "truncated": false
+    }
+  ]
+}

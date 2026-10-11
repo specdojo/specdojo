@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8d252713a1ed4b06b1dcf1b2945536fb
+  ts: "2026-09-27T06:22:09Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-N03W の評価で判明し、利用者の判断で routine の unreviewed を無効にして別項目とした
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の unreviewed 契機を内容の変化がある文書に絞る
+    - field: description
+      from: ""
+      to: grade list --unreviewed は schedule タスクのない文書を、評価済みで内容が変わっていなくても毎回すべて選ぶ（kata 262 件全件）。2ZVS の content_hash 一致なら再実行しない規則に合わせて絞り、routine の unreviewed を再び有効にする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_73e16c574e744fc2b0facc5f1577964b
+  ts: "2026-09-27T06:55:54Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8d252713a1ed4b06b1dcf1b2945536fb
+- v: 1
+  id: reg_838f10b39dab4128a81ccdbad3525a6c
+  ts: "2026-09-27T07:10:01Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_73e16c574e744fc2b0facc5f1577964b
+- v: 1
+  id: reg_ca9ca03c7b224844aeccca1de27b49a5
+  ts: "2026-09-27T07:11:41Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor の実行結果を orchestrator が評価し、件数を再確認して完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: grade list --unreviewed を未評価または content_hash 不一致の文書に絞り、routine の unreviewed を有効に戻した。対象は kata 262→0 件、成果物 19→1 件
+  previous_event_id: reg_838f10b39dab4128a81ccdbad3525a6c

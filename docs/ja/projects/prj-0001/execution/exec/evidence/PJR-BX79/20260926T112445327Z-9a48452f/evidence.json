@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BX79",
+  "run_id": "20260926T112445327Z-9a48452f",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-26T11:24:45.327Z",
+    "completed_at": "2026-09-26T11:31:38.742Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bx79-integrate-dubious-ownership-retry.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-worktree-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../pjr-bx79-integrate-dubious-ownership-retry.md  | 15 +++--\n docs/ja/specdojo/guides/exec-worktree-guide.md     |  2 +\n src/exec-worktree.ts                               | 52 ++++++++++++++---\n tests/src/exec-worktree.test.ts                    | 67 +++++++++++++++++++++-\n 4 files changed, 120 insertions(+), 16 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-worktree.ts tests/src/exec-worktree.test.ts docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-bx79-integrate-dubious-ownership-retry.md",
+      "status": "passed",
+      "summary": "変更4ファイルを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-bx79-integrate-dubious-ownership-retry.md",
+      "status": "passed",
+      "summary": "変更したMarkdownに違反なし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "TypeScript ESLintが通過した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm -- --quiet --frail docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-bx79-integrate-dubious-ownership-retry.md",
+      "status": "passed",
+      "summary": "frontmatter・remark検査が通過した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog検証が通過した。既存の欠落文書警告のみ。npx tsxはsandboxのIPC制約で起動できなかったため同じtsxローダーで実行した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成が通過し、追跡対象の追加差分は発生しなかった。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書インデックス1997件を生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "Markdown全体lintが通過した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証が通過した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BX79\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-jGBfHW/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-jGBfHW/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-jGBfHW/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-jGBfHW/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BX79/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BX79/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BX79\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-R7spUn/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ZP7oOO/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-05zJPw/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-UFEHCc/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-O4nLuW/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-wdLH5M/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\n ❯ tests/tools/grade-per-document.test.ts (18 tests | 12 failed) 3124ms\n     × uses the rulebook prj-overview document as the stage 1 default 38ms\n     × uses the recipe prj-overview document as the stage 1 default 33ms\n     × uses the sample prj-overview document as the stage 1 default 35ms…"
+    }
+  ],
+  "final_message": "dubious ownership 限定の1回再試行、警告ログ、単体テスト、運用文書と個票の更新を完了した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-BX79/20260926T112445327Z-9a48452f/executor.log",
+      "bytes": 2405,
+      "truncated": false
+    }
+  ]
+}

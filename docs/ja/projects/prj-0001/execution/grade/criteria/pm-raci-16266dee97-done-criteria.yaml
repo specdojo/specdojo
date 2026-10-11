@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:pm-raci-grade-criteria
+document: prj-0001:pm-raci
+path: docs/ja/projects/prj-0001/030-project-management/pm-raci.md
+graded_at: "2026-09-25T16:18:21.733Z"
+graded_by: codex-expert-executor
+content_hash: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+summary:
+  satisfied: 3
+  unsatisfied: 1
+  total: 4
+criteria:
+  - id: DC-001
+    text: 成果物・プロセスごとの責任分担マトリクスを承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: unsatisfied
+    reason: Launch スケジュール戦略のRACIとSchedule ownerが矛盾しており、責任分担マトリクスを承認できない。
+  - id: DC-002
+    text: 確認者・合意対象など業務観点での責任分担が読み取れること
+    roles:
+      - BA
+    viewpoint: vp-ba-stakeholder-clarity
+    status: satisfied
+  - id: DC-003
+    text: RACI の Role code が組織定義の採用ロールと整合していること
+    roles:
+      - ARC
+    viewpoint: vp-arc-cross-document-consistency
+    status: satisfied
+  - id: DC-004
+    text: A の集約（1 成果物 1 Accountable）と R/C の抜け漏れがないこと
+    roles:
+      - QE
+    viewpoint: vp-qe-omissions-consistency
+    status: satisfied

@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-4f4a3ade62f7",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-24T16:00:05.530Z",
+    "completed_at": "2026-09-24T16:51:29.808Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/opr-agent-cli-update-beb291d74a89.json",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/tsd-ollama-1333c3ab83bb.json",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/pm-communication-plan-6a68d585dc-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/pm-organization-3bb06d1a82-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/pm-plan-1817063f8a-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/pm-quality-management-plan-2f81d713a1-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-overview-0cce063d8f-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-scope-b521ba27f3-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-stakeholder-register-dd42317729-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-success-criteria-and-acceptance-criteria-11b049ad8a-done-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-communication-plan.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-organization.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-plan.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.pm-quality-management-plan.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-overview.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-scope.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-stakeholder-register.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-success-criteria-and-acceptance-criteria.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-4f4a3ade62f7.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 19,
+    "summary": ".../execution/grade/pipeline/opr-agent-cli-update-beb291d74a89.json | 6 +++---\n .../prj-0001/execution/grade/pipeline/tsd-ollama-1333c3ab83bb.json  | 6 +++---\n 2 files changed, 6 insertions(+), 6 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-4f4a3ade62f7 --stages 1 --target deliverable --limit 10 --changed-only=true --ungraded=true --incomplete=true\ncat logs/grade/runs/per-document/JBR-grade-deliverable-4f4a3ade62f7/results.tsv",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\ntools/grade/run-per-document.sh --run-id JBR-grade-deliverable-4f4a3ade62f7 --stages 1 --target deliverable --limit 10 --changed-only=true --ungraded=true --incomplete=true\ncat logs/grade/runs/per-document/JBR-grade-deliverable-4f4a3ade62f7/results.tsv",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-4f4a3ade62f7/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-4f4a3ade62f7/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.2.1 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-deliverable-4f4a3ade62f7 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-4f4a3ade62f7\nstage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md\ndocument resume: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md start_stage=1\ndocument incomplete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md failed_stage=1\ndocument start: docs/ja/product/090-operations/opr-agent-cli-update.md\ndocument resume: docs/ja/product/090-operations/opr-agent-cli-update.md start_stage=1\ndocument incomplete: docs/ja/product/090-operations/opr-agent-cli-update.md failed_stage=1\ndocument start: docs/ja/projects/prj-0001/020-project-definition/prj-overview.md\ndocument complete: docs/ja/projects/prj-0001/020-project-definition/prj-overview.md\ndocument start: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md\ndocument complete: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md\ndocument start: docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md\ndocument complete: docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md\ndocument start: docs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md\ndocument complete: docs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md\ndocument start: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md\ndocument complete: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md\ndocument start: docs/ja/projects/prj-0001/030-project-management/pm-organization.md\ndocument complete: docs/ja/projects/prj-0001/030-project-management/pm-organization.md\ndocument start: docs/ja/projects/prj-0001/030-project-management/pm-plan.md\ndocument complete: docs/ja/projects/prj-0001/030-project-management/pm-plan.md\ndocument start: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md\ndocument complete: docs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md\ngrade pipeline complete: selected=10 processed=10 completed_now=8 incomplete=2 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-4f4a3ade62f7/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-09-24T16:06:02Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md\t1\tfailed\t351\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\t2\t3\t1\n2026-09-24T16:14:06Z\tdocs/ja/product/090-operations/opr-agent-cli-update.md\t1\tfailed\t483\t\t\t\tcodex-expert-executor\tgemma-reporter\tnone\t2\t3\t1\n2026-09-24T16:19:14Z\tdocs/ja/projects/prj-0001/020-project-definition/prj-overview.md\t1\tpassed\t308\tpass\t92\t5\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-24T16:24:45Z\tdocs/ja/projects/prj-0001/020-project-definition/prj-scope.md\t1\tpassed\t329\tneeds-work\t65\t12\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-24T16:28:30Z\tdocs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md\t1\tpassed\t223\tneeds-work\t91\t3\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-24T16:34:03Z\tdocs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md\t1\tpassed\t331\tneeds-work\t76\t8\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-24T16:38:32Z\tdocs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md\t1\tpassed\t267\tneeds-work\t71\t10\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-24T16:43:04Z\tdocs/ja/projects/prj-0001/030-project-management/pm-organization.md\t1\tpassed\t270\tneeds-work\t87\t4\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-24T16:47:06Z\tdocs/ja/projects/prj-0001/030-project-management/pm-plan.md\t1\tpassed\t240\tpass\t97\t1\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-24T16:51:28Z\tdocs/ja/projects/prj-0001/030-project-management/pm-quality-management-plan.md\t1\tpassed\t260\tneeds-work\t79\t6\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-4f4a3ade62f7/attempt-1/command.stdout.log",
+      "bytes": 4445,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-4f4a3ade62f7/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+# GitHub Copilot CLI agent 定義のスニペット。
+# members の要素をリポジトリ共通の .specdojo/agent-members.yaml へコピーして使う。
+# project ごとの pm-members.yaml は人間専用なので、agent は記載しない。
+# 起動コマンドは member には書かず、.specdojo/exec-defaults.yaml の
+# providers.copilot.command_template で定義する（exec-defaults-snippet.yaml を参照）。
+# 設計の背景は exec-config-guide.md の
+# 「agent 権限とプロンプトインジェクション対策」を参照。
+
+version: 1
+members:
+  - nickname: copilot-edit-agent
+    disabled: true
+    priority: 4
+    display_name: Copilot Edit Agent
+    email: null
+    roles: []
+    type: agent
+    provider: copilot
+    mode: edit
+    proficiency: normal
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - implementation
+    capabilities: []
+    scheduler_strategy: critical-first
+    note: GitHub Copilot CLI を使用する標準エージェント。ツールは許可リスト方式で、shell は読み取り系・検証系のみ、git の変更系は deny する。パスはデフォルト制限で worktree 配下に限定される。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。
+  - nickname: copilot-review-agent
+    disabled: true
+    priority: 4
+    display_name: Copilot Review Agent
+    email: null
+    roles: []
+    type: agent
+    provider: copilot
+    mode: review
+    proficiency: normal
+    persona: multi-viewpoint-reviewer
+    focus:
+      - done-criteria-verification
+      - cross-viewpoint-consistency
+      - quality-assurance
+    capabilities: []
+    scheduler_strategy: fifo
+    note: GitHub Copilot CLI を使用するレビューエージェント。write はパス単位に絞れないため result 記入用に許可し、成果物変更の境界は specdojo CLI の commit 許可リスト（review は result のみ）で作る。URL アクセスは許可しないため web_search capability を持たない。最終判断は行わない。

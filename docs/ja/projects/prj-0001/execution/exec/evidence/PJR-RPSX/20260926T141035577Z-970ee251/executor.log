@@ -1,0 +1,10 @@
+タスク「PJR-RPSX config scaffold で provider に応じたオーケストレーター起動スクリプトを package.json へ加える」の対応を完了しました。
+
+- `src/exec-provider-scaffold.ts` に、`package.json` が存在する場合に provider 別の起動スクリプトを追加する処理を実装しました。
+- `tests/src/exec-provider-scaffold.test.ts` に単体テストを追加し、テストが通過することを確認しました。
+- `README.md` に記載されたオーケストレーター起動手順を `npm run orch:<name>` に更新しました。
+- 作業内容と結果を個票（`pjr-rpsx-scaffold-orchestrator-npm-scripts.md`）および結果ファイル（`pjr-rpsx-20260926T140935Z-4605-result.md`）に記録しました。
+
+<specdojo_executor_evidence>
+{"final_message":"package.json へのオーケストレーター起動スクリプト追加とテスト、README の更新を完了しました","validations":[{"command":"npm run typecheck","status":"passed","summary":"Type check passed"},{"command":"npm run test:unit tests/src/exec-provider-scaffold.test.ts","status":"passed","summary":"Unit tests passed"},{"command":"npx prettier --write .","status":"passed","summary":"Prettier formatting applied"},{"command":"npx markdownlint .","status":"passed","summary":"Markdownlint passed"},{"command":"specdojo index build","status":"passed","summary":"Index built successfully"}]}
+</specdojo_executor_evidence>

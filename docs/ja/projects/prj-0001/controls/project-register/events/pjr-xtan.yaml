@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_763c15f291cc4782bffa66296e7c5bc6
+  ts: "2026-09-24T14:01:36Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-2ZVS の決定 3.3 の見直しで判明
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 判定語彙を verdict_definitions へ統一する
+    - field: description
+      from: ""
+      to: 同じ判定を 4 つの語彙で表している。pm-review-viewpoints.yaml の verdict_definitions を唯一の正本とし、grade の文書 verdict（pass / needs-work / fail）、xrr-template の recommendation（approve / revise / reject）、xrr-viewpoint-detail-template の result（pass / fail / unclear）をすべて pass / conditional_pass / changes_requested / blocked へ揃える。grade の判定条件は変えない。既存の grade 結果 260 件の移行を伴う破壊的変更のため 0.3.0 で扱う。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-24"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_26a08df691cb4b1da5d3ba2e7cd008c1
+  ts: "2026-09-26T11:00:45Z"
+  action: update
+  actor: manual
+  from_status: open
+  to_status: open
+  reason: PJR-2ZVS の最終結論で grade と review が違う対象を判定すると分かったため、4 語彙の一括統一から、統一するかどうかの判断を含む形へ改める。
+  changes:
+    - field: title
+      from: 判定語彙を verdict_definitions へ統一する
+      to: 判定語彙を判定対象ごとに整理し 同じ対象の語彙だけを統一する
+  previous_event_id: reg_763c15f291cc4782bffa66296e7c5bc6
+- v: 1
+  id: reg_2705e9680d114fe7afc0fbccddedd7ca
+  ts: "2026-09-28T09:28:29Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_26a08df691cb4b1da5d3ba2e7cd008c1
+- v: 1
+  id: reg_56715e77234648b0889ab6f8398052ea
+  ts: "2026-09-28T09:37:36Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2705e9680d114fe7afc0fbccddedd7ca
+- v: 1
+  id: reg_57e13ea7107e4172818c3149dd9142e9
+  ts: "2026-09-28T09:38:45Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: review 側の完了可否の語彙を 6 値（complete / complete-with-findings / incomplete / grade-stale / grade-unavailable / changed-during-review）へ統一し、REVIEW_VERDICTS を正本とした。grade の語彙と level からの写像は残し、旧値は移行先を示すエラーで拒否する
+  previous_event_id: reg_56715e77234648b0889ab6f8398052ea

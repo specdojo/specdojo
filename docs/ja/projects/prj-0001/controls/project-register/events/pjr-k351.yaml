@@ -1,0 +1,101 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_242884d2c73e42478e8cec2067d0ea2e
+  ts: "2026-09-25T12:45:13Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: "vp-ops-agent-boundary を試行して continuous: true の可否を決める"
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: OPS
+    - field: registered
+      from: ""
+      to: "2026-09-25"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_f7b3a919df1146518ffe81913d4d4278
+  ts: "2026-09-26T10:58:31Z"
+  action: update
+  actor: manual
+  from_status: open
+  to_status: open
+  reason: PJR-2ZVS の最終結論で continuous の廃止が決まったため、当初の vp-ops-agent-boundary 単体の試行から範囲を広げる。
+  changes:
+    - field: id
+      from: prj-0001:pjr-k351-vp-ops-agent-boundary-continuous-true
+      to: prj-0001:pjr-k351-continuous-abolition-all-viewpoints
+    - field: title
+      from: "vp-ops-agent-boundary を試行して continuous: true の可否を決める"
+      to: continuous を廃止し 28 観点すべてを grade の対象にする
+    - field: priority
+      from: medium
+      to: high
+    - field: owner
+      from: OPS
+      to: ARC
+  previous_event_id: reg_242884d2c73e42478e8cec2067d0ea2e
+- v: 1
+  id: reg_865f12a55621482fbda1609aefa96812
+  ts: "2026-09-27T12:24:58Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f7b3a919df1146518ffe81913d4d4278
+- v: 1
+  id: reg_de255eaa83f34a5ea968e22cce3383e5
+  ts: "2026-09-27T12:34:45Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_865f12a55621482fbda1609aefa96812
+- v: 1
+  id: reg_99b0b5595ce1465abd99fff71302e5e5
+  ts: "2026-09-27T12:42:30Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価し、未実施だった標本の試行を orchestrator が行って完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: continuous を廃止し 28 観点を grade の対象にした。rubric を v2（9 category）とし pass_score を 75 に改めた。旧形式はエラーで拒否する。標本の試行で既存 finding の質の低下はなかった
+  previous_event_id: reg_de255eaa83f34a5ea968e22cce3383e5

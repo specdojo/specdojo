@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "task_id": "stsd-register-entry",
+  "run_id": "20260928T151617528Z-4016896d",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-28T15:16:17.528Z",
+    "completed_at": "2026-09-28T15:17:07.920Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ".../exec/results/stsd-register-entry-20260928T093919Z-6fd7-result.md | 5 ++---\n 1 file changed, 2 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md --changed-only",
+      "status": "passed",
+      "summary": "no output (content_hash matches, grade is fresh); no output again on re-check"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md --dependency-changed",
+      "status": "passed",
+      "summary": "no output (no dependency changes); no output again on re-check"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts grade list --target deliverable --path docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md --incomplete",
+      "status": "passed",
+      "summary": "no output (grade pipeline complete)"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/specdojo\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-Kf8cEC/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-Kf8cEC/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-Kf8cEC/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-Kf8cEC/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/specdojo/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/specdojo/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-template.yaml: schema /workspaces/specdoj…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/specdojo\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-P1WwOk/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-WtFByY/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-27TdBQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-EWVrib/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-6rIMVd/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-VT1noa/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-yqq0e9/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-qO5bvI/outputs/partial.txt\n\n Test Files  114 passed (114)\n      Tests  1703 passed (17…"
+    }
+  ],
+  "final_message": "review verdict: incomplete. Grade is fresh (changed-only / dependency-changed / incomplete checks produced no output, and the re-check before recording also produced no output). Sidecar verdict needs-work, score 69, findings blocker 0 / major 13 / minor 7 / note 0, done_criteria satisfied 0/5 (DC-001 to DC-005 all unsatisfied). The deliverable still has unresolved _TODO_ / _ASSUMPTION_ / _UNDECIDED_ items, `based_on` is empty, and the `depends_on` item `bdd-register-entry` has not been created. The preceding edit result could not be identified, so the edit validation results were not checked. No files were modified.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/stsd-register-entry/20260928T151617528Z-4016896d/executor.log",
+      "bytes": 6387,
+      "truncated": false
+    }
+  ]
+}

@@ -3,29 +3,72 @@ version: 1
 document: specdojo:pm-members-recipe
 path: docs/ja/specdojo/recipes/pm-members-recipe.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-09-04T14:13:41.528Z"
-graded_by: gemma-expert-executor
-content_hash: 65b81361aef92a02ab6d274ff7245450630c939e7de54d8d302cc6dc8b7a039c
+score: 97
+graded_at: "2026-10-09T21:02:20.799Z"
+graded_by: agy-expert-executor
+content_hash: 95105c117df50ea0d2cef0f9306e0215107fe2d3ed8a86452aa5245c84d36fc4
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,36 +86,86 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 4
+  minor: 9
   note: 0
 findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 76
-    message: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
-    anchor: "- Role code は大文字の標準表記で記載する。"
+    line: 27
+    anchor: 1. `project_id`、成果物 ID、`based_on` を確定します。
+    message: 全体の作成手順において、rulebook で必須とされる title の設定手順が漏れている。
+    message_ja: 全体の作成手順において、rulebook で必須とされる title の設定手順が漏れている。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 76
-    message: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
-    anchor: "- Role code は大文字の標準表記で記載する。"
+    line: 27
+    anchor: 1. `project_id`、成果物 ID、`based_on` を確定します。
+    message: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
+    message_ja: メタ項目の設定手順において、rulebook で必須とされる `title` が漏れている。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 90
-    message: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
-    anchor: ""
+    line: 27
+    anchor: 1. `project_id`、成果物 ID、`based_on` を確定します。
+    message: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
+    message_ja: メタ項目の設定手順において、rulebook で必須とされる `status` が漏れている。
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 112
+    line: 27
+    anchor: 1. `project_id`、成果物 ID、`based_on` を確定します。
+    message: メタ項目の設定手順において、rulebook で必須とされる `version` の設定手順が漏れている。
+    message_ja: メタ項目の設定手順において、rulebook で必須とされる `version` の設定手順が漏れている。
+  - id: F005
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 27
+    anchor: 1. `project_id`、成果物 ID、`based_on` を確定します。
+    message: >-
+      The procedure for setting metadata omits the required fields `type: project` and `rulebook` specified in the
+      rulebook.
+    message_ja: "メタデータを設定する手順において、rulebookで指定されている必須フィールドの `type: project` および `rulebook` が省略されています。"
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 38
+    anchor: "- 人間として最終判断、受入、公開可否を担う主体は誰ですか。"
+    message: agent のフィールド設定において、rulebook で定義されている `scheduler_strategy` と `disabled` の扱いが漏れている。
+    message_ja: agent のフィールド設定において、rulebook で定義されている `scheduler_strategy` と `disabled` の扱いが漏れている。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 38
+    anchor: "- 人間として最終判断、受入、公開可否を担う主体は誰ですか。"
+    message: agent のフィールド設定において、persona のフォーマット (kebab-case) に関する指定が漏れている。
+    message_ja: agent のフィールド設定において、persona のフォーマット (kebab-case) に関する指定が漏れている。
+  - id: F008
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 36
+    anchor: "### 4.1. 実行主体"
+    message: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
+    message_ja: "`members` の問いにおいて、必須項目である `display_name` の確認が漏れている。"
+  - id: F009
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 39
+    anchor: "- 人物が交代しても意味が変わらない nickname になっていますか。"
     message: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。
-    anchor: "| 汎用 agent     | `roles: []` とし、実行時の owner で文脈を補う    | `roles` 未記載のまま承認責任を曖昧にする            |"
+    message_ja: 書き方において、`stage_role` の設定基準や nickname の許容文字に関する rulebook 記載の具体ルールが記述されていない。

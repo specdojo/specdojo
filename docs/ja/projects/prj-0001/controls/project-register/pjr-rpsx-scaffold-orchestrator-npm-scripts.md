@@ -1,0 +1,118 @@
+---
+specdojo:
+  id: prj-0001:pjr-rpsx-scaffold-orchestrator-npm-scripts
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: done
+  priority: medium
+  owner: DEV
+  registered_at: "2026-09-26T13:33:13Z"
+  completed_at: "2026-09-26T14:23:51Z"
+---
+
+# PJR-RPSX config scaffold で provider に応じたオーケストレーター起動スクリプトを package.json へ加える
+
+## 1. 概要
+
+オーケストレーターの起動は provider ごとにコマンドが長い（`codex "$(cat .specdojo/codex/orchestrator.md)"` など）。このリポジトリの `package.json` には `orch:opus` などの起動スクリプトがあるが、SpecDojo を導入した人の `package.json` には何も加わらない。`config scaffold --provider` のときに、provider に応じた起動スクリプトを加える。
+
+## 2. 事実
+
+### 2.1. 現在の scaffold は package.json を変えない
+
+`src/exec-provider-scaffold.ts` は provider ごとの設定ファイルを配置するが、`package.json` には触れない。
+
+### 2.2. このリポジトリには起動スクリプトがある
+
+```json
+"orch:opus": "claude --agent specdojo-orchestrator --model opus",
+"orch:sonnet": "claude --agent specdojo-orchestrator --model sonnet",
+"orch:agy": "agy --add-dir \"$(pwd)\" --model gemini-3.1-pro-high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+```
+
+ただしこれは開発用で、規範の本文を `.agents/specdojo-orchestrator.agent.md` から読む。導入した人の環境では `.specdojo/<provider>/orchestrator.md` に配置されるため、**同じコマンドはそのまま使えない。**
+
+## 3. 追加するスクリプト
+
+| provider      | スクリプト                 | 起動                                                                       |
+| ------------- | -------------------------- | -------------------------------------------------------------------------- |
+| `claude`      | `orch:opus`、`orch:sonnet` | `claude --agent specdojo-orchestrator --model <model>`                     |
+| `codex`       | `orch:codex`               | `codex "$(cat .specdojo/codex/orchestrator.md)"`                           |
+| `antigravity` | `orch:agy`                 | `agy --add-dir "$(pwd)" -i "$(cat .specdojo/antigravity/orchestrator.md)"` |
+| `opencode`    | `orch:opencode`            | `opencode --agent specdojo-orchestrator`                                   |
+| `copilot`     | `orch:copilot`             | **要確認**。`templates/copilot/` にオーケストレーターの定義がない          |
+
+`config init` ではなく `config scaffold --provider` で加える。init の時点ではどの provider を使うかが分からないためである。
+
+## 4. 決まりごと
+
+| 決まりごと                 | 内容                                                                 |
+| -------------------------- | -------------------------------------------------------------------- |
+| 既存のキーは上書きしない   | 同じ名前のスクリプトがあれば飛ばし、その旨を表示する                 |
+| 起動パスは配置先に合わせる | codex / antigravity は `.specdojo/<provider>/orchestrator.md` を読む |
+| `--dry-run` で確認できる   | 追加予定のスクリプトを表示するだけにできる                           |
+| 整形を保つ                 | `package.json` のインデントと既存の並びを崩さない                    |
+
+## 5. 完了条件
+
+- `config scaffold --provider <p>` のあと、`npm run orch:<name>` でオーケストレーターを起動できる。
+- 既存の同名スクリプトを上書きしない。飛ばしたことが表示される。
+- `package.json` がない場合の扱いが決まっている（作らずに案内するか、エラーにするか）。
+- `--dry-run` で追加予定が確認でき、ファイルは変わらない。
+- copilot の扱いが決まっている。オーケストレーターの定義を配置しないなら、スクリプトも加えない。
+- README の「オーケストレーターを配置する」に、`npm run orch:<name>` で起動できることが書かれている。
+- 単体テストがある。
+- `npm run check` が通過している。
+
+## 6. 作業内容
+
+| No  | 作業                                             | 担当 | 状態 | メモ                              |
+| --- | ------------------------------------------------ | ---- | ---- | --------------------------------- |
+| 1   | copilot のオーケストレーター配置の有無を確かめる | DEV  | done |                                   |
+| 2   | scaffold へスクリプトの追加を実装する            | DEV  | done | 上書きしない                      |
+| 3   | テストを追加する                                 | DEV  | done |                                   |
+| 4   | README へ起動方法を記載する                      | DEV  | done | PJR-34MQ の README 改訂と調整する |
+
+## 7. 対応結果
+
+- copilot にはオーケストレーターの配置がないため、スクリプトも加えないこととした。
+- `src/exec-provider-scaffold.ts` にて、`package.json` が存在する場合に `config scaffold` 時に provider 別の起動スクリプトを追加する処理を実装した。
+- 既存のスクリプトの上書き防止および `--dry-run` 時の出力の処理も実装し、テストを `tests/src/exec-provider-scaffold.test.ts` に追加した。
+- `README.md` の起動方法の説明を `npm run orch:<name>` による方法に更新した。
+
+### 7.1. 評価（2026-09-26 夜間）
+
+`agy-expert-executor` で実装され、統合まで成功した。個票と規約に合わない点が 3 つあったため、夜間の決まりごとに沿って私が直した。直したあとは完了条件をすべて満たす。
+
+| 完了条件                                           | 判定                                                 |
+| -------------------------------------------------- | ---------------------------------------------------- |
+| scaffold のあと `npm run orch:<name>` で起動できる | 満たす                                               |
+| 既存の同名スクリプトを上書きしない                 | **手直しで満たす**（`--force` でも上書きしない）     |
+| `package.json` がない場合の扱い                    | 満たす。作らずに「not found」と表示して続ける        |
+| `--dry-run` で確認できファイルが変わらない         | 満たす                                               |
+| copilot の扱い                                     | 満たす。定義を配置しないのでスクリプトも加えない     |
+| README に起動方法を記載                            | 満たす                                               |
+| 単体テスト                                         | 満たす（13 件）                                      |
+| `npm run check` 相当                               | 満たす（test:unit 1572 件、test:integration 111 件） |
+
+### 7.2. 私が直した点
+
+| 点                     | 直す前                                       | 直したあと                                         |
+| ---------------------- | -------------------------------------------- | -------------------------------------------------- |
+| `--force` での上書き   | 既存のスクリプトを上書きした                 | `--force` でも上書きしない                         |
+| `JSON.parse` の扱い    | `any` のまま扱った                           | `unknown` で受け、オブジェクトであることを確かめる |
+| 更新の失敗             | 表示だけで終了コード 0                       | 終了コードを 1 にする                              |
+| 字下げ                 | 常に 2 桁へ書き直した                        | 既存の字下げを保つ                                 |
+| テストの出力の差し止め | `process.stdout.write` の差し替えと `as any` | `vi.spyOn`                                         |
+
+`--force` は配置するテンプレートのファイルを上書きするための指定であり、利用者が書き換えた起動スクリプトまで壊す理由にならない。
+
+## 8. 関連ドキュメント
+
+- [[prj-0001:pjr-34mq-plain-repository-naming-readme]]
+- `src/exec-provider-scaffold.ts`
+- `README.md`

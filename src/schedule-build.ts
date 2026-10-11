@@ -319,7 +319,7 @@ function validateAgentAssignment(
   errors: string[],
 ): void {
   if (!roster) {
-    errors.push(`${label}: agent assignment requires a configured pm-members.yaml`);
+    errors.push(`${label}: agent assignment requires configured member registries`);
     return;
   }
   for (const [stageRole, nickname] of [
@@ -332,7 +332,7 @@ function validateAgentAssignment(
     );
     if (members.length !== 1) {
       errors.push(
-        `${label}.agent.${stageRole}: nickname '${nickname}' was not found uniquely in pm-members.yaml`,
+        `${label}.agent.${stageRole}: nickname '${nickname}' was not found uniquely in agent-members.yaml`,
       );
       continue;
     }

@@ -1,0 +1,53 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-ff59dc9363b1 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-ff59dc9363b1
+stage=1 executor=agy-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/specdojo/rulebooks/etc-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/etc-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/etc-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/etc-rulebook.md
+document start: docs/ja/specdojo/rulebooks/gl-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/gl-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-business-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-business-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-data-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-data-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-operations-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-operations-rulebook.md
+document start: docs/ja/specdojo/rulebooks/imp-test-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/imp-test-rulebook.md
+document start: docs/ja/specdojo/rulebooks/itc-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/itc-index-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-ff59dc9363b1/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-03T21:04:05Z	docs/ja/specdojo/rulebooks/etc-index-rulebook.md	1	passed	226	needs-work	92	2	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:07:35Z	docs/ja/specdojo/rulebooks/etc-rulebook.md	1	passed	208	needs-work	86	4	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:10:58Z	docs/ja/specdojo/rulebooks/gl-rulebook.md	1	passed	201	pass	97	3	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:13:28Z	docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md	1	passed	148	needs-work	93	3	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:16:39Z	docs/ja/specdojo/rulebooks/ifx-api-rulebook.md	1	passed	189	needs-work	80	11	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:20:25Z	docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md	1	passed	224	needs-work	82	7	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:23:45Z	docs/ja/specdojo/rulebooks/ifx-file-rulebook.md	1	passed	198	needs-work	90	2	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:26:32Z	docs/ja/specdojo/rulebooks/ifx-index-rulebook.md	1	passed	165	pass	87	10	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:29:22Z	docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md	1	passed	167	pass	92	6	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:32:02Z	docs/ja/specdojo/rulebooks/imp-business-rulebook.md	1	passed	158	pass	93	4	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:36:00Z	docs/ja/specdojo/rulebooks/imp-data-rulebook.md	1	passed	236	needs-work	75	11	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:39:17Z	docs/ja/specdojo/rulebooks/imp-interface-rulebook.md	1	passed	194	pass	97	3	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:41:56Z	docs/ja/specdojo/rulebooks/imp-operations-rulebook.md	1	passed	156	pass	97	3	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:45:53Z	docs/ja/specdojo/rulebooks/imp-test-rulebook.md	1	passed	235	needs-work	86	6	agy-expert-executor	gemma-reporter	none		
+2026-10-03T21:48:59Z	docs/ja/specdojo/rulebooks/itc-index-rulebook.md	1	passed	184	needs-work	89	2	agy-expert-executor	gemma-reporter	none		

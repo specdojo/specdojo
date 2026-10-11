@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_27704cbf16d642fea46752694dfa157d
+  ts: "2026-09-27T11:30:16Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-H220 で案 B を採択したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 観点の document_kinds で判断漏れの rulebook を検出する検証を追加する
+    - field: description
+      from: ""
+      to: PJR-H220 の決定（案 B）の実装。document_kinds で適用範囲を宣言した観点ごとに、include / exclude / 既定のどれとも判断されていない rulebook を一覧化し、rulebook 追加時の判断漏れを検知する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_44b057e1bc984041847244a79a482387
+  ts: "2026-09-27T11:33:28Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_27704cbf16d642fea46752694dfa157d
+- v: 1
+  id: reg_c8d3b743b1504e33b8d5b0b82516ca01
+  ts: "2026-09-27T11:43:21Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_44b057e1bc984041847244a79a482387
+- v: 1
+  id: reg_c07386f8b04f4740a851b7efbb51468a
+  ts: "2026-09-27T11:44:18Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断。専用 npm script と pre-commit への組み込みは 3S8Q により agent が編集できず残課題
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: document_kinds に confirmed_default を追加し、観点ごとに判断漏れ・存在しない ID・重複を error で報告する検証を npm test（npm run check に含まれる）で実行する。既存 107 件の判断を適用結果を変えずに記録し、作成手順とガイドへ記載した
+  previous_event_id: reg_c8d3b743b1504e33b8d5b0b82516ca01

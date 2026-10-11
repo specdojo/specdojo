@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_29af80c23d1242dfbf6aff0ecf9d2f6b
+  ts: "2026-10-09T03:55:04Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 公開物では grade を通しで実行できない（run-per-document.sh が同梱されない）
+    - field: description
+      from: ""
+      to: 公開物の試用（2026-10-09）で、文書ごとの grade の実行を担う tools/grade/run-per-document.sh（約 1,300 行の bash）が npm package の files に含まれず、利用者は grade plan と grade apply の部品しか使えないことを確認した。案内文書はこのスクリプトを前提にしている。v0.3.0 では grade を部品のみ・試験的と明記するか、CLI に grade run として取り込むかを決める。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-09"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_19164eab60be4769ad0a278d568ea264
+  ts: "2026-10-09T10:56:17Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_29af80c23d1242dfbf6aff0ecf9d2f6b
+- v: 1
+  id: reg_fff74dd7d9254793bd4ae9e31b78038f
+  ts: "2026-10-09T11:06:59Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_19164eab60be4769ad0a278d568ea264
+- v: 1
+  id: reg_08d1410edc4f45b0a815e65e38ab8c15
+  ts: "2026-10-09T11:08:07Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、手順のオプションを CLI の help と照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: v0.3.0 の grade を試験的と明記し、run-per-document.sh が package に含まれないこと、catalog_path が要ることを README・CHANGELOG・案内文書へ書いた。部品だけで 1 文書を評価する手順を command-reference に示した。
+  previous_event_id: reg_fff74dd7d9254793bd4ae9e31b78038f

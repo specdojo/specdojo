@@ -45,3 +45,35 @@
       from: low
       to: medium
   previous_event_id: reg_fe376fd8c10a4e3484e5e74afa043b99
+- v: 1
+  id: reg_28e0924d4a914bbca63a76567ec06912
+  ts: "2026-10-01T03:55:03Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: v0.3.0 で複数リポジトリ対応を進める方針になり、PJR-5822 の決定で扱う範囲に含めるため
+  changes:
+    - field: priority
+      from: medium
+      to: high
+  previous_event_id: reg_98dfa914a9354d7d8c3e5543d2815bc6
+- v: 1
+  id: reg_8f71bf17ad774d41a50705d294ed2d8e
+  ts: "2026-10-07T12:42:35Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: orchestrator が完了条件と後続の項目の対応を確認し、利用者の承認を得て完了
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: 後続の PJR-5822・PJR-9KST・PJR-6RN3・PJR-V96B・PJR-69VP で、統合順序・失敗パターンごとの回復・リポジトリ別の親検証・部分状態の扱い・実構成での確認がすべて満たされた。本項目での実装はない
+  previous_event_id: reg_28e0924d4a914bbca63a76567ec06912

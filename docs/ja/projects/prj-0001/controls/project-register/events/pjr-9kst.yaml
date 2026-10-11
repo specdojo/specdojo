@@ -1,0 +1,163 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_acff14d603764e0f9d23f4a3fd135c94
+  ts: "2026-10-01T11:39:22Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-69VP の 3 リポジトリ構成の e2e で、失敗位置ごとの再開 3 件がすべてこの理由で失敗したため。PJR-0WAA の統合テストは関数を直接呼ぶためこの経路を通らなかった
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 複数リポジトリの統合を再開すると waiting の記帳が事前検査を妨げる
+    - field: description
+      from: ""
+      to: 統合の途中で失敗して waiting に戻った項目を exec run --resume で再開すると、runner がプロジェクト側に書いた waiting の記帳（個票と event）が、事前検査で merge の対象と重なる未 commit の変更と判定され、統合できない。初回の統合と同じく releasePaths として除外する（v0.3.0）
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-01"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_6db2e4316f984afb8602ec00c70f67cc
+  ts: "2026-10-01T11:40:29Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_acff14d603764e0f9d23f4a3fd135c94
+- v: 1
+  id: reg_10432d13e019454bb3dbf96153b90605
+  ts: "2026-10-01T11:53:45Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による統合テスト `test-integration` が failed となっており、完了条件を満たしていないため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による統合テスト `test-integration` が failed となっており、完了条件を満たしていないため。"
+  previous_event_id: reg_6db2e4316f984afb8602ec00c70f67cc
+- v: 1
+  id: reg_c6aa820aaea34906a1ec4dc24a15bb0f
+  ts: "2026-10-01T12:20:46Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_10432d13e019454bb3dbf96153b90605
+- v: 1
+  id: reg_ead1fa3cabf4481aa17166049d0fe141
+  ts: "2026-10-01T12:21:52Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: runner による統合テスト `test-integration` が failed となっており、完了条件を満たしていないため。"
+      to: rate limit reached
+  previous_event_id: reg_c6aa820aaea34906a1ec4dc24a15bb0f
+- v: 1
+  id: reg_d653c4375ca2433d9cbd3e47c386f876
+  ts: "2026-10-01T12:22:41Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_ead1fa3cabf4481aa17166049d0fe141
+- v: 1
+  id: reg_989dcb802f29484a93279da22baa1c3b
+  ts: "2026-10-01T12:25:51Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+  previous_event_id: reg_d653c4375ca2433d9cbd3e47c386f876
+- v: 1
+  id: reg_aeb0e33da53948338de0014187923991
+  ts: "2026-10-01T15:12:25Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_989dcb802f29484a93279da22baa1c3b
+- v: 1
+  id: reg_bc4d88cd2fc5420cb0a2aa703647d110
+  ts: "2026-10-01T15:20:11Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_aeb0e33da53948338de0014187923991
+- v: 1
+  id: reg_49c441ed2e11476db8667e10b0dd8c6c
+  ts: "2026-10-01T19:41:52Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex は上限で中断、claude-expert-executor で完了 / gemma-reporter）の結果を orchestrator が評価した。完了条件と親検証 7 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-02"
+    - field: conclusion
+      from: "-"
+      to: 再開経路でも runner の記帳を初回と同じ基準で releasePaths として扱い、trace の文章を result の Markdown 検査に合わせた。2 製品構成の CLI 経路で失敗位置ごとの再開を確かめた
+  previous_event_id: reg_bc4d88cd2fc5420cb0a2aa703647d110

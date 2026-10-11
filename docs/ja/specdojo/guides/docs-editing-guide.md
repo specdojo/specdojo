@@ -19,6 +19,7 @@ SpecDojo で扱うドキュメントの編集に役立つ、Visual Studio Code�
 
 - 文書編集に役立つ VS Code 拡張と SpecDojo 拡張の導入方法・役割
 - 見出し番号の付け方、Markdown プレビューの使い方、表の整形方法
+- 文書サイトのビルド方法と、サイドバー・検索・package 同梱文書の扱い
 
 **次に読む文書**
 
@@ -325,3 +326,22 @@ npx specdojo-docs-lint md-content \
   --schema docs/ja/specdojo/schemas/v1/guide-content.schema.yaml \
   --data "docs/ja/specdojo/guides/*-guide.md"
 ```
+
+## 6. 文書サイトを確認する
+
+VitePress の文書サイトが必要なリポジトリでは、任意パッケージ `@specdojo/docs-site` を導入します。CLI 本体の `specdojo` だけを使う場合、このパッケージは不要です。
+
+```bash
+npm install --save-dev @specdojo/docs-site
+npx specdojo-docs-site build .
+```
+
+開発サーバは `npx specdojo-docs-site dev .` で起動します。`build` と `dev` は、利用リポジトリに存在しない package 同梱の kata・guide・reference を、gitignore 済みの `specdojo-kata-staging/` へ一時的に複製して `/ja/specdojo/` で配信します。eject 済みの文書は利用リポジトリ側を優先するため、サイト表示のために `kata install --all` を実行する必要はありません。
+
+サイト上の情報量を抑えるため、ナビゲーションと検索には次の範囲を使います。
+
+- `/ja/specdojo/` では SpecDojo 文書、`/ja/projects/<project-id>/` では対象 project の文書をサイドバーに表示します。
+- plan / result / event などの実行記録はページとして公開しますが、サイドバーには列挙しません。project の dashboard から `exec-records.md` を経由して辿ります。
+- ローカル検索は登録簿一覧 `pjr-index` を入口にし、個票、状態別などの派生ビュー、管理ログ、実行記録を検索インデックスから除外します。個票本文を探す場合は `pjr-index` から対象個票へ移動します。
+
+ステージングの参照元、Mermaid SVG だけを生成するコマンドなど、package 固有の設定は `packages/docs-site/README.md` を参照してください。

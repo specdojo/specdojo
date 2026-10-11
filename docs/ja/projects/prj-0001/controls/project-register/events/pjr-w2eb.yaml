@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_37a6d18e951d44dfbbbbe39721b5715b
+  ts: "2026-10-10T22:39:01Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: main への昇格の準備で npm run check が負荷のタイムアウトで 2 回続けて失敗したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: npm test の一括実行で負荷によりテストがタイムアウトする
+    - field: description
+      from: ""
+      to: npm test（vitest run）は単体と統合をまとめて既定の並列数で流すため、毎回別のテストが 1〜2 件タイムアウトで失敗する（10/11 に 2 回、exec-pipeline-e2e・exec-worktree-ops・doc-index）。test:unit と test:integration を分けて流すと全件通過する。npm run check が公開判定の基準 2 を満たせない。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-11"
+    - field: due
+      from: ""
+      to: _TODO_

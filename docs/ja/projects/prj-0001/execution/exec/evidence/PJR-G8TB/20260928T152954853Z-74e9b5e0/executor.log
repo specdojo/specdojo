@@ -1,0 +1,11 @@
+PJR-G8TB の計画に従い、指定されたガイドやリファレンスを調査して、各項目の仕様（PJR-4HBG・36CN・E2Q3）との食い違いを修正しました。
+
+1. **PJR-4HBG (`--join` 合流等)**: `exec-operation-guide.md` と `exec-config-guide.md` にはすでに `--join` による合流や `exec slots` についての記述が存在し、修正は不要でした。
+2. **PJR-36CN (イベントの和集合解決)**: `register-operation-guide.md` に「同じ項目を複数 worktree で変更した場合は……片方の event を削除せず再実行または手動統合します」という古い記述が残っていたため、和集合で解決する仕様へ記述を改めました。
+3. **PJR-E2Q3 (review の 2 段階実行)**: `exec-operation-guide.md` には記述済みでしたが、`quick-start-guide.md` と `review-guide.md` で review plan を実行する手順に `executor-by` と `reporter-by` を指定するコマンド例を書き加えました。
+
+最後に `npx prettier` によるフォーマットと `npm run -s lint:md` の実行を行い、静的検査が通過することを確認しています。本タスクは Pipeline executor stage であるため、以下のとおり executor evidence を JSON 形式で出力して完了とします。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-G8TB の指示に従い、各ガイドおよびリファレンスの記載を仕様に沿って更新しました。quick-start-guide.md および review-guide.md に review plan を executor と reporter の 2 段で実行する手順を追加し、register-operation-guide.md のイベントファイル競合時の解決方法を和集合で解決する旨に修正しました。他の文書（overview、exec-operation、exec-worktree、exec-config、orchestrator-operation、command-reference、README）は既に実装に合った記述となっているため変更不要としました。","validations":[{"command":"npm run -s lint:md","status":"passed","summary":"markdownlint passed"}]}
+</specdojo_executor_evidence>

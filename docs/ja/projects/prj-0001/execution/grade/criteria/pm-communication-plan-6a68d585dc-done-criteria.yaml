@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: prj-0001:pm-communication-plan-grade-criteria
+document: prj-0001:pm-communication-plan
+path: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md
+graded_at: "2026-09-24T16:38:32.296Z"
+graded_by: codex-expert-executor
+content_hash: 9079267db2d4ded76eaf486b2ae824cc1c2706cfb132d257fe65c54f63217edb
+summary:
+  satisfied: 1
+  unsatisfied: 2
+  total: 3
+criteria:
+  - id: DC-001
+    text: 報告・連絡・会議体の計画を承認できる粒度で記述されていること
+    roles:
+      - PO
+    viewpoint: vp-po-decision-readiness
+    status: satisfied
+  - id: DC-002
+    text: 進捗・課題・リスクの報告経路が定義されていること
+    roles:
+      - PM
+    viewpoint: vp-pm-control-reporting
+    status: unsatisfied
+    reason: 進捗の報告先、および通常の課題・リスクについて報告者、報告先、手段、記録先を結ぶ経路が定義されていない。
+  - id: DC-003
+    text: 関係者ごとの情報要求・関与方針が業務観点で確認できること
+    roles:
+      - BA
+    viewpoint: vp-ba-stakeholder-clarity
+    status: unsatisfied
+    reason: 異なる情報要求を持つ代表利用者・協働組織・将来の貢献者が併合され、関係者ごとの情報要求と関与方針を確認できない。

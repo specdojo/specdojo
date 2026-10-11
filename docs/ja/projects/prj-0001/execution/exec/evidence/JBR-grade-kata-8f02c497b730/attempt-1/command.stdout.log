@@ -1,0 +1,68 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-8f02c497b730 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-8f02c497b730
+stage=1 executor=agy-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/atc-index-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/atc-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/atc-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/atc-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/atc-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bac-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/bac-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/bac-rulebook.md
+document start: docs/ja/specdojo/rulebooks/bds-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/bds-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/bds-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdsd-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/cdsd-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/cdsd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cld-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/cld-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/cld-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cnd-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/cnd-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/cnd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cxd-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/cxd-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/cxd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/dct-index-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/dct-index-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/dct-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/dct-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/dct-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/dct-rulebook.md
+document start: docs/ja/specdojo/rulebooks/dec-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/dec-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/dec-rulebook.md
+document start: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/dmd-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/dmd-rulebook.md
+document resume: docs/ja/specdojo/rulebooks/dmd-rulebook.md start_stage=1
+document complete: docs/ja/specdojo/rulebooks/dmd-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-8f02c497b730/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-02T21:04:31Z	docs/ja/specdojo/rulebooks/atc-index-rulebook.md	1	passed	253	needs-work	69	16	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:08:46Z	docs/ja/specdojo/rulebooks/atc-rulebook.md	1	passed	253	needs-work	77	15	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:12:58Z	docs/ja/specdojo/rulebooks/bac-rulebook.md	1	passed	250	needs-work	77	23	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:16:38Z	docs/ja/specdojo/rulebooks/bds-rulebook.md	1	passed	218	needs-work	67	21	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:21:06Z	docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md	1	passed	266	needs-work	42	27	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:24:59Z	docs/ja/specdojo/rulebooks/cdsd-rulebook.md	1	passed	231	needs-work	56	23	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:28:31Z	docs/ja/specdojo/rulebooks/cld-rulebook.md	1	passed	210	needs-work	63	23	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:32:25Z	docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md	1	passed	232	needs-work	59	17	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:35:28Z	docs/ja/specdojo/rulebooks/cnd-rulebook.md	1	passed	181	needs-work	78	14	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:38:43Z	docs/ja/specdojo/rulebooks/cxd-rulebook.md	1	passed	193	pass	93	4	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:41:20Z	docs/ja/specdojo/rulebooks/dct-index-rulebook.md	1	passed	156	pass	100	0	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:47:58Z	docs/ja/specdojo/rulebooks/dct-rulebook.md	1	passed	396	needs-work	84	8	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:51:10Z	docs/ja/specdojo/rulebooks/dec-rulebook.md	1	passed	190	pass	93	8	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:53:37Z	docs/ja/specdojo/rulebooks/dmd-index-rulebook.md	1	passed	145	needs-work	93	3	agy-expert-executor	gemma-reporter	none		
+2026-10-02T21:56:06Z	docs/ja/specdojo/rulebooks/dmd-rulebook.md	1	passed	147	needs-work	96	1	agy-expert-executor	gemma-reporter	none		

@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3aacf2d11fba4305b1a3e60e1bfb6d06
+  ts: "2026-10-08T12:38:03Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-P8TK の公開物での実地の確認で判明
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent の定義の分離が、新しい利用者の導入の経路に追従していない
+    - field: description
+      from: ""
+      to: 公開物（npm pack の tarball）での実地の確認（2026-10-08）で判明。(1) loadMemberRoster は project に members_path がないと何も読まずに返すため、config init の既定の設定では .specdojo/agent-members.yaml の agent が読まれず、exec で agent を使えない。(2) templates の codex・copilot・antigravity の README と pm-members-snippet.yaml が、agent の定義を pm-members.yaml へ書くよう案内したままで、そのとおりにすると読み込みがエラーになる。(3) 名簿の schema 違反などの読み込みのエラーを exec run が「agent nickname not found」とだけ表示し、原因が利用者に伝わらない。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
+- v: 1
+  id: reg_17c2021082894f97afffcfa848b0f022
+  ts: "2026-10-08T12:52:32Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3aacf2d11fba4305b1a3e60e1bfb6d06
+- v: 1
+  id: reg_a94db375e0c3431a89d2ce353cebadaf
+  ts: "2026-10-08T13:05:34Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_17c2021082894f97afffcfa848b0f022
+- v: 1
+  id: reg_6c4fb61a24e246679ab4d28d44840c21
+  ts: "2026-10-08T13:20:28Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: members_path がなくても .specdojo/agent-members.yaml の agent を読み込み、名簿の読み込みのエラーの原因を表示するようにした。codex・copilot・antigravity のテンプレートの案内を agent-members.yaml へ改め、スニペットを agent-members-snippet.yaml に改名した
+  previous_event_id: reg_a94db375e0c3431a89d2ce353cebadaf

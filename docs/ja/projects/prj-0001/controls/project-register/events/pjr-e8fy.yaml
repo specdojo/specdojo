@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_792662b2655546bda1daf6f79e1014c2
+  ts: "2026-09-26T23:23:14Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: docs:build の重さの調査結果を受けて利用者が A+B 案を選択
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs:build のサイドバーから実行記録を外しパスごとに分割する
+    - field: description
+      from: ""
+      to: 全2038項目のサイドバーが2167ページ全てに埋め込まれ、HTMLが1ページ約1.4MB・distが2.9GBに膨らみ既定ヒープで失敗する。実行記録をサイドバーから外し、/ja/specdojo/ と /ja/projects/`<id>`/ でサイドバーを分ける
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_3138fea7b84c458d862c4eae455faf13
+  ts: "2026-09-26T23:50:54Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_792662b2655546bda1daf6f79e1014c2
+- v: 1
+  id: reg_ae34afb6792246c2a1fa3ab50aec5952
+  ts: "2026-09-27T00:05:42Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: The sandbox refused edits to `packages/docs-site/.vitepress/config.mts`, preventing the primary sidebar changes required by the plan. Additionally, the runner validati…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: The sandbox refused edits to `packages/docs-site/.vitepress/config.mts`, preventing the primary sidebar changes required by the plan. Additionally, the runner validati…"
+  previous_event_id: reg_3138fea7b84c458d862c4eae455faf13
+- v: 1
+  id: reg_6b60583b65544a488f149c812b1e30fd
+  ts: "2026-09-27T02:00:58Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_ae34afb6792246c2a1fa3ab50aec5952
+- v: 1
+  id: reg_131c75e982214d7ea24f558f77559f61
+  ts: "2026-09-27T02:42:50Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6b60583b65544a488f149c812b1e30fd
+- v: 1
+  id: reg_45ad23e40915443e9cea194c84fd6095
+  ts: "2026-09-27T04:02:11Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断。ビルド時間は同一環境での再計測が残る
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: サイドバーから実行記録を外しパス別に分割、metaChunk でサイト設定を切り出した。既定ヒープで docs:build が成功し dist は 2.9GB→568MB、代表ページは 1.4MB→120KB。実行記録は exec-records.md から辿れる
+  previous_event_id: reg_131c75e982214d7ea24f558f77559f61

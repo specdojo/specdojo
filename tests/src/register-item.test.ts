@@ -141,6 +141,38 @@ describe("readRegisterItemContent — 個票からの一覧行の導出", () => 
   it("命名規約外のファイル名は undefined を返す", () => {
     expect(readRegisterItemContent(buildItemFile(), "notes.md")).toBeUndefined();
   });
+
+  it("個票の targets を読み取る", () => {
+    const parsed = readRegisterItemContent(
+      buildItemFile([
+        ...MIGRATED_FIELDS,
+        "targets:",
+        "  - prj-0001:cdfd-overview",
+        "  - prj-0001:cdfd-check",
+      ]),
+      "pjr-ab12-inventory-seed.md",
+    );
+
+    expect(parsed?.item.targets).toEqual(["prj-0001:cdfd-overview", "prj-0001:cdfd-check"]);
+  });
+
+  it("targets が無い個票は targets を持たない", () => {
+    const parsed = readRegisterItemContent(
+      buildItemFile(MIGRATED_FIELDS),
+      "pjr-ab12-inventory-seed.md",
+    );
+
+    expect(parsed?.item.targets).toBeUndefined();
+  });
+
+  it("空の targets 配列は無視する", () => {
+    const parsed = readRegisterItemContent(
+      buildItemFile([...MIGRATED_FIELDS, "targets: []"]),
+      "pjr-ab12-inventory-seed.md",
+    );
+
+    expect(parsed?.item.targets).toBeUndefined();
+  });
 });
 
 describe("toDisplayItem — 保存した日時から一覧の暦日を導出する", () => {
@@ -374,6 +406,15 @@ describe("setRegisterItemTitle / setRegisterItemDescription — 本文側の項�
     const updated = setRegisterItemTitle(buildItemFile(), "在庫初期値を見直す");
 
     expect(updated).toContain("# PJR-AB12 在庫初期値を見直す");
+  });
+
+  it("タイトルの山括弧プレースホルダを code span 化し、既存 code span は二重化しない", () => {
+    const updated = setRegisterItemTitle(buildItemFile(), "dct-<domain>.yaml を見直す");
+
+    expect(updated).toContain("# PJR-AB12 `dct-<domain>.yaml` を見直す");
+    expect(setRegisterItemTitle(updated, "`dct-<domain>.yaml` を見直す")).not.toContain(
+      "``dct-<domain>.yaml``",
+    );
   });
 
   it("最初の章の段落を差し替える", () => {

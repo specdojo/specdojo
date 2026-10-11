@@ -370,7 +370,7 @@ groups:
             purpose: 登録簿の初期化（scaffold）
         depends_on:
           - cdfd-overview
-        note: 全体概要の Onboarding（P-01）を詳細化する。repository からの導入、既存プロジェクトへの導入、Detached Unit の複数ケースを扱う。旧 cdfd-init は参照しない
+        note: 全体概要の Onboarding（P-01）を詳細化する。repository からの導入、既存プロジェクトへの導入、別リポジトリ構成の複数ケースを扱う。旧 cdfd-init は参照しない
         done_criteria:
           - text: 全体概要の P-01 の主要入力・主要出力・データストアが「プロセス領域」章で矛盾なく詳細化され、Kata の配置と稼働構成の初期化がプロセス単位で確認できること
             roles: [BA]

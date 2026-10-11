@@ -1,0 +1,12 @@
+現行 CDFD の 14 領域へ追従しました。
+
+- 既存 BPS 29 件を再配置し、全 `overview` と `depends_on` を更新
+- `P-08` / `P-11` の BPS を追加し、合計 31 件に更新
+- [成果物カタログ](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MH9E/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml)
+- [PJR 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MH9E/docs/ja/projects/prj-0001/controls/project-register/pjr-mh9e-bps-29-cdfd-14.md)
+- executor 指示に従い result は未編集
+- catalog 検証はエラーなし。既存の未作成成果物に関する warning のみです。
+
+<specdojo_executor_evidence>
+{"final_message":"BPSカタログを現行CDFDの14領域へ再編し、既存29件の追従とP-08/P-11の2件追加を完了した。","validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-mh9e-bps-29-cdfd-14.md","status":"passed","summary":"対象2ファイルはPrettier形式に適合"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-mh9e-bps-29-cdfd-14.md","status":"passed","summary":"Markdown lintエラーなし"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全カタログOK。既存の未作成成果物に関するwarningのみ"},{"command":"node --import tsx src/specdojo.ts catalog build","status":"passed","summary":"カタログ生成成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿ビュー生成成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引2012件を生成"},{"command":"node --import tsx src/specdojo.ts grade validate --target deliverable --project prj-0001 --path docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md --path docs/ja/product/010-business-specs/030-business-model/bps-task-completion.md","status":"passed","summary":"2文書、0エラー。cross-document-consistency findingは0件"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

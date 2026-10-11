@@ -1,0 +1,447 @@
+Reading prompt from stdin...
+OpenAI Codex v0.160.0
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EZAF
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a116b1-4b96-7b51-a41b-e8c7b20f64ea
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-ezaf-20261007t140657z-4dac
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-EZAF
+  name: "devcontainer テンプレートで codex の sandbox が動くか確認し、必要な設定を加える"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: DEV
+---
+
+# Edit Plan: PJR-EZAF devcontainer テンプレートで codex の sandbox が動くか確認し、必要な設定を加える
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-EZAF「devcontainer テンプレートで codex の sandbox が動くか確認し、必要な設定を加える」に対応する。
+
+specdojo devcontainer scaffold のテンプレートはシステムの bubblewrap を入れないため、PJR-27Z9 の /proc の問題は起きない見込みである。一方、runArgs を持たず Docker 既定の seccomp が名前空間の作成（unshare / clone の名前空間フラグ）を禁止するため、codex 同梱の bwrap が sandbox を作れない可能性が高い。Docker が必要なため Host Mac で実際に確認し、問題があれば codex provider の指定時だけ設定を加える
+
+## 2. 対象項目
+
+- `id`: PJR-EZAF
+- `type`: todo
+- `priority`: medium
+- `owner`: DEV
+- `due`: -
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-ezaf-devcontainer-template-codex-sandbox.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-ezaf-20261007T140657Z-4dac-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+### grade result から展開された finding
+
+- なし
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 作業用のファイル（編集用スクリプト、検証用の一時データなど）はリポジトリの外（一時ディレクトリ）に置き、終了前に削除する。リポジトリ内、とくにリポジトリ直下に作業用のファイルを作らない。成果物ではない新規ファイルは commit されず、`commit-scope:` の警告として記録される。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- Markdown 成果物を編集した後は、`npx prettier --write <対象ファイル>` で整形し、`npx markdownlint <対象ファイル>` で静的検査を実施する。検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）を先回りで実行し、失敗をすべて修正してから完了する。コミット時に初めて失敗が判明すると commit がブロックされ、成果物の内容が完成していてもタスクは block になる。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当する行の検査をすべて実行する。該当行がない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は設定側に合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx tsx src/specdojo.ts <subcommand>` など）で実行する。ただし、sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する。
+
+| 変更したファイル                                                                                       | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | `npx prettier --write <対象ファイル>`、`npx markdownlint <対象ファイル>`                                                              |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+
+Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|requires_human","summary":"concise result or required human check"}]}
+</specdojo_executor_evidence>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+関連する登録簿・個票・devcontainer 設計とテンプレート実装を先に確認し、完了条件と変更範囲を確定します。Host Mac / Docker でしか行えない実機確認は、実装・ローカル検証とは分けて evidence に記録します。
+exec
+/bin/bash -lc "git status --short && rg -n \"PJR-EZAF|devcontainer|runArgs|seccomp|bubblewrap|bwrap|codex\" docs/ja/projects/prj-0001/controls/project-register docs/ja/specdojo src tests package.json lefthook.yml --glob '"'!**/.env'"' --glob '"'!secrets/**'"'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EZAF
+ succeeded in 728ms:
+?? docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EZAF/
+lefthook.yml:29:      glob: "{.agents/specdojo-orchestrator.agent.md,.claude/agents/specdojo-orchestrator.md,.github/agents/specdojo-orchestrator.md,.codex/agents/specdojo-orchestrator.toml,.opencode/agents/gemma-orchestrator.md,.opencode/agents/qwen-orchestrator.md,templates/*/agents/specdojo-orchestrator.*,templates/antigravity/orchestrator.md}"
+package.json:65:    "orch:terra": "codex -m gpt-5.6-terra \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+package.json:66:    "orch:terra:work": "tools/worktree/open-agent-worktree.sh codex-work codex -m gpt-5.6-terra \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+package.json:67:    "orch:sol": "codex -m gpt-5.6-sol \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+package.json:68:    "orch:sol:work": "tools/worktree/open-agent-worktree.sh codex-work codex -m gpt-5.6-sol \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+package.json:107:    "vscode:ps": "bash .devcontainer/kill-stale-vscode.sh --list",
+package.json:108:    "vscode:kill-stale": "bash .devcontainer/kill-stale-vscode.sh",
+tests/devcontainer-scaffold.test.ts:2:import { runDevcontainerScaffold } from "../src/devcontainer-scaffold.js";
+tests/devcontainer-scaffold.test.ts:29:      if (file.includes(".devcontainer")) return false; // not exists in repo
+tests/devcontainer-scaffold.test.ts:36:      if (file.endsWith("devcontainer.json")) {
+tests/devcontainer-scaffold.test.ts:45:            postCreateCommand: "bash .devcontainer/post-create.sh",
+tests/devcontainer-scaffold.test.ts:56:  it("should not overwrite existing .devcontainer by default", async () => {
+tests/devcontainer-scaffold.test.ts:57:    existsSyncMock.mockReturnValue(true); // .devcontainer exists
+tests/devcontainer-scaffold.test.ts:74:  it("should overwrite existing .devcontainer if force is true", async () => {
+tests/devcontainer-scaffold.test.ts:75:    existsSyncMock.mockReturnValue(true); // .devcontainer exists
+tests/devcontainer-scaffold.test.ts:104:      expect.stringContaining("[dry-run] would write: .devcontainer/devcontainer.json"),
+tests/devcontainer-scaffold.test.ts:107:      expect.stringContaining("[dry-run] would write: .devcontainer/post-create.sh"),
+tests/devcontainer-scaffold.test.ts:125:    const jsonCall = findWriteCall("devcontainer.json");
+tests/devcontainer-scaffold.test.ts:128:      "ghcr.io/rocker-org/devcontainer-features/apt-packages:1",
+tests/devcontainer-scaffold.test.ts:150:    const jsonCall = findWriteCall("devcontainer.json");
+tests/devcontainer-scaffold.test.ts:153:      json.features["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"].packages,
+tests/devcontainer-scaffold.test.ts:156:      json.features["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"].packages,
+tests/devcontainer-scaffold.test.ts:173:    const jsonCall = findWriteCall("devcontainer.json");
+tests/devcontainer-scaffold.test.ts:182:      providers: ["claude", "codex", "opencode", "antigravity"],
+tests/devcontainer-scaffold.test.ts:190:    const jsonCall = findWriteCall("devcontainer.json");
+tests/devcontainer-scaffold.test.ts:196:      "source=repo-specdojo-codex,target=/home/node/.codex,type=volume",
+tests/devcontainer-scaffold.test.ts:210:    expect(shCall[1]).toContain("sudo npm install -g @openai/codex@latest");
+tests/devcontainer-scaffold.test.ts:227:    const jsonCall = findWriteCall("devcontainer.json");
+tests/tools/open-agent-worktree.integration.test.ts:23:  const worktree = path.join(root, "worktrees", "codex-work");
+tests/tools/open-agent-worktree.integration.test.ts:42:    execFileSync(scriptPath, ["codex-work", process.execPath, "-e", "process.exit(0)"], {
+tests/tools/open-agent-worktree.integration.test.ts:46:    expect(git(worktree, "branch", "--show-current")).toBe("worktree/codex-work");
+tests/tools/open-agent-worktree.integration.test.ts:49:    execFileSync(scriptPath, ["codex-work", process.execPath, "-e", "process.exit(0)"], {
+tests/tools/open-agent-worktree.integration.test.ts:53:    expect(git(worktree, "branch", "--show-current")).toBe("worktree/codex-work");
+tests/tools/open-agent-worktree.integration.test.ts:59:    git(repo, "worktree", "add", "-b", "codex-work", worktree);
+tests/tools/open-agent-worktree.integration.test.ts:63:      ["codex-work", process.execPath, "-e", "process.exit(0)"],
+tests/tools/open-agent-worktree.integration.test.ts:72:    expect(result.stderr).toContain("actual=codex-work expected=worktree/codex-work");
+tests/docs/specdojo/schemas/pm-members-schema.test.ts:48:      nickname: "codex-executor",
+tests/docs/specdojo/schemas/pm-members-schema.test.ts:53:      provider: "codex",
+tests/tools/grade-per-document.test.ts:298:  it("defaults to a single codex stage when --stages is omitted", () => {
+tests/tools/grade-per-document.test.ts:309:    expect(result.stdout).toContain("stage=1 executor=codex-expert-executor");
+tests/tools/grade-per-document.test.ts:458:  it("runs a single codex stage without the conditional later stages", () => {
+tests/tools/grade-per-document.test.ts:466:      "stage=1 executor=codex-expert-executor reporter=machine reference=none",
+tests/tools/grade-per-document.test.ts:480:    expect(readFileSync(fixture.argsFile, "utf8")).toContain("--by codex-expert-executor");
+tests/tools/grade-per-document.test.ts:667:    expect(agentRuns[0]).toContain("--by codex-expert-executor");
+tests/tools/grade-per-document.test.ts:686:    expect(agentRuns[0]).toContain("--by codex-expert-executor");
+tests/tools/grade-per-document.test.ts:781:      "stage=1 executor=codex-expert-executor reporter=gemma-reporter",
+tests/tools/grade-per-document.test.ts:785:    expect(invocations.match(/^agent run .*--by codex-expert-executor/gm)).toHaveLength(1);
+tests/docs/specdojo/schemas/sch-strategy-schema.test.ts:76:    firstPhase(strategy).agent = { executor: "codex-executor", reporter: "gemma-reporter" };
+tests/docs/specdojo/schemas/sch-strategy-schema.test.ts:91:        agent: { executor: "codex-executor", reporter: "gemma-reporter" },
+tests/src/exec-run.test.ts:310:      agent({ nickname: "codex", priority: 1 }),
+tests/src/exec-run.test.ts:317:    expect(actual).toEqual(["codex", "opencode"]);
+tests/src/exec-run.test.ts:416:        nickname: "codex-expert-executor",
+tests/src/exec-run.test.ts:444:    expect(expertExecutorCandidates).toEqual(["codex-expert-executor"]);
+tests/src/exec-run.test.ts:680:      providers: { codex: { command_template: "codex exec --model {model}" } },
+tests/src/exec-run.test.ts:683:      agent({ nickname: "codex-edit-agent", provider: "codex", command: undefined }),
+tests/src/exec-run.test.ts:689:      { edit: "codex-edit-agent" },
+tests/src/exec-run.test.ts:697:      expect(actual.message).toContain("codex-edit-agent");
+tests/src/exec-provider-scaffold.test.ts:189:        buildProviderScaffoldPlan({ packageRoot, repoRoot: dir, provider: "codex" }),
+tests/src/exec-provider-scaffold.test.ts:190:      ).rejects.toThrow(/Unknown provider template: codex\. Available: claude/);
+tests/src/review-grade.test.ts:31:    graded_by: "codex-expert-executor",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:500:          "    provider: codex",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:539:          "  - nickname: exec-codex-protected-write",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:540:          "    display_name: exec-codex-protected-write",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:544:          "    provider: codex",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:606:          "  codex:",
+tests/src/exec-register-pipeline-e2e.integration.test.ts:1468:  it.each(["exec-codex-protected-write", "exec-claude-protected-write"])(
+tests/src/register-commands.test.ts:343:      await runRegister(["start", "--id", "PJR-AB12", "--by", "codex"]);
+tests/src/register-commands.test.ts:348:        actor: "codex",
+tests/src/register-commands.test.ts:354:      await runRegister(["start", "--id", "PJR-AB12", "--by", "codex"]);
+tests/src/exec-agent-protected-config.test.ts:44:    ".codex/agents/executor.toml",
+tests/src/exec-agent-protected-config.test.ts:143:    write(join(root, ".codex", "agents", "new.toml"), 'name = "new"\n');
+tests/src/exec-agent-protected-config.test.ts:147:      ".codex/agents/new.toml",
+tests/src/exec-register.test.ts:280:    const selection = parseRegisterExecutorSelection("pjr-0001=exec-codex,PJR-0002=exec-claude", [
+tests/src/exec-register.test.ts:287:      "PJR-0001": "exec-codex",
+tests/src/exec-register.test.ts:311:        provider: "codex",
+tests/src/exec-register.test.ts:317:        provider: "codex",
+tests/src/exec-register.test.ts:328:      executor: { command: "run-exec-1", actor: "exec-1", provider: "codex" },
+tests/src/exec-register.test.ts:329:      reporterCandidates: [{ command: "run-report-1", actor: "report-1", provider: "codex" }],
+tests/src/exec-limit.test.ts:30:      provider: "codex",
+tests/src/exec-limit.test.ts:46:      provider: "codex",
+tests/src/exec-limit.test.ts:54:      provider: "codex",
+tests/src/exec-limit.test.ts:68:      provider: "codex",
+tests/src/exec-limit.test.ts:105:        last_by: "codex-edit-agent",
+tests/src/exec-limit.test.ts:110:        last_by: "codex-edit-agent",
+tests/src/exec-task-repos.test.ts:65:  it("repeats --add-dir for codex, antigravity, and copilot", () => {
+tests/src/exec-task-repos.test.ts:66:    for (const provider of ["codex", "antigravity", "copilot"] as const) {
+tests/src/exec-task-repos.test.ts:89:    expect(withAgentExtraRoots("codex exec", "codex", [])).toBe("codex exec");
+tests/src/exec-task-repos.test.ts:93:    expect(withAgentExtraRoots("codex exec", "codex", ["/tmp/it's here"])).toBe(
+tests/src/exec-task-repos.test.ts:94:      "codex exec '--add-dir' '/tmp/it'\\''s here'",
+tests/src/exec-agent-config.test.ts:148:    const actual = resolveRateLimitDetection(config, "codex");
+tests/src/exec-agent-config.test.ts:175:    const actual = resolveRateLimitPolicy(config, "codex");
+tests/src/exec-agent-config.test.ts:198:        codex: { max_concurrency: 2.5 },
+tests/src/exec-agent-config.test.ts:203:    expect(resolveMaxConcurrency(bad, "codex")).toBeUndefined();
+tests/src/exec-agent-config.test.ts:242:    expect(tracker.hasCapacity("codex")).toBe(true);
+tests/src/grade-result.test.ts:37:    graded_by: "codex-executor",
+docs/ja/specdojo/standards/git-branching-standard.md:43:対話型オーケストレーターを隔離して起動する常設 worktree は、ブランチを `worktree/<name>`、配置を `../worktrees/<name>` とします。`<name>` は `claude-work`、`codex-work`、`copilot-work`、`qwen-work`、`gemma-work` のいずれかです。
+tests/src/specdojo-config.test.ts:164:  - nickname: codex-executor
+tests/src/specdojo-config.test.ts:169:    provider: codex
+tests/src/specdojo-config.test.ts:185:    expect(roster?.members.map((member) => member.nickname)).toEqual(["alice", "codex-executor"]);
+tests/src/specdojo-config.test.ts:190:    write(join(root, "members.yaml"), humanRoster.replaceAll("alice", "codex-executor"));
+tests/src/specdojo-config.test.ts:194:      /Duplicate member nickname 'codex-executor'/,
+tests/src/specdojo-config.test.ts:203:      /codex-executor.*config migrate-members --dry-run/,
+tests/src/grade.test.ts:425:          nickname: "codex-executor",
+tests/src/grade.test.ts:434:    expect(resolveGradeActor(" codex-executor ", roster)).toBe("codex-executor");
+tests/src/grade.test.ts:436:    expect(() => resolveGradeActor("codex-executor", null)).toThrow(
+tests/src/grade.test.ts:502:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:511:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:518:    expect(first).toContain("graded_by: codex-executor");
+tests/src/grade.test.ts:549:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:580:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:589:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:617:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:660:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:669:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:697:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:710:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:728:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:765:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:785:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:817:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:1519:        graded_by: "codex-expert-executor",
+tests/src/grade.test.ts:1826:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:1857:      graded_by: "codex-executor",
+tests/src/grade.test.ts:1877:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:1892:      gradedBy: "codex-executor",
+tests/src/grade.test.ts:1914:        gradedBy: "codex-executor",
+tests/src/grade.test.ts:1961:        gradedBy: "codex-executor",
+tests/src/grade.test.ts:2074:      graded_by: "codex-expert-executor",
+tests/src/exec-results.test.ts:201:      agent: "codex-edit-agent",
+tests/src/exec-results.test.ts:213:      agent: "codex-edit-agent",
+tests/src/exec-results.test.ts:223:      agent: "codex-edit-agent",
+tests/src/exec-results.test.ts:240:      agent: "codex-edit-agent",
+tests/src/exec-results.test.ts:266:      agent: "codex-edit-agent",
+tests/src/exec-results.test.ts:275:      agent: "codex-edit-agent",
+tests/src/exec-results.test.ts:302:    await resetResultForClaim(resultPath, "codex-edit-agent", "2026-06-21T00:00:00.000Z");
+tests/src/exec-results.test.ts:308:    expect(frontmatter).toContain("agent: codex-edit-agent");
+tests/src/exec-results.test.ts:343:      agent: "codex-expert-edit-agent",
+tests/src/exec-results.test.ts:363:      agent: "codex-review-agent",
+tests/src/exec-results.test.ts:454:      agent: "codex-edit-agent",
+tests/src/exec-results.test.ts:461:    await resetResultForClaim(resultPath, "codex-edit-agent", "2026-07-25T02:00:00.000Z");
+tests/src/exec-results.test.ts:972:      agent: "codex-review-agent",
+tests/src/exec-strategy.test.ts:201:          "        executor: codex-expert-review-executor",
+tests/src/exec-strategy.test.ts:226:        executor: "codex-expert-review-executor",
+tests/src/exec-run-downgrade-unfilled.test.ts:19:  "  agent: codex-edit-agent",
+tests/src/exec-run-downgrade-unfilled.test.ts:93:        "  agent: codex-edit-agent",
+tests/src/exec-run-downgrade-unfilled.test.ts:94:        "  completed_at: 2026-08-10T00:05:00.000Z\n  agent: codex-edit-agent\n  block_reason: rate limit reached",
+tests/src/exec-run-downgrade-unfilled.test.ts:127:    ["changed field", "  agent: codex-edit-agent", "  agent: local-edit-agent"],
+tests/src/exec-run-downgrade-unfilled.test.ts:128:    ["added field", "  agent: codex-edit-agent", "  agent: codex-edit-agent\n  summary: custom"],
+docs/ja/projects/prj-0001/controls/project-register/pjr-h9r2-resume-sync-uncommitted-overlap.md:42:| 完了条件 | 未 commit の変更と統合先の変更が同じファイルに及んでも衝突しない場合は、再開が取り込みを終えて親検証へ進むことを確かめる統合テストがある。衝突する場合は成果を失わずに止まることも確かめる。宣言を持たない project と複数リポジトリの project の両方で動く。親検証がすべて通る。1 回目の実行（codex）では、同じファイルの衝突しない変更を戻すときに `git stash pop --index` が index の衝突で失敗した（`tests/src/exec-task-repos.integration.test.ts` の「merges non-conflicting changes to the same file and restores the executor edit」）。戻すときは index を復元しない方法にする。差分の控えは `/workspaces/specdojo-workspace/specdojo/logs/pjr-h9r2-attempt1.patch` にある |
+tests/src/exec-pipeline-e2e.integration.test.ts:251:      ...member("cloud-expert-executor", "codex", "expert", "executor"),
+tests/src/exec-pipeline-e2e.integration.test.ts:279:      "  codex:",
+tests/src/exec-pipeline-e2e.integration.test.ts:283:      "        expert: { model: gpt-5-codex, effort: high }",
+tests/src/exec-pipeline-e2e.integration.test.ts:870:    expect(invocations[0].model).toBe("gpt-5-codex");
+tests/src/specdojo-config-command.test.ts:79:      await runConfigCommand(["scaffold", "--provider", "codex"]);
+tests/src/specdojo-config-command.test.ts:81:      expect(existsSync(join(repo, ".codex", "agents", "codex-executor.toml"))).toBe(true);
+tests/src/exec-agent-config-command.test.ts:32:const codexTemplateConfig: ExecDefaultsConfig = {
+tests/src/exec-agent-config-command.test.ts:34:    codex: {
+tests/src/exec-agent-config-command.test.ts:35:      command_template: 'codex exec --model {model} -c model_reasoning_effort="{effort}"',
+tests/src/exec-agent-config-command.test.ts:79:      codexTemplateConfig,
+tests/src/exec-agent-config-command.test.ts:80:      buildMember({ nickname: "codex-edit-agent", provider: "codex", proficiency: "normal" }),
+tests/src/exec-agent-config-command.test.ts:83:      codexTemplateConfig,
+tests/src/exec-agent-config-command.test.ts:85:        nickname: "codex-expert-edit-agent",
+tests/src/exec-agent-config-command.test.ts:86:        provider: "codex",
+tests/src/exec-agent-config-command.test.ts:91:    expect(normal).toBe('codex exec --model gpt-5.4-mini -c model_reasoning_effort="medium"');
+tests/src/exec-agent-config-command.test.ts:92:    expect(expert).toBe('codex exec --model gpt-5.5 -c model_reasoning_effort="high"');
+tests/src/exec-agent-config-command.test.ts:159:      nickname: "codex-edit-agent",
+tests/src/exec-agent-config-command.test.ts:160:      provider: "codex",
+tests/src/exec-agent-config-command.test.ts:164:    expect(() => resolveMemberCommand(codexTemplateConfig, member)).toThrow(
+tests/src/exec-agent-config-command.test.ts:165:      /\{model\}.*providers\.codex\.command_template.*codex-edit-agent/,
+tests/src/exec-agent-config-command.test.ts:172:        codex: {
+tests/src/exec-agent-config-command.test.ts:173:          command_template: "codex exec --model {model} --effort {effort}",
+tests/src/exec-agent-config-command.test.ts:177:            by_nickname: { "codex-special": { model: "from-nickname" } },
+tests/src/exec-agent-config-command.test.ts:184:      resolveMemberCommand(config, buildMember({ nickname: "codex-special", provider: "codex" })),
+tests/src/exec-agent-config-command.test.ts:185:    ).toBe("codex exec --model from-nickname --effort medium");
+tests/src/exec-agent-config-command.test.ts:186:    expect(resolveMemberCommand(config, buildMember({ provider: "codex" }))).toBe(
+tests/src/exec-agent-config-command.test.ts:187:      "codex exec --model from-proficiency --effort medium",
+src/specdojo-config.ts:139:export type AgentProvider = "opencode" | "claude" | "codex" | "copilot" | "antigravity" | "custom";
+src/specdojo-config.ts:790:      "Provider template to copy (antigravity|claude|codex|copilot|opencode)",
+src/exec-task-repos.ts:529:    case "codex":
+src/exec-provider-scaffold.ts:14:  codex: {
+src/exec-provider-scaffold.ts:15:    "orch:codex": 'codex "$(cat .specdojo/codex/orchestrator.md)"',
+src/devcontainer-scaffold.ts:24:  const devcontainerDir = path.join(repoRoot, ".devcontainer");
+src/devcontainer-scaffold.ts:26:  if (existsSync(devcontainerDir) && !force) {
+src/devcontainer-scaffold.ts:28:      process.stdout.write(`[dry-run] skipped: .devcontainer/ already exists\n`);
+src/devcontainer-scaffold.ts:30:      process.stdout.write(`Skipped (already exists): .devcontainer/\n`);
+src/devcontainer-scaffold.ts:35:  const templateDir = path.join(packageRoot, "templates", "devcontainer");
+src/devcontainer-scaffold.ts:40:  // devcontainer.json をパースして改変する
+src/devcontainer-scaffold.ts:41:  const devcontainerJsonPath = path.join(templateDir, "devcontainer.json");
+src/devcontainer-scaffold.ts:42:  const baseJsonStr = await readFile(devcontainerJsonPath, "utf8");
+src/devcontainer-scaffold.ts:43:  const devcontainer = JSON.parse(baseJsonStr);
+src/devcontainer-scaffold.ts:46:  devcontainer.mounts = devcontainer.mounts.map((mount: string) =>
+src/devcontainer-scaffold.ts:61:    devcontainer.postAttachCommand = "sudo service cron start";
+src/devcontainer-scaffold.ts:65:    devcontainer.features["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"] = {
+src/devcontainer-scaffold.ts:72:    devcontainer.containerEnv["OLLAMA_BASE_URL"] = "http://host.docker.internal:11434";
+src/devcontainer-scaffold.ts:73:    devcontainer.containerEnv["LOCAL_OPENAI_BASE_URL"] = "http://host.docker.internal:11434/v1";
+src/devcontainer-scaffold.ts:78:  const knownProviders = new Set(["claude", "codex", "opencode", "antigravity"]);
+src/devcontainer-scaffold.ts:85:      devcontainer.mounts.push(
+src/devcontainer-scaffold.ts:88:      devcontainer.containerEnv["CLAUDE_CONFIG_DIR"] = "/home/node/.claude";
+src/devcontainer-scaffold.ts:92:    } else if (provider === "codex") {
+src/devcontainer-scaffold.ts:93:      devcontainer.mounts.push(
+src/devcontainer-scaffold.ts:94:        `source=${volumeName("codex")},target=/home/node/.codex,type=volume`,
+src/devcontainer-scaffold.ts:96:      extraScripts.push("sudo npm install -g @openai/codex@latest");
+src/devcontainer-scaffold.ts:98:      devcontainer.mounts.push(
+src/devcontainer-scaffold.ts:102:      devcontainer.containerEnv["OPENCODE_DISABLE_AUTO_UPDATE"] = "1";
+src/devcontainer-scaffold.ts:105:      devcontainer.mounts.push(
+src/devcontainer-scaffold.ts:122:    process.stdout.write(`[dry-run] would write: .devcontainer/devcontainer.json\n`);
+src/devcontainer-scaffold.ts:123:    process.stdout.write(`[dry-run] would write: .devcontainer/post-create.sh\n`);
+src/devcontainer-scaffold.ts:127:  await mkdir(devcontainerDir, { recursive: true });
+src/devcontainer-scaffold.ts:129:    path.join(devcontainerDir, "devcontainer.json"),
+src/devcontainer-scaffold.ts:130:    JSON.stringify(devcontainer, null, 2) + "\n",
+src/devcontainer-scaffold.ts:133:  await writeFile(path.join(devcontainerDir, "post-create.sh"), postCreateScript, "utf8");
+src/devcontainer-scaffold.ts:135:  process.stdout.write(`Written: .devcontainer/devcontainer.json\n`);
+src/devcontainer-scaffold.ts:136:  process.stdout.write(`Written: .devcontainer/post-create.sh\n`);
+src/specdojo.ts:23:import { registerDevcontainerCommands } from "./devcontainer-command.js";
+src/devcontainer-command.ts:2:import { runDevcontainerScaffold } from "./devcontainer-scaffold.js";
+src/devcontainer-command.ts:7:  const dc = program.command("devcontainer").description("Dev Container helpers");
+src/devcontainer-command.ts:10:    .description("Scaffold .devcontainer/ configuration for the repository")
+src/devcontainer-command.ts:13:      "Comma-separated list of agent providers to install (e.g. claude,codex,opencode,antigravity)",
+src/devcontainer-command.ts:19:    .option("--force", "Overwrite existing .devcontainer/", false)
+src/exec-agent-protected-config.ts:15:  ".codex/",
+src/exec-agent-protected-config.ts:45:  ".codex",
+src/catalog-build.ts:655:    ".codex",
+docs/ja/projects/prj-0001/controls/project-register/pjr-6xnj-grade-graded-by.md:50:| `codex-expert-executor`  | `/root`                                                       |
+docs/ja/projects/prj-0001/controls/project-register/pjr-6xnj-grade-graded-by.md:51:| `codex-executor`         | `/root`                                                       |
+docs/ja/projects/prj-0001/controls/project-register/pjr-6xnj-grade-graded-by.md:57:codex は実行環境のパスを返しており、agent を識別できない。qwen は同一 agent の2回の実行で異なる値を返した。claude は expert と normal で語彙が揃っていない。
+docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md:200:4. executor に使う provider を確認する。claude・codex・antigravity・copilot は runner が
+docs/ja/projects/prj-0001/controls/project-register/pjr-h5z7-cdfd-3-bps-2-grade-finding.md:101:| `cdfd-check`                 | `needs-work` | 79    | M3 m6    | `codex-expert-executor` |
+docs/ja/projects/prj-0001/controls/project-register/pjr-h5z7-cdfd-3-bps-2-grade-finding.md:106:いずれも codex 単段（`--stages 1`）で評価した。`cdfd-check` のみ codex、残りは codex の rate limit により `agy-expert-executor` で評価したため、executor が揃っていない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-h5z7-cdfd-3-bps-2-grade-finding.md:170:| 2   | 単段 codex   | 2 文書で打ち切り。終了コード 0。`cdfd-action` が前回状態の移行で完了扱い |
+docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md:37:2026-09-26 に codex が rate limit にかかり、作業の途中で agy へ切り替えた（[[prj-0001:pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review]]、[[prj-0001:pjr-h5z7-cdfd-3-bps-2-grade-finding]]）。`codex-expert-executor`、`agy-expert-executor`、`agy-claude-expert-executor` の 3 つを並行で使えれば、1 つの provider の枠に依存しない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md:47:| 1   | `--executor-by PJR-A=codex-expert-executor,PJR-B=agy-expert-executor` | 起動時にまとめて指定できる     | 引数が長くなる                       |
+docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md:75:案 1 の `--executor-by PJR-A=codex,PJR-B=agy` 形式での個別指定を実装しました。項目別指定は起動対象の全項目を指定する必要があり、起動対象外の ID、指定漏れ、重複指定がある場合は状態遷移前にエラーで失敗します。全項目で共通指定する従来の `--executor-by <nickname>` とも互換性を保ち、`--dry-run` では項目ごとの解決結果を表示します。
+docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md:95:    --executor-by PJR-WPWB=codex-expert-executor,PJR-XTAN=agy-expert-executor ... --dry-run
+docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md:96:register item: PJR-WPWB  executor: codex-expert-executor
+docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md:106:| 1   | codex                      | codex の使用上限（00:53 に回復）                           |
+docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md:108:| 3   | codex（resume）            | executor の段が `failed` のため resume できず              |
+docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md:109:| 4   | codex（`--force-restart`） | 実装は完成したが、runner の `test-integration` で 1 件失敗 |
+docs/ja/specdojo/guides/schedule-design-guide.md:303:        executor: codex-expert-executor
+docs/ja/projects/prj-0001/controls/project-register/pjr-0fk2-config-scaffold-agent.md:42:- [x] PJR-2H5F（devcontainer の scaffold）の統合後に着手し、scaffold の実装の変更と競合しない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-0fk2-config-scaffold-agent.md:62:- PJR-3S8Q（agent の書き込み範囲の決定）、PJR-2H5F（devcontainer の scaffold）
+docs/ja/projects/prj-0001/controls/project-register/pjr-98g4-multi-repo-worktree-agent.md:28:- agent の `cwd` はプロジェクト worktree とし、プロダクト worktree を各 provider（claude・codex・antigravity・opencode）の追加ディレクトリと書き込み許可に加える。リポジトリごとの絶対パスを環境変数（`SPECDOJO_REPO_<NAME>` など）で渡す。provider ごとの対応状況と制約を result に記録する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-98g4-multi-repo-worktree-agent.md:62:| `codex`       | `--add-dir <path>` を付け足す                                               | `--sandbox workspace-write` の書き込みルートに加わる。各 worktree の `.git` は codex の仕様で読み取り専用のまま                              |
+docs/ja/specdojo/guides/routine-operation-guide.md:16:継続品質評価は `job-grade-kata` や `job-grade-deliverable` の Job Definition から `action.kind: job` の routine で定期起動します。文書の選択、各文書の executor 実行、executor の marker を GradeSubmission へ機械変換する `grade apply --path --analysis-from` の逐次処理は `tools/grade/run-per-document.sh` が持ちます。定期 Job は `--stages 1` で codex 単段を選びます。Job runnerは`task.command`からその入口を直接起動してevidenceを記録し、成功後の結果判断だけを`task.analysis`のreporter agentへ委譲します。責務の切り分け基準は [Job定義標準](../standards/job-definition-standard.md) を参照します。
+docs/ja/specdojo/guides/routine-operation-guide.md:118:`rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日6時に実行し、いずれも `missed_run: skip` とします。`rtn-dashboard-refresh` は `action.kind: specdojo` で毎時 `dashboard build` を直接起動します（exec の実行ロックを取らないため、grade や register の実行中でも並行して動きます）。devcontainer の cron は毎時 `routine run --due` を呼びますが、各 routine の発火時刻は routine 側の cron で決まります。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
+docs/ja/specdojo/guides/routine-operation-guide.md:124:`rubric_outdated: true` は、grade result サイドカーの `rubric` が現在の `grade_rubric.id` と異なる文書、または `rubric` の記録がない文書を選びます（`grade list --rubric-outdated`）。ルーブリックを改めたとき（PJR-K351 の `grade-rubric-v2` など）、旧版の結果は score を新版と比べられないため評価し直します。全件を一度に評価し直すと agent の利用上限に達するため、両 routine の既存の件数上限（Kata 15 件、成果物 10 件）の範囲で、夜間の余った利用枠を使って少しずつ進めます。辞書順で上限までを選ぶため、変更済みや未評価の文書と同じ枠を分け合います。評価者は各 Job 定義の既定（`codex-expert-executor`）のままとし、手動で評価し直した結果の評価者はそのまま残します。評価し直した文書は `rubric` が現在の版になり、次回以降は選ばれません。
+docs/ja/specdojo/guides/routine-operation-guide.md:137:| 判定   | `codex-expert-executor` / `machine` | 対象文書を英語で評価し、正本の判定を確定する                 |
+docs/ja/specdojo/guides/routine-operation-guide.md:198:### 2.1. devcontainerでのcron設定
+docs/ja/specdojo/guides/routine-operation-guide.md:200:このリポジトリのdevcontainerでは、`.devcontainer/specdojo-routine.cron`をcron設定のテンプレートとして管理します。コンテナ起動時に`.devcontainer/post-start.sh`がワークスペースの絶対パスを埋め込み、`/etc/cron.d/specdojo-routine`へ登録してcronを起動します。これはユーザーcrontabではないため、`crontab -l`には表示されません。
+docs/ja/specdojo/guides/routine-operation-guide.md:202:現在のテンプレートは、devcontainerが稼働している間、`prj-0001`のdueなroutineを毎時0分（Asia/Tokyo）に確認します。どの routine がどの時刻に動くかは各 `rtn-*.yaml` の cron で決まり、成果物評価は1時、Kata 評価は6時、dashboard 更新は毎時です。
+docs/ja/specdojo/guides/routine-operation-guide.md:235:`post-start.sh` は cron の起動直後の status 確認に失敗した場合、その失敗を無視せず終了します。起動後の停止は `routine-exec-cycle.log` だけでは「due 対象なし」と区別できないため、`routine-cron-heartbeat.log` の最終時刻が10分以上更新されていないことを検知条件にします。devcontainerが停止している時刻のcronは実行されません。また、外部cronの起動時刻とroutine定義の`trigger.cron`は独立した設定です。特定時刻に確実にdue判定を行う構成では、`.devcontainer/specdojo-routine.cron`と対象の`rtn-*.yaml`で時刻・タイムゾーンを一致させます。プロジェクトIDや実行時刻を変更する場合は両方を更新し、コンテナを再起動して`post-start.sh`による再登録後に上記コマンドで確認します。
+docs/ja/projects/prj-0001/controls/project-register/pjr-es57-register-file-ssot-migration.md:50:| 4   | [[prj-0001:pjr-9p5q-migrate-existing-register-items]]  | ARC  | done | codex-expert-edit-agent                                              |
+docs/ja/projects/prj-0001/controls/project-register/pjr-es57-register-file-ssot-migration.md:51:| 5   | [[prj-0001:pjr-37wn-remove-id-reservation-mechanisms]] | ARC  | done | codex-edit-agent（1回目はexec-run.tsの不具合で失敗し修正後に再実行） |
+docs/ja/projects/prj-0001/controls/project-register/pjr-es57-register-file-ssot-migration.md:52:| 6   | [[prj-0001:pjr-vc94-update-validation-and-tests]]      | ARC  | done | codex-edit-agent                                                     |
+docs/ja/projects/prj-0001/controls/project-register/pjr-es57-register-file-ssot-migration.md:53:| 7   | [[prj-0001:pjr-rdnc-update-docs-for-ticket-ssot]]      | ARC  | done | codex-edit-agent                                                     |
+docs/ja/projects/prj-0001/controls/project-register/pjr-bx79-integrate-dubious-ownership-retry.md:42:所有者は一致しており、事後に実行すると通る。git の所有者チェックは `st_uid` と euid の比較であるため、一致していれば `safe.directory` の設定有無に関わらず成立する。devcontainer の overlay ファイルシステムで所有者情報が一時的に異なって見える事象と考えられる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-bx79-integrate-dubious-ownership-retry.md:98:`codex-expert-executor` で PJR-9PZ7 と並行で実行した。実装は正しかったが、runner の `test-unit` 検証が `tests/tools/grade-per-document.test.ts` の 12 件で失敗した。**この失敗は本項目と無関係で、私が `593c36e8` で grade の段数の既定を変えた際にテストを実行しなかったことが原因だった。** `c6d050db` でテストを直したのち、worktree の成果を統合した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-akj4-agent-json-response.md:66:- provider 固有である。claude と codex には適用できず、provider ごとに対策を持つことになる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:3:  id: prj-0001:pjr-27z9-codex-bwrap-proc-mount
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:16:  conclusion: システムの bubblewrap を外し codex 同梱の bwrap を使わせて解決した。systempaths=unconfined は隔離を弱めるため採用しない。codex sandbox と codex-expert-executor の grade を確認済み
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:19:# PJR-27Z9 codex 0.160 の bubblewrap sandbox が devcontainer 内で /proc をマウントできず exec と grade が失敗する
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:23:2026-10-03 のリビルドで codex が 0.160.0 になり、Linux sandbox が bubblewrap 必須になった。devcontainer 内では bwrap: Can't mount proc on /proc: Operation not permitted で起動に失敗し、codex の executor はファイルを読めず異常終了する（`codex sandbox linux -- ls -d /` でも再現する）。旧方式の landlock（`features.use_legacy_landlock`）は、ファイル制限を伴う実行で「bubblewrap が必要」として panic するため回避策にならない。`codex-*` member を使う exec と grade が失敗する。
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:29:| スコープ     | `codex-*` member（executor / reporter）を使う exec、grade、exec trial がすべて失敗する。定期の grade（`job-grade-kata` / `job-grade-deliverable`）は `agy-expert-executor` を使うため影響しない（2026-10-04 の定期実行は成功している） |
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:30:| スケジュール | codex を前提にした比較（[[prj-0001:pjr-me20-antigravity-codex-trial]]）が進められない                                                                                                                                                  |
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:31:| コスト       | 自動選択で codex が選ばれると、失敗と再選択で実行時間を浪費する                                                                                                                                                                        |
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:32:| 品質         | codex の executor は異常終了を申告し判定を出さないため、誤った結果は記録されない                                                                                                                                                       |
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:33:| 関係者       | DEV（devcontainer の保守）                                                                                                                                                                                                             |
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:39:| 原因     | Dockerfile で入れたシステムの bubblewrap 0.12.0 は `/proc` の mount に失敗したときのエラー文が codex の想定と異なり（`/newroot/proc` ではなく `/proc`）、codex が `/proc` を mount しない方式へ切り替えられない（openai/codex#44329）。Docker が `/proc` の一部をマスクしていることが mount の失敗の原因                                                                                                                    |
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:40:| 対応策   | システムの bubblewrap を外し、codex 同梱の bwrap（`~/.codex/packages/standalone/current/codex-resources/bwrap`）を使わせる。codex は PATH 上の `bwrap` を優先し、なければ同梱版を使う。`runArgs` に `--security-opt=systempaths=unconfined` を加える案は、Docker がマスクしている `/proc`・`/sys` を読み書きできるようにし、`node` の sudo 経由で Docker Desktop の VM のカーネル設定まで変更できるようになるため採用しない |
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:41:| 依存事項 | devcontainer のリビルド                                                                                                                                                                                                                                                                                                                                                                                                     |
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:42:| 完了条件 | devcontainer 内で `codex sandbox linux -- ls -d /` が成功し、`codex-expert-executor` で grade の executor plan を実行して `[VIEWPOINT ...]` 形式の判定を返せる。採否の判断と変更が `.devcontainer/` と [[tsd-home-mac-dev-server]] に反映されている                                                                                                                                                                         |
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:46:解決内容: `.devcontainer/Dockerfile` からシステムの `bubblewrap` を削除し、codex 同梱の bwrap が使われるようにした。exec（agy-expert-executor）が加えた `runArgs` の `--security-opt=systempaths=unconfined` は、コンテナの隔離を弱めるため取り消した。理由を [[tsd-home-mac-dev-server]] の devcontainer 設定に記載した（コミット 3802bd5a2）。
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:48:確認結果（2026-10-04、現行コンテナで `apt-get remove bubblewrap` を実行した状態）:
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:50:- `codex sandbox -- sh -c 'ls -d /; head -1 package.json; touch /etc/x'` は、読み取りに成功し、`/etc` への書き込みは「読み込み専用ファイルシステム」で拒否された。sandbox の保護が効いている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:51:- `codex-expert-executor` で grade の executor plan（`trc-requirements-to-tests-rulebook`）を実行し、326 秒で 23 観点の `[VIEWPOINT ...]` を返した。`grade apply --dry-run` の検証を通過し、score 62（major 17・minor 3）だった。
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:53:再発防止策: システムの bubblewrap を入れない理由を設計書に明記した。codex が上流で判定を直した場合（openai/codex#44329）も、同梱版を使う構成のままでよい。
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:59:- [[prj-0001:pjr-vqb5-agent-grade-comparison]]: 2026-10-03 の agent 比較で codex 3 件がすべてこの事象で失敗した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md:60:- [[prj-0001:pjr-me20-antigravity-codex-trial]]: codex との比較が本件で止まっている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-8myj-remote-host-development-guide.md:36:prj-0001 では Tailscale + SSH + tmux + devcontainer で母艦へ接続して開発しており、運用知見が [[tsd-home-mac-dev-server-usage|自宅 MacBook Pro 開発サーバ運用ガイド]]（265 行）にある。ただしこれは `docs/ja/product/` 配下の product 側文書で、[[prj-0001:pjr-tbhh-detached-unit-default]] の境界によりプロダクト実装のリポジトリに属し、npm package にも含まれない（`files` は `docs/ja/specdojo` と `docs/specdojo` のみ）。
+docs/ja/projects/prj-0001/controls/project-register/pjr-8myj-remote-host-development-guide.md:53:- `docs/ja/specdojo/guides/` にガイドがあり、母艦への接続、tmux でのセッション永続化、devcontainer 内での agent 実行、切断と再接続の手順が書かれている。
+docs/ja/projects/prj-0001/controls/project-register/pjr-8myj-remote-host-development-guide.md:73:- 一般化は「役割と代替手段の表」で行った。常時稼働ホスト、ネットワーク到達手段、端末多重化、実行環境の 4 つの役割を示し、それぞれに代替を並べた。Tailscale + SSH + tmux + devcontainer は例として挙げるに留め、特定の機種名・ホスト名・アカウント設定は含めていない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-49jk-readme-orchestrator-onboarding.md:30:npx specdojo config scaffold --provider codex   （任意）
+docs/ja/projects/prj-0001/controls/project-register/pjr-49jk-readme-orchestrator-onboarding.md:69:| `codex`       | `.specdojo/codex/orchestrator.md`           | `codex "$(cat .specdojo/codex/orchestrator.md)"` |
+docs/ja/projects/prj-0001/controls/project-register/pjr-49jk-readme-orchestrator-onboarding.md:72:- 作業中に `codex --help` を確認したところ `--agent <name>` が存在せず、TOML の agent 定義を名前で選べないことが分かった。プロンプトとして渡せる `templates/codex/orchestrator.md`（raw 形式）を追加した。同期対象は 9 から 10 になった。
+docs/ja/projects/prj-0001/controls/project-register/pjr-49jk-readme-orchestrator-onboarding.md:76:- 検証: 空ディレクトリで 4 provider を scaffold し、配置を確認した。配置された `.specdojo/codex/orchestrator.md` と `.specdojo/antigravity/orchestrator.md` は SSOT と diff なしで一致した。`npm run check`（1658 tests）と `npm run lint:md` が通過した。
+docs/ja/specdojo/guides/specdojo-overview-guide.md:253:登録簿を agent 実行と並行して記帳する場合は、記帳コマンドの `--commit` が同じ project の `register lifecycle` 枠を使います。provider 設定を配布するときは `config scaffold` を使い、Antigravity の `--global` はすべてのリポジトリに効くため dry-run 後に適用します。Dev Container は必須ではなく、必要な場合だけ `devcontainer scaffold` で追加します。各操作の詳細は上表のガイドと [CLIコマンドリファレンス](../references/command-reference.md) を参照してください。
+docs/ja/projects/prj-0001/controls/project-register/pjr-6776-worktree-branch-naming.md:31:| `codex-work`   | `orch:terra:work`   | `codex-work`   | `worktree-codex-work`  | **×** |
+docs/ja/projects/prj-0001/controls/project-register/pjr-6776-worktree-branch-naming.md:55:`worktree-codex-work` は script から作られたものではない。script は `codex-work` を指定して
+docs/ja/projects/prj-0001/controls/project-register/pjr-6776-worktree-branch-naming.md:74:| 接頭辞なし                 | `codex-work`              | 用途が名前から読めない |
+docs/ja/projects/prj-0001/controls/project-register/pjr-6776-worktree-branch-naming.md:75:| `worktree-` ハイフン       | `worktree-codex-work`     | 既存の慣例と不一致     |
+docs/ja/projects/prj-0001/controls/project-register/pjr-6776-worktree-branch-naming.md:76:| **`worktree/` スラッシュ** | **`worktree/codex-work`** | **`exec/` と揃う**     |
+docs/ja/projects/prj-0001/controls/project-register/pjr-6776-worktree-branch-naming.md:129:iTerm2 のネイティブペインは devcontainer 内では利用できず、`--tmux=classic` の経路になる。
+docs/ja/projects/prj-0001/controls/project-register/pjr-6776-worktree-branch-naming.md:135:- `worktree-codex-work` と script の不整合が解消している。
+docs/ja/projects/prj-0001/controls/project-register/pjr-6776-worktree-branch-naming.md:169:git -C ../worktrees/codex-work branch -m worktree/codex-work
+docs/ja/projects/prj-0001/controls/project-register/pjr-e8tt-initial-release-positioning.md:16:  conclusion: 初期リリースで前面に出すのは register の記録範囲、対話型 orchestrator、成果物 kata の網羅範囲の 3 つとする。exec 層は機能比較に持ち込まず成果物体系を維持する手段として説明する。tmux を agent runtime として採らず、devcontainer は常時稼働環境の構成例として補強材料に位置づける。
+docs/ja/projects/prj-0001/controls/project-register/pjr-e8tt-initial-release-positioning.md:23:Gas Town / Gas City の調査を踏まえ、初期リリースで前面に出すものを決める。exec 層は実行基盤として規模で先行されているため機能比較に持ち込まない。register は task tracker ではなく、判断・観測・保留を含めて記録する場である点を差別化として扱う。orchestrator の規律、成果物 kata の網羅範囲と合わせて位置づけを定める。devcontainer と tmux の扱いも併せて決める。
+docs/ja/projects/pr

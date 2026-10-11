@@ -1,0 +1,14 @@
+利用者向け文書8ファイルを更新し、個票へ対応結果を記録しました。result は executor 指示どおり未編集です。
+
+主な反映内容:
+
+- 記帳コマンドの `--commit` と並行実行時の安全条件
+- 任意の Dev Container、非上書き、dry-run、名前付きボリューム
+- Antigravity `--global` の全リポジトリへの影響と安全な適用手順
+- 旧 `--dangerously-skip-permissions` 記述の削除
+
+Antigravity の認証先と Dev Container の mount 先の設計差異は個票へ申し送りました。Markdown lint、catalog 検証、登録簿・文書 index 生成は成功しています。
+
+<specdojo_executor_evidence>
+{"final_message":"9XG4・2H5F・0FK2の利用者向け文書反映を完了し、Antigravityの認証ボリューム差異を個票へ記録した。resultは未編集。","validations":[{"command":"npx prettier --write README.md docs/ja/specdojo/guides/specdojo-overview-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/specdojo/guides/remote-host-development-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-a4py-docs-sync-9xg4-2h5f-0fk2.md","status":"passed","summary":"対象Markdownを整形した。"},{"command":"npx markdownlint README.md docs/ja/specdojo/guides/specdojo-overview-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/specdojo/guides/remote-host-development-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-a4py-docs-sync-9xg4-2h5f-0fk2.md","status":"passed","summary":"変更対象のMarkdown lintが成功した。"},{"command":"npm run -s lint:md","status":"passed","summary":"全Markdown lintが成功した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューを再生成した。標準のnpx tsx起動はsandboxのIPC制約でEPERMとなったため、同じソースを非IPC経路で実行した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全catalogがOK。既存の未作成成果物に関する警告のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書index 2195件を再生成した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ebbd7bdb1bd7414f8a06f5be9acf98e1
+  ts: "2026-10-06T10:18:09Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-27Y0 の resume で観測した 2 つの問題をまとめて起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の resume は executor 段へ戻れず、executor 段の再開でも統合先を取り込まない
+    - field: description
+      from: ""
+      to: 親検証の失敗後の resume は reporter 段から始まり、executor に直させる経路がない（--force-restart は worktree ごと捨てる）。executor 段から再開するときは統合先を merge しないため、保護された設定を人が develop へ適用する手順と噛み合わず、手で merge する必要がある。PJR-27Y0 で両方が起きた。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"
+- v: 1
+  id: reg_54ff178121194c1da8be6873ed489216
+  ts: "2026-10-07T03:20:50Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ebbd7bdb1bd7414f8a06f5be9acf98e1
+- v: 1
+  id: reg_d8c5abc70523408f93dcb8efe589b085
+  ts: "2026-10-07T03:40:40Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+  previous_event_id: reg_54ff178121194c1da8be6873ed489216
+- v: 1
+  id: reg_1a2465b9925b474f8a78ad08e886a125
+  ts: "2026-10-07T03:47:11Z"
+  action: start
+  actor: agy-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: error: unknown option '--reserve' / error: unknown option '--local' / error: unknown option '--strict-sync' / error: unknown option '--integration-branch'…"
+      to: "-"
+  previous_event_id: reg_d8c5abc70523408f93dcb8efe589b085
+- v: 1
+  id: reg_d5ac60a963c14973b1b1afc2aa11b395
+  ts: "2026-10-07T03:51:01Z"
+  action: review
+  actor: agy-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1a2465b9925b474f8a78ad08e886a125
+- v: 1
+  id: reg_1e3a18e869534c338a30163869130e3c
+  ts: "2026-10-07T10:27:45Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_d5ac60a963c14973b1b1afc2aa11b395
+- v: 1
+  id: reg_47bc35210b5a4813be6f2225eb5b7dd6
+  ts: "2026-10-07T10:37:36Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1e3a18e869534c338a30163869130e3c
+- v: 1
+  id: reg_371aca3bcb724b74ad00f5e062d742c7
+  ts: "2026-10-07T10:38:47Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 初回の実装と、review で追加したテスト（83ebdc982）を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: "--resume-from executor で reporter 段の run を executor 段から再開でき、失敗の理由を申し送る。すべての段の再開で統合先を取り込む。保護された設定を人が統合先へ適用して再開する流れ（同じ変更なら通り、異なれば衝突として拒否）を integration test で確認した"
+  previous_event_id: reg_47bc35210b5a4813be6f2225eb5b7dd6

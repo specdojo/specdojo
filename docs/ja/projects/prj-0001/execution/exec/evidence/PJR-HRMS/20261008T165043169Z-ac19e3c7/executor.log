@@ -1,0 +1,5 @@
+CHANGELOG と個票を最終化しました。移行ガイドは全破壊的変更を網羅しており、変更不要と確認済みです。公開日の記入のみ PO の後続作業として残しています。
+
+<specdojo_executor_evidence>
+{"final_message":"CHANGELOG、v0.3.0移行ガイド、PJR-HRMS個票を確認済み。CHANGELOGと個票を更新し、移行ガイドは変更不要と判断した。未確認の成果物はない。公開日の記入と親runnerの固定検証は後続工程で行う。","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-hrms-v030-changelog-finalize.md","status":"passed","summary":"対象Markdownは整形済みで変更なし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログがOK。既存の参照先未配置に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書インデックスの生成に成功"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証に成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

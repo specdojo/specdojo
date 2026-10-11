@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-ff59dc9363b1",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-03T21:00:09.374Z",
+    "completed_at": "2026-10-03T21:49:01.570Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-action-96f0bab377-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-check-de77e19930-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-do-96363482bc-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-orchestrator-0888f9bb68-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-overview-4f5ff02b38-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-plan-53594c9748-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-deliverable-20176468f7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-uc-register-7fa05372dd-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-execution-225183781b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-action.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-check.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-do.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-orchestrator.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-overview.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-plan.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdfd-uc-register.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-execution.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.etc-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.etc-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.gl-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifd-mermaid-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-api-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-cmd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-file-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifx-msg-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-business-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-data-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-interface-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-operations-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-test-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdfd-onboarding-61a4d6c9efa7.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-7665a95709d6.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-ff59dc9363b1.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 36,
+    "summary": ".../cdfd-action-96f0bab377-done-criteria.yaml      |   6 +-\n .../cdfd-check-de77e19930-done-criteria.yaml       |   4 +-\n .../criteria/cdfd-do-96363482bc-done-criteria.yaml |   4 +-\n ...cdfd-orchestrator-0888f9bb68-done-criteria.yaml |   2 +-\n .../cdfd-overview-4f5ff02b38-done-criteria.yaml    |   6 +-\n .../cdfd-plan-53594c9748-done-criteria.yaml        |   4 +-\n ...fd-uc-deliverable-20176468f7-done-criteria.yaml |   2 +-\n .../cdfd-uc-register-7fa05372dd-done-criteria.yaml |   2 +-\n .../cdsd-execution-225183781b-done-criteria.yaml   |   8 +-\n .../execution/grade/results/cdfd-action.yaml       | 237 ++++++++-------------\n .../execution/grade/results/cdfd-check.yaml        |  50 ++---\n .../prj-0001/execution/grade/results/cdfd-do.yaml  | 105 +++------\n .../execution/grade/results/cdfd-orchestrator.yaml |  16 +-\n .../execution/grade/results/cdfd-overview.yaml     |  92 ++++----\n .../execution/grade/results/cdfd-plan.yaml         |  12 +-\n .../grade/results/cdfd-uc-deliverable.yaml         |   4 +-\n .../execution/grade/results/cdfd-uc-register.yaml  |  16 +-\n .../execution/grade/results/cdsd-execution.yaml    |   4 +-\n .../grade/results/specdojo.etc-index-rulebook.yaml |  82 +++++--\n .../grade/results/specdojo.etc-rulebook.yaml       | 105 ++++++---\n .../grade/results/specdojo.gl-rulebook.yaml        |  94 ++++++--\n .../results/specdojo.ifd-mermaid-rulebook.yaml     |  85 ++++++--\n .../grade/results/specdojo.ifx-api-rulebook.yaml   | 170 ++++++++++-----\n .../grade/results/specdojo.ifx-cmd-rulebook.yaml   | 142 ++++++++----\n .../grade/results/specdojo.ifx-file-rulebook.yaml  |  87 ++++++--\n .../grade/results/specdojo.ifx-index-rulebook.yaml | 135 ++++++++++--\n .../grade/results/specdojo.ifx-msg-rulebook.yaml   | 112 ++++++++--\n .../results/specdojo.imp-business-rulebook.yaml    | 115 +++++++---\n .../grade/results/specdojo.imp-data-rulebook.yaml  | 171 ++++++++++-----\n .../results/specdojo.imp-interface-rulebook.yaml   |  97 +++++++--\n .../results/specdojo.imp-operations-rulebook.yaml  |  84 ++++++--\n .../grade/results/specdojo.imp-test-rulebook.yaml  | 119 +++++++----\n .../grade/results/specdojo.itc-index-rulebook.yaml |  94 ++++++--\n 33 files changed, 1509 insertions(+), 757 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-ff59dc9363b1 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-ff59dc9363b1/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-ff59dc9363b1' \"$g…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-ff59dc9363b1 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-ff59dc9363b1/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-ff59dc9363b1' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-ff59dc9363b1/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-ff59dc9363b1/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.3.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-ff59dc9363b1 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-ff59dc9363b1\nstage=1 executor=agy-expert-executor reporter=gemma-reporter reference=none\ndocument start: docs/ja/specdojo/rulebooks/etc-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/etc-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/etc-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/etc-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/gl-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/gl-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/ifx-api-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/ifx-file-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/ifx-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/ifx-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/imp-business-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/imp-business-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/imp-data-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/imp-data-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/imp-interface-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/imp-operations-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/imp-operations-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/imp-test-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/imp-test-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/itc-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/itc-index-rulebook.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-ff59dc9363b1/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-03T21:04:05Z\tdocs/ja/specdojo/rulebooks/etc-index-rulebook.md\t1\tpassed\t226\tneeds-work\t92\t2\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:07:35Z\tdocs/ja/specdojo/rulebooks/etc-rulebook.md\t1\tpassed\t208\tneeds-work\t86\t4\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:10:58Z\tdocs/ja/specdojo/rulebooks/gl-rulebook.md\t1\tpassed\t201\tpass\t97\t3\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:13:28Z\tdocs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md\t1\tpassed\t148\tneeds-work\t93\t3\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:16:39Z\tdocs/ja/specdojo/rulebooks/ifx-api-rulebook.md\t1\tpassed\t189\tneeds-work\t80\t11\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:20:25Z\tdocs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md\t1\tpassed\t224\tneeds-work\t82\t7\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:23:45Z\tdocs/ja/specdojo/rulebooks/ifx-file-rulebook.md\t1\tpassed\t198\tneeds-work\t90\t2\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:26:32Z\tdocs/ja/specdojo/rulebooks/ifx-index-rulebook.md\t1\tpassed\t165\tpass\t87\t10\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:29:22Z\tdocs/ja/specdojo/rulebooks/ifx-msg-rulebook.md\t1\tpassed\t167\tpass\t92\t6\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:32:02Z\tdocs/ja/specdojo/rulebooks/imp-business-rulebook.md\t1\tpassed\t158\tpass\t93\t4\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:36:00Z\tdocs/ja/specdojo/rulebooks/imp-data-rulebook.md\t1\tpassed\t236\tneeds-work\t75\t11\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:39:17Z\tdocs/ja/specdojo/rulebooks/imp-interface-rulebook.md\t1\tpassed\t194\tpass\t97\t3\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:41:56Z\tdocs/ja/specdojo/rulebooks/imp-operations-rulebook.md\t1\tpassed\t156\tpass\t97\t3\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:45:53Z\tdocs/ja/specdojo/rulebooks/imp-test-rulebook.md\t1\tpassed\t235\tneeds-work\t86\t6\tagy-expert-executor\tgemma-reporter\tnone\t\t\n2026-10-03T21:48:59Z\tdocs/ja/specdojo/rulebooks/itc-index-rulebook.md\t1\tpassed\t184\tneeds-work\t89\t2\tagy-expert-executor\tgemma-reporter\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-ff59dc9363b1/attempt-1/command.stdout.log",
+      "bytes": 4901,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-ff59dc9363b1/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

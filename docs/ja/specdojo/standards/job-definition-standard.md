@@ -55,7 +55,7 @@ Job Definition Standard
 - `task.agent.executor` に、成果物の編集・検証・コマンド実行を担当する agent の nickname を書く。
 - result を executor が書かない構成（stage_role を持つ pipeline member）では、`task.agent.reporter` に reporter の nickname を書く。両方を指名した Run は executor → reporter の2段で実行され、result は reporter が書く。
 - `task.agent.reporter` を省略した場合、executor が Job Run の result まで記入する。result を書かない agent を単独で指名してはならない。
-- nickname は `pm-members.yaml` に登録済みの `type: agent` のメンバーと完全一致させる。`job validate` は書式のみを検査するため、実在確認は `exec run --job --dry-run` で行う。
+- nickname は `.specdojo/agent-members.yaml` に登録済みのメンバーと完全一致させる。`job validate` は書式のみを検査するため、実在確認は `exec run --job --dry-run` で行う。
 - `exec run --by` は単一 agent 実行としての単発の差し替え、`--executor-by` / `--reporter-by` は段ごとの差し替えとして、いずれも Job の指名より優先する。
 - command Job で判断が必要な場合は `task.analysis.agent` に `stage_role: reporter` の nickname を指定する。`--reporter-by` で差し替えられるが、runner 実行を `--by` / `--executor-by` で agent に置き換えることはできない。
 
@@ -92,22 +92,24 @@ Job Definition Standard
 
 ## 4. 値制約・判定基準
 
-| 項目                   | 必須 | 判定基準                                                           |
-| ---------------------- | ---- | ------------------------------------------------------------------ |
-| `id`                   | ○    | `job-<slug>` 形式で、ファイル名の拡張子を除いた部分と一致する      |
-| `task.mode`            | ○    | `edit` / `review` / `command`                                      |
-| `task.description`     | 条件 | `edit` / `review` で必須。決定論的手順の列挙を含まない             |
-| `task.command`         | 条件 | `command` で必須。入力展開後も非空                                 |
-| `task.precondition`    | 任意 | `command` と `empty-output` または 0〜255 の終了コードを指定       |
-| `task.analysis`        | 任意 | command 結果の判断が必要な場合だけ agent と description を指定     |
-| `task.targets` `paths` | 条件 | `edit` / `review` はいずれか必須。`command` では任意               |
-| `task.agent.executor`  | 任意 | `pm-members.yaml` の nickname 書式（`^[a-z0-9][a-z0-9_-]{0,62}$`） |
-| `task.agent.reporter`  | 任意 | 同上。executor が result を書かない構成では必須                    |
-| `inputs.*.enum`        | 任意 | scalar の値または list の各要素に対する非空の許容値集合            |
-| `minimum` / `maximum`  | 任意 | integer input だけに指定でき、`minimum <= maximum`                 |
-| `run.idempotency_key`  | ○    | 空文字へ解決されず、同じ論理実行を一意に判別できる                 |
+| 項目                   | 必須 | 判定基準                                                                        |
+| ---------------------- | ---- | ------------------------------------------------------------------------------- |
+| `id`                   | ○    | `job-<slug>` 形式で、ファイル名の拡張子を除いた部分と一致する                   |
+| `task.mode`            | ○    | `edit` / `review` / `command`                                                   |
+| `task.description`     | 条件 | `edit` / `review` で必須。決定論的手順の列挙を含まない                          |
+| `task.command`         | 条件 | `command` で必須。入力展開後も非空                                              |
+| `task.precondition`    | 任意 | `command` と `empty-output` または 0〜255 の終了コードを指定                    |
+| `task.analysis`        | 任意 | command 結果の判断が必要な場合だけ agent と description を指定                  |
+| `task.targets` `paths` | 条件 | `edit` / `review` はいずれか必須。`command` では任意                            |
+| `task.agent.executor`  | 任意 | `.specdojo/agent-members.yaml` の nickname 書式（`^[a-z0-9][a-z0-9_-]{0,62}$`） |
+| `task.agent.reporter`  | 任意 | 同上。executor が result を書かない構成では必須                                 |
+| `inputs.*.enum`        | 任意 | scalar の値または list の各要素に対する非空の許容値集合                         |
+| `minimum` / `maximum`  | 任意 | integer input だけに指定でき、`minimum <= maximum`                              |
+| `run.idempotency_key`  | ○    | 空文字へ解決されず、同じ論理実行を一意に判別できる                              |
 
 ## 5. 記述例
+
+次の grade Job は SpecDojo 本体リポジトリを保守するための例です。`tools/grade/run-per-document.sh` は本体リポジトリの開発用で npm package には含まれません。v0.3.0 の公開物における grade は試験的で、利用者は `grade list` / `plan` / `apply` / `validate` / `result` などの部品を組み合わせます。成果物の grade には project の `catalog_path` が必要です。
 
 ```yaml
 task:

@@ -1,6 +1,6 @@
 import { readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
-import { ensureDir, safeSlug } from "./exec-shared.js";
+import { ensureDir, redactSensitiveText, safeSlug } from "./exec-shared.js";
 import { gitOutput } from "./exec-worktree.js";
 import type { AgentStageRole } from "./exec-types.js";
 
@@ -15,9 +15,20 @@ const MAX_VALIDATION_SUMMARY_LENGTH = 1_000;
 export type EvidenceValidation = {
   id?: string;
   source?: "executor" | "runner";
+  /** Repository the runner ran the validation in (`project` or a declared product repository). */
+  repo?: string;
   command: string;
-  status: "passed" | "failed" | "not_run";
+  status: "passed" | "failed" | "not_run" | "not_applicable" | "requires_human";
   summary: string;
+  /** Why an executor validation does not apply. Required when status is `not_applicable`. */
+  reason?: string;
+};
+
+export type EvidenceTargetCoverage = {
+  target: string;
+  status: "changed" | "unchanged";
+  path?: string;
+  reason: string;
 };
 
 export type ExecEvidence = {
@@ -34,12 +45,18 @@ export type ExecEvidence = {
     attempts: number;
   };
   changes: Array<{ path: string; status: string }>;
+  /** Files materially changed during this executor attempt, excluding pre-existing worktree changes. */
+  attempt_changes?: Array<{ path: string; status: string }>;
   diff_summary: {
     files_changed: number;
     summary: string;
   };
   validations: EvidenceValidation[];
+  /** Executor-reported disposition of plan targets. Required by the runner on executor resume. */
+  target_coverage?: EvidenceTargetCoverage[];
   final_message: string;
+  /** Runner-derived failure/protection reason. Present only when the executor did not succeed. */
+  block_reason?: string;
   command?: {
     shell: string;
     value: string;
@@ -52,7 +69,7 @@ export type ExecEvidence = {
     stderr?: string;
   };
   log_refs: Array<{
-    kind: "agent-output-excerpt" | "command-stdout" | "command-stderr";
+    kind: "agent-output-excerpt" | "command-stdout" | "command-stderr" | "parent-validation-output";
     path: string;
     bytes: number;
     truncated: boolean;
@@ -92,14 +109,23 @@ export type RecordExecutorEvidenceInput = {
   attempts: number;
   stdout: string;
   stderr: string;
+  changesBeforeAttempt?: WorktreeChangeSnapshot;
   parentValidations?: EvidenceValidation[];
+  /**
+   * Product worktrees of a multi-repository task (PJR-98G4). Their changes are recorded as
+   * `<name>:<path>` beside the project worktree changes, which keep their bare paths.
+   */
+  productWorktrees?: readonly EvidenceProductWorktree[];
 };
+
+export type EvidenceProductWorktree = { name: string; path: string };
 
 export type BuildExecutorEvidenceInput = Omit<
   RecordExecutorEvidenceInput,
-  "repoRoot" | "worktreePath" | "executionPath"
+  "repoRoot" | "worktreePath" | "executionPath" | "changesBeforeAttempt" | "productWorktrees"
 > & {
   changes: ExecEvidence["changes"];
+  attemptChanges?: ExecEvidence["changes"];
   diffStat: string;
   logRefPath: string;
   parentValidations?: EvidenceValidation[];
@@ -112,9 +138,26 @@ export type RecordReporterFailureOutputInput = {
   invocationOutputs: Array<{ stdout: string; stderr: string }>;
 };
 
+export type RecordParentValidationFailureOutputInput = {
+  worktreePath: string;
+  evidencePath: string;
+  evidence: ExecEvidence;
+  failureOutputs: readonly {
+    label: string;
+    exitCode: number | null;
+    stdout: string;
+    stderr: string;
+    error?: string;
+    timedOut?: boolean;
+    stdoutTruncated?: boolean;
+    stderrTruncated?: boolean;
+  }[];
+};
+
 type ExecutorReport = {
   final_message?: unknown;
   validations?: unknown;
+  target_coverage?: unknown;
 };
 
 const REPORT_PATTERN =
@@ -139,24 +182,30 @@ function boundedLog(value: string): { content: string; truncated: boolean } {
   };
 }
 
-/** Redacts common credential forms before agent output is persisted as evidence or a log excerpt. */
-export function redactSensitiveText(value: string): string {
-  return value
-    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]+/giu, "Bearer [REDACTED]")
-    .replace(/\b(sk-(?:proj-)?[A-Za-z0-9_-]{8,}|gh[opsu]_[A-Za-z0-9_]{8,})\b/gu, "[REDACTED]")
-    .replace(
-      /\b(api[_-]?key|access[_-]?token|auth(?:orization)?|password|passwd|secret)\b(\s*[:=]\s*)([^\s,;]+)/giu,
-      "$1$2[REDACTED]",
-    );
-}
+export { redactSensitiveText } from "./exec-shared.js";
 
 function boundedText(value: unknown, limit: number): string {
   return truncate(redactSensitiveText(typeof value === "string" ? value.trim() : ""), limit);
 }
 
+function executorBlockReason(status: ExecEvidence["stage"]["status"], stderr: string): string {
+  if (status === "rate_limited") return "executor rate limit reached";
+  const lines = stderr
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+  const tagged = lines.find((line) => /^(blocked|review-blocked):/iu.test(line));
+  const detail = tagged ?? lines.at(-1);
+  return boundedText(
+    detail ? `agent exited with non-zero code: ${detail}` : "agent exited with non-zero code",
+    MAX_VALIDATION_SUMMARY_LENGTH,
+  );
+}
+
 export function parseExecutorReport(stdout: string): {
   finalMessage: string;
   validations: EvidenceValidation[];
+  targetCoverage: EvidenceTargetCoverage[];
 } {
   const matches = [...stdout.matchAll(REPORT_PATTERN)];
   const raw = matches.at(-1)?.[1];
@@ -179,7 +228,14 @@ export function parseExecutorReport(stdout: string): {
       const candidate = item as Record<string, unknown>;
       const command = boundedText(candidate.command, MAX_VALIDATION_COMMAND_LENGTH);
       const status = candidate.status;
-      if (!command || (status !== "passed" && status !== "failed" && status !== "not_run")) {
+      if (
+        !command ||
+        (status !== "passed" &&
+          status !== "failed" &&
+          status !== "not_run" &&
+          status !== "not_applicable" &&
+          status !== "requires_human")
+      ) {
         continue;
       }
       validations.push({
@@ -187,6 +243,28 @@ export function parseExecutorReport(stdout: string): {
         command,
         status,
         summary: boundedText(candidate.summary, MAX_VALIDATION_SUMMARY_LENGTH),
+        ...(status === "not_applicable"
+          ? { reason: boundedText(candidate.reason, MAX_VALIDATION_SUMMARY_LENGTH) }
+          : {}),
+      });
+    }
+  }
+
+  const targetCoverage: EvidenceTargetCoverage[] = [];
+  if (Array.isArray(report.target_coverage)) {
+    for (const item of report.target_coverage.slice(0, MAX_CHANGE_FILES)) {
+      if (!item || typeof item !== "object" || Array.isArray(item)) continue;
+      const candidate = item as Record<string, unknown>;
+      const target = boundedText(candidate.target, 1_000);
+      const status = candidate.status;
+      const path = boundedText(candidate.path, 1_000);
+      const reason = boundedText(candidate.reason, MAX_VALIDATION_SUMMARY_LENGTH);
+      if (!target || (status !== "changed" && status !== "unchanged")) continue;
+      targetCoverage.push({
+        target,
+        status,
+        ...(path ? { path } : {}),
+        reason,
       });
     }
   }
@@ -195,7 +273,173 @@ export function parseExecutorReport(stdout: string): {
   return {
     finalMessage: boundedText(report.final_message ?? fallback, MAX_FINAL_MESSAGE_LENGTH),
     validations,
+    targetCoverage,
   };
+}
+
+function normalizedEvidencePath(value: string): string | null {
+  const normalized = value.replaceAll("\\", "/").replace(/^\.\//u, "");
+  if (
+    !normalized ||
+    normalized.startsWith("/") ||
+    /^[A-Za-z]:\//u.test(normalized) ||
+    normalized.split("/").includes("..")
+  ) {
+    return null;
+  }
+  return normalized;
+}
+
+function changedEvidencePaths(changes: readonly ExecEvidence["changes"][number][]): Set<string> {
+  const paths = new Set<string>();
+  for (const change of changes) {
+    // Rename/copy entries use "old -> new". Either side is sufficient to prove that the target
+    // was handled, and both remain repository-relative paths produced by git status.
+    for (const value of change.path.split(" -> ")) {
+      const normalized = normalizedEvidencePath(value);
+      if (normalized) paths.add(normalized);
+    }
+  }
+  return paths;
+}
+
+export type WorktreeChangeSnapshot = ReadonlyMap<string, string>;
+
+function changeFingerprint(worktreePath: string, change: ExecEvidence["changes"][number]): string {
+  const hashes = change.path.split(" -> ").map((path) => {
+    try {
+      return gitOutput(worktreePath, ["hash-object", "--", path]).trim();
+    } catch {
+      return "missing";
+    }
+  });
+  return `${change.status}\0${hashes.join("\0")}`;
+}
+
+/** Captures bounded fingerprints of the current cumulative worktree diff without storing content. */
+export function snapshotWorktreeChanges(
+  worktreePath: string,
+  productWorktrees: readonly EvidenceProductWorktree[] = [],
+): WorktreeChangeSnapshot {
+  return new Map(
+    repoStatusChanges(worktreePath, productWorktrees)
+      .slice(0, MAX_CHANGE_FILES)
+      .map((change) => [change.path, changeFingerprint(change.root, change.local)]),
+  );
+}
+
+type RepoStatusChange = {
+  /** Path recorded in evidence (`<name>:<path>` for product repositories). */
+  path: string;
+  status: string;
+  /** Worktree the change belongs to and its repository-relative form, for fingerprints. */
+  root: string;
+  local: { path: string; status: string };
+};
+
+function qualifyEvidencePath(name: string, path: string): string {
+  // Rename entries are "old -> new"; qualify each side so both stay attributable to the repository.
+  return path
+    .split(" -> ")
+    .map((side) => `${name}:${side}`)
+    .join(" -> ");
+}
+
+// PJR-98G4: プロジェクト worktree の変更は従来どおり相対パス、プロダクト worktree の変更は
+// `<name>:<path>` で記録する。targets・paths の `<repo>:<path>` と同じ書式にそろえる。
+function repoStatusChanges(
+  worktreePath: string,
+  productWorktrees: readonly EvidenceProductWorktree[],
+): RepoStatusChange[] {
+  return [
+    ...parseStatusPaths(worktreePath).map((change) => ({
+      ...change,
+      root: worktreePath,
+      local: change,
+    })),
+    ...productWorktrees.flatMap((product) =>
+      parseStatusPaths(product.path).map((change) => ({
+        path: qualifyEvidencePath(product.name, change.path),
+        status: change.status,
+        root: product.path,
+        local: change,
+      })),
+    ),
+  ];
+}
+
+function productDiffStat(productWorktrees: readonly EvidenceProductWorktree[]): string {
+  return productWorktrees
+    .map((product) => {
+      const stat = gitOutput(product.path, ["diff", "--stat", "HEAD", "--"]).trim();
+      return stat ? `[${product.name}]\n${stat}` : "";
+    })
+    .filter(Boolean)
+    .join("\n");
+}
+
+/**
+ * Validates the stricter completion contract used when an interrupted executor is resumed.
+ * A changed target must point at a path present in the cumulative worktree diff; an unchanged
+ * target must carry a concrete reason that can be preserved in the result by the reporter path.
+ */
+export function validateResumedTargetCoverage(
+  targets: readonly string[],
+  evidence: ExecEvidence,
+): { ok: true } | { ok: false; reason: string } {
+  const expected = [...new Set(targets.map((target) => target.trim()).filter(Boolean))];
+  if (expected.length === 0) return { ok: true };
+
+  const coverage = evidence.target_coverage ?? [];
+  const byTarget = new Map<string, EvidenceTargetCoverage>();
+  const duplicates = new Set<string>();
+  for (const entry of coverage) {
+    if (byTarget.has(entry.target)) duplicates.add(entry.target);
+    else byTarget.set(entry.target, entry);
+  }
+  if (duplicates.size > 0) {
+    return {
+      ok: false,
+      reason: `resumed executor target coverage has duplicate entries: ${[...duplicates].join(", ")}`,
+    };
+  }
+
+  const missing = expected.filter((target) => !byTarget.has(target));
+  if (missing.length > 0) {
+    return {
+      ok: false,
+      reason: `resumed executor did not account for every plan target: ${missing.join(", ")}`,
+    };
+  }
+
+  const changedPaths = changedEvidencePaths(evidence.changes);
+  for (const target of expected) {
+    const entry = byTarget.get(target)!;
+    if (entry.status === "unchanged") {
+      if (!entry.reason.trim()) {
+        return {
+          ok: false,
+          reason: `resumed executor reported an unchanged target without a reason: ${target}`,
+        };
+      }
+      continue;
+    }
+
+    const path = entry.path ? normalizedEvidencePath(entry.path) : null;
+    if (!path) {
+      return {
+        ok: false,
+        reason: `resumed executor reported a changed target without a valid repository-relative path: ${target}`,
+      };
+    }
+    if (!changedPaths.has(path)) {
+      return {
+        ok: false,
+        reason: `resumed executor target path is absent from the cumulative worktree diff: ${target} (${path})`,
+      };
+    }
+  }
+  return { ok: true };
 }
 
 function parseStatusPaths(worktreePath: string): Array<{ path: string; status: string }> {
@@ -238,6 +482,10 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
     path: boundedText(change.path, 1_000),
     status: boundedText(change.status, 40),
   }));
+  const attemptChanges = (input.attemptChanges ?? []).slice(0, MAX_CHANGE_FILES).map((change) => ({
+    path: boundedText(change.path, 1_000),
+    status: boundedText(change.status, 40),
+  }));
   const output = `${input.stdout}\n${input.stderr}`.trim();
   const boundedOutput = boundedLog(output);
   const logExcerpt = boundedOutput.content;
@@ -257,12 +505,17 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
         attempts: input.attempts,
       },
       changes,
+      ...(input.attemptChanges ? { attempt_changes: attemptChanges } : {}),
       diff_summary: {
         files_changed: changes.length,
         summary: truncate(redactSensitiveText(input.diffStat.trim()), MAX_DIFF_SUMMARY_LENGTH),
       },
       validations,
+      ...(report.targetCoverage.length > 0 ? { target_coverage: report.targetCoverage } : {}),
       final_message: report.finalMessage,
+      ...(input.status === "succeeded"
+        ? {}
+        : { block_reason: executorBlockReason(input.status, input.stderr) }),
       log_refs: [
         {
           kind: "agent-output-excerpt",
@@ -287,10 +540,30 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     `${executionRel}/exec/evidence/`,
     `${executionRel}/generated/`,
   ];
-  const changesBeforeEvidence = parseStatusPaths(input.worktreePath).filter((change) =>
-    runnerManagedPrefixes.every((prefix) => !change.path.startsWith(prefix)),
+  const productWorktrees = input.productWorktrees ?? [];
+  const repoChanges = repoStatusChanges(input.worktreePath, productWorktrees).filter(
+    (change) =>
+      change.root !== input.worktreePath ||
+      runnerManagedPrefixes.every((prefix) => !change.path.startsWith(prefix)),
   );
-  const diffStat = gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]);
+  const changesBeforeEvidence = repoChanges.map(({ path, status }) => ({ path, status }));
+  // The attempt delta is needed both for interrupted-run target coverage and for telling the
+  // reporter which filtered runner-owned records the executor itself changed on a successful run.
+  const attemptChanges = input.changesBeforeAttempt
+    ? repoChanges
+        .filter(
+          (change) =>
+            input.changesBeforeAttempt?.get(change.path) !==
+            changeFingerprint(change.root, change.local),
+        )
+        .map(({ path, status }) => ({ path, status }))
+    : undefined;
+  const diffStat = [
+    gitOutput(input.worktreePath, ["diff", "--stat", "HEAD", "--"]).trimEnd(),
+    productDiffStat(productWorktrees),
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   const executionInWorktree = join(input.worktreePath, executionRel);
   const evidenceDir = join(
@@ -315,6 +588,7 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     stdout: input.stdout,
     stderr: input.stderr,
     changes: changesBeforeEvidence,
+    attemptChanges,
     diffStat,
     logRefPath: repoRelative(input.worktreePath, logPath),
     parentValidations: input.parentValidations,
@@ -396,6 +670,13 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
       },
     ],
     final_message: `Runner command ${summary}.`,
+    ...(!succeeded
+      ? {
+          block_reason: input.error
+            ? `command spawn failed: ${boundedText(input.error, MAX_VALIDATION_SUMMARY_LENGTH)}`
+            : `command exited with code ${input.exitCode ?? "unknown"}`,
+        }
+      : {}),
     command: {
       shell: input.shell,
       value: safeCommand,
@@ -433,6 +714,59 @@ export function writeExecutorEvidence(path: string, evidence: ExecEvidence): voi
   const temporaryPath = `${path}.tmp`;
   writeFileSync(temporaryPath, `${JSON.stringify(evidence, null, 2)}\n`, "utf8");
   renameSync(temporaryPath, path);
+}
+
+/**
+ * Persists failed parent-validation output beside executor evidence. A new numbered set is added
+ * for every validation batch so reporter/integration resume never overwrites the prior failure.
+ */
+export function recordParentValidationFailureOutput(
+  input: RecordParentValidationFailureOutputInput,
+): ExecEvidence {
+  if (input.failureOutputs.length === 0) return input.evidence;
+  const evidenceDir = dirname(input.evidencePath);
+  ensureDir(evidenceDir);
+  const priorAttempts = input.evidence.log_refs
+    .map((ref) => /^parent-validation-attempt-(\d+)-/u.exec(ref.path.split("/").at(-1) ?? "")?.[1])
+    .filter((attempt): attempt is string => attempt !== undefined)
+    .map(Number);
+  const attempt = Math.max(0, ...priorAttempts) + 1;
+  const refs: ExecEvidence["log_refs"] = [];
+
+  for (const output of input.failureOutputs) {
+    const logPath = join(
+      evidenceDir,
+      `parent-validation-attempt-${attempt}-${safeSlug(output.label)}.log`,
+    );
+    const content = redactSensitiveText(
+      [
+        `parent validation: ${output.label}`,
+        `exit code: ${output.exitCode ?? "unknown"}`,
+        `timed out: ${output.timedOut === true ? "yes" : "no"}`,
+        ...(output.error ? [`spawn error: ${output.error}`] : []),
+        "",
+        "--- stdout ---",
+        output.stdout,
+        "",
+        "--- stderr ---",
+        output.stderr,
+      ].join("\n"),
+    );
+    writeFileSync(logPath, content, "utf8");
+    refs.push({
+      kind: "parent-validation-output",
+      path: repoRelative(input.worktreePath, logPath),
+      bytes: Buffer.byteLength(content, "utf8"),
+      truncated: output.stdoutTruncated === true || output.stderrTruncated === true,
+    });
+  }
+
+  const evidence = {
+    ...input.evidence,
+    log_refs: [...input.evidence.log_refs, ...refs],
+  };
+  writeExecutorEvidence(input.evidencePath, evidence);
+  return evidence;
 }
 
 /**

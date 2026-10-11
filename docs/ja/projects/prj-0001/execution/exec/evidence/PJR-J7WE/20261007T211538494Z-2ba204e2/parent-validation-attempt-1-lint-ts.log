@@ -1,0 +1,18 @@
+parent validation: lint-ts
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 lint:ts
+> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'
+
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-J7WE/tests/devcontainer-scaffold.test.ts
+  262:51  error  `import()` type annotations are forbidden  @typescript-eslint/consistent-type-imports
+
+✖ 1 problem (1 error, 0 warnings)
+
+
+
+--- stderr ---

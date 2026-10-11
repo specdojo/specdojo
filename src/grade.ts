@@ -5,15 +5,18 @@ import { type Command } from "commander";
 import yaml from "js-yaml";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
-import { extractJsonText } from "./agent-response.js";
+import { extractJsonArrayText, extractJsonText } from "./agent-response.js";
 import { collectResolvedDeliverables, loadCatalogDocs } from "./catalog-build.js";
 import { isTrashedPath, resolveBasePath } from "./catalog-paths.js";
-import { resolveViewpointsDoc } from "./review-plan.js";
+import { resolveViewpointsDoc, viewpointAppliesToDocument } from "./review-plan.js";
 import type { GradeRubric, ReviewViewpoint, ReviewViewpointsDoc } from "./review-types.js";
 import {
   assertValidActor,
   getProjectCatalogPath,
   getProjectExecutionPath,
+  getProjectMembersPath,
+  getProjectRolesPath,
+  getProjectSchedulePath,
   getProjectViewpointsPath,
   loadConfig,
   loadMemberRoster,
@@ -22,11 +25,15 @@ import {
   type SpecDojoProjectConfig,
 } from "./specdojo-config.js";
 import { listFilesRecursive } from "./exec-shared.js";
+import { buildScheduleIndex } from "./exec-schedule-index.js";
 import { resolveSpecdojoPath } from "./template-resolution.js";
 import {
+  applyGradeFindingTranslations,
   gradeContentHash,
   gradeFindingCount,
+  gradeFindingTranslationInput,
   gradeResultPath,
+  gradeResultPathForDocument,
   markdownDocumentId,
   readGradeResult,
   readGradeResultForDocument,
@@ -38,16 +45,21 @@ import {
 } from "./grade-result.js";
 
 export type GradeTarget = "kata" | "deliverable";
+const GRADE_TARGETS: readonly GradeTarget[] = ["kata", "deliverable"];
 export type GradeSeverity = "blocker" | "major" | "minor" | "note";
 export type GradeVerdict = "pass" | "needs-work" | "fail";
 
 export type GradeTargetFilters = {
   changedOnly?: boolean;
+  dependencyChanged?: boolean;
+  rulebookChanged?: boolean;
+  unreviewed?: boolean;
   verdict?: GradeVerdict;
   minScore?: number;
   maxFindings?: number;
   ungraded?: boolean;
   incomplete?: boolean;
+  rubricOutdated?: boolean;
 };
 
 export type GradePipelineState = {
@@ -68,8 +80,17 @@ export type GradePipelineState = {
 export type GradeFindingInput = {
   id?: string;
   severity: GradeSeverity;
+  /** Canonical executor wording. */
   message: string;
+  /** Japanese display wording. It never participates in scoring or carry-over matching. */
+  message_ja?: string;
   line?: number;
+};
+
+export type GradeLevelCorrection = {
+  viewpoint: string;
+  original_level: number;
+  corrected_level: number;
 };
 
 type PreviousGradeFinding = Pick<GradeFindingInput, "severity" | "message" | "line"> & {
@@ -93,6 +114,7 @@ export type GradeCriterionInput = {
 export type GradeDocumentInput = {
   path: string;
   viewpoints: GradeViewpointInput[];
+  level_corrections?: GradeLevelCorrection[];
   done_criteria?: GradeCriterionInput[];
 };
 
@@ -151,6 +173,7 @@ const DONE_CRITERIA_SCHEMA = "docs/specdojo/schemas/v1/grade-done-criteria.schem
 const GRADE_PLACEHOLDER = "__SPECDOJO_GRADE_FLOW_PLACEHOLDER__";
 const GRADE_FINDINGS_PLACEHOLDER = "__SPECDOJO_GRADE_FINDINGS_FLOW_PLACEHOLDER__";
 const GRADE_UNSATISFIED_PLACEHOLDER = "__SPECDOJO_GRADE_UNSATISFIED_BLOCK_PLACEHOLDER__";
+export const GRADE_PLAN_EMBEDDED_DOCUMENT_CHARACTER_LIMIT = 100_000;
 const SEVERITY_LEVEL_CAP: Record<GradeSeverity, number> = {
   blocker: 0,
   major: 2,
@@ -225,6 +248,26 @@ function levelCapForFindings(findings: readonly GradeFindingInput[]): number {
     4,
   );
   return majorCount >= 2 ? Math.min(severityCap, 1) : severityCap;
+}
+
+function correctViewpointLevels(viewpoints: readonly GradeViewpointInput[]): {
+  viewpoints: GradeViewpointInput[];
+  corrections: GradeLevelCorrection[];
+} {
+  const corrections: GradeLevelCorrection[] = [];
+  const corrected = viewpoints.map((viewpoint) => {
+    const cap = levelCapForFindings(viewpoint.findings ?? []);
+    const correctedLevel = Math.min(viewpoint.level, cap);
+    if (correctedLevel !== viewpoint.level) {
+      corrections.push({
+        viewpoint: viewpoint.id,
+        original_level: viewpoint.level,
+        corrected_level: correctedLevel,
+      });
+    }
+    return { ...viewpoint, level: correctedLevel };
+  });
+  return { viewpoints: corrected, corrections };
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -490,9 +533,19 @@ function loadViewpoints(projectOption?: string): ReviewViewpointsDoc {
   return resolveViewpointsDoc(resolve(specdojoRootDir(), path));
 }
 
+// 対象探索は観点定義が無いプロジェクトでも動かす。その場合は突き合わせ先を持たない扱いにする。
+function loadViewpointsIfConfigured(
+  projectOption: string | undefined,
+  rootDir: string,
+): ReviewViewpointsDoc | undefined {
+  const path = getProjectViewpointsPath(resolveProject(projectOption).project);
+  if (!path || !existsSync(resolve(rootDir, path))) return undefined;
+  return resolveViewpointsDoc(resolve(rootDir, path));
+}
+
 export function resolveGradeActor(actor: string, roster: MemberRoster | null): string {
   const normalized = actor.trim();
-  if (!normalized) throw new Error("--by must be a non-empty pm-members.yaml nickname");
+  if (!normalized) throw new Error("--by must be a non-empty agent-members.yaml nickname");
   if (!roster) throw new Error("members_path is required for grade apply --by");
   assertValidActor(normalized, roster);
   if (roster.members.filter((member) => member.nickname === normalized).length !== 1) {
@@ -504,6 +557,17 @@ export function resolveGradeActor(actor: string, roster: MemberRoster | null): s
 function assertRubric(doc: ReviewViewpointsDoc): GradeRubric {
   const rubric = doc.grade_rubric;
   if (!rubric) throw new Error("Resolved viewpoints do not define grade_rubric");
+  // すべての観点が grade の対象なので、重みのない category の観点は score へ黙って入らなくなる。
+  for (const viewpoint of doc.viewpoints ?? []) {
+    for (const target of viewpoint.grade_targets ?? GRADE_TARGETS) {
+      const weight = rubric.weights[target]?.[viewpoint.category];
+      if (typeof weight !== "number" || weight <= 0) {
+        throw new Error(
+          `grade_rubric ${rubric.id} has no ${target} weight for category '${viewpoint.category}' used by ${viewpoint.id}`,
+        );
+      }
+    }
+  }
   return rubric;
 }
 
@@ -725,6 +789,9 @@ type DeliverableCatalogEntry = {
   path: string;
   localId: string;
   doneCriteria: GradeDoneCriterion[];
+  dependsOn?: string[];
+  /** SHA-256 of the catalog entry definition; the catalog-entry comparison source. */
+  entryHash: string;
 };
 
 function criterionId(index: number): string {
@@ -757,6 +824,8 @@ function loadDeliverableCatalog(
       entries.set(path, {
         path,
         localId: item.item.local_id,
+        dependsOn: item.item.depends_on,
+        entryHash: gradeContentHash(stableJson(item.item)),
         doneCriteria: (item.item.done_criteria ?? []).map((criterion, index) => ({
           id: criterionId(index),
           text: criterion.text,
@@ -785,6 +854,211 @@ export function resolveDeliverableDoneCriteria(
     }
   }
   return result;
+}
+
+// キー順に依存しない直列化。カタログ項目の hash が YAML 上のキー順の入れ替えで変わらないようにする。
+function stableJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map((item) => stableJson(item)).join(",")}]`;
+  if (isRecord(value)) {
+    const keys = Object.keys(value)
+      .filter((key) => value[key] !== undefined)
+      .sort();
+    return `{${keys.map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value) ?? "null";
+}
+
+// 突き合わせ先の変更検出（PJR-Z47X）。観点が comparison_sources で宣言した突き合わせ先と、
+// 成果物の depends_on 先の hash を grade result の source_hashes へ記録し、
+// --changed-only と --dependency-changed が現在の hash と比較する。
+const COMPARISON_SOURCE_RE =
+  /^(catalog-entry|dependencies|schedule|members|roles|deliverable:[a-z0-9][a-z0-9-]*)$/;
+// 突き合わせ先が存在しないことも状態として記録し、後から作られた場合に変更として検出する。
+const ABSENT_SOURCE_HASH = gradeContentHash("specdojo:grade-comparison-source-absent");
+
+type GradeSourceContext = {
+  rootDir: string;
+  project: SpecDojoProjectConfig;
+  projectOption?: string;
+  catalog?: Map<string, DeliverableCatalogEntry>;
+  localIdToPath?: Map<string, string>;
+  hashes: Map<string, string>;
+};
+
+function createGradeSourceContext(
+  projectOption: string | undefined,
+  rootDir: string,
+): GradeSourceContext {
+  return {
+    rootDir,
+    project: resolveProject(projectOption).project,
+    projectOption,
+    hashes: new Map(),
+  };
+}
+
+function sourceCatalog(context: GradeSourceContext): {
+  catalog: Map<string, DeliverableCatalogEntry>;
+  localIdToPath: Map<string, string>;
+} {
+  if (!context.catalog || !context.localIdToPath) {
+    context.catalog = getProjectCatalogPath(context.project)
+      ? loadDeliverableCatalog(context.projectOption, context.rootDir)
+      : new Map<string, DeliverableCatalogEntry>();
+    context.localIdToPath = new Map(
+      [...context.catalog.entries()].map(([path, entry]) => [entry.localId, path]),
+    );
+  }
+  return { catalog: context.catalog, localIdToPath: context.localIdToPath };
+}
+
+function hashSourceFile(path: string | undefined): string {
+  if (!path || !existsSync(path)) return ABSENT_SOURCE_HASH;
+  return gradeContentHash(readFileSync(path, "utf8"));
+}
+
+// ディレクトリはファイルの相対パスと内容の組で hash する。生成物は生成元の変更で検出する。
+function hashSourceDirectory(path: string): string {
+  const files = listFilesRecursive(path)
+    .filter((file) => !relativePathFromRoot(file, path).split("/").includes("generated"))
+    .sort();
+  if (files.length === 0) return ABSENT_SOURCE_HASH;
+  const hash = createHash("sha256");
+  for (const file of files) {
+    hash.update(`${relativePathFromRoot(file, path)}\0${hashSourceFile(file)}\n`);
+  }
+  return hash.digest("hex");
+}
+
+function sharedSourceHash(key: string, context: GradeSourceContext): string {
+  const cached = context.hashes.get(key);
+  if (cached !== undefined) return cached;
+  let hash: string;
+  if (key === "schedule") {
+    hash = hashSourceDirectory(resolve(context.rootDir, getProjectSchedulePath(context.project)));
+  } else if (key === "members" || key === "roles") {
+    const path =
+      key === "members"
+        ? getProjectMembersPath(context.project)
+        : getProjectRolesPath(context.project);
+    hash = hashSourceFile(path ? resolve(context.rootDir, path) : undefined);
+  } else {
+    const localId = key.slice(key.indexOf(":") + 1);
+    hash = hashSourceFile(sourceCatalog(context).localIdToPath.get(localId));
+  }
+  context.hashes.set(key, hash);
+  return hash;
+}
+
+function gradedComparisonSources(
+  viewpoints: ReviewViewpointsDoc | undefined,
+  target: GradeTarget,
+  metadata: Record<string, unknown>,
+): string[] {
+  if (!viewpoints) return [];
+  const sources = new Set<string>();
+  for (const viewpoint of gradedViewpoints(viewpoints, target, metadata)) {
+    for (const source of viewpoint.comparison_sources ?? []) {
+      if (!COMPARISON_SOURCE_RE.test(source)) {
+        throw new Error(`${viewpoint.id}: unknown comparison source ${source}`);
+      }
+      sources.add(source);
+    }
+  }
+  return [...sources].sort();
+}
+
+// depends_on のうちカタログで Markdown 成果物に解決できるものだけを依存先として扱う。
+function dependencySourceKeys(documentPath: string, context: GradeSourceContext): string[] {
+  const { catalog, localIdToPath } = sourceCatalog(context);
+  return (catalog.get(documentPath)?.dependsOn ?? [])
+    .filter((localId) => localIdToPath.has(localId))
+    .map((localId) => `dependency:${localId}`)
+    .sort();
+}
+
+function comparisonSourceKeys(
+  sources: readonly string[],
+  documentPath: string,
+  context: GradeSourceContext,
+): string[] {
+  return sources.flatMap((source) =>
+    source === "dependencies" ? dependencySourceKeys(documentPath, context) : [source],
+  );
+}
+
+function currentSourceHashes(
+  keys: readonly string[],
+  documentPath: string,
+  context: GradeSourceContext,
+): Record<string, string> {
+  const hashes: Record<string, string> = {};
+  for (const key of [...new Set(keys)].sort()) {
+    if (key === "catalog-entry") {
+      hashes[key] =
+        sourceCatalog(context).catalog.get(documentPath)?.entryHash ?? ABSENT_SOURCE_HASH;
+    } else if (key.startsWith("dependency:")) {
+      const localId = key.slice("dependency:".length);
+      hashes[key] = hashSourceFile(sourceCatalog(context).localIdToPath.get(localId));
+    } else {
+      hashes[key] = sharedSourceHash(key, context);
+    }
+  }
+  return hashes;
+}
+
+// grade result へ記録する突き合わせ先の hash。宣言された突き合わせ先に加え、成果物では
+// --dependency-changed が使う depends_on 先を、観点の宣言に関係なく記録する。
+function gradeSourceHashes(
+  documentPath: string,
+  document: MarkdownDocument,
+  viewpoints: ReviewViewpointsDoc | undefined,
+  target: GradeTarget,
+  context: GradeSourceContext,
+): Record<string, string> {
+  const metadata = isRecord(document.data.specdojo) ? document.data.specdojo : {};
+  const keys = [
+    ...comparisonSourceKeys(
+      gradedComparisonSources(viewpoints, target, metadata),
+      documentPath,
+      context,
+    ),
+    ...(target === "deliverable" ? dependencySourceKeys(documentPath, context) : []),
+  ];
+  return currentSourceHashes(keys, documentPath, context);
+}
+
+/** Current hashes of the comparison sources and dependencies that grade apply records for a document. */
+export function resolveGradeSourceHashes(
+  opts: {
+    path: string;
+    target: GradeTarget;
+    project?: string;
+    viewpoints?: ReviewViewpointsDoc;
+  },
+  rootDir = specdojoRootDir(),
+): Record<string, string> {
+  const absolute = resolveSafeMarkdownPath(opts.path, rootDir);
+  const document = parseMarkdown(
+    readFileSync(absolute, "utf8"),
+    relativePathFromRoot(absolute, rootDir),
+  );
+  const viewpoints = opts.viewpoints ?? loadViewpointsIfConfigured(opts.project, rootDir);
+  return gradeSourceHashes(
+    absolute,
+    document,
+    viewpoints,
+    opts.target,
+    createGradeSourceContext(opts.project, rootDir),
+  );
+}
+
+// 記録の無い突き合わせ先（source tracking 導入前の結果を含む）は、鮮度を保証できないため変更として扱う。
+function sourceHashesChanged(
+  stored: Readonly<Record<string, string>> | undefined,
+  current: Readonly<Record<string, string>>,
+): boolean {
+  return Object.entries(current).some(([key, hash]) => stored?.[key] !== hash);
 }
 
 function gradePipelineStateDirectory(projectOption?: string, rootDir = specdojoRootDir()): string {
@@ -1054,17 +1328,68 @@ export function discoverGradeTargets(
     .sort();
   if (
     !opts.changedOnly &&
+    !opts.dependencyChanged &&
+    !opts.rulebookChanged &&
+    !opts.unreviewed &&
     opts.verdict === undefined &&
     opts.minScore === undefined &&
     opts.maxFindings === undefined &&
     !opts.ungraded &&
-    !opts.incomplete
+    !opts.incomplete &&
+    !opts.rubricOutdated
   ) {
     return unique;
   }
   const pipelineStates = opts.incomplete
     ? loadGradePipelineStates(opts.project, rootDir)
     : new Map<string, GradePipelineState>();
+
+  const sourceContext = createGradeSourceContext(opts.project, rootDir);
+  const viewpoints =
+    opts.changedOnly || opts.rubricOutdated
+      ? loadViewpointsIfConfigured(opts.project, rootDir)
+      : undefined;
+  const currentRubricId = opts.rubricOutdated ? currentGradeRubricId(viewpoints) : undefined;
+
+  let scheduledDocuments: Set<string> | undefined;
+  if (opts.unreviewed) {
+    const { project } = resolveProject(opts.project);
+    const schedulePath = join(rootDir, getProjectExecutionPath(project), "../schedule");
+    try {
+      const index = buildScheduleIndex(schedulePath);
+      scheduledDocuments = new Set();
+      for (const node of index.nodes.values()) {
+        if (node.local_id) scheduledDocuments.add(node.local_id);
+        if (node.target_local_ids) {
+          for (const tid of node.target_local_ids) scheduledDocuments.add(tid);
+        }
+      }
+    } catch {
+      scheduledDocuments = new Set();
+    }
+  }
+
+  const gradeDates = new Map<string, number>();
+  function getMemoizedGradeDate(p: string) {
+    if (!gradeDates.has(p)) {
+      const res = readGradeResultForDocument({
+        documentPath: relativePathFromRoot(p, rootDir),
+        project: opts.project,
+        rootDir,
+      });
+      gradeDates.set(p, res ? new Date(res.graded_at).getTime() : 0);
+    }
+    return gradeDates.get(p)!;
+  }
+
+  function getRulebookPath(rulebookId: string) {
+    if (rulebookId.startsWith("specdojo:")) {
+      const id = rulebookId.slice("specdojo:".length);
+      return join(rootDir, "docs/ja/specdojo/rulebooks", `${id}.md`);
+    }
+    return undefined;
+  }
+
   return unique.filter((path) => {
     const rel = relativePathFromRoot(path, rootDir);
     const content = readFileSync(path, "utf8");
@@ -1080,9 +1405,10 @@ export function discoverGradeTargets(
       project: opts.project,
       rootDir,
     });
-    if (opts.incomplete && !isIncompleteGradePipelineState(pipelineState)) return false;
-    if (opts.ungraded && result !== undefined) return false;
-    if (opts.verdict !== undefined && result?.verdict !== opts.verdict) return false;
+
+    if (opts.verdict !== undefined && (result === undefined || result.verdict !== opts.verdict)) {
+      return false;
+    }
     if (opts.minScore !== undefined && (result === undefined || result.score < opts.minScore)) {
       return false;
     }
@@ -1092,8 +1418,83 @@ export function discoverGradeTargets(
     ) {
       return false;
     }
-    return !opts.changedOnly || result?.content_hash !== gradeContentHash(content);
+
+    if (opts.unreviewed) {
+      if (!scheduledDocuments) return false;
+      const id = (document.data.specdojo as Record<string, unknown>)?.id as string;
+      if (!id || scheduledDocuments.has(id.split(":").pop()!)) return false;
+      if (result !== undefined && result.content_hash === gradeContentHash(content)) return false;
+    }
+
+    if (opts.incomplete && pipelineState) {
+      if (!isIncompleteGradePipelineState(pipelineState)) return false;
+    } else if (opts.incomplete) {
+      return false;
+    }
+
+    if (opts.ungraded && result !== undefined) return false;
+
+    if (currentRubricId !== undefined && !isGradeRubricOutdated(result, currentRubricId)) {
+      return false;
+    }
+
+    if (result === undefined) {
+      if (opts.dependencyChanged || opts.rulebookChanged) return false;
+      return true;
+    }
+
+    const docDate = new Date(result.graded_at).getTime();
+
+    if (opts.rulebookChanged) {
+      const rb = (document.data.specdojo as Record<string, unknown>)?.rulebook as string;
+      if (!rb) return false;
+      const rbPath = getRulebookPath(rb);
+      if (!rbPath || !existsSync(rbPath)) return false;
+      if (getMemoizedGradeDate(rbPath) <= docDate) return false;
+    }
+
+    // 依存先の評価日時ではなく内容の hash で判定する。再評価しただけの依存先は変更扱いにしない。
+    if (opts.dependencyChanged) {
+      if (opts.target !== "deliverable") return false;
+      const keys = dependencySourceKeys(path, sourceContext);
+      if (keys.length === 0) return false;
+      const current = currentSourceHashes(keys, path, sourceContext);
+      if (!sourceHashesChanged(result.source_hashes, current)) return false;
+    }
+
+    if (opts.changedOnly && result.content_hash === gradeContentHash(content)) {
+      const metadata = isRecord(document.data.specdojo) ? document.data.specdojo : {};
+      const keys = comparisonSourceKeys(
+        gradedComparisonSources(viewpoints, opts.target, metadata),
+        path,
+        sourceContext,
+      );
+      if (keys.length === 0) return false;
+      const current = currentSourceHashes(keys, path, sourceContext);
+      if (!sourceHashesChanged(result.source_hashes, current)) return false;
+    }
+
+    return true;
   });
+}
+
+function currentGradeRubricId(viewpoints: ReviewViewpointsDoc | undefined): string {
+  const id = viewpoints?.grade_rubric?.id;
+  if (typeof id !== "string" || id.length === 0) {
+    throw new Error("--rubric-outdated requires grade_rubric.id in the resolved review viewpoints");
+  }
+  return id;
+}
+
+// 保存済みの結果が現在の rubric 以外で付けられたかを判定する。rubric の記録がない結果は
+// どの版で付けたか確かめられないため旧版として扱う。結果がない文書は --ungraded の対象である。
+export function isGradeRubricOutdated(
+  result: { rubric?: unknown } | undefined,
+  currentRubricId: string,
+): boolean {
+  if (result === undefined) return false;
+  if (typeof result.rubric !== "string" || result.rubric.length === 0) return true;
+  return result.rubric !== currentRubricId;
 }
 
 function validateGradeTargetFilters(filters: GradeTargetFilters): void {
@@ -1125,6 +1526,9 @@ function validateGradeTargetFilters(filters: GradeTargetFilters): void {
   ) {
     throw new Error("--ungraded cannot be combined with --verdict, --min-score, or --max-findings");
   }
+  if (filters.ungraded && filters.rubricOutdated) {
+    throw new Error("--ungraded cannot be combined with --rubric-outdated");
+  }
 }
 
 function storedGradeScore(grade: Record<string, unknown>, path: string): number {
@@ -1155,6 +1559,16 @@ function matchesParsedGradeTargetFilters(
   filters: GradeTargetFilters,
   incomplete = false,
 ): boolean {
+  if (
+    filters.dependencyChanged ||
+    filters.rulebookChanged ||
+    filters.unreviewed ||
+    filters.rubricOutdated
+  ) {
+    throw new Error(
+      "dependencyChanged, rulebookChanged, unreviewed, rubricOutdated cannot be evaluated individually without context",
+    );
+  }
   const specdojo = document.data.specdojo as Record<string, unknown>;
   const grade = isRecord(specdojo.grade) ? specdojo.grade : undefined;
   if (filters.incomplete && !incomplete) return false;
@@ -1192,17 +1606,28 @@ export function matchesGradeTargetFilters(
   );
 }
 
-function continuousViewpoints(doc: ReviewViewpointsDoc, target: GradeTarget): ReviewViewpoint[] {
+// grade の対象は grade_targets と文書の種類（document_kinds）だけで決まる。
+function gradedViewpoints(
+  doc: ReviewViewpointsDoc,
+  target: GradeTarget,
+  metadata: Record<string, unknown>,
+): ReviewViewpoint[] {
   return (doc.viewpoints ?? []).filter(
     (viewpoint) =>
-      viewpoint.continuous === true &&
-      viewpoint.evaluation !== "human" &&
-      (viewpoint.grade_targets === undefined || viewpoint.grade_targets.includes(target)),
+      (viewpoint.grade_targets === undefined || viewpoint.grade_targets.includes(target)) &&
+      viewpointAppliesToDocument(viewpoint, metadata),
   );
 }
 
-function agentViewpoints(doc: ReviewViewpointsDoc, target: GradeTarget): ReviewViewpoint[] {
-  return continuousViewpoints(doc, target).filter((viewpoint) => viewpoint.evaluation === "agent");
+function agentViewpoints(
+  doc: ReviewViewpointsDoc,
+  target: GradeTarget,
+  metadata: Record<string, unknown>,
+): ReviewViewpoint[] {
+  return gradedViewpoints(doc, target, metadata).filter(
+    (viewpoint) =>
+      viewpoint.evaluation === "referential" || viewpoint.evaluation === "discretionary",
+  );
 }
 
 function deterministicResults(
@@ -1211,7 +1636,8 @@ function deterministicResults(
   target: GradeTarget,
 ): GradeViewpointInput[] {
   const results: GradeViewpointInput[] = [];
-  for (const viewpoint of continuousViewpoints(definitions, target).filter(
+  const metadata = document.data.specdojo as Record<string, unknown>;
+  for (const viewpoint of gradedViewpoints(definitions, target, metadata).filter(
     (item) => item.evaluation === "deterministic",
   )) {
     const findings: GradeFindingInput[] = [];
@@ -1258,7 +1684,7 @@ function doneCriteriaPlanLines(
   return [
     "### 3.4. 完了条件（done_criteria）",
     "",
-    "成果物カタログが対象へ宣言する完了条件である。viewpoint と rubric による level 判定とは別の軸として、各条件を現在の本文の根拠だけで `satisfied` / `unsatisfied` のどちらかに判定する。score や level の高低から充足を推論せず、条件文が要求する内容を本文で確認できるかだけで判定する。`roles` は条件の確認責任を持つ Role code、`viewpoint` は条件を見る観点であり、`evaluation: human` の観点に紐づく条件も本文の根拠で一次判定する。",
+    "成果物カタログが対象へ宣言する完了条件である。viewpoint と rubric による level 判定とは別の軸として、各条件を現在の本文の根拠だけで `satisfied` / `unsatisfied` のどちらかに判定する。score や level の高低から充足を推論せず、条件文が要求する内容を本文で確認できるかだけで判定する。`roles` は条件の確認責任を持つ Role code、`viewpoint` は条件を見る観点であり、`evaluation: discretionary` の観点に紐づく条件も本文の根拠で一次判定する。",
     "",
     ...doneCriteria.map((criterion) => {
       const title = titles.get(criterion.viewpoint);
@@ -1269,7 +1695,21 @@ function doneCriteriaPlanLines(
   ];
 }
 
-export function renderGradePlan(opts: {
+function applicableDoneCriteria(
+  doneCriteria: readonly GradeDoneCriterion[],
+  definitions: ReviewViewpointsDoc,
+  metadata: Record<string, unknown>,
+): GradeDoneCriterion[] {
+  const viewpoints = new Map(
+    (definitions.viewpoints ?? []).map((viewpoint) => [viewpoint.id, viewpoint]),
+  );
+  return doneCriteria.filter((criterion) => {
+    const viewpoint = viewpoints.get(criterion.viewpoint);
+    return viewpoint === undefined || viewpointAppliesToDocument(viewpoint, metadata);
+  });
+}
+
+type RenderGradePlanOptions = {
   target: GradeTarget;
   path: string;
   references?: string[];
@@ -1277,15 +1717,116 @@ export function renderGradePlan(opts: {
   viewpoints: ReviewViewpointsDoc;
   projectId: string;
   doneCriteria?: GradeDoneCriterion[];
+  embedDocuments?: boolean;
+  /** テスト用に上限を差し替える。CLI は既定の 100,000 文字を使う。 */
+  maxEmbeddedDocumentCharacters?: number;
   /** 前回結果の読み取り元。省略時は project の execution/grade/results を使う。 */
   resultsDirectory?: string;
-}): string {
+};
+
+type GradePlanEmbedding = {
+  requested: boolean;
+  embedded: boolean;
+  characterCount: number;
+  limit: number;
+  lines: string[];
+};
+
+function markdownFence(content: string): string {
+  let longestRun = 0;
+  for (const match of content.matchAll(/`+/g)) longestRun = Math.max(longestRun, match[0].length);
+  return "`".repeat(Math.max(3, longestRun + 1));
+}
+
+function splitDocumentForEmbedding(content: string): { frontmatter?: string; body: string } {
+  const normalized = content.replace(/\r\n?/g, "\n");
+  const match = normalized.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!match) return { body: normalized.replace(/\n$/, "") };
+  return {
+    frontmatter: match[1],
+    body: (match[2] ?? "").replace(/^\n+/, "").replace(/\n$/, ""),
+  };
+}
+
+function renderEmbeddedGradeDocument(path: string, roles: readonly string[]): string[] {
+  const content = readFileSync(resolveSafeRepositoryPath(path, "embedded document"), "utf8");
+  const { frontmatter, body } = splitDocumentForEmbedding(content);
+  const bodyLines = body === "" ? [] : body.split("\n");
+  const numberedBody = bodyLines.map((line, index) => `${index + 1} | ${line}`).join("\n");
+  const lines = [
+    `#### ${roles.join("・")}: \`${path}\``,
+    "",
+    "Frontmatter（`finding.line` の行番号対象外）:",
+    "",
+  ];
+  if (frontmatter === undefined) {
+    lines.push("- なし", "");
+  } else {
+    const fence = markdownFence(frontmatter);
+    lines.push(`${fence}yaml`, frontmatter, fence, "");
+  }
+  const bodyFence = markdownFence(numberedBody);
+  lines.push(
+    "本文（左端は `finding.line` と同じ、Frontmatter を除く1始まりの行番号）:",
+    "",
+    `${bodyFence}text`,
+    numberedBody,
+    bodyFence,
+    "",
+  );
+  return lines;
+}
+
+function gradePlanEmbedding(opts: {
+  requested: boolean;
+  targetPath: string;
+  references: readonly string[];
+  referenceExample?: string;
+  limit: number;
+}): GradePlanEmbedding {
+  if (!Number.isSafeInteger(opts.limit) || opts.limit < 1) {
+    throw new Error("maxEmbeddedDocumentCharacters must be a positive integer");
+  }
+  if (!opts.requested) {
+    return { requested: false, embedded: false, characterCount: 0, limit: opts.limit, lines: [] };
+  }
+
+  const rolesByPath = new Map<string, string[]>();
+  const add = (path: string, role: string) => {
+    const roles = rolesByPath.get(path);
+    if (roles) {
+      if (!roles.includes(role)) roles.push(role);
+    } else {
+      rolesByPath.set(path, [role]);
+    }
+  };
+  add(opts.targetPath, "評価対象");
+  for (const reference of opts.references) add(reference, "参考資料");
+  if (opts.referenceExample) add(opts.referenceExample, "良い実例");
+
+  const lines = [...rolesByPath].flatMap(([path, roles]) =>
+    renderEmbeddedGradeDocument(path, roles),
+  );
+  const characterCount = lines.join("\n").length;
+  return {
+    requested: true,
+    embedded: characterCount <= opts.limit,
+    characterCount,
+    limit: opts.limit,
+    lines: characterCount <= opts.limit ? lines : [],
+  };
+}
+
+function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
+  content: string;
+  embedding: GradePlanEmbedding;
+} {
   const rubric = assertRubric(opts.viewpoints);
-  const viewpoints = agentViewpoints(opts.viewpoints, opts.target);
   const absolute = resolveSafeMarkdownPath(opts.path);
   const rel = repoRelativePath(absolute);
   const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
+  const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
   const priorFindings =
     (opts.resultsDirectory
@@ -1300,7 +1841,17 @@ export function renderGradePlan(opts: {
   const referenceExample = opts.referenceExample
     ? repoRelativePath(resolveSafeMarkdownPath(opts.referenceExample))
     : undefined;
-  const doneCriteria = opts.target === "deliverable" ? (opts.doneCriteria ?? []) : [];
+  const embedding = gradePlanEmbedding({
+    requested: opts.embedDocuments ?? false,
+    targetPath: rel,
+    references,
+    referenceExample,
+    limit: opts.maxEmbeddedDocumentCharacters ?? GRADE_PLAN_EMBEDDED_DOCUMENT_CHARACTER_LIMIT,
+  });
+  const doneCriteria =
+    opts.target === "deliverable"
+      ? applicableDoneCriteria(opts.doneCriteria ?? [], opts.viewpoints, metadata)
+      : [];
   const lines = [
     "---",
     yaml
@@ -1325,7 +1876,7 @@ export function renderGradePlan(opts: {
     "",
     `# Review Plan: ${taskId} grade: ${rel}`,
     "",
-    "この plan は grade pipeline の executor stage 用である。評価と根拠の記述だけを行い、GradeSubmission JSON は作成しない。後続の reporter が判定内容を変更せず JSON へ構造化する。",
+    "この plan は grade pipeline の executor stage 用である。評価と根拠の記述だけを行い、GradeSubmission JSON は作成しない。`grade apply` が最終応答の marker を機械的に解析して GradeSubmission を生成し、契約を満たさない応答は拒否して executor を再実行する。",
     "",
     "## 1. このタスクで行うこと",
     "",
@@ -1356,18 +1907,42 @@ export function renderGradePlan(opts: {
           "",
         ]
       : []),
+    ...(embedding.embedded
+      ? [
+          "### 埋め込み資料",
+          "",
+          `評価対象・参考資料・良い実例を plan 生成時点の内容で埋め込む。埋め込み部分は ${embedding.characterCount.toLocaleString("en-US")} 文字（上限 ${embedding.limit.toLocaleString("en-US")} 文字）である。`,
+          "",
+          ...embedding.lines,
+        ]
+      : embedding.requested
+        ? [
+            "### 埋め込み資料",
+            "",
+            `警告: 埋め込み部分が ${embedding.characterCount.toLocaleString("en-US")} 文字となり、上限 ${embedding.limit.toLocaleString("en-US")} 文字を超えたため、本文を埋め込まずパス参照へフォールバックした。`,
+            "",
+          ]
+        : []),
     "## 3. 進め方",
     "",
-    "1. 評価対象をファイル読み取りツールで全文読み、実行ログに読み取り操作を残す。plan に対象本文は埋め込まれていないため、この手順を省略しない。",
-    "2. 参考資料と良い実例がある場合は列挙された全ファイルを全文読み、実行ログに各パスの読み取り操作を残す。参考資料や良い実例を評価対象と混同しない。",
+    ...(embedding.embedded
+      ? [
+          "1. plan の「埋め込み資料」にある評価対象の本文を全文読む。Frontmatter は行番号の対象外であり、本文左端の番号を finding の `line` に使う。",
+          "2. 埋め込まれた参考資料と良い実例がある場合はすべて読む。ファイル読み取りツールと検索ツールを使わず、plan に埋め込まれた資料だけで判定し、参考資料や良い実例を評価対象と混同しない。",
+        ]
+      : [
+          "1. 評価対象をファイル読み取りツールで全文読み、実行ログに読み取り操作を残す。plan に対象本文は埋め込まれていないため、この手順を省略しない。",
+          "2. 参考資料と良い実例がある場合は列挙された全ファイルを全文読み、実行ログに各パスの読み取り操作を残す。参考資料や良い実例を評価対象と混同しない。",
+        ]),
     "3. 良い実例がある場合は、章ごとの具体性、根拠の密度、過不足を評価対象と比較して記載水準を判定する。表現の類似や実例自体の欠点を評価理由にせず、rubric と viewpoint を最終的な判定基準にする。",
     "4. 評価対象を次の rubric と viewpoint に照らし、各 viewpoint を 0-4 で判定する。ある viewpoint の finding の有無から、ほかの viewpoint の判定を推論しない。",
-    "5. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
-    "6. 前回の指摘を対象の現在内容と照合し、解消済みか確認する。未解消なら前回の message を変更せず今回の finding に含め、severity は前回と同等以上を指定する。前回の rule は前回評価時の分類として扱い、各 viewpoint は現在の根拠から独立に評価する。前回の問題が解消され、別の軽微な問題だけが残るため severity を引き下げる場合は、その根拠を新しい finding の message に含める。",
-    "7. 前回の指摘の確認だけで終了せず、前回の指摘にない問題もすべての viewpoint で独立して検出する。",
+    "5. 判定根拠と新しい finding の message は英語で記述する。固有名詞・識別子・引用は原文を保ってよい。日本語だけの既存 finding は互換用の正本として扱い、未解消ならその message を翻訳せず原文のまま再掲する。",
+    "6. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。",
+    "7. 前回の指摘を対象の現在内容と照合し、解消済みか確認する。未解消なら前回の canonical message を変更せず今回の finding に含め、severity は前回と同等以上を指定する。前回の rule は前回評価時の分類として扱い、各 viewpoint は現在の根拠から独立に評価する。前回の問題が解消され、別の軽微な問題だけが残るため severity を引き下げる場合は、その根拠を新しい finding の message に含める。",
+    "8. 前回の指摘の確認だけで終了せず、前回の指摘にない問題もすべての viewpoint で独立して検出する。",
     ...(doneCriteria.length > 0
       ? [
-          "8. 完了条件（done_criteria）を1件ずつ本文の根拠と照合し、`satisfied` / `unsatisfied` を判定する。viewpoint の level や総合 score とは独立した判定であり、level が高いことを理由に条件を満たしたとみなさない。`unsatisfied` には不足している内容を1行で記す。",
+          "9. 完了条件（done_criteria）を1件ずつ本文の根拠と照合し、`satisfied` / `unsatisfied` を判定する。viewpoint の level や総合 score とは独立した判定であり、level が高いことを理由に条件を満たしたとみなさない。`unsatisfied` には不足している内容を英語で1行に記す。",
         ]
       : []),
     "",
@@ -1413,7 +1988,7 @@ export function renderGradePlan(opts: {
     "",
     "1. すべての agent viewpoint の判定と、必要な finding が揃っていることを確認する。",
     "2. 最終応答では各 viewpoint を次のマーカーで1回ずつ宣言する。マーカー間には根拠や検討過程を自由形式で詳しく記述してよい。JSON、Markdown コードフェンス、GradeSubmission は出力しない。",
-    "3. `LEVEL` と各 `FINDING` は reporter が忠実性を機械検証する申告値である。message は1行で具体的に記し、reporter が一字一句コピーできるようにする。finding がない場合は `FINDING` 行を記さない。",
+    "3. `LEVEL` と各 `FINDING` は `grade apply` が機械的に読み取る申告値である。marker・`LEVEL`・`FINDING` はそれぞれ行頭に1行で記し、message は英語で1行に具体的に記す。message は正本としてそのまま記録される。finding がない場合は `FINDING` 行を記さない。",
     "4. すべての viewpoint marker、0-4 の level、level 3 以下の finding、severity と非空 message が揃っていることを確認する。",
     ...(doneCriteria.length > 0
       ? [
@@ -1444,14 +2019,22 @@ export function renderGradePlan(opts: {
     "",
     "## 5. 異常終了の条件",
     "",
-    "- 評価対象、参考資料、または良い実例を読み取れない場合は、内容を推測せず異常終了する。",
+    ...(embedding.embedded
+      ? [
+          "- plan に評価対象、参考資料、または良い実例の埋め込み内容が欠けている場合は、内容を推測せず異常終了する。",
+        ]
+      : ["- 評価対象、参考資料、または良い実例を読み取れない場合は、内容を推測せず異常終了する。"]),
     "- rubric または viewpoint に不足があり、全項目を判定できない場合は異常終了する。",
     "- すべての viewpoint の level と finding を申告できない場合は異常終了する。",
     ...(doneCriteria.length > 0
       ? ["- 列挙された完了条件のいずれかを判定できない場合は異常終了する。"]
       : []),
   ];
-  return `${lines.join("\n")}\n`;
+  return { content: `${lines.join("\n")}\n`, embedding };
+}
+
+export function renderGradePlan(opts: RenderGradePlanOptions): string {
+  return renderGradePlanWithEmbedding(opts).content;
 }
 
 export function renderGradeReporterPlan(opts: {
@@ -1462,15 +2045,18 @@ export function renderGradeReporterPlan(opts: {
   doneCriteria?: GradeDoneCriterion[];
 }): string {
   const rubric = assertRubric(opts.viewpoints);
-  const viewpoints = agentViewpoints(opts.viewpoints, opts.target);
   const absolute = resolveSafeMarkdownPath(opts.path);
   const rel = repoRelativePath(absolute);
   const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
+  const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
   const taskHash = createHash("sha256").update(rel).digest("hex").slice(0, 12).toUpperCase();
   const taskId = `GRADE-${opts.target.toUpperCase()}-${taskHash}-REPORTER`;
-  const doneCriteria = opts.target === "deliverable" ? (opts.doneCriteria ?? []) : [];
+  const doneCriteria =
+    opts.target === "deliverable"
+      ? applicableDoneCriteria(opts.doneCriteria ?? [], opts.viewpoints, metadata)
+      : [];
   const lines = [
     "---",
     yaml
@@ -1495,7 +2081,7 @@ export function renderGradeReporterPlan(opts: {
     "",
     `# Reporter Plan: ${taskId} grade: ${rel}`,
     "",
-    "この plan は grade pipeline の reporter stage 用である。executor の最終応答が `<grade_executor_output>` としてこの plan と一緒に渡される。評価やファイル読み取りは行わず、申告済みの判定を GradeSubmission JSON へ忠実に構造化する。",
+    "この plan は grade pipeline の reporter stage 用である。既定の pipeline は reporter を起動せず、`grade apply` が executor の marker から GradeSubmission を機械的に生成する。この plan は LLM reporter を明示指定して書き写しの精度を比較・検証する場合にだけ使う。executor の最終応答が `<grade_executor_output>` としてこの plan と一緒に渡される。評価やファイル読み取りは行わず、申告済みの判定を GradeSubmission JSON へ忠実に構造化する。",
     "",
     "## 1. このタスクで行うこと",
     "",
@@ -1513,7 +2099,7 @@ export function renderGradeReporterPlan(opts: {
     "1. `<grade_executor_output>` の `[VIEWPOINT <id>]` ごとに `LEVEL` とすべての `FINDING` を読み取る。対象文書や参考資料は読まない。",
     "2. level、severity、line、message を executor の申告どおりにコピーする。message の要約、言い換え、校正を行わない。",
     "3. executor が述べていない finding を追加せず、述べた finding を省略しない。finding の `id` は出力しない。",
-    "4. marker が欠けている、値が曖昧、または GradeSubmission の検証規則と矛盾する場合は推測せず異常終了する。",
+    "4. finding の severity により viewpoint の level に上限がある（`blocker` は上限 0、`major` は上限 2、`minor` は上限 3）。executor の申告が上限を超えていても level は申告どおりにコピーし、補正は `grade apply` に委ねる。marker 欠落など、それ以外の GradeSubmission 契約違反は推測で補わず異常終了する。",
     ...(doneCriteria.length > 0
       ? [
           "5. `[DONE_CRITERIA]` ブロックの各行を `done_criteria` へ写す。`id` と `status`（`satisfied` / `unsatisfied`）は申告どおりにコピーし、`unsatisfied` に続く不足内容は `reason` へ一字一句コピーする。条件の追加・省略・判定変更を行わない。",
@@ -1564,7 +2150,7 @@ export function renderGradeReporterPlan(opts: {
     "## 5. 異常終了の条件",
     "",
     "- `<grade_executor_output>` が渡されていない、または marker 契約を解析できない場合は異常終了する。",
-    "- executor の申告を変更しなければ GradeSubmission の契約を満たせない場合は異常終了する。",
+    "- level の下方向補正を除き、executor の申告を変更しなければ GradeSubmission の契約を満たせない場合は異常終了する。",
   ];
   return `${lines.join("\n")}\n`;
 }
@@ -1593,6 +2179,7 @@ export function writeGradePlans(opts: {
   viewpoints: ReviewViewpointsDoc;
   projectId: string;
   outputDirectory: string;
+  embedDocuments?: boolean;
   random?: () => number;
   // リポジトリ相対パスをキーにした done_criteria 定義。deliverable の plan だけが使う。
   doneCriteriaByPath?: ReadonlyMap<string, GradeDoneCriterion[]>;
@@ -1603,6 +2190,9 @@ export function writeGradePlans(opts: {
   reporterChanged: boolean;
   target: string;
   referenceExample?: string;
+  documentsEmbedded: boolean;
+  embeddingCharacterCount: number;
+  embeddingCharacterLimit: number;
 }[] {
   const outputDirectory = resolveSafeRepositoryPath(opts.outputDirectory, "--out");
   if (opts.paths.length === 0) return [];
@@ -1625,7 +2215,7 @@ export function writeGradePlans(opts: {
         random: opts.random,
       });
     const doneCriteria = opts.doneCriteriaByPath?.get(repoRelativePath(absolute));
-    const content = renderGradePlan({
+    const rendered = renderGradePlanWithEmbedding({
       target: opts.target,
       path: absolute,
       references: resolveGradeReferencePathsFromCatalog(absolute, kataReferences),
@@ -1633,7 +2223,9 @@ export function writeGradePlans(opts: {
       viewpoints: opts.viewpoints,
       projectId: opts.projectId,
       doneCriteria,
+      embedDocuments: opts.embedDocuments,
     });
+    const content = rendered.content;
     const reporterContent = renderGradeReporterPlan({
       target: opts.target,
       path: absolute,
@@ -1653,8 +2245,31 @@ export function writeGradePlans(opts: {
       reporterChanged,
       target: repoRelativePath(absolute),
       referenceExample,
+      documentsEmbedded: rendered.embedding.embedded,
+      embeddingCharacterCount: rendered.embedding.characterCount,
+      embeddingCharacterLimit: rendered.embedding.limit,
     };
   });
+}
+
+// executor の最終応答に現れる marker 行の軽微な書式の揺れを正規化する。受理するのは、行頭の
+// 空白、ブロッククオート `>`、リスト記号（`-` / `*` / `+` と空白）、および marker・LEVEL・
+// FINDING・DC-NNN の見出し部分を囲む `**` だけである。message と reason の本文は変更しない。
+// 文中に埋もれた FINDING などは marker とみなさず、従来どおり無視または拒否する。
+export function normalizeGradeExecutorLine(line: string): string {
+  let normalized = line.replace(/^\s*(?:>\s*)*(?:[-*+]\s+)?/, "");
+  const wrappedMarker = normalized.match(
+    /^\*\*(\[(?:END )?(?:VIEWPOINT[^\]]*|DONE_CRITERIA)\])\*\*\s*$/,
+  );
+  if (wrappedMarker) return wrappedMarker[1];
+  const wrappedLevel = normalized.match(/^\*\*(LEVEL:\s*[0-4])\*\*\s*$/);
+  if (wrappedLevel) return wrappedLevel[1];
+  normalized = normalized.replace(
+    /^\*\*(LEVEL|FINDING(?:\s+[a-z]+)?(?:\s+line=[0-9]+)?|DC-[0-9]{3,})(:?)\*\*(:?)/,
+    (_match, head: string, innerColon: string, outerColon: string) =>
+      `${head}${innerColon}${outerColon}`,
+  );
+  return normalized;
 }
 
 export function parseGradeExecutorAnalysis(raw: string): GradeExecutorAnalysis {
@@ -1669,7 +2284,8 @@ export function parseGradeExecutorAnalysis(raw: string): GradeExecutorAnalysis {
       }
     | undefined;
 
-  for (const [lineIndex, line] of raw.split(/\r?\n/).entries()) {
+  for (const [lineIndex, rawLine] of raw.split(/\r?\n/).entries()) {
+    const line = normalizeGradeExecutorLine(rawLine);
     if (/^\[DONE_CRITERIA\]\s*$/.test(line)) {
       if (current) throw new Error(`line ${lineIndex + 1}: DONE_CRITERIA inside VIEWPOINT`);
       if (doneCriteria !== undefined) {
@@ -1879,6 +2495,73 @@ function doneCriteriaFidelityIssues(
   return issues;
 }
 
+export type GradeExecutorConversionOptions = {
+  executorOutput: string;
+  viewpoints: ReviewViewpointsDoc;
+  target: GradeTarget;
+  expectedPath: string;
+  doneCriteria?: GradeDoneCriterion[];
+};
+
+type GradeExecutorConversion =
+  | { analysis: GradeExecutorAnalysis; submission: GradeSubmission; issues: [] }
+  | { analysis?: undefined; submission?: undefined; issues: GradeValidationIssue[] };
+
+// executor の marker を parse し、GradeSubmission へ機械的に変換したうえで既存の
+// GradeSubmission 検証にかける。severity が定める上限より level が高い場合は、判定を甘くしない
+// 方向へ level だけを補正し、補正前後を submission に残す。それ以外の marker 契約違反と
+// done_criteria の過不足は拒否する。
+function convertGradeExecutorOutput(opts: GradeExecutorConversionOptions): GradeExecutorConversion {
+  let analysis: GradeExecutorAnalysis;
+  try {
+    analysis = parseGradeExecutorAnalysis(opts.executorOutput);
+  } catch (error) {
+    return {
+      issues: [
+        {
+          path: "$analysis",
+          message: error instanceof Error ? error.message : String(error),
+        },
+      ],
+    };
+  }
+
+  const rubric = assertRubric(opts.viewpoints);
+  const corrected = correctViewpointLevels(analysis.viewpoints);
+  const submission: GradeSubmission = {
+    rubric: rubric.id,
+    documents: [
+      {
+        path: opts.expectedPath,
+        viewpoints: corrected.viewpoints,
+        ...(corrected.corrections.length > 0 ? { level_corrections: corrected.corrections } : {}),
+        ...(analysis.doneCriteria ? { done_criteria: analysis.doneCriteria } : {}),
+      },
+    ],
+  };
+  const issues = validateGradeSubmission(
+    submission,
+    opts.viewpoints,
+    opts.target,
+    opts.doneCriteria
+      ? { doneCriteriaByPath: new Map([[opts.expectedPath, opts.doneCriteria]]) }
+      : {},
+  ).map((issue) => ({ path: `$analysis.${issue.path}`, message: issue.message }));
+  if (issues.length > 0) return { issues };
+  return { analysis, submission, issues: [] };
+}
+
+// executor の分析から GradeSubmission を生成する。LLM の reporter を通さずに grade を記録する
+// 既定の経路で使う。拒否時は issues を返し、呼び出し側は executor を再実行する。
+export function buildGradeSubmissionFromAnalysis(opts: GradeExecutorConversionOptions): {
+  submission?: GradeSubmission;
+  issues: GradeValidationIssue[];
+} {
+  const conversion = convertGradeExecutorOutput(opts);
+  if (conversion.submission === undefined) return { issues: conversion.issues };
+  return { submission: conversion.submission, issues: [] };
+}
+
 export function validateGradeReporterFidelity(opts: {
   executorOutput: string;
   submission: GradeSubmission;
@@ -1887,37 +2570,9 @@ export function validateGradeReporterFidelity(opts: {
   expectedPath: string;
   doneCriteria?: GradeDoneCriterion[];
 }): GradeValidationIssue[] {
-  let analysis: GradeExecutorAnalysis;
-  try {
-    analysis = parseGradeExecutorAnalysis(opts.executorOutput);
-  } catch (error) {
-    return [
-      {
-        path: "$analysis",
-        message: error instanceof Error ? error.message : String(error),
-      },
-    ];
-  }
-
-  const rubric = assertRubric(opts.viewpoints);
-  const analysisIssues = validateGradeSubmission(
-    {
-      rubric: rubric.id,
-      documents: [
-        {
-          path: opts.expectedPath,
-          viewpoints: analysis.viewpoints,
-          ...(analysis.doneCriteria ? { done_criteria: analysis.doneCriteria } : {}),
-        },
-      ],
-    },
-    opts.viewpoints,
-    opts.target,
-    opts.doneCriteria
-      ? { doneCriteriaByPath: new Map([[opts.expectedPath, opts.doneCriteria]]) }
-      : {},
-  ).map((issue) => ({ path: `$analysis.${issue.path}`, message: issue.message }));
-  if (analysisIssues.length > 0) return analysisIssues;
+  const conversion = convertGradeExecutorOutput(opts);
+  if (conversion.analysis === undefined) return conversion.issues;
+  const analysis = conversion.analysis;
 
   if (opts.submission.documents.length !== 1) {
     return [
@@ -2084,8 +2739,6 @@ export function validateGradeSubmission(
   const rubric = assertRubric(doc);
   if (submission.rubric !== rubric.id)
     issues.push({ path: "$", message: `rubric must be ${rubric.id}` });
-  const required = agentViewpoints(doc, target);
-  const allowed = new Map(required.map((viewpoint) => [viewpoint.id, viewpoint]));
   const paths = new Set<string>();
   for (const [documentIndex, document] of submission.documents.entries()) {
     const where = `documents[${documentIndex}]`;
@@ -2096,15 +2749,25 @@ export function validateGradeSubmission(
     if (paths.has(document.path))
       issues.push({ path: where, message: `duplicate path: ${document.path}` });
     paths.add(document.path);
-    const normalizedDocumentPath = repoRelativePath(resolve(specdojoRootDir(), document.path));
+    const absoluteDocumentPath = resolve(specdojoRootDir(), document.path);
+    const normalizedDocumentPath = repoRelativePath(absoluteDocumentPath);
+    const metadata = existsSync(absoluteDocumentPath)
+      ? (parseMarkdown(readFileSync(absoluteDocumentPath, "utf8"), normalizedDocumentPath).data
+          .specdojo as Record<string, unknown>)
+      : {};
+    const required = agentViewpoints(doc, target, metadata);
+    const allowed = new Map(required.map((viewpoint) => [viewpoint.id, viewpoint]));
+    const expectedDoneCriteria =
+      options.doneCriteriaByPath?.get(document.path) ??
+      options.doneCriteriaByPath?.get(normalizedDocumentPath);
     issues.push(
       ...validateDoneCriteriaInput({
         where,
         target,
         value: document.done_criteria,
-        expected:
-          options.doneCriteriaByPath?.get(document.path) ??
-          options.doneCriteriaByPath?.get(normalizedDocumentPath),
+        expected: expectedDoneCriteria
+          ? applicableDoneCriteria(expectedDoneCriteria, doc, metadata)
+          : undefined,
       }),
     );
     const ids = new Set<string>();
@@ -2114,7 +2777,7 @@ export function validateGradeSubmission(
       if (!result || !allowed.has(result.id)) {
         issues.push({
           path: resultPath,
-          message: `unknown or non-continuous viewpoint: ${result?.id ?? ""}`,
+          message: `unknown or non-applicable viewpoint: ${result?.id ?? ""}`,
         });
         continue;
       }
@@ -2145,6 +2808,15 @@ export function validateGradeSubmission(
           });
           continue;
         }
+        if (
+          finding.message_ja !== undefined &&
+          (typeof finding.message_ja !== "string" || !finding.message_ja.trim())
+        ) {
+          issues.push({
+            path: `${resultPath}.findings[${findingIndex}].message_ja`,
+            message: "message_ja must be a non-empty string when present",
+          });
+        }
         if (finding.id !== undefined) {
           if (!/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(finding.id)) {
             issues.push({
@@ -2169,6 +2841,35 @@ export function validateGradeSubmission(
       const cap = levelCapForFindings(findings);
       if (result.level > cap)
         issues.push({ path: resultPath, message: `finding severity caps level at ${cap}` });
+    }
+    if (document.level_corrections !== undefined) {
+      if (!Array.isArray(document.level_corrections)) {
+        issues.push({ path: `${where}.level_corrections`, message: "must be an array" });
+      } else {
+        for (const [index, correction] of document.level_corrections.entries()) {
+          const correctedViewpoint = document.viewpoints.find(
+            (viewpoint) => viewpoint.id === correction?.viewpoint,
+          );
+          if (
+            !correction ||
+            typeof correction.viewpoint !== "string" ||
+            !correctedViewpoint ||
+            !Number.isInteger(correction.original_level) ||
+            !Number.isInteger(correction.corrected_level) ||
+            correction.original_level < 0 ||
+            correction.original_level > 4 ||
+            correction.corrected_level < 0 ||
+            correction.corrected_level >= correction.original_level ||
+            correctedViewpoint.level !== correction.corrected_level
+          ) {
+            issues.push({
+              path: `${where}.level_corrections[${index}]`,
+              message:
+                "viewpoint and matching downward original/corrected levels from 0 to 4 are required",
+            });
+          }
+        }
+      }
     }
     for (const viewpoint of required) {
       if (!ids.has(viewpoint.id)) {
@@ -2258,6 +2959,7 @@ export function applyGradeSubmission(opts: {
   doneCriteriaByPath?: ReadonlyMap<string, GradeDoneCriterion[]>;
   criteriaDirectory?: string;
   resultsDirectory?: string;
+  project?: string;
 }): string[] {
   const issues = validateGradeSubmission(opts.submission, opts.viewpoints, opts.target, {
     doneCriteriaByPath: opts.doneCriteriaByPath,
@@ -2265,6 +2967,9 @@ export function applyGradeSubmission(opts: {
   if (issues.length > 0)
     throw new Error(issues.map((issue) => `${issue.path}: ${issue.message}`).join("\n"));
   const changed: string[] = [];
+  const sourceContext = opts.resultsDirectory
+    ? createGradeSourceContext(opts.project, specdojoRootDir())
+    : undefined;
   for (const input of opts.submission.documents) {
     const absolute = resolveSafeMarkdownPath(input.path);
     const rel = repoRelativePath(absolute);
@@ -2283,6 +2988,24 @@ export function applyGradeSubmission(opts: {
       const previous = readGradeResult(resultPath);
       const document = parseMarkdown(current, rel);
       const agentResults = preserveStoredFindingSeverities(previous, input.viewpoints);
+      const correctionByViewpoint = new Map(
+        (input.level_corrections ?? []).map((correction) => [
+          correction.viewpoint,
+          { ...correction },
+        ]),
+      );
+      for (const [index, result] of agentResults.entries()) {
+        const submitted = input.viewpoints[index];
+        if (submitted && result.level < submitted.level) {
+          const existing = correctionByViewpoint.get(result.id);
+          correctionByViewpoint.set(result.id, {
+            viewpoint: result.id,
+            original_level: existing?.original_level ?? submitted.level,
+            corrected_level: result.level,
+          });
+        }
+      }
+      const levelCorrections = [...correctionByViewpoint.values()];
       const evaluated = {
         ...input,
         viewpoints: [
@@ -2314,6 +3037,7 @@ export function applyGradeSubmission(opts: {
             line,
             anchor: bodyLines[Math.min(bodyLines.length, line) - 1]?.trim() ?? "",
             message: sanitizeCommentText(finding.message),
+            message_ja: sanitizeCommentText(finding.message_ja ?? finding.message),
           };
         }),
       );
@@ -2322,6 +3046,9 @@ export function applyGradeSubmission(opts: {
           ? input.done_criteria
           : undefined;
       const detailRef = criteriaResults ? doneCriteriaDetailId(documentId, absolute) : undefined;
+      const sourceHashes = sourceContext
+        ? gradeSourceHashes(absolute, document, opts.viewpoints, opts.target, sourceContext)
+        : undefined;
       const result: GradeResult = {
         version: 1,
         document: documentId,
@@ -2334,10 +3061,14 @@ export function applyGradeSubmission(opts: {
         graded_at: gradedAt,
         graded_by: opts.gradedBy,
         content_hash: gradeContentHash(current),
+        ...(sourceHashes && Object.keys(sourceHashes).length > 0
+          ? { source_hashes: sourceHashes }
+          : {}),
         categories: summary.categories,
         viewpoints: summary.viewpoints,
         finding_counts: summary.findings,
         findings,
+        ...(levelCorrections.length > 0 ? { level_corrections: levelCorrections } : {}),
         ...(criteriaResults && definitions && detailRef
           ? { done_criteria: summarizeDoneCriteria(definitions, criteriaResults, detailRef) }
           : {}),
@@ -2488,6 +3219,9 @@ export function gradeMarkdownDocument(opts: GradeMarkdownOptions): {
     opts.target === "deliverable" && opts.doneCriteria && opts.input.done_criteria
       ? opts.input.done_criteria
       : undefined;
+  const applicableCriteriaDefinitions = opts.doneCriteria
+    ? applicableDoneCriteria(opts.doneCriteria.definitions, opts.viewpoints, specdojo)
+    : undefined;
   specdojo.grade = {
     rubric: rubric.id,
     ...(opts.reference ? { reference: resolveGradeReferenceId(opts.reference) } : {}),
@@ -2500,10 +3234,10 @@ export function gradeMarkdownDocument(opts: GradeMarkdownOptions): {
     categories: summary.categories,
     viewpoints: summary.viewpoints,
     findings: summary.findings,
-    ...(criteriaResults && opts.doneCriteria
+    ...(criteriaResults && opts.doneCriteria && applicableCriteriaDefinitions
       ? {
           done_criteria: summarizeDoneCriteria(
-            opts.doneCriteria.definitions,
+            applicableCriteriaDefinitions,
             criteriaResults,
             opts.doneCriteria.detailRef,
           ),
@@ -2645,6 +3379,7 @@ export function migrateInlineGrades(opts: {
     const findings: StoredGradeFinding[] = legacyFindings.map((finding) => ({
       ...finding,
       anchor: bodyLines[Math.min(bodyLines.length, finding.line) - 1]?.trim() ?? "",
+      message_ja: finding.message,
     }));
     const counts: Record<GradeSeverity, number> = { blocker: 0, major: 0, minor: 0, note: 0 };
     for (const finding of findings) counts[finding.severity] += 1;
@@ -2728,6 +3463,14 @@ function requirePositiveInteger(value: string): number {
   return parsed;
 }
 
+function requireNonNegativeInteger(value: string): number {
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed < 0) {
+    throw new Error("value must be a non-negative integer");
+  }
+  return parsed;
+}
+
 function requirePipelineStatus(value: string): "passed" | "failed" | "complete" {
   if (value !== "passed" && value !== "failed" && value !== "complete") {
     throw new Error("--status must be passed, failed, or complete");
@@ -2738,6 +3481,23 @@ function requirePipelineStatus(value: string): "passed" | "failed" | "complete" 
 function commandError(error: unknown): void {
   process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
   process.exitCode = 1;
+}
+
+export function renderGradeFindingTranslationPlan(
+  result: GradeResult,
+  translationIndex?: number,
+): string {
+  const messages = gradeFindingTranslationInput(result, translationIndex);
+  return [
+    "# Grade finding translation",
+    "",
+    "次の JSON 文字列配列に含まれる英語の finding だけを、簡潔で自然な日本語へ翻訳してください。入力と同じ件数・同じ順序の、訳文だけの JSON 文字列配列を返してください。元の文にあるインラインコード（バッククォートで囲んだ部分）は一字一句変えずに残し、元の文にないインラインコードやバッククォートは追加しないでください。インラインコード以外の英語の語句は、固有名詞・識別子を除いて日本語に訳してください。Markdown fence、説明、番号、token、判定の変更は不要です。",
+    "",
+    "```json",
+    JSON.stringify(messages, null, 2),
+    "```",
+    "",
+  ].join("\n");
 }
 
 export function registerGradeCommand(program: Command): void {
@@ -2756,6 +3516,21 @@ export function registerGradeCommand(program: Command): void {
       )
       .option("--changed-only", "Select documents changed since their latest grade", false)
       .option(
+        "--dependency-changed",
+        "Select documents whose dependencies have been graded more recently",
+        false,
+      )
+      .option(
+        "--rulebook-changed",
+        "Select documents whose declared rulebook has been graded more recently",
+        false,
+      )
+      .option(
+        "--unreviewed",
+        "Select ungraded or changed documents that do not have a schedule task",
+        false,
+      )
+      .option(
         "--verdict <verdict>",
         "Select documents with this latest verdict: pass, needs-work, or fail",
         requireGradeVerdict,
@@ -2771,7 +3546,12 @@ export function registerGradeCommand(program: Command): void {
         requireMaxFindings,
       )
       .option("--ungraded", "Select documents without a stored grade", false)
-      .option("--incomplete", "Select documents with a retryable incomplete pipeline", false);
+      .option("--incomplete", "Select documents with a retryable incomplete pipeline", false)
+      .option(
+        "--rubric-outdated",
+        "Select graded documents whose stored result was not graded with the current rubric",
+        false,
+      );
 
   addSelection(
     grade.command("list").description("Print selected document paths without writing grade plans"),
@@ -2782,11 +3562,15 @@ export function registerGradeCommand(program: Command): void {
         project: options.project,
         paths: options.path,
         changedOnly: options.changedOnly,
+        dependencyChanged: options.dependencyChanged,
+        rulebookChanged: options.rulebookChanged,
+        unreviewed: options.unreviewed,
         verdict: options.verdict,
         minScore: options.minScore,
         maxFindings: options.maxFindings,
         ungraded: options.ungraded,
         incomplete: options.incomplete,
+        rubricOutdated: options.rubricOutdated,
       });
       for (const path of paths) process.stdout.write(`${repoRelativePath(path)}\n`);
     } catch (error) {
@@ -2802,6 +3586,11 @@ export function registerGradeCommand(program: Command): void {
     .option("--out <directory>", "Write plans below this repository-relative directory")
     .option("--reference <path>", "Use this document as the comparison reference")
     .option(
+      "--embed-documents",
+      "Embed the target and reference documents in the executor plan",
+      false,
+    )
+    .option(
       "--random-reference",
       "Select a comparison reference at random from ready documents",
       false,
@@ -2816,11 +3605,15 @@ export function registerGradeCommand(program: Command): void {
           project: options.project,
           paths: options.path,
           changedOnly: options.changedOnly,
+          dependencyChanged: options.dependencyChanged,
+          rulebookChanged: options.rulebookChanged,
+          unreviewed: options.unreviewed,
           verdict: options.verdict,
           minScore: options.minScore,
           maxFindings: options.maxFindings,
           ungraded: options.ungraded,
           incomplete: options.incomplete,
+          rubricOutdated: options.rubricOutdated,
         });
         if (options.reference && options.randomReference) {
           throw new Error("--reference and --random-reference cannot be combined");
@@ -2841,6 +3634,7 @@ export function registerGradeCommand(program: Command): void {
           viewpoints,
           projectId,
           outputDirectory,
+          embedDocuments: options.embedDocuments,
           doneCriteriaByPath:
             target === "deliverable"
               ? resolveDeliverableDoneCriteria(paths, options.project)
@@ -2853,6 +3647,11 @@ export function registerGradeCommand(program: Command): void {
           if (options.randomReference && !plan.referenceExample) {
             process.stderr.write(
               `warning: no ready reference of the same kind for ${plan.target}; grading without a reference\n`,
+            );
+          }
+          if (options.embedDocuments && !plan.documentsEmbedded) {
+            process.stderr.write(
+              `warning: embedded documents for ${plan.target} would use ${plan.embeddingCharacterCount} characters and exceed the ${plan.embeddingCharacterLimit} character limit; falling back to path references\n`,
             );
           }
           process.stdout.write(`${plan.changed ? "written" : "unchanged"}: ${plan.path}\n`);
@@ -2869,13 +3668,22 @@ export function registerGradeCommand(program: Command): void {
   addSelection(
     grade
       .command("apply")
-      .description("Validate reporter fidelity and JSON, calculate scores, and update documents"),
+      .description(
+        "Convert executor markers (or validate reporter JSON), calculate scores, and update documents",
+      ),
   )
-    .requiredOption("--from <path>", "GradeSubmission JSON produced by the assessment agent")
-    .requiredOption("--by <nickname>", "Grading agent nickname from pm-members.yaml")
+    .option(
+      "--from <path>",
+      "GradeSubmission JSON produced by an LLM reporter; omit to convert --analysis-from mechanically",
+    )
+    .requiredOption("--by <nickname>", "Grading agent nickname from agent-members.yaml")
     .option(
       "--analysis-from <path>",
-      "Executor analysis used to verify reporter fidelity (omit only for legacy one-stage output)",
+      "Executor analysis converted to GradeSubmission, or used to verify --from fidelity",
+    )
+    .option(
+      "--submission-out <path>",
+      "Write the GradeSubmission converted from --analysis-from to this repository path",
     )
     .option(
       "--reference <pathOrId>",
@@ -2891,47 +3699,108 @@ export function registerGradeCommand(program: Command): void {
           options.by,
           loadMemberRoster(specdojoRootDir(), project),
         );
-        const submission = parseGradeSubmission(
-          readFileSync(resolveSafeRepositoryPath(options.from, "--from"), "utf8"),
-        );
+        if (!options.from && !options.analysisFrom) {
+          throw new Error("grade apply requires --analysis-from, --from, or both");
+        }
+        if (options.submissionOut && (options.from || !options.analysisFrom)) {
+          throw new Error("--submission-out requires --analysis-from without --from");
+        }
         const selected = new Set(
           discoverGradeTargets({
             target,
             project: options.project,
             paths: options.path,
             changedOnly: options.changedOnly,
+            dependencyChanged: options.dependencyChanged,
+            rulebookChanged: options.rulebookChanged,
+            unreviewed: options.unreviewed,
             verdict: options.verdict,
             minScore: options.minScore,
             maxFindings: options.maxFindings,
             ungraded: options.ungraded,
             incomplete: options.incomplete,
+            rubricOutdated: options.rubricOutdated,
           }).map(repoRelativePath),
         );
         const doneCriteriaByPath =
           target === "deliverable"
             ? resolveDeliverableDoneCriteria([...selected], options.project)
             : undefined;
+        let submission: GradeSubmission;
         if (options.analysisFrom) {
           if (selected.size !== 1) {
             throw new Error("--analysis-from requires exactly one selected --path");
           }
           const expectedPath = [...selected][0];
-          const fidelityIssues = validateGradeReporterFidelity({
-            executorOutput: readFileSync(
-              resolveSafeRepositoryPath(options.analysisFrom, "--analysis-from"),
-              "utf8",
-            ),
-            submission,
+          const executorOutput = readFileSync(
+            resolveSafeRepositoryPath(options.analysisFrom, "--analysis-from"),
+            "utf8",
+          );
+          const conversionOptions = {
+            executorOutput,
             viewpoints,
             target,
             expectedPath,
             doneCriteria: doneCriteriaByPath?.get(expectedPath),
-          });
-          if (fidelityIssues.length > 0) {
-            throw new Error(
-              fidelityIssues.map((issue) => `${issue.path}: ${issue.message}`).join("\n"),
+          };
+          if (options.from) {
+            // LLM reporter の JSON を executor marker と照合する互換・比較用の経路。
+            submission = parseGradeSubmission(
+              readFileSync(resolveSafeRepositoryPath(options.from, "--from"), "utf8"),
             );
+            const fidelityIssues = validateGradeReporterFidelity({
+              ...conversionOptions,
+              submission,
+            });
+            if (fidelityIssues.length > 0) {
+              throw new Error(
+                fidelityIssues.map((issue) => `${issue.path}: ${issue.message}`).join("\n"),
+              );
+            }
+            const converted = buildGradeSubmissionFromAnalysis(conversionOptions);
+            if (converted.submission === undefined) {
+              throw new Error(
+                converted.issues.map((issue) => `${issue.path}: ${issue.message}`).join("\n"),
+              );
+            }
+            const convertedDocument = converted.submission.documents[0];
+            const correctedLevels = new Map(
+              convertedDocument.viewpoints.map((viewpoint) => [viewpoint.id, viewpoint.level]),
+            );
+            submission.documents[0] = {
+              ...submission.documents[0],
+              viewpoints: submission.documents[0].viewpoints.map((viewpoint) => ({
+                ...viewpoint,
+                level: correctedLevels.get(viewpoint.id) ?? viewpoint.level,
+              })),
+              ...(convertedDocument.level_corrections
+                ? { level_corrections: convertedDocument.level_corrections }
+                : {}),
+            };
+          } else {
+            const converted = buildGradeSubmissionFromAnalysis(conversionOptions);
+            if (converted.submission === undefined) {
+              throw new Error(
+                [
+                  "executor analysis rejected; rerun the executor",
+                  ...converted.issues.map((issue) => `${issue.path}: ${issue.message}`),
+                ].join("\n"),
+              );
+            }
+            submission = converted.submission;
+            if (options.submissionOut && !options.dryRun) {
+              const submissionOut = resolveSafeRepositoryPath(
+                options.submissionOut,
+                "--submission-out",
+              );
+              mkdirSync(dirname(submissionOut), { recursive: true });
+              writeFileSync(submissionOut, `${JSON.stringify(submission, null, 2)}\n`, "utf8");
+            }
           }
+        } else {
+          submission = parseGradeSubmission(
+            readFileSync(resolveSafeRepositoryPath(options.from, "--from"), "utf8"),
+          );
         }
         for (const document of submission.documents)
           if (!selected.has(repoRelativePath(resolve(specdojoRootDir(), document.path))))
@@ -2946,11 +3815,156 @@ export function registerGradeCommand(program: Command): void {
           doneCriteriaByPath,
           criteriaDirectory: join(getProjectExecutionPath(project), "grade", "criteria"),
           resultsDirectory: join(getProjectExecutionPath(project), "grade", "results"),
+          project: options.project,
         });
         for (const path of changed)
           process.stdout.write(`${options.dryRun ? "would update" : "updated"}: ${path}\n`);
         process.stdout.write(
           `Graded: ${submission.documents.length}, updated: ${changed.length}\n`,
+        );
+      } catch (error) {
+        commandError(error);
+      }
+    });
+
+  addSelection(
+    grade
+      .command("translation-plan")
+      .description("Create a Japanese translation request for the latest canonical findings"),
+  )
+    .requiredOption("--out <path>", "Write the translation plan to this repository path")
+    .option(
+      "--translation-index <index>",
+      "Translate only this zero-based index from the translatable findings",
+      requireNonNegativeInteger,
+    )
+    .action((options) => {
+      try {
+        const target = requireTarget(options.target);
+        const selected = discoverGradeTargets({
+          target,
+          project: options.project,
+          paths: options.path,
+          changedOnly: options.changedOnly,
+          dependencyChanged: options.dependencyChanged,
+          rulebookChanged: options.rulebookChanged,
+          unreviewed: options.unreviewed,
+          verdict: options.verdict,
+          minScore: options.minScore,
+          maxFindings: options.maxFindings,
+          ungraded: options.ungraded,
+          incomplete: options.incomplete,
+          rubricOutdated: options.rubricOutdated,
+        }).map(repoRelativePath);
+        if (selected.length !== 1) {
+          throw new Error("grade translation-plan requires exactly one selected --path");
+        }
+        const result = readGradeResultForDocument({
+          documentPath: selected[0],
+          project: options.project,
+        });
+        if (!result) throw new Error(`${selected[0]}: grade result not found`);
+        if (result.target !== target) {
+          throw new Error(
+            `${selected[0]}: grade result target=${result.target}, expected=${target}`,
+          );
+        }
+        const output = resolveSafeRepositoryPath(options.out, "--out");
+        mkdirSync(dirname(output), { recursive: true });
+        const messages = gradeFindingTranslationInput(result, options.translationIndex);
+        writeFileSync(
+          output,
+          renderGradeFindingTranslationPlan(result, options.translationIndex),
+          "utf8",
+        );
+        process.stdout.write(
+          `written: ${repoRelativePath(output)}\nTranslations: ${messages.length}\n`,
+        );
+      } catch (error) {
+        commandError(error);
+      }
+    });
+
+  addSelection(
+    grade
+      .command("localize")
+      .description("Attach Japanese display messages to the latest canonical grade findings"),
+  )
+    .requiredOption("--from <path>", "JSON string array returned by the translation agent")
+    .option(
+      "--translation-index <index>",
+      "Apply a retry for this zero-based index from the translatable findings",
+      requireNonNegativeInteger,
+    )
+    .requiredOption(
+      "--rejections-out <path>",
+      "Write machine-readable rejected translation details as JSON",
+    )
+    .action((options) => {
+      try {
+        const target = requireTarget(options.target);
+        const selected = discoverGradeTargets({
+          target,
+          project: options.project,
+          paths: options.path,
+          changedOnly: options.changedOnly,
+          dependencyChanged: options.dependencyChanged,
+          rulebookChanged: options.rulebookChanged,
+          unreviewed: options.unreviewed,
+          verdict: options.verdict,
+          minScore: options.minScore,
+          maxFindings: options.maxFindings,
+          ungraded: options.ungraded,
+          incomplete: options.incomplete,
+          rubricOutdated: options.rubricOutdated,
+        }).map(repoRelativePath);
+        if (selected.length !== 1) {
+          throw new Error("grade localize requires exactly one selected --path");
+        }
+        const resultPath = gradeResultPathForDocument({
+          documentPath: selected[0],
+          project: options.project,
+        });
+        const result = readGradeResult(resultPath);
+        if (!result) throw new Error(`${selected[0]}: grade result not found`);
+        if (result.target !== target) {
+          throw new Error(
+            `${selected[0]}: grade result target=${result.target}, expected=${target}`,
+          );
+        }
+        let translations: unknown;
+        try {
+          translations = JSON.parse(
+            extractJsonArrayText(
+              readFileSync(resolveSafeRepositoryPath(options.from, "--from"), "utf8"),
+            ),
+          );
+        } catch (error) {
+          translations = undefined;
+          process.stderr.write(
+            `warning: could not parse grade finding translations: ${error instanceof Error ? error.message : String(error)}\n`,
+          );
+        }
+        const localized = applyGradeFindingTranslations(
+          result,
+          translations,
+          options.translationIndex,
+        );
+        if (!localized.accepted) {
+          process.stderr.write(
+            `warning: rejected grade finding translations: ${localized.reason ?? "invalid output"}\n`,
+          );
+        }
+        const rejectionsPath = resolveSafeRepositoryPath(options.rejectionsOut, "--rejections-out");
+        mkdirSync(dirname(rejectionsPath), { recursive: true });
+        writeFileSync(
+          rejectionsPath,
+          `${JSON.stringify({ version: 1, rejections: localized.rejections }, null, 2)}\n`,
+          "utf8",
+        );
+        const changed = writeGradeResult(resultPath, localized.result);
+        process.stdout.write(
+          `${changed ? "updated" : "unchanged"}: ${repoRelativePath(resultPath)}\n`,
         );
       } catch (error) {
         commandError(error);
@@ -2967,11 +3981,15 @@ export function registerGradeCommand(program: Command): void {
         project: options.project,
         paths: options.path,
         changedOnly: options.changedOnly,
+        dependencyChanged: options.dependencyChanged,
+        rulebookChanged: options.rulebookChanged,
+        unreviewed: options.unreviewed,
         verdict: options.verdict,
         minScore: options.minScore,
         maxFindings: options.maxFindings,
         ungraded: options.ungraded,
         incomplete: options.incomplete,
+        rubricOutdated: options.rubricOutdated,
       });
       const errors = paths.flatMap((path) =>
         validateGradeResultForDocument({ path, target, project: options.project }),

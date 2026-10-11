@@ -1,6 +1,5 @@
 import { defineConfig } from "vitepress";
 import { generateSidebar } from "vitepress-sidebar";
-import * as crypto from "crypto";
 import {
   specdojoSidebarItems,
   PROJECTS_SEGMENT_TEXT,
@@ -16,8 +15,15 @@ import type { Plugin } from "vite";
 import {
   generateMermaidSvgs,
   generateMermaidSvgsForFile,
+  mermaidSvgId,
   shouldGenerateMermaidForFile,
 } from "../src/gen-mermaid-svg";
+import {
+  KATA_STAGING_DIR_NAME,
+  STAGED_PACKAGE_DEAD_LINK_PATTERNS,
+  stageBundledKata,
+  toSiteDocIndexEntry,
+} from "./kata-staging";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
@@ -28,12 +34,32 @@ const WORKSPACE_ROOT = path.resolve(process.env.SPECDOJO_DOCS_ROOT ?? process.cw
 const CONTENT_ROOT = path.join(WORKSPACE_ROOT, "docs");
 const MERMAID_OUT_DIR = path.join(WORKSPACE_ROOT, "public", "mermaid");
 
+// package 参照中の kata をページ走査より前にステージングへ複製する。
+// VitePress は設定の読み込み後にページを走査するため、build / dev の両方でここが先に動く。
+const kataStaging = stageBundledKata(WORKSPACE_ROOT);
+if (kataStaging.packageRoot) {
+  console.log(
+    `[kata] staged ${kataStaging.staged} file(s) from ${kataStaging.packageRoot} (ejected: ${kataStaging.ejected})`,
+  );
+}
+const KATA_STAGING_CONTENT_ROOT = kataStaging.stagingRoot
+  ? path.join(kataStaging.stagingRoot, "docs")
+  : undefined;
+
 // [[id]] wikilink index — loaded once at build/dev startup
 function loadDocIndex(workspaceRoot: string): Record<string, string> {
   const p = path.join(workspaceRoot, ".specdojo", "doc-index.json");
   if (!existsSync(p)) return {};
   try {
-    return (JSON.parse(readFileSync(p, "utf8")) as { entries: Record<string, string> }).entries;
+    const entries = (JSON.parse(readFileSync(p, "utf8")) as { entries: Record<string, string> })
+      .entries;
+    // package 側 kata のエントリはステージング経由の公開パスへ付け替える。
+    return Object.fromEntries(
+      Object.entries(entries).map(([id, entry]) => [
+        id,
+        toSiteDocIndexEntry(entry, workspaceRoot, kataStaging.packageRoot),
+      ]),
+    );
   } catch {
     return {};
   }
@@ -212,12 +238,25 @@ const isExecRecordPath = (relativePath: string | undefined): boolean =>
   relativePath !== undefined &&
   /(^|\/)execution\/exec\/(events|plans|results)(\/|$)/.test(relativePath.replace(/\\/g, "/"));
 
+const isExcludedSearchPath = (relativePath: string | undefined): boolean => {
+  if (!relativePath) return false;
+  const path = relativePath.replace(/\\/g, "/");
+
+  if (/(^|\/)execution\/exec\/(events|plans|results)(\/|$)/.test(path)) return true;
+  if (/(^|\/)controls\/project-register\/pjr-[^/]+\.md$/.test(path)) return true;
+  if (/(^|\/)controls\/project-register\/generated\/pjr-views-by-[^/]+\.md$/.test(path))
+    return true;
+  if (/(^|\/)controls\/generated\/pm-[^/]+\.md$/.test(path)) return true;
+
+  return false;
+};
+
 function renderSearchHtml(
   src: string,
   env: SearchRenderEnv,
   md: { render: (src: string, env: unknown) => string },
 ): string {
-  if (env.frontmatter?.search === false || isExecRecordPath(env.relativePath)) return "";
+  if (env.frontmatter?.search === false || isExcludedSearchPath(env.relativePath)) return "";
 
   const html = md.render(src, env);
   const docId = getSpecdojoDocId(env.frontmatter);
@@ -235,9 +274,6 @@ const specdojoItems = {
 
 // GitHub Pages の公開パス: https://specdojo.github.io/specdojo/
 const base = "/specdojo/";
-
-const hashCode = (code: string): string =>
-  crypto.createHash("md5").update(code).digest("hex").slice(0, 8);
 
 const mermaidSvgAutoGenerate = (): Plugin => {
   let timer: NodeJS.Timeout | undefined;
@@ -270,7 +306,11 @@ const mermaidSvgAutoGenerate = (): Plugin => {
         }
       } else {
         console.log(`[mermaid] generating svgs (${reason})`);
-        generateMermaidSvgs({ rootDir: CONTENT_ROOT, outDir: MERMAID_OUT_DIR });
+        generateMermaidSvgs({
+          rootDir: CONTENT_ROOT,
+          outDir: MERMAID_OUT_DIR,
+          additionalRootDirs: KATA_STAGING_CONTENT_ROOT ? [KATA_STAGING_CONTENT_ROOT] : [],
+        });
       }
     } finally {
       running = false;
@@ -712,6 +752,10 @@ const transformSidebar = (
 ): SidebarItem[] => {
   const transformed = items
     .filter((it) => !isHandbookTop(it)) // handbook トップは自動生成側に含めない
+    // 実行記録（plan / result / events）は件数が多く、サイドバーに載せると全ページの HTML が
+    // 肥大化してビルドがメモリ不足になる。ページは公開したまま、生成一覧（exec-records）から辿る。
+    // 表示名の解決（ファイル読み込み）より前に除外し、不要な I/O も避ける。
+    .filter((it) => !isExecRecordPath(it.link))
     .map((it) => {
       const next: SidebarItem = { ...it };
 
@@ -749,7 +793,9 @@ const transformSidebar = (
       return next;
     })
     // link の正規化後に判定する（正規化前の raw link では docs 配下のパスを解決できない）
-    .filter((it) => !isCatalogYamlViewerPage(it.link));
+    .filter((it) => !isCatalogYamlViewerPage(it.link))
+    // 実行記録の除外で子が空になったグループ（実行プラン・実行結果など）は表示しない
+    .filter((it) => it.link || !it.items || it.items.length > 0);
 
   const flattened = transformed.flatMap((it) =>
     !it.link && it.items && FLATTENED_GROUP_TEXTS.has(it.text ?? "") ? it.items : [it],
@@ -781,6 +827,85 @@ const makeSidebar = (locale: Locale): SidebarItem[] =>
 const sidebarJaAuto = makeSidebar("ja");
 const sidebarEnAuto = makeSidebar("en");
 
+type SidebarMulti = Record<string, SidebarItem[]>;
+
+// 子孫を含めて最初に見つかるリンク。リンクを持たないグループの配置先パスを決めるのに使う。
+const firstSidebarLink = (item: SidebarItem): string | undefined => {
+  if (item.link) return item.link;
+  for (const child of item.items ?? []) {
+    const link = firstSidebarLink(child);
+    if (link) return link;
+  }
+  return undefined;
+};
+
+// "/ja/projects/prj-0001/..." から先頭 depth 個のセグメントを取り、"/ja/projects/prj-0001/" を返す。
+const sidebarKeyFromLink = (link: string, depth: number): string | undefined => {
+  const segments = link.split("#")[0].split("/").filter(Boolean);
+  if (segments.length <= depth) return undefined;
+  return `/${segments.slice(0, depth).join("/")}/`;
+};
+
+// サイドバーをパスごとに分割する。1 つの配列にすると、全ページが全節のサイドバーを
+// 描画・保持してビルドが肥大化するため、表示中のページが属する節だけを出す。
+// - /<locale>/specdojo/ 配下: specdojo の節だけ
+// - /<locale>/projects/<id>/ 配下: その project の節だけ
+// - それ以外のトップレベル（product など）: そのディレクトリの節だけ
+// - どれにも当たらないページ（/<locale>/ のトップなど）: 各節の入口リンクだけ
+const makeSidebarMulti = (
+  locale: Locale,
+  autoItems: SidebarItem[],
+  handbookItem?: SidebarItem,
+): SidebarMulti => {
+  const sections: { key: string; items: SidebarItem[]; entry: SidebarItem }[] = [];
+
+  if (handbookItem) {
+    sections.push({
+      key: `/${locale}/specdojo/`,
+      items: [handbookItem],
+      entry: { text: handbookItem.text, link: handbookItem.link },
+    });
+  }
+
+  for (const item of autoItems) {
+    const link = firstSidebarLink(item);
+    const key = link ? sidebarKeyFromLink(link, 2) : undefined;
+    if (!key) continue;
+
+    if (key === `/${locale}/projects/` && item.items) {
+      for (const project of item.items) {
+        const projectLink = firstSidebarLink(project);
+        const projectKey = projectLink ? sidebarKeyFromLink(projectLink, 3) : undefined;
+        if (!projectKey) continue;
+        sections.push({
+          key: projectKey,
+          items: [{ ...project, collapsed: false }],
+          entry: { text: `${item.text ?? ""}: ${project.text ?? ""}`, link: projectLink },
+        });
+      }
+      continue;
+    }
+
+    sections.push({
+      key,
+      items: [{ ...item, collapsed: false }],
+      entry: { text: item.text, link: item.link ?? link },
+    });
+  }
+
+  const multi: SidebarMulti = {};
+  for (const section of sections) {
+    multi[section.key] = [...(multi[section.key] ?? []), ...section.items];
+  }
+  if (sections.length > 0) {
+    multi[`/${locale}/`] = sections.map((section) => section.entry);
+  }
+  return multi;
+};
+
+const sidebarJa = makeSidebarMulti("ja", sidebarJaAuto, specdojoItems.ja);
+const sidebarEn = makeSidebarMulti("en", sidebarEnAuto);
+
 export default defineConfig({
   title: "SpecDojo",
   description: "Documentation for SpecDojo",
@@ -798,6 +923,10 @@ export default defineConfig({
   // 未知タグを含む agent 出力が Vue のコンパイルを壊す。
   srcExclude: ["*.md", "local/**", "workspaces/**", "templates/**", "logs/**", "packages/**"],
 
+  // サイト設定（サイドバーを含む）とページのハッシュ表は、既定では全ページの HTML へ
+  // インライン展開される。ページ数が多いため、共有の JS チャンクへ切り出して 1 回だけ配信する。
+  metaChunk: true,
+
   // サイドバー折りたたみ状態の復元（初回描画前に同期実行し、ちらつきを防ぐ）
   head: [
     [
@@ -809,11 +938,17 @@ export default defineConfig({
 
   // 物理パスは docs/ja, docs/en のままで、
   // 公開URL（および i18n のロケール判定）は /ja/, /en/ に揃える。
+  // package 参照中の kata はステージングに置き、利用リポジトリの docs/ja と同じ URL へ写像する。
   rewrites: {
     "docs/index.md": "index.md",
     "docs/ja/:rest*": "ja/:rest*",
     "docs/en/:rest*": "en/:rest*",
+    [`${KATA_STAGING_DIR_NAME}/docs/ja/:rest*`]: "ja/:rest*",
   },
+
+  // ステージングした package 文書から SpecDojo 開発リポジトリ固有の文書へのリンクだけを許容する。
+  // ステージングしていない（SpecDojo 自身のリポジトリなど）場合は従来どおり全 dead link を検出する。
+  ...(KATA_STAGING_CONTENT_ROOT ? { ignoreDeadLinks: [...STAGED_PACKAGE_DEAD_LINK_PATTERNS] } : {}),
 
   themeConfig: {
     // ビルド時に生成したインデックスでブラウザ内検索を行う（外部サービス不要）
@@ -870,7 +1005,7 @@ export default defineConfig({
             link: "/ja/projects/prj-0001/020-project-definition/prj-overview",
           },
         ],
-        sidebar: [specdojoItems.ja, ...sidebarJaAuto],
+        sidebar: sidebarJa,
         langMenuLabel: "言語",
       },
     },
@@ -880,7 +1015,7 @@ export default defineConfig({
       link: "/en/",
       themeConfig: {
         nav: [{ text: "Home", link: "/en/" }],
-        sidebar: sidebarEnAuto,
+        sidebar: sidebarEn,
         langMenuLabel: "Language",
       },
     },
@@ -952,7 +1087,8 @@ export default defineConfig({
 
         if (info === "mermaid") {
           const code = token.content.trim();
-          const id = hashCode(code);
+          // 生成側と同じキー（mermaid-cli の版・設定・コード）で SVG 名を求める
+          const id = mermaidSvgId(code);
           const src = `/mermaid/${id}.svg`;
 
           // 800x800 を超える場合はスクロールさせるためのラッパーを用意

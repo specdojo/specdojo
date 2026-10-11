@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7fe47c74749b493f85fda5f7890a0865
+  ts: "2026-10-08T03:44:06Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者との対話で呼び方を検討（2026-10-08）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: SpecDojo の呼び方を仕様道（Spec-Dō）にする
+    - field: description
+      from: ""
+      to: 「仕様駆動開発のためのドキュメントフレームワーク」をやめ、SpecDojo を仕様道（Spec-Dō、the way of specification）の道場と呼ぶ。表記の規則、守破離と approach の対応、使う比喩の範囲を決める。根拠は PJR-NYZR の位置づけ（仕様と設計を作り保つ基盤）。
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-10-08"
+- v: 1
+  id: reg_03fcb07fef3f480db3b6b741f51f850f
+  ts: "2026-10-08T03:44:56Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が orchestrator との対話で仕様道を指示した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: SpecDojo を仕様道（Spec-Dō、the way of specification）の道場と呼ぶ。仕様駆動開発とは名乗らない。表記・標語・比喩の範囲と、守破離と approach の対応を定めた
+  previous_event_id: reg_7fe47c74749b493f85fda5f7890a0865

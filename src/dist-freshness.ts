@@ -11,11 +11,7 @@ import path from "node:path";
  * 開発チェックアウトでのみ有効になり、それ以外では no-op になる。
  */
 export type DistFreshnessStatus =
-  | "not-dist-entry"
-  | "no-source-tree"
-  | "no-dist-output"
-  | "up-to-date"
-  | "stale";
+  "not-dist-entry" | "no-source-tree" | "no-dist-output" | "up-to-date" | "stale";
 
 export type DistFreshnessResult = {
   status: DistFreshnessStatus;
@@ -25,9 +21,7 @@ export type DistFreshnessResult = {
 };
 
 export type DistFreshnessDecision =
-  | { action: "none" }
-  | { action: "warn"; message: string }
-  | { action: "block"; message: string };
+  { action: "none" } | { action: "warn"; message: string } | { action: "block"; message: string };
 
 const SKIP_ENV_NAME = "SPECDOJO_SKIP_DIST_FRESHNESS_CHECK";
 const SKIP_ENV_VALUES = new Set(["1", "true", "yes"]);
@@ -148,11 +142,7 @@ export type BuildRunResult = {
 export type BuildRunner = (packageRoot: string) => BuildRunResult;
 
 export type EnsureFreshDistOutcome =
-  | "not-applicable"
-  | "up-to-date"
-  | "rebuilt"
-  | "rebuild-skipped"
-  | "rebuild-failed";
+  "not-applicable" | "up-to-date" | "rebuilt" | "rebuild-skipped" | "rebuild-failed";
 
 export type EnsureFreshDistResult = {
   outcome: EnsureFreshDistOutcome;

@@ -1,0 +1,27 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-710933c29195 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-710933c29195
+stage=1 executor=agy-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-issues-and-approach.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-issues-and-approach.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-overview.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-scope.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-stakeholder-register.md
+document start: docs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md
+document complete: docs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md
+document start: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md
+document incomplete: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md failed_stage=1
+document start: docs/ja/projects/prj-0001/030-project-management/pm-organization.md
+document complete: docs/ja/projects/prj-0001/030-project-management/pm-organization.md
+document start: docs/ja/projects/prj-0001/030-project-management/pm-plan.md
+document complete: docs/ja/projects/prj-0001/030-project-management/pm-plan.md
+grade pipeline complete: selected=10 processed=10 completed_now=9 incomplete=1 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-710933c29195/results.tsv

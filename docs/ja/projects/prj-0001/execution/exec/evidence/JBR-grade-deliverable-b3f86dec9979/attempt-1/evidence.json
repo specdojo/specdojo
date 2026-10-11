@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-b3f86dec9979",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-09T16:00:08.565Z",
+    "completed_at": "2026-10-09T16:19:24.242Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-agent-settings-2403b993e9-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-antigravity-agent-settings-e0daf68b06-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-claude-agent-settings-f502b91867-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-codex-agent-settings-209779c515-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-critical-flows-a985cc0d3a-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-39e4cdf49b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-usage-cd996e0bcb-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-1333c3ab83-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-f7cad9fd9b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-opencode-824c965487-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-antigravity-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-claude-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-codex-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-critical-flows.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server-usage.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx-opencode.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-b3f86dec9979.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 21,
+    "summary": "...sd-agent-settings-2403b993e9-done-criteria.yaml |  28 +-\n ...ty-agent-settings-e0daf68b06-done-criteria.yaml |  12 +-\n ...de-agent-settings-f502b91867-done-criteria.yaml |  25 +-\n ...ex-agent-settings-209779c515-done-criteria.yaml |  21 +-\n ...sd-critical-flows-a985cc0d3a-done-criteria.yaml |  23 +-\n ...me-mac-dev-server-39e4cdf49b-done-criteria.yaml |  12 +-\n ...-dev-server-usage-cd996e0bcb-done-criteria.yaml |  12 +-\n .../tsd-ollama-1333c3ab83-done-criteria.yaml       |  21 +-\n .../tsd-omlx-f7cad9fd9b-done-criteria.yaml         |  21 +-\n ...tsd-omlx-opencode-824c965487-done-criteria.yaml |  14 +-\n .../grade/results/sysd-agent-settings.yaml         | 306 +++++++++++++--------\n .../results/sysd-antigravity-agent-settings.yaml   |  97 ++++---\n .../grade/results/sysd-claude-agent-settings.yaml  |  68 ++++-\n .../grade/results/sysd-codex-agent-settings.yaml   | 143 +++++++---\n .../grade/results/sysd-critical-flows.yaml         |  32 ++-\n .../results/tsd-home-mac-dev-server-usage.yaml     |   4 +-\n .../grade/results/tsd-home-mac-dev-server.yaml     |   4 +-\n .../execution/grade/results/tsd-ollama.yaml        | 124 ++++++---\n .../execution/grade/results/tsd-omlx-opencode.yaml | 244 ++++++++--------\n .../prj-0001/execution/grade/results/tsd-omlx.yaml | 203 ++++++++------\n 20 files changed, 866 insertions(+), 548 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-deliverable-b3f86dec9979 --stages 1 --stage-1-executor agy-expert-executor --target deliverable --limit 10 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-deliverable-b3f86dec9979/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grad…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-deliverable-b3f86dec9979 --stages 1 --stage-1-executor agy-expert-executor --target deliverable --limit 10 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-deliverable-b3f86dec9979/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-deliverable-b3f86dec9979' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-b3f86dec9979/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-b3f86dec9979/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.3.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-deliverable-b3f86dec9979 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-b3f86dec9979\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md\ndocument start: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md\ndocument complete: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md\ndocument start: docs/ja/product/040-system-design/sysd-agent-settings.md\ndocument complete: docs/ja/product/040-system-design/sysd-agent-settings.md\ndocument start: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md\ndocument complete: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md\ndocument start: docs/ja/product/040-system-design/sysd-claude-agent-settings.md\ndocument complete: docs/ja/product/040-system-design/sysd-claude-agent-settings.md\ndocument start: docs/ja/product/040-system-design/sysd-codex-agent-settings.md\ndocument complete: docs/ja/product/040-system-design/sysd-codex-agent-settings.md\ndocument start: docs/ja/product/040-system-design/sysd-critical-flows.md\ndocument complete: docs/ja/product/040-system-design/sysd-critical-flows.md\ngrade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-b3f86dec9979/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-09T16:02:22Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md\t1\tpassed\t124\tneeds-work\t63\t22\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-09T16:04:26Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md\t1\tpassed\t122\tneeds-work\t71\t22\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-09T16:06:29Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md\t1\tpassed\t121\tneeds-work\t48\t24\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-09T16:07:58Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md\t1\tpassed\t87\tneeds-work\t56\t19\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-09T16:09:26Z\tdocs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md\t1\tpassed\t86\tneeds-work\t53\t21\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-09T16:11:48Z\tdocs/ja/product/040-system-design/sysd-agent-settings.md\t1\tpassed\t140\tneeds-work\t66\t26\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-09T16:13:40Z\tdocs/ja/product/040-system-design/sysd-antigravity-agent-settings.md\t1\tpassed\t110\tneeds-work\t67\t25\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-09T16:15:33Z\tdocs/ja/product/040-system-design/sysd-claude-agent-settings.md\t1\tpassed\t111\tneeds-work\t56\t30\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-09T16:17:22Z\tdocs/ja/product/040-system-design/sysd-codex-agent-settings.md\t1\tpassed\t107\tneeds-work\t41\t33\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-09T16:19:23Z\tdocs/ja/product/040-system-design/sysd-critical-flows.md\t1\tpassed\t120\tneeds-work\t71\t20\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-b3f86dec9979/attempt-1/command.stdout.log",
+      "bytes": 4165,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-b3f86dec9979/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

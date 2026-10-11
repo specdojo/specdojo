@@ -11,6 +11,7 @@ import {
   parseExecutorReport,
   recordReporterFailureOutput,
   redactSensitiveText,
+  validateResumedTargetCoverage,
 } from "../../src/exec-evidence.js";
 
 const Ajv2020 = Ajv2020Module.default;
@@ -38,8 +39,147 @@ describe("executor evidence", () => {
           summary: "42 tests passed",
         },
       ],
+      targetCoverage: [],
     });
     expect(redactSensitiveText("Authorization: Bearer abc.def.ghi")).not.toContain("abc.def.ghi");
+  });
+
+  it("accepts a requires_human validation in executor evidence", () => {
+    const stdout = [
+      "<specdojo_executor_evidence>",
+      JSON.stringify({
+        final_message: "sandbox 外の確認を申し送る",
+        validations: [
+          {
+            command: "real-agent-cli --version",
+            status: "requires_human",
+            summary: "実 agent CLI をホスト側で起動する必要がある",
+          },
+        ],
+      }),
+      "</specdojo_executor_evidence>",
+    ].join("\n");
+
+    expect(parseExecutorReport(stdout).validations).toEqual([
+      {
+        source: "executor",
+        command: "real-agent-cli --version",
+        status: "requires_human",
+        summary: "実 agent CLI をホスト側で起動する必要がある",
+      },
+    ]);
+  });
+
+  it("preserves the required reason for a not_applicable validation", () => {
+    const stdout = [
+      "<specdojo_executor_evidence>",
+      JSON.stringify({
+        final_message: "適用条件を確認した",
+        validations: [
+          {
+            command: "npx prettier --write docs/test.md",
+            status: "not_applicable",
+            summary: "検査は適用外",
+            reason: "prettier が package.json の依存にない",
+          },
+        ],
+      }),
+      "</specdojo_executor_evidence>",
+    ].join("\n");
+
+    expect(parseExecutorReport(stdout).validations).toEqual([
+      {
+        source: "executor",
+        command: "npx prettier --write docs/test.md",
+        status: "not_applicable",
+        summary: "検査は適用外",
+        reason: "prettier が package.json の依存にない",
+      },
+    ]);
+  });
+
+  it("validates every resumed plan target against cumulative changes or an unchanged reason", () => {
+    const { evidence } = buildExecutorEvidence({
+      taskId: "T-TEST-doc-010",
+      runId: "run-resumed",
+      actor: "executor",
+      status: "succeeded",
+      startedAt: "2026-08-10T07:03:34Z",
+      completedAt: "2026-08-10T07:04:34Z",
+      exitCode: 0,
+      attempts: 1,
+      stdout: [
+        "<specdojo_executor_evidence>",
+        JSON.stringify({
+          final_message: "all targets checked",
+          validations: [],
+          target_coverage: [
+            {
+              target: "test:doc-a",
+              status: "changed",
+              path: "docs/a.md",
+              reason: "",
+            },
+            {
+              target: "test:doc-b",
+              status: "unchanged",
+              reason: "現行内容が完了条件を満たしていた。",
+            },
+          ],
+        }),
+        "</specdojo_executor_evidence>",
+      ].join("\n"),
+      stderr: "",
+      changes: [{ path: "docs/a.md", status: "M" }],
+      diffStat: "docs/a.md | 1 +",
+      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-resumed/executor.log",
+    });
+
+    expect(validateResumedTargetCoverage(["test:doc-a", "test:doc-b"], evidence)).toEqual({
+      ok: true,
+    });
+  });
+
+  it("rejects missing targets and changed paths absent from the cumulative diff", () => {
+    const base = buildExecutorEvidence({
+      taskId: "T-TEST-doc-010",
+      runId: "run-resumed",
+      actor: "executor",
+      status: "succeeded",
+      startedAt: "2026-08-10T07:03:34Z",
+      completedAt: "2026-08-10T07:04:34Z",
+      exitCode: 0,
+      attempts: 1,
+      stdout:
+        "<specdojo_executor_evidence>" +
+        JSON.stringify({
+          final_message: "partial",
+          validations: [],
+          target_coverage: [
+            {
+              target: "test:doc-a",
+              status: "changed",
+              path: "docs/not-changed.md",
+              reason: "",
+            },
+          ],
+        }) +
+        "</specdojo_executor_evidence>",
+      stderr: "",
+      changes: [{ path: "docs/a.md", status: "M" }],
+      diffStat: "docs/a.md | 1 +",
+      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-resumed/executor.log",
+    }).evidence;
+
+    expect(validateResumedTargetCoverage(["test:doc-a", "test:doc-b"], base)).toEqual({
+      ok: false,
+      reason: "resumed executor did not account for every plan target: test:doc-b",
+    });
+    expect(validateResumedTargetCoverage(["test:doc-a"], base)).toEqual({
+      ok: false,
+      reason:
+        "resumed executor target path is absent from the cumulative worktree diff: test:doc-a (docs/not-changed.md)",
+    });
   });
 
   it("builds schema-valid run-scoped evidence without raw diffs or secrets", () => {
@@ -48,7 +188,14 @@ describe("executor evidence", () => {
       "<specdojo_executor_evidence>",
       JSON.stringify({
         final_message: "artifact updated",
-        validations: [{ command: "npm test", status: "passed", summary: "ok" }],
+        validations: [
+          { command: "npm test", status: "passed", summary: "ok" },
+          {
+            command: "real-agent-cli --version",
+            status: "requires_human",
+            summary: "run on the host",
+          },
+        ],
       }),
       "</specdojo_executor_evidence>",
     ].join("\n");
@@ -65,6 +212,7 @@ describe("executor evidence", () => {
       stdout,
       stderr: "",
       changes: [{ path: "artifact.md", status: "M" }],
+      attemptChanges: [{ path: "artifact.md", status: "M" }],
       diffStat: " artifact.md | 2 +-",
       logRefPath:
         "docs/execution/exec/evidence/T-TEST-doc-010/20260810T070334Z-aabbccdd/executor.log",
@@ -80,10 +228,17 @@ describe("executor evidence", () => {
     });
 
     expect(evidence.changes).toContainEqual({ path: "artifact.md", status: "M" });
+    expect(evidence.attempt_changes).toEqual([{ path: "artifact.md", status: "M" }]);
     expect(evidence.diff_summary.files_changed).toBe(1);
     expect(evidence.final_message).toBe("artifact updated");
     expect(evidence.validations).toEqual([
       { source: "executor", command: "npm test", status: "passed", summary: "ok" },
+      {
+        source: "executor",
+        command: "real-agent-cli --version",
+        status: "requires_human",
+        summary: "run on the host",
+      },
       {
         id: "test-integration",
         source: "runner",
@@ -111,6 +266,41 @@ describe("executor evidence", () => {
     addFormats(ajv);
     const validate = ajv.compile(schema);
     expect(validate(evidence), JSON.stringify(validate.errors)).toBe(true);
+    expect(
+      validate({
+        ...evidence,
+        validations: [
+          {
+            source: "executor",
+            command: "npx prettier --write artifact.md",
+            status: "not_applicable",
+            summary: "適用外",
+          },
+        ],
+      }),
+    ).toBe(false);
+  });
+
+  it("stores a bounded protection reason as a machine-readable evidence fact", () => {
+    const { evidence } = buildExecutorEvidence({
+      taskId: "T-TEST-doc-010",
+      runId: "run-protected",
+      actor: "executor",
+      status: "failed",
+      startedAt: "2026-08-10T07:03:34Z",
+      completedAt: "2026-08-10T07:04:34Z",
+      exitCode: 1,
+      attempts: 1,
+      stdout: "",
+      stderr: "blocked: agent-config-write: protected configuration changes detected",
+      changes: [],
+      diffStat: "",
+      logRefPath: "execution/exec/evidence/T-TEST-doc-010/run-protected/executor.log",
+    });
+
+    expect(evidence.block_reason).toBe(
+      "agent exited with non-zero code: blocked: agent-config-write: protected configuration changes detected",
+    );
   });
 
   it("bounds change, validation, final-message, and log payload sizes", () => {

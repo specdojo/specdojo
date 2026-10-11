@@ -32,7 +32,7 @@ const RAW_LOG_MARKER = "raw-executor-log-marker";
 
 type AgentBehavior = {
   role: "executor" | "reporter" | "legacy";
-  kind?: "ok" | "fail" | "invalid" | "blocked";
+  kind?: "ok" | "fail" | "invalid" | "rate_limit" | "resume_ok" | "path_mismatch";
   task?: string;
   lockWorktree?: boolean;
 };
@@ -50,7 +50,7 @@ type AgentInvocation = {
 // 受け取り、behavior ファイルの指定に従って executor / reporter / 従来 agent として振る舞う。
 const FAKE_AGENT_SCRIPT = `
 import { execFileSync } from "node:child_process";
-import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 function arg(name) {
@@ -74,6 +74,11 @@ appendFileSync(
 );
 
 if (behavior.role === "executor") {
+  if (behavior.kind === "rate_limit") {
+    writeFileSync("pipeline-artifact.md", "# partial executor work\\n", "utf8");
+    process.stderr.write("rate limit reached while editing the first target\\n");
+    process.exit(1);
+  }
   if (behavior.kind === "fail") {
     process.stderr.write("blocked: validation command failed; need=fix the failing test\\n");
     process.exit(1);
@@ -81,13 +86,36 @@ if (behavior.role === "executor") {
   if (behavior.lockWorktree) {
     execFileSync("git", ["worktree", "lock", "--reason", "integration-test", "."]);
   }
-  writeFileSync("pipeline-artifact.md", "# " + nickname + " / " + model + "\\n", "utf8");
+  const resumed = behavior.kind === "resume_ok";
+  if (resumed) {
+    mkdirSync("docs/test", { recursive: true });
+    writeFileSync("docs/test/doc.md", "# completed after resume\\n", "utf8");
+  } else {
+    writeFileSync("pipeline-artifact.md", "# " + nickname + " / " + model + "\\n", "utf8");
+    if (behavior.kind === "path_mismatch") {
+      writeFileSync("pipeline-secondary.md", "# secondary artifact\\n", "utf8");
+      writeFileSync("pipeline-tertiary.md", "# tertiary artifact\\n", "utf8");
+    }
+  }
+  const target = prompt.match(/\\n\\s*targets:\\s*\\n\\s*-\\s*([^\\n]+)/)?.[1]?.trim();
   process.stdout.write("${RAW_LOG_MARKER} api_key: sk-proj-abcdefgh12345678\\n");
   process.stdout.write(
     "<specdojo_executor_evidence>" +
       JSON.stringify({
         final_message: "pipeline-artifact.md を更新し、検証を実行した。",
         validations: [{ command: "npm test", status: "passed", summary: "全テストが成功した。" }],
+        ...(resumed && target
+          ? {
+              target_coverage: [
+                {
+                  target,
+                  status: "changed",
+                  path: "docs/test/doc.md",
+                  reason: "",
+                },
+              ],
+            }
+          : {}),
       }) +
       "</specdojo_executor_evidence>\\n",
   );
@@ -103,19 +131,28 @@ if (behavior.role === "reporter") {
     process.stdout.write(JSON.stringify({ schema_version: 1, mode: "edit" }));
     process.exit(0);
   }
-  const blocked = behavior.kind === "blocked";
+  const evidenceTag = "<specdojo_executor_evidence>";
+  const evidenceStart = prompt.lastIndexOf(evidenceTag) + evidenceTag.length;
+  const evidenceEnd = prompt.indexOf("</specdojo_executor_evidence>", evidenceStart);
+  const evidence = JSON.parse(prompt.slice(evidenceStart, evidenceEnd).trim());
+  const changedFiles =
+    behavior.kind === "path_mismatch"
+      ? [
+          ...evidence.changes
+            .slice(1)
+            .reverse()
+            .map(({ path }) => ({ path, summary: path + " の説明。" })),
+          { path: "invented-by-reporter.md", summary: "evidence にない説明。" },
+        ]
+      : evidence.changes.map(({ path }) => ({ path, summary: "文書を更新した。" }));
   process.stdout.write(
     JSON.stringify({
       schema_version: 1,
       mode: "edit",
-      outcome: blocked ? "blocked" : "complete",
-      summary: blocked
-        ? ["検証が完了しなかったため結果を確定できなかった。"]
-        : ["成果物を更新し、検証を完了した。"],
-      changed_files: [{ path: "pipeline-artifact.md", summary: "文書を更新した。" }],
+      summary: ["成果物を更新し、検証を完了した。"],
+      changed_files: changedFiles,
       handoff: [],
       approach: "plan と executor evidence だけを根拠に結果を構成した。",
-      block_reason: blocked ? "検証コマンドの結果が evidence に含まれていない。" : "",
     }),
   );
   process.exit(0);
@@ -160,6 +197,7 @@ type PipelineFixture = {
   logPath: string;
   behaviorPath: string;
   parentValidationDir: string;
+  agentFixtureDir: string;
   parentValidationLogPath: string;
   parentValidationBehaviorPath: string;
 };
@@ -187,8 +225,22 @@ function writeMembers(repo: string): void {
   writeFileSync(
     join(repo, "pm-members.yaml"),
     [
+      "id: test:pm-members",
+      "type: project",
+      "status: draft",
+      "title: Members",
+      "rulebook: specdojo:pm-members-rulebook",
       "version: 1",
       "project_id: test",
+      "members: []",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(repo, ".specdojo", "agent-members.yaml"),
+    [
+      "version: 1",
       "members:",
       // 従来フロー専用（stage_role なし）
       ...member("legacy-edit-agent", "opencode", "normal"),
@@ -402,11 +454,6 @@ function writeTemplates(repo: string): void {
     "utf8",
   );
   writeFileSync(
-    join(templates, "xrp-viewpoint-detail-template.md"),
-    "### _VP_ID_\n\n_VP_CHECK_\n",
-    "utf8",
-  );
-  writeFileSync(
     join(templates, "xep-common-conventions-template.md"),
     "## 記法・リンク規約（共通）\n\n- リンクは `[[id|title]]` 形式。\n",
     "utf8",
@@ -428,8 +475,11 @@ function setupPipelineRepository(): PipelineFixture {
     mkdirSync(dir, { recursive: true });
   }
 
-  const logPath = join(repo, "agent-invocations.jsonl");
-  const behaviorPath = join(repo, "agent-behavior.json");
+  // fake agent の呼び出し記録と振る舞いは対象リポジトリの外に置く。リポジトリ内に置くと、
+  // runner が executor の変更として evidence と result の変更一覧に含めてしまう。
+  const agentFixtureDir = mkdtempSync(join(tmpdir(), "specdojo-agent-e2e-"));
+  const logPath = join(agentFixtureDir, "agent-invocations.jsonl");
+  const behaviorPath = join(agentFixtureDir, "agent-behavior.json");
   writeFileSync(logPath, "", "utf8");
   writeFileSync(parentValidationLogPath, "", "utf8");
   writeFileSync(parentValidationBehaviorPath, "pass\n", "utf8");
@@ -492,6 +542,7 @@ function setupPipelineRepository(): PipelineFixture {
     logPath,
     behaviorPath,
     parentValidationDir,
+    agentFixtureDir,
     parentValidationLogPath,
     parentValidationBehaviorPath,
   };
@@ -545,6 +596,15 @@ function readResult(fixture: PipelineFixture, taskId: string): string {
     join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
     "utf8",
   );
+}
+
+function resultChangedFiles(result: string): Array<{ path: string; summary: string }> {
+  const section = result.match(/## 2\. 変更ファイル\n\n([\s\S]*?)\n\n## 3\./u)?.[1];
+  if (section === undefined) throw new Error("result changed-files section is missing");
+  return [...section.matchAll(/^- `([^`]+)`: (.+)$/gmu)].map((match) => ({
+    path: match[1]!,
+    summary: match[2]!,
+  }));
 }
 
 // 実行が失敗すると worktree はマージされずに保持されるため、その run の result は
@@ -627,6 +687,7 @@ describe("executor / reporter pipeline E2E", () => {
     if (fixture) {
       rmSync(fixture.repo, { recursive: true, force: true });
       rmSync(fixture.parentValidationDir, { recursive: true, force: true });
+      rmSync(fixture.agentFixtureDir, { recursive: true, force: true });
     }
     fixture = undefined;
   });
@@ -688,7 +749,7 @@ describe("executor / reporter pipeline E2E", () => {
       changes: Array<{ path: string }>;
       validations: Array<{ command: string; status: string }>;
       final_message: string;
-      log_refs: Array<{ path: string; truncated: boolean }>;
+      log_refs: Array<{ kind: string; path: string; truncated: boolean }>;
     };
     expect(evidence.task_id).toBe("T-TEST-doc-010");
     expect(evidence.stage).toMatchObject({
@@ -713,6 +774,7 @@ describe("executor / reporter pipeline E2E", () => {
         summary: expect.stringContaining("integration validation pass"),
       },
     ]);
+    expect(evidence.log_refs.some((ref) => ref.kind === "parent-validation-output")).toBe(false);
     expect(readFileSync(target.parentValidationLogPath, "utf8")).toBe("run\n");
 
     const state = JSON.parse(readFileSync(join(runDir, "pipeline-state.json"), "utf8")) as {
@@ -728,6 +790,45 @@ describe("executor / reporter pipeline E2E", () => {
     });
     // in-place 実行は worktree の統合段を持たないため integrate は記録されない。
     expect(state.stages.integrate).toBeUndefined();
+  });
+
+  it("renders by evidence path when reporter descriptions are missing, extra, and reordered", async () => {
+    const target = setup();
+    setBehavior(target.behaviorPath, {
+      "local-gemma-executor": { role: "executor", kind: "path_mismatch" },
+      "local-gemma-reporter": { role: "reporter", kind: "path_mismatch" },
+    });
+
+    await runExec(["run", "--project", "test", "--task", "T-TEST-doc-010"]);
+
+    expect(process.exitCode).toBeUndefined();
+    const runDir = evidenceRunDir(target, "T-TEST-doc-010");
+    const evidence = JSON.parse(readFileSync(join(runDir, "evidence.json"), "utf8")) as {
+      changes: Array<{ path: string }>;
+    };
+
+    const result = readResult(target, "T-TEST-doc-010");
+    const changedFiles = resultChangedFiles(result);
+    expect(changedFiles.map(({ path }) => path)).toEqual([
+      "pipeline-artifact.md",
+      "pipeline-secondary.md",
+      "pipeline-tertiary.md",
+    ]);
+    // 保存版 evidence は runner 管理記録も保持するが、result の変更一覧からは除外する。
+    expect(evidence.changes.map(({ path }) => path)).toEqual(
+      expect.arrayContaining(changedFiles.map(({ path }) => path)),
+    );
+    expect(evidence.changes.length).toBeGreaterThan(changedFiles.length);
+    expect(result).toContain("status: complete");
+    expect(changedFiles).toEqual([
+      {
+        path: "pipeline-artifact.md",
+        summary: "reporter の説明がないため、変更差分を参照。",
+      },
+      { path: "pipeline-secondary.md", summary: "pipeline-secondary.md の説明。" },
+      { path: "pipeline-tertiary.md", summary: "pipeline-tertiary.md の説明。" },
+    ]);
+    expect(result).not.toContain("invented-by-reporter.md");
   });
 
   it("hands the reporter bounded evidence only, keeping raw log text and secrets out of the prompt", async () => {
@@ -830,6 +931,7 @@ describe("executor / reporter pipeline E2E", () => {
     const runDir = evidenceRunDir(target, "T-TEST-doc-010");
     const evidence = JSON.parse(readFileSync(join(runDir, "evidence.json"), "utf8")) as {
       validations: Array<{ id?: string; source?: string; status: string }>;
+      log_refs: Array<{ kind: string; path: string; truncated: boolean }>;
     };
     expect(evidence.validations).toContainEqual(
       expect.objectContaining({
@@ -837,6 +939,11 @@ describe("executor / reporter pipeline E2E", () => {
         source: "runner",
         status: "failed",
       }),
+    );
+    const parentLog = evidence.log_refs.find((ref) => ref.kind === "parent-validation-output");
+    expect(parentLog).toMatchObject({ truncated: false });
+    expect(readFileSync(join(target.repo, parentLog?.path ?? ""), "utf8")).toContain(
+      "integration validation fail",
     );
     expect(readResult(target, "T-TEST-doc-010")).toContain(
       "parent validation failed: test-integration",
@@ -904,20 +1011,6 @@ describe("executor / reporter pipeline E2E", () => {
     expect(result).toContain("format attempts");
   });
 
-  it("blocks when the reporter reports outcome blocked", async () => {
-    const target = setup();
-    setBehavior(target.behaviorPath, {
-      "local-gemma-reporter": { role: "reporter", kind: "blocked" },
-    });
-
-    await runExec(["run", "--project", "test", "--task", "T-TEST-doc-010"]);
-
-    expect(process.exitCode).toBe(1);
-    const result = readResult(target, "T-TEST-doc-010");
-    expect(result).toContain("status: blocked");
-    expect(result).toContain("検証コマンドの結果が evidence に含まれていない。");
-  });
-
   it("rejects an executor override whose member is not a pipeline executor", async () => {
     const target = setup();
 
@@ -950,6 +1043,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     if (fixture) {
       rmSync(fixture.repo, { recursive: true, force: true });
       rmSync(fixture.parentValidationDir, { recursive: true, force: true });
+      rmSync(fixture.agentFixtureDir, { recursive: true, force: true });
     }
     worktreeBase = undefined;
     fixture = undefined;
@@ -957,6 +1051,77 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
 
   // Spawns real git worktree + child-process commands; needs more than the 5s default
   // when the full suite runs in parallel under load.
+  // rate limit で止まった executor を --task 経路で resume し、plan の対象を網羅するかを
+  // 確かめる。rate limit の block イベントへ pipeline_state_ref が書かれないと resume できない
+  // （PJR-TDB0 で修正）。
+  it("rechecks every plan target when an executor resumes after a rate limit", async () => {
+    fixture = setupPipelineRepository();
+    worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    vi.spyOn(spawnSelfModule, "selfRunArgs").mockImplementation((subArgs: string[]) => [
+      process.execPath,
+      [
+        join(specdojoRoot, "node_modules", ".bin", "tsx"),
+        join(specdojoRoot, "src", "specdojo.ts"),
+        ...subArgs,
+      ],
+    ]);
+    process.chdir(fixture.repo);
+
+    setBehavior(fixture.behaviorPath, {
+      "local-gemma-executor": { role: "executor", kind: "rate_limit" },
+    });
+    await runExec([
+      "run",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+    // rate limit は他の失敗と異なり、再開可能な中断として exitCode を設定しない。
+    expect(process.exitCode).toBeUndefined();
+    expect(
+      readInvocations(fixture.logPath).filter((item) => item.role === "reporter"),
+    ).toHaveLength(0);
+
+    setBehavior(fixture.behaviorPath, {
+      "local-gemma-executor": { role: "executor", kind: "resume_ok" },
+    });
+    await runExec([
+      "resume",
+      "--project",
+      "test",
+      "--task",
+      "T-TEST-doc-010",
+      "--worktree-base",
+      worktreeBase,
+    ]);
+
+    expect(process.exitCode ?? 0).toBe(0);
+    const invocations = readInvocations(fixture.logPath);
+    const executors = invocations.filter((item) => item.role === "executor");
+    expect(executors).toHaveLength(2);
+    expect(executors[1].prompt).toContain("resumes an interrupted attempt");
+    expect(executors[1].prompt).toContain("`pipeline-artifact.md`");
+    expect(invocations.filter((item) => item.role === "reporter")).toHaveLength(1);
+    expect(readFileSync(join(fixture.repo, "docs", "test", "doc.md"), "utf8")).toContain(
+      "completed after resume",
+    );
+
+    const evidenceRoot = join(fixture.repo, "execution", "exec", "evidence", "T-TEST-doc-010");
+    const latestRun = readdirSync(evidenceRoot).sort().at(-1)!;
+    const evidence = JSON.parse(
+      readFileSync(join(evidenceRoot, latestRun, "evidence.json"), "utf8"),
+    ) as { target_coverage?: Array<{ target: string; path?: string }> };
+    expect(evidence.target_coverage).toEqual([
+      { target: "test:doc", status: "changed", path: "docs/test/doc.md", reason: "" },
+    ]);
+  }, 20_000);
+
   it("resumes the reporter from persisted evidence instead of rerunning the executor", async () => {
     fixture = setupPipelineRepository();
     worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-pipeline-e2e-wt-"));
@@ -1244,9 +1409,19 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
 
     const evidence = JSON.parse(
       readFileSync(join(evidenceRunDir(fixture, "T-TEST-doc-010"), "evidence.json"), "utf8"),
-    ) as { validations: Array<{ source?: string; status: string }> };
+    ) as {
+      validations: Array<{ source?: string; status: string }>;
+      log_refs: Array<{ kind: string; path: string }>;
+    };
     expect(evidence.validations).toContainEqual(
       expect.objectContaining({ source: "runner", status: "passed" }),
+    );
+    const retainedFailureLog = evidence.log_refs.find(
+      (ref) => ref.kind === "parent-validation-output",
+    );
+    expect(retainedFailureLog).toBeDefined();
+    expect(readFileSync(join(fixture.repo, retainedFailureLog?.path ?? ""), "utf8")).toContain(
+      "integration validation fail",
     );
   }, 20_000);
 

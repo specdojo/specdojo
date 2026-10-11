@@ -1,0 +1,661 @@
+実装を完了しました。
+
+- `specdojo orchestrator run` を追加し、宣言済み `repos` のみ provider ごとに許可。
+- OpenCode は公式の [Config](https://opencode.ai/docs/config/) / [Permissions](https://opencode.ai/docs/permissions/) に基づき、実行時設定を注入。
+- scaffold、unit test、関連文書、CHANGELOG、個票を更新。
+- result、登録簿ステータス、保護対象設定は未変更。
+- 整形、register/catalog/index 検証、CLI help、差分検査は成功。残る lint・型検査・test は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"orchestrator 起動時に宣言済みプロダクトリポジトリだけを provider ごとに許可する CLI、scaffold、テスト、文書を実装した","validations":[{"command":"npx prettier --write src/orchestrator.ts src/specdojo.ts src/exec-provider-scaffold.ts tests/src/orchestrator.test.ts tests/src/cli-verb-taxonomy.test.ts tests/src/exec-provider-scaffold.test.ts tests/src/init-command.test.ts CHANGELOG.md docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-zgj4-orchestrator-product-repo-access.md","status":"passed","summary":"変更した TypeScript と Markdown を整形した"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"project register の生成物を正常に再構築した"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード 0。別リポジトリ側の未配置文書に関する既存 warning のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2524 entries の文書 index を正常に再構築した"},{"command":"node --import tsx src/specdojo.ts orchestrator run --help","status":"passed","summary":"新しい CLI 入口と provider 引数の構文を確認した"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
+
+Reading prompt from stdin...
+OpenAI Codex v0.160.0
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-me20-zgj4-codex-expert-executor
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a125a4-50e6-7d02-b91b-57feeed6b7ba
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-zgj4-20261009t201207z-d54c
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-ZGJ4
+  name: "orchestrator の起動に宣言済みのプロダクトリポジトリへのアクセスを付ける"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: ARC
+---
+
+# Edit Plan: PJR-ZGJ4 orchestrator の起動に宣言済みのプロダクトリポジトリへのアクセスを付ける
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-ZGJ4「orchestrator の起動に宣言済みのプロダクトリポジトリへのアクセスを付ける」に対応する。
+
+`orch:*` の起動コマンドは repos を読まないため、orchestrator から app1/ を参照・変更できない。exec と同じく宣言済みのリポジトリだけを provider ごとの方法で許可する。
+
+## 2. 対象項目
+
+- `id`: PJR-ZGJ4
+- `type`: issue
+- `priority`: high
+- `owner`: ARC
+- `due`: 2026-10-31
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-zgj4-orchestrator-product-repo-access.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-zgj4-20261009T201207Z-d54c-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+### grade result から展開された finding
+
+- なし
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 作業用のファイル（編集用スクリプト、検証用の一時データなど）はリポジトリの外（一時ディレクトリ）に置き、終了前に削除する。リポジトリ内、とくにリポジトリ直下に作業用のファイルを作らない。成果物ではない新規ファイルは commit されず、`commit-scope:` の警告として記録される。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- 検査を実行する前に、リポジトリの `package.json`、`.specdojo/specdojo.config.json`、hook 設定を読み、下表の適用条件を確認する。条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する。`not_run` は適用される検査を実行しなかった場合だけに使う。誤って `not_run` と記録しても、npm script・依存 package の不在、または SpecDojo サブコマンドの設定上の非適用を runner が機械的に確定できる場合は適用外として扱われるが、この救済を前提に記録を省略しない。
+- 依存パッケージの有無は、対象リポジトリの `package.json` の `dependencies` / `devDependencies` と、リポジトリに固定された package manager の設定を基準に判断する。`npx` が未導入パッケージをネットワークから一時取得できることは、導入済みとはみなさない。設定ファイルがない、壊れているなどの理由で適用条件を確定できない検査は実行せず、validations に `not_applicable` として理由と次の確認事項を記録する。
+- Markdown 成果物を編集した場合、Prettier が導入されているときだけ `npx prettier --write <対象ファイル>` で整形する。`markdownlint-cli` または `markdownlint` が導入されているときだけ `npx markdownlint <対象ファイル>` を実行し、`markdownlint-cli2` を採用するリポジトリでは、そのリポジトリで定めた CLI2 のコマンドを実行する。適用した検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）のうち、現在のリポジトリに設定され、上記の適用条件を満たすものを先回りで実行する。適用した検査の失敗はすべて修正してから完了する。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当し、かつ適用条件を満たす行の検査を実行する。該当行がない場合や適用条件を満たさない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は、適用条件を満たす設定側のコマンドに合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx specdojo <subcommand>`、`npx tsx src/specdojo.ts <subcommand>` など）で実行する。ただし、sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する。
+
+| 変更したファイル                                                                                       | 適用条件                                                                            | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | 対応するローカル依存が `package.json` にある                                        | `npx prettier --write <対象ファイル>`、導入済み実装に対応する markdownlint コマンド                                                   |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | Prettier が `package.json` にある                                                   | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `package.json` に `typecheck` script がある                                         | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `test:unit`、それ以外は `test` script が `package.json` にある | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | 対象 project に `project_register_path` が設定されている                            | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | 対象 project に `schedule_path` が設定されている                                    | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | リポジトリで定められた起動方法により SpecDojo CLI を実行できる                      | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+
+Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
+Use validation status `not_applicable` when the repository does not meet a check's applicability
+conditions, and include a non-empty `reason`. The runner carries it into the result without
+blocking completion, but rejects the claim when the named npm script or npx package is present in
+the repository's package.json.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]}
+</specdojo_executor_evidence>
+
+---
+
+# Agent comparison trial instructions
+
+This is an isolated comparison trial. Edit and validate the artifacts required by the plan, but
+do not update task lifecycle state or create/update the result file. End the final response with
+exactly one machine-readable executor evidence envelope as documented by SpecDojo.
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+まず登録簿・個票と関連設計を確認し、その後 `orch:*` と `exec` の起動経路を比較して、provider ごとの既存許可方式を流用します。result と状態項目には触れず、親 runner が実行する検証コマンドも重複実行しません。
+exec
+/bin/bash -lc "pwd && git status --short && rg --files -g 'AGENTS.md' -g '"'!secrets/**'"' -g '"'!.env'"' -g 'docs/ja/projects/prj-0001/controls/project-register/pjr-*' -g 'package.json' -g '.specdojo/specdojo.config.json' -g 'lefthook.yml' -g 'lefthook.yaml'" in /workspaces/specdojo-workspace/worktrees/prj-0001-trial-me20-zgj4-codex-expert-executor
+ succeeded in 655ms:
+/workspaces/specdojo-workspace/worktrees/prj-0001-trial-me20-zgj4-codex-expert-executor
+package.json
+lefthook.yml
+AGENTS.md
+packages/vscode-specdojo/package.json
+packages/docs-site/package.json
+packages/docs-lint/package.json
+docs/ja/projects/prj-0001/controls/project-register/pjr-wafc-grade-translation-no-added-code.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-3m8s-exec-result-frontmatter.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zwmh-register-index-angle-placeholder-escape.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tdb0-task-resume-rate-limit-executor.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-e6hg-claude-reporter-json-failure.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0013-prj-overview.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0050-review-viewpoints-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tpy9-register-git-github.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-es57-register-file-ssot-migration.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0087-dct-template-yaml-markdown.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-gh26-ledger-review-alternative.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-e8tt-initial-release-positioning.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0025-pm-members.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0092-vitepress-repo.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0069-register-close-reject.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-akj4-agent-json-response.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0034-wbs.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0007-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-wpwb-viewpoint-evaluation-criteria.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-t3nn-bps-rulebook-rulebook-authoring-standard.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-vx97-git-diff-dubious-ownership-retry.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0019-prj-assumptions-constraints-dependencies.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0075-worktree-devcontainer.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0108-xer-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-p8tk-release-stabilization-criteria.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6v3d-bps-sample.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-f4c9-npm-staged-publishing.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0130-clarify-why-review-viewpoints.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0059-pjr-scaffold.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-wpr3-exec-run-split-investigation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-cf15-glossary-term-reference-check.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-vv3m-kata-creation-policy-by-type.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-a0ne-not-applicable-check-blocks.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-avsr-grade-reporter-level-severity-mismatch.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0153-dct-schema-yaml-done-criteria-group-top.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-h9r2-resume-sync-uncommitted-overlap.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-qqxp-docs-search-index-scope.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0023-pm-quality-management-plan.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-aar2-milestones-status-follows-last-built-track.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-t1jw-protected-config-gitignore-false-positive.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0003-item.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-m35p-protection-false-positive-generated.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9xg4-register-commit-under-lifecycle-lock.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0078-schedule-gate.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-jhsc-exec-events-granularity.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-n22n-xrp-xrr-review.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6xnj-grade-graded-by.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0004-pjr-generated.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0039-frontmatter-type.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-aq9g-exec-plan-angle-placeholder-escape.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0155-dct-domain-multifile.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-98g4-multi-repo-worktree-agent.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0017-prj-success-criteria-and-acceptance-criteria.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9rwg-register-events-separation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-36cn-integrate-bookkeeping-event-union.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-wre7-omlx-context-64k.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-djft-grade-run-per-document-sh.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zkna-cdfd-uc-rulebook.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0014-prj-stakeholder-register.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-say1-template-finding-comments.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-gqfx-todo-marker-false-positive-in-inline-code.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-z47x-grade-changed-only.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-g1qz-grade-finding-comment-lint.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0112-xrp-recipe-maintenance-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-nw9v-agent-comparison-trial.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-nsxt-executor-reporter-agent-definitions.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-xxbc-result-approach-section-rename.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-n8aw-item.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0080-scaffold.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-j3g0-exec-resume-integrate-schedule-task.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9qz2-exec-stale-running-stage.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-qgp4-naming-spec-do.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-8ten-bps-sample-bps-template-bps-recipe.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-sdxb-bootstrap.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0161-register-approval-workflow-policy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-cjqm-branch-protection-setup.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zrxg-register-ansi.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0060-pjr-index-vscode.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0085-specdojo-docs-structure-guide.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0053-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-keqq-devcontainer-template-volumes.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0029-devcontainer.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5n64-template-declaration-resolution.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0wym-naming-spec-do-apply.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-h4h7-bps-grade-review.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0095-specdojo-exec-build.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-hf4n-maintenance-approach-evidence.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ghkd-resume-sync-git-diff-outside-repo.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0051-specdojo-review.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-aak1-kata-subcommands.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tm1b-claude-edit-allowlist-too-narrow.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-xw9m-orchestrator-note-type-non-terminal.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0117-xrr-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0079-task-step-by-step.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-v96b-multi-repo-parent-validations.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-wvns-planning-artifacts-catalog-scope.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ffpk-agent-scratch-files-in-commit.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-frzb-cli-entrypoint-shortcut.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0103-xep-recipe-guided-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-veq4-evidence-refs-staleness-detection.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-bb92-cdfd-overview-propagation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-n03w-grade-role-and-triggers.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-c44h-plan-frontmatter-name-yaml-escape.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0154-operations-domain-timing.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-pzpa-grade-translation-default-translator.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0107-xep-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-09kk-npm-onboarding-path.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0146-forbid-links-in-history-files.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zjzd-dct-index-nested-groups.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-rg7c-reporter-result-generation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0093-sch-strategy-execution-auto.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-vqb5-agent-grade-comparison.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-aqmw-fully-guided-refine-pass-rulebook.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0043-specdojo-schedule.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0114-xrp-sample-maintenance-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-03m3-branch-standard-three-layers.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0028-pm-organization.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6776-worktree-branch-naming.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0036-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-36qg-competitive-landscape-and-release.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zp0b-system-design-sysd-term-sysd-agent-settings.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-qesv-kata-creation-criteria.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-nwpc-register-where-stderr.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6wfa-register-plan-targets.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tc43-executor-reporter-e2e-docs.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-jfwq-executor-reporter-pipeline-schema.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-k351-continuous-abolition-all-viewpoints.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-s190-strategy-scope-local-ids.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-kaqv-agent-raw-stderr-retention.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0002-launch.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0082-pjr-by.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-20dv-grade-content-hash-normalization.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-dq9e-demo-repository-dagashiya.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-8myj-remote-host-development-guide.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-49jk-readme-orchestrator-onboarding.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0088-agent-config-guide.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-e2q3-exec-plan-review-agent-pipeline.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-qcmp-register-commands-split.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ppyf-register-targets-from-first-attempt.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-33sb-grade-recheck-skip-empty-selection.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0101-xep-freeform-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-bx79-integrate-dubious-ownership-retry.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-3n21-kata-declaration-ssot-split.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0152-lint-unescaped-angle-bracket-placeholder.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5tzs-kata-presets-by-scale.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-00qv-cdfd-rulebook.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6qda-interactive-init.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9xvg-grade-plan-link-style.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zsjq-qwen36-grade-evaluation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0138-register-add-on-integration-branch.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-fkn1-kata-distribution-method.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0091-task-complete-commit-push.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0037-schedule-strategy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0136-exec-limit-resume.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-kata-artifact-kata-readiness-assessment.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-4tz7-grade-per-document.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0035-dct-domain.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5w8c-register-github-integration.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-q88a-register-stdout-stderr.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmqh-quickstart-decision-register.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-e6qj-worktree-generated-artifacts.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-jg9q-auto-rebuild-stale-tracks.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ysdv-readme-positioning-intro.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-xbdb-devcontainer-emacs-init-location.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-4ahz-routine-exec-cycle-sequential-execution.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-q7gj-parallel-integration-hook-flaky.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-1d5g-grade-exclude-trash.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-bkq0-generated-blank-after-finding-removal.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0083-milestone-timeline.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0099-exec-plan-creation-mode.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-7mf6-parallel-register-run-integration.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-xkks-grade-sidecar.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-19hx-result-prettier-emphasis-mangling.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-h5z7-cdfd-3-bps-2-grade-finding.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0fk2-config-scaffold-agent.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-37wn-remove-id-reservation-mechanisms.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tbhh-detached-unit-default.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0115-xrp-template-maintenance-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zpjz-exec-result-superseded-status.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-3j5d-grade-test-tmpdir-mermaid-enoent.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-sdwf-composite-check-not-run-block.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0111-xrp-recipe-guided-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-w66b-parent-validation-typecheck.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ywph-register-plan-grade-findings.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0159-exec-agent-flag-by-unification.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0057-id.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2kpn-register-update-topic.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-h220-viewpoint-document-kinds-maintenance.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-daw8-register-commit-header-length.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-bk4k-executor-not-run-human-check.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0020-prj-comparison-of-alternatives.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6aax-assessment-validate-false-warning.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-1jjd-register-plan-expands-referenced-findings.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0106-xep-sample-maintenance-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ay1r-fully-guided-sample-rulebook.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-y0ah-integrate-only-resume.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-t2m6-register-reject-note-terminal.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tr8g-git-failure-reason-progress.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0098-specdojo-exec-auto-capabilities.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0133-cross-deliverable-dedup-pass.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-fpcm-devcontainer-editor-toolchain.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0046-draft-agent.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-cbqv-docs-site-npm-publish.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-wzma-job-responsibility-boundary.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-k513-vscode-extension-layout.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zyfz-single-responsibility-viewpoint.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-755t-specdojo-not-run.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2w38-sample-quality-observation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-bbpc-stage1-reference-kind-default.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-k6kb-grade-module-split.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-p7hy-multi-repo-single-item.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0118-debian-chromium-150.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-vfd0-exec-resume-protection-blocked.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-jftc-sch-assessment-retirement.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2zvs-grade-review-integration.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ym9y-kata-mermaid-sample-findings.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-qvgx-codex-sandbox-tsx-ipc-eperm.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-3hhw-serialize-parent-validations.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-njrh-orchestrator-use-register-commit.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-pp0d-exec-plan-todo-markdown.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0w8s-grade-retry-failed-stage.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-qw5t-protect-main-push-and-merge-method.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-gdqc-register-close-reject-note.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-r1n2-cli-version-from-package-json.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-qm88-rulebook-schema-enum-lint.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0waa-multi-repo-integration-resume.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-rzr3-pjr-index-as-generated-view.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-th4b-eslint-max-lines-guard.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0125-specdojo-pjr-todo-template-h1.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-7wfe-schedule-agent-by-name.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-w5jt-grade-single-stage-nightly.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-86je-docs-lint-chinese-glyphs.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2gfh-exec-handoff-clarity.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ypns-kata-resolution.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0100-instruction-md.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0140-register-commit-missed-paths.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0008-sch-config-track-yaml.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0105-xep-rulebook-maintenance-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0122-review-launch.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zffz-cdfd-3-stsd-cstd.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-cmyx-exec-dist-parent-validations.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-49d2-quality-assessment.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0010-claude-codex.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-8xqz-orchestrator-distribution-and-ssot.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0119-charter-approval.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-pjbn-grade-exec-run.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0063-sch-strategy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-b7dg-rulebook-sample-coverage-check.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-jxv7-executor-evidence-collection.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-x40m-grade-previous-findings.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0142-vs-code-specdojo.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-8pj4-catalog-sidebar-and-schema-mapping.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0139-register-ticket-status-transition.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zgj4-orchestrator-product-repo-access.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-3xnm-grade-fidelity-normalization.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-jwxk-grade-translation-code-tokens.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6tka-deps-in-range-update-dotenv18.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-44j9-plan-conventions-unavailable-checks.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ex5e-git-identity-isolation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0031-wbs-strategy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-y06y-glossary-schema.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-pg6w-resume-stage-and-sync.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-mwwp-dashboard-cell-sanitize.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-s5ya-register-item-type-lifecycle.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-q3jg-grade-exclude-exec-templates.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0045-viewpoint-results.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-xmma-docs-site-puppeteer25-mermaid12.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-t84c-protected-config-runtime-artifacts.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-rdnc-update-docs-for-ticket-ssot.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0158-exec-run-project-lock.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0076-schedule.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-a4py-docs-sync-9xg4-2h5f-0fk2.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-za91-stsd-cstd-merge.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2bxd-grade-plan-generated-default.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0068-auto-generate.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-fzc4-multi-repo-design-investigation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0086-catalog-scaffold-test-ts.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tndh-exec-run-register-executor-reporter.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2t63-agent-members-split.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0066-item.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0048-pm-review-policy-md.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0032-wbs.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-26k4-grade-plan-embed-documents.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0016-prj-scope.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-q828-reporter-revalidation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-vc94-update-validation-and-tests.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-t7zq-register-commit-policy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-06re-kata-maintenance-review-phase.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0151-index-build-duplicate-id-error-detection.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-k1zd-opencode-plugin-bootstrap-protected-false-positive.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-3d7q-grade-target-filter.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-nfv7-result-trailing-newline.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0052-id.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-hqbk-multi-repo-config-resolution.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0137-register-id-uniqueness.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-kcmh-review-grade-verdict.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0065-src-tools.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0120-item.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9y7g-register-item-file-as-ssot.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-kk07-template-resolution-fallback.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0141-guide-reference-content-schema-yaml.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0030-wbs-to-schedule-strategy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-grb5-protected-config-false-positive-after-limit.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-y3kp-agent-config-write-enforcement.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0044-specdojo-command.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-a12b-remove-dead-lefthook-docs-build.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-1f46-kata-sc-01-sc-03.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-td1g-grade-review-record-structure.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5hhs-exec-branch-not-deleted.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0109-xrp-freeform-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9s8f-split-docs-site-package.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ctv4-resume-integrate-bookkeeping-conflict.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-07m5-trial-validation-completeness.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0081-metadata-json.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-979n-delegated-validation-block.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-rf3b-register-item-frontmatter-schema.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-j29x-readme-dojo-vocabulary.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-x2q7-register-conclusion-overwrite.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-1y0g-devcontainer-stale-vscode-server.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-t0vq-pjr-id-length-evaluation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0xxz-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-c915-exec-resume-replan.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0121-item.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-r8wr-parent-validation-failure-output.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-c0b7-plan-context-and-precommit-check.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-fmz2-integrate-error-stderr.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-seqc-timeline-gantt-chart-timeline.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-hqkv-fast-glob-braces-vulnerability.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0038-pjr-domain-md-done-criteria.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0094-sch-strategy-execution.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-mbvm-grade-exclude-generated.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0022-pm-communication-plan.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0135-exec-register-multiple-ids.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-a45t-ryu-guide-md-kata-guide-md-approach.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0126-pr-based-po-approval.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0040-pjr.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0073-opencode-agent-member.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9py9-maintenance-plan-findings.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-g2f4-qwen-reporter-structured-output.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0058-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-3s8q-agent-writable-config-scope.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-17hh-japanese-title-topic-slug.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0116-xrp-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5822-multi-repo-item-design.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-q3f0-dev-dependencies-major-update.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9kst-multi-repo-resume-precheck-register-records.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0005-specdojo-pjr-rulebook-task.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-17s7-unit-test-double-run-hang.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-xtan-unify-verdict-vocabulary.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0124-human-plan-integrate-result.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-21e8-grade-frontmatter-flow-style.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ga2k-routine-sequential-actions.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0157-cli-verb-taxonomy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2f3y-grade-unreviewed-content-hash.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2jye-dashboard-daily-briefing.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6rn3-resume-sync-remerges-integrated-products.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0015-prj-charter.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0xej-claude-config-dir-isolation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-1z1h-rulebook-sample-declaration-gap.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-4hbg-exec-run.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-23dt-grade-reference-examples.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-mwxs-uis-index-rulebook-bds-index-rulebook.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-dkx8-vp-arc-conciseness-vp-ux-user-flow-check.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6hf3-hook-script-dependency-free-entry.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-qhka-docs-structure-detached-unit.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5ptx-release-v0-3-0-notes-migration.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-qf7t-planning-domain-and-track.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-1sxk-refs-trailer-project-qualified-id.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0162-exec-agent-flag-removal.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0021-pm-plan.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9s41-exec-templates-separation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0011-stakeholder-id.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-genj-resume-validation-before-develop-sync.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0067-validate-templates.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-4nxr-cdfd-rulebook-process-group.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-25sf-register-ai.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0129-why-what-how-recipes.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0128-propagate-project-context.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-b1sj-angle-placeholder-escape-scope.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0071-specdojo-build.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0123-register.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-t2kk-grade-recheck-routine.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-rpsx-scaffold-orchestrator-npm-scripts.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-269z-dct-index-generation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9pz7-grade-0.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-7vkr-npm-release.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-jswe-agent-workflow-plan-vs-skills.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0089-claude-agent-settings.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5rs9-bps-review-finalize-and-cdfd-overview.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-gwyj-rulebook-sample-chapter-extraction-phase2.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-rp1k-maintenance-finding-instruction.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0102-xep-fully-guided-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9p5q-migrate-existing-register-items.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2h5f-devcontainer-scaffold.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-08k1-deliverable-grade-done-criteria.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0149-project-dashboard-page.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5yw6-agent-trial-base-and-reporter.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-78mq-routine-action-kind-unification.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0027-item.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6pd7-cdfd-overview.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbev-exec-reporter-machine-facts.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-wzyw-agent-members-onboarding-gap.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-v8fv-cdfd-common-chapter-skeleton.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-nyzr-adoption-strategy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-t7em-ifx-cmd.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-qjad-grade-incomplete-exit-code.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ewwx-feature-branch-policy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0131-concise-documentation-policy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0049-specdojo-review.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0134-exec-auto-worker-pool.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-e8fy-docs-build-sidebar-scope.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-strg-deterministic-dct-strategy-generation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-ezaf-devcontainer-template-codex-sandbox.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0110-xrp-fully-guided-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0097-xep-rulebook.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-wjpx-gemma4-26b-moe-evaluation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-enk0-sch-strategy-planning-regenerate.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2m84-integrate-merge-abort.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-f1jg-cdfd-overview-runner-qe.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0084-gate-timeline.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-7gak-docs-lint-dependency-vulnerabilities.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-hg98-config-init-gitignore-generated.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tx1g-exec-resume-rate-limited-executor.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0061-sch-defaults-start-date-sch-strategy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-69vp-multi-repo-e2e-docs.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-bvps-grade-rubric-outdated-selector.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-05gc-exec-plan-doc-id-qualification.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-3kbg-grade-finding-insertion-prettier-ignore.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-mrjt-job-run-identity-from-period.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0113-xrp-rulebook-maintenance-template.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-7znh-schedule-build-keep-schema-modeline.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6vfn-exec-run-register-executor-reporter.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-reds-integrate-staged-deletion.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-199g-promotion-commit-consolidation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5erg-orchestrator-body-sync.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0033-yaml-md.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2t2s-antigravity-provider.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-mp2p-devcontainer-config-persistence.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0074-claude-agent-member.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-30sw-multi-repo-refs-trace.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-7mxj-pipeline-resume-recovery.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-kefk-orchestrator-feature-branch-rule.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-h95r-exec-complete-worktree-merge.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-sj3x-docs-site-kata-staging.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0012-claude-skill.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-1y9p-resume-executor-plan.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-q3w9-gastown-design-philosophy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-44cw-git-state-guard-false-positive.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-m8na-sandbox-docs-build-tsx-eperm.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-k1z5-parent-validations-lint.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-y8p9-large-source-files-split.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-eqdb-kata-cdfd-stsd-rulebook-findings.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-srqz-register-dependencies.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-xgjk-kata-declaration-migrate-to-rulebook.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-078k-yaml-schema-modeline-ssot.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-d4kg-document-owner-declaration.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0047-guidelines-guides.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0055-pjr.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-a99j-agent-git-isolation-breach.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0096-edit-plan-frontmatter-based-on.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0150-pm-members-nickname-schema-validation-gap.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0054-id-markdown-preview.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0001-item.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-f346-docs-sync-recent-changes.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-1d0c-pjr-index-wikilink-broken.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-34mq-plain-repository-naming-readme.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tt4j-register-cli-write-to-tickets.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-g8tb-docs-sync-4hbg-36cn-e2q3.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-4rr8-ollama-sampling-recommended-params.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-d0kf-exec-register-worktree-default.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0160-register-dependency-type-review.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-e9h3-grade-deterministic-reporter.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-y013-exec-commit-folding.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-rcvs-js-yaml-5-migration.

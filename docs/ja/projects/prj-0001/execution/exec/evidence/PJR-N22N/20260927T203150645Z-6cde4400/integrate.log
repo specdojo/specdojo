@@ -1,0 +1,22 @@
+=== 2026-09-28T03:49:58.827Z git merge --no-ff -m exec(register PJR-N22N): xrp と xrr テンプレートを review が評価しない前提へ改訂する
+
+Transition: start → review
+Executor: claude-expert-executor
+Reporter: claude-reporter
+Refs: PJR-N22N exec/prj-0001-PJR-N22N ===
+exit: 1
+--- stdout ---
+Auto-merging docs/ja/projects/prj-0001/controls/project-register/events/pjr-n22n.yaml
+CONFLICT (content): Merge conflict in docs/ja/projects/prj-0001/controls/project-register/events/pjr-n22n.yaml
+Auto-merging docs/ja/projects/prj-0001/controls/project-register/pjr-n22n-xrp-xrr-review.md
+Auto-merging docs/ja/projects/prj-0001/execution/exec/results/pjr-n22n-20260927T203034Z-5dd7-result.md
+CONFLICT (add/add): Merge conflict in docs/ja/projects/prj-0001/execution/exec/results/pjr-n22n-20260927T203034Z-5dd7-result.md
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr ---
+
+--- merge --abort ---
+exit: 128
+error: Entry 'docs/ja/projects/prj-0001/controls/project-register/pjr-n22n-xrp-xrr-review.md' not uptodate. Cannot merge.
+fatal: Could not reset index file to revision 'HEAD'.
+

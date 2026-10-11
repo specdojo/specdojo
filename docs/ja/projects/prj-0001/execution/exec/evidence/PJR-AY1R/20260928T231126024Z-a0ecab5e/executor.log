@@ -1,0 +1,26 @@
+`fully-guided` の edit plan が sample を参照できるようにし、試行として 2 件の rulebook の `サンプル` 章を sample へ外出ししました。ただし個票の完了条件はまだ満たしていません。grade の再実行と、残りの `サンプル` 章の外出しが残っています。私が実行した検査はすべて通過しましたが、単体テスト・型チェック・スキーマ検証・統合テストは親 runner が後で実行するため、結果はまだ出ていません。
+
+**変更したファイル**
+- `docs/ja/specdojo/exec-templates/xep-fully-guided-template.md`
+  - 参照ファイルに `sample: _SAMPLE_REF_` と、sample を読む手順を追加しました。`_SAMPLE_REF_` は plan 生成コードがすでに値を入れているため、`src/` は変更していません。
+  - sample は完成例の形式（章・表・記述の粒度）の確認にだけ使います。業務内容・固有名詞・値を対象成果物へ写すことと、sample を具体的な記述の根拠にすることは禁止しました。
+  - 既存の対象成果物と sample の形式が異なる場合は、rulebook が認める範囲で既存の成果物を優先すると明記しました。
+  - 「sample / template は読み込まない」は「template は読み込まない」に改めました。`recipe-guided` は利用者の判断どおり変更していません。
+- `docs/ja/specdojo/standards/rulebook-authoring-standard.md`: 「fully-guided は sample を読まない」を前提にした経過措置の記述を、変更後の参照範囲に合わせました。「一括で外出しする」は「少数で試してから段階的に外出しする」に改めました。
+- `docs/ja/specdojo/rulebooks/bps-rulebook.md` / `stsd-rulebook.md`: 完成例を埋め込んでいた `## 8. サンプル` 章を削除しました。どちらも既存の `bps-sample` / `stsd-sample` がほぼ同じ内容を持っていました（stsd では遷移条件の文言が 1 か所だけ異なります）。sample ファイル自体は変更しておらず、本文に sample へのリンクも追加していません。
+- `tests/src/exec-plans.test.ts`: fully-guided の plan に sample のパスが入ること、rulebook が未宣言なら `_MISSING_` になることのテストを 2 件追加しました。
+- 個票 `pjr-ay1r-fully-guided-sample-rulebook.md`: 作業内容の表と対応結果を更新しました。frontmatter の状態項目は変更していません。
+
+**試行の結果**
+- plan の増加は、参照ファイルの 1 行と手順の 1 項目だけです。sample はパスだけを渡すため、sample が長くても plan は大きくなりません。
+- `stsd-mermaid-rulebook` の `サンプル` 章は 5 遷移の図だけの最小例なので、経過措置の範囲内として残しました。
+
+**残っている作業**
+- grade の再実行（`vp-qe-kata-conformance`・`vp-arc-conciseness`）はこの環境では実行できず、未実施です。finding が悪化していないかは確認できていません。
+- 残りの `サンプル` 章の外出しは、grade の結果を確認してから広げます。
+- sample を持たない `ifx-index-rulebook`・`tml-rulebook` は、利用者の判断どおり参照先を空のままにします。
+- `npm run check` 全体は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"fully-guided の edit plan で sample を参照できるよう xep-fully-guided-template.md を変更し（形式の参照に限定、既存成果物を優先、recipe-guided は対象外）、rulebook-authoring-standard.md の経過措置の記述を段階移行に合わせた。試行として bps-rulebook / stsd-rulebook の完成例サンプル章を削除し（既存 sample とほぼ同内容。sample ファイルは未変更）、stsd-mermaid-rulebook の最小例は残した。plan の増分はパス 1 行と手順 1 項目のみ。tests/src/exec-plans.test.ts に sample パス注入のテストを 2 件追加し、個票の作業内容と対応結果を更新した。完了条件は未達で、grade の再実行・残りのサンプル章の外出し・npm run check が残る。","validations":[{"command":"npx prettier --write docs/ja/specdojo/exec-templates/xep-fully-guided-template.md docs/ja/specdojo/standards/rulebook-authoring-standard.md docs/ja/specdojo/rulebooks/bps-rulebook.md docs/ja/specdojo/rulebooks/stsd-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-ay1r-fully-guided-sample-rulebook.md tests/src/exec-plans.test.ts","status":"passed","summary":"整形完了（standard と個票を再整形）"},{"command":"npx markdownlint (変更した Markdown 5 件)","status":"passed","summary":"エラーなし"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint (変更した Markdown 5 件)","status":"passed","summary":"exit 0"},{"command":"npm run -s lint:md","status":"passed","summary":"エラーなし"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0、ERROR 0 件（既存の based_on 未検出 WARN のみ）"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"2176 entries を構築"},{"command":"npm run -s validate:history-links","status":"passed","summary":"exit 0"},{"command":"grade 再実行（vp-qe-kata-conformance / vp-arc-conciseness）","status":"not_run","summary":"executor の sandbox では実行できないため未実施"},{"command":"npm run check","status":"not_run","summary":"未実行（個票の完了条件の一つ）"}]}
+</specdojo_executor_evidence>

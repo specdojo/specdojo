@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SJ3X",
+  "run_id": "20260927T055817733Z-c09c05be",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-27T05:58:17.733Z",
+    "completed_at": "2026-09-27T06:10:10.345Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-sj3x-docs-site-kata-staging.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/README.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/src/gen-mermaid-svg.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/kata-staging.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-sj3x-docs-site-kata-staging.md             | 26 ++++++++++----\n packages/docs-site/.vitepress/config.mts           | 40 ++++++++++++++++++++--\n packages/docs-site/README.md                       |  9 +++++\n packages/docs-site/src/gen-mermaid-svg.ts          | 14 ++++++--\n 4 files changed, 78 insertions(+), 11 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write packages/docs-site/.vitepress/kata-staging.ts packages/docs-site/.vitepress/config.mts packages/docs-site/src/gen-mermaid-svg.ts packages/docs-site/README.md docs/ja/projects/prj-0001/controls/project-register/pjr-sj3x-docs-site-kata-staging.md",
+      "status": "passed",
+      "summary": "formatted"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint packages/docs-site/README.md docs/ja/projects/prj-0001/controls/project-register/pjr-sj3x-docs-site-kata-staging.md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsc -p packages/docs-site/.vitepress/tsconfig.json --noEmit",
+      "status": "passed",
+      "summary": "docs-site config typechecks"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:ts",
+      "status": "passed",
+      "summary": "no ESLint errors"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:fm",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:history-links",
+      "status": "passed",
+      "summary": "exit 0"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "exit 0 (existing based_on WARNs only)"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index: 2081 entries"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-site/bin/specdojo-docs-site.js build /tmp/sj3x-ws",
+      "status": "passed",
+      "summary": "temp workspace without kata: 378 files staged, 1 ejected kept; rulebook pages built; wikilinks resolved to ja/specdojo/rulebooks; 101 mermaid SVGs"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "passed",
+      "summary": "repository site build complete; no staging dir created"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJ3X\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-MMLpig/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-MMLpig/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-MMLpig/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-MMLpig/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJ3X/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJ3X/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJ3X\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-VEA0Qi/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-dZyMF5/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-5fcZfy/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-cbJ5VJ/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-i6KnFZ/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-4UtSA7/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-EsXn2z/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-X6r1xO/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  109 passed (109)\n      Tes…"
+    }
+  ],
+  "final_message": "@specdojo/docs-site now stages the package's docs/ja/specdojo into a self-gitignored specdojo-kata-staging/ at config load (build and dev), before pages are scanned. Ejected files win over package files; rewrites serve the staged pages at /ja/specdojo/...; package doc-index entries are remapped so wikilinks resolve; Mermaid covers staged files. Staging scope is wider than the ticket (all of docs/ja/specdojo, because kata link to guides/references), and product/ dead links are ignored only when staging runs; both are recorded as _ASSUMPTION_ in the ticket. Writing root .gitignore was denied; the internal .gitignore covers it. Verified with a temp workspace that has no kata (one rulebook ejected): rulebook pages generated, ejected content used, wikilinks resolved. The repo's own docs:build still passes without staging. Side effect: the first temp index build overwrote /tmp/.specdojo/doc-index.json (outside the repo); /tmp/sj3x-ws and /tmp/sj3x-git-* remain. Known limitation: docs-site already fails when docs/en is missing (pre-existing).",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-SJ3X/20260927T055817733Z-c09c05be/executor.log",
+      "bytes": 7338,
+      "truncated": false
+    }
+  ]
+}

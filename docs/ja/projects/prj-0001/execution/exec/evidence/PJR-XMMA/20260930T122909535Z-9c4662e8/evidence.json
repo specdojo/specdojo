@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XMMA",
+  "run_id": "20260930T122909535Z-9c4662e8",
+  "stage": {
+    "role": "executor",
+    "actor": "agy-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-30T12:29:09.535Z",
+    "completed_at": "2026-09-30T12:33:52.360Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/mermaid-config.json",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": "CHANGELOG.md                                              | 6 ++++++\n docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md | 4 ++++\n packages/docs-site/mermaid-config.json                    | 1 +\n 3 files changed, 11 insertions(+)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run docs:build:mermaid",
+      "status": "passed",
+      "summary": "Generated mermaid SVGs successfully with mermaid-cli 12"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write CHANGELOG.md docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md packages/docs-site/mermaid-config.json",
+      "status": "passed",
+      "summary": "Formatted modified files"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint CHANGELOG.md docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md",
+      "status": "passed",
+      "summary": "Passed markdownlint"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Rebuilt document index successfully"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-yEMiuv/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-yEMiuv/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-yEMiuv/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-yEMiuv/docs/ja/projects/test/controls/project-register/generated/pj…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-d8FBL3/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-yIBwMq/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-dRmqvo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-yk0wBX/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-nSF1UB/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-Yx5Ktw/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-DaIJEy/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-wxgsTs/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  116 passed (116)\n      Te…"
+    }
+  ],
+  "final_message": "mermaid-config.jsonに layout: dagre を追加し、CHANGELOG.md と移行ガイドに Node 22.13 以上の要件、および既知の脆弱性について追記しました。SVGの生成も正常に行われることを確認しました（生成されたSVGの見た目の確認は完了条件に沿って人が行います）。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XMMA/20260930T122909535Z-9c4662e8/executor.log",
+      "bytes": 1646,
+      "truncated": false
+    }
+  ]
+}

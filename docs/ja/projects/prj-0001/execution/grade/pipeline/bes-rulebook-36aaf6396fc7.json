@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "kata",
+  "document": "docs/ja/specdojo/rulebooks/bes-rulebook.md",
+  "content_hash": "ae13d43567b5a6e34720da36d3e104264cd55f5edcc909d0203a4257a76ab799",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-kata-6e23633d2f4f",
+  "updated_at": "2026-09-30T21:36:28.353Z"
+}

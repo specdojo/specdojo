@@ -72,7 +72,7 @@ groups:
         depends_on:
           - bps-task-selection-preparation
           - bps-task-edit
-          - bps-task-review-finalize
+          - bps-task-verification
           - bps-task-judgment-integration
           - prj-success-criteria-and-acceptance-criteria
         overview: タスクの選択・準備からEdit・Review・Finalize・判定統合までが業務として成立することを確認する

@@ -1,0 +1,23 @@
+
+> specdojo@0.2.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-c6f3fce805bb project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true max_stage_failures=3 stages=1 documents=5 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-c6f3fce805bb
+stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/specdojo/recipes/bps-recipe.md
+document complete: docs/ja/specdojo/recipes/bps-recipe.md
+document start: docs/ja/specdojo/rulebooks/bps-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/bps-rulebook.md
+document start: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/cdfd-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pjr-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pjr-rulebook.md
+document start: docs/ja/specdojo/templates/bps-template.md
+document complete: docs/ja/specdojo/templates/bps-template.md
+grade pipeline complete: selected=5 processed=5 completed_now=5 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-c6f3fce805bb/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-26T21:04:09Z	docs/ja/specdojo/recipes/bps-recipe.md	1	passed	238	needs-work	73	3	codex-expert-executor	gemma-reporter	none		
+2026-09-26T21:07:31Z	docs/ja/specdojo/rulebooks/bps-rulebook.md	1	passed	200	pass	89	3	codex-expert-executor	gemma-reporter	none		
+2026-09-26T21:10:02Z	docs/ja/specdojo/rulebooks/cdfd-rulebook.md	1	passed	149	pass	86	3	codex-expert-executor	gemma-reporter	none		
+2026-09-26T21:14:38Z	docs/ja/specdojo/rulebooks/pjr-rulebook.md	1	passed	274	needs-work	68	6	codex-expert-executor	gemma-reporter	none		
+2026-09-26T21:17:28Z	docs/ja/specdojo/templates/bps-template.md	1	passed	168	pass	91	2	codex-expert-executor	gemma-reporter	none		

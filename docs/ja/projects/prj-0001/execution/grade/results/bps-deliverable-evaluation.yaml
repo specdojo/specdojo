@@ -1,0 +1,164 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: bps-deliverable-evaluation
+path: docs/ja/product/010-business-specs/030-business-model/bps-deliverable-evaluation.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: pass
+score: 96
+graded_at: "2026-10-08T16:11:13.148Z"
+graded_by: agy-expert-executor
+content_hash: 95e5a113b891d0a9af9eb93425f773398e6073adffa8da4954fab7bee1130a0c
+source_hashes:
+  catalog-entry: 3247f5eb39765fd5f1c1d12c83847bb47a3c4ed94beeef8fade45a514a9e2e8e
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
+    score: 75
+  architecture:
+    score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 100
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-cross-document-consistency:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 0
+  minor: 3
+  note: 0
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-arc-cross-document-consistency
+    line: 64
+    anchor: >-
+      grade・finding は成果物の品質に関する事実であり、タスクの完了可否を直接確定しない。[[bps-task-completion|タスク完了]]
+      はこの出力を再評価せず、変更内容、plan、実行記録、完了条件と併せて別の判定を行う。
+    message: >-
+      docs/ja/product/010-business-specs/010-data-flow/cdfd-check.mdのE-08-02は評価不能の範囲と理由をfindingに記録してActionへ渡す一方、本表は評価不能時にgrade・findingを未確定としてQEとOrchestratorだけへ渡しており、評価不能時の出力契約が一致していません。
+    message_ja: >-
+      docs/ja/product/010-business-specs/010-data-flow/cdfd-check.mdのE-08-02は評価不能の範囲と理由をfindingに記録してActionへ渡す一方、本表は評価不能時にgrade・findingを未確定としてQEとOrchestratorだけへ渡しており、評価不能時の出力契約が一致していません。
+  - id: F002
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 52
+    anchor: >-
+      | `S-02`      | `P-08-02`     | runner | `S-01`
+      で固定した評価単位、成果物、実行記録                                                     | 28 観点すべてについて成果物の内容と根拠を一度だけ照合し、grade 案と
+      finding 案を作る。editor の自己評価や review による再評価は用いない  | 各観点の判定根拠、grade 案、finding
+      案を再現でき、未評価の観点がない                                  | `E-01`、`E-02` |
+    message: >-
+      Step S-01 verifies the change in evaluation context, but '評価コンテキストの変化' (change in evaluation context) is missing
+      from its input column.
+    message_ja: >-
+      Step S-01 verifies the change in evaluation context, but '評価コンテキストの変化' (change in evaluation context) is missing
+      from its input column.
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 71
+    anchor: >-
+      | `E-02`  | `S-02`、`S-03`         | 評価開始後に対象が変更され、現在の `content_hash` が評価開始時と一致しない     | 変更前の評価結果の確定 | runner |
+      変更前の grade 案と finding 案を確定結果として使用せず、変更後の内容を新しい評価対象にする | 変更後の `content_hash` と成果物を特定し、`S-01` から新しい評価単位として再開する |
+    message: E-01の再開条件に「独立した runner がそろった後」とありますが、検出条件には独立性の違反が含まれておらず、S-01での確認結果との対応が不完全です。
+    message_ja: E-01の再開条件に「独立した runner がそろった後」とありますが、検出条件には独立性の違反が含まれておらず、S-01での確認結果との対応が不完全です。
+done_criteria:
+  satisfied: 5
+  total: 5
+  detail_ref: bps-deliverable-evaluation-grade-criteria

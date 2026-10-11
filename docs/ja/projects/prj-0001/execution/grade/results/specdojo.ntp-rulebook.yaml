@@ -3,29 +3,75 @@ version: 1
 document: specdojo:ntp-rulebook
 path: docs/ja/specdojo/rulebooks/ntp-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 69
-graded_at: "2026-09-03T00:10:07.747Z"
-graded_by: gemma-expert-executor
+score: 67
+graded_at: "2026-10-04T21:19:24.431Z"
+graded_by: agy-expert-executor
 content_hash: 792e97fdd498a4362610f95cef061b5c391565559832f4648f8708927474ce61
 categories:
-  consistency:
+  purpose:
+    score: 50
+  operations:
     score: 75
+  planning:
+    score: 50
+  business:
+    score: 58
+  architecture:
+    score: 83
   usability:
     score: 67
-  architecture:
+  implementation:
     score: 100
   quality:
+    score: 67
+  consistency:
     score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
     level: 4
     score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 2
     score: 50
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,42 +89,117 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 0
+  major: 15
+  minor: 1
   note: 0
 findings:
-  - id: F002
-    severity: major
-    rule: vp-qe-verifiability
-    line: 1
-    message: 「判定可能な記述にする」という方針はあるが、移行テスト計画における具体的な判定基準や成功条件の例示がなく、検証可能性が担保されていない。
-    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
   - id: F001
     severity: major
-    rule: vp-arc-conciseness
+    rule: vp-po-purpose-alignment
     line: 1
-    message: 「責務境界を明確化する」等の記述が、具体的ルールではなくrulebook作成者向けの指示（プレースホルダー）となっている。
     anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 成果物固有の目的は記載されているが、プロジェクト全体の目的や上位文書への参照がなく、なぜこの計画が必要かの全体的な整合性が確認できない。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: POが移行テスト計画の承認や保留を判断するための基準（テスト結果の合否基準や未決事項の扱いなど）の記述ルールが不足している。
   - id: F003
     severity: major
-    rule: vp-qe-omissions-consistency
+    rule: vp-pm-plan-feasibility
     line: 1
-    message: 標準テンプレで定義されている「4. 検証観点」が、対応するサンプル (ntp-sample.md) では「4. 最小記述例」となっており整合していない。
     anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 移行リハーサルの実施スケジュール、所要時間、担当者など、計画の実現可能性や進捗確認に使える粒度の記述ルールが欠落している。
   - id: F004
     severity: major
-    rule: vp-qe-kata-conformance
+    rule: vp-pm-dependency-risk
     line: 1
-    message: 推奨される本文構成の「4. 検証観点」が、サンプル (ntp-sample.md) に適用されておらず、相互参照と適用方法に矛盾がある。
     anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 移行テストにおける他システムとの依存関係、課題、リスク（切替失敗時の切り戻し等）を識別・記述するためのルールが不足している。
   - id: F005
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 1
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 移行リハーサル時の進捗報告先、課題発生時のエスカレーション方針など、コントロール・報告に関する記述ルールがない。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 1
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 移行テストがどの対象者のどのような業務課題（例えば、移行による業務停止時間の最小化など）に応えるかの記述ルールが不足している。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 1
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 利用者視点での移行テストの対象範囲や除外範囲、受入条件について、どのような粒度で定義すべきかの記述ルールがない。
+  - id: F008
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 1
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 移行テストのステークホルダー（実施者、確認者、承認者など）や、合意形成の対象を明確にするための記述ルールが欠落している。
+  - id: F009
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 1
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 移行先のシステム環境や外部システムとの連携など、移行テストにおける技術的な前提・制約事項を記述するためのルールがない。
+  - id: F010
+    severity: major
+    rule: vp-arc-conciseness
+    line: 15
+    anchor: "- 上位方針・関連成果物との責務境界を明確化する。"
+    message: 「責務境界を明確化する」等の記述が、具体的ルールではなくrulebook作成者向けの指示（プレースホルダー）となっている。
+  - id: F011
+    severity: major
+    rule: vp-qe-verifiability
+    line: 11
+    anchor: "- 曖昧表現を避け、判定可能な記述にする。"
+    message: 「判定可能な記述にする」という方針はあるが、移行テスト計画における具体的な判定基準や成功条件の例示がなく、検証可能性が担保されていない。
+  - id: F012
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 39
+    anchor: "| 4. 検証観点       | ○    | 完了条件、確認観点     |"
+    message: 標準テンプレで定義されている「4. 検証観点」が、対応するサンプル (ntp-sample.md) では「4. 最小記述例」となっており整合していない。
+  - id: F013
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 39
+    anchor: "| 4. 検証観点       | ○    | 完了条件、確認観点     |"
+    message: 推奨される本文構成の「4. 検証観点」が、サンプル (ntp-sample.md) に適用されておらず、相互参照と適用方法に矛盾がある。
+  - id: F014
     severity: major
     rule: vp-ux-readability
     line: 1
-    message: 本文構成の定義に留まり、「移行テスト計画」として何を記述すべきかという具体的なガイドラインが欠落しており、初見の読者が作成内容を判断できない。
     anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 本文構成の定義に留まり、「移行テスト計画」として何を記述すべきかという具体的なガイドラインが欠落しており、初見の読者が作成内容を判断できない。
+  - id: F015
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 移行テスト（リハーサル）を完了とし、本番移行を実施（リリース）するための判断基準や前提条件の記述ルールが明示されていない。
+  - id: F016
+    severity: major
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# 移行テスト計画（リハーサル計画） 作成ルール"
+    message: 移行リハーサル中の障害発生時の対応手順や、問い合わせ対応などの運用面に関する記述ルールが欠落している。

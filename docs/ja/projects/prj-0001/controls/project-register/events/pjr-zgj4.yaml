@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f1a3f3da68194c8c92069bbd8dd8de4b
+  ts: "2026-10-09T19:58:13Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: exec と同様に orchestrator からもプロダクトリポジトリを扱えるようにするため起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: orchestrator の起動に宣言済みのプロダクトリポジトリへのアクセスを付ける
+    - field: description
+      from: ""
+      to: orch:* の起動コマンドは repos を読まないため、orchestrator から app1/ を参照・変更できない。exec と同じく宣言済みのリポジトリだけを provider ごとの方法で許可する。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-10"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_2a796fd5f6ca407799ef206d5444c371
+  ts: "2026-10-09T20:12:10Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f1a3f3da68194c8c92069bbd8dd8de4b
+- v: 1
+  id: reg_b0354b2181944e9e81cfd67b8b5bc9bb
+  ts: "2026-10-09T20:28:10Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2a796fd5f6ca407799ef206d5444c371
+- v: 1
+  id: reg_54956fffdb9f4b5c858f5dc08cc4be19
+  ts: "2026-10-10T01:17:00Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の結果をレビューし、指摘を PJR-4Y48 で解消、保護設定の本文は orchestrator が承認を得て反映した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-10"
+    - field: conclusion
+      from: "-"
+      to: specdojo orchestrator launch を追加し、orch:* を経由させた。repos に宣言したリポジトリ本体だけを exec と同じ規則（agentExtraRootArguments）で許可し、opencode は OPENCODE_CONFIG_CONTENT で external_directory と edit を注入する（agent 定義の規則は残ることを opencode debug agent で確認）。シグナル処理は PJR-4Y48 で修正。orchestrator 本文に宣言済みリポジトリの扱いを加えた（60b57173f）。
+  previous_event_id: reg_b0354b2181944e9e81cfd67b8b5bc9bb

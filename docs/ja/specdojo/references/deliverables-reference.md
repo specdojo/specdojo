@@ -115,7 +115,7 @@ SpecDojo で扱う成果物の種類、目的、推奨ファイル名、主な�
 | --- | --- | --- | --- | --- | --- |
 | [組織とロールの定義](../rulebooks/pm-organization-rulebook.md) | Organization and Role Definition | `pm-organization` | プロジェクトの体制・関係者構造・意思決定構造を明確にする | プロジェクト全体の体制図、チーム構成、ロール構成 | [レシピ](../recipes/pm-organization-recipe.md) |
 | [ロール定義](../rulebooks/pm-roles-rulebook.md) | Role Definition | `pm-roles.yaml` | プロジェクトで利用するロールを機械処理しやすい形で定義する | ロールコード、ロール名、責務、権限 | [レシピ](../recipes/pm-roles-recipe.md) |
-| [メンバー定義](../rulebooks/pm-members-rulebook.md) | Member Definition | `pm-members.yaml` | メンバーとロールの対応を管理する | メンバー、所属、担当ロール、連絡先、稼働条件 | [レシピ](../recipes/pm-members-recipe.md) |
+| [メンバー定義](../rulebooks/pm-members-rulebook.md) | Member Definition | `pm-members.yaml` | 人間メンバーとロールの対応を管理する | 人間メンバー、所属、担当ロール、連絡先、稼働条件 | [レシピ](../recipes/pm-members-recipe.md) |
 | [RACI](../rulebooks/pm-raci-rulebook.md) | RACI | `pm-raci` | 作業や成果物に対する責任分担マトリクスを定義する | 成果物ごとの RACI マトリクス | [レシピ](../recipes/pm-raci-recipe.md) |
 
 #### 1.7.3. 管理台帳・管理ビュー

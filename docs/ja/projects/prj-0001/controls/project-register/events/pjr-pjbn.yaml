@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_788039c20a2c4f4c86a0888d7d255a70
+  ts: "2026-10-08T22:09:37Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 定期実行の grade がメインの作業ツリーにステージ済みのファイルを残し、exec run が止まる
+    - field: description
+      from: ""
+      to: cron の routine run --due で動く grade のジョブが evidence をメインの作業ツリーで git add したまま commit せずに終わる。その後の exec run --register は checkpoint で Root index has staged changes となり waiting になる（2026-10-09 の PJR-HQKV で発生）。routine の出力を commit するか、ステージしないか、exec 側の扱いを決める。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-09"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_05b99fcd3a8348dc8a6f72bbfc8f5000
+  ts: "2026-10-09T11:18:44Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_788039c20a2c4f4c86a0888d7d255a70
+- v: 1
+  id: reg_8bb5ee7ab9e54c83bf5c696b4cfdd2d1
+  ts: "2026-10-09T11:27:52Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_05b99fcd3a8348dc8a6f72bbfc8f5000
+- v: 1
+  id: reg_b854624213d14843a0659c061f99b8b8
+  ts: "2026-10-09T11:28:40Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_8bb5ee7ab9e54c83bf5c696b4cfdd2d1
+- v: 1
+  id: reg_957c9aa3ba504fde842e4079f67c33e0
+  ts: "2026-10-09T11:36:05Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b854624213d14843a0659c061f99b8b8
+- v: 1
+  id: reg_619ab32e56204103809949d14980265a
+  ts: "2026-10-09T11:37:54Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューした。integration test の失敗は --resume-from executor で直させた。10/9 朝に JBR の evidence がステージされた具体的な経路は再現で確定していない
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: worktree 作成前の検査を checkpoint の対象との重なりに絞り、失敗時の reset を対象のパスに限った。runner の commit または hook が失敗したときにステージを残す 2 経路を特定し、対象だけを戻すように直した。
+  previous_event_id: reg_957c9aa3ba504fde842e4079f67c33e0

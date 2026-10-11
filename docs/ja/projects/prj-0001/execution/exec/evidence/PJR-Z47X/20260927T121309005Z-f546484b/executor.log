@@ -1,0 +1,24 @@
+PJR-Z47X の主な対応（案 1）は実装と文書化まで終えました。ただし完了条件のうち「全件再評価の経路が運用されている」は、まだ満たしたと言えません。`rtn-grade-kata` は無効のままにして手動の手順を文書に書いただけなので、この扱いでよいかは OPS / PO の判断が必要です。個票の作業 3 は open のまま残しています。typecheck と単体・統合テストはまだ実行していません。親 runner がこのあと実行します。
+
+**変更の中身**
+- **突き合わせ先の宣言**: 観点ごとに突き合わせ先（`comparison_sources`）を書けるようにし、次の 2 つの観点に設定しました。
+  - `vp-arc-cross-document-consistency`: 自身のカタログ項目、依存先、Schedule、メンバー定義、ロール定義、`pm-raci`、`pm-organization`
+  - `vp-qe-done-criteria`: 自身のカタログ項目
+- **記録**: `grade apply` が評価時点の突き合わせ先と依存先の hash を grade result の `source_hashes` に保存します。
+- **`--changed-only`**: 本文が変わっていなくても、突き合わせ先の hash が記録と違えば再評価対象にします。カタログは対象文書自身の項目だけを見るので、他の成果物の項目を変えても選ばれません。
+- **`--dependency-changed`**: 依存先の評価日時（`graded_at`）ではなく、依存先の内容の hash で判定するように改めました。依存先を再評価しただけでは選ばれません。
+- **文書化**: 検出するもの・しないもの（宣言していない文書、観点定義・ルーブリックの変更、生成物）を `command-reference.md` に書きました。grade が今の内容に対して有効かの判断は `review-guide.md`、routine への影響とコストは `routine-operation-guide.md` です。2 つの routine YAML にも挙動変更のコメントを入れ、個票の対応結果に挙動変更の表・コスト見積もり・残課題を書きました。
+
+**実データでの確認（`grade list --project prj-0001`）**
+- 導入直後は、既存の grade result に `source_hashes` がないため、成果物 46 件がすべて `--changed-only` で一度だけ選ばれます。`--dependency-changed` では 34 件です。
+- `rtn-grade-deliverable-recheck` の上限 10 件なら約 5 日で記録が揃い、その後は突き合わせ先が変わった日だけ該当する成果物が選ばれます。
+- kata の `--changed-only` は 0 件で、kata の日次 routine の挙動は変わりません。
+
+**テスト**: `tests/src/grade-triggers.test.ts` の依存先 2 件のテストを hash 判定に書き直し、突き合わせ先の検出を確かめるテストを追加しました。
+
+**残課題**
+- `--rulebook-changed` は今も評価日時で判定しています。本項目の範囲外としました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-Z47X（案 1）を実装した。観点に `comparison_sources` を追加し、`grade apply` が突き合わせ先と依存先の hash を `source_hashes` に記録する。`--changed-only` は突き合わせ先の変更でも再評価対象にし、`--dependency-changed` は依存先の内容 hash で判定する。検出範囲・routine への影響・コストを `command-reference` / `review-guide` / `routine-operation-guide` と個票に記載した。全件再評価の定期経路は設けず（`rtn-grade-kata` は無効のまま、手動経路を文書化）、その扱いは OPS/PO の判断待ちとして個票の作業 3 を open で残した。","validations":[{"command":"npx prettier --write (changed ts/yaml/md files)","status":"passed","summary":"all changed files formatted"},{"command":"npx markdownlint + node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint (4 changed md files)","status":"passed","summary":"no errors"},{"command":"npx eslint src/grade.ts src/grade-result.ts src/review-types.ts tests/src/grade-triggers.test.ts","status":"passed","summary":"no lint errors"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0; only pre-existing based_on warnings for dct-user-interface-model"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2112 entries"},{"command":"npx tsx src/specdojo.ts grade list --target deliverable/kata --project prj-0001 [--changed-only|--dependency-changed]","status":"passed","summary":"deliverable changed-only 46/46 (one-time catch-up), dependency-changed 34, kata changed-only 0, kata total 262"}]}
+</specdojo_executor_evidence>

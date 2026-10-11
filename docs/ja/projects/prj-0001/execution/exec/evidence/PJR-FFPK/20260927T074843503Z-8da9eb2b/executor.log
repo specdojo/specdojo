@@ -1,0 +1,41 @@
+register 由来の実行で、agent の一時ファイルが commit されないようにしました。ready 昇格の検査も、一時ファイルでは統合を止めなくなります。ただし、テストはまだ一度も実行していません。typecheck、単体テスト、統合テストは、plan の指定どおり終了後に親 runner が実行します。git の読み取りコマンドも承認待ちで使えなかったため、差分は目視で確認しました。
+
+**今回の変更点**
+- **commit 範囲の絞り込み（`src/exec-worktree-ops.ts`）:** `origin: register` のタスク（人間の作業は除く）が対象です。HEAD に無い新規ファイルは、次のどれかに置かれたものだけを commit します。
+  - 既知の成果物ディレクトリ（`docs/`、`src/`、`tests/`、`tools/`、`scripts/`、`packages/`）
+  - HEAD で追跡済みの最上位ディレクトリ
+  - 対象タスクの result と evidence 配下
+  - plan の `targets` から解決できたパス
+
+  リポジトリ直下の `modify.py` などはこれに当たらず、commit せずに worktree に残します。既存ファイルの変更と削除は、これまでどおり commit します。
+- **ready 昇格の検査:** `assertNoAgentReadyPromotion` は、絞り込んだ後の commit 対象だけを受け取るようになりました。一時ファイル `test-schema.yaml` が `status: ready` を含んでいても、統合は止まりません。
+- **警告の記録（`src/exec-worktree-ops.ts`、`src/exec-run.ts`）:** commit しなかった変更は、従来の `commit-scope:` 警告に加えて、run の evidence にある `integrate.log` にも追記します。このログ自体も同じ commit に含めます。
+- **共通規約とガイド:** exec plan 共通規約（`xep-common-conventions-template.md`）に「作業用のファイルはリポジトリの外（一時ディレクトリ）に置き、終了前に削除する」を追記しました。`exec-worktree-guide.md` には、register 由来タスクの commit 範囲の説明を追記しました。
+- **個票:** 個票の作業内容と対応結果を、今回の実装内容で書き直しました。
+
+**2 回目に失敗した統合テスト 2 件の原因**
+reporter の段からの再開と executor の再起動で、result・evidence・成果物が除外されていたわけではありません。テスト用の fake executor が、成果物をリポジトリ直下の `pipeline-artifact.md` に書いていました。新しい規則では、これが一時ファイルと同じ扱いで除外されていました。
+
+そこでテストのフィクスチャ側を直しました。
+- 成果物を `docs/pipeline-artifact.md` へ移しました。
+- 別のテストでリポジトリ直下に置いていたマーカーも、同じ理由で `docs/protection-applied` へ移しました。
+
+本体の処理ではなくテストのフィクスチャを変えた判断なので、確認をお願いします。
+
+**追加したテスト**
+`exec-worktree-ops.integration.test.ts` に 3 件追加しました。
+- 一時ファイルは commit されず、`integrate.log` に記録され、merge も止まらない。
+- 追跡済みのルートファイルの変更と、`targets` から解決した成果物は commit される。
+- commit 対象の成果物を ready へ上げた場合は、従来どおり止まる。
+
+**実行した検査**
+すべて成功しました。
+- 変更したファイルの `npx prettier --write`
+- 変更した Markdown の `npx markdownlint`
+- 変更した TypeScript の `npx eslint`
+- `catalog validate`（既存の警告のみ）
+- `index build`
+
+<specdojo_executor_evidence>
+{"final_message":"register 由来タスクでは、HEAD に無い新規ファイルを既知の成果物ディレクトリ、HEAD で追跡済みの最上位ディレクトリ、result と evidence、解決済みの targets に限って commit するようにした。それ以外は commit-scope 警告としてログと integrate.log に記録する。ready 昇格の検査は絞り込み後の commit 対象だけを見るので、一時ファイルでは統合が止まらない。共通規約テンプレートとガイドに一時ファイルの扱いを追記し、個票の作業内容と対応結果を更新した。統合テスト 3 件を追加した。再開テストの失敗原因はリポジトリ直下に成果物を書くフィクスチャだったため、フィクスチャのパスを docs/ 配下へ移した。テストは未実行で、親 runner が実行する。","validations":[{"command":"npx prettier --write src/exec-worktree-ops.ts src/exec-run.ts tests/src/exec-worktree-ops.integration.test.ts tests/src/exec-register-resume.integration.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts docs/ja/specdojo/exec-templates/xep-common-conventions-template.md docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-ffpk-agent-scratch-files-in-commit.md","status":"passed","summary":"整形済み"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/specdojo/exec-templates/xep-common-conventions-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-ffpk-agent-scratch-files-in-commit.md","status":"passed","summary":"エラーなし"},{"command":"npx eslint src/exec-worktree-ops.ts src/exec-run.ts tests/src/exec-worktree-ops.integration.test.ts tests/src/exec-register-resume.integration.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts","status":"passed","summary":"エラーなし"},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"OK（based_on 未作成の既存 WARN のみ）"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"2096 entries を生成"}]}
+</specdojo_executor_evidence>

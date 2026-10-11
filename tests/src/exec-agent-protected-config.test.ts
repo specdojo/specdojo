@@ -55,6 +55,7 @@ describe("agent protected configuration paths", () => {
     ".circleci/config.yml",
     "azure-pipelines.yml",
     "Jenkinsfile",
+    ".specdojo/agent-members.yaml",
   ])("protects %s with one provider-independent definition", (path) => {
     expect(isAgentProtectedConfigPath(path)).toBe(true);
   });
@@ -65,6 +66,9 @@ describe("agent protected configuration paths", () => {
     ".agents/specdojo-orchestrator.agent.md",
     ".github/CODEOWNERS",
     "src/config.ts",
+    "pm-members.yaml",
+    "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml",
+    "docs/ja/projects/prj-0001/030-project-management/pm-members-sample.yaml",
   ])("does not overmatch %s", (path) => {
     expect(isAgentProtectedConfigPath(path)).toBe(false);
   });
@@ -85,6 +89,46 @@ describe("agent protected configuration paths", () => {
       ".github/workflows/ci.yml",
       "package.json",
     ]);
+  });
+
+  it("allows project rosters while protecting the repository agent registry", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    write(
+      join(root, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({
+        projects: {
+          "prj-0001": {
+            base_path: "docs/ja/projects/prj-0001",
+            members_path: "030-project-management/pm-members.yaml",
+          },
+        },
+      }),
+    );
+    const membersPath = "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml";
+    write(join(root, membersPath), "members: []\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    expect(before.has(membersPath)).toBe(false);
+
+    write(join(root, membersPath), "members:\n  - nickname: rogue\n");
+    write(join(root, ".specdojo", "agent-members.yaml"), "version: 1\nmembers: []\n");
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
+      ".specdojo/agent-members.yaml",
+    ]);
+  });
+
+  it("keeps checking other protected files when the project config is not valid JSON", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    write(join(root, ".specdojo", "specdojo.config.json"), "{not json");
+    write(join(root, "package.json"), "{}\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(join(root, "package.json"), '{"scripts":{}}\n');
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual(["package.json"]);
   });
 
   it("detects changes and additions under agent instruction directories", () => {
@@ -142,11 +186,16 @@ describe("agent protected configuration paths", () => {
     roots.push(root);
     initRepository(root);
     write(join(root, ".opencode", "agents", "reporter.md"), "# reporter\n");
-    write(join(root, ".opencode", ".gitignore"), "node_modules\npackage.json\n.gitignore\n");
 
     const before = captureAgentProtectedConfigSnapshot(root);
-    // opencode は起動時に plugin を install し、自分用の package.json を書き出す。
+    // opencode は起動時に ignore 規則と plugin の導入ファイルをまとめて書き出す。
+    write(
+      join(root, ".opencode", ".gitignore"),
+      "node_modules\npackage.json\npackage-lock.json\nbun.lock\n.gitignore\n",
+    );
     write(join(root, ".opencode", "package.json"), '{"dependencies":{}}\n');
+    write(join(root, ".opencode", "package-lock.json"), '{"lockfileVersion":3}\n');
+    write(join(root, ".opencode", "bun.lock"), "lockfileVersion = 1\n");
     write(join(root, ".opencode", "node_modules", "yaml", "package.json"), '{"name":"yaml"}\n');
 
     expect(changedAgentProtectedConfigPaths(root, before)).toEqual([]);
@@ -170,16 +219,49 @@ describe("agent protected configuration paths", () => {
     ]);
   });
 
-  it("keeps runtime artifact paths protected when git does not ignore them", () => {
+  it("keeps opencode runtime artifacts protected when git does not ignore them", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
     roots.push(root);
     initRepository(root);
     write(join(root, ".opencode", "agents", "reporter.md"), "# reporter\n");
 
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(join(root, ".opencode", "package.json"), '{"dependencies":{}}\n');
+    write(join(root, ".opencode", "package-lock.json"), '{"lockfileVersion":3}\n');
+    write(join(root, ".opencode", "bun.lock"), "lockfileVersion = 1\n");
+    write(join(root, ".opencode", "node_modules", "yaml", "package.json"), '{"name":"yaml"}\n');
+
     // ignore 規則がない場合は生成物と判定できないため、保護対象のまま残す。
-    expect(
-      agentProtectedConfigPaths(root, [".opencode/package.json", ".opencode/agents/reporter.md"]),
-    ).toEqual([".opencode/agents/reporter.md", ".opencode/package.json"]);
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
+      ".opencode/bun.lock",
+      ".opencode/node_modules/yaml/package.json",
+      ".opencode/package-lock.json",
+      ".opencode/package.json",
+    ]);
+  });
+
+  it("keeps opencode runtime artifacts protected when git check-ignore fails", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    write(join(root, ".opencode", "agents", "reporter.md"), "# reporter\n");
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(
+      join(root, ".opencode", ".gitignore"),
+      "node_modules\npackage.json\npackage-lock.json\nbun.lock\n.gitignore\n",
+    );
+    write(join(root, ".opencode", "package.json"), '{"dependencies":{}}\n');
+    write(join(root, ".opencode", "package-lock.json"), '{"lockfileVersion":3}\n');
+    write(join(root, ".opencode", "bun.lock"), "lockfileVersion = 1\n");
+    write(join(root, ".opencode", "node_modules", "yaml", "package.json"), '{"name":"yaml"}\n');
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([
+      ".opencode/.gitignore",
+      ".opencode/bun.lock",
+      ".opencode/node_modules/yaml/package.json",
+      ".opencode/package-lock.json",
+      ".opencode/package.json",
+    ]);
   });
 
   it("excludes a known generated path even when it is already tracked", () => {
@@ -220,7 +302,7 @@ describe("agent protected configuration paths", () => {
     ]);
   });
 
-  it("protects every candidate when the directory is not a Git repository", () => {
+  it("excludes known generated paths even when git check-ignore fails (e.g. not a Git repository)", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
     roots.push(root);
     write(join(root, ".specdojo", "doc-index.json"), '{"entries":[]}\n');
@@ -228,7 +310,18 @@ describe("agent protected configuration paths", () => {
     const before = captureAgentProtectedConfigSnapshot(root);
     write(join(root, ".specdojo", "doc-index.json"), '{"entries":[{"id":"a"}]}\n');
 
-    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([".specdojo/doc-index.json"]);
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([]);
+  });
+
+  it("keeps settings.local.json protected when git check-ignore fails", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    write(join(root, ".claude", "settings.local.json"), '{"permissions":{"allow":[]}}\n');
+
+    const before = captureAgentProtectedConfigSnapshot(root);
+    write(join(root, ".claude", "settings.local.json"), '{"permissions":{"allow":["Bash(*)"]}}\n');
+
+    expect(changedAgentProtectedConfigPaths(root, before)).toEqual([".claude/settings.local.json"]);
   });
 
   it("records a git failure reason without copying the whole file", () => {

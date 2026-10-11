@@ -29,11 +29,7 @@ const DATA_FLOW_DOMAIN = "data-flow";
 export type DctPlanConfidence = "high" | "medium" | "low";
 export type DctPlanIterationPattern = "pattern-a" | "pattern-b";
 export type DctPlanInputKind =
-  | "data-flow"
-  | "upstream-deliverable"
-  | "existing-catalog"
-  | "template"
-  | "other";
+  "data-flow" | "upstream-deliverable" | "existing-catalog" | "template" | "other";
 
 export type DctPlanVariable = {
   name: string;

@@ -37,7 +37,7 @@ exec refresh
   -> ready.json に Ready タスクを出力
 exec run --auto [--loop]
   -> Ready タスクを選択
-  -> phase 要件と pm-members.yaml から agent を解決
+  -> phase 要件と .specdojo/agent-members.yaml から agent を解決
   -> plan / result を生成
   -> claim
   -> task worktree を作成

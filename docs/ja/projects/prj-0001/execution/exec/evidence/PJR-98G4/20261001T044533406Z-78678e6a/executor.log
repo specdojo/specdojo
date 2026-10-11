@@ -1,0 +1,43 @@
+PJR-98G4 の実装・テスト・文書更新を終えました。ただし、このタスクで書いたテストは私の環境ではまだ一度も実行していません。単体テストと統合テストの実行は、この後の親 runner の検証に任せています。/tmp への書き込みが許可されなかったため、git の挙動を確かめる使い捨てのスクリプトも動かせませんでした。
+
+**何が変わったか（`repos` を宣言した project のみ）**
+- **worktree の配置:** タスクごとに `<worktree_base>/<task-id>/project/`（プロジェクト）と `<worktree_base>/<task-id>/<repo>/`（各プロダクト）を作ります。プロダクト側の exec branch は `integration_branch`（省略時は現在のブランチ）の先端から作ります。
+- **撤去・破棄・孤児検出:** 撤去は、全リポジトリが撤去できることを確かめてから全リポジトリまとめて行い、空になったタスクのディレクトリも消します。古い worktree の破棄（再 claim、`release --reset-worktree`）と `exec worktree prune` の孤児検出も、プロダクトリポジトリまで対象を広げました。
+- **予約名と設定の解決:** プロジェクト側のディレクトリ名を `project` に決め、`repos[].name` の予約名として設定の読み込みと schema の両方で拒否します。exec worktree の中で設定を読んだ場合、`repos[].path` は同じタスクのプロダクト worktree に解決されます。
+- **agent の起動:** 作業ディレクトリはプロジェクト worktree のままです。各リポジトリの絶対パスを `SPECDOJO_REPO_PROJECT`・`SPECDOJO_REPO_<NAME>`・`SPECDOJO_REPO_NAMES` で渡し、プロンプトにも場所と `<repo>:<path>` の書き方を加えます。
+- **検査と evidence:** 保護設定と Git 状態の検査を全リポジトリで行い、違反は `app1:package.json`・`app2:HEAD` のように示します。evidence の変更ファイルも、プロダクト側は `<repo>:<path>` で記録します。
+- **手動運用:** `exec worktree` の各サブコマンドが、プロダクトの worktree も表示・検査します。
+- **既存の動作:** `repos` を持たない project は、従来どおり `<task-id>/` 直下に 1 つだけ作ります。
+
+**プロダクト側の変更はまだ統合できません。** プロダクトの commit と統合は PJR-0WAA の担当です。それまでは、プロダクト worktree に変更か commit が残るタスクはプロジェクト側の commit の前に block し、全 worktree を残します。プロジェクト側だけ統合されてプロダクトの変更が失われることはありませんが、プロダクトを実際に変更するタスクは、現状すべて統合前で止まります。
+
+**provider ごとの書き込み許可**
+
+`.specdojo/exec-defaults.yaml` は変更せず、runner が起動コマンドに引数を付け足します。
+
+| provider | 付け足す引数 | 状況 |
+| --- | --- | --- |
+| claude | `--add-dir` と `--allowedTools 'Edit(//<path>/**)'` | 実 CLI での書き込み確認は PJR-69VP |
+| codex | `--add-dir` | 書き込みルートに加わる（ドキュメントで確認） |
+| antigravity | `--add-dir` | 複数指定できる前提（仮定、未確認） |
+| copilot | `--add-dir` | CLI が対応している前提（仮定、未確認） |
+| opencode | なし | パスは渡すが、書き込みは agent 定義で拒否される |
+
+opencode でプロダクトへ書き込むには、人が `.opencode/agents/*.md` の `external_directory` に許可を加える必要があります（agent 定義は保護対象のため変えていません）。`exec trial` は単一リポジトリのままです。
+
+**テスト**
+- 統合テスト `tests/src/exec-task-repos.integration.test.ts`: 実 Git でプロダクト 2 つを使い、作成・再利用・統合前の block・撤去・撤去拒否・破棄・孤児検出・リポジトリ別の検査・evidence を確かめます。`repos` なしの回帰テストも含みます。
+- 単体テスト: `tests/src/exec-task-repos.test.ts` を新設し、既存の `tests/src/specdojo-config-repos.test.ts` と schema テストに予約名と worktree 内の解決を追加しました。
+
+**手順上の注意:** 開発中に、変更した src ファイルへ `npx tsc -p tsconfig.build.json --noEmit` と `npx eslint` を直接実行しました。親検証の `typecheck` と `lint-ts` と重なるため、下の検証結果には含めていません。
+
+設定リファレンス、`docs-structure-guide`、個票の作業内容と対応結果も更新しました（個票の状態項目は変えていません）。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-98G4: implemented per-repository task worktrees (<worktree_base>/<task-id>/project/ and /<repo>/) for projects declaring repos, with removal/discard/orphan detection across repositories, reserved repo name 'project' (config + schema), worktree-aware repos[].path resolution, agent env SPECDOJO_REPO_* and prompt guidance, runner-appended provider extra-root args (claude/codex/antigravity/copilot; opencode unsupported without agent definition change), protected-config/Git-state checks and executor evidence per repository (<repo>:<path>), and a pre-integration guard that blocks tasks with pending product changes until PJR-0WAA. Added unit/integration tests and updated config reference, docs-structure-guide, and the PJR-98G4 ticket. The new tests were not run in the sandbox (left to parent test-unit/test-integration). During development, npx tsc --noEmit (src) and npx eslint on changed src files were also run; they overlap parent typecheck/lint-ts and are not listed as validations.","validations":[{"command":"npx prettier --write <changed .md/.ts/.yaml files>","status":"passed","summary":"All changed source, test, schema, and Markdown files formatted"},{"command":"npx markdownlint docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-98g4-multi-repo-worktree-agent.md","status":"passed","summary":"No markdownlint errors"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK: dct-index.yaml (only pre-existing based_on WARN lines unrelated to this change)"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2272 entries"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"Register views regenerated without errors"}]}
+</specdojo_executor_evidence>
+
+Sources:
+- https://codex.danielvaughan.com/2026/05/10/codex-cli-multi-directory-workflows-add-dir-writable-roots-cross-repo-coordination/
+- https://opencode.ai/docs/permissions/
+- https://code.claude.com/docs/en/iam

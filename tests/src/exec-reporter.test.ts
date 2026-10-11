@@ -7,7 +7,10 @@ import { describe, expect, it } from "vitest";
 import type { ExecEvidence } from "../../src/exec-evidence.js";
 import {
   buildReporterPrompt,
+  deriveReporterFacts,
+  evidenceForReporter,
   parseReporterOutput,
+  reporterOutputSchemaForMode,
   runReporterWithFormatRetry,
 } from "../../src/exec-reporter.js";
 
@@ -45,30 +48,20 @@ function evidence(): ExecEvidence {
 const validEditOutput = {
   schema_version: 1,
   mode: "edit",
-  outcome: "complete",
   summary: ["文書を更新した。"],
   changed_files: [{ path: "docs/test.md", summary: "内容を追加した。" }],
   handoff: [],
   approach: "plan と evidence を照合した。",
-  block_reason: "",
 } as const;
 
 const validReviewOutput = {
   schema_version: 1,
   mode: "review",
-  outcome: "complete",
-  viewpoint_results: [
-    {
-      id: "RVP-001",
-      result: "pass",
-      evidence: ["検証が成功した。"],
-      notes: "",
-    },
-  ],
-  findings: [],
+  grade_check: "評価結果は最新で、grade は pass だった。",
+  rationale: ["完了条件と実行記録を照合した。"],
+  improvements: [],
   approach: "done criteria と evidence を照合した。",
-  recommendation: "approve",
-  block_reason: "",
+  verdict: "complete",
 } as const;
 
 describe("reporter structured output", () => {
@@ -108,6 +101,74 @@ describe("reporter structured output", () => {
     );
   });
 
+  it("supplies a simple mode-specific schema suitable for structured output", () => {
+    const schema = reporterOutputSchemaForMode("edit");
+    const validate = new Ajv2020({ allErrors: true, strict: true }).compile(schema);
+
+    expect(schema).not.toHaveProperty("oneOf");
+    expect(validate(validEditOutput), JSON.stringify(validate.errors)).toBe(true);
+    expect(validate(validReviewOutput)).toBe(false);
+  });
+
+  it("accepts every task-completion verdict and rejects per-viewpoint review output", () => {
+    for (const verdict of [
+      "complete",
+      "complete-with-findings",
+      "incomplete",
+      "grade-stale",
+      "grade-unavailable",
+      "changed-during-review",
+    ]) {
+      const output = { ...validReviewOutput, verdict };
+      expect(parseReporterOutput(JSON.stringify(output), "review").output, verdict).toEqual(output);
+    }
+    expect(
+      parseReporterOutput(JSON.stringify({ ...validReviewOutput, verdict: "approve" }), "review")
+        .error,
+    ).toMatch(
+      /verdict is invalid: removed verdict 'approve'; use complete or complete-with-findings/,
+    );
+    expect(
+      parseReporterOutput(JSON.stringify({ ...validReviewOutput, verdict: "unknown" }), "review")
+        .error,
+    ).toMatch(/verdict is invalid: unknown verdict 'unknown'; allowed: complete,/);
+    expect(
+      parseReporterOutput(JSON.stringify({ ...validReviewOutput, rationale: [] }), "review").error,
+    ).toMatch(/rationale/);
+    // 改訂前の観点別出力（viewpoint_results / recommendation）は受け付けない。
+    const legacyOutput = {
+      schema_version: 1,
+      mode: "review",
+      viewpoint_results: [{ id: "RVP-001", result: "pass", evidence: ["x"], notes: "" }],
+      findings: [],
+      approach: "done criteria と evidence を照合した。",
+      recommendation: "approve",
+    };
+    expect(parseReporterOutput(JSON.stringify(legacyOutput), "review").error).toBeDefined();
+  });
+
+  it("names the replacement verdict when a review output uses the legacy recommendation", () => {
+    const { verdict: _verdict, ...withoutVerdict } = validReviewOutput;
+    const legacy = { ...withoutVerdict, recommendation: "revise" };
+
+    expect(parseReporterOutput(JSON.stringify(legacy), "review").error).toBe(
+      "recommendation was replaced by verdict; removed verdict 'revise'; use incomplete " +
+        "(allowed: complete, complete-with-findings, incomplete, grade-stale, grade-unavailable, changed-during-review)",
+    );
+  });
+
+  it("keeps review judgement prose while reserving lifecycle facts for the runner", () => {
+    const prompt = buildReporterPrompt({
+      plan: "# Plan\n\nReview the task.",
+      evidence: evidence(),
+      mode: "review",
+    });
+
+    expect(prompt).toContain("did not re-grade the deliverable");
+    expect(prompt).toContain("Record that judgement in verdict");
+    expect(prompt).toContain("runner owns frontmatter, outcome");
+  });
+
   it("passes only plan, bounded evidence, and schema to the reporter", () => {
     const prompt = buildReporterPrompt({
       plan: "# Plan\n\nDo the work.",
@@ -119,27 +180,685 @@ describe("reporter structured output", () => {
     expect(prompt).toContain('"diff_summary"');
     expect(prompt).toContain("<specdojo_reporter_output_schema");
     expect(prompt).toContain('source="runner"');
-    expect(prompt).toContain('outcome="blocked"');
+    expect(prompt).toContain("the authoritative changed-file list");
     expect(prompt).toContain("identifier or field name");
     expect(prompt).toContain("`depends_on`");
     expect(prompt).not.toContain("raw_diff");
     expect(prompt).not.toContain("executor log body");
   });
 
-  it("tells the reporter its own response fulfills the plan's result-recording requirement", () => {
-    // Regression: without this, a reporter reading a plan written for a single edit+record
-    // agent (record to result before finishing) alongside executor evidence that correctly
-    // leaves the result file untouched (writing it is the reporter's job, not the executor's)
-    // can conclude the task is incomplete and return outcome=blocked even though a
-    // outcome="complete" response is exactly what fulfills that requirement.
+  it("asks for path-keyed descriptions without requiring the evidence order or count", () => {
     const prompt = buildReporterPrompt({
       plan: "# Plan\n\nDo the work.",
       evidence: evidence(),
       mode: "edit",
     });
 
-    expect(prompt).toContain('outcome="complete"');
-    expect(prompt).toContain("Do not treat the executor's evidence");
+    expect(prompt).toContain("exact path from its evidence.changes entry");
+    expect(prompt).toContain("order does not matter");
+    expect(prompt).toContain("missing descriptions use a default message");
+    expect(prompt).toContain("paths\nabsent from evidence are discarded");
+    expect(prompt).not.toContain('"outcome"');
+    expect(prompt).not.toContain('"block_reason"');
+  });
+
+  it("rejects reporter attempts to supply machine-owned facts", () => {
+    expect(
+      parseReporterOutput(
+        JSON.stringify({
+          ...validEditOutput,
+          outcome: "blocked",
+          block_reason: "LLM judgement",
+          changed_files: [{ path: "docs/test.md", summary: "内容を追加した。" }],
+        }),
+        "edit",
+      ).error,
+    ).toMatch(/additional properties/);
+  });
+
+  it("derives paths and a complete outcome from successful evidence", () => {
+    expect(deriveReporterFacts(evidence())).toEqual({
+      outcome: "complete",
+      changed_files: [{ path: "docs/test.md", status: "M" }],
+      block_reason: "",
+    });
+  });
+
+  it("keeps deliverables and excludes resolved evidence, register, and result paths", () => {
+    const input = evidence();
+    input.changes = [
+      { path: "docs/test.md", status: "M" },
+      { path: "runtime/custom/exec/evidence/T-TEST/run-1/pipeline-state.json", status: "??" },
+      { path: "runtime/custom/exec/evidence/T-TEST/run-1/evidence.json", status: "??" },
+      { path: "runtime/custom/exec/evidence/T-TEST/run-1/executor.log", status: "??" },
+      { path: "records/register/pjr-ab12-test.md", status: "M" },
+      { path: "records/register/events/pjr-ab12-events.json", status: "M" },
+      { path: "records/generated/pm-issue-log.md", status: "M" },
+      { path: "runtime/custom/exec/results/pjr-ab12-result.md", status: "M" },
+    ];
+    input.attempt_changes = [...input.changes];
+    input.diff_summary = { files_changed: input.changes.length, summary: "unfiltered" };
+
+    const selected = evidenceForReporter(input, {
+      repoRoot: "/repo",
+      worktreePath: "/worktrees/task",
+      executionPath: "/repo/runtime/custom",
+      registerPaths: ["/repo/records/register", "/repo/records/generated"],
+      resultPath: "/worktrees/task/runtime/custom/exec/results/pjr-ab12-result.md",
+    });
+
+    expect(selected.changes).toEqual([{ path: "docs/test.md", status: "M" }]);
+    expect(selected.attempt_changes).toEqual([{ path: "docs/test.md", status: "M" }]);
+    expect(selected.diff_summary).toEqual({ files_changed: 1, summary: "M docs/test.md" });
+    expect(deriveReporterFacts(selected).changed_files).toEqual([
+      { path: "docs/test.md", status: "M" },
+    ]);
+    expect(input.changes).toHaveLength(8);
+  });
+
+  it("supplies runner not-applicable judgements to the reporter and forbids contradictory handoff", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npx specdojo catalog validate --project prj-0001",
+        status: "not_run",
+        summary: "適用条件を確認していない",
+      },
+    ];
+    const selected = evidenceForReporter(input, {
+      repoRoot: "/repo",
+      worktreePath: "/worktrees/task",
+      executionPath: "/repo/runtime/custom",
+      factOptions: {
+        packageDependencies: new Set(["specdojo"]),
+        specdojoConfig: {
+          version: 1,
+          current_project: "prj-0001",
+          projects: { "prj-0001": {} },
+        },
+      },
+    });
+
+    expect(selected.runner_context?.mechanically_not_applicable).toEqual([
+      {
+        command: "npx specdojo catalog validate --project prj-0001",
+        reason: "project 'prj-0001' に catalog_path が設定されていない",
+      },
+    ]);
+    const prompt = buildReporterPrompt({ plan: "# Plan", evidence: selected, mode: "edit" });
+    expect(prompt).toContain('"mechanically_not_applicable"');
+    expect(prompt).toContain("do not ask for\na command in mechanically_not_applicable to be run");
+  });
+
+  it("tells the reporter when the executor changed a filtered runner-managed record", () => {
+    const input = evidence();
+    const ticket = { path: "records/register/pjr-ab12-test.md", status: "M" };
+    input.changes = [...input.changes, ticket];
+    input.attempt_changes = [{ path: "docs/test.md", status: "M" }, ticket];
+    const selected = evidenceForReporter(input, {
+      repoRoot: "/repo",
+      worktreePath: "/worktrees/task",
+      executionPath: "/repo/runtime/custom",
+      registerPaths: ["/repo/records/register"],
+    });
+
+    expect(selected.changes).toEqual([{ path: "docs/test.md", status: "M" }]);
+    expect(selected.runner_context?.runner_managed_attempt_changes).toEqual([ticket]);
+    const prompt = buildReporterPrompt({ plan: "# Plan", evidence: selected, mode: "edit" });
+    expect(prompt).toContain('"runner_managed_attempt_changes"');
+    expect(prompt).toContain("intentionally absent from changed_files");
+    expect(prompt).toContain("do not request confirmation solely because");
+  });
+
+  it("blocks mechanically on runner validation failure even when prose is valid", () => {
+    const input = evidence();
+    input.validations.push({
+      id: "test-unit",
+      source: "runner",
+      command: "npm run test:unit",
+      status: "failed",
+      summary: "exit 1",
+    });
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "parent validation failed: test-unit",
+      changed_files: [{ path: "docs/test.md", status: "M" }],
+    });
+  });
+
+  it("blocks mechanically on an executor-reported failed validation", () => {
+    const input = evidence();
+    input.validations = [
+      { command: "npx markdownlint docs/test.md", status: "failed", summary: "1 error" },
+    ];
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npx markdownlint docs/test.md",
+    });
+  });
+
+  it("accepts an executor validation delegated as not_run when the runner passed the same command", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npm run test:unit",
+        status: "not_run",
+        summary: "delegated to the parent runner",
+      },
+      {
+        id: "test-unit",
+        source: "runner",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+    expect(deriveReporterFacts(input)).toMatchObject({ outcome: "complete", block_reason: "" });
+  });
+
+  it("still blocks a delegated not_run validation that the runner did not run", () => {
+    const input = evidence();
+    input.validations = [
+      { source: "executor", command: "npm run lint:md", status: "not_run", summary: "delegated" },
+      {
+        id: "test-unit",
+        source: "runner",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npm run lint:md",
+    });
+  });
+
+  it("completes when only a requires_human validation remains", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "real-agent-cli --version",
+        status: "requires_human",
+        summary: "実 agent CLI の起動は sandbox 外で人が確認する",
+      },
+    ];
+
+    expect(deriveReporterFacts(input)).toMatchObject({ outcome: "complete", block_reason: "" });
+  });
+
+  it("does not block a reasoned not_applicable validation", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npx prettier --write docs/test.md",
+        status: "not_applicable",
+        summary: "適用外",
+        reason: "prettier が package.json の依存にない",
+      },
+    ];
+
+    expect(
+      deriveReporterFacts(input, {
+        packageScripts: {},
+        packageDependencies: new Set(),
+      }),
+    ).toMatchObject({ outcome: "complete", block_reason: "" });
+  });
+
+  it.each(["not_applicable", "not_run"] as const)(
+    "accepts catalog validate as %s when the target project has no catalog_path",
+    (status) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx specdojo catalog validate --project prj-0001",
+          status,
+          summary: "catalog_path がないため適用外",
+          ...(status === "not_applicable" ? { reason: "catalog_path が設定されていない" } : {}),
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: {
+            version: 1,
+            current_project: "prj-0001",
+            projects: { "prj-0001": {} },
+          },
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    },
+  );
+
+  it.each(["not_applicable", "not_run"] as const)(
+    "blocks catalog validate reported as %s when the target project has catalog_path",
+    (status) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx specdojo catalog validate --project prj-0001",
+          status,
+          summary: "適用外として報告",
+          ...(status === "not_applicable" ? { reason: "catalog_path がない" } : {}),
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: {
+            version: 1,
+            current_project: "prj-0001",
+            projects: { "prj-0001": { catalog_path: "catalog" } },
+          },
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason:
+          "executor validation failed or not run: npx specdojo catalog validate --project prj-0001",
+      });
+    },
+  );
+
+  it("accepts not_run for an npx package that is not installed", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npx prettier --write docs/test.md",
+        status: "not_run",
+        summary: "prettier は未導入",
+      },
+    ];
+
+    expect(
+      deriveReporterFacts(input, {
+        packageDependencies: new Set(),
+        specdojoConfig: null,
+      }),
+    ).toMatchObject({ outcome: "complete", block_reason: "" });
+  });
+
+  it("blocks not_run for an npx package that is installed", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npx prettier --write docs/test.md",
+        status: "not_run",
+        summary: "未実行",
+      },
+    ];
+
+    expect(
+      deriveReporterFacts(input, {
+        packageDependencies: new Set(["prettier"]),
+        specdojoConfig: null,
+      }),
+    ).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npx prettier --write docs/test.md",
+    });
+  });
+
+  it.each([
+    {
+      command: "npm test",
+      reason: "test script はない",
+      packageScripts: { test: "vitest run" },
+      packageDependencies: new Set<string>(),
+    },
+    {
+      command: "npx prettier --write docs/test.md",
+      reason: "prettier は未導入",
+      packageScripts: {},
+      packageDependencies: new Set(["prettier"]),
+    },
+    {
+      command: "npx prettier --write docs/test.md",
+      reason: "",
+      packageScripts: {},
+      packageDependencies: new Set<string>(),
+    },
+  ])("blocks an invalid not_applicable claim for $command", (validation) => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: validation.command,
+        status: "not_applicable",
+        summary: "適用外",
+        reason: validation.reason,
+      },
+    ];
+
+    expect(
+      deriveReporterFacts(input, {
+        packageScripts: validation.packageScripts as Readonly<Record<string, string>>,
+        packageDependencies: validation.packageDependencies,
+      }),
+    ).toMatchObject({
+      outcome: "blocked",
+      block_reason: `executor validation failed or not run: ${validation.command}`,
+    });
+  });
+
+  it.each(["npm run lint:md -- docs/test.md", "npm run lint:md docs/test.md"])(
+    "blocks not_applicable for an existing script invoked with arguments: %s",
+    (command) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command,
+          status: "not_applicable",
+          summary: "適用外",
+          reason: "lint:md script はない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: { "lint:md": "markdownlint docs" },
+          packageDependencies: new Set(),
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason: `executor validation failed or not run: ${command}`,
+      });
+    },
+  );
+
+  it("keeps argument-bearing npm commands distinct for delegated-validation matching", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npm run test:unit -- tests/src/exec-reporter.test.ts",
+        status: "not_run",
+        summary: "runner に委譲",
+      },
+      {
+        id: "test-unit",
+        source: "runner",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+
+    expect(
+      deriveReporterFacts(input, {
+        packageScripts: { "test:unit": "vitest run --config vitest.unit.config.ts" },
+      }),
+    ).toMatchObject({
+      outcome: "blocked",
+      block_reason:
+        "executor validation failed or not run: npm run test:unit -- tests/src/exec-reporter.test.ts",
+    });
+  });
+
+  it.each([
+    { command: "npm test", status: "failed" as const, summary: "1 failed" },
+    { command: "npm run lint:md", status: "not_run" as const, summary: "not delegated" },
+  ])("still blocks $status mixed with requires_human", (blockingValidation) => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "real-agent-cli --version",
+        status: "requires_human",
+        summary: "人が確認する",
+      },
+      { source: "executor", ...blockingValidation },
+    ];
+
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: `executor validation failed or not run: ${blockingValidation.command}`,
+    });
+  });
+
+  it("does not let a runner pass override an executor-reported failure of the same command", () => {
+    const input = evidence();
+    input.validations = [
+      { source: "executor", command: "npm run test:unit", status: "failed", summary: "1 failed" },
+      {
+        id: "test-unit",
+        source: "runner",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npm run test:unit",
+    });
+  });
+
+  it("does not accept a delegated validation passed only in a product repository", () => {
+    const input = evidence();
+    input.validations = [
+      { source: "executor", command: "npm run test:unit", status: "not_run", summary: "delegated" },
+      {
+        id: "test-unit",
+        source: "runner",
+        repo: "app",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+    expect(deriveReporterFacts(input).outcome).toBe("blocked");
+  });
+
+  describe("composite commands delegated as not_run", () => {
+    const packageScripts = {
+      check: "npm run typecheck && npm run lint:md && npm run validate:catalog && npm test",
+      test: "vitest run",
+      "test:unit": "vitest run --config vitest.unit.config.ts",
+      "test:integration": "vitest run --config vitest.integration.config.ts",
+    };
+    const runner = (command: string, status: "passed" | "failed" = "passed") => ({
+      id: command,
+      source: "runner" as const,
+      command,
+      status,
+      summary: status === "passed" ? "exit 0" : "exit 1",
+    });
+
+    it("accepts npm run check when every component passed in the runner or the executor", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        {
+          source: "executor",
+          command: "npm run validate:catalog",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      expect(deriveReporterFacts(input, { packageScripts })).toMatchObject({
+        outcome: "complete",
+        block_reason: "",
+      });
+    });
+
+    it("accepts a component that the executor ran as the script body", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        {
+          source: "executor",
+          command: "node --import tsx src/specdojo.ts catalog validate",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      const facts = deriveReporterFacts(input, {
+        packageScripts: {
+          ...packageScripts,
+          "validate:catalog": "tsx src/specdojo.ts catalog validate",
+        },
+      });
+      expect(facts.outcome).toBe("complete");
+    });
+
+    it("accepts a nested composite component that the runner ran as a whole", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        runner("npm run validate:schema"),
+        runner("npm run typecheck"),
+      ];
+      const facts = deriveReporterFacts(input, {
+        packageScripts: {
+          check: "npm run typecheck && npm run validate:schema",
+          "validate:schema": "npm run validate:schema:docs && npm run validate:schema:samples",
+          "validate:schema:docs": "tsx tools/validate.ts docs",
+          "validate:schema:samples": "tsx tools/validate.ts samples",
+        },
+      });
+      expect(facts.outcome).toBe("complete");
+    });
+
+    it("accepts the script body run with only a --project option", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        {
+          source: "executor",
+          command: "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      const facts = deriveReporterFacts(input, {
+        packageScripts: {
+          ...packageScripts,
+          "validate:catalog": "tsx src/specdojo.ts catalog validate",
+        },
+      });
+      expect(facts.outcome).toBe("complete");
+    });
+
+    it("does not accept the script body run with other options", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        {
+          source: "executor",
+          command: "node --import tsx src/specdojo.ts catalog validate --only one.yaml",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      const facts = deriveReporterFacts(input, {
+        packageScripts: {
+          ...packageScripts,
+          "validate:catalog": "tsx src/specdojo.ts catalog validate",
+        },
+      });
+      expect(facts.outcome).toBe("blocked");
+    });
+
+    it("still blocks npm run check when a component was not run by anyone", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      expect(deriveReporterFacts(input, { packageScripts })).toMatchObject({
+        outcome: "blocked",
+        block_reason: "executor validation failed or not run: npm run check",
+      });
+    });
+
+    it("does not treat npm test as passed when only the unit tests passed", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "not_run", summary: "delegated" },
+        {
+          source: "executor",
+          command: "npm run validate:catalog",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+      ];
+      expect(deriveReporterFacts(input, { packageScripts }).outcome).toBe("blocked");
+    });
+
+    it("does not expand a script that runs arbitrary shell commands", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run verify", status: "not_run", summary: "delegated" },
+        runner("npm run typecheck"),
+      ];
+      const facts = deriveReporterFacts(input, {
+        packageScripts: { verify: "npm run typecheck && rm -rf tmp" },
+      });
+      expect(facts.outcome).toBe("blocked");
+    });
+
+    it("keeps an executor failure of npm run check blocking", () => {
+      const input = evidence();
+      input.validations = [
+        { source: "executor", command: "npm run check", status: "failed", summary: "1 failed" },
+        {
+          source: "executor",
+          command: "npm run validate:catalog",
+          status: "passed",
+          summary: "ok",
+        },
+        runner("npm run typecheck"),
+        runner("npm run lint:md"),
+        runner("npm run test:unit"),
+        runner("npm run test:integration"),
+      ];
+      expect(deriveReporterFacts(input, { packageScripts }).outcome).toBe("blocked");
+    });
+  });
+
+  it("uses the evidence block reason for a failed protected executor", () => {
+    const input = evidence();
+    input.stage.status = "failed";
+    input.stage.exit_code = 1;
+    input.block_reason = "agent-config-write: protected configuration changes detected";
+    expect(deriveReporterFacts(input)).toMatchObject({
+      outcome: "blocked",
+      block_reason: "agent-config-write: protected configuration changes detected",
+    });
   });
 
   it("retries only the reporter after a format error and reuses the same evidence", async () => {

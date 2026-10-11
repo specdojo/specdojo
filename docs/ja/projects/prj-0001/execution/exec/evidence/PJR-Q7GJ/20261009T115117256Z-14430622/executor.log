@@ -1,0 +1,13 @@
+原因を特定し、修正しました。
+
+- 実リポジトリの生成済み登録簿を読むテストを一時 fixture へ隔離
+- checkpoint／統合 commit・merge の失敗全文を秘匿して `integrate.log` に保存
+- 失敗要約へ Vitest の `FAIL`・集計行を追加
+- CHANGELOG、運用ガイド、PJR-Q7GJ 個票を更新
+- 登録簿生成、catalog 検証、index 生成、Prettier、モジュール読み込み確認は成功
+- result は executor 指示に従い未編集
+- typecheck・lint・unit/integration test は親 runner の検証に委譲
+
+<specdojo_executor_evidence>
+{"final_message":"生成物を読むテストをfixtureへ隔離し、checkpoint・統合時のhook失敗全文の秘匿保存と末尾要約を実装した","validations":[{"command":"npx prettier --write src/exec-shared.ts src/exec-evidence.ts src/exec-worktree.ts src/exec-worktree-ops.ts src/exec-repo-integration.ts src/exec-run.ts tests/src/exec-worktree.test.ts tests/src/exec-worktree-ops.integration.test.ts tests/src/doc-index.test.ts CHANGELOG.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-q7gj-parallel-integration-hook-flaky.md","status":"passed","summary":"変更対象をPrettierで整形した"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build","status":"passed","summary":"登録簿生成、catalog検証、2511件の文書index生成に成功。catalogの既存未作成文書に関する警告のみ"},{"command":"node --import tsx --input-type=module -e \"await import('./src/exec-run.ts'); await import('./src/exec-worktree.ts'); await import('./src/exec-repo-integration.ts')\" && git diff --check && git status --short","status":"passed","summary":"変更モジュールの読み込みと差分の空白検査に成功"}]}
+</specdojo_executor_evidence>

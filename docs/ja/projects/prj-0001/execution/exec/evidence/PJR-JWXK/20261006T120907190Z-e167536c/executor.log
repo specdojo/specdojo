@@ -1,0 +1,12 @@
+実装を完了しました。
+
+- token を廃止し、訳文を件別検証する方式へ変更。
+- 不合格項目のみ1回ずつ再翻訳し、再失敗時は英語正本へフォールバック。
+- unit test・pipeline fixture・関連文書・個票を更新。
+- result ファイルと登録簿ステータスは未変更。
+- 実モデルによる再確認は個票 No.4 として残しています。
+- 親 runner 担当の型検査・テスト・lint は指示どおり未実行です。
+
+<specdojo_executor_evidence>
+{"final_message":"token 非依存の件別翻訳検証、単件再試行、英語フォールバックを実装し、テストと関連文書を更新した","validations":[{"command":"npx prettier --check docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md docs/ja/projects/prj-0001/controls/project-register/pjr-27y0-grade-english-canonical-translation.md docs/ja/projects/prj-0001/controls/project-register/pjr-jwxk-grade-translation-code-tokens.md docs/ja/projects/prj-0001/controls/project-register/pjr-vqb5-agent-grade-comparison.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/standards/document-metadata-standard.md src/grade-result.ts src/grade.ts tests/src/grade-result.test.ts tests/tools/grade-per-document.test.ts","status":"passed","summary":"全対象ファイルが Prettier 形式に準拠"},{"command":"bash -n tools/grade/run-per-document.sh","status":"passed","summary":"シェル構文エラーなし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード0。既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2414件の文書 index を生成"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

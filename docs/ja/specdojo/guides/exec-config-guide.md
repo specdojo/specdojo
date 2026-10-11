@@ -9,7 +9,7 @@ specdojo:
 
 Exec Configuration Guide
 
-SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase に作業要件を定義し、`pm-members.yaml` のエージェント定義から実行者を選択します。レートリミットなどの共通実行ポリシーは `exec-defaults.yaml` に分離します。
+SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase に作業要件を定義し、`.specdojo/agent-members.yaml` のエージェント定義から実行者を選択します。人間の名簿は project ごとの `pm-members.yaml`、レートリミットなどの共通実行ポリシーは `exec-defaults.yaml` に分離します。
 
 **対象読者**
 
@@ -38,10 +38,11 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 | ファイル                       | 役割                                                                                     | 粒度         |
 | ------------------------------ | ---------------------------------------------------------------------------------------- | ------------ |
 | `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・実行要件・任意の `agent` / `agent_pipeline`             | トラック     |
-| `pm-members.yaml`              | 誰が作業するか（identity・capabilities・proficiency・priority・任意の `stage_role`）     | プロジェクト |
+| `pm-members.yaml`              | 人間の identity・連絡先・対応 Role code                                                  | プロジェクト |
+| `.specdojo/agent-members.yaml` | agent の identity・capabilities・proficiency・priority・任意の `stage_role`              | リポジトリ   |
 | `.specdojo/exec-defaults.yaml` | provider 別起動コマンドテンプレート・rate limit 検出条件・リトライポリシー・同時実行上限 | システム     |
 
-`sch-strategy` は通常、phase に「どんな能力が必要か」を書き、`pm-members.yaml` の候補から自動選択します。provider の利用枠を計画する phase だけは `agent` で個体を指名できます。
+`sch-strategy` は通常、phase に「どんな能力が必要か」を書き、`.specdojo/agent-members.yaml` の候補から自動選択します。provider の利用枠を計画する phase だけは `agent` で個体を指名できます。
 
 ## 2. phase の実行要件
 
@@ -92,7 +93,7 @@ pipeline では `agent_pipeline.stages` を `executor`、`reporter` の順に定
 
 ## 3. エージェントの定義
 
-`pm-members.yaml` の `type: agent` メンバーには `provider`・`capabilities`・`proficiency`・`priority` を定義します。起動コマンドは member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。
+`.specdojo/agent-members.yaml` の member には `type: agent` と `provider`・`capabilities`・`proficiency`・`priority` を定義します。起動コマンドは通常 member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。
 
 ```yaml
 members:
@@ -125,13 +126,13 @@ pipeline 専用 agent には `stage_role: executor` または `stage_role: repor
 2. `priority` 昇順（同値なら次へ）。
 3. 余剰 capabilities 数の少ない順。
 
-ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。`max_concurrency` は auto 選択のみに適用し、phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や resume 実行には適用しません。
+ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。auto 選択以外では、register の worktree モードで実行する executor/reporter pipeline（`--parallel` / `--resume` を含む）に適用し、項目ごとの各 stage を provider の空き枠まで待機させます。その他の Schedule phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や Schedule task の resume 実行には適用しません。
 
 phase の by-name agent が rate limit になった場合は、別 agent へ自動フォールバックせず待機状態にします。`exec resume` は同じ agent を再開し、運用者が差し替える場合だけ stage override を指定します。
 
 ## 4. 実行フロー
 
-`providers.<provider>.max_concurrency` は1つの `exec run` プロセス内の provider 枠を制御します。複数の `exec run` プロセスを跨ぐ上限ではないため、project ごとの `exec-run.lock` が手動実行・routine・CI の run 全体を排他します。同一 run 内の `--parallel` はこのロックの内側で動作します。
+`providers.<provider>.max_concurrency` は1つの `exec run` プロセス内の provider 枠を制御します。project ごとの `exec-run.lock` が手動実行・routine・CI の run 全体を排他し、同一 run 内の `--parallel` はこのロックの内側で動作します。例外は register の worktree 実行へ `exec run --register ... --worktree --join` で合流する run です。この場合は、register pipeline の executor と reporter が `exec/.locks/provider-<provider>/` の枠を取得するため、`max_concurrency` は合流した run を跨いで効きます（[exec運用ガイド](exec-operation-guide.md) の「実行中の register worktree 実行へ後から合流する」を参照）。
 
 手動 CLI の busy 時既定は `--if-busy fail` です。必要に応じて `wait` または `skip` を明示します。routine は待機で cron worker を占有しないよう常に `--if-busy skip` を渡し、再試行は次回の cron tick に委ねます。
 
@@ -163,7 +164,7 @@ flowchart LR
 
 ## 5. exec-defaults
 
-`.specdojo/exec-defaults.yaml` には、全トラック共通の実行ポリシーを定義します。executor の sandbox 外で親 runner に実行させる固定検証は `pipeline.parent_validations` に許可リスト ID だけを指定します。
+`.specdojo/exec-defaults.yaml` には、全トラック共通の実行ポリシーを定義します。executor の sandbox 外で親 runner に実行させる固定検証は `pipeline.parent_validations` に許可リスト ID だけを指定します。別リポジトリ構成では、ID と実行するリポジトリの組（`{ id, repo }`）も指定できます。
 
 ```yaml
 pipeline:
@@ -172,6 +173,10 @@ pipeline:
     - typecheck
     - test-unit
     - test-integration
+  parent_validation_concurrency: 1 # 省略時も 1（run 内と合流した run の親検証を直列化）
+
+run:
+  max_concurrent_runs: 4 # 省略時も 4（最初の run と --join の run の合計）
 
 rate_limit_detection:
   exit_codes: []
@@ -194,9 +199,38 @@ rate_limit_policy:
     on_exhausted: block
 ```
 
-`test-integration` は組み込み許可リストで `npm run test:integration` へ解決されます。設定や executor evidence に command・引数を書くことはできません。未知 ID、重複 ID は agent 起動前の設定エラーになります。親 runner は `shell: false` の固定 argv で実行し、現時点で許可される ID は `validate-schema`、`typecheck`、`test-unit`、`test-integration` の 4 つです。
+`test-integration` は組み込み許可リストで `npm run test:integration` へ解決されます。設定や executor evidence に command・引数を書くことはできません。未知 ID、重複 ID は agent 起動前の設定エラーになります。親 runner は `shell: false` の固定 argv で実行し、現時点で許可される ID は `validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md` の 7 つです。
 
 `typecheck`（`npm run typecheck`）は Vitest と異なり型検査を行うため、executor が残した TypeScript の型エラーを検出します。Vitest は型検査を行わないため、`typecheck` を親検証に含めないと型エラーは test-unit を通過して統合時の pre-commit hook で初めて失敗するため、既定では `test-unit` の前に置いて早めに止めます（PJR-W66B）。
+
+`lint-ts`（`npm run lint:ts`）、`lint-fm`（`npm run lint:fm`）、`lint-md`（`npm run lint:md`）は、executor が残した ESLint・frontmatter・Markdown の lint エラーを agent の段階で検出します。指定しない場合、これらのエラーは統合後の `npm run check` まで持ち越されます（PJR-K1Z5）。
+
+`specdojo.config.json` の project に `repos` を宣言した別リポジトリ構成では、`pipeline.parent_validations` の要素に `{ id, repo }` を書き、検証を実行するリポジトリを割り当てられます（PJR-V96B）。ID だけの要素はプロジェクトリポジトリで実行します。`repo` には、プロジェクトリポジトリを表す `project` か、`repos` で宣言したプロダクトリポジトリの名前を書きます。
+
+```yaml
+pipeline:
+  parent_validations:
+    - lint-md # プロジェクトリポジトリ（文書の lint）
+    - validate-schema # プロジェクトリポジトリ（schema 検証）
+    - { id: typecheck, repo: app1 } # プロダクトリポジトリ app1
+    - { id: test-unit, repo: app1 }
+    - { id: test-unit, repo: app2 } # 同じ ID を別のリポジトリにも割り当てられる
+```
+
+- 親 runner は、割り当てたリポジトリの task worktree（`<worktree_base>/<task-id>/<repo>/`）を `cwd` にして検証を実行します。そのリポジトリに変更が無くても省略しません。統合先の破損を検出するためです。
+- evidence の runner 検証には `repo` を記録します。記録するのは、task がプロダクトリポジトリを持つ場合か、要素が `{ id, repo }` の場合です。`repos` を持たない project で ID だけを書いた場合、evidence と実行場所は従来と同じです。
+- ログと block 理由では、プロダクトリポジトリの検証を `<repo>:<id>`（例: `app2:test-unit`）と表示します。
+- task の worktree が無いリポジトリへ割り当てた検証は、コマンドを起動せずに `failed` になります。`repos` に無い名前を書いた場合も同じです。
+- 同じ `id` と `repo` の組の重複、`id`・`repo` 以外のキー、`repo` の無いオブジェクトは、agent 起動前の設定エラーになります。
+- 実行するコマンドは、どのリポジトリでも ID ごとの固定 argv です（例: `test-unit` は `npm run test:unit`）。リポジトリ別に command や npm script 名を指定する手段は設けません。プロダクトリポジトリの npm script 名が異なる場合は、プロダクト側の `package.json` に許可リストと同じ名前の script（`test:unit` など）を用意してください。用意できない検証は、そのリポジトリへ割り当てないでください。script が無いまま割り当てると、`npm run` が失敗して親検証は `failed` になります。
+
+`run.register_execution` は、`exec run --register` の既定の実行場所です。`worktree` または `in-place` を指定します。省略時は既存リポジトリとの互換性のため `in-place` です。CLI の `--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。
+
+`run.max_concurrent_runs` は、同じ project で同時に動かせる `exec run` プロセスの数の上限です。最初の run と、register の worktree 実行へ `--join` で合流する run の合計で数えます。正の整数だけを指定でき、省略時や不正な値の場合は `4` です。`1` を指定すると `--join` は無効になります。現在の使用数は `exec slots --project <project-id>` で確認できます。
+
+`pipeline.parent_validation_concurrency` は、1 つの `exec run` プロセスの中で親検証を同時に実行できる項目数の上限です。正の整数だけを指定でき、省略時は `1` です。`--parallel` で複数項目を並行実行しても、親検証は項目単位で 1 本ずつ直列に実行されます。vitest は検証ごとに複数の worker を起動するため、検証が重なるとコンテナの負荷で成果物と無関係なタイムアウトが起きます。これを防ぐための既定値です（PJR-3HHW）。制限の対象は親検証だけで、executor と reporter は `--parallel` のとおり並行に動きます。空きを待つ項目は `Waiting for parent validation slot: <項目> (<検証 ID>); running: <実行中の項目>` をログへ出力し、枠を得たときに `Parent validation slot acquired: <項目>` を出力します。
+
+この直列化は、同じ `exec run` プロセス内の全経路に適用されます。対象は executor 成功後の検証、reporter 再開前の検証の再実行、`exec trial` の検証です。同じ project の `exec run` は `exec-run.lock` によって run 全体で排他されるため、通常は別プロセスの検証が重なることはありません。register の worktree 実行へ `--join` で合流した run どうしは並行して動くため、`exec-run.lock` または合流の枠を取得したプロセスは、同じ上限の枠を `exec/.locks/parent-validation/` にも取得します。これにより、合流した run を跨いでも親検証は `parent_validation_concurrency` 本までに抑えられます（PJR-4HBG）。別プロセスの枠を待つ項目は `Waiting for parent validation slot held by another exec run: <項目> (<検証 ID>)` をログへ出力します。枠は heartbeat 付きのロックで、プロセスが異常終了した場合は heartbeat が止まってから 30 秒で stale とみなされ、後続の run が奪取します。このため、解放漏れで無関係な run が止まり続けることはありません。別 project の run を同時に起動した場合は、ロックの配置が異なるため、互いの検証が重なり得ます。executor が sandbox 内で実行する検証は runner の管理外です。このため、vitest を使う `test-unit` / `test-integration` は `parent_validations` へ寄せ、executor には実行させません。
 
 provider ごとに挙動が異なる設定は `providers.<provider>` に置きます。各キーは対応するグローバル値を完全に置き換え、未指定のキーはグローバル値にフォールバックします。`<provider>` は `pm-members[].provider` に対応します。指定できるキーは次のとおりです。
 
@@ -205,7 +239,7 @@ provider ごとに挙動が異なる設定は `providers.<provider>` に置き�
 - `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先します）。
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
 - `rate_limit_policy.cooldown_seconds`: reset / retry-after が無い retryable signal にだけ使う明示的な延期秒数。未指定の kind は再開時刻を推定しません。
-- `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱います。
+- `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱います。register の worktree 実行では、`--join` で合流した run を跨いで数えます。
 
 `{nickname}` のような `{lower_snake}` は実行のたびに展開される実行時変数であり、ファイルに記法のまま残った状態が完成形です。テンプレート成果物の記入プレースホルダ `_UPPER_SNAKE_`（一度埋めたら消える）とは別の記法で、使い分けは [Template 記述標準](../standards/template-authoring-standard.md) の `他のプレースホルダ記法との使い分け` を正本とします。
 
@@ -222,18 +256,18 @@ providers:
         expert: { model: gpt-5.5, effort: high }
 
   antigravity:
-    command_template: 'agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions --model {model} -p "$(cat)"'
+    command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
         expert: { model: gemini-3.1-pro-high }
       by_nickname:
-        agy-opus-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
 ```
 
 `by_nickname` は、同じ provider の一部 member だけモデルなどを差し替える用途です。層をまたぐ同名変数は意図的な上書きとして許可されます。一方、`nickname`、`mode`、`proficiency` は組み込み変数なので、どの `command_params` 層でも再定義できません。
 
-`max_concurrency` は、同一ホストの単一モデルを共有する provider（例: ローカル Ollama の `opencode`）が複数同時起動でメモリ競合・モデルロード待ちにより不安定になるのを防ぐために使います。グローバルな `--parallel` を下げずに、その provider だけを直列化できます。
+`max_concurrency` は、同一ホストの単一モデルを共有する provider（例: ローカル Ollama の `opencode`）が複数同時起動でメモリ競合・モデルロード待ちにより不安定になるのを防ぐために使います。グローバルな `--parallel` を下げずに、その provider だけを直列化できます。register の並列 pipeline では executor と reporter の各 stage が個別に枠を取得するため、別 provider の executor を並列化しつつ、同一 provider の reporter だけを直列化できます。
 
 ```yaml
 providers:
@@ -355,28 +389,30 @@ specdojo exec run --project <project-id> --task <task-id> \
 
 executor の出力は、そのまま reporter へ渡さずに run 単位の evidence へ整形して保存します。保存先は `<execution_path>/exec/evidence/<task-id>/<run-id>/` です。
 
-| ファイル                                                              | 内容                                                                                |
-| --------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `evidence.json`                                                       | stage の実行結果、変更ファイル一覧、diff サマリ、検証結果、最終メッセージ、ログ参照 |
-| `executor.log`                                                        | executor の標準出力・標準エラーの抜粋（人が調査するための参照先）                   |
-| `reporter-attempt-<n>.stdout.log` / `reporter-attempt-<n>.stderr.log` | 失敗した reporter の形式試行ごとの stdout / stderr（秘匿処理後の生出力）            |
-| `pipeline-state.json`                                                 | executor / reporter の状態・actor・試行回数・成果物参照                             |
+| ファイル                                                              | 内容                                                                                          |
+| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `evidence.json`                                                       | stage の実行結果、変更ファイル一覧、diff サマリ、検証結果、最終メッセージ、失敗理由、ログ参照 |
+| `executor.log`                                                        | executor の標準出力・標準エラーの抜粋（人が調査するための参照先）                             |
+| `reporter-attempt-<n>.stdout.log` / `reporter-attempt-<n>.stderr.log` | 失敗した reporter の形式試行ごとの stdout / stderr（秘匿処理後の生出力）                      |
+| `parent-validation-attempt-<n>-<id>.log`                              | 失敗した親検証の stdout / stderr（秘匿処理後の出力）                                          |
+| `pipeline-state.json`                                                 | executor / reporter の状態・actor・試行回数・成果物参照                                       |
 
 引き渡しの方針は次のとおりです。
 
 - reporter へ渡すのは、plan と `evidence.json` の内容と出力 JSON Schema だけです。ログ本文・生 diff は渡しません。
 - ログは `evidence.json` の `log_refs` に参照（パス・バイト数・切り詰めの有無）としてだけ現れます。ログ本文を読むのは人です。
-- 保存前に上限を適用します。`executor.log` は全体で 64KiB、失敗した reporter のログは stdout / stderr の各ファイルを 64KiB とし、最終メッセージと diff サマリは各 4,000 文字、検証結果は 50 件、変更ファイルは 1,000 件までです。stdout と stderr を分離することで原因調査時にストリームを識別でき、同じ上限を各ストリームへ適用することで片方の大量出力がもう片方を押し出しません。超過分は切り詰め、切り詰めた事実を `log_refs.truncated` に残します。
+- 保存前に上限を適用します。`executor.log` は全体で 64KiB、失敗した reporter のログは stdout / stderr の各ファイルを 64KiB とします。失敗した親検証は stdout / stderr をそれぞれ 1MiB まで取得し、両方を 1 つのログへ保存します。1MiB を超えたストリームは先頭と末尾を残して中間を省略します。最終メッセージと diff サマリは各 4,000 文字、検証結果は 50 件、変更ファイルは 1,000 件までです。超過分を切り詰めた事実は `log_refs.truncated` に残します。
 - 保存前に秘匿値を伏せ字化します（`Bearer` トークン、`sk-`/`gh*_` 形式のキー、`api_key` / `token` / `password` などの値）。evidence と executor / reporter のログに適用します。
 - reporter が非ゼロ終了または形式エラーで失敗した場合、同じ reporter stage 内の各形式試行を `reporter-attempt-<n>.stdout.log` と `reporter-attempt-<n>.stderr.log` に保存します。同じ run を resume して再度失敗した場合は、直近の失敗内容でこれらのファイルと `log_refs` を置き換えます。
+- 親検証は失敗時だけ出力を保存し、成功時は要約だけを記録します。失敗ログは `parent-validation-output` として `log_refs` から参照します。同じ run の resume や統合段の再検証では attempt 番号を増やして新しいログを追加し、以前の失敗ログを上書きしません。親検証の要約は 1,000 文字以内で先頭と末尾を残すため、末尾に出る失敗ケース名と件数を evidence から確認できます。
 - evidence ディレクトリは Git の管理対象です。成功して統合された run のログは履歴に残り、失敗中の worktree では未コミットのまま保持されます。`--force-restart` などで worktree を破棄すると未コミットログも失われるため、必要な調査を先に行います。既知パターンは保存前に秘匿しますが、未知形式の秘密が残る可能性を考慮し、ログを外部共有する前に内容を確認します。
-- executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`）を出します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
-- `pipeline.parent_validations` には `validate-schema`（`npm run validate:schema`）、`typecheck`（`npm run typecheck`）、`test-unit`（`npm run test:unit`）、`test-integration`（`npm run test:integration`）を指定できます。親 runner は executor の成功後・reporter の起動前に、指定順で固定 argv の検証を実行します。
+- executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`）を出します。`validations[].status` は `passed` / `failed` / `not_run` / `not_applicable` / `requires_human` のいずれかです。`not_applicable` はリポジトリが検査の適用条件を満たさない場合に使い、`reason` へ理由を必ず記録します。`requires_human` は、実 agent CLI の起動、利用枠や課金を伴う操作、認証情報やホスト側の操作など、agent の sandbox から実行できない確認だけに使います。実行できるが省略した検証には使わず、`not_run` として記録します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
+- `pipeline.parent_validations` には `validate-schema`（`npm run validate:schema`）、`typecheck`（`npm run typecheck`）、`test-unit`（`npm run test:unit`）、`test-integration`（`npm run test:integration`）、`lint-ts`（`npm run lint:ts`）、`lint-fm`（`npm run lint:fm`）、`lint-md`（`npm run lint:md`）を指定できます。親 runner は executor の成功後・reporter の起動前に、指定順で固定 argv の検証を実行します。
 - executor prompt には設定済み ID と対応コマンドを明示します。executor はそのコマンドや対象限定版を sandbox 内で実行せず、親 runner の結果だけを `source: runner` と許可リスト `id` 付きで同じ `validations` 配列へ保存します。これにより sandbox 内で成立しない検証を親へ移した場合も二重実行しません。
-- 親検証が失敗しても reporter は evidence を受け取り、block 内容を構成できます。ただし reporter が誤って `outcome: complete` を返しても、runner は親検証の失敗を優先してタスクを成功扱いにしません。
+- result の `changed_files` のパスは evidence の `changes` から、execution の evidence、project register とその派生ビュー、当該 result という runner 管理記録を除いて runner が機械生成します。除外後の変更一覧だけを reporter へ渡し、edit の変更説明は evidence のパスと対にして受け取ります。runner はパスで突き合わせるため、説明の順序は問いません。説明が不足したパスには差分参照を促す既定文を記録し、evidence にないパスの説明は捨てます。`outcome` と `block_reason` は stage の状態・終了コード・保護機構が保存した理由・executor / 親 runner の検証から機械生成します。reporter の JSON Schema は文章項目と対応づけ用のパスだけを受け付け、いずれかの検証が failed または `not_run` なら、reporter の文章にかかわらず機械判定は blocked です。ただし、executor が `not_run`（親 runner へ委譲）と記録したコマンドを親 runner が project で同じコマンドとして実行し成功していれば、その `not_run` は満たされたものとして扱います。さらに、`npm run <name>` に対応する script がない、`npx <package>` の package が `dependencies` / `devDependencies` にない、または SpecDojo サブコマンドの設定上の適用条件を満たさないことを runner が機械的に確定できる場合、その `not_run` は block せず、edit result の申し送りへ「適用外の検証（runner の判定）」として追記します。SpecDojo の起動形は `specdojo <subcommand>`、`npx specdojo <subcommand>`、ソース／配布済み CLI の直接起動を認識し、`catalog validate` は対象 project の `catalog_path` で判定します。設定が読めない、対象 project を特定できない、または適用条件を未定義のサブコマンドは機械的な救済をせず、通常の `not_run` として扱います。executor の failed は親 runner の成功や適用外判定で打ち消しません。`npm run check` のように npm script を `&&` でつないだだけの合成コマンドを executor が `not_run` とした場合は、`package.json` の script を展開し、構成する各コマンドが親 runner の親検証か executor 自身の検証で通っていれば満たされたものとして扱います。`npm test` は、`npm run test:unit` と `npm run test:integration` の両方が通っていれば満たされたものとします。構成するコマンドの script の中身と同じコマンドを executor が直接実行して通した場合も満たします（`tsx` の起動の書き方の違いはそろえて比べます）。任意のシェルを含む script は展開しません。理由付きの `not_applicable` は block の理由にせず、runner が edit result の申し送りへ「適用外の検証: `<コマンド>`（<理由>）」として機械的に追記します。ただし、理由がない場合、`npm run <name>` の script が存在する場合、または `npx <package>` の package が `dependencies` / `devDependencies` に存在する場合は誤申告として blocked にします。SpecDojo サブコマンドは package の有無だけでは反証せず、既知の適用条件を設定から判定します。適用条件が未定義なら理由付きの agent の申告に従います。executor の `requires_human` は block の理由にせず、runner が edit result の申し送りへ「人の確認が必要: `<コマンド>`（<要約>）」として機械的に追記します。項目は review へ進み、人が確認してから close します。
 - reporter の出力は JSON Schema で厳格に検証します。形式不正のときは同じ plan と evidence のまま reporter だけを最大 3 回再実行し、executor は再実行しません。
-- reporter stage の再開では、現在の設定 ID と一致する親検証が保存済み evidence にそろっている場合だけ executor evidence を再利用します。保存済みの親検証がすべて成功していれば再実行しません。`failed` / `not_run` があれば、親 runner が現在の worktree で固定許可リストの親検証を再実行し、同じ ID の結果を evidence 上で置換してから reporter へ渡します。executor 由来の検証は再実行・置換しません。設定 ID が変わった、または結果が欠けている場合、Schedule 実行は新しい executor run としてやり直し、register 実行は明示的な再実行を促して再開を拒否します。
-- result の frontmatter は runner が scaffold した内容を保ち、本文は検証済み JSON から runner が描画します。reporter はファイルを書きません。
+- reporter stage の再開では、現在の設定 ID と一致する親検証が保存済み evidence にそろっている場合だけ executor evidence を再利用します。`{ id, repo }` を使う場合は、ID とリポジトリの組が一致することを求めます。再実行時も同じ割り当てで、各リポジトリの worktree を `cwd` にします。保存済みの親検証がすべて成功していれば再実行しません。`failed` / `not_run` があれば、親 runner が現在の worktree で固定許可リストの親検証を再実行し、同じ ID の結果を evidence 上で置換してから reporter へ渡します。過去の親検証ログは置換せず、新しい失敗ログだけを追加します。executor 由来の検証は再実行・置換しません。設定 ID が変わった、または結果が欠けている場合、Schedule 実行は新しい executor run としてやり直し、register 実行は明示的な再実行を促して再開を拒否します。
+- result の frontmatter は runner が scaffold した内容を保ち、本文は検証済みの reporter 文章と evidence 由来の事実を組み合わせて runner が描画します。reporter はファイルを書きません。
 
 ## 7. provider 設定の配布と scaffold
 
@@ -384,19 +420,21 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 
 配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
 
-| provider    | 配布内容                                                                                                                                            | 配置先                                 |
-| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| claude      | `agents/*.md`、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                                               | `.claude/agents/`、`.specdojo/claude/` |
-| codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）                                                                                             | `.codex/agents/`                       |
-| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                           | `.opencode/agents/`                    |
-| copilot     | `pm-members-snippet.yaml`（member 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
-| antigravity | なし（`agy` は定義ファイルを持たず、member と `providers.antigravity` の設定だけで動く）                                                            | —                                      |
+| provider    | 配布内容                                                                                                                                              | 配置先                                 |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| claude      | `agents/*.md`、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                                                 | `.claude/agents/`、`.specdojo/claude/` |
+| codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）                                                                                               | `.codex/agents/`                       |
+| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                             | `.opencode/agents/`                    |
+| copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
+| antigravity | `orchestrator.md`、agent / provider 設定スニペット。`settings.global.json` は `--global` 用のマージ原本であり repository へは配置しない               | `.specdojo/antigravity/`               |
 
 導入手順とテンプレートに含めない手動設定（`opencode.json`、`.codex/config.toml` など）は各 `templates/<provider>/README.md` を参照します。
 
 `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` には `--settings .specdojo/claude/settings.{mode}.json` を指定します。`--permission-mode bypassPermissions` は使いません（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します）。
 
 Claude member の `mode` はこの `{mode}` を権限プロファイル名へ展開するためにも使います。edit executor は `edit`、review executor は `review`、reporter は `report` を指定します。reporter の適格性は task mode ではなく `stage_role: reporter` で決まり、`settings.report.json` は Edit/Write と `git add` / `git commit` を deny します。
+
+`settings.edit.json` は、利用者のリポジトリ固有の構成（ルート直下の成果物や `app/`・`lib/` など）にも対応できるよう、既定でリポジトリ全体への Edit を許可します。一方、agent の権限や親 runner・hook・CI の実行内容を変更できる `.specdojo/`、agent 設定、CI 設定、ルート直下の `package.json` などは deny します。deny の範囲は runner の agent-config-write 検査と同じ保護対象を unit test で照合し、Claude Code の事前拒否と runner の事後検査を重ねます。
 
 ### 7.1. scaffold コマンド
 
@@ -415,9 +453,11 @@ specdojo config scaffold --provider claude
 - 配布原本はインストール済み package のルートから解決します。`templates/<name>/` が存在しない provider を指定した場合は、指定可能な provider 一覧を添えてエラーにします。
 - 配置先に同名ファイルが存在する場合は上書きせず `Skipped (already exists):` を出力します。`--force` 指定時のみ上書きします。ファイルごとに `Written:` / `Skipped:` を 1 行ずつ出力します（既存の scaffold 系コマンドの出力形式に合わせます）。
 - `--dry-run` 指定時は書き込みを行わず、コピー予定のファイル一覧を表示します。
+- `antigravity` で `--global` を明示した場合だけ、`~/.gemini/antigravity-cli/settings.json` の `permissions.allow` / `deny` / `ask` へ不足 rule を追記します。既存キーと配列要素は保持し、書き換え前に timestamp 付きバックアップを作ります。`--global --dry-run` は追加 rule の差分だけを表示し、設定もバックアップも作りません。
+- `--global` をサポートしない provider へ指定した場合はエラーにします。`--force` はグローバル設定の既存値を上書きしません。
 - コピー完了後、次の 2 点を案内メッセージとして出力します。配置ファイルのコミットが必要であること（worktree 実行の前提）、および `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` に `--settings` の指定が必要であること。
 - `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねます。scaffold は `.specdojo/specdojo.config.json` のパス設定に基づく書き換えを行いません（テンプレートを事実上の推奨レイアウト前提で配布します）。
-- 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。コマンド側は provider 名からディレクトリを解決するだけで、provider ごとの分岐を持ちません。
+- 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。repository 内へのコピーは provider 名からディレクトリを解決します。ユーザーディレクトリ設定も扱う provider だけは、グローバル設定原本と配置先を実装の許可リストへ明示します。
 
 ## 8. agent 権限とプロンプトインジェクション対策
 
@@ -439,6 +479,8 @@ provider によらず、exec の実行構造そのものが次の境界を提供
 ### 8.2. provider 別の権限設定
 
 **claude** は `provider 設定の配布と scaffold` のとおり、ロール別 `--settings`（edit は `docs/**`、`src/**`、`tests/**`、review は result 配下のみ書き込み可）でパス単位に制限します。`--permission-mode bypassPermissions` は使わず、`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します。
+
+**antigravity** は `config scaffold --provider antigravity --global` で fine-grained permission を追記します。グローバル設定は利用者のすべてのリポジトリに効くため、allow は読み取りの Git コマンド（`git status` / `diff` / `log` / `show`）だけとし、`npm run` など任意のスクリプトを実行できる command は含めません。deny には、Git の変更操作・破壊的 command・秘密情報・固定保護設定へのアクセスを入れます。`--dangerously-skip-permissions` は使いません。CLI の permission に加えて、実行後の provider 非依存ガードでも保護設定の変更を block します。
 
 **codex** はパス単位の permission 機構を持たず、sandbox（`read-only` / `workspace-write` / `danger-full-access`）の粒度で制御します。review でも result の記入が必要なため `read-only` にはできず、edit / review とも `workspace-write` を使います。command template には次を明示します。
 
@@ -467,7 +509,7 @@ providers:
 
 `bash` を deny 基点の許可リストにするのは、`git add` / `git commit` を含む任意コマンドを塞ぐためで、denylist（`git push` などの列挙）では不十分です。ローカル Ollama 前提のため外部送信面はもともと小さいですが、`read` の `.env` / `secrets` deny と `external_directory: deny` は維持します。
 
-**copilot**（GitHub Copilot CLI）は command のフラグで権限を制御します。deny は allow より常に優先され、`--allow-all-tools` すら上書きできます。`pm-members.yaml` には copilot member を `disabled: true` で定義済みで、起動コマンドは `providers.copilot.command_template` に定義します。有効化する際も次の構成を維持します。
+**copilot**（GitHub Copilot CLI）は command のフラグで権限を制御します。deny は allow より常に優先され、`--allow-all-tools` すら上書きできます。`.specdojo/agent-members.yaml` には copilot member を `disabled: true` で定義し、起動コマンドは `providers.copilot.command_template` に定義します。有効化する際も次の構成を維持します。
 
 ```yaml
 providers:
@@ -490,21 +532,20 @@ providers:
 providers:
   antigravity:
     command_template: >-
-      agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions
-      --model {model} -p "$(cat)"
+      agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
         expert: { model: gemini-3.1-pro-high }
       by_nickname:
-        agy-sonnet-executor: { model: claude-sonnet-4-6 }
-        agy-opus-executor: { model: claude-opus-4-6-thinking }
-        agy-opus-review-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-executor: { model: claude-sonnet-4-6 }
+        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-expert-review-executor: { model: claude-opus-4-6-thinking }
         agy-gpt-executor: { model: gpt-oss-120b-medium }
 ```
 
 - `--sandbox` は書き込み先を `~/.gemini/antigravity-cli/scratch/` へ逃がすため、`--add-dir "$(pwd)"` で作業ディレクトリ（worktree）を明示して成果物へ書けるようにします。`--add-dir` なしでは成果物が更新されません。
-- `--dangerously-skip-permissions` は非対話実行に必須です。境界は worktree、保護設定（`agent-config-write`）、commit 許可リストで作ります。
+- 非対話実行に必要な permission rule は `config scaffold --provider antigravity --global` で設定します。すべてのリポジトリに効くため、先に `--global --dry-run` で差分を確認します。`--dangerously-skip-permissions` は deny rule を含む承認境界を迂回するため使いません。
 - モデルは `agy models` で確認します。標準モデルは `by_proficiency`、Antigravity 経由の Claude / GPT は `by_nickname` で選びます。モデル ID は推論強度を含む（`gemini-3.8-flash-medium` など）ため `--effort` は併用しません。ID と `--effort` が食い違うと `invalid model selection` で起動に失敗します。
 - 資格情報はコンテナ内では `~/.gemini/antigravity-cli/antigravity-oauth-token` に保存されます。devcontainer では `~/.gemini` を名前付きボリュームにして永続化します。
 - `--output-format json --json-schema <file>` は `structured_output` を含む JSON エンベロープを返します。runner の reporter は stdout の本文から JSON を読むため、現時点では既定のテキスト出力を使います。
@@ -536,7 +577,7 @@ providers:
 - `retrofit` の `evidence_refs` は plan 本文へ読み取り専用の調査入力として展開されますが、`targets` や実践の型ディレクトリの許可には変換されません。実装エビデンスへの変更は commit 対象外です。
 - agent で HEAD に plan が無い場合、または human で HEAD に result が無い場合など、frontmatter から task 識別を復元できない場合のみ従来の除外リスト方式へフォールバックします。CLI 経由では正本となる plan / result を checkpoint するため、agent 側からこの分岐を誘発することはできません。
 - この許可リストは specdojo CLI が行う commit にのみ効くため、**agent 自身に `git commit` を許可しないこと**が全 provider 共通の前提になります。agent が exec branch 上に直接 commit すると許可リストを経由せず merge に到達します。claude は settings の allow に `git add` / `git commit` を含めません（`-p` 実行では未許可ツールは自動拒否されます）、codex は共有 `.git` が worktree 外にあるため sandbox が書き込みを遮断します、opencode は `bash` の許可リストで塞ぎます。
-- worktree 内をパス単位で制約しない provider（codex / copilot）への本命の対策であると同時に、claude / opencode に対しても provider 設定と独立した深層防御として機能します。provider 非依存の specdojo CLI 側実装であり、`pm-members.yaml` の変更を必要としません。
+- worktree 内をパス単位で制約しない provider（codex / copilot）への本命の対策であると同時に、claude / opencode に対しても provider 設定と独立した深層防御として機能します。provider 非依存の specdojo CLI 側実装です。
 
 ### 8.4. 親 runner が実行する設定と Git 状態の変更ガード
 
@@ -549,10 +590,11 @@ commit 許可リストだけでは、register 由来の除外リスト方式や�
 - `AGENTS.md`、`CLAUDE.md`、`GEMINI.md`
 - `commitlint.config.*`、`.commitlintrc*`
 - `.github/workflows/**`、`.gitlab-ci.*`、`.gitlab/ci/**`、`.circleci/**`、Azure Pipelines / Jenkins の設定
+- `.specdojo/**`。この中の `agent-members.yaml` は agent の identity・起動上書き・選択属性を含むため、agent が自身や他の agent の定義を書き換えられないようにする
 
 runner は agent の各試行前後でファイル内容を比較し、差分があれば親検証と reporter を起動せず block します。worktree の commit 前には Git status と exec branch の commit 済み差分を再検査するため、register の除外リスト方式や agent 自身による commit があっても merge されません。違反時は `agent-config-write:` と対象パスを標準エラーへ出力します。この定義は `exec-defaults.yaml` や member 設定から解除・拡張できません。
 
-保護対象の候補はパスの固定定義で分類し、実際に block する対象は `agentProtectedConfigPaths()` で確定します。`.specdojo/doc-index.json` は `index build` が再生成し commit しない既知の生成物なので、リポジトリの ignore 規則にも一致する場合だけ除外します。判定には `git check-ignore --no-index` を使い、過去に追跡されていた worktree でも生成物として扱います。任意の ignore 対象を除外すると、agent が `.gitignore` と新規設定を同時に作って回避できるため、除外は既知の生成物の固定リストに限定します。Git による判定が失敗した場合や ignore 規則から外れた場合は除外せず、保護側へ倒します。agent 前後の snapshot と commit 前の再検査はこの判定を共有します。
+保護対象の候補はパスの固定定義で分類し、実際に block する対象は `agentProtectedConfigPaths()` で確定します。`.specdojo/doc-index.json` は `index build` が再生成し commit しない既知の生成物なので、リポジトリの ignore 規則にも一致する場合だけ除外します。判定には `git check-ignore --no-index` を使い、過去に追跡されていた worktree でも生成物として扱います。任意の ignore 対象を除外すると、agent が `.gitignore` と新規設定を同時に作って回避できるため、除外は既知の生成物の固定リストに限定します。Git による判定が失敗した場合や ignore 規則から外れた場合は除外せず、保護側へ倒します。agent 前後の snapshot と commit 前の再検査はこの判定を共有します。`pm-members.yaml` は schema により人間だけを受け付ける通常成果物なので、この保護対象には含めません。
 
 agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。除去対象は`src/git-environment.ts`の`GIT_LOCAL_ENV_VARS`を正本とします。Vitestの全3設定も共通setupを使ってtest module読込前に同じ変数をworkerから除去するため、Git hook経由で`npm test`が起動されても、テストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
 
@@ -573,17 +615,18 @@ executor / reporter pipelineのexecutor promptは、commitとrepository設定を
 
 自動記録は edit result の申し送り節（無い場合は末尾に専用節）へ書き込み、agent が書いた申し送りは残したまま自動記録を後ろへ追加します。同じ result へ再度 block した場合は前回の自動記録を置き換えます。frontmatter と他節（`実施内容` / `変更ファイル` のプレースホルダを含む）は変更しないため、未記入 result を block として扱う判定と終了コードの契約はそのままです。記録先の result が無い run では自動記録を行わず、その旨を実行ログへ出力します。`exec trial` は exec result を持たないため、違反は trial の evidence と標準エラーにのみ残ります。
 
-### 8.5. pm-members.yaml の値検証（nickname インジェクション対策）
+### 8.5. agent-members.yaml の値検証（nickname インジェクション対策）
 
-`nickname` は `providers.<provider>.command_template` の `{nickname}` へ無エスケープで展開され、展開後のコマンドは `shell: true` で実行されます。`pm-members.yaml` を書き換えられる者が `nickname` にシェルメタ文字を仕込むと、command 起動時にコマンドインジェクションが成立し得ます。これを次の 2 層で防ぎます。
+`nickname` は `providers.<provider>.command_template` の `{nickname}` へ無エスケープで展開され、展開後のコマンドは `shell: true` で実行されます。これを次の 3 層で防ぎます。
 
-- 入力検証: `pm-members.yaml` の先頭 modeline を `pm-members.schema.yaml` へ向け、CI の `npm run validate:schema` が同じ宣言を読んで検証します。`nickname` は schema の `^[a-z0-9][a-z0-9_-]{0,62}$` に一致しない値を拒否します。
-- 実行時の深層防御: 起動コマンドを組み立てる `resolveMemberCommand`（`src/exec-agent-config.ts`）は、`{nickname}` を展開する直前に同じパターンで `nickname` を再検証し、不一致の場合は command を組み立てずに例外を送出します。schema 検証を経ていない `pm-members.yaml` を読み込んだ場合でも、不正な `nickname` が shell へ到達する前に停止します。
+- 書き込み境界: agent 定義を保護対象の `.specdojo/agent-members.yaml` に置きます。
+- 入力検証: `loadMemberRoster` が `agent-members.schema.yaml` を実行時に検証し、`nickname` は `^[a-z0-9][a-z0-9_-]{0,62}$` に一致しない値を拒否します。
+- 実行時の深層防御: 起動コマンドを組み立てる `resolveMemberCommand` は、`{nickname}` を展開する直前に同じパターンで再検証します。
 
 再検証のパターンは `pm-members.schema.yaml` の `nickname` と同一に保ちます（一方を変更したら他方も合わせます）。
 
 ## 9. 変更手順
 
-新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加します。必要な能力を持つ agent が `pm-members.yaml` に存在しない場合だけ、新しい agent を追加します。
+新しい作業要件を追加する場合は、まず `sch-strategy-<track>.yaml` の phase に `capabilities` / `proficiency` を追加します。必要な能力を持つ agent が `.specdojo/agent-members.yaml` に存在しない場合だけ、保護設定を変更できる人間または orchestrator が追加します。
 
 `approach: rulebook-maintenance` のような進め方の違いも phase に直接定義します。実践の型メンテナンスを通常成果物作業に暗黙で混ぜず、必要な phase として明示します。

@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_caae0ed8b31040259c2935deb345c672
+  ts: "2026-10-04T03:46:05Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: review や start への遷移で block_reason が残る
+    - field: description
+      from: ""
+      to: register review で waiting から review へ戻しても、frontmatter の block_reason が残る（PJR-27Z9 で観測）。register update にも block_reason を消す手段がなく、解消済みの理由が表示され続ける
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_df09979a7c664adcaa38c34f30dff80b
+  ts: "2026-10-04T04:50:28Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_caae0ed8b31040259c2935deb345c672
+- v: 1
+  id: reg_b61ab6fb13394702869d4266361ed5d4
+  ts: "2026-10-04T05:05:00Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent-git-state-write: Git state changes detected; fields=HEAD; agent must leave commits and repository configuration changes to the parent runner"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent-git-state-write: Git state changes detected; fields=HEAD; agent must leave commits and repository configuration changes to the parent runner"
+  previous_event_id: reg_df09979a7c664adcaa38c34f30dff80b
+- v: 1
+  id: reg_3c9b711488eb478499d23e359a2ca69a
+  ts: "2026-10-04T05:08:52Z"
+  action: review
+  actor: claude
+  from_status: waiting
+  to_status: review
+  reason: block は作業者の並行 commit が原因。成果を確認して a4f5daa91 で commit した
+  changes:
+    - field: status
+      from: waiting
+      to: review
+    - field: block_reason
+      from: "agent-git-state-write: Git state changes detected; fields=HEAD; agent must leave commits and repository configuration changes to the parent runner"
+      to: "-"
+  previous_event_id: reg_b61ab6fb13394702869d4266361ed5d4
+- v: 1
+  id: reg_74c08ff2bb9f4affb08dda7f19059f2c
+  ts: "2026-10-04T05:59:33Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 実際の遷移と npm run check で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: waiting 以外への遷移で block_reason を消し、変更前の理由はイベントに残すようにした。register update --block-reason を追加した。実際の遷移と npm run check で確認した
+  previous_event_id: reg_3c9b711488eb478499d23e359a2ca69a

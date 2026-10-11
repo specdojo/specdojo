@@ -1,0 +1,54 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-74d127e2ce47 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-74d127e2ce47
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/recipes/pm-members-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-members-recipe.md
+document start: docs/ja/specdojo/recipes/pm-roles-recipe.md
+document complete: docs/ja/specdojo/recipes/pm-roles-recipe.md
+document start: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md
+document start: docs/ja/specdojo/recipes/prj-charter-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-charter-recipe.md
+document start: docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md
+document start: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md
+document start: docs/ja/specdojo/recipes/prj-overview-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-overview-recipe.md
+document start: docs/ja/specdojo/recipes/prj-scope-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-scope-recipe.md
+document start: docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md
+document complete: docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md
+document start: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
+document start: docs/ja/specdojo/rulebooks/pm-roles-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pm-roles-rulebook.md
+document start: docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md
+document start: docs/ja/specdojo/rulebooks/sac-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/sac-rulebook.md
+document start: docs/ja/specdojo/rulebooks/sch-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/sch-rulebook.md
+document start: docs/ja/specdojo/rulebooks/sf-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/sf-index-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-74d127e2ce47/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-08T21:01:55Z	docs/ja/specdojo/recipes/pm-members-recipe.md	1	passed	94	pass	97	8	agy-expert-executor	machine	none		
+2026-10-08T21:03:36Z	docs/ja/specdojo/recipes/pm-roles-recipe.md	1	passed	99	needs-work	79	8	agy-expert-executor	machine	none		
+2026-10-08T21:05:04Z	docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md	1	passed	86	needs-work	93	3	agy-expert-executor	machine	none		
+2026-10-08T21:06:51Z	docs/ja/specdojo/recipes/prj-charter-recipe.md	1	passed	105	pass	94	3	agy-expert-executor	machine	none		
+2026-10-08T21:08:26Z	docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md	1	passed	93	needs-work	87	10	agy-expert-executor	machine	none		
+2026-10-08T21:10:03Z	docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md	1	passed	95	pass	89	13	agy-expert-executor	machine	none		
+2026-10-08T21:11:40Z	docs/ja/specdojo/recipes/prj-overview-recipe.md	1	passed	95	needs-work	81	11	agy-expert-executor	machine	none		
+2026-10-08T21:13:43Z	docs/ja/specdojo/recipes/prj-scope-recipe.md	1	passed	121	needs-work	81	10	agy-expert-executor	machine	none		
+2026-10-08T21:15:10Z	docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md	1	passed	85	needs-work	82	9	agy-expert-executor	machine	none		
+2026-10-08T21:16:39Z	docs/ja/specdojo/rulebooks/pm-members-rulebook.md	1	passed	87	pass	93	3	agy-expert-executor	machine	none		
+2026-10-08T21:18:12Z	docs/ja/specdojo/rulebooks/pm-roles-rulebook.md	1	passed	91	needs-work	84	7	agy-expert-executor	machine	none		
+2026-10-08T21:19:37Z	docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md	1	passed	83	pass	97	2	agy-expert-executor	machine	none		
+2026-10-08T21:21:11Z	docs/ja/specdojo/rulebooks/sac-rulebook.md	1	passed	92	needs-work	93	3	agy-expert-executor	machine	none		
+2026-10-08T21:22:45Z	docs/ja/specdojo/rulebooks/sch-rulebook.md	1	passed	92	needs-work	92	3	agy-expert-executor	machine	none		
+2026-10-08T21:24:37Z	docs/ja/specdojo/rulebooks/sf-index-rulebook.md	1	passed	110	needs-work	48	23	agy-expert-executor	machine	none		

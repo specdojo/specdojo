@@ -22,7 +22,7 @@ export function stripSpecdojoFindingComments(raw: string): string {
   if (lines.at(-1) === "") lines.pop();
 
   const output: string[] = [];
-  for (let index = 0; index < lines.length; ) {
+  for (let index = 0; index < lines.length;) {
     const line = lines[index];
     if (!isBlankLine(line) && !FINDING_COMMENT_LINE_RE.test(lineBody(line))) {
       output.push(line);

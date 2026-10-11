@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-34MQ",
+  "run_id": "20260926T134522864Z-4a9453bf",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-26T13:45:22.864Z",
+    "completed_at": "2026-09-26T13:53:30.889Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-34mq-plain-repository-naming-readme.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/directory-layout-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": "README.md                                          | 63 ++++++++++++----------\n .../pjr-34mq-plain-repository-naming-readme.md     | 19 ++++---\n docs/ja/specdojo/guides/docs-structure-guide.md    | 20 +++----\n docs/ja/specdojo/guides/quick-start-guide.md       | 14 +++--\n docs/ja/specdojo/guides/specdojo-overview-guide.md |  2 +-\n .../references/directory-layout-reference.md       |  6 +--\n .../references/specdojo-config-reference.md        |  2 +-\n 7 files changed, 71 insertions(+), 55 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write README.md docs/ja/projects/prj-0001/controls/project-register/pjr-34mq-plain-repository-naming-readme.md docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/guides/specdojo-overview-guide.md docs/ja/specdojo/references/directory-layout-reference.md docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "passed",
+      "summary": "対象Markdown 7件を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint README.md docs/ja/projects/prj-0001/controls/project-register/pjr-34mq-plain-repository-naming-readme.md docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/guides/specdojo-overview-guide.md docs/ja/specdojo/references/directory-layout-reference.md docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "passed",
+      "summary": "対象Markdown 7件にエラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "リポジトリ全体のMarkdown lintが通過した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec refresh --project prj-0001 && node --import tsx src/specdojo.ts catalog build --project prj-0001 && node --import tsx src/specdojo.ts register build --project prj-0001 && node --import tsx src/specdojo.ts yaml-pages build && node --import tsx src/specdojo.ts dashboard build --project prj-0001 && node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "IPC不要の起動方法で全派生文書を生成した。履歴イベントに関する既存warningのみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate && node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "登録簿生成、catalog検証、文書索引生成が通過した。未作成成果物に関する既存warningのみ。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分に空白エラーなし。旧用語と旧見出し参照が対象文書に残っていないことも確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "failed",
+      "summary": "sandboxがtsxのIPCソケット作成をEPERMで拒否し、文書生成前に停止した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm --prefix packages/docs-site run docs:build",
+      "status": "failed",
+      "summary": "VitePressは起動したが、sandboxがChromiumプロセスを拒否しMermaid SVG生成時に停止した。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-34MQ\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-U68KXu/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-U68KXu/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-U68KXu/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-U68KXu/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-34MQ/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-34MQ/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-34MQ\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-kznE9C/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-jN6cBV/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-2SmA5y/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-GKQWqj/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-23VmlC/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-XRz4q4/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-Eskeoj/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-ZMQwoe/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  107 passed (107)\n      Tes…"
+    }
+  ],
+  "final_message": "READMEと関連文書を平易なリポジトリ名称へ統一した。docs buildのみsandbox制約で未完了。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-34MQ/20260926T134522864Z-4a9453bf/executor.log",
+      "bytes": 3045,
+      "truncated": false
+    }
+  ]
+}

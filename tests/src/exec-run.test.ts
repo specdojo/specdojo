@@ -1,12 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   buildExecutorPrompt,
+  commitSubject,
   executorRequirements,
   extractBlockReason,
   isRateLimitError,
   parseExecRunBusyPolicy,
   pipelineRecoveryMeta,
   rebuildStaleGeneratedTracksForCycle,
+  resolveRegisterWorktree,
   resolveAgentOverride,
   reporterRequirements,
   selectCandidates,
@@ -17,6 +19,24 @@ import { join } from "node:path";
 import type { ExecDefaultsConfig, RateLimitDetection } from "../../src/exec-agent-config.js";
 import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
 
+describe("commitSubject", () => {
+  const prefix = "exec(register PJR-AB12): ";
+
+  it("100文字のsubjectを変更しない", () => {
+    const title = "a".repeat(100 - prefix.length);
+
+    expect(commitSubject(prefix, title)).toBe(`${prefix}${title}`);
+  });
+
+  it("101文字のsubjectを省略記号付き100文字へ切り詰める", () => {
+    const title = "a".repeat(101 - prefix.length);
+    const subject = commitSubject(prefix, title);
+
+    expect(subject).toHaveLength(100);
+    expect(subject).toBe(`${prefix}${"a".repeat(99 - prefix.length)}…`);
+  });
+});
+
 describe("parseExecRunBusyPolicy", () => {
   it("既定を fail とし、skip / wait / fail だけを受け入れる", () => {
     expect(parseExecRunBusyPolicy(undefined)).toBe("fail");
@@ -24,6 +44,25 @@ describe("parseExecRunBusyPolicy", () => {
     expect(parseExecRunBusyPolicy("wait")).toBe("wait");
     expect(parseExecRunBusyPolicy("fail")).toBe("fail");
     expect(() => parseExecRunBusyPolicy("retry")).toThrow(/--if-busy/);
+  });
+});
+
+describe("resolveRegisterWorktree", () => {
+  it("設定の既定を使い、CLI の明示指定を優先する", () => {
+    expect(resolveRegisterWorktree({}, {})).toBe(false);
+    expect(resolveRegisterWorktree({}, { run: { register_execution: "worktree" } })).toBe(true);
+    expect(
+      resolveRegisterWorktree({ inPlace: true }, { run: { register_execution: "worktree" } }),
+    ).toBe(false);
+    expect(
+      resolveRegisterWorktree({ worktree: true }, { run: { register_execution: "in-place" } }),
+    ).toBe(true);
+  });
+
+  it("--worktree と --in-place の同時指定を拒否する", () => {
+    expect(() => resolveRegisterWorktree({ worktree: true, inPlace: true }, {})).toThrow(
+      /either --worktree or --in-place/,
+    );
   });
 });
 
@@ -143,6 +182,64 @@ describe("extractBlockReason", () => {
 
     expect(prompt).toContain("identifiers or field names containing an");
     expect(prompt).toContain("`depends_on`");
+  });
+
+  it("requires_human を sandbox 外で人が行う確認だけに限定する", () => {
+    const prompt = buildExecutorPrompt("# Plan\n");
+
+    expect(prompt).toContain("`requires_human`");
+    expect(prompt).toContain("cannot run from the agent sandbox");
+    expect(prompt).toContain("Do not use it for a check that could run but was skipped");
+    expect(prompt).toContain('"status":"passed|failed|not_run|not_applicable|requires_human"');
+  });
+
+  it("not_applicable に理由を要求し、機械的な反証を伝える", () => {
+    const prompt = buildExecutorPrompt("# Plan\n");
+
+    expect(prompt).toContain("`not_applicable`");
+    expect(prompt).toContain("non-empty `reason`");
+    expect(prompt).toContain("npm script or npx package is present");
+  });
+
+  it("再開 executor に既存差分と全 target の構造化確認を要求する", () => {
+    const prompt = buildExecutorPrompt("# Plan\n", [], {
+      resumed: true,
+      existingChanges: ["docs/a.md"],
+      initialChangeTargets: ["docs/first-attempt.md"],
+      resumeHandoff: ["parent validation test-unit failed: 1 test failed"],
+    });
+
+    expect(prompt).toContain("resumes an interrupted attempt");
+    expect(prompt).toContain("`target_coverage`");
+    expect(prompt).toContain("incomplete lower bound, not an upper bound");
+    expect(prompt).toContain("`docs/first-attempt.md`");
+    expect(prompt).toContain("`docs/a.md`");
+    expect(prompt).toContain("parent validation test-unit failed: 1 test failed");
+  });
+
+  it("plan が targets を宣言した場合は初回変更集合より宣言を優先する", () => {
+    const prompt = buildExecutorPrompt(
+      [
+        "---",
+        "specdojo:",
+        "  task_id: PJR-AB12",
+        "  mode: edit",
+        "  targets:",
+        "    - test:declared-doc",
+        "---",
+        "",
+        "# Plan",
+      ].join("\n"),
+      [],
+      {
+        resumed: true,
+        initialChangeTargets: ["docs/first-attempt.md"],
+      },
+    );
+
+    expect(prompt).toContain("Declared targets take");
+    expect(prompt).not.toContain("incomplete lower bound, not an upper bound");
+    expect(prompt).not.toContain("`docs/first-attempt.md`");
   });
 
   it("truncates an overly long reason to keep the block event log readable", () => {

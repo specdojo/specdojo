@@ -1,0 +1,5 @@
+再開同期を修正しました。未コミット・未追跡成果を退避し、`--index` なしで復元します。競合時は同期 merge を巻き戻して成果を保持します。単一・複数リポジトリ、CLI 再開の回帰テストと運用文書も更新しました。テスト・型検査・lint は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"再開前同期で未コミット成果を安全に退避・復元し、競合時に成果を保持して停止する実装と回帰テストを追加した。","validations":[{"command":"npx prettier --write src/exec-repo-integration.ts tests/src/exec-task-repos.integration.test.ts tests/src/exec-register-resume.integration.test.ts docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"対象5ファイルを整形した。"},{"command":"npx prettier --write tests/src/exec-register-resume.integration.test.ts tests/src/exec-task-repos.integration.test.ts","status":"passed","summary":"追加テストの最終整形を確認した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーはない。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"ドキュメント索引2306件を正常に生成した。"}]}
+</specdojo_executor_evidence>

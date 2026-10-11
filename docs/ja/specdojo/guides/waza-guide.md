@@ -41,7 +41,20 @@ SpecDojo は道場のメタファーとして、`specdojo` CLI のコマンド�
 | 定期実行定義               | `rtn-*.yaml`               | `routine`      |
 | ドキュメントIDインデックス | `.specdojo/doc-index.json` | `index`        |
 
-### 1.1. 生成系動詞の標準
+### 1.1. 技の名前
+
+主要な CLI 機能には、仕様道（Spec-Dō）の道場で使う技の名前を付けています。
+
+| 技の名前 | CLI の機能 | 役割                                                                               |
+| -------- | ---------- | ---------------------------------------------------------------------------------- |
+| 記帳     | `register` | 起票から状態の遷移・決定・完了までを記録し続ける。最初の `register add` は「起票」 |
+| 実戦     | `exec`     | 型に沿って実際の成果物を作る                                                       |
+| 評定     | `grade`    | 型に照らして品質を 0〜4 で評価する                                                 |
+| 講評     | `review`   | 評定を入力に、タスクの完了を判断する                                               |
+
+技の名前は表示と文書で使う呼び方です。CLI のコマンド名、オプション、設定のキーは変更しません。
+
+### 1.2. 生成系動詞の標準
 
 生成や実行を伴うコマンドは、出力の性質と副作用に応じて次の動詞を使います。
 
@@ -183,7 +196,7 @@ specdojo schedule build --project prj-0001 --track launch --force
 # 5. 実行状態、Ready、CPMを生成する
 specdojo exec refresh --project prj-0001
 
-# 6. pm-members.yaml と provider 設定を用意して Readyタスクを実行する
+# 6. `.specdojo/agent-members.yaml` と provider 設定を用意して Readyタスクを実行する
 specdojo exec run --project prj-0001 --auto --parallel 5
 ```
 

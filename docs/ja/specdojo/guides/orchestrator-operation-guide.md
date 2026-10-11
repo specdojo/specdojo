@@ -80,6 +80,27 @@ frontier モデルは Claude Code が `opus`、Codex が `gpt-5.6-sol` に対応
 
 worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
 
+### 2.1. 利用リポジトリへ設定を配置する
+
+npm package から利用する場合は、起動前に provider の設定と npm script を利用リポジトリへ配置します。
+
+```bash
+npx specdojo config scaffold --provider <name>
+```
+
+scaffold が追加する `orch:*` は `specdojo orchestrator launch` を経由します。起動時に対象 project の `repos` を解決し、宣言済みのプロダクトリポジトリ本体だけを provider の追加ルートとして許可します。`repos` が無い場合の provider コマンドは従来どおりです。npm script に追加引数を渡す場合は `npm run orch:<name> -- <引数>` とし、その引数は provider CLI へそのまま渡されます。
+
+OpenCode は起動引数に追加ルートの指定を持たないため、選択した orchestrator agent の `permission.external_directory` を実行時の inline config で上書きします。全外部ディレクトリを拒否してから宣言済みルートだけを許可し、同じルートの `permission.edit` も許可します。設定ファイル自体は変更しません。
+
+Antigravity CLI の無人実行に必要な permission rule は、利用者のすべてのリポジトリに効くグローバル設定です。通常の scaffold では変更されないため、明示的に dry-run で追加 rule を確認してから適用します。既存設定は保持され、実適用前にバックアップされます。
+
+```bash
+npx specdojo config scaffold --provider antigravity --global --dry-run
+npx specdojo config scaffold --provider antigravity --global
+```
+
+分離環境が必要な場合は、追加の任意手順として `devcontainer scaffold` を利用できます。既存の `.devcontainer/` は上書きされず、provider の設定ディレクトリは名前付きボリュームへ保存されます。詳細は [CLIコマンドリファレンス](../references/command-reference.md) の `devcontainer` を参照してください。
+
 ## 3. 対話の進め方
 
 オーケストレーターは「提案 → 承認 → 実行」を基本とします。
@@ -107,7 +128,7 @@ worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通�
 
 ## 5. 設定ファイルの構成
 
-指示本文（システムプロンプト）の正本を1ファイルに集約し、各 agent CLI の設定はその本文を埋め込む薄いラッパーとしています。4系統の設定形式は非互換のため、単一のネイティブ設定ファイルを共有することはできません。
+指示本文（システムプロンプト）の正本を1ファイルに集約し、各 agent CLI の設定はその本文を埋め込む薄いラッパーとしています。4系統の設定形式は非互換のため、単一のネイティブ設定ファイルを共有することはできません。リポジトリ内で使うラッパーに加え、`config scaffold` で利用者へ配る provider テンプレートも同じ本文から生成します。
 
 | 役割               | パス                                       |
 | ------------------ | ------------------------------------------ |
@@ -121,7 +142,7 @@ worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通�
 本文を変更する場合は、次の手順で全環境を同期します。
 
 1. SSOT の `.agents/specdojo-orchestrator.agent.md` を編集します。
-2. Markdown ラッパー4ファイルでは frontmatter より後を、Codex ラッパーでは `developer_instructions` の複数行文字列を、SSOT と同じ本文に更新します。
-3. `npm run lint:orchestrator-sync` を実行し、5つのラッパーが SSOT とバイト単位で一致することを確認します。
+2. `npm run orchestrator:sync` を実行し、環境別ラッパーと配布テンプレートへ本文を生成します。
+3. `npm run lint:orchestrator-sync` を実行し、10個の同期対象が SSOT とバイト単位で一致することを確認します。
 
-この検証は対象ファイルの変更時に pre-commit hook からも自動実行され、不一致があれば commit を停止します。モデル・権限・provider の変更は本文ではなく、各ラッパーの frontmatter / TOML 側で行います。
+同期対象の一覧は `tools/validate-orchestrator-sync.mjs` を正本とします。pre-commit hook は対象ファイルの変更時に `npm run orchestrator:sync` を実行し、本文の反映漏れを自動で補います。モデル・権限・provider の変更は本文ではなく、各ラッパーの frontmatter / TOML 側で行います。

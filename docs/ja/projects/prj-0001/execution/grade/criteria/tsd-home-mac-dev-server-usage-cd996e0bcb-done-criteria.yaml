@@ -2,12 +2,12 @@
 id: tsd-home-mac-dev-server-usage-grade-criteria
 document: tsd-home-mac-dev-server-usage
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
-graded_at: "2026-09-13T23:53:04.813Z"
-graded_by: gemma-expert-executor
-content_hash: 8f861937dd50968fb1168128903f185015cd62d0d7b5797b9be03a1fba2f7407
+graded_at: "2026-10-09T16:02:20.342Z"
+graded_by: agy-expert-executor
+content_hash: 122a31bab81314a9f48992acb49cfcc55cf3d4233e9491dac0cb1833283203c9
 summary:
-  satisfied: 2
-  unsatisfied: 3
+  satisfied: 1
+  unsatisfied: 4
   total: 5
 criteria:
   - id: DC-001
@@ -16,27 +16,28 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 採用技術の選定理由と業務要件の整合性に関する記述がない。
+    reason: Missing reasons for adoption and constraints mapped to business requirements.
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: 技術スタック選定を承認するための判断材料（比較検討等）が記載されていない。
+    reason: Missing approval target, decision maker, and unresolved issues for approval.
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: 全体的な技術的制約・ライセンス・バージョン方針の明示的な定義がない。
+    reason: Missing technical constraints, licensing policies, and versioning strategies.
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: Missing testing framework, CI/CD references, test commands, and expected results.
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:

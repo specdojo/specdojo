@@ -180,7 +180,7 @@ pipeline reporter は標準入力で渡された plan、executor evidence、出�
 
 ## 8. エージェント割り当て設定
 
-### 8.1. `pm-members.yaml`
+### 8.1. `.specdojo/agent-members.yaml`
 
 起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.opencode.command_template` で定義する。`{nickname}` が `--agent` の指定名に展開されるため、member の nickname と agent 定義のファイル名を一致させる。
 
@@ -190,7 +190,7 @@ providers:
     command_template: "opencode run --agent {nickname}"
 ```
 
-`pm-members.yaml` の member は選択属性だけを持ち、`command` を書かない。
+`.specdojo/agent-members.yaml` の member は選択属性だけを持ち、`command` を書かない。
 
 ```yaml
 members:
@@ -232,7 +232,7 @@ phase の共通契約は親設計に従う。外部Web検索が必要なphaseは
 
 ### 8.3. `.specdojo/exec-defaults.yaml`
 
-共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Ollama では API rate limit より、モデルロード待ち、メモリ不足、接続タイムアウトが主な失敗要因になるため、OpenCode 固有の検出条件とポリシーを `providers.opencode` に置き、`pm-members.yaml` で `provider: opencode` の member に適用する。
+共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Ollama では API rate limit より、モデルロード待ち、メモリ不足、接続タイムアウトが主な失敗要因になるため、OpenCode 固有の検出条件とポリシーを `providers.opencode` に置き、`.specdojo/agent-members.yaml` で `provider: opencode` の member に適用する。
 
 ```yaml
 providers:
@@ -315,13 +315,13 @@ worktree のライフサイクル、配置、ブランチ名、イベントフ�
 
 ## 12. 現状差分と導入順序
 
-| 項目                    | 現状                                          | 対応                                                    |
-| ----------------------- | --------------------------------------------- | ------------------------------------------------------- |
-| `opencode.json`         | provider・3モデル・デフォルトモデルを定義済み | 必要に応じて `instructions` と provider 制限を追加      |
-| `AGENTS.md`             | project root に共通ルールを定義済み           | OpenCode 固有指示を追加する場合だけ別ファイルを参照     |
-| `.opencode/agents/*.md` | edit / review agent を定義済み                | `opencode debug agent <name>` で認識を確認              |
-| `pm-members.yaml`       | `opencode-*-agent` の選択属性を定義済み       | 単一タスク実行で起動を確認                              |
-| `exec-defaults.yaml`    | `rate limit` / `429` を検出                   | command template と Ollama 固有エラーを必要に応じて追加 |
+| 項目                           | 現状                                          | 対応                                                    |
+| ------------------------------ | --------------------------------------------- | ------------------------------------------------------- |
+| `opencode.json`                | provider・3モデル・デフォルトモデルを定義済み | 必要に応じて `instructions` と provider 制限を追加      |
+| `AGENTS.md`                    | project root に共通ルールを定義済み           | OpenCode 固有指示を追加する場合だけ別ファイルを参照     |
+| `.opencode/agents/*.md`        | edit / review agent を定義済み                | `opencode debug agent <name>` で認識を確認              |
+| `.specdojo/agent-members.yaml` | `opencode-*-agent` の選択属性を定義済み       | 単一タスク実行で起動を確認                              |
+| `exec-defaults.yaml`           | `rate limit` / `429` を検出                   | command template と Ollama 固有エラーを必要に応じて追加 |
 
 導入確認は agent 認識確認、`exec-defaults.yaml` の command template 更新、単一タスク実行、並列実行の順で行う。
 

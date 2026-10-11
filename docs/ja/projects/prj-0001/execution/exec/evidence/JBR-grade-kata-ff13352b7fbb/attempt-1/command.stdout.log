@@ -1,0 +1,53 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-ff13352b7fbb project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-ff13352b7fbb
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+document start: docs/ja/specdojo/recipes/ifx-cmd-recipe.md
+document complete: docs/ja/specdojo/recipes/ifx-cmd-recipe.md
+document start: docs/ja/specdojo/rulebooks/itc-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/itc-rulebook.md
+document start: docs/ja/specdojo/rulebooks/mip-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/mip-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/mm-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/mm-rulebook.md
+document start: docs/ja/specdojo/rulebooks/mtp-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/mtp-rulebook.md
+document start: docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md
+document start: docs/ja/specdojo/rulebooks/nfr-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/nfr-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md
+document start: docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md
+document start: docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md
+document start: docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md
+document start: docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md
+document start: docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md
+document start: docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md
+document start: docs/ja/specdojo/rulebooks/ntp-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/ntp-rulebook.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-ff13352b7fbb/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-04T21:02:44Z	docs/ja/specdojo/recipes/ifx-cmd-recipe.md	1	passed	144	needs-work	94	3	agy-expert-executor	machine	none		
+2026-10-04T21:04:07Z	docs/ja/specdojo/rulebooks/itc-rulebook.md	1	passed	81	needs-work	94	2	agy-expert-executor	machine	none		
+2026-10-04T21:05:13Z	docs/ja/specdojo/rulebooks/mip-index-rulebook.md	1	passed	64	needs-work	96	2	agy-expert-executor	machine	none		
+2026-10-04T21:06:42Z	docs/ja/specdojo/rulebooks/mm-rulebook.md	1	passed	87	pass	77	22	agy-expert-executor	machine	none		
+2026-10-04T21:07:39Z	docs/ja/specdojo/rulebooks/mtp-rulebook.md	1	passed	55	needs-work	94	1	agy-expert-executor	machine	none		
+2026-10-04T21:08:29Z	docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md	1	passed	47	needs-work	96	1	agy-expert-executor	machine	none		
+2026-10-04T21:09:50Z	docs/ja/specdojo/rulebooks/nfr-index-rulebook.md	1	passed	78	needs-work	89	3	agy-expert-executor	machine	none		
+2026-10-04T21:10:55Z	docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md	1	passed	63	needs-work	94	2	agy-expert-executor	machine	none		
+2026-10-04T21:12:15Z	docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md	1	passed	78	needs-work	95	2	agy-expert-executor	machine	none		
+2026-10-04T21:13:09Z	docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md	1	passed	52	needs-work	93	2	agy-expert-executor	machine	none		
+2026-10-04T21:14:11Z	docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md	1	passed	60	needs-work	92	4	agy-expert-executor	machine	none		
+2026-10-04T21:15:44Z	docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md	1	passed	92	needs-work	93	2	agy-expert-executor	machine	none		
+2026-10-04T21:16:54Z	docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md	1	passed	68	needs-work	84	6	agy-expert-executor	machine	none		
+2026-10-04T21:18:03Z	docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md	1	passed	67	needs-work	94	2	agy-expert-executor	machine	none		
+2026-10-04T21:19:25Z	docs/ja/specdojo/rulebooks/ntp-rulebook.md	1	passed	80	needs-work	67	16	agy-expert-executor	machine	none		

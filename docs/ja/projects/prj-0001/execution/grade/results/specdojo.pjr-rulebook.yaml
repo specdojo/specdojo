@@ -3,44 +3,99 @@ version: 1
 document: specdojo:pjr-rulebook
 path: docs/ja/specdojo/rulebooks/pjr-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 93
-graded_at: "2026-09-03T02:14:11.547Z"
-graded_by: codex-expert-executor
-content_hash: b2ce4e16531c3eead1a0ac43c1bfd60be42ef23ba2624d3b0a505883ac6dac02
+score: 82
+graded_at: "2026-10-05T21:10:59.550Z"
+graded_by: agy-expert-executor
+content_hash: ab7de61a5b5e7a3bc9d698f78abe375992b87b036c894231f9697f1beb078f3a
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
-  quality:
+  usability:
+    score: 83
+  implementation:
     score: 100
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
+  quality:
+    score: 67
+  consistency:
     score: 50
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,23 +103,55 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 1
+  major: 3
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
+    rule: vp-qe-verifiability
+    line: 106
+    anchor: "- タイトルは個票の H1、説明は個票本文、その他の列は個票 Frontmatter から生成する。"
+    message: >-
+      `ready` 昇格と終端可否は「type 固有の必須節」を満たすことに依存する一方、各 `item_type` の必須節・必須記入欄を本文で列挙せず参照 ID のない「各 type 用テンプレート」に委ねているため、必須条件の
+      pass / fail を決定できる定義または解決可能な参照を追加する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 16
+    anchor: "- type 別テンプレートの選択と初期生成は `register add` が担うため、本 rulebook は単一の template を参照しない。"
     message: >-
       本文と schema は未定の owner / due を省略し、`deferred` では `completed_at` を持たない規則だが、`register-operation-guide.md` は
       Frontmatter に `_TODO_` を残し、`defer` 時にも完了日時を記録すると説明しているため、関連ガイドを正本と同じ保存規則へ修正しないと schema 違反または誤った履歴を生成する。
-    anchor: "# プロジェクト登録簿 作成ルール"
-  - id: F002
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 83
+    anchor: "### 4.1. 個別登録項目"
+    message: >-
+      「起票と終端」を `registered_at` / `completed_at` に保存するとする記述は、`deferred` は終端だが `completed_at`
+      を持たないとする後段の例外規則と整合しないため、`completed_at` の対象を完了・決定・却下に限定して記述する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 31
+    anchor: "### 2.2. 配置規約"
+    message: >-
+      Frontmatter の `template: not-needed` は template が不要であることを表す一方、本文は `register add` が type 別 template を選択すると定め、実在する
+      `pjr-*-template` 群もこの rulebook を参照しているため, 複数 template を表せるメタデータまたは解決可能なディスパッチ定義で対応関係を宣言する必要がある。
+  - id: F005
     severity: minor
     rule: vp-ux-readability
-    line: 1
+    line: 16
+    anchor: "- type 別テンプレートの選択と初期生成は `register add` が担うため、本 rulebook は単一の template を参照しない。"
     message: >-
       `register-item-frontmatter.schema.yaml` と `register-events.schema.yaml` がファイル名だけで参照先パスまたはリンクを持たず、コマンドの選択基準を扱う
       register operation guide への案内もないため, 初見の読者が次に確認すべき正本へ直接移動できる導線を追加する必要がある。
-    anchor: "# プロジェクト登録簿 作成ルール"
+  - id: F006
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 208
+    anchor: ""
+    message: >-
+      `type` は文書種別 `project`、`item_type` は登録項目分類として区別しているのに、禁止事項を含む複数箇所で登録項目分類を裸の「type」と表記しており両者を混同し得るため、`item_type`
+      または「CLI の type は `item_type` を指す」という定義へ統一する必要がある。

@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-V96B",
+  "run_id": "20261001T051805460Z-c5ebf1df",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-10-01T05:18:05.460Z",
+    "completed_at": "2026-10-01T05:18:08.345Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [],
+  "final_message": "You've hit your session limit · resets 5:30pm (Asia/Tokyo)",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-V96B/20261001T051805460Z-c5ebf1df/executor.log",
+      "bytes": 59,
+      "truncated": false
+    }
+  ]
+}

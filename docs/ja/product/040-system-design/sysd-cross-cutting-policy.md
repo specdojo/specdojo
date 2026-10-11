@@ -62,12 +62,12 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 
 ### scp-SEL-001: member選択
 
-- **Rule（MUST）**: phaseの`mode`、`capabilities`、`proficiency`と、`pm-members.yaml`のmember属性を照合し、適合候補だけをpriority順に選択する。
+- **Rule（MUST）**: phaseの`mode`、`capabilities`、`proficiency`と、`.specdojo/agent-members.yaml`のmember属性を照合し、適合候補だけをpriority順に選択する。
 - **Rationale（意図）**: scheduleへCLI名やモデル名を固定せず、要求と実行環境を分離する。
 - **Scope（適用範囲）**: `exec run --auto`と明示member指定。
 - **Enforcement（検証）**: 設定schema、候補解決テスト、適合候補なしの事前エラー。
 - **Exception（例外）**: 人間taskは明示的に登録されたagent上書きがない限り自動起動しない。
-- **References（参照）**: `.specdojo/exec-defaults.yaml`、`pm-members.yaml`。
+- **References（参照）**: `.specdojo/exec-defaults.yaml`、`.specdojo/agent-members.yaml`。
 
 ### scp-CFG-001: 起動コマンド解決
 

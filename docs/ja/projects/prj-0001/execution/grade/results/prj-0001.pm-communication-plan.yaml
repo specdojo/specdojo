@@ -1,0 +1,148 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: prj-0001:pm-communication-plan
+path: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md
+target: deliverable
+rubric: grade-rubric-v1
+verdict: needs-work
+score: 71
+graded_at: "2026-09-24T16:38:32.296Z"
+graded_by: codex-expert-executor
+content_hash: 9079267db2d4ded76eaf486b2ae824cc1c2706cfb132d257fe65c54f63217edb
+categories:
+  consistency:
+    score: 50
+  usability:
+    score: 75
+  architecture:
+    score: 100
+  quality:
+    score: 67
+viewpoints:
+  vp-arc-cross-document-consistency:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 3
+    score: 75
+  vp-qe-omissions-consistency:
+    level: 2
+    score: 50
+  vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-user-flow:
+    level: 2
+    score: 50
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 4
+    score: 100
+finding_counts:
+  blocker: 0
+  major: 5
+  minor: 5
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 12
+    anchor: >-
+      | 代表利用者・協働組織との試行 | 課題、期待価値、試行成果、現金支出、作業負荷、継続条件 | 試行設計時、試行終了時     | 相談・試行記録、Issue          | `BA` |
+      合意と評価結果           |
+    message: >-
+      ステークホルダー登録簿は協働組織の関与責任をPM、管理計画は重大事象のPO向け判断材料整理をPMとしているが、本書は協働組織を代表利用者と併合してBA責任とし、価値・品質事象でもPMを経路から外しているため、正本に合わせて責任経路を分離・明示する必要がある。
+  - id: F002
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 14
+    anchor: >-
+      | チームの進捗                 | 完了、次の作業、ブロック、必要な判断                   | 節目または状態変化時       | Schedule、登録簿、Pull Request |
+      `PM` | 状態と次の行動           |
+    message: 進捗の対象者が示されず、通常の課題・リスクには報告者、報告先、手段、記録先を結ぶ経路がないため、DC-002を確認できない。
+  - id: F003
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 12
+    anchor: >-
+      | 代表利用者・協働組織との試行 | 課題、期待価値、試行成果、現金支出、作業負荷、継続条件 | 試行設計時、試行終了時     | 相談・試行記録、Issue          | `BA` |
+      合意と評価結果           |
+    message: 代表利用者と協働組織、将来の利用者と貢献者がそれぞれ併合され、ステークホルダーごとの異なる情報要求と関与方針を追跡できないため、DC-003を確認できない。
+  - id: F004
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 14
+    anchor: >-
+      | チームの進捗                 | 完了、次の作業、ブロック、必要な判断                   | 節目または状態変化時       | Schedule、登録簿、Pull Request |
+      `PM` | 状態と次の行動           |
+    message: 「節目または状態変化時」と「登録簿」の対象が特定されていないため、報告が必要となる状態と証跡の格納先をID・状態・記録先で判定可能にする必要がある。
+  - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 12
+    anchor: >-
+      | 代表利用者・協働組織との試行 | 課題、期待価値、試行成果、現金支出、作業負荷、継続条件 | 試行設計時、試行終了時     | 相談・試行記録、Issue          | `BA` |
+      合意と評価結果           |
+    message: Rulebookが求めるステークホルダーIDとの対応がなく、異なる情報要求を持つ代表利用者・協働組織を一行へ統合しているため、登録簿の全情報要求がコミュニケーション機会へ変換されたことを確認できない。
+  - id: F006
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 32
+    anchor: "- 判断、課題、リスク、変更、次の作業は、後から根拠を追える正本へ記録する。"
+    message: 情報管理の必須要素である具体的な記録先が「正本」とだけ記されているため、判断、課題、リスク、変更ごとの正本IDまたは参照先を明示する必要がある。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 40
+    anchor: >-
+      代表利用者・協働組織の参加、公開範囲、試行方法、主な連絡手段、AI Agent の利用条件が変わった場合に見直す。具体的な代表利用者、協働開始時の連絡手段、定期確認の要否は、各試行の開始前に `BA` と `PM` が整理し
+      `PO` が決定する。
+    message: 未決事項がRulebook指定の「_UNDECIDED_:」形式で識別されていないため、確定済み方針と未決論点を明確に区別する必要がある。
+  - id: F008
+    severity: minor
+    rule: vp-ux-readability
+    line: 5
+    anchor: >-
+      当事者、技術協力者、継続参加者が、社会課題と試行成果、費用・負荷、次の判断を同じ証跡で確認できるようにする。非同期の公開記録を基本とし、会議は当事者確認または意思決定が必要な場合だけ行う。関係者の一覧、期待、懸念は
+      [[prj-0001:prj-stakeholder-register|ステークホルダー登録簿]] を正とする。
+    message: 「当事者」「技術協力者」「継続参加者」がステークホルダー登録簿のどの関係者を指すか不明で、後続表でも別の呼称へ変わるため、IDまたは正本と一致する名称で対応を示す必要がある。
+  - id: F009
+    severity: major
+    rule: vp-ux-user-flow
+    line: 14
+    anchor: >-
+      | チームの進捗                 | 完了、次の作業、ブロック、必要な判断                   | 節目または状態変化時       | Schedule、登録簿、Pull Request |
+      `PM` | 状態と次の行動           |
+    message: 「チームの進捗」は報告先を示さず、「Schedule」「登録簿」も具体的な参照先を持たないうえ、通常の課題・リスクの報告手順がないため、利用者が迷わず報告を完了できる導線を追加する必要がある。
+  - id: F010
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 14
+    anchor: >-
+      | チームの進捗                 | 完了、次の作業、ブロック、必要な判断                   | 節目または状態変化時       | Schedule、登録簿、Pull Request |
+      `PM` | 状態と次の行動           |
+    message: 「登録簿」がステークホルダー登録簿とプロジェクト登録簿のどちらを指すか判別できないため、成果物名またはIDを用いて統一する必要がある。
+done_criteria:
+  satisfied: 1
+  total: 3
+  unsatisfied:
+    DC-002:
+      - PM
+    DC-003:
+      - BA
+  detail_ref: prj-0001:pm-communication-plan-grade-criteria

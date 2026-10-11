@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c04f03ddf48d4fa8a2416a94949a7759
+  ts: "2026-10-05T22:59:51Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: pm-members.yaml の保護（b99b3042f）の次の段階として起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent の定義を pm-members.yaml から保護された設定へ分ける
+    - field: description
+      from: ""
+      to: pm-members.yaml には人と agent の定義が同居している。agent の定義（provider・コマンド・モデル・役割）を .specdojo/ 配下など保護された設定へ移し、人は pm-members.yaml に残す。名簿の読み込みは両方を合わせ、ニックネームの一意性を検査する。schema・rulebook・scaffold も合わせて直す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"
+- v: 1
+  id: reg_e596a9b79b5f46b89a70b334277eb3a0
+  ts: "2026-10-07T12:48:32Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c04f03ddf48d4fa8a2416a94949a7759
+- v: 1
+  id: reg_392ccdf903c4487e95f91010d4ecfacc
+  ts: "2026-10-07T13:18:42Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: validate-schema, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: validate-schema, test-unit"
+  previous_event_id: reg_e596a9b79b5f46b89a70b334277eb3a0
+- v: 1
+  id: reg_95903d4187484fde9de574a92cc8e09b
+  ts: "2026-10-07T13:32:07Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: waiting
+  to_status: done
+  reason: orchestrator が統合と移行を行い、検証と名簿の読み込みを確認した。コメントを補ってから完了
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: agent の定義を .specdojo/agent-members.yaml へ分け、名簿の読み込みで両ファイルを schema 検証して合成する。pm-members.yaml の agent はエラーにし（案 A）、pm-members.yaml の保護を外した。本リポジトリの agent 37 件を移行し、失われたコメントを補った
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: validate-schema, test-unit"
+      to: "-"
+  previous_event_id: reg_392ccdf903c4487e95f91010d4ecfacc

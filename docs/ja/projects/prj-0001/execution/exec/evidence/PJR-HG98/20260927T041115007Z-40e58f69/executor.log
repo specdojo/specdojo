@@ -1,0 +1,34 @@
+`config init` が生成物を除外する `.gitignore` を用意するようにしました。ただしテストと型チェックはこちらでは一度も実行していません。親 runner がこのあと `test:unit`・`test:integration`・`typecheck`・`validate:schema` を実行するので、その結果が出るまでは動作未確認です。CLI を一時ディレクトリで手で動かす確認も、実行権限が下りず行えていません。
+
+前提として、個票の「対応結果」には前回の試行で実装済みと書かれていましたが、前回はレート制限で止まっていてコードは作業ツリーにもコミット履歴にもありませんでした。そのため改めて実装しました。
+
+**実装の内容**
+- **新規 `src/specdojo-gitignore.ts`**:
+  - 除外する行を設定の配置から決める処理（`gitignorePatternsForLayouts`）と、`.gitignore` への追記処理（`mergeGitignore` / `ensureGitignore`）を置きました。
+  - 既定で追記するのは `.specdojo/doc-index.json`、`docs/**/generated/*`、`!docs/**/generated/.gitkeep`、`docs/**/execution/exec/.locks/` の4行です。
+  - `base_path` が `docs/` の外にある場合は、`base_path` から導いた行を足します。`base_path` が無い場合は各パス設定から導きます。リポジトリの外を指すパスは対象にしません。
+  - 既存の行は消したり並べ替えたりせず、足りない行だけを末尾へ足します。CRLF の改行はそのまま保ち、何度実行しても同じ結果になります。
+- **`src/specdojo-config.ts`**:
+  - `config init` に `--dry-run` を加えました。dry-run では設定も `.gitignore` も書かず、予定の行を表示するだけです。
+  - 設定ファイルが既にある場合も `.gitignore` の確認と追記は行います。
+  - 追記した行と飛ばした行を表示します。追記があったときは、すでに git で管理している生成物を `git rm -r --cached` で外す手順を案内します。
+- **テスト**:
+  - `tests/src/specdojo-gitignore.test.ts` を新しく作りました。配置からの行の導出、2回実行しても結果が変わらないこと、CRLF の維持、空ファイルの場合を確かめます。
+  - `tests/src/specdojo-config-command.test.ts` に3件足しました。新規作成、既存ファイルへの追記と再実行、`--dry-run` です。
+  - `tests/src/exec-register-pipeline-e2e.integration.test.ts` では、2項目を並行実行するテストで手書きしていた `.gitignore` を `config init` の実行に置き換えました。その後、案内どおり `git ls-files -ci --exclude-standard` で見つかる管理済みの生成物を `git rm -r --cached` で外してから実行します。
+- **ドキュメント**:
+  - `README.md` の「npm で導入する」に、`.gitignore` が作られることを追記しました。
+  - `docs/ja/specdojo/references/command-reference.md` と `docs/ja/specdojo/references/specdojo-config-reference.md` にも同じ内容を追記しました。
+  - 個票の作業内容と対応結果は、実装に合わせて書き直しました。前回の記述は「各パスの親ディレクトリから導く」でしたが、実装は各パスそのものから導く形です。個票のステータス項目と result ファイルには触れていません。
+
+**こちらで実行した検査**（どれも親 runner の担当外です）
+- 変更した TypeScript 5本への `npx prettier --write` は、手直しなしで通りました。ESLint もエラーはありません。
+- 変更した Markdown 4本への `npx prettier --write` と `npx markdownlint` は、エラーなしで通りました。
+- `catalog validate` は終了コード 0 でした。WARN が出ていますが、今回触っていない既存の `based_on` に関するものです。
+- `index build` は成功しました（2068件）。
+
+完了条件のうち `npm run check` の通過は、まだ確かめていません。
+
+<specdojo_executor_evidence>
+{"final_message":"config init で生成物除外の .gitignore を作成・冪等追記する機能（--dry-run、追記/スキップ表示、git rm --cached 案内、base_path 等の配置から行を導出）を実装し、単体テスト・並行実行 E2E・README/リファレンス/個票を更新した。typecheck・テストは未実行で、親 runner の結果待ち。","validations":[{"command":"npx prettier --write src/specdojo-gitignore.ts src/specdojo-config.ts tests/src/specdojo-gitignore.test.ts tests/src/specdojo-config-command.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts","status":"passed","summary":"all files unchanged after formatting"},{"command":"npx eslint src/specdojo-gitignore.ts src/specdojo-config.ts tests/src/specdojo-gitignore.test.ts tests/src/specdojo-config-command.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts","status":"passed","summary":"no lint errors"},{"command":"npx prettier --write README.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-hg98-config-init-gitignore-generated.md","status":"passed","summary":"formatted (command-reference table realigned)"},{"command":"npx markdownlint README.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-hg98-config-init-gitignore-generated.md","status":"passed","summary":"no markdownlint errors"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0; only pre-existing based_on WARNs unrelated to this change"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2068 entries"}]}
+</specdojo_executor_evidence>

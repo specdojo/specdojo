@@ -1,9 +1,67 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import yaml from "js-yaml";
 import { resolveSpecdojoPath } from "./template-resolution.js";
-import type { ReviewViewpointsDoc } from "./review-types.js";
+import {
+  GRADE_LEVEL_REVIEW_VERDICTS,
+  REVIEW_VERDICTS,
+  describeInvalidReviewVerdict,
+} from "./review-types.js";
+import type { ReviewViewpoint, ReviewViewpointsDoc, ViewpointEvaluation } from "./review-types.js";
 
 export const COMMON_VIEWPOINTS_ID = "specdojo:pm-review-viewpoints";
+
+type DocumentMetadata = Record<string, unknown>;
+
+function nestedRecord(value: unknown): Record<string, unknown> | undefined {
+  return isRecord(value) ? value : undefined;
+}
+
+/**
+ * Resolve the rulebook ID that represents a document kind. Rulebooks identify themselves,
+ * recipes/samples/deliverables refer to their rulebook directly, and templates carry the
+ * generated document's rulebook in frontmatter_template.
+ */
+export function documentKind(metadata: DocumentMetadata): string | undefined {
+  const direct = metadata["rulebook"];
+  if (
+    typeof direct === "string" &&
+    !["none", "undecided", "not-needed"].includes(direct) &&
+    direct.trim()
+  ) {
+    return direct;
+  }
+
+  const id = metadata["id"];
+  if (metadata["type"] === "rulebook" && typeof id === "string" && id.trim()) return id;
+
+  const frontmatterTemplate = nestedRecord(metadata["frontmatter_template"]);
+  const generatedMetadata = nestedRecord(frontmatterTemplate?.["specdojo"]);
+  const generatedRulebook = generatedMetadata?.["rulebook"];
+  if (
+    typeof generatedRulebook === "string" &&
+    !["none", "undecided", "not-needed"].includes(generatedRulebook) &&
+    generatedRulebook.trim()
+  ) {
+    return generatedRulebook;
+  }
+  return undefined;
+}
+
+/**
+ * Apply a viewpoint's document-kind declaration. Omitted declarations and unclassified
+ * documents remain applicable for backward compatibility unless explicitly excluded.
+ */
+export function viewpointAppliesToDocument(
+  viewpoint: ReviewViewpoint,
+  metadata: DocumentMetadata,
+): boolean {
+  const declaration = viewpoint.document_kinds;
+  if (!declaration) return true;
+  const kind = documentKind(metadata);
+  if (!kind) return declaration.unclassified !== "exclude";
+  if (declaration.exclude?.includes(kind)) return false;
+  return declaration.include === undefined || declaration.include.includes(kind);
+}
 
 const COLLECTIONS = [
   ["categories", "id"],
@@ -107,6 +165,73 @@ function mergeCollection(opts: {
     .map((itemKey) => values.get(itemKey)!);
 }
 
+const VIEWPOINT_EVALUATIONS: readonly ViewpointEvaluation[] = [
+  "deterministic",
+  "referential",
+  "discretionary",
+];
+
+// Values removed when evaluation was redefined by where the judging criterion lives (PJR-WPWB).
+// Old values are rejected with guidance instead of being ignored.
+const LEGACY_VIEWPOINT_EVALUATIONS: Readonly<Record<string, string>> = {
+  agent: "referential or discretionary",
+  human: "referential or discretionary",
+};
+
+function validateViewpointFields(doc: Record<string, unknown>, path: string): void {
+  for (const viewpoint of recordArray(doc, "viewpoints", path)) {
+    const id = String(viewpoint["id"] ?? "(unknown)");
+    // continuous was removed when every viewpoint became a grade target (PJR-K351).
+    // Reject it instead of ignoring it so that an overlay cannot silently expect a narrower scope.
+    if (Object.hasOwn(viewpoint, "continuous")) {
+      throw new Error(
+        `Viewpoint '${id}' uses removed field 'continuous'; every viewpoint is graded, ` +
+          `so delete it and narrow scope with grade_targets or document_kinds: ${path}`,
+      );
+    }
+    const value = viewpoint["evaluation"];
+    if (value === undefined) continue;
+    if (typeof value === "string" && value in LEGACY_VIEWPOINT_EVALUATIONS) {
+      throw new Error(
+        `Viewpoint '${id}' uses removed evaluation '${value}'; use ${LEGACY_VIEWPOINT_EVALUATIONS[value]} ` +
+          `(allowed: ${VIEWPOINT_EVALUATIONS.join(", ")}): ${path}`,
+      );
+    }
+    if (!(VIEWPOINT_EVALUATIONS as readonly unknown[]).includes(value)) {
+      throw new Error(
+        `Viewpoint '${id}' has unknown evaluation '${String(value)}'; allowed: ${VIEWPOINT_EVALUATIONS.join(", ")}: ${path}`,
+      );
+    }
+  }
+}
+
+// verdict_definitions は review の verdict と同じ語彙に限る（PJR-XTAN）。grade_rubric の review_verdict は
+// grade の level を review の入力にする写像であり、level から決まる 3 値だけを許す。
+function validateVerdictVocabulary(doc: Record<string, unknown>, path: string): void {
+  for (const definition of recordArray(doc, "verdict_definitions", path)) {
+    const value = definition["id"];
+    if (!(REVIEW_VERDICTS as readonly unknown[]).includes(value)) {
+      throw new Error(`verdict_definitions has ${describeInvalidReviewVerdict(value)}: ${path}`);
+    }
+  }
+  const rubric = doc["grade_rubric"];
+  if (rubric === undefined) return;
+  if (!isRecord(rubric))
+    throw new Error(`Review viewpoints 'grade_rubric' must be a mapping: ${path}`);
+  const levels = rubric["levels"];
+  if (!Array.isArray(levels)) return;
+  for (const level of levels) {
+    if (!isRecord(level)) continue;
+    const value = level["review_verdict"];
+    if (!(GRADE_LEVEL_REVIEW_VERDICTS as readonly unknown[]).includes(value)) {
+      throw new Error(
+        `grade_rubric level ${String(level["level"])} review_verdict has ` +
+          `${describeInvalidReviewVerdict(value, GRADE_LEVEL_REVIEW_VERDICTS)}: ${path}`,
+      );
+    }
+  }
+}
+
 function validateResolvedInheritance(doc: Record<string, unknown>, projectPath: string): void {
   const categories = new Set(
     recordArray(doc, "categories", projectPath).map((item) => String(item.id)),
@@ -186,7 +311,11 @@ export function resolveViewpointsDoc(
   commonPath = commonViewpointsPath(),
 ): ReviewViewpointsDoc {
   const project = loadYamlMapping(projectPath);
-  if (project["extends"] === undefined) return project as ReviewViewpointsDoc;
+  if (project["extends"] === undefined) {
+    validateViewpointFields(project, projectPath);
+    validateVerdictVocabulary(project, projectPath);
+    return project as ReviewViewpointsDoc;
+  }
   if (project["extends"] !== COMMON_VIEWPOINTS_ID) {
     throw new Error(
       `Unsupported review viewpoints inheritance '${String(project["extends"])}'; expected '${COMMON_VIEWPOINTS_ID}': ${projectPath}`,
@@ -211,6 +340,10 @@ export function resolveViewpointsDoc(
   }
   delete resolved["extends"];
   delete resolved["disabled"];
+  validateViewpointFields(common, commonPath);
+  validateViewpointFields(project, projectPath);
+  validateVerdictVocabulary(common, commonPath);
+  validateVerdictVocabulary(project, projectPath);
   validateResolvedInheritance(resolved, projectPath);
   return resolved as ReviewViewpointsDoc;
 }

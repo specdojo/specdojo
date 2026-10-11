@@ -26,18 +26,19 @@ AI Agent は草案、整理、実装、検証を支援できるが、費用、�
 ## 2. ロール・owner方針
 
 - 使用可能な Role code は `pm-roles.yaml` を正本とする。
-- 実行主体と兼務割り当ては `pm-members.yaml` を正本とする。
+- 人間の実行主体と兼務割り当ては `pm-members.yaml`、agent は `.specdojo/agent-members.yaml` を正本とする。
 - Schedule の `owner` には Role code だけを使用し、個人名や agent 名は使用しない。
 - 小規模運用では1人が複数ロールを兼務できるが、判断責任と作業責任は RACI 上で区別する。
 
 ## 3. 正本と責任境界
 
-| 情報                   | 正本                   |
-| ---------------------- | ---------------------- |
-| Role code と責務       | `pm-roles.yaml`        |
-| 実行主体と兼務         | `pm-members.yaml`      |
-| 成果物・判断の責任     | `pm-raci.md`           |
-| 関係者の関心・情報要求 | ステークホルダー登録簿 |
+| 情報                   | 正本                           |
+| ---------------------- | ------------------------------ |
+| Role code と責務       | `pm-roles.yaml`                |
+| 人間の実行主体と兼務   | `pm-members.yaml`              |
+| agent の実行主体       | `.specdojo/agent-members.yaml` |
+| 成果物・判断の責任     | `pm-raci.md`                   |
+| 関係者の関心・情報要求 | ステークホルダー登録簿         |
 
 本書には人物一覧や詳細な RACI を複製しない。
 

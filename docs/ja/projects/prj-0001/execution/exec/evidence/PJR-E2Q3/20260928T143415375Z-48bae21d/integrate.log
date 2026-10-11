@@ -1,0 +1,19 @@
+=== 2026-09-28T14:42:14.974Z git merge --no-ff -m exec(register PJR-E2Q3): exec run --plan で review を executor と reporter の構成で実行できるようにする
+
+Transition: start → review
+Executor: claude-expert-executor
+Reporter: claude-reporter
+Refs: PJR-E2Q3 exec/prj-0001-PJR-E2Q3 ===
+exit: 1
+--- stdout ---
+Auto-merging docs/ja/specdojo/guides/exec-operation-guide.md
+Auto-merging docs/ja/specdojo/references/command-reference.md
+CONFLICT (content): Merge conflict in docs/ja/specdojo/references/command-reference.md
+Auto-merging src/exec-run.ts
+Automatic merge failed; fix conflicts and then commit the result.
+
+--- stderr ---
+
+--- merge --abort ---
+exit: 0
+

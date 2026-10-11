@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_53be5dd76c5041bbae8e7873c34b78a0
+  ts: "2026-10-08T03:45:37Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-NYZR の段階 0
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 駄菓子屋のデモのリポジトリを用意する
+    - field: description
+      from: ""
+      to: 共通サンプル文脈（駄菓子屋）で、register・kata・grade の一連の流れを見せるデモのリポジトリを用意する。クイックスタートと発表の記事・動画で使う。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"

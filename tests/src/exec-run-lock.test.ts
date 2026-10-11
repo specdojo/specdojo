@@ -4,9 +4,11 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   acquireExecRunLock,
+  collectExecLockUsage,
   EXEC_RUN_LOCK_TOKEN_ENV,
   execRunLockPath,
   ExecRunBusyError,
+  formatExecLockUsage,
   inheritsExecRunLock,
   releaseExecRunLock,
 } from "../../src/exec-run-lock.js";
@@ -124,6 +126,139 @@ describe("exec run project lock", () => {
       releaseExecRunLock(first!);
       await expect(stat(execRunLockPath(executionPath))).resolves.toBeDefined();
       releaseExecRunLock(recovered!);
+    });
+  });
+});
+
+describe("exec run --join", () => {
+  it("排他の主 run が動いている間は join を busy にする", async () => {
+    await withTempExecution(async (executionPath) => {
+      const primary = await acquireExecRunLock(executionPath, { actor: "cycle", ifBusy: "fail" });
+
+      const joined = await acquireExecRunLock(executionPath, {
+        actor: "joiner",
+        ifBusy: "skip",
+        join: { limit: 3 },
+      });
+
+      expect(joined).toBeNull();
+      releaseExecRunLock(primary!);
+    });
+  });
+
+  it("shareable な主 run へ join の枠数まで合流でき、枠が埋まると skip する", async () => {
+    await withTempExecution(async (executionPath) => {
+      const primary = await acquireExecRunLock(executionPath, {
+        actor: "primary",
+        ifBusy: "fail",
+        shareable: true,
+      });
+      const first = await acquireExecRunLock(executionPath, {
+        actor: "join-1",
+        ifBusy: "fail",
+        join: { limit: 2 },
+      });
+      const second = await acquireExecRunLock(executionPath, {
+        actor: "join-2",
+        ifBusy: "fail",
+        join: { limit: 2 },
+      });
+
+      const third = await acquireExecRunLock(executionPath, {
+        actor: "join-3",
+        ifBusy: "skip",
+        join: { limit: 2 },
+      });
+
+      expect(first).not.toBeNull();
+      expect(second).not.toBeNull();
+      expect(third).toBeNull();
+      for (const handle of [second, first, primary]) releaseExecRunLock(handle!);
+    });
+  });
+
+  it("--join なしの2つ目は shareable な主 run に対しても従来どおり busy になる", async () => {
+    await withTempExecution(async (executionPath) => {
+      const primary = await acquireExecRunLock(executionPath, {
+        actor: "primary",
+        ifBusy: "fail",
+        shareable: true,
+      });
+
+      await expect(
+        acquireExecRunLock(executionPath, { actor: "second", ifBusy: "fail", shareable: true }),
+      ).rejects.toBeInstanceOf(ExecRunBusyError);
+
+      releaseExecRunLock(primary!);
+    });
+  });
+
+  it("join run が残っている間は排他の run を busy にし、shareable な run は受け入れる", async () => {
+    await withTempExecution(async (executionPath) => {
+      const joined = await acquireExecRunLock(executionPath, {
+        actor: "joiner",
+        ifBusy: "fail",
+        join: { limit: 1 },
+      });
+
+      const exclusive = await acquireExecRunLock(executionPath, { actor: "cycle", ifBusy: "skip" });
+      const shareable = await acquireExecRunLock(executionPath, {
+        actor: "register",
+        ifBusy: "skip",
+        shareable: true,
+      });
+
+      expect(exclusive).toBeNull();
+      expect(shareable).not.toBeNull();
+      releaseExecRunLock(shareable!);
+      releaseExecRunLock(joined!);
+    });
+  });
+
+  it("join run の token も継承済み lock として扱う", async () => {
+    await withTempExecution(async (executionPath) => {
+      const joined = await acquireExecRunLock(executionPath, {
+        actor: "joiner",
+        ifBusy: "fail",
+        join: { limit: 1 },
+      });
+      const previous = process.env[EXEC_RUN_LOCK_TOKEN_ENV];
+      try {
+        process.env[EXEC_RUN_LOCK_TOKEN_ENV] = joined!.token;
+
+        expect(inheritsExecRunLock(executionPath)).toBe(true);
+      } finally {
+        if (previous === undefined) delete process.env[EXEC_RUN_LOCK_TOKEN_ENV];
+        else process.env[EXEC_RUN_LOCK_TOKEN_ENV] = previous;
+        releaseExecRunLock(joined!);
+      }
+    });
+  });
+
+  it("使用中の枠と上限を一覧できる", async () => {
+    await withTempExecution(async (executionPath) => {
+      const primary = await acquireExecRunLock(executionPath, {
+        actor: "primary",
+        ifBusy: "fail",
+        shareable: true,
+      });
+      const joined = await acquireExecRunLock(executionPath, {
+        actor: "joiner",
+        ifBusy: "fail",
+        join: { limit: 3 },
+      });
+
+      const usage = collectExecLockUsage(executionPath, { joinLimit: 3, pools: [] });
+
+      expect(usage.map((entry) => [entry.name, entry.holders.length, entry.limit])).toEqual([
+        ["exec run (primary)", 1, 1],
+        ["exec run (--join)", 1, 3],
+        ["register lifecycle", 0, 1],
+      ]);
+      expect(usage[0]!.holders[0]).toMatch(/^primary \(pid \d+, since .+, joinable\)$/);
+      expect(formatExecLockUsage(usage)).toContain("exec run (--join): 1/3\n  slot-1: joiner");
+      releaseExecRunLock(joined!);
+      releaseExecRunLock(primary!);
     });
   });
 });

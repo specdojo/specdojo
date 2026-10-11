@@ -1,0 +1,7 @@
+<specdojo_executor_evidence>
+{"final_message":"日本語の文書に中国語の字体が混ざったことを検出する lint (`no-chinese-glyphs`) を追加し、テストでの `ts-ignore` のエラーを修正して静的解析を通過させました。","validations":[{"command":"npm run check","status":"passed","summary":"全静的解析、スキーマ検証、ユニットテストが成功しました"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビュー生成成功"}]}
+</specdojo_executor_evidence>
+<specdojo_executor_evidence>
+{"final_message":"日本語の文書に中国語の字体が混ざったことを検出する lint (`no-chinese-glyphs`) を追加し、テストでの `ts-ignore` のエラーを修正して静的解析を通過させました。","validations":[{"command":"npm run check","status":"passed","summary":"全静的解析、スキーマ検証、ユニットテストが成功しました"},{"command":"npx tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビュー生成成功"}]}
+</specdojo_executor_evidence>
+All tasks completed successfully.

@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-change-request-log-rulebook
 path: docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 80
-graded_at: "2026-09-03T02:28:49.015Z"
-graded_by: gemma-expert-executor
+score: 83
+graded_at: "2026-10-05T21:12:09.790Z"
+graded_by: agy-expert-executor
 content_hash: b65cfcc30036ebd04e48e64af1e9e54aa87689a40cf7cf4f8995d90cd9494cb2
 categories:
-  consistency:
+  purpose:
     score: 75
-  usability:
+  operations:
+    score: 94
+  planning:
+    score: 92
+  business:
     score: 92
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
-    score: 63
+    score: 75
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,36 +89,75 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 2
-  minor: 2
+  minor: 7
   note: 0
 findings:
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: テンプレート側で指定されている rulebook-id (`specdojo:pjr-rulebook`) と本ルールの ID が不整合である。
-    anchor: "# 変更要求ログ 作成ルール"
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: テンプレートが「生成された派生ビュー」を前提としているのに対し、本ルールは手動での「作成ルール」を定義しており、成果物の性質と生成プロセスが矛盾している。
-    anchor: "# 変更要求ログ 作成ルール"
-  - id: F004
-    severity: minor
-    rule: vp-ux-readability
-    line: 1
-    message: 「位置づけ」がドキュメント名の列挙に留まっており、他文書との関係性や参照タイミングなどのコンテキストが不足している。
-    anchor: "# 変更要求ログ 作成ルール"
   - id: F001
     severity: minor
+    rule: vp-po-purpose-alignment
+    line: 8
+    anchor: ""
+    message: 変更要求の審査基準や承認権限のプロジェクト目的（スコープや優先順位）との連動方針が明確化されていない。
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 66
+    anchor: ""
+    message: POが承認判断を行うための材料（未対応時のリスクや期待効果）を記録する基準が不足している。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 2
+    anchor: ""
+    message: 変更要求に含まれる機密情報や個人情報の取り扱い方針、および公開範囲が定義されていない。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 74
+    anchor: ""
+    message: 変更に伴う新たなリスクや課題の発生を `pm-risk-register` や `pm-issue-log` に連携する手順が定義されていない。
+  - id: F005
+    severity: minor
+    rule: vp-ba-business-value
+    line: 62
+    anchor: ""
+    message: 変更要求がどの業務課題や期待価値に対応するかのビジネス的背景を記載する項目が不足している。
+  - id: F006
+    severity: minor
     rule: vp-qe-verifiability
-    line: 1
+    line: 47
+    anchor: ""
     message: 記述ガイドが項目の列挙に留まっており、「判定可能な形」にするための具体的な書き方や基準が示されていない。
-    anchor: "# 変更要求ログ 作成ルール"
+  - id: F007
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 2
+    anchor: ""
+    message: テンプレート側で指定されている rulebook-id (`specdojo:pjr-rulebook`) と本ルールの ID が不整合である。
+  - id: F008
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 2
+    anchor: ""
+    message: テンプレートが「生成された派生ビュー」を前提としているのに対し、本ルールは手動での「作成ルール」を定義しており、成果物の性質と生成プロセスが矛盾している。
+  - id: F009
+    severity: minor
+    rule: vp-ux-readability
+    line: 14
+    anchor: ""
+    message: 「位置づけ」がドキュメント名の列挙に留まっており、他文書との関係性や参照タイミングなどのコンテキストが不足している。

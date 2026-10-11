@@ -1,252 +1,92 @@
 # pm-members.schema.yaml
 $schema: "https://json-schema.org/draft/2020-12/schema"
-title: "SpecDojo Project Member Roster schema"
+title: "SpecDojo Human Member Roster schema"
 type: object
 $comment: >
-  Schema for project member roster files:
-  docs/ja/projects/<project_id>/030-project-management/pm-members.yaml
-  Manages the mapping from --by <nickname> (used in specdojo exec events) to
-  display name, contact info, roles, and actor type. nickname is immutable once
-  recorded in the event log.
-
+  Schema for project-local human rosters. Runnable agent definitions belong in the
+  repository-wide protected agent-members.yaml file.
 additionalProperties: false
-
-required:
-  - id
-  - type
-  - status
-  - title
-  - rulebook
-  - version
-  - project_id
-  - members
-
+required: [id, type, status, title, rulebook, version, project_id, members]
 properties:
   id:
     type: string
     pattern: "^[a-z0-9][a-z0-9-:]*$"
-    description: "Document metadata ID (e.g., prj-0001:pm-members)."
-
   type:
-    type: string
     const: project
-    description: "Document type. Must be 'project'."
-
   status:
-    type: string
     enum: [draft, ready, deprecated]
-    description: "Document status."
-
   title:
     type: string
     minLength: 1
-    description: "Document title. Equivalent to the Markdown H1; used as the heading of the generated display page."
-
   rulebook:
     type: string
     pattern: "^((?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|none)$"
-    description: "Rulebook ID this document conforms to. Use none only when no rulebook exists."
-
   based_on:
     type: array
-    description: "Optional source document IDs."
     items:
       type: string
       pattern: "^[a-z0-9][a-z0-9-:]*$"
     uniqueItems: true
-
   supersedes:
     type: array
-    description: "Optional superseded document IDs."
     items:
       type: string
       pattern: "^[a-z0-9][a-z0-9-:]*$"
     uniqueItems: true
-
   version:
     type: integer
     minimum: 1
-    description: "Schema/data version."
-
   project_id:
     type: string
     minLength: 1
-    description: "Project identifier (e.g., prj-0001)."
-
   members:
     type: array
-    minItems: 1
-    description: "List of project members (human or agent)."
     items:
-      $ref: "#/$defs/Member"
+      $ref: "#/$defs/HumanMember"
     uniqueItems: true
-
   rules:
     type: array
-    description: "Optional operational rules for using this member roster."
     items:
       type: string
       minLength: 1
     uniqueItems: true
-
 $defs:
   RoleLabel:
     type: string
-    description: "Role code. Must exist in pm-roles.yaml (e.g., PO, PM, BA, ARC, DEV, QE, UX, OPS)."
     pattern: "^[A-Z]{2,4}$"
-
-  Member:
+  HumanMember:
     type: object
     additionalProperties: false
-    required:
-      - nickname
-      - display_name
-      - roles
-      - type
+    required: [nickname, display_name, roles, type]
     properties:
       nickname:
         type: string
-        description: >
-          Immutable identifier used in `specdojo exec --by <nickname>`. Once
-          recorded in the event log, this value must not change.
         pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
-        minLength: 1
-
       display_name:
         type: string
-        description: "Human-readable name (person's name or agent display name)."
         minLength: 1
-
       email:
-        description: "Contact email address. Use null for agents or when not applicable."
         oneOf:
           - type: string
             format: email
           - type: "null"
-
       roles:
         type: array
-        description: "Role codes this member corresponds to. Use empty array for cross-role (general-purpose) agents."
         items:
           $ref: "#/$defs/RoleLabel"
         uniqueItems: true
-
       type:
-        type: string
-        description: "Actor type: human for a person, agent for an automated agent
-          (e.g., GitHub Copilot)."
-        enum: ["human", "agent"]
-
-      provider:
-        type: string
-        description: >
-          Agent runtime provider family. Use this to identify which external CLI
-          executes the member command.
-        enum: ["opencode", "claude", "codex", "copilot", "antigravity", "custom"]
-
+        const: human
       persona:
         type: string
         minLength: 1
-        description: "Optional working persona label used to describe the member's style
-          (e.g., value-first, analysis-first, risk-averse)."
-
       focus:
         type: array
-        description: "Optional list of emphasis areas used to steer the member's
-          execution or review perspective."
         items:
           type: string
           minLength: 1
         uniqueItems: true
-
-      capabilities:
-        type: array
-        description: >
-          Capabilities this agent can perform. Required for type: agent.
-          See exec-common.schema.yaml for core values (exec, review, web_search).
-        items:
-          $ref: "./exec-common.schema.yaml#/$defs/Capability"
-        uniqueItems: true
-
-      proficiency:
-        $ref: "./exec-common.schema.yaml#/$defs/Proficiency"
-        description: >
-          Agent proficiency level. Used by sch-strategy phase requirements to filter
-          agents by quality tier. Required for type: agent.
-
-      priority:
-        type: integer
-        minimum: 1
-        description: >
-          Tiebreaker priority within agents that share the same proficiency and
-          have equal extra-capabilities count. Lower value = tried first.
-          Required for type: agent.
-
-      command:
-        type: string
-        minLength: 1
-        description: >
-          Optional override of the launch command. Normally the command is resolved
-          from providers.<provider>.command_template in .specdojo/exec-defaults.yaml
-          using this member's attributes; set command only for configurations without
-          a template (e.g. provider: custom). Must not contain credentials or
-          machine-local paths.
-
-      mode:
-        type: string
-        enum: ["edit", "review", "report"]
-        description: >
-          Launch profile for this agent.
-          edit:   executor profile for deliverable creation and editing tasks.
-          review: executor profile for read-only deliverable review tasks.
-          report: reporter profile for turning evidence into a structured result without writing files.
-          For executor and legacy agents, exec run matches edit/review against the task mode.
-          Reporter eligibility is determined by stage_role: reporter instead, so report does not
-          restrict the reporter to edit or review tasks. Omit for a mode-agnostic member.
-
-      stage_role:
-        type: string
-        enum: ["executor", "reporter"]
-        description: >
-          Optional pipeline-stage responsibility for this agent.
-          executor and reporter agents are selected only for the matching agent_pipeline stage.
-          Omit for legacy single-agent execution; members without this field are not pipeline candidates.
-
-      disabled:
-        type: boolean
-        description: >
-          Optional. When true, this agent is temporarily excluded from
-          exec run --auto candidate selection (including rate-limit fallback).
-          Use to isolate a single provider during testing (e.g. verifying one
-          agent's rate-limit handling) without deleting the member definition.
-          Absent or false means the agent is selectable as usual.
-
       scheduler_strategy:
-        type: string
-        description: "Optional default scheduler strategy used when this member runs
-          `specdojo exec scheduler` without `--strategy`."
-        enum: ["critical-first", "dependency-first", "fifo", "manual"]
-
+        enum: [critical-first, dependency-first, fifo, manual]
       note:
         type: string
-        description: "Optional free-text note (e.g., availability, timezone,
-          responsibilities)."
-
-    allOf:
-      - if:
-          properties:
-            type:
-              const: agent
-        then:
-          required:
-            - provider
-            - capabilities
-            - proficiency
-            - priority
-      - if:
-          required:
-            - stage_role
-        then:
-          properties:
-            type:
-              const: agent

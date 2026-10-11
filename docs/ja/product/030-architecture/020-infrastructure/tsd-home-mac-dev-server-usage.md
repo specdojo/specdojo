@@ -206,7 +206,7 @@ tmux new-session -A -s specdojo
 specdojo exec run --auto --parallel 3
 ```
 
-agent の責務分担、`pm-members.yaml`、実行コマンド、モデル、認証、権限は次を正本とする。認証状態は devcontainer の named volume に保存し、API key や token をリポジトリや設定ファイルに記載しない。
+agent の責務分担、`.specdojo/agent-members.yaml`、実行コマンド、モデル、認証、権限は次を正本とする。認証状態は devcontainer の named volume に保存し、API key や token をリポジトリや設定ファイルに記載しない。
 
 - [[sysd-agent-settings|エージェント共通設定]]
 - [[sysd-opencode-agent-settings|OpenCode エージェント設定]]
@@ -247,16 +247,9 @@ tmux new -s specdojo
 
 ### 6.3. agent CLI の認証が毎回消える
 
-`.devcontainer/devcontainer.json` の named volume mount が有効か確認する。特に次の volume がない場合、コンテナ再作成時に認証状態が消える。
+設定・認証情報の保存先と named volume の完全な一覧は、[[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] の 4.10.1 を正本とする。`.devcontainer/devcontainer.json` の `mounts` が正本どおりか確認し、対象 volume を削除していないか調べる。OpenCode の API key は `specdojo-opencode-data` に mount した `/home/node/.local/share/opencode/auth.json` に保存される。
 
-```text
-specdojo-claude
-specdojo-claude-state
-specdojo-codex
-specdojo-copilot
-specdojo-opencode
-specdojo-gh
-```
+volume が存在するのに認証が消える場合は、CLI が正本と異なる保存先を使っていないか確認する。volume を削除した場合だけ対象 CLI で再ログインし、API key や token はリポジトリへ保存しない。
 
 ## 7. 運用上のセキュリティ
 

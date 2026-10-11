@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_335ce604a8ab4731a8bd992ecddfd33e
+  ts: "2026-09-28T22:27:35Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: config scaffoldに各Agentのパーミッション設定機能を追加
+    - field: description
+      from: ""
+      to: ローカル設定の生成(Claude等)およびグローバル設定へのマージ(Antigravity等)に対応する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_883b0739caee4b63a9cbad57a033664e
+  ts: "2026-09-29T10:50:57Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_335ce604a8ab4731a8bd992ecddfd33e
+- v: 1
+  id: reg_9a6cda56662d48faa3c0a18301cc12d6
+  ts: "2026-09-29T11:09:54Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_883b0739caee4b63a9cbad57a033664e
+- v: 1
+  id: reg_8e4aa8e345fb4f3b9e2ae397cc5b2fdb
+  ts: "2026-09-29T11:48:05Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: codex-expert-executor の実行結果を評価し安全条件の充足を確認。グローバル allow に npm run 等が含まれていたため利用者の承認を受け orchestrator が絞った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: config scaffold --provider antigravity --global で ~/.gemini/antigravity-cli/settings.json へ permission rule を差分表示・バックアップ付きでマージするようにした。グローバルの allow は読み取りの git コマンドだけに絞った
+  previous_event_id: reg_9a6cda56662d48faa3c0a18301cc12d6

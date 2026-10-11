@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_12110d5281d64299be86c8ae77da00db
+  ts: "2026-10-04T00:28:36Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の reporter を LLM から executor の marker の機械変換に置き換える
+    - field: description
+      from: ""
+      to: "grade の reporter は executor の [VIEWPOINT] / [DONE_CRITERIA] marker を GradeSubmission JSON へ一字一句写すだけだが、LLM が担うため書き写しの誤り（例: 三箇所→三箇会）、JSON の構文破損、根拠のない JSON の生成が起き、時間もかかる。grade apply は既に executor の分析を parse して忠実性を検証しているため、同じ parse から GradeSubmission を機械的に生成すれば、reporter 起因の失敗をなくし、executor の選択肢も広げられる"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_b5f5be5166204764bb5c14a1b4164f63
+  ts: "2026-10-04T03:45:58Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_12110d5281d64299be86c8ae77da00db
+- v: 1
+  id: reg_9666625357e2406789fde8f7b08561e5
+  ts: "2026-10-04T04:00:43Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner validation failed: `validate-schema` (exit 1), `typecheck` (error TS2532 in `tests/src/grade.test.ts`), and `test-unit` (4 tests failed in `tests/tools/grade-pe…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner validation failed: `validate-schema` (exit 1), `typecheck` (error TS2532 in `tests/src/grade.test.ts`), and `test-unit` (4 tests failed in `tests/tools/grade-pe…"
+  previous_event_id: reg_b5f5be5166204764bb5c14a1b4164f63
+- v: 1
+  id: reg_29281c9ee9c045b1a1b753275499c1ce
+  ts: "2026-10-04T04:26:45Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_9666625357e2406789fde8f7b08561e5
+- v: 1
+  id: reg_2042cbbc29d34d5d81c476a70249e5a2
+  ts: "2026-10-04T04:39:56Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_29281c9ee9c045b1a1b753275499c1ce
+- v: 1
+  id: reg_07f72081a87b446c8200be07a27724c9
+  ts: "2026-10-04T04:46:44Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: 実際の grade で機械変換の経路を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: grade の reporter の既定を executor の marker の機械変換（machine）にした。grade apply は --analysis-from だけで反映でき、拒否時は executor を1回再実行する。実際の grade 1 件で LLM の reporter を起動せずに記録できることを確認した
+  previous_event_id: reg_2042cbbc29d34d5d81c476a70249e5a2

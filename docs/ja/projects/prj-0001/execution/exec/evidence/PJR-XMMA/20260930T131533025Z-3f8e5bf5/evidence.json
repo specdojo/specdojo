@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XMMA",
+  "run_id": "20260930T131533025Z-3f8e5bf5",
+  "stage": {
+    "role": "executor",
+    "actor": "agy-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-30T13:15:33.025Z",
+    "completed_at": "2026-09-30T13:21:32.913Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xmma-docs-site-puppeteer25-mermaid12.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/mermaid-config.json",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/src/gen-mermaid-svg.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/gen-mermaid-svg.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/scratch.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-xmma-docs-site-puppeteer25-mermaid12.md    | 16 ++--\n .../pjr-xmma-20260930T131440Z-12b7-result.md       | 16 +++-\n packages/docs-site/mermaid-config.json             |  1 +\n packages/docs-site/src/gen-mermaid-svg.ts          | 13 +++-\n tests/packages/docs-site/gen-mermaid-svg.test.ts   | 89 +++++++++++++++++++++-\n 5 files changed, 120 insertions(+), 15 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write \"packages/docs-site/mermaid-config.json\" \"packages/docs-site/src/gen-mermaid-svg.ts\" \"tests/packages/docs-site/gen-mermaid-svg.test.ts\" \"docs/ja/projects/prj-0001/controls/project-register/pjr-xmma-docs-site-puppeteer25-mermaid12.md\" \"docs/ja/projects/prj-0001/execution/exec/results/pjr-xmma-20260930T131440Z-12b7-result.md\"",
+      "status": "passed",
+      "summary": "Formatted successfully"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint \"docs/ja/projects/prj-0001/controls/project-register/pjr-xmma-docs-site-puppeteer25-mermaid12.md\" \"docs/ja/projects/prj-0001/execution/exec/results/pjr-xmma-20260930T131440Z-12b7-result.md\"",
+      "status": "passed",
+      "summary": "Linted successfully"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "Validated successfully"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\nUpdated: /tmp/specdojo-register-resume-e2e-d5tf8N/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-d5tf8N/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-d5tf8N/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-d5tf8N/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md\nGenerated: /tm…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XMMA\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-HztBCw/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-qhRN9W/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-V6bIAO/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-saR8dH/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-1gjVZ5/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-69BWK6/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-ZQYuOD/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-n9AgqS/outputs/partial.txt\n\n Test Files  116 passed (116)\n      Te…"
+    }
+  ],
+  "final_message": "docs-site の puppeteer 25 と mermaid-cli 12 への更新に伴う設定追加とキャッシュロジック・テストの修正を完了し、個票と result を更新しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XMMA/20260930T131533025Z-3f8e5bf5/executor.log",
+      "bytes": 1566,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+タスク PJR-27Z9 の対応として、以下の作業を実施しました。
+
+1. **devcontainer 設定の変更**
+   `.devcontainer/devcontainer.json` の `runArgs` に `--security-opt=systempaths=unconfined` を追加し、codex（bubblewrap）がコンテナ内で `/proc` を正常にマウントできるように Docker の設定を緩和しました。
+2. **設計書の更新**
+   `docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md` のセクション 4.10 内の devcontainer 設定テーブルに `runArgs` のエントリを追加し、隔離緩和の目的（codex の bubblewrap 対応）を明記しました。
+3. **個票の更新**
+   `docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md` の「4. 対応結果」セクションを更新し、対応内容・確認内容・再発防止策を追記しました。
+4. **検証の実行**
+   指定された検査コマンド（`prettier`、`markdownlint`、`specdojo catalog validate`、`specdojo index build`）を実行し、問題なく完了することを確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":"devcontainer の runArgs に --security-opt=systempaths=unconfined を追加し、tsd-home-mac-dev-server と pjr-27z9-codex-bwrap-proc-mount に対応結果と意図を反映しました。","validations":[{"command":"npx prettier --write .devcontainer/devcontainer.json docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md","status":"passed","summary":"Formatted 3 files"},{"command":"npx markdownlint docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md docs/ja/projects/prj-0001/controls/project-register/pjr-27z9-codex-bwrap-proc-mount.md","status":"passed","summary":"No lint errors"},{"command":"npx tsx src/specdojo.ts catalog validate","status":"passed","summary":"Validated catalog with warnings"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"Built index (2353 entries)"}]}
+</specdojo_executor_evidence>

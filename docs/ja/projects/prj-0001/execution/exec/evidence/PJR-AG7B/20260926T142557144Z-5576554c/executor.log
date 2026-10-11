@@ -1,0 +1,14 @@
+実装完了です。
+
+- `document_kinds` による rulebook ID 単位の適用宣言を追加。
+- grade・edit/review plan・review result で同じ選択処理を使用。
+- 3観点の条件分岐を `check` から宣言へ移動。
+- 未分類文書は互換性維持のため既定で適用。
+- [PJR-AG7B 個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AG7B/docs/ja/projects/prj-0001/controls/project-register/pjr-ag7b-viewpoint-applicability-by-document-kind.md)へ対応結果を記録。ステータスと result は未変更です。
+- 親 runner 担当の typecheck・unit・integration・schema 検証は実行していません。
+
+標準の `npx tsx` 起動は sandbox の IPC 制約で失敗したため、同じ loader を使う `node --import tsx` で SpecDojo 検証を完了しました。
+
+<specdojo_executor_evidence>
+{"final_message":"`document_kinds` による文書種類別の観点選択を grade と review に統一して実装し、PJR-AG7B 個票を更新した。","validations":[{"command":"npx prettier --write <変更した13ファイル>","status":"passed","summary":"全変更ファイルを整形、再実行時 unchanged"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-ag7b-viewpoint-applicability-by-document-kind.md docs/ja/specdojo/guides/review-guide.md","status":"passed","summary":"Markdown lint エラーなし"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューを正常に再生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログ OK。未作成成果物に関する既存警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2012 entries を再構築"},{"command":"node --import tsx --input-type=module -e '<3 representative documents document-kind selection smoke>'","status":"passed","summary":"index／overview では単一責務観点を除外し、BPS では維持。読みやすさ観点は全対象で維持"},{"command":"npm run typecheck; npm run test:unit; npm run test:integration; npm run validate:schema","status":"not_run","summary":"executor 指示に従い親 runner の検証へ委譲"}]}
+</specdojo_executor_evidence>

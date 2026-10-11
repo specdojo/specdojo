@@ -4,6 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { commitRegisterItemChanges } from "../../src/exec-run.js";
+import { worktreeStatusPaths } from "../../src/exec-worktree-ops.js";
 import { gitEnvironment } from "../../src/exec-worktree.js";
 import type { PjrItem } from "../../src/register.js";
 
@@ -34,11 +35,11 @@ function createGitRepository(): string {
   return repo;
 }
 
-function makeItem(id = "PJR-0001"): PjrItem {
+function makeItem(id = "PJR-0001", title = "register commit test"): PjrItem {
   return {
     id,
     status: "in-progress",
-    title: "register commit test",
+    title,
     description: "test",
     type: "issue",
     priority: "high",
@@ -52,6 +53,23 @@ function makeItem(id = "PJR-0001"): PjrItem {
 }
 
 describe("commitRegisterItemChanges", () => {
+  it("100文字を超えるタイトルでもsubjectを上限内に収めてcommitする", () => {
+    const repo = createGitRepository();
+    try {
+      writeFileSync(join(repo, "src", "target.ts"), "long title change\n", "utf8");
+
+      const result = commitRegisterItemChanges(repo, makeItem("PJR-0001", "長".repeat(120)), []);
+      const subject = git(repo, "log", "-1", "--pretty=%s");
+
+      expect(result.committed).toBe(true);
+      expect(subject).toHaveLength(100);
+      expect(subject).toMatch(/^exec\(register PJR-0001\): /);
+      expect(subject.endsWith("…")).toBe(true);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("hookが整形した対象を同じIDのcommitへ収束させ、次IDでも同じパスをcommitできる", () => {
     const repo = createGitRepository();
     try {
@@ -115,6 +133,45 @@ describe("commitRegisterItemChanges", () => {
       expect(git(repo, "show", "HEAD:exec/plans/pjr-plan.md")).toBe("plan");
       expect(readFileSync(join(repo, "docs", "user.md"), "utf8")).toBe("user change\n");
       expect(git(repo, "status", "--porcelain")).toBe(" M docs/user.md");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("未追跡ディレクトリをファイル単位で比較し、実行中に増えたファイルだけをcommitする", () => {
+    const repo = createGitRepository();
+    try {
+      mkdirSync(join(repo, "docs", "notes"), { recursive: true });
+      writeFileSync(join(repo, "docs", "notes", "user.md"), "user note\n", "utf8");
+      const preexisting = worktreeStatusPaths(repo);
+      writeFileSync(join(repo, "docs", "notes", "runner.md"), "runner note\n", "utf8");
+
+      const result = commitRegisterItemChanges(repo, makeItem(), preexisting);
+
+      expect(result.committed).toBe(true);
+      expect(git(repo, "show", "HEAD:docs/notes/runner.md")).toBe("runner note");
+      expect(() => git(repo, "show", "HEAD:docs/notes/user.md")).toThrow();
+      expect(worktreeStatusPaths(repo)).toEqual(["docs/notes/user.md"]);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("commit失敗時はrunner対象だけをunstageし、既存のstaged変更を保持する", () => {
+    const repo = createGitRepository();
+    try {
+      writeFileSync(join(repo, "docs", "user.md"), "staged by user\n", "utf8");
+      git(repo, "add", "docs/user.md");
+      const preexisting = worktreeStatusPaths(repo);
+      writeFileSync(join(repo, "src", "target.ts"), "runner change\n", "utf8");
+      const hookPath = join(repo, ".git", "hooks", "pre-commit");
+      writeFileSync(hookPath, "#!/bin/sh\nexit 1\n", "utf8");
+      chmodSync(hookPath, 0o755);
+
+      expect(() => commitRegisterItemChanges(repo, makeItem(), preexisting)).toThrow();
+
+      expect(git(repo, "diff", "--cached", "--name-only")).toBe("docs/user.md");
+      expect(git(repo, "diff", "--name-only")).toBe("src/target.ts");
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

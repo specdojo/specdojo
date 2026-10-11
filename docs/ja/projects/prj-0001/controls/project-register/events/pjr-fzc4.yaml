@@ -1,0 +1,137 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_497075ed57cd49ee916e5266b7e83203
+  ts: "2026-10-01T03:58:50Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: decision は exec run で実行できない種別のため、PJR-5822 の調査と案の作成を todo として切り出す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 複数リポジトリ対応の調査と選択肢の比較
+    - field: description
+      from: ""
+      to: PJR-5822 の決定に必要な調査として、現行実装の変更箇所を一覧にし、論点ごとの選択肢と推奨案を PJR-5822 の個票に書く。決定はしない（v0.3.0）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-01"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_39b5d449e58345048a7102a0d3f3cc80
+  ts: "2026-10-01T03:59:29Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_497075ed57cd49ee916e5266b7e83203
+- v: 1
+  id: reg_f5507c4035114c259b2bd2b6fe65ef22
+  ts: "2026-10-01T04:10:12Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証のうち、`test-unit` が `failed` となっており、完了条件を満たしていない。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証のうち、`test-unit` が `failed` となっており、完了条件を満たしていない。"
+  previous_event_id: reg_39b5d449e58345048a7102a0d3f3cc80
+- v: 1
+  id: reg_6c72919407f74f8ea4c8d16703da4b87
+  ts: "2026-10-01T04:11:47Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_f5507c4035114c259b2bd2b6fe65ef22
+- v: 1
+  id: reg_6ba613c772404e8db81ed8b6f58975be
+  ts: "2026-10-01T04:16:16Z"
+  action: wait
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親検証 `test-unit` が失敗（exit 1）しており、完了条件である静的検査・テストの全件通過を満たしていないため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: runner による検証のうち、`test-unit` が `failed` となっており、完了条件を満たしていない。"
+      to: "agent exited with non-zero code: 親検証 `test-unit` が失敗（exit 1）しており、完了条件である静的検査・テストの全件通過を満たしていないため。"
+  previous_event_id: reg_6c72919407f74f8ea4c8d16703da4b87
+- v: 1
+  id: reg_6dd8b79156a441689f3fb498a6f2504e
+  ts: "2026-10-01T04:16:56Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_6ba613c772404e8db81ed8b6f58975be
+- v: 1
+  id: reg_e3530055066544ee92c530fcd6bb6843
+  ts: "2026-10-01T04:21:23Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6dd8b79156a441689f3fb498a6f2504e
+- v: 1
+  id: reg_e6c67c81214b47708e9279f215f4c353
+  ts: "2026-10-01T04:29:39Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor / gemma-reporter）の結果を orchestrator が評価した。論点と変更箇所が完了条件を満たし、PJR-5822 の決定に用いた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-01"
+    - field: conclusion
+      from: "-"
+      to: 現行実装の変更箇所を一覧にし、10 の論点の選択肢と推奨案を PJR-5822 に記録した
+  previous_event_id: reg_e3530055066544ee92c530fcd6bb6843

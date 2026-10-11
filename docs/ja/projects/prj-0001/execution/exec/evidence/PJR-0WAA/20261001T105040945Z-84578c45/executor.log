@@ -1,0 +1,14 @@
+複数リポジトリの統合・再開処理を実装しました。
+
+- 宣言順にプロダクト、最後にプロジェクトを統合
+- リポジトリ別の状態を pipeline state に記録
+- 統合済みリポジトリをスキップして失敗位置から再開
+- 全リポジトリの事前検査と `releasePaths` 除外を実装
+- 各失敗位置、無関係な未 commit 変更、単一リポジトリ互換の回帰テストを追加
+- 個票を更新。result は executor 指示どおり未編集
+
+親 runner 担当の lint、型検査、unit／integration test、schema 検証は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"複数リポジトリの宣言順統合、pipeline stateへの進捗記録、失敗位置からの再開、およびreleasePathsを考慮した事前検査を実装した。","validations":[{"command":"npx prettier --write docs/specdojo/schemas/v1/pipeline-state.schema.yaml src/exec-pipeline-state.ts src/exec-repo-integration.ts src/exec-run.ts src/exec-task-repos.ts src/exec-worktree-ops.ts tests/src/exec-pipeline-state.test.ts tests/src/exec-task-repos.integration.test.ts","status":"passed","summary":"変更したTypeScript・YAMLを整形した。"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-0waa-multi-repo-integration-resume.md","status":"passed","summary":"個票を整形した。"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-0waa-multi-repo-integration-resume.md","status":"passed","summary":"個票のMarkdown検査に合格した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証に合格した。既存の未配置文書に関する警告のみ。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書インデックスを正常に再生成した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"プロジェクト登録簿の派生ビューを正常に再生成した。"},{"command":"node --import tsx --input-type=module -e \"await Promise.all([import('./src/exec-repo-integration.ts'), import('./src/exec-pipeline-state.ts'), import('./src/exec-worktree-ops.ts')])\"","status":"passed","summary":"主要変更モジュールの読み込みに成功した。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはない。"}]}
+</specdojo_executor_evidence>

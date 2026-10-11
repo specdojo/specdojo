@@ -5,8 +5,10 @@ import { join, resolve } from "node:path";
 import yaml from "js-yaml";
 import {
   buildViewpointsOverlay,
+  documentKind,
   resolveViewpointsDoc,
   scaffoldViewpoints,
+  viewpointAppliesToDocument,
 } from "../../src/review-plan.js";
 import type { ReviewViewpointsDoc } from "../../src/review-types.js";
 import { buildValidator, formatErrors } from "../helpers/schema.js";
@@ -124,6 +126,172 @@ describe("resolveViewpointsDoc", () => {
     });
   });
 
+  it("プロジェクトの観点が削除済みの evaluation を使う場合は新しい値を示して拒否する", () => {
+    withTempDir((dir) => {
+      const projectPath = writeOverlay(dir, {
+        viewpoints: [
+          {
+            id: "vp-po-purpose-alignment",
+            role: "PO",
+            category: "purpose",
+            title: "目的整合",
+            check: "確認する。",
+            evidence: "根拠。",
+            default_severity: "major",
+            evaluation: "human",
+          },
+        ],
+      });
+
+      expect(() => resolveViewpointsDoc(projectPath, resolve(COMMON_PATH))).toThrow(
+        /vp-po-purpose-alignment.*removed evaluation 'human'.*referential or discretionary/,
+      );
+    });
+  });
+
+  it("プロジェクトの観点が削除済みの continuous を持つ場合は無視せず拒否する", () => {
+    withTempDir((dir) => {
+      const projectPath = writeOverlay(dir, {
+        viewpoints: [
+          {
+            id: "vp-po-purpose-alignment",
+            role: "PO",
+            category: "purpose",
+            title: "目的整合",
+            check: "確認する。",
+            evidence: "根拠。",
+            default_severity: "major",
+            evaluation: "referential",
+            continuous: false,
+          },
+        ],
+      });
+
+      expect(() => resolveViewpointsDoc(projectPath, resolve(COMMON_PATH))).toThrow(
+        /vp-po-purpose-alignment.*removed field 'continuous'.*grade_targets or document_kinds/,
+      );
+    });
+  });
+
+  it("extends のない全量ファイルでも削除済みの continuous を拒否する", () => {
+    withTempDir((dir) => {
+      const path = join(dir, "legacy.yaml");
+      writeFileSync(
+        path,
+        yaml.dump({
+          id: "test:viewpoints",
+          viewpoints: [{ id: "vp-qe-sample", evaluation: "referential", continuous: true }],
+        }),
+      );
+
+      expect(() => resolveViewpointsDoc(path)).toThrow(/vp-qe-sample.*removed field 'continuous'/);
+    });
+  });
+
+  it("extends のない全量ファイルでも削除済みの evaluation を拒否する", () => {
+    withTempDir((dir) => {
+      const path = join(dir, "legacy.yaml");
+      writeFileSync(
+        path,
+        yaml.dump({
+          id: "test:viewpoints",
+          viewpoints: [{ id: "vp-qe-sample", evaluation: "agent" }],
+        }),
+        "utf8",
+      );
+
+      expect(() => resolveViewpointsDoc(path)).toThrow(
+        /vp-qe-sample.*removed evaluation 'agent'.*allowed: deterministic, referential, discretionary/,
+      );
+    });
+  });
+
+  it("verdict_definitions の旧値を移行先の値を示して拒否する", () => {
+    withTempDir((dir) => {
+      const projectPath = writeOverlay(dir, {
+        verdict_definitions: [{ id: "conditional_pass", description: "旧値" }],
+      });
+
+      expect(() => resolveViewpointsDoc(projectPath, resolve(COMMON_PATH))).toThrow(
+        /verdict_definitions has removed verdict 'conditional_pass'; use complete-with-findings \(allowed: complete, complete-with-findings, incomplete, grade-stale, grade-unavailable, changed-during-review\)/,
+      );
+    });
+  });
+
+  it("extends のない全量ファイルでも grade_rubric の旧 review_verdict を拒否する", () => {
+    withTempDir((dir) => {
+      const path = join(dir, "legacy.yaml");
+      writeFileSync(
+        path,
+        yaml.dump({
+          id: "test:viewpoints",
+          viewpoints: [],
+          grade_rubric: {
+            id: "grade-rubric-test",
+            levels: [
+              { level: 2, name: "L2", description: "d", review_verdict: "changes_requested" },
+            ],
+          },
+        }),
+        "utf8",
+      );
+
+      expect(() => resolveViewpointsDoc(path)).toThrow(
+        /grade_rubric level 2 review_verdict has removed verdict 'changes_requested'; use incomplete \(allowed: complete, complete-with-findings, incomplete\)/,
+      );
+    });
+  });
+
+  it("grade の level から決まらない verdict を review_verdict に使えない", () => {
+    withTempDir((dir) => {
+      const path = join(dir, "legacy.yaml");
+      writeFileSync(
+        path,
+        yaml.dump({
+          id: "test:viewpoints",
+          viewpoints: [],
+          grade_rubric: {
+            id: "grade-rubric-test",
+            levels: [{ level: 0, name: "L0", description: "d", review_verdict: "grade-stale" }],
+          },
+        }),
+        "utf8",
+      );
+
+      expect(() => resolveViewpointsDoc(path)).toThrow(
+        /grade_rubric level 0 review_verdict has unknown verdict 'grade-stale'/,
+      );
+    });
+  });
+
+  it("共通正本の verdict_definitions は review の verdict と同じ 6 値である", () => {
+    withTempDir((dir) => {
+      const resolved = resolveViewpointsDoc(writeOverlay(dir), resolve(COMMON_PATH)) as Record<
+        string,
+        unknown
+      >;
+      const ids = (resolved["verdict_definitions"] as { id: string }[]).map((item) => item.id);
+
+      expect(ids).toEqual([
+        "complete",
+        "complete-with-findings",
+        "incomplete",
+        "grade-stale",
+        "grade-unavailable",
+        "changed-during-review",
+      ]);
+      expect(resolved["grade_rubric"]).toMatchObject({
+        levels: [
+          { level: 0, review_verdict: "incomplete" },
+          { level: 1, review_verdict: "incomplete" },
+          { level: 2, review_verdict: "incomplete" },
+          { level: 3, review_verdict: "complete-with-findings" },
+          { level: 4, review_verdict: "complete" },
+        ],
+      });
+    });
+  });
+
   it("extends のない既存の全量ファイルは互換読み込みする", () => {
     withTempDir((dir) => {
       const path = join(dir, "legacy.yaml");
@@ -135,6 +303,77 @@ describe("resolveViewpointsDoc", () => {
 
       expect(resolveViewpointsDoc(path)).toMatchObject({ id: "test:viewpoints", viewpoints: [] });
     });
+  });
+});
+
+describe("viewpoint document-kind applicability", () => {
+  const viewpoint = {
+    id: "vp-arc-example",
+    role: "ARC",
+    category: "architecture",
+    title: "example",
+    check: "check",
+    evidence: "evidence",
+    default_severity: "major",
+    document_kinds: {
+      exclude: ["specdojo:dct-index-rulebook"],
+      unclassified: "exclude" as const,
+    },
+  };
+
+  it("rulebook・成果物・template を同じ rulebook ID へ正規化する", () => {
+    expect(
+      documentKind({
+        id: "specdojo:bps-rulebook",
+        type: "rulebook",
+      }),
+    ).toBe("specdojo:bps-rulebook");
+    expect(documentKind({ rulebook: "specdojo:bps-rulebook" })).toBe("specdojo:bps-rulebook");
+    expect(
+      documentKind({
+        type: "template",
+        frontmatter_template: { specdojo: { rulebook: "specdojo:bps-rulebook" } },
+      }),
+    ).toBe("specdojo:bps-rulebook");
+  });
+
+  it("除外した種類と未分類だけを対象外にする", () => {
+    expect(
+      viewpointAppliesToDocument(viewpoint, {
+        rulebook: "specdojo:dct-index-rulebook",
+      }),
+    ).toBe(false);
+    expect(
+      viewpointAppliesToDocument(viewpoint, {
+        rulebook: "specdojo:bps-rulebook",
+      }),
+    ).toBe(true);
+    expect(viewpointAppliesToDocument(viewpoint, { rulebook: "none" })).toBe(false);
+  });
+
+  it("confirmed_default は判断の記録であり、適用判定を変えない", () => {
+    const recorded = {
+      ...viewpoint,
+      document_kinds: {
+        ...viewpoint.document_kinds,
+        confirmed_default: ["specdojo:bps-rulebook"],
+      },
+    };
+    const includeOnly = {
+      ...viewpoint,
+      document_kinds: {
+        include: ["specdojo:bps-rulebook"],
+        confirmed_default: ["specdojo:dct-rulebook"],
+      },
+    };
+
+    expect(viewpointAppliesToDocument(recorded, { rulebook: "specdojo:bps-rulebook" })).toBe(true);
+    expect(viewpointAppliesToDocument(recorded, { rulebook: "specdojo:dct-index-rulebook" })).toBe(
+      false,
+    );
+    expect(viewpointAppliesToDocument(includeOnly, { rulebook: "specdojo:dct-rulebook" })).toBe(
+      false,
+    );
   });
 });
 

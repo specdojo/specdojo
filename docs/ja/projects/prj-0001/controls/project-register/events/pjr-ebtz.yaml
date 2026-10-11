@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_46584051cd5e4133add58346d0852cb0
+  ts: "2026-09-25T13:09:50Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: vp-arc-cross-document-consistency の突き合わせ先を target 別に絞り kata-conformance との境界を定める
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-25"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_3b27568105fc43f9b30d3556744deb4a
+  ts: "2026-09-26T04:13:19Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_46584051cd5e4133add58346d0852cb0
+- v: 1
+  id: reg_1d170ff936f840528938130eb7b0eeed
+  ts: "2026-09-26T04:23:47Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3b27568105fc43f9b30d3556744deb4a
+- v: 1
+  id: reg_a58457cc96004801a6c5673207671d2c
+  ts: "2026-09-26T04:59:09Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 完了条件 5 件すべてを満たす。突き合わせ先を成果物へ絞り、kata の整合は vp-qe-kata-conformance の責務へ移管した。finding へ突き合わせ先の明示を必須化し、乖離を監査可能にした。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_1d170ff936f840528938130eb7b0eeed

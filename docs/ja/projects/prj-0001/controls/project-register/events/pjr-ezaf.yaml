@@ -1,0 +1,153 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b5d88e42105d44a2bbe09ea22d4c8c9d
+  ts: "2026-10-04T05:03:36Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer テンプレートで codex の sandbox が動くか確認し、必要な設定を加える
+    - field: description
+      from: ""
+      to: specdojo devcontainer scaffold のテンプレートはシステムの bubblewrap を入れないため、PJR-27Z9 の /proc の問題は起きない見込みである。一方、runArgs を持たず Docker 既定の seccomp が名前空間の作成（unshare / clone の名前空間フラグ）を禁止するため、codex 同梱の bwrap が sandbox を作れない可能性が高い。Docker が必要なため Host Mac で実際に確認し、問題があれば codex provider の指定時だけ設定を加える
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_867051e0b3e14c01bfaf190e56f51be6
+  ts: "2026-10-07T14:06:58Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b5d88e42105d44a2bbe09ea22d4c8c9d
+- v: 1
+  id: reg_3c4fe49cea43488e9880e320ffa7bdae
+  ts: "2026-10-07T14:08:56Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_867051e0b3e14c01bfaf190e56f51be6
+- v: 1
+  id: reg_4cd63614e2fe45e0aa98e44de918db95
+  ts: "2026-10-07T20:53:38Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_3c4fe49cea43488e9880e320ffa7bdae
+- v: 1
+  id: reg_b58fe41c8bb1479c97c27ec895b9f536
+  ts: "2026-10-07T21:03:32Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  previous_event_id: reg_4cd63614e2fe45e0aa98e44de918db95
+- v: 1
+  id: reg_5982993d213447a7a1cc38659486f8a8
+  ts: "2026-10-07T21:59:39Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+      to: "-"
+  previous_event_id: reg_b58fe41c8bb1479c97c27ec895b9f536
+- v: 1
+  id: reg_e5c118f653b44be8a0762bbbe4b104f4
+  ts: "2026-10-07T22:04:05Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-md"
+  previous_event_id: reg_5982993d213447a7a1cc38659486f8a8
+- v: 1
+  id: reg_e2a7af7b66224b24b623234b493172d0
+  ts: "2026-10-07T22:05:04Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_e5c118f653b44be8a0762bbbe4b104f4
+- v: 1
+  id: reg_d225a6f1bccf4b37ba24af10b2ccd750
+  ts: "2026-10-07T22:09:47Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e2a7af7b66224b24b623234b493172d0

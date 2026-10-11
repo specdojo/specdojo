@@ -1,0 +1,118 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e9db290a000a4571bf70ef8743cf0808
+  ts: "2026-09-26T05:44:30Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 成果物カタログの BPS 29 件を現行 CDFD の 14 領域へ追従させる
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-09-26"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_5c574993f8714a02a06c3d355c6dabf1
+  ts: "2026-09-26T14:25:59Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e9db290a000a4571bf70ef8743cf0808
+- v: 1
+  id: reg_2ac7a143612f4a41a81e1d490709cbea
+  ts: "2026-09-26T14:41:59Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5c574993f8714a02a06c3d355c6dabf1
+- v: 1
+  id: reg_23b8bced52314c39bb47141ce7cca9fd
+  ts: "2026-09-26T14:42:07Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: review
+  to_status: waiting
+  reason: "integrate failed: git status failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MH9E' (args: --porcelain=v1 -z --untracked-files=all)"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git status failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MH9E' (args: --porcelain=v1 -z --untracked-files=all)"
+  previous_event_id: reg_2ac7a143612f4a41a81e1d490709cbea
+- v: 1
+  id: reg_1c432ffad05a4a4f85614a781b30e56e
+  ts: "2026-09-26T14:47:27Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_23b8bced52314c39bb47141ce7cca9fd
+- v: 1
+  id: reg_608a803ad2e24d0d86a14563983e33e4
+  ts: "2026-09-26T14:47:36Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1c432ffad05a4a4f85614a781b30e56e
+- v: 1
+  id: reg_35c87345eb7546bcb2d102c47afb85f2
+  ts: "2026-09-26T14:49:52Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: カタログの BPS を現行 CDFD の 14 領域へ再編し、BPS 2 件を登録した。31 件すべてに done_criteria がある。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_608a803ad2e24d0d86a14563983e33e4

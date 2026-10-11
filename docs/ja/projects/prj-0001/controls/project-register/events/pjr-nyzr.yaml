@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_eafaf62410764945bfd4b7dca7b0e2e2
+  ts: "2026-10-07T23:16:09Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼で v0.3.0 の普及戦略を立案（2026-10-08）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: SpecDojo の普及戦略を決める
+    - field: description
+      from: ""
+      to: v0.3.0 の公開に向けて、位置づけ（仕様と設計を作り運用・保守へつなぐ基盤、Spec Kit の上流）、入口（仕様の判断台帳としての register）、最初に狙う利用者（設計書を作り保守する日本のチーム）、段階的な計画と指標を決める。根拠は PJR-36QG の比較。
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: PO
+    - field: registered
+      from: ""
+      to: "2026-10-08"
+- v: 1
+  id: reg_869000f8556d4f3fa48b25ab4af01610
+  ts: "2026-10-08T03:19:57Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が orchestrator との対話で選択肢 B を指示した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: 選択肢 B。仕様と設計の基盤として、register を仕様の判断台帳として入口にし、kata・grade へ順に進める。最初に狙う利用者は設計書を作り保守する日本のチーム
+  previous_event_id: reg_eafaf62410764945bfd4b7dca7b0e2e2

@@ -17,6 +17,9 @@ vi.mock("../../src/doc-index.js", () => ({
 import * as docIndex from "../../src/doc-index.js";
 
 vi.mock("../../src/grade-result.js", () => ({
+  gradeFindingDisplayMessage: vi.fn(
+    (finding: { message: string; message_ja?: string }) => finding.message_ja ?? finding.message,
+  ),
   gradeResultPathForDocument: vi.fn(),
   readGradeResultForDocument: vi.fn(),
 }));
@@ -31,7 +34,21 @@ describe("registerGradeFindingsText", () => {
     vi.mocked(fs.existsSync).mockReturnValue(true);
     vi.mocked(fs.readFileSync).mockImplementation(((_path: string) => {
       if (_path.includes("ticket.md")) {
-        return "## 5. 関連ドキュメント\n\n- [[doc-a]]\n- [[doc-b]]\n- [[doc-c]]\n- [[doc-not-found]]\n";
+        return [
+          "---",
+          "specdojo:",
+          "  targets:",
+          "    - doc-a",
+          "    - doc-b",
+          "    - doc-c",
+          "    - doc-not-found",
+          "---",
+          "",
+          "## 5. 関連ドキュメント",
+          "",
+          "- [[doc-reference-only]]",
+          "",
+        ].join("\n");
       }
       return "";
     }) as unknown as typeof fs.readFileSync);
@@ -64,7 +81,8 @@ describe("registerGradeFindingsText", () => {
               rule: "R02",
               line: 10,
               anchor: "anch",
-              message: "warning msg",
+              message: "Canonical warning message",
+              message_ja: "警告メッセージ",
             },
           ],
         } as unknown as GradeResult;
@@ -92,15 +110,24 @@ describe("registerGradeFindingsText", () => {
     expect(text).toContain("[error/R01; line=20; anchor=null]: msg 19");
     expect(text).not.toContain("[error/R01; line=21; anchor=null]: msg 20");
     expect(text).toContain("- 他 5 件の finding があります。詳細はサイドカーを参照してください。");
+    expect(text).toContain('[warning/R02; line=10; anchor="anch"]: 警告メッセージ');
+    expect(text).not.toContain("Canonical warning message");
 
     // サイドカー未存在（または finding 0件）の扱い
     expect(text).toContain("- [[doc-c]]: finding なし");
+
+    // 関連ドキュメントにあるだけで targets にない文書は展開されない
+    expect(text).not.toContain("doc-reference-only");
+    expect(docIndex.lookupDocIndex).not.toHaveBeenCalledWith(
+      "doc-reference-only",
+      expect.any(String),
+    );
   });
 
   it("文書数の上限", () => {
     vi.mocked(fs.readFileSync).mockImplementation(((_path: string) => {
-      const links = Array.from({ length: 15 }, (_, i) => `- [[doc-${i}]]`).join("\n");
-      return `## 5. 関連ドキュメント\n\n${links}\n`;
+      const targets = Array.from({ length: 15 }, (_, i) => `    - doc-${i}`).join("\n");
+      return `---\nspecdojo:\n  targets:\n${targets}\n---\n`;
     }) as unknown as typeof fs.readFileSync);
     vi.mocked(docIndex.lookupDocIndex).mockReturnValue("dummy.md");
     vi.mocked(gradeResult.readGradeResultForDocument).mockReturnValue({
@@ -113,5 +140,17 @@ describe("registerGradeFindingsText", () => {
     expect(text).toContain("- [[doc-9]]: finding なし");
     expect(text).not.toContain("- [[doc-10]]: finding なし");
     expect(text).toContain("- その他 5 件の文書は省略されました");
+  });
+
+  it("targets がなければ関連ドキュメントの finding を展開しない", () => {
+    vi.mocked(fs.readFileSync).mockReturnValue(
+      "---\nspecdojo:\n  id: prj-test:pjr-test\n---\n\n## 5. 関連ドキュメント\n\n- [[doc-a]]\n",
+    );
+
+    const text = registerGradeFindingsText("prj-test", "ticket.md");
+
+    expect(text).toBe("- なし");
+    expect(docIndex.lookupDocIndex).not.toHaveBeenCalled();
+    expect(gradeResult.readGradeResultForDocument).not.toHaveBeenCalled();
   });
 });

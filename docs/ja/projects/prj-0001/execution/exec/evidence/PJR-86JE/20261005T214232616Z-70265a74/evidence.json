@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-86JE",
+  "run_id": "20261005T214232616Z-70265a74",
+  "stage": {
+    "role": "executor",
+    "actor": "agy-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-05T21:42:32.616Z",
+    "completed_at": "2026-10-05T22:01:48.782Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-86je.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-86je-docs-lint-chinese-glyphs.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vqb5-agent-grade-comparison.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/bin/specdojo-docs-lint.js",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/markdownlint-rule-no-chinese-glyphs.cjs",
+      "status": "??"
+    },
+    {
+      "path": "test.js",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-lint/markdownlint-rule-no-chinese-glyphs.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../controls/project-register/events/pjr-86je.yaml  |  2 +-\n .../pjr-86je-docs-lint-chinese-glyphs.md            | 21 ++++++++++++++-------\n .../pjr-vqb5-agent-grade-comparison.md              |  2 ++\n .../plans/pjr-86je-20261005T214003Z-714f-plan.md    |  4 +++-\n .../T-DATA-FLOW-PDCA-cdfd-uc-register-070-result.md |  2 +-\n .../pjr-86je-20261004T132004Z-0e0b-result.md        |  4 ++--\n packages/docs-lint/bin/specdojo-docs-lint.js        |  3 +++\n 7 files changed, 26 insertions(+), 12 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run check",
+      "status": "passed",
+      "summary": "全静的解析、スキーマ検証、ユニットテストが成功しました"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿派生ビュー生成成功"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86JE\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/tools/open-agent-worktree.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 116\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/deliverable-trash.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 89\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-agent-git-state.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 168\u001b[2mms\u001b[22m\u001b[39m\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\n \u001b[32m✓\u001b[39m tests/src/exec-register-worktree.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 84\u001b[2mms\u001b[22m\u001b[39m\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\n \u001b[32m✓\u001b[39m tests/src/exec-register-multiple-ids.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[3…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86JE/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86JE/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-86JE\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/doc-index.test.ts \u001b[2m(\u001b[22m\u001b[2m28 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 3938\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する \u001b[33m 3904\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/tools/grade-per-document.test.ts \u001b[2m(\u001b[22m\u001b[2m28 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 6083\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m runs all three stages for one document and skips it on resume \u001b[33m 395\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m routes deliverables through deliverable grade plans and apply \u001b[33m 332\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m exits with 0 when no document is left incomplete \u001b[33m 385\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m retries a failed stage in a new run without repeating completed stages \u001b[33m 605\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m…"
+    }
+  ],
+  "final_message": "日本語の文書に中国語の字体が混ざったことを検出する lint (`no-chinese-glyphs`) を追加し、テストでの `ts-ignore` のエラーを修正して静的解析を通過させました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-86JE/20261005T214232616Z-70265a74/executor.log",
+      "bytes": 1169,
+      "truncated": false
+    }
+  ]
+}

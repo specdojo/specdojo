@@ -1,0 +1,87 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: "SpecDojo Glossary Schema"
+type: object
+additionalProperties: false
+required:
+  - id
+  - title
+  - locale
+  - terms
+properties:
+  id:
+    type: string
+    pattern: "^([a-z0-9-]+:)?gl-[a-z0-9-]+$"
+    description: "用語集ID（gl-...）"
+  title:
+    type: string
+    minLength: 1
+    description: "用語集名"
+  locale:
+    type: string
+    minLength: 1
+    description: "言語（例: ja / en）"
+  status:
+    type: string
+    enum: ["draft", "ready", "deprecated"]
+    description: "文書のステータス"
+  terms:
+    type: array
+    description: "用語のリスト"
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - term
+        - definition
+      properties:
+        id:
+          type: string
+          pattern: "^tm-[a-z0-9-]+$"
+          description: "用語ID（tm-...）"
+        term:
+          type: string
+          minLength: 1
+          description: "用語（正式名称）"
+        englishName:
+          type: string
+          minLength: 1
+          description: "英語名（概念の英語表記）"
+        aliases:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: "別名"
+          uniqueItems: true
+        definition:
+          type: string
+          minLength: 1
+          description: "定義（境界が分かる説明）"
+        notes:
+          type: string
+          minLength: 1
+          description: "補足・運用メモ"
+        category:
+          type: string
+          minLength: 1
+          description: "分類"
+        relatedTerms:
+          type: array
+          items:
+            type: string
+            pattern: "^tm-[a-z0-9-]+$"
+          description: "関連用語ID"
+          uniqueItems: true
+        source:
+          type: string
+          minLength: 1
+          description: "出典/参考"
+        status:
+          type: string
+          enum: ["official", "deprecated", "candidate"]
+          description: "用語のステータス"
+        example:
+          type: string
+          minLength: 1
+          description: "用例"

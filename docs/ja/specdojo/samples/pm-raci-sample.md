@@ -48,7 +48,7 @@ specdojo:
 ## 4. Schedule・実行主体との対応
 
 - Schedule の `owner` は、その作業を主導する `R` の Role code と一致させる。
-- 実行主体と兼務は `pm-members.yaml` で管理し、本書へ個人名や agent 名を記載しない。
+- 人間の実行主体と兼務は `pm-members.yaml`、agent は `.specdojo/agent-members.yaml` で管理し、本書へ個人名や agent 名を記載しない。
 - 成果物を統合・分割した場合も、各作業の `A` が不明にならないようにする。
 - 同じ実行主体が `A` と `R` を兼ねる場合も、判断と作業の証跡を分ける。
 

@@ -32,12 +32,10 @@ function configurePipeline(repo: string, reporterCommandOverride?: string): void
   const reporterOutput = JSON.stringify({
     schema_version: 1,
     mode: "edit",
-    outcome: "complete",
     summary: ["成果物を更新し、検証を完了した。"],
     changed_files: [{ path: "pipeline-artifact.md", summary: "文書を更新した。" }],
     handoff: [],
     approach: "plan と executor evidence のみを根拠に結果を構成した。",
-    block_reason: "",
   });
   const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
   const reporterCommand =
@@ -45,19 +43,20 @@ function configurePipeline(repo: string, reporterCommandOverride?: string): void
     `node -e "const fs=require('node:fs');fs.readFileSync(0,'utf8');` +
       `fs.writeSync(1,Buffer.from('${reporterOutputBase64}','base64'))"`;
   writeFileSync(
-    join(repo, "pm-members.yaml"),
+    join(repo, ".specdojo", "agent-members.yaml"),
     [
       "version: 1",
-      "project_id: test",
       "members:",
       "  - nickname: pipeline-executor",
       "    display_name: Pipeline Executor",
       "    email: null",
       "    roles: [DEV]",
       "    type: agent",
+      "    provider: custom",
       "    stage_role: executor",
       "    capabilities: [exec]",
       "    proficiency: expert",
+      "    priority: 1",
       `    command: ${JSON.stringify(executorCommand)}`,
       "    mode: edit",
       "  - nickname: pipeline-reporter",
@@ -65,9 +64,11 @@ function configurePipeline(repo: string, reporterCommandOverride?: string): void
       "    email: null",
       "    roles: []",
       "    type: agent",
+      "    provider: custom",
       "    stage_role: reporter",
       "    capabilities: []",
       "    proficiency: normal",
+      "    priority: 1",
       `    command: ${JSON.stringify(reporterCommand)}`,
       "    mode: edit",
       "",
@@ -148,15 +149,31 @@ function setupRepository(): { repo: string; executionPath: string } {
   writeFileSync(
     join(repo, "pm-members.yaml"),
     [
+      "id: test:pm-members",
+      "type: project",
+      "status: draft",
+      "title: Members",
+      "rulebook: specdojo:pm-members-rulebook",
       "version: 1",
       "project_id: test",
+      "members: []",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(repo, ".specdojo", "agent-members.yaml"),
+    [
+      "version: 1",
       "members:",
       `  - nickname: ${FAKE_AGENT_NICKNAME}`,
       "    display_name: Test Edit Agent",
       "    email: null",
       "    roles: [DEV]",
       "    type: agent",
+      "    provider: custom",
       "    capabilities: []",
+      "    proficiency: normal",
       "    priority: 1",
       `    command: ${JSON.stringify(FAKE_AGENT_CMD)}`,
       "    mode: edit",
@@ -220,11 +237,6 @@ function setupRepository(): { repo: string; executionPath: string } {
     "utf8",
   );
   writeFileSync(
-    join(repo, "docs", "ja", "specdojo", "exec-templates", "xrp-viewpoint-detail-template.md"),
-    "### _VP_ID_\n\n_VP_CHECK_\n",
-    "utf8",
-  );
-  writeFileSync(
     join(repo, "docs", "ja", "specdojo", "exec-templates", "xep-common-conventions-template.md"),
     "## 記法・リンク規約（共通）\n\n- リンクは `[[id|title]]` 形式。\n",
     "utf8",
@@ -267,6 +279,52 @@ afterEach(() => {
 });
 
 describe("exec run (in-place, default)", () => {
+  it("reports an agent registry schema error instead of replacing it with nickname not found", async () => {
+    const { repo } = setupRepository();
+    writeFileSync(
+      join(repo, ".specdojo", "agent-members.yaml"),
+      [
+        "version: 1",
+        "members:",
+        `  - nickname: ${FAKE_AGENT_NICKNAME}`,
+        "    display_name: Test Edit Agent",
+        "    roles: [DEV]",
+        "    type: agent",
+        "    provider: custom",
+        "    capabilities: []",
+        "    proficiency: normal",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    const stdout: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      stdout.push(String(chunk));
+      return true;
+    });
+    try {
+      process.chdir(repo);
+      await runExec([
+        "run",
+        "--project",
+        "test",
+        "--task",
+        "T-TEST-doc-010",
+        "--by",
+        FAKE_AGENT_NICKNAME,
+      ]);
+
+      expect(process.exitCode).toBe(1);
+      expect(stdout.join("")).toContain("Schema validation failed:");
+      expect(stdout.join("")).toContain("agent-members.yaml");
+      expect(stdout.join("")).toContain("priority");
+      expect(stdout.join("")).not.toContain("nickname not found");
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("returns routine skip without creating Job artifacts when the precondition output is empty", async () => {
     const { repo, executionPath } = setupRepository();
     writeFileSync(
@@ -395,12 +453,10 @@ describe("exec run (in-place, default)", () => {
     const reporterOutput = JSON.stringify({
       schema_version: 1,
       mode: "edit",
-      outcome: "complete",
       summary: ["reporter should not run"],
       changed_files: [],
       handoff: [],
       approach: "unexpected reporter invocation",
-      block_reason: "",
     });
     const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
     configurePipeline(
@@ -473,12 +529,15 @@ describe("exec run (in-place, default)", () => {
     const reporterOutput = JSON.stringify({
       schema_version: 1,
       mode: "edit",
-      outcome: "complete",
       summary: ["成果物を更新し、検証を完了した。"],
-      changed_files: [],
+      changed_files: [
+        {
+          path: "nested-agent.txt",
+          summary: "runner command の実行後に検出した変更を記録した。",
+        },
+      ],
       handoff: [],
       approach: "command evidence の stdout と stderr を確認した。",
-      block_reason: "",
     });
     const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
     configurePipeline(

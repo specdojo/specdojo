@@ -1,0 +1,150 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ef040bd920f04b0fb591c468d3d58e74
+  ts: "2026-09-28T09:47:25Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-KCMH の review 試行で、plan から reporter 付きで review を実行する経路がないことが判明したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run --plan で review を executor と reporter の構成で実行できるようにする
+    - field: description
+      from: ""
+      to: 成果物の review を exec plan で生成し exec run --plan で実行すると、agent_pipeline のタスクではないため --reporter-by を指定できない。--by で review executor を使うと executor は result を書かない設計のため、runner が result 未記入として blocked にする。KCMH の試行で判明
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-28"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_3a4f0869fdc4484aaf97a14f82ffd07f
+  ts: "2026-09-28T11:25:31Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ef040bd920f04b0fb591c468d3d58e74
+- v: 1
+  id: reg_1f8aa7fda8a14df9aaa8f2327d9eb7d1
+  ts: "2026-09-28T11:26:34Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_3a4f0869fdc4484aaf97a14f82ffd07f
+- v: 1
+  id: reg_1ac4e0b064d4454592e073345b596a18
+  ts: "2026-09-28T14:34:14Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_1f8aa7fda8a14df9aaa8f2327d9eb7d1
+- v: 1
+  id: reg_0bc2cfb6028349ffadbc018f35ba5db6
+  ts: "2026-09-28T14:42:06Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1ac4e0b064d4454592e073345b596a18
+- v: 1
+  id: reg_3326f8c2101c41c38eb98cc1c41ad504
+  ts: "2026-09-28T14:42:15Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: review
+  to_status: waiting
+  reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/references/command-reference.md"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: rate limit reached
+      to: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in docs/ja/specdojo/references/command-reference.md"
+  previous_event_id: reg_0bc2cfb6028349ffadbc018f35ba5db6
+- v: 1
+  id: reg_b1ef431b0b534a2eb8d2b0f9ced5367c
+  ts: "2026-09-28T15:13:55Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_3326f8c2101c41c38eb98cc1c41ad504
+- v: 1
+  id: reg_28e3a5b2d56741e59694269f70829b21
+  ts: "2026-09-28T15:14:06Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b1ef431b0b534a2eb8d2b0f9ced5367c
+- v: 1
+  id: reg_5999af9231ce4ed18c464fd82af268da
+  ts: "2026-09-28T15:19:28Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を評価。統合時の command-reference の競合は orchestrator が両方の変更を合わせて解決し、review の試行も orchestrator が行った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-29"
+    - field: conclusion
+      from: "-"
+      to: exec run --plan と --deliverable で --executor-by / --reporter-by を指定すると executor/reporter の 2 段で実行するようにし、--by に pipeline 用の agent を指定した場合は実行前に案内のエラーにした。review を 1 件実行し、reporter が新しい書式で result を記入することを確認した
+  previous_event_id: reg_28e3a5b2d56741e59694269f70829b21

@@ -1,0 +1,29 @@
+PJR-5RS9 の個票にある完了条件はすべて満たせました。grade finding は一部だけ解消し、残りは未対応です。
+
+**1. 改名（カタログ3ファイル）**
+- `bps-task-review-finalize` の `local_id` を `bps-task-verification` に、`path` を `bps-task-verification.md` に変えました。
+- 確定・統合は後続の `bps-task-judgment-integration` の担当なので、確定を含まない「検証」を名前に選びました。個票の例にあった `bps-task-review` は、Action（P-11）の review phase と紛れるため避けました。
+- `name` はもともと「業務プロセス仕様（成果検証）」で中身と合っていたため、そのままです。
+- 旧 ID を参照していた `depends_on` 3か所（`bps-task-judgment-integration`、`br-review-verdict`、`bac-task-execution`）も書き換え、カタログ内に旧 ID は残っていません。文書本体はまだ無いので、ファイルの移動はありません。
+
+**2. cdfd-overview の修正**
+- Check への要求を、本文と図の両方で「評価・報告・生成要求」にしました。
+- Plan・Do・Check・Action から Orchestrator への応答エッジ4本を、cdfd-orchestrator と同じラベルで図に足しました。各グループの主要出力と Orchestrator の主要入力にも入れています。
+- 実行記録から Orchestrator へのエッジは「記録済みの実行状態」に名前を変えました。「応答は Orchestrator へ直接返り、Orchestrator が実行記録に残したうえで次の判断に使う」という関係を本文に書いています。
+- 指摘されていた小さな不整合も2点直しました。Orchestrator の主要入力に図にある「rulebook 参照」を追加したことと、詳細 CDFD 一覧の表を rulebook どおり3列にして「phase / 判定との対応」列を削除したことです。
+- cdfd-overview は `status: ready` の文書ですが、`status` は変えていません。
+
+**3. 個票**
+- 「作業内容」の表の状態を `done` にし、「対応結果」に上の内容を書きました。`item_status` と登録簿（`pjr-index.md`）は変えていません。
+
+**未対応の grade finding**
+- cdfd-overview の P-01 の起動条件の範囲、Action の人間判断の境界、PO 承認記録（DC-002）の3件です。承認記録は PO の判断が必要で、ほかの2件もこのタスクの範囲を超えるため手を付けていません。
+- cdfd-orchestrator と cdfd-check の指摘（完了条件列・停止範囲列・適用期間の追加、pm-roles 参照の分割）も同様に残しています。これらは別タスクにするのがよいと考えます。
+
+**検証**
+- `prettier`、`markdownlint`、`npm run -s lint:md`、`specdojo catalog build`、`catalog validate`、`index build` はすべて成功しました。`catalog build` の WARN は今回と関係のない既存の未作成文書に関するもので、エラーは 0 件です。
+- `validate-schema`、`typecheck`、`test-unit`、`test-integration` は、この後に親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"カタログ上の bps-task-review-finalize を bps-task-verification に改名し（local_id と path）、参照していた depends_on 3か所も書き換えた。cdfd-overview では Check への要求を「評価・報告・生成要求」にし、Plan/Do/Check/Action から Orchestrator への応答エッジ4本と、応答と実行記録の関係を本文に追加した。あわせて rulebook 参照の追加と詳細 CDFD 一覧の表の3列化を行った。個票の作業内容と対応結果を更新した。未対応: cdfd-overview の P-01 起動条件範囲・Action の人間判断境界・DC-002 の PO 承認記録、および cdfd-orchestrator / cdfd-check の完了条件列・停止範囲列・適用期間・pm-roles 参照の指摘（PO 判断が必要、またはタスク範囲外のため別タスクを推奨）。","validations":[{"command":"npx prettier --write (changed md/yaml files)","status":"passed","summary":"個票を整形、ほかは変更なし"},{"command":"npx markdownlint docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md docs/ja/projects/prj-0001/controls/project-register/pjr-5rs9-bps-review-finalize-and-cdfd-overview.md","status":"passed","summary":"エラーなし"},{"command":"npm run -s lint:md","status":"passed","summary":"エラーなし"},{"command":"npx tsx src/specdojo.ts catalog build --project prj-0001","status":"passed","summary":"生成成功。今回と無関係な既存の未作成文書の WARN のみ"},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"exit 0、ERROR なし"},{"command":"npx tsx src/specdojo.ts index build","status":"passed","summary":"2037 entries"}]}
+</specdojo_executor_evidence>

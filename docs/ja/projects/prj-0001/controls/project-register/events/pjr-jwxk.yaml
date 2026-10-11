@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_be60852fc1a347708cf8ea3f66815157
+  ts: "2026-10-06T12:06:51Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-27Y0 の実モデルでの試験で翻訳が全件捨てられたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の翻訳でモデルに印を書かせず、各件をコードで点検する
+    - field: description
+      from: ""
+      to: PJR-27Y0 の翻訳は、モデルが [T010] を [T10] と書いただけで 13 件すべてを捨てた。印はコードが管理し、モデルには英語の文の配列だけを渡す。件数・仮名・インラインコードの保持を件ごとに点検し、落ちた件だけ 1 件ずつ訳し直し、それでも駄目なら英語に戻す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"
+- v: 1
+  id: reg_9976ab07fd1d413b8002d654ed9d4b09
+  ts: "2026-10-06T12:08:11Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_be60852fc1a347708cf8ea3f66815157
+- v: 1
+  id: reg_810cc245e4fe4a5dad686d2b7494b793
+  ts: "2026-10-06T12:24:04Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9976ab07fd1d413b8002d654ed9d4b09
+- v: 1
+  id: reg_2c31e05ad8ef4e3aae76d92a89ba615e
+  ts: "2026-10-06T22:13:53Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分を確認し、実モデルで翻訳をやり直して確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-07"
+    - field: conclusion
+      from: "-"
+      to: 翻訳の印をコードで管理し、件数・仮名・インラインコードを件ごとに点検、不合格の件だけ1件ずつ訳し直すようにした。実モデルで13件すべて点検に通ることを確認した
+  previous_event_id: reg_810cc245e4fe4a5dad686d2b7494b793

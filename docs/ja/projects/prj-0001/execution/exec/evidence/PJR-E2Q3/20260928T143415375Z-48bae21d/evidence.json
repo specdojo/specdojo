@@ -1,0 +1,143 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-E2Q3",
+  "run_id": "20260928T143415375Z-48bae21d",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-28T14:34:15.375Z",
+    "completed_at": "2026-09-28T14:37:38.006Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-e2q3.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-e2q3-exec-plan-review-agent-pipeline.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run-resolve-command.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../controls/project-register/events/pjr-e2q3.yaml |  13 +++\n .../pjr-e2q3-exec-plan-review-agent-pipeline.md    |  19 ++--\n docs/ja/specdojo/guides/exec-operation-guide.md    |   7 ++\n docs/ja/specdojo/references/command-reference.md   |  42 ++++----\n src/exec-run.ts                                    |  68 +++++++++++-\n tests/src/exec-run-resolve-command.test.ts         | 116 ++++++++++++++++++++-\n 6 files changed, 233 insertions(+), 32 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-run.ts tests/src/exec-run-resolve-command.test.ts docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-e2q3-exec-plan-review-agent-pipeline.md",
+      "status": "passed",
+      "summary": "formatted"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/exec-run.ts tests/src/exec-run-resolve-command.test.ts",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-e2q3-exec-plan-review-agent-pipeline.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-e2q3-exec-plan-review-agent-pipeline.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md",
+      "status": "passed",
+      "summary": "no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "OK (pre-existing based_on WARN only)"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index: 2151 entries"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s validate:history-links",
+      "status": "passed",
+      "summary": "valid"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts exec run --project prj-0001 --plan docs/ja/projects/prj-0001/execution/exec/plans/stsd-register-entry-20260928T093919Z-6fd7-plan.md --executor-by claude-expert-review-executor --reporter-by claude-reporter --dry-run",
+      "status": "passed",
+      "summary": "executor と reporter のコマンドが解決され、終了コード 0"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts exec run --project prj-0001 --plan docs/ja/projects/prj-0001/execution/exec/plans/stsd-register-entry-20260928T093919Z-6fd7-plan.md --by claude-expert-review-executor --dry-run",
+      "status": "passed",
+      "summary": "想定どおり案内付きエラーで拒否され、終了コード 1"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check",
+      "status": "not_run",
+      "summary": "個票の完了条件。一部は親 runner の検証（typecheck、test:unit、test:integration、validate:schema）と重なり、未実行"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E2Q3\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-OUJdXD/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-OUJdXD/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-OUJdXD/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-OUJdXD/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E2Q3/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E2Q3/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E2Q3\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-lVv6Qc/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-5SeBEk/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-vfogdB/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Vh4vQ4/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-oaetPX/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-yTN2fB/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-9nvOHJ/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-ucewn5/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  112 passed (112)\n      Tes…"
+    }
+  ],
+  "final_message": "exec run --plan / --deliverable に --executor-by / --reporter-by を付けると executor/reporter の 2 段構成で実行するようにした（in-place 実行で既定の agent_pipeline を合成）。frontmatter に task_id がない plan、--by と stage フラグの併用、--by への stage_role 付き agent の指定は、実行前に案内付きのエラーで拒否する。resolveInPlaceAgentPipeline の単体テストを tests/src/exec-run-resolve-command.test.ts に追加し、exec-operation-guide.md と command-reference.md に使い方を記載した。個票の作業内容 No.1・No.2 と対応結果を更新したが、状態項目は変更していない。確認済み: 前回の試行の review plan で dry-run を2通り実行し、pipeline 側は executor=claude-expert-review-executor / reporter=claude-reporter に解決、誤った --by は案内付きエラーで終了コード 1 になった。未確認: review の実行1件と、reporter が新しい書式で result を記入すること（個票 No.3。agent の実行が必要なため）、npm run check（完了条件）。型チェックと単体テストは親 runner に任せている。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-E2Q3/20260928T143415375Z-48bae21d/executor.log",
+      "bytes": 6558,
+      "truncated": false
+    }
+  ]
+}

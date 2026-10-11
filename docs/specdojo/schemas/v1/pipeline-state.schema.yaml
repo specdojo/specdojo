@@ -31,8 +31,56 @@ properties:
       # Runner-owned integration stage (commit -> merge -> worktree removal). Absent in runs
       # recorded before the stage existed, so it is optional.
       integrate:
-        $ref: "#/$defs/stage"
+        $ref: "#/$defs/integrateStage"
 $defs:
+  # The integrate stage of a project that declares product repositories (`repos`) also records
+  # the state of each repository. `repos` is optional; states without it are read as a single
+  # project repository integration.
+  integrateStage:
+    type: object
+    additionalProperties: false
+    required: [status, actor, attempts, started_at, completed_at, artifact_ref]
+    properties:
+      status:
+        type: string
+        enum: [pending, running, succeeded, failed, rate_limited, blocked]
+      actor:
+        type: [string, "null"]
+      attempts:
+        type: integer
+        minimum: 0
+      started_at:
+        type: [string, "null"]
+        format: date-time
+      completed_at:
+        type: [string, "null"]
+        format: date-time
+      artifact_ref:
+        type: [string, "null"]
+      # Keys are repository names (`project` for the project repository) in integration order.
+      repos:
+        type: object
+        propertyNames:
+          pattern: "^[a-z0-9-]+$"
+        additionalProperties:
+          $ref: "#/$defs/repoIntegration"
+  repoIntegration:
+    type: object
+    additionalProperties: false
+    required: [status, commit, merged_at]
+    properties:
+      status:
+        type: string
+        enum: [pending, merged, unchanged, failed]
+      # Merge commit on the integration target. Null for the project repository (the merge commit
+      # contains this state) and for repositories that are not merged.
+      commit:
+        type: [string, "null"]
+      merged_at:
+        type: [string, "null"]
+        format: date-time
+      error:
+        type: string
   stage:
     type: object
     additionalProperties: false

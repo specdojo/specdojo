@@ -1,0 +1,38 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-88db3b4d0339 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-88db3b4d0339
+stage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none
+document start: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document complete: docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md
+document start: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+document complete: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+document start: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
+document complete: docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-88db3b4d0339/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-09-29T16:06:34Z	docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md	1	passed	378	needs-work	85	8	codex-expert-executor	gemma-reporter	none		
+2026-09-29T16:13:50Z	docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md	1	passed	434	needs-work	69	22	codex-expert-executor	gemma-reporter	none		
+2026-09-29T16:18:51Z	docs/ja/product/010-business-specs/020-data-model/stsd-routine-run.md	1	passed	299	needs-work	64	23	codex-expert-executor	gemma-reporter	none		
+2026-09-29T16:24:52Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md	1	passed	359	needs-work	71	20	codex-expert-executor	gemma-reporter	none		
+2026-09-29T16:30:53Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md	1	passed	359	needs-work	75	22	codex-expert-executor	gemma-reporter	none		
+2026-09-29T16:37:03Z	docs/ja/product/030-architecture/020-infrastructure/tsd-index.md	1	passed	368	needs-work	66	15	codex-expert-executor	gemma-reporter	none		
+2026-09-29T16:41:56Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md	1	passed	291	needs-work	62	25	codex-expert-executor	gemma-reporter	none		
+2026-09-29T16:52:39Z	docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md	1	passed	641	needs-work	59	24	codex-expert-executor	gemma-reporter	none		
+2026-09-29T16:59:45Z	docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md	1	passed	424	needs-work	73	18	codex-expert-executor	gemma-reporter	none		
+2026-09-29T17:07:25Z	docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md	1	passed	458	needs-work	65	21	codex-expert-executor	gemma-reporter	none		

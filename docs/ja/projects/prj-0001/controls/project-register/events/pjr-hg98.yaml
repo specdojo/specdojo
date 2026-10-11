@@ -1,0 +1,208 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ac673965e55b4285975bfbdb51d0f16b
+  ts: "2026-09-26T23:06:45Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: config init で生成物を除外する .gitignore を作り register の並行実行の衝突を防ぐ
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_d0e9a40e5e7e4a6f85880d0f312b7c52
+  ts: "2026-09-26T23:53:15Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ac673965e55b4285975bfbdb51d0f16b
+- v: 1
+  id: reg_0ac2b09b0a494a5bbb0e90d493f54b93
+  ts: "2026-09-27T00:12:32Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しており、完了条件を満たしていない。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しており、完了条件を満たしていない。"
+  previous_event_id: reg_d0e9a40e5e7e4a6f85880d0f312b7c52
+- v: 1
+  id: reg_f12931607a6e491da6d6f7857e4e9ed6
+  ts: "2026-09-27T02:04:53Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_0ac2b09b0a494a5bbb0e90d493f54b93
+- v: 1
+  id: reg_dfee83272c364eeeab07764b037bac66
+  ts: "2026-09-27T02:32:04Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親 runner による検証項目 `test-integration` が失敗しているため。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: runner による検証 `test-integration` が失敗（exit 1）しており、完了条件を満たしていない。"
+      to: "agent exited with non-zero code: 親 runner による検証項目 `test-integration` が失敗しているため。"
+  previous_event_id: reg_f12931607a6e491da6d6f7857e4e9ed6
+- v: 1
+  id: reg_126d5e3bcf5a4af39cd9dc1e7e52e1df
+  ts: "2026-09-27T02:45:14Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_dfee83272c364eeeab07764b037bac66
+- v: 1
+  id: reg_a8382610dd6246cdbc2ec70328353754
+  ts: "2026-09-27T02:51:34Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_126d5e3bcf5a4af39cd9dc1e7e52e1df
+- v: 1
+  id: reg_0f3eac5a96d04a99a7ae19a58fb97165
+  ts: "2026-09-27T02:51:45Z"
+  action: wait
+  actor: gemma-reporter
+  from_status: review
+  to_status: waiting
+  reason: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-qjad.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-qjad-g…"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 親 runner による検証項目 `test-integration` が失敗しているため。"
+      to: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-qjad.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-qjad-g…"
+  previous_event_id: reg_a8382610dd6246cdbc2ec70328353754
+- v: 1
+  id: reg_cf754de1fe754dc1a8cd40610290cec8
+  ts: "2026-09-27T03:09:09Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_0f3eac5a96d04a99a7ae19a58fb97165
+- v: 1
+  id: reg_49f0da3b811c4cbeb736f4fee164c1c4
+  ts: "2026-09-27T03:13:05Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "integrate failed: Current worktree changes overlap merge paths: docs/ja/projects/prj-0001/controls/project-register/events/pjr-qjad.yaml, docs/ja/projects/prj-0001/controls/project-register/pjr-qjad-g…"
+      to: rate limit reached
+  previous_event_id: reg_cf754de1fe754dc1a8cd40610290cec8
+- v: 1
+  id: reg_168316218aef401dad9784004ae790f3
+  ts: "2026-09-27T04:10:20Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_49f0da3b811c4cbeb736f4fee164c1c4
+- v: 1
+  id: reg_b8c193c66244460aa270e300366d72dc
+  ts: "2026-09-27T04:20:13Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_168316218aef401dad9784004ae790f3
+- v: 1
+  id: reg_1ab94d4ec962436b9a4c8c2d50c0f923
+  ts: "2026-09-27T04:37:40Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: config init が設定から導いた生成物の除外パターンを .gitignore へ冪等に追記し、管理済み生成物を外す手順を案内する。並行実行の統合テストは config init を使う形にした。README と参照文書へ記載
+  previous_event_id: reg_b8c193c66244460aa270e300366d72dc

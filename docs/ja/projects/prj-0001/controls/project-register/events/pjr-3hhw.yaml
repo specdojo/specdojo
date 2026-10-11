@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7704e0fc1d8b4a558f9746c430249073
+  ts: "2026-09-27T02:44:20Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-09-27 の 5 並行実行で 4 件が runner 検証の負荷起因の失敗で止まったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 並行実行中の runner 検証を同時に走らせないようにする
+    - field: description
+      from: ""
+      to: exec run --parallel で worktree ごとに test:unit / test:integration が同時に走り、負荷で単体テスト1件が116秒かかるなどして失敗する。単独なら全件通る。runner の検証を run 全体で直列化するか同時数を制限する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_c7cada5feef44e63b1253f7933ef1641
+  ts: "2026-09-27T06:44:54Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7704e0fc1d8b4a558f9746c430249073
+- v: 1
+  id: reg_3b8567321f7c441587ef5cf2877757e6
+  ts: "2026-09-27T06:55:15Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c7cada5feef44e63b1253f7933ef1641
+- v: 1
+  id: reg_b64bd007ae784588860ed9deddc6e597
+  ts: "2026-09-27T07:11:40Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: ParentValidationGate で 1 回の exec run 内の親検証を既定 1 本に直列化し、pipeline.parent_validation_concurrency で同時数を設定できるようにした。executor と reporter は並列のまま。別プロセスは exec-run.lock に委ね対象外とし、ガイドへ記載
+  previous_event_id: reg_3b8567321f7c441587ef5cf2877757e6

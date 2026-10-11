@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1a5901270f35499b850b61936a84f1a3
+  ts: "2026-09-26T02:25:42Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: データストア名へ概念の英語名を併記し cdfd-rulebook の禁止事項に注記を加える
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-09-26"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_d72c9a286d8b4302835dd269cc420ed4
+  ts: "2026-09-26T02:35:52Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1a5901270f35499b850b61936a84f1a3
+- v: 1
+  id: reg_2f68bc21e2484257a9ed0ff6a3a1566a
+  ts: "2026-09-26T02:35:53Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml docs/ja/projects/prj-0001/controls/project-regi…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/events/pjr-t3nn.yaml docs/ja/projects/prj-0001/controls/project-regi…"
+  previous_event_id: reg_d72c9a286d8b4302835dd269cc420ed4
+- v: 1
+  id: reg_f308b8d5852b40ecb2224887b0059bcb
+  ts: "2026-09-26T03:47:18Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_2f68bc21e2484257a9ed0ff6a3a1566a
+- v: 1
+  id: reg_0241c75c991e4c5da13d9683dcbc7965
+  ts: "2026-09-26T04:04:19Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f308b8d5852b40ecb2224887b0059bcb
+- v: 1
+  id: reg_c5900b96b67b4b418912a8030b2f414f
+  ts: "2026-09-26T04:08:01Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: 完了条件 7/8 を満たす。grade 再実行は定期実行で確認する。スコープ外の変更なし。保留 5 件の英語名確定は用語集の作成で扱う。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_0241c75c991e4c5da13d9683dcbc7965

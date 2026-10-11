@@ -1,0 +1,16 @@
+実装完了しました。
+
+- `--executor-by PJR-ID=nickname,...` の項目別指定を追加
+- 対象外ID・指定漏れ・重複指定を実行前に拒否
+- 従来の共通 executor 指定を維持
+- `--dry-run` で項目別の解決結果を表示
+- provider別 `max_concurrency` を executor／reporter 各段で制御
+- 単体テストと並列実行の統合テストを追加
+- 運用ガイド、コマンドリファレンス、個票を更新
+- pipeline指示に従い result ファイルは未更新
+
+親runner担当の typecheck・unit・integration・schema検証は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"registerの項目別executor指定とprovider別`max_concurrency`制御を実装し、テスト・ガイド・個票を更新した。","validations":[{"command":"npx prettier --write src/exec-agent-config.ts src/exec-run.ts tests/src/exec-agent-config.test.ts tests/src/exec-register.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md","status":"passed","summary":"変更したTypeScript・テスト・Markdownを整形"},{"command":"npx eslint src/exec-agent-config.ts src/exec-run.ts tests/src/exec-agent-config.test.ts tests/src/exec-register.test.ts tests/src/exec-register-pipeline-e2e.integration.test.ts","status":"passed","summary":"変更したTypeScriptのlintに成功"},{"command":"npx markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md","status":"passed","summary":"変更したMarkdownの検査に成功"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md","status":"passed","summary":"pre-commit相当のMarkdown検査に成功"},{"command":"node --import ./node_modules/tsx/dist/loader.mjs src/specdojo.ts register build && node --import ./node_modules/tsx/dist/loader.mjs src/specdojo.ts catalog validate && node --import ./node_modules/tsx/dist/loader.mjs src/specdojo.ts index build","status":"passed","summary":"register生成、catalog検証、文書索引生成に成功。catalogは既存の未作成文書警告のみ"},{"command":"npm run -s lint:fm -- --quiet --frail docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-k332-per-item-executor-assignment.md && npm run -s validate:history-links","status":"passed","summary":"frontmatterと履歴リンクの検査に成功"},{"command":"node --import ./node_modules/tsx/dist/loader.mjs src/specdojo.ts exec run --project prj-0001 --register PJR-K332 --executor-by PJR-K332=codex-expert-executor --reporter-by gemma-reporter --dry-run","status":"passed","summary":"項目別executorとreporterの解決結果を確認"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c5c9e88165f949a6a51e717d98c41adb
+  ts: "2026-10-01T04:30:47Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-1SXK のタイトルで lint:fm と単体テストが失敗し、PJR-FZC4 の exec run が止まったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register add のタイトルに素の山括弧プレースホルダを入れられる
+    - field: description
+      from: ""
+      to: register add / update の --title と --description に、インラインコードで囲まない山括弧プレースホルダを入れると、個票の H1 が lint:fm に反し docs:build も失敗する。入力時に検出してエラーにするか、自動でインラインコードへ囲む
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-01"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_f649b2d8567e42d6822e39593e41fa84
+  ts: "2026-10-02T00:32:33Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c5c9e88165f949a6a51e717d98c41adb
+- v: 1
+  id: reg_0925993496874472ab984ded6cd9e4bb
+  ts: "2026-10-02T00:39:46Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f649b2d8567e42d6822e39593e41fa84
+- v: 1
+  id: reg_8446fd029ba848dfbce4a5e8e5afb9fd
+  ts: "2026-10-02T07:23:25Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor / claude-reporter）の結果を orchestrator が評価した。完了条件の「拒否する」ではなく自動で囲む形で実装されたが、説明欄の既存の変換と同じ規則で利用者の手間がないため、利用者が受け入れた（2026-10-02）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-02"
+    - field: conclusion
+      from: "-"
+      to: register add / update のタイトルと説明で、コードスパン外の山括弧プレースホルダを自動でインラインコードに囲む
+  previous_event_id: reg_0925993496874472ab984ded6cd9e4bb

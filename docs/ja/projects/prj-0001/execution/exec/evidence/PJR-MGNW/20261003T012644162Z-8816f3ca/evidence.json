@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-MGNW",
+  "run_id": "20261003T012644162Z-8816f3ca",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-03T01:26:44.162Z",
+    "completed_at": "2026-10-03T01:38:44.398Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-mgnw-omlx-app-gui-setup.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../020-infrastructure/tsd-omlx-opencode.md        | 14 +++--\n .../020-infrastructure/tsd-omlx.md                 | 70 +++++++++++++---------\n .../pjr-mgnw-omlx-app-gui-setup.md                 | 14 +++--\n 3 files changed, 59 insertions(+), 39 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md docs/ja/projects/prj-0001/controls/project-register/pjr-mgnw-omlx-app-gui-setup.md",
+      "status": "passed",
+      "summary": "3ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "npx tsxのIPC EPERMを規約指定の代替コマンドで回避し、登録簿を生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "終了コード0。既存の未配置文書に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec refresh",
+      "status": "passed",
+      "summary": "検証成功。既存の履歴イベントに関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build",
+      "status": "passed",
+      "summary": "カタログ生成成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts yaml-pages build",
+      "status": "passed",
+      "summary": "135件変更なし、19件スキップ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts dashboard build",
+      "status": "passed",
+      "summary": "dashboard関連生成物を生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2319件の文書インデックスを生成"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md docs/ja/projects/prj-0001/controls/project-register/pjr-mgnw-omlx-app-gui-setup.md",
+      "status": "passed",
+      "summary": "全対象ファイルがPrettier準拠"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "failed",
+      "summary": "内部のtsx CLIがsandbox IPCでlisten EPERM"
+    },
+    {
+      "source": "executor",
+      "command": "PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-headless-shell npm --prefix packages/docs-site run docs:build",
+      "status": "failed",
+      "summary": "Mermaid用Chromiumがsandbox_host_linuxのOperation not permittedで起動不可"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MGNW\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/a.md\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/a.md\nUpdated: /tmp/specdojo-register-resume-e2e-3D9YSY/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-3D9YSY/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-3D9YSY/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-3D9YSY/docs/ja/projects/test/controls/project-…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MGNW/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MGNW/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MGNW\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-t0m3Pw/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-fHoqBN/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-B65BUs/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-U8vFnh/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-RPngAg/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-zCL1FX/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-hSYxx2/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-kLevpz/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  120 passed (120)\n      Te…"
+    }
+  ],
+  "final_message": "oMLX手順3文書の更新は完了。整形・カタログ・生成検証は成功したが、docs:buildはsandbox内のtsx IPCおよびChromium起動制約で未達。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MGNW/20261003T012644162Z-8816f3ca/executor.log",
+      "bytes": 3331,
+      "truncated": false
+    }
+  ]
+}

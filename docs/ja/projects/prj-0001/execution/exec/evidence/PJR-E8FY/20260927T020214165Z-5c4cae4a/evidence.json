@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-E8FY",
+  "run_id": "20260927T020214165Z-5c4cae4a",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-27T02:02:14.165Z",
+    "completed_at": "2026-09-27T02:33:51.740Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-e8fy-docs-build-sidebar-scope.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/sidebar-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": ".../pjr-e8fy-docs-build-sidebar-scope.md           |  29 +++-\n packages/docs-site/.vitepress/config.mts           |  95 ++++++++++++-\n packages/docs-site/.vitepress/sidebar-config.ts    |   2 +\n src/dashboard.ts                                   | 148 ++++++++++++++++++++-\n tests/src/dashboard.test.ts                        |  93 ++++++++++++-\n 5 files changed, 355 insertions(+), 12 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "passed",
+      "summary": "Succeeded without NODE_OPTIONS (run twice: 686s with Mermaid regeneration, then 413s wall / 205s user); 2,175 pages, dist 568MB"
+    },
+    {
+      "source": "executor",
+      "command": "node -e (dist sidebar scan script)",
+      "status": "passed",
+      "summary": "Sidebars with exec links 0; specdojo pages with project sidebar 0; prj-0001 pages missing project sidebar 0; metadata chunk has no exec links; exec-records links 555 results"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write packages/docs-site/.vitepress/config.mts packages/docs-site/.vitepress/sidebar-config.ts src/dashboard.ts tests/src/dashboard.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-e8fy-docs-build-sidebar-scope.md",
+      "status": "passed",
+      "summary": "Formatted"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-e8fy-docs-build-sidebar-scope.md",
+      "status": "passed",
+      "summary": "No errors"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "No errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/dashboard.ts tests/src/dashboard.test.ts",
+      "status": "passed",
+      "summary": "0 errors (docs-site files are outside the eslint config)"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsc -p packages/docs-site/.vitepress/tsconfig.json --noEmit",
+      "status": "passed",
+      "summary": "docs-site config typecheck has no errors"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "OK (only unrelated pre-existing based_on warnings)"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index: 2050 entries"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E8FY\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-cVcxjJ/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-cVcxjJ/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-cVcxjJ/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-cVcxjJ/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E8FY/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E8FY/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E8FY\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-lSivmG/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-yPt1YY/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-x44Mx2/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-HMSPKa/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-RT3y4u/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-ASe7W6/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-vM3JRc/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-SUTMRE/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  107 passed (107)\n      Tes…"
+    }
+  ],
+  "final_message": "Removed exec records (plan/result/events) from the VitePress sidebar and split the sidebar by path (ja/en). /ja/specdojo/ shows only the specdojo section; /ja/projects/<id>/ shows only that project. Enabled metaChunk (not in the ticket) so the site data, including the sidebar, is no longer inlined into every page. Added an exec-records.md list page generated by `specdojo dashboard build`, linked from the dashboard, so exec records stay reachable. npm run docs:build succeeds without NODE_OPTIONS. Scan of 2,175 built pages: 0 sidebars with exec records, 0 specdojo pages with a project sidebar, 0 prj-0001 pages missing the project sidebar. Dist 2.9GB -> 568MB; specdojo-overview-guide.html 1,405,099 -> 119,895 bytes. Build time is not comparable: 413s wall (user 205s) in the sandbox vs 193s recorded before in a different environment; needs re-measurement in the same environment. Ticket work table and results updated; frontmatter and status untouched. Changed: packages/docs-site/.vitepress/config.mts, packages/docs-site/.vitepress/sidebar-config.ts, src/dashboard.ts, tests/src/dashboard.test.ts, docs/ja/projects/prj-0001/controls/project-register/pjr-e8fy-docs-build-sidebar-scope.md",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-E8FY/20260927T020214165Z-5c4cae4a/executor.log",
+      "bytes": 6718,
+      "truncated": false
+    }
+  ]
+}

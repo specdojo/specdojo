@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d8cad0f67ac747b884b1bd141d2b8a00
+  ts: "2026-10-09T03:54:27Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 適用外の検査の判定が specdojo のサブコマンドを誤って反証し、not_run の記録も救えない
+    - field: description
+      from: ""
+      to: 公開物の試用（2026-10-09）で、codex は catalog_path のない project の npx specdojo catalog validate を理由付きの not_applicable と記録したが、specdojo が依存にあるため A0NE の反証が block した。claude（sonnet）は未導入の prettier と catalog validate を not_run と記録して止まった。specdojo のサブコマンドは設定で適用条件を判定し、機械的に適用外と分かる not_run は runner が適用外として扱う方式を検討する。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-09"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_3f8e797988514dbb845d82cbd04ae0bb
+  ts: "2026-10-09T10:45:04Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d8cad0f67ac747b884b1bd141d2b8a00
+- v: 1
+  id: reg_160eabd19c424ec88d5cb220890b4064
+  ts: "2026-10-09T10:55:13Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3f8e797988514dbb845d82cbd04ae0bb
+- v: 1
+  id: reg_0e8ff3f64c104382ab145f403054e581
+  ts: "2026-10-09T11:01:26Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューし、完了条件と照合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: specdojo の検査は設定で適用を判定し（catalog validate は catalog_path の有無）、依存の有無で反証しないようにした。機械的に適用外と分かる not_run は runner の判定として申し送りへ出し、block しない。
+  previous_event_id: reg_160eabd19c424ec88d5cb220890b4064

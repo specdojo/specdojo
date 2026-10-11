@@ -3,29 +3,75 @@ version: 1
 document: specdojo:tsd-rulebook
 path: docs/ja/specdojo/rulebooks/tsd-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 91
-graded_at: "2026-09-03T13:53:18.825Z"
-graded_by: gemma-expert-executor
+score: 93
+graded_at: "2026-10-10T21:02:42.709Z"
+graded_by: agy-expert-executor
 content_hash: e8aae3b289b30fe23c75d273071c06a9cd59253c1d927c5bd27d8e9edb845e6d
 categories:
-  consistency:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 92
+  architecture:
     score: 100
   usability:
     score: 100
-  architecture:
+  implementation:
     score: 100
   quality:
     score: 75
+  consistency:
+    score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,12 +81,21 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,14 +104,24 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 1
+    anchor: "# 特定領域 技術スタック詳細定義（TSD）作成ルール"
+    message: 成果物を作成・維持する担当者（Role code）や想定読者を明記してください。
+    message_ja: 成果物を作成・維持する担当者（Role code）や想定読者を明記してください。
+  - id: F002
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
+    anchor: "# 特定領域 技術スタック詳細定義（TSD）作成ルール"
     message: >-
       指定されている sample (specdojo:tsd-sample) が「技術スタック一覧（インデックス）」の構成となっており、本ルールブックが定義する「特定領域詳細定義」の記述ルールや Frontmatter
       必須項目を全く反映していないため。
-    anchor: "# 特定領域 技術スタック詳細定義（TSD）作成ルール"
+    message_ja: >-
+      指定されている sample (specdojo:tsd-sample) が「技術スタック一覧（インデックス）」の構成となっており、本ルールブックが定義する「特定領域詳細定義」の記述ルールや Frontmatter
+      必須項目を全く反映していないため。

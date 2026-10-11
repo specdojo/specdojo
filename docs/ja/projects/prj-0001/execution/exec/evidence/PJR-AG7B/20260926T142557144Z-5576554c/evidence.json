@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-AG7B",
+  "run_id": "20260926T142557144Z-5576554c",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-26T14:25:57.144Z",
+    "completed_at": "2026-09-26T14:39:01.744Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ag7b-viewpoint-applicability-by-document-kind.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/defaults/pm-review-viewpoints.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review-plan.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 13,
+    "summary": "...g7b-viewpoint-applicability-by-document-kind.md | 24 ++++---\n .../ja/specdojo/defaults/pm-review-viewpoints.yaml | 49 ++++++++++++--\n docs/ja/specdojo/guides/review-guide.md            |  8 ++-\n .../schemas/v1/pm-review-viewpoints.schema.yaml    | 35 ++++++++++\n src/exec-plans.ts                                  | 41 +++++++++--\n src/exec-run.ts                                    |  8 ++-\n src/exec.ts                                        | 11 ++-\n src/grade.ts                                       | 79 +++++++++++++++++-----\n src/review-plan.ts                                 | 55 ++++++++++++++-\n src/review-types.ts                                |  5 ++\n tests/src/exec-plans.test.ts                       | 22 ++++++\n tests/src/grade.test.ts                            | 56 +++++++++++++++\n tests/src/review-plan.test.ts                      | 48 +++++++++++++\n 13 files changed, 396 insertions(+), 45 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <変更した13ファイル>",
+      "status": "passed",
+      "summary": "全変更ファイルを整形、再実行時 unchanged"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-ag7b-viewpoint-applicability-by-document-kind.md docs/ja/specdojo/guides/review-guide.md",
+      "status": "passed",
+      "summary": "Markdown lint エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿と派生ビューを正常に再生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログ OK。未作成成果物に関する既存警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2012 entries を再構築"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx --input-type=module -e '<3 representative documents document-kind selection smoke>'",
+      "status": "passed",
+      "summary": "index／overview では単一責務観点を除外し、BPS では維持。読みやすさ観点は全対象で維持"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck; npm run test:unit; npm run test:integration; npm run validate:schema",
+      "status": "not_run",
+      "summary": "executor 指示に従い親 runner の検証へ委譲"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AG7B\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-pipeline-e2e-LnRt8v/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)\nUpdated: /tmp/specdojo-register-pipeline-e2e-LnRt8v/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml\nGenerated: /tmp/specdojo-register-pipeline-e2e-LnRt8v/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-pipeline-e2e-LnRt8v/docs/ja/projects/test/controls/project-register/gen…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AG7B/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AG7B/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AG7B\n\n ❯ tests/src/exec-plans.test.ts (63 tests | 1 failed) 1176ms\n     × review plan はプロジェクト差分から共通レビュー観点を解決して展開する 77ms\nUpdated ticket status → ready: /tmp/specdojo-ticket-JZECGG/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-64oAZF/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8nx5My/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-7e7G42/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-5BUXvL/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-7mX0H7/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-PFC95D/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-kjNgdX/outputs/partial.txt\nresult-markdownlint: result…"
+    }
+  ],
+  "final_message": "`document_kinds` による文書種類別の観点選択を grade と review に統一して実装し、PJR-AG7B 個票を更新した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-AG7B/20260926T142557144Z-5576554c/executor.log",
+      "bytes": 2399,
+      "truncated": false
+    }
+  ]
+}

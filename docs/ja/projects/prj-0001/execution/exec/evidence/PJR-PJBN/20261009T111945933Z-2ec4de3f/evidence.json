@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-PJBN",
+  "run_id": "20261009T111945933Z-2ec4de3f",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-09T11:19:45.933Z",
+    "completed_at": "2026-10-09T11:24:00.643Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-pjbn-grade-exec-run.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-multiple-ids.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": "CHANGELOG.md                                       |  1 +\n .../project-register/pjr-pjbn-grade-exec-run.md    |  7 ++-\n docs/ja/specdojo/guides/exec-operation-guide.md    |  2 +\n src/exec-run.ts                                    | 42 +++++++++-----\n src/exec-worktree-ops.ts                           | 39 +++++++++----\n .../exec-register-multiple-ids.integration.test.ts | 40 +++++++++++++\n tests/src/exec-worktree-ops.integration.test.ts    | 67 ++++++++++++++++++++++\n 7 files changed, 172 insertions(+), 26 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-worktree-ops.ts src/exec-run.ts tests/src/exec-worktree-ops.integration.test.ts tests/src/exec-register-multiple-ids.integration.test.ts docs/ja/specdojo/guides/exec-operation-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-pjbn-grade-exec-run.md",
+      "status": "passed",
+      "summary": "変更対象を整形し、全ファイルが変更不要の状態になりました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "register 派生ビューを正常に生成しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog 検証は既存の欠落文書警告のみで正常終了しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書 index を正常に再生成しました。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証が正常終了しました。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分に空白エラーはありません。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PJBN\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/tools/open-agent-worktree.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 116\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-agent-git-state.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 168\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/\n… output omitted …\not\u001b[33m.\u001b[39m\u001b[34mtoBeNull\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m310|\u001b[39m     expect(git(worktree!.path, \"diff\", \"--cached\", \"--name-only\")).toB…\n    \u001b[90m   |\u001b[39m                                                                    \u001b[31m^\u001b[39m\n    \u001b[90m311|\u001b[39m     \u001b[34mexpect\u001b[39m(\u001b[34mworktreeStatusPaths\u001b[39m(worktree\u001b[33m!\u001b[39m\u001b[33m.\u001b[39mpath))\u001b[33m.\u001b[39m\u001b[34mtoEqual\u001b[39m(\n    \u001b[90m312|\u001b[39m       expect\u001b[33m.\u001b[39m\u001b[34marrayContaining\u001b[39m([\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PJBN/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PJBN/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-PJBN\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 981\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-plans.test.ts \u001b[2m(\u001b[22m\u001b[2m67 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 1299\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m maintenance 4種と bootstrap の plan に編集対象 kata のパスと exist\n… output omitted …\nrated Markdown: ja/removed.md\n\n\u001b[90mstderr\u001b[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts\u001b[2m > \u001b[22m\u001b[2mMermaid SVG generation basics\u001b[2m > \u001b[22m\u001b[2mignores generated Markdown and removes any stale manifest entry\n\u001b[22m\u001b[39m[mermaid] skipping missing or generated Markdown: ja/generated/invalid.md\n\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "checkpoint と register commit の対象限定 unstage を実装し、無関係な staged 変更による exec 停止を解消しました。回帰テストと関連文書も更新済みです。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-PJBN/20261009T111945933Z-2ec4de3f/executor.log",
+      "bytes": 1879,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-PJBN/20261009T111945933Z-2ec4de3f/parent-validation-attempt-1-test-integration.log",
+      "bytes": 135211,
+      "truncated": false
+    }
+  ]
+}

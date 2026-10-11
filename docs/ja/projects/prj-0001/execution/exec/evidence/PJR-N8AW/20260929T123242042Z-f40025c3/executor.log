@@ -1,0 +1,8 @@
+オーケストレーターの起票時対話サポート機能の追加タスクの対応を完了しました。
+
+1. `templates/codex/orchestrator.md` および `templates/antigravity/orchestrator.md` を更新し、起票時に不足している項目があれば推奨値を提示してヒアリングするルールと、起票後に自動生成される個票の `_TODO_` 部分を会話の文脈から記述案を作成し、利用者の承認を得た上でファイルを自動更新するルールを追記しました。
+2. 変更した Markdown ファイルに対して `prettier` と `markdownlint` を実行し、問題がないことを確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":"Added interaction rules to orchestrator.md to support task registration dialogs and auto-updating placeholders based on conversation context.","validations":[{"command":"npx prettier --write templates/codex/orchestrator.md templates/antigravity/orchestrator.md && npx markdownlint templates/codex/orchestrator.md templates/antigravity/orchestrator.md","status":"passed","summary":"Prettier and markdownlint passed with no issues."}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,895 @@
+Reading prompt from stdin...
+OpenAI Codex v0.160.0
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-D0KF
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a10632-7f5e-7642-b355-971ea358b91d
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-d0kf-20261004t090435z-cb1e
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-D0KF
+  name: "exec run --register の既定を worktree にし、in-place を明示指定にする"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: DEV
+---
+
+# Edit Plan: PJR-D0KF exec run --register の既定を worktree にし、in-place を明示指定にする
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-D0KF「exec run --register の既定を worktree にし、in-place を明示指定にする」に対応する。
+
+exec run --register は既定で in-place に実行される。in-place の実行中にメインの作業ツリーで commit すると HEAD 検査（agent-git-state-write）で成功した作業が waiting になり、失敗時の変更が作業ツリーに残って後続の実行も止まる（2026-10-04 の PJR-SMET）。worktree なら作業ツリーが分かれ、失敗時の隔離と --resume が使える。既定を worktree にし、in-place は明示指定にする
+
+## 2. 対象項目
+
+- `id`: PJR-D0KF
+- `type`: todo
+- `priority`: medium
+- `owner`: DEV
+- `due`: -
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-d0kf-exec-register-worktree-default.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-d0kf-20261004T090435Z-cb1e-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+### grade result から展開された finding
+
+- なし
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 作業用のファイル（編集用スクリプト、検証用の一時データなど）はリポジトリの外（一時ディレクトリ）に置き、終了前に削除する。リポジトリ内、とくにリポジトリ直下に作業用のファイルを作らない。成果物ではない新規ファイルは commit されず、`commit-scope:` の警告として記録される。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- Markdown 成果物を編集した後は、`npx prettier --write <対象ファイル>` で整形し、`npx markdownlint <対象ファイル>` で静的検査を実施する。検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）を先回りで実行し、失敗をすべて修正してから完了する。コミット時に初めて失敗が判明すると commit がブロックされ、成果物の内容が完成していてもタスクは block になる。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当する行の検査をすべて実行する。該当行がない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は設定側に合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx tsx src/specdojo.ts <subcommand>` など）で実行する。ただし、sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する。
+
+| 変更したファイル                                                                                       | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | `npx prettier --write <対象ファイル>`、`npx markdownlint <対象ファイル>`                                                              |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+This executor invocation resumes an interrupted attempt. Existing worktree changes may represent
+only a partial implementation; they are not proof that the plan is complete. Re-read the entire
+plan before reporting success. The plan declares no `targets` and no first-attempt change lower bound was recorded.
+Omit `target_coverage` and state in `final_message` which artifacts you verified and which
+remain unverified.
+
+A changed target must use status `changed`, provide its
+repository-relative `path`, and actually be present in the cumulative worktree diff. A target
+that legitimately needs no change must use status `unchanged` and provide a concrete `reason`;
+the runner will preserve that reason in the result. If you cannot account for every target, exit
+non-zero instead of claiming completion.
+
+Changes already present when this resumed invocation started:
+- `docs/ja/projects/prj-0001/controls/project-register/events/pjr-d0kf.yaml`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-d0kf-exec-register-worktree-default.md`
+- `docs/ja/specdojo/guides/exec-config-guide.md`
+- `docs/ja/specdojo/guides/exec-operation-guide.md`
+- `docs/ja/specdojo/guides/register-operation-guide.md`
+- `docs/ja/specdojo/references/command-reference.md`
+- `docs/specdojo/schemas/v1/exec-defaults.schema.yaml`
+- `src/exec-agent-config.ts`
+- `src/exec-run.ts`
+- `tests/src/exec-agent-config.test.ts`
+- `tests/src/exec-run.test.ts`
+- `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-D0KF/20261004T090535692Z-39924479/evidence.json`
+- `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-D0KF/20261004T090535692Z-39924479/executor.log`
+- `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-D0KF/20261004T090535692Z-39924479/pipeline-state.json`
+- `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-D0KF/20261004T091534242Z-53541199/pipeline-state.json`
+
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run","summary":"concise result"}],"target_coverage":[{"target":"exact declared target id or lower-bound path","status":"changed|unchanged","path":"repo-relative path for changed targets","reason":"required when unchanged"}]}
+</specdojo_executor_evidence>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+再開時点の差分を前提にせず、個票・関連設計・実装差分を通して確認します。親 runner が担当する検証は実行せず、残る安全な検証と差分整合性を確認して、必要な箇所だけ修正します。
+exec
+/bin/bash -lc "git status --short && git diff --stat && sed -n '1,240p' docs/ja/projects/prj-0001/controls/project-register/pjr-d0kf-exec-register-worktree-default.md && rg -n \"PJR-D0KF\" docs/ja/projects/prj-0001/controls/project-register/pjr-index.md" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-D0KF
+ exited 2 in 207ms:
+ M docs/ja/projects/prj-0001/controls/project-register/events/pjr-d0kf.yaml
+ M docs/ja/projects/prj-0001/controls/project-register/pjr-d0kf-exec-register-worktree-default.md
+ M docs/ja/specdojo/guides/exec-config-guide.md
+ M docs/ja/specdojo/guides/exec-operation-guide.md
+ M docs/ja/specdojo/guides/register-operation-guide.md
+ M docs/ja/specdojo/references/command-reference.md
+ M docs/specdojo/schemas/v1/exec-defaults.schema.yaml
+ M src/exec-agent-config.ts
+ M src/exec-run.ts
+ M tests/src/exec-agent-config.test.ts
+ M tests/src/exec-run.test.ts
+?? docs/ja/projects/prj-0001/execution/exec/evidence/PJR-D0KF/
+ .../controls/project-register/events/pjr-d0kf.yaml | 16 ++++++
+ .../pjr-d0kf-exec-register-worktree-default.md     |  3 +-
+ docs/ja/specdojo/guides/exec-config-guide.md       |  4 +-
+ docs/ja/specdojo/guides/exec-operation-guide.md    | 14 +++--
+ .../ja/specdojo/guides/register-operation-guide.md | 11 ++--
+ docs/ja/specdojo/references/command-reference.md   |  9 ++--
+ docs/specdojo/schemas/v1/exec-defaults.schema.yaml |  7 +++
+ src/exec-agent-config.ts                           | 20 +++++++
+ src/exec-run.ts                                    | 61 ++++++++++++++++++----
+ tests/src/exec-agent-config.test.ts                | 15 ++++++
+ tests/src/exec-run.test.ts                         | 20 +++++++
+ 11 files changed, 152 insertions(+), 28 deletions(-)
+---
+specdojo:
+  id: prj-0001:pjr-d0kf-exec-register-worktree-default
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: in-progress
+  priority: medium
+  owner: DEV
+  registered_at: "2026-10-04T05:12:44Z"
+  due_on: null
+---
+
+# PJR-D0KF exec run --register の既定を worktree にし、in-place を明示指定にする
+
+## 1. 概要
+
+exec run --register は既定で in-place に実行される。in-place の実行中にメインの作業ツリーで commit すると HEAD 検査（agent-git-state-write）で成功した作業が waiting になり、失敗時の変更が作業ツリーに残って後続の実行も止まる（2026-10-04 の PJR-SMET）。worktree なら作業ツリーが分かれ、失敗時の隔離と --resume が使える。既定を worktree にし、in-place は明示指定にする
+
+## 2. 完了条件
+
+- `exec run --register` の既定の実行場所を、`.specdojo/exec-defaults.yaml` で設定できるようにし、本プロジェクトの既定を worktree にする。設定がない利用リポジトリでの既定（in-place のままにするか）は、互換性への影響を評価して決め、記録する。
+- in-place で実行したい場合の明示指定（例: `--in-place`）を追加し、`--worktree` と同時に指定した場合はエラーにする。
+- `--register-commit`・`--resume`・`--force-restart` など、実行場所に依存するオプションの扱いを、既定の変更後も矛盾しないように整理する。
+- worktree の準備時間が見合わない小さな作業向けに、in-place を選ぶ基準を exec 運用ガイドに書く。あわせて、プロジェクト単位の exec-run.lock により worktree でも別の `exec run` は同時に起動できず、並行は1コマンドの `--parallel` で行うことを明記する。
+- 対話型 orchestrator（`.claude/agents/specdojo-orchestrator.md` などの SSOT と各環境のラッパー）の提案を新しい既定にそろえる。
+- unit test で、設定の既定、`--in-place` の明示、`--worktree` との同時指定のエラーを検証する。
+- `npm run check` が通る。
+
+## 3. 作業内容
+
+| No  | 作業                                                  | 担当 | 状態    | メモ                            |
+| --- | ----------------------------------------------------- | ---- | ------- | ------------------------------- |
+| 1   | 既定の設定方法と互換性の方針を決める                  | DEV  | done    | 未設定時は in-place を維持      |
+| 2   | CLI と exec-defaults の実装                           | DEV  | blocked | project 既定は保護設定パス      |
+| 3   | 運用ガイド、コマンドリファレンス、orchestrator の更新 | DEV  | blocked | orchestrator 正本は読み取り専用 |
+
+## 4. 対応結果
+
+- `.specdojo/exec-defaults.yaml` に `run.register_execution: worktree` の変更を用意した。設定未指定の利用リポジトリは互換性のため従来どおり in-place とする。
+- CLI に `--in-place` を追加し、`--worktree` との同時指定をエラーにした。両フラグは設定値を上書きし、worktree モードに依存する `--parallel` / `--join` / `--resume` / `--force-restart` と、in-place 専用の `--register-commit` は解決後のモードで判定する。
+- exec 運用ガイド、登録簿運用ガイド、コマンドリファレンス、exec 設定ガイドを新しい既定にそろえた。
+- 設定の既定・上書き、`--in-place`、`--worktree` との同時指定を unit test に追加した。
+- 残課題: `.specdojo/exec-defaults.yaml` は agent の保護設定パスであり、executor の変更は統合前ガードの対象になる。書き込み権限を持つ runner または人が同じ変更を適用する必要がある。
+- 残課題: orchestrator の SSOT `.agents/specdojo-orchestrator.agent.md` は executor のファイル権限で読み取り専用となり、編集が拒否された。書き込み権限を持つ runner または人が「タスク実行」の例から `--worktree` を外し、`run.register_execution` に従うことと小さな作業だけ `--in-place` を明示する基準を追記した後、`npm run orchestrator:sync` で各環境ラッパーへ反映する。
+
+## 5. 関連ドキュメント
+
+- [[prj-0001:pjr-smet-register-stale-block-reason]]: in-place の実行中の commit で HEAD 検査に止められた実行。
+- [[specdojo:exec-operation-guide]]: worktree と in-place の使い分けの説明。
+rg: docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: IO error for operation on docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: No such file or directory (os error 2)
+
+exec
+/bin/bash -lc "rg --files | rg '("'^|/)(pjr-index'"\\.md|exec-defaults\\.yaml|specdojo-orchestrator.*\\.md|exec-(config|operation)-guide\\.md|register-operation-guide\\.md|command-reference\\.md|exec-(agent-config|run)\\.ts)"'$'"' && git diff -- docs/ja/projects/prj-0001/controls/project-register/events/pjr-d0kf.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-d0kf-exec-register-worktree-default.md docs/specdojo/schemas/v1/exec-defaults.schema.yaml src/exec-agent-config.ts src/exec-run.ts tests/src/exec-agent-config.test.ts tests/src/exec-run.test.ts" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-D0KF
+ succeeded in 73ms:
+src/exec-run.ts
+src/exec-agent-config.ts
+templates/opencode/agents/specdojo-orchestrator.md
+templates/claude/agents/specdojo-orchestrator.md
+docs/ja/specdojo/references/command-reference.md
+docs/ja/specdojo/guides/register-operation-guide.md
+docs/ja/specdojo/guides/exec-config-guide.md
+docs/ja/specdojo/guides/exec-operation-guide.md
+diff --git a/docs/ja/projects/prj-0001/controls/project-register/events/pjr-d0kf.yaml b/docs/ja/projects/prj-0001/controls/project-register/events/pjr-d0kf.yaml
+index d181a771f..1980cdc0f 100644
+--- a/docs/ja/projects/prj-0001/controls/project-register/events/pjr-d0kf.yaml
++++ b/docs/ja/projects/prj-0001/controls/project-register/events/pjr-d0kf.yaml
+@@ -58,3 +58,19 @@
+       from: "-"
+       to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml; agent must record the required chang…"
+   previous_event_id: reg_655a8abec00246a4986b0a384c56808e
++- v: 1
++  id: reg_9dcae789a2fe483cbffbbae17ab6e496
++  ts: "2026-10-04T09:15:32Z"
++  action: start
++  actor: codex-expert-executor
++  from_status: waiting
++  to_status: in-progress
++  reason: executor resumed
++  changes:
++    - field: status
++      from: waiting
++      to: in-progress
++    - field: block_reason
++      from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml; agent must record the required chang…"
++      to: "-"
++  previous_event_id: reg_89049830957b4bd68263dec64e4798d2
+diff --git a/docs/ja/projects/prj-0001/controls/project-register/pjr-d0kf-exec-register-worktree-default.md b/docs/ja/projects/prj-0001/controls/project-register/pjr-d0kf-exec-register-worktree-default.md
+index e7d604b1b..1811870cf 100644
+--- a/docs/ja/projects/prj-0001/controls/project-register/pjr-d0kf-exec-register-worktree-default.md
++++ b/docs/ja/projects/prj-0001/controls/project-register/pjr-d0kf-exec-register-worktree-default.md
+@@ -7,12 +7,11 @@ specdojo:
+   part_of:
+     - prj-0001:pjr-index
+   item_type: todo
+-  item_status: waiting
++  item_status: in-progress
+   priority: medium
+   owner: DEV
+   registered_at: "2026-10-04T05:12:44Z"
+   due_on: null
+-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.specdojo/exec-defaults.yaml; agent must record the required chang…"
+ ---
+ 
+ # PJR-D0KF exec run --register の既定を worktree にし、in-place を明示指定にする
+diff --git a/docs/specdojo/schemas/v1/exec-defaults.schema.yaml b/docs/specdojo/schemas/v1/exec-defaults.schema.yaml
+index c157d52f1..ed8244231 100644
+--- a/docs/specdojo/schemas/v1/exec-defaults.schema.yaml
++++ b/docs/specdojo/schemas/v1/exec-defaults.schema.yaml
+@@ -100,6 +100,13 @@ $defs:
+     additionalProperties: false
+     minProperties: 1
+     properties:
++      register_execution:
++        type: string
++        enum: [in-place, worktree]
++        description: >
++          Default execution location for `exec run --register`. `--worktree` and `--in-place`
++          override this value. When omitted, the historical `in-place` behavior is retained for
++          compatibility with existing repositories.
+       max_concurrent_runs:
+         type: integer
+         minimum: 1
+diff --git a/src/exec-agent-config.ts b/src/exec-agent-config.ts
+index d16a5f279..bac80c1ba 100644
+--- a/src/exec-agent-config.ts
++++ b/src/exec-agent-config.ts
+@@ -81,6 +81,9 @@ export type ProviderOverride = {
+ 
+ export type ExecDefaultsConfig = {
+   run?: {
++    // Default execution location for register items. Omitted keeps the historical in-place
++    // behavior so existing repositories do not start creating worktrees after an upgrade.
++    register_execution?: "in-place" | "worktree";
+     // Maximum number of `exec run` processes that may run at once for one project, counting the
+     // primary run and every `--join` run (default 4). 1 disables `--join`.
+     max_concurrent_runs?: number;
+@@ -277,6 +280,22 @@ export function providerSlotPoolPath(lockRoot: string, provider: AgentProvider):
+ }
+ 
+ export const DEFAULT_MAX_CONCURRENT_RUNS = 4;
++export const DEFAULT_REGISTER_EXECUTION = "in-place" as const;
++
++export type RegisterExecution = "in-place" | "worktree";
++
++// Preserve the historical default for repositories that have not opted into worktree execution.
++// Invalid YAML-sourced values are rejected instead of silently changing where agents write.
++export function resolveRegisterExecution(config: ExecDefaultsConfig): RegisterExecution {
++  const raw = config.run?.register_execution;
++  if (raw === undefined) return DEFAULT_REGISTER_EXECUTION;
++  if (raw !== "in-place" && raw !== "worktree") {
++    throw new Error(
++      `run.register_execution in exec-defaults must be "in-place" or "worktree": ${String(raw)}`,
++    );
++  }
++  return raw;
++}
+ 
+ // Resolve how many `exec run` processes may run at once for one project. Invalid values fall back
+ // to the default so a typo cannot silently disable the busy guard.
+@@ -422,6 +441,7 @@ export function loadExecDefaultsConfig(
+ 
+   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
+   resolveParentValidationConcurrency(defaults.pipeline?.parent_validation_concurrency);
++  resolveRegisterExecution(defaults);
+ 
+   return defaults;
+ }
+diff --git a/src/exec-run.ts b/src/exec-run.ts
+index 8681f1c29..2899db7a6 100644
+--- a/src/exec-run.ts
++++ b/src/exec-run.ts
+@@ -12,6 +12,7 @@ import {
+   providerSlotPoolPath,
+   resolveMaxConcurrency,
+   resolveMaxConcurrentRuns,
++  resolveRegisterExecution,
+   resolveMemberCommand,
+   resolveRateLimitDetection,
+   resolveRateLimitPolicy,
+@@ -334,6 +335,7 @@ export type RunOpts = {
+   resume?: boolean;
+   forceRestart?: boolean;
+   worktree?: boolean;
++  inPlace?: boolean;
+   trackState?: boolean;
+   archiveOnSuccess?: boolean;
+   editBy?: string;
+@@ -796,6 +798,18 @@ export function parseExecRunBusyPolicy(value: string | undefined): ExecRunBusyPo
+   return policy;
+ }
+ 
++export function resolveRegisterWorktree(
++  opts: Pick<RunOpts, "worktree" | "inPlace">,
++  execDefaults: ExecDefaultsConfig,
++): boolean {
++  if (opts.worktree && opts.inPlace) {
++    throw new Error("Specify either --worktree or --in-place, not both.");
++  }
++  if (opts.worktree) return true;
++  if (opts.inPlace) return false;
++  return resolveRegisterExecution(execDefaults) === "worktree";
++}
++
+ // How the run shares the project exec-run lock. Only register worktree runs coordinate their
+ // shared resources (agent slots, root lifecycle, parent validations) across processes, so only
+ // they may run next to other processes.
+@@ -6813,7 +6827,7 @@ export function registerRunCommand(exec: Command): void {
+   rcmd.option("--plan <path>", "Run an existing plan file (in-place; no generation)");
+   rcmd.option(
+     "--register <pjrIds...>",
+-    "One or more project register item IDs (PJR-XXXX) to run; tracks state via register transitions. In place and serial by default; add --worktree to isolate deliverables (and --parallel to run concurrently)",
++    "One or more project register item IDs (PJR-XXXX) to run; execution location defaults to run.register_execution in exec-defaults (in-place when unset)",
+   );
+   rcmd.option(
+     "--register-filter",
+@@ -6833,7 +6847,7 @@ export function registerRunCommand(exec: Command): void {
+   rcmd.option("--job-trigger <source>", "Job trigger source: manual|routine|ci", "manual");
+   rcmd.option(
+     "--register-commit",
+-    "With --register (in-place only): commit each successful item's changes as a separate commit (default: leave changes in the working tree). Ignored with --worktree, which always commits",
++    "With in-place --register: commit each successful item's changes as a separate commit (default: leave changes in the working tree). Ignored in worktree mode, which always commits",
+     false,
+   );
+   rcmd.option(
+@@ -6842,17 +6856,22 @@ export function registerRunCommand(exec: Command): void {
+   );
+   rcmd.option(
+     "--resume",
+-    "With --register --worktree: resume the stage where a run stopped (executor, reporter, or integration), reusing the existing worktree and checkpoints",
++    "With register worktree mode: resume the stage where a run stopped (executor, reporter, or integration), reusing the existing worktree and checkpoints",
+     false,
+   );
+   rcmd.option(
+     "--force-restart",
+-    "With --register --worktree: re-run the whole item even when a resumable executor result exists (discards the worktree and its uncommitted changes)",
++    "With register worktree mode: re-run the whole item even when a resumable executor result exists (discards the worktree and its uncommitted changes)",
+     false,
+   );
+   rcmd.option(
+     "--worktree",
+-    "Isolate execution in a git worktree and integrate back (requires --task or --register)",
++    "Use a git worktree and integrate back (requires --task or --register; overrides run.register_execution for --register)",
++    false,
++  );
++  rcmd.option(
++    "--in-place",
++    "Run a register item in the current working tree (overrides run.register_execution; cannot be combined with --worktree)",
+     false,
+   );
+   rcmd.option(
+@@ -6887,7 +6906,7 @@ export function registerRunCommand(exec: Command): void {
+   );
+   rcmd.option(
+     "--join",
+-    "With --register --worktree: run next to a running register worktree exec instead of waiting for it, sharing its provider caps, lifecycle serialization, and parent-validation slots (up to run.max_concurrent_runs; --if-busy applies when all join slots are taken)",
++    "With register worktree mode: run next to a running register worktree exec instead of waiting for it, sharing its provider caps, lifecycle serialization, and parent-validation slots (up to run.max_concurrent_runs; --if-busy applies when all join slots are taken)",
+     false,
+   );
+   rcmd.option(
+@@ -6966,23 +6985,41 @@ export function registerRunCommand(exec: Command): void {
+         process.exitCode = 1;
+         return;
+       }
++      if (opts.worktree && opts.inPlace) {
++        process.stdout.write("Specify either --worktree or --in-place, not both.\n");
++        process.exitCode = 1;
++        return;
++      }
++      if (opts.inPlace && !hasRegister) {
++        process.stdout.write("--in-place requires --register or --register-filter.\n");
++        process.exitCode = 1;
++        return;
++      }
++      if (hasRegister) {
++        const { schedulePath, executionPath } = resolveProjectPaths({ project: opts.project });
++        const execDefaults = loadExecDefaultsConfig(
++          resolveExecDefaultsPath(opts, schedulePath),
++          executionPath,
++        );
++        opts.worktree = resolveRegisterWorktree(opts, execDefaults);
++      }
+       if (hasRegister && !opts.worktree && parseParallel(opts.parallel) !== 1) {
+         process.stdout.write(
+-          "--parallel with --register requires --worktree (in-place register items run serially).\n",
++          "--parallel with --register requires worktree mode; use --worktree or configure run.register_execution: worktree.\n",
+         );
+         process.exitCode = 1;
+         return;
+       }
+       if (opts.join && !(hasRegister && opts.worktree)) {
+         process.stdout.write(
+-          "--join requires --register (or --register-filter) with --worktree.\n",
++          "--join requires --register (or --register-filter) in worktree mode.\n",
+         );
+         process.exitCode = 1;
+         return;
+       }
+       if (hasRegister && opts.worktree && opts.registerCommit) {
+         process.stdout.write(
+-          "Note: --register-commit is ignored with --worktree; worktree runs always commit (checkpoint + merge back).\n",
++          "Note: --register-commit is ignored in worktree mode; worktree runs always commit (checkpoint + merge back).\n",
+         );
+       }
+       if ((opts.registerCommit || opts.onFailure) && !hasRegister) {
+@@ -6998,7 +7035,9 @@ export function registerRunCommand(exec: Command): void {
+       // 再開は既存 worktree の成果を再利用する操作のため、worktree 実行に限る。in-place 実行は
+       // executor の変更が作業ツリーに残り、再開時のID単位 commit が対象を判別できない。
+       if ((opts.resume || opts.forceRestart) && !opts.worktree) {
+-        process.stdout.write("--resume and --force-restart require --worktree with --register.\n");
++        process.stdout.write(
++          "--resume and --force-restart require register worktree mode; use --worktree or configure run.register_execution: worktree.\n",
++        );
+         process.exitCode = 1;
+         return;
+       }
+@@ -7065,7 +7104,7 @@ export function registerRunCommand(exec: Command): void {
+         opts,
+         "run",
+         async () => {
+-          // Register-item run: in place (default) or in a worktree (--worktree), with state tracked
++          // Register-item run: use the configured location or an explicit CLI override, with state tracked
+           // via register transitions (start → review / waiting) instead of exec events.
+           if (hasRegister) {
+             await runRegisterMode(opts);
+diff --git a/tests/src/exec-agent-config.test.ts b/tests/src/exec-agent-config.test.ts
+index a425ef266..3cbcfb695 100644
+--- a/tests/src/exec-agent-config.test.ts
++++ b/tests/src/exec-agent-config.test.ts
+@@ -4,12 +4,14 @@ import { join } from "node:path";
+ import { describe, expect, it } from "vitest";
+ import {
+   createProviderCapacityTracker,
++  DEFAULT_REGISTER_EXECUTION,
+   DEFAULT_MAX_CONCURRENT_RUNS,
+   loadExecDefaultsConfig,
+   ProviderConcurrencyGate,
+   providerSlotPoolPath,
+   resolveMaxConcurrency,
+   resolveMaxConcurrentRuns,
++  resolveRegisterExecution,
+   resolveRateLimitDetection,
+   resolveRateLimitPolicy,
+   type ExecDefaultsConfig,
+@@ -355,3 +357,16 @@ describe("resolveMaxConcurrentRuns", () => {
+     expect(resolveMaxConcurrentRuns({ run: { max_concurrent_runs: 6 } })).toBe(6);
+   });
+ });
++
++describe("resolveRegisterExecution", () => {
++  it("未指定では互換性のため in-place、設定時は指定値を使う", () => {
++    expect(resolveRegisterExecution({})).toBe(DEFAULT_REGISTER_EXECUTION);
++    expect(resolveRegisterExecution({ run: { register_execution: "in-place" } })).toBe("in-place");
++    expect(resolveRegisterExecution({ run: { register_execution: "worktree" } })).toBe("worktree");
++  });
++
++  it("未知の値を設定エラーにする", () => {
++    const config = { run: { register_execution: "temporary" } } as unknown as ExecDefaultsConfig;
++    expect(() => resolveRegisterExecution(config)).toThrow(/run\.register_execution/);
++  });
++});
+diff --git a/tests/src/exec-run.test.ts b/tests/src/exec-run.test.ts
+index 7e05b0012..387e022d3 100644
+--- a/tests/src/exec-run.test.ts
++++ b/tests/src/exec-run.test.ts
+@@ -8,6 +8,7 @@ import {
+   parseExecRunBusyPolicy,
+   pipelineRecoveryMeta,
+   rebuildStaleGeneratedTracksForCycle,
++  resolveRegisterWorktree,
+   resolveAgentOverride,
+   reporterRequirements,
+   selectCandidates,
+@@ -46,6 +47,25 @@ describe("parseExecRunBusyPolicy", () => {
+   });
+ });
+ 
++describe("resolveRegisterWorktree", () => {
++  it("設定の既定を使い、CLI の明示指定を優先する", () => {
++    expect(resolveRegisterWorktree({}, {})).toBe(false);
++    expect(resolveRegisterWorktree({}, { run: { register_execution: "worktree" } })).toBe(true);
++    expect(
++      resolveRegisterWorktree({ inPlace: true }, { run: { register_execution: "worktree" } }),
++    ).toBe(false);
++    expect(
++      resolveRegisterWorktree({ worktree: true }, { run: { register_execution: "in-place" } }),
++    ).toBe(true);
++  });
++
++  it("--worktree と --in-place の同時指定を拒否する", () => {
++    expect(() => resolveRegisterWorktree({ worktree: true, inPlace: true }, {})).toThrow(
++      /either --worktree or --in-place/,
++    );
++  });
++});
++
+ describe("rebuildStaleGeneratedTracksForCycle", () => {
+   it("does not build or write output when every generated track is current", async () => {
+     const dir = mkdtempSync(join(tmpdir(), "specdojo-cycle-rebuild-"));
+
+codex
+現状の実装差分には CLI・schema・テスト・ガイド更新がありますが、完了条件のうちプロジェクト既定設定と orchestrator 正本は前回の保護設定ガードで未反映です。まず、生成元と反映経路を確認し、保護対象を直接変更せずに完了条件を満たせる正規の編集先があるかを詰めています。
+exec
+/bin/bash -lc "git ls-files | rg 'pjr-index\\.md"'$|exec-defaults'"\\.yaml"'$|specdojo-orchestrator.*'"\\.md"'$|orchestrator'"' | head -200 && sed -n '1,220p' .specdojo/exec-defaults.yaml 2>/dev/null || true && sed -n '1,220p' .agents/specdojo-orchestrator.agent.md 2>/dev/null || true && sed -n '1,220p' templates/claude/agents/specdojo-orchestrator.md && git diff -- docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/references/command-reference.md" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-D0KF
+ succeeded in 0ms:
+.agents/specdojo-orchestrator.agent.md
+.claude/agents/specdojo-orchestrator.md
+.codex/agents/specdojo-orchestrator.toml
+.github/agents/specdojo-orchestrator.md
+.opencode/agents/gemma-orchestrator.md
+.opencode/agents/qwen-orchestrator.md
+.specdojo/exec-defaults.yaml
+docs/ja/product/010-business-specs/010-data-flow/cdfd-orchestrator.md
+docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0007-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0036-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0058-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0xxz-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-49jk-readme-orchestrator-onboarding.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5erg-orchestrator-body-sync.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-8xqz-orchestrator-distribution-and-ssot.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-kefk-orchestrator-feature-branch-rule.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-njrh-orchestrator-use-register-commit.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-rpsx-scaffold-orchestrator-npm-scripts.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-xw9m-orchestrator-note-type-non-terminal.md
+docs/ja/projects/prj-0001/execution/exec/events/20260915T140411Z_codex-expert-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-010_claim_1b82.json
+docs/ja/projects/prj-0001/execution/exec/events/20260915T141623Z_codex-expert-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-010_complete_2892.json
+docs/ja/projects/prj-0001/execution/exec/events/20260916T004811Z_qwen-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-070_claim_90d3.json
+docs/ja/projects/prj-0001/execution/exec/events/20260916T011907Z_qwen-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-070_block_c556.json
+docs/ja/projects/prj-0001/execution/exec/events/20260916T090631Z_qwen-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-070_unblock_2a25.json
+docs/ja/projects/prj-0001/execution/exec/events/20260916T091019Z_qwen-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-070_complete_1edc.json
+docs/ja/projects/prj-0001/execution/exec/events/20260916T142550Z_codex-expert-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-075_claim_7901.json
+docs/ja/projects/prj-0001/execution/exec/events/20260916T143529Z_codex-expert-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-075_complete_2f0d.json
+docs/ja/projects/prj-0001/execution/exec/events/20260917T131435Z_indie_T-DATA-FLOW-PDCA-cdfd-orchestrator-075_reopen_ebbf.json
+docs/ja/projects/prj-0001/execution/exec/events/20260917T131510Z_codex-expert-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-075_claim_a7f7.json
+docs/ja/projects/prj-0001/execution/exec/events/20260917T132346Z_codex-expert-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-075_complete_45ec.json
+docs/ja/projects/prj-0001/execution/exec/events/20260917T230410Z_codex-expert-review-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-090_claim_fbf9.json
+docs/ja/projects/prj-0001/execution/exec/events/20260917T231304Z_codex-expert-review-executor_T-DATA-FLOW-PDCA-cdfd-orchestrator-090_complete_3b69.json
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-010/20260915T140411026Z-83718677/evidence.json
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-010/20260915T140411026Z-83718677/executor.log
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-010/20260915T140411026Z-83718677/pipeline-state.json
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-070/20260916T004811076Z-26fed23d/evidence.json
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-070/20260916T004811076Z-26fed23d/executor.log
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-070/20260916T004811076Z-26fed23d/pipeline-state.json
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-070/20260916T004811076Z-26fed23d/reporter-attempt-1.stderr.log
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-070/20260916T004811076Z-26fed23d/reporter-attempt-1.stdout.log
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-075/20260916T142550460Z-9c901cd8/evidence.json
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-075/20260916T142550460Z-9c901cd8/executor.log
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-075/20260916T142550460Z-9c901cd8/pipeline-state.json
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-075/20260917T131510538Z-1a2a7a89/evidence.json
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-075/20260917T131510538Z-1a2a7a89/executor.log
+docs/ja/projects/prj-0001/execution/exec/evidence/T-DATA-FLOW-PDCA-cdfd-orchestrator-075/20260917T131510538Z-1a2a7a89/pipeline-state.json
+docs/ja/projects/prj-0001/execution/exec/plans/T-DATA-FLOW-PDCA-cdfd-orchestrator-010-plan.md
+docs/ja/projects/prj-0001/execution/exec/plans/T-DATA-FLOW-PDCA-cdfd-orchestrator-070-plan.md
+docs/ja/projects/prj-0001/execution/exec/plans/T-DATA-FLOW-PDCA-cdfd-orchestrator-075-plan.md
+docs/ja/projects/prj-0001/execution/exec/plans/T-DATA-FLOW-PDCA-cdfd-orchestrator-090-plan.md
+docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-orchestrator-010-result.md
+docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-orchestrator-070-result.md
+docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-orchestrator-075-result.md
+docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-orchestrator-090-result.md
+docs/ja/projects/prj-0001/execution/grade/criteria/cdfd-orchestrator-0888f9bb68-done-criteria.yaml
+docs/ja/projects/prj-0001/execution/grade/criteria/sysd-orchestrator-agent-settings-b1c21895d4-done-criteria.yaml
+docs/ja/projects/prj-0001/execution/grade/results/cdfd-orchestrator.yaml
+docs/ja/projects/prj-0001/execution/grade/results/sysd-orchestrator-agent-settings.yaml
+docs/ja/specdojo/guides/orchestrator-operation-guide.md
+templates/antigravity/orchestrator.md
+templates/claude/agents/specdojo-orchestrator.md
+templates/codex/agents/specdojo-orchestrator.toml
+templates/codex/orchestrator.md
+templates/opencode/agents/specdojo-orchestrator.md
+tests/tools/validate-orchestrator-sync.test.ts
+tools/generate-orchestrator-wrappers.mjs
+tools/validate-orchestrator-sync.mjs
+# yaml-language-server: $schema=../docs/specdojo/schemas/v1/exec-defaults.schema.yaml
+# exec-defaults.yaml
+# specdojo exec run の共通実行設定。
+#
+# エージェント選択に使う作業要件（mode / capabilities / proficiency）は
+# sch-strategy-<track>.yaml の phase に定義する。
+#
+# rate_limit_detection / rate_limit_policy は全 provider 共通のグローバル既定値。
+# 検出シグナル・終了コード・待機時間は provider ごとに異なるため、provider 別の
+# 上書きは providers.<provider> に置く（キーは pm-members[].provider に対応）。
+# member ごとに、対応する provider ブロックがあればそれを、なければ下のグローバル
+# 既定を使う。検出は候補ごとに provider で解決し、retry/backoff の policy は最優先
+# 候補（candidates[0]）の provider で解決する。
+
+# executor の sandbox では実行できない検証を、executor 成功後・reporter 起動前に
+# SpecDojo 親プロセスが固定許可リストから実行する。設定できるのは ID だけで、agent の
+# evidence や設定ファイルから任意の command / 引数を注入することはできない。
+pipeline:
+  parent_validations:
+    # lint は短時間で終わるため先に実行し、executor が残した ESLint・frontmatter・Markdown の
+    # エラーを統合前に検出する（PJR-K1Z5）。
+    - lint-ts # npm run lint:ts
+    - lint-fm # npm run lint:fm
+    - lint-md # npm run lint:md
+    - test-integration # npm run test:integration（shell を介さず固定 argv で実行）
+    # sandbox 内では tsx の IPC ソケット作成、Vitest の終了、git の子プロセス終了が
+    # 成立せず、成果物と無関係に failed となるため親プロセスで実行する（PJR-QVGX）。
+    - validate-schema # npm run validate:schema
+    # 型エラーは Vitest では検出できず、統合時の pre-commit hook まで持ち越されるため、
+    # test-unit の前に親検証として実行する（PJR-W66B）。
+    - typecheck # npm run typecheck
+    - test-unit # npm run test:unit
+
+rate_limit_detection:
+  # exit_codes は最小限にする。多くの agent CLI は通常失敗と agent 自身の block も
+  # exit 1 で返すため、素の exit 1 は rate limit と区別できない。通常失敗を利用制限
+  # として延期しないよう、共通既定では exit code 単独の検出を行わない。
+  exit_codes: []
+  # stderr_patterns は既定で「プロセスが非ゼロ終了した場合のみ」rate limit とみなす
+  # （stderr_requires_nonzero_exit の既定は true）。成果物本文に "rate limit" 等の
+  # 語が含まれ、agent が成功（exit 0）したままその差分を stderr に出力しても誤検出
+  # しない。終了コードに依らず stderr のみで判定したい場合は false を明示する。
+  stderr_patterns:
+    - "rate limit"
+    - "429"
+
+rate_limit_policy:
+  # provider 出力に reset / retry-after が無い一時的な rate limit だけ、明示した
+  # cooldown を再開時刻として使用する。quota_exhausted は自動再開しない。
+  cooldown_seconds:
+    rate_limit: 900
+  on_non_critical:
+    action: skip # cpm.slack > 0: block イベントを記録して次のタスクへ
+  on_critical:
+    action: try_next # cpm.slack == 0: candidates 配列の次の agent へ
+    retry:
+      max_attempts: 3
+      initial_wait_seconds: 60
+      backoff_multiplier: 3 # 60s -> 180s -> 540s
+      max_wait_seconds: 600
+    on_exhausted: block # 全候補試行後はブロックして人間に委ねる
+
+# provider 別の設定。command_template は agent の起動コマンドで、member 属性
+# （{nickname} / {mode} / {proficiency} と command_params の変数）で展開する。
+# member 側の command はテンプレートを持たない構成（provider: custom 等）専用の上書き。
+#
+# 検出・ポリシー上書きは、各 provider ブロックの rate_limit_detection を
+# 与えた場合、その provider の member ではグローバル rate_limit_detection を完全に
+# 置き換える（exit_codes を省略すれば exit code 起因の誤検出を避けられる）。
+#
+# limit の種類は provider ごとに異なる（rate limit / session limit / 週次・月次 quota）。
+# reset horizon により retryable と回復戦略が変わるため、詳細は各 provider 設計書の
+# limit 表を参照する。stderr の実文言は CLI バージョンで変わりうるため、下記 pattern は
+# 実際の出力で検証してから確定する。
+providers:
+  claude:
+    # モデルは .claude/agents/{nickname}.md の model フィールドで指定するため、
+    # テンプレートにモデル名を含めない。permission は mode 別 settings で分離する。
+    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
+    # Anthropic API: 429 / rate limit に加え、モデル高負荷時の overloaded を検出。
+    # session limit は logs/exec-auto.log で実観測:
+    #   "You've hit your session limit · resets 4:10am (UTC)"
+    # （rate limit / 429 を含まないため exit 1 ではなくこの文言で検出する必要がある）
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "overloaded"
+        - "session limit"
+
+  copilot:
+    # edit / review とも同一の許可リスト方式（shell は読み取り系・検証系のみ、git の
+    # 変更系は deny）。write はパス単位に絞れないため許可し、成果物変更の境界は
+    # specdojo CLI の commit 許可リストで作る。プレースホルダは不要のため使わない。
+    # model は auto（Copilot の自動モデル選択）で常に最新・最適なモデルへ追従する。
+    # ローカル config に persist された model 設定に依存しないよう明示する。
+    command_template: >-
+      copilot -p "$(cat)" --no-color --no-ask-user --model auto
+      --no-remote --no-remote-export --disable-builtin-mcps
+      --allow-tool write
+      --allow-tool 'shell(git status)' --allow-tool 'shell(git diff)'
+      --allow-tool 'shell(git log)' --allow-tool 'shell(git show)'
+      --allow-tool 'shell(npm run)' --allow-tool 'shell(npm test)'
+      --allow-tool 'shell(specdojo:*)'
+      --deny-tool 'shell(git add)' --deny-tool 'shell(git commit)'
+      --deny-tool 'shell(git push)' --deny-tool 'shell(git reset)'
+    # Copilot: 429 / rate limit に加え、quota / premium request 上限の文言を検出。
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "quota"
+        - "premium request"
+
+  codex:
+    # codex exec には worker 名を選択するオプションがないため {nickname} は使わず、
+    # モデルと reasoning effort を proficiency で切り替える。--ephemeral は rollout
+    # ファイルを保存しない（実行履歴の正本は SpecDojo の event・plan・result）。
+    # sandbox_workspace_write.network_access=false は sandbox 内からの直接の
+    # ネットワークアクセスを遮断する（web_search はモデル側ツールのため影響しない）。
+    command_template: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model {model} -c model_reasoning_effort="{effort}"'
+    command_params:
+      by_proficiency:
+        normal: { model: gpt-5.6-terra, effort: medium }
+        expert: { model: gpt-5.6-sol, effort: high }
+    # OpenAI: 429 / rate limit（API）に加え、ChatGPT プランの 5時間枠（session limit）
+    # と週次上限（weekly / usage limit）がスタックする。
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "session limit"
+        - "weekly limit"
+        - "usage limit"
+
+  opencode:
+    # {nickname} が --agent の指定名になるため、member の nickname と
+    # .opencode/agents/<name>.md のファイル名を一致させる。
+    command_template: "opencode run --agent {nickname}"
+    # 同一ホストの単一 Ollama モデルを共有するため、複数の opencode agent を同時起動
+    # するとメモリ競合・モデルロード待ちで不安定になる。1 ラウンドで同時に走る opencode
+    # を 1 つに制限する（他 provider のグローバル --parallel は下げない）。
+    max_concurrency: 1
+    # ローカル Ollama: API rate limit より、モデルロード待ち・メモリ不足・接続
+    # タイムアウトが主な失敗要因。exit 1 は実失敗なので exit_codes は空にする。
+    rate_limit_detection:
+      exit_codes: []
+      stderr_patterns:
+        - "timeout"
+        - "connection refused"
+        - "out of memory"
+        - "model is loading"
+    # 同一ホストの OpenCode provider を共有するため、別 member への try_next でも
+    # モデル切替・メモリ不足は解消しないことがある。復旧は wait+backoff を優先する。
+    rate_limit_policy:
+      on_non_critical:
+        action: skip
+      on_critical:
+        action: try_next
+        retry:
+          max_attempts: 3
+          initial_wait_seconds: 120 # モデル再ロード/メモリ解放に時間がかかるため長め
+          backoff_multiplier: 2 # 120s -> 240s -> 480s
+          max_wait_seconds: 600
+        on_exhausted: block
+
+  antigravity:
+    # Antigravity CLI（agy）は --agent による定義ファイルの選択を持たず、codex と同じく
+    # プロンプト（plan）だけで役割を与える。-p はプロンプトを引数に取り stdin を読まないため、
+    # runner が stdin へ書く plan を "$(cat)" で引数に渡す（shell: true で実行される）。
+    # --sandbox は書き込み先を ~/.gemini 配下の scratch へ逃がすため、--add-dir で作業
+    # ディレクトリ（worktree）を明示して成果物へ書けるようにする（2026-09-21 実測）。
+    # --dangerously-skip-permissions は非対話実行に必須。境界は worktree・保護設定・
+    # commit 許可リストで作る。
+    # agy のモデル ID は推論強度を含む（gemini-3.8-flash-{high,medium,low} など）。--effort を
+    # 併用すると ID と食い違ったときに "invalid model selection" で起動に失敗するため、
+    # 強度はモデル ID だけで指定する（2026-09-21 実測: flash-high + --effort medium で失敗）。
+    command_template: 'agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions --model {model} -p "$(cat)"'
+    command_params:
+      by_proficiency:
+        normal: { model: gemini-3.8-flash-medium }
+        expert: { model: gemini-3.1-pro-high }
+      # Gemini 以外の Antigravity 提供モデルは member nickname で明示的に選ぶ。
+      # by_nickname は proficiency / mode の既定値より優先される。
+      by_nickname:
+        agy-claude-executor: { model: claude-sonnet-4-6 }
+        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-expert-review-executor: { model: claude-opus-4-6-thinking }
+        agy-gpt-executor: { model: gpt-oss-120b-medium }
+    # Gemini API の制限文言は未観測。429 / quota / RESOURCE_EXHAUSTED を初期値とし、
+    # 実観測した文言で更新する（observed-agent-limit-stderr と同じ扱い）。
+    rate_limit_detection:
+      stderr_patterns:
+        - "rate limit"
+        - "429"
+        - "quota"
+        - "RESOURCE_EXHAUSTED"
+# SpecDojo Orchestrator Agent
+
+あなたは SpecDojo の対話型オーケストレーターです。利用者との会話から意図を読み取り、`specdojo` CLI（`register` / `exec` / `kata` / `catalog` / `schedule` / `routine` など）を用いてプロジェクト実行管理を代行します。1件のタスクを黙々と処理する edit / review agent とは異なり、あなたは会話を通じて「何をしたいか」を明確化し、適切なコマンドへ落とし込み、実行と報告を行う司令塔です。
+
+CLI は利用リポジトリへローカル導入されるため、`npx specdojo <command>` で起動する。`node_modules/.bin` が `PATH` に入る環境（VS Code 統合ターミナルなど）では `specdojo` と打てるが、提示するコマンドは `npx specdojo` で統一する。
+
+## 基本方針
+
+- 回答は原則として日本語で行う。
+- コマンドは「提案 → 承認 → 実行」の順で扱う。状態やファイルを変える操作は、実行するコマンドを提示して利用者の承認を得てから実行する。読み取り・状況確認のみのコマンド（`--help`、`list`、`status`、`where`、`validate`、`--dry-run`）は説明の上で実行してよい。
+- 破壊的変更や `git push` は行わない。
+- `git commit` は次の方針で行う。実行前に必ず現在のブランチを確認して提示し、`main` では commit しない（対象ブランチを提案して止まる）。
+  - register の状態遷移や worktree の統合など、runner 相当の記帳は承認なしに commit してよい。register の記帳は `--commit` で commit する。
+  - 自分が判断して書いた変更（実装・設定・規範文書など）は、対象ファイルと commit メッセージを提示して承認を得てから commit する。
+- commit 先のブランチは変更の種類で決める。作業を始める前に現在ブランチを確認し、想定と違う場合は切り替えを提案してから進める。
+  - register の記帳（起票・状態遷移・生成物の再構築）は、対象 project の `develop` へ直接 commit してよい。個票とイベントが項目ごとに分かれ、ID も乱数で採番されるため、並行しても衝突しない。
+  - 自分が内容を書いた変更（実装・設定・規範文書など）は `feature/<project-id>/<topic>` を切ってそこへ commit する。`git push` と PR 作成は行わず、コマンドを提示して利用者へ引き渡す。
+  - `exec run` は現在ブランチを統合先にするため、実行前に対象 project の `develop` にいることを確認する。
+  - exec に流す予定の `todo` は、実行前に対象 project の `develop` へ入れておく。worktree は commit から作られるため、feature ブランチにしかない個票は実行できない。
+- commit メッセージは subject を日本語で書き、conventional commit の type と scope を保つ。本文には「なぜ」を日本語で書き、関連する登録簿項目があれば `Refs: <project-id>:<PJR-XXXX>`（例: `Refs: prj-0001:PJR-36QG`）を記載する。項目ごとに 1 行とし、過去の commit の書式は書き換えない。
+- 登録簿項目の実行は既定で `exec run --register` を使う。自分で実装するのは、利用者が実装者として自分を指定した場合に限る。「着手してください」は実行経路の指示であり、自分が実装してよい根拠として扱わない。実装者が読み取れない場合は確認する。
+- 自分が直接対応した項目は `start` を経ずに `close` してよい。実行していない主体を actor とする遷移を、記録の体裁を揃える目的で追加しない。終端イベントの `reason` に対応経路を記録し、実施内容と検証結果は個票の対応結果へ残す。
+- 認証情報・秘密鍵・`.env`・`secrets/` を読み込まない。
+- 変更前に関連する設計書（`docs/ja/specdojo/guides/`、`docs/ja/specdojo/references/command-reference.md`）を確認する。
+- タスクに関係しない成果物やファイルを変更しない。プロジェクトの事実を捏造しない。不明点は推測で埋めず、利

@@ -3,37 +3,83 @@ version: 1
 document: specdojo:cpd-mermaid-rulebook
 path: docs/ja/specdojo/rulebooks/cpd-mermaid-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 87
-graded_at: "2026-09-02T03:34:07.545Z"
+score: 74
+graded_at: "2026-09-29T22:10:56.410Z"
 graded_by: codex-expert-executor
 content_hash: a662ed2d55e9cc1d9a836b6f9760a6ff515ce60c1352d22c16d160bd4caa847f
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 75
+  operations:
+    score: 75
+  planning:
+    score: 83
+  business:
     score: 92
   architecture:
-    score: 100
+    score: 83
+  usability:
+    score: 92
+  implementation:
+    score: 88
   quality:
-    score: 75
+    score: 58
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
     level: 3
     score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -43,32 +89,111 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 1
-  minor: 2
+  major: 7
+  minor: 7
   note: 0
 findings:
+  - id: F001
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# Mermaid を用いたC4コンポーネント図 作成ルール"
+    message: >-
+      Frontmatter が `status: draft` かつ `recipe` / `template: undecided` である一方、本文に判断者、未決事項の影響、解消条件、次アクションがなく、PO
+      が承認・保留・差し戻しを判断できない。
   - id: F002
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 42
+    anchor: ※ 既存の C4 コンテキスト図（CXD）/ C4 コンテナ図（CND）と同じ色指定を利用します。
+    message: 共通色を既存の CXD / CND と同一にすると述べるだけで、対応 rulebook の ID や変更時の同期先を宣言しておらず、共有スタイル変更の影響を追跡できない。
+  - id: F003
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 1
+    anchor: "# Mermaid を用いたC4コンポーネント図 作成ルール"
+    message: "`recipe` と `template` の要否が `undecided` だが、未決事項として影響、担当、報告先、対応方針が分離されていない。"
+  - id: F004
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 5
+    anchor: 本ドキュメントは、アーキテクチャ設計のために、**Mermaid の `flowchart` 構文を使って C4 コンポーネント図（Component Diagram）を描く際の標準ルール**です。
+    message: 作成者、レビュー者、合意責任者を役割として定義しておらず、誰が図の境界や関係を確認するか読み取れない。
+  - id: F005
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 11
+    anchor: "- Mermaid の **`flowchart` を C4 コンポーネント図風に利用**する。"
+    message: Mermaid の対応バージョン、レンダラーまたは実行環境、HTML ラベルや絵文字の前提が未定義で、同じコードの解析・表示結果が環境差で変わる可能性がある。
+  - id: F006
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 42
+    anchor: ※ 既存の C4 コンテキスト図（CXD）/ C4 コンテナ図（CND）と同じ色指定を利用します。
+    message: ノード形状や共通スタイルを変更した際の既存 CPD、cpd-sample、Mermaid 生成物への互換性影響と移行方針が示されていない。
+  - id: F007
+    severity: major
+    rule: vp-dev-testability
+    line: 188
+    anchor: "```mermaid"
+    message: Mermaid コードの検証コマンド、対象ファイル、期待結果、エラー時対応がなく、変更後に構文とレンダリングの合否を再現可能に確認できない。
+  - id: F008
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 132
+    anchor: "- 対象コンテナは **サブグラフ `subgraph ... end`** で囲う。"
+    message: 必須条件が各節に分散し、最終的な受入チェックリストと pass / fail 条件がないため、「5〜15個程度」「増やしすぎない」等を含む完成判定を一意に行えない。
+  - id: F009
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "## 1. 全体方針"
+    message: >-
+      `specdojo:rulebook-authoring-standard`
+      が必須とする「ファイル命名・ID規則」「本文要件」「記述ガイド」の責務が標準章構成として整理されず、対象成果物の必須・任意項目、品質・受入、運用、トレーサビリティの確認項目も欠落している。
+  - id: F010
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
+    anchor: "# Mermaid を用いたC4コンポーネント図 作成ルール"
     message: >-
-      Frontmatter で対応 sample として宣言した docs/ja/specdojo/samples/cpd-sample.md に Mermaid
-      図の完成例がなく、本ルールのノード、境界、関係、スタイルを適用した成果物を確認できない。
-    anchor: ""
-  - id: F001
+      Frontmatter で対応 sample として宣言した docs/ja/specdojo/samples/cpd-sample.md に Mermaid 図の完成例がなく,
+      本ルールのノード、境界、関係、スタイルを適用した成果物を確認できない。
+  - id: F011
     severity: minor
-    rule: vp-arc-cross-document-consistency
+    rule: vp-qe-kata-conformance
     line: 1
+    anchor: "# Mermaid を用いたC4コンポーネント図 作成ルール"
     message: 参照サンプル (docs/ja/specdojo/samples/cpd-sample.md) 内のリンク先が本ルールのファイル名と不整合である。
-    anchor: ""
-  - id: F003
+  - id: F012
     severity: minor
     rule: vp-ux-readability
-    line: 1
+    line: 29
+    anchor: "## 2.1. 標準の色分け（推奨）"
     message: 「2.1. 標準の色分け」を章「2. C4要素と Mermaid 記号の対応」と同じ H2 にしているため、H3 の「2.1.1」「2.1.2」を含む階層が番号体系と一致するよう見出しレベルを修正する必要がある。
-    anchor: ""
+  - id: F013
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# Mermaid を用いたC4コンポーネント図 作成ルール"
+    message: "`status: draft` と `recipe` / `template: undecided` のまま、ready 化に必要な判断、承認者、公開前確認、未解決事項の解消条件が本文に定義されていない。"
+  - id: F014
+    severity: major
+    rule: vp-ops-operability
+    line: 42
+    anchor: ※ 既存の C4 コンテキスト図（CXD）/ C4 コンテナ図（CND）と同じ色指定を利用します。
+    message: Mermaid または共通スタイル更新時の改訂手順、再レンダリング手順、変更管理先、問い合わせ・表示障害時の対応がなく、継続保守を再現できない。

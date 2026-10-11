@@ -2,12 +2,12 @@
 id: sysd-codex-agent-settings-grade-criteria
 document: sysd-codex-agent-settings
 path: docs/ja/product/040-system-design/sysd-codex-agent-settings.md
-graded_at: "2026-09-19T16:24:54.832Z"
-graded_by: codex-expert-executor
-content_hash: 59f6b61ff14943d60c3ca70348d55b9e47a58e1f2f6ae921b5f251993c805122
+graded_at: "2026-10-10T16:16:39.706Z"
+graded_by: agy-expert-executor
+content_hash: 42a2cd4f17db9160725236e0e253365b83ba8383f39c224e60b1de5a8f56eeaf
 summary:
-  satisfied: 1
-  unsatisfied: 4
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -16,31 +16,32 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 採用理由と対応する業務要件または要求成果物との追跡関係が示されていない。
+    reason: 対象利用者、業務要件、受入条件が明示されておらず要件との整合性が確認できない。
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: モデル、検証実行主体、review executor の責務に重大な不整合があり、現状の設計方針を承認できない。
+    reason: モデル値やreview executorの書き込み責務に関して本文および正本との間に矛盾が存在する。
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: "`agents.max_depth` などの技術的制約について対応バージョンや有効性が示されていない。"
   - id: DC-004
     text: テスト設計・検証観点の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: Codex 固有の設定・制約に対応するテスト設計、検証条件、関連テストへの参照がない。
+    reason: テスト設計や検証観点を参照するための章や pass / fail 条件が定義されていない。
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 正本と異なるモデル・検証設定および矛盾する書き込み責務があり、安全な実装の基礎として参照できない。
+    reason: モデル値や検証主体、書き込み責務の矛盾により実装の基礎として利用できない。

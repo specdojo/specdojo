@@ -13,7 +13,30 @@ import {
   scaffoldResult,
   updateResultStatus,
 } from "../../src/exec-results.js";
+import type { ExecEvidence } from "../../src/exec-evidence.js";
 import { specdojoRootDir } from "../../src/specdojo-config.js";
+
+function reporterEvidence(changes: ExecEvidence["changes"]): ExecEvidence {
+  return {
+    schema_version: 1,
+    task_id: "prj-overview",
+    run_id: "run-1",
+    stage: {
+      role: "executor",
+      actor: "pipeline-executor",
+      status: "succeeded",
+      started_at: "2026-08-10T07:00:00.000Z",
+      completed_at: "2026-08-10T07:01:00.000Z",
+      exit_code: 0,
+      attempts: 1,
+    },
+    changes,
+    diff_summary: { files_changed: changes.length, summary: "" },
+    validations: [],
+    final_message: "executor completed",
+    log_refs: [],
+  };
+}
 
 function markdownlintErrors(content: string): unknown[] {
   const parsed = yaml.load(readFileSync(join(specdojoRootDir(), ".markdownlint.yaml"), "utf8"));
@@ -310,23 +333,6 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(frontmatter).toContain("targets:\n    - prj-0001:prj-overview");
   });
 
-  it("expands the review result sections placeholder when reviewSections is provided", async () => {
-    const { resultPath } = await scaffoldResult({
-      executionPath,
-      taskId: "prj-overview",
-      mode: "review",
-      projectId: "prj-0001",
-      planRef: "exec/plans/prj-overview-plan.md",
-      agent: "codex-review-agent",
-      startedAt: "2026-06-20T00:00:00.000Z",
-      reviewSections: "### RVP-001（BA: vp-ba-business-value）\n\n**確認基準**: x",
-    });
-
-    const body = readFileSync(resultPath, "utf8");
-    expect(body).toContain("### RVP-001（BA: vp-ba-business-value）");
-    expect(body).not.toContain("_REVIEW_RESULT_SECTIONS_");
-  });
-
   it("cross-deliverable-dedup は重複整理の専用 result セクションを使う", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
@@ -347,7 +353,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(body).toContain("## 6. 維持確認");
   });
 
-  it("falls back to a language-neutral _TODO_ marker when a review result has no reviewSections", async () => {
+  it("scaffolds a review result with the judgement sections instead of per-viewpoint results", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: "prj-overview",
@@ -359,9 +365,13 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     });
 
     const body = readFileSync(resultPath, "utf8");
-    // The placeholder is replaced; no Japanese fallback prose is hardcoded in code.
-    expect(body).not.toContain("_REVIEW_RESULT_SECTIONS_");
-    expect(body).toContain("## 1. レビュー観点別結果");
+    expect(body).toContain("## 1. 評価結果の確認");
+    expect(body).toContain("## 2. 判断根拠");
+    expect(body).toContain("## 3. 未充足事項・改善指示");
+    expect(body).toContain("## 5. decision");
+    expect(body).toContain("- verdict: _TODO_");
+    expect(body).not.toContain("レビュー観点別結果");
+    expect(body).not.toContain("RVP-");
   });
 
   it("approach: bootstrap-finalize は finalize result テンプレートを使いチェックリストを焼き込む", async () => {
@@ -553,17 +563,16 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     const output = {
       schema_version: 1 as const,
       mode: "edit" as const,
-      outcome: "complete" as const,
       summary: ["成果物とテストを更新した。"],
       changed_files: [{ path: "docs/test.md", summary: "記述を追加した。" }],
       handoff: [],
       approach: "plan と evidence の範囲だけを根拠にした。",
-      block_reason: "",
     };
+    const evidence = reporterEvidence([{ path: "docs/test.md", status: "M" }]);
 
-    await renderReporterResult(resultPath, output);
+    await renderReporterResult(resultPath, output, evidence);
     const first = readFileSync(resultPath, "utf8");
-    await renderReporterResult(resultPath, output);
+    await renderReporterResult(resultPath, output, evidence);
     const second = readFileSync(resultPath, "utf8");
 
     expect(second).toBe(first);
@@ -574,16 +583,219 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(markdownlintErrors(first)).toEqual([]);
   });
 
-  it("renders review viewpoints in scaffold order and rejects mismatched ids", async () => {
-    const reviewSections = [
-      "### RVP-001（DEV: vp-quality）",
-      "",
-      "**確認基準**: 内容が完全である。",
-      "",
-      "- result: _TODO_（pass / fail / unclear）",
-      "- evidence: _TODO_",
-      "- notes: _TODO_",
-    ].join("\n");
+  it("matches descriptions by path and tolerates missing, extra, and reordered entries", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["成果物を更新した。"],
+        changed_files: [
+          { path: "docs/b.md", summary: "B を更新した。" },
+          { path: "docs/not-in-evidence.md", summary: "未知の変更。" },
+        ],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      reporterEvidence([
+        { path: "docs/a.md", status: "M" },
+        { path: "docs/b.md", status: "M" },
+      ]),
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain("`docs/a.md`: reporter の説明がないため、変更差分を参照。");
+    expect(content).toContain("`docs/b.md`: B を更新した。");
+    expect(content.indexOf("`docs/a.md`")).toBeLessThan(content.indexOf("`docs/b.md`"));
+    expect(content).not.toContain("docs/not-in-evidence.md");
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("preserves an unchanged target reason from resumed executor evidence in the result", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["全対象を確認した。"],
+        changed_files: [{ path: "docs/a.md", summary: "記述を更新した。" }],
+        handoff: [],
+        approach: "再開前後の差分と plan を照合した。",
+      },
+      {
+        schema_version: 1,
+        task_id: "prj-overview",
+        run_id: "resume-1",
+        stage: {
+          role: "executor",
+          actor: "pipeline-executor",
+          status: "succeeded",
+          started_at: "2026-08-10T07:00:00.000Z",
+          completed_at: "2026-08-10T07:01:00.000Z",
+          exit_code: 0,
+          attempts: 1,
+        },
+        changes: [{ path: "docs/a.md", status: "M" }],
+        diff_summary: { files_changed: 1, summary: "docs/a.md | 1 +" },
+        validations: [],
+        target_coverage: [
+          {
+            target: "test:doc-b",
+            status: "unchanged",
+            reason: "現行内容が完了条件を満たしていた。",
+          },
+        ],
+        final_message: "全対象を確認した。",
+        log_refs: [],
+      },
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain("対象 `test:doc-b` は未変更: 現行内容が完了条件を満たしていた。");
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("adds requires_human validations to the result handoff mechanically", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const evidence = reporterEvidence([]);
+    evidence.validations = [
+      {
+        source: "executor",
+        command: "real-agent-cli --version",
+        status: "requires_human",
+        summary: "実 agent CLI をホスト側で起動する",
+      },
+    ];
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["sandbox 内の作業を完了した。"],
+        changed_files: [],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      evidence,
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain(
+      "人の確認が必要: `real-agent-cli --version`（実 agent CLI をホスト側で起動する）",
+    );
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("adds not_applicable validations and their reasons to the result handoff", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const evidence = reporterEvidence([]);
+    evidence.validations = [
+      {
+        source: "executor",
+        command: "npx prettier --write docs/test.md",
+        status: "not_applicable",
+        summary: "適用外",
+        reason: "prettier が package.json の依存にない",
+      },
+    ];
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["適用条件を確認した。"],
+        changed_files: [],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      evidence,
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain(
+      "適用外の検証: `npx prettier --write docs/test.md`（prettier が package.json の依存にない）",
+    );
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("adds mechanically inapplicable not_run validations to the result handoff", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const evidence = reporterEvidence([]);
+    evidence.validations = [
+      {
+        source: "executor",
+        command: "npm run command-that-does-not-exist",
+        status: "not_run",
+        summary: "script がないため未実行",
+      },
+    ];
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["適用条件を確認した。"],
+        changed_files: [],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      evidence,
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain(
+      "適用外の検証（runner の判定）: `npm run command-that-does-not-exist`（package.json に npm script 'command-that-does-not-exist' がない）",
+    );
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("renders the review judgement sections and verdict from reporter output", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: "T-TEST-doc-020",
@@ -592,39 +804,26 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
       planRef: "exec/plans/T-TEST-doc-020-plan.md",
       agent: "pipeline-executor",
       startedAt: "2026-08-10T07:00:00.000Z",
-      reviewSections,
     });
     const output = {
       schema_version: 1 as const,
       mode: "review" as const,
-      outcome: "complete" as const,
-      viewpoint_results: [
-        {
-          id: "RVP-001",
-          result: "pass" as const,
-          evidence: ["検証コマンドが成功した。"],
-          notes: "",
-        },
-      ],
-      findings: [],
-      approach: "done criteria と evidence を照合した。",
-      recommendation: "approve" as const,
-      block_reason: "",
+      grade_check: "評価結果は最新で、grade は pass、finding は minor 1 件だった。",
+      rationale: ["完了条件を満たし、minor の finding は今回の範囲外である。"],
+      improvements: ["minor の finding を次回の見直しで扱う。"],
+      approach: "fully-guided で求めた作成が行われたことを確認した。",
+      verdict: "complete-with-findings" as const,
     };
 
-    await renderReporterResult(resultPath, output);
+    await renderReporterResult(resultPath, output, reporterEvidence([]));
     const content = readFileSync(resultPath, "utf8");
-    expect(content).toContain("- result: pass");
-    expect(content).toContain("- recommendation: approve");
+    expect(content).toContain("## 1. 評価結果の確認");
+    expect(content).toContain("- 完了条件を満たし、minor の finding は今回の範囲外である。");
+    expect(content).toContain("- minor の finding を次回の見直しで扱う。");
+    expect(content).toContain("- verdict: complete-with-findings");
     expect(content).not.toContain("_TODO_");
     expect(markdownlintErrors(content)).toEqual([]);
-
-    await expect(
-      renderReporterResult(resultPath, {
-        ...output,
-        viewpoint_results: [{ ...output.viewpoint_results[0], id: "RVP-002" }],
-      }),
-    ).rejects.toThrow(/must match scaffold order/);
+    expect(isResultUnfilled(resultPath, "review")).toBe(false);
   });
 
   it.each([
@@ -780,7 +979,7 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(true);
   });
 
-  it("treats a review result with an undecided recommendation as unfilled", async () => {
+  it("treats a review result with an undecided verdict as unfilled", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: "prj-overview",
@@ -794,12 +993,32 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(isResultUnfilled(resultPath, "review")).toBe(true);
 
     const decided = readFileSync(resultPath, "utf8").replace(
-      "recommendation: _TODO_",
-      "recommendation: approve",
+      /verdict: _TODO_[^\n]*/,
+      "verdict: incomplete",
     );
     writeFileSync(resultPath, decided, "utf8");
 
     expect(isResultUnfilled(resultPath, "review")).toBe(false);
+  });
+
+  it("still treats a review result scaffolded before the verdict revision as unfilled", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "review",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "claude-review-agent",
+      startedAt: "2026-06-20T00:00:00.000Z",
+    });
+    // 改訂前の xrr-template.md は decision に recommendation を置いていた。
+    const legacy = readFileSync(resultPath, "utf8").replace(
+      /verdict: _TODO_[^\n]*/,
+      "recommendation: _TODO_（approve / revise / reject）",
+    );
+    writeFileSync(resultPath, legacy, "utf8");
+
+    expect(isResultUnfilled(resultPath, "review")).toBe(true);
   });
 
   it("returns false for a missing result path", () => {

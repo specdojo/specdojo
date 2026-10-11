@@ -1,0 +1,118 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8dbd9a6158f44de086b4b4885a08ea32
+  ts: "2026-10-03T22:19:26Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: codex 0.160 の bubblewrap sandbox が devcontainer 内で /proc をマウントできず exec と grade が失敗する
+    - field: description
+      from: ""
+      to: "2026-10-03 のリビルドで codex が 0.160.0 になり、Linux sandbox が bubblewrap 必須になった。devcontainer 内では bwrap: Can't mount proc on /proc: Operation not permitted で起動に失敗し、codex の executor はファイルを読めず異常終了する。codex 単段の定期 kata grade と codex を使う exec が失敗する"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_9620c09c92604a83a2175bbb810f023c
+  ts: "2026-10-04T03:32:18Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8dbd9a6158f44de086b4b4885a08ea32
+- v: 1
+  id: reg_2e95a0e7d9444a68bc2f97bf8ce1d248
+  ts: "2026-10-04T03:39:43Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9620c09c92604a83a2175bbb810f023c
+- v: 1
+  id: reg_47ddc39ed90a4accb8e7ed6fa551d553
+  ts: "2026-10-04T03:39:50Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: review
+  to_status: waiting
+  reason: "register commit incomplete: git commit failed: summary: (done in 0.65 seconds) / 🥊 commitlint (0.65 seconds) (args: -m exec(register PJR-27Z9): codex 0.160 の … -- 9 paths)"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "register commit incomplete: git commit failed: summary: (done in 0.65 seconds) / 🥊 commitlint (0.65 seconds) (args: -m exec(register PJR-27Z9): codex 0.160 の … -- 9 paths)"
+  previous_event_id: reg_2e95a0e7d9444a68bc2f97bf8ce1d248
+- v: 1
+  id: reg_2877d2c63615424f9d311870168b772f
+  ts: "2026-10-04T03:40:52Z"
+  action: review
+  actor: claude
+  from_status: waiting
+  to_status: review
+  reason: 自動 commit の失敗はヘッダー長だけが原因で、実行結果は 09ac5d47e で commit 済み。リビルド後の確認と隔離の評価が残る
+  changes:
+    - field: status
+      from: waiting
+      to: review
+  previous_event_id: reg_47ddc39ed90a4accb8e7ed6fa551d553
+- v: 1
+  id: reg_574bec25017640a19e368a62aec986e9
+  ts: "2026-10-04T04:41:35Z"
+  action: close
+  actor: claude
+  from_status: review
+  to_status: done
+  reason: codex sandbox と grade executor の動作を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: システムの bubblewrap を外し codex 同梱の bwrap を使わせて解決した。systempaths=unconfined は隔離を弱めるため採用しない。codex sandbox と codex-expert-executor の grade を確認済み
+  previous_event_id: reg_2877d2c63615424f9d311870168b772f
+- v: 1
+  id: reg_2e8c039bf85242e9bca3f638b5a43bb6
+  ts: "2026-10-04T05:09:08Z"
+  action: update
+  actor: claude
+  from_status: done
+  to_status: done
+  reason: 自動 commit の失敗による古い block_reason を PJR-SMET の機能で消す
+  changes:
+    - field: block_reason
+      from: "register commit incomplete: git commit failed: summary: (done in 0.65 seconds) / 🥊 commitlint (0.65 seconds) (args: -m exec(register PJR-27Z9): codex 0.160 の … -- 9 paths)"
+      to: "-"
+  previous_event_id: reg_574bec25017640a19e368a62aec986e9

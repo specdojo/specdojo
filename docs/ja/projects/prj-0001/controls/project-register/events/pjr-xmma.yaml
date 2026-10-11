@@ -1,0 +1,192 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e5672b42a7904402b89a2fc41b1f01cd
+  ts: "2026-09-29T22:16:57Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: リリース前の依存確認で、利用者に入る docs-site に major 更新でしか直らない high の脆弱性が見つかったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs-site の puppeteer 25 と mermaid-cli 12 への更新と Node 下限の引き上げ
+    - field: description
+      from: ""
+      to: high の脆弱性 extract-zip を除くため docs-site の puppeteer を 25、mermaid-cli を 12 に上げ、specdojo・docs-lint・docs-site の engines を Node 22.12 以上にそろえる（v0.3.0）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-30"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_855644dc996d46ddafd777c1c55c9851
+  ts: "2026-09-30T12:28:17Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e5672b42a7904402b89a2fc41b1f01cd
+- v: 1
+  id: reg_730db71c25034670b40e84fda6502194
+  ts: "2026-09-30T12:38:12Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_855644dc996d46ddafd777c1c55c9851
+- v: 1
+  id: reg_6db6624634254d4ab688518090bebfde
+  ts: "2026-09-30T13:14:21Z"
+  action: wait
+  actor: orchestrator
+  from_status: review
+  to_status: waiting
+  reason: "review で差し戻し: SVG キャッシュが mermaid の版と設定を判定に含めず、更新が反映されないため作業 5 を追加して再実行する"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "review で差し戻し: SVG キャッシュが mermaid の版と設定を判定に含めず、更新が反映されないため作業 5 を追加して再実行する"
+  previous_event_id: reg_730db71c25034670b40e84fda6502194
+- v: 1
+  id: reg_7e94e947f15741dbbaca751f57fe7822
+  ts: "2026-09-30T13:14:41Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_6db6624634254d4ab688518090bebfde
+- v: 1
+  id: reg_2ce57d2323f447b395ea1e3b71c07bda
+  ts: "2026-09-30T13:25:38Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親検証の `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しています。具体的に `tests/scratch.test.ts` で TS2698 および TS2307 エラーが発生しており、完了基準である静的検査の解消を満たしていません。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "review で差し戻し: SVG キャッシュが mermaid の版と設定を判定に含めず、更新が反映されないため作業 5 を追加して再実行する"
+      to: "agent exited with non-zero code: 親検証の `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しています。具体的に `tests/scratch.test.ts` で TS2698 および TS2307 エラーが発生しており、完了基準である静的検査の解消を満たしていません。"
+  previous_event_id: reg_7e94e947f15741dbbaca751f57fe7822
+- v: 1
+  id: reg_8e5af9ab908a43ed9d317e025d81e229
+  ts: "2026-09-30T13:27:27Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_2ce57d2323f447b395ea1e3b71c07bda
+- v: 1
+  id: reg_1b2804e6af7648a8bf2b2ec1d5780fed
+  ts: "2026-09-30T13:32:13Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8e5af9ab908a43ed9d317e025d81e229
+- v: 1
+  id: reg_580d3542c65e4ef5ae15e21b6c7bcbb4
+  ts: "2026-09-30T13:38:54Z"
+  action: wait
+  actor: orchestrator
+  from_status: review
+  to_status: waiting
+  reason: "review で差し戻し: .manifest.json のファイル単位のスキップで SVG が描き直されず、テストが lint:ts に反するため作業 6 を追加して再実行する"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "agent exited with non-zero code: 親検証の `typecheck` (exit 2) および `test-unit` (exit 1) が失敗しています。具体的に `tests/scratch.test.ts` で TS2698 および TS2307 エラーが発生しており、完了基準である静的検査の解消を満たしていません。"
+      to: "review で差し戻し: .manifest.json のファイル単位のスキップで SVG が描き直されず、テストが lint:ts に反するため作業 6 を追加して再実行する"
+  previous_event_id: reg_1b2804e6af7648a8bf2b2ec1d5780fed
+- v: 1
+  id: reg_946df830fc264a61b48920e858b060cc
+  ts: "2026-09-30T13:39:13Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_580d3542c65e4ef5ae15e21b6c7bcbb4
+- v: 1
+  id: reg_a907e33a648448d7af757ed1b72d69fa
+  ts: "2026-09-30T13:55:29Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_946df830fc264a61b48920e858b060cc
+- v: 1
+  id: reg_8c2c62bc06db424880feb82207bd6568
+  ts: "2026-09-30T14:24:44Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: 3 回の exec run（agy 2 回、claude-expert-executor 1 回 / gemma-reporter）の結果を orchestrator が評価した。利用者が mermaid 12 の見た目を確認し、統合後に 174 枚が描き直されることと lint:ts・docs:build の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-30"
+    - field: conclusion
+      from: "-"
+      to: docs-site を puppeteer 25 と mermaid-cli 12 に上げ、3 パッケージの Node の下限を 22.13 にそろえた。SVG キャッシュは版と設定の変更で描き直すようにした
+  previous_event_id: reg_a907e33a648448d7af757ed1b72d69fa

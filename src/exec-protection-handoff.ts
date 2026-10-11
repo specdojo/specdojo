@@ -1,9 +1,15 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { stripTerminalControlSequences } from "./exec-shared.js";
-import { describeAgentProtectedConfigChanges } from "./exec-agent-protected-config.js";
+import {
+  describeAgentProtectedConfigChanges,
+  qualifiedRepoPaths,
+  type AgentRepoPathChanges,
+} from "./exec-agent-protected-config.js";
 import {
   describeAgentGitStateChanges,
+  qualifiedGitStateFields,
   type AgentGitStateSnapshot,
+  type AgentRepoGitStateChanges,
 } from "./exec-agent-git-state.js";
 
 // PJR-VH6R: 保護機構が agent の変更を止めたとき、規約は「対象・変更理由・提案差分・
@@ -211,6 +217,66 @@ export function recordProtectedConfigBlock(params: {
     evidence: collectEvidence(() =>
       describeAgentProtectedConfigChanges(params.repoRoot, params.paths),
     ),
+  });
+}
+
+// プロダクトリポジトリの差分には `# repo: <name>` の見出しを付ける。プロジェクトリポジトリだけの
+// 変更は見出しを付けず、`repos` を持たない project の記録内容を変えない。
+function repoSectionHeader(name: string | undefined): string[] {
+  return name ? [`# repo: ${name}`] : [];
+}
+
+/** Record protected-config blocks found in several repositories of one task (PJR-98G4). */
+export function recordProtectedConfigBlockAcrossRepos(params: {
+  resultPath?: string;
+  changes: readonly AgentRepoPathChanges[];
+  reason: string;
+}): boolean {
+  return recordProtectionHandoff(params.resultPath, {
+    mechanism: "agent-config-write",
+    subjectLabel: "対象パス",
+    subjects: qualifiedRepoPaths(params.changes),
+    reason: params.reason,
+    evidenceLabel: "提案差分",
+    evidenceLanguage: "diff",
+    evidence: params.changes
+      .map((change) =>
+        collectEvidence(() =>
+          [
+            ...repoSectionHeader(change.repo.name),
+            describeAgentProtectedConfigChanges(change.repo.root, change.paths),
+          ].join("\n"),
+        ),
+      )
+      .filter((section) => section.trim() !== "")
+      .join("\n"),
+  });
+}
+
+/** Record Git state blocks found in several repositories of one task (PJR-98G4). */
+export function recordGitStateBlockAcrossRepos(params: {
+  resultPath?: string;
+  changes: readonly AgentRepoGitStateChanges[];
+  reason: string;
+}): boolean {
+  return recordProtectionHandoff(params.resultPath, {
+    mechanism: "agent-git-state-write",
+    subjectLabel: "対象フィールド",
+    subjects: qualifiedGitStateFields(params.changes),
+    reason: params.reason,
+    evidenceLabel: "検知した変更",
+    evidenceLanguage: "text",
+    evidence: params.changes
+      .map((change) =>
+        collectEvidence(() =>
+          [
+            ...repoSectionHeader(change.repo.name),
+            describeAgentGitStateChanges(change.repo.root, change.before, change.fields),
+          ].join("\n"),
+        ),
+      )
+      .filter((section) => section.trim() !== "")
+      .join("\n"),
   });
 }
 

@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_11eb71b5b65c40cdae594777d532c652
+  ts: "2026-10-04T05:20:41Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec の reporter の事実項目を evidence から機械生成し、LLM は要約だけに使う
+    - field: description
+      from: ""
+      to: exec の reporter（LLM）は、changed_files のパス・outcome・block_reason という evidence に正確な値がある事実項目まで書き写しており、誤りや根拠のない出力の原因になっている。事実項目は runner が evidence から機械生成し、LLM の reporter は summary などの文章項目だけに使う。review の verdict など判定は executor の申告を正とする方向も検討する。grade の reporter は PJR-E9H3 で機械変換へ置き換え済み
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_841c1602b4194ac088e0603ef9caf86f
+  ts: "2026-10-04T09:53:53Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_11eb71b5b65c40cdae594777d532c652
+- v: 1
+  id: reg_e87b173d44d54418b8cde466d0323863
+  ts: "2026-10-04T10:18:44Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: 親 runner による `test-integration` が失敗しているため（status: failed）。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: 親 runner による `test-integration` が失敗しているため（status: failed）。"
+  previous_event_id: reg_841c1602b4194ac088e0603ef9caf86f
+- v: 1
+  id: reg_235d1902c77e4d33b30c5845cdaccd8e
+  ts: "2026-10-04T11:33:46Z"
+  action: start
+  actor: agy-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: 親 runner による `test-integration` が失敗しているため（status: failed）。"
+      to: "-"
+  previous_event_id: reg_e87b173d44d54418b8cde466d0323863
+- v: 1
+  id: reg_aba681da766e4f17a92eb1ccb36fcfae
+  ts: "2026-10-04T11:38:58Z"
+  action: review
+  actor: agy-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_235d1902c77e4d33b30c5845cdaccd8e
+- v: 1
+  id: reg_2160b632ae8941e084d314dc36d98970
+  ts: "2026-10-06T10:44:08Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 後続の修正を含め、PJR-27Y0 の resume で reporter の機械判定が期待どおり動くことを確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: reporter の事実項目（変更パス・outcome・block_reason）を runner が evidence から機械生成するようにした。その後の不具合は PJR-0ECY（件数ずれ）と PJR-979N（委譲した検証の扱い）で修正済み
+  previous_event_id: reg_aba681da766e4f17a92eb1ccb36fcfae

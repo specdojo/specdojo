@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c6d5bb370ccc4ac1a930f561060947b0
+  ts: "2026-09-29T13:53:49Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-09-29 の docs:build の失敗の原因を orchestrator が特定したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: plan の frontmatter の name に個票の H1 のエスケープが残り YAML が不正になる
+    - field: description
+      from: ""
+      to: 個票の H1 は Markdown 整形でアスタリスクなどが \* にエスケープされる。plan 生成がこれをダブルクォートの YAML 文字列へそのまま入れるため、不正なエスケープとなり VitePress の docs:build が失敗した（PJR-Y06Y の plan）
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-29"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_b0686029d307459fbc7dc541bc3aa7cd
+  ts: "2026-09-29T22:34:05Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c6d5bb370ccc4ac1a930f561060947b0
+- v: 1
+  id: reg_7ffe619b861c4f4eafe009c6d710d945
+  ts: "2026-09-29T22:47:36Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git commit failed: hint: to use in all of your new repositories, which will suppress this warning, / hint: to use in all of your new repositories, which will suppress this warning, /…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git commit failed: hint: to use in all of your new repositories, which will suppress this warning, / hint: to use in all of your new repositories, which will suppress this warning, /…"
+  previous_event_id: reg_b0686029d307459fbc7dc541bc3aa7cd
+- v: 1
+  id: reg_9bce94c68d8d485eb69703d450f368b2
+  ts: "2026-09-30T03:28:00Z"
+  action: start
+  actor: gemma-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_7ffe619b861c4f4eafe009c6d710d945
+- v: 1
+  id: reg_e9d64a80671144c098ac820929184ed9
+  ts: "2026-09-30T03:28:54Z"
+  action: review
+  actor: gemma-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9bce94c68d8d485eb69703d450f368b2
+- v: 1
+  id: reg_b710f54698f9404aa4143fbba41912fb
+  ts: "2026-09-30T04:05:15Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor / gemma-reporter）の結果を orchestrator が評価した。3 か所の name 生成の修正と回帰テストを確認し、runner の検証 4 種の通過を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-30"
+    - field: conclusion
+      from: "-"
+      to: plan・result・job の frontmatter の name を JSON.stringify で出力し、H1 のエスケープが残らず YAML として正しくなった
+  previous_event_id: reg_e9d64a80671144c098ac820929184ed9

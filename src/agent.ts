@@ -26,14 +26,14 @@ export function resolveAgentMember(
     return candidate.type === "agent" && candidate.nickname === nickname;
   });
   if (!members || members.length === 0) {
-    return { error: `--by agent nickname not found in pm-members.yaml: ${nickname}` };
+    return { error: `--by agent nickname not found in agent-members.yaml: ${nickname}` };
   }
   if (members.length !== 1) {
-    return { error: `--by agent nickname is not unique in pm-members.yaml: ${nickname}` };
+    return { error: `--by agent nickname is not unique in agent-members.yaml: ${nickname}` };
   }
   const [member] = members;
   if (member.disabled) {
-    return { error: `--by agent is disabled in pm-members.yaml: ${nickname}` };
+    return { error: `--by agent is disabled in agent-members.yaml: ${nickname}` };
   }
   return { member };
 }
@@ -127,7 +127,7 @@ export function registerAgentCommands(program: Command): void {
     .command("run")
     .description("Feed a plan to one agent and capture its stdout")
     .requiredOption("--plan <path>", "Plan file passed to the agent on stdin")
-    .requiredOption("--by <nickname>", "Agent nickname defined in pm-members.yaml")
+    .requiredOption("--by <nickname>", "Agent nickname defined in agent-members.yaml")
     .option("--out <path>", "Write the agent stdout to this file instead of the terminal")
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .option("--exec-defaults <path>", "Override the exec-defaults.yaml path")

@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2ad311c96f4b4986bbec934c90027ba9
+  ts: "2026-10-08T03:45:20Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-QGP4 の決定の反映
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README と概要の呼び方を仕様道（Spec-Dō）に改める
+    - field: description
+      from: ""
+      to: PJR-QGP4 の決定に従い、README・docs サイトのトップ・概要ガイド・package.json の説明の冒頭の文を「仕様道（Spec-Dō）の道場」に改め、標語と比喩の対応を載せる。仕様駆動開発とは名乗らず、関係として触れる。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
+- v: 1
+  id: reg_b658574695084db5990f649d25516c62
+  ts: "2026-10-08T11:46:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2ad311c96f4b4986bbec934c90027ba9
+- v: 1
+  id: reg_cdaddf7524a7490c8d14fffa1dfab016
+  ts: "2026-10-08T11:53:55Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  previous_event_id: reg_b658574695084db5990f649d25516c62
+- v: 1
+  id: reg_1cbc596441324d2db737a812a8b04236
+  ts: "2026-10-08T11:56:23Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+      to: "-"
+  previous_event_id: reg_cdaddf7524a7490c8d14fffa1dfab016
+- v: 1
+  id: reg_d88d23bd7f454ea5b725e16e7e49d7a8
+  ts: "2026-10-08T12:00:01Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1cbc596441324d2db737a812a8b04236
+- v: 1
+  id: reg_a4c4b03c53904162b68a891a7db99c6f
+  ts: "2026-10-08T12:07:23Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認し、package.json を orchestrator が修正"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: README・docs サイトのトップ・概要ガイド・ryu-guide・waza-guide・package.json の説明を、仕様道（Spec-Dō）の呼び方と技・流の名前に改めた。CLI の値は変えていない
+  previous_event_id: reg_d88d23bd7f454ea5b725e16e7e49d7a8

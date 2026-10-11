@@ -459,6 +459,8 @@ export const PROJECTS_FILE_MENU: Record<string, { text: string; order?: number }
   cpm: { text: "クリティカルパス分析", order: 40 },
   "schedule-diff": { text: "スケジュール差分", order: 50 },
   dashboard: { text: "ダッシュボード", order: 60 },
+  // 実行プラン・実行結果はサイドバーに載せず、この一覧から辿る。
+  "exec-records": { text: "実行記録一覧", order: 70 },
 };
 
 // グループ（リンクなし）の表示順。メニュー表示名（変換後）をキーにする。

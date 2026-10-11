@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XZEQ",
+  "run_id": "20260926T063212525Z-4e2852d1",
+  "updated_at": "2026-09-26T06:38:09.096Z",
+  "stages": {
+    "executor": {
+      "status": "rate_limited",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-09-26T06:32:12.525Z",
+      "completed_at": "2026-09-26T06:38:09.096Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XZEQ/20260926T063212525Z-4e2852d1/evidence.json"
+    },
+    "reporter": {
+      "status": "pending",
+      "actor": "gemma-reporter",
+      "attempts": 0,
+      "started_at": null,
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-xzeq-20260926T063111Z-c1dc-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-xzeq-20260926T063111Z-c1dc-result.md"
+  }
+}

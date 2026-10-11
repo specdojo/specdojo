@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-4HBG",
+  "run_id": "20260928T111944008Z-9761f42e",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-09-28T11:19:44.008Z",
+    "completed_at": "2026-09-28T11:24:09.339Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "src/exec-agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-lock.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-slot-lock.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "src/exec-agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-lock.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-slot-lock.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": "src/exec-agent-config.ts |  61 +++++++++++++-\n src/exec-run-lock.ts     | 215 ++++++++++++++++++++---------------------------\n 2 files changed, 150 insertions(+), 126 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "You've hit your session limit · resets 11:10pm (Asia/Tokyo)",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-4HBG/20260928T111944008Z-9761f42e/executor.log",
+      "bytes": 60,
+      "truncated": false
+    }
+  ]
+}

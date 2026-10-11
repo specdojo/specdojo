@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_162c6212d5434cc68d8fcde69b3c47e5
+  ts: "2026-10-07T22:18:25Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼。PJR-EZAF の再開で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 一時的な dubious ownership で git diff が失敗し、再試行されない
+    - field: description
+      from: ""
+      to: "worktree で Git が一時的に dubious ownership を返すとき、git diff は「fatal: detected dubious ownership」ではなく「warning: Not a git repository. Use --no-index ...」を出して失敗する。exec-worktree.ts の再試行は前者の文言だけを検出するため、git diff は再試行されず、再開前の統合先の取り込みが拒否される。PJR-EZAF の再開（2026-10-08）で発生した。"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
+- v: 1
+  id: reg_84cd333be2f741b4a578b8aaae0535c8
+  ts: "2026-10-07T22:23:21Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_162c6212d5434cc68d8fcde69b3c47e5
+- v: 1
+  id: reg_e4f0ff7910db47968fb858908e2467d2
+  ts: "2026-10-07T22:32:16Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_84cd333be2f741b4a578b8aaae0535c8
+- v: 1
+  id: reg_b9ff09e79eac483ebc53a9657ff8a891
+  ts: "2026-10-07T22:33:20Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 差分と完了条件を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: 作業ディレクトリに .git がある場合に限り、Not a git repository の失敗も dubious ownership と同じ間隔・上限で再試行するようにした。.git がない場合は従来どおりすぐ失敗する
+  previous_event_id: reg_e4f0ff7910db47968fb858908e2467d2

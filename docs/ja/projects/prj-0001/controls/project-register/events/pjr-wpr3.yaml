@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cc790500bbab4f199fc787d22df7a97b
+  ts: "2026-10-02T12:14:16Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: v0.3.0 の公開後に、動作を変えずに大きなファイルと関数を分け、今日の 9KST・GENJ・6RN3・H9R2 のような初回と再開の経路の食い違いや並行作業の衝突を防ぐため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec-run.ts の分割方針の調査と選択肢の比較
+    - field: description
+      from: ""
+      to: exec-run.ts の関数・依存・初回と再開の重複を調べ、モジュールの境界と状態遷移の選択肢と推奨案を exec-run.ts の分割方針の決定の個票へ書く。決定はしない（v0.3.0 の公開後）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-02"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_2f2258146b7f49bdadc5bdc8b06fb757
+  ts: "2026-10-07T21:03:53Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cc790500bbab4f199fc787d22df7a97b
+- v: 1
+  id: reg_bf532a01513247e7ba2706e29edb4bf1
+  ts: "2026-10-07T21:14:23Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  previous_event_id: reg_2f2258146b7f49bdadc5bdc8b06fb757
+- v: 1
+  id: reg_4341d5d7dd22444ca2c59bc33b96ceb6
+  ts: "2026-10-07T21:35:59Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+      to: "-"
+  previous_event_id: reg_bf532a01513247e7ba2706e29edb4bf1
+- v: 1
+  id: reg_a8f1279b2d0d41d4b47ee6344f4d17b5
+  ts: "2026-10-07T21:40:05Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  previous_event_id: reg_4341d5d7dd22444ca2c59bc33b96ceb6
+- v: 1
+  id: reg_fe5d9965d1d14167bf98de1fcfc55d17
+  ts: "2026-10-07T21:48:42Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+      to: "-"
+  previous_event_id: reg_a8f1279b2d0d41d4b47ee6344f4d17b5
+- v: 1
+  id: reg_817a7749359c4e26ac553b615f196583
+  ts: "2026-10-07T21:52:02Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+  previous_event_id: reg_fe5d9965d1d14167bf98de1fcfc55d17
+- v: 1
+  id: reg_cf8bf98c6a46494799c529baacf64516
+  ts: "2026-10-07T21:55:22Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run check"
+      to: "-"
+  previous_event_id: reg_817a7749359c4e26ac553b615f196583
+- v: 1
+  id: reg_0c7fad1d3a7a45f3b3cc91dee3ebb848
+  ts: "2026-10-07T21:58:54Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cf8bf98c6a46494799c529baacf64516
+- v: 1
+  id: reg_5d0a30aeaca64b35891215aaa3c342f4
+  ts: "2026-10-07T22:18:00Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: 調査結果と PJR-Q761 の比較を確認し、利用者が方針を決定"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: exec-run.ts の関数の分類・依存・重複・状態遷移を調べ、3 案を PJR-Q761 で比較した。利用者が選択肢 C を選んだ
+  previous_event_id: reg_0c7fad1d3a7a45f3b3cc91dee3ebb848

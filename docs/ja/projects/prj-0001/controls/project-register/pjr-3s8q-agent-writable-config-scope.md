@@ -63,6 +63,31 @@ specdojo:
 
 本決定の後、PJR-0DA8 の実行で違反事例が発生した。codex-expert-executor が `.specdojo/claude/settings.report.json` を直接作成し、register 実行の commit 対象が除外方式であるためコミットと merge まで通過した。生成された内容は意図した最小権限と一致していたため成果物としては受け入れたが、決定が provider の sandbox 方式に依存して守られないことが実例で確認された。実効的な強制手段は PJR-Y3KP で対応する。
 
+### 6.1. 追記: 2026-09-27 の edit 権限の見直し
+
+PJR-E8FY・PJR-QJAD・PJR-HG98 の実行で、claude の edit executor が `packages/docs-site/.vitepress/`・`tools/grade/`・`README.md` へ書き込めずに止まった。このうち QJAD では、executor が Bash 経由で `tools/grade/run-per-document.sh` を書き換えており、allow リストをすり抜ける経路が使われた。
+
+最初は `Edit(tools/**)` と `Edit(packages/**)` を加える案を出した。しかし、次のファイルは git hook から親コンテキストで実行されるため、本決定の対象にあたる。git hook は worktree 間で共有されるので、runner が worktree で commit するときにも動く。
+
+| ファイル                                       | 実行される契機                                 |
+| ---------------------------------------------- | ---------------------------------------------- |
+| `packages/docs-lint/bin/specdojo-docs-lint.js` | pre-commit（runner の worktree commit を含む） |
+| `tools/build-if-stale.mjs`                     | post-checkout / post-merge                     |
+| `tools/protect-main-push.mjs`                  | pre-push                                       |
+| `tools/install-lefthook.mjs`                   | `npm install` の `prepare`                     |
+
+そこで、hook や script の定義から呼ばれないパスだけを加えることにし、利用者が commit b52ac1c7 で `.specdojo/claude/settings.edit.json` に反映した。
+
+| 追加した許可                             | 理由                                                                                                                              |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `Edit(tools/grade/**)`                   | grade のスクリプト。hook からは呼ばれない。routine から実行される点は既存の `Edit(src/**)` と同じ扱い                             |
+| `Edit(packages/docs-site/.vitepress/**)` | サイトの設定と表示部品。`docs:build` の実行時に読まれる点は `Edit(src/**)` と同じ扱い。`packages/docs-site/package.json` は対象外 |
+| `Edit(README.md)`                        | 文書で、実行されない                                                                                                              |
+
+`packages/docs-lint/`、`tools/` 直下の hook の入口、各 `package.json` は、引き続き書き込み範囲に含めない。
+
+途中で、許可をリポジトリ共通の `.claude/settings.json` に加える commit を一度作ったが、push 前に取り消した。共通設定はオーケストレーターと review / report の executor にも効くため、役割別の `--settings` で書き込み範囲を分ける設計が崩れる。edit の許可は `settings.edit.json` にだけ置く。
+
 ## 7. 関連ドキュメント
 
 - 契機となった課題: [[prj-0001:pjr-cmyx-exec-dist-parent-validations|PJR-CMYX exec 実行が古い dist ビルドを使い設定済み parent_validations が実行されない]]

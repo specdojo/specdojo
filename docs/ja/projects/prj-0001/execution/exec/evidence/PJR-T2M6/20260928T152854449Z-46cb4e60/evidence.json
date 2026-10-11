@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-T2M6",
+  "run_id": "20260928T152854449Z-46cb4e60",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-28T15:28:54.449Z",
+    "completed_at": "2026-09-28T15:39:45.458Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".github/instructions/rulebook.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-t2m6-register-reject-note-terminal.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/practice-system-composition-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/kata.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register-commands.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": ".github/instructions/rulebook.instructions.md      |  4 +-\n .../pjr-t2m6-register-reject-note-terminal.md      | 14 ++--\n .../guides/practice-system-composition-guide.md    |  4 +-\n .../ja/specdojo/guides/register-operation-guide.md | 14 ++--\n docs/ja/specdojo/references/command-reference.md   |  4 +-\n docs/ja/specdojo/rulebooks/pjr-rulebook.md         | 73 ++++++++++++--------\n .../standards/rulebook-authoring-standard.md       | 30 +++++----\n .../schemas/v1/rulebook-frontmatter.schema.yaml    | 30 +++++++++\n src/kata.ts                                        | 38 +++++++++++\n src/register.ts                                    | 28 +++++++-\n tests/src/kata.test.ts                             | 31 +++++++++\n tests/src/register-commands.test.ts                | 78 ++++++++++++++++++++++\n 12 files changed, 287 insertions(+), 61 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <変更対象ファイル>",
+      "status": "passed",
+      "summary": "Markdown・YAML・TypeScript を整形"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint <変更対象Markdown>",
+      "status": "passed",
+      "summary": "変更対象Markdownにエラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "全Markdown検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "ESLintに成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "Frontmatter検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "既存の欠落文書警告のみで検証成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿と派生ビューを再生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2160件の文書インデックスを生成"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検査に成功"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T2M6\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-CfYpfg/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-CfYpfg/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-CfYpfg/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-CfYpfg/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T2M6/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T2M6/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-model-bes-tem…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T2M6\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-cmk8uR/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-EgjR2c/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-exJuHJ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-x3Jc5x/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-9QjGwx/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-9gP11k/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-26NlUj/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-434Dfd/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  114 passed (114)\n      Tes…"
+    }
+  ],
+  "final_message": "`note` の close・reject・defer 拒否、テスト、関連文書と `template_dispatch` 定義を実装済み",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-T2M6/20260928T152854449Z-46cb4e60/executor.log",
+      "bytes": 1822,
+      "truncated": false
+    }
+  ]
+}

@@ -184,7 +184,7 @@ Codex連携には、SpecDojo workerの選択とCodex custom subagentの選択と
 ```text
 sch-strategy の phase 要件
    ↓
-SpecDojo が pm-members.yaml から worker を選択
+SpecDojo が .specdojo/agent-members.yaml から worker を選択
    ↓
 providers.codex の command template を worker 属性で展開して codex exec を起動
    ↓
@@ -195,7 +195,7 @@ Codex が AGENTS.md と標準入力の plan を読み込む
 
 #### SpecDojo workerの選択
 
-`specdojo exec run` は、taskのphase要件と `pm-members.yaml` の各memberを次の順で照合する。
+`specdojo exec run` は、taskのphase要件と `.specdojo/agent-members.yaml` の各memberを次の順で照合する。
 
 1. `type: agent` であり、起動コマンドを解決できる（provider に command template があるか、member に `command` 上書きがある）memberだけを候補にする。
 2. taskのagent_pipeline stage（`executor` / `reporter`）とmemberの `stage_role` が一致する候補だけを残す。
@@ -241,13 +241,13 @@ specdojo exec run --by codex-expert-review-executor --task <task-id>
 
 親Codexはsubagentのnameとdescriptionを参照し、必要な場合に明示的にspawnする。spawnしない場合、`.codex/agents/*.toml` はworker実行へ影響せず、workerは `AGENTS.md`、command template から解決した起動コマンド、標準入力のplanだけで動作する。
 
-workerのnicknameとcustom subagentのnameは運用上同じ名称に揃えているが、Codex CLIが自動的に両者を関連付けるわけではない。たとえば `pm-members.yaml` で `codex-expert-executor` が選ばれても、`.codex/agents/codex-expert-executor.toml` が自動適用されることはない。
+workerのnicknameとcustom subagentのnameは運用上同じ名称に揃えているが、Codex CLIが自動的に両者を関連付けるわけではない。たとえば `.specdojo/agent-members.yaml` で `codex-expert-executor` が選ばれても、`.codex/agents/codex-expert-executor.toml` が自動適用されることはない。
 
 ## 9. エージェント割り当て設定
 
 ### 9.1. 起動コマンドの設計
 
-起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.codex` で定義する。`pm-members.yaml` の member には `command` を書かない。`codex exec` には worker 名を選択するオプションがないため、テンプレートに `{nickname}` は含めず、モデルと reasoning effort を `command_params.by_proficiency` で切り替える。
+起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.codex` で定義する。`.specdojo/agent-members.yaml` の member には `command` を書かない。`codex exec` には worker 名を選択するオプションがないため、テンプレートに `{nickname}` は含めず、モデルと reasoning effort を `command_params.by_proficiency` で切り替える。
 
 ```yaml
 providers:
@@ -259,7 +259,7 @@ providers:
         expert: { model: gpt-5.5, effort: high }
 ```
 
-`pm-members.yaml` の member は選択属性だけを持つ。全員 `stage_role`（`executor` / `reporter`）を持つ pipeline member とし、単体で edit/review を完結する legacy member は使わない。
+`.specdojo/agent-members.yaml` の member は選択属性だけを持つ。全員 `stage_role`（`executor` / `reporter`）を持つ pipeline member とし、単体で edit/review を完結する legacy member は使わない。
 
 ```yaml
 members:
@@ -321,7 +321,7 @@ phase の共通契約は親設計に従う。Codex の Web 検索が必要な ph
 
 ### 9.3. `.specdojo/exec-defaults.yaml`
 
-共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Codex 固有の検出条件は `providers.codex.rate_limit_detection` に置き、`pm-members.yaml` で `provider: codex` の member に適用する。
+共通の retry / fallback / block 方針とグローバル既定 / provider 別上書きの2層構造は親設計に従う。Codex 固有の検出条件は `providers.codex.rate_limit_detection` に置き、`.specdojo/agent-members.yaml` で `provider: codex` の member に適用する。
 
 Codex worker は `workspace-write` sandbox 内で `npm run test:unit` を実行する。実 Git・worktree・CLI 子プロセスを必要とする integration テストは sandbox を広げず、SpecDojo 親 runner の固定許可リストへ分離する。
 
@@ -359,7 +359,7 @@ stderr の実文言は CLI バージョンで変わりうるため、上記 patt
 
 ### 9.4. `exec run` による実行
 
-共通の実行コマンドは親設計を参照する。Codex member は phase の `capabilities` / `proficiency` と `pm-members.yaml` の属性により自動選択される。
+共通の実行コマンドは親設計を参照する。Codex member は phase の `capabilities` / `proficiency` と `.specdojo/agent-members.yaml` の属性により自動選択される。
 
 ## 10. 非対話実行と出力
 

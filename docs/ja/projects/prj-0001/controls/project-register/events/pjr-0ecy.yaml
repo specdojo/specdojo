@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f83d3ced10e74c2683c33417eb976e06
+  ts: "2026-10-04T20:39:02Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: reporter の変更ファイルの説明の件数がずれると、結果の作成が失敗する
+    - field: description
+      from: ""
+      to: PJR-GBEV で、changed_files のパスは runner が evidence から作り、reporter は同じ件数・同じ順序の説明だけを返す契約にした。LLM の reporter は件数をそろえるのが苦手で、2026-10-05 の並列実行で gemma26-reporter が 4 件に対し 3 件、14 件に対し 6 件を返し、reporter result rendering failed で PJR-86JE と PJR-27Y0 が waiting になった。変更ファイルが多い exec ほど失敗し、今後のすべての exec に影響する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-05"
+- v: 1
+  id: reg_160391977ce944cfad683a4f6f9ca7e6
+  ts: "2026-10-04T20:39:35Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f83d3ced10e74c2683c33417eb976e06
+- v: 1
+  id: reg_b7c2f2f02ab94360832f37b73883fefa
+  ts: "2026-10-04T20:48:56Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration, typecheck, test-unit"
+  previous_event_id: reg_160391977ce944cfad683a4f6f9ca7e6
+- v: 1
+  id: reg_283705aa4ad74b21bc9ce095eec53277
+  ts: "2026-10-05T21:34:36Z"
+  action: start
+  actor: codex-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration, typecheck, test-unit"
+      to: "-"
+  previous_event_id: reg_b7c2f2f02ab94360832f37b73883fefa
+- v: 1
+  id: reg_e259d2efec74422c8b8ae320fc96c80d
+  ts: "2026-10-05T21:39:16Z"
+  action: review
+  actor: codex-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_283705aa4ad74b21bc9ce095eec53277
+- v: 1
+  id: reg_5479449255944a46b300c19d629c5eef
+  ts: "2026-10-06T10:43:22Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: "review: unit / integration test を確認し、gemma26-reporter での PJR-27Y0 の resume で result 作成を確認"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: reporter の changed_files をパスと説明の組にし、runner がパスで突き合わせるようにした。件数・順序のずれで result 作成が失敗しない。orchestrator がテストの fixture と runner 管理パスの除外（exec/ 全体）を補修した
+  previous_event_id: reg_e259d2efec74422c8b8ae320fc96c80d

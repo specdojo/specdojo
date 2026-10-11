@@ -1,0 +1,129 @@
+---
+specdojo:
+  id: prj-0001:pjr-qd81-gl-common
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: done
+  priority: medium
+  owner: BA
+  registered_at: "2026-09-26T04:08:08Z"
+  completed_at: "2026-09-28T23:20:01Z"
+  block_reason: "agent exited with non-zero code: runner による検証 `validate-schema` が failed となっており、成果物の整合性が担保されていないため。"
+  conclusion: gl-common.yaml を作成し、gl-rulebook の terms に englishName を加えた。単一名を持たない実行記録・評価結果は構成要素を個別に定義し、総称と分類の用語も加えて 22 語とした。対象は cdfd-overview のデータストアとその構成要素
+---
+
+# PJR-QD81 用語集 gl-common を作成し概念名と英語名の対応を確定する
+
+## 1. 概要
+
+カタログ `dct-glossary.yaml` は `gl-common`（用語集・共通）を定義するが未作成である。[[prj-0001:pjr-00qv-cdfd-rulebook]] で、データストア名のうち 5 件は単一の英語名を確定できず併記を見送った。概念名と英語名の対応は用語集が正本であり、CDFD 側へ分散させると乖離する。用語集を作成して対応を確定する。
+
+## 2. 事実
+
+### 2.1. 英語名が未確定の 5 件
+
+| データストア     | 候補                                      | 問題                               |
+| ---------------- | ----------------------------------------- | ---------------------------------- |
+| 実行記録         | `result` / `event` / `evidence` / `trial` | 4 語に対応。単一名では一部が漏れる |
+| 評価結果         | `grade` / `finding`                       | 2 語に対応                         |
+| 稼働構成         | —                                         | 対応語がない                       |
+| 進捗報告         | —                                         | 未確定                             |
+| 派生ビュー・索引 | —                                         | 未確定                             |
+
+`cdfd-rulebook` には「一対一の対応を確定できない場合は英語名を推測で補わず、日本語名だけを使用して用語集での確定を待ちます」と規定済みである。
+
+### 2.2. 用語集の構造に英語名の項目がない
+
+`gl-rulebook.md` の `terms` の基本構造は次のとおりで、**英語名を持つ項目がない**。
+
+| 項目    | 説明               | 必須 |
+| ------- | ------------------ | ---- |
+| id      | 用語ID（`tm-...`） | ○    |
+| term    | 用語（正式名称）   | ○    |
+| aliases | 別名（配列）       | 任意 |
+
+`aliases` を流用する案もあるが、別名と訳語は性質が異なる。**英語名を保持する方法を先に決める必要がある。**
+
+### 2.3. gl-rulebook 自体が standard 準拠でない
+
+| 問題                           | 内容                                                              |
+| ------------------------------ | ----------------------------------------------------------------- |
+| 禁止事項が 2 章ある            | `## 3. 禁止事項` と `## 5. 禁止事項`                              |
+| 見出し番号に `.` がない        | `### 1.1 ファイル命名`、`### 4.1 terms の基本構造`                |
+| 章構成が standard と一致しない | `メタデータ`、`記載ルール・命名規則` など                         |
+| schema がない                  | sample の先頭に `specdojo-schema: none reason=schema-not-defined` |
+
+`target_format: yaml` の系統であり、`rulebook-authoring-standard.md` は「`target_format` が `yaml` の場合は対応する sample が schema と整合することを確認する」と定めるが、schema が存在しない。
+
+## 3. 完了条件
+
+- `gl-common.yaml` が作成され、`gl-rulebook.md` に準拠している。
+- 概念名と英語名の対応を保持する方法が決まっている。`terms` へ項目を追加するか、`aliases` を使うかを明示する。
+- 未確定の 5 件について、英語名を確定するか「単一名を持たない」と結論するかが決まっている。
+- 結論が `cdfd-rulebook` の規定と整合している。併記できるものは CDFD 側へ反映する。
+- CDFD のデータストア 16 件がすべて用語集に含まれている。
+- 用語集の対象範囲が決まっている。データストア名だけか、CDFD の用語全体かを明示する。
+- `gl-rulebook.md` の standard 非準拠（禁止事項の重複、見出し番号）が解消されている。
+- schema の要否が決まっている。作る場合は `npm run validate:schema:file` で sample を検証する。
+- `npm run check` が通過している。
+
+## 4. 検討事項
+
+### 4.1. 単一名を持たないものの扱い
+
+`実行記録` は `result` / `event` / `evidence` / `trial` の 4 つを含む。取りうる結論は 3 つある。
+
+| 案  | 内容                                                     | 影響                             |
+| --- | -------------------------------------------------------- | -------------------------------- |
+| 1   | 総称となる英語名を新たに定める（例: `execution record`） | 既存のディレクトリ名と対応しない |
+| 2   | 単一名を持たないと結論し、CDFD では日本語名のみを使う    | 現状維持。読み手の負担が残る     |
+| 3   | 用語集で 4 語それぞれを個別の用語として定義する          | データストア名との対応は別途必要 |
+
+**案 3 と案 2 の組み合わせが妥当と考える。** 構成要素を個別に定義し、データストア名としては日本語のみとする。
+
+### 4.2. 作業の分割
+
+`gl-rulebook` の是正（`2.3.`）は本項目に含めるか、別項目に分けるかを判断する。[[prj-0001:pjr-t3nn-bps-rulebook-rulebook-authoring-standard]] と同種の作業であり、規模も近い。
+
+### 4.3. 判断の結果（2026-09-29）
+
+利用者が次のとおり判断した。
+
+- 単一名を持たないもの（`実行記録` など）の扱い: 案 3 を採る。構成要素（`result` / `event` / `evidence` / `trial`）を用語集で個別の用語として定義する。
+- 作業の分割: `gl-rulebook` の是正（2.3.）は本項目に含めず、PJR-5DM3 として別項目に分けた。
+
+## 5. 作業内容
+
+| No  | 作業                                         | 担当 | 状態 | メモ                                |
+| --- | -------------------------------------------- | ---- | ---- | ----------------------------------- |
+| 1   | `gl-rulebook` の是正を本項目に含めるか決める | ARC  | open | 別項目に分ける選択もある            |
+| 2   | 英語名の保持方法を決める                     | BA   | open | `terms` への項目追加か `aliases` か |
+| 3   | 未確定 5 件の結論を出す                      | BA   | open | 案 2 と案 3 の組み合わせを起点に    |
+| 4   | `gl-common.yaml` を作成する                  | BA   | open | データストア 16 件を含める          |
+| 5   | 確定した英語名を CDFD へ反映する             | ARC  | open | 併記できるものだけ                  |
+| 6   | schema の要否を決め、必要なら作成する        | ARC  | open |                                     |
+
+## 6. 対応結果
+
+agy-expert-executor が `gl-common.yaml` を作成し、`gl-rulebook.md` の `terms` に英語名（`englishName`）の項目を加えた。executor は本個票の対応結果を記入しなかったため、orchestrator が評価と補完の内容を記録する。
+
+- 英語名の保持方法: `terms` に `englishName` を加えた（`aliases` は別名であり、訳語と性質が異なるため使わない）。
+- 未確定の 5 件: 利用者の判断（案 3）どおり、単一名を持たないもの（実行記録、評価結果）は構成要素を個別の用語として定義した。実行記録は実行結果・状態遷移イベント・証跡・試行記録、評価結果は判定結果・指摘事項である。CDFD 側への英語名の併記は行わず、用語集を正本とした。
+- 対象範囲: 概念データフロー図（全体概要）のデータストアと、その構成要素とする。CDFD の用語全体は対象外である。
+- orchestrator による補完: executor の用語集では、データストアのうち実行記録と評価結果が構成要素だけで定義されており、構成要素の `category` が指す `tm-exec-log` / `tm-evaluation`、13 件のデータストアが指す `tm-data-store` も用語集に存在しなかった。この 3 語を、cdfd-overview のデータストアの表の説明を根拠に追加した。追加後は 22 語で、`category` と `relatedTerms` がすべて用語集内の ID を指す。
+- データストアの件数: 完了条件と作業内容は「16 件」としていたが、2026-09-29 時点の cdfd-overview のデータストアは 15 件であり、すべて用語集に含まれる。
+- 用語集の形式: gl の schema がないため、先頭を `# specdojo-schema: none reason=schema-not-defined` とし、`id` を成果物の命名に合わせて `gl-common` とした（orchestrator が worktree で修正）。schema の作成は PJR-Y06Y で扱う。
+- `gl-rulebook.md` の作成標準への準拠（2.3.）は、利用者の判断で PJR-5DM3 に分けた。
+- runner の検証（`test-unit`・`test-integration`・`typecheck`・`validate-schema`）はすべて通過した。
+
+## 7. 関連ドキュメント
+
+- [[prj-0001:pjr-00qv-cdfd-rulebook]]
+- `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-glossary.yaml`
+- `docs/ja/specdojo/rulebooks/gl-rulebook.md`
+- `docs/ja/specdojo/samples/gl-sample.yaml`
+- `docs/ja/specdojo/rulebooks/cdfd-rulebook.md`

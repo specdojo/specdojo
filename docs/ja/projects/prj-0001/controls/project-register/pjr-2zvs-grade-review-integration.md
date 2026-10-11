@@ -12,8 +12,8 @@ specdojo:
   owner: ARC
   registered_at: "2026-09-23T05:10:56Z"
   due_on: "2026-10-17"
-  completed_at: "2026-09-23T05:17:27Z"
-  conclusion: 観点の evaluation 区分を判定主体の唯一の基準とし、review フェーズ内で runner が grade を実行して verdict の一次入力とする。grade は owner ロールを認識し、定期実行は変化検知に限定する。kata 保守タスクへ review フェーズを追加する。
+  completed_at: "2026-09-26T02:01:10Z"
+  conclusion: grade は成果物の品質、review はタスクの完了可否を判定する別の経路とする。評価は grade が 1 回だけ行い、review は文書を再評価せず grade を事実として受け取って完了可否を判断する。観点は 28 件を共通とし continuous を廃止する。review phase は評価を持たないため Action へ移す。
 ---
 
 # PJR-2ZVS grade と review の役割分担を evaluation 区分で定義し、評価経路を統合する
@@ -75,29 +75,229 @@ level 0〜4 には `review_verdict` が対応づけられており、grade の�
 
 ## 3. 決定内容
 
-選択肢 C を採る。review フェーズの中で対象文書へ grade を実行し、その結果を verdict の一次入力とする。5 点を次のとおり定める。
+### 3.0. 最終結論（2026-09-26）
 
-### 3.1. 観点の分担は evaluation を唯一の基準とする
+**本項目の結論はこの節である。** 以降の 3.1〜3.6 は検討の経緯であり、撤回した決定を含む。設計の詳細は成果物評価の BPS を正本とする。
 
-| `evaluation`    | 判定主体          | 扱い                           |
-| --------------- | ----------------- | ------------------------------ |
-| `agent`         | grade             | level と findings を算出する   |
-| `deterministic` | grade             | 検証コマンドの結果から判定する |
-| `human`         | review のレビュア | grade は判定しない             |
+#### 3.0.1. grade と review は違う対象を判定する
 
-観点ごとに判定主体を二重化しない。`agent` 観点をレビュアが再評価することも、`human` 観点を grade が評価することもしない。観点を追加・変更するときは `evaluation` を必ず指定し、それが実行経路の割り当てになる。
+議論が長引いた原因は、両者を同じ判定として扱っていたことである。
 
-### 3.2. grade は対象文書の owner ロールを認識する
+| 経路   | 判定対象         | 出力           | 問い                     |
+| ------ | ---------------- | -------------- | ------------------------ |
+| grade  | **成果物**       | grade・finding | この文書の品質はどうか   |
+| review | **タスクの成果** | verdict        | この作業を完了してよいか |
 
-対象文書の owner ロールの観点を主の判定軸とする。owner 以外のロールの `agent` 観点は入力適合性の確認に限定し、`blocker` / `major` を出せるのは「そのロールが自分の責務の成果物を作成できない」場合だけとする。それ以外の指摘は `note` とし、level を下げない。
+品質が低くても今回のタスクの範囲では完了してよい場合があり、品質が十分でもタスクが要求したことをやっていなければ完了できない。**2 つは重複していない。** 重複していたのは、review が grade と同じ観点で文書を再評価していた部分である。
 
-これは review plan が定める一文書一責務の制御を grade へ移したものである。現在の grade は全文書へ同じ観点を一律に当てているため、責務範囲外の指摘で level が下がる。
+#### 3.0.2. 設計の原則
 
-### 3.3. verdict は grade の level と human 観点の判定を合成する
+| 原則 | 内容                                | 理由                                     |
+| ---- | ----------------------------------- | ---------------------------------------- |
+| 1    | 同じ対象を同じ基準で 2 回評価しない | 矛盾が構造的に発生する                   |
+| 2    | 評価者は作成者から独立する          | 自己評価は統制として成立しない           |
+| 3    | 評価と承認を分ける                  | 混ぜると責任の所在が曖昧になる           |
+| 4    | 判定対象が異なるものを同一視しない  | 成果物の品質とタスクの完了可否は別の対象 |
 
-grade の level を `grade_rubric` の `review_verdict` で verdict へ写像し、初期値とする。`human` 観点の判定と合成し、最も厳しい判定を採る（`changes_requested` > `conditional_pass` > `pass`）。`blocked` は判定不能を表すため level へ写像せず、レビュアの判断だけで付与する。
+#### 3.0.3. 確定した設計
 
-レビュアが grade 由来の判定を覆す場合は、対象の viewpoint ID と理由を review result へ記録する。記録のない上書きは行わない。
+```text
+grade（成果物の評価）
+  入力: 成果物の内容
+  実行: 内容変化を契機に runner が実行する（editor から独立）
+  観点: 28 観点すべて
+  出力: grade・finding
+  回数: 1 回だけ
+
+review（タスクの完了判断）
+  入力: grade の結果、変更内容、plan、実行記録
+  実行: ゲート時
+  判定: 文書を再評価しない。grade を事実として受け取る
+  出力: verdict（完了可否）と改善指示
+```
+
+鮮度は `content_hash` で保証する。review の時点で grade が最新でなければ実行し、最新ならそのまま使う。どちらの場合も**評価は 1 回**である。
+
+#### 3.0.4. PDCA グループの所属
+
+グループは「何をするか」で分け、実行形態では分けない。
+
+| 工程         | 内容                             | グループ   | 変更     |
+| ------------ | -------------------------------- | ---------- | -------- |
+| edit phase   | 成果物を作る・直す               | Do         | なし     |
+| grade        | 成果物を評価する                 | Check      | なし     |
+| review phase | grade を確認し完了可否を記録する | **Action** | **変更** |
+
+review phase から評価が消える。残るのは grade の結果を確認して完了可否を判断することだけであり、これは Action の定義に当たる。
+
+#### 3.0.5. 観点の扱い
+
+| 項目         | 確定内容                                                   |
+| ------------ | ---------------------------------------------------------- |
+| 観点集合     | grade と review は同じ 28 観点。部分集合を作らない         |
+| `continuous` | **廃止**。28 観点すべてが grade 可能であり、情報を持たない |
+| `evaluation` | 判定基準の所在を表す区分へ改める。詳細は PJR-WPWB          |
+| 適用範囲     | 文書の種類で宣言する。`check` へ場当たりに書き込まない     |
+
+#### 3.0.6. 選択肢 C の扱い
+
+選択肢 C（review の中で grade を実行し verdict の一次入力にする）は**精密化して採る**。「review の中で実行」を「鮮度が足りなければ実行」とし、review 自身は評価しない。
+
+#### 3.0.7. 検討の経緯
+
+3.1〜3.3 は一度決定した後に実データで撤回・修正した。3.4〜3.6 は有効である。経緯を残す理由は、同じ誤りを繰り返さないためである。
+
+| 決定 | 状態                                                                    |
+| ---- | ----------------------------------------------------------------------- |
+| 3.1  | **再修正**。`human` = 文書外の文脈という読みは否定。`continuous` は廃止 |
+| 3.2  | 撤回済み。責務による重み付けは行わない                                  |
+| 3.3  | **再検討へ**。判定対象が違うため語彙統一の是非から問い直す（PJR-XTAN）  |
+| 3.4  | 有効。定期実行は変化検知に限定する                                      |
+| 3.5  | 有効。kata 保守タスクへ review フェーズを追加する                       |
+| 3.6  | 有効。grade は runner が実行し executor には行わせない                  |
+
+### 3.1. 観点の分担は continuous と evaluation で決める（経緯）
+
+**2026-09-24 に表現を修正した。** 当初は「`evaluation` を唯一の基準とし、`human` 観点は review のレビュアが判定する」と書いたが、2 点誤っていた。
+
+| 観点の属性                                          | 役割                                                                         |
+| --------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `continuous`（boolean）                             | **grade の評価対象に含めるか**。grade の選択基準はこちらである               |
+| `evaluation`（`deterministic` / `agent` / `human`） | **判定の方法**。検証コマンドか、本文から推論できるか、文書外の文脈を要するか |
+
+`src/grade.ts` の `continuousViewpoints()` は `continuous === true` で対象を絞り、`agentViewpoints()` が `evaluation === "agent"` でさらに分ける。grade の対象選択は `continuous`、判定手段は `evaluation` である。
+
+現在の 28 観点では両者が 1 対 1 に対応する（`agent` 10 件と `deterministic` 2 件が `continuous: true`、`human` 16 件が `continuous: false`）。ただしこれは現在のデータの一致であり、構造上の同一ではない。`evaluation: agent` でありながら費用の都合で `continuous: false` とする観点は定義できる。
+
+#### 3.1.1. `human` は「人だけが判定する」ではない
+
+review フェーズは agent が実行する。`pm-members.yaml` には `claude-review-executor`、`codex-review-executor`、`agy-expert-review-executor`、`opencode-review-executor` があり、`xrp-*` は agent へ渡す review plan である。つまり `evaluation: human` の観点も、実際には agent が判定している。
+
+`continuous: false` との対応から読み取れる `human` の意味は次である。
+
+> 継続的な自動評価に向かない。判断の前提となる文脈（承認の意図、事業価値、実装の見通し）が文書外にあり、機械的な繰り返し評価では意味のある判定ができない。
+
+分けているのは「誰が」ではなく「**いつ・どの文脈で**」判定するかである。実行主体は `pm-members.yaml` が決める。
+
+なお `task.execution` の `human` は別の概念で、そちらは実際に人が実行することを意味する（`src/exec-plans.ts`）。**同じ語が 2 箇所で別の意味を持つ**ため、観点側の改名を [[prj-0001:pjr-wpwb-viewpoint-evaluation-criteria]] で扱う。
+
+#### 3.1.2. 分担
+
+| 判定の場           | 対象観点            | 実行主体                                                          |
+| ------------------ | ------------------- | ----------------------------------------------------------------- |
+| grade（継続評価）  | `continuous: true`  | agent（`evaluation: agent`）または検証コマンド（`deterministic`） |
+| review（都度判断） | `continuous: false` | agent または人。`pm-members.yaml` が決める                        |
+
+観点ごとに判定の場を二重化しない。`continuous: true` の観点を review で再評価せず、`continuous: false` の観点を grade が採点しない。
+
+ただし `done_criteria` の充足判定は例外である。grade は `evaluation` を問わず全条件を本文の根拠だけで一次判定する。`human` 観点に紐づく条件も対象で、「PO の承認記録がない」のように**記述の有無**を検出する。観点としての良否を判断するわけではない。
+
+### 3.2. grade の agent 観点は責務で重み付けしない
+
+**2026-09-24 に見直した。** 当初は「対象文書の owner ロールの観点を主の判定軸とし、owner 以外のロールの `agent` 観点は入力適合性の確認に限定して severity を抑える」と決めたが、実データと食い違うため撤回する。
+
+grade が扱う `agent` / `deterministic` 観点は、**どの文書にも共通して適用される品質の下限**とする。責務による重み付けを行わない。`done_criteria` が宣言する観点は review（人）が判定する軸であり、両者は補完関係にある。重み付けの関係ではない。
+
+#### 3.2.1. 撤回の根拠
+
+prj-0001 の実データを集計した（246 deliverable、`done_criteria` 508 件、grade 結果 35 件）。
+
+**`done_criteria` の viewpoint は 75% が `human` である。**
+
+| evaluation      | 件数 | 割合 |
+| --------------- | ---- | ---- |
+| `human`         | 383  | 75%  |
+| `agent`         | 117  | 23%  |
+| `deterministic` | 8    | 1%   |
+
+grade が判定できるのは 24% だけで、catalog が宣言する観点の大半は grade の守備範囲外である。
+
+**grade の findings の 93% は「宣言外」に分類される。**
+
+```text
+宣言内  15 件（7%）
+宣言外 207 件（93%）   うち major 126 / minor 81
+```
+
+宣言外の上位はすべて `agent` 観点である。
+
+```text
+vp-arc-cross-document-consistency  42
+vp-qe-omissions-consistency        42
+vp-qe-done-criteria                37
+vp-ux-readability                  19
+vp-arc-conciseness                 17
+```
+
+当初の方式を採ると、**findings の 93% が格下げされ grade がほぼ機能しなくなる**。owner による切り分けでも同じ結果になる。owner ロールは `done_criteria` の roles と対応し、そちらも `human` 偏重（BA 111 / ARC 110 / QE 110 / PO 97）であるため、owner の観点は grade が判定できない。
+
+**「宣言外＝責務範囲外＝軽く扱うべき」という前提が誤りだった。** 宣言外の findings の中身は成果物間の矛盾や抜け漏れであり、どの文書にとっても妥当な指摘である。
+
+#### 3.2.2. 決定 3.1 との整合
+
+本見直しにより、判定主体の基準は `evaluation` だけになる。当初の 3.2 は責務という別の軸を持ち込んでおり、決定 3.1（`evaluation` を唯一の基準とする）と矛盾していた。
+
+owner を文書の frontmatter や RACI として持たせる案は、grade の判定軸としては不要である。ただし「schedule を持たない最小構成で review の観点を選ぶ」「文書の責任者を人が知る」という別の用途では価値があるため、[[prj-0001:pjr-d4kg-document-owner-declaration]] として切り出した。
+
+### 3.3. 判定語彙を verdict_definitions へ統一する
+
+**2026-09-24 に見直した。** 当初は「grade の level を `review_verdict` で写像して verdict の初期値とし、`human` 観点の判定と合成する」と決めたが、合成規則が未定義であり、素朴な集約（最小 level）では実データの 77% が `changes_requested` になって初期値として機能しないことが分かった。写像で繋ぐのではなく、**語彙そのものを統一する**。
+
+#### 3.3.1. 判定語彙が 4 系統ある
+
+| 使用箇所                                             | 語彙                                                          |
+| ---------------------------------------------------- | ------------------------------------------------------------- |
+| `pm-review-viewpoints.yaml` の `verdict_definitions` | `pass` / `conditional_pass` / `changes_requested` / `blocked` |
+| grade の文書 verdict                                 | `pass` / `needs-work` / `fail`                                |
+| `xrr-template.md` の `decision.recommendation`       | `approve` / `revise` / `reject`                               |
+| `xrr-viewpoint-detail-template.md` の `result`       | `pass` / `fail` / `unclear`                                   |
+
+同じ「判定」を 4 通りの語で表している。`verdict_definitions` という正本が存在するにもかかわらず、result テンプレート 2 種はどちらも従っていない。`revise` が `conditional_pass` と `changes_requested` のどちらか、`unclear` が `blocked` かは、どこにも書かれていない。
+
+一方 `severity_levels`（`blocker` / `major` / `minor` / `note`）は正本が 1 つで、grade の findings も従っている。verdict も同じ形にする。
+
+#### 3.3.2. 統一の内容
+
+`verdict_definitions` を唯一の正本とし、4 箇所すべてを揃える。
+
+| 対象                                           | 変更                                                                               |
+| ---------------------------------------------- | ---------------------------------------------------------------------------------- |
+| grade の文書 verdict                           | `fail` → `changes_requested`、`needs-work` → `conditional_pass`、`pass` は据え置き |
+| `xrr-template.md` の `recommendation`          | verdict 4 値へ                                                                     |
+| `xrr-viewpoint-detail-template.md` の `result` | verdict 4 値へ                                                                     |
+| 観点ごとの level から verdict                  | `grade_rubric` の `review_verdict` 写像（既存）をそのまま使う                      |
+
+grade の判定条件自体は変えない。現行の集約はそのまま使える。
+
+```typescript
+const verdict =
+  counts.blocker > 0
+    ? "changes_requested"
+    : counts.major > 0 || score < rubric.pass_score
+      ? "conditional_pass"
+      : "pass";
+```
+
+`blocked` は grade が付けない。判定不能は人の領域であり、`grade_rubric` のコメントも「review の blocked は判定不能を表すため level へ写像しない」としている。
+
+#### 3.3.3. 実データによる妥当性
+
+現行の grade verdict をこの対応で読み替えると、使える分布になる。
+
+| 対象        | `pass` | `conditional_pass` | `changes_requested` |
+| ----------- | ------ | ------------------ | ------------------- |
+| deliverable | 8      | 27                 | 0                   |
+| kata        | 78     | 142                | 40                  |
+
+素朴な最小 level 集約では deliverable の 77%、kata の 70% が `changes_requested` になり初期値として機能しなかった。grade の既存集約（blocker の有無、major の有無、加重スコア）は、それより妥当な分布を与える。
+
+#### 3.3.4. 効果
+
+- 写像規則と合成規則の実装が不要になる。[[prj-0001:pjr-kcmh-review-grade-verdict]] の作業が 2 件減る。
+- grade の文書判定、review の観点別判定、review の総合判定が同じ語彙になり、比較できる。
+- 「`needs-work` は `conditional_pass` か」という解釈の余地が消える。
+
+代償は既存 grade 結果 260 件の移行と、`grade list --verdict` の引数値の変更である。破壊的変更として 0.3.0 で扱う。
 
 ### 3.4. 定期実行は変化検知に限定する
 
@@ -123,6 +323,8 @@ review 内の grade は runner が実行し、executor には行わせない。�
 
 ## 4. 採択理由
 
+**以下は決定時点の理由であり、3.1〜3.3 の撤回・修正を反映していない。** 最終的な採択理由は `最終結論（2026-09-26）` の設計の原則に示す。経緯として残す。
+
 - 観点とルーブリックは既に共有されており、`review_verdict` への写像も存在する。本決定は新しい概念の追加ではなく、既にある設計の接続である。`evaluation` 区分をそのまま実行経路の分岐に使うため、判定主体の定義を新設する必要がない。
 - 案 B（findings を参考提示）では鮮度が保証されない。grade は夜間実行のため、レビュー直前の編集が反映されない。案 C は review の中で実行するため、評価対象と評価結果が常に一致する。
 - 案 D（grade で置換）を採らない理由は、review plan の「owner 以外のロールは入力適合性の最低限の確認にとどめる」という制御が grade に無いことである。決定 3.2 でこの制御を grade へ移すが、`human` 観点は機械判定できないため置換はできない。
@@ -144,16 +346,36 @@ review 内の grade は runner が実行し、executor には行わせない。�
 
 ## 6. 影響範囲とフォローアップ
 
-| 項目       | 内容                                                                                                                                                               |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 影響範囲   | `src/grade.ts`、`src/review-plan.ts`、`src/exec-plans.ts`、`xrp-*` テンプレート 9 種、`sch-strategy-launch.yaml` の kata 保守タスク、routine の `rtn-grade-*` 3 種 |
-| 必要な対応 | 実装を review 経路 / routine 経路 / schedule 経路の 3 系統へ分割して起票する                                                                                       |
-| 追跡先     | 本項目および派生する todo                                                                                                                                          |
+| 項目       | 内容                                                                                                                       |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------- |
+| 影響範囲   | `src/grade.ts`、`src/review-plan.ts`、`xrp-*` / `xrr-*` テンプレート、`sch-strategy-*.yaml` の review phase、`cdfd-*` 3 本 |
+| 必要な対応 | 成果物評価の BPS を作成し、それを根拠に実装項目へ展開する                                                                  |
+| 追跡先     | 本項目から派生する todo                                                                                                    |
 
-決定後の実装は、観点分担と verdict 合成（review 経路）、定期実行の契機変更（routine 経路）、kata 保守タスクへの review 追加（schedule 経路）の 3 系統に分かれる見込みである。1 項目にまとめず分割する。
+実装は次の順で展開する。設計の正本を先に作る理由は、`cdfd-*` の修正が 3 文書にまたがり、根拠がないと整合を取れないためである。
+
+| 順  | 作業                                                               | 状態     |
+| --- | ------------------------------------------------------------------ | -------- |
+| 1   | 成果物評価の BPS を作成する                                        | 次の作業 |
+| 2   | BPS を根拠に `cdfd-overview` / `cdfd-check` / `cdfd-action` を修正 | 未起票   |
+| 3   | `xrp-*` / `xrr-*` テンプレートを改訂する                           | 未起票   |
+| 4   | 観点の適用範囲を文書の種類で宣言する                               | 未起票   |
+
+既に起票済みの派生項目は次のとおり。
+
+| ID       | 内容                                                |
+| -------- | --------------------------------------------------- |
+| PJR-WPWB | `evaluation` の区分基準と改名、`continuous` の廃止  |
+| PJR-EBTZ | 観点の突き合わせ先を target 別に絞る                |
+| PJR-DKX8 | `check` へ判定規準を書き込む                        |
+| PJR-K351 | grade の対象範囲を 28 観点へ広げる                  |
+| PJR-Z47X | `changed_only` が突き合わせ先の変更を検出しない     |
+| PJR-XTAN | verdict 語彙の統一。**統一の是非から再検討する**    |
+| PJR-D4KG | 文書へ owner または RACI を宣言するか。優先度は低い |
 
 ## 7. 関連ドキュメント
 
+- [[prj-0001:pjr-wpwb-viewpoint-evaluation-criteria]]
 - [[prj-0001:pjr-xkks-grade-sidecar]]
 - [[prj-0001:pjr-w5jt-grade-single-stage-nightly]]
 - `docs/ja/specdojo/defaults/pm-review-viewpoints.yaml`

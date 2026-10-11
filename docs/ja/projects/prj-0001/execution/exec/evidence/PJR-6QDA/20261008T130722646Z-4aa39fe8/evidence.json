@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6QDA",
+  "run_id": "20261008T130722646Z-4aa39fe8",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-10-08T13:07:22.646Z",
+    "completed_at": "2026-10-08T13:19:26.605Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6qda-interactive-init.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "package.json",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/copilot/README.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/specdojo-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/init-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "templates/claude/agents/claude-executor.md",
+      "status": "??"
+    },
+    {
+      "path": "templates/claude/agents/claude-reporter.md",
+      "status": "??"
+    },
+    {
+      "path": "templates/init-agent-members.yaml",
+      "status": "??"
+    },
+    {
+      "path": "templates/init-exec-defaults.yaml",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/init-command.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 15,
+    "summary": "CHANGELOG.md                                       |  3 ++\n .../project-register/pjr-6qda-interactive-init.md  |  5 ++-\n .../pjr-6qda-20261008T130616Z-2a93-result.md       | 26 ++++++++++-\n docs/ja/specdojo/guides/quick-start-guide.md       | 41 +++++++++++++++--\n docs/ja/specdojo/references/command-reference.md   | 44 ++++++++++++++----\n package.json                                       |  1 +\n src/exec-provider-scaffold.ts                      | 52 ++++++++++++++++++----\n src/specdojo.ts                                    |  2 +\n templates/copilot/README.md                        |  6 ++-\n tests/src/specdojo-config-command.test.ts          |  1 +\n 10 files changed, 155 insertions(+), 26 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-6qda-interactive-init.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/references/command-reference.md package.json src/exec-provider-scaffold.ts src/init-command.ts src/specdojo.ts templates/claude/agents/claude-executor.md templates/claude/agents/claude-reporter.md templates/copilot/README.md templates/init-agent-members.yaml templates/init-exec-defaults.yaml tests/src/init-command.test.t…",
+      "status": "passed",
+      "summary": "変更対象ファイルを整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts init --help",
+      "status": "passed",
+      "summary": "init コマンドとオプションの登録を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "register 派生ビューの生成に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog 検証に成功。既存の未配置成果物に関する警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書索引 2473 件を正常に生成。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証が全件成功。"
+    },
+    {
+      "source": "executor",
+      "command": "env npm_config_cache=/tmp/specdojo-npm-cache-pjr6qda npm pack --dry-run --ignore-scripts --json",
+      "status": "passed",
+      "summary": "公開物に init テンプレート、Claude agent、Copilot orchestrator wrapper が含まれることを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check && git status --short",
+      "status": "passed",
+      "summary": "空白エラーなし。変更範囲を確認し、result ファイルが未変更であることを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "公開 tarball をインストールし、実 agent CLI で specdojo init から exec 実行まで確認",
+      "status": "requires_human",
+      "summary": "provider の認証情報、利用枠および実 agent CLI が必要なため、人手での実地確認を要する。"
+    }
+  ],
+  "final_message": "選択式の specdojo init と関連テンプレート、provider scaffold、テスト、利用文書を実装・更新した。result および登録簿ステータスは executor stage の規約どおり変更していない。",
+  "block_reason": "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result handoff for human or orchestrator application",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-6QDA/20261008T130722646Z-4aa39fe8/executor.log",
+      "bytes": 3032,
+      "truncated": false
+    }
+  ]
+}

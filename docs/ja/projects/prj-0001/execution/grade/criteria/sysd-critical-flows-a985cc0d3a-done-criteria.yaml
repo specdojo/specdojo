@@ -2,12 +2,12 @@
 id: sysd-critical-flows-grade-criteria
 document: sysd-critical-flows
 path: docs/ja/product/040-system-design/sysd-critical-flows.md
-graded_at: "2026-09-19T16:29:47.712Z"
-graded_by: codex-expert-executor
-content_hash: 0c053df264b820997c73427fd43ce256296cc1a9a9486c6e08649b547c4686a5
+graded_at: "2026-10-10T16:18:55.565Z"
+graded_by: agy-expert-executor
+content_hash: 966617c380ef236d4b8e01cde7d9122583b38dadea3d63971773790324dc133f
 summary:
-  satisfied: 5
-  unsatisfied: 0
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -15,28 +15,39 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-business-value
-    status: satisfied
+    status: unsatisfied
+    reason: The selection reasons for critical flows and specific business impacts if ignored are not documented.
   - id: DC-002
     text: 重要フローの内容を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: Pending issues, impact scope, and approvers necessary for the PO's approval decision are not explicitly stated.
   - id: DC-003
     text: フローの境界・永続化点・再実行性・失敗時挙動が定義されていること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      While persistence points are listed, system boundaries and technical configuration constraints remain
+      insufficiently defined.
   - id: DC-004
     text: 重要フローのテストシナリオ設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      Test references use glob patterns and lack specific execution commands or expected results, making them unusable
+      for scenario design.
   - id: DC-005
     text: フロー実装の共通理解として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      Specific configuration keys (e.g., parallel limits, retry backoffs) are not traceable for establishing a shared
+      understanding of the implementation.

@@ -1,0 +1,89 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_50cdf7eda982421bad2500d8425b3ab4
+  ts: "2026-10-07T13:56:22Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼（2026-10-07）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer scaffold で Emacs の設定をテンプレートから展開する
+    - field: description
+      from: ""
+      to: devcontainer scaffold のオプションで Emacs を選べるようにする。必要なツール（Emacs・LSP サーバー・検索ツール）と、一般的なキーバインド（C-h を後退にするなど）を設定した init.el をテンプレートとして同梱し、scaffold 時に展開する。既存の Emacs の設定は上書きしない。PJR-2H5F の scaffold の上に作る。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-07"
+- v: 1
+  id: reg_0d32eea88e9342e8b06d8e7061faa125
+  ts: "2026-10-07T21:14:40Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_50cdf7eda982421bad2500d8425b3ab4
+- v: 1
+  id: reg_0f6be75054934ebc9e76761cefe96cba
+  ts: "2026-10-07T21:24:31Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-ts"
+  previous_event_id: reg_0d32eea88e9342e8b06d8e7061faa125
+- v: 1
+  id: reg_9f803402705145e887e62714296ccf41
+  ts: "2026-10-07T21:40:25Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_0f6be75054934ebc9e76761cefe96cba
+- v: 1
+  id: reg_dc277b2718fb45f8ba7bb0e1a24e5264
+  ts: "2026-10-07T21:47:34Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9f803402705145e887e62714296ccf41

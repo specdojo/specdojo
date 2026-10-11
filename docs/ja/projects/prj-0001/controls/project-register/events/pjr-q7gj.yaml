@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8c97fd27ff4544a4ba98aa4b3df1cf16
+  ts: "2026-10-08T12:32:32Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-P8TK の棚卸し（a）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 並列実行で統合の commit のフックのテストが一時的に失敗する
+    - field: description
+      from: ""
+      to: exec run --parallel で 3 件を並べて流したとき、PJR-PG6W の統合段の commit で lefthook の pre-commit が実行する全テストが失敗した。同じ worktree で全テストを実行し直すと 2039 件すべて通り、--resume で統合できた。並列の親検証・統合とフックのテストが重なり、資源の競合で一時的に失敗したとみられる。原因の特定か、統合の commit でのフックの扱いの見直しが要る。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
+- v: 1
+  id: reg_afa8d875244a4cff9d9b0a1aa61dd944
+  ts: "2026-10-09T11:50:16Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8c97fd27ff4544a4ba98aa4b3df1cf16
+- v: 1
+  id: reg_ce5cbb5fbeeb42f4afa4014b05ea304b
+  ts: "2026-10-09T12:03:49Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_afa8d875244a4cff9d9b0a1aa61dd944
+- v: 1
+  id: reg_a57e4cd065584562a57e0d94d0060362
+  ts: "2026-10-09T12:08:15Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューした。過去の PJR-0FCT でも同じ doc-index のテストが落ちており、原因の特定と整合する
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: hook の並列の生成（register-build・index-build）と、実リポジトリの generated/pjr-index.md を読む doc-index のテストの競合を原因と特定し、テストを一時ディレクトリの fixture へ移した。commit・merge の失敗時は hook の出力の全文を integrate.log へ保存し、要約に FAIL と集計の行を残す。
+  previous_event_id: reg_ce5cbb5fbeeb42f4afa4014b05ea304b

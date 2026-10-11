@@ -1,0 +1,322 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-result.schema.yaml
+version: 1
+document: cdsd-planning
+path: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
+target: deliverable
+rubric: grade-rubric-v2
+verdict: needs-work
+score: 50
+graded_at: "2026-10-08T16:02:06.860Z"
+graded_by: agy-expert-executor
+content_hash: 465645a27f2f91f437f68825eea853917093aa68ab32e62fc2c271fd80e8c020
+source_hashes:
+  catalog-entry: b4e6602f27a2738ac3267a1293e65bd203ca4f0f124efcaf6272ea7d75179b65
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
+categories:
+  purpose:
+    score: 25
+  operations:
+    score: 69
+  planning:
+    score: 42
+  business:
+    score: 58
+  consistency:
+    score: 25
+  architecture:
+    score: 75
+  usability:
+    score: 94
+  implementation:
+    score: 25
+  quality:
+    score: 31
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 1
+    score: 25
+  vp-po-decision-readiness:
+    level: 1
+    score: 25
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 1
+    score: 25
+  vp-pm-dependency-risk:
+    level: 1
+    score: 25
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-cross-document-consistency:
+    level: 1
+    score: 25
+  vp-arc-technical-constraints:
+    level: 1
+    score: 25
+  vp-arc-conciseness:
+    level: 4
+    score: 100
+  vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 1
+    score: 25
+  vp-dev-change-impact:
+    level: 1
+    score: 25
+  vp-dev-testability:
+    level: 1
+    score: 25
+  vp-qe-done-criteria:
+    level: 1
+    score: 25
+  vp-qe-verifiability:
+    level: 1
+    score: 25
+  vp-qe-omissions-consistency:
+    level: 1
+    score: 25
+  vp-ux-readability:
+    level: 4
+    score: 100
+  vp-ux-user-flow:
+    level: 4
+    score: 100
+  vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 1
+    score: 25
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
+  vp-arc-document-structure:
+    level: 4
+    score: 100
+  vp-qe-config-validity:
+    level: 2
+    score: 50
+finding_counts:
+  blocker: 0
+  major: 15
+  minor: 7
+  note: 0
+findings:
+  - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: 成果物カタログが本書の対象とするプロジェクト構成・運用構成・成果物カタログ・Schedule 戦略を TODO のまま除外しており、カタログ上の目的と本文の実際のスコープが一致していない。
+    message_ja: 成果物カタログが本書の対象とするプロジェクト構成・運用構成・成果物カタログ・Schedule 戦略を TODO のまま除外しており、カタログ上の目的と本文の実際のスコープが一致していない。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: TODO とされたデータストア追加について、判断者、担当 Role code、完了時期、依存文書、未完了の影響を記載し、PO が ready 可否を判断できるようにする必要がある。
+    message_ja: TODO とされたデータストア追加について、判断者、担当 Role code、完了時期、依存文書、未完了の影響を記載し、PO が ready 可否を判断できるようにする必要がある。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 15
+    anchor: >-
+      | 登録項目個票             | 登録簿ライフサイクル、定期処理、報告 | type、状態、優先度、担当、期限、登録日時、完了日時、説明、結論、追記型の変更 event | 随時（起票時・状態変更時・内容更新時） |
+      登録項目毎                 | 計画外事項・判断事項の追跡、審査・承認の証跡、監視と報告の根拠 |
+    message: 本書の公開対象、非公開情報の有無、および公開・ready 化の最終判断を担う人間の PO または承認 Role codeを明示する必要がある。
+    message_ja: 本書の公開対象、非公開情報の有無、および公開・ready 化の最終判断を担う人間の PO または承認 Role codeを明示する必要がある。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: TODO をデータストアごとの作業単位へ分解し、依存する業務データ辞書、担当 Role code、判断時期、完了条件を記載しなければ進捗管理や所要時間見積もりに利用できない。
+    message_ja: TODO をデータストアごとの作業単位へ分解し、依存する業務データ辞書、担当 Role code、判断時期、完了条件を記載しなければ進捗管理や所要時間見積もりに利用できない。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: "`dct-data-model-cdsd.yaml` の `cdsd-planning.depends_on` にある6文書との依存関係、未作成時の影響、PJR・Schedule への登録方針を明示する必要がある。"
+    message_ja: "`dct-data-model-cdsd.yaml` の `cdsd-planning.depends_on` にある6文書との依存関係、未作成時の影響、PJR・Schedule への登録方針を明示する必要がある。"
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: 本書内の TODO について、進捗管理・報告のために PJR 等へ課題として転記する基準、対応方針、担当 Role code が明示されていない。
+    message_ja: 本書内の TODO について、進捗管理・報告のために PJR 等へ課題として転記する基準、対応方針、担当 Role code が明示されていない。
+  - id: F007
+    severity: minor
+    rule: vp-ba-business-value
+    line: 15
+    anchor: >-
+      | 登録項目個票             | 登録簿ライフサイクル、定期処理、報告 | type、状態、優先度、担当、期限、登録日時、完了日時、説明、結論、追記型の変更 event | 随時（起票時・状態変更時・内容更新時） |
+      登録項目毎                 | 計画外事項・判断事項の追跡、審査・承認の証跡、監視と報告の根拠 |
+    message: 登録簿と Schedule の境界が曖昧な場合に生じる重複追跡・判断漏れ等の影響と、本書の適用成功を確認する基準を補足する必要がある。
+    message_ja: 登録簿と Schedule の境界が曖昧な場合に生じる重複追跡・判断漏れ等の影響と、本書の適用成功を確認する基準を補足する必要がある。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: プロジェクト構成、運用構成、成果物カタログ、Schedule 戦略についても、業務上の役割、主な内容、更新タイミング、粒度、用途、更新責務を記述する必要がある。
+    message_ja: プロジェクト構成、運用構成、成果物カタログ、Schedule 戦略についても、業務上の役割、主な内容、更新タイミング、粒度、用途、更新責務を記述する必要がある。
+  - id: F009
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 5
+    anchor: >-
+      プロジェクトの立上と計画で扱う概念データストアのうち、登録簿と Schedule について、業務上の役割、内容、粒度、更新責務を一覧で定義する。BA は登録簿と計画済み作業の管理境界の確認に、ARC
+      は正本と派生物の区別を設計の基礎に、QE はデータ検証・整合性確認の対象の識別に利用する。
+    message: 成果物の内容を誰が確認し、どの時点で合意とするか（合意対象）が明記されていないため、ステークホルダーの責任範囲が不明確である。
+    message_ja: 成果物の内容を誰が確認し、どの時点で合意とするか（合意対象）が明記されていないため、ステークホルダーの責任範囲が不明確である。
+  - id: F010
+    severity: major
+    rule: vp-arc-cross-document-consistency
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml` は `cdsd-planning`
+      を「プロジェクト構成、登録簿、成果物カタログ、Schedule等」の一覧と定義する一方、本文は登録項目個票と Schedule・マイルストーンだけを定義して残りを TODO としており、双方の対象範囲が相反している。
+    message_ja: >-
+      `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml` は `cdsd-planning`
+      を「プロジェクト構成、登録簿、成果物カタログ、Schedule等」の一覧と定義する一方、本文は登録項目個票と Schedule・マイルストーンだけを定義して残りを TODO としており、双方の対象範囲が相反している。
+  - id: F011
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: 未記載のプロジェクト構成・運用構成・成果物カタログ・Schedule 戦略について、正本、外部依存、主要 schema、生成・検証方針を追加しなければデータストア構成全体の設計基礎として参照できない。
+    message_ja: 未記載のプロジェクト構成・運用構成・成果物カタログ・Schedule 戦略について、正本、外部依存、主要 schema、生成・検証方針を追加しなければデータストア構成全体の設計基礎として参照できない。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: >-
+      カタログの evidence_refs にある
+      `src/specdojo-config.ts`、`src/register.ts`、`src/catalog.ts`、`src/exec.ts`、`src/schedule.ts`
+      と各データストアの入力、出力、schema、制約を対応付ける必要がある。
+    message_ja: >-
+      カタログの evidence_refs にある
+      `src/specdojo-config.ts`、`src/register.ts`、`src/catalog.ts`、`src/exec.ts`、`src/schedule.ts`
+      と各データストアの入力、出力、schema、制約を対応付ける必要がある。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 35
+    anchor: >-
+      | `risk`           | まだ顕在化していない懸念について、対応方針・受容・延期を判断する必要がある       | リスクオーナーが方針を審査する                                
+      |
+    message: 関連文書への参照だけでなく、登録項目個票または Schedule の定義変更時に影響する schema、生成ビュー、CLI コマンド、既存データ互換性を明示する必要がある。
+    message_ja: 関連文書への参照だけでなく、登録項目個票または Schedule の定義変更時に影響する schema、生成ビュー、CLI コマンド、既存データ互換性を明示する必要がある。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 23
+    anchor: >-
+      | Schedule・マイルストーン | 計画・状態遷移の正本                   | 計画展開、タスク実行 | 報告・監視では参照のみ行い、変更は計画展開・タスク実行へ委譲する              |
+      PM、task owner            |
+    message: 各データストアについて schema・整合性を検証するコマンド、対象ファイル、期待する pass 条件、エラー時の対応先を記載する必要がある。
+    message_ja: 各データストアについて schema・整合性を検証するコマンド、対象ファイル、期待する pass 条件、エラー時の対応先を記載する必要がある。
+  - id: F015
+    severity: major
+    rule: vp-qe-done-criteria
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: カタログ対象のデータストアを追加し、各ストアの役割・内容・粒度、設計上の正本・依存、検証・整合性確認対象を揃えるまで done_criteria を充足したとは判定できない。
+    message_ja: カタログ対象のデータストアを追加し、各ストアの役割・内容・粒度、設計上の正本・依存、検証・整合性確認対象を揃えるまで done_criteria を充足したとは判定できない。
+  - id: F016
+    severity: major
+    rule: vp-qe-verifiability
+    line: 23
+    anchor: >-
+      | Schedule・マイルストーン | 計画・状態遷移の正本                   | 計画展開、タスク実行 | 報告・監視では参照のみ行い、変更は計画展開・タスク実行へ委譲する              |
+      PM、task owner            |
+    message: 一覧の説明値だけでなく、必須項目、許容値、参照整合性、正本と派生物の一致条件をストアごとに pass / fail 判定可能な形で定義する必要がある。
+    message_ja: 一覧の説明値だけでなく、必須項目、許容値、参照整合性、正本と派生物の一致条件をストアごとに pass / fail 判定可能な形で定義する必要がある。
+  - id: F017
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: >-
+      `dct-data-model-cdsd.yaml` が要求する
+      `bdd-project-config`、`bdd-operations-config`、`bdd-deliverables-catalog`、`bdd-schedule-strategy`
+      等に対応する定義・参照がなく、Frontmatter の `based_on` も空であるため必須範囲を補完する必要がある。
+    message_ja: >-
+      `dct-data-model-cdsd.yaml` が要求する
+      `bdd-project-config`、`bdd-operations-config`、`bdd-deliverables-catalog`、`bdd-schedule-strategy`
+      等に対応する定義・参照がなく、Frontmatter の `based_on` も空であるため必須範囲を補完する必要がある。
+  - id: F018
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# 概念データストア定義（プロジェクトの立上と計画）"
+    message: rulebook では ID を `^cdsl-[a-z0-9-]+$` とするよう指定されているが、本書の ID は `cdsd-planning` となっており命名規則に違反している。
+    message_ja: rulebook では ID を `^cdsl-[a-z0-9-]+$` とするよう指定されているが、本書の ID は `cdsd-planning` となっており命名規則に違反している。
+  - id: F019
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 16
+    anchor: >-
+      | Schedule・マイルストーン | 計画展開、タスク実行、報告           | 計画済みタスク、依存、担当、マイルストーンと依存 task                              |
+      変更時（カタログ・戦略・計画の変更時） | タスク毎、マイルストーン毎 | 計画済み作業の実行順序、進捗・達成見込みの判断                 |
+    message: データストア名「Schedule・マイルストーン」は、ルールブックが求める日本語の単数形ではなく、表記ゆれや解釈の曖昧さを生む可能性がある。
+    message_ja: データストア名「Schedule・マイルストーン」は、ルールブックが求める日本語の単数形ではなく、表記ゆれや解釈の曖昧さを生む可能性がある。
+  - id: F020
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: 未記載データストアの追加条件、残課題の解消確認、レビュー担当、最終承認者、公開前検証を ready 条件として明示する必要がある。
+    message_ja: 未記載データストアの追加条件、残課題の解消確認、レビュー担当、最終承認者、公開前検証を ready 条件として明示する必要がある。
+  - id: F021
+    severity: minor
+    rule: vp-ops-operability
+    line: 20
+    anchor: >-
+      | データストア名           | 位置づけ                               | 主な生成・更新       |
+      利用時の扱い                                                                  | 更新責務                  |
+    message: 継続運用に必要な再生成手順、整合性不一致時の復旧・エスカレーション、問い合わせ先の Role code を更新責務と併せて記載する必要がある。
+    message_ja: 継続運用に必要な再生成手順、整合性不一致時の復旧・エスカレーション、問い合わせ先の Role code を更新責務と併せて記載する必要がある。
+  - id: F022
+    severity: major
+    rule: vp-qe-config-validity
+    line: 9
+    anchor: "- _TODO_: プロジェクト構成、成果物カタログ、Schedule 戦略のデータストアは、対応する業務データ辞書の作成時に追加する。"
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+done_criteria:
+  satisfied: 0
+  total: 3
+  unsatisfied:
+    DC-001:
+      - BA
+    DC-002:
+      - ARC
+    DC-003:
+      - QE
+  detail_ref: cdsd-planning-grade-criteria

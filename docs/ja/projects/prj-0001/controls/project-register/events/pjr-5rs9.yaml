@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_310b9435f1df42a296418219918d2e81
+  ts: "2026-09-26T23:23:17Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 夜間作業の報告項目 5・6 の確認結果
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: bps-task-review-finalize の local_id を中身に合わせ cdfd-overview の不整合を直す
+    - field: description
+      from: ""
+      to: カタログの bps-task-review-finalize は中身が成果検証（P-07-03）で確定を含まない。cdfd-overview は Check への要求が「評価・報告要求」で生成要求を欠き、Orchestrator への応答を実行記録経由の実行状態1本に集約しており、cdfd-orchestrator / cdfd-check と一致しない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_b6b3432583d540fb82257b87f6d4143e
+  ts: "2026-09-26T23:54:25Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_310b9435f1df42a296418219918d2e81
+- v: 1
+  id: reg_ed333f0f1eac4f54b9ef74522c5b98be
+  ts: "2026-09-27T00:17:01Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b6b3432583d540fb82257b87f6d4143e
+- v: 1
+  id: reg_d8ac94a2cd624d8698ea86764aa2c8a1
+  ts: "2026-09-27T00:20:17Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: claude-expert-executor の実行結果を orchestrator が評価し完了条件を満たすと判断
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-27"
+    - field: conclusion
+      from: "-"
+      to: local_id を bps-task-verification へ改め参照元3件を追随、cdfd-overview の Check への要求を評価・報告・生成要求にし、Plan/Do/Check/Action から Orchestrator への応答4本を cdfd-orchestrator と一致させた
+  previous_event_id: reg_ed333f0f1eac4f54b9ef74522c5b98be

@@ -3,34 +3,80 @@ version: 1
 document: specdojo:pm-risk-register-rulebook
 path: docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 71
-graded_at: "2026-09-03T05:09:17.412Z"
-graded_by: gemma-expert-executor
+score: 69
+graded_at: "2026-10-06T11:11:41.675Z"
+graded_by: codex-expert-executor
 content_hash: 6c572d542e866302e7b625e42859c5e0086613493f36a57987d8c39b2fa95827
 categories:
-  consistency:
+  purpose:
+    score: 75
+  operations:
+    score: 69
+  planning:
     score: 50
-  usability:
-    score: 92
+  business:
+    score: 67
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 88
   quality:
+    score: 42
+  consistency:
     score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
     level: 2
     score: 50
+  vp-po-publication-accountability:
+    level: 2
+    score: 50
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-qe-verifiability:
+  vp-dev-implementation-readiness:
     level: 4
     score: 100
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 2
+    score: 50
+  vp-qe-verifiability:
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 2
     score: 50
@@ -43,36 +89,174 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 1
-  major: 2
-  minor: 1
+  major: 10
+  minor: 6
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: テンプレート側で参照される rulebook が `specdojo:pjr-rulebook` となっており、本ルールブックと矛盾している。
-    anchor: "# リスク登録簿 作成ルール"
-  - id: F004
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 1
-    message: 見出しでは「推奨 Frontmatter 項目」としているが、表内では「必須：○」と定義されており、表記が矛盾している。
-    anchor: "# リスク登録簿 作成ルール"
+    rule: vp-po-decision-readiness
+    line: 53
+    anchor: "- リスクID、内容、発生確率、影響度、優先度、対応策、担当、ステータスを一覧化する。"
+    message: >-
+      The risk table requires priority and response data but omits the decision owner, decision state, decision
+      deadline, and residual-risk acceptance criteria needed for PO approval, hold, or rejection decisions.
+    message_ja: >-
+      The risk table requires priority and response data but omits the decision owner, decision state, decision
+      deadline, and residual-risk acceptance criteria needed for PO approval, hold, or rejection decisions.
   - id: F002
+    severity: major
+    rule: vp-po-publication-accountability
+    line: 24
+    anchor: "## 4. 推奨 Frontmatter 項目"
+    message: >-
+      The metadata rules define publication-like statuses but provide no restrictions for personal or confidential
+      information and no human PO approval responsibility for making a register ready or public.
+    message_ja: メタデータルールは公開に近いステータスを定義していますが、個人情報や機密情報に対する制限がなく、レジスターを準備または公開するための人間のPOによる承認責任も規定されていません。
+  - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 66
+    anchor: "- 回避、低減、受容、移転の方針と具体対応を記載する。"
+    message: >-
+      The response-plan rules do not require a work unit, dependency, due date, completion criterion, or accountable
+      Role code, even though the sample relies on deadlines and completion conditions to make responses actionable.
+    message_ja: >-
+      response-plan のルールには、work unit、dependency、due date、completion criterion、または accountable Role code
+      は必要ありません。ただし、サンプルでは、レスポンスを実行可能なものにするために、期限や完了条件に依存しています。
+  - id: F004
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 74
+    anchor: "- `pm-issue-log`、`pm-change-request-log` への導線を記載する。"
+    message: >-
+      The related-document guidance omits affected deliverables, dependencies, schedule impact, and PJR linkage, so
+      downstream planning consequences of a risk cannot be traced.
+    message_ja: 関連ドキュメントのガイダンスには、影響を受ける成果物、依存関係、スケジュールの影響、およびPJRとの関連性が記載されていないため、リスクによる下流の計画への影響を追跡することができません。
+  - id: F005
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 74
+    anchor: "- `pm-issue-log`、`pm-change-request-log` への導線を記載する。"
+    message: >-
+      The rules name the issue and change-request logs but do not define transfer criteria, reporting destinations, or
+      ownership for separating risks from realized issues, change requests, and decisions.
+    message_ja: ルールには、問題および変更要求のログが記載されていますが、リスクを顕在化した問題、変更要求、および意思決定から分離するための移管基準、報告先、または所有権が定義されていません。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 5
+    anchor: 本ドキュメントは、`リスク登録簿` を一貫した粒度で作成するためのルールを定義する。
+    message: >-
+      The purpose states the management activity but does not identify its beneficiary or the business consequence
+      avoided through risk control, leaving business-value alignment implicit.
+    message_ja: 目的では管理活動について述べていますが、その受益者やリスク管理を通じて回避されるビジネス上の結果を特定していないため、ビジネス価値との整合性が暗黙的なままになっています。
+  - id: F007
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 53
+    anchor: "- リスクID、内容、発生確率、影響度、優先度、対応策、担当、ステータスを一覧化する。"
+    message: >-
+      The required risk table includes a status column but defines neither allowed values nor transition criteria,
+      leaving the usage requirements incomplete.
+    message_ja: 必要なリスクテーブルにはステータス列が含まれていますが、許可される値も遷移基準も定義されておらず、使用要件が不完全なままになっています。
+  - id: F008
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 49
+    anchor: "- 管理対象、見直し頻度、責任者を 1〜3 行で示す。"
+    message: >-
+      The rules require a responsible person but do not distinguish the maintainer, reviewer, approver, consulted
+      stakeholders, or the decisions on which their agreement is required.
+    message_ja: ルールでは責任者を求めていますが、メンテナー、レビュアー、承認者、相談先のステークホルダー、または彼らの合意が必要となる意思決定を区別していません。
+  - id: F009
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 32
+    anchor: "| supersedes | 置換関係ID（配列）               | 任意 |"
+    message: >-
+      The metadata includes supersedes but gives no procedure for migrating existing registers or assessing impacts on
+      templates, generated views, and consumers when this rulebook changes.
+    message_ja: メタデータには supersedes が含まれていますが、このルールブックが変更された際の、既存のレジスタの移行や、テンプレート、生成されたビュー、およびコンシューマーへの影響を評価するための手順は示されていません。
+  - id: F010
+    severity: major
+    rule: vp-dev-testability
+    line: 77
+    anchor: "## 7. 禁止事項"
+    message: >-
+      The rulebook provides no lint, schema-validation, build, or generation command with expected results, so an
+      implementation cannot be tested against the stated authoring rules.
+    message_ja: >-
+      ルールブックには期待される結果が得られる lint、schema-validation、build、または generation
+      コマンドが提供されていないため、記載されたオーサリングルールに沿って実装をテストすることができません。
+  - id: F011
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 62
+    anchor: "- 評価スケール、優先度算定ルール、再評価条件を記載する。"
+    message: >-
+      The evaluation guidance does not require numeric mappings, thresholds, or a complete priority matrix, so reviewers
+      cannot reliably reproduce the stated priority from probability and impact values.
+    message_ja: 評価ガイダンスでは、数値マッピング、しきい値、または完全な優先順位マトリックスが要求されていないため、レビュアーは発生確率と影響の値から記述された優先順位を確実に再現することができません。
+  - id: F012
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
-    message: テンプレートに、本節で定義されている必須本文構成（概要〜関連ドキュメント）が含まれておらず、整合性が取れていない。
     anchor: "# リスク登録簿 作成ルール"
-  - id: F003
+    message: テンプレートに、本節で定義されている必須本文構成（概要〜関連ドキュメント）が含まれておらず、整合性が取れていない。
+    message_ja: テンプレートに、本節で定義されている必須本文構成（概要〜関連ドキュメント）が含まれておらず、整合性が取れていない。
+  - id: F013
     severity: blocker
     rule: vp-qe-kata-conformance
     line: 1
-    message: 手動作成を前提とした本文構成ルールを定義しているが、対応するテンプレートは自動生成ビューの定義となっており、成果物の種別と責務が根本的に矛盾している。
     anchor: "# リスク登録簿 作成ルール"
+    message: 手動作成を前提とした本文構成ルールを定義しているが、対応するテンプレートは自動生成ビューの定義となっており、成果物の種別と責務が根本的に矛盾している。
+    message_ja: 手動作成を前提とした本文構成ルールを定義しているが、対応するテンプレートは自動生成ビューの定義となっており、成果物の種別と責務が根本的に矛盾している。
+  - id: F014
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# リスク登録簿 作成ルール"
+    message: テンプレート側で参照される rulebook が `specdojo:pjr-rulebook` となっており、本ルールブックと矛盾している。
+    message_ja: テンプレート側で参照される rulebook が `specdojo:pjr-rulebook` となっており、本ルールブックと矛盾している。
+  - id: F015
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# リスク登録簿 作成ルール"
+    message: 見出しでは「推奨 Frontmatter 項目」としているが、表内では「必須：○」と定義されており、表記が矛盾している。
+    message_ja: 見出しでは「推奨 Frontmatter 項目」としているが、表内では「必須：○」と定義されており、表記が矛盾している。
+  - id: F016
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 24
+    anchor: "## 4. 推奨 Frontmatter 項目"
+    message: >-
+      The status field includes ready, but the rulebook defines no readiness criteria, unresolved-risk policy, approver,
+      or pre-publication gate for promoting a register from draft.
+    message_ja: >-
+      status フィールドには ready が含まれていますが、ルールブックでは、レジスタを draft から昇格させるための readiness criteria、unresolved-risk
+      policy、approver、または pre-publication gate が定義されていません。
+  - id: F017
+    severity: minor
+    rule: vp-ops-operability
+    line: 70
+    anchor: "- 監視周期、トリガー、状態更新ルールを記載する。"
+    message: >-
+      The monitoring rules do not require an operator, escalation path, or recovery action for a missed review or failed
+      update.
+    message_ja: モニタリングルールでは、レビューの漏れや更新の失敗に対するオペレーター、エスカレーションパス、またはリカバリアクションが要求されていません。

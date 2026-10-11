@@ -32,23 +32,25 @@ SpecDojo Unit のプロジェクトドキュメントとプロダクトドキュ
 
 ## 1. 既定のリポジトリ構成
 
-利用プロジェクトでは Detached Unit を既定とし、プロダクトの内容と同じ revision が必要な文書と、SpecDojo の運用記録を別リポジトリに置きます。
+利用プロジェクトでは別リポジトリ構成を既定とし、プロダクトの内容と同じ revision が必要な文書と、SpecDojo の運用記録を別リポジトリに置きます。`app1-specdojo/` は、登録簿・計画・実行記録などのプロジェクトドキュメントを置く **プロジェクトリポジトリ**です。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。
 
 ```text
 workspace/
 ├── app1/                            # プロダクトリポジトリ
 │   ├── src/
 │   └── docs/ja/product/             # プロダクトドキュメント
-├── app1-specdojo/                   # SpecDojo 運用リポジトリ
+├── app1-specdojo/                   # プロジェクトリポジトリ
 │   ├── .specdojo/
-│   │   └── specdojo.config.json
+│   │   ├── specdojo.config.json
+│   │   ├── agent-members.yaml       # repository 共通の保護された agent 定義
+│   │   └── exec-defaults.yaml       # provider 起動・実行ポリシー
 │   └── docs/ja/
 │       ├── specdojo/                # 実践体系
 │       └── projects/<project-id>/   # プロジェクト文書と実行記録
-└── app1-worktrees/                  # task 単位の worktree 置き場
+└── app1-specdojo-worktrees/         # task 単位の worktree 置き場（config init がリポジトリ名から設定）
 ```
 
-以下のツリーは各リポジトリ内の配置を個別に示します。成果物と実装が常に同じ変更として動く Attached Unit を選ぶ場合は、両方のツリーを1つのリポジトリの `docs/ja/` 配下へ置けます。
+以下のツリーは各リポジトリ内の配置を個別に示します。成果物と実装が常に同じ変更として動く同一リポジトリ構成を選ぶ場合は、両方のツリーを1つのリポジトリの `docs/ja/` 配下へ置けます。
 
 ## 2. プロジェクトドキュメントの構成
 
@@ -97,7 +99,7 @@ docs/
 │   │   │   │   ├── pm-review-viewpoints.yaml     # レビュー観点
 │   │   │   │   ├── pm-organization.md            # 組織とロールの定義
 │   │   │   │   ├── pm-roles.yaml                 # ロール定義
-│   │   │   │   ├── pm-members.yaml               # メンバー定義
+│   │   │   │   ├── pm-members.yaml               # 人間のメンバー定義
 │   │   │   │   └── pm-raci.md                    # 組織体制とRACI
 │   │   │   │
 │   │   │   ├── 040-current-state/                # 現状（必要な成果物だけを配置）
@@ -163,7 +165,9 @@ docs/
 │   │   │   │   │   ├── runs/                    # 入力・task・attempt・結果
 │   │   │   │   │   └── generated/               # checkpoint派生ビュー
 │   │   │   │   ├── grade/                        # 継続品質評価（最新状態）
+│   │   │   │   │   ├── results/                  # 文書別のgrade resultサイドカー
 │   │   │   │   │   ├── criteria/                 # 成果物別のdone_criteria判定詳細
+│   │   │   │   │   ├── pipeline/                 # 文書別pipelineの再開state
 │   │   │   │   │   └── generated/                # 再生成可能な派生物（git管理外）
 │   │   │   │   │       └── plans/                # 1文書単位の評価plan
 │   │   │   │   │           ├── kata/             # Kata評価plan

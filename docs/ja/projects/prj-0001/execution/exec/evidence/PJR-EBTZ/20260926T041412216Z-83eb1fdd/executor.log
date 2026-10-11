@@ -1,0 +1,11 @@
+`vp-arc-cross-document-consistency` を成果物専用に限定し、Kata の整合責務を `vp-qe-kata-conformance` へ移管しました。
+
+- 両観点の `check` に責務境界を明記
+- ARC finding に突き合わせ先と相反箇所の提示を必須化
+- 個票の作業内容・対応結果を更新
+- Kata／成果物それぞれの grade plan で観点分離を確認
+- result は executor 指示どおり未編集
+
+<specdojo_executor_evidence>
+{"final_message":"ARCの成果物間整合とQEのKata適合性をtarget別に分離し、個票へ検証結果を記録しました。","validations":[{"command":"npx prettier --write docs/ja/specdojo/defaults/pm-review-viewpoints.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance.md","status":"passed","summary":"変更したYAML・Markdownを整形"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance.md","status":"passed","summary":"Markdown lint成功"},{"command":"node --import tsx src/specdojo.ts grade plan --target kata --project prj-0001 --path docs/ja/specdojo/recipes/pm-raci-recipe.md --out docs/ja/projects/prj-0001/execution/grade/generated/plans/pjr-ebtz-trial","status":"passed","summary":"Kata planにQE観点のみ含まれ、ARC観点が除外されることを確認"},{"command":"node --import tsx src/specdojo.ts grade plan --target deliverable --project prj-0001 --path docs/ja/product/010-business-specs/010-data-flow/cdfd-overview.md --out docs/ja/projects/prj-0001/execution/grade/generated/plans/pjr-ebtz-trial","status":"passed","summary":"成果物planにARC観点のみ含まれ、Kata観点が除外されることを確認"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビュー生成成功"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログ検証成功。既存の未作成成果物warningのみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引1963件を生成"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npm run validate:schema","status":"not_run","summary":"親runnerのallowlist検証に委譲"},{"command":"npm run typecheck","status":"not_run","summary":"親runnerのallowlist検証に委譲"},{"command":"npm run test:unit","status":"not_run","summary":"親runnerのallowlist検証に委譲"},{"command":"npm run test:integration","status":"not_run","summary":"親runnerのallowlist検証に委譲"}]}
+</specdojo_executor_evidence>

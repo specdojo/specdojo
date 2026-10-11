@@ -1,0 +1,7 @@
+`registerGradeFindingsText` の展開対象を個票 Frontmatter の `targets` に限定しました。関連ドキュメントのみの文書は除外され、`targets` 未宣言時は finding を展開しません。
+
+テスト、運用ガイド、個票の対応結果も更新済みです。親 runner 管轄の単体テスト・型検査・schema 検証は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"grade finding の展開対象を個票の targets に限定し、回帰テスト・運用ガイド・個票を更新した。","validations":[{"command":"npx prettier --write src/exec-plans.ts tests/src/exec-plans-grade-findings.test.ts docs/ja/specdojo/guides/register-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-1jjd-register-plan-expands-referenced-findings.md","status":"passed","summary":"4ファイルを整形済み"},{"command":"npm run lint:ts","status":"passed","summary":"TypeScript ESLint 成功"},{"command":"npm run lint:md","status":"passed","summary":"Markdown lint 成功"},{"command":"npm run lint:fm","status":"passed","summary":"Frontmatter/remark 検査成功"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検査成功"},{"command":"npx tsx src/specdojo.ts index build","status":"failed","summary":"sandbox が tsx の IPC ソケット作成を EPERM で拒否"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引2167件を生成"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ビューを生成"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"カタログ検証成功。既存の未作成文書に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"whitespace エラーなし"}]}
+</specdojo_executor_evidence>

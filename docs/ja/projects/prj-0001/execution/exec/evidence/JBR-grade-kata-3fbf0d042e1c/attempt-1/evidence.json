@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-3fbf0d042e1c",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-09-28T21:00:08.184Z",
+    "completed_at": "2026-09-28T22:27:17.280Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/bps-deliverable-evaluation-e8ef6378e7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/cdsd-planning-c998e41655-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/opr-agent-cli-update-beb291d74a-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/prj-assumptions-constraints-dependencies-04a3c0d40b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-github-copilot-agent-settings-caeaa1d83f-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-index-920a4c50dc-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-orchestrator-agent-settings-b1c21895d4-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/cdsd-planning-c998e41655ac.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/bps-deliverable-evaluation.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/cdsd-planning.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/opr-agent-cli-update.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/prj-0001.prj-assumptions-constraints-dependencies.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.br-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ccd-mermaid-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-mermaid-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-overview-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-quality-management-plan-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-raci-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-roles-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-assumptions-constraints-dependencies-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-charter-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-comparison-of-alternatives-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-issues-and-approach-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-overview-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-scope-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-stakeholder-register-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-recipe.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-github-copilot-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-orchestrator-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/sysd-job-execution-f206c7f9d3b9.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/sysd-opencode-agent-settings-7921b7f52776.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-8328578620b8.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-3fbf0d042e1c.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 34,
+    "summary": "...erable-evaluation-e8ef6378e7-done-criteria.yaml |   2 +-\n .../cdsd-planning-c998e41655-done-criteria.yaml    |   8 +-\n ...-agent-cli-update-beb291d74a-done-criteria.yaml |  13 +-\n ...ints-dependencies-04a3c0d40b-done-criteria.yaml |   4 +-\n ...ot-agent-settings-caeaa1d83f-done-criteria.yaml |  10 +-\n .../sysd-index-920a4c50dc-done-criteria.yaml       |   8 +-\n ...or-agent-settings-b1c21895d4-done-criteria.yaml |  17 +-\n .../grade/pipeline/cdsd-planning-c998e41655ac.json |  14 -\n .../grade/results/bps-deliverable-evaluation.yaml  |   2 +-\n .../execution/grade/results/cdsd-planning.yaml     |   2 +-\n .../grade/results/opr-agent-cli-update.yaml        | 240 +++++++++++++--\n ...1.prj-assumptions-constraints-dependencies.yaml | 233 ++++++++++++++-\n .../grade/results/specdojo.br-rulebook.yaml        | 165 +++++++++--\n .../results/specdojo.ccd-mermaid-rulebook.yaml     | 254 ++++++++++++++--\n .../results/specdojo.cdfd-mermaid-rulebook.yaml    | 209 ++++++++++++--\n .../results/specdojo.cdfd-overview-rulebook.yaml   | 112 +++++--\n ...specdojo.pm-quality-management-plan-recipe.yaml | 139 +++++++--\n .../grade/results/specdojo.pm-raci-recipe.yaml     | 203 ++++++++++---\n .../grade/results/specdojo.pm-roles-recipe.yaml    | 126 ++++++--\n ...ssumptions-constraints-dependencies-recipe.yaml |  85 +++++-\n .../grade/results/specdojo.prj-charter-recipe.yaml |  99 ++++++-\n ...dojo.prj-comparison-of-alternatives-recipe.yaml | 139 ++++++---\n .../specdojo.prj-issues-and-approach-recipe.yaml   | 165 ++++++++---\n .../results/specdojo.prj-overview-recipe.yaml      | 136 +++++++--\n .../grade/results/specdojo.prj-scope-recipe.yaml   | 151 ++++++----\n .../specdojo.prj-stakeholder-register-recipe.yaml  | 161 ++++++++---\n ...ss-criteria-and-acceptance-criteria-recipe.yaml |  93 +++++-\n .../sysd-github-copilot-agent-settings.yaml        | 321 ++++++++++++++++-----\n .../execution/grade/results/sysd-index.yaml        | 234 +++++++++++----\n .../results/sysd-orchestrator-agent-settings.yaml  | 207 ++++++++++++-\n 30 files changed, 2934 insertions(+), 618 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-3fbf0d042e1c --stages 1 --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-3fbf0d042e1c/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-3fbf0d042e1c' \"$grade_status\" >&2\n  exit \"$grade_status\"…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-3fbf0d042e1c --stages 1 --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-3fbf0d042e1c/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-3fbf0d042e1c' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-3fbf0d042e1c/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-3fbf0d042e1c/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.2.1 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-3fbf0d042e1c project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-3fbf0d042e1c\nstage=1 executor=codex-expert-executor reporter=gemma-reporter reference=none\ndocument start: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md\ndocument complete: docs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md\ndocument start: docs/ja/specdojo/recipes/pm-raci-recipe.md\ndocument complete: docs/ja/specdojo/recipes/pm-raci-recipe.md\ndocument start: docs/ja/specdojo/recipes/pm-roles-recipe.md\ndocument complete: docs/ja/specdojo/recipes/pm-roles-recipe.md\ndocument start: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md\ndocument complete: docs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md\ndocument start: docs/ja/specdojo/recipes/prj-charter-recipe.md\ndocument complete: docs/ja/specdojo/recipes/prj-charter-recipe.md\ndocument start: docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md\ndocument complete: docs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md\ndocument start: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md\ndocument complete: docs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md\ndocument start: docs/ja/specdojo/recipes/prj-overview-recipe.md\ndocument complete: docs/ja/specdojo/recipes/prj-overview-recipe.md\ndocument start: docs/ja/specdojo/recipes/prj-scope-recipe.md\ndocument complete: docs/ja/specdojo/recipes/prj-scope-recipe.md\ndocument start: docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md\ndocument complete: docs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md\ndocument start: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md\ndocument complete: docs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md\ndocument start: docs/ja/specdojo/rulebooks/br-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/br-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-3fbf0d042e1c/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-09-28T21:06:13Z\tdocs/ja/specdojo/recipes/pm-quality-management-plan-recipe.md\t1\tpassed\t356\tpass\t92\t10\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T21:13:19Z\tdocs/ja/specdojo/recipes/pm-raci-recipe.md\t1\tpassed\t424\tneeds-work\t73\t19\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T21:18:40Z\tdocs/ja/specdojo/recipes/pm-roles-recipe.md\t1\tpassed\t319\tneeds-work\t79\t8\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T21:23:28Z\tdocs/ja/specdojo/recipes/prj-assumptions-constraints-dependencies-recipe.md\t1\tpassed\t286\tneeds-work\t93\t2\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T21:28:08Z\tdocs/ja/specdojo/recipes/prj-charter-recipe.md\t1\tpassed\t278\tpass\t94\t3\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T21:33:06Z\tdocs/ja/specdojo/recipes/prj-comparison-of-alternatives-recipe.md\t1\tpassed\t296\tneeds-work\t87\t10\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T21:38:26Z\tdocs/ja/specdojo/recipes/prj-issues-and-approach-recipe.md\t1\tpassed\t318\tpass\t89\t13\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T21:43:50Z\tdocs/ja/specdojo/recipes/prj-overview-recipe.md\t1\tpassed\t322\tneeds-work\t81\t11\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T21:48:35Z\tdocs/ja/specdojo/recipes/prj-scope-recipe.md\t1\tpassed\t283\tneeds-work\t86\t7\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T21:55:00Z\tdocs/ja/specdojo/recipes/prj-stakeholder-register-recipe.md\t1\tpassed\t383\tneeds-work\t82\t9\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T21:58:52Z\tdocs/ja/specdojo/recipes/prj-success-criteria-and-acceptance-criteria-recipe.md\t1\tpassed\t230\tpass\t96\t3\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T22:06:44Z\tdocs/ja/specdojo/rulebooks/br-rulebook.md\t1\tpassed\t470\tneeds-work\t77\t13\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T22:13:17Z\tdocs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md\t1\tpassed\t391\tneeds-work\t56\t27\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T22:20:53Z\tdocs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md\t1\tpassed\t454\tneeds-work\t77\t14\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n2026-09-28T22:27:15Z\tdocs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md\t1\tpassed\t380\tpass\t87\t9\tcodex-expert-executor\tgemma-reporter\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-3fbf0d042e1c/attempt-1/command.stdout.log",
+      "bytes": 5247,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-3fbf0d042e1c/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-3fbf0d042e1c/attempt-1/reporter-attempt-1.stdout.log",
+      "bytes": 1758,
+      "truncated": false
+    },
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-3fbf0d042e1c/attempt-1/reporter-attempt-1.stderr.log",
+      "bytes": 147,
+      "truncated": false
+    }
+  ]
+}

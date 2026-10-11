@@ -3,34 +3,77 @@ version: 1
 document: specdojo:bes-index-rulebook
 path: docs/ja/specdojo/rulebooks/bes-index-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 89
-graded_at: "2026-09-01T23:13:48.659Z"
-graded_by: gemma-expert-executor
+score: 79
+graded_at: "2026-09-27T20:46:01.377Z"
+graded_by: claude-expert-executor
 content_hash: fa83473288a2256a51c55ca0c51ac1009badd7d7433068652366b1862170d70e
 categories:
-  consistency:
+  purpose:
+    score: 88
+  operations:
+    score: 88
+  planning:
+    score: 83
+  business:
+    score: 83
+  architecture:
     score: 88
   usability:
-    score: 100
-  architecture:
-    score: 100
+    score: 83
+  implementation:
+    score: 75
   quality:
+    score: 67
+  consistency:
     score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 4
     score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
-  vp-arc-single-responsibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 3
     score: 75
@@ -41,6 +84,15 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,18 +101,108 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 1
-  minor: 1
+  minor: 16
   note: 0
 findings:
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 参照先のサンプル `specdojo:bes-index-sample` において、5章で定義した「業務イベント一覧（表）」を具体的に実装し、記述ルールに準拠した完成例を示すこと。
-    anchor: "# 業務イベント仕様 全体構成 作成ルール"
   - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 7
+    anchor: "## 1. 全体方針"
+    message: recipe・template が `undecided` のままである論点と、ready 化の前に決める事項を `_UNDECIDED_` ラベルで本文に明示すること。
+  - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 11
+    anchor: "- 複雑なイベントは個別 BES へ分離し、一覧から相対リンクで辿れる構成を維持する。"
+    message: 「複雑なイベントは個別 BES へ分離」とあるが「複雑」の判定基準（事実データの項目数、分岐の有無など）がないため、分離判断と完了条件に使える基準を追記すること。
+  - id: F003
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 76
+    anchor: "- 個別 BES を作成する場合、一覧のイベントIDを相対リンクとして記載する。"
+    message: イベントIDの変更・廃止が BPS・BR・UI・テスト仕様の参照に波及することと、その追従手順（`supersedes` による置き換え明示と参照側の更新）を関係として明記すること。
+  - id: F004
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 45
+    anchor: "| 章  | 内容                   | 必須 |"
+    message: 本文構成が「業務イベント一覧（表）」1章のみで、目的・適用範囲や未解決事項など他章の要否（必須/任意/不要）が示されていないため、template undecided 系統として本文要件の章一覧を補完すること。
+  - id: F005
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 10
+    anchor: "- 一覧は後工程（BPS / BR / UI / テスト）の参照元として扱い、イベントIDの一意性と可読性を優先する。"
+    message: 一覧の作成者・確認者・主な利用者（BPS/BR/UI/テスト仕様の作成者）を Role code で明記すること。
+  - id: F006
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 76
+    anchor: "- 個別 BES を作成する場合、一覧のイベントIDを相対リンクとして記載する。"
+    message: 個別 BES への参照方式が「相対リンク」とされているが、プロジェクト成果物の wikilink（project 修飾 doc id）規約との関係が不明なため、採用する参照記法を明示すること。
+  - id: F007
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 61
+    anchor: "### 5.2. 列順ルール"
+    message: 5.2「列順ルール」は 5.1 の表の行順と同一内容の再掲であるため、5.1 に「表の行順を列順として固定する」と一文で統合すること。
+  - id: F008
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 38
+    anchor: "| `type`       | `project` を推奨（メタ仕様に従う） | ○    |"
+    message: "`type` の推奨値を「メタ仕様に従う」とだけ記しており参照先が不明なため、document-metadata-standard を明示し許容値を確定すること。"
+  - id: F009
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 49
+    anchor: "### 5.1. 業務イベント一覧の標準列"
+    message: 標準列を変更した場合に sample・個別 BES・後続仕様へ及ぶ影響と、同時に更新すべき成果物を記載すること。
+  - id: F010
+    severity: minor
+    rule: vp-dev-testability
+    line: 24
+    anchor: "- 一覧表のイベントIDは `^bes-[a-z0-9][a-z0-9-]*$` に合致する一意IDを用いる。"
+    message: イベントIDの一意性・正規表現適合と Markdown 規約の確認手段（`npm run lint:md` 等の検証コマンドとチェック観点）を記載すること。
+  - id: F011
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 91
+    anchor: "- 曖昧語（その他、適宜など）を多用しない。"
+    message: 「曖昧語を多用しない」は判定不能なため、「その他・適宜等を発生条件・事実データに使用しない」のように判定可能な条件へ置き換えること。
+  - id: F012
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
-    message: 共通のFrontmatterスキーマやメタ情報標準への参照リンクを追記し、全社標準との整合性を明示すること。
     anchor: "# 業務イベント仕様 全体構成 作成ルール"
+    message: 共通のFrontmatterスキーマやメタ情報標準への参照リンクを追記し、全社標準との整合性を明示すること。
+  - id: F013
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 43
+    anchor: "## 5. 本文構成（標準テンプレ）"
+    message: 5章見出し「本文構成（標準テンプレ）」が rulebook-authoring-standard の標準章名「本文要件」と一致しないため、章名と内容（各章・キーの目的・必須/任意）を標準に揃えること。
+  - id: F014
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 業務イベント仕様 全体構成 作成ルール"
+    message: 参照先のサンプル `specdojo:bes-index-sample` において、5章で定義した「業務イベント一覧（表）」を具体的に実装し、記述ルールに準拠した完成例を示すこと。
+  - id: F015
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 11
+    anchor: "- 複雑なイベントは個別 BES へ分離し、一覧から相対リンクで辿れる構成を維持する。"
+    message: イベントIDの形式が `bes-＜領域＞-＜短い英字＞` と `bes-＜term＞` で表記ゆれしているため、プレースホルダ表記を統一すること。
+  - id: F016
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 業務イベント仕様 全体構成 作成ルール"
+    message: ready 化の前提（sample の完成例整備、recipe/template の要否判断）が未明示のため、未解決事項として記載すること。
+  - id: F017
+    severity: minor
+    rule: vp-ops-operability
+    line: 82
+    anchor: "- イベントIDは再利用せず、廃止時は置き換え関係を明示する。"
+    message: 廃止イベントを一覧上でどう扱うか（残置・削除・状態表示）と新規追加時の手順を定義すること。

@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/grade-done-criteria.schema.yaml
+id: stsd-register-entry-grade-criteria
+document: stsd-register-entry
+path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
+graded_at: "2026-10-10T16:02:18.576Z"
+graded_by: agy-expert-executor
+content_hash: 48c647b4efecd15bfe8dcfe583519d02eea22fa18c70c886d97ce88f85fcbb19
+summary:
+  satisfied: 0
+  unsatisfied: 5
+  total: 5
+criteria:
+  - id: DC-001
+    text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
+    roles:
+      - BA
+    viewpoint: vp-ba-requirements-completeness
+    status: unsatisfied
+    reason: 現行運用で成立する直接終端などの全遷移が定義されておらず、正確性に欠けるため。
+  - id: DC-002
+    text: 状態遷移の業務的妥当性を承認できること
+    roles:
+      - PO
+    viewpoint: vp-po-purpose-alignment
+    status: unsatisfied
+    reason: 未解決の ASSUMPTION（再開時や却下時の遷移仕様の CLI との差異など）が残っており、PO が承認を判断できないため。
+  - id: DC-003
+    text: 状態遷移実装の基礎として参照できること
+    roles:
+      - ARC
+    viewpoint: vp-arc-technical-constraints
+    status: unsatisfied
+    reason: item_status 等の現行制約との対応や、コマンドと状態の整合が取れていないため。
+  - id: DC-004
+    text: 状態ベースのテスト設計に活用できること
+    roles:
+      - QE
+    viewpoint: vp-qe-verifiability
+    status: unsatisfied
+    reason: 全許可・禁止遷移などの検証対象や期待結果が定義されておらず、テスト設計に活用できないため。
+  - id: DC-005
+    text: 状態管理実装の参照として使えること
+    roles:
+      - DEV
+    viewpoint: vp-dev-implementation-readiness
+    status: unsatisfied
+    reason: 実装可能な遷移行列として CLI コマンドやスキーマの現行制約との整合が取れていないため。

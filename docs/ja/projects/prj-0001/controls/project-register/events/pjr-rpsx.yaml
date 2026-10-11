@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0cb4629d02a749259a63e6bc0f95ab63
+  ts: "2026-09-26T13:33:14Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: config scaffold で provider に応じたオーケストレーター起動スクリプトを package.json へ加える
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-26"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_a830db3166f640fc8f07a7c9616d523a
+  ts: "2026-09-26T14:09:39Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0cb4629d02a749259a63e6bc0f95ab63
+- v: 1
+  id: reg_944542e7bf954b45998adf8e2c25184c
+  ts: "2026-09-26T14:18:54Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a830db3166f640fc8f07a7c9616d523a
+- v: 1
+  id: reg_5e753239410442dba678919053f0f4ac
+  ts: "2026-09-26T14:23:51Z"
+  action: close
+  actor: manual
+  from_status: review
+  to_status: done
+  reason: config scaffold が provider に応じた起動スクリプトを package.json へ加える。既存の上書き、型、失敗時の終了コードを手直しした。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_944542e7bf954b45998adf8e2c25184c

@@ -3,29 +3,75 @@ version: 1
 document: specdojo:nfr-operations-rulebook
 path: docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 89
-graded_at: "2026-09-02T23:00:32.403Z"
-graded_by: gemma-expert-executor
+score: 93
+graded_at: "2026-10-04T21:13:09.316Z"
+graded_by: agy-expert-executor
 content_hash: 10d0ed46ab762bcce41dc148371bd6e3e3e0b60ae02b166546de0782d120359b
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
+    score: 83
+  consistency:
     score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -52,15 +107,15 @@ finding_counts:
   minor: 1
   note: 0
 findings:
-  - id: F002
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 参照サンプル specdojo:nfr-operations-sample の構成がルールブックで定義した標準テンプレ（第5節）に準拠しておらず、正しくない例となっている。
-    anchor: "# 非機能要件 / 運用 作成ルール"
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
-    message: 生成対象ドキュメントの推奨配置ディレクトリ（フォルダ構成）に関する記述を追加してください。
     anchor: "# 非機能要件 / 運用 作成ルール"
+    message: 生成対象ドキュメントの推奨配置ディレクトリ（フォルダ構成）に関する記述を追加してください。
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 非機能要件 / 運用 作成ルール"
+    message: 参照サンプル specdojo:nfr-operations-sample の構成がルールブックで定義した標準テンプレ（第5節）に準拠しておらず、正しくない例となっている。

@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_af3db5cf12384c7d9ea904dfa8f6dacb
+  ts: "2026-10-07T21:32:21Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-EZAF・PJR-WPR3 の実行で観測。orchestrator が直接対応する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: executor が npm run check を not_run とすると、中身が通っていても block される
+    - field: description
+      from: ""
+      to: executor が npm run check を「親 runner の検証と重複する」として not_run と記録すると、runner は check という合成コマンドを実行しないため、中身（typecheck・lint・schema・test など）が runner と executor の検証ですべて通っていても block する。PJR-EZAF と PJR-WPR3 で発生。check の中身を展開して判定する。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
+- v: 1
+  id: reg_7b217afcf2d849338978db9aa6b67777
+  ts: "2026-10-07T22:13:11Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: orchestrator が直接修正し、実際の evidence で確認
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-08"
+    - field: conclusion
+      from: "-"
+      to: 合成コマンドの not_run を、構成するコマンドが runner か executor の検証で通っていれば満たすようにした。PJR-EZAF と PJR-WPR3 が再開で review へ進んだ
+  previous_event_id: reg_af3db5cf12384c7d9ea904dfa8f6dacb

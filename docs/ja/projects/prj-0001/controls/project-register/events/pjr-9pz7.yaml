@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2619017d1b1548ea836d6ce7b9e63c32
+  ts: "2026-09-26T10:28:17Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の打ち切りが検出されず終了コード 0 で完了扱いになる
+    - field: description
+      from: ""
+      to: _TODO_
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-26"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_3e3cc9d532f54f2a94bbe6f256e1c8bb
+  ts: "2026-09-26T11:22:57Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2619017d1b1548ea836d6ce7b9e63c32
+- v: 1
+  id: reg_1762cad06bca4ae993a3edf84b03f78e
+  ts: "2026-09-26T11:23:44Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9PZ7' (args: --full-name -z -- 4 paths)"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9PZ7' (args: --full-name -z -- 4 paths)"
+  previous_event_id: reg_3e3cc9d532f54f2a94bbe6f256e1c8bb
+- v: 1
+  id: reg_046b807fa7de45d5982d659f72d613d9
+  ts: "2026-09-26T11:44:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+  previous_event_id: reg_1762cad06bca4ae993a3edf84b03f78e
+- v: 1
+  id: reg_820f8231dbd24bf785bf70108c4817ed
+  ts: "2026-09-26T12:01:09Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: runner による検証 `test-unit` が失敗しているため（`tests/tools/grade-per-document.test.ts` において 1 件の失敗が検出された）。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "checkpoint failed: git ls-files failed: fatal: detected dubious ownership in repository at '/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9PZ7' (args: --full-name -z -- 4 paths)"
+      to: "agent exited with non-zero code: runner による検証 `test-unit` が失敗しているため（`tests/tools/grade-per-document.test.ts` において 1 件の失敗が検出された）。"
+  previous_event_id: reg_046b807fa7de45d5982d659f72d613d9
+- v: 1
+  id: reg_9136458e78424276a76ef046b2c9f051
+  ts: "2026-09-26T12:08:40Z"
+  action: close
+  actor: manual
+  from_status: waiting
+  to_status: done
+  reason: 打ち切りを trap で検出し、理由と未着手の文書を報告して終了コードを 1 にする形にした。executor の read の欠陥を直して統合した。
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-26"
+  previous_event_id: reg_820f8231dbd24bf785bf70108c4817ed

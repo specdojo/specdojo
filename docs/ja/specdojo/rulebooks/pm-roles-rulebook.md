@@ -15,7 +15,7 @@ specdojo:
 
 Project Role Definition Documentation Rulebook
 
-本ドキュメントは、`pm-roles.yaml` を一貫した構造で作成・更新するためのルールを定義する。`pm-roles.yaml` は、プロジェクトで使用する全 Role code の machine-readable な一覧であり、Schedule の `owner` や RACI の列として使用できる責務語彙を定義する。実行主体と兼務の割り当ては `pm-members.yaml` の `members[].roles` で管理する。
+本ドキュメントは、`pm-roles.yaml` を一貫した構造で作成・更新するためのルールを定義する。`pm-roles.yaml` は、プロジェクトで使用する全 Role code の machine-readable な一覧であり、Schedule の `owner` や RACI の列として使用できる責務語彙を定義する。人間の実行主体と兼務の割り当ては `pm-members.yaml`、agent は `.specdojo/agent-members.yaml` の `members[].roles` で管理する。
 
 ## 1. 全体方針
 
@@ -23,7 +23,7 @@ Project Role Definition Documentation Rulebook
 
 - 標準 Role code は `PO`, `PM`, `BA`, `ARC`, `DEV`, `QE`, `UX`, `OPS` を基本セットとし、プロジェクト内で採用する責務語彙をこの集合から選ぶ。
 - Role code の共通定義・責務・規模別パターンは上位標準を参照し、本ファイルに再掲しない。
-- 兼務の割り当て、member nickname、agent 名、個人名は `pm-members.yaml` で管理し、本ファイルに記載しない。
+- 兼務の割り当て、member nickname、agent 名、個人名は `pm-members.yaml` と `.specdojo/agent-members.yaml` で管理し、本ファイルに記載しない。
 - ロール採用の方針・根拠、最終判断の集約先、見直し条件は `pm-organization.md` を参照し、本ファイルに重複して記載しない。
 - `pm-roles.yaml` の `roles[].code` は、Schedule の `owner` および `pm-members.yaml` の `members[].roles` で使用できる Role code の語彙一覧として機能する。
 - PO が全 Role code とプロジェクト固有メモを承認できるよう、各 `project_note` は公開可能な内容だけで簡潔に記載する。
@@ -38,7 +38,8 @@ Project Role Definition Documentation Rulebook
 | `pm-organization.md` | ロール・メンバー構成の方針と設計根拠を記述する | 採用方針、最終判断の集約先、見直し条件 |
 
 | `pm-roles.yaml` | 採用した Role code を machine-readable な YAML として一覧化する | `owner` 語彙、Role code 名、プロジェクト固有メモ |
-| `pm-members.yaml` | 実行主体と対応する Role code の対応を管理する | member nickname、agent、人間、兼務割り当て |
+| `pm-members.yaml` | 人間の実行主体と対応する Role code を管理する | member nickname、人間、兼務割り当て |
+| `.specdojo/agent-members.yaml` | agent と対応する Role code を管理する | agent nickname、選択属性、兼務割り当て |
 | `pm-raci.md` | 必要時の責任分担を記述する | 成果物・プロセスごとの責任分担 |
 
 用語は次のように使い分ける。
@@ -139,7 +140,7 @@ schema に定義されていないメタ項目は `pm-roles.yaml` には追加�
 | -------------------------------------------------------------------------- | --------------------------------------------------- |
 | 標準にない独自 Role code を追加する                                        | Schedule、RACI、member 定義との接続が壊れるため     |
 | `roles[].code` に member nickname、agent 名、個人名、stakeholder ID を書く | Role と実行主体が混同されるため                     |
-| 兼務の割り当てや実行主体を本ファイルに記載する                             | `pm-members.yaml` の責務であり重複管理になるため    |
+| 兼務の割り当てや実行主体を本ファイルに記載する                             | member 名簿の責務であり重複管理になるため           |
 | ロール採用の根拠・方針・見直し条件を長く記載する                           | `pm-organization.md` の責務であり重複管理になるため |
 | 公開できない個人情報、連絡先、非公開組織情報、アクセス情報を記載する       | PO の公開可否判断と説明責任を損なうため             |
 | AI Agent に最終承認、公開可否、説明責任を持たせる記述を置く                | 人間の PO が最終判断を担う前提に反するため          |

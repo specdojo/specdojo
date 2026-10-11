@@ -6,7 +6,7 @@ import { gitEnvironment, gitResult } from "./exec-worktree.js";
 
 // PJR-3S8Q で agent の書き込み対象外とした、親 runner / hook / CI の実行内容を
 // 変えられる設定パス。provider 設定から注入できない固定定義として CLI 側に持つ。
-const PROTECTED_DIRECTORY_PREFIXES = [
+export const PROTECTED_DIRECTORY_PREFIXES = [
   "node_modules/",
   ".specdojo/",
   ".agents/rules/",
@@ -22,7 +22,7 @@ const PROTECTED_DIRECTORY_PREFIXES = [
   ".jenkins/",
 ] as const;
 
-const PROTECTED_EXACT_PATHS = new Set([
+export const PROTECTED_EXACT_PATHS: ReadonlySet<string> = new Set([
   "package.json",
   "AGENTS.md",
   "CLAUDE.md",
@@ -67,6 +67,10 @@ const GENERATED_PATHS = new Set([
   ".claude/settings.local.json",
 ]);
 
+// git の ignore 判定が行えない場合でも除外してよい生成物。内容が設定として働かず、
+// 親 runner / hook / CI の実行内容や agent の権限を変えないものだけを列挙する。
+const SAFE_WHEN_IGNORE_UNKNOWN = new Set([".specdojo/doc-index.json"]);
+
 // provider が agent 実行時に作る作業ディレクトリ。配下のファイル数が多く個別に列挙できないため
 // prefix で判定する。GENERATED_PATHS と同じく、ignore 済みであることを併せて条件にする。
 const GENERATED_DIRECTORY_PREFIXES = [".opencode/node_modules/", ".claude/worktrees/"] as const;
@@ -74,6 +78,11 @@ const GENERATED_DIRECTORY_PREFIXES = [".opencode/node_modules/", ".claude/worktr
 function isGeneratedCandidate(path: string): boolean {
   if (GENERATED_PATHS.has(path)) return true;
   return GENERATED_DIRECTORY_PREFIXES.some((prefix) => path.startsWith(prefix));
+}
+
+function isGeneratedDirectoryRoot(path: string): boolean {
+  const normalized = `${normalizeRepoPath(path).replace(/\/+$/, "")}/`;
+  return GENERATED_DIRECTORY_PREFIXES.some((prefix) => prefix === normalized);
 }
 
 export type AgentProtectedConfigSnapshot = ReadonlyMap<string, string>;
@@ -101,8 +110,12 @@ function ignoredGeneratedPaths(
     input: `${generatedCandidates.join("\0")}\0`,
     encoding: "utf8",
   });
-  // 0: 1件以上が ignore 対象、1: 該当なし。それ以外は判定不能として除外しない。
-  if (result.error || (result.status !== 0 && result.status !== 1)) return new Set();
+  // 0: 1件以上が ignore 対象、1: 該当なし。それ以外は git が使えないなどの異常系。
+  // 判定不能時は、内容が設定として働かない生成物（SAFE_WHEN_IGNORE_UNKNOWN）だけを除外し、
+  // それ以外は保護対象に残す。`.claude/settings.local.json` のように権限規則を書ける
+  // ファイルを判定不能のまま除外すると、保護をすり抜けられるため。
+  if (result.error || (result.status !== 0 && result.status !== 1))
+    return new Set(generatedCandidates.filter((path) => SAFE_WHEN_IGNORE_UNKNOWN.has(path)));
   return new Set(
     (result.stdout ?? "")
       .split("\0")
@@ -119,7 +132,8 @@ export function isAgentProtectedConfigPath(path: string): boolean {
   const normalized = normalizeRepoPath(path);
   if (PROTECTED_EXACT_PATHS.has(normalized)) return true;
   if (PROTECTED_DIRECTORY_PREFIXES.some((prefix) => normalized.startsWith(prefix))) return true;
-  return /^(?:commitlint\.config\.[^/]+|\.commitlintrc(?:\.[^/]+)?)$/.test(normalized);
+  if (/^(?:commitlint\.config\.[^/]+|\.commitlintrc(?:\.[^/]+)?)$/.test(normalized)) return true;
+  return false;
 }
 
 // snapshot と統合直前の再検査で同じ保護境界を使う。isAgentProtectedConfigPath は
@@ -159,9 +173,14 @@ function addTreeFiles(repoRoot: string, rootPath: string, out: Map<string, strin
     const entryPath = join(rootPath, entry.name);
     if (entry.isDirectory()) {
       // `.opencode/node_modules` のような実行時生成ディレクトリは数百〜数千ファイルになる。
-      // 走査して fingerprint を取っても結果は除外されるため、入口で辿らない。
+      // ignore 済みなら走査して fingerprint を取っても結果は除外されるため、入口で辿らない。
+      // ignore されていない場合や git の判定に失敗した場合は、保護対象として検出するため走査する。
       const relDir = normalizeRepoPath(relative(repoRoot, entryPath).split(sep).join("/"));
-      if (GENERATED_DIRECTORY_PREFIXES.some((prefix) => `${relDir}/` === prefix)) continue;
+      if (
+        isGeneratedDirectoryRoot(relDir) &&
+        ignoredGeneratedPaths(repoRoot, [`${relDir}/`]).has(`${relDir}/`)
+      )
+        continue;
       addTreeFiles(repoRoot, entryPath, out);
       continue;
     }
@@ -200,6 +219,51 @@ export function changedAgentProtectedConfigPaths(
   return [...allPaths]
     .filter((path) => before.get(path) !== after.get(path))
     .sort((a, b) => a.localeCompare(b));
+}
+
+/**
+ * One repository of an agent run. `name` is undefined for the project repository (the agent's
+ * cwd) and the `repos[].name` for a product worktree, whose paths are reported as `<name>:<path>`.
+ */
+export type AgentRepoRoot = { name?: string; root: string };
+
+export type AgentRepoProtectedConfigSnapshot = ReadonlyArray<{
+  repo: AgentRepoRoot;
+  snapshot: AgentProtectedConfigSnapshot;
+}>;
+
+export type AgentRepoPathChanges = { repo: AgentRepoRoot; paths: string[] };
+
+/** Qualify a repository-relative path with its product repository name (`<name>:<path>`). */
+export function qualifyRepoPath(repo: Pick<AgentRepoRoot, "name">, path: string): string {
+  return repo.name ? `${repo.name}:${path}` : path;
+}
+
+// PJR-98G4: 保護パスの一覧はプロダクトリポジトリにもそのまま適用する。プロダクト側の
+// `package.json` や CI 設定も、親 runner・hook・CI の実行内容を変えうるため。
+export function captureAgentProtectedConfigAcrossRepos(
+  repos: readonly AgentRepoRoot[],
+): AgentRepoProtectedConfigSnapshot {
+  return repos.map((repo) => ({ repo, snapshot: captureAgentProtectedConfigSnapshot(repo.root) }));
+}
+
+/** Changed protected paths per repository; repositories without changes are omitted. */
+export function changedAgentProtectedConfigAcrossRepos(
+  before: AgentRepoProtectedConfigSnapshot,
+): AgentRepoPathChanges[] {
+  return before
+    .map(({ repo, snapshot }) => ({
+      repo,
+      paths: changedAgentProtectedConfigPaths(repo.root, snapshot),
+    }))
+    .filter((change) => change.paths.length > 0);
+}
+
+/** Flatten per-repository changes to qualified paths for block messages. */
+export function qualifiedRepoPaths(changes: readonly AgentRepoPathChanges[]): string[] {
+  return changes.flatMap((change) =>
+    change.paths.map((path) => qualifyRepoPath(change.repo, path)),
+  );
 }
 
 // block した変更を人が判断できるよう、対象パスごとの差分を git から取得する。

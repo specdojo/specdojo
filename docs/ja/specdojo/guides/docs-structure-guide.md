@@ -43,22 +43,22 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 | 文書の分類と責任の考え方          | `SpecDojoで扱うドキュメントの全体構成`〜`ドキュメントオーナー`                    |
 | 成果物・DCT・Schedule・execの関係 | `成果物と実践体系の関係`〜`成果物カタログ・Schedule・実行管理の関係`              |
 | ディレクトリの命名・構成方針      | `ディレクトリ・ファイルの命名ルール` 以降                                         |
-| プロダクトと別リポジトリで運用    | `別リポジトリ構成（Detached Unit）`                                               |
+| プロダクトと別リポジトリで運用    | `別リポジトリ構成`                                                                |
 | ファイル単位の完全な配置一覧      | [ディレクトリレイアウトリファレンス](../references/directory-layout-reference.md) |
 
 ## 1. SpecDojoで扱うドキュメントの全体構成
 
 - SpecDojo は、1つの SpecDojo Unit で1つのプロダクト文脈を扱うことを基本とします。SpecDojo Unit とは、プロダクトドキュメント、プロジェクトドキュメント、実践体系をまとめて扱う論理的な管理境界です。
 - 1つの SpecDojo Unit には、対象プロダクトを構築・改修するための複数のプロジェクトが存在します。プロジェクトごとにプロジェクトドキュメントを作成します。
-- 既定の Detached Unit では、プロダクトドキュメントをプロダクトリポジトリへ、プロジェクトドキュメントと実践体系を SpecDojo 専用リポジトリへ置きます。Attached Unit では、これらを1つのリポジトリの `docs/` ルートに置きます。
+- 既定の別リポジトリ構成では、プロダクトドキュメントをプロダクトリポジトリへ、プロジェクトドキュメントと実践体系をプロジェクトリポジトリへ置きます。同一リポジトリ構成では、これらを1つのリポジトリの `docs/` ルートに置きます。
 - 1つのリポジトリで複数プロダクトを扱う場合は、プロダクトごとに文書の管理境界を分け、それぞれを独立した SpecDojo Unit として扱います。
 - 成果物IDは、原則として SpecDojo Unit 内で一意にします。複数の SpecDojo Unit を横断して扱う場合は、必要に応じて Unit ID と成果物IDの組み合わせで識別します。
 
 ### 1.1. 構成の選び方
 
-利用プロジェクトでは、SpecDojo の成果物更新、登録簿の状態遷移、exec の実行記録をプロダクトの Git 履歴から分離する **Detached Unit を既定**とします。成果物と実装が同じ変更で動き、履歴も一体として扱う必要がある場合に限り、同一リポジトリの Attached Unit を選びます。CLI はどちらの構成も許容し、この選択を強制しません。
+利用プロジェクトでは、SpecDojo の成果物更新、登録簿の状態遷移、exec の実行記録をプロダクトの Git 履歴から分離する **別リポジトリ構成を既定**とします。成果物と実装が同じ変更で動き、履歴も一体として扱う必要がある場合に限り、同一リポジトリ構成を選びます。CLI はどちらの構成も許容し、この選択を強制しません。
 
-Detached Unit の配置と現行実装の制約は `別リポジトリ構成（Detached Unit）` を参照してください。
+別リポジトリ構成の配置と現行実装の制約は `別リポジトリ構成` を参照してください。
 
 ## 2. ドキュメントの分類
 
@@ -342,38 +342,38 @@ product/
 
 ファイル単位の完全なツリーは [ディレクトリレイアウトリファレンス](../references/directory-layout-reference.md) の `プロダクトドキュメントの構成` を参照してください。
 
-## 10. 別リポジトリ構成（Detached Unit）
+## 10. 別リポジトリ構成
 
-Detached Unit は、SpecDojo Unit の運用記録をプロダクトと同じリポジトリに置かず、専用のリポジトリで管理する既定構成です。SpecDojo のプロジェクト成果物、登録簿の状態遷移、exec の実行記録をプロダクトの Git 履歴から分離します。
+別リポジトリ構成は、SpecDojo Unit の運用記録をプロダクトと同じリポジトリに置かず、プロジェクトリポジトリで管理する既定構成です。プロジェクトリポジトリとは、登録簿・計画・実行記録などのプロジェクトドキュメントと実践体系を置くリポジトリです。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。この構成により、SpecDojo のプロジェクト成果物、登録簿の状態遷移、exec の実行記録をプロダクトの Git 履歴から分離します。
 
 ### 10.1. 採用条件
 
-| 利用形態                                                                | 判断                                                                              |
-| ----------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| 一般の利用プロジェクト                                                  | Detached Unit を既定とする                                                        |
-| プロジェクト文書と SpecDojo の運用記録だけを扱う                        | `app1-specdojo/` 内で catalog、Schedule、exec、grade を完結できる                 |
-| プロダクト文書または実装を1つの登録簿項目で変更する                     | PJR-P7HY 完了までは複数リポジトリを自動統合せず、項目を分けるか人が統合を管理する |
-| SpecDojo 自身の開発のように、成果物と実装が常に同じ変更・履歴として動く | 例外として Attached Unit を選べる                                                 |
+| 利用形態                                                                | 判断                                                                        |
+| ----------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| 一般の利用プロジェクト                                                  | 別リポジトリ構成を既定とする                                                |
+| プロジェクト文書と SpecDojo の運用記録だけを扱う                        | `app1-specdojo/` 内で catalog、Schedule、exec、grade を完結できる           |
+| プロダクト文書または実装を1つの登録簿項目で変更する                     | project に `repos` を宣言し、`exec run --worktree` で全リポジトリを統合する |
+| SpecDojo 自身の開発のように、成果物と実装が常に同じ変更・履歴として動く | 例外として同一リポジトリ構成を選べる                                        |
 
-実装を伴う項目の二重 worktree、親検証のリポジトリ別割り当て、統合と回復は [[prj-0001:pjr-p7hy-multi-repo-single-item|PJR-P7HY 1つの項目が複数リポジトリを変更する場合の統合を扱う]] の完了まで未対応です。それまでは `app1-specdojo/` の agent から `app1/` を直接更新しません。
+プロダクトリポジトリ（`app1/` など）を変更する項目は、`.specdojo/specdojo.config.json` の project に `repos` を宣言してから実行します。宣言の書き方は [[specdojo:specdojo-config-reference|specdojo.config.json リファレンス]] の「`repos`のキー」を参照してください。宣言できるプロダクトリポジトリの数に上限はなく、1つの項目でプロジェクトリポジトリと複数のプロダクトリポジトリを変更できます。宣言済みのリポジトリは exec のタスク対象にでき、`specdojo orchestrator launch` で起動したオーケストレーターも参照・変更できます。宣言していないリポジトリは exec とオーケストレーターの管理外であり、`app1-specdojo/` の agent から直接更新しません。
 
 ### 10.2. ディレクトリレイアウト
 
-3つのルートを互いに独立したディレクトリとして配置します。`app1/` と `app1-specdojo/` はそれぞれ別の Git リポジトリです。`app1-worktrees/` は両リポジトリの外に置く worktree 用の領域です。
+3つのルートを互いに独立したディレクトリとして配置します。`app1/` と `app1-specdojo/` はそれぞれ別の Git リポジトリです。`app1-specdojo-worktrees/` は両リポジトリの外に置く worktree 用の領域です。
 
 ```text
 workspace/
 ├── app1/                    # プロダクトのリポジトリ
 │   ├── src/
 │   └── docs/ja/product/     # 実装と同期して更新するプロダクト文書
-├── app1-specdojo/           # SpecDojo の運用リポジトリ
+├── app1-specdojo/           # プロジェクトリポジトリ
 │   ├── .specdojo/
 │   ├── docs/ja/projects/
 │   └── package.json          # npm i -D specdojo で CLI を導入する
-└── app1-worktrees/          # task 単位の worktree 置き場
+└── app1-specdojo-worktrees/ # task 単位の worktree 置き場
 ```
 
-`.specdojo/specdojo.config.json` の project パスは `app1-specdojo/` を基準とし、`run.worktree_base` は `../app1-worktrees` とします。SpecDojo CLI の実行、プロジェクト成果物の解決、doc index の生成、運用記録の検証は `app1-specdojo/` 側で行います。
+`.specdojo/specdojo.config.json` の project パスは `app1-specdojo/` を基準とします。`config init` はリポジトリのディレクトリ名から `run.worktree_base` を作るため、この例では `../app1-specdojo-worktrees` になります。SpecDojo CLI の実行、プロジェクト成果物の解決、doc index の生成、運用記録の検証は `app1-specdojo/` 側で行います。
 
 ### 10.3. プロダクト文書の配置
 
@@ -381,25 +381,34 @@ workspace/
 
 `app1-specdojo/` には `docs/ja/projects/` と `docs/ja/specdojo/` を置きます。前者はプロジェクト固有の目的、判断、計画、実行記録、後者は運用に使う philosophy / standard / rulebook / recipe / sample / template などの実践体系です。この境界により、プロダクトの内容と同じ revision が必要な文書は `app1/`、SpecDojo の記帳と再利用可能な実践体系は `app1-specdojo/` の履歴に残ります。
 
-プロダクト文書の catalog `base_path` を別リポジトリへ解決する機能と、[[prj-0001:pjr-xkks-grade-sidecar|PJR-XKKS grade result のサイドカー化]] で定める成果物へ書き込まない grade 運用は、複数リポジトリ対応の前提です。現行実装でプロダクト文書を自動処理できるとはみなしません。
+プロダクト文書の catalog `base_path` を別リポジトリへ解決する機能と、[[prj-0001:pjr-xkks-grade-sidecar|PJR-XKKS grade result のサイドカー化]] で定める成果物へ書き込まない grade 運用は、プロダクト文書を成果物として管理する場合の前提です。exec はプロダクト文書をファイルとして変更・統合できますが、catalog・grade・doc index の対象にはしません。
 
 ### 10.4. 現行実装の境界
 
-現行の exec worktree は SpecDojo リポジトリの1つのルートと1つの worktree の組を管理します。そのため、`app1-specdojo/` の agent が `app1/` のプロダクト文書または実装を同じ項目で更新する運用には、次の未対応点があります。
+`repos` を宣言した project では、exec がプロジェクトリポジトリと宣言したプロダクトリポジトリを1つのタスクとして扱います。現行実装が扱う範囲と、扱わない範囲は次のとおりです。
 
-| 論点              | 現行の境界                                                                 |
-| ----------------- | -------------------------------------------------------------------------- |
-| 編集対象の解決    | job の `paths` と task の `targets` は SpecDojo ルート相対で解決する       |
-| worktree の隔離   | SpecDojo リポジトリのみを隔離し、`app1/` の更新は task worktree の外に出る |
-| commit のスコープ | 変更ファイルと commit 対象を SpecDojo リポジトリに対して計算する           |
-| 親検証の実行場所  | 親検証は1つの `cwd` で実行し、検証 ID ごとに `app1/` へ割り当てられない    |
+| 論点              | 現行実装の扱い                                                                                                                                      |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 編集対象の解決    | `targets`・`paths` の `<repo>:<path>`（例: `app1:src/auth/token.ts`）をプロダクトリポジトリのパスとして解決する。接頭辞の無い値は従来どおり解決する |
+| worktree の隔離   | タスクごとに全リポジトリの worktree を作り、agent はプロジェクト worktree を `cwd` としてプロダクト worktree へ書き込む                             |
+| 統合              | runner がリポジトリごとに commit し、宣言順のプロダクト、最後にプロジェクトの順で統合する                                                           |
+| commit のスコープ | 変更ファイルと commit 対象をリポジトリごとに計算し、evidence にはプロダクト側を `<repo>:<path>` で記録する                                          |
+| 親検証の実行場所  | `pipeline.parent_validations` の `{ id, repo }` で検証ごとにリポジトリを割り当てる                                                                  |
+| 保護設定の検査    | 保護設定と Git 状態の検査を全リポジトリの worktree に適用する                                                                                       |
 
-これらが解消されるまでは、`app1/` を agent のサンドボックス外から直接更新したり、手動の Git 操作で実質的な二重 worktree にしたりしません。`app1-specdojo/` 内のプロジェクト文書だけを変更する項目に限定するか、プロダクト文書・実装の変更を別の実行単位として人が管理します。
+次の範囲は扱いません。
+
+- プロダクト文書の doc id による参照。プロダクト側の `targets` はパスで指定します。
+- `exec worktree commit` / `merge` によるプロダクト側の統合。分割コマンドはプロジェクト側だけを統合し、プロダクト worktree に変更が残るタスクは commit の前に停止します。プロダクト側を含めた統合は `exec run --worktree` で行います。
+- exec が起動する opencode agent からプロダクト worktree への書き込み。opencode は agent 定義の `permission.external_directory` で作業ディレクトリ外を拒否するため、runner が起動引数で許可を加えられません。対話型オーケストレーターは `specdojo orchestrator launch` が起動時の inline config へ宣言済みルートだけを注入するため、この制約の対象外です。
+- 宣言していないリポジトリの変更。`app1/` を agent のサンドボックス外から直接更新したり、手動の Git 操作で exec の管理外の worktree を作ったりしません。
+
+`repos` を宣言しない project（同一リポジトリ構成を含む）の worktree の配置、commit、統合は従来と変わりません。
 
 ### 10.5. result によるトレーサビリティ
 
-プロダクト実装の変更を伴う項目では、登録簿の item ID を履歴改変に依存しないトレースキーとし、
-app 側の commit message と SpecDojo 側の result 本文の両方に記録します。result frontmatter は
+プロダクト実装の変更を伴う項目では、登録簿の item ID をプロジェクト ID で修飾した `<project-id>:<item-id>`（例: `prj-0001:PJR-XXXX`）を履歴改変に依存しないトレースキーとし、
+app 側の commit message と SpecDojo 側の result 本文の両方に記録します。登録簿の ID はプロジェクトの中でしか一意でないため、修飾しないと複数プロジェクトの構成やプロダクトリポジトリの履歴から所属を特定できません。result frontmatter は
 scaffold の構造を維持し、独自キーを追加しません。
 
 app 側では、対象項目に対応する commit message の body 末尾に `Refs:` trailer を記載します。
@@ -409,33 +418,44 @@ feat(auth): トークン失効処理を追加する
 
 認証済み端末を紛失した場合に、利用者がセッションを失効できるようにする。
 
-Refs: PJR-XXXX
+Refs: prj-0001:PJR-XXXX
 ```
 
-SpecDojo 側の result には、同じ item ID と app 側の参照を本文へ記録します。commit hash は特定時点の
-スナップショットであり、主たる参照にはしません。Pull Request を使わない場合は `app PR` を
-`not applicable` とし、理由を添えます。
+`specdojo.config.json` の project に `repos` を宣言し、`exec run --register` で項目を統合する場合は、runner が次を自動で行います。
+
+- プロダクト側の exec branch の commit と、統合先ブランチへの merge commit の両方に `Refs: <project-id>:<item-id>` を付けます。プロダクト側の merge commit には、遷移や agent 名などプロジェクト側の記帳を複製しません。
+- プロジェクト側の merge commit の `Refs:` も同じ修飾形で付けます。
+- 宣言順にプロダクトを統合した後、プロジェクトを統合する前に、リポジトリごとの統合先ブランチと commit snapshot を result 本文の末尾に「トレーサビリティ」の章として記録します。統合を再開した場合は同じ章を書き直します。
+
+`repos` を宣言しない project では、プロダクト側の統合と trace 表の記録は行いません。プロジェクト側の merge commit の `Refs:` だけが修飾形になります。
+
+SpecDojo 側の result には、同じトレースキーと app 側の参照を本文へ記録します。commit hash は特定時点の
+スナップショットであり、主たる参照にはしません。Pull Request を使わない場合は `PR` を
+`not applicable` とし、理由を添えます。runner がローカルで統合した行は `not applicable` になります。
 
 ```markdown
-| trace key | app repository | app PR | app commit snapshot                        | 確認時点                 |
-| --------- | -------------- | ------ | ------------------------------------------ | ------------------------ |
-| PJR-XXXX  | app1           | #123   | `0123456789abcdef0123456789abcdef01234567` | 統合先ブランチへの統合後 |
+| trace key           | repository | integration branch | PR             | commit snapshot                            | recorded at              |
+| ------------------- | ---------- | ------------------ | -------------- | ------------------------------------------ | ------------------------ |
+| `prj-0001:PJR-XXXX` | `app1`     | `main`             | #123           | `0123456789abcdef0123456789abcdef01234567` | 2026-10-01T00:00:00.000Z |
+| `prj-0001:PJR-XXXX` | `app2`     | `release`          | not applicable | not applicable (no changes)                | 2026-10-01T00:00:00.000Z |
 ```
 
 次の規則で運用します。
 
-- `Refs:` の値は登録簿の item ID と完全一致させます。表示名や一時的な branch 名をトレースキーに
-  しません。
+- `Refs:` の値は `<project-id>:<item-id>` とし、item ID は登録簿の ID と完全一致させます。表示名や一時的な branch 名をトレースキーに
+  しません。1 つの commit が複数の項目に関わる場合は、`Refs:` を項目ごとに 1 行ずつ書きます。
+- プロダクトリポジトリから参照される project ID は、別々のプロジェクトリポジトリの間で重ならないよう、意味のある名前（例: `app1`）にします。
 - app 側の対象 commit には `Refs:` trailer を付けます。複数 commit を1つへ squash する場合は、
   最終 commit message に trailer を1行残します。app のソースや設定ファイルへ逆参照を埋め込みません。
 - PR を使う場合は、番号だけでリポジトリを特定できないため、result へ repository 名と PR 番号または
   URL を対で記録します。
 - app commit snapshot は、意図する統合先ブランチが実装変更を含んだ直後の40文字の完全長 hash と
   します。merge commit が作られた場合はその merge commit、fast-forward または squash merge の
-  場合は統合後の先端を記録します。
+  場合は統合後の先端を記録します。統合する変更が無かったリポジトリは `not applicable (no changes)` とします。
 - 記録と確認は app 側の統合成功後、SpecDojo 側の result と成果物を統合する前に行います。app 側への
   統合が未完了なら PR や hash を推測で記録しません。
 - 文書のみの項目で app 側の変更がない場合は、`app change: not applicable` とその理由を記録します。
+- 過去の commit の `Refs: PJR-XXXX`（修飾なし）は書き換えません。検索するときは修飾形と修飾なしの両方を対象にします。
 
 #### 10.5.1. rebase / squash merge 後の確認
 
@@ -443,18 +463,24 @@ rebase や squash により commit hash は変わるため、統合後の commit
 いることを完了条件として確認します。
 
 1. rebase 後は、書き換え後の各対象 commit の message を確認する。commit をまとめた場合は、残った
-   commit の body 末尾に `Refs: PJR-XXXX` があることを確認する。
-2. squash merge では、最終 commit message を確定する画面またはコマンドで `Refs: PJR-XXXX` を
+   commit の body 末尾に `Refs: prj-0001:PJR-XXXX` があることを確認する。
+2. squash merge では、最終 commit message を確定する画面またはコマンドで `Refs: prj-0001:PJR-XXXX` を
    明示的に残す。プラットフォームによる commit message の自動連結には依存しない。
 3. 統合後の app リポジトリで次を実行し、統合先ブランチから到達可能な commit が表示されることを
    確認する。
 
 ```bash
-git log <target-branch> --grep='^Refs: PJR-XXXX$' --format='%H %s'
+git log <target-branch> --grep='^Refs: prj-0001:PJR-XXXX$' --format='%H %s'
 ```
 
 1. 表示された最終 hash と PR 番号または URL を result へ記録する。対象 commit が表示されなければ、
    SpecDojo 側を統合せず、app 側のトレースキーを是正する。
+
+修飾形を導入する前の履歴も含めて検索する場合は、修飾なしの `Refs: PJR-XXXX` も対象にします。修飾なしの ID は別のプロジェクトの同じ ID にも一致し得るため、表示された commit がどのプロジェクトの項目かを result や期間で確かめます。
+
+```bash
+git log <target-branch> -E --grep='^Refs: (prj-0001:)?PJR-XXXX$' --format='%H %s'
+```
 
 この確認により、rebase や squash で hash が変わっても item ID から app の到達可能な履歴を検索
 できます。PR は squash 後の commit とレビュー経緯を結ぶ補助参照、hash は確認時点を固定する補助値
@@ -462,7 +488,7 @@ git log <target-branch> --grep='^Refs: PJR-XXXX$' --format='%H %s'
 
 #### 10.5.2. 逆参照の範囲
 
-Detached Unit は SpecDojo の状態遷移や実行記録を app の履歴から分離しますが、app の変更理由を
+別リポジトリ構成は SpecDojo の状態遷移や実行記録を app の履歴から分離しますが、app の変更理由を
 登録簿へ結び直す最小限の逆参照として、commit message の `Refs:` trailer は必須とします。app の
 ファイルへの ID 追記、SpecDojo の遷移 commit の複製、2つのリポジトリの原子的な統合は求めません。
 履歴を汚さない範囲を commit message 1行に限定し、履歴改変後の追跡可能性を優先します。
@@ -482,38 +508,44 @@ Detached Unit は SpecDojo の状態遷移や実行記録を app の履歴から
 
 移行のために共有済みの app 履歴を rebase、amend、force-push しません。
 
-### 10.6. 二重 worktree の構成案と統合順序
+### 10.6. 複数リポジトリの worktree と統合順序
 
-文書とソースの両方を1つの登録簿項目で扱う将来構成では、同じ task ID の下に両リポジトリの worktree を作ります。
+`repos` を宣言した project では、同じ task ID の下にリポジトリごとの worktree を作ります。プロジェクトリポジトリの worktree は予約名 `project`、プロダクトリポジトリの worktree は宣言した `name` のディレクトリに置きます。
 
 ```text
-app1-worktrees/
+app1-specdojo-worktrees/
 └── <task-id>/
-    ├── docs/   # app1-specdojo の worktree
-    └── src/    # app1 の worktree
+    ├── project/   # app1-specdojo の worktree（agent の cwd）
+    ├── app1/      # app1 の worktree
+    └── app2/      # app2 の worktree（宣言した場合）
 ```
+
+各 exec branch は、プロジェクト側が現在の統合先から、プロダクト側が `integration_branch`（省略時はそのリポジトリの現在のブランチ）の先端から作ります。agent はプロジェクト worktree を作業ディレクトリとし、プロダクト worktree の絶対パスを環境変数 `SPECDOJO_REPO_<NAME>` で受け取ります。provider ごとの書き込み許可は runner が起動引数へ付け足します。
 
 統合は次の順序で行います。
 
-1. `src/` で app 側の検証を実行し、`app1/` の統合先ブランチへ統合する。
-2. 統合後の app 履歴に `Refs:` trailer が残っていることを確認し、trace key、PR 参照、最終 commit
-   snapshot を `docs/` 側の result 本文へ記録する。
-3. `docs/` で SpecDojo 側の検証を実行し、`app1-specdojo/` の統合先ブランチへ統合する。
+1. 全リポジトリで commit 対象を commit し、merge できるかを事前に検査する。1つでも統合できないリポジトリがあれば、どのリポジトリも統合しない。
+2. 宣言順にプロダクトの exec branch を統合先ブランチへ merge commit で統合する。プロダクト側の commit と merge commit には `Refs: <project-id>:<item-id>` を付ける（register 項目の場合）。
+3. 統合後のプロダクトの trace key と commit snapshot を、プロジェクト側の result 本文へ記録する。
+4. プロジェクトの exec branch を `app1-specdojo/` の統合先ブランチへ統合する。
+5. 全リポジトリの統合後に、全リポジトリの worktree と exec branch をまとめて撤去する。
 
-ソースを先に統合することで、プロダクトの統合を SpecDojo 側の統合成否から切り離します。失敗時の部分状態は次の2つに限定します。
+ソースを先に統合することで、プロダクトの統合を SpecDojo 側の統合成否から切り離します。プロジェクト側の記帳（`review` への遷移と result）は、プロダクトがすべて統合された後にだけ統合先へ入ります。
 
-| 失敗箇所                | 統合状態                    | 登録簿と再開の扱い                                                    |
-| ----------------------- | --------------------------- | --------------------------------------------------------------------- |
-| app 側の統合が失敗      | app / SpecDojo ともに未統合 | 項目を `waiting` とし、app 側の統合から再開する                       |
-| SpecDojo 側の統合が失敗 | app のみ統合済み            | 項目を `waiting` とし、app を再統合せず SpecDojo 側の統合だけ再開する |
+### 10.7. 複数リポジトリの統合の失敗と再開
 
-app のみ統合済みの状態は完了ではないため、`review` へ進めません。SpecDojo 側の統合を打ち切る場合、app の変更を残すか revert するかは、通常の統合後の判断として人が決めます。自動的に履歴を巻き戻しません。
+統合が途中で失敗した場合、失敗位置より前のリポジトリは統合済みのまま残り、失敗位置から後ろは統合しません。Git は複数リポジトリの原子的な更新を持たないため、runner は統合済みの範囲を巻き戻さず、リポジトリ別の状態を記録して失敗位置から再開します。
 
-### 10.7. 二重 worktree の採用前に必要な実装
+| 失敗箇所                 | 統合状態                                     | 登録簿と再開の扱い                                                          |
+| ------------------------ | -------------------------------------------- | --------------------------------------------------------------------------- |
+| 事前検査                 | 全リポジトリが未統合                         | 項目を `waiting` とし、原因を解消してから統合段を再開する                   |
+| n 番目のプロダクトの統合 | 1〜n-1 番目のプロダクトだけ統合済み          | 項目を `waiting` とし、統合済みのプロダクトを飛ばして n 番目から再開する    |
+| プロジェクトの統合       | 全プロダクトが統合済み、プロジェクトは未統合 | 項目を `waiting` とし、プロダクトを再統合せずプロジェクトの統合だけ再開する |
 
-プロダクト実装も同じ項目で扱うには、少なくとも次を実装します。
+- リポジトリ別の状態（`pending` / `merged` / `unchanged` / `failed`）は、run の `pipeline-state.json` の `stages.integrate.repos` に記録します。失敗の詳細は同じ run の `integrate.log` に残ります。
+- `block_reason` には、失敗したリポジトリ、統合済みのリポジトリ、未統合のリポジトリを記録します。
+- 失敗後も全リポジトリの worktree と exec branch を保持します。原因を解消した後、`exec run --register <item-id> --worktree --resume` で統合段から再開します。agent は再実行しません。
+- 再開の前に、runner は未統合のリポジトリにだけ統合先の最新を取り込みます。`stages.integrate.repos` で統合済み（`merged` / `unchanged`）のプロダクトは取り込まず、exec branch に merge commit を作りません。
+- 再開時は、統合先へ取り込み済みのプロダクトを merge し直さず、最初の統合で作った merge commit を result の trace 表へ記録します。
 
-- **親検証の割り当て**: 検証 ID ごとに実行対象のリポジトリと `cwd` を宣言し、ソースの test は `src/`、文書の lint と schema 検証は `docs/` で実行する。
-- **agent の作業ディレクトリ**: `<task-id>/` を agent の作業ディレクトリとして両 worktree を読み書き可能にし、`paths` と `targets` の解決基準を明示する。
-- **失敗時の worktree 保持**: 失敗した段と統合済みのリポジトリを識別し、調査・再開に必要な worktree の保持と撤去条件を定める。
-- **統合処理の複製**: commit 対象の算出、branch への統合、統合済み判定、pipeline state の記録を repo / worktree の2組に対応させ、app → SpecDojo の順序と再開位置を保存する。
+一部のリポジトリだけが統合済みの状態は完了ではないため、`review` へ進めません。統合を打ち切る場合、統合済みのプロダクトの変更を残すか revert するかは、通常の統合後の判断として人が決めます。自動的に履歴を巻き戻しません。

@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-A4PY",
+  "run_id": "20260929T115240728Z-200d62ac",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-09-29T11:52:40.728Z",
+    "completed_at": "2026-09-29T11:58:44.420Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "README.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-a4py-docs-sync-9xg4-2h5f-0fk2.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/remote-host-development-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": "README.md                                               | 14 +++++++++++++-\n .../pjr-a4py-docs-sync-9xg4-2h5f-0fk2.md                | 16 ++++++++++------\n docs/ja/specdojo/guides/exec-config-guide.md            |  7 +++----\n docs/ja/specdojo/guides/orchestrator-operation-guide.md | 17 +++++++++++++++++\n docs/ja/specdojo/guides/quick-start-guide.md            | 13 ++++++++++++-\n .../ja/specdojo/guides/remote-host-development-guide.md | 11 +++++++++++\n docs/ja/specdojo/guides/specdojo-overview-guide.md      |  3 +++\n docs/ja/specdojo/references/command-reference.md        |  4 +++-\n 8 files changed, 72 insertions(+), 13 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write README.md docs/ja/specdojo/guides/specdojo-overview-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/specdojo/guides/remote-host-development-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-a4py-docs-sync-9xg4-2h5f-0fk2.md",
+      "status": "passed",
+      "summary": "対象Markdownを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint README.md docs/ja/specdojo/guides/specdojo-overview-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/specdojo/guides/remote-host-development-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-a4py-docs-sync-9xg4-2h5f-0fk2.md",
+      "status": "passed",
+      "summary": "変更対象のMarkdown lintが成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run -s lint:md",
+      "status": "passed",
+      "summary": "全Markdown lintが成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿と派生ビューを再生成した。標準のnpx tsx起動はsandboxのIPC制約でEPERMとなったため、同じソースを非IPC経路で実行した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全catalogがOK。既存の未作成成果物に関する警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "文書index 2195件を再生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A4PY\n\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets:\n  docs/shared.md\ncommit-targets:\n  docs/conflict.md\nUpdated: /tmp/specdojo-register-resume-e2e-IPwpss/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)\nUpdated: /tmp/specdojo-register-resume-e2e-IPwpss/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml\nGenerated: /tmp/specdojo-register-resume-e2e-IPwpss/docs/ja/projects/test/controls/project-register/generated/pjr-index.md\nGenerated: /tmp/specdojo-register-resume-e2e-IPwpss/docs/ja/projects/test/controls/project-register/generated/pjr…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums\n\n\n> specdojo@0.2.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/product/010-business-specs/060-glossary/gl-common.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/gl-sample.yaml: schema none (schema-not-defined)\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A4PY/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A4PY/docs/specdojo/schemas/v1/dct…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.2.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.8 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-A4PY\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-0D5fuG/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-dve0Yz/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-SaIdx6/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-V1vBm6/pjr-0001-topic.md\nWarning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-3p19fv/pjr-0001-topic.md\nUpdated ticket status → deprecated: /tmp/specdojo-ticket-u1Q9jO/pjr-0001-topic.md\nbefore\n  \n  \ndocs/selected.md\nWrote agent stdout: /tmp/specdojo-agent-command-JV02CT/outputs/response.txt\nWrote agent stdout: /tmp/specdojo-agent-command-IQ5uza/outputs/partial.txt\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\n\n Test Files  115 passed (115)\n      Tes…"
+    }
+  ],
+  "final_message": "9XG4・2H5F・0FK2の利用者向け文書反映を完了し、Antigravityの認証ボリューム差異を個票へ記録した。resultは未編集。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-A4PY/20260929T115240728Z-200d62ac/executor.log",
+      "bytes": 2713,
+      "truncated": false
+    }
+  ]
+}

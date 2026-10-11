@@ -13,6 +13,16 @@ const DEFAULT_OUT_DIR = path.join(WORKSPACE_ROOT, "public", "mermaid");
 const PUPPETEER_CONFIG = path.join(PACKAGE_ROOT, "puppeteer-config.json");
 const MERMAID_CONFIG = path.join(PACKAGE_ROOT, "mermaid-config.json");
 const MERMAID_CLI = path.join(path.dirname(require.resolve("@mermaid-js/mermaid-cli")), "cli.js");
+const MERMAID_CLI_PKG_PATH = path.join(
+  path.dirname(require.resolve("@mermaid-js/mermaid-cli")),
+  "..",
+  "package.json",
+);
+const MERMAID_CLI_VERSION = String(
+  (JSON.parse(fs.readFileSync(MERMAID_CLI_PKG_PATH, "utf8")) as { version?: unknown }).version,
+);
+const MERMAID_CONFIG_CONTENT = fs.readFileSync(MERMAID_CONFIG, "utf8");
+const MERMAID_CONFIG_HASH = crypto.createHash("md5").update(MERMAID_CONFIG_CONTENT).digest("hex");
 
 // ファイル単位の差分判定キャッシュ。outDir 配下に置き、生成済み SVG と一緒に gitignore される。
 const MANIFEST_FILE = ".manifest.json";
@@ -23,6 +33,10 @@ interface ManifestEntry {
   mtimeMs: number;
   size: number;
   hashes: string[];
+  // 描画に使った mermaid-cli の版と mermaid-config.json のハッシュ。
+  // 今の値と異なるエントリは、Markdown が変わっていなくてもスキップに使わない。
+  mermaidCliVersion?: string;
+  mermaidConfigHash?: string;
 }
 
 interface Manifest {
@@ -31,11 +45,32 @@ interface Manifest {
 }
 
 /**
- * Mermaidコードの内容からハッシュを作って、SVGファイル名に使う
- * → 同じコードなら同じSVGを使い回せる
+ * mermaid-cli の版・mermaid-config.json・Mermaidコードからハッシュを作って、SVGファイル名に使う。
+ * VitePress の Markdown 描画も同じ関数で SVG 名を求めるため、生成側と参照側がずれない。
  */
-function hashCode(code: string): string {
-  return crypto.createHash("md5").update(code).digest("hex").slice(0, 8);
+export function mermaidSvgId(code: string): string {
+  return crypto
+    .createHash("md5")
+    .update(`${MERMAID_CLI_VERSION}\n${MERMAID_CONFIG_CONTENT}\n${code}`)
+    .digest("hex")
+    .slice(0, 8);
+}
+
+function createManifestEntry(stat: fs.Stats, hashes: string[]): ManifestEntry {
+  return {
+    mtimeMs: stat.mtimeMs,
+    size: stat.size,
+    hashes,
+    mermaidCliVersion: MERMAID_CLI_VERSION,
+    mermaidConfigHash: MERMAID_CONFIG_HASH,
+  };
+}
+
+function isRenderedWithCurrentSettings(entry: ManifestEntry): boolean {
+  return (
+    entry.mermaidCliVersion === MERMAID_CLI_VERSION &&
+    entry.mermaidConfigHash === MERMAID_CONFIG_HASH
+  );
 }
 
 function svgPathFor(outDir: string, id: string): string {
@@ -169,7 +204,7 @@ function normalizeSvgSize(svgPath: string): void {
 }
 
 function renderSvg(outDir: string, code: string): string {
-  const id = hashCode(code);
+  const id = mermaidSvgId(code);
   const svgPath = svgPathFor(outDir, id);
 
   // 既に同じコードのSVGがあれば再生成しない（ブロック単位キャッシュ）
@@ -201,7 +236,8 @@ function renderSvg(outDir: string, code: string): string {
 
 /**
  * 1 ファイルを処理して、そのファイルが参照する SVG ハッシュ一覧を返す。
- * manifest が渡され、mtime/size が一致し対応 SVG が揃っている場合は read せずスキップする。
+ * manifest が渡され、mtime/size と描画時の mermaid-cli の版・設定ハッシュが一致し、
+ * 対応 SVG が揃っている場合は read せずスキップする。
  */
 function processMarkdown(
   mdPath: string,
@@ -218,6 +254,7 @@ function processMarkdown(
       prev &&
       prev.mtimeMs === stat.mtimeMs &&
       prev.size === stat.size &&
+      isRenderedWithCurrentSettings(prev) &&
       prev.hashes.every((id) => fs.existsSync(svgPathFor(outDir, id)))
     ) {
       // 変更なし & 生成済み → 何もしない
@@ -263,26 +300,32 @@ function pruneOrphanSvgs(outDir: string, manifest: Manifest): void {
   }
 }
 
-export function generateMermaidSvgs(options?: { rootDir?: string; outDir?: string }): void {
+// additionalRootDirs は docs/ 以外に置かれたページ（docs-site がステージングした package の
+// kata など）を同じ manifest で扱うためのもの。manifest のキーは rootDir 相対のままとし、
+// 追加ルートのファイルも走査に含めることで、orphan 判定で互いの SVG を消し合わないようにする。
+export function generateMermaidSvgs(options?: {
+  rootDir?: string;
+  outDir?: string;
+  additionalRootDirs?: string[];
+}): void {
   const rootDir = options?.rootDir ?? DEFAULT_ROOT;
   const outDir = options?.outDir ?? DEFAULT_OUT_DIR;
+  const markdownFiles = [rootDir, ...(options?.additionalRootDirs ?? [])]
+    .filter((dir) => fs.existsSync(dir))
+    .flatMap((dir) => collectMarkdownFiles(dir));
 
   console.log("🔍 Scanning docs for mermaid code blocks...");
 
   const prevManifest = loadManifest(outDir);
   const nextManifest: Manifest = { version: MANIFEST_VERSION, files: {} };
 
-  for (const mdPath of collectMarkdownFiles(rootDir)) {
+  for (const mdPath of markdownFiles) {
     try {
       const stat = fs.statSync(mdPath);
       const hashes = processMarkdown(mdPath, rootDir, outDir, prevManifest);
       if (hashes.length > 0) {
         // mermaid を含むファイルのみ記録する（mtime/size で次回の差分判定に使う）
-        nextManifest.files[path.relative(rootDir, mdPath)] = {
-          mtimeMs: stat.mtimeMs,
-          size: stat.size,
-          hashes,
-        };
+        nextManifest.files[path.relative(rootDir, mdPath)] = createManifestEntry(stat, hashes);
       }
     } catch (error) {
       if (!isFileNotFoundError(error)) throw error;
@@ -328,7 +371,7 @@ export function generateMermaidSvgsForFile(
     const hashes = processMarkdown(mdPath, rootDir, outDir);
     if (hashes.length > 0) {
       const stat = fs.statSync(mdPath);
-      manifest.files[relKey] = { mtimeMs: stat.mtimeMs, size: stat.size, hashes };
+      manifest.files[relKey] = createManifestEntry(stat, hashes);
     } else {
       delete manifest.files[relKey];
     }

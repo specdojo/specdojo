@@ -250,3 +250,7 @@ tmux を agent の runtime provider として採ることはしない。人の�
 - [[prj-0001:pjr-7vkr-npm-release]]
 - [[prj-0001:pjr-49jk-readme-orchestrator-onboarding]]
 - [[prj-0001:pjr-2w38-sample-quality-observation]]
+
+## 追記 (2026-09-29)
+
+利用者からの提案を受け、`specdojo devcontainer scaffold` により利用リポジトリ向けの隔離環境を生成する機能を初期リリースに含めることに判断を変更した。配布用に構成を最小限に絞り、利用者が任意の CLI やオプションを指定して生成できるようにしたため、本リポジトリ専用の構成と分離して保守できるようになった（PJR-2H5F）。

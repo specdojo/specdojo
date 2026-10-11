@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { resolveInPlaceCommand, type RunOpts } from "../../src/exec-run.js";
+import {
+  resolveInPlaceAgentPipeline,
+  resolveInPlaceCommand,
+  type RunOpts,
+} from "../../src/exec-run.js";
 import type { MemberRoster } from "../../src/specdojo-config.js";
-import type { ReadyTaskView } from "../../src/exec-types.js";
+import type { AgentPipeline, ReadyTaskView } from "../../src/exec-types.js";
 
 function buildRoster(): MemberRoster {
   return {
@@ -208,5 +212,113 @@ describe("resolveInPlaceCommand actor derivation", () => {
         executorBy: "backup-executor",
       } as RunOpts).actor,
     ).toBe("backup-executor");
+  });
+});
+
+function buildRosterWithReporter(): MemberRoster {
+  const roster = buildRoster();
+  roster.members.push({
+    nickname: "reporter",
+    display_name: "Reporter",
+    email: null,
+    roles: [],
+    type: "agent",
+    priority: 1,
+    command: "run reporter",
+    stage_role: "reporter",
+  });
+  return roster;
+}
+
+describe("resolveInPlaceAgentPipeline", () => {
+  it("synthesizes the executor/reporter pipeline for a --plan run with both stage flags", () => {
+    const task = buildTask({ mode: "review", capabilities: [] });
+
+    const pipeline = resolveInPlaceAgentPipeline(
+      task,
+      buildRosterWithReporter(),
+      { executorBy: "executor", reporterBy: "reporter" },
+      "plan",
+    );
+
+    expect(pipeline).toEqual({
+      stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
+    });
+    // The synthesized pipeline lets the in-place command resolver accept --executor-by.
+    expect(
+      resolveInPlaceCommand({ ...task, agent_pipeline: pipeline }, buildRosterWithReporter(), {
+        executorBy: "executor",
+      } as RunOpts),
+    ).toEqual({ command: "run executor", actor: "executor" });
+  });
+
+  it("opts in to the pipeline when only --reporter-by is given", () => {
+    expect(
+      resolveInPlaceAgentPipeline(
+        buildTask(),
+        buildRosterWithReporter(),
+        { reporterBy: "reporter" },
+        "plan",
+      ),
+    ).toEqual({ stages: [{ stage_role: "executor" }, { stage_role: "reporter" }] });
+  });
+
+  it("keeps a single-agent run when --by names a legacy agent", () => {
+    expect(
+      resolveInPlaceAgentPipeline(buildTask(), buildRoster(), { by: "claude-edit-agent" }, "plan"),
+    ).toBeUndefined();
+  });
+
+  it("rejects a pipeline executor passed to --by and points to --executor-by / --reporter-by", () => {
+    expect(() =>
+      resolveInPlaceAgentPipeline(buildTask(), buildRoster(), { by: "executor" }, "plan"),
+    ).toThrow(
+      /--by executor is a pipeline executor agent \(stage_role: executor\).*--plan with --executor-by executor --reporter-by <reporter>/,
+    );
+  });
+
+  it("rejects a pipeline reporter passed to --by", () => {
+    expect(() =>
+      resolveInPlaceAgentPipeline(
+        buildTask(),
+        buildRosterWithReporter(),
+        { by: "reporter" },
+        "deliverable",
+      ),
+    ).toThrow(
+      /stage_role: reporter.*--deliverable with --executor-by <executor> --reporter-by reporter/,
+    );
+  });
+
+  it("rejects stage flags for an ad-hoc plan without task_id", () => {
+    expect(() =>
+      resolveInPlaceAgentPipeline(null, buildRoster(), { executorBy: "executor" }, "plan"),
+    ).toThrow(/--plan pipeline execution requires a plan with task_id/);
+  });
+
+  it("rejects --by combined with stage flags", () => {
+    expect(() =>
+      resolveInPlaceAgentPipeline(
+        buildTask(),
+        buildRosterWithReporter(),
+        { by: "executor", reporterBy: "reporter" },
+        "plan",
+      ),
+    ).toThrow(/--by cannot be combined with --executor-by \/ --reporter-by/);
+  });
+
+  it("returns an existing task pipeline unchanged", () => {
+    const agentPipeline: AgentPipeline = {
+      stages: [{ stage_role: "executor", capabilities: ["exec"] }, { stage_role: "reporter" }],
+    };
+
+    expect(
+      resolveInPlaceAgentPipeline(
+        buildTask({ agent_pipeline: agentPipeline }),
+        buildRoster(),
+        { by: "executor" },
+        "plan",
+      ),
+    ).toBe(agentPipeline);
   });
 });

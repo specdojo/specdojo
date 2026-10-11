@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1c0e03a6d39d49118ecbed3d1784705f
+  ts: "2026-10-04T02:28:38Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: qwen と gemma のサンプリングを公式推奨値へ合わせて grade の executor の改善を計測する
+    - field: description
+      from: ""
+      to: "qwen と gemma の expert executor は temperature 0.2、Modelfile は top_p 0.9・repeat_penalty 1.05 で、公式推奨（Qwen の thinking・コーディング向け: temperature 0.6 / top_p 0.95 / top_k 20 / repeat_penalty 1.0、Gemma: temperature 1.0 / top_p 0.95 / top_k 64）から大きく外れている。Qwen は thinking で貪欲に近いデコードを避けるよう明記しており、qwen の executor が最大 1,952 秒かかった一因の可能性がある。gemma が良否を区別できない（3 件とも 100）ことや、repeat_penalty による書き写しの崩れにも関係しうる。推奨値の派生モデルを作り、同じ条件で計測して採否を決める"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-04"
+- v: 1
+  id: reg_a445b99a8a704ab68b8516b3621a0ec4
+  ts: "2026-10-04T08:28:53Z"
+  action: close
+  actor: claude
+  from_status: open
+  to_status: done
+  reason: 見込みの試行で改善がなかった
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-04"
+    - field: conclusion
+      from: "-"
+      to: 推奨サンプリングは qwen で速くならず形式が崩れ、gemma は良否を区別できず形式も崩れたため採用しない。grade の用途には現行の低い温度が合う。計測用の agent と登録は削除した
+  previous_event_id: reg_1c0e03a6d39d49118ecbed3d1784705f

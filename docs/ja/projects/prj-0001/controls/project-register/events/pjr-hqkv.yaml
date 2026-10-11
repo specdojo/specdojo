@@ -1,0 +1,172 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d860f73768164fd082577b6655253999
+  ts: "2026-10-08T12:32:42Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-P8TK の棚卸し（c）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 本体の実行時の依存 fast-glob 経由で braces の high の脆弱性が残る
+    - field: description
+      from: ""
+      to: npm audit --omit=dev で、直接の依存 fast-glob → micromatch → braces のサービス不能攻撃の脆弱性が high 3 件として出る（2026-10-08）。修正版はまだない。CHANGELOG の v0.3.0 は依存の脆弱性に対応したと書いている。fast-glob を別の実装（Node 標準の glob など）に置き換えるか、既知の問題として CHANGELOG に書くかを決める。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-08"
+- v: 1
+  id: reg_cc1ca263a4534b8298a20df16224c16d
+  ts: "2026-10-08T22:00:33Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d860f73768164fd082577b6655253999
+- v: 1
+  id: reg_a6b7b1a671ce4703b00057eb47983bb1
+  ts: "2026-10-08T22:00:34Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-32c25dd4476f/attempt-1/command.stderr.log docs/j…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-32c25dd4476f/attempt-1/command.stderr.log docs/j…"
+  previous_event_id: reg_cc1ca263a4534b8298a20df16224c16d
+- v: 1
+  id: reg_a076ddd3dc50437c8c35c28374937474
+  ts: "2026-10-08T22:02:21Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Root index has staged changes; commit or unstage them first: docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-32c25dd4476f/attempt-1/command.stderr.log docs/j…"
+      to: "-"
+  previous_event_id: reg_a6b7b1a671ce4703b00057eb47983bb1
+- v: 1
+  id: reg_da346d0daf0e4803b3247a09659eba29
+  ts: "2026-10-08T22:09:14Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_a076ddd3dc50437c8c35c28374937474
+- v: 1
+  id: reg_1e57a2b60e22497fbf07406a0f957325
+  ts: "2026-10-08T22:35:35Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+      to: "-"
+  previous_event_id: reg_da346d0daf0e4803b3247a09659eba29
+- v: 1
+  id: reg_adf8d5f6dea546e3a2e207adda630226
+  ts: "2026-10-08T22:42:44Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_1e57a2b60e22497fbf07406a0f957325
+- v: 1
+  id: reg_745d00b1aa1d4c3d9d8e6ba62df10633
+  ts: "2026-10-08T22:43:28Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_adf8d5f6dea546e3a2e207adda630226
+- v: 1
+  id: reg_8b6d86f5839543c7b2eb5b78f64b9011
+  ts: "2026-10-08T22:51:43Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_745d00b1aa1d4c3d9d8e6ba62df10633
+- v: 1
+  id: reg_3da7e4cdec7948fcab971b8971be12ee
+  ts: "2026-10-08T22:52:55Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register（codex-expert-executor / gemma26-reporter）の成果を orchestrator がレビューした。保護対象の package.json は利用者の承認のもと develop へ反映し、親検証の unit test の失敗（絶対パターンの返り値の差）は --resume-from executor で修正させた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-09"
+    - field: conclusion
+      from: "-"
+      to: 本体の fast-glob を依存なしの再帰走査に、docs-lint を tinyglobby に置き換えた。npm ls braces --omit=dev は空、npm audit --omit=dev は 0 件。
+  previous_event_id: reg_8b6d86f5839543c7b2eb5b78f64b9011

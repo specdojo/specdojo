@@ -3,29 +3,87 @@ version: 1
 document: prj-0001:prj-charter
 path: docs/ja/projects/prj-0001/020-project-definition/prj-charter.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 75
-graded_at: "2026-09-23T17:04:19.887Z"
-graded_by: codex-expert-executor
+score: 84
+graded_at: "2026-10-01T16:34:45.707Z"
+graded_by: agy-expert-executor
 content_hash: 3d9ec2f69a1c89de4118a701d1f8bbec47b9789c143071aa3267a3f9a45a2444
+source_hashes:
+  catalog-entry: 79368fc2687fe1aac7391ff8f1b8820122444482df90833bceab3b36fe254a14
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:prj-overview: a88ff7cd0188a42619a304502c5fb5dd2ac200a6222763d09e437f5d3cf80691
+  dependency:prj-stakeholder-register: 758466442987c415d7dd5c238527079d85299cf5c566a8ad86eba504d849de13
+  members: ec838bbb5673ba76f1a15672e094c00088dcb686a2a67225ca8411c0dc5e90d3
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
-  consistency:
-    score: 50
-  usability:
+  purpose:
     score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  consistency:
+    score: 38
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 58
+    score: 69
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
     level: 1
     score: 25
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
@@ -35,8 +93,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 3
-    score: 75
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -44,6 +102,15 @@ viewpoints:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -54,47 +121,47 @@ viewpoints:
     score: 50
 finding_counts:
   blocker: 0
-  major: 4
+  major: 5
   minor: 2
   note: 0
 findings:
   - id: F001
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 106
-    anchor: "| 2026-07-17 | `PO`   | 立ち上げ認可、詳細計画策定と初期準備の権限委譲 | [[prj-0001:pjr-0119-charter-approval\\|PJR-0119 プロジェクト憲章の承認]] |"
+    line: 118
+    anchor: ""
     message: 承認証跡 PJR-0119 はコミット ce44286c 時点を承認対象としているが、その後に目的・期待効果・スコープなど承認対象となる内容が変更されており、現行版を認可した証跡がない。
   - id: F002
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 113
-    anchor: >-
-      | OSS ライセンス方針       | _UNDECIDED_ | `PO` |
-      初回公開前に候補を比較し、公開方針と合わせて決定する                                                 |
+    line: 125
+    anchor: ""
     message: PJR-0120 と前提・制約・依存関係の ACD-D02 は採用ライセンスを MIT として決定済みだが、本書は OSS ライセンス方針を未決事項としており状態が矛盾している。
   - id: F003
     severity: major
     rule: vp-qe-done-criteria
-    line: 106
-    anchor: "| 2026-07-17 | `PO`   | 立ち上げ認可、詳細計画策定と初期準備の権限委譲 | [[prj-0001:pjr-0119-charter-approval\\|PJR-0119 プロジェクト憲章の承認]] |"
+    line: 118
+    anchor: ""
     message: 記載された承認証跡は現行版より前のコミットだけを承認しているため、現行の目的・スコープを含む正式認可を確認できず DC-002 を満たさない。
   - id: F004
     severity: minor
     rule: vp-qe-verifiability
-    line: 96
-    anchor: >-
-      | 目的整合 | 成果物体系、公開対象、優先順位が SpecDojo の目的と矛盾していない                   | [[prj-0001:pm-plan\|プロジェクト管理計画]] /
-      決定記録               |
+    line: 108
+    anchor: "## 9. 未決事項"
     message: 「目的と矛盾していない」「検証方針が整っている」の合否条件がなく、成功基準の SC/AC ID または品質ゲートへ対応付けないと判定者によって結果が変わり得る。
   - id: F005
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 76
+    anchor: "- 各 GO / Not GO 判断"
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+  - id: F006
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 64
-    anchor: >-
-      | 成果物体系の整理                    | `PO`   | `PM`       | `BA` / _TODO_: レビュー担当                  | 成果物カタログ、Pull
-      Request                                    |
+    line: 76
+    anchor: "- 各 GO / Not GO 判断"
     message: "成果物体系の整理と GO / Not GO 判断準備の協議先に `_TODO_: レビュー担当` が残っており、組織定義・RACIにある Role codeでレビュー責任を確定する必要がある。"
-  - id: F006
+  - id: F007
     severity: major
     rule: vp-qe-config-validity
     line: 64

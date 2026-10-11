@@ -1,0 +1,10 @@
+前回未完だった実 agent CLI 確認手順を補完しました。
+
+- project＋app1＋app2 を生成する検証スクリプトを追加
+- 個票を更新し、既存の E2E・文書・CHANGELOG 反映状況を記録
+- 実 CLI 起動は、要件どおり orchestrator／利用者へ委譲
+- result は pipeline 指示に従い未編集
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-69VP の既存 E2E・ガイド・CHANGELOG 更新を設計個票と照合し、前回未完だった3リポジトリ実 agent CLI 検証手順を tools/exec/verify-multi-repo-agent-write.sh として追加した。個票も実施内容に合わせて更新した。実 agent CLI の起動は orchestrator または利用者が行う。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-69vp-multi-repo-e2e-docs.md","status":"passed","summary":"個票を整形した"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-69vp-multi-repo-e2e-docs.md","status":"passed","summary":"Markdown エラーなし"},{"command":"bash -n tools/exec/verify-multi-repo-agent-write.sh && shellcheck tools/exec/verify-multi-repo-agent-write.sh","status":"passed","summary":"shell 構文と静的検査が通過した"},{"command":"claude --help; codex exec --help; agy --help","status":"passed","summary":"使用する追加ルート、権限、stdin／print 引数が各 CLI で利用可能なことを確認した"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"catalog 検証成功。既存の未作成 based_on 文書に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書 index 2433 件を生成した"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"tools/exec/verify-multi-repo-agent-write.sh all","status":"not_run","summary":"agent sandbox から別 agent CLI は起動せず、orchestrator または利用者が実行する"}]}
+</specdojo_executor_evidence>

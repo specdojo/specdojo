@@ -2,7 +2,7 @@
 
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import fg from "fast-glob";
+import { globFilesSync } from "./glob-files.js";
 import { findForbiddenLinks } from "./history-links.js";
 
 // 履歴蓄積ファイル（plan / result / pjr-NNNN-<topic> 等）の既定 glob。
@@ -40,9 +40,7 @@ function parseArgs(): { patterns: string[]; ignore: string[] } {
 function main(): void {
   const { patterns, ignore } = parseArgs();
 
-  const files = fg
-    .sync(patterns, { absolute: false, onlyFiles: true, ignore })
-    .sort((a, b) => a.localeCompare(b));
+  const files = globFilesSync(patterns, { absolute: false, ignore });
 
   if (files.length === 0) {
     console.warn(`警告: 対象ファイルが見つかりません: ${patterns.join(", ")}`);

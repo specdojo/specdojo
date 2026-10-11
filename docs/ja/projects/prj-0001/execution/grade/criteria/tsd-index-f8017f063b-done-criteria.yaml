@@ -2,12 +2,12 @@
 id: tsd-index-grade-criteria
 document: tsd-index
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
-graded_at: "2026-09-14T00:32:17.517Z"
-graded_by: gemma-expert-executor
-content_hash: 60c89a384b0f5e9e637f1ba239d5d23e7b88aacea4584bdfc054253d3413a237
+graded_at: "2026-10-10T16:06:45.424Z"
+graded_by: agy-expert-executor
+content_hash: 865c78a040e444d78e0098701fe700d905bd94693ef7e0124d1d580c6ff48ed3
 summary:
-  satisfied: 3
-  unsatisfied: 2
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -16,29 +16,32 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 選定理由と制約が業務要件と整合していることを示す記述が不足しています。
+    reason: Missing reasons for technology selection and constraints aligned with business requirements.
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: Lacks impact analysis and pending issues necessary for PO to approve the technology stack.
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: ライセンスおよび詳細な技術的制約を識別できる記述が不足しています。
+    reason: Technical constraints, licenses, and versioning policies are not identified.
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
-    status: satisfied
+    status: unsatisfied
+    reason: Test framework (Vitest) and detailed CI/CD workflow references are missing.
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: Listed versions diverge from the actual package.json, making it unsafe for development environment setup.

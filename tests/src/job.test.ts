@@ -141,7 +141,7 @@ describe("Job Definition", () => {
     );
     expect(parsed.job).toBeUndefined();
     expect(parsed.errors).toContain(
-      "job-report.yaml: task.agent.executor must be an agent nickname from pm-members.yaml",
+      "job-report.yaml: task.agent.executor must be an agent nickname from agent-members.yaml",
     );
   });
 

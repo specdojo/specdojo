@@ -180,7 +180,7 @@ function validStringList(value: unknown): value is string[] {
   );
 }
 
-// Same nickname shape as pm-members.schema.yaml. The roster is not loaded here, so a
+// Same nickname shape as agent-members.schema.yaml. The roster is not loaded here, so a
 // definition only guarantees the format; an unknown nickname fails when the Run resolves
 // the agent command.
 function isAgentNickname(value: unknown): value is string {
@@ -206,10 +206,10 @@ function parseJobAgent(value: unknown): { agent?: JobAgentDefinition; error?: st
     return { error: `task.agent has unknown key(s): ${unknownKeys.sort().join(", ")}` };
   }
   if (!isAgentNickname(value.executor)) {
-    return { error: "task.agent.executor must be an agent nickname from pm-members.yaml" };
+    return { error: "task.agent.executor must be an agent nickname from agent-members.yaml" };
   }
   if (value.reporter !== undefined && !isAgentNickname(value.reporter)) {
-    return { error: "task.agent.reporter must be an agent nickname from pm-members.yaml" };
+    return { error: "task.agent.reporter must be an agent nickname from agent-members.yaml" };
   }
   return {
     agent: {
@@ -524,7 +524,7 @@ export function parseJobDefinition(
             );
           }
           if (!isAgentNickname(value.task.analysis.agent)) {
-            errors.push("task.analysis.agent must be an agent nickname from pm-members.yaml");
+            errors.push("task.analysis.agent must be an agent nickname from agent-members.yaml");
           }
           const analysisDescription =
             typeof value.task.analysis.description === "string"
@@ -1000,7 +1000,7 @@ function jobPlanFrontmatter(
     "type: exec-plan",
     "rulebook: none",
     `task_id: ${record.run_id}`,
-    `name: "${definition.name.replaceAll('"', "'")}"`,
+    `name: ${JSON.stringify(definition.name)}`,
     // A command Run's plan is consumed only by the optional analysis reporter. Exec result
     // frontmatter intentionally keeps the existing edit/review vocabulary for compatibility.
     `mode: ${isJobCommandTask(record.task) ? "edit" : record.task.mode}`,

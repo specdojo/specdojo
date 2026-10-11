@@ -158,7 +158,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     await generateRegisterPlan(input);
     const second = await readFile(outPath, "utf8");
 
-    expect(first).toContain('name: "`prefix-<term>-suffix` を扱う"');
+    expect(first).toContain('name: "prefix-<term>-suffix を扱う"');
     expect(first).toContain("# Edit Plan: PJR-TEST `prefix-<term>-suffix` を扱う");
     expect(first).toContain("`dct-<domain>.yaml`");
     expect(first).toContain("`sch-track-<track>.yaml`");
@@ -173,5 +173,67 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     const rawBody = ["# 見出し", "", PROBLEMATIC_DESCRIPTION, "", "*強調* テキスト", ""].join("\n");
 
     expect(emphasisViolations(rawBody).length).toBeGreaterThan(0);
+  });
+
+  it("個票が targets を宣言していれば plan frontmatter に targets が含まれる", async () => {
+    const outPath = path.join(dir, "plan-with-targets.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({
+        targets: ["prj-test:cdfd-overview", "prj-test:cdfd-check"],
+      }),
+      stem: "xep-pjr-test",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+
+    expect(content).toContain("targets:");
+    expect(content).toContain("  - prj-test:cdfd-overview");
+    expect(content).toContain("  - prj-test:cdfd-check");
+    expect(content).toContain("origin: register");
+  });
+
+  it("個票が targets を宣言していなければ plan frontmatter に targets が含まれない", async () => {
+    const outPath = path.join(dir, "plan-without-targets.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths: makeRegisterPaths(),
+      item: makeItem(),
+      stem: "xep-pjr-test",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+
+    expect(content).not.toContain("targets:");
+    expect(content).toContain("origin: register");
+  });
+
+  it('タイトルに特殊文字 (*_\\":#) を含む項目の plan の frontmatter が YAML として読め、元のタイトルと一致する', async () => {
+    const outPath = path.join(dir, "plan-special-chars.md");
+    const titleWithSpecialChars = 'タイトル * _ \\ " : # を含む';
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({ title: titleWithSpecialChars }),
+      stem: "xep-pjr-test",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+    const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+    expect(match).not.toBeNull();
+    const frontmatterYaml = match![1];
+
+    // JS-YAML で YAML として正しくパースできるか確認
+    const parsed = yaml.load(frontmatterYaml) as { specdojo: { name: string } };
+
+    // name が元のタイトルと完全に一致するか確認
+    expect(parsed.specdojo.name).toBe(titleWithSpecialChars);
   });
 });

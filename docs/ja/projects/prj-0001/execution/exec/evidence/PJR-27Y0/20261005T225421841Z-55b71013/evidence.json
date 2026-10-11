@@ -1,0 +1,242 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-27Y0",
+  "run_id": "20261005T225421841Z-55b71013",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-05T22:54:21.841Z",
+    "completed_at": "2026-10-05T23:01:00.024Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-27y0.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-27y0-grade-english-canonical-translation.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vqb5-agent-grade-comparison.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-result.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/agent-response.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review-grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/agent-response.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans-grade-findings.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade-result.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review-grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/grade-per-document.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/grade/run-per-document.sh",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 21,
+    "summary": ".../020-infrastructure/tsd-ollama.md               |   2 +-\n .../030-project-management/pm-members.yaml         |   2 +-\n .../controls/project-register/events/pjr-27y0.yaml |  16 ++\n ...pjr-27y0-grade-english-canonical-translation.md |   3 +-\n .../pjr-vqb5-agent-grade-comparison.md             |  13 +\n docs/ja/specdojo/guides/routine-operation-guide.md |   9 +-\n docs/ja/specdojo/references/command-reference.md   |  32 ++-\n .../standards/document-metadata-standard.md        |  35 +--\n docs/specdojo/schemas/v1/grade-result.schema.yaml  |  21 ++\n src/agent-response.ts                              |  23 ++\n src/exec-plans.ts                                  |  10 +-\n src/grade-result.ts                                |  98 ++++++++\n src/grade.ts                                       | 266 ++++++++++++++++++++-\n src/review-grade.ts                                |   9 +-\n tests/src/agent-response.test.ts                   |  16 +-\n tests/src/exec-plans-grade-findings.test.ts        |   8 +-\n tests/src/grade-result.test.ts                     |  89 +++++++\n tests/src/grade.test.ts                            | 102 +++++++-\n tests/src/review-grade.test.ts                     |   3 +-\n tests/tools/grade-per-document.test.ts             |  40 +++-\n tools/grade/run-per-document.sh                    |  40 +++-\n 21 files changed, 766 insertions(+), 71 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write <変更したMarkdown/YAML/TypeScriptファイル>",
+      "status": "passed",
+      "summary": "対象21ファイルを整形"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check && bash -n tools/grade/run-per-document.sh",
+      "status": "passed",
+      "summary": "差分とshell構文に問題なし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "終了コード0。既存の欠落文書警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2408件の索引を生成"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "履歴リンク検証に成功"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:ts",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:fm",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run lint:md",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:integration",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run typecheck",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "source": "executor",
+      "command": "npm run test:unit",
+      "status": "not_run",
+      "summary": "親runnerのallowlisted validationへ委譲"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-27Y0\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/tools/open-agent-worktree.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 113\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/deliverable-trash.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 79\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-agent-git-state.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 168\u001b[2mms\u001b[22m\u001b[39m\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\n \u001b[32m✓\u001b[39m tests/src/exec-register-worktree.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m3 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 90\u001b[2mms\u001b[22m\u001b[39m\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\n \u001b[32m✓\u001b[39m tests/src/exec-register-multiple-ids.integration.test.ts \u001b[2…"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-implemented)\ndocs/ja/specdojo/samples/ifx-msg-sample.yaml: schema none (external-asyncapi)\ndocs/ja/specdojo/templates/dct-architecture-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-27Y0/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specdojo/templates/dct-business-acceptance-criteria-template.yaml: schema /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-27Y0/docs/specdojo/schemas/v1/dct.schema.yaml (validation skipped: template)\ndocs/ja/specd…"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-27Y0\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/tools/grade-per-document.test.ts \u001b[2m(\u001b[22m\u001b[2m29 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 7117\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m runs all three stages for one document and skips it on resume \u001b[33m 486\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m routes deliverables through deliverable grade plans and apply \u001b[33m 437\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m exits with 0 when no document is left incomplete \u001b[33m 425\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m retries a failed stage in a new run without repeating completed stages \u001b[33m 631\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m excludes an exhausted stage from retries and reports it \u001b[33m 971\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m does not reselect an exhausted ungraded document through the filter union \u001b[33m 701\u001b[2mms\u001b[22…"
+    }
+  ],
+  "final_message": "累積差分の実装・テスト・schema・運用文書・PJR個票を検証し、未確認の成果物はありません。`message_ja` 表示、英語正本での引き継ぎ、`level_corrections`、安全な配列抽出、翻訳対象0件時のagent省略を確認しました。親runner担当のlint、型検査、schema検証、unit/integration testは未実行です。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-27Y0/20261005T225421841Z-55b71013/executor.log",
+      "bytes": 2248,
+      "truncated": false
+    }
+  ]
+}

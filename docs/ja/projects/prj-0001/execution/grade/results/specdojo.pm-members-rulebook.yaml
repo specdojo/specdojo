@@ -3,44 +3,96 @@ version: 1
 document: specdojo:pm-members-rulebook
 path: docs/ja/specdojo/rulebooks/pm-members-rulebook.md
 target: kata
-rubric: grade-rubric-v1
-verdict: needs-work
-score: 71
-graded_at: "2026-09-23T21:07:32.067Z"
-graded_by: codex-expert-executor
-content_hash: 4226599c8333049c170a5ea38209e05d8c7bce511f7ac462e062fe966e2a4e0c
+rubric: grade-rubric-v2
+verdict: pass
+score: 93
+graded_at: "2026-10-08T21:16:37.437Z"
+graded_by: agy-expert-executor
+content_hash: 9042fd0e0576c3996b06168b14b76df91bac98ee223338b7295e3bf2bbfc8341
 categories:
-  consistency:
-    score: 63
-  usability:
-    score: 83
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 50
+    score: 83
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 3
-    score: 75
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
-  vp-qe-omissions-consistency:
-    level: 2
-    score: 50
-  vp-qe-kata-conformance:
-    level: 2
-    score: 50
-  vp-ux-readability:
     level: 3
     score: 75
+  vp-qe-omissions-consistency:
+    level: 3
+    score: 75
+  vp-qe-kata-conformance:
+    level: 3
+    score: 75
+  vp-ux-readability:
+    level: 4
+    score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,78 +100,28 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 3
-  minor: 7
+  major: 0
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 38
-    anchor: "| pipeline reporter | evidence から結果を構成する第 2 stage agent        | `stage_role: reporter` とする   |"
-    message: >-
-      rulebook は pipeline reporter と `mode: report` を定義しているが、対応 recipe の agent 用フィールドは `mode` を `edit` / `review`
-      の二択としており、reporter の設定手順が実践の型の間で一致していない。
+    rule: vp-qe-verifiability
+    line: 46
+    anchor: "| `based_on`   | 任意 | 根拠文書 ID                      |"
+    message: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
+    message_ja: nicknameの許容文字だけを示し、先頭を英小文字か数字とする条件と最大文字数のschema制約を示していないため、schemaでrejectされる値を作成し得る。
   - id: F002
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 95
-    anchor: "| `roles` | ○ | 対応する Role code のリスト。汎用 agent は `[]` 可 |"
-    message: >-
-      `members[].roles`を必須としているが、`based_on`の`people-and-organization-definition-standard`では任意とされており、関連文書間で必須性と優先する規定を判断できない。
+    rule: vp-qe-omissions-consistency
+    line: 50
+    anchor: schema にないメタ項目は追加しません。成果物の `status` は作成中は `draft` とし、`ready` への変更は人間が判断します。
+    message: schemaが任意のルートメタ項目として許可するsupersedesが「推奨メタ項目」とルート構造から欠落しており、置き換え関係の記述可否を判断できない。
+    message_ja: schemaが任意のルートメタ項目として許可するsupersedesが「推奨メタ項目」とルート構造から欠落しており、置き換え関係の記述可否を判断できない。
   - id: F003
     severity: minor
-    rule: vp-arc-conciseness
-    line: 52
-    anchor: "## 4. 推奨メタ項目"
-    message: 4節の「推奨メタ項目」と 5節の「本文構成（標準テンプレ）」で共通メタ項目の定義が重複しており、YAML 形式において冗長な記述となっている。
-  - id: F004
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 48
-    anchor: "- `members[].nickname` は英小文字、数字、ハイフン、アンダースコアで記述する。"
-    message: >-
-      `members[].nickname`の許容文字だけを示し、先頭を英小文字または数字とする条件と最大63文字のschema制約を示していないため,
-      rulebook上は許容されてもschemaでrejectされる値を作成できる。
-  - id: F005
-    severity: major
-    rule: vp-qe-verifiability
-    line: 98
-    anchor: "| `priority` | agent 推奨 | 同条件の agent 候補間での優先度。小さい値を優先する |"
-    message: >-
-      `priority`、`proficiency`、`capabilities`を「agent 推奨」としているが, schemaは全ての`type: agent`で3項目を必須としているため,
-      rulebookに従った成果物がschema検証に失敗し得る。
-  - id: F006
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 52
-    anchor: "## 4. 推奨メタ項目"
-    message: schemaが任意のルートメタ項目として許可する`supersedes`が「推奨メタ項目」とルート構造の双方から欠落しており、置き換え関係の記述可否をrulebookから判断できない。
-  - id: F007
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 98
-    anchor: "| `priority` | agent 推奨 | 同条件の agent 候補間での優先度。小さい値を優先する |"
-    message: >-
-      schemaでは全ての`type: agent`に`priority`、`proficiency`、`capabilities`が必須だが、フィールド表では「agent 推奨」、記述ガイドでは`exec run
-      —auto`候補だけの条件としており、必須キーの規定がschemaと矛盾している。
-  - id: F008
-    severity: major
     rule: vp-qe-kata-conformance
-    line: 98
-    anchor: "| `priority` | agent 推奨 | 同条件の agent 候補間での優先度。小さい値を優先する |"
-    message: >-
-      前回指摘のうち`report`起動プロファイル未定義は解消されたが、schema必須の`priority`・`proficiency`・`capabilities`を推奨扱いとし、`priority`の整数・最小値等の型制約も正本化していないため、YAML
-      rulebookとして実装可能な必須キー・型制約を定義できていない。
-  - id: F009
-    severity: minor
-    rule: vp-ux-readability
-    line: 52
-    anchor: "## 4. 推奨メタ項目"
-    message: 「推奨メタ項目」と「本文構成（標準テンプレ）」で同じ8個のメタ項目を再掲しているため、読者が二つの表を比較しなければ差分の有無を判断できない。
-  - id: F010
-    severity: minor
-    rule: vp-ux-readability
-    line: 57
-    anchor: "| ---- | ---- | ---- |"
-    message: 「推奨メタ項目」と「本文構成（標準テンプレ）」の表で区切り行直後やデータ行間に空行が入り、Markdown上で表が分断されるため、必須性と説明を一つの表として読み取れない。
+    line: 74
+    anchor: ""
+    message: members[].rolesを必須としているが、based_onの標準定義では任意とされており、関連文書間で必須性と優先する規定を判断できない。
+    message_ja: members[].rolesを必須としているが、based_onの標準定義では任意とされており、関連文書間で必須性と優先する規定を判断できない。

@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=../../../specdojo/schemas/v1/agent-members.schema.yaml
+# specdojo-schema: validate=false reason=template
+id: specdojo:agent-members-template
+type: template
+status: draft
+title: 保護された agent 定義テンプレート
+rulebook: none
+
+# この content を .specdojo/agent-members.yaml に配置する。
+content:
+  version: 1
+  members:
+    - nickname: _AGENT_NICKNAME_
+      display_name: _AGENT_DISPLAY_NAME_
+      email: null
+      roles: []
+      type: agent
+      provider: _AGENT_PROVIDER_
+      mode: _AGENT_MODE_
+      stage_role: _AGENT_STAGE_ROLE_
+      proficiency: _AGENT_PROFICIENCY_
+      priority: _AGENT_PRIORITY_
+      capabilities:
+        - _AGENT_CAPABILITY_
+      note: "_TODO_: 支援範囲と人間が保持する最終判断を記述する。"

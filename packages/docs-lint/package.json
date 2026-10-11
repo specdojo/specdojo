@@ -33,7 +33,7 @@
     "access": "public"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.13"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",
@@ -43,19 +43,18 @@
   "dependencies": {
     "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1",
-    "fast-glob": "^3.3.3",
     "gray-matter": "^4.0.3",
     "js-yaml": "^4.2.0",
-    "markdownlint-cli": "^0.48.0",
+    "markdownlint-cli": "^0.49.1",
     "remark": "^15.0.1",
     "remark-cli": "^12.0.1",
     "remark-frontmatter": "^5.0.0",
     "remark-gfm": "^4.0.1",
     "remark-lint": "^10.0.1",
-    "remark-lint-frontmatter-schema": "^3.15.4",
     "remark-mdx": "^3.1.1",
     "remark-parse": "^11.0.0",
     "remark-stringify": "^11.0.0",
+    "tinyglobby": "^0.2.17",
     "tsx": "^4.22.4",
     "unified": "^11.0.5"
   },

@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a9e56ce8e13f431eb457ec1e33378e95
+  ts: "2026-09-27T12:46:34Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-09-27 の ZFFZ の評価で、orchestrator が定義の表を根拠に誤った推奨をしたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーター定義の種別表で note を終端しない記録に直す
+    - field: description
+      from: ""
+      to: オーケストレーター定義の登録簿の種別表は note の終端状態を done としているが、pjr-rulebook と登録簿運用ガイドは note を終端させず open のまま追記すると定めている。SSOT 本文と各環境の配置先・テンプレートを rulebook に合わせる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-09-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_9d95aa1f714d427da6e4c0ec3ef83424
+  ts: "2026-09-28T10:39:46Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a9e56ce8e13f431eb457ec1e33378e95
+- v: 1
+  id: reg_52d500db65634201a879f8dc4e13aba6
+  ts: "2026-09-28T10:53:00Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor evidence の `source: executor` 検証コマンド（`node -e ... orchestrator note terminal state is still done` チェック）が `status: failed` であり、要約は「SSOTのnote終端状態が依然done。読み取り専用の…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor evidence の `source: executor` 検証コマンド（`node -e ... orchestrator note terminal state is still done` チェック）が `status: failed` であり、要約は「SSOTのnote終端状態が依然done。読み取り専用の…"
+  previous_event_id: reg_9d95aa1f714d427da6e4c0ec3ef83424
+- v: 1
+  id: reg_140f3de755b3476fbe5de131b317a29d
+  ts: "2026-09-28T11:18:34Z"
+  action: close
+  actor: orchestrator
+  from_status: waiting
+  to_status: done
+  reason: codex-expert-executor は対象ファイルに書き込めず範囲外の変更を残したため破棄し、利用者の承認を受け orchestrator が直接対応した（b03689a9）
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-09-28"
+    - field: conclusion
+      from: "-"
+      to: SSOT（.agents/specdojo-orchestrator.agent.md）の種別表で note の終端を「なし」に改め、close 手順の後に note を終端させない旨を追記し、orchestrator:sync で 10 か所へ同期した
+  previous_event_id: reg_52d500db65634201a879f8dc4e13aba6

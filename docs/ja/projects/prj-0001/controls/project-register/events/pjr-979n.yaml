@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1c55cdb7313d42db96a8a55e132f76bc
+  ts: "2026-10-06T10:25:34Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-27Y0 の resume で観測。orchestrator が直接対応する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: executor が親 runner へ委ねた検証を runner が通しても block される
+    - field: description
+      from: ""
+      to: deriveReporterFacts は executor の passed 以外の検証を一律に失敗とみなす。codex が sandbox で実行できない検証を not_run（親 runner へ委譲）と記録し、runner が同じコマンドを実行して passed になっても block される。PJR-27Y0 で発生。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-06"
+- v: 1
+  id: reg_6b9ae8e2aab940dd8632af3b11e0481e
+  ts: "2026-10-06T10:34:50Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: orchestrator が利用者の指示で直接修正。PJR-27Y0 の resume で統合を確認
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-06"
+    - field: conclusion
+      from: "-"
+      to: 親 runner が project で同じコマンドを通した executor の not_run を満たされたものとして扱うよう修正した（73de62d3b）
+  previous_event_id: reg_1c55cdb7313d42db96a8a55e132f76bc

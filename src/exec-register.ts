@@ -345,16 +345,21 @@ function registerPlanFrontmatter(projectId: string, stem: string, item: PjrItem)
     `type: exec-plan`,
     `rulebook: none`,
     `task_id: ${item.id}`,
-    `name: "${escapeMarkdownInline(item.title).replace(/"/g, "'")}"`,
+    `name: ${JSON.stringify(item.title)}`,
     `mode: edit`,
     `status: ready`,
     `project_id: ${projectId}`,
-    // 登録簿項目は対象成果物を特定できないため targets を持たない。schedule 由来の
-    // タスクと区別できるよう出自を明示する（schema の targets 必須判定にも使う）。
+    // schedule 由来のタスクと区別できるよう出自を明示する（schema の targets 必須判定
+    // にも使う）。個票が targets を宣言していれば plan にも転記し、target coverage
+    // 検証を有効にする。宣言がない項目は targets を持たず、検証は skip される。
     `origin: register`,
   ];
   if (item.owner && item.owner !== "-" && item.owner !== "_TODO_") {
     inner.push(`owner: ${item.owner}`);
+  }
+  if (item.targets && item.targets.length > 0) {
+    inner.push("targets:");
+    for (const target of item.targets) inner.push(`  - ${target}`);
   }
   return buildSpecdojoFrontmatter(inner);
 }
