@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-HEPK
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0002
   origin: register
   plan_ref: exec/plans/pjr-hepk-20261011T144112Z-b70e-plan.md
   started_at: "2026-10-11T14:41:12.380Z"
-  completed_at: "2026-10-11T14:57:50.214Z"
+  completed_at: "2026-10-11T15:00:49.043Z"
   agent: claude-expert-executor
-  block_reason: "agent exited with non-zero code: executor validation failed or not run: specdojo catalog validate, npm --prefix specdojo-lp run build"
 ---
 
 # Edit Result
