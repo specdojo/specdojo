@@ -141,3 +141,19 @@
       from: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-CM5W/project. Generated docs are gitignored and must be rebuilt pe…"
       to: "-"
   previous_event_id: reg_7a9cf35089ab47d1bb02f96b5ef9f6d1
+- v: 1
+  id: reg_6b16f4e907fc4ef09f3683e22f167e3a
+  ts: "2026-10-11T12:41:48Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=specdojo-lp:package.json; agent must record the required change in…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=specdojo-lp:package.json; agent must record the required change in…"
+  previous_event_id: reg_6a1ebb5d395747d7a7ca25a4fac169a3
