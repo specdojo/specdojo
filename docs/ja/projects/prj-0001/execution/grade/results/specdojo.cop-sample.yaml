@@ -3,31 +3,77 @@ version: 1
 document: specdojo:cop-sample
 path: docs/ja/specdojo/samples/cop-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 48
-graded_at: "2026-09-05T01:00:09.969Z"
-graded_by: gemma-expert-executor
+score: 46
+graded_at: "2026-10-11T21:19:33.160Z"
+graded_by: agy-expert-executor
 content_hash: b35fdc47a428bfa15c040417abe7518644a3b626294b3231d96863aca2372f44
 categories:
-  consistency:
-    score: 25
+  purpose:
+    score: 50
+  operations:
+    score: 69
+  planning:
+    score: 50
+  business:
+    score: 50
+  architecture:
+    score: 83
   usability:
     score: 58
-  architecture:
-    score: 100
+  implementation:
+    score: 50
   quality:
-    score: 25
+    score: 33
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
     level: 2
     score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -38,53 +84,210 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
     level: 2
     score: 50
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 2
-  major: 4
-  minor: 0
+  major: 18
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 4
-    message: Frontmatter の `type` が `project` となっており、ルールブックで定義されている `migration` と矛盾している。
-    anchor: ""
-  - id: F006
+    rule: vp-po-purpose-alignment
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The document lacks concrete cutover objectives, scope boundaries, and justification for the target system
+      switchover.
+    message_ja: ドキュメントには、具体的な切り替え目標、スコープの境界、および対象システムの切り替えに関する正当性が欠けています。
+  - id: F002
     severity: major
-    rule: vp-ux-language-consistency
-    line: 4
-    message: Frontmatter の `type` 定義が `project` となっており、ルールブックの規定（`migration`）と不整合である。
-    anchor: ""
+    rule: vp-po-decision-readiness
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      The document lacks concrete GO/NO-GO decision points, decision makers, and criteria, providing only a vague
+      unresolved issue to be materialized in actual projects.
+    message_ja: ドキュメントには、具体的なGO/NO-GOの意思決定ポイント、意思決定者、および基準が欠けており、実際の実プロジェクトで具体化されるべき曖昧で未解決の問題のみが示されています。
   - id: F003
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 9
-    message: ルールブックで必須とされている本文構成（見出し1〜10）がすべて欠落しており、成果物としての最低限の構成を満たしていない。
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# カットオーバー計画（本番切替手順） サンプル"
+    message: >-
+      The document does not clearly designate human PO final approval authority and accountability for the cutover
+      execution.
+    message_ja: ドキュメントには、切り替え実行に対する人間のPOによる最終承認権限と責任が明確に指定されていません。
   - id: F004
-    severity: blocker
-    rule: vp-qe-kata-conformance
+    severity: major
+    rule: vp-pm-plan-feasibility
     line: 9
-    message: サンプルとしての責務（完成例の提示）を果たしておらず、ルールブックで定義された構造や記述ガイドを完全に無視した内容となっている。
     anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The document completely lacks execution tasks, minute-by-minute timeline sequencing, completion conditions, and
+      duration estimates necessary for cutover scheduling.
+    message_ja: ドキュメントには、切り替えスケジュールの策定に必要な実行タスク、分単位のタイムラインの順序、完了条件、および所要時間の見積もりが完全に欠けています。
   - id: F005
     severity: major
-    rule: vp-ux-readability
+    rule: vp-pm-dependency-risk
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      Operational dependencies on antecedent migration artifacts and risks associated with cutover failure or schedule
+      overruns are not identified.
+    message_ja: 事前の移行成果物に対する運用上の依存関係や、切り替えの失敗またはスケジュール超過に関連するリスクが特定されていません。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      The document lacks reporting lines, responsible Role codes, and separated tracking items for risks, issues, or
+      project journal recording.
+    message_ja: ドキュメントには、報告ライン、責任のあるRoleコード、およびリスク、イシュー、またはプロジェクトジャーナルの記録のための分離された追跡項目が欠けています。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
     line: 9
-    message: 初見の読者が本サンプルを参考にしても、ルールブックが規定する切替計画の具体的な記述方法（タイムラインや判定ポイント等）を理解することができず、ガイドとして機能していない。
     anchor: "- 対象: 駄菓子屋の販売管理システム"
-  - id: F002
+    message: >-
+      The document does not describe the business operational window, downtime constraints, or expected business value
+      and impacts for the target store system.
+    message_ja: ドキュメントには、ビジネスの運用ウィンドウ、ダウンタイムの制約、または対象となる店舗システムに対する期待されるビジネス価値と影響が記載されていません。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: "- 主な内容: 対象固有の切替手順、判定ポイント、ロールバック手順、責務分担"
+    message: >-
+      Cutover prerequisites, acceptance criteria, and specific in-scope/out-of-scope operational boundaries are missing
+      from the user and operator perspective.
+    message_ja: ユーザーおよびオペレーターの観点から、切り替えの前提条件、受け入れ基準、および特定のインスコープ/アウトオブスコープの運用境界が欠落しています。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: Stakeholders, cutover operators, business verifiers, and notification recipients are entirely omitted.
+    message_ja: ステークホルダー、切り替えオペレーター、ビジネス検証者、および通知の受信者が完全に省略されています。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      Technical constraints, infrastructure prerequisites, system dependencies, and verification procedures for the
+      cutover are completely omitted.
+    message_ja: 切り替えのための技術的な制約、インフラの前提条件、システムの依存関係、および検証手順が完全に省略されています。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 20
+    anchor: "| 項目         | 値                                                           | 備考                                 |"
+    message: >-
+      Section 4 merely duplicates the general statements of Section 1 and Section 3 in a table format without adding
+      concrete operational decisions.
+    message_ja: セクション4は、具体的な運用の意思決定を追加することなく、セクション1とセクション3の一般的な記述を表形式で重複させているだけです。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The document provides no operational commands, configuration settings, target files, or completion conditions
+      required for executing cutover changes.
+    message_ja: ドキュメントには、切り替え変更の実行に必要な運用コマンド、設定、対象ファイル、または完了条件が提供されていません。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The impact of system cutover on existing operational systems, schemas, interfaces, and service downtime is not
+      identified.
+    message_ja: 既存の運用システム、スキーマ、インターフェース、およびサービスのダウンタイムに対するシステム切り替えの影響が特定されていません。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      Post-cutover verification procedures, smoke test cases, expected outcomes, and rollback validation checks are
+      entirely missing.
+    message_ja: 切り替え後の検証手順、スモークテストケース、期待される結果、およびロールバックの検証チェックが完全に欠落しています。
+  - id: F015
     severity: major
     rule: vp-qe-verifiability
     line: 28
-    message: 最小記述例の「値」が抽象的な説明に留まっており、ルールブックが求める「分単位の時刻」や「具体的判定基準」などの検証可能な表現を提示できていない。
     anchor: "| 論点           | 処理方針                 |"
+    message: 最小記述例の「値」が抽象的な説明に留まっており、ルールブックが求める「分単位の時刻」や「具体的判定基準」などの検証可能な表現を提示できていない。
+    message_ja: 最小記述例の「値」が抽象的な説明に留まっており、ルールブックが求める「分単位の時刻」や「具体的判定基準」などの検証可能な表現を提示できていない。
+  - id: F016
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: ルールブックで必須とされている本文構成（見出し1〜10）がすべて欠落しており、成果物としての最低限の構成を満たしていない。
+    message_ja: ルールブックで必須とされている本文構成（見出し1〜10）がすべて欠落しており、成果物としての最低限の構成を満たしていない。
+  - id: F017
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: サンプルとしての責務（完成例の提示）を果たしておらず、ルールブックで定義された構造や記述ガイドを完全に無視した内容となっている。
+    message_ja: サンプルとしての責務（完成例の提示）を果たしておらず、ルールブックで定義された構造や記述ガイドを完全に無視した内容となっている。
+  - id: F018
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 4
+    anchor: ""
+    message: Frontmatter の `type` が `project` となっており、ルールブックで定義されている `migration` と矛盾している。
+    message_ja: Frontmatter の `type` が `project` となっており、ルールブックで定義されている `migration` と矛盾している。
+  - id: F019
+    severity: major
+    rule: vp-ux-readability
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 初見の読者が本サンプルを参考にしても、ルールブックが規定する切替計画の具体的な記述方法（タイムラインや判定ポイント等）を理解することができず、ガイドとして機能していない。
+    message_ja: 初見の読者が本サンプルを参考にしても、ルールブックが規定する切替計画の具体的な記述方法（タイムラインや判定ポイント等）を理解することができず、ガイドとして機能していない。
+  - id: F020
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 4
+    anchor: ""
+    message: Frontmatter の `type` 定義が `project` となっており、ルールブックの規定（`migration`）と不整合である。
+    message_ja: Frontmatter の `type` 定義が `project` となっており、ルールブックの規定（`migration`）と不整合である。
+  - id: F021
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      The prerequisites and criteria for transitioning from draft to ready are not clearly defined, leaving only an
+      abstract unresolved issue.
+    message_ja: ドラフトから準備完了への移行のための前提条件と基準が明確に定義されておらず、抽象的な未解決の問題だけが残されています。
+  - id: F022
+    severity: major
+    rule: vp-ops-operability
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The document lacks operational escalation procedures, contact channels, and change management workflows for
+      ongoing maintenance and emergency response.
+    message_ja: ドキュメントには、継続的なメンテナンスおよび緊急対応のための運用上のエスカレーション手順、連絡手段、および変更管理のワークフローが欠けています。

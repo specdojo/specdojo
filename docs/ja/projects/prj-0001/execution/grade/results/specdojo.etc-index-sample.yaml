@@ -3,29 +3,72 @@ version: 1
 document: specdojo:etc-index-sample
 path: docs/ja/specdojo/samples/etc-index-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 55
-graded_at: "2026-09-05T03:15:54.908Z"
-graded_by: gemma-expert-executor
+score: 71
+graded_at: "2026-10-11T21:41:22.693Z"
+graded_by: agy-expert-executor
 content_hash: 66df3484ab2a7e958dd74c68a10cc3c143dad703d40ab28b670c753c9aa12b73
 categories:
-  consistency:
-    score: 25
-  usability:
-    score: 83
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 100
   quality:
-    score: 25
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
     score: 50
+  consistency:
+    score: 0
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +86,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,37 +106,43 @@ finding_counts:
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 4
-    message: Frontmatter の type を rulebook の定義に従い `test` に修正してください。
-    anchor: ""
-  - id: F004
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 4
-    message: Frontmatter の type を `test` に修正してください。
-    anchor: ""
-  - id: F002
-    severity: major
     rule: vp-qe-verifiability
     line: 60
-    message: 判定基準や合格基準の具体的にどのような表現を用いて定義すべきか、実例を記述してください。
     anchor: ""
-  - id: F003
+    message: 判定基準や合格基準の具体的にどのような表現を用いて定義すべきか、実例を記述してください。
+    message_ja: 判定基準や合格基準の具体的にどのような表現を用いて定義すべきか、実例を記述してください。
+  - id: F002
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 43
-    message: rulebook で規定された必須構成（1. 目的、2. 分割基準、3. 対象外、4. 観点、5. 条件、6. 採用/分配、7. 境界/依存/環境、8. 共通カラム）をすべて実装してください。
     anchor: ""
+    message: rulebook で規定された必須構成（1. 目的、2. 分割基準、3. 対象外、4. 観点、5. 条件、6. 採用/分配、7. 境界/依存/環境、8. 共通カラム）をすべて実装してください。
+    message_ja: rulebook で規定された必須構成（1. 目的、2. 分割基準、3. 対象外、4. 観点、5. 条件、6. 採用/分配、7. 境界/依存/環境、8. 共通カラム）をすべて実装してください。
+  - id: F003
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 4
+    anchor: ""
+    message: Frontmatter の type を `test` に修正してください。
+    message_ja: Frontmatter の type を `test` に修正してください。
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 4
+    anchor: ""
+    message: Frontmatter の type を rulebook の定義に従い `test` に修正してください。
+    message_ja: Frontmatter の type を rulebook の定義に従い `test` に修正してください。
   - id: F005
     severity: blocker
     rule: vp-qe-kata-conformance
     line: 43
-    message: "rulebook で定義された標準テンプレート構成（## 1. 〜 ## 8.）に従って構成を全面的に再構築してください。"
     anchor: ""
+    message: "rulebook で定義された標準テンプレート構成（## 1. 〜 ## 8.）に従って構成を全面的に再構築してください。"
+    message_ja: "rulebook で定義された標準テンプレート構成（## 1. 〜 ## 8.）に従って構成を全面的に再構築してください。"
   - id: F006
     severity: major
     rule: vp-ux-readability
     line: 60
-    message: 項目を列挙するだけでなく、各節で具体的にどのように方針や基準を記述すべきか、詳細な例文を提示してください。
     anchor: ""
+    message: 項目を列挙するだけでなく、各節で具体的にどのように方針や基準を記述すべきか、詳細な例文を提示してください。
+    message_ja: 項目を列挙するだけでなく、各節で具体的にどのように方針や基準を記述すべきか、詳細な例文を提示してください。

@@ -3,29 +3,72 @@ version: 1
 document: specdojo:dmd-index-sample
 path: docs/ja/specdojo/samples/dmd-index-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 84
-graded_at: "2026-09-05T02:40:47.468Z"
-graded_by: gemma-expert-executor
+score: 91
+graded_at: "2026-10-11T21:34:28.813Z"
+graded_by: agy-expert-executor
 content_hash: 9db026a1d045d5c8cbf1cdb78a625951135a898cb3bf69d4c2a9f768316fd960
 categories:
-  consistency:
-    score: 63
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
     score: 75
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,12 +78,21 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -53,20 +105,23 @@ finding_counts:
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: Frontmatter の id および type が、参照先の rulebook で定義されている必須値と矛盾している。
-    anchor: ""
-  - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# データ移行設計 サンプル"
     message: Frontmatter に必須項目である title が欠落している。
-    anchor: ""
+    message_ja: Frontmatter に必須項目である title が欠落している。
+  - id: F002
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# データ移行設計 サンプル"
+    message: Frontmatter の id および type が、参照先の rulebook で定義されている必須値と矛盾している。
+    message_ja: Frontmatter の id および type が、参照先の rulebook で定義されている必須値と矛盾している。
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
+    anchor: "# データ移行設計 サンプル"
     message: rulebook で定義された Frontmatter の制約を遵守しておらず、サンプルとしての正しさを欠いている。
-    anchor: ""
+    message_ja: rulebook で定義された Frontmatter の制約を遵守しておらず、サンプルとしての正しさを欠いている。

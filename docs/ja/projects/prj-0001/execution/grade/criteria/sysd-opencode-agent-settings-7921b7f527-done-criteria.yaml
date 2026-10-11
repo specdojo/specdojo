@@ -2,9 +2,9 @@
 id: sysd-opencode-agent-settings-grade-criteria
 document: sysd-opencode-agent-settings
 path: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md
-graded_at: "2026-10-01T16:31:20.053Z"
+graded_at: "2026-10-11T16:29:58.328Z"
 graded_by: agy-expert-executor
-content_hash: 6a5964f92c63db08b8d878fd284174bd06061efa35ec23938769c3ad012b88ec
+content_hash: 6e1d7d6cdacbea0f8b5042901d4e8a88096dd00eb27591882b1765e062f3d871
 summary:
   satisfied: 1
   unsatisfied: 4
@@ -16,14 +16,16 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 設計方針に対応する業務要件または上位要求への参照がなく、採用理由・制約が要件と整合しているか確認できない。
+    reason: >-
+      Missing references to business requirements or upstream specifications to confirm alignment of adoption rationale
+      and constraints.
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: 業務要件との整合性が確認できず、承認条件も示されていないため、設計方針を承認できない。
+    reason: Design policy cannot be approved due to lack of alignment with business requirements and absent approval criteria.
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
@@ -36,11 +38,13 @@ criteria:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 導入確認手順に実行コマンド、期待される出力、失敗条件などのテスト設計・検証観点が欠落している。
+    reason: Verification steps lack execution commands, expected outputs, pass/fail criteria, and references to test design.
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 導入状況が実設定と食い違っており、確認手順も不十分であるため実装の基礎として参照できない。
+    reason: >-
+      Discrepancies with actual configuration files and inadequate verification steps prevent using this document as an
+      implementation baseline.

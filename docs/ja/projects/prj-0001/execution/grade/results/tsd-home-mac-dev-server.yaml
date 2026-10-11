@@ -6,7 +6,7 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 71
-graded_at: "2026-10-09T16:04:24.281Z"
+graded_at: "2026-10-11T16:05:40.833Z"
 graded_by: agy-expert-executor
 content_hash: d0d3aa9edab9042511674be17988a318e62bdc18a2ffc0c497c43163e08d08c1
 source_hashes:
@@ -311,13 +311,9 @@ findings:
     message: 手順・依存CLI・macOS設定の更新責任者、問い合わせ先、障害を解消できない場合のエスカレーション経路と変更管理方法を追記する必要がある。
     message_ja: 手順・依存CLI・macOS設定の更新責任者、問い合わせ先、障害を解消できない場合のエスカレーション経路と変更管理方法を追記する必要がある。
 done_criteria:
-  satisfied: 0
+  satisfied: 2
   total: 5
   unsatisfied:
-    DC-001:
-      - BA
-    DC-002:
-      - PO
     DC-003:
       - ARC
     DC-004:

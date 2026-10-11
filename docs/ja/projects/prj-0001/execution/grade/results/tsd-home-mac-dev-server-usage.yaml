@@ -5,8 +5,8 @@ path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-serve
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 63
-graded_at: "2026-10-09T16:02:20.342Z"
+score: 71
+graded_at: "2026-10-11T16:03:06.482Z"
 graded_by: agy-expert-executor
 content_hash: 122a31bab81314a9f48992acb49cfcc55cf3d4233e9491dac0cb1833283203c9
 source_hashes:
@@ -25,17 +25,17 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 25
-  operations:
-    score: 56
-  planning:
-    score: 42
-  business:
-    score: 42
-  consistency:
     score: 50
+  operations:
+    score: 69
+  planning:
+    score: 58
+  business:
+    score: 58
+  consistency:
+    score: 63
   architecture:
-    score: 75
+    score: 83
   usability:
     score: 94
   implementation:
@@ -44,29 +44,29 @@ categories:
     score: 69
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
     level: 3
     score: 75
   vp-pm-control-reporting:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
@@ -74,8 +74,8 @@ viewpoints:
     level: 3
     score: 75
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -98,8 +98,8 @@ viewpoints:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 3
     score: 75
@@ -110,8 +110,8 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
     level: 3
     score: 75

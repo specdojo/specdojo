@@ -5,8 +5,8 @@ path: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 52
-graded_at: "2026-10-08T16:19:27.614Z"
+score: 62
+graded_at: "2026-10-11T16:11:15.883Z"
 graded_by: agy-expert-executor
 content_hash: adf89fc90887cda2670ecba4f37a6e3d174c9a9af6b5af23127805b8751d5f12
 source_hashes:
@@ -19,21 +19,21 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 63
-  operations:
-    score: 69
-  planning:
-    score: 58
-  business:
-    score: 58
-  consistency:
-    score: 25
-  architecture:
     score: 75
+  operations:
+    score: 75
+  planning:
+    score: 67
+  business:
+    score: 67
+  consistency:
+    score: 50
+  architecture:
+    score: 83
   usability:
-    score: 63
+    score: 75
   implementation:
-    score: 25
+    score: 38
   quality:
     score: 44
 viewpoints:
@@ -41,8 +41,8 @@ viewpoints:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 3
     score: 75
@@ -50,8 +50,8 @@ viewpoints:
     level: 3
     score: 75
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-control-reporting:
     level: 3
     score: 75
@@ -59,17 +59,17 @@ viewpoints:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
   vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -80,8 +80,8 @@ viewpoints:
     level: 1
     score: 25
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-testability:
     level: 1
     score: 25
@@ -92,20 +92,20 @@ viewpoints:
     level: 1
     score: 25
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-user-flow:
     level: 4
     score: 100
   vp-ux-language-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
     level: 3
     score: 75

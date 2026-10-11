@@ -2,9 +2,9 @@
 id: sysd-job-execution-grade-criteria
 document: sysd-job-execution
 path: docs/ja/product/040-system-design/sysd-job-execution.md
-graded_at: "2026-10-01T16:27:14.507Z"
+graded_at: "2026-10-11T16:24:07.397Z"
 graded_by: agy-expert-executor
-content_hash: 32bdb45ec2ed79a3242b1fe18859e7acb2389cc4156752f5cad701de897d141a
+content_hash: 06cd21b1ca83b84272fc735dea02eb51cb9777a845ebf9a2988828e5651faa80
 summary:
   satisfied: 4
   unsatisfied: 1
@@ -34,7 +34,7 @@ criteria:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 設計制約ごとの検査方法、対象テスト、期待結果、またはテスト設計への参照がないため。
+    reason: Verification viewpoints, test methods, expected results, and references to test design are missing.
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:

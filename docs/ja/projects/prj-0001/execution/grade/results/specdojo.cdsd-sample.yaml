@@ -3,34 +3,80 @@ version: 1
 document: specdojo:cdsd-sample
 path: docs/ja/specdojo/samples/cdsd-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 53
-graded_at: "2026-09-04T23:33:13.373Z"
-graded_by: gemma-expert-executor
+score: 70
+graded_at: "2026-10-11T21:05:54.491Z"
+graded_by: agy-expert-executor
 content_hash: 52b962ba44374970e1b92e3f62bf481499647f9448480be8e0779d1a2e864cfd
 categories:
-  consistency:
-    score: 50
-  usability:
-    score: 75
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 75
+  implementation:
+    score: 100
   quality:
-    score: 13
+    score: 50
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -38,9 +84,18 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,30 +104,45 @@ viewpoints:
 finding_counts:
   blocker: 2
   major: 2
-  minor: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 20
+    anchor: >-
+      | 項目         | 値                                                                      |
+      備考                                 |
+    message: >-
+      Section 4 merely duplicates the purpose and main content summary already stated in Sections 1 and 3 without
+      providing distinct content.
+    message_ja: セクション 4 は、独自のコンテンツを提供することなく、セクション 1 および 3 ですでに述べられている目的と主要な内容の要約を単に複製しているだけである。
+  - id: F002
     severity: major
     rule: vp-qe-verifiability
-    line: 57
+    line: 18
+    anchor: "## 4. 最小記述例"
     message: ルールブックで定義された標準列や語彙に基づく具体的な記述がなく、検証不可能な状態である。
-    anchor: ""
-  - id: F002
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 57
-    message: ルールブックで必須とされている「標準列（データストア名、対応プロセス等）」を含むデータストア一覧表が欠落している。
-    anchor: ""
+    message_ja: ルールブックで定義された標準列や語彙に基づく具体的な記述がなく、検証不可能な状態である。
   - id: F003
     severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 57
-    message: サンプルとして成果物の具体的な記述例を示す責務を果たしておらず、ルールブックの標準定義を全く適用していない。
-    anchor: ""
+    rule: vp-qe-omissions-consistency
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: ルールブックで必須とされている「標準列（データストア名、対応プロセス等）」を含むデータストア一覧表が欠落している。
+    message_ja: ルールブックで必須とされている「標準列（データストア名、対応プロセス等）」を含むデータストア一覧表が欠落している。
   - id: F004
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: サンプルとして成果物の具体的な記述例を示す責務を果たしておらず、ルールブックの標準定義を全く適用していない。
+    message_ja: サンプルとして成果物の具体的な記述例を示す責務を果たしておらず、ルールブックの標準定義を全く適用していない。
+  - id: F005
     severity: major
     rule: vp-ux-readability
-    line: 52
+    line: 18
+    anchor: "## 4. 最小記述例"
     message: 成果物の具体的な記述例が欠落しており、初見の読者がどのように具体的に記述すべきかを理解できない。
-    anchor: ""
+    message_ja: 成果物の具体的な記述例が欠落しており、初見の読者がどのように具体的に記述すべきかを理解できない。
