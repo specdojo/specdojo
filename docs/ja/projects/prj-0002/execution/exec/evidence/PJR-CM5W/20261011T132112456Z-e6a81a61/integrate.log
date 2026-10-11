@@ -1,0 +1,5 @@
+commit-scope: skipped non-target changes (left in worktree):
+  specdojo-lp:.gitignore
+  specdojo-lp:README.md
+  specdojo-lp:astro.config.mjs
+  specdojo-lp:tsconfig.json

@@ -1,0 +1,34 @@
+`specdojo-lp` に Astro と Tailwind CSS の構成ファイルを作成しましたが、`npm run build` は未確認です。この環境では npm の実行に承認が必要で、`npm install` も実行できませんでした。そのため依存は導入されておらず、`package-lock.json` も生成されていません。ビルドが通るかどうかはまだ分かりません。
+
+**作成したファイル（`specdojo-lp`）**
+- `specdojo-lp:package.json`：npm を使う前提で、`dev`・`build`・`preview` の script を定義しました。版は npm レジストリで確認した最新版（Astro 7.3.8、Tailwind CSS 4.3.3、`@tailwindcss/vite` 4.3.3）で、Node.js は 22.12.0 以上を要求します。
+- `specdojo-lp:astro.config.mjs`：`output: "static"` で静的出力にし、Tailwind CSS を組み込みました。
+- `specdojo-lp:tsconfig.json`、`specdojo-lp:.gitignore`
+- `specdojo-lp:src/styles/global.css`：Material 3 の指針をテーマとして定義しました。
+  - 色の役割（primary・surface など）
+  - 文字の段階（display から label まで 15 段階）
+  - 角丸（extra-small から extra-large まで 5 段階）
+  - 影の段階（`shadow-elevation-1` から `-5`）
+- `specdojo-lp:src/layouts/BaseLayout.astro`
+- `specdojo-lp:src/pages/index.astro`：仮のトップページです。テーマの色と文字の段階を使っています。
+- `specdojo-lp:README.md`：開発とビルドの手順を書きました。
+
+**個票の更新（プロジェクトリポジトリ）**
+- `pjr-cm5w-lp-initial-setup.md` の「作業内容」で、1 と 2 を `done` にしました。3 はビルドが未確認のため `open` のままです。
+- 「対応結果」に実施内容と残課題を書きました。`item_status` などのステータス項目は変更していません。
+
+**検査結果**
+- `npx prettier --write`：個票と LP のファイルを整形しました。
+- `npx markdownlint`：個票にエラーはありませんでした。
+- `npx specdojo catalog validate`：既存の警告だけで、エラーはありませんでした。
+- `npx specdojo index build`：成功しました。
+
+**残っている作業**
+- `specdojo-lp` で `npm install` と `npm run build` を実行し、`dist/index.html` が出力されることを確認してください。あわせて `package-lock.json` をコミットしてください。
+- 色は Material 3 の標準配色（ライト）を仮に置いています。ブランドの基調色が決まったら差し替えてください。ダークテーマはまだ定義していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Created Astro 7 static-output + Tailwind CSS 4 scaffold in specdojo-lp (package.json, astro.config.mjs, tsconfig.json, .gitignore, Material 3 theme in src/styles/global.css, BaseLayout, placeholder index page, README) and updated the PJR-CM5W ticket's work table and results section. npm install / npm run build could not be run because npm requires approval in this sandbox, so no dependencies are installed, package-lock.json is not generated and the build is unverified.","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-cm5w-lp-initial-setup.md","status":"passed","summary":"Formatted ticket"},{"command":"npx prettier --write specdojo-lp:README.md specdojo-lp:src/styles/global.css specdojo-lp:package.json specdojo-lp:tsconfig.json specdojo-lp:astro.config.mjs","status":"passed","summary":"README table realigned; other files unchanged"},{"command":"npx markdownlint docs/ja/projects/prj-0002/controls/project-register/pjr-cm5w-lp-initial-setup.md","status":"passed","summary":"No errors"},{"command":"npx specdojo catalog validate","status":"passed","summary":"No errors; only pre-existing WARN lines for prj-0001 based_on targets"},{"command":"npx specdojo index build","status":"passed","summary":"Built index: 2572 entries"},{"command":"npm install && npm run build (in specdojo-lp)","status":"requires_human","summary":"npm commands require approval in the agent sandbox; run in specdojo-lp on the host, confirm dist/index.html is emitted, and commit package-lock.json"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=specdojo-lp:package.json; agent must record the required change in the result handoff for human or orchestrator application

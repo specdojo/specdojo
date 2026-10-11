@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-11T10:25:32Z"
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=specdojo-lp:package.json; agent must record the required change in…"
 ---
 
 # PJR-CM5W specdojo-lp に Astro と Tailwind CSS の初期構成を作る
@@ -33,7 +32,7 @@ PJR-FV3W の決定に従い、specdojo-lp に静的出力の Astro と Tailwind 
 
 | No  | 作業                                                    | 担当 | 状態 | メモ                                                     |
 | --- | ------------------------------------------------------- | ---- | ---- | -------------------------------------------------------- |
-| 1   | Astro（静的出力）と Tailwind CSS を導入する             | DEV  | done | 構成ファイルを作成。`package-lock.json` は未生成         |
+| 1   | Astro（静的出力）と Tailwind CSS を導入する             | DEV  | done | 構成ファイルを作成。`package-lock.json` は統合先から取込 |
 | 2   | Material 3 の指針を Tailwind CSS のテーマとして定義する | DEV  | done | `src/styles/global.css` の `@theme` に定義               |
 | 3   | 仮のトップページと README を用意し、ビルドを確認する    | DEV  | open | ページと README は作成済み。`npm run build` の確認が未了 |
 
@@ -63,7 +62,8 @@ PJR-FV3W の決定に従い、specdojo-lp に静的出力の Astro と Tailwind 
 
 ### 4.2. 残課題
 
-- 作業環境で npm を実行できなかったため、`npm install` と `npm run build` は未実行である。`specdojo-lp` で両方を実行し、`dist/index.html` が出力されることを確認する必要がある。あわせて `package-lock.json` を生成してコミットする。
+- `specdojo-lp:package.json` は保護対象の設定ファイルのため、agent ではなく人が適用する。再開時点では `package.json` と `package-lock.json`（lockfileVersion 3）が統合先からの取り込みで作業ツリーにあり、依存の内容は Astro 7.3.8、Tailwind CSS 4.3.3、`@tailwindcss/vite` 4.3.3 で一致している。
+- 作業環境の sandbox では npm を実行できないため、`npm ci` と `npm run build` は未実行である。`specdojo-lp` で両方を実行し、`dist/index.html` が出力されることを人が確認する必要がある。
 - 色はベースライン配色の仮の値である。ブランドの基調色が決まったら、Material Color Utilities で生成した値に差し替える。ダークテーマは未定義である。
 - Cloudflare への配置、本番の原稿（PJR-HEPK）、マスコット（PJR-FSMC）は本項目に含めていない。
 
