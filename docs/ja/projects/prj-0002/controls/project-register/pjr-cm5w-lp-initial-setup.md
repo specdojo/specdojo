@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-11T10:25:32Z"
-  block_reason: "integrate failed: specdojo-lp: pre-integration check failed (no repository was integrated in this attempt): specdojo-lp: uncommitted changes outside the commit scope: specdojo-lp:.gitignore, specdojo-…"
 ---
 
 # PJR-CM5W specdojo-lp に Astro と Tailwind CSS の初期構成を作る

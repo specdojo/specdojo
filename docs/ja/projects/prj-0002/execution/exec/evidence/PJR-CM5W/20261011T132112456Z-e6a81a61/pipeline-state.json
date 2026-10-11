@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-CM5W",
   "run_id": "20261011T132112456Z-e6a81a61",
-  "updated_at": "2026-10-11T13:26:08.577Z",
+  "updated_at": "2026-10-11T13:41:33.579Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -22,11 +22,24 @@
     },
     "integrate": {
       "status": "running",
-      "actor": "claude-expert-executor",
-      "attempts": 1,
-      "started_at": "2026-10-11T13:26:08.577Z",
+      "actor": "claude-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-11T13:41:33.579Z",
       "completed_at": null,
-      "artifact_ref": null
+      "artifact_ref": null,
+      "repos": {
+        "specdojo-lp": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "uncommitted changes outside the commit scope: specdojo-lp:.gitignore, specdojo-lp:README.md, specdojo-lp:astro.config.mjs, specdojo-lp:tsconfig.json"
+        },
+        "project": {
+          "status": "pending",
+          "commit": null,
+          "merged_at": null
+        }
+      }
     }
   },
   "artifacts": {

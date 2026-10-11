@@ -189,3 +189,19 @@
       from: "-"
       to: "integrate failed: specdojo-lp: pre-integration check failed (no repository was integrated in this attempt): specdojo-lp: uncommitted changes outside the commit scope: specdojo-lp:.gitignore, specdojo-…"
   previous_event_id: reg_58b2cac28d4d4232bc4354859b9e5eb9
+- v: 1
+  id: reg_1d75d55fd0bd4435be15bbdac3402ef0
+  ts: "2026-10-11T13:39:01Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: specdojo-lp: pre-integration check failed (no repository was integrated in this attempt): specdojo-lp: uncommitted changes outside the commit scope: specdojo-lp:.gitignore, specdojo-…"
+      to: "-"
+  previous_event_id: reg_91d6c43adec24de3b8ad257a781d189c
