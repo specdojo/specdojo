@@ -61,3 +61,35 @@
       from: "-"
       to: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-G4QN/project. Generated docs are gitignored and must be rebuilt pe…"
   previous_event_id: reg_352bab40fc024ada911e27784781da93
+- v: 1
+  id: reg_e416055cbbd043ac9d826c77a9b6e626
+  ts: "2026-10-11T08:58:39Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Worktree preparation failed: specdojo build exited with 1 in /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-G4QN/project. Generated docs are gitignored and must be rebuilt pe…"
+      to: "-"
+  previous_event_id: reg_87fe3193ffa04153a4d15051b722e39e
+- v: 1
+  id: reg_fc44c78edc1e46a3afa6c5185950df66
+  ts: "2026-10-11T09:04:17Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, typecheck, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, typecheck, test-unit"
+  previous_event_id: reg_e416055cbbd043ac9d826c77a9b6e626

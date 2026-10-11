@@ -1,0 +1,24 @@
+PJR-G4QN の個票の「対応結果」に、3 つの候補を 6 つの観点で比べた評価表と推奨案を書きました。推奨は B（Astro + Tailwind CSS）です。整形と検査はすべて通っています。
+
+**推奨の理由**
+- **表示の速さ:** Astro は既定でブラウザ側の実行用コードを出しません。A（Next.js の静的書き出し）は React の、C（Nuxt）は Vue の実行用コードが載ります。
+- **Cloudflare への配置:** Astro には公式の配置手順があり、静的サイトなら追加の部品は要りません。開発元も 2026 年 1 月に Cloudflare に合流しています。
+- **マテリアルデザイン:** 3 候補で差はありません。どれも Tailwind CSS のテーマで表現する方式になります。
+- **次点:** 利用者の多さを最優先するなら A です。C は利用者が最も少なく学ぶ手間も大きいため、推奨しませんでした。
+
+**PJR-FV3W の見立てと違った点**（個票では表にまとめています）
+- A: 「利用者が最も多い」は合っていました。ただ、Cloudflare は Next.js の静的書き出しを特定用途向けとし、別の方式（Workers 上の vinext）を勧めています。これは見立てになかった懸念です。
+- B: 新しく覚えることは見立てより少なそうです。書き方が React の JSX に近く、React の部品も使えます。
+- C: ドキュメントのサイトは VitePress で、Nuxt とは別の仕組みです。Vue の部品を共有するだけなら B でもできるので、C だけの利点とは言いにくいです。
+
+各評価には根拠の番号を付け、公式ドキュメントなど 17 件の URL を「根拠一覧」に載せました。
+
+確認していないことが 2 点あります。
+- 表示の速さは公式ドキュメントの記述をもとにした評価で、実際には測っていません。
+- npm のダウンロード数は自動取得も含むので、利用者数の目安として扱ってください。
+
+個票では、作業内容表の「状態」2 行を `done` にしました。frontmatter の `item_status` は変えていません。PJR-FV3W の個票、`specdojo-lp`、実装、result ファイルにも手を入れていません。作業ツリーで変更として出ている `events/pjr-g4qn.yaml`、以前の result、`evidence/`、今回の plan と result は、私が編集したものではありません。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-G4QN の個票の「対応結果」に、3 候補を 6 観点で評価した根拠付きの表、推奨案 B（Astro + Tailwind CSS）とその理由、PJR-FV3W の見立てとの違い、根拠一覧、残課題を書いた。作業内容表の状態も更新した。変更したファイルは docs/ja/projects/prj-0002/controls/project-register/pjr-g4qn-lp-tech-stack-evaluation.md のみ。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-g4qn-lp-tech-stack-evaluation.md","status":"passed","summary":"整形済みで差分なし"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint docs/ja/projects/prj-0002/controls/project-register/pjr-g4qn-lp-tech-stack-evaluation.md","status":"passed","summary":"bare URL（MD034）を autolink に直した後、エラーなし"},{"command":"npx markdownlint docs/ja/projects/prj-0002/controls/project-register/pjr-g4qn-lp-tech-stack-evaluation.md","status":"passed","summary":"エラーなし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"終了コード 0。生成物は gitignore 対象"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"終了コード 0。警告は prj-0001 の既存項目のみ（prj-0002 には catalog_path なし）"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"索引 2554 件を生成、終了コード 0"}]}
+</specdojo_executor_evidence>

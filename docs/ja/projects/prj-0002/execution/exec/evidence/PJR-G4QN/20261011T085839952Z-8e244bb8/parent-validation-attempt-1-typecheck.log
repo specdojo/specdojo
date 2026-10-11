@@ -1,0 +1,15 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 typecheck
+> tsc -b --noEmit
+
+error TS2688: Cannot find type definition file for 'vscode'.
+  The file is in the program because:
+    Entry point of type library 'vscode' specified in compilerOptions
+
+
+--- stderr ---

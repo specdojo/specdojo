@@ -1,0 +1,64 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/specdojo-prj-0002
+
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Updated ticket status → ready: /tmp/specdojo-ticket-Vi56w2/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-rIsL31/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-aZJfzZ/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-3eidX3/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-IHkknf/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-l0s3Q1/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Wrote agent stdout: /tmp/specdojo-agent-command-g5TYhE/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-kjBqU1/outputs/partial.txt
+ ❯ tests/packages/docs-site/gen-mermaid-svg.test.ts (0 test)
+Would move 1 agent member(s) from /tmp/specdojo-members-mzFPhE/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-mzFPhE/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-mzFPhE/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-mzFPhE/.specdojo/agent-members.yaml
+
+ Test Files  1 failed | 123 passed (124)
+      Tests  1954 passed (1954)
+   Start at  18:03:29
+   Duration  36.14s (transform 2.15s, setup 518ms, import 18.16s, tests 37.51s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+problem
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/packages/docs-site/gen-mermaid-svg.test.ts [ tests/packages/docs-site/gen-mermaid-svg.test.ts ]
+Error: Cannot find module '@mermaid-js/mermaid-cli'
+Require stack:
+- /workspaces/specdojo-workspace/specdojo-prj-0002/packages/docs-site/src/gen-mermaid-svg.ts
+ ❯ packages/docs-site/src/gen-mermaid-svg.ts:15:52
+     13| const PUPPETEER_CONFIG = path.join(PACKAGE_ROOT, "puppeteer-config.jso…
+     14| const MERMAID_CONFIG = path.join(PACKAGE_ROOT, "mermaid-config.json");
+     15| const MERMAID_CLI = path.join(path.dirname(require.resolve("@mermaid-j…
+       |                                                    ^
+     16| const MERMAID_CLI_PKG_PATH = path.join(
+     17|   path.dirname(require.resolve("@mermaid-js/mermaid-cli")),
+ ❯ tests/packages/docs-site/gen-mermaid-svg.test.ts:16:1
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
