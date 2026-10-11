@@ -21,13 +21,20 @@ PJR-FV3W の決定に従い、specdojo-lp に静的出力の Astro と Tailwind 
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- プロダクトリポジトリ `specdojo-lp` に、静的出力の Astro プロジェクトと Tailwind CSS が導入されている。パッケージ管理は npm とする。
+- Material 3 の色の役割（primary・surface など）、文字の大きさの段階、角丸、影の段階が Tailwind CSS のテーマとして定義されている。
+- 仮のトップページが 1 枚あり、テーマの色と文字の段階を使っている。
+- `specdojo-lp` で `npm run build` を実行すると、静的な HTML が出力される。
+- `specdojo-lp` の README に、開発とビルドの手順が書かれている。
+- Cloudflare への配置、本番の原稿（PJR-HEPK）、マスコット（PJR-FSMC）は本項目に含めない。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                    | 担当 | 状態 | メモ |
+| --- | ------------------------------------------------------- | ---- | ---- | ---- |
+| 1   | Astro（静的出力）と Tailwind CSS を導入する             | DEV  | open | -    |
+| 2   | Material 3 の指針を Tailwind CSS のテーマとして定義する | DEV  | open | -    |
+| 3   | 仮のトップページと README を用意し、ビルドを確認する    | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -35,4 +42,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0002:pjr-fv3w-lp-tech-stack]]: 技術スタックの決定。
+- [[prj-0002:pjr-g4qn-lp-tech-stack-evaluation]]: 比較評価と根拠。
