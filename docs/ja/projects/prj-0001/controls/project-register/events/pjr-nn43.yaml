@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0edb300248ed471ebe9798253341b961
+  ts: "2026-10-11T08:58:39Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 の PJR-G4QN を worktree で実行した際、../specdojo-lp が存在しないとして準備段階で失敗したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: repos を持つ project の worktree 実行がプロダクトの worktree 作成前の build で失敗する
+    - field: description
+      from: ""
+      to: repos を宣言した project で exec run --worktree を行うと、project/ の worktree で specdojo build が設定を読む時点で兄弟のプロダクト worktree がまだなく、repos[].path の存在検査で失敗する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-11"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_f1c65e00ff314f9cae5e964cb204e783
+  ts: "2026-10-11T10:26:13Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0edb300248ed471ebe9798253341b961
+- v: 1
+  id: reg_8bccd6bfa66e4bbeb53ceb8cbc412643
+  ts: "2026-10-11T10:33:23Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f1c65e00ff314f9cae5e964cb204e783
+- v: 1
+  id: reg_a06dfddcc20f4f0f84d242d37f4a09b8
+  ts: "2026-10-11T11:09:38Z"
+  action: close
+  actor: orchestrator
+  from_status: review
+  to_status: done
+  reason: prj-0002 の PJR-CM5W の実行で、specdojo-lp の worktree が project 側の build より先に作られることを実環境で確認したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-11"
+    - field: conclusion
+      from: "-"
+      to: プロダクトの worktree を project 側の build より先に作る順序に改め、統合テストを 2 件追加した
+  previous_event_id: reg_8bccd6bfa66e4bbeb53ceb8cbc412643
