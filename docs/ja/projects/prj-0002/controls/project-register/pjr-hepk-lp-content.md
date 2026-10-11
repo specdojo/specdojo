@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: UX
   registered_at: "2026-10-11T06:37:19Z"
-  block_reason: "agent exited with non-zero code: executor validation failed or not run: npx prettier --write specdojo-lp:src/pages/index.astro, specdojo catalog validate"
 ---
 
 # PJR-HEPK ランディングページの構成と原稿を作る
