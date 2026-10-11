@@ -17,13 +17,7 @@ specdojo:
 
 ## 1. 背景
 
-- SpecDojo のランディングページを、Cloudflare 上の静的サイトとして公開する。
-- 技術スタックは比較して決める。Next.js の経験はあるが、こだわりはない。
-- できるだけ標準的なツールで構築する。スタイルは Tailwind CSS を前提とし、比較の対象はフレームワークに絞る。
-- デザインはマテリアルデザインのすっきりした見た目にする。マテリアルデザインは部品集ではなく設計の指針として扱い、Material 3 の色の役割・文字の段階・角丸・影の段階を Tailwind のテーマとして定義する。
-- 詳しいドキュメントは既存の VitePress のサイト（GitHub Pages）で公開し、ランディングページからはそこへ案内する。
-- Google の Material Web はメンテナンスモードのため、土台にしない（<https://github.com/material-components/material-web/discussions/5642>）。
-- 判断期限は未定。
+Cloudflare で静的サイトとして公開するランディングページのフレームワークを、Tailwind CSS を前提に比較して決める
 
 ## 2. 検討した選択肢
 
