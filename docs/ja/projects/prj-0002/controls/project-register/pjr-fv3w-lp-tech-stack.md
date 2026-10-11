@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0002:pjr-fv3w-lp-tech-stack
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: ARC
   registered_at: "2026-10-11T06:37:13Z"
+  completed_at: "2026-10-11T09:18:27Z"
+  conclusion: Astro + Tailwind CSS を採用する
 ---
 
 # PJR-FV3W ランディングページの技術スタックを決める

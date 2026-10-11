@@ -45,3 +45,22 @@
       from: "- SpecDojo のランディングページを、Cloudflare 上の静的サイトとして公開する。 - 技術スタックは比較して決める。Next.js の経験はあるが、こだわりはない。 - できるだけ標準的なツールで構築する。スタイルは Tailwind CSS を前提とし、比較の対象はフレームワークに絞る。 - デザインはマテリアルデザインのすっきりした見た目にする。マテリアルデザインは部品集ではなく設計の指針として扱い、Material 3 の色の役割・文字の段階・角丸・影の段階を Tailwind のテーマとして定義する。 - 詳しいドキュメントは既存の VitePress のサイト（GitHub Pages）で公開し、ランディングページからはそこへ案内する。 - Google の Material Web はメンテナンスモードのため、土台にしない（<https://github.com/material-components/material-web/discussions/5642>）。 - 判断期限は未定。"
       to: Cloudflare で静的サイトとして公開するランディングページのフレームワークを、Tailwind CSS を前提に比較して決める
   previous_event_id: reg_c0cc633f05cb4badaf926254ca382971
+- v: 1
+  id: reg_ca3f33ae748441969271ac8a830918cf
+  ts: "2026-10-11T09:18:27Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: decided
+  reason: 利用者（PO）が PJR-G4QN の推奨案 B を承認したため
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-11"
+    - field: conclusion
+      from: "-"
+      to: Astro + Tailwind CSS を採用する
+  previous_event_id: reg_006e2b809885444993fcc8275a930378
