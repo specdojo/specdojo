@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: in-progress
   priority: medium
   owner: UX
   registered_at: "2026-10-11T06:37:19Z"
