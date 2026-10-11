@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-VQZA
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-vqza-20261011T223028Z-efc5-plan.md
   started_at: "2026-10-11T22:30:28.570Z"
-  completed_at: "2026-10-11T22:43:09.568Z"
+  completed_at: "2026-10-11T23:26:17.687Z"
   agent: codex-expert-executor
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
 ---
 
 # Edit Result
