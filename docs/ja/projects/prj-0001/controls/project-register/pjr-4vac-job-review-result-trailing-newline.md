@@ -40,7 +40,9 @@ Job Run の review の後に runner が verdict を書き込む fillIncompleteJo
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `fillIncompleteJobReviewResult` と `overrideJobReviewDecision` を非同期化し、review result の書き込み直後に共通の `formatMarkdownFile` を呼ぶようにした。これにより、runner が本文や verdict を上書きした場合もファイル末尾が改行 1 つへ正規化される。
+- `tests/src/exec-job-worktree.integration.test.ts` に、complete の統合、Job 失敗時の runner による incomplete への上書き、reporter 不在時の incomplete 補完の各経路で、review result が末尾改行 1 つで終わることを確認する回帰テストを追加した。既存の検証と合わせて、complete は統合と worktree 撤去、incomplete は `waiting` と worktree 保持を確認する。
+- 整形と静的検査は executor/reporter pipeline の親 runner が実行する。executor では親検証と重複しない `register build` と `catalog validate` を実行した。
 
 ## 5. 関連ドキュメント
 

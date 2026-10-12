@@ -29,6 +29,28 @@ function git(cwd: string, ...args: string[]): string {
   return String(result.stdout).trim();
 }
 
+function reviewResultContent(repo: string): string {
+  const reviewResults = git(repo, "ls-files", "execution")
+    .split("\n")
+    .filter((path) => path.endsWith("-review-result.md"));
+  expect(reviewResults).toHaveLength(1);
+  return readFileSync(join(repo, reviewResults[0]), "utf8");
+}
+
+function jobWorktreePath(repo: string): string {
+  const entry = git(repo, "worktree", "list", "--porcelain")
+    .split("\n\n")
+    .find((candidate) => candidate.includes("JBR-"));
+  const worktree = entry?.match(/^worktree (.+)$/m)?.[1];
+  if (!worktree) throw new Error("Job Run worktree not found");
+  return worktree;
+}
+
+function expectSingleTrailingNewline(content: string): void {
+  expect(content.endsWith("\n")).toBe(true);
+  expect(content.endsWith("\n\n")).toBe(false);
+}
+
 function write(path: string, content: string): void {
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(path, content, "utf8");
@@ -36,7 +58,7 @@ function write(path: string, content: string): void {
 
 function setupFixture(
   verdict: "complete" | "incomplete",
-  options: { declareReview?: boolean } = {},
+  options: { declareReview?: boolean; failCommand?: boolean; omitReporter?: boolean } = {},
 ): {
   repo: string;
   worktrees: string;
@@ -94,17 +116,21 @@ function setupFixture(
       "    capabilities: []",
       "    proficiency: normal",
       "    priority: 9",
-      "  - nickname: fixture-reporter",
-      "    display_name: Fixture Reporter",
-      "    email: null",
-      "    roles: []",
-      "    type: agent",
-      "    provider: custom",
-      "    stage_role: reporter",
-      "    command: node tools/review-reporter.mjs",
-      "    capabilities: []",
-      "    proficiency: normal",
-      "    priority: 1",
+      ...(options.omitReporter
+        ? []
+        : [
+            "  - nickname: fixture-reporter",
+            "    display_name: Fixture Reporter",
+            "    email: null",
+            "    roles: []",
+            "    type: agent",
+            "    provider: custom",
+            "    stage_role: reporter",
+            "    command: node tools/review-reporter.mjs",
+            "    capabilities: []",
+            "    proficiency: normal",
+            "    priority: 1",
+          ]),
       "",
     ].join("\n"),
   );
@@ -127,6 +153,7 @@ function setupFixture(
       "  command: |",
       "    mkdir -p output",
       "    git rev-parse HEAD > output/run.txt",
+      ...(options.failCommand ? ["    exit 1"] : []),
       "  paths: [output]",
       ...(options.declareReview
         ? [
@@ -212,10 +239,11 @@ describe("Job Run worktree integration", () => {
     expect(git(fixture.repo, "diff", "--name-only")).toBe("unrelated.txt");
     expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("");
     expect(git(fixture.repo, "worktree", "list", "--porcelain")).not.toContain("JBR-");
+    expectSingleTrailingNewline(reviewResultContent(fixture.repo));
   }, 120_000);
 
-  it("keeps the exec worktree and leaves root HEAD unchanged when review is incomplete", () => {
-    const fixture = setupFixture("incomplete");
+  it("keeps the exec worktree and normalizes the result when the runner overrides a failed Job review", () => {
+    const fixture = setupFixture("complete", { failCommand: true });
     const result = runJob(fixture.repo, fixture.worktrees);
 
     expect(result.status).toBe(1);
@@ -223,6 +251,22 @@ describe("Job Run worktree integration", () => {
     expect(git(fixture.repo, "worktree", "list", "--porcelain")).toContain("JBR-");
     expect(existsSync(join(fixture.repo, "output/run.txt"))).toBe(false);
     expect(`${result.stdout}\n${result.stderr}`).toContain("[routine-job] waiting");
+    const reviewResult = reviewResultContent(jobWorktreePath(fixture.repo));
+    expect(reviewResult).toContain("- verdict: incomplete");
+    expect(reviewResult).toContain("- runner 判定: ");
+    expectSingleTrailingNewline(reviewResult);
+  }, 120_000);
+
+  it("fills and normalizes an incomplete result when no review reporter is available", () => {
+    const fixture = setupFixture("complete", { omitReporter: true });
+    const result = runJob(fixture.repo, fixture.worktrees);
+
+    expect(result.status).toBe(1);
+    expect(`${result.stdout}\n${result.stderr}`).toContain("[routine-job] waiting");
+    const reviewResult = reviewResultContent(jobWorktreePath(fixture.repo));
+    expect(reviewResult).toContain("- verdict: incomplete");
+    expect(reviewResult).toContain("No reporter is available for Job Run review.");
+    expectSingleTrailingNewline(reviewResult);
   }, 120_000);
 
   it("reviews a Job that declares task.review without --worktree using the nominated review executor", () => {
@@ -233,11 +277,7 @@ describe("Job Run worktree integration", () => {
     expect(String(result.stdout)).toContain("[routine-job] merged");
     expect(readFileSync(join(fixture.repo, "output/run.txt"), "utf8").trim()).toBe(fixture.head);
     expect(git(fixture.repo, "log", "-1", "--pretty=%P").split(" ")).toHaveLength(2);
-    const reviewResults = git(fixture.repo, "ls-files", "execution")
-      .split("\n")
-      .filter((path) => path.endsWith("-review-result.md"));
-    expect(reviewResults).toHaveLength(1);
-    expect(readFileSync(join(fixture.repo, reviewResults[0]), "utf8")).toMatch(
+    expect(reviewResultContent(fixture.repo)).toMatch(
       /agent: "?fixture-nominated-review-executor"?/,
     );
   }, 120_000);
