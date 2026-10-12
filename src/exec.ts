@@ -84,6 +84,7 @@ import {
 import { buildTaskView } from "./exec-task-view.js";
 import { registerExecWorktreeCommands } from "./exec-worktree-command.js";
 import { registerExecTrialCommands } from "./exec-trial.js";
+import { registerExecHandoffCommands } from "./exec-handoff.js";
 import { discardStaleExecWorktree } from "./exec-worktree-ops.js";
 import { configuredProductRepos } from "./exec-task-repos.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
@@ -715,6 +716,7 @@ async function runReleaseAllBlocked(opts: ExecCommandOpts): Promise<void> {
 
 export function registerExecCommands(program: Command): void {
   const exec = program.command("exec").description("Execution helpers");
+  registerExecHandoffCommands(exec);
   const lockedActions: Record<LockedEventAction["type"], LockedEventAction> = {
     claim: {
       type: "claim",

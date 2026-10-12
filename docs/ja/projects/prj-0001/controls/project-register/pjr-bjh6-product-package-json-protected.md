@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:43:10Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration, typecheck"
 ---
 
 # PJR-BJH6 プロダクトリポジトリの package.json も agent の保護対象になる
@@ -41,7 +40,10 @@ agent-config-write の保護対象パスがプロダクトリポジトリにも�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `specdojo exec handoff apply --project <project-id> --register <PJR-ID>` を追加し、waiting の最新 result に自動記録された `agent-config-write` の提案差分を表示後、確認つきで統合先へ適用・commit できるようにした。非対話実行は `--yes` がない限り変更しない。
+- 申し送りの対象パスと差分の対象を照合し、保護対象外のパス、未宣言リポジトリ、切り詰められた差分、適用不能な差分、対象パスの既存変更を commit 前に拒否する。複数リポジトリの差分は `# repo: <name>` ごとに宣言済みの統合先へ適用する。
+- `package.json` を適用した場合は lock ファイルの再生成・commit を案内し、続けて実行する `--resume` コマンドを表示する。
+- executor/reporter の統合テストを、保護違反、確認なしの拒否、`--yes` による統合先への commit、同期後の `--resume` 成功まで通す形に更新した。提案差分がない場合と切り詰められた場合の拒否も単体テストで固定した。
 
 ## 5. 関連ドキュメント
 
