@@ -42,7 +42,7 @@ specdojo:
 | No  | 作業                                                           | 担当         | 状態 | メモ                      |
 | --- | -------------------------------------------------------------- | ------------ | ---- | ------------------------- |
 | 1   | 節ごとのコンポーネントに分け、`index.astro` を並べるだけにする | DEV          | done | 10 部品と共通リンクへ分割 |
-| 2   | ビルドし、分割前後の `dist/index.html` を比べる                | orchestrator | open | sandbox の外で確認する    |
+| 2   | ビルドし、分割前後の `dist/index.html` を比べる                | orchestrator | done | sandbox の外で確認した    |
 
 ## 4. 対応結果
 
@@ -69,6 +69,12 @@ specdojo:
 
 - `git diff --check` で差分に空白エラーがないことを確認した。
 - `npm run build` と、099292f の `dist/index.html` との空白を除く比較は、個票の完了条件どおり orchestrator が sandbox の外で確認する。
+- exec run は `waiting` に止まらず、runner が `specdojo-lp` の `main` へ統合した（6c6d001）。runner の親検証 7 種はすべて passed だった。
+- orchestrator が sandbox の外で、分割前の `main`（099292f）と統合後の `main`（6c6d001）をそれぞれビルドして比べた（2026-10-12）。
+  - どちらも `npm run build` が成功した。
+  - `dist/index.html` は、空白の差を除いて一致した。そのため、文言・節の順・タブの `role` と `aria-selected` などの属性も変わっていない。
+  - CSS はファイル名（`index.CE3mUiSH.css`）も中身も一致した。
+  - `pages/index.astro` は 887 行から 29 行になった。
 
 ## 5. 関連ドキュメント
 
