@@ -102,3 +102,12 @@ specdojo-workspace/
 
 - 理由: マスコットの原本は、AI で生成した画像も手描きの画像も 1 枚あたり数 MB 程度に収まり、大きなファイルを作る予定がない。LFS は devcontainer への導入と、clone する全員の `git lfs` が要り、GitHub の LFS には容量と転送量の上限もある。書き出したファイルは `specdojo-lp` で普通に commit するため、LP のビルドには影響しない。
 - 見直しの目安: 1 ファイルが 10 MB を超えるなど、原本が大きくなる場合は LFS を改めて検討する。PSD など大きくなりやすい作業用のファイルを原本として置くか、書き出した PNG だけを置くかは、[[prj-0002:pjr-f34r-assets-repository-setup]] で決めて `README.md` に書く。
+
+## 9. 追記（2026-10-12、ディレクトリ体系）
+
+今後いろいろなアセットを管理する前提で、利用者の承認を得て、構成の案を次のように一般化した。正本は `specdojo-assets` の `README.md`（df10f80）とする。
+
+- アセットは `assets/<kind>/<id>/` の 2 階層に置き、どの種類も `asset.yaml`・`source/`・`prompts/`・`drafts/` を持つ。マスコットは `assets/characters/<character-id>/`（例: `dojo-otter`）に置き、キャラクターの設定を `profile.md` に書く。構成の案の `mascot/source/`・`mascot/prompts/` は、この体系で置き換える。
+- 原本ごとの作り方（AI での生成か手描きか）・作者・ライセンスは、アセットごとの `asset.yaml` に書く。`BRAND.md` は、ブランド全体の規則（色・余白・使ってよい場面・ライセンスの方針）だけにする。
+- 書き出しの定義は `exports.yaml` 1 つにまとめ、書き出し先のリポジトリを `targets`、書き出すものを `exports` に書く。`specdojo-lp` への書き出し先は `public/assets/` の下とし、構成の案の `public/mascot/` を置き換える。
+- 新しいアセットの雛形を `templates/asset.yaml`、書き出しのスクリプトを `scripts/export.mjs` に置く。
