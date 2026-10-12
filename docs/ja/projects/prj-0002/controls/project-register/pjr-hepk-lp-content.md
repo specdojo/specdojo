@@ -9,8 +9,9 @@ specdojo:
   item_type: todo
   item_status: review
   priority: medium
-  owner: UX
+  owner: BA
   registered_at: "2026-10-11T06:37:19Z"
+  due_on: "2026-10-31"
 ---
 
 # PJR-HEPK ランディングページの構成と原稿を作る
