@@ -128,6 +128,7 @@ export function isCommitTargetPath(path: string, executionRel: string, resultRel
   // doc-index は root と worktree の双方で再生成される生成物。commit-target に含めると
   // merge 時の overlap ガードで衝突するため除外する。
   if (normalized === ".specdojo/doc-index.json") return false;
+  if (normalized === "tmp" || normalized.startsWith("tmp/")) return false;
   if (normalized.startsWith(`${executionRel}/exec/plans/`)) return false;
   if (normalized.startsWith(`${executionRel}/exec/results/`)) return false;
   if (normalized.startsWith(`${executionRel}/exec/events/`)) return false;
@@ -466,7 +467,9 @@ function registerNewFileIsAllowed(
     if (resolved) allowedFiles.add(resolved);
   }
   return (path: string) =>
-    allowedFiles.has(path) || allowedDirPrefixes.some((prefix) => path.startsWith(prefix));
+    !path.includes("/") ||
+    allowedFiles.has(path) ||
+    allowedDirPrefixes.some((prefix) => path.startsWith(prefix));
 }
 
 function pathsTrackedAtHead(worktreePath: string, paths: readonly string[]): Set<string> {
@@ -707,6 +710,79 @@ function rootDirtyPaths(repoRoot: string): Set<string> {
   ]);
 }
 
+export const ROOT_NEW_FILES_HANDOFF_LABEL = "最上位に追加したファイル";
+
+export function applyRootNewFilesHandoff(content: string, files: readonly string[]): string {
+  const normalized = content.replace(/\r\n/g, "\n");
+  const uniqueFiles = [...new Set(files)];
+  if (uniqueFiles.length === 0) return normalized;
+
+  const linePattern = new RegExp(`^[ \\t]*- +${ROOT_NEW_FILES_HANDOFF_LABEL}: *(.*)$`, "m");
+  const match = linePattern.exec(normalized);
+  if (match) {
+    const existingMatches = [...match[1].matchAll(/`([^`]+)`/g)].map((m) => m[1]);
+    const merged = [...new Set([...existingMatches, ...uniqueFiles])];
+    const newLine = `- ${ROOT_NEW_FILES_HANDOFF_LABEL}: ${merged.map((f) => `\`${f}\``).join(", ")}`;
+    return normalized.replace(match[0], newLine);
+  }
+
+  const handoffHeading = /^## +\d+\. +申し送り[ \t]*$/m.exec(normalized);
+  if (handoffHeading) {
+    const start = handoffHeading.index + handoffHeading[0].length;
+    const rest = normalized.slice(start);
+    const nextHeading = /^##\s+/m.exec(rest);
+    const end = nextHeading ? start + nextHeading.index : normalized.length;
+    const sectionBody = normalized.slice(start, end);
+
+    const newLine = `- ${ROOT_NEW_FILES_HANDOFF_LABEL}: ${uniqueFiles.map((f) => `\`${f}\``).join(", ")}`;
+
+    const markerIndex = sectionBody.indexOf("<!-- specdojo:agent-protection-handoff -->");
+    const beforeMarker = markerIndex === -1 ? sectionBody : sectionBody.slice(0, markerIndex);
+    const afterMarker = markerIndex === -1 ? "" : sectionBody.slice(markerIndex);
+
+    const trimmedBefore = beforeMarker.trim();
+    let updatedBefore: string;
+    if (
+      trimmedBefore === "" ||
+      trimmedBefore === "- なし" ||
+      trimmedBefore === "なし" ||
+      trimmedBefore.includes("_TODO_")
+    ) {
+      updatedBefore = newLine;
+    } else {
+      updatedBefore = `${trimmedBefore}\n${newLine}`;
+    }
+
+    const newSectionBody = afterMarker
+      ? `\n\n${updatedBefore}\n\n${afterMarker}\n\n`
+      : `\n\n${updatedBefore}\n\n`;
+
+    const updated = `${normalized.slice(0, start)}${newSectionBody}${normalized.slice(end)}`;
+    return updated.replace(/\n{3,}/g, "\n\n").replace(/\n*$/, "\n");
+  }
+
+  const numbers = [...normalized.matchAll(/^##\s+(\d+)\./gm)].map((m) => Number(m[1]));
+  const nextNum = numbers.length === 0 ? 1 : Math.max(...numbers) + 1;
+  const newLine = `- ${ROOT_NEW_FILES_HANDOFF_LABEL}: ${uniqueFiles.map((f) => `\`${f}\``).join(", ")}`;
+  return `${normalized.trimEnd()}\n\n## ${nextNum}. 申し送り\n\n${newLine}\n`;
+}
+
+export function recordRootNewFilesHandoff(
+  resultPath: string | undefined,
+  files: readonly string[],
+): boolean {
+  if (!resultPath || !existsSync(resultPath) || files.length === 0) return false;
+  try {
+    const content = readFileSync(resultPath, "utf8");
+    const updated = applyRootNewFilesHandoff(content, files);
+    if (updated === content) return false;
+    writeFileSync(resultPath, updated, "utf8");
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 // Commit the task result and deliverable changes inside the worktree onto its exec branch.
 // The commit is limited to the mode-based allowlist (resolveCommitScope); out-of-scope
 // changes stay uncommitted in the worktree and are reported. Excludes plans, events,
@@ -726,6 +802,7 @@ export function commitWorktreeChanges(params: {
   // false（手動の `exec worktree commit` など）では、プロダクトに未統合の変更が残るタスクの
   // プロジェクト側だけを commit しない。統合後の撤去でプロダクトの変更を失わないため。
   productsIntegratedByCaller?: boolean;
+  productRootNewFiles?: readonly string[];
 }): { targets: string[]; committed: boolean } {
   const { context, worktree, taskId } = params;
   assertNoAgentProtectedConfigChanges(context, worktree, taskId);
@@ -750,6 +827,32 @@ export function commitWorktreeChanges(params: {
     // 追記したログ自体を commit 対象に含めるため、分類をやり直す。
     partition = partitionCommitTargets(context, worktree, taskId);
   }
+
+  const { resultRel } = taskPaths(context, taskId);
+  const trackedAtHead = pathsTrackedAtHead(worktree.path, partition.targets);
+  const projectRootNewFiles = partition.targets.filter(
+    (path) => !path.includes("/") && !trackedAtHead.has(path) && path !== resultRel,
+  );
+  if (projectRootNewFiles.length > 0) {
+    const rootNewWarning =
+      `最上位に追加したファイル:\n` +
+      `${projectRootNewFiles.map((path) => `  ${path}`).join("\n")}\n`;
+    process.stdout.write(rootNewWarning);
+    if (params.scopeLogPath && !params.dryRun) {
+      mkdirSync(resolve(params.scopeLogPath, ".."), { recursive: true });
+      appendFileSync(params.scopeLogPath, rootNewWarning, "utf8");
+      partition = partitionCommitTargets(context, worktree, taskId);
+    }
+  }
+
+  const allRootNewFiles = [...(params.productRootNewFiles ?? []), ...projectRootNewFiles];
+  if (allRootNewFiles.length > 0 && !params.dryRun) {
+    const resultPath = resolve(worktree.path, resultRel);
+    if (recordRootNewFilesHandoff(resultPath, allRootNewFiles)) {
+      partition = partitionCommitTargets(context, worktree, taskId);
+    }
+  }
+
   const paths = partition.targets;
   if (paths.length === 0) {
     process.stdout.write("No commit-target changes.\n");

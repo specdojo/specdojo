@@ -34,6 +34,7 @@ import { gitOutput, gitResult, type ExecWorktree } from "../../src/exec-worktree
 import {
   commitProductWorktrees,
   integrateTaskRepositories,
+  productMergeBlockers,
   projectMergeBlockers,
   syncTaskWorktreesWithIntegrationTargets,
   type RepoIntegrationRecorder,
@@ -801,6 +802,70 @@ describe("multi-repository task worktrees", () => {
     expect(result).toMatch(
       /\| `app2` +\| `release` +\| not applicable \| not applicable \(no changes\)/,
     );
+  });
+
+  it("commits root new files and excludes tmp/ in product repos without tracked directories", () => {
+    const fixture = setup();
+    const worktree = prepare(fixture);
+    const [app1] = worktree.repos!;
+
+    // app1 has only README.md at HEAD (0 tracked directories)
+    expect(git(app1!.path, "ls-tree", "-d", "HEAD")).toBe("");
+
+    // Create root new files and a scratch file in tmp/
+    writeFile(join(app1!.path, ".gitignore"), "node_modules/\n");
+    writeFile(join(app1!.path, "settings.json"), '{"env": "test"}\n');
+    writeFile(join(app1!.path, "tmp", "scratch.txt"), "temporary scratch\n");
+
+    const scopeLogPath = join(fixture.parent, "integrate.log");
+    const resultPath = join(fixture.parent, "result.md");
+    writeFile(
+      resultPath,
+      "# Edit Result\n\n## 1. 実施内容\n\n- done\n\n## 3. 申し送り\n\n- 特になし\n",
+    );
+
+    const outcomes = commitProductWorktrees({
+      worktree,
+      message: "exec(register PJR-GBVM): add initial config",
+      scopeLogPath,
+      resultPath,
+    });
+
+    // Root new files committed, tmp/ excluded
+    const app1Outcome = outcomes.find((o) => o.repo === "app1")!;
+    expect(app1Outcome.committed).toBe(true);
+    expect(app1Outcome.targets.sort()).toEqual([".gitignore", "settings.json"]);
+    expect(app1Outcome.outOfScope).toEqual([]);
+    expect(app1Outcome.rootNewFiles.sort()).toEqual([".gitignore", "settings.json"]);
+
+    // git log shows committed root files, but not tmp/
+    const committedFiles = git(app1!.path, "log", "-1", "--name-only")
+      .split("\n")
+      .map((f) => f.trim())
+      .filter(Boolean);
+    expect(committedFiles).toContain(".gitignore");
+    expect(committedFiles).toContain("settings.json");
+    expect(committedFiles).not.toContain("tmp/scratch.txt");
+
+    // tmp/scratch.txt remains untracked in worktree
+    expect(git(app1!.path, "status", "--porcelain", "-uall")).toContain("?? tmp/scratch.txt");
+
+    // scopeLogPath (integrate.log) lists root new files under 最上位に追加したファイル:
+    const logContent = readFileSync(scopeLogPath, "utf8");
+    expect(logContent).toContain(
+      "最上位に追加したファイル:\n  app1:.gitignore\n  app1:settings.json\n",
+    );
+    expect(logContent).not.toContain("scratch.txt");
+
+    // resultPath 申し送り contains root new files
+    const resultContent = readFileSync(resultPath, "utf8");
+    expect(resultContent).toContain(
+      "- 最上位に追加したファイル: `app1:.gitignore`, `app1:settings.json`\n",
+    );
+
+    // productMergeBlockers does not block because tmp/ is excluded and root files were committed
+    const blockers = productMergeBlockers(app1!);
+    expect(blockers).toEqual([]);
   });
 
   it("records the merge commit of a product that a resumed integration skips", () => {
