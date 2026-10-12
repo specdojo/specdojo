@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0ee8cd803b544246914bd893eff8d978
+  ts: "2026-10-12T08:47:03Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 で specdojo-lp の main に exec の統合が細かく並び、利用者がプロダクト側のルールで運用できるほうが参入障壁が下がると提案した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロダクトリポジトリのブランチ戦略を SpecDojo は求めない
+    - field: description
+      from: ""
+      to: 別リポジトリ構成で、SpecDojo はプロダクトリポジトリにブランチ戦略を求めず、プロダクト側のルール（GitHub flow・git flow など）で決めた統合先だけを受け取る。merge の方式は問わず、追跡は SHA ではなく trace key（Refs:）を主にする
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
