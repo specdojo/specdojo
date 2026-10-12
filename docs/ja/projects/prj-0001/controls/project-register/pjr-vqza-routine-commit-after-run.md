@@ -12,7 +12,7 @@ specdojo:
   owner: ARC
   registered_at: "2026-10-11T22:15:30Z"
   due_on: "2026-10-31"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-vqza.yaml 17ms (unchanged); FAIL  tests/src/exec-pipeline-e2e.integration.test.ts >…"
 ---
 
 # PJR-VQZA 定期実行の出力を実行後に commit する
@@ -74,10 +74,10 @@ routine が起動する Job（grade など）は本体の作業場所で出力�
 | No  | 作業                                                                                | 担当 | 状態 | メモ                     |
 | --- | ----------------------------------------------------------------------------------- | ---- | ---- | ------------------------ |
 | 1   | B と D を比較し、採用する方式と失敗した Run の扱いを決める                          | ARC  | done | 概要の決定（2026-10-12） |
-| 2   | Job を exec の worktree で実行し、runner が exec ブランチへ commit する仕組みを作る | DEV  | open | -                        |
-| 3   | Job Run の review を schedule の review と同じ形で実行し、verdict で統合を分ける    | DEV  | open | -                        |
-| 4   | テストを追加する                                                                    | DEV  | open | -                        |
-| 5   | routine 運用ガイドと設計書を更新する                                                | ARC  | open | -                        |
+| 2   | Job を exec の worktree で実行し、runner が exec ブランチへ commit する仕組みを作る | DEV  | done | `commit: true` で有効化  |
+| 3   | Job Run の review を schedule の review と同じ形で実行し、verdict で統合を分ける    | DEV  | done | review pipeline を再利用 |
+| 4   | テストを追加する                                                                    | DEV  | done | 単体・統合テスト         |
+| 5   | routine 運用ガイドと設計書を更新する                                                | ARC  | done | 運用手順を追記           |
 
 ## 4. 対応結果
 
@@ -85,7 +85,11 @@ routine が起動する Job（grade など）は本体の作業場所で出力�
 
 2026-10-12 の 1 回目の exec run（codex-expert-executor / gemma26-reporter）は D 方式（統合先への直接 commit と lifecycle lock による直列化、`git-branching-standard` の層 3 への追加）で実装した。追加した統合テスト 2 件が子プロセスで `--import tsx` を解決できず失敗し、`waiting` で止まった。テストは orchestrator が修正して通ったが、利用者が統合前のレビューを求めて方式を B ベースへ改めたため、実装は統合せず `--force-restart` で破棄した。
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。
+### 4.2. 2 回目の実行
+
+B 方式を実装した。routine action の `commit: true` で Job Run を `exec/<project-id>-<run-id>` の worktree へ隔離し、runner が出力を `chore(routine): …` で commit する。commit 後は `mode: review` の plan/result と executor/reporter pipeline で読み取り専用レビューし、Run が成功かつ verdict が `complete` / `complete-with-findings` の場合だけ `--no-ff` で統合する。それ以外は worktree を残し、Job Run・review result・routine state/history に理由を記録する。
+
+`rtn-grade-deliverable-recheck` と `rtn-grade-recheck` で `commit: true` を有効にした。Job Run schema と routine run schema、[[specdojo:routine-operation-guide]]、[[sysd-job-execution|Job実行設計]]を更新し、受理時の統合と不受理時の保持、本体 checkout の未 commit 変更を commit しないことを統合テストへ追加した。登録簿の状態は runner と人間が遷移するため変更していない。
 
 ## 5. 関連ドキュメント
 
