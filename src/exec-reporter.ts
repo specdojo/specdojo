@@ -1,6 +1,6 @@
 import Ajv2020Module from "ajv/dist/2020.js";
 import { existsSync, readFileSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { join, relative, resolve, sep } from "node:path";
 import { extractJsonText } from "./agent-response.js";
 import type { ExecEvidence } from "./exec-evidence.js";
 import {
@@ -8,7 +8,14 @@ import {
   failedParentValidationReason,
 } from "./exec-parent-validation.js";
 import type { TaskMode } from "./exec-types.js";
-import { specdojoRootDir, type SpecDojoConfig } from "./specdojo-config.js";
+import {
+  getProjectExecutionPath,
+  resolveRepoRoot,
+  specdojoRootDir,
+  type SpecDojoConfig,
+  type SpecDojoProjectConfig,
+  type SpecDojoRepoConfig,
+} from "./specdojo-config.js";
 import { REVIEW_VERDICTS, describeInvalidReviewVerdict, isReviewVerdict } from "./review-types.js";
 import type { ReviewVerdict } from "./review-types.js";
 
@@ -47,11 +54,24 @@ export type ReporterFacts = {
   block_reason: string;
 };
 
+/** Scripts and dependency names declared by one repository's package.json. */
+export type PackageManifestFacts = {
+  scripts: Readonly<Record<string, string>>;
+  dependencies: ReadonlySet<string>;
+};
+
 export type ReporterFactOptions = {
   packageScripts?: Readonly<Record<string, string>>;
   packageDependencies?: ReadonlySet<string>;
   /** Configuration used to decide whether a SpecDojo subcommand applies to its target project. */
   specdojoConfig?: SpecDojoConfig | null;
+  /**
+   * Project the run targets. A SpecDojo subcommand without `--project` is judged against this
+   * project instead of `current_project`, and product repositories are looked up in it.
+   */
+  projectId?: string;
+  /** package.json facts of the project's product repositories, keyed by repository name. */
+  productPackageManifests?: Readonly<Record<string, PackageManifestFacts>>;
 };
 
 export type ReporterEvidence = ExecEvidence & {
@@ -60,6 +80,11 @@ export type ReporterEvidence = ExecEvidence & {
     mechanically_not_applicable: Array<{ command: string; reason: string }>;
     runner_managed_attempt_changes: Array<{ path: string; status: string }>;
   };
+  /**
+   * Project the run targets, resolved by the runner. Not persisted in evidence.json; it lets
+   * deriveReporterFacts judge validations against the same project as evidenceForReporter.
+   */
+  runner_scope?: { project_id: string };
 };
 
 export type ReporterEvidenceScope = {
@@ -73,9 +98,36 @@ export type ReporterEvidenceScope = {
   resultPath?: string;
   /** Resolved project register and derived-view paths in the primary repository. */
   registerPaths?: readonly string[];
+  /** Project the run targets. Derived from `executionPath` and the configuration when omitted. */
+  projectId?: string;
   /** Injectable repository facts used by tests and non-default runners. */
   factOptions?: ReporterFactOptions;
 };
+
+function isProjectConfig(value: unknown): value is SpecDojoProjectConfig {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Finds the single configured project whose execution directory is `executionPath`. Returns
+ * undefined when no project or more than one project matches, so ambiguity never picks a project.
+ */
+function projectIdForExecutionPath(
+  config: SpecDojoConfig | null,
+  repoRoot: string,
+  executionPath: string,
+): string | undefined {
+  if (!config) return undefined;
+  const target = resolve(executionPath);
+  const matches = Object.keys(config.projects)
+    .sort()
+    .filter((projectId) => {
+      const project: unknown = config.projects[projectId];
+      if (!isProjectConfig(project)) return false;
+      return resolve(repoRoot, getProjectExecutionPath(project)) === target;
+    });
+  return matches.length === 1 ? matches[0] : undefined;
+}
 
 function repoRelativePath(root: string, path: string): string {
   return relative(root, path).split(sep).join("/").replace(/^\.\//u, "");
@@ -127,17 +179,31 @@ export function evidenceForReporter(
   const runnerManagedAttemptChanges = (evidence.attempt_changes ?? []).filter((change) =>
     isRunnerManagedChange(change, scope),
   );
+  const factOptions = scope.factOptions ?? {};
+  const config =
+    factOptions.specdojoConfig === undefined ? defaultSpecdojoConfig() : factOptions.specdojoConfig;
+  const projectId =
+    scope.projectId ??
+    factOptions.projectId ??
+    projectIdForExecutionPath(config, scope.repoRoot, scope.executionPath);
+  const scopedFactOptions: ReporterFactOptions = {
+    ...factOptions,
+    ...(projectId ? { projectId } : {}),
+  };
   const mechanicallyNotApplicable = evidence.validations.flatMap((validation) => {
     if (validation.source === "runner" || validation.status !== "not_run") return [];
-    const reason = mechanicallyNotApplicableReason(validation.command, scope.factOptions);
+    const reason = mechanicallyNotApplicableReason(validation.command, scopedFactOptions);
     return reason === undefined ? [] : [{ command: validation.command, reason }];
   });
   const filtered =
     changes.length !== evidence.changes.length ||
     attemptChanges?.length !== evidence.attempt_changes?.length;
+  const scoped: ReporterEvidence = projectId
+    ? { ...evidence, runner_scope: { project_id: projectId } }
+    : evidence;
   const selected: ReporterEvidence = filtered
     ? {
-        ...evidence,
+        ...scoped,
         changes,
         ...(attemptChanges ? { attempt_changes: attemptChanges } : {}),
         diff_summary: {
@@ -148,7 +214,7 @@ export function evidenceForReporter(
             .slice(0, MAX_TEXT_LENGTH),
         },
       }
-    : evidence;
+    : scoped;
   if (mechanicallyNotApplicable.length === 0 && runnerManagedAttemptChanges.length === 0) {
     return selected;
   }
@@ -166,7 +232,7 @@ export function evidenceForReporter(
  * from this decision so an LLM cannot change paths or turn a failed run into a completed one.
  */
 export function deriveReporterFacts(
-  evidence: ExecEvidence,
+  evidence: ReporterEvidence,
   options: ReporterFactOptions = {},
 ): ReporterFacts {
   const changedFiles = evidence.changes.map(({ path, status }) => ({ path, status }));
@@ -217,6 +283,16 @@ export function deriveReporterFacts(
   const packageDependencies = options.packageDependencies ?? defaultPackageDependencies();
   const specdojoConfig =
     options.specdojoConfig === undefined ? defaultSpecdojoConfig() : options.specdojoConfig;
+  const projectId = options.projectId ?? evidence.runner_scope?.project_id;
+  const applicabilityOptions: ReporterFactOptions = {
+    packageScripts,
+    packageDependencies,
+    specdojoConfig,
+    ...(projectId ? { projectId } : {}),
+    ...(options.productPackageManifests
+      ? { productPackageManifests: options.productPackageManifests }
+      : {}),
+  };
   const isDelegatedValidationSatisfied = (command: string): boolean => {
     const normalized = normalizeValidationCommand(command);
     if (runnerPassedCommands.has(normalized)) return true;
@@ -235,19 +311,13 @@ export function deriveReporterFacts(
       return !isValidNotApplicableValidation(
         validation.command,
         validation.reason,
-        packageScripts,
-        packageDependencies,
-        specdojoConfig,
+        applicabilityOptions,
       );
     }
     return !(
       validation.status === "not_run" &&
       (isDelegatedValidationSatisfied(validation.command) ||
-        mechanicallyNotApplicableReason(validation.command, {
-          packageScripts,
-          packageDependencies,
-          specdojoConfig,
-        }) !== undefined)
+        mechanicallyNotApplicableReason(validation.command, applicabilityOptions) !== undefined)
     );
   });
   if (executorValidationFailures.length > 0) {
@@ -314,6 +384,7 @@ function projectOptionOf(args: string): string | undefined {
 function specdojoCommandApplicability(
   command: string,
   config: SpecDojoConfig | null,
+  runProjectId: string | undefined,
 ): SpecdojoCommandApplicability {
   const args = specdojoCommandArgs(command);
   if (args === undefined) return { recognized: false };
@@ -322,8 +393,11 @@ function specdojoCommandApplicability(
   }
 
   const configuredProjectId = config?.current_project;
+  // 明示の --project を優先し、次に run の対象 project を使う。current_project は run の対象を
+  // 特定できない場合の最後の手段にとどめる（別 project の catalog_path で判定しないため）。
   const projectId =
     projectOptionOf(args) ??
+    runProjectId ??
     (typeof configuredProjectId === "string" ? configuredProjectId : undefined);
   const project = projectId ? config?.projects[projectId] : undefined;
   if (!project || typeof project !== "object" || Array.isArray(project)) {
@@ -351,22 +425,23 @@ export function mechanicallyNotApplicableReason(
   options: ReporterFactOptions = {},
 ): string | undefined {
   const normalized = normalizeValidationCommand(command);
-  const scripts = options.packageScripts ?? defaultPackageScripts();
-  const dependencies = options.packageDependencies ?? defaultPackageDependencies();
   const config =
     options.specdojoConfig === undefined ? defaultSpecdojoConfig() : options.specdojoConfig;
-  const specdojo = specdojoCommandApplicability(normalized, config);
+  const specdojo = specdojoCommandApplicability(normalized, config, options.projectId);
   if (specdojo.recognized) {
     return specdojo.applicable === false ? specdojo.reason : undefined;
   }
 
-  const scriptName = invokedScriptNameOf(normalized);
-  if (scriptName !== undefined && scripts[scriptName] === undefined) {
-    return `package.json に npm script '${scriptName}' がない`;
+  const manifest = commandManifest(normalized, options, config);
+  const packageJson =
+    manifest.repoName === undefined ? "package.json" : `${manifest.repoName} の package.json`;
+  const scriptName = invokedScriptNameOf(manifest.command);
+  if (scriptName !== undefined && manifest.scripts[scriptName] === undefined) {
+    return `${packageJson} に npm script '${scriptName}' がない`;
   }
-  const packageName = npxPackageNameOf(normalized);
-  if (packageName !== undefined && !dependencies.has(packageName)) {
-    return `package.json の dependencies / devDependencies に '${packageName}' がない`;
+  const packageName = npxPackageNameOf(manifest.command);
+  if (packageName !== undefined && !manifest.dependencies.has(packageName)) {
+    return `${packageJson} の dependencies / devDependencies に '${packageName}' がない`;
   }
   return undefined;
 }
@@ -374,18 +449,116 @@ export function mechanicallyNotApplicableReason(
 function isValidNotApplicableValidation(
   command: string,
   reason: string | undefined,
-  scripts: Readonly<Record<string, string>>,
-  dependencies: ReadonlySet<string>,
-  config: SpecDojoConfig | null,
+  options: ReporterFactOptions,
 ): boolean {
   if (!reason?.trim()) return false;
   const normalized = normalizeValidationCommand(command);
-  const specdojo = specdojoCommandApplicability(normalized, config);
+  const config =
+    options.specdojoConfig === undefined ? defaultSpecdojoConfig() : options.specdojoConfig;
+  const specdojo = specdojoCommandApplicability(normalized, config, options.projectId);
   if (specdojo.recognized) return specdojo.applicable !== true;
-  const scriptName = invokedScriptNameOf(normalized);
-  if (scriptName !== undefined && scripts[scriptName] !== undefined) return false;
-  const packageName = npxPackageNameOf(normalized);
-  return packageName === undefined || !dependencies.has(packageName);
+  const manifest = commandManifest(normalized, options, config);
+  const scriptName = invokedScriptNameOf(manifest.command);
+  if (scriptName !== undefined && manifest.scripts[scriptName] !== undefined) return false;
+  const packageName = npxPackageNameOf(manifest.command);
+  return packageName === undefined || !manifest.dependencies.has(packageName);
+}
+
+type CommandManifest = PackageManifestFacts & {
+  /** Command with any product-repository `--prefix` option removed. */
+  command: string;
+  /** Product repository the command targets; undefined for the project repository. */
+  repoName?: string;
+};
+
+const PREFIX_OPTION_PATTERN = /(?:^|\s)--prefix(?:=|\s+)(\S+)(?=\s|$)/u;
+
+function normalizeRepoPathText(path: string): string {
+  return path.replaceAll("\\", "/").replace(/^\.\//u, "").replace(/\/+$/u, "");
+}
+
+function declaredRepos(
+  config: SpecDojoConfig | null,
+  projectId: string | undefined,
+): SpecDojoRepoConfig[] {
+  const targetProjectId = projectId ?? config?.current_project;
+  const project: unknown = targetProjectId ? config?.projects[targetProjectId] : undefined;
+  if (!isProjectConfig(project) || !Array.isArray(project.repos)) return [];
+  // 設定ファイル由来の値なので、型の宣言に頼らず name と path が文字列の要素だけを使う。
+  return project.repos.filter(
+    (repo: unknown): repo is SpecDojoRepoConfig =>
+      typeof repo === "object" &&
+      repo !== null &&
+      typeof (repo as { name?: unknown }).name === "string" &&
+      typeof (repo as { path?: unknown }).path === "string",
+  );
+}
+
+/**
+ * Identifies a command that targets a declared product repository, either through
+ * `--prefix <repo>` (the repository name or its configured path) or a `<repo>:<path>` argument.
+ */
+function productRepoCommand(
+  command: string,
+  repos: readonly SpecDojoRepoConfig[],
+): { repo: SpecDojoRepoConfig; command: string } | undefined {
+  const prefix = PREFIX_OPTION_PATTERN.exec(command)?.[1];
+  if (prefix !== undefined) {
+    const value = normalizeRepoPathText(prefix);
+    const repo = repos.find(
+      (candidate) => candidate.name === value || normalizeRepoPathText(candidate.path) === value,
+    );
+    if (!repo) return undefined;
+    return {
+      repo,
+      command: normalizeValidationCommand(command.replace(PREFIX_OPTION_PATTERN, " ")),
+    };
+  }
+  const tokens = command.split(" ");
+  const repo = repos.find((candidate) =>
+    tokens.some((token) => token.startsWith(`${candidate.name}:`)),
+  );
+  return repo ? { repo, command } : undefined;
+}
+
+const productManifestCache = new Map<string, PackageManifestFacts>();
+
+function productPackageManifest(
+  repo: SpecDojoRepoConfig,
+  options: ReporterFactOptions,
+): PackageManifestFacts {
+  const injected = options.productPackageManifests?.[repo.name];
+  if (injected) return injected;
+  const packageJsonPath = join(resolveRepoRoot(specdojoRootDir(), repo), "package.json");
+  const cached = productManifestCache.get(packageJsonPath);
+  if (cached) return cached;
+  const manifest = readPackageManifest(packageJsonPath);
+  productManifestCache.set(packageJsonPath, manifest);
+  return manifest;
+}
+
+/**
+ * Selects the package.json that decides a command's applicability: the product repository's
+ * when the command targets one declared by the run's project, otherwise the project repository's.
+ */
+function commandManifest(
+  command: string,
+  options: ReporterFactOptions,
+  config: SpecDojoConfig | null,
+): CommandManifest {
+  const product = productRepoCommand(command, declaredRepos(config, options.projectId));
+  if (product) {
+    return {
+      ...productPackageManifest(product.repo, options),
+      command: product.command,
+      repoName: product.repo.name,
+    };
+  }
+  return {
+    scripts: options.packageScripts ?? defaultPackageScripts(),
+    dependencies: options.packageDependencies ?? defaultPackageDependencies(),
+    command,
+  };
 }
 
 // package.json の script が npm script の呼び出しを `&&` でつないだだけの合成なら、直下の構成
