@@ -1,0 +1,13 @@
+実装完了しました。
+
+- [LP 本体](/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-KH17/specdojo-lp/src/pages/index.astro)に、6 行の使い分け表、GitHub Issues との補完フロー、指定出典を追加
+- スマホではカード、PC では表として表示
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-KH17/project/docs/ja/projects/prj-0002/controls/project-register/pjr-kh17-lp-tool-fit-guide.md)の作業内容・対応結果を更新
+- result と登録簿ステータスは未変更
+- 既存テーマを維持し、公開処理は行っていません
+
+静的要件、整形、register/index 再生成、両リポジトリの差分検査は通過しています。LP ビルドは指示どおり orchestrator へ引き継ぎます。
+
+<specdojo_executor_evidence>
+{"final_message":"LP に困りごと別の6行の使い分け表、GitHub Issuesとの補完フロー、指定出典を追加し、個票を更新した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-kh17-lp-tool-fit-guide.md","status":"passed","summary":"個票のMarkdown整形が完了した。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0002","status":"passed","summary":"npx tsxで発生した既知のIPC EPERMを規定の代替起動へ切り替え、prj-0002の登録簿を正常に再生成した。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書インデックスを正常に再生成した。"},{"command":"git diff --check","status":"passed","summary":"プロジェクトリポジトリの差分に空白エラーはない。"},{"command":"git -C \"$SPECDOJO_REPO_SPECDOJO_LP\" diff --check","status":"passed","summary":"specdojo-lpの差分に空白エラーはない。"},{"command":"npm --prefix \"$SPECDOJO_REPO_SPECDOJO_LP\" run build","status":"requires_human","summary":"個票の指定に従い、orchestratorがsandbox外で実行する必要がある。"}]}
+</specdojo_executor_evidence>
