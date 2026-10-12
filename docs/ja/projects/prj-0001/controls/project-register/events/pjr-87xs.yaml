@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f593067daba34147abbeee134136bf80
+  ts: "2026-10-12T09:00:54Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 で specdojo-lp と同時に開くための code-workspace を手で作り、利用者が SpecDojo の機能にすることを承認した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: repos の設定から VS Code のマルチルートワークスペースを作れるようにする
+    - field: description
+      from: ""
+      to: 別リポジトリ構成では、プロジェクトリポジトリとプロダクトリポジトリを VS Code で同時に開く必要がある。repos の宣言から `<project-id>.code-workspace` を作る機能（config scaffold など）を加え、利用者が手で書かなくて済むようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
