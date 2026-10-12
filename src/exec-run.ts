@@ -1056,8 +1056,13 @@ blocking completion, but rejects the claim when it can confirm the check applies
 - \`npx <package>\`: the package is in package.json dependencies or devDependencies.
 - A command that targets a declared product repository (a \`<repo>:<path>\` argument or
   \`--prefix <repo>\`) is judged by that repository's package.json, not the project repository's.
-- \`specdojo catalog validate\`: the run's target project (or \`--project <id>\`) sets \`catalog_path\`.
-  A project without \`catalog_path\` is a valid reason; state it in \`reason\`.
+- \`specdojo catalog validate\`: the run's target project (or \`--project <id>\`) sets \`catalog_path\`
+  and your changes reach \`docs/ja/projects/\`. A project without \`catalog_path\`, or changes
+  outside \`docs/ja/projects/\`, is a valid reason; state it in \`reason\`.
+
+Do not run or report \`specdojo index build\`. It writes \`.specdojo/doc-index.json\`, which the
+agent may not write, and the runner regenerates the index while preparing the worktree and before
+integration.
 
 End the final response with exactly one machine-readable report using this envelope. Do not place
 Markdown fences around the JSON.
