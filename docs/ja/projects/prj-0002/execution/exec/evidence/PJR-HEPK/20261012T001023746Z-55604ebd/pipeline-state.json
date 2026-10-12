@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-HEPK",
   "run_id": "20261012T001023746Z-55604ebd",
-  "updated_at": "2026-10-12T00:17:55.887Z",
+  "updated_at": "2026-10-12T00:18:08.749Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,12 +21,24 @@
       "artifact_ref": "docs/ja/projects/prj-0002/execution/exec/results/pjr-hepk-20261012T001023Z-d0c1-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "claude-expert-executor",
       "attempts": 1,
       "started_at": "2026-10-12T00:17:55.887Z",
-      "completed_at": null,
-      "artifact_ref": null
+      "completed_at": "2026-10-12T00:18:08.749Z",
+      "artifact_ref": null,
+      "repos": {
+        "specdojo-lp": {
+          "status": "merged",
+          "commit": "454595b5e4b6820d19407713900d6b70ae85bdd4",
+          "merged_at": "2026-10-12T00:18:08.022Z"
+        },
+        "project": {
+          "status": "merged",
+          "commit": null,
+          "merged_at": "2026-10-12T00:18:08.024Z"
+        }
+      }
     }
   },
   "artifacts": {

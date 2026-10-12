@@ -36,3 +36,18 @@ specdojo:
 ## 4. 進め方と実践の型の適用
 
 登録簿の PJR-HEPK と個票を基準に、LP の構成と原稿を `index.astro` へ反映した。個票は構成表と実施内容を更新した。Markdown の整形と lint、`index build` を executor が実行し、型検査、lint、schema、unit と integration の各テストは親 runner が実行して全件 passed となった。LP のビルドだけは sandbox の制約で人間の確認に回した。
+
+## 5. トレーサビリティ
+
+runner がプロダクトリポジトリを統合した後に記録した、統合先の commit snapshot です。
+プロジェクトリポジトリの統合は、この result を含む merge commit で確認します。
+その merge commit には `Refs: prj-0002:PJR-HEPK` を付けます。
+PR が `not applicable` の行は、runner がローカルで統合し PR を経由していません。
+
+<!-- markdownlint-disable MD013 -->
+
+| trace key           | repository    | integration branch | PR             | commit snapshot                            | recorded at              |
+| ------------------- | ------------- | ------------------ | -------------- | ------------------------------------------ | ------------------------ |
+| `prj-0002:PJR-HEPK` | `specdojo-lp` | `main`             | not applicable | `454595b5e4b6820d19407713900d6b70ae85bdd4` | 2026-10-12T00:18:08.748Z |
+
+<!-- markdownlint-enable MD013 -->
