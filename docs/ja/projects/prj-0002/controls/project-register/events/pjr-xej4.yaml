@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_591cad6efd2341fb8b5241f5b20c1480
+  ts: "2026-10-12T10:54:12Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: LP の公開に向け、specdojo-assets での正式なキャラクター作りと並行して、利用者が用意した暫定の画像で当面しのぐことにした
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 暫定のマスコット画像を LP の Hero に置く
+    - field: description
+      from: ""
+      to: ChatGPT で作ったマスコットの画像（道着を着たカワウソが、書いて、削り出して、磨き上げる 3 コマ）を、正式な画像（PJR-FSMC）ができるまでの暫定として LP の Hero の仮の枠に置く。astro:assets の Image で最適化して表示する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: UX
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
