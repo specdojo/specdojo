@@ -1,0 +1,20 @@
+作業が完了しました。`specdojo-lp` に `tsd-index.md` を新しく作り、README から案内を追加しました。`specdojo-lp` で `npm run format:check` と `npm run build` を実行し、どちらも通っています。
+
+**変更したファイル**
+- `specdojo-lp:docs/ja/product/030-architecture/020-infrastructure/tsd-index.md`（新規）
+  - frontmatter は `id: tsd-index`、`type: architecture`、`status: draft`、`rulebook: specdojo:tsd-index-rulebook` です。
+  - `技術スタック一覧` は表 1 つで、列は `区分`・`採用技術`・`担当責務`・`補足` です。
+  - バージョンは `package.json` に合わせて、メジャーバージョンまで書きました。
+    - 言語・ランタイムなど: TypeScript 6.x、Node.js 22.x（開発は 22.13.0 以上、ビルドは 22.12.0 以上）、npm
+    - Web フレームワークとスタイル: Astro 7.x（静的出力）、Tailwind CSS 4.x、Material 3 のテーマ（`src/styles/global.css`）
+    - 整形・lint・型検査: Prettier 3.x（Astro・Tailwind CSS の plugin）、ESLint 10.x（`typescript-eslint`・`eslint-plugin-astro`）、`astro check`
+    - ホスティングなど: Cloudflare Workers の静的アセット（`specdojo.org`）、GitHub（GitHub flow）、specdojo-assets
+  - Cloudflare の詳細を書く `tsd-<term>` はまだ無いので、リンクは書いていません。作成した時点で足す旨を表の外の補足に書きました。
+- `specdojo-lp:README.md`: 冒頭に `tsd-index.md` への案内を 1 行足しました。
+- 個票 `pjr-4zsn-lp-tech-stack-tsd.md`: 作業内容 No.1 を `done` にし、`対応結果` を書きました。登録簿と項目の状態は変えていません。作業内容 No.2（`format:check` とビルドの確認）は担当が orchestrator のため `open` のままです。
+
+`specdojo catalog validate` は、prj-0002 に `catalog_path` が設定されていないので実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"specdojo-lp に tsd-index.md（技術スタック一覧の表 1 つ、メジャーバージョンは package.json と一致）を作り、README から案内した。個票の作業内容 No.1 を done にし、対応結果を書いた。","validations":[{"command":"npx prettier --write docs/ja/product/030-architecture/020-infrastructure/tsd-index.md README.md (specdojo-lp)","status":"passed","summary":"tsd-index.md を整形した。README は変更なし"},{"command":"npm run format:check (specdojo-lp)","status":"passed","summary":"All matched files use Prettier code style!"},{"command":"npm run build (specdojo-lp)","status":"passed","summary":"astro build 完了（1 page built）"},{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-4zsn-lp-tech-stack-tsd.md","status":"passed","summary":"変更なし"},{"command":"npx markdownlint docs/ja/projects/prj-0002/controls/project-register/pjr-4zsn-lp-tech-stack-tsd.md","status":"passed","summary":"エラーなし"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"対象外","reason":"prj-0002 に catalog_path が設定されていない"}]}
+</specdojo_executor_evidence>
