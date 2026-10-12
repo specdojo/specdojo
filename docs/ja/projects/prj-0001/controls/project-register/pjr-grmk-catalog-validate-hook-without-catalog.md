@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T04:10:29Z"
   due_on: "2026-10-31"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result …"
 ---
 
 # PJR-GRMK pre-commit の catalog-validate が catalog_path のない project で失敗する
