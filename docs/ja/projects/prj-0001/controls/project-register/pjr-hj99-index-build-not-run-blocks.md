@@ -7,9 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   registered_at: "2026-10-12T03:32:21Z"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: ERROR: Selected model is at capacity. Please try a different model."
 ---
 
 # PJR-HJ99 executor が実行できない index build の not_run で run が止まる
