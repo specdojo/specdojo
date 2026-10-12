@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-12T09:14:26Z"
@@ -40,7 +40,13 @@ task.review を宣言した Job を --scheduled-at なしで手動実行する�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+worktree 作成前に親プロセスが確定した `scheduled_at` を、worktree 内の子プロセスへ
+`--scheduled-at` として常に渡すようにした。これにより手動実行で引数を省略しても、親子が同じ
+冪等キーと Job Run ID を使う。
+
+統合テストへ `--scheduled-at` の省略ケースを追加し、親が表示する Run ID、子が完了した Run ID、
+merge 対象の Run ID が一致し、対応する Job Run record が統合後のリポジトリに存在することを確認する。
+既存の明示指定ケースも維持し、双方の経路を回帰テスト対象とした。
 
 ## 5. 関連ドキュメント
 
