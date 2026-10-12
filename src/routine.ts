@@ -16,7 +16,14 @@ import {
   writeJson,
 } from "./exec-shared.js";
 import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./exec-run-lock.js";
-import { resolveJobPaths } from "./job.js";
+import {
+  jobDeclaresReview,
+  jobRunUsesReviewedIntegration,
+  loadJobDefinition,
+  resolveJobPaths,
+  resolveJobReviewAgentNominations,
+  type JobDefinition,
+} from "./job.js";
 
 // ================================
 // Types
@@ -689,6 +696,8 @@ export function buildJobRunArgs(
     "--if-busy",
     "skip",
   ];
+  // action.commit is kept for compatibility. A Job that declares task.review is reviewed by
+  // exec run regardless of this flag, so the Job's declaration takes precedence.
   if (action.commit) args.push("--worktree");
   for (const [key, value] of Object.entries(action.inputs ?? {}).sort(([a], [b]) =>
     a.localeCompare(b),
@@ -696,6 +705,25 @@ export function buildJobRunArgs(
     args.push("--input", `${key}=${renderRoutineInput(value, scheduledAt, timezone)}`);
   }
   return args;
+}
+
+/**
+ * Describes how a job action's Run is integrated and which review agents the Job nominates.
+ * The Job's task.review declaration wins over the legacy routine `commit`; routine never
+ * passes --review-by / --reporter-by, so an agent without a Job nomination is auto selected.
+ */
+export function describeJobActionReview(
+  action: RoutineJobAction,
+  definition: Pick<JobDefinition, "task">,
+): string {
+  if (!jobRunUsesReviewedIntegration(definition, { worktree: action.commit === true })) {
+    return "review: none (in-place)";
+  }
+  const source = jobDeclaresReview(definition)
+    ? "job task.review"
+    : "routine action.commit (compat)";
+  const nominations = resolveJobReviewAgentNominations({}, definition);
+  return `review: ${source} (executor=${nominations.executor?.nickname ?? "auto"}, reporter=${nominations.reporter?.nickname ?? "auto"})`;
 }
 
 export function aggregateRoutineActionResults(
@@ -732,6 +760,16 @@ function executeRoutineAction(
     lastRoutineSpawnReason = undefined;
     lastRoutineSpawnRunId = undefined;
     process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
+    if (action.kind === "job") {
+      try {
+        const definition = loadJobDefinition(resolveJobPaths(projectId), action.job);
+        process.stdout.write(`  [dry-run] ${describeJobActionReview(action, definition)}\n`);
+      } catch (error) {
+        process.stdout.write(
+          `  [dry-run] review: unknown (${error instanceof Error ? error.message : String(error)})\n`,
+        );
+      }
+    }
     return "success";
   }
   return spawnSelf(args);

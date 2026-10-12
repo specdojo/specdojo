@@ -34,7 +34,10 @@ function write(path: string, content: string): void {
   writeFileSync(path, content, "utf8");
 }
 
-function setupFixture(verdict: "complete" | "incomplete"): {
+function setupFixture(
+  verdict: "complete" | "incomplete",
+  options: { declareReview?: boolean } = {},
+): {
   repo: string;
   worktrees: string;
   head: string;
@@ -79,6 +82,18 @@ function setupFixture(verdict: "complete" | "incomplete"): {
       "    capabilities: []",
       "    proficiency: normal",
       "    priority: 1",
+      "  - nickname: fixture-nominated-review-executor",
+      "    display_name: Fixture Nominated Review Executor",
+      "    email: null",
+      "    roles: []",
+      "    type: agent",
+      "    provider: custom",
+      "    mode: review",
+      "    stage_role: executor",
+      "    command: node tools/review-executor.mjs",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 9",
       "  - nickname: fixture-reporter",
       "    display_name: Fixture Reporter",
       "    email: null",
@@ -113,6 +128,14 @@ function setupFixture(verdict: "complete" | "incomplete"): {
       "    mkdir -p output",
       "    git rev-parse HEAD > output/run.txt",
       "  paths: [output]",
+      ...(options.declareReview
+        ? [
+            "  review:",
+            "    agent:",
+            "      executor: fixture-nominated-review-executor",
+            "      reporter: fixture-reporter",
+          ]
+        : []),
       "run:",
       '  idempotency_key: "{{job_id}}:{{scheduled_at}}"',
       "",
@@ -141,7 +164,11 @@ function setupFixture(verdict: "complete" | "incomplete"): {
   return { repo, worktrees, head };
 }
 
-function runJob(repo: string, worktrees: string): ReturnType<typeof spawnSync> {
+function runJob(
+  repo: string,
+  worktrees: string,
+  options: { worktreeFlag?: boolean } = {},
+): ReturnType<typeof spawnSync> {
   return spawnSync(
     process.execPath,
     [
@@ -155,7 +182,7 @@ function runJob(repo: string, worktrees: string): ReturnType<typeof spawnSync> {
       "job-sample",
       "--scheduled-at",
       "2026-10-12T01:00:00.000Z",
-      "--worktree",
+      ...(options.worktreeFlag === false ? [] : ["--worktree"]),
       "--worktree-base",
       worktrees,
     ],
@@ -196,5 +223,22 @@ describe("Job Run worktree integration", () => {
     expect(git(fixture.repo, "worktree", "list", "--porcelain")).toContain("JBR-");
     expect(existsSync(join(fixture.repo, "output/run.txt"))).toBe(false);
     expect(`${result.stdout}\n${result.stderr}`).toContain("[routine-job] waiting");
+  }, 120_000);
+
+  it("reviews a Job that declares task.review without --worktree using the nominated review executor", () => {
+    const fixture = setupFixture("complete", { declareReview: true });
+    const result = runJob(fixture.repo, fixture.worktrees, { worktreeFlag: false });
+
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+    expect(String(result.stdout)).toContain("[routine-job] merged");
+    expect(readFileSync(join(fixture.repo, "output/run.txt"), "utf8").trim()).toBe(fixture.head);
+    expect(git(fixture.repo, "log", "-1", "--pretty=%P").split(" ")).toHaveLength(2);
+    const reviewResults = git(fixture.repo, "ls-files", "execution")
+      .split("\n")
+      .filter((path) => path.endsWith("-review-result.md"));
+    expect(reviewResults).toHaveLength(1);
+    expect(readFileSync(join(fixture.repo, reviewResults[0]), "utf8")).toMatch(
+      /agent: "?fixture-nominated-review-executor"?/,
+    );
   }, 120_000);
 });

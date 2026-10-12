@@ -70,7 +70,11 @@ $defs:
           type: string
       commit:
         type: boolean
-        description: Run the Job in an exec worktree, commit its outputs, review them, and merge only an accepted Run.
+        description: >
+          Compatibility only; not recommended for new routines. Run the Job in an exec worktree,
+          commit its outputs, review them, and merge only an accepted Run. Declare task.review in
+          the Job Definition instead. When the Job declares task.review, the Job wins and the Run
+          is reviewed even if commit is false or omitted.
   specdojoAction:
     description: >
       Runs a specdojo subcommand directly with --project appended, without taking the exec run

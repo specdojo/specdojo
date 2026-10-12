@@ -53,9 +53,23 @@ action:
 
 ### Job Run 出力の commit と review
 
-統合前レビューが必要な定期 Job では、action に `commit: true` を指定します。
+統合前レビューが必要かどうかは Job の出力の性質で決まるため、routine ではなく Job Definition の `task.review` で宣言します（[[specdojo:job-definition-standard]] の `統合前 review の宣言と review agent の規約`）。review executor と reporter も `task.review.agent` に nickname で指名します。routine は時刻条件のトリガー層であり、Job に書いた宣言と指名は、同じ Job を `exec run --job` で手動実行した場合にも同じように効きます。
 
-`commit: true` を指定した Job は本体の checkout では実行せず、`exec/<project-id>-<run-id>` の worktree で実行します。runner は Job Run の plan・result・evidence・Run JSON と Job が更新した成果物だけを `chore(routine): …` の commit にし、commit 本文へ Job Run ID と `succeeded` / `failed` を記録します。本体 checkout にある利用者の未 commit 変更は commit 対象に入りません。
+```yaml
+# job-*.yaml
+task:
+  # mode や command などは省略
+  review:
+    agent:
+      executor: claude-expert-review-executor
+      reporter: claude-reporter
+```
+
+review agent は、`exec run` の `--review-by` / `--reporter-by`、Job の `task.review.agent`、自動選択の順に解決します。routine から CLI の指定は渡さないため、routine 起動では Job の指名か自動選択になります。解決結果は `specdojo exec run --job <job-id> --dry-run` の `review executor` / `review reporter` の行で、解決元とともに確認できます。
+
+action の `commit: true` は互換として残しています。`task.review` を宣言していない Job でも `commit: true` なら同じ流れで実行しますが、新しい routine では推奨しません。Job が `task.review` を宣言している場合は Job を優先し、`commit` を省略しても、`false` を指定しても review を経て統合します。
+
+統合前 review を宣言した Job は本体の checkout では実行せず、`exec/<project-id>-<run-id>` の worktree で実行します。runner は Job Run の plan・result・evidence・Run JSON と Job が更新した成果物だけを `chore(routine): …` の commit にし、commit 本文へ Job Run ID と `succeeded` / `failed` を記録します。本体 checkout にある利用者の未 commit 変更は commit 対象に入りません。
 
 出力 commit の後、runner は `mode: review` の plan/result を作ります。review executor は score・verdict・finding・失敗文書と Job の完了条件を照合しますが、Job Run 出力は修正しません。Run が `succeeded` で verdict が `complete` または `complete-with-findings` の場合だけ、runner は現在の統合先へ `--no-ff` で merge し、worktree と exec branch を撤去します。Run が失敗した場合、review が未完了の場合、またはそれ以外の verdict の場合は統合せず、worktree を保持して routine の `last_result: failure`、`last_reason`、review result、Job Run JSON に理由を残します。
 

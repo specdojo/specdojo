@@ -8,6 +8,7 @@ import {
   buildJobRunArgs,
   buildSpecdojoActionArgs,
   cronOccurrences,
+  describeJobActionReview,
   executeRoutineActions,
   formatRoutineLastRun,
   isRoutineDue,
@@ -376,6 +377,40 @@ describe("cron Job routine", () => {
       "--input",
       "period=2026-W32",
     ]);
+  });
+});
+
+describe("describeJobActionReview", () => {
+  const declared = {
+    task: {
+      mode: "command" as const,
+      command: "tools/grade/run.sh",
+      review: {
+        agent: { executor: "claude-expert-review-executor", reporter: "claude-reporter" },
+      },
+    },
+  };
+  const undeclared = { task: { mode: "command" as const, command: "tools/grade/run.sh" } };
+
+  it("prefers the Job declaration and its nominated agents when action.commit is omitted", () => {
+    expect(describeJobActionReview({ kind: "job", job: "job-grade-kata" }, declared)).toBe(
+      "review: job task.review (executor=claude-expert-review-executor, reporter=claude-reporter)",
+    );
+  });
+
+  it("keeps the Job declaration even when action.commit is false", () => {
+    expect(
+      describeJobActionReview({ kind: "job", job: "job-grade-kata", commit: false }, declared),
+    ).toMatch(/^review: job task\.review /);
+  });
+
+  it("treats action.commit as a compatible opt in for an undeclared Job", () => {
+    expect(
+      describeJobActionReview({ kind: "job", job: "job-grade-kata", commit: true }, undeclared),
+    ).toBe("review: routine action.commit (compat) (executor=auto, reporter=auto)");
+    expect(describeJobActionReview({ kind: "job", job: "job-grade-kata" }, undeclared)).toBe(
+      "review: none (in-place)",
+    );
   });
 });
 
