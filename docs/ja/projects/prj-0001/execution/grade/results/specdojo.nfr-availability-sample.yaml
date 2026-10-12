@@ -3,34 +3,80 @@ version: 1
 document: specdojo:nfr-availability-sample
 path: docs/ja/specdojo/samples/nfr-availability-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 53
-graded_at: "2026-09-05T10:07:42.435Z"
-graded_by: gemma-expert-executor
+score: 56
+graded_at: "2026-10-12T21:36:14.949Z"
+graded_by: agy-expert-executor
 content_hash: 7e02345806258b330f8ea29e21cb7e558393a3e9009b47fe94b3cdcf465bb4f7
 categories:
-  consistency:
+  purpose:
+    score: 88
+  operations:
+    score: 88
+  planning:
+    score: 83
+  business:
     score: 50
+  architecture:
+    score: 83
   usability:
     score: 75
-  architecture:
-    score: 100
+  implementation:
+    score: 63
   quality:
-    score: 13
+    score: 33
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 4
     score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -38,9 +84,18 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,33 +103,154 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 2
-  major: 2
-  minor: 0
+  major: 8
+  minor: 7
   note: 0
 findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 27
+    anchor: ""
+    message: >-
+      The unresolved issues table in section 5 lists a generic topic without specifying the decision-maker, impact, or
+      concrete next action.
+    message_ja: セクション5の未解決課題テーブルには、意思決定者、影響、または具体的な次のアクションが指定されていない一般的なトピックが記載されています。
   - id: F002
-    severity: blocker
-    rule: vp-qe-omissions-consistency
+    severity: minor
+    rule: vp-pm-plan-feasibility
     line: 1
-    message: 必須章（概要、適用範囲・除外条件、可用性要件一覧、測定・検証方法、関連ドキュメント導線）がすべて欠落している。
-    anchor: ""
+    anchor: "# [非機能要件 / 可用性](../rulebooks/nfr-availability-rulebook.md) サンプル"
+    message: >-
+      The sample does not define responsible role codes or timing for availability verification, preventing task
+      scheduling and progress tracking.
+    message_ja: サンプルには、責任者となるロールコードや可用性検証のタイミングが定義されていないため、タスクのスケジューリングや進捗の追跡ができません。
   - id: F003
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: rulebook Section 5 で定義された必須の見出し構成に準拠しておらず、完成例としての責務を果たしていない。
-    anchor: ""
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: >-
+      The document does not identify dependencies on downstream verification and operational artifacts such as test
+      cases and recovery runbooks.
+    message_ja: ドキュメントには、テストケースやリカバリ・ランブックといった、ダウンストリームの検証および運用アーティファクトへの依存関係が特定されていません。
   - id: F004
     severity: major
-    rule: vp-ux-readability
-    line: 1
-    message: 具体的な記述例を欠いたメタ記述のみとなっており、初見の読者が「どのように書くべきか」を理解できるサンプルとしての機能を果たしていない。
+    rule: vp-ba-business-value
+    line: 6
     anchor: ""
-  - id: F001
+    message: >-
+      The sample fails to explain which operational business problems and expected value for the confectionery store the
+      availability continuity addresses, lacking context on target users and impact of system outages.
+    message_ja: サンプルでは、可用性の継続性が菓子店のどの業務上の問題と期待される価値に対処するのかが説明されておらず、対象ユーザーやシステム停止の影響に関するコンテキストが不足しています。
+  - id: F005
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 14
+    anchor: ""
+    message: >-
+      The document lacks concrete availability requirements, acceptance criteria, scope boundaries, and exclusion
+      conditions from the user perspective, providing only abstract topic keywords.
+    message_ja: ドキュメントには、ユーザーの視点から見た具体的な可用性の要件、受け入れ基準、スコープの境界、および除外条件が不足しており、抽象的なトピックのキーワードのみが提供されています。
+  - id: F006
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: >-
+      The document does not identify concrete stakeholders, user roles, or approvers, merely listing '責任者' as an
+      abstract viewpoint item.
+    message_ja: ドキュメントでは、具体的なステークホルダー、ユーザーロール、または承認者が特定されておらず、単に「責任者」という抽象的な観点の項目がリストされているだけです。
+  - id: F007
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: >-
+      Technical constraints, external dependencies, and architectural redundancy policies are merely listed as keyword
+      topics without specifying any actual constraints or architecture decisions.
+    message_ja: 技術的な制約、外部依存関係、およびアーキテクチャの冗長化ポリシーが、実際的な制約やアーキテクチャの決定事項を指定することなく、キーワードのトピックとして単に列挙されています。
+  - id: F008
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 21
+    anchor: >-
+      | ------------ | ---------------------------------------------------------------- |
+      ------------------------------------ |
+    message: >-
+      The table in section 4 duplicates the exact purpose and bullet list of topics already stated in sections 1 and 3
+      without adding any new information.
+    message_ja: セクション4のテーブルは、新しい情報を追加することなく、セクション1および3ですでに述べられているトピックの目的と箇条書きリストをそのまま重複させています。
+  - id: F009
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: >-
+      The document provides no concrete inputs, configuration parameters, recovery thresholds, or completion criteria
+      needed by developers to implement availability mechanisms.
+    message_ja: ドキュメントには、開発者が可用性のメカニズムを実装するために必要な具体的な入力、設定パラメータ、リカバリの閾値、または完了基準が提供されていません。
+  - id: F010
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: >-
+      The document does not identify the scope of impact on downstream artifacts and operational procedures when
+      availability requirements change.
+    message_ja: ドキュメントでは、可用性の要件が変更された際の、下流のアーティファクトや運用手順への影響範囲が特定されていません。
+  - id: F011
+    severity: major
+    rule: vp-dev-testability
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: >-
+      The sample does not specify any test procedures, monitoring methods, or validation commands to verify availability
+      requirements after implementation.
+    message_ja: サンプルには、実装後に可用性の要件を検証するためのテスト手順、監視方法、または検証コマンドが指定されていません。
+  - id: F012
     severity: major
     rule: vp-qe-verifiability
     line: 21
-    message: 可用性要件の核心である定量的な判定基準（稼働率 % や RTO/RPO の値など）が一切記述されておらず、検証不能である。
     anchor: >-
-      | 項目         | 値                                                               |
-      備考                                 |
+      | ------------ | ---------------------------------------------------------------- |
+      ------------------------------------ |
+    message: 可用性要件の核心である定量的な判定基準（稼働率 % や RTO/RPO の値など）が一切記述されておらず、検証不能である。
+    message_ja: 可用性要件の核心である定量的な判定基準（稼働率 % や RTO/RPO の値など）が一切記述されておらず、検証不能である。
+  - id: F013
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [非機能要件 / 可用性](../rulebooks/nfr-availability-rulebook.md) サンプル"
+    message: 必須章（概要、適用範囲・除外条件、可用性要件一覧、測定・検証方法、関連ドキュメント導線）がすべて欠落している。
+    message_ja: 必須章（概要、適用範囲・除外条件、可用性要件一覧、測定・検証方法、関連ドキュメント導線）がすべて欠落している。
+  - id: F014
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [非機能要件 / 可用性](../rulebooks/nfr-availability-rulebook.md) サンプル"
+    message: rulebook Section 5 で定義された必須の見出し構成に準拠しておらず、完成例としての責務を果たしていない。
+    message_ja: rulebook Section 5 で定義された必須の見出し構成に準拠しておらず、完成例としての責務を果たしていない。
+  - id: F015
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    anchor: "# [非機能要件 / 可用性](../rulebooks/nfr-availability-rulebook.md) サンプル"
+    message: 具体的な記述例を欠いたメタ記述のみとなっており、初見の読者が「どのように書くべきか」を理解できるサンプルとしての機能を果たしていない。
+    message_ja: 具体的な記述例を欠いたメタ記述のみとなっており、初見の読者が「どのように書くべきか」を理解できるサンプルとしての機能を果たしていない。
+  - id: F016
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 27
+    anchor: ""
+    message: The conditions and prerequisites required to transition the document from draft to ready status are not specified.
+    message_ja: ドキュメントをドラフトから準備完了ステータスに移行するために必要な条件と前提事項が指定されていません。
+  - id: F017
+    severity: minor
+    rule: vp-ops-operability
+    line: 6
+    anchor: ""
+    message: >-
+      The document lacks information on change management, responsible roles, or operational contacts for maintaining
+      availability definitions.
+    message_ja: ドキュメントには、可用性の定義を維持するための変更管理、責任者、または運用の連絡先に関する情報が不足しています。
