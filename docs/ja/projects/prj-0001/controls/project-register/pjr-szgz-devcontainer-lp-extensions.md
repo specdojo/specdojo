@@ -22,13 +22,20 @@ specdojo:
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `.devcontainer/devcontainer.json` の `customizations.vscode.extensions` に、次の拡張機能を加えている。
+  - `astro-build.astro-vscode`（Astro）
+  - `bradlc.vscode-tailwindcss`（Tailwind CSS IntelliSense）
+  - `dbaeumer.vscode-eslint`（ESLint）
+- Prettier（`esbenp.prettier-vscode`）は既にあるため、重複して加えない。
+- devcontainer を作り直し（Rebuild Container）、3 つの拡張機能が入ること、`specdojo-lp` の `.astro` ファイルで構文の強調表示と Tailwind の補完が効くことを確認している。
+- `.devcontainer/` の変更は利用者の承認を得てから行う。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                   | 担当 | 状態 | メモ               |
+| --- | -------------------------------------- | ---- | ---- | ------------------ |
+| 1   | `devcontainer.json` に拡張機能を加える | DEV  | open | 利用者の承認を得る |
+| 2   | devcontainer を作り直して確認する      | DEV  | open | -                  |
 
 ## 4. 対応結果
 
@@ -36,4 +43,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0002:pjr-2cqc-lp-dev-environment]]: `specdojo-lp` の開発環境。推奨の一覧（`.vscode/extensions.json`）はこちらで置く。
