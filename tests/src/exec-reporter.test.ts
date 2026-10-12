@@ -873,6 +873,143 @@ describe("reporter structured output", () => {
     expect(deriveReporterFacts(input).outcome).toBe("blocked");
   });
 
+  describe("product repository validations delegated as not_run", () => {
+    const productConfig = {
+      version: 1 as const,
+      current_project: "prj-0002",
+      projects: {
+        "prj-0002": {
+          repos: [
+            { name: "app1", path: "../app1" },
+            { name: "app2", path: "../app2" },
+          ],
+        },
+      },
+    };
+    const options = {
+      projectId: "prj-0002",
+      specdojoConfig: productConfig,
+      productPackageManifests: {
+        app1: {
+          scripts: {
+            check: "npm run typecheck && npm run test:unit",
+            "test:unit": "vitest run",
+          },
+          dependencies: new Set<string>(),
+        },
+        app2: { scripts: { "test:unit": "vitest run" }, dependencies: new Set<string>() },
+      },
+    };
+
+    it("accepts the same command passed by the runner in the targeted product repository", () => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm --prefix app1 run test:unit",
+          status: "not_run",
+          summary: "app1 の親検証へ委譲",
+        },
+        {
+          id: "test-unit",
+          source: "runner",
+          repo: "app1",
+          command: "npm run test:unit",
+          status: "passed",
+          summary: "exit 0",
+        },
+      ];
+
+      expect(deriveReporterFacts(input, options)).toMatchObject({
+        outcome: "complete",
+        block_reason: "",
+      });
+    });
+
+    it("expands a delegated composite script within the targeted product repository", () => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm --prefix app1 run check",
+          status: "not_run",
+          summary: "app1 の親検証へ委譲",
+        },
+        {
+          id: "typecheck",
+          source: "runner",
+          repo: "app1",
+          command: "npm run typecheck",
+          status: "passed",
+          summary: "exit 0",
+        },
+        {
+          id: "test-unit",
+          source: "runner",
+          repo: "app1",
+          command: "npm run test:unit",
+          status: "passed",
+          summary: "exit 0",
+        },
+      ];
+
+      expect(deriveReporterFacts(input, options)).toMatchObject({
+        outcome: "complete",
+        block_reason: "",
+      });
+    });
+
+    it("does not accept the same command passed in a different product repository", () => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm --prefix app1 run test:unit",
+          status: "not_run",
+          summary: "app1 の親検証へ委譲",
+        },
+        {
+          id: "test-unit",
+          source: "runner",
+          repo: "app2",
+          command: "npm run test:unit",
+          status: "passed",
+          summary: "exit 0",
+        },
+      ];
+
+      expect(deriveReporterFacts(input, options)).toMatchObject({
+        outcome: "blocked",
+        block_reason: "executor validation failed or not run: npm --prefix app1 run test:unit",
+      });
+    });
+
+    it("does not accept a failed parent validation in the targeted product repository", () => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm --prefix app1 run test:unit",
+          status: "not_run",
+          summary: "app1 の親検証へ委譲",
+        },
+        {
+          id: "test-unit",
+          source: "runner",
+          repo: "app1",
+          command: "npm run test:unit",
+          status: "failed",
+          summary: "1 failed",
+        },
+      ];
+
+      expect(deriveReporterFacts(input, options)).toMatchObject({
+        outcome: "blocked",
+        block_reason: "parent validation failed: app1:test-unit",
+      });
+    });
+  });
+
   describe("composite commands delegated as not_run", () => {
     const packageScripts = {
       check: "npm run typecheck && npm run lint:md && npm run validate:catalog && npm test",

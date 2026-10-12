@@ -257,28 +257,6 @@ export function deriveReporterFacts(
       block_reason: validationFailure,
     };
   }
-  // sandbox で実行できない検証を executor が not_run（親 runner へ委譲）と記録し、runner が
-  // 同じコマンドを project で実行して通した場合は満たされたものとして扱う。executor の failed は
-  // runner の結果で打ち消さない。
-  const runnerPassedCommands = new Set(
-    evidence.validations
-      .filter(
-        (validation) =>
-          validation.source === "runner" &&
-          validation.status === "passed" &&
-          (validation.repo === undefined || validation.repo === PARENT_VALIDATION_PROJECT_REPO),
-      )
-      .map((validation) => normalizeValidationCommand(validation.command)),
-  );
-  // `npm run check` のような合成コマンドを executor が not_run（親 runner へ委譲）とした場合は、
-  // package.json の script を展開し、構成する各コマンドが runner の親検証か executor 自身の検証で
-  // 通っていれば満たされたものとして扱う（PJR-SDWF）。
-  const passedCommands = new Set([
-    ...runnerPassedCommands,
-    ...evidence.validations
-      .filter((validation) => validation.source !== "runner" && validation.status === "passed")
-      .map((validation) => normalizeValidationCommand(validation.command)),
-  ]);
   const packageScripts = options.packageScripts ?? defaultPackageScripts();
   const packageDependencies = options.packageDependencies ?? defaultPackageDependencies();
   const specdojoConfig =
@@ -293,14 +271,58 @@ export function deriveReporterFacts(
       ? { productPackageManifests: options.productPackageManifests }
       : {}),
   };
+  const passedCommandsByRepo = new Map<string, Set<string>>();
+  const runnerPassedCommandsByRepo = new Map<string, Set<string>>();
+  const addPassedCommand = (
+    target: Map<string, Set<string>>,
+    repo: string,
+    command: string,
+  ): void => {
+    const commands = target.get(repo) ?? new Set<string>();
+    commands.add(command);
+    target.set(repo, commands);
+  };
+  // sandbox で実行できない検証を executor が not_run（親 runner へ委譲）と記録し、runner が
+  // 同じリポジトリで同じコマンドを実行して通した場合は満たされたものとして扱う。executor の
+  // failed は runner の結果で打ち消さない（PJR-2GZE）。
+  for (const validation of evidence.validations) {
+    if (validation.status !== "passed") continue;
+    if (validation.source === "runner") {
+      const repo = validation.repo ?? PARENT_VALIDATION_PROJECT_REPO;
+      const command = normalizeValidationCommand(validation.command);
+      addPassedCommand(runnerPassedCommandsByRepo, repo, command);
+      addPassedCommand(passedCommandsByRepo, repo, command);
+      continue;
+    }
+    const manifest = commandManifest(
+      normalizeValidationCommand(validation.command),
+      applicabilityOptions,
+      specdojoConfig,
+    );
+    addPassedCommand(
+      passedCommandsByRepo,
+      manifest.repoName ?? PARENT_VALIDATION_PROJECT_REPO,
+      manifest.command,
+    );
+  }
+  // `npm run check` のような合成コマンドを executor が not_run（親 runner へ委譲）とした場合は、
+  // 対象リポジトリの package.json の script を展開し、構成する各コマンドが同じリポジトリの
+  // 親検証か executor 自身の検証で通っていれば満たされたものとして扱う（PJR-SDWF）。
   const isDelegatedValidationSatisfied = (command: string): boolean => {
-    const normalized = normalizeValidationCommand(command);
-    if (runnerPassedCommands.has(normalized)) return true;
-    const components = compositeComponents(normalized, packageScripts);
+    const manifest = commandManifest(
+      normalizeValidationCommand(command),
+      applicabilityOptions,
+      specdojoConfig,
+    );
+    const repo = manifest.repoName ?? PARENT_VALIDATION_PROJECT_REPO;
+    const runnerPassedCommands = runnerPassedCommandsByRepo.get(repo) ?? new Set<string>();
+    if (runnerPassedCommands.has(manifest.command)) return true;
+    const passedCommands = passedCommandsByRepo.get(repo) ?? new Set<string>();
+    const components = compositeComponents(manifest.command, manifest.scripts);
     return (
       components !== undefined &&
       components.every((component) =>
-        isComponentSatisfied(component, passedCommands, packageScripts),
+        isComponentSatisfied(component, passedCommands, manifest.scripts),
       )
     );
   };
