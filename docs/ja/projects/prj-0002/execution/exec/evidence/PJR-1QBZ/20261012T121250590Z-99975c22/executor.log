@@ -1,0 +1,12 @@
+README の古い構成表を現状に合わせて更新しました。
+
+- [specdojo-lp/README.md](/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-1QBZ/specdojo-lp/README.md): 全コンポーネント、共通リンク、マスコット画像を追記
+- [PJR-1QBZ 個票](/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-1QBZ/project/docs/ja/projects/prj-0002/controls/project-register/pjr-1qbz-lp-stale-docs.md): 実施内容と確認結果を記録
+- ソースコメントと画面用語は現状と一致していたため変更なし
+- 製品コード・表示文言は変更しておらず、HTML 出力への影響なし
+- `npm run build` は計画どおり orchestrator による確認が必要です
+- result ファイルと登録簿ステータスは変更していません
+
+<specdojo_executor_evidence>
+{"final_message":"READMEの構成表を現行実装に合わせ、個票へ調査・対応結果を記録しました。ソースコメントと画面文言に追加修正は不要でした。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-1qbz-lp-stale-docs.md","status":"passed","summary":"個票を整形しました。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0002","status":"passed","summary":"tsxのIPC制約を規定の代替起動方法で回避し、登録簿生成に成功しました。"},{"command":"git diff --check && git -C \"$SPECDOJO_REPO_SPECDOJO_LP\" diff --check","status":"passed","summary":"両リポジトリの差分に空白エラーはありません。"},{"command":"npm run build (specdojo-lp)","status":"requires_human","summary":"個票の完了条件に従い、orchestratorがsandbox外で実行する必要があります。"}]}
+</specdojo_executor_evidence>
