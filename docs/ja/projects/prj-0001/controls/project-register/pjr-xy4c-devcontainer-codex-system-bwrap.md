@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-12T12:52:35Z"
+  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XY4C/20261012T125314628Z-304dabfc/evidence.json 35ms (unchanged); FAIL  tests/packages/docs-…"
 ---
 
 # PJR-XY4C devcontainer scaffold の codex でシステムの bubblewrap が sandbox を失敗させる
