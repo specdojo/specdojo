@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-j7we-devcontainer-emacs-template
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-07T13:56:21Z"
   due_on: null
+  completed_at: "2026-10-12T13:02:47Z"
+  conclusion: devcontainer scaffold の --editor emacs で Emacs の設定をテンプレートから展開し、実機で C-h と eglot の LSP 接続を確かめた
 ---
 
 # PJR-J7WE devcontainer scaffold で Emacs の設定をテンプレートから展開する
