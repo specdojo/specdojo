@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-86q5-product-worktree-deps-not-installed
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:43:19Z"
+  completed_at: "2026-10-12T07:19:07Z"
+  conclusion: プロダクトの worktree に package-lock.json があれば npm ci で依存を導入するようにした
 ---
 
 # PJR-86Q5 プロダクトリポジトリの worktree に依存が導入されない

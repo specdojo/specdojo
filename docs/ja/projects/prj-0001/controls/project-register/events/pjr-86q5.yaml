@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3a84e5bd139d4c1fadc6861b32feddef
+- v: 1
+  id: reg_1040d8d992da42f183a037917deb74a2
+  ts: "2026-10-12T07:19:07Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（ffe7d593e）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: プロダクトの worktree に package-lock.json があれば npm ci で依存を導入するようにした
+  previous_event_id: reg_73ab2be2daaa4bb1b7c6b0a78dd51ddd
