@@ -69,7 +69,7 @@ LP の手順を新しいディレクトリで実際に実行して確認した�
 | 2   | 原稿を書き、コマンドとリンクが正しいか確認する                             | UX   | done | -                                               |
 | 3   | `index.astro` に原稿を反映し、ビルドを確認する                             | DEV  | done | ビルドは orchestrator が sandbox の外で確認した |
 | 4   | 「始める」をオーケストレーター中心に改め、コマンドをタブで切り替える       | UX   | done | ビルドは orchestrator が sandbox の外で確認する |
-| 5   | register の 7 種類を todo から並べ、前提（Node.js・Claude Code）を書き足す | UX   | open | 概要の再改訂（2026-10-12）に従う                |
+| 5   | register の 7 種類を todo から並べ、前提（Node.js・Claude Code）を書き足す | UX   | done | ビルドは orchestrator が sandbox の外で確認する |
 
 ## 4. 対応結果
 
@@ -82,8 +82,8 @@ LP は 1 ページで、上から次の順に並べる。
 | 1   | ヘッダー                                 | サービス名と、ドキュメントサイトへの入口を常に見せる。                                                                             |
 | 2   | ヒーロー（決めて、書いて、鍛え続ける。） | SpecDojo を一文で伝え、「5 つの手順で始める」と Quick Start への導線を置く。右側にマスコットの仮の枠を置く。                       |
 | 3   | こんなことはありませんか                 | 判断が散らばる・「なぜ」をたどれない・AI に前提を渡せない、の 3 つの困りごとから、SpecDojo が何を解決するかを示す。                |
-| 4   | register の考え方                        | issue / decision / todo を起票し、個票（Markdown）を正本として記録を集め、一覧は個票から生成されることを説明する。                 |
-| 5   | 5 つの手順で始める                       | 導入から起票・一覧までを、オーケストレーターとの会話で LP だけで体験させる。CLI のコマンドは参考としてタブで切り替えて見せる。     |
+| 4   | register の考え方                        | 7 種類を todo から並べて起票の考え方を示し、個票（Markdown）を正本として記録を集め、一覧は個票から生成されることを説明する。       |
+| 5   | 5 つの手順で始める                       | 前提（Node.js・Claude Code）を示し、導入から起票・一覧までを会話で体験させる。CLI のコマンドは参考としてタブで切り替えて見せる。   |
 | 6   | 次の一歩                                 | decision から change-request までの流れを Quick Start へ、詳細を登録簿運用ガイド・コマンドリファレンス・全体概要ガイドへ案内する。 |
 | 7   | フッター                                 | 著作権表示とドキュメントサイトへのリンクを置く。                                                                                   |
 
@@ -115,7 +115,17 @@ LP は 1 ページで、上から次の順に並べる。
 - タブは `role="tablist"`・`role="tab"`・`role="tabpanel"` と `aria-selected`・`aria-controls`・`aria-labelledby` を持ち、左右キー（と Home / End）で切り替えられる。タブの一覧は `hidden` で出力し、インラインの script が表示してから非選択のパネルを隠す。JavaScript が無効な環境では、タブを出さずに両方のパネルを見出しつきで表示する。
 - 色・文字・角丸・影は PJR-CM5W の `global.css` で定義したテーマの class だけを使った。
 
-### 4.4. 統合の経緯
+### 4.4. 再改訂の実施内容（2026-10-12）
+
+- 「register の考え方」に 7 種類すべてを、`todo` → `decision` → `issue` → `question` → `risk` → `change-request` → `note` の順で載せた。先頭の 3 種類は 3 列の大きいカード（`text-title-large`）、残りの 4 種類は 4 列の小さいカード（`text-title-small`・`text-body-small`）で見せる。
+- 各 type の説明は、[[specdojo:pjr-rulebook]] の `item_type` 別の終端基準（`note` は終端させず追記する、`risk` は消滅または対応完了まで追う など）と、[[specdojo:register-operation-guide]] の種類の表に合わせた。
+- 「5 つの手順で始める」の冒頭、タブの前に「始める前に用意するもの」を置き、次の 2 点を書いた。
+  - Node.js 22.13 以上（specdojo の `package.json` の `engines` の `>=22.13` に合わせた）と Git。
+  - Claude Code の導入とログイン。`npm run orch:opus` が `specdojo orchestrator launch --provider claude` を経由して `claude` を起動すること（`src/exec-provider-scaffold.ts` の script 定義に一致）と、コマンドで始める場合は不要であることを添えた。
+- 「次の一歩」の登録簿運用ガイドの説明を、7 つの種類に合わせて改めた。
+- 色・文字・角丸・影は PJR-CM5W の `global.css` で定義したテーマの class だけを使った。
+
+### 4.5. 統合の経緯
 
 exec run は 2 回とも、成果物ではなく executor 検証の記録形式の判定で `waiting` に止まった。利用者の承認を得て、orchestrator が runner の代わりに統合した。
 
@@ -125,7 +135,7 @@ exec run は 2 回とも、成果物ではなく executor 検証の記録形式�
 - orchestrator が worktree と、統合後の `specdojo-lp` の `main` で `npm run build` を実行し、`dist/index.html` が出力されること、見出しが本書の構成のとおりに並ぶことを確認した（2026-10-12）。
 - `specdojo-lp` では exec ブランチに原稿を commit し（cb7e4bb）、`main` へ `--no-ff` で merge した（ba8f1e8）。plan と result は runner の `wait` 記帳で `project/prj-0002/develop` に入っており、evidence は orchestrator が worktree から移した。
 
-### 4.5. 残課題
+### 4.6. 残課題
 
 - Cloudflare への配置とマスコットの絵は本項目に含めない（マスコットは PJR-FSMC）。
 
