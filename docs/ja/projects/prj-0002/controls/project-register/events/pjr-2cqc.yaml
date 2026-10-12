@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_413fe95d41264095b96ed7a6b3cd918a
+  ts: "2026-10-12T12:55:37Z"
+  action: review
+  actor: orchestrator
+  from_status: open
+  to_status: review
+  reason: orchestrator が実装者として specdojo-lp の開発環境を整え、feature/lp-v1 へ取り込んだ（7cb3b82）。親 runner の検証は PJR-HE9R へ引き継いだ
+  changes:
+    - field: status
+      from: open
+      to: review
+  previous_event_id: reg_b73fadad822b46eb86df96439e299ded
