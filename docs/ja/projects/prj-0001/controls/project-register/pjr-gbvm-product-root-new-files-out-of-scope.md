@@ -52,6 +52,7 @@ register 由来タスクのプロダクト worktree では、最上位に作っ�
 - 再発防止策:
   - 共通規約テンプレートと executor evidence contract の双方で一時ファイルの `tmp/` 配置を標準化。
   - runner 側で `tmp/` の自動除外と最上位新規ファイルの申し送り記録を恒久化し、レビュー時の気付きを確保。
+- 統合の経緯: 2026-10-12 の exec run（agy-expert-executor）は、新しい方針に合わせて既存テストの期待値を更新しておらず、統合テスト 3 件が落ちて止まった。orchestrator が期待値だけを直した（最上位の新規ファイルを申し送りへ記録するため result も commit 対象になる、`tmp/` 配下は `-uall` で確かめる、申し送りのファイル名をインラインコードにする）。再開では runner の親検証 7 種がすべて通ったが、修正前の executor 検証の記録で止まったため、利用者の承認を得て orchestrator が exec ブランチへ commit し（ba93f5dbf）、単体テスト 2018 件・統合テスト 178 件・型検査の通過を確かめたうえで develop へ `--no-ff` で merge した（bd86926ed）。
 
 ## 5. 関連ドキュメント
 
