@@ -30,17 +30,17 @@ specdojo-assets に README.md のディレクトリ体系どおりの骨組み�
   - `README.md` の書き出しの説明と例が、`exports.yaml` とスクリプトの実際の形と一致している。
 - 原本の大きさの目安（Git LFS を使わず、10 MB を超えたら検討する。PSD は原本として置かない）が `README.md` に書かれている（df10f80 で記載済み）。
 - `exports.yaml` に従って書き出すスクリプト（`scripts/export.mjs`）があり、見本の画像 1 つで `specdojo-lp` の書き出し先にファイルが作られることを確かめている。
-- prj-0002 の `repos` に `specdojo-assets` を加えている。設定ファイルの変更は feature ブランチで行い、利用者の承認を得て取り込む。
+- prj-0002 の `repos` に `specdojo-assets` を加えている。設定ファイルの変更は feature ブランチで行い、利用者の承認を得て取り込む。統合先は `main` とする（利用者の承認、56813ee21 で取り込み済み）。
 - 前提（2026-10-12 の確認）:
   - `specdojo-assets` は `/workspaces/specdojo-workspace/specdojo-assets` に clone 済み。最初の commit（`README.md` のみ、df10f80）は orchestrator が `main` に作った。
 - `git push` は行わない。push は利用者が行う。
 
 ## 3. 作業内容
 
-| No  | 作業                                               | 担当         | 状態 | メモ                           |
-| --- | -------------------------------------------------- | ------------ | ---- | ------------------------------ |
-| 1   | 最初の commit を作り、`repos` に加える             | orchestrator | open | 設定の変更は利用者の承認を得る |
-| 2   | 骨組みと書き出しのスクリプトを作り、見本で確かめる | DEV          | open | -                              |
+| No  | 作業                                               | 担当         | 状態 | メモ                                           |
+| --- | -------------------------------------------------- | ------------ | ---- | ---------------------------------------------- |
+| 1   | 最初の commit を作り、`repos` に加える             | orchestrator | done | df10f80（specdojo-assets）、56813ee21（repos） |
+| 2   | 骨組みと書き出しのスクリプトを作り、見本で確かめる | DEV          | open | -                                              |
 
 ## 4. 対応結果
 
