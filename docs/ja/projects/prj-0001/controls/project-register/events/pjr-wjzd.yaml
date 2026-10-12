@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-10-03"
+- v: 1
+  id: reg_296cd14ef98d4cf292d751387e619d2f
+  ts: "2026-10-12T12:00:14Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: done
+  reason: 利用者が trusted publisher を登録し workflow を再実行・承認して公開した。orchestrator が npm 上の公開者と導入・動作を確認
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: "@specdojo/docs-lint 0.2.0 を trusted publisher 経由で npm へ公開し、導入と動作を確かめた"
+  previous_event_id: reg_45018bd5475a494eb8afb0078fbf808a

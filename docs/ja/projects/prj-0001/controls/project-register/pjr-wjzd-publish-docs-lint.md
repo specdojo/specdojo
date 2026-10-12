@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wjzd-publish-docs-lint
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: OPS
   registered_at: "2026-09-23T10:57:25Z"
   due_on: "2026-10-03"
+  completed_at: "2026-10-12T12:00:14Z"
+  conclusion: "@specdojo/docs-lint 0.2.0 を trusted publisher 経由で npm へ公開し、導入と動作を確かめた"
 ---
 
 # PJR-WJZD @specdojo/docs-lint を npm へ公開できるようにする
