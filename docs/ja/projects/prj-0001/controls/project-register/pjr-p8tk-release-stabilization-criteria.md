@@ -96,6 +96,12 @@ v0.3.0 の公開前に、exec の再開・統合・判定まわりの未解決�
 
 残る作業は、明朝の定期実行の確認と PJR-VQZA・PJR-MD3C の close、main への昇格、main での `npm run check` と実地の確認、PJR-CBQV・PJR-WJZD・devcontainer の確認、`v0.3.0` のタグの push である。
 
+### 2.6. 公開前の確認（2026-10-12 夜）
+
+- 基準 2: develop（f3b5b03e3）で `npm run check` が通った（テスト 145 ファイル・2226 件）。main への昇格後にもう一度確かめる。
+- 基準 3: develop から `npm pack` した tarball（specdojo 0.3.0）を新しいリポジトリへ入れ、利用者と同じ手順で確かめた。`config init`（`.gitignore` に `node_modules/` が入る）→ `config scaffold --provider claude`（`orch:opus`・`orch:sonnet` が追加される）→ `exec-defaults.yaml` の `command_template` と `agent-members.yaml`（claude の 3 名）を案内どおり用意 → `register scaffold` → `register add`（todo）→ `exec run --register --worktree`（agent を指定せず `claude-executor` と `claude-reporter` が自動で選ばれた）→ 統合して `review` → `register close` まで通った。grade は v0.3.0 では部品のみ・試験的のため対象外とした。利用者のリポジトリに markdownlint が無い場合、result の commit 前の lint は飛ばされる（`result-markdownlint: markdownlint-cli not found; skipped`）。
+- routine の新しい流れ（PJR-VQZA・PJR-MD3C）: Job Run の worktree での実行、runner の commit、claude-expert の review、verdict による統合までを試し実行で確かめた（f3b5b03e3）。途中で見つかった PJR-4VAC・PJR-DXDC・PJR-BJTC は直して統合した。今夜の定期実行の結果を明朝確かめる。
+
 ## 3. 作業内容
 
 | No  | 作業                                   | 担当         | 状態 | メモ                       |
