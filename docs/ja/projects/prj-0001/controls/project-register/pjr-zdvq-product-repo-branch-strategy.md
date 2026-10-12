@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zdvq-product-repo-branch-strategy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: BA
   registered_at: "2026-10-12T08:47:02Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T08:48:09Z"
+  conclusion: 選択肢 B。プロダクトリポジトリにブランチ戦略を求めず、プロダクト側のルールで決めた統合先だけを受け取る。merge の方式は問わず、追跡は trace key（Refs:）を主にする。ガイドへの節の追加と、足りない機能 2 つは派生項目で扱う
 ---
 
 # PJR-ZDVQ プロダクトリポジトリのブランチ戦略を SpecDojo は求めない
