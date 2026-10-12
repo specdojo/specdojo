@@ -1,0 +1,7 @@
+`index.astro` を 887 行から 29 行へ縮小し、指定のヘッダー・フッター・Tabs・7 節と共通リンクへ分割しました。各節のデータと型も対応コンポーネントへ移動済みです。
+
+個票の作業内容・対応結果を更新し、整形、登録簿生成、構造・タブ要件・空白エラーの検査は成功しました。`npm run build` と 099292f との HTML 比較は、計画どおり orchestrator 側での確認が必要です。
+
+<specdojo_executor_evidence>
+{"final_message":"index.astroを29行へ縮小し、指定された10コンポーネントと共通リンクへ分割した。個票も更新済み。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-7wg4-lp-split-components.md","status":"passed","summary":"個票を整形した"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0002","status":"passed","summary":"prj-0002の登録簿生成が成功した"},{"command":"git diff --check && git -C \"$SPECDOJO_REPO_SPECDOJO_LP\" diff --check","status":"passed","summary":"両リポジトリの差分に空白エラーなし"},{"command":"npm --prefix \"$SPECDOJO_REPO_SPECDOJO_LP\" run build","status":"requires_human","summary":"sandbox外でビルドし、099292fとのdist/index.htmlを空白差を除いて比較する必要がある"}]}
+</specdojo_executor_evidence>
