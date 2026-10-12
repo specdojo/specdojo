@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e99f47ac2253416c82b20544d2945f51
+  ts: "2026-10-12T06:06:38Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 の PJR-KH17 の run が、specdojo-lp に Prettier がないのに not_applicable を却下されて止まった
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: SPECDOJO_REPO_* で指定したプロダクトリポジトリのコマンドを not_applicable の判定が認識しない
+    - field: description
+      from: ""
+      to: runner は agent に `SPECDOJO_REPO_<NAME>` でプロダクトリポジトリの場所を渡すが、not_applicable の判定（productRepoCommand）は --prefix `<repo>` と `<repo>`:`<path>` しか認識しない。$SPECDOJO_REPO_SPECDOJO_LP/... のコマンドがプロジェクトリポジトリの package.json で判定され、正しい not_applicable が却下されて run が止まる
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
