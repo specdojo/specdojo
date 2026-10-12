@@ -80,7 +80,7 @@ PJR-HEPK のレビューで、利用者から他のツールとの比較を LP �
 | No  | 作業                                               | 担当         | 状態 | メモ                     |
 | --- | -------------------------------------------------- | ------------ | ---- | ------------------------ |
 | 1   | 使い分けの節の原稿を書き、`index.astro` に反映する | BA           | done | 6 行の表と補完関係を反映 |
-| 2   | ビルドを確認する                                   | orchestrator | open | sandbox の外で確認する   |
+| 2   | ビルドを確認する                                   | orchestrator | done | sandbox の外で確認した   |
 
 ## 4. 対応結果
 
@@ -97,9 +97,23 @@ GitHub Issues との関係は、議論と共有を issue で行い、その URL 
 | `specdojo-lp:src/pages/index.astro` | 使い分けの表、GitHub Issues と register の補完関係、2026 年 10 月時点の出典リンクを追加 |
 | `pjr-kh17-lp-tool-fit-guide.md`     | 作業内容と対応結果を更新                                                                |
 
-### 4.3. 残課題
+### 4.3. 統合の経緯
 
-- `specdojo-lp` の `npm run build` は、個票の役割分担どおり orchestrator が sandbox の外で確認する。
+- 1 回目の exec run は、runner が `specdojo-lp` の `main` へ統合した（42c8c11）。orchestrator がビルドを確認したところ、完了条件を満たさない点が 2 つあった。
+  - 使い分けの表に、内部の項目 ID（PJR-7T8X）が表示されていた。orchestrator が個票の表のセルに書いた文言が原因だった。
+  - GitHub Issues が苦手なこと（未整理の迷いは書きにくい、そのままでは agent への指示になりにくい）が抜けていた。完了条件の書き方が曖昧だった。
+- 表のセルを「準備中」に改め、2 点を完了条件に明示して再実行した。2 回目は修正を終えたが、executor が `npx prettier --write` を「`specdojo-lp` に Prettier がない」理由で `not_applicable` と記録し、runner の判定が通らず `waiting` に止まった。runner の親検証 7 種はすべて passed だった。
+- 利用者の承認を得て、orchestrator が runner の代わりに統合した。worktree の修正を exec ブランチへ commit し（5d1afb7）、`specdojo-lp` の `main` へ `--no-ff` で merge した（6b431cd）。2 回目の evidence は worktree から移した。
+- orchestrator が 6b431cd で `npm run build` を実行し、`dist/index.html` が出力されることを確認した（2026-10-12）。あわせて次を確認した。
+  - 画面の文言に登録簿の項目 ID がない（会話の例のプレースホルダ `PJR-XXXX` を除く）。
+  - GitHub Issues が苦手なことの 2 点がある。
+  - 「2026 年 10 月時点の各ツールの公開情報による」と出典リンク 8 件がある。
+  - 「設計書」「体系」の語がない。
+  - 節が「register の考え方」と「5 つの手順で始める」の間にある。
+
+### 4.4. 残課題
+
+- `specdojo-lp` には Prettier などの開発環境がないため、executor の整形の検証が `not_applicable` になり run が止まる。開発環境の整備は別の todo で扱う。
 
 ## 5. 関連ドキュメント
 

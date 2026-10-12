@@ -1,0 +1,10 @@
+LP の使い分け節を完了条件に合わせて修正しました。
+
+- 「準備中」から画面表示用の登録簿 ID を削除
+- GitHub Issues が苦手な点を明記
+- 6 行、8 出典、節の配置、禁止語、スマホ向けカード表示を静的確認
+- result・登録簿ステータスは未変更
+
+<specdojo_executor_evidence>
+{"final_message":"specdojo-lp の使い分け節を補正し、GitHub Issues が苦手な点の明示と画面文言からの登録簿 ID 削除を完了した。","validations":[{"command":"git -C \"$SPECDOJO_REPO_SPECDOJO_LP\" diff --check","status":"passed","summary":"LP の差分に空白エラーはない。"},{"command":"static acceptance checks using test, rg, sed, and awk against \"$SPECDOJO_REPO_SPECDOJO_LP/src/pages/index.astro\"","status":"passed","summary":"6 行、8 出典、GitHub Issues の補完関係、準備中表示、禁止語不在、レスポンシブ表示、節の配置を確認した。"},{"command":"npx prettier --write \"$SPECDOJO_REPO_SPECDOJO_LP/src/pages/index.astro\"","status":"not_applicable","summary":"プロダクトリポジトリでは Prettier を実行していない。","reason":"specdojo-lp/package.json の dependencies と devDependencies に Prettier がないため。"},{"command":"npm --prefix \"$SPECDOJO_REPO_SPECDOJO_LP\" run build","status":"requires_human","summary":"個票の指定どおり、orchestrator が sandbox 外でビルドを確認する必要がある。"}]}
+</specdojo_executor_evidence>
