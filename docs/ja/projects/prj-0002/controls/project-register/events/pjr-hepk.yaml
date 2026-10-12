@@ -193,3 +193,32 @@
       from: in-progress
       to: review
   previous_event_id: reg_6db252a2297f4d85b7ffbd9ce1a9e087
+- v: 1
+  id: reg_66a2ad8a7a2f45fc84077028c8daf64c
+  ts: "2026-10-12T04:11:35Z"
+  action: start
+  actor: gemma26-translator
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_7fd6ad77202040cfa747087d42c4499c
+- v: 1
+  id: reg_290a2d28eff94cb58d01924aed4e9a86
+  ts: "2026-10-12T04:12:40Z"
+  action: wait
+  actor: gemma26-translator
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Checkpoint commit failed (exec(register PJR-HEPK): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0002/controls/project-register/events…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Checkpoint commit failed (exec(register PJR-HEPK): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0002/controls/project-register/events…"
+  previous_event_id: reg_66a2ad8a7a2f45fc84077028c8daf64c
