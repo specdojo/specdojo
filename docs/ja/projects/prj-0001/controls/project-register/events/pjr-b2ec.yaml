@@ -32,3 +32,61 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_e70dc5043ccc47d2985640c67d2058a6
+  ts: "2026-10-12T02:17:28Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4da22fd23f2141569744d68fd31503e1
+- v: 1
+  id: reg_6204460f8e0948eca864684383a6cd6b
+  ts: "2026-10-12T02:18:32Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_e70dc5043ccc47d2985640c67d2058a6
+- v: 1
+  id: reg_b4cc6e8950c24135ad78b2aec1eb88ef
+  ts: "2026-10-12T03:47:24Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_6204460f8e0948eca864684383a6cd6b
+- v: 1
+  id: reg_c11871afd65d43dc8566886d2906a913
+  ts: "2026-10-12T03:57:29Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b4cc6e8950c24135ad78b2aec1eb88ef

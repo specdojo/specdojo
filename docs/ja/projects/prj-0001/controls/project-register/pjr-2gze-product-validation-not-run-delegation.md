@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T15:00:34Z"
@@ -40,7 +40,9 @@ executor が not_run と記録したプロダクトリポジトリの検証（�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+`src/exec-reporter.ts` の委譲判定を、正規化したコマンドだけでなく対象リポジトリとの組で照合するよう変更した。executor が `npm --prefix <repo> run <script>` として `not_run` を報告した場合は、同じ `<repo>` に割り当てた同一コマンドの親検証が成功したときだけ完了とみなす。project リポジトリや別のプロダクトリポジトリの成功は代用せず、失敗した親検証は従来どおり block する。
+
+単体テストに、同一プロダクトリポジトリで成功するケース、別リポジトリでは満たされないケース、対象リポジトリの親検証が失敗するケースを追加した。合成 npm script の展開にも対象リポジトリの `package.json` と同一リポジトリ内の検証結果を使うようにし、リポジトリ間で検証結果が混ざらないようにした。運用方法は [[specdojo:exec-config-guide]] の親検証の説明へ追記した。
 
 ## 5. 関連ドキュメント
 

@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5ec7ccc85ec746739f2e3cf6e3dfaaef
+  ts: "2026-10-12T04:10:29Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 の PJR-HEPK の記帳 commit が catalog-validate で止まった
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: pre-commit の catalog-validate が catalog_path のない project で失敗する
+    - field: description
+      from: ""
+      to: lefthook の catalog-validate は project を指定せずに catalog validate を実行するため、SPECDOJO_PROJECT が catalog_path のない project（prj-0002 など）を指すシェルでは、register の記帳だけの commit でも失敗する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_0ffbdeae52ee4ad689ca348de27fa114
+  ts: "2026-10-12T04:15:48Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: 利用者の指示で担当と期限を決めた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-10-31"
+  previous_event_id: reg_5ec7ccc85ec746739f2e3cf6e3dfaaef

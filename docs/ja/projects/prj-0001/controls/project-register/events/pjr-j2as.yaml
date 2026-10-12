@@ -1,0 +1,60 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9ecbbce00c454789920e053833b40112
+  ts: "2026-10-12T03:21:36Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: devcontainer scaffold の実機確認（2026-10-12）で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: config init が .gitignore に node_modules/ を加えない
+    - field: description
+      from: ""
+      to: README の導入手順（npm init -y → npm install --save-dev specdojo → config init）で、config init は SpecDojo の生成物だけを .gitignore に追記し node_modules/ を加えない。git add . で node_modules が commit される
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_afbff29802a3470bb5eb2459bf79cbb5
+  ts: "2026-10-12T04:47:50Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9ecbbce00c454789920e053833b40112
+- v: 1
+  id: reg_87db7c6fc244426b99395772c0f8d502
+  ts: "2026-10-12T04:54:23Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_afbff29802a3470bb5eb2459bf79cbb5
