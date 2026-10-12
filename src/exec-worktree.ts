@@ -429,11 +429,20 @@ function removeLegacyNodeModulesLink(packageDir: string): void {
 // Git worktree は独自の作業ツリーを持つだけで node_modules は引き継がないため、
 // tracked package-lock.json ごとに npm ci を実行し、worktree 内へ独立して依存を配置する。
 // 旧方式の共有 symlink は npm に辿らせず、先に link 自体だけを削除する。
+// lock が無い worktree は導入しない。依存が無いまま検証が失敗したときに原因を追えるよう、
+// 導入しなかったことをログに残す（PJR-86Q5）。
 export function installWorktreeDependencies(
   worktreePath: string,
   npmCi: NpmCiRunner = runNpmCi,
 ): void {
-  for (const packageDir of trackedPackageLockDirs(resolve(worktreePath))) {
+  const packageDirs = trackedPackageLockDirs(resolve(worktreePath));
+  if (packageDirs.length === 0) {
+    process.stdout.write(
+      `Skipping worktree dependencies: no tracked package-lock.json in ${worktreePath}\n`,
+    );
+    return;
+  }
+  for (const packageDir of packageDirs) {
     if (!existsSync(join(packageDir, "package.json"))) {
       throw new Error(`package.json is missing next to package-lock.json: ${packageDir}`);
     }

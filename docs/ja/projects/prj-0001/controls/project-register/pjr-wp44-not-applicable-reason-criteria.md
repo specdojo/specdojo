@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T15:00:52Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-WP44 not_applicable の理由の条件が分かりにくく正当な対象外が失敗扱いになる
@@ -41,7 +40,11 @@ catalog_path を設定していない project の catalog validate を executor 
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+| 項目       | 内容                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解決内容   | `src/exec-reporter.ts` の適用可否の判定を変えた。(1) `<repo>:<path>` を引数に含むコマンドと `--prefix <repo>` 付きのコマンドは、対象 project が `repos` で宣言したプロダクトリポジトリの `package.json` で判定する。(2) `specdojo catalog validate` は `--project`、run の対象 project（execution path に一致する project）、`current_project` の順に対象を決めて判定する。対象 project は `evidenceForReporter` が特定し、`deriveReporterFacts` も同じ project で判定する |
+| 確認結果   | executor の prompt（`src/exec-run.ts`）に、`not_applicable` が退けられる条件とプロダクトリポジトリ・`catalog_path` の扱いを示した。`tests/src/exec-reporter.test.ts` に、プロダクト側に prettier や script が無い場合と run の対象 project に `catalog_path` が無い場合の受理、project 側に依存がある場合と対象 project に `catalog_path` がある場合の拒否の単体テストを追加した                                                                                           |
+| 再発防止策 | exec-config-guide と exec-operation-guide に、対象 project の決め方とプロダクトリポジトリのコマンドの判定先を記載した                                                                                                                                                                                                                                                                                                                                                      |
 
 ## 5. 関連ドキュメント
 

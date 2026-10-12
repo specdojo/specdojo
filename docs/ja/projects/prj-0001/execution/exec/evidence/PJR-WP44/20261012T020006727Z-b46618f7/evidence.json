@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-WP44",
+  "run_id": "20261012T020006727Z-b46618f7",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-12T02:01:02.915Z",
+    "completed_at": "2026-10-12T02:06:01.953Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-wp44-not-applicable-reason-criteria.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-reporter.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-wp44-not-applicable-reason-criteria.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-reporter.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-wp44-not-applicable-reason-criteria.md     |   6 +-\n docs/ja/specdojo/guides/exec-config-guide.md       |   2 +-\n docs/ja/specdojo/guides/exec-operation-guide.md    |   2 +-\n src/exec-reporter.ts                               | 235 ++++++++++++++++++---\n src/exec-run.ts                                    |   9 +-\n tests/src/exec-reporter.test.ts                    | 212 +++++++++++++++++++\n 6 files changed, 430 insertions(+), 36 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-reporter.ts src/exec-run.ts tests/src/exec-reporter.test.ts",
+      "status": "passed",
+      "summary": "formatted; src/exec-reporter.ts reformatted, others unchanged"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-wp44-not-applicable-reason-criteria.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "passed",
+      "summary": "formatted; ticket table reformatted"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-wp44-not-applicable-reason-criteria.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "passed",
+      "summary": "no markdownlint errors"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "output ends with OK: dct-index.yaml; only pre-existing based_on WARN lines; exit code not captured (output was piped through tail)"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "Built index: 2569 entries"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo register build",
+      "status": "not_applicable",
+      "summary": "pjr-index.md not changed",
+      "reason": "register build applies only when pjr-index.md is changed; only an individual ticket file was edited"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WP44\n\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nGenerating worktree artifacts: specdojo build\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WP44/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WP44/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WP44\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-O9K42g/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-RQx8Nn/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Vhkdpp/pjr-0001-topic.md\nUpd\n… output omitted …\n  36.65s (transform 2.11s, setup 506ms, import 18.22s, tests 38.14s, environment 7ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "final_message": "PJR-WP44: not_applicable judgement now uses the run's target project for specdojo catalog validate (--project, then the project whose execution path matches, then current_project). It also uses the declared product repository's package.json for commands with a <repo>:<path> argument or --prefix <repo>. The run's project is carried as runner_scope on the reporter-only evidence so evidenceForReporter and deriveReporterFacts agree. The executor prompt now lists the not_applicable rejection conditions. Added unit tests in tests/src/exec-reporter.test.ts, which have not run yet; parent runner owns test-unit and typecheck. Updated exec-config-guide, exec-operation-guide and the PJR-WP44 ticket's 対応結果 section. Changed: src/exec-reporter.ts, src/exec-run.ts, tests/src/exec-reporter.test.ts, docs/ja/specdojo/guides/exec-config-guide.md, docs/ja/specdojo/guides/exec-operation-guide.md, docs/ja/projects/prj-0001/controls/project-register/pjr-wp44-not-applicable-reason-criteria.md.",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-WP44/20261012T020006727Z-b46618f7/executor.log",
+      "bytes": 5642,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-WP44/20261012T020006727Z-b46618f7/parent-validation-attempt-1-test-unit.log",
+      "bytes": 5409,
+      "truncated": false
+    }
+  ]
+}

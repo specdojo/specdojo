@@ -4,30 +4,32 @@ specdojo:
   type: exec-result
   task_id: PJR-2GZE
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-2gze-20261012T021511Z-c5dc-plan.md
   started_at: "2026-10-12T02:15:11.761Z"
-  completed_at: "2026-10-12T02:17:12.863Z"
+  completed_at: "2026-10-12T03:45:16.042Z"
   agent: claude-expert-executor
-  block_reason: "rate limit reached"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- `not_run` の委譲判定を、リポジトリとコマンドの組で照合するよう修正した。
+- 関連する単体テストと実行設定ガイドを更新し、整形・カタログ・登録簿・索引の生成検証および runner 検証がすべて成功した。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/guides/exec-config-guide.md`: `not_run` 検証を親 runner へ委譲する際の、リポジトリとコマンドを組み合わせた照合要件を案内した。
+- `src/exec-reporter.ts`: `not_run` の委譲可否をリポジトリとコマンドの組で判定するようにした。
+- `tests/src/exec-reporter.test.ts`: 異なるリポジトリの同名コマンドでは `not_run` 委譲を満たさないことを検証するケースを追加した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- 追加対応は不要。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+PJR-2GZE の課題に対し、親 runner 検証との委譲照合をリポジトリとコマンドの組に限定し、実装・テスト・利用ガイドを整合させた。

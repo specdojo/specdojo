@@ -4,12 +4,13 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  realpathSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { delimiter, dirname, join } from "node:path";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   captureAgentProtectedConfigAcrossRepos,
   changedAgentProtectedConfigAcrossRepos,
@@ -53,7 +54,7 @@ import {
   type WorktreeOpsContext,
 } from "../../src/exec-worktree-ops.js";
 
-const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
+const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH", "PATH"];
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
 
 const TASK_ID = "T-T-doc-010";
@@ -339,6 +340,41 @@ describe("multi-repository task worktrees", () => {
       [join(taskDir, "app1"), true],
       [join(taskDir, "app2"), true],
     ]);
+  });
+
+  it("runs npm ci in a product worktree with a tracked package-lock.json and skips one without", () => {
+    const fixture = setup();
+    const [app1] = fixture.products;
+    writeFile(join(app1!.repoRoot, "package.json"), '{"name":"app1","version":"1.0.0"}\n');
+    writeFile(
+      join(app1!.repoRoot, "package-lock.json"),
+      '{"name":"app1","version":"1.0.0","lockfileVersion":3,"packages":{}}\n',
+    );
+    git(app1!.repoRoot, "add", "package.json", "package-lock.json");
+    git(app1!.repoRoot, "commit", "-m", "add lock");
+    // Stand-in for npm on PATH: records where and how it ran, without network access.
+    const bin = join(fixture.parent, "bin");
+    const npmLog = join(fixture.parent, "npm.log");
+    writeFile(join(bin, "npm"), `#!/bin/sh\nprintf '%s %s\\n' "$(pwd -P)" "$*" >> '${npmLog}'\n`);
+    chmodSync(join(bin, "npm"), 0o755);
+    process.env.PATH = `${bin}${delimiter}${process.env.PATH ?? ""}`;
+    const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    let output = "";
+
+    try {
+      prepare(fixture);
+      output = stdout.mock.calls.map(([chunk]) => String(chunk)).join("");
+    } finally {
+      stdout.mockRestore();
+    }
+
+    const taskDir = join(fixture.worktreeBase, TASK_DIR_NAME);
+    expect(readFileSync(npmLog, "utf8")).toBe(
+      `${realpathSync(join(taskDir, "app1"))} ci --include=dev\n`,
+    );
+    expect(output).toContain(
+      `Skipping worktree dependencies: no tracked package-lock.json in ${join(taskDir, "app2")}\n`,
+    );
   });
 
   it("reuses every worktree of the task on a second prepare", () => {
@@ -891,6 +927,56 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
     // 復元時は merge commit の index と衝突する `stash apply --index` を使わない。
     expect(gitResult(worktree.path, ["diff", "--cached", "--quiet"]).status).toBe(0);
     expect(git(worktree.path, "stash", "list")).toBe("");
+  });
+
+  it("treats an untracked executor file as resolved when the integration branch adds identical content", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    writeFile(join(worktree.path, "docs", "protected.md"), "shared protected config\n");
+    commitOn(fixture.repo, "docs/protected.md", "shared protected config\n");
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+    });
+
+    expect(synced.map((entry) => entry.status)).toEqual(["merged"]);
+    expect(readFileSync(join(worktree.path, "docs", "protected.md"), "utf8")).toBe(
+      "shared protected config\n",
+    );
+    expect(git(worktree.path, "ls-files", "docs/protected.md")).toBe("docs/protected.md");
+    expect(git(worktree.path, "status", "--porcelain")).toBe("");
+    expect(git(worktree.path, "stash", "list")).toBe("");
+  });
+
+  it("rejects a tracked integration file that differs from the stashed untracked file", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    writeFile(join(worktree.path, "docs", "protected.md"), "executor proposal\n");
+    commitOn(fixture.repo, "docs/protected.md", "integration decision\n");
+
+    expect(() =>
+      syncTaskWorktreesWithIntegrationTargets({
+        worktree,
+        projectTarget: currentBranch(fixture.repo),
+        message: "merge integration target before resume",
+      }),
+    ).toThrow(
+      /project: uncommitted executor changes conflict with .*: untracked files differ from tracked integration files: docs\/protected\.md/,
+    );
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+    expect(readFileSync(join(worktree.path, "docs", "protected.md"), "utf8")).toBe(
+      "executor proposal\n",
+    );
+    expect(
+      gitResult(worktree.path, ["ls-files", "--error-unmatch", "docs/protected.md"]).status,
+    ).not.toBe(0);
+    expect(git(worktree.path, "stash", "list")).toBe("");
+    expect(
+      gitResult(worktree.path, ["rev-parse", "--verify", "--quiet", "MERGE_HEAD"]).status,
+    ).not.toBe(0);
   });
 
   it("reports up-to-date and creates no commit when the integration branch has nothing new", () => {
