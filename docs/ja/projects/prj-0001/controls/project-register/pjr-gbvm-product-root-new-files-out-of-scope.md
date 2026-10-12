@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:43:02Z"
-  block_reason: rate limit reached
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
 ---
 
 # PJR-GBVM 空のプロダクトリポジトリで最上位の新規ファイルが commit 範囲外になる
@@ -41,7 +41,17 @@ register 由来タスクのプロダクト worktree では、最上位に作っ�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容:
+  1. 予防: `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` および `src/exec-run.ts` の executor 規約に、作業用・使い捨ての一時ファイルはリポジトリ最上位に作らず worktree 内の `tmp/` またはリポジトリ外の一時ディレクトリに配置する規則を明記。
+  2. 除外: project リポジトリ（`src/exec-worktree-ops.ts`）およびプロダクトリポジトリ（`src/exec-repo-integration.ts`）の commit 対象判定および残留変更検査において、`.gitignore` の有無によらず `tmp/` 配下を commit 対象外および事前検査ブロック除外として扱うよう実装。
+  3. 緩和: register 由来タスクの project worktree およびプロダクト worktree において、最上位の新規ファイル（パスに `/` を含まないファイル）を commit 対象として許可。
+  4. 安全網: commit された最上位の新規ファイルを `integrate.log`（scopeLogPath）および result の `## 3. 申し送り` に「最上位に追加したファイル:」として記録。あわせて `docs/ja/specdojo/guides/exec-worktree-guide.md` の commit 対象・除外対象の仕様記述を更新。
+- 確認結果:
+  - `tests/src/exec-worktree-ops.integration.test.ts` で最上位新規ファイル（`modify.py` 等）の commit、`tmp/` の除外、統合ログおよび申し送りへの記録を確認。
+  - `tests/src/exec-task-repos.integration.test.ts` で追跡済みディレクトリの無いプロダクトリポジトリにおける最上位新規ファイル（`.gitignore`, `settings.json`）の commit、`tmp/` の除外、統合ログ・申し送りへの記録、および `productMergeBlockers` の通過を確認。
+- 再発防止策:
+  - 共通規約テンプレートと executor evidence contract の双方で一時ファイルの `tmp/` 配置を標準化。
+  - runner 側で `tmp/` の自動除外と最上位新規ファイルの申し送り記録を恒久化し、レビュー時の気付きを確保。
 
 ## 5. 関連ドキュメント
 
