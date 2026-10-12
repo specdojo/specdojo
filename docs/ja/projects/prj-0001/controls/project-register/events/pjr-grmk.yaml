@@ -48,3 +48,16 @@
       from: _TODO_
       to: "2026-10-31"
   previous_event_id: reg_5ec7ccc85ec746739f2e3cf6e3dfaaef
+- v: 1
+  id: reg_14e2fad711da41c4b737efbd4ced2ec6
+  ts: "2026-10-12T06:02:12Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0ffbdeae52ee4ad689ca348de27fa114
