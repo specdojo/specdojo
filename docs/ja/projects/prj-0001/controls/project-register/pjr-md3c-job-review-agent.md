@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-md3c-job-review-agent
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   registered_at: "2026-10-12T01:06:22Z"
+  completed_at: "2026-10-12T10:58:47Z"
+  conclusion: Job の task.review で統合前 review の宣言と review agent の指名をできるようにし、grade の 2 Job で claude-expert を指名した
 ---
 
 # PJR-MD3C Job Run の review agent と統合前 review の宣言を Job で指定する
