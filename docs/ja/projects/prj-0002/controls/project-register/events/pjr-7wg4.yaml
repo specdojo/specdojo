@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b3c251c68d3e47abb8d3a2d679312a06
+  ts: "2026-10-12T07:21:38Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が index.astro をコンポーネントに分けたほうがよいと提案した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: LP の index.astro を節ごとのコンポーネントに分ける
+    - field: description
+      from: ""
+      to: 887 行の index.astro を、節ごとのコンポーネント（Hero・Problems・RegisterTypes・ToolFit・GetStarted・NextSteps・Roadmap）とヘッダー・フッター・Tabs に分け、index.astro は節を並べるだけにする。出力される HTML は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
