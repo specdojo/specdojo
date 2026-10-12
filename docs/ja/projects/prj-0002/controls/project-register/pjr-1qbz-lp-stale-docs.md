@@ -69,6 +69,14 @@ orchestrator が `feature/lp-v1`（518a45e）で確認した時点の候補。�
 - `specdojo-lp` の `npm run build` は、完了条件どおり orchestrator が sandbox の外で確認する。
 - exec run は `waiting` に止まらず、runner が `specdojo-lp` の `feature/lp-v1` へ統合した（0126899）。runner の親検証 7 種はすべて passed だった。orchestrator が sandbox の外で 0126899 をビルドし、成功を確認した（2026-10-12）。差分は `README.md` だけで、`src/` に登録簿の項目 ID が残っていないことも確かめた。
 
+### 4.4. レビュー（2026-10-12）
+
+orchestrator が完了条件に照らして確かめた。
+
+- `feature/lp-v1`（PJR-2CQC の取り込み後）で、README の `4. 構成` の表に載るパスがすべて実在し、`src/pages/index.astro`・`src/components/` の各コンポーネント・`src/lib/links.ts` が載っている。`tsconfig.json`・`.prettierignore`・`.vscode/extensions.json` は表に無いが、表は全ファイルの一覧ではないため問題としない。
+- `src/` のコメントは現状と一致し、登録簿の項目 ID も残っていない。
+- 本個票の完了条件にある「`specdojo-lp` で prettier を実行しない」の条件は、PJR-2CQC で整形の道具が入ったため、今後の項目では不要になった。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0002:pjr-7wg4-lp-split-components]]: コンポーネントへの分割。

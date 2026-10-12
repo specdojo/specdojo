@@ -64,6 +64,14 @@ specdojo-lp に整形（Prettier）・lint（ESLint）・型検査（astro check
 
 - `feature/lp-dev-environment` は、利用者の承認を得て `feature/lp-v1` へ `--no-ff` で取り込んだ（7cb3b82）。取り込んだ後も `format:check`・`lint:ts`・`typecheck`・`build` が通ることを確かめた。
 - 親 runner での `specdojo-lp` の検証は [[prj-0001:pjr-he9r-per-project-parent-validations]] で扱う。
+
+### 4.4. レビュー（2026-10-12）
+
+orchestrator が完了条件に照らして確かめた。
+
+- 道具・script・`.vscode/extensions.json` が揃い、`feature/lp-v1` で `format:check`・`lint:ts`・`typecheck`・`build` が通る。
+- 入れた ESLint 10 は Node.js `^22.13.0` 以上を求めるが、README の「必要な環境」が「Node.js 22.12.0 以上」のままだった。22.12 では `npm run lint:ts` が動かないため、README を「開発には 22.13.0 以上（ビルドだけなら 22.12.0 以上）」に直した（b087e01）。`package.json` の `engines`（`>=22.12.0`）は、ビルドと配置に影響するため変えていない。
+- 「`specdojo-lp` で prettier を実行しない」の条件は、完了済みの項目の個票は書き換えず、本個票と、review 中だった PJR-1QBZ に、今後は不要になったと記録した。
 - 「`specdojo-lp` で prettier を実行しない」の条件を置いた項目（PJR-7T8X・PJR-1QBZ・PJR-XEJ4 など）はすべて完了済みで、今後の項目では不要になった。
 
 ## 5. 関連ドキュメント
