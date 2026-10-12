@@ -166,6 +166,7 @@ describe("reporter structured output", () => {
 
     expect(prompt).toContain("did not re-grade the deliverable");
     expect(prompt).toContain("Record that judgement in verdict");
+    expect(prompt).toContain('evidence.final_message identifies "確認できなかった範囲"');
     expect(prompt).toContain("runner owns frontmatter, outcome");
   });
 
@@ -358,7 +359,7 @@ describe("reporter structured output", () => {
     expect(deriveReporterFacts(input)).toMatchObject({ outcome: "complete", block_reason: "" });
   });
 
-  it("still blocks a delegated not_run validation that the runner did not run", () => {
+  it("still blocks an edit-mode not_run validation that the runner did not run", () => {
     const input = evidence();
     input.validations = [
       { source: "executor", command: "npm run lint:md", status: "not_run", summary: "delegated" },
@@ -370,9 +371,48 @@ describe("reporter structured output", () => {
         summary: "exit 0",
       },
     ];
-    expect(deriveReporterFacts(input)).toMatchObject({
+    expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
       outcome: "blocked",
       block_reason: "executor validation failed or not run: npm run lint:md",
+    });
+  });
+
+  it.each(["not_run", "not_applicable"] as const)(
+    "does not block review mode on an executor validation recorded as %s",
+    (status) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "specdojo grade list --dependency-changed",
+          status,
+          summary: "review で任意確認を実施しなかった",
+          ...(status === "not_applicable" ? { reason: "review の判断には不要" } : {}),
+        },
+      ];
+
+      expect(deriveReporterFacts(input, { mode: "review" })).toMatchObject({
+        outcome: "complete",
+        block_reason: "",
+      });
+    },
+  );
+
+  it("still blocks review mode on an executor-reported failed validation", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "specdojo grade list --dependency-changed",
+        status: "failed",
+        summary: "exit 1",
+      },
+    ];
+
+    expect(deriveReporterFacts(input, { mode: "review" })).toMatchObject({
+      outcome: "blocked",
+      block_reason:
+        "executor validation failed or not run: specdojo grade list --dependency-changed",
     });
   });
 

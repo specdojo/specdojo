@@ -57,8 +57,13 @@ function write(path: string, content: string): void {
 }
 
 function setupFixture(
-  verdict: "complete" | "incomplete",
-  options: { declareReview?: boolean; failCommand?: boolean; omitReporter?: boolean } = {},
+  verdict: "complete" | "complete-with-findings" | "incomplete",
+  options: {
+    declareReview?: boolean;
+    failCommand?: boolean;
+    omitReporter?: boolean;
+    reviewValidationStatus?: "not_run" | "failed";
+  } = {},
 ): {
   repo: string;
   worktrees: string;
@@ -134,9 +139,25 @@ function setupFixture(
       "",
     ].join("\n"),
   );
+  const reviewValidations = options.reviewValidationStatus
+    ? [
+        {
+          command: "specdojo grade list --dependency-changed",
+          status: options.reviewValidationStatus,
+          summary:
+            options.reviewValidationStatus === "failed"
+              ? "任意確認が失敗した"
+              : "任意確認を実行しなかった",
+        },
+      ]
+    : [];
+  const reviewEvidence = JSON.stringify({
+    final_message: "reviewed",
+    validations: reviewValidations,
+  });
   write(
     join(repo, "tools/review-executor.mjs"),
-    `process.stdin.resume(); process.stdin.on("end", () => console.log('<specdojo_executor_evidence>{"final_message":"reviewed","validations":[]}</specdojo_executor_evidence>'));\n`,
+    `process.stdin.resume(); process.stdin.on("end", () => console.log(${JSON.stringify(`<specdojo_executor_evidence>${reviewEvidence}</specdojo_executor_evidence>`)}));\n`,
   );
   write(
     join(repo, "tools/review-reporter.mjs"),
@@ -241,6 +262,40 @@ describe("Job Run worktree integration", () => {
     expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("");
     expect(git(fixture.repo, "worktree", "list", "--porcelain")).not.toContain("JBR-");
     expectSingleTrailingNewline(reviewResultContent(fixture.repo));
+  }, 120_000);
+
+  it.each(["complete", "complete-with-findings"] as const)(
+    "merges verdict %s even when the review executor records an optional check as not_run",
+    (verdict) => {
+      const fixture = setupFixture(verdict, { reviewValidationStatus: "not_run" });
+      const result = runJob(fixture.repo, fixture.worktrees);
+
+      expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+      expect(String(result.stdout)).toContain(`[routine-job] merged`);
+      expect(String(result.stdout)).toContain(`review=${verdict}`);
+      expect(existsSync(join(fixture.repo, "output/run.txt"))).toBe(true);
+    },
+    120_000,
+  );
+
+  it("keeps the worktree waiting when verdict is incomplete despite review not_run", () => {
+    const fixture = setupFixture("incomplete", { reviewValidationStatus: "not_run" });
+    const result = runJob(fixture.repo, fixture.worktrees);
+
+    expect(result.status).toBe(1);
+    expect(`${result.stdout}\n${result.stderr}`).toContain("[routine-job] waiting");
+    expect(`${result.stdout}\n${result.stderr}`).toContain("review=incomplete");
+    expect(existsSync(join(fixture.repo, "output/run.txt"))).toBe(false);
+  }, 120_000);
+
+  it("keeps the worktree waiting when a review executor validation fails", () => {
+    const fixture = setupFixture("complete", { reviewValidationStatus: "failed" });
+    const result = runJob(fixture.repo, fixture.worktrees);
+
+    expect(result.status).toBe(1);
+    expect(`${result.stdout}\n${result.stderr}`).toContain("[routine-job] waiting");
+    expect(`${result.stdout}\n${result.stderr}`).toContain("executor validation failed");
+    expect(existsSync(join(fixture.repo, "output/run.txt"))).toBe(false);
   }, 120_000);
 
   it("keeps the exec worktree and normalizes the result when the runner overrides a failed Job review", () => {

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-12T09:51:26Z"
@@ -40,7 +40,9 @@ Job Run の review（mode: review）でも、executor が実行しなかった�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `deriveReporterFacts` に task mode を渡し、`review` では executor の `not_run` / `not_applicable` を pipeline の停止条件から除外した。runner の検証失敗と executor の `failed` は従来どおり停止条件とし、`edit` の判定も変更していない。
+- review executor の指示へ、実行しなかった任意確認を `validations` に記録せず、「確認できなかった範囲」として reporter へ渡し、result と verdict に反映する規則を追加した。
+- 単体テストで mode 別の検証判定と prompt を固定し、Job Run の統合テストへ `not_run` があっても `complete` / `complete-with-findings` は統合、`incomplete` と executor の `failed` は waiting になるケースを追加した。
 
 ## 5. 関連ドキュメント
 

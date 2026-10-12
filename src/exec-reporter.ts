@@ -61,6 +61,8 @@ export type PackageManifestFacts = {
 };
 
 export type ReporterFactOptions = {
+  /** Review completion is decided by its verdict, not by optional executor checks left unrun. */
+  mode?: TaskMode;
   packageScripts?: Readonly<Record<string, string>>;
   packageDependencies?: ReadonlySet<string>;
   /** Configuration used to decide whether a SpecDojo subcommand applies to its target project. */
@@ -340,6 +342,14 @@ export function deriveReporterFacts(
   const executorValidationFailures = evidence.validations.filter((validation) => {
     if (validation.source === "runner") return false;
     if (validation.status === "passed" || validation.status === "requires_human") return false;
+    // review executor の任意確認は verdict の判断材料であり、未実施・適用外そのものを
+    // pipeline の失敗にしない。実行して失敗した確認だけは mode にかかわらず block する。
+    if (
+      options.mode === "review" &&
+      (validation.status === "not_run" || validation.status === "not_applicable")
+    ) {
+      return false;
+    }
     if (
       (validation.status === "not_run" || validation.status === "not_applicable") &&
       runnerOwnedValidationReason(validation.command) !== undefined
@@ -1010,7 +1020,8 @@ export function buildReporterPrompt(opts: {
     opts.mode === "review"
       ? `\n\nFor review mode, the executor did not re-grade the deliverable; it judged task completion
 from the stored grade result. Record that judgement in verdict and put unmet items and improvement
-instructions in improvements.`
+instructions in improvements. If evidence.final_message identifies "確認できなかった範囲",
+record that scope in rationale or improvements and reflect it in the verdict.`
       : "";
   return `You are the reporter stage of a SpecDojo executor/reporter pipeline.
 Use only the supplied plan and bounded executor evidence. Do not edit or inspect files. Do not
