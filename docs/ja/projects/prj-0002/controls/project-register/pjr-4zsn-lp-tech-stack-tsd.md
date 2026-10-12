@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T13:14:29Z"
@@ -46,12 +46,16 @@ specdojo-lp が採用する技術（Astro・Tailwind CSS・TypeScript・Node.js�
 
 | No  | 作業                                       | 担当         | 状態 | メモ |
 | --- | ------------------------------------------ | ------------ | ---- | ---- |
-| 1   | `tsd-index.md` を書き、README から案内する | DEV          | open | -    |
+| 1   | `tsd-index.md` を書き、README から案内する | DEV          | done | -    |
 | 2   | `format:check` とビルドを確かめる          | orchestrator | open | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `specdojo-lp` に `docs/ja/product/030-architecture/020-infrastructure/tsd-index.md` を作成した。frontmatter は `id: tsd-index`・`type: architecture`・`status: draft`・`rulebook: specdojo:tsd-index-rulebook` とした。
+- `技術スタック一覧` は表 1 つで、列を `区分`・`採用技術`・`担当責務`・`補足` とした。メジャーバージョンは `specdojo-lp` の `package.json` に合わせた（TypeScript 6.x、Node.js 22.x、Astro 7.x、Tailwind CSS 4.x、Prettier 3.x、ESLint 10.x、`@astrojs/check` 0.9.x など）。Material 3 のテーマ、Cloudflare Workers（静的アセット、`specdojo.org`）、GitHub（GitHub flow）、specdojo-assets も載せた。
+- Cloudflare の詳細の `tsd-<term>` はまだ無いため、リンクは書かず [[prj-0002:pjr-ym7m-lp-cloudflare-deploy]] で作成した時点で足す。
+- `specdojo-lp` の README の冒頭から `tsd-index.md` へ案内した。
+- executor の作業環境で `npm run format:check` と `npm run build` が通ることを確かめた。作業内容 No.2 の確認は orchestrator が行う。
 
 ## 5. 関連ドキュメント
 
