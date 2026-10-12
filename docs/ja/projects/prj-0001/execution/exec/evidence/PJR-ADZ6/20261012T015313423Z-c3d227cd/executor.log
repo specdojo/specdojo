@@ -1,0 +1,26 @@
+PJR-ADZ6 は推奨案 (b) で対応しました。`--by` も `--executor-by` / `--reporter-by` も付けずに `exec run --register` を実行すると、`stage_role` を持つ agent からだけ executor と reporter を選んで 2 段階で実行します。`gemma26-translator` のような `stage_role` を持たない agent は選ばれなくなりました。追加・更新したテストはまだ実行していません。テスト、型検査、lint は親 runner が後で実行します。
+
+**変更内容**
+- **`src/exec-run.ts`**:
+  - `isRegisterPipelineRequested` は、`--by` が無ければ pipeline 実行を選ぶようにしました（以前は `--executor-by` / `--reporter-by` が無いと単一 agent 実行でした）。
+  - `resolveRegisterPipelineCommand` は、両フラグが無い場合に `autoSelectRegisterPipelineAgents` を呼びます。executor は `stage_role: executor`（`mode: edit` または未指定）、reporter は `stage_role: reporter` から `priority` 順に選びます。どちらかの段に候補がいなければ、明示指定を求めるエラーで止まります。
+  - `resolveRegisterCommand` は `--by` 指定時だけを扱うようにし、owner・role・汎用候補からの自動選択をやめました。
+- **`tests/src/exec-register.test.ts`**: owner や role から選ぶ前提の旧テストを削除しました。代わりに次の 3 つを確認するテストを追加しました。
+  - `stage_role` の無い agent や `mode: review` の executor を候補から外して選ぶこと。
+  - `stage_role` の無い agent しかいない場合はエラーになること。
+  - `--by` が無いとき、owner と一致する agent があっても選ばないこと。
+- **`docs/ja/specdojo/references/command-reference.md`**: `--register` の既定が pipeline 実行であること、`stage_role` から自動で選ぶこと、owner・role からは選ばないことを、実装に合わせて書き直しました。
+- **個票（`pjr-adz6-...md`）**: 「対応結果」に解決内容、確認内容、再発防止策、残課題を記入しました。
+
+**人の対応が必要な点**
+- **規約と実データのずれ**: 規約として、`.specdojo/agent-members.yaml` の冒頭に「agent は全員 `stage_role` を持つ」と書かれています。しかし `gemma26-translator` は `stage_role` を持っていません。このファイルは agent が書き込めないため、例外の明記か規約の見直しは人が行う必要があります。個票の完了条件の 1 つ（pm-members の規約と実装の一致）は、ここが直るまで満たせません。
+- **既存の実行方法の変化**: これまでフラグなしの `--register` は単一 agent で実行していましたが、今後は 2 段階実行になります。従来の動きが必要な場合は `--by` を指定してください。
+
+**検証**
+- Prettier で 4 ファイルを整形しました（差分なし）。
+- `catalog validate` は ERROR 0 件で、既存の based_on WARN のみでした。
+- `specdojo index build` は実行していません。書き込み先の `.specdojo/doc-index.json` が agent の書き込み禁止対象のため、runner 側で実行してください。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-ADZ6 は推奨案 (b) で対応した。`--by` も `--executor-by` / `--reporter-by` も無い `exec run --register` は、`stage_role: executor`（`mode: edit` または未指定）と `stage_role: reporter` の agent から `priority` 順に自動で選んで2段階で実行する。`stage_role` を持たない agent（`gemma26-translator` など）は選ばれない。どちらかの段に候補がいなければ明示指定を求めるエラーで止まる。`resolveRegisterCommand` は `--by` 指定時だけを扱い、owner・role・汎用候補からの自動選択をやめた。変更ファイル: `src/exec-run.ts`（`isRegisterPipelineRequested`、`resolveRegisterPipelineCommand`、`resolveRegisterCommand` の変更と `autoSelectRegisterPipelineAgents` の追加）、`tests/src/exec-register.test.ts`（旧 owner/role テストを削除し、自動選択の除外・エラー・owner 不使用のテストを追加）、`docs/ja/specdojo/references/command-reference.md`（`--register` の agent 選択の記述を改訂）、個票 `pjr-adz6-register-run-non-pipeline-agent-fallback.md`（対応結果を記入。ステータス項目は変更していない）。追加・更新したテストは executor では実行しておらず、親 runner の `test:unit` / `test:integration` が実行する。申し送り: `.specdojo/agent-members.yaml` 冒頭の規約コメント「agent は全員 `stage_role` を持つ」に対し `gemma26-translator` は `stage_role` を持たない。同ファイルは agent の書き込み禁止対象のため、例外の明記か規約の見直しは人が行う。個票の完了条件（pm-members 規約と実装の一致）はそれまで満たせない。また、フラグなしの `--register` は単一 agent 実行から2段階実行に変わったため、従来の動きが必要な場合は `--by` を指定する。","validations":[{"command":"npx prettier --write src/exec-run.ts tests/src/exec-register.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-adz6-register-run-non-pipeline-agent-fallback.md","status":"passed","summary":"4ファイルとも整形済み（unchanged）"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"ERROR 0件。既存の based_on 対象文書未検出の WARN のみ"},{"command":"specdojo index build","status":"not_run","summary":"出力先の `.specdojo/doc-index.json` は agent の書き込み禁止対象のため、executor sandbox では実行しなかった。文書 id の追加・変更はない。runner または人が実行する"}]}
+</specdojo_executor_evidence>

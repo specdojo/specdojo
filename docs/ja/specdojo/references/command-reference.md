@@ -450,7 +450,7 @@ specdojo schedule strategy generate \
 
 agent の指定は repository 共通 roster nickname（`.specdojo/agent-members.yaml`）へ一本化します。手動ターゲット（`--task` / `--register` など）では `--by <nickname>`、`--auto` バッチでは mode 別に `--edit-by` / `--review-by` を使い、バッチ起動は `--auto` に一本化します。解決の優先順位は「単体指定（`--by`）＞ mode 別指定（`--edit-by` / `--review-by`）＞ 自動選択」です。
 
-Schedule タスクの `agent_pipeline`（`sch-strategy-<track>.yaml` の phase 設定）と同じ executor/reporter 2段階（`stage_role: executor` が成果物を編集・検証し、`stage_role: reporter` が evidence から result を描画する）は、`--register` でも `--executor-by <nickname>` と `--reporter-by <nickname>` を **両方セットで** 指定すると使えます。register 項目は Schedule のような per-item のパイプライン宣言を持たないため、owner・role からの自動選択は行わず、この2フラグの明示指定のみで切り替わります。複数項目では `--executor-by PJR-0001=exec-a,PJR-0002=exec-b` のような項目別指定も使用できます。項目別指定は選択した全項目を含む必要があり、対象外 ID と指定漏れは実行前にエラーになります。片方だけの指定もエラーになります。
+Schedule タスクの `agent_pipeline`（`sch-strategy-<track>.yaml` の phase 設定）と同じ executor/reporter 2段階（`stage_role: executor` が成果物を編集・検証し、`stage_role: reporter` が evidence から result を描画する）は、`--register` の既定の実行方式です。register 項目は Schedule のような per-item のパイプライン宣言を持たないため、owner・role からの agent 選択は行いません。`--executor-by <nickname>` と `--reporter-by <nickname>` を **両方セットで** 指定すると、その agent で実行します。`--by` と `--executor-by` / `--reporter-by` をいずれも指定しない場合は、`stage_role: executor`（`mode: edit` または `mode` 未指定）と `stage_role: reporter` の agent から `priority` 順に自動で選びます。`stage_role` を持たない agent（翻訳専用など）は自動選択の候補に入りません。どちらかの段に該当する agent がいない場合は、`--executor-by` / `--reporter-by` の指定を求めるエラーで実行前に止まります。複数項目では `--executor-by PJR-0001=exec-a,PJR-0002=exec-b` のような項目別指定も使用できます。項目別指定は選択した全項目を含む必要があり、対象外 ID と指定漏れは実行前にエラーになります。片方だけの指定もエラーになります。
 
 `exec scheduler` の claim 保護と選択戦略、`--auto --loop --parallel` の枠管理は [Schedule実行運用ガイド](../guides/schedule-operation-guide.md)、`exec reopen` の実行条件は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
@@ -490,7 +490,7 @@ specdojo exec run --project prj-0001 --register PJR-0012 --worktree
 # worktree 隔離のまま複数項目を並列実行する
 specdojo exec run --project prj-0001 --register PJR-0012 PJR-0013 --worktree --parallel 2
 
-# executor/reporter パイプラインで実行する（両フラグ必須）
+# executor/reporter パイプラインの agent を明示して実行する（両フラグをセットで指定）
 specdojo exec run --project prj-0001 --register PJR-0012 --executor-by claude-expert-executor --reporter-by claude-reporter --worktree
 
 # 項目ごとに executor を分け、解決結果を確認してから並列実行する
@@ -512,7 +512,7 @@ specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026
 
 全再開段で、agent または親検証の起動前に統合先ブランチの最新を exec branch と worktree へ取り込みます（複数リポジトリの project ではプロダクトごとの統合先も取り込みます）。worktree の未コミット成果は未追跡ファイルを含めて一時退避し、取り込み後に index を復元せず戻すため、同一ファイルの非競合変更も両方保持できます。commit 済み変更または退避した成果の復元が競合する場合は同期 merge を巻き戻し、executor の成果を元の worktree へ戻してから、register の状態を変えずに再開を拒否します。親検証の記録が不足または失敗している場合は、現在の固定許可リストで親検証を更新してから reporter へ進みます。reporter も成功していて統合（commit → merge → worktree 撤去）だけが残っている場合は、agent を起動せずに統合段だけを再試行します。worktree や plan/result が無い、成功済み executor の evidence が欠損しているなど再開できない場合は、worktree を含め何も変更せずエラー終了します。再開可能な成果が残っている項目を `--resume` なしで再実行しようとした場合も、未統合の成果を守るために中断します。破棄して最初からやり直す場合は `--force-restart` を指定します。手順の使い分けは [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
-`--by`（または owner 解決）を指定した場合は、従来どおり単一 agent が成果物編集と result 記入を1回の実行で完結します。`--executor-by` と `--reporter-by` を両方指定した場合は、`stage_role: executor` の agent が成果物を編集・検証し、その evidence（実行ログの要約・検証結果）を渡された `stage_role: reporter` の agent が result 本文を描画する2段階実行に切り替わります。`stage_role` が一致しない nickname を指定するとエラーになります。
+`--by` を指定した場合は、従来どおり単一 agent が成果物編集と result 記入を1回の実行で完結します。`--by` を指定しない場合（`--executor-by` と `--reporter-by` を両方指定した場合、またはどちらも指定せず `stage_role` から自動選択した場合）は、`stage_role: executor` の agent が成果物を編集・検証し、その evidence（実行ログの要約・検証結果）を渡された `stage_role: reporter` の agent が result 本文を描画する2段階実行に切り替わります。`stage_role` が一致しない nickname を指定するとエラーになります。
 
 register 実行の対応内容、状態追跡、commit の扱いは [登録簿運用ガイド](../guides/register-operation-guide.md)、実行フロー全体は [exec運用ガイド](../guides/exec-operation-guide.md) を参照します。
 
