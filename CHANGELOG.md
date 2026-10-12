@@ -124,6 +124,26 @@ SpecDojo の利用者に影響する変更を記録します。
   鍛え続ける。」です（PJR-QGP4、PJR-0WYM、PJR-J29X）。
 - Quick Start に、`specdojo init` から question・decision の記帳、設計書の更新、change-request、
   決定ログの確認までを 10 分で体験する「仕様の判断台帳」の手順を追加しました（PJR-XMQH）。
+- routine が起動する Job Run を、本体の作業場所ではなく exec の worktree
+  （`exec/<project-id>-<run-id>`）で実行できるようにしました。runner が Run の出力だけを
+  `chore(routine): …` で exec ブランチへ commit し、`mode: review` の plan・result による review を
+  経て、Run が成功し verdict が `complete` / `complete-with-findings` の場合だけ統合先へ `--no-ff` で
+  merge します。それ以外は worktree を残して統合せず、理由を Job Run、review result、routine の
+  記録へ残します。Job の実行中に本体の作業場所の HEAD は動きません（PJR-VQZA）。
+- Job Definition に、統合前 review を宣言する `task.review` を追加しました。宣言した Job は routine
+  と手動の `exec run --job` のどちらから起動しても、worktree での実行、runner の commit、review、
+  verdict による統合の流れで動きます。review agent は `task.review.agent.executor`（必須）と
+  `task.review.agent.reporter`（任意）で nickname 指名でき、`--review-by` / `--reporter-by`、Job の
+  指名、自動選択の順に解決します。`exec run --job --dry-run` と `routine run --dry-run` は解決した
+  review agent を表示します。routine の `action.commit: true` は互換として読みますが新たには
+  推奨せず、Job が `task.review` を宣言している場合は Job を優先します（PJR-MD3C）。
+- `agent-config-write` の保護で block された設定変更（プロダクトリポジトリの `package.json` など）を、
+  result の申し送りに自動記録された提案差分から統合先へ適用・commit する
+  `specdojo exec handoff apply --project <project-id> --register <PJR-ID>` を追加しました。差分を
+  表示してから確認を求め、非対話実行では `--yes` がない限り変更しません。保護対象外のパス、
+  未宣言のリポジトリ、切り詰められた差分や適用できない差分は commit 前に拒否します。
+  `package.json` を適用した場合は lock ファイルの再生成と、続けて実行する `--resume` のコマンドを
+  案内します（PJR-BJH6）。
 
 ### 不具合修正
 
@@ -189,6 +209,37 @@ SpecDojo の利用者に影響する変更を記録します。
   `remark-lint-frontmatter-schema` を依存から外しました（PJR-7GAK）。
 - `fast-glob` を、本体では Node 標準 API による再帰走査、docs-lint では `tinyglobby` に置き換え、
   `micromatch` 経由の `braces` の high の脆弱性を本体の実行時依存から除きました（PJR-HQKV）。
+- `repos` を宣言した project の `exec run --worktree` で、`project/` の worktree の `specdojo build` が
+  兄弟のプロダクト worktree より先に設定を読み、`repos[].path` の存在検査で失敗する問題を修正
+  しました。プロダクト worktree を作成（または再利用）してから build します（PJR-NN43）。
+- `--project` なしの `specdojo build` が `current_project` の登録簿しか生成せず、project が複数ある
+  生成物のない worktree で index build が失敗する問題を修正しました。`project_register_path` を
+  持つすべての project の登録簿を生成してから index build へ進みます（PJR-WJ83）。
+- `exec run --register` で agent を指定しない場合に、pipeline 用でない agent（翻訳専用の agent など）が
+  owner・role から自動選択される問題を修正しました。既定は pipeline 実行とし、`stage_role` が
+  executor・reporter の agent から `priority` 順に選びます。該当する agent がない段は明示の指定を
+  求めるエラーになります（PJR-ADZ6）。
+- `not_applicable` の判定で、`<repo>:<path>` を引数に含むコマンドと `--prefix <repo>` 付きの
+  コマンドをプロダクトリポジトリの `package.json` で判定するようにしました。
+  `specdojo catalog validate` は `--project`、run の対象 project、`current_project` の順に対象を
+  決めて `catalog_path` を判定します（PJR-WP44）。
+- executor がプロダクトリポジトリの検証（`npm --prefix <repo> run <script>`）を `not_run` とした
+  場合、同じリポジトリに割り当てた同じコマンドの親検証が成功したときだけ満たされたものと扱う
+  ようにしました。project リポジトリや別のプロダクトリポジトリの成功では代用しません
+  （PJR-2GZE）。
+- プロダクト worktree の作成時に、追跡されている `package-lock.json` がないため依存を導入しな
+  かったことが分からない問題に対応し、`Skipping worktree dependencies: …` をログへ出すように
+  しました。lock を持つプロダクト worktree では従来どおり `npm ci` を実行します（PJR-86Q5）。
+- `--resume` の同期で、統合先に入った内容と同じ未追跡ファイルが worktree に残ると再開を拒否する
+  問題を修正しました。同じ内容なら解消して再開し、内容が異なる場合はパスを示して拒否し、元の
+  worktree を復元します（PJR-B2EC）。
+- register 由来のタスクで、worktree の最上位に新規作成したファイル（`.gitignore`、設定、README
+  など）が `targets` なしでは commit されず統合前検査で止まる問題を修正しました。最上位の新規
+  ファイルを commit 対象に含め、run の `integrate.log` と result の申し送りへ記録します。`tmp/`
+  配下は `.gitignore` の有無によらず commit 対象と統合前検査から除外し、exec plan の共通規約は
+  作業用のファイルを `tmp/` かリポジトリ外へ置くよう指示します（PJR-GBVM）。
+- `config init` が `.gitignore` に `node_modules/` を追記するようにしました。既存の `.gitignore` に
+  同じ意味の行がある場合は追記しません（PJR-J2AS）。
 
 ### 既知の問題
 
@@ -199,5 +250,14 @@ SpecDojo の利用者に影響する変更を記録します。
 - docs-site に high 1 件、moderate 1 件の脆弱性が残っています。mermaid 12 が依存する chevrotain 11 が `lodash-es` 4.17.23 を固定している問題と、vite 経由の `esbuild` に起因するものであり、いずれも上流の対応待ちです（PJR-XMMA）。
 - docs-lint に moderate 1 件の脆弱性が残っています。`markdownlint-cli` 0.49.1 が `js-yaml` を
   `~5.2.1` に固定しているためで、上流の対応待ちです（PJR-7GAK）。
+- `npm test` で単体テストと統合テストを既定の並列数でまとめて実行すると、負荷により別々の
+  テストが 1〜2 件時間切れで失敗することがあります。`npm run test:unit` と
+  `npm run test:integration` を分けて実行すると全件通過します（PJR-W2EB）。
+- 試験的な `devcontainer scaffold` が生成するコンテナは、利用リポジトリの親フォルダを利用者の
+  フォルダ名によらず `/workspaces/specdojo-workspace` にマウントします。また、`--tmux` などの
+  任意機能は指定しないと入らず、完了時の案内にも表示されません（PJR-PV5B）。
+- executor は `.specdojo/doc-index.json` へ書き込めないため `specdojo index build` を `not_run` と
+  記録するしかなく、index を runner が再生成していても run が止まります。対応は未完了で、止まった
+  場合は人または orchestrator が統合します（PJR-HJ99）。
 
 [0.3.0]: https://github.com/specdojo/specdojo/compare/v0.2.1...v0.3.0

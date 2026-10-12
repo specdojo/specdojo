@@ -93,3 +93,32 @@
       from: "-"
       to: "agent exited with non-zero code: executor validation failed or not run: specdojo index build, specdojo catalog validate"
   previous_event_id: reg_e78ce92fe8614b9d86ab3728b865a10b
+- v: 1
+  id: reg_43d4f6012f244c61adb185691d72be49
+  ts: "2026-10-12T07:08:56Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: specdojo index build, specdojo catalog validate"
+      to: "-"
+  previous_event_id: reg_6884edf73ff24ca89c3423bb2e302781
+- v: 1
+  id: reg_7b17538c43c1428cac3f5219cde7b7da
+  ts: "2026-10-12T07:12:28Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_43d4f6012f244c61adb185691d72be49
