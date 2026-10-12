@@ -40,7 +40,18 @@ npm test（vitest run）は単体と統合をまとめて既定の並列数で�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `vitest.config.ts` の一括実行を unit / integration の 2 project 構成にし、それぞれ既存の
+  `vitest.unit.config.ts` と `vitest.integration.config.ts` を継承するようにした。両 project の
+  `maxWorkers` は 2 に固定し、integration project は既存設定の `testTimeout: 30000` を継承する。
+  setup・環境変数・対象ファイルの条件も各既存設定から引き継ぐため、`test:unit` と
+  `test:integration` の設定は変更していない。
+- 設定の project 構成、worker 上限、統合テストの 30 秒上限を検証する単体テストを追加した。
+- `npm test` で `unit` / `integration` の両 project が起動することを確認した。この executor の
+  sandbox では、統合テストが利用する Git fixture 操作と `tsx` の IPC socket 作成が `EPERM` で
+  拒否され、子プロセス待ちのまま完走しなかったため中断した。分割した単体・統合テストは親 runner
+  の検証対象であり、全件の結果は runner の evidence で確認する。sandbox 外での `npm test` の
+  完走確認を申し送る。
+- CHANGELOG の記載を既知の問題から不具合修正へ移した。
 
 ## 5. 関連ドキュメント
 
