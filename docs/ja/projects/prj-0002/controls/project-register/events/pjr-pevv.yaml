@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cdce51bf464841bcb29f50ab3e3076ed
+  ts: "2026-10-12T09:49:26Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-HKTJ（アセットを specdojo-assets で管理する）の決定から派生した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 道着を着たカワウソのキャラクターの設定と原本を作る
+    - field: description
+      from: ""
+      to: マスコット（道着を着たカワウソ）の性格・配色・ポーズの種類などの設定を決め、AI での生成と人の手描きを使って原本を specdojo-assets に作る。作り方とライセンスを BRAND.md に記録する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: UX
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
