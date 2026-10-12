@@ -44,7 +44,7 @@ orchestrator が `feature/lp-v1`（518a45e）で確認した時点の候補。�
 | No  | 作業                                                | 担当         | 状態 | メモ                   |
 | --- | --------------------------------------------------- | ------------ | ---- | ---------------------- |
 | 1   | 古い記述を洗い出し、README とソースを現状に合わせる | BA           | done | README の構成表を更新  |
-| 2   | ビルドを確認する                                    | orchestrator | open | sandbox の外で確認する |
+| 2   | ビルドを確認する                                    | orchestrator | done | sandbox の外で確認した |
 
 ## 4. 対応結果
 
@@ -67,6 +67,7 @@ orchestrator が `feature/lp-v1`（518a45e）で確認した時点の候補。�
 
 - `git diff --check` で差分に空白エラーがないことを確認した。
 - `specdojo-lp` の `npm run build` は、完了条件どおり orchestrator が sandbox の外で確認する。
+- exec run は `waiting` に止まらず、runner が `specdojo-lp` の `feature/lp-v1` へ統合した（0126899）。runner の親検証 7 種はすべて passed だった。orchestrator が sandbox の外で 0126899 をビルドし、成功を確認した（2026-10-12）。差分は `README.md` だけで、`src/` に登録簿の項目 ID が残っていないことも確かめた。
 
 ## 5. 関連ドキュメント
 
