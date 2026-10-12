@@ -1,0 +1,22 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 typecheck
+> tsc -b --noEmit
+
+tests/src/exec-task-repos.integration.test.ts(486,9): error TS2304: Cannot find name 'app2'.
+tests/src/exec-task-repos.integration.test.ts(487,9): error TS2304: Cannot find name 'app2'.
+tests/src/exec-task-repos.integration.test.ts(488,20): error TS2304: Cannot find name 'app2'.
+tests/src/exec-task-repos.integration.test.ts(489,9): error TS2304: Cannot find name 'app2'.
+tests/src/exec-task-repos.integration.test.ts(490,9): error TS2304: Cannot find name 'app2'.
+tests/src/exec-task-repos.integration.test.ts(491,9): error TS2304: Cannot find name 'app2'.
+tests/src/exec-task-repos.integration.test.ts(506,25): error TS2304: Cannot find name 'app2'.
+tests/src/exec-task-repos.integration.test.ts(965,9): error TS2304: Cannot find name 'app2'.
+tests/src/exec-task-repos.integration.test.ts(966,14): error TS2304: Cannot find name 'app2'.
+tests/src/exec-task-repos.integration.test.ts(967,9): error TS2304: Cannot find name 'app2'.
+
+
+--- stderr ---
