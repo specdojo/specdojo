@@ -9,7 +9,9 @@ specdojo:
   item_type: issue
   item_status: open
   priority: medium
+  owner: DEV
   registered_at: "2026-10-12T04:10:29Z"
+  due_on: "2026-10-31"
 ---
 
 # PJR-GRMK pre-commit の catalog-validate が catalog_path のない project で失敗する
