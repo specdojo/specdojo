@@ -122,3 +122,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_23ef0f86f68b45f7ae3b1f6f86eac663
+- v: 1
+  id: reg_825deed5fe194ab49f27dba9b7f931b5
+  ts: "2026-10-12T07:20:09Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（e11db0d62）。PJR-MTFA の再開で実地に動作を確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: index build を runner が担う検証とし、catalog validate の適用を変更範囲でも判定するようにした
+  previous_event_id: reg_5abb1e9195654428a7648bc9cc675667

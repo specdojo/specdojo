@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-hj99-index-build-not-run-blocks
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   registered_at: "2026-10-12T03:32:21Z"
+  completed_at: "2026-10-12T07:20:09Z"
+  conclusion: index build を runner が担う検証とし、catalog validate の適用を変更範囲でも判定するようにした
 ---
 
 # PJR-HJ99 executor が実行できない index build の not_run で run が止まる
