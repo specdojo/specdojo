@@ -62,7 +62,7 @@ specdojo-lp に整形（Prettier）・lint（ESLint）・型検査（astro check
 
 ### 4.3. 残課題
 
-- `feature/lp-dev-environment` を `feature/lp-v1` へ取り込むのは、利用者の承認を得てから行う。
+- `feature/lp-dev-environment` は、利用者の承認を得て `feature/lp-v1` へ `--no-ff` で取り込んだ（7cb3b82）。取り込んだ後も `format:check`・`lint:ts`・`typecheck`・`build` が通ることを確かめた。
 - 親 runner での `specdojo-lp` の検証は [[prj-0001:pjr-he9r-per-project-parent-validations]] で扱う。
 - 「`specdojo-lp` で prettier を実行しない」の条件を置いた項目（PJR-7T8X・PJR-1QBZ・PJR-XEJ4 など）はすべて完了済みで、今後の項目では不要になった。
 
