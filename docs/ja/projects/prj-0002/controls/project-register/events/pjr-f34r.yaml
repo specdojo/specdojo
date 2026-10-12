@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8a118619fd774ecc944d6023c77b08de
+  ts: "2026-10-12T09:49:11Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-HKTJ（アセットを specdojo-assets で管理する）の決定から派生した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo-assets の骨組みと書き出しの仕組みを作る
+    - field: description
+      from: ""
+      to: specdojo-assets に mascot/source/・mascot/prompts/・exports.yaml・BRAND.md の骨組み、Git LFS の設定、exports.yaml に従って書き出すスクリプトを用意し、prj-0002 の repos に specdojo-assets を加える
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
