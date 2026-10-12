@@ -4,6 +4,7 @@ import {
   GITIGNORE_HEADER,
   gitignorePatternsForLayouts,
   mergeGitignore,
+  NODE_MODULES_PATTERN,
 } from "../../src/specdojo-gitignore.js";
 import { projectGitignoreLayout } from "../../src/specdojo-config.js";
 
@@ -69,6 +70,38 @@ describe("mergeGitignore", () => {
       added: ["a/*"],
       skipped: ["node_modules/", ".specdojo/doc-index.json"],
     });
+  });
+
+  it("adds node_modules/ with the defaults to a .gitignore lacking it", () => {
+    const actual = mergeGitignore("dist\n", [...DEFAULT_GITIGNORE_PATTERNS]);
+
+    expect(actual.added).toEqual([...DEFAULT_GITIGNORE_PATTERNS]);
+    expect(actual.added[0]).toBe(NODE_MODULES_PATTERN);
+    expect(actual.content).toBe(
+      `dist\n\n${GITIGNORE_HEADER}\n${DEFAULT_GITIGNORE_PATTERNS.join("\n")}\n`,
+    );
+  });
+
+  it.each([
+    "node_modules",
+    "/node_modules",
+    "/node_modules/",
+    "**/node_modules",
+    "**/node_modules/",
+  ])("skips node_modules/ when an equivalent line %s already exists", (line) => {
+    const actual = mergeGitignore(`${line}\n`, [NODE_MODULES_PATTERN, "a/*"]);
+
+    expect(actual).toEqual({
+      content: `${line}\n\n${GITIGNORE_HEADER}\na/*\n`,
+      added: ["a/*"],
+      skipped: [NODE_MODULES_PATTERN],
+    });
+  });
+
+  it("does not treat a nested node_modules path as excluding the root one", () => {
+    const actual = mergeGitignore("packages/app/node_modules/\n", [NODE_MODULES_PATTERN]);
+
+    expect(actual.added).toEqual([NODE_MODULES_PATTERN]);
   });
 
   it("returns the same content when merged twice", () => {

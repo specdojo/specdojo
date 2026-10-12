@@ -24,10 +24,14 @@ export type EnsureGitignoreResult = GitignoreMergeResult & {
   written: boolean;
 };
 
-export const GITIGNORE_HEADER = "# specdojo の生成物（specdojo config init が追記）";
+export const GITIGNORE_HEADER = "# 依存と specdojo の生成物（specdojo config init が追記）";
+
+export const NODE_MODULES_PATTERN = "node_modules/";
 
 // このリポジトリの .gitignore と同じ既定の除外。docs/ 配下の配置はすべてこれで覆える。
+// README の導入手順は npm install の直後に config init を実行するため、依存の node_modules/ も含める。
 export const DEFAULT_GITIGNORE_PATTERNS = [
+  NODE_MODULES_PATTERN,
   ".specdojo/doc-index.json",
   "docs/**/generated/*",
   "!docs/**/generated/.gitkeep",
@@ -82,6 +86,22 @@ export function gitignorePatternsForLayouts(layouts: ProjectGitignoreLayout[]): 
   return patterns;
 }
 
+// 既存の .gitignore で node_modules/ と同じ意味（root の node_modules を除外する）になる行。
+const NODE_MODULES_EQUIVALENTS = [
+  "node_modules",
+  "node_modules/",
+  "/node_modules",
+  "/node_modules/",
+  "**/node_modules",
+  "**/node_modules/",
+] as const;
+
+function isAlreadyPresent(present: Set<string>, pattern: string): boolean {
+  if (present.has(pattern)) return true;
+  if (pattern !== NODE_MODULES_PATTERN) return false;
+  return NODE_MODULES_EQUIVALENTS.some((line) => present.has(line));
+}
+
 /**
  * Append the missing patterns to existing .gitignore content. Existing lines are never removed
  * or reordered, and the file's line ending (LF / CRLF) is preserved.
@@ -91,7 +111,7 @@ export function mergeGitignore(existing: string, patterns: string[]): GitignoreM
   const added: string[] = [];
   const skipped: string[] = [];
   for (const pattern of patterns) {
-    if (present.has(pattern) || added.includes(pattern)) {
+    if (isAlreadyPresent(present, pattern) || added.includes(pattern)) {
       if (!skipped.includes(pattern)) skipped.push(pattern);
       continue;
     }
@@ -130,7 +150,9 @@ export function formatGitignoreReport(result: EnsureGitignoreResult, dryRun: boo
   const lines: string[] = [];
   const addVerb = dryRun ? "Would add" : "Added";
   if (result.added.length === 0) {
-    lines.push(`.gitignore already excludes specdojo outputs: ${result.gitignorePath}`);
+    lines.push(
+      `.gitignore already excludes node_modules/ and specdojo outputs:${result.gitignorePath}`,
+    );
   } else {
     const action = result.created ? (dryRun ? "Would create" : "Created") : "Updated";
     lines.push(`${dryRun ? `${action} (dry-run)` : action}: ${result.gitignorePath}`);
@@ -139,7 +161,7 @@ export function formatGitignoreReport(result: EnsureGitignoreResult, dryRun: boo
   for (const line of result.skipped) lines.push(`  Skipped (already present): ${line}`);
   if (result.added.length > 0) {
     lines.push(
-      "If specdojo outputs are already tracked by git, untrack them once and commit:",
+      "If node_modules/ or specdojo outputs are already tracked by git, untrack them once and commit:",
       `  ${UNTRACK_IGNORED_COMMAND}`,
     );
   }
