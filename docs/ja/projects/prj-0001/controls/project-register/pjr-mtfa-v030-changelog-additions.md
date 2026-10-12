@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-mtfa-v030-changelog-additions
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-12T06:01:18Z"
+  completed_at: "2026-10-12T07:20:16Z"
+  conclusion: CHANGELOG の 0.3.0 に 10 月 11 日以降の変更と既知の問題を追記し、移行ガイドに 3 行を加えた
 ---
 
 # PJR-MTFA v0.3.0 の CHANGELOG に 10 月 11 日以降の変更と既知の問題を追記する

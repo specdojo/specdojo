@@ -122,3 +122,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_43d4f6012f244c61adb185691d72be49
+- v: 1
+  id: reg_d38eb9f220304edfb8708612bfaaab3a
+  ts: "2026-10-12T07:20:16Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（aebcff031）。PJR-HJ99 の移動と用語の追記は orchestrator が補正
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: CHANGELOG の 0.3.0 に 10 月 11 日以降の変更と既知の問題を追記し、移行ガイドに 3 行を加えた
+  previous_event_id: reg_7b17538c43c1428cac3f5219cde7b7da
