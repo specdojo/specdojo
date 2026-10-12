@@ -563,6 +563,31 @@ function applyStashedWorktree(cwd: string, stashOid: string): ReturnType<typeof 
   return gitResult(cwd, ["stash", "apply", "--quiet", stashOid]);
 }
 
+function treeObjectAt(cwd: string, ref: string, path: string): string | undefined {
+  const entry = gitResult(cwd, ["ls-tree", "-z", ref, "--", path]);
+  if (entry.status !== 0) return undefined;
+  const output = gitText(entry.stdout);
+  const separator = output.indexOf("\t");
+  if (separator < 0) return undefined;
+  return output.slice(0, separator).split(" ").at(-1);
+}
+
+function classifyTrackedStashedUntrackedPaths(
+  cwd: string,
+  stash: StashedWorktree,
+): { identical: string[]; conflicting: string[] } {
+  const identical: string[] = [];
+  const conflicting: string[] = [];
+  const untrackedRef = `${stash.oid}^3`;
+  for (const path of stash.untrackedPaths) {
+    const mergedObject = treeObjectAt(cwd, "HEAD", path);
+    if (!mergedObject) continue;
+    const stashedObject = treeObjectAt(cwd, untrackedRef, path);
+    (stashedObject === mergedObject ? identical : conflicting).push(path);
+  }
+  return { identical, conflicting };
+}
+
 function restoreOriginalWorktree(params: {
   cwd: string;
   repo: string;
@@ -667,6 +692,37 @@ export function syncWorktreeWithIntegrationTarget(params: {
   }
 
   if (stash) {
+    const trackedUntracked = classifyTrackedStashedUntrackedPaths(cwd, stash);
+    if (trackedUntracked.conflicting.length > 0) {
+      restoreOriginalWorktree({
+        cwd,
+        repo,
+        originalHead,
+        stash,
+        reason:
+          `uncommitted executor changes conflict with ${target}: ` +
+          `untracked files differ from tracked integration files: ${trackedUntracked.conflicting.join(", ")}`,
+      });
+    }
+    if (trackedUntracked.identical.length > 0) {
+      const removed = gitResult(cwd, [
+        "rm",
+        "--quiet",
+        "--force",
+        "--",
+        ...trackedUntracked.identical,
+      ]);
+      if (removed.status !== 0) {
+        const detail = gitFailure(removed) || `exit ${removed.status ?? "unknown"}`;
+        restoreOriginalWorktree({
+          cwd,
+          repo,
+          originalHead,
+          stash,
+          reason: `cannot prepare identical untracked files for restore: ${detail}`,
+        });
+      }
+    }
     const restored = applyStashedWorktree(cwd, stash.oid);
     if (restored.status !== 0) {
       const detail = gitFailure(restored) || `exit ${restored.status ?? "unknown"}`;
@@ -677,6 +733,19 @@ export function syncWorktreeWithIntegrationTarget(params: {
         stash,
         reason: `uncommitted executor changes conflict with ${target}: ${detail}`,
       });
+    }
+    if (trackedUntracked.identical.length > 0) {
+      const resolved = gitResult(cwd, ["checkout", "HEAD", "--", ...trackedUntracked.identical]);
+      if (resolved.status !== 0) {
+        const detail = gitFailure(resolved) || `exit ${resolved.status ?? "unknown"}`;
+        restoreOriginalWorktree({
+          cwd,
+          repo,
+          originalHead,
+          stash,
+          reason: `cannot finish restoring identical untracked files: ${detail}`,
+        });
+      }
     }
     dropStash(cwd, stash.oid);
   }

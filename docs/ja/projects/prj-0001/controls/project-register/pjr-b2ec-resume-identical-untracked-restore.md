@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:42:46Z"
-  block_reason: rate limit reached
 ---
 
 # PJR-B2EC 再開時の同期で内容が同じ未追跡ファイルを戻せず再開が拒否される
@@ -41,7 +40,9 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- stash に退避した未追跡ファイルを復元する前に、merge 後の追跡済みファイルと blob を比較するようにした。同一内容のパスは一時的に重複を解消して stash を適用し、統合先の追跡状態へ戻すため、手作業なしで再開できる。
+- 内容が異なるパスは stash を適用する前に検出し、該当パスをエラーへ含めたうえで同期 merge を巻き戻す。元の未追跡ファイルは既存の復旧手順で worktree へ戻し、復旧に失敗した場合は stash を保持する。
+- 同一内容なら同期が成功して clean になるケースと、異なる内容ならパスを示して拒否し元の worktree を復元するケースを `tests/src/exec-task-repos.integration.test.ts` に追加した。
 
 ## 5. 関連ドキュメント
 
