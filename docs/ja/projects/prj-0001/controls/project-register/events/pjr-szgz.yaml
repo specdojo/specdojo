@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_613824e30b944c9e95990e4144600c8d
+  ts: "2026-10-12T06:13:26Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 で specdojo-lp の開発環境を整えるにあたり、利用者が VS Code の拡張機能も追加したいと要望した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer に specdojo-lp 用の VS Code 拡張機能を加える
+    - field: description
+      from: ""
+      to: 作業場所の devcontainer で specdojo-lp も開いているが、Astro・Tailwind CSS IntelliSense・ESLint の拡張機能が入っていない。devcontainer.json の customizations.vscode.extensions に加え、作り直したときに自動で入るようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"

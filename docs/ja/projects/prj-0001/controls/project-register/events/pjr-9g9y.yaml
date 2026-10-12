@@ -48,3 +48,22 @@
       from: _TODO_
       to: "2026-10-31"
   previous_event_id: reg_1eee18c9e79b45fd8eac3ab2ba3396ac
+- v: 1
+  id: reg_114f56a1d88d4de6ae6a67b55a583c5f
+  ts: "2026-10-12T06:11:35Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: 利用者が orchestrator との会話で選択肢 C と名前の候補 1 を承認した。文書の反映は PJR-34F2 で行う
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: 選択肢 C。3 つの体系を成果物・型（Kata）・技（Waza）に改め、流（Ryu）をそれらをつなぐ属性とする。標語・PDCA マトリクス・仕様書の語・app1-workspace/ もあわせて改める
+  previous_event_id: reg_289cf985e75a48f496e4990d29632771

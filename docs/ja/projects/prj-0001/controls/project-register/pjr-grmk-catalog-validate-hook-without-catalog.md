@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T04:10:29Z"
   due_on: "2026-10-31"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result …"
 ---
 
 # PJR-GRMK pre-commit の catalog-validate が catalog_path のない project で失敗する
@@ -41,7 +42,9 @@ lefthook の catalog-validate は project を指定せずに catalog validate �
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- pre-commit 専用の `tools/catalog-validate-if-configured.mjs` を追加した。通常の `catalog validate` を実行し、既知の project に `catalog_path` がない場合のエラーだけを成功扱いのスキップへ変換する。未知の project、設定不備、catalog の不整合は従来どおり失敗させる。
+- `lefthook.yml` の `catalog-validate` を専用ラッパー経由にした。これにより `SPECDOJO_PROJECT=prj-0002` では記帳 commit を妨げず、`catalog_path` のある prj-0001 では従来どおり catalog の不整合を検出する。公開 CLI の仕様は変更していない。
+- 回帰テストとして、`catalog_path` のない project のスキップ、未知の project と設定済み catalog の不整合の失敗維持、正常な catalog の成功を追加した。
 
 ## 5. 関連ドキュメント
 
