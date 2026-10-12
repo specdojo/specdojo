@@ -122,3 +122,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_74a448be8c9d42879e53a0b93bd55107
+- v: 1
+  id: reg_2852d240fd7f4ee8a4e120c8b4d00ed8
+  ts: "2026-10-12T07:19:30Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（fdd17819c）。PJR-GRMK の適用で実地に動作を確認
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: 保護は残し、申し送りの提案差分を exec handoff apply で確認つきで統合先へ適用できるようにした
+  previous_event_id: reg_bd82d3fbc4fd42beaf4bb3d9f25d3dd4

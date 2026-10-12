@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-bjh6-product-package-json-protected
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:43:10Z"
+  completed_at: "2026-10-12T07:19:30Z"
+  conclusion: 保護は残し、申し送りの提案差分を exec handoff apply で確認つきで統合先へ適用できるようにした
 ---
 
 # PJR-BJH6 プロダクトリポジトリの package.json も agent の保護対象になる
