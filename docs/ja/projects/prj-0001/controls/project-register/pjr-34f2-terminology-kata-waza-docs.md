@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-34f2-terminology-kata-waza-docs
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: BA
   registered_at: "2026-10-12T06:10:44Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T07:20:24Z"
+  conclusion: 体系の名前を成果物・型・技に改め、標語・PDCA マトリクス・仕様書の語・app1-workspace/ を文書へ反映した
 ---
 
 # PJR-34F2 体系の名前を成果物・型・技に改め、標語と PDCA マトリクスを文書へ反映する

@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_27616351fd324e0a98ad5eb44dee2be4
+- v: 1
+  id: reg_0156e73f993c401ca5303d1fa14a6390
+  ts: "2026-10-12T07:20:24Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（521f13686）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: 体系の名前を成果物・型・技に改め、標語・PDCA マトリクス・仕様書の語・app1-workspace/ を文書へ反映した
+  previous_event_id: reg_371948b8c0e84d269b60d6d09e8a0ef2
