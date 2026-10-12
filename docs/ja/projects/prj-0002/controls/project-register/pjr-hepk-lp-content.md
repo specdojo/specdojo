@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-hepk-lp-content
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-10-11T06:37:19Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T04:36:26Z"
+  conclusion: LP の構成と原稿（標語「記して、形にして、磨き続ける。」、register の 7 種類、会話中心の 5 つの手順、app1-workspace/ の構成図）を specdojo-lp の main（9e1d922）へ反映し、ビルドを確認した
 ---
 
 # PJR-HEPK ランディングページの構成と原稿を作る
