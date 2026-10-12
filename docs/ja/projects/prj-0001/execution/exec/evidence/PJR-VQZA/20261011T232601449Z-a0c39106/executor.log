@@ -1,0 +1,15 @@
+B方式による定期 Job の commit・review・条件付き統合を実装しました。
+
+- `commit: true` で Job を専用 worktree へ隔離
+- Run 出力を `chore(routine): …` で限定 commit
+- review pipeline と verdict による `--no-ff` 統合／waiting 分岐
+- `last_reason`、Job Run review 情報、運用手順を追加
+- 2つの grade routine で有効化
+- 単体・統合テストを追加
+- 個票の対応結果を更新（状態項目は未変更）
+
+catalog 検証は成功し、既存の欠落文書に関する警告のみでした。親 runner 担当の lint、型検査、schema、unit／integration test は重複実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"定期 Job を exec worktree で実行し、出力 commit、読み取り専用 review、verdict に応じた統合または waiting を行う仕組みを実装した。","validations":[{"command":"npx prettier --check src/exec-run.ts src/job.ts src/routine.ts tests/src/routine.test.ts tests/src/exec-job-worktree.integration.test.ts docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-vqza-routine-commit-after-run.md docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml docs/ja/specdojo/exec-templates/xrp-job-template.md docs/specdojo/schemas/v1/job-run.schema.yaml docs/specdojo/schemas/v1/routine-run.schema.yaml docs/specdojo/schemas/v1/routine.schema.yaml","status":"passed","summary":"全対象ファイルが Prettier 形式に一致した。"},{"command":"node --import tsx src/specdojo.ts routine validate --project prj-0001","status":"passed","summary":"9件の routine を検証し、エラー0件。"},{"command":"node --import tsx src/specdojo.ts job validate --project prj-0001","status":"passed","summary":"8件の Job Definition を検証し、エラー0件。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全カタログの検証に成功。既存の未作成文書に関する警告のみ。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の派生ビューを正常に再生成した。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2562件の文書インデックスを正常に生成した。"},{"command":"node --import tsx -e \"Promise.all([import('./src/exec-run.ts'), import('./src/job.ts'), import('./src/routine.ts')]).then(() => console.log('module-load: ok'))\"","status":"passed","summary":"変更した主要モジュールを正常にロードできた。"},{"command":"git diff --check","status":"passed","summary":"空白エラーや競合マーカーは検出されなかった。"}]}
+</specdojo_executor_evidence>

@@ -68,6 +68,9 @@ $defs:
         type: object
         additionalProperties:
           type: string
+      commit:
+        type: boolean
+        description: Run the Job in an exec worktree, commit its outputs, review them, and merge only an accepted Run.
   specdojoAction:
     description: >
       Runs a specdojo subcommand directly with --project appended, without taking the exec run

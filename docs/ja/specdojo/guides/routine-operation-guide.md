@@ -51,6 +51,39 @@ action:
     limit: "3"
 ```
 
+### Job Run 出力の commit と review
+
+統合前レビューが必要な定期 Job では、action に `commit: true` を指定します。
+
+`commit: true` を指定した Job は本体の checkout では実行せず、`exec/<project-id>-<run-id>` の worktree で実行します。runner は Job Run の plan・result・evidence・Run JSON と Job が更新した成果物だけを `chore(routine): …` の commit にし、commit 本文へ Job Run ID と `succeeded` / `failed` を記録します。本体 checkout にある利用者の未 commit 変更は commit 対象に入りません。
+
+出力 commit の後、runner は `mode: review` の plan/result を作ります。review executor は score・verdict・finding・失敗文書と Job の完了条件を照合しますが、Job Run 出力は修正しません。Run が `succeeded` で verdict が `complete` または `complete-with-findings` の場合だけ、runner は現在の統合先へ `--no-ff` で merge し、worktree と exec branch を撤去します。Run が失敗した場合、review が未完了の場合、またはそれ以外の verdict の場合は統合せず、worktree を保持して routine の `last_result: failure`、`last_reason`、review result、Job Run JSON に理由を残します。
+
+#### waiting Run の確認・統合・破棄
+
+`[routine-job] waiting` が出た Run は、表示された worktree と `exec/<project-id>-<run-id>` branch を確認します。
+
+```bash
+git -C <worktree> status --short
+git -C <worktree> log --oneline --decorate -3
+git diff <integration-branch>...exec/<project-id>-<run-id>
+```
+
+人が review result と差分を確認し、統合すると決めた場合は、統合先 branch の checkout で未 commit 変更との重複がないことを確認してから `--no-ff` で統合します。統合後は worktree を撤去し、merge 済み branch を削除します。
+
+```bash
+git merge --no-ff exec/<project-id>-<run-id>
+git worktree remove <worktree>
+git branch -d exec/<project-id>-<run-id>
+```
+
+破棄すると決めた場合は、review result と Job Run evidence を先に確認します。未統合の記録も不要であることを確認したうえで worktree を強制撤去し、branch を削除します。この操作は未統合 commit を失うため、人が明示的に判断した場合だけ行います。
+
+```bash
+git worktree remove --force <worktree>
+git branch -D exec/<project-id>-<run-id>
+```
+
 ### 1.1. 複数 action の順次実行
 
 通常は `action` に1つの Job を指定します。複数の独立した委譲単位を同じ実行機会で順序保証したい場合は、`action` に1件以上の配列を指定します。各要素は `kind: job` と参照する Job、入力を持ちます。

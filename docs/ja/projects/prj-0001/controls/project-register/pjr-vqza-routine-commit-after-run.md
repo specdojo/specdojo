@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: ARC
   registered_at: "2026-10-11T22:15:30Z"
   due_on: "2026-10-31"
-  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-vqza.yaml 17ms (unchanged); FAIL  tests/src/exec-pipeline-e2e.integration.test.ts >…"
 ---
 
 # PJR-VQZA 定期実行の出力を実行後に commit する

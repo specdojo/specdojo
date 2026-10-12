@@ -144,12 +144,17 @@ import {
 import {
   completeJobRun,
   executeJobCommand,
+  generateJobReviewPlan,
   isJobCommandTask,
+  loadJobRunRecord,
   materializeJobRun,
+  recordJobRunReview,
+  resolveJobPaths,
   type JobRunRecord,
 } from "./job.js";
 import {
   appendGitFailureLog,
+  ensureExecWorktree,
   findExecWorktree,
   gitEnvironment,
   gitOutput,
@@ -4161,7 +4166,396 @@ async function runCommandJobMode(params: {
   }
 }
 
+const ACCEPTED_JOB_REVIEW_VERDICTS = new Set(["complete", "complete-with-findings"]);
+
+function jobChildArgs(opts: RunOpts, projectId: string): string[] {
+  const args = ["exec", "run", "--job", String(opts.job), "--project", projectId];
+  const inputs = Array.isArray(opts.input) ? opts.input : opts.input ? [opts.input] : [];
+  for (const input of inputs) args.push("--input", input);
+  if (opts.scheduledAt) args.push("--scheduled-at", opts.scheduledAt);
+  if (opts.jobTrigger) args.push("--job-trigger", opts.jobTrigger);
+  if (opts.by) args.push("--by", opts.by);
+  if (opts.reporterBy) args.push("--reporter-by", opts.reporterBy);
+  if (opts.execDefaults) args.push("--exec-defaults", opts.execDefaults);
+  return args;
+}
+
+function commitJobPaths(
+  worktreePath: string,
+  paths: readonly string[],
+  subject: string,
+  body: string,
+): string {
+  const unique = [...new Set(paths)].sort();
+  if (unique.length === 0) throw new Error("Job Run produced no tracked output to commit.");
+  stageCommitTargets(worktreePath, unique);
+  const staged = gitResult(worktreePath, ["diff", "--cached", "--quiet", "--", ...unique]);
+  if (staged.status === 0) throw new Error("Job Run output has no staged changes.");
+  if (staged.status !== 1) throw new Error("Failed to inspect staged Job Run output.");
+  const commit = gitResult(worktreePath, ["commit", "-m", subject, "-m", body, "--", ...unique]);
+  if (commit.status !== 0) {
+    const output = [commit.stdout, commit.stderr]
+      .filter((part): part is string => typeof part === "string" && part.length > 0)
+      .join("\n");
+    throw new Error(`git commit failed: ${summarizeGitHookFailure(output)}`);
+  }
+  stabilizeCommitTargets(worktreePath, () =>
+    worktreeStatusPaths(worktreePath).filter((path) => unique.includes(path)),
+  );
+  return gitOutput(worktreePath, ["rev-parse", "HEAD"]).trim();
+}
+
+function jobReviewVerdict(resultPath: string): string | undefined {
+  const match = readFileSync(resultPath, "utf8").match(
+    /^- verdict:\s*(complete|complete-with-findings|incomplete|grade-stale|grade-unavailable|changed-during-review)\s*$/m,
+  );
+  return match?.[1];
+}
+
+function fillIncompleteJobReviewResult(resultPath: string, reason: string): void {
+  const safeReason = reason.replace(/\s+/g, " ").trim();
+  let content = readFileSync(resultPath, "utf8");
+  content = content
+    .replace(
+      /_TODO_: 評価結果サイドカー[^\n]*/,
+      `Job Run の review を完了できなかった: ${safeReason}`,
+    )
+    .replace(
+      /_TODO_: 変更内容[^\n]*/,
+      `- runner が review を完了できなかったため統合不可と判断した。`,
+    )
+    .replace(/_TODO_: 未充足事項[^\n]*/, `- ${safeReason}`)
+    .replace(/_TODO_: `approach`[^\n]*/, "Job Run の出力は変更していない。")
+    .replace(/- verdict: _TODO_（[^\n]*）/, "- verdict: incomplete");
+  writeFileSync(resultPath, content, "utf8");
+}
+
+function overrideJobReviewDecision(resultPath: string, verdict: string, reason: string): void {
+  let content = readFileSync(resultPath, "utf8");
+  content = content.replace(
+    /^- verdict:\s*(?:complete|complete-with-findings|incomplete|grade-stale|grade-unavailable|changed-during-review)\s*$/m,
+    `- verdict: ${verdict}`,
+  );
+  const instruction = `- runner 判定: ${reason.replace(/\s+/g, " ").trim()}`;
+  if (!content.includes(instruction)) {
+    content = content.replace(
+      "\n## 4. approach に応じた確認",
+      `\n${instruction}\n\n## 4. approach に応じた確認`,
+    );
+  }
+  writeFileSync(resultPath, content, "utf8");
+}
+
+function resolveJobReviewAgents(
+  task: ReadyTaskView,
+  roster: MemberRoster | null,
+  execDefaults: ExecDefaultsConfig,
+  opts: RunOpts,
+): {
+  executor: AgentRunCandidate & { actor: string };
+  reporterCandidates: AgentRunCandidate[];
+} {
+  const override = resolveAgentOverride(
+    "review",
+    opts.reviewBy?.trim(),
+    {},
+    roster,
+    execDefaults,
+    "executor",
+  );
+  if (override.kind === "error") throw new Error(override.message);
+  let executor: AgentRunCandidate & { actor: string };
+  if (override.kind === "command") {
+    executor = {
+      command: override.command,
+      actor: override.actor ?? String(opts.reviewBy),
+      provider: override.provider,
+    };
+  } else {
+    const requirements = executorRequirements(task);
+    const member = requirements
+      ? selectCandidates(requirements, roster, "review", undefined, execDefaults)[0]
+      : undefined;
+    const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
+    if (!member || !command) throw new Error("No review executor is available for Job Run review.");
+    executor = { command, actor: member.nickname, provider: member.provider };
+  }
+  const reporterCandidates = resolveReporterAgentCandidates(
+    task,
+    roster,
+    execDefaults,
+    undefined,
+    opts.reporterBy?.trim(),
+  );
+  if (reporterCandidates.length === 0) {
+    throw new Error("No reporter is available for Job Run review.");
+  }
+  return { executor, reporterCandidates };
+}
+
+async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
+  const resolvedPaths = resolveProjectPaths({ project: opts.project });
+  activateResolvedProjectPaths(resolvedPaths);
+  const { schedulePath, executionPath } = resolvedPaths;
+  const projectId = resolvedPaths.projectId ?? opts.project ?? process.env.SPECDOJO_PROJECT ?? "";
+  if (!projectId) throw new Error("--job requires a project id.");
+  const trigger =
+    opts.jobTrigger === "ci"
+      ? "ci"
+      : process.env[ROUTINE_EXEC_ENV] === "1" || opts.jobTrigger === "routine"
+        ? "routine"
+        : "manual";
+  const preview = await materializeJobRun({
+    projectId,
+    jobId: String(opts.job).trim(),
+    inputs: opts.input,
+    scheduledAt: opts.scheduledAt,
+    trigger,
+    dryRun: true,
+  });
+  if (preview.duplicateComplete) {
+    process.stdout.write(
+      `Job Run already complete: ${preview.record.run_id} (${preview.record.state})\n`,
+    );
+    return;
+  }
+  if (opts.dryRun) {
+    process.stdout.write(`[dry-run] job worktree: ${projectId}-${preview.record.run_id}\n`);
+    process.stdout.write(`[dry-run] job: ${preview.definition.id}\n`);
+    process.stdout.write(`[dry-run] run: ${preview.record.run_id}\n`);
+    process.stdout.write("[dry-run] lifecycle: execute -> commit -> review -> merge|waiting\n");
+    return;
+  }
+
+  const repoRoot = specdojoRootDir();
+  const baseCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
+  const worktreeBase = resolveWorktreeBase(
+    repoRoot,
+    opts.worktreeBase,
+    configuredWorktreeBase(schedulePath),
+  );
+  const worktreeTaskId = `${projectId}-${preview.record.run_id}`;
+  const worktree = ensureExecWorktree({ repoRoot, worktreeBase, taskId: worktreeTaskId });
+  const childArgs = jobChildArgs(opts, projectId);
+  const [executable, fullArgs] = selfRunArgs(childArgs);
+  process.stdout.write(`Running Job Run ${preview.record.run_id} in ${worktree.path}.\n`);
+  const child = spawnSync(executable, fullArgs, {
+    cwd: worktree.path,
+    env: { ...process.env, [ROUTINE_EXEC_ENV]: trigger === "routine" ? "1" : "0" },
+    stdio: "inherit",
+  });
+  if (child.status === ROUTINE_BUSY_SKIP_EXIT_CODE) {
+    removeWorktree({
+      context: { repoRoot, schedulePath, executionPath },
+      worktree,
+      taskId: `${preview.record.run_id}-review`,
+      force: true,
+      deleteBranch: true,
+    });
+    process.exitCode = ROUTINE_BUSY_SKIP_EXIT_CODE;
+    return;
+  }
+
+  const executionRel = relative(repoRoot, executionPath);
+  const worktreeExecutionPath = resolve(worktree.path, executionRel);
+  const worktreeJobPaths = resolveJobPaths(projectId);
+  const runPath = resolve(worktree.path, relative(repoRoot, preview.runPath));
+  if (!existsSync(runPath)) {
+    throw new Error(`Job Run record was not created in worktree: ${preview.record.run_id}`);
+  }
+  let record = loadJobRunRecord(runPath);
+  const outputPaths = worktreeStatusPaths(worktree.path);
+  const outputCommit = commitJobPaths(
+    worktree.path,
+    outputPaths,
+    `chore(routine): ${preview.definition.name}`,
+    `Job Run: ${record.run_id}\nState: ${record.state}`,
+  );
+
+  const reviewTaskId = `${record.run_id}-review`;
+  const reviewTask: ReadyTaskView = {
+    id: reviewTaskId,
+    local_id: record.run_id,
+    name: `${preview.definition.name} の実行結果レビュー`,
+    mode: "review",
+    schedule_file: "",
+    fifo_rank: 0,
+    critical_first_rank: 0,
+    agent_pipeline: {
+      stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
+    },
+  };
+  const { planPath, resultPath } = await generateJobReviewPlan(
+    {
+      ...worktreeJobPaths,
+      jobsPath: resolve(worktree.path, relative(repoRoot, worktreeJobPaths.jobsPath)),
+      executionPath: worktreeExecutionPath,
+      runsPath: resolve(worktree.path, relative(repoRoot, worktreeJobPaths.runsPath)),
+      statePath: resolve(worktree.path, relative(repoRoot, worktreeJobPaths.statePath)),
+    },
+    preview.definition,
+    record,
+    { branch: worktree.branch, baseCommit, outputCommit },
+  );
+  const rootExecDefaultsPath = resolve(repoRoot, resolveExecDefaultsPath(opts, schedulePath));
+  const execDefaultsRelative = relative(repoRoot, rootExecDefaultsPath);
+  const execDefaultsPath =
+    execDefaultsRelative === ".." || execDefaultsRelative.startsWith(`..${sep}`)
+      ? rootExecDefaultsPath
+      : resolve(worktree.path, execDefaultsRelative);
+  const execDefaults = loadExecDefaultsConfig(execDefaultsPath, worktreeExecutionPath);
+  const originalCwd = process.cwd();
+  let reviewReason: string | undefined;
+  let verdict: string | undefined;
+  try {
+    process.chdir(worktree.path);
+    const roster = loadRosterForExecutionPath(worktreeExecutionPath);
+    const agents = resolveJobReviewAgents(reviewTask, roster, execDefaults, opts);
+    await scaffoldResult({
+      executionPath: worktreeExecutionPath,
+      taskId: reviewTaskId,
+      mode: "review",
+      projectId,
+      origin: "job",
+      jobId: record.job_id,
+      runId: record.run_id,
+      planRef: relative(worktree.path, planPath).split(sep).join("/"),
+      agent: agents.executor.actor,
+      startedAt: new Date().toISOString(),
+      stem: reviewTaskId,
+    });
+    const reviewOutcome = await runAgentPipeline({
+      repoRoot: worktree.path,
+      cwd: worktree.path,
+      schedulePath: resolve(worktree.path, relative(repoRoot, schedulePath)),
+      executionPath: worktreeExecutionPath,
+      taskId: reviewTaskId,
+      executor: agents.executor,
+      reporterCandidates: agents.reporterCandidates,
+      planPath,
+      planPrompt: expandPromptRefs(readFileSync(planPath, "utf8")),
+      resultPath,
+      execDefaults,
+      mode: "review",
+    });
+    reviewReason = reviewOutcome.blockReason;
+    await updateResultStatus(
+      resultPath,
+      reviewOutcome.exitCode === 0 ? "complete" : "blocked",
+      new Date().toISOString(),
+      reviewReason,
+    );
+    verdict = reviewOutcome.exitCode === 0 ? jobReviewVerdict(resultPath) : undefined;
+    if (!verdict && reviewOutcome.exitCode === 0) reviewReason = "review result has no verdict";
+  } catch (error) {
+    reviewReason = error instanceof Error ? error.message : String(error);
+    if (!existsSync(resultPath)) {
+      await scaffoldResult({
+        executionPath: worktreeExecutionPath,
+        taskId: reviewTaskId,
+        mode: "review",
+        projectId,
+        origin: "job",
+        jobId: record.job_id,
+        runId: record.run_id,
+        planRef: relative(worktree.path, planPath).split(sep).join("/"),
+        agent: "specdojo-runner",
+        startedAt: new Date().toISOString(),
+        stem: reviewTaskId,
+      });
+    }
+    fillIncompleteJobReviewResult(resultPath, reviewReason);
+    await updateResultStatus(resultPath, "blocked", new Date().toISOString(), reviewReason);
+    verdict = "incomplete";
+  } finally {
+    process.chdir(originalCwd);
+  }
+
+  const allowedReviewPrefixes = [
+    `${relative(worktree.path, worktreeExecutionPath).split(sep).join("/")}/exec/evidence/${reviewTaskId}/`,
+  ];
+  const allowedReviewFiles = new Set([
+    relative(worktree.path, planPath).split(sep).join("/"),
+    relative(worktree.path, resultPath).split(sep).join("/"),
+    relative(worktree.path, runPath).split(sep).join("/"),
+  ]);
+  const reviewChanges = worktreeStatusPaths(worktree.path);
+  const unexpected = reviewChanges.filter(
+    (path) =>
+      !allowedReviewFiles.has(path) &&
+      !allowedReviewPrefixes.some((prefix) => path.startsWith(prefix)),
+  );
+  if (unexpected.length > 0) {
+    reviewReason = `review executor changed Job output: ${unexpected.join(", ")}`;
+    verdict = "changed-during-review";
+    overrideJobReviewDecision(resultPath, verdict, reviewReason);
+  }
+  if (unexpected.length === 0 && record.state !== "succeeded") {
+    reviewReason = record.attempts.at(-1)?.reason ?? `Job Run state is ${record.state}`;
+    verdict = "incomplete";
+    overrideJobReviewDecision(resultPath, verdict, reviewReason);
+  }
+  if (!reviewReason && verdict && !ACCEPTED_JOB_REVIEW_VERDICTS.has(verdict)) {
+    reviewReason = `review verdict is ${verdict}`;
+  }
+  record = recordJobRunReview(runPath, {
+    plan_ref: relative(worktree.path, planPath).split(sep).join("/"),
+    result_ref: relative(worktree.path, resultPath).split(sep).join("/"),
+    branch: worktree.branch,
+    ...(verdict ? { verdict: verdict as NonNullable<JobRunRecord["review"]>["verdict"] } : {}),
+    ...(reviewReason ? { reason: reviewReason } : {}),
+  });
+  const committableReviewPaths = worktreeStatusPaths(worktree.path).filter(
+    (path) =>
+      allowedReviewFiles.has(path) ||
+      allowedReviewPrefixes.some((prefix) => path.startsWith(prefix)),
+  );
+  commitJobPaths(
+    worktree.path,
+    committableReviewPaths,
+    `chore(routine): review ${record.run_id}`,
+    `Job Run: ${record.run_id}\nState: ${record.state}\nVerdict: ${verdict ?? "unavailable"}`,
+  );
+
+  const accepted =
+    record.state === "succeeded" &&
+    verdict !== undefined &&
+    ACCEPTED_JOB_REVIEW_VERDICTS.has(verdict) &&
+    unexpected.length === 0;
+  if (!accepted) {
+    const reason =
+      record.state !== "succeeded"
+        ? `Job Run state is ${record.state}`
+        : (reviewReason ?? `review verdict is ${verdict ?? "unavailable"}`);
+    process.stdout.write(
+      `[routine-job] waiting run_id=${record.run_id} review=${verdict ?? "unavailable"} worktree=${worktree.path} reason=${reason}\n`,
+    );
+    process.exitCode = child.status || 1;
+    return;
+  }
+
+  mergeWorktreeIntoCurrent({
+    context: { repoRoot, schedulePath, executionPath },
+    worktree,
+    taskId: reviewTaskId,
+    message: `chore(routine): merge ${record.run_id}`,
+  });
+  removeWorktree({
+    context: { repoRoot, schedulePath, executionPath },
+    worktree,
+    taskId: reviewTaskId,
+    deleteBranch: true,
+  });
+  process.stdout.write(
+    `[routine-job] merged run_id=${record.run_id} review=${verdict} branch=${worktree.branch}\n`,
+  );
+}
+
 async function runJobMode(opts: RunOpts): Promise<void> {
+  if (opts.worktree) {
+    await runJobWorktreeMode(opts);
+    return;
+  }
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
   const { schedulePath, executionPath } = resolvedPaths;
@@ -4541,6 +4935,8 @@ async function runReporterStage(params: {
   statePath: string;
   providerConcurrencyGate?: ProviderConcurrencyGate;
   productWorktrees?: readonly ProductWorktree[];
+  /** reporter が返す出力の mode。省略時は edit（Job Run の review だけが review を渡す）。 */
+  mode?: TaskMode;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -4578,7 +4974,7 @@ async function runReporterStage(params: {
     runReporterWithFormatRetry({
       plan: params.planPrompt,
       evidence: reporterEvidence,
-      mode: "edit",
+      mode: params.mode ?? "edit",
       invoke: async (reporterPrompt) => {
         const reporterOutcome = await runWithRetry(
           reporterCandidates,
@@ -4680,6 +5076,8 @@ async function runAgentPipeline(params: {
   providerConcurrencyGate?: ProviderConcurrencyGate;
   productWorktrees?: readonly ProductWorktree[];
   runId?: string;
+  /** reporter が返す出力の mode。省略時は edit。 */
+  mode?: TaskMode;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -4843,6 +5241,7 @@ async function runAgentPipeline(params: {
     statePath: stateLocation.path,
     providerConcurrencyGate: params.providerConcurrencyGate,
     productWorktrees: params.productWorktrees,
+    mode: params.mode,
   });
 
   return {
@@ -7025,7 +7424,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--worktree",
-    "Use a git worktree and integrate back (requires --task or --register; overrides run.register_execution for --register)",
+    "Use a git worktree and integrate back (requires --task, --register, or --job; Job runs are committed and reviewed before merge)",
     false,
   );
   rcmd.option(
@@ -7225,11 +7624,6 @@ export function registerRunCommand(exec: Command): void {
         process.exitCode = 1;
         return;
       }
-      if (hasJob && opts.worktree) {
-        process.stdout.write("--worktree is not yet supported with --job.\n");
-        process.exitCode = 1;
-        return;
-      }
       if (opts.onFailure && !isRegisterFailureMode(opts.onFailure)) {
         process.stdout.write(`--on-failure must be "stop" or "continue": ${opts.onFailure}\n`);
         process.exitCode = 1;
@@ -7252,8 +7646,8 @@ export function registerRunCommand(exec: Command): void {
         process.exitCode = 1;
         return;
       }
-      if (opts.worktree && !hasTask && !hasRegister) {
-        process.stdout.write("--worktree requires --task or --register.\n");
+      if (opts.worktree && !hasTask && !hasRegister && !hasJob) {
+        process.stdout.write("--worktree requires --task, --register, or --job.\n");
         process.exitCode = 1;
         return;
       }

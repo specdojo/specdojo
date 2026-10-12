@@ -10,10 +10,12 @@ import {
   isJobAgentTask,
   isJobCommandTask,
   jobCheckpoint,
+  loadJobRunRecord,
   materializeJobRun,
   parseJobDefinition,
   parseJobInputs,
   renderJobTemplate,
+  recordJobRunReview,
   resolveJobPaths,
 } from "../../src/job.js";
 
@@ -633,6 +635,34 @@ describe("Job Run lifecycle", () => {
 });
 
 describe("Job Run file validation", () => {
+  it("records the review verdict and waiting reason on the Job Run", async () => {
+    const repo = setupRepo();
+    try {
+      const run = await materializeJobRun({
+        projectId: "test",
+        jobId: "job-translate",
+        inputs: ["to_revision=reviewed"],
+      });
+      completeJobRun({ projectId: "test", runPath: run.runPath, status: "failed" });
+
+      recordJobRunReview(run.runPath, {
+        plan_ref: "execution/exec/plans/review-plan.md",
+        result_ref: "execution/exec/results/review-result.md",
+        branch: "exec/test-JBR-translate-review",
+        verdict: "incomplete",
+        reason: "Job Run state is failed",
+      });
+
+      expect(loadJobRunRecord(run.runPath).review).toMatchObject({
+        verdict: "incomplete",
+        reason: "Job Run state is failed",
+      });
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("skips a structurally invalid Run file and keeps checkpoints from valid history", async () => {
     const repo = setupRepo();
     try {

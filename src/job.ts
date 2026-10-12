@@ -101,6 +101,21 @@ export type JobRunAttempt = {
   reason?: string;
 };
 
+export type JobRunReview = {
+  plan_ref: string;
+  result_ref: string;
+  reviewed_at: string;
+  branch: string;
+  verdict?:
+    | "complete"
+    | "complete-with-findings"
+    | "incomplete"
+    | "grade-stale"
+    | "grade-unavailable"
+    | "changed-during-review";
+  reason?: string;
+};
+
 export type JobRunRecord = {
   version: 1;
   run_id: string;
@@ -119,6 +134,7 @@ export type JobRunRecord = {
   plan_ref: string;
   result_ref: string;
   attempts: JobRunAttempt[];
+  review?: JobRunReview;
 };
 
 export type JobPaths = {
@@ -269,6 +285,26 @@ function isJobRunAttempt(value: unknown): value is JobRunAttempt {
   );
 }
 
+function isJobRunReview(value: unknown): value is JobRunReview {
+  return (
+    isRecord(value) &&
+    typeof value.plan_ref === "string" &&
+    typeof value.result_ref === "string" &&
+    typeof value.reviewed_at === "string" &&
+    typeof value.branch === "string" &&
+    (value.verdict === undefined ||
+      [
+        "complete",
+        "complete-with-findings",
+        "incomplete",
+        "grade-stale",
+        "grade-unavailable",
+        "changed-during-review",
+      ].includes(String(value.verdict))) &&
+    (value.reason === undefined || typeof value.reason === "string")
+  );
+}
+
 function isJobRunRecord(value: unknown): value is JobRunRecord {
   if (!isRecord(value)) return false;
   const stringFields = [
@@ -291,6 +327,7 @@ function isJobRunRecord(value: unknown): value is JobRunRecord {
     isJobTaskDefinition(value.task) &&
     isRecord(value.checkpoint_before) &&
     (value.checkpoint_after === undefined || isRecord(value.checkpoint_after)) &&
+    (value.review === undefined || isJobRunReview(value.review)) &&
     Array.isArray(value.attempts) &&
     value.attempts.every(isJobRunAttempt)
   );
@@ -300,6 +337,10 @@ function readJobRunRecord(filePath: string): JobRunRecord {
   const raw = readJson(filePath);
   if (!isJobRunRecord(raw)) throw new Error(`Invalid Job Run file: ${filePath}`);
   return raw;
+}
+
+export function loadJobRunRecord(filePath: string): JobRunRecord {
+  return readJobRunRecord(filePath);
 }
 
 function validateJobInputValue(value: unknown, input: JobInputDefinition, key: string): void {
@@ -1072,6 +1113,80 @@ export async function generateJobPlan(
   writeFileSync(planPath, content, "utf8");
   await formatMarkdownFile(planPath);
   return planPath;
+}
+
+function jobReviewPlanFrontmatter(
+  projectId: string,
+  definition: JobDefinition,
+  record: JobRunRecord,
+): string {
+  return buildSpecdojoFrontmatter([
+    `id: ${projectId}:xrp-${record.run_id.toLowerCase()}-review`,
+    "type: exec-plan",
+    "rulebook: none",
+    `task_id: ${record.run_id}-review`,
+    `name: ${JSON.stringify(`${definition.name} の実行結果レビュー`)}`,
+    "mode: review",
+    "status: ready",
+    `project_id: ${projectId}`,
+    "origin: job",
+    `job_id: ${definition.id}`,
+    `run_id: ${record.run_id}`,
+  ]);
+}
+
+export async function generateJobReviewPlan(
+  paths: JobPaths,
+  definition: JobDefinition,
+  record: JobRunRecord,
+  opts: { branch: string; baseCommit: string; outputCommit: string },
+): Promise<{ planPath: string; resultPath: string }> {
+  const templatePath = execTemplatePath("xrp-job-template.md");
+  if (!existsSync(templatePath)) throw new Error(`Template not found: ${templatePath}`);
+  const planPath = join(paths.executionPath, "exec", "plans", `${record.run_id}-review-plan.md`);
+  const resultPath = join(
+    paths.executionPath,
+    "exec",
+    "results",
+    `${record.run_id}-review-result.md`,
+  );
+  mkdirSync(resolve(planPath, ".."), { recursive: true });
+  const values: Record<string, string> = {
+    _FRONTMATTER_: jobReviewPlanFrontmatter(paths.projectId, definition, record),
+    _JOB_ID_: definition.id,
+    _JOB_NAME_: definition.name,
+    _RUN_ID_: record.run_id,
+    _RUN_STATE_: record.state,
+    _BRANCH_: opts.branch,
+    _BASE_COMMIT_: opts.baseCommit,
+    _OUTPUT_COMMIT_: opts.outputCommit,
+    _JOB_DESCRIPTION_: definition.description ?? "-",
+    _ANALYSIS_DESCRIPTION_: isJobCommandTask(record.task)
+      ? (record.task.analysis?.description ?? "コマンドの終了結果と出力を確認する。")
+      : record.task.description,
+    _RESULT_REF_: repoRelative(resultPath),
+    _RUN_RESULT_REF_: repoRelative(join(paths.executionPath, record.result_ref)),
+  };
+  const body = expandTemplate(readFileSync(templatePath, "utf8"), values);
+  const content = injectCommonConventions(body, MISSING, new Map<string, string>(), "review");
+  writeFileSync(planPath, content, "utf8");
+  await formatMarkdownFile(planPath);
+  return { planPath, resultPath };
+}
+
+export function recordJobRunReview(
+  runPath: string,
+  review: Omit<JobRunReview, "reviewed_at"> & { reviewed_at?: string },
+): JobRunRecord {
+  const record = readJobRunRecord(runPath);
+  const reviewedAt = review.reviewed_at ?? new Date().toISOString();
+  const updated: JobRunRecord = {
+    ...record,
+    updated_at: reviewedAt,
+    review: { ...review, reviewed_at: reviewedAt },
+  };
+  writeJson(runPath, updated);
+  return updated;
 }
 
 export async function materializeJobRun(opts: {

@@ -125,3 +125,32 @@
       from: "-"
       to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-vqza.yaml 17ms (unchanged); FAIL  tests/src/exec-pipeline-e2e.integration.test.ts >…"
   previous_event_id: reg_32ff1ccb36ba4736843fa0d633607746
+- v: 1
+  id: reg_f220be6e8d844c50a3ba13235f278075
+  ts: "2026-10-12T00:19:32Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-vqza.yaml 17ms (unchanged); FAIL  tests/src/exec-pipeline-e2e.integration.test.ts >…"
+      to: "-"
+  previous_event_id: reg_d0ede86731e0468194bd797e15b5b4f7
+- v: 1
+  id: reg_734977add34040639e997f612002520b
+  ts: "2026-10-12T00:24:08Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f220be6e8d844c50a3ba13235f278075
