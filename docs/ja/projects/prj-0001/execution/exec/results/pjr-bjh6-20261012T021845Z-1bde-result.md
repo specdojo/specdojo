@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-BJH6
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-bjh6-20261012T021845Z-1bde-plan.md
   started_at: "2026-10-12T02:18:45.516Z"
-  completed_at: "2026-10-12T04:22:46.466Z"
+  completed_at: "2026-10-12T05:00:23.100Z"
   agent: claude-expert-executor
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration, typecheck"
 ---
 
 # Edit Result
