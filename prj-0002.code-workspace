@@ -2,6 +2,7 @@
   "folders": [
     { "name": "specdojo-prj-0002", "path": "." },
     { "name": "specdojo-lp", "path": "../specdojo-lp" },
+    { "name": "specdojo-assets", "path": "../specdojo-assets" },
   ],
   "settings": {
     "workbench.colorCustomizations": {
