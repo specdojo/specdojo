@@ -929,6 +929,56 @@ describe("syncTaskWorktreesWithIntegrationTargets", () => {
     expect(git(worktree.path, "stash", "list")).toBe("");
   });
 
+  it("treats an untracked executor file as resolved when the integration branch adds identical content", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    writeFile(join(worktree.path, "docs", "protected.md"), "shared protected config\n");
+    commitOn(fixture.repo, "docs/protected.md", "shared protected config\n");
+
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: currentBranch(fixture.repo),
+      message: "merge integration target before resume",
+    });
+
+    expect(synced.map((entry) => entry.status)).toEqual(["merged"]);
+    expect(readFileSync(join(worktree.path, "docs", "protected.md"), "utf8")).toBe(
+      "shared protected config\n",
+    );
+    expect(git(worktree.path, "ls-files", "docs/protected.md")).toBe("docs/protected.md");
+    expect(git(worktree.path, "status", "--porcelain")).toBe("");
+    expect(git(worktree.path, "stash", "list")).toBe("");
+  });
+
+  it("rejects a tracked integration file that differs from the stashed untracked file", () => {
+    const fixture = setup({ withProducts: false });
+    const worktree = prepare(fixture);
+    const before = git(worktree.path, "rev-parse", "HEAD");
+    writeFile(join(worktree.path, "docs", "protected.md"), "executor proposal\n");
+    commitOn(fixture.repo, "docs/protected.md", "integration decision\n");
+
+    expect(() =>
+      syncTaskWorktreesWithIntegrationTargets({
+        worktree,
+        projectTarget: currentBranch(fixture.repo),
+        message: "merge integration target before resume",
+      }),
+    ).toThrow(
+      /project: uncommitted executor changes conflict with .*: untracked files differ from tracked integration files: docs\/protected\.md/,
+    );
+    expect(git(worktree.path, "rev-parse", "HEAD")).toBe(before);
+    expect(readFileSync(join(worktree.path, "docs", "protected.md"), "utf8")).toBe(
+      "executor proposal\n",
+    );
+    expect(
+      gitResult(worktree.path, ["ls-files", "--error-unmatch", "docs/protected.md"]).status,
+    ).not.toBe(0);
+    expect(git(worktree.path, "stash", "list")).toBe("");
+    expect(
+      gitResult(worktree.path, ["rev-parse", "--verify", "--quiet", "MERGE_HEAD"]).status,
+    ).not.toBe(0);
+  });
+
   it("reports up-to-date and creates no commit when the integration branch has nothing new", () => {
     const fixture = setup({ withProducts: false });
     const worktree = prepare(fixture);
