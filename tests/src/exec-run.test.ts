@@ -204,6 +204,25 @@ describe("extractBlockReason", () => {
     expect(prompt).toContain("outside `docs/ja/projects/`, is a valid reason");
   });
 
+  it("review executor に未実施の任意確認を validations へ記録しないよう伝える", () => {
+    const prompt = buildExecutorPrompt(
+      [
+        "---",
+        "specdojo:",
+        "  task_id: T-REVIEW-010",
+        "  mode: review",
+        "---",
+        "",
+        "# Review Plan",
+      ].join("\n"),
+    );
+
+    expect(prompt).toContain("For a review task, report only checks you actually ran");
+    expect(prompt).toContain("Do not add optional");
+    expect(prompt).toContain('under "確認できなかった範囲"');
+    expect(prompt).toContain("reflect it in the verdict");
+  });
+
   it("index build は runner が担うため executor は実行も記録もしないと伝える", () => {
     const prompt = buildExecutorPrompt("# Plan\n");
 

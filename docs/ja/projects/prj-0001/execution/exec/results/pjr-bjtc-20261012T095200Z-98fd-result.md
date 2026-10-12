@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-BJTC
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-bjtc-20261012T095200Z-98fd-plan.md
   started_at: "2026-10-12T09:52:01.017Z"
+  completed_at: "2026-10-12T10:00:38.615Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,23 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- review mode では executor の `not_run` / `not_applicable` によって統合を停止せず、verdict に基づいて統合可否を判断するよう修正した。
+- 回帰テストを追加・更新し、関連する個票を更新した。
+- 整形、登録簿生成、カタログ検証、差分検査、および runner による lint・型検査・unit/integration test・schema 検証はすべて passed。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `src/exec-reporter.ts`: review の検証結果を mode 別に扱い、executor の `not_run` / `not_applicable` が統合判定を停止しないようにした。
+- `src/exec-run.ts`: review run の統合判定が verdict を基準に進むよう更新した。
+- `src/exec-trial.ts`: review 実行時の検証結果の扱いを統合判定の変更に合わせて更新した。
+- `tests/src/exec-job-worktree.integration.test.ts`: Job Run の review における executor の `not_run` を対象にした統合回帰テストを更新した。
+- `tests/src/exec-reporter.test.ts`: review mode の reporter 判定に関するテストを更新した。
+- `tests/src/exec-run.test.ts`: review run が verdict に基づき統合することを確認するテストを更新した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+review と edit の検証停止条件を分離し、review は executor の検証未実行状態ではなく verdict を統合判断の基準とするよう実装と回帰テストを整合させた。

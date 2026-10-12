@@ -946,6 +946,7 @@ export function loadPrompt(executionPath: string, taskId: string): string | null
 }
 
 type ExecutorPromptOptions = {
+  mode?: TaskMode;
   resumed?: boolean;
   existingChanges?: readonly string[];
   initialChangeTargets?: readonly string[];
@@ -1021,6 +1022,15 @@ non-zero instead of claiming completion.${
   const targetCoverageExample = options.resumed
     ? ',"target_coverage":[{"target":"exact declared target id or lower-bound path","status":"changed|unchanged","path":"repo-relative path for changed targets","reason":"required when unchanged"}]'
     : "";
+  const reviewValidationInstruction =
+    options.mode === "review"
+      ? `
+For a review task, report only checks you actually ran in \`validations\`. Do not add optional
+checks you chose not to run as \`not_run\` or \`not_applicable\`. Describe them instead in
+\`final_message\` under "確認できなかった範囲" so the reporter can record that scope in the
+review result and reflect it in the verdict.
+`
+      : "";
   return `
 
 ---
@@ -1043,6 +1053,7 @@ When writing Markdown in the final evidence, wrap identifiers or field names con
 underscore in inline code (for example, \`depends_on\`).
 ${parentValidationInstruction}
 ${resumeInstruction}
+${reviewValidationInstruction}
 
 Use validation status \`requires_human\` only for a check that cannot run from the agent sandbox,
 such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
@@ -1082,6 +1093,7 @@ export function buildExecutorPrompt(
   const coverage = resolveResumedCoverageTargets(plan, options.initialChangeTargets);
   return `${plan.trimEnd()}${executorEvidenceContract(parentValidations, {
     ...options,
+    mode: options.mode ?? parsePlanTaskIdentity(plan)?.mode ?? "edit",
     initialChangeTargets: coverage.targets,
     coverageSource: coverage.source,
   })}`;
@@ -2392,7 +2404,9 @@ async function runPreparedTask(
       if (reporter.result === "success") {
         try {
           await renderReporterResult(worktreeResultPath, reporter.output, reporterEvidence);
-          const facts = deriveReporterFacts(reporterEvidence);
+          const facts = deriveReporterFacts(reporterEvidence, {
+            mode: prepared.task.mode ?? "edit",
+          });
           result = facts.outcome === "complete" ? "success" : "failure";
           pipelineBlockReason = facts.block_reason || undefined;
           if (pipelineBlockReason) stderr = pipelineBlockReason;
@@ -3834,7 +3848,7 @@ async function runInPlaceMode(opts: RunOpts): Promise<void> {
       if (reporter.result === "success" && resultPath) {
         try {
           await renderReporterResult(resultPath, reporter.output, reporterEvidence);
-          const facts = deriveReporterFacts(reporterEvidence);
+          const facts = deriveReporterFacts(reporterEvidence, { mode: task.mode ?? "edit" });
           exitCode = facts.outcome === "complete" ? 0 : 1;
           pipelineBlockReason = facts.block_reason || undefined;
           process.stdout.write(
@@ -5156,7 +5170,7 @@ async function runReporterStage(params: {
   if (reporter.result === "success") {
     try {
       await renderReporterResult(params.resultPath, reporter.output, reporterEvidence);
-      const facts = deriveReporterFacts(reporterEvidence);
+      const facts = deriveReporterFacts(reporterEvidence, { mode: params.mode ?? "edit" });
       exitCode = facts.outcome === "complete" ? 0 : 1;
       blockReason = facts.block_reason || undefined;
       process.stdout.write(
@@ -5282,6 +5296,7 @@ async function runAgentPipeline(params: {
   const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
   const executorPrompt = withProductRepoPrompt(
     buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations, {
+      mode: params.mode ?? "edit",
       resumed: params.resumedExecutor,
       ...(params.resumedExecutor ? { existingChanges: worktreeStatusPaths(cwd) } : {}),
       ...(params.resumedExecutor

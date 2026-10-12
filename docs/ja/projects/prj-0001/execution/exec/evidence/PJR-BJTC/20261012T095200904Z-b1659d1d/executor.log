@@ -1,0 +1,5 @@
+`review` の `not_run` / `not_applicable` を停止条件から除外し、`failed` と `edit` の従来動作を維持しました。プロンプト、単体テスト、Job Run 統合テスト、個票も更新済みです。
+
+<specdojo_executor_evidence>
+{"final_message":"review の検証判定を mode 別に修正し、executor の `not_run` / `not_applicable` では停止せず verdict で統合を判断するようにした。回帰テストと個票も更新した。","validations":[{"command":"npx prettier --write src/exec-reporter.ts src/exec-run.ts src/exec-trial.ts tests/src/exec-reporter.test.ts tests/src/exec-run.test.ts tests/src/exec-job-worktree.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-bjtc-job-review-not-run-blocks.md","status":"passed","summary":"変更対象を整形した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビューを正常に再生成した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"カタログ検証は終了コード 0。既存の参照先不在警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>
