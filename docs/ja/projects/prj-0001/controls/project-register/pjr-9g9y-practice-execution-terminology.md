@@ -9,8 +9,9 @@ specdojo:
   item_type: decision
   item_status: open
   priority: medium
-  owner: PM
+  owner: BA
   registered_at: "2026-10-12T04:10:12Z"
+  due_on: "2026-10-31"
 ---
 
 # PJR-9G9Y 体系の用語と標語を見直す
