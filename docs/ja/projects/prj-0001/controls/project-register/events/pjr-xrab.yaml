@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d48bd04d957f421e9311691c6d3c539b
+  ts: "2026-10-12T08:54:04Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-ZDVQ（プロダクトリポジトリのブランチ戦略を求めない）の決定から派生した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run でプロダクトリポジトリの統合先を run ごとに指定できるようにする
+    - field: description
+      from: ""
+      to: integration_branch は project の設定に固定され、GitHub flow ではトピックが変わるたびに設定ファイルを書き換える必要がある。exec run に --integration-branch `<repo>`=`<branch>` のような指定を加え、run ごとに統合先を選べるようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
