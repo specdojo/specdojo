@@ -42,6 +42,14 @@ export type JobAgentDefinition = {
   reporter?: string;
 };
 
+// Declares that a Run's output is reviewed before it is integrated. A Job with this
+// declaration always runs in an exec worktree, is committed by the runner, reviewed, and
+// merged only on an accepted verdict, whether a routine or a manual `exec run --job`
+// starts it. The optional agent pins the review executor/reporter by nickname.
+export type JobReviewDefinition = {
+  agent?: JobAgentDefinition;
+};
+
 export type JobAgentTaskDefinition = {
   mode: TaskMode;
   owner?: string;
@@ -51,6 +59,7 @@ export type JobAgentTaskDefinition = {
   agent?: JobAgentDefinition;
   capabilities?: string[];
   proficiency?: Proficiency;
+  review?: JobReviewDefinition;
 };
 
 export type JobCommandAnalysisDefinition = {
@@ -71,6 +80,7 @@ export type JobCommandTaskDefinition = {
   analysis?: JobCommandAnalysisDefinition;
   targets?: string[];
   paths?: string[];
+  review?: JobReviewDefinition;
 };
 
 export type JobTaskDefinition = JobAgentTaskDefinition | JobCommandTaskDefinition;
@@ -211,21 +221,25 @@ function isJobAgentDefinition(value: unknown): value is JobAgentDefinition {
   );
 }
 
-// Parses task.agent and reports why it was rejected. Unknown keys are refused so a typo
-// (for example `reporters`) cannot silently drop the reporter stage.
-function parseJobAgent(value: unknown): { agent?: JobAgentDefinition; error?: string } {
+// Parses task.agent (or another nomination such as task.review.agent) and reports why it was
+// rejected. Unknown keys are refused so a typo (for example `reporters`) cannot silently drop
+// the reporter stage.
+function parseJobAgent(
+  value: unknown,
+  fieldName = "task.agent",
+): { agent?: JobAgentDefinition; error?: string } {
   if (!isRecord(value)) {
-    return { error: "task.agent must be a mapping with executor and optional reporter" };
+    return { error: `${fieldName} must be a mapping with executor and optional reporter` };
   }
   const unknownKeys = Object.keys(value).filter((key) => key !== "executor" && key !== "reporter");
   if (unknownKeys.length > 0) {
-    return { error: `task.agent has unknown key(s): ${unknownKeys.sort().join(", ")}` };
+    return { error: `${fieldName} has unknown key(s): ${unknownKeys.sort().join(", ")}` };
   }
   if (!isAgentNickname(value.executor)) {
-    return { error: "task.agent.executor must be an agent nickname from agent-members.yaml" };
+    return { error: `${fieldName}.executor must be an agent nickname from agent-members.yaml` };
   }
   if (value.reporter !== undefined && !isAgentNickname(value.reporter)) {
-    return { error: "task.agent.reporter must be an agent nickname from agent-members.yaml" };
+    return { error: `${fieldName}.reporter must be an agent nickname from agent-members.yaml` };
   }
   return {
     agent: {
@@ -233,6 +247,83 @@ function parseJobAgent(value: unknown): { agent?: JobAgentDefinition; error?: st
       ...(isAgentNickname(value.reporter) ? { reporter: value.reporter.trim() } : {}),
     },
   };
+}
+
+// Parses task.review. The mapping itself is the declaration; an empty mapping declares the
+// reviewed integration without pinning agents, which are then auto selected.
+function parseJobReview(value: unknown): { review?: JobReviewDefinition; errors: string[] } {
+  if (!isRecord(value)) {
+    return { errors: ["task.review must be a mapping with an optional agent"] };
+  }
+  const errors: string[] = [];
+  const unknownKeys = Object.keys(value).filter((key) => key !== "agent");
+  if (unknownKeys.length > 0) {
+    errors.push(`task.review has unknown key(s): ${unknownKeys.sort().join(", ")}`);
+  }
+  let agent: JobAgentDefinition | undefined;
+  if (value.agent !== undefined) {
+    const parsed = parseJobAgent(value.agent, "task.review.agent");
+    if (parsed.error) errors.push(parsed.error);
+    agent = parsed.agent;
+  }
+  if (errors.length > 0) return { errors };
+  return { review: agent ? { agent } : {}, errors };
+}
+
+function isJobReviewDefinition(value: unknown): value is JobReviewDefinition {
+  return isRecord(value) && (value.agent === undefined || isJobAgentDefinition(value.agent));
+}
+
+/** True when the Job declares that its Run output is reviewed before integration. */
+export function jobDeclaresReview(definition: Pick<JobDefinition, "task">): boolean {
+  return definition.task.review !== undefined;
+}
+
+export type JobReviewAgentSource = "cli" | "job";
+
+export type JobReviewAgentNomination = { nickname: string; source: JobReviewAgentSource };
+
+/**
+ * Resolves the review agent nicknames of a Job Run review. The order is the CLI flag
+ * (`--review-by` / `--reporter-by`), then the Job's task.review.agent, then auto selection
+ * (an undefined entry means the caller auto selects).
+ */
+export function resolveJobReviewAgentNominations(
+  cli: { reviewBy?: string; reporterBy?: string },
+  definition: Pick<JobDefinition, "task">,
+): { executor?: JobReviewAgentNomination; reporter?: JobReviewAgentNomination } {
+  const nominate = (
+    cliValue: string | undefined,
+    jobValue: string | undefined,
+  ): JobReviewAgentNomination | undefined => {
+    const fromCli = cliValue?.trim();
+    if (fromCli) return { nickname: fromCli, source: "cli" };
+    const fromJob = jobValue?.trim();
+    if (fromJob) return { nickname: fromJob, source: "job" };
+    return undefined;
+  };
+  const agent = definition.task.review?.agent;
+  const executor = nominate(cli.reviewBy, agent?.executor);
+  const reporter = nominate(cli.reporterBy, agent?.reporter);
+  return {
+    ...(executor ? { executor } : {}),
+    ...(reporter ? { reporter } : {}),
+  };
+}
+
+/**
+ * Decides whether a Job Run takes the reviewed integration path (exec worktree, runner
+ * commit, review, merge by verdict). The Job's task.review declaration wins over the
+ * caller: a declared Job is always reviewed, and `--worktree` (passed by a routine with the
+ * legacy `action.commit: true`) still opts an undeclared Job in for compatibility. The child
+ * process that executes the Job inside the worktree never re-enters this path.
+ */
+export function jobRunUsesReviewedIntegration(
+  definition: Pick<JobDefinition, "task">,
+  opts: { worktree?: boolean; isWorktreeChild?: boolean },
+): boolean {
+  if (opts.isWorktreeChild) return false;
+  return jobDeclaresReview(definition) || !!opts.worktree;
 }
 
 function isJobRunState(value: unknown): value is JobRunState {
@@ -248,6 +339,7 @@ function isJobTaskDefinition(value: unknown): value is JobTaskDefinition {
     )
   )
     return false;
+  if (value.review !== undefined && !isJobReviewDefinition(value.review)) return false;
   if (value.mode === "command") {
     return (
       typeof value.command === "string" &&
@@ -504,10 +596,17 @@ export function parseJobDefinition(
       errors.push("task.paths must be a non-empty string list");
     if (value.task.owner !== undefined && typeof value.task.owner !== "string")
       errors.push("task.owner must be a string");
+    let review: JobReviewDefinition | undefined;
+    if (value.task.review !== undefined) {
+      const parsedReview = parseJobReview(value.task.review);
+      errors.push(...parsedReview.errors);
+      review = parsedReview.review;
+    }
     const common = {
       ...(targets ? { targets: targets.map((target) => target.trim()) } : {}),
       ...(paths ? { paths: paths.map((path) => path.trim()) } : {}),
       ...(typeof value.task.owner === "string" ? { owner: value.task.owner.trim() } : {}),
+      ...(review ? { review } : {}),
     };
 
     if (mode === "command") {

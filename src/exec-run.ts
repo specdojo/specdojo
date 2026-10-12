@@ -146,10 +146,15 @@ import {
   executeJobCommand,
   generateJobReviewPlan,
   isJobCommandTask,
+  jobRunUsesReviewedIntegration,
+  loadJobDefinition,
   loadJobRunRecord,
   materializeJobRun,
   recordJobRunReview,
   resolveJobPaths,
+  resolveJobReviewAgentNominations,
+  type JobDefinition,
+  type JobReviewAgentNomination,
   type JobRunRecord,
 } from "./job.js";
 import {
@@ -4246,29 +4251,58 @@ function overrideJobReviewDecision(resultPath: string, verdict: string, reason: 
   writeFileSync(resultPath, content, "utf8");
 }
 
+// Child process marker for the Job executed inside the review worktree. The child must run
+// the Job in place; without it a Job that declares task.review would re-enter the worktree.
+const JOB_REVIEW_WORKTREE_CHILD_ENV = "SPECDOJO_JOB_REVIEW_WORKTREE_CHILD";
+
+function jobReviewAgentSourceLabel(
+  nomination: JobReviewAgentNomination,
+  cliFlag: "--review-by" | "--reporter-by",
+): string {
+  return nomination.source === "cli"
+    ? cliFlag
+    : `task.review.agent.${cliFlag === "--review-by" ? "executor" : "reporter"}`;
+}
+
 function resolveJobReviewAgents(
   task: ReadyTaskView,
   roster: MemberRoster | null,
   execDefaults: ExecDefaultsConfig,
   opts: RunOpts,
+  definition: Pick<JobDefinition, "task">,
 ): {
   executor: AgentRunCandidate & { actor: string };
   reporterCandidates: AgentRunCandidate[];
 } {
+  // Resolution order: --review-by / --reporter-by, then the Job's task.review.agent, then
+  // capability based auto selection.
+  const nominations = resolveJobReviewAgentNominations(
+    { reviewBy: opts.reviewBy, reporterBy: opts.reporterBy },
+    definition,
+  );
   const override = resolveAgentOverride(
     "review",
-    opts.reviewBy?.trim(),
+    nominations.executor?.nickname,
     {},
     roster,
     execDefaults,
     "executor",
   );
-  if (override.kind === "error") throw new Error(override.message);
+  if (override.kind === "error") {
+    throw new Error(
+      nominations.executor
+        ? override.message.replace(
+            /^--by/,
+            jobReviewAgentSourceLabel(nominations.executor, "--review-by"),
+          )
+        : override.message,
+    );
+  }
   let executor: AgentRunCandidate & { actor: string };
   if (override.kind === "command") {
     executor = {
       command: override.command,
-      actor: override.actor ?? String(opts.reviewBy),
+      actor: override.actor ?? String(nominations.executor?.nickname),
       provider: override.provider,
     };
   } else {
@@ -4280,17 +4314,54 @@ function resolveJobReviewAgents(
     if (!member || !command) throw new Error("No review executor is available for Job Run review.");
     executor = { command, actor: member.nickname, provider: member.provider };
   }
-  const reporterCandidates = resolveReporterAgentCandidates(
-    task,
-    roster,
-    execDefaults,
-    undefined,
-    opts.reporterBy?.trim(),
-  );
+  let reporterCandidates: AgentRunCandidate[];
+  try {
+    reporterCandidates = resolveReporterAgentCandidates(
+      task,
+      roster,
+      execDefaults,
+      undefined,
+      nominations.reporter?.nickname,
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (nominations.reporter?.source !== "job") throw error;
+    throw new Error(
+      message.replace(
+        /^--reporter-by/,
+        jobReviewAgentSourceLabel(nominations.reporter, "--reporter-by"),
+      ),
+      { cause: error },
+    );
+  }
   if (reporterCandidates.length === 0) {
     throw new Error("No reporter is available for Job Run review.");
   }
   return { executor, reporterCandidates };
+}
+
+function jobReviewTaskView(runId: string, jobName: string): ReadyTaskView {
+  return {
+    id: `${runId}-review`,
+    local_id: runId,
+    name: `${jobName} の実行結果レビュー`,
+    mode: "review",
+    schedule_file: "",
+    fifo_rank: 0,
+    critical_first_rank: 0,
+    agent_pipeline: {
+      stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
+    },
+  };
+}
+
+function describeJobReviewAgent(
+  actor: string | undefined,
+  nomination: JobReviewAgentNomination | undefined,
+  cliFlag: "--review-by" | "--reporter-by",
+): string {
+  const source = nomination ? jobReviewAgentSourceLabel(nomination, cliFlag) : "auto";
+  return `${actor ?? "(unknown)"} (${source})`;
 }
 
 async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
@@ -4324,6 +4395,37 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
     process.stdout.write(`[dry-run] job: ${preview.definition.id}\n`);
     process.stdout.write(`[dry-run] run: ${preview.record.run_id}\n`);
     process.stdout.write("[dry-run] lifecycle: execute -> commit -> review -> merge|waiting\n");
+    process.stdout.write(
+      `[dry-run] review declared by job: ${preview.definition.task.review ? "yes" : "no (--worktree)"}\n`,
+    );
+    const nominations = resolveJobReviewAgentNominations(
+      { reviewBy: opts.reviewBy, reporterBy: opts.reporterBy },
+      preview.definition,
+    );
+    try {
+      const roster = loadRosterForExecutionPath(executionPath);
+      const execDefaults = loadExecDefaultsConfig(
+        resolveExecDefaultsPath(opts, schedulePath),
+        executionPath,
+      );
+      const agents = resolveJobReviewAgents(
+        jobReviewTaskView(preview.record.run_id, preview.definition.name),
+        roster,
+        execDefaults,
+        opts,
+        preview.definition,
+      );
+      process.stdout.write(
+        `[dry-run] review executor: ${describeJobReviewAgent(agents.executor.actor, nominations.executor, "--review-by")}\n`,
+      );
+      process.stdout.write(
+        `[dry-run] review reporter: ${describeJobReviewAgent(agents.reporterCandidates[0]?.actor, nominations.reporter, "--reporter-by")}\n`,
+      );
+    } catch (error) {
+      process.stdout.write(
+        `[dry-run] review agents: unresolved (${error instanceof Error ? error.message : String(error)})\n`,
+      );
+    }
     return;
   }
 
@@ -4341,7 +4443,11 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   process.stdout.write(`Running Job Run ${preview.record.run_id} in ${worktree.path}.\n`);
   const child = spawnSync(executable, fullArgs, {
     cwd: worktree.path,
-    env: { ...process.env, [ROUTINE_EXEC_ENV]: trigger === "routine" ? "1" : "0" },
+    env: {
+      ...process.env,
+      [ROUTINE_EXEC_ENV]: trigger === "routine" ? "1" : "0",
+      [JOB_REVIEW_WORKTREE_CHILD_ENV]: "1",
+    },
     stdio: "inherit",
   });
   if (child.status === ROUTINE_BUSY_SKIP_EXIT_CODE) {
@@ -4373,18 +4479,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   );
 
   const reviewTaskId = `${record.run_id}-review`;
-  const reviewTask: ReadyTaskView = {
-    id: reviewTaskId,
-    local_id: record.run_id,
-    name: `${preview.definition.name} の実行結果レビュー`,
-    mode: "review",
-    schedule_file: "",
-    fifo_rank: 0,
-    critical_first_rank: 0,
-    agent_pipeline: {
-      stages: [{ stage_role: "executor" }, { stage_role: "reporter" }],
-    },
-  };
+  const reviewTask = jobReviewTaskView(record.run_id, preview.definition.name);
   const { planPath, resultPath } = await generateJobReviewPlan(
     {
       ...worktreeJobPaths,
@@ -4410,7 +4505,13 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   try {
     process.chdir(worktree.path);
     const roster = loadRosterForExecutionPath(worktreeExecutionPath);
-    const agents = resolveJobReviewAgents(reviewTask, roster, execDefaults, opts);
+    const agents = resolveJobReviewAgents(
+      reviewTask,
+      roster,
+      execDefaults,
+      opts,
+      preview.definition,
+    );
     await scaffoldResult({
       executionPath: worktreeExecutionPath,
       taskId: reviewTaskId,
@@ -4552,12 +4653,23 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
 }
 
 async function runJobMode(opts: RunOpts): Promise<void> {
-  if (opts.worktree) {
-    await runJobWorktreeMode(opts);
-    return;
-  }
   const resolvedPaths = resolveProjectPaths({ project: opts.project });
   activateResolvedProjectPaths(resolvedPaths);
+  const isWorktreeChild = process.env[JOB_REVIEW_WORKTREE_CHILD_ENV] === "1";
+  if (!isWorktreeChild) {
+    // A Job's task.review declaration takes precedence over the caller: it routes the Run
+    // through the reviewed integration path even without --worktree (routine action.commit).
+    const reviewProjectId =
+      resolvedPaths.projectId ?? opts.project ?? process.env.SPECDOJO_PROJECT ?? "";
+    const definition = loadJobDefinition(
+      resolveJobPaths(reviewProjectId || undefined),
+      String(opts.job).trim(),
+    );
+    if (jobRunUsesReviewedIntegration(definition, { worktree: opts.worktree, isWorktreeChild })) {
+      await runJobWorktreeMode(opts);
+      return;
+    }
+  }
   const { schedulePath, executionPath } = resolvedPaths;
   const projectId = resolvedPaths.projectId ?? opts.project ?? process.env.SPECDOJO_PROJECT ?? "";
   if (!projectId) throw new Error("--job requires a project id.");

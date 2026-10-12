@@ -10,6 +10,8 @@ import {
   isJobAgentTask,
   isJobCommandTask,
   jobCheckpoint,
+  jobDeclaresReview,
+  jobRunUsesReviewedIntegration,
   loadJobRunRecord,
   materializeJobRun,
   parseJobDefinition,
@@ -17,7 +19,182 @@ import {
   renderJobTemplate,
   recordJobRunReview,
   resolveJobPaths,
+  resolveJobReviewAgentNominations,
+  type JobDefinition,
 } from "../../src/job.js";
+
+function commandJobWithReview(review: unknown): Record<string, unknown> {
+  return {
+    id: "job-grade",
+    name: "Grade",
+    task: {
+      mode: "command",
+      command: "tools/grade/run.sh",
+      ...(review === undefined ? {} : { review }),
+    },
+    run: { idempotency_key: "{{job_id}}" },
+  };
+}
+
+function parsedJob(review: unknown): JobDefinition {
+  const parsed = parseJobDefinition(commandJobWithReview(review), "job-grade.yaml");
+  if (!parsed.job) throw new Error(`fixture is invalid: ${parsed.errors.join("; ")}`);
+  return parsed.job;
+}
+
+describe("task.review", () => {
+  it("parses the reviewed integration declaration with nominated review agents", () => {
+    const parsed = parseJobDefinition(
+      commandJobWithReview({
+        agent: { executor: "claude-expert-review-executor", reporter: "claude-reporter" },
+      }),
+      "job-grade.yaml",
+    );
+
+    expect(parsed.errors).toEqual([]);
+    expect(parsed.job?.task.review).toEqual({
+      agent: { executor: "claude-expert-review-executor", reporter: "claude-reporter" },
+    });
+    expect(parsed.job && jobDeclaresReview(parsed.job)).toBe(true);
+  });
+
+  it("accepts an empty mapping as a declaration without nominated agents", () => {
+    const job = parsedJob({});
+
+    expect(job.task.review).toEqual({});
+    expect(jobDeclaresReview(job)).toBe(true);
+  });
+
+  it("does not declare review when task.review is omitted", () => {
+    expect(jobDeclaresReview(parsedJob(undefined))).toBe(false);
+  });
+
+  it("accepts task.review on an edit Job as well as a command Job", () => {
+    const parsed = parseJobDefinition(
+      {
+        id: "job-report",
+        name: "Report",
+        task: {
+          mode: "edit",
+          description: "write",
+          targets: ["report"],
+          review: { agent: { executor: "claude-expert-review-executor" } },
+        },
+        run: { idempotency_key: "{{job_id}}" },
+      },
+      "job-report.yaml",
+    );
+
+    expect(parsed.errors).toEqual([]);
+    expect(parsed.job?.task.review).toEqual({
+      agent: { executor: "claude-expert-review-executor" },
+    });
+  });
+
+  it("rejects unknown keys under task.review and task.review.agent like task.agent", () => {
+    const unknownReviewKey = parseJobDefinition(
+      commandJobWithReview({ enabled: true }),
+      "job-grade.yaml",
+    );
+    const unknownAgentKey = parseJobDefinition(
+      commandJobWithReview({
+        agent: { executor: "claude-expert-review-executor", reporters: "claude-reporter" },
+      }),
+      "job-grade.yaml",
+    );
+
+    expect(unknownReviewKey.job).toBeUndefined();
+    expect(unknownReviewKey.errors).toContain(
+      "job-grade.yaml: task.review has unknown key(s): enabled",
+    );
+    expect(unknownAgentKey.job).toBeUndefined();
+    expect(unknownAgentKey.errors).toContain(
+      "job-grade.yaml: task.review.agent has unknown key(s): reporters",
+    );
+  });
+
+  it("rejects a non-mapping review and an invalid review agent nickname", () => {
+    const notMapping = parseJobDefinition(commandJobWithReview(true), "job-grade.yaml");
+    const badExecutor = parseJobDefinition(
+      commandJobWithReview({ agent: { executor: "Claude Expert" } }),
+      "job-grade.yaml",
+    );
+    const badReporter = parseJobDefinition(
+      commandJobWithReview({ agent: { executor: "claude-expert-review-executor", reporter: "" } }),
+      "job-grade.yaml",
+    );
+
+    expect(notMapping.errors).toContain(
+      "job-grade.yaml: task.review must be a mapping with an optional agent",
+    );
+    expect(badExecutor.errors).toContain(
+      "job-grade.yaml: task.review.agent.executor must be an agent nickname from agent-members.yaml",
+    );
+    expect(badReporter.errors).toContain(
+      "job-grade.yaml: task.review.agent.reporter must be an agent nickname from agent-members.yaml",
+    );
+  });
+});
+
+describe("resolveJobReviewAgentNominations", () => {
+  const nominated = parsedJob({
+    agent: { executor: "claude-expert-review-executor", reporter: "claude-reporter" },
+  });
+
+  it("prefers --review-by / --reporter-by over the Job nomination", () => {
+    expect(
+      resolveJobReviewAgentNominations(
+        { reviewBy: "codex-review-executor", reporterBy: "gemma-reporter" },
+        nominated,
+      ),
+    ).toEqual({
+      executor: { nickname: "codex-review-executor", source: "cli" },
+      reporter: { nickname: "gemma-reporter", source: "cli" },
+    });
+  });
+
+  it("uses the Job nomination when the CLI does not specify the agent", () => {
+    expect(resolveJobReviewAgentNominations({ reviewBy: "  " }, nominated)).toEqual({
+      executor: { nickname: "claude-expert-review-executor", source: "job" },
+      reporter: { nickname: "claude-reporter", source: "job" },
+    });
+  });
+
+  it("resolves each stage independently", () => {
+    expect(resolveJobReviewAgentNominations({ reporterBy: "gemma-reporter" }, nominated)).toEqual({
+      executor: { nickname: "claude-expert-review-executor", source: "job" },
+      reporter: { nickname: "gemma-reporter", source: "cli" },
+    });
+  });
+
+  it("leaves agents for auto selection when neither the CLI nor the Job nominates them", () => {
+    expect(resolveJobReviewAgentNominations({}, parsedJob({}))).toEqual({});
+    expect(
+      resolveJobReviewAgentNominations(
+        {},
+        parsedJob({ agent: { executor: "claude-expert-review-executor" } }),
+      ),
+    ).toEqual({ executor: { nickname: "claude-expert-review-executor", source: "job" } });
+  });
+});
+
+describe("jobRunUsesReviewedIntegration", () => {
+  it("routes a Job that declares task.review through review even without --worktree", () => {
+    expect(jobRunUsesReviewedIntegration(parsedJob({}), { worktree: false })).toBe(true);
+    expect(jobRunUsesReviewedIntegration(parsedJob({}), {})).toBe(true);
+  });
+
+  it("keeps --worktree (routine action.commit) as an opt in for an undeclared Job", () => {
+    expect(jobRunUsesReviewedIntegration(parsedJob(undefined), { worktree: true })).toBe(true);
+    expect(jobRunUsesReviewedIntegration(parsedJob(undefined), { worktree: false })).toBe(false);
+  });
+
+  it("never re-enters the reviewed path from the worktree child process", () => {
+    expect(
+      jobRunUsesReviewedIntegration(parsedJob({}), { worktree: true, isWorktreeChild: true }),
+    ).toBe(false);
+  });
+});
 
 const originalCwd = process.cwd();
 

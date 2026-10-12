@@ -104,5 +104,12 @@ task:
       観測した事実と未確認の範囲を分けて報告する。
   paths:
     - docs/ja/projects/prj-0001
+  # PJR-MD3C: 出力は統合前に review する。起動元（routine・手動の exec run --job）によらず、
+  # exec の worktree で実行し、runner の commit、review、verdict による統合の流れで動く。
+  # review agent は自動選択に任せず、ここで指名する。
+  review:
+    agent:
+      executor: claude-expert-review-executor
+      reporter: claude-reporter
 run:
   idempotency_key: "{{job_id}}:command-v7:{{scheduled_at}}:{{inputs.limit}}:{{inputs.dependency_changed}}:{{inputs.rulebook_changed}}:{{inputs.unreviewed}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}:{{inputs.rubric_outdated}}"

@@ -80,7 +80,17 @@ Job Definition Standard
 - Job は起動時刻を持たない。時刻条件は routine または外部スケジューラが持つ。
 - Job は agent 実行エンジンを持たない。plan 生成、agent 選択、result、worktree、commit は `exec` 実行基盤へ委ねる。
 
-### 3.5. inputs と冪等性
+### 3.5. 統合前 review の宣言と review agent の規約
+
+- Run の出力を統合前に review するかは Job の出力の性質で決まるため、Job の `task.review` で宣言する。routine の `action.commit` には書かない。
+- `task.review` を持つ Job は、起動元（routine・手動の `exec run --job`）によらず、exec の worktree での実行、runner による commit、review、verdict による統合の流れで動く。Job は宣言だけを持ち、worktree・commit・review・統合は `exec` 実行基盤が担う。
+- `task.review` は `edit` / `review` / `command` のいずれの mode でも書ける。空の mapping（`review: {}`）は、review agent を指名せずに宣言だけを行う。
+- review agent は `task.review.agent.executor`（review executor）と `task.review.agent.reporter`（reporter）に nickname で指名する。書式と未知のキーの扱いは `task.agent` と同じで、`executor` は必須、`reporter` は任意、それ以外のキーは `job validate` がエラーにする。
+- review agent の解決順は、`exec run` の `--review-by` / `--reporter-by` → `task.review.agent` → 自動選択とする。review タスクは能力要件を持たないため、自動選択では利用者の意図した agent にならない場合がある。review の品質を固定したい Job は指名する。
+- `task.review.agent` は Job Run 自体の agent（`task.agent` / `task.analysis.agent`）とは独立している。`--reporter-by` は従来どおり Run の reporter と review の reporter の両方を差し替える。
+- routine の `action.commit: true` は互換として読み、`task.review` を宣言していない Job でも同じ流れで実行する。Job が `task.review` を宣言している場合は Job を優先し、`action.commit` の有無や値によらず review を経て統合する。
+
+### 3.6. inputs と冪等性
 
 - `inputs` には、実行内容または表示内容を決める値（期間、対象種別、上限件数）だけを置く。
 - string / integer / boolean は `enum` で許容値を、list は `enum` で各要素の許容値を制限できる。integer の範囲は `minimum` / `maximum` で制限する。既定値にも同じ制約を適用する。
@@ -103,6 +113,8 @@ Job Definition Standard
 | `task.targets` `paths` | 条件 | `edit` / `review` はいずれか必須。`command` では任意                            |
 | `task.agent.executor`  | 任意 | `.specdojo/agent-members.yaml` の nickname 書式（`^[a-z0-9][a-z0-9_-]{0,62}$`） |
 | `task.agent.reporter`  | 任意 | 同上。executor が result を書かない構成では必須                                 |
+| `task.review`          | 任意 | mapping。存在すれば統合前 review の宣言。`agent` 以外のキーを持たない           |
+| `task.review.agent`    | 任意 | `executor` 必須・`reporter` 任意。書式は `task.agent` と同じ nickname 書式      |
 | `inputs.*.enum`        | 任意 | scalar の値または list の各要素に対する非空の許容値集合                         |
 | `minimum` / `maximum`  | 任意 | integer input だけに指定でき、`minimum <= maximum`                              |
 | `run.idempotency_key`  | ○    | 空文字へ解決されず、同じ論理実行を一意に判別できる                              |
@@ -128,9 +140,15 @@ task:
       閾値の見直し要否を判断して報告する。
   paths:
     - docs/ja/specdojo/rulebooks
+  review:
+    agent:
+      executor: claude-expert-review-executor
+      reporter: claude-reporter
 run:
   idempotency_key: "{{job_id}}:{{scheduled_at}}"
 ```
+
+この例は `task.review` で統合前 review を宣言し、review agent を指名しています。routine から起動しても手動で `exec run --job` を実行しても、Run の出力は worktree で commit され、`claude-expert-review-executor` と `claude-reporter` の review を経て、verdict が `complete` / `complete-with-findings` の場合だけ統合されます。
 
 ## 6. 禁止事項
 
@@ -144,7 +162,7 @@ run:
 ## 7. 運用・見直しルール
 
 - `job-*.yaml` を変更した場合は `specdojo job validate --project <project-id>` を実行する。
-- agent の指名を変更した場合は `specdojo exec run --job <job-id> --dry-run` で、解決された nickname とコマンドを確認する。
+- agent の指名を変更した場合は `specdojo exec run --job <job-id> --dry-run` で、解決された nickname とコマンドを確認する。`task.review` を宣言した Job では、同じ dry-run が review executor / reporter の nickname と解決元（`--review-by` / `--reporter-by`・`task.review.agent.*`・`auto`）を表示する。
 - Job を統廃合した場合は、参照する routine の `action` と運用ガイドの記述を同じ変更で更新する。
 - script または CLI へ手順を移した場合は、移し先の入口と引数を `command-reference` に記載し、Job からはその入口だけを呼ぶ。
 - `task.precondition` を追加・変更した場合は、選択 0 件の skip と 1 件以上の通常 materialize の両方をテストする。

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   registered_at: "2026-10-12T01:06:22Z"
 ---
@@ -44,14 +44,22 @@ routine が起動する Job Run の review agent が自動選択になってお�
 
 | No  | 作業                                                                  | 担当 | 状態 | メモ |
 | --- | --------------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | Job の schema・検証・解決に、統合前 review と review agent を追加する | -    | open | -    |
-| 2   | routine の `action.commit` を互換として扱い、Job を優先する           | -    | open | -    |
-| 3   | grade の 2 Job に宣言と指名を書き、routine から `commit` を外す       | -    | open | -    |
-| 4   | テストと文書を更新する                                                | -    | open | -    |
+| 1   | Job の schema・検証・解決に、統合前 review と review agent を追加する | -    | done | -    |
+| 2   | routine の `action.commit` を互換として扱い、Job を優先する           | -    | done | -    |
+| 3   | grade の 2 Job に宣言と指名を書き、routine から `commit` を外す       | -    | done | -    |
+| 4   | テストと文書を更新する                                                | -    | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- Job Definition に `task.review` を追加した。mapping の存在が統合前 review の宣言で、`task.review.agent.executor`（必須）/ `task.review.agent.reporter`（任意）で review agent を nickname 指名する。書式と未知キーの扱いは `task.agent` と同じで、`job validate`（`src/job.ts`）と `job.schema.yaml` の両方で検証する。mode によらず書ける。
+- `exec run --job` は、Job が `task.review` を宣言していれば `--worktree` がなくても worktree 実行・runner の commit・review・verdict による統合の流れで動く。worktree 内で Job を実行する子プロセスは環境変数 `SPECDOJO_JOB_REVIEW_WORKTREE_CHILD` で識別し、再入しない。
+- review agent の解決順を `--review-by` / `--reporter-by` → `task.review.agent` → 自動選択とした。`exec run --job --dry-run` は review executor / reporter の nickname と解決元を表示し、`routine run --dry-run` は job action ごとに review の有無と指名を表示する。
+- routine の `action.commit` は互換として残し（`true` なら従来どおり `--worktree` を渡す）、Job が宣言している場合は Job を優先する。schema の説明と文書に、新たには推奨しないことを書いた。
+- `job-grade-kata` と `job-grade-deliverable` に `task.review` を書き、`claude-expert-review-executor` と `claude-reporter` を指名した。`rtn-grade-recheck` と `rtn-grade-deliverable-recheck` から `commit: true` を外した。
+- 確認: `exec run --job job-grade-kata --dry-run` と routine 相当の `exec run --job job-grade-deliverable --job-trigger routine --dry-run`（`--worktree` なし）で、review executor が `claude-expert-review-executor (task.review.agent.executor)`、reporter が `claude-reporter (task.review.agent.reporter)` と解決された。`--review-by` を付けると executor だけが CLI 指定に置き換わった。`routine run --id rtn-grade-recheck --dry-run` は `review: job task.review (executor=claude-expert-review-executor, reporter=claude-reporter)` を表示した。
+- 文書: [[specdojo:job-definition-standard]]、[[specdojo:routine-operation-guide]]、`docs/ja/product/040-system-design/sysd-job-execution.md` を更新した。sysd の実装境界にあった「`exec run --job --worktree` は未対応」の古い記述も現状に合わせた。
+- テスト: 単体テスト（`tests/src/job.test.ts`、`tests/src/routine.test.ts`、`tests/docs/specdojo/schemas/job-schema.test.ts`）で解決順・Job と `action.commit` の優先・schema を、統合テスト（`tests/src/exec-job-worktree.integration.test.ts`）で宣言 Job が `--worktree` なしで review・統合され、指名した review executor が使われることを確認する。
+- 残課題: 実 agent による routine 起動の確認は未実施（次回の定期実行で `[routine-job] merged|waiting` と review result の `agent` を確認する）。
 
 ## 5. 関連ドキュメント
 

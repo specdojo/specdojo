@@ -113,6 +113,13 @@ task:
     - docs/ja/specdojo/recipes
     - docs/ja/specdojo/samples
     - docs/ja/specdojo/templates
+  # PJR-MD3C: 出力は統合前に review する。起動元（routine・手動の exec run --job）によらず、
+  # exec の worktree で実行し、runner の commit、review、verdict による統合の流れで動く。
+  # review agent は自動選択に任せず、ここで指名する。
+  review:
+    agent:
+      executor: claude-expert-review-executor
+      reporter: claude-reporter
 run:
   # scheduled_at は routine の論理実行枠を表す。同じ枠の再試行は同じ Run、次の枠は別 Run にする。
   idempotency_key: "{{job_id}}:command-v8:{{scheduled_at}}:{{inputs.kind}}:{{inputs.limit}}:{{inputs.dependency_changed}}:{{inputs.rulebook_changed}}:{{inputs.unreviewed}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}:{{inputs.rubric_outdated}}"
