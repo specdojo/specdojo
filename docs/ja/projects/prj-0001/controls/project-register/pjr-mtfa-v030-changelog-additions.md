@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-12T06:01:18Z"
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: specdojo index build, specdojo catalog validate"
 ---
 
 # PJR-MTFA v0.3.0 の CHANGELOG に 10 月 11 日以降の変更と既知の問題を追記する
