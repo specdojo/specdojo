@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5e60f7be2a0c450eb4659b78ab4bce37
+  ts: "2026-10-12T08:53:07Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: README の構成の表が古いことに気づき、利用者が README を含めた見直しの起票を指示した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo-lp の README と古くなった記述を現状に合わせる
+    - field: description
+      from: ""
+      to: PJR-7WG4 のコンポーネント分割などで、README の構成の表（index.astro を仮のトップページとする記述など）やソースのコメントが現状と合わなくなった。README を含めて古い記述を洗い出し、現状に合わせる。統合先は feature/lp-v1
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
