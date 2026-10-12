@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:43:02Z"
-  block_reason: rate limit reached
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
 ---
 
 # PJR-GBVM 空のプロダクトリポジトリで最上位の新規ファイルが commit 範囲外になる
