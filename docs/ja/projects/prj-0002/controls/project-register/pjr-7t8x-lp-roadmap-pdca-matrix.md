@@ -57,6 +57,7 @@ LP 用に短くした文言は次のとおり。
   - 時期の目安を書かない。
   - 準備中の行にはガイドへのリンクを置かない。
 - 「体系」や Kata・Waza・Ryu の語を使わない。
+- 画面に表示する文言に、登録簿の項目 ID（`PJR-` で始まる ID）を書かない。会話の例のプレースホルダ `PJR-XXXX` と、ソースのコメントは除く。
 - マトリクスは PC ではグリッド、スマホでは行ごとのカードとして表示する。色・文字・角丸・影は PJR-CM5W で定義したテーマの class だけを使う。
 - PJR-KH17 で加えた使い分けの節など、既存の節を壊さない。
 - `specdojo-lp` で `npm run build` が成功する。agent の sandbox では npm を実行できないため、executor は evidence の `validations` でこの検証を `requires_human` と記録し、ビルドは orchestrator が sandbox の外で確認する。

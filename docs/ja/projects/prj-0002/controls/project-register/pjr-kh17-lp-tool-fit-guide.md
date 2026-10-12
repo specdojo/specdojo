@@ -39,7 +39,7 @@ PJR-HEPK のレビューで、利用者から他のツールとの比較を LP �
 | 1 つの機能を仕様から実装まで素早く作りたい                 | Spec Kit（新規開発）、OpenSpec（既存コードへの変更）、Kiro（IDE の中で承認しながら） | 工程が違う。SpecDojo はその上流で、プロダクトの要求・仕様を決めて保つ              |
 | 多数の AI agent に作業を配り、並行して大量に回したい       | Beads / Gas Town                                                                     | 規模と依存関係の管理はあちらが強い。register は判断を残す側                        |
 | 迷い・判断・保留・リスクを、理由ごと残してあとでたどりたい | SpecDojo の register                                                                 | いま使える                                                                         |
-| 決めたことを要求・要件・仕様の文書に反映し、保ち続けたい   | SpecDojo（型と品質評価）                                                             | 準備中。PJR-7T8X の「これから」とつながる                                          |
+| 決めたことを要求・要件・仕様の文書に反映し、保ち続けたい   | SpecDojo（型と品質評価）                                                             | 準備中                                                                             |
 
 ### 1.3. GitHub Issues との補完関係
 
@@ -65,6 +65,10 @@ PJR-HEPK のレビューで、利用者から他のツールとの比較を LP �
   - <https://github.com/gastownhall/beads>
   - <https://github.com/gastownhall/gastown>
 - 「SpecDojo（型と品質評価）」の行は「準備中」と表示し、ガイドへのリンクを置かない。
+- GitHub Issues が苦手なことを、本文に明示する。次の 2 点を含める。
+  - チームに公開・通知されるため、未整理の迷いや小さな判断は書きにくい。
+  - 完了条件がないため、そのままでは agent への指示になりにくい。
+- 画面に表示する文言に、登録簿の項目 ID（`PJR-` で始まる ID）を書かない。会話の例のプレースホルダ `PJR-XXXX` と、ソースのコメントは除く。
 - 表はスマホでは行ごとのカードとして表示する。色・文字・角丸・影は PJR-CM5W で定義したテーマの class だけを使う。
 - 「体系」や Kata・Waza・Ryu の語を使わない。
 - `specdojo-lp` で `npm run build` が成功する。agent の sandbox では npm を実行できないため、executor は evidence の `validations` でこの検証を `requires_human` と記録し、ビルドは orchestrator が sandbox の外で確認する。
