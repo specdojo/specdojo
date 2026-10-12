@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-XY4C",
   "run_id": "20261012T125314628Z-304dabfc",
-  "updated_at": "2026-10-12T21:57:00.549Z",
+  "updated_at": "2026-10-12T21:58:20.449Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-xy4c-20261012T125314Z-5f90-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "codex-reporter",
       "attempts": 4,
       "started_at": "2026-10-12T21:57:00.549Z",
-      "completed_at": null,
+      "completed_at": "2026-10-12T21:58:20.449Z",
       "artifact_ref": null,
       "repos": {
         "project": {

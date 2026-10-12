@@ -141,3 +141,16 @@
       from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 18ms (unchanged); FAIL  tests/packages/docs-lint/remark-no-unescaped-angl…"
       to: "-"
   previous_event_id: reg_8873e516067f493a838e28240c895cde
+- v: 1
+  id: reg_5eef1193dc7a4960a877749708952aee
+  ts: "2026-10-12T21:58:20Z"
+  action: review
+  actor: codex-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e9b75d0138c74e4ba744d768c7ec9c57
