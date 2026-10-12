@@ -74,3 +74,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cf6287ddab46435cb8ea9025818c7d52
+- v: 1
+  id: reg_3be8e255b3024b95915cc0bed0aba763
+  ts: "2026-10-12T12:09:51Z"
+  action: close
+  actor: BA
+  from_status: review
+  to_status: done
+  reason: BA が統合の結果とビルドの確認を受けて完了と判断した。exec run（register worktree）で実装した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: LP の「register の考え方」に register の 1 周を、末尾に PDCA マトリクスで「これから」の節を加え、specdojo-lp の main へ統合した（443b08a）
+  previous_event_id: reg_91439ba24dc649a8b37877fd75a6c752

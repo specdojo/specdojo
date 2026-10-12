@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-7t8x-lp-roadmap-pdca-matrix
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-10-12T04:09:17Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T12:09:51Z"
+  conclusion: LP の「register の考え方」に register の 1 周を、末尾に PDCA マトリクスで「これから」の節を加え、specdojo-lp の main へ統合した（443b08a）
 ---
 
 # PJR-7T8X LP に PDCA マトリクスで「これから」の節を加える
