@@ -22,13 +22,22 @@ specdojo-assets で作ったマスコット（道着を着たカワウソ）の�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- LP で使うマスコットの画像が、`specdojo-assets` の `exports.yaml` に従って `specdojo-lp` へ書き出され、`specdojo-lp` で commit されている。書き出したファイルを `specdojo-lp` で直接直していない。
+- Hero の右側の仮の枠（`data-placeholder="mascot"`、「マスコット（準備中）」）が、書き出した画像に差し替わっている。
+  - 画像に、内容を表す `alt` がある。
+  - 書き出した形式とサイズ（@1x・@2x など）を使い、`width` と `height` を指定してレイアウトのずれを防ぐ。
+- 色・角丸・影は PJR-CM5W で定義したテーマの class だけを使う。
+- 変更は `specdojo-lp` の統合先（`feature/lp-v1`）へ入れる。
+- `specdojo-lp` で `npm run build` が成功する。agent の sandbox では npm を実行できないため、executor は evidence の `validations` でこの検証を `requires_human` と記録し、ビルドは orchestrator が sandbox の外で確認する。
+- 前提: PJR-PEVV で原本と `exports.yaml` の定義ができ、PJR-F34R で書き出しのスクリプトができている。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                          | 担当         | 状態 | メモ                      |
+| --- | --------------------------------------------- | ------------ | ---- | ------------------------- |
+| 1   | 原本を `specdojo-lp` へ書き出して commit する | UX           | open | PJR-PEVV と PJR-F34R の後 |
+| 2   | Hero の仮の枠を画像に差し替える               | UX           | open | -                         |
+| 3   | ビルドを確認する                              | orchestrator | open | sandbox の外で確認する    |
 
 ## 4. 対応結果
 
@@ -36,4 +45,7 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0002:pjr-hktj-assets-repository]]: アセットを specdojo-assets で管理する決定。
+- [[prj-0002:pjr-pevv-mascot-character-source]]: キャラクターの設定と原本。本項目の前提。
+- [[prj-0002:pjr-f34r-assets-repository-setup]]: 書き出しの仕組み。本項目の前提。
+- [[prj-0002:pjr-hepk-lp-content]]: マスコットの仮の枠を置いた LP の原稿。
