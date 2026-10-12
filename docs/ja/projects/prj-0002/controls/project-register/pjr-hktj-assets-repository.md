@@ -95,3 +95,10 @@ specdojo-workspace/
 
 - [[prj-0002:pjr-fsmc-lp-mascot]]: マスコットの項目
 - [[prj-0002:pjr-hepk-lp-content]]: マスコットの仮の枠を置いた LP の原稿
+
+## 8. 追記（2026-10-12）
+
+利用者の判断で、原本を Git LFS で管理することをやめ、普通の git で管理する。決定内容と構成の案にある「Git LFS」は、この追記で置き換える。
+
+- 理由: マスコットの原本は、AI で生成した画像も手描きの画像も 1 枚あたり数 MB 程度に収まり、大きなファイルを作る予定がない。LFS は devcontainer への導入と、clone する全員の `git lfs` が要り、GitHub の LFS には容量と転送量の上限もある。書き出したファイルは `specdojo-lp` で普通に commit するため、LP のビルドには影響しない。
+- 見直しの目安: 1 ファイルが 10 MB を超えるなど、原本が大きくなる場合は LFS を改めて検討する。PSD など大きくなりやすい作業用のファイルを原本として置くか、書き出した PNG だけを置くかは、[[prj-0002:pjr-f34r-assets-repository-setup]] で決めて `README.md` に書く。
