@@ -7,9 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   registered_at: "2026-10-12T03:32:21Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-HJ99 executor が実行できない index build の not_run で run が止まる
@@ -39,7 +40,13 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+| 項目       | 内容                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解決内容   | `src/exec-reporter.ts` に `runnerOwnedValidationReason` を加え、`specdojo index build`（`npx specdojo`・`node --import tsx src/specdojo.ts`・`npx tsx`・`node dist/specdojo.js` の起動形を含む）を runner が担う検証として判定する。`deriveReporterFacts` は executor の `not_run` / `not_applicable` を block の理由にせず、`failed` は従来どおり block する。runner の記録に失敗があれば `failedParentValidationReason` が先に block する |
+| 解決内容   | `catalog validate` の適用可否を変更範囲でも判定する。`ReporterFactOptions` に `changedPaths` を加え、runner 管理記録を除いた変更（rename は前後の両方）が `docs/ja/projects/` 配下に及ばない run では、`catalog_path` があっても適用外とする                                                                                                                                                                                                |
+| 解決内容   | executor への指示（`src/exec-run.ts` の pipeline executor 指示）に、`specdojo index build` を実行も記録もしないことと、`catalog validate` の変更範囲による適用外を加えた。edit result の申し送りへ「runner が担う検証」を追記する（`src/exec-results.ts`）。exec-config-guide の該当の記述を更新した                                                                                                                                        |
+| 確認結果   | 単体テスト（`tests/src/exec-reporter.test.ts`・`tests/src/exec-run.test.ts`）に、index build の各起動形の `not_run` / `not_applicable` が受理されること、ほかの `specdojo` コマンドの `not_run` は block のままであること、変更範囲による `catalog validate` の受理と退け、executor の指示の内容を加えた。統合テストは追加していない。テストの実行結果は runner の親検証を正とする                                                          |
+| 再発防止策 | agent が書き込めない生成物を出力する検証は、runner が担う検証として判定と executor への指示の両方で扱う                                                                                                                                                                                                                                                                                                                                     |
 
 ## 5. 関連ドキュメント
 

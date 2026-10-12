@@ -77,3 +77,19 @@
       from: "agent exited with non-zero code: agent exited with non-zero code: ERROR: Selected model is at capacity. Please try a different model."
       to: "-"
   previous_event_id: reg_81681a53572f49b6bfddc1ed93ce24d4
+- v: 1
+  id: reg_1eaf914399884b67bcf39422c673a1c0
+  ts: "2026-10-12T06:46:39Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_2a7f120cc9ae48c8b1ca04faf9929eca
