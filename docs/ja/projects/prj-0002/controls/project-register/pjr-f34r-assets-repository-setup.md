@@ -22,13 +22,26 @@ specdojo-assets に mascot/source/・mascot/prompts/・exports.yaml・BRAND.md �
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `specdojo-assets` に、[[prj-0002:pjr-hktj-assets-repository]] の構成どおりに次がある。
+  - `mascot/source/`（原本。Git LFS で管理する）と `mascot/prompts/`（生成のプロンプトと設定）
+  - `exports.yaml`: 何を・どの形式とサイズ（WebP・AVIF・PNG、@1x・@2x など）で・どのリポジトリのどこへ書き出すかの定義。当面の書き出し先は `specdojo-lp` だけとする。
+  - `BRAND.md`: 色・余白・使ってよい場面・ライセンスと、原本ごとの作り方（AI での生成か手描きか）を書く欄。
+  - `README.md`: 原本を直して書き出し直す手順。書き出したファイルを使う側で直接直さないこと。
+- `.gitattributes` で、`mascot/source/` の画像を Git LFS の対象にしている。
+- `exports.yaml` に従って書き出すスクリプトがあり、見本の画像 1 つで `specdojo-lp` の書き出し先にファイルが作られることを確かめている。
+- prj-0002 の `repos` に `specdojo-assets` を加えている。設定ファイルの変更は feature ブランチで行い、利用者の承認を得て取り込む。
+- 前提（2026-10-12 の確認）:
+  - `specdojo-assets` は `/workspaces/specdojo-workspace/specdojo-assets` に clone 済みで、commit がまだない。exec は統合先ブランチの先端から worktree を作るため、最初の commit（`README.md` など）は exec の前に orchestrator が作る。
+  - この devcontainer には Git LFS が入っていない。導入の方法（devcontainer への追加など）を決めてから LFS を設定する。
+- `git push` は行わない。push は利用者が行う。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                               | 担当         | 状態 | メモ                           |
+| --- | -------------------------------------------------- | ------------ | ---- | ------------------------------ |
+| 1   | 最初の commit を作り、`repos` に加える             | orchestrator | open | 設定の変更は利用者の承認を得る |
+| 2   | Git LFS の導入方法を決めて設定する                 | DEV          | open | -                              |
+| 3   | 骨組みと書き出しのスクリプトを作り、見本で確かめる | DEV          | open | -                              |
 
 ## 4. 対応結果
 
@@ -36,4 +49,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0002:pjr-hktj-assets-repository]]: 派生元の決定。構成の案（`mascot/source/`・`mascot/prompts/`・`exports.yaml`・`BRAND.md`）を含む。
+- [[prj-0002:pjr-pevv-mascot-character-source]]: この骨組みに原本を置く項目。
