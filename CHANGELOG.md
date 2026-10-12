@@ -246,6 +246,11 @@ SpecDojo の利用者に影響する変更を記録します。
   作業用のファイルを `tmp/` かリポジトリ外へ置くよう指示します（PJR-GBVM）。
 - `config init` が `.gitignore` に `node_modules/` を追記するようにしました。既存の `.gitignore` に
   同じ意味の行がある場合は追記しません（PJR-J2AS）。
+- executor が実行できない `specdojo index build` を `not_run` と記録すると、index を runner が
+  再生成していても run が止まる問題を直しました。index build は runner が担う検証として扱い、
+  executor には実行も記録もしないよう指示します。あわせて、`specdojo catalog validate` の適用を、
+  exec plan の共通規約と同じく変更範囲でも判定し、`docs/ja/projects/` 配下を変えない run の
+  `not_applicable` を受理します（PJR-HJ99）。
 
 ### 既知の問題
 
@@ -262,8 +267,5 @@ SpecDojo の利用者に影響する変更を記録します。
 - 試験的な `devcontainer scaffold` が生成するコンテナは、利用リポジトリの親フォルダを利用者の
   フォルダ名によらず `/workspaces/specdojo-workspace` にマウントします。また、`--tmux` などの
   任意機能は指定しないと入らず、完了時の案内にも表示されません（PJR-PV5B）。
-- executor は `.specdojo/doc-index.json` へ書き込めないため `specdojo index build` を `not_run` と
-  記録するしかなく、index を runner が再生成していても run が止まります。対応は未完了で、止まった
-  場合は人または orchestrator が統合します（PJR-HJ99）。
 
 [0.3.0]: https://github.com/specdojo/specdojo/compare/v0.2.1...v0.3.0
