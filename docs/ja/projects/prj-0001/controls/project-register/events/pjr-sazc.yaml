@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0e79a51bf3e349959879da688541b57c
+  ts: "2026-10-12T09:10:38Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 でオーケストレーターを起動するたびに specdojo-lp の --add-dir を付け忘れると利用者から指摘があった
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 本リポジトリの orch:* の script を orchestrator launch 経由にする
+    - field: description
+      from: ""
+      to: 本リポジトリの package.json の orch:opus などは provider の CLI を直接起動し、specdojo orchestrator launch を経由しないため、repos で宣言したプロダクトリポジトリが --add-dir などで許可されない。config scaffold が利用者に作る script と同じく launch 経由にし、:work の付く script の扱いも決める
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
