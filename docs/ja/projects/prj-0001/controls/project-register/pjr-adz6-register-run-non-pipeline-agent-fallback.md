@@ -47,6 +47,7 @@ exec run --register を --executor-by/--reporter-by なしで起動すると、o
 - 文書: [[specdojo:command-reference]] の `--register` の agent 選択の記述（既定は pipeline、`stage_role` からの自動選択、owner・role からは選ばない）を実装に合わせて改訂した。
 - 再発防止策: register の自動選択は、`stage_role` で段を指定する `selectCandidates` だけを経由する。`stage_role` を持たない agent は段指定の選択で除外されるため、自動選択の対象にならない。
 - 残課題: `.specdojo/agent-members.yaml` 冒頭の規約コメント「`type: agent` のメンバーは全員 `stage_role` を持つ」に対し、`gemma26-translator` は `stage_role` を持たない（`agent run --by` 専用）。同ファイルは agent の書き込み禁止対象のため、例外の明記または規約の見直しは人が行う。
+- 統合の経緯: 2026-10-12 の exec run で runner の親検証 7 種は通ったが、executor が `specdojo index build` を `not_run` と記録したことで run が止まった（出力先の `.specdojo/doc-index.json` は agent の書き込み禁止対象）。利用者の承認を得て orchestrator が exec ブランチへ commit し（57c36a760）、develop を取り込んで型検査と単体テスト 2014 件の通過を確かめたうえで、develop へ `--no-ff` で merge した（013daa695）。この止まり方は [[prj-0001:pjr-hj99-index-build-not-run-blocks]] で扱う。
 
 ## 5. 関連ドキュメント
 
