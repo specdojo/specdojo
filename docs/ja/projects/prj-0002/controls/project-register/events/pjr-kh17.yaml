@@ -103,3 +103,22 @@
       from: 'agent exited with non-zero code: executor validation failed or not run: npx prettier --write "$SPECDOJO_REPO_SPECDOJO_LP/src/pages/index.astro"'
       to: "-"
   previous_event_id: reg_2ff38f6193f9447288b6cf1bfb5d7d3d
+- v: 1
+  id: reg_6f8195e92d8f4527904574f5c6016f92
+  ts: "2026-10-12T12:09:39Z"
+  action: close
+  actor: BA
+  from_status: review
+  to_status: done
+  reason: BA が統合の結果とビルドの確認を受けて完了と判断した。2 回目の run は orchestrator が runner の代わりに統合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: LP に「何に困ったら、何を使う？」の節（困りごと 6 行の表、GitHub Issues との補完関係、日付と出典リンク）を加え、specdojo-lp の main へ統合した（6b431cd）
+  previous_event_id: reg_d0a7a77242bc49cabf4f3cf333ea9448

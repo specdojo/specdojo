@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-kh17-lp-tool-fit-guide
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-10-12T04:53:43Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T12:09:39Z"
+  conclusion: LP に「何に困ったら、何を使う？」の節（困りごと 6 行の表、GitHub Issues との補完関係、日付と出典リンク）を加え、specdojo-lp の main へ統合した（6b431cd）
 ---
 
 # PJR-KH17 LP に「何に困ったら何を使うか」の使い分けを加える
