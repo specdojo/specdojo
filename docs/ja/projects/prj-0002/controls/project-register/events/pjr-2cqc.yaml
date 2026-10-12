@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b73fadad822b46eb86df96439e299ded
+  ts: "2026-10-12T06:05:24Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-KH17 の run が、specdojo-lp に Prettier がなく整形の検証を not_applicable と記録したことで止まったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo-lp に標準的な開発環境を整える
+    - field: description
+      from: ""
+      to: specdojo-lp に整形（Prettier）・lint（ESLint）・型検査（astro check）と推奨の VS Code 拡張機能を整え、exec の親 runner が sandbox の外でプロダクトリポジトリの検証を実行できるようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
