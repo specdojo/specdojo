@@ -29,7 +29,7 @@ specdojo-lp を Cloudflare Workers の静的アセットとして配置する設
 
 ## 2. 完了条件
 
-- 配置の形: Cloudflare Workers の静的アセットとする（Astro の公式ガイドの推奨）。Cloudflare Pages を使う場合は、理由を対応結果に書く。
+- 配置の形: Cloudflare Workers の静的アセットとする（Astro の公式ガイドの推奨。利用者が決めた、2026-10-12）。
 - `specdojo-lp` に次がある。`package.json` の変更は exec の保護の対象のため、orchestrator が行う。
   - `wrangler` を devDependencies に入れている。
   - `wrangler.jsonc` に、`name`・`compatibility_date`・`assets.directory`（`./dist`）を書いている。404 のページを用意する場合は `assets.not_found_handling` も書く。
@@ -38,7 +38,7 @@ specdojo-lp を Cloudflare Workers の静的アセットとして配置する設
   - ビルドのコマンドは `npm run build`、配置のコマンドは `npx wrangler deploy` とする。
   - 本番のブランチは `main` とする。`feature/lp-v1` などの本番以外のブランチは、プレビューとして配置されるようにし、プレビューの URL で LP を確かめている。
   - ビルドで使う Node.js の版を 22.13.0 以上にしている（指定の方法は、設定するときに Cloudflare の公式の文書で確かめる）。
-- _UNDECIDED_: 独自ドメイン（使うか、使う場合のドメイン名）は利用者が決める。
+- 独自ドメインは `specdojo.org` を使う（利用者が決めた、2026-10-12）。Workers の Custom Domains で LP に割り当て、本番の URL として表示を確かめる。DNS とドメインの設定は利用者が行う。
 - 認証情報（API トークンなど）をリポジトリや個票に書かない。Cloudflare への認証は、利用者がダッシュボードや `wrangler login` で行う。
 - 設定の内容を、`specdojo-lp` の `tsd-<term>`（例: `tsd-cloudflare-workers.md`）にまとめ、[[prj-0002:pjr-4zsn-lp-tech-stack-tsd]] の `tsd-index` から参照できるようにしている。
 - 本番の公開は 0.3.0 の公開の後とし、`main` へ取り込んで配置したら、本番の URL で表示を確かめている。
@@ -47,11 +47,11 @@ specdojo-lp を Cloudflare Workers の静的アセットとして配置する設
 
 | No  | 作業                                                        | 担当         | 状態 | メモ                                      |
 | --- | ----------------------------------------------------------- | ------------ | ---- | ----------------------------------------- |
-| 1   | 配置の形（Workers）を確かめて決める                         | DEV          | open | 利用者の確認                              |
+| 1   | 配置の形（Workers）を確かめて決める                         | DEV          | done | 利用者が Workers に決めた（2026-10-12）   |
 | 2   | `wrangler` と `wrangler.jsonc` を加え、手元で表示を確かめる | orchestrator | open | `package.json` の変更は利用者の承認を得る |
 | 3   | Cloudflare のダッシュボードで Workers Builds に連携する     | 利用者       | open | 認証を伴う                                |
 | 4   | プレビューの URL で表示を確かめる                           | orchestrator | open | -                                         |
-| 5   | 独自ドメインを決めて設定する                                | 利用者       | open | -                                         |
+| 5   | 独自ドメインを決めて設定する                                | 利用者       | open | `specdojo.org` に決めた。設定は利用者     |
 | 6   | 設定の内容を `tsd-<term>` にまとめる                        | DEV          | open | -                                         |
 | 7   | 0.3.0 の公開の後、`main` へ取り込んで本番に配置する         | 利用者       | open | -                                         |
 
