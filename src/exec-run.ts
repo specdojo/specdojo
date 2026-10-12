@@ -1035,6 +1035,9 @@ The parent runner owns Git commits and repository configuration. Do not run git 
 local, global, or system Git configuration, including user.name and user.email. A Git state change
 will stop the pipeline before validation, reporting, commit, or merge.
 
+Do not create disposable or scratch files at the repository root; place them in \`tmp/\` within
+the worktree or outside the repository. Files under \`tmp/\` are excluded from commits.
+
 When writing Markdown in the final evidence, wrap identifiers or field names containing an
 underscore in inline code (for example, \`depends_on\`).
 ${parentValidationInstruction}
@@ -2546,13 +2549,17 @@ async function runPreparedTask(
           );
           const productNames = (prepared.worktree.repos ?? []).map((product) => product.name);
           try {
-            commitProductWorktrees({
+            const productOutcomes = commitProductWorktrees({
               worktree: prepared.worktree,
               message: mergeMessage,
               targets: taskTargetsAtHead(context, prepared.worktree, prepared.task.id),
               scopeLogPath: integrateLogPath(pipelineStatePath),
               failureLogPath: integrateLogPath(pipelineStatePath),
+              resultPath: worktreeResultPath,
             });
+            const productRootNewFiles = productOutcomes.flatMap((outcome) =>
+              outcome.rootNewFiles.map((path) => `${outcome.repo}:${path}`),
+            );
             commitWorktreeChanges({
               context,
               worktree: prepared.worktree,
@@ -2560,6 +2567,7 @@ async function runPreparedTask(
               scopeLogPath: integrateLogPath(pipelineStatePath),
               failureLogPath: integrateLogPath(pipelineStatePath),
               productsIntegratedByCaller: true,
+              productRootNewFiles,
             });
           } catch (error) {
             const message = error instanceof Error ? error.message : String(error);
@@ -6310,13 +6318,17 @@ async function finalizeRegisterWorktreeRun(params: {
     try {
       const productNames = (worktree.repos ?? []).map((product) => product.name);
       try {
-        commitProductWorktrees({
+        const productOutcomes = commitProductWorktrees({
           worktree,
           message: productMessage,
           targets: taskTargetsAtHead(wtContext, worktree, stem),
           scopeLogPath: integrateLogPath(params.pipelineStatePath),
           failureLogPath: integrateLogPath(params.pipelineStatePath),
+          resultPath: worktreeResultPath,
         });
+        const productRootNewFiles = productOutcomes.flatMap((outcome) =>
+          outcome.rootNewFiles.map((path) => `${outcome.repo}:${path}`),
+        );
         commitWorktreeChanges({
           context: wtContext,
           worktree,
@@ -6325,6 +6337,7 @@ async function finalizeRegisterWorktreeRun(params: {
           scopeLogPath: integrateLogPath(params.pipelineStatePath),
           failureLogPath: integrateLogPath(params.pipelineStatePath),
           productsIntegratedByCaller: true,
+          productRootNewFiles,
         });
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
