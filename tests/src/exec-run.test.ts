@@ -201,6 +201,14 @@ describe("extractBlockReason", () => {
     expect(prompt).toContain("rejects the claim when it can confirm the check applies");
     expect(prompt).toContain("judged by that repository's package.json");
     expect(prompt).toContain("sets `catalog_path`");
+    expect(prompt).toContain("outside `docs/ja/projects/`, is a valid reason");
+  });
+
+  it("index build は runner が担うため executor は実行も記録もしないと伝える", () => {
+    const prompt = buildExecutorPrompt("# Plan\n");
+
+    expect(prompt).toContain("Do not run or report `specdojo index build`.");
+    expect(prompt).toContain("the runner regenerates the index");
   });
 
   it("再開 executor に既存差分と全 target の構造化確認を要求する", () => {

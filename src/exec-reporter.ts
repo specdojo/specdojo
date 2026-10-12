@@ -72,6 +72,12 @@ export type ReporterFactOptions = {
   projectId?: string;
   /** package.json facts of the project's product repositories, keyed by repository name. */
   productPackageManifests?: Readonly<Record<string, PackageManifestFacts>>;
+  /**
+   * Repository-relative paths the executor changed, excluding runner-managed records. When set,
+   * `catalog validate` applies only if a change reaches the project documents
+   * (`docs/ja/projects/`), matching the validation table of the plan's common conventions.
+   */
+  changedPaths?: readonly string[];
 };
 
 export type ReporterEvidence = ExecEvidence & {
@@ -189,6 +195,7 @@ export function evidenceForReporter(
   const scopedFactOptions: ReporterFactOptions = {
     ...factOptions,
     ...(projectId ? { projectId } : {}),
+    changedPaths: changes.map((change) => change.path),
   };
   const mechanicallyNotApplicable = evidence.validations.flatMap((validation) => {
     if (validation.source === "runner" || validation.status !== "not_run") return [];
@@ -270,6 +277,7 @@ export function deriveReporterFacts(
     ...(options.productPackageManifests
       ? { productPackageManifests: options.productPackageManifests }
       : {}),
+    changedPaths: options.changedPaths ?? evidence.changes.map((change) => change.path),
   };
   const passedCommandsByRepo = new Map<string, Set<string>>();
   const runnerPassedCommandsByRepo = new Map<string, Set<string>>();
@@ -326,9 +334,18 @@ export function deriveReporterFacts(
       )
     );
   };
+  // runner が担う検証（index build）の executor 側の not_run / not_applicable は満たしたものとする。
+  // runner の再生成が失敗した場合は worktree の準備で run が止まり、runner の記録に失敗が残れば
+  // 上の failedParentValidationReason で block するため、ここまで到達しない。
   const executorValidationFailures = evidence.validations.filter((validation) => {
     if (validation.source === "runner") return false;
     if (validation.status === "passed" || validation.status === "requires_human") return false;
+    if (
+      (validation.status === "not_run" || validation.status === "not_applicable") &&
+      runnerOwnedValidationReason(validation.command) !== undefined
+    ) {
+      return false;
+    }
     if (validation.status === "not_applicable") {
       return !isValidNotApplicableValidation(
         validation.command,
@@ -399,6 +416,28 @@ function specdojoCommandArgs(command: string): string | undefined {
   );
 }
 
+/**
+ * Returns why a validation is owned by the runner rather than the executor. `specdojo index build`
+ * writes `.specdojo/doc-index.json`, which agents may not write; the runner regenerates the index
+ * while preparing the worktree and before integration, so the executor cannot and need not run it.
+ * Other SpecDojo subcommands return undefined and keep their usual `not_run` handling.
+ */
+export function runnerOwnedValidationReason(command: string): string | undefined {
+  const args = specdojoCommandArgs(command);
+  if (args === undefined || !/^index\s+build(?:\s|$)/u.test(args)) return undefined;
+  return "index は runner が worktree の準備と統合の前に再生成する";
+}
+
+const PROJECT_DOCUMENTS_ROOT = "docs/ja/projects/";
+
+function changesReachProjectDocuments(changedPaths: readonly string[]): boolean {
+  return changedPaths
+    .flatMap((path) => path.split(" -> "))
+    .some((path) =>
+      path.replaceAll("\\", "/").replace(/^\.\//u, "").startsWith(PROJECT_DOCUMENTS_ROOT),
+    );
+}
+
 function projectOptionOf(args: string): string | undefined {
   return /(?:^|\s)--project(?:=|\s+)([A-Za-z0-9_-]+)(?=\s|$)/u.exec(args)?.[1];
 }
@@ -407,6 +446,7 @@ function specdojoCommandApplicability(
   command: string,
   config: SpecDojoConfig | null,
   runProjectId: string | undefined,
+  changedPaths?: readonly string[],
 ): SpecdojoCommandApplicability {
   const args = specdojoCommandArgs(command);
   if (args === undefined) return { recognized: false };
@@ -426,6 +466,14 @@ function specdojoCommandApplicability(
     return { recognized: true, applicable: undefined };
   }
   if (typeof project.catalog_path === "string" && project.catalog_path.trim()) {
+    // plan の共通規約は catalog validate を docs/ja/projects/ 配下の変更に限って求める。
+    if (changedPaths !== undefined && !changesReachProjectDocuments(changedPaths)) {
+      return {
+        recognized: true,
+        applicable: false,
+        reason: `変更が ${PROJECT_DOCUMENTS_ROOT} 配下に及ばない`,
+      };
+    }
     return { recognized: true, applicable: true };
   }
   if (project.catalog_path !== undefined) {
@@ -449,7 +497,12 @@ export function mechanicallyNotApplicableReason(
   const normalized = normalizeValidationCommand(command);
   const config =
     options.specdojoConfig === undefined ? defaultSpecdojoConfig() : options.specdojoConfig;
-  const specdojo = specdojoCommandApplicability(normalized, config, options.projectId);
+  const specdojo = specdojoCommandApplicability(
+    normalized,
+    config,
+    options.projectId,
+    options.changedPaths,
+  );
   if (specdojo.recognized) {
     return specdojo.applicable === false ? specdojo.reason : undefined;
   }
@@ -477,7 +530,12 @@ function isValidNotApplicableValidation(
   const normalized = normalizeValidationCommand(command);
   const config =
     options.specdojoConfig === undefined ? defaultSpecdojoConfig() : options.specdojoConfig;
-  const specdojo = specdojoCommandApplicability(normalized, config, options.projectId);
+  const specdojo = specdojoCommandApplicability(
+    normalized,
+    config,
+    options.projectId,
+    options.changedPaths,
+  );
   if (specdojo.recognized) return specdojo.applicable !== true;
   const manifest = commandManifest(normalized, options, config);
   const scriptName = invokedScriptNameOf(manifest.command);
