@@ -39,14 +39,36 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                           | 担当         | 状態 | メモ                   |
-| --- | -------------------------------------------------------------- | ------------ | ---- | ---------------------- |
-| 1   | 節ごとのコンポーネントに分け、`index.astro` を並べるだけにする | DEV          | open | -                      |
-| 2   | ビルドし、分割前後の `dist/index.html` を比べる                | orchestrator | open | sandbox の外で確認する |
+| No  | 作業                                                           | 担当         | 状態 | メモ                      |
+| --- | -------------------------------------------------------------- | ------------ | ---- | ------------------------- |
+| 1   | 節ごとのコンポーネントに分け、`index.astro` を並べるだけにする | DEV          | done | 10 部品と共通リンクへ分割 |
+| 2   | ビルドし、分割前後の `dist/index.html` を比べる                | orchestrator | open | sandbox の外で確認する    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 4.1. 実施内容
+
+- ヘッダーとフッターを `SiteHeader.astro`・`SiteFooter.astro` へ分けた。
+- 7 つの節を `Hero.astro`・`Problems.astro`・`RegisterTypes.astro`・`ToolFit.astro`・`GetStarted.astro`・`NextSteps.astro`・`Roadmap.astro` へ分けた。各節のデータと型は、それを使う節の frontmatter へ移した。
+- タブのマークアップとインライン script を `Tabs.astro` へ分けた。手順データと表示内容は `GetStarted.astro` に置き、named slot で Tabs に渡している。
+- 複数の節で使うドキュメントサイトの URL を `lib/links.ts` に集約した。
+- `pages/index.astro` は `BaseLayout` の中でヘッダー、7 つの節、フッターを並べる 29 行のファイルにした。
+
+### 4.2. 成果物
+
+| ファイル                                      | 内容                                 |
+| --------------------------------------------- | ------------------------------------ |
+| `specdojo-lp:src/pages/index.astro`           | ページを構成するコンポーネントの配置 |
+| `specdojo-lp:src/components/SiteHeader.astro` | ヘッダー                             |
+| `specdojo-lp:src/components/SiteFooter.astro` | フッター                             |
+| `specdojo-lp:src/components/Tabs.astro`       | 始め方のタブとインライン script      |
+| `specdojo-lp:src/components/sections/*.astro` | Hero から Roadmap までの 7 節        |
+| `specdojo-lp:src/lib/links.ts`                | ドキュメントサイトの共通 URL         |
+
+### 4.3. 検証と残課題
+
+- `git diff --check` で差分に空白エラーがないことを確認した。
+- `npm run build` と、099292f の `dist/index.html` との空白を除く比較は、個票の完了条件どおり orchestrator が sandbox の外で確認する。
 
 ## 5. 関連ドキュメント
 
