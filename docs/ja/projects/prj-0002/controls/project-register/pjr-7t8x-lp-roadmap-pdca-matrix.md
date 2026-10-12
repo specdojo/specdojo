@@ -69,7 +69,7 @@ LP 用に短くした文言は次のとおり。
 | No  | 作業                                                  | 担当         | 状態 | メモ                   |
 | --- | ----------------------------------------------------- | ------------ | ---- | ---------------------- |
 | 1   | 1 周の図と「これから」の節を `index.astro` に反映する | BA           | done | 個票の確定稿を反映     |
-| 2   | ビルドを確認する                                      | orchestrator | open | sandbox の外で確認する |
+| 2   | ビルドを確認する                                      | orchestrator | done | sandbox の外で確認した |
 
 ## 4. 対応結果
 
@@ -90,6 +90,12 @@ LP 用に短くした文言は次のとおり。
 
 - `git diff --check` で差分に空白エラーがないことを確認した。
 - `npm run build` は agent の sandbox では実行せず、orchestrator が sandbox の外で確認する。
+- exec run は `waiting` に止まらず、runner が `specdojo-lp` の `main` へ統合した（443b08a）。runner の親検証 7 種はすべて passed だった。完了条件に「`specdojo-lp` で prettier を実行しない（evidence にも記録しない）」を加えた後の run で、PJR-KH17 の 2 回目のような整形の検証の判定では止まらなかった。
+- orchestrator が 443b08a で `npm run build` を実行し、`dist/index.html` が出力されることを確認した（2026-10-12）。あわせて次を確認した。
+  - 「register の考え方」の中に「register の 1 周」として「記して（P）→ 形にして（D）→ 磨き続ける（C・A）」がある。
+  - 「次の一歩」の後、フッターの前に「これから」の節があり、3 行 × 4 列のマトリクスが本個票の LP 用の文言どおりに並ぶ。register の行は「いま使える」、schedule と routine + Job の行は「準備中」で、準備中の行にリンクはない。
+  - 画面の文言に登録簿の項目 ID がない（会話の例のプレースホルダ `PJR-XXXX` を除く）。「体系」、Kata・Waza・Ryu の語がない。
+  - PJR-KH17 で加えた使い分けの節（GitHub Issues が苦手なことを含む）が残っている。
 
 ## 5. 関連ドキュメント
 
