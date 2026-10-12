@@ -1,0 +1,15 @@
+`catalog_path` 未設定時だけ pre-commit の検証をスキップする専用ラッパーを実装しました。
+
+- [lefthook.yml](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GRMK/lefthook.yml) を専用ラッパー経由へ変更
+- [catalog-validate-if-configured.mjs](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GRMK/tools/catalog-validate-if-configured.mjs) を追加
+- 回帰テストを追加
+- 個票の対応結果を更新
+- prj-0001 の catalog 検証、登録簿生成、index 生成、整形、構文検査に成功
+
+通常の `catalog validate` と公開 CLI の仕様は変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"`catalog_path` のない project だけを安全にスキップする pre-commit ラッパーと回帰テストを追加し、個票を更新した。","validations":[{"command":"npx prettier --write tools/catalog-validate-if-configured.mjs tests/tools/catalog-validate-if-configured.test.ts lefthook.yml docs/ja/projects/prj-0001/controls/project-register/pjr-grmk-catalog-validate-hook-without-catalog.md","status":"passed","summary":"変更対象4ファイルの整形に成功"},{"command":"SPECDOJO_PROJECT=prj-0001 node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"設定済みcatalogを省略せず検証し終了コード0。既存の`based_on`警告のみ"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿と派生ビューの生成に成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"2591件の文書index生成に成功"},{"command":"node --check tools/catalog-validate-if-configured.mjs","status":"passed","summary":"ラッパーの構文検査に成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result handoff for human or orchestrator application
