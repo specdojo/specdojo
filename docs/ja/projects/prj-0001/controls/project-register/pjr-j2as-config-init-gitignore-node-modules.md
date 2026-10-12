@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   registered_at: "2026-10-12T03:21:36Z"
 ---
@@ -39,7 +39,11 @@ README の導入手順（npm init -y → npm install --save-dev specdojo → con
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+| 項目       | 内容                                                                                                                                                                                                                                                                                                                                    |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解決内容   | `src/specdojo-gitignore.ts` の既定の行（`DEFAULT_GITIGNORE_PATTERNS`）の先頭に `node_modules/` を加えた。既存の `.gitignore` に `node_modules`、`node_modules/`、`/node_modules`、`/node_modules/`、`**/node_modules`、`**/node_modules/` のいずれかがあれば追記しない。追記の見出しコメントと案内文も `node_modules/` を含む表現にした |
+| 確認結果   | `tests/src/specdojo-gitignore.test.ts` と `tests/src/specdojo-config-command.test.ts` に、`.gitignore` が無い場合・`node_modules` を含まない場合の追記、同じ意味の行がある場合の非追記、`config init --dry-run` の表示に `node_modules/` が含まれることを加えた。README・command-reference・specdojo-config-reference の説明へ反映した  |
+| 再発防止策 | 既定の行を単体テストで固定し、導入手順の説明と合わせて維持する                                                                                                                                                                                                                                                                          |
 
 ## 5. 関連ドキュメント
 

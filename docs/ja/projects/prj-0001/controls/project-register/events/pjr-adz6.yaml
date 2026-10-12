@@ -61,3 +61,19 @@
       from: "-"
       to: "agent exited with non-zero code: executor validation failed or not run: specdojo index build"
   previous_event_id: reg_8acf537bb9704c5c86d427a71304d805
+- v: 1
+  id: reg_e1bc06c1aab24b0e81781240a6c30413
+  ts: "2026-10-12T04:58:24Z"
+  action: review
+  actor: naoji3x
+  from_status: waiting
+  to_status: review
+  reason: executor 検証の記録（index build の not_run）で run が止まったため、利用者の承認を得て orchestrator が統合した（013daa695）
+  changes:
+    - field: status
+      from: waiting
+      to: review
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: specdojo index build"
+      to: "-"
+  previous_event_id: reg_9a5689e32a3540b5932ab677d13b07a4
