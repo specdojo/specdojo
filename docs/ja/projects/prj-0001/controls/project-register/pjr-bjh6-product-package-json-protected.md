@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:43:10Z"
+  block_reason: rate limit reached
 ---
 
 # PJR-BJH6 プロダクトリポジトリの package.json も agent の保護対象になる

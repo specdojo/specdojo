@@ -4,12 +4,13 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  realpathSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
-import { afterEach, describe, expect, it } from "vitest";
+import { delimiter, dirname, join } from "node:path";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   captureAgentProtectedConfigAcrossRepos,
   changedAgentProtectedConfigAcrossRepos,
@@ -53,7 +54,7 @@ import {
   type WorktreeOpsContext,
 } from "../../src/exec-worktree-ops.js";
 
-const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
+const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH", "PATH"];
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
 
 const TASK_ID = "T-T-doc-010";
@@ -339,6 +340,41 @@ describe("multi-repository task worktrees", () => {
       [join(taskDir, "app1"), true],
       [join(taskDir, "app2"), true],
     ]);
+  });
+
+  it("runs npm ci in a product worktree with a tracked package-lock.json and skips one without", () => {
+    const fixture = setup();
+    const [app1] = fixture.products;
+    writeFile(join(app1!.repoRoot, "package.json"), '{"name":"app1","version":"1.0.0"}\n');
+    writeFile(
+      join(app1!.repoRoot, "package-lock.json"),
+      '{"name":"app1","version":"1.0.0","lockfileVersion":3,"packages":{}}\n',
+    );
+    git(app1!.repoRoot, "add", "package.json", "package-lock.json");
+    git(app1!.repoRoot, "commit", "-m", "add lock");
+    // Stand-in for npm on PATH: records where and how it ran, without network access.
+    const bin = join(fixture.parent, "bin");
+    const npmLog = join(fixture.parent, "npm.log");
+    writeFile(join(bin, "npm"), `#!/bin/sh\nprintf '%s %s\\n' "$(pwd -P)" "$*" >> '${npmLog}'\n`);
+    chmodSync(join(bin, "npm"), 0o755);
+    process.env.PATH = `${bin}${delimiter}${process.env.PATH ?? ""}`;
+    const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    let output = "";
+
+    try {
+      prepare(fixture);
+      output = stdout.mock.calls.map(([chunk]) => String(chunk)).join("");
+    } finally {
+      stdout.mockRestore();
+    }
+
+    const taskDir = join(fixture.worktreeBase, TASK_DIR_NAME);
+    expect(readFileSync(npmLog, "utf8")).toBe(
+      `${realpathSync(join(taskDir, "app1"))} ci --include=dev\n`,
+    );
+    expect(output).toContain(
+      `Skipping worktree dependencies: no tracked package-lock.json in ${join(taskDir, "app2")}\n`,
+    );
   });
 
   it("reuses every worktree of the task on a second prepare", () => {

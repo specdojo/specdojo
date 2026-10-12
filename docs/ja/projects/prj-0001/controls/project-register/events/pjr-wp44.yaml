@@ -61,3 +61,32 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-unit"
   previous_event_id: reg_bc1dfa06302244ac8a9c3b50151ea979
+- v: 1
+  id: reg_8fdfb80a99264450bfc5e9ef96aae149
+  ts: "2026-10-12T03:26:50Z"
+  action: start
+  actor: codex-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_ad796bf1e56e472aa5f46e0d17125f43
+- v: 1
+  id: reg_999aef3f66244be8bfaa744b82dbb5a9
+  ts: "2026-10-12T03:31:39Z"
+  action: review
+  actor: codex-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8fdfb80a99264450bfc5e9ef96aae149
