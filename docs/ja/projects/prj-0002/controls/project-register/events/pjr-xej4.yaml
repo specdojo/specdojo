@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_037aa0ff50d5495bb3430d1e38d1df8d
+- v: 1
+  id: reg_feed522870e1418bbae28618f42d1636
+  ts: "2026-10-12T12:10:12Z"
+  action: close
+  actor: UX
+  from_status: review
+  to_status: done
+  reason: UX がビルドの確認と類似の確認の結果を受けて完了と判断した。exec run（register worktree）で実装した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: ChatGPT で作った暫定のマスコット画像を src/assets/mascot に置き、Hero の仮の枠を astro:assets の Image に差し替えて specdojo-lp の feature/lp-v1 へ統合した（da0491f）。正式な画像は PJR-FSMC で差し替える
+  previous_event_id: reg_6e9ad1f74c02469db755e8c6435938c6

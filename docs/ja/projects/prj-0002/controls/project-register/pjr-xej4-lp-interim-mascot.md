@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-xej4-lp-interim-mascot
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: UX
   registered_at: "2026-10-12T10:54:12Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T12:10:12Z"
+  conclusion: ChatGPT で作った暫定のマスコット画像を src/assets/mascot に置き、Hero の仮の枠を astro:assets の Image に差し替えて specdojo-lp の feature/lp-v1 へ統合した（da0491f）。正式な画像は PJR-FSMC で差し替える
 ---
 
 # PJR-XEJ4 暫定のマスコット画像を LP の Hero に置く
