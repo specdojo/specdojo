@@ -42,16 +42,19 @@ Node のバージョンが要件を満たしているか確認し、必要に応
 作業中の plan / result がない状態で更新し、利用リポジトリの変更を commit してから始めます。
 次のファイルや記録を変更している場合は、移行対象です。
 
-| 対象                        | 確認箇所                           | 必要な対応                                                                                        |
-| --------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------- |
-| レビュー観点の overlay      | project の `viewpoints_path`       | `evaluation`、`continuous`、rubric、verdict を更新する                                            |
-| コピー済み kata             | `npx specdojo kata status`         | v0.3.0 の package 原本との差分を確認する                                                          |
-| コピー済み実行テンプレート  | `docs/ja/specdojo/exec-templates/` | review テンプレートを同期し、削除済みファイルを除く                                               |
-| 既存 review plan            | `execution/exec/plans/`            | 未着手の review plan を更新後に再生成する                                                         |
-| 既存 grade 結果             | grade result サイドカー            | rubric v2 で再評価する                                                                            |
-| 登録簿の `note` の扱い      | `note` を close する運用や script  | `register close` / `reject` / `defer` が `note` を拒否するため、`open` のまま追記する運用へ改める |
-| `Refs:` で履歴を引く script | commit message を検索する処理      | `Refs: <project-id>:<item-id>` の修飾形も検索の対象にする                                         |
-| プロダクトリポジトリの変更  | 項目を分けるか人が統合している運用 | 必要に応じて `repos` を宣言し、`exec run --worktree` の統合へ移す                                 |
+| 対象                             | 確認箇所                                   | 必要な対応                                                                                                                                                                               |
+| -------------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| レビュー観点の overlay           | project の `viewpoints_path`               | `evaluation`、`continuous`、rubric、verdict を更新する                                                                                                                                   |
+| コピー済み kata                  | `npx specdojo kata status`                 | v0.3.0 の package 原本との差分を確認する                                                                                                                                                 |
+| コピー済み実行テンプレート       | `docs/ja/specdojo/exec-templates/`         | review テンプレートを同期し、削除済みファイルを除く                                                                                                                                      |
+| 既存 review plan                 | `execution/exec/plans/`                    | 未着手の review plan を更新後に再生成する                                                                                                                                                |
+| 既存 grade 結果                  | grade result サイドカー                    | rubric v2 で再評価する                                                                                                                                                                   |
+| 登録簿の `note` の扱い           | `note` を close する運用や script          | `register close` / `reject` / `defer` が `note` を拒否するため、`open` のまま追記する運用へ改める                                                                                        |
+| `Refs:` で履歴を引く script      | commit message を検索する処理              | `Refs: <project-id>:<item-id>` の修飾形も検索の対象にする                                                                                                                                |
+| プロダクトリポジトリの変更       | 項目を分けるか人が統合している運用         | 必要に応じて `repos` を宣言し、`exec run --worktree` の統合へ移す                                                                                                                        |
+| routine が起動する Job の出力    | 作業場所に残った出力を人が commit する運用 | 統合前に review する Job は `job-*.yaml` に `task.review` を宣言し、必要なら `task.review.agent` で review agent を指名する。routine の `action.commit` は互換のため読まれるが推奨しない |
+| コピー済みの共通規約テンプレート | `xep-common-conventions-template.md`       | 作業用のファイルを `tmp/` かリポジトリ外へ置く規則を同期する。`tmp/` 配下は commit 対象から除外される                                                                                    |
+| `.gitignore`                     | `config init` を再実行する運用             | 同じ意味の行がなければ `node_modules/` と生成物の行が追記されるため、追記内容を確認して commit する                                                                                      |
 
 依存 package を更新します。`@specdojo/docs-lint` は v0.3.0 の変更対象ではないため、利用中の
 版をそのまま使えます。docs サイトを直接利用している場合は `@specdojo/docs-site@0.2.0` へ
