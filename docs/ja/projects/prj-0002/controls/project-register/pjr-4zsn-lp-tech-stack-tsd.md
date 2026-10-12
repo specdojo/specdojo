@@ -44,10 +44,10 @@ specdojo-lp が採用する技術（Astro・Tailwind CSS・TypeScript・Node.js�
 
 ## 3. 作業内容
 
-| No  | 作業                                       | 担当         | 状態 | メモ |
-| --- | ------------------------------------------ | ------------ | ---- | ---- |
-| 1   | `tsd-index.md` を書き、README から案内する | DEV          | done | -    |
-| 2   | `format:check` とビルドを確かめる          | orchestrator | open | -    |
+| No  | 作業                                       | 担当         | 状態 | メモ                   |
+| --- | ------------------------------------------ | ------------ | ---- | ---------------------- |
+| 1   | `tsd-index.md` を書き、README から案内する | DEV          | done | -                      |
+| 2   | `format:check` とビルドを確かめる          | orchestrator | done | sandbox の外で確認した |
 
 ## 4. 対応結果
 
@@ -56,6 +56,12 @@ specdojo-lp が採用する技術（Astro・Tailwind CSS・TypeScript・Node.js�
 - Cloudflare の詳細の `tsd-<term>` はまだ無いため、リンクは書かず [[prj-0002:pjr-ym7m-lp-cloudflare-deploy]] で作成した時点で足す。
 - `specdojo-lp` の README の冒頭から `tsd-index.md` へ案内した。
 - executor の作業環境で `npm run format:check` と `npm run build` が通ることを確かめた。作業内容 No.2 の確認は orchestrator が行う。
+
+### 4.1. orchestrator の確認（2026-10-12）
+
+- exec run は `waiting` に止まらず、runner が `specdojo-lp` の `feature/lp-v1` へ統合した（7113ae0）。runner の親検証 7 種はすべて passed だった。
+- orchestrator が sandbox の外で 7113ae0 の `npm run format:check` とビルドを実行し、どちらも成功した。差分は `tsd-index.md` の追加と README の案内の 2 行だけである。
+- 一覧の採用技術のメジャーバージョンが `specdojo-lp` の `package.json`（Astro 7・Tailwind CSS 4・TypeScript 6・Prettier 3・ESLint 10・`typescript-eslint` 8・`@astrojs/check` 0.9 など）と一致することを確かめた。
 
 ## 5. 関連ドキュメント
 
