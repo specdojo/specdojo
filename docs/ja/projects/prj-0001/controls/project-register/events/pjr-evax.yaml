@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_af7e2790a9d144088676e8227723ad3a
+  ts: "2026-10-12T07:13:04Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: LP の Hero の小見出しを利用者の判断で「Spec道（仕様道）の道場」に改めたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README と全体概要ガイドの冒頭を「Spec道（仕様道）の道場」に揃える
+    - field: description
+      from: ""
+      to: LP の Hero の小見出しを「Spec道（仕様道）の道場」とした。README・ドキュメントサイトのトップ・全体概要ガイド・遂行の技活用ガイドの「仕様道（Spec-Dō）の道場」を同じ表記に揃える
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
