@@ -4,6 +4,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [0.3.0] - 未定
 
+同梱パッケージは `@specdojo/docs-lint` 0.2.0 と `@specdojo/docs-site` 0.2.0 を同時に公開します。docs-lint は 0.1.0 以降の変更（下記の lint の追加、依存の更新、脆弱性の修正）を含みます。
+
 ### 破壊的変更
 
 - agent の定義を project ごとの `pm-members.yaml` から repository 共通の保護設定 `.specdojo/agent-members.yaml` へ分離しました。`pm-members.yaml` は人間だけを受け付け、agent が残る場合は `specdojo config migrate-members --dry-run` を案内して読み込みを停止します。移行後は人間名簿を通常成果物として agent が編集でき、agent 定義は `.specdojo/**` の既存保護境界に残ります（PJR-2T63）。
