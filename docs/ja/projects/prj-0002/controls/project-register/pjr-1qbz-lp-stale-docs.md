@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: BA
   registered_at: "2026-10-12T08:53:07Z"
@@ -43,12 +43,30 @@ orchestrator が `feature/lp-v1`（518a45e）で確認した時点の候補。�
 
 | No  | 作業                                                | 担当         | 状態 | メモ                   |
 | --- | --------------------------------------------------- | ------------ | ---- | ---------------------- |
-| 1   | 古い記述を洗い出し、README とソースを現状に合わせる | BA           | open | -                      |
+| 1   | 古い記述を洗い出し、README とソースを現状に合わせる | BA           | done | README の構成表を更新  |
 | 2   | ビルドを確認する                                    | orchestrator | open | sandbox の外で確認する |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 4.1. 実施内容
+
+- `specdojo-lp:README.md` の `4. 構成` を現行ソースと照合し、`src/pages/index.astro` を「仮のトップページ」から、ヘッダー・7 つの節・フッターを並べるトップページへ改めた。
+- `SiteHeader.astro`・`SiteFooter.astro`・`Tabs.astro`、`sections/` の 7 コンポーネント、共通リンクの `src/lib/links.ts`、Hero の暫定マスコット画像を構成表へ追加した。
+- `src/` のコメントをすべて確認した。タブのフォールバック、register の 7 種類、README に合わせた会話例、暫定マスコットの説明はいずれも現状と一致していたため、変更していない。
+- LP の表示文言を、prj-0001 の PJR-34F2 と PJR-EVAX の内容に照らして確認した。標語「記して、形にして、磨き続ける。」、`app1-workspace/`、要求・要件・仕様の表現、「Spec道（仕様道）」の表記は最新の用語と一致している。旧称の「成果物体系」「実践体系」「遂行体系」は使っていないため、表示文言は変更していない。
+- 製品コードや表示文言は変更しておらず、出力される HTML への変更はない。
+
+### 4.2. 成果物
+
+| ファイル                                    | 内容                           |
+| ------------------------------------------- | ------------------------------ |
+| `specdojo-lp:README.md`                     | 現行のソース構成に合わせて更新 |
+| `prj-0002:pjr-1qbz-lp-stale-docs`（本個票） | 作業内容と対応結果を記録       |
+
+### 4.3. 検証と残課題
+
+- `git diff --check` で差分に空白エラーがないことを確認した。
+- `specdojo-lp` の `npm run build` は、完了条件どおり orchestrator が sandbox の外で確認する。
 
 ## 5. 関連ドキュメント
 
