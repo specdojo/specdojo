@@ -142,6 +142,7 @@ describe("parseRoutineDoc", () => {
         action: {
           kind: "job",
           job: "job-register-sweep",
+          commit: true,
           inputs: { types: "todo", priorities: "high", statuses: "open", limit: "3" },
         },
       },
@@ -157,9 +158,20 @@ describe("parseRoutineDoc", () => {
       action: {
         kind: "job",
         job: "job-register-sweep",
+        commit: true,
         inputs: { types: "todo", priorities: "high", statuses: "open", limit: "3" },
       },
     });
+  });
+
+  it("commit を有効にした Job action は worktree 実行を要求する", () => {
+    expect(
+      buildJobRunArgs(
+        { kind: "job", job: "job-grade", commit: true },
+        "prj-0001",
+        new Date("2026-10-12T01:00:00.000Z"),
+      ),
+    ).toContain("--worktree");
   });
 
   it("id とファイル名の不一致を検出する", () => {

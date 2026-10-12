@@ -34,3 +34,6 @@ properties:
     items:
       type: string
       pattern: "^JBR-[A-Za-z0-9-]+$"
+  reason:
+    type: string
+    minLength: 1

@@ -12,7 +12,7 @@ specdojo:
 
 週報作成や更新文書の翻訳など、同じ作業定義から実行単位を繰り返し生成するためのJob実行モデルを定義する。
 
-本設計は`job-*.yaml`、`exec run --job`、routineの`action.kind: job`として実装されている。routine の action は Job 参照へ統一し、register sweep、Schedule auto、利用制限後の再開、exec cycle も command Job として扱う。Job Runは既存exec基盤を使ってin-place実行され、決定論的コマンドはrunnerが直接実行し、判断が必要な処理だけをagentへ委譲する。
+本設計は`job-*.yaml`、`exec run --job`、routineの`action.kind: job`として実装されている。routine の action は Job 参照へ統一し、register sweep、Schedule auto、利用制限後の再開、exec cycle も command Job として扱う。Job Runは既存exec基盤を使い、通常はin-place、routine action が `commit: true` の場合は exec worktree で実行される。決定論的コマンドはrunnerが直接実行し、判断が必要な処理だけをagentへ委譲する。
 
 ## 1. 目的と適用範囲
 
@@ -25,7 +25,7 @@ Scheduleは成果物を完成へ導く有限の依存グラフ、registerは課�
 | Job           | 週次・月次・変更追随などの反復作業   | Job定義は継続し、Runは毎回有限 | Job Run    |
 | Routine       | 時刻条件による起動                   | 定義が有効な間                 | 発火状態   |
 
-Jobは新しいagent実行エンジンを持たない。`edit` / `review` Jobとcommand後の任意のanalysisは既存の`exec`実行基盤を共用し、`command` Jobのコマンドは同じrunnerが直接実行する。
+Jobは新しいagent実行エンジンを持たない。`edit` / `review` Jobとcommand後の任意のanalysisは既存の`exec`実行基盤を共用し、`command` Jobのコマンドは同じrunnerが直接実行する。routine が `commit: true` で起動する Job は `exec/<project-id>-<run-id>` の worktree で実行し、出力を commit・review してから統合する。手動 Job と `commit` を指定しない routine は従来どおり in-place で実行する。
 
 次はJobの対象外とする。
 
@@ -155,10 +155,13 @@ specdojo routine run --project <project-id> --due
 4. Job Definition、Job Run ID、入力、checkpointから解決済みtaskを生成する。
 5. 初回の command Job に precondition があれば実行する。skip 条件を満たした場合は Run を保存せず起動元へ `skipped` を返す。
 6. skip でなければ解決済みtaskをJob Runへ保存する。
-7. `edit` / `review`は既存exec基盤でagentを実行する。`command`はrunnerが解決済みコマンドを直接実行してevidenceを保存する。
+7. `edit` / `review`は既存exec基盤でagentを実行する。`command`はrunnerが解決済みコマンドを直接実行してevidenceを保存する。routine action が `commit: true` の場合は、ここまでを Job Run 専用 worktree で行う。
 8. commandが成功し`task.analysis`があれば、evidenceをreporter agentへ渡す。失敗時またはanalysisなしではagentを起動しない。
 9. agent結果またはコマンド終了コードをRunへ反映する。
 10. `succeeded`または設計上成功とみなす`noop`の場合だけcheckpointを原子的に更新する。
+11. `commit: true` の Run は、Job が作った差分だけを `chore(routine): …` で exec ブランチへ commit する。本文には Job Run ID と Run の状態を含める。
+12. runner は `mode: review` の plan/result を作り、review executor と reporter で出力 commit を読み取り専用レビューする。review executor が出力を変更した場合は `changed-during-review` とする。
+13. Run が `succeeded` かつ verdict が `complete` / `complete-with-findings` の場合だけ、runner が現在の統合先へ `--no-ff` で merge し、worktree と branch を撤去する。それ以外は review result と Job Run JSON に理由を残し、worktree を保持する。
 
 routineから起動する場合は、routineのactionにJobを指定する。
 
@@ -172,12 +175,15 @@ trigger:
 action:
   kind: job
   job: job-weekly-report
+  commit: true
   inputs:
     period: "{{scheduled_at | iso_week}}"
 policy:
   missed_run: latest
   overlap: skip
 ```
+
+`commit: true` は、出力に LLM の判断を含み統合前レビューが必要な定期 Job に指定する。precondition が skip した場合は空の exec branch を残さず撤去する。routine の `last_result` は、統合まで完了した Run を `success`、waiting になった Run を `failure` として記録し、`last_reason` と `routine-runs.jsonl` の `reason` に待機理由を残す。
 
 現行routineの`interval`は「前回実行からの経過時間」であり、毎週金曜日などの暦上の予定を表せない。Job連携時には`cron`と`timezone`を追加し、既存`interval`を後方互換として維持する。
 

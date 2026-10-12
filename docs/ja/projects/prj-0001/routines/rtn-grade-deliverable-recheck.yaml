@@ -9,6 +9,7 @@ trigger:
 action:
   kind: job
   job: job-grade-deliverable
+  commit: true
   inputs:
     period: "{{scheduled_at | iso_week}}"
     limit: "10"
