@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_7a4bb3037df2496d828b102ff0b71258
+  ts: "2026-10-12T09:57:00Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: PJR-HKTJ で原本を specdojo-assets で管理すると決め、原本を作る範囲を PJR-PEVV に分けたため、本項目を LP 側の配置に絞る
+  changes:
+    - field: title
+      from: マスコットキャラクター（道着を着たカワウソ）を作る
+      to: マスコットを specdojo-assets から書き出して LP に配置する
+    - field: description
+      from: ランディングページに載せる、道着を着たカワウソのマスコットキャラクターを作る。作り方は未定
+      to: specdojo-assets で作ったマスコット（道着を着たカワウソ）の原本を exports.yaml に従って specdojo-lp へ書き出し、Hero の仮の枠を差し替える。キャラクターの設定と原本は PJR-PEVV で作る
+    - field: due
+      from: _TODO_
+      to: "2026-10-31"
+  previous_event_id: reg_947f4ac150c945f9af4e54dc670b1079

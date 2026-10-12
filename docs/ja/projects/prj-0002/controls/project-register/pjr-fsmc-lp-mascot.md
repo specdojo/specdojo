@@ -11,13 +11,14 @@ specdojo:
   priority: medium
   owner: UX
   registered_at: "2026-10-11T06:37:27Z"
+  due_on: "2026-10-31"
 ---
 
-# PJR-FSMC マスコットキャラクター（道着を着たカワウソ）を作る
+# PJR-FSMC マスコットを specdojo-assets から書き出して LP に配置する
 
 ## 1. 概要
 
-ランディングページに載せる、道着を着たカワウソのマスコットキャラクターを作る。作り方は未定
+specdojo-assets で作ったマスコット（道着を着たカワウソ）の原本を exports.yaml に従って specdojo-lp へ書き出し、Hero の仮の枠を差し替える。キャラクターの設定と原本は PJR-PEVV で作る
 
 ## 2. 完了条件
 
