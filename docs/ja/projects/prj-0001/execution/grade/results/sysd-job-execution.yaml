@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 81
-graded_at: "2026-10-11T16:24:07.397Z"
+graded_at: "2026-10-12T16:11:13.529Z"
 graded_by: agy-expert-executor
-content_hash: 06cd21b1ca83b84272fc735dea02eb51cb9777a845ebf9a2988828e5651faa80
+content_hash: f67209bfc6525084d83ece5c4f627a66840fc434d489bcd136a77c12ab66a3db
 source_hashes:
   catalog-entry: db038a4fa9b3f18fd5227eec2bd56d78d0d0ee1c409c00f22393decfe82f1cea
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -133,14 +133,14 @@ findings:
   - id: F002
     severity: major
     rule: vp-arc-cross-document-consistency
-    line: 237
+    line: 260
     anchor: "owner: TR"
     message: "`owner: TR` は `pm-roles.yaml` に存在しないため、Schedule taskと共通のRole codeを使うという方針に従い、登録済みRole codeへ置換する必要がある。"
     message_ja: "`owner: TR` は `pm-roles.yaml` に存在しないため、Schedule taskと共通のRole codeを使うという方針に従い、登録済みRole codeへ置換する必要がある。"
   - id: F003
     severity: minor
     rule: vp-arc-conciseness
-    line: 289
+    line: 313
     anchor: >-
       - `task.mode:
       command`はrunnerがin-placeで直接実行する。`task.analysis`を持つ場合だけ成功後にreporterを起動し、redact・上限付きstdout/stderrを含むevidence本体を渡す。commandまたはanalysisの失敗はRun全体をfailedにする。
@@ -149,28 +149,28 @@ findings:
   - id: F004
     severity: major
     rule: vp-qe-done-criteria
-    line: 294
+    line: 318
     anchor: ""
     message: 設計制約ごとの検査方法、対象テスト、期待結果, またはテスト設計への参照がないため、DC-004「テスト設計・検証観点の参照として使えること」を確認できない。
     message_ja: 設計制約ごとの検査方法、対象テスト、期待結果, またはテスト設計への参照がないため、DC-004「テスト設計・検証観点の参照として使えること」を確認できない。
   - id: F005
     severity: major
     rule: vp-qe-verifiability
-    line: 294
+    line: 318
     anchor: ""
     message: Job生成、重複排除、precondition、retry、checkpoint、権限・秘密情報の各制約について検証手段と期待結果を対応付けた検証観点を追加する必要がある。
     message_ja: Job生成、重複排除、precondition、retry、checkpoint、権限・秘密情報の各制約について検証手段と期待結果を対応付けた検証観点を追加する必要がある。
   - id: F006
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 294
+    line: 318
     anchor: ""
     message: "`sysd-rulebook`で必須の検証観点・関連文書がなく、`sysd-index`、横断ルール、テスト設計、運用ガイド、`job-definition-standard`への解決可能な導線を追加する必要がある。"
     message_ja: "`sysd-rulebook`で必須の検証観点・関連文書がなく、`sysd-index`、横断ルール、テスト設計、運用ガイド、`job-definition-standard`への解決可能な導線を追加する必要がある。"
   - id: F007
     severity: minor
     rule: vp-ux-readability
-    line: 124
+    line: 142
     anchor: >-
       決定論的な処理は`task.mode:
       command`とし、入力を展開する`task.command`を必須にする。対象選択を伴う処理では任意の`task.precondition`をRun保存前に実行し、空出力または指定終了コードならJob
@@ -184,8 +184,9 @@ findings:
   - id: F008
     severity: major
     rule: vp-ux-user-flow
-    line: 31
-    anchor: ""
+    line: 30
+    anchor: >-
+      Jobは「runnerが直接実行するコマンド」と「agentへ委譲する判断」を分離する。`task.description`へ決定論的な手順を自然言語で書くと、agentが手順を解釈し、実行の有無や引数の正しさがagent依存になる。手順はscriptまたはCLIへ実装して`task.command`から入口を1つ呼び、結果の判断が必要な場合だけ`task.analysis`を指定する。判定可能な規約は`job-definition-standard`をSSOTとする。
     message: "`job-definition-standard`をSSOTとして示しているがリンクがなく、関連文書一覧も存在しないため、実装者・検証者・運用者が必要な正本へ到達できるリンク付き導線を追加する必要がある。"
     message_ja: "`job-definition-standard`をSSOTとして示しているがリンクがなく、関連文書一覧も存在しないため、実装者・検証者・運用者が必要な正本へ到達できるリンク付き導線を追加する必要がある。"
   - id: F009
@@ -198,7 +199,7 @@ findings:
   - id: F010
     severity: major
     rule: vp-ux-language-consistency
-    line: 237
+    line: 260
     anchor: "owner: TR"
     message: 翻訳Job例の`TR`はプロジェクトで定義されたRole codeではなく、ownerの語彙を混乱させるため登録済みRole codeへ統一する必要がある。
     message_ja: 翻訳Job例の`TR`はプロジェクトで定義されたRole codeではなく、ownerの語彙を混乱させるため登録済みRole codeへ統一する必要がある。
