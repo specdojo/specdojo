@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4f15d59b53814636b253341ce08dc796
+- v: 1
+  id: reg_75943007b47846e48111e26d95f1db6f
+  ts: "2026-10-12T07:19:15Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（b8a530b1d）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: repo を割り当てた親検証の結果で、同じリポジトリの executor の not_run を満たせるようにした
+  previous_event_id: reg_7b0027567fd740caaa5433a73a39f554

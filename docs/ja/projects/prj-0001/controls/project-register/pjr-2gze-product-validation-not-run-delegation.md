@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2gze-product-validation-not-run-delegation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T15:00:34Z"
+  completed_at: "2026-10-12T07:19:15Z"
+  conclusion: repo を割り当てた親検証の結果で、同じリポジトリの executor の not_run を満たせるようにした
 ---
 
 # PJR-2GZE プロダクトリポジトリの検証を not_run の委譲先として満たせない
