@@ -335,4 +335,16 @@ describe("agent protected configuration paths", () => {
     expect(description).toContain("not a git repository");
     expect(description).not.toContain("full-content-must-not-be-copied");
   });
+
+  it("records an untracked protected file as an applicable unified patch", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-protected-config-"));
+    roots.push(root);
+    initRepository(root);
+    write(join(root, "package.json"), '{"private":true}\n');
+
+    const description = describeAgentProtectedConfigChanges(root, ["package.json"]);
+
+    expect(description).toContain("--- /dev/null\n+++ b/package.json\n@@ -0,0 +1,1 @@");
+    expect(description).toContain('+{"private":true}');
+  });
 });

@@ -605,7 +605,7 @@ executor / reporter pipelineのexecutor promptは、commitとrepository設定を
 
 さらに`src/exec-agent-git-state.ts`が各agent試行の直前にagentのcwdから解決したHEAD（commitとsymbolic ref）およびlocal configを記録し、終了直後に比較します。runnerが作成したworktree branchをVS Codeが発見した際に付与する`branch.*.vscode-merge-base`は表示用metadataなので比較から除外します。それ以外のlocal configは順序と重複を保って比較し、`core.bare`などrepository動作に関わる変更を検知します。HEADまたは監視対象設定に差分があれば`agent-git-state-write:`と変更フィールドを標準エラーへ出力し、親検証・reporter・commit・mergeへ進まずblockします。通常のworktree実行だけでなく、in-place、`exec trial`、`exec worktree agent`にも同じ境界を適用します。
 
-設定変更が必要なタスクでは、agent は対象パス、変更理由、提案差分、変更後に必要な検証を result の申し送りへ記載して block します。人間または対話型 orchestrator は agent 実行外で提案を確認して適用し、対象設定に対応する test / hook / CI 検証を実行して commit します。agent 用の解除フラグはありません。
+設定変更が必要なタスクでは、agent は対象パス、変更理由、提案差分、変更後に必要な検証を result の申し送りへ記載して block します。人間または対話型 orchestrator は agent 実行外で `specdojo exec handoff apply --project <project-id> --register <PJR-ID>` を実行し、表示された提案差分を確認して統合先へ適用・commit します。対話入力では `y` / `yes`、非対話実行では `--yes` が必要で、確認がなければ変更しません。`package.json` の依存定義を変更した場合は、コマンドの案内に従って対応する lock ファイルを再生成・commit してから `exec run --register ... --worktree --resume` で再開します。提案差分がない、切り詰められている、対象パスと一致しない、または統合先へ安全に適用できない場合は自動適用せずエラーにします。agent 用の解除フラグはありません。
 
 ただし block は agent の記入を待たずに成立するため、記入を agent の遵守だけに委ねると申し送りが `_TODO_` のまま残ります。そのため `src/exec-protection-handoff.ts` が、block した時点で機構側から result の申し送り節へ次を自動記録します（`agent-config-write` / `agent-git-state-write` の双方が対象です）。
 
