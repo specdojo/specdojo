@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:43:19Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
 ---
 
 # PJR-86Q5 プロダクトリポジトリの worktree に依存が導入されない

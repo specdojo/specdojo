@@ -61,3 +61,19 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
   previous_event_id: reg_a4e5dfd6b95c4592948c9ae1eaad6d03
+- v: 1
+  id: reg_3a84e5bd139d4c1fadc6861b32feddef
+  ts: "2026-10-12T03:32:33Z"
+  action: start
+  actor: codex-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+      to: "-"
+  previous_event_id: reg_d04b06deafda40fdb22245663eaf1a9b

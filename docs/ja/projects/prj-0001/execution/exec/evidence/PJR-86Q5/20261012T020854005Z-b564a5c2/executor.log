@@ -1,0 +1,22 @@
+PJR-86Q5 を対応しました。ただし新しい統合テストは私の環境ではまだ一度も実行していません。sandbox では `npm` も `test:integration` も動かせないため、合否は親 runner の `npm run test:integration` で決まります。
+
+**原因:** プロダクト worktree での `npm ci` は、PJR-98G4 の時点で作成時に実行されるようになっていました（`setup.install` の既定は `true`）。PJR-CM5W で依存が入らなかったのは、worktree を作った時点で `specdojo-lp` に `package-lock.json` がまだ無く、しかも何もログが出なかったためです。lock はその後、orchestrator が統合先で生成しています。
+
+**変更したファイル:**
+- `src/exec-worktree.ts`: Git 管理下の lock が1つも無い worktree では、導入を見送った旨を `Skipping worktree dependencies: no tracked package-lock.json in <path>` とログに出すようにしました。この処理はプロジェクト側と共通なので、プロジェクト worktree でも同じログが出ます。失敗時の扱いはプロジェクト側と同じで、`npm ci` が失敗したら準備の失敗になります。
+- `tests/src/exec-task-repos.integration.test.ts`: 統合テストを1件追加しました。lock がある `app1` の worktree では `npm ci --include=dev` が実行され、lock が無い `app2` では実行されずにログが出ることを確認します。
+  - 本物の npm の代わりに、呼ばれた場所と引数を記録するだけの偽の `npm` を `PATH` の先頭に置いています。ネットワークに依存せず、通常の準備経路（`checkpointAndEnsureWorktree`）をそのまま通ります。
+  - CLI を子プロセスとして起動しないので、`tsx` の絶対パス起動と `agent-members.yaml` の fixture という完了条件は今回は当てはまりません。
+- `docs/ja/specdojo/guides/docs-structure-guide.md`: 「現行実装の境界」の表に「依存の導入」の行を追加しました。
+- 個票 `pjr-86q5-...md`: 「対応結果」を記入しました。登録簿とステータスは変更していません。
+
+**残っている制約:** 一度作った worktree を再利用するときは、プロジェクト側と同じく依存を入れ直しません。そのため PJR-CM5W のように worktree を作った後で lock が追加された場合は、worktree を作り直すまで依存は入りません。今回はこの挙動を変えず、個票とガイドに書き残すだけにしています。
+
+**検証:**
+- 変更した4ファイルに `prettier` をかけ、Markdown 2件は `markdownlint` でエラーなしでした。
+- `catalog validate` は exit 0（既存の WARN のみ）、`index build` も成功しました。
+- `typecheck`、`lint:ts`、`test:integration` などは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"Products already ran npm ci when their worktrees were created. PJR-CM5W had no tracked lock at that point and nothing was logged, so a skip log was added to installWorktreeDependencies. Added an integration test (fake npm on PATH; not run in the sandbox, left to the parent runner) checking that npm ci runs for a product with a lock and is skipped with a log for one without. Added a dependency installation row to the current implementation boundaries table in docs-structure-guide and filled in the ticket's resolution section. Remaining limitation: reused worktrees do not reinstall dependencies, same as the project side.","validations":[{"command":"npx prettier --write src/exec-worktree.ts tests/src/exec-task-repos.integration.test.ts docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-86q5-product-worktree-deps-not-installed.md","status":"passed","summary":"Formatted all 4 files; prettier --check passes for the TS files"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-86q5-product-worktree-deps-not-installed.md docs/ja/specdojo/guides/docs-structure-guide.md","status":"passed","summary":"No errors"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"exit 0, OK: dct-index.yaml (pre-existing WARNs only)"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2571 entries"}]}
+</specdojo_executor_evidence>
