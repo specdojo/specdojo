@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2h5f-devcontainer-scaffold
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-28T23:27:46Z"
+  completed_at: "2026-10-12T13:02:31Z"
+  conclusion: specdojo devcontainer scaffold で利用リポジトリに devcontainer を生成し、実機で orchestrator の起動を確かめた
 ---
 
 # PJR-2H5F specdojo devcontainer scaffold で利用リポジトリに devcontainer を生成する
