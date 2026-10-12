@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:42:46Z"
+  block_reason: rate limit reached
 ---
 
 # PJR-B2EC 再開時の同期で内容が同じ未追跡ファイルを戻せず再開が拒否される

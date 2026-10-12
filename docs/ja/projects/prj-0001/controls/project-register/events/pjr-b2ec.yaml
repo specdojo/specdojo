@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_4da22fd23f2141569744d68fd31503e1
+- v: 1
+  id: reg_6204460f8e0948eca864684383a6cd6b
+  ts: "2026-10-12T02:18:32Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_e70dc5043ccc47d2985640c67d2058a6
