@@ -20,22 +20,22 @@ lefthook の catalog-validate は project を指定せずに catalog validate �
 
 ## 2. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                                                                            |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| スコープ     | catalog を使わない project（prj-0002）の register の記帳 commit が、catalog と無関係な検証で止まる                              |
+| スケジュール | 回避策があるため影響は小さい                                                                                                    |
+| コスト       | commit のたびに環境変数を外す手間がかかる                                                                                       |
+| 品質         | 回避策では catalog-validate が別 project（`current_project` の prj-0001）を検証するため、検証の対象が commit の内容と一致しない |
+| 関係者       | prj-0002 を扱う orchestrator と利用者                                                                                           |
 
 ## 3. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                                                                                                                   |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | `lefthook.yml` の catalog-validate は glob `docs/ja/projects/**` で起動し、`catalog validate` を `--project` なしで実行する。project は環境変数 `SPECDOJO_PROJECT` から解決され、`catalog_path` のない prj-0002 を指すと exit 1 になる |
+| 対応策   | `catalog_path` のない project では catalog-validate を飛ばす。利用者が承認した方針（2026-10-12）                                                                                                                                       |
+| 依存事項 | なし                                                                                                                                                                                                                                   |
+| 完了条件 | `SPECDOJO_PROJECT=prj-0002` のシェルで prj-0002 の個票だけを commit したとき、catalog-validate が失敗しない。prj-0001 の catalog の不整合は、従来どおり検出する                                                                        |
 
 ## 4. 対応結果
 
@@ -43,4 +43,5 @@ _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0002:pjr-hepk-lp-content]]: 記帳 commit が止まった項目。
+- 再現（2026-10-12）: `/workspaces/specdojo-workspace/specdojo-prj-0002` で `SPECDOJO_PROJECT=prj-0002` のまま `git commit` を実行し、catalog-validate が `catalog_path not set for project 'prj-0002'` で exit 1 になった。回避として `env -u SPECDOJO_PROJECT git commit` で commit した。
