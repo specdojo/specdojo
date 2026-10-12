@@ -62,6 +62,7 @@ LP 用に短くした文言は次のとおり。
 - PJR-KH17 で加えた使い分けの節など、既存の節を壊さない。
 - `specdojo-lp` で `npm run build` が成功する。agent の sandbox では npm を実行できないため、executor は evidence の `validations` でこの検証を `requires_human` と記録し、ビルドは orchestrator が sandbox の外で確認する。
 - prj-0002 は `catalog_path` を設定していないため、`specdojo catalog validate` は実行しない（evidence にも記録しない）。
+- `specdojo-lp` には Prettier などの整形・lint の道具がないため、`specdojo-lp` のファイルに対して `prettier` などを実行しない（evidence にも記録しない）。
 
 ## 3. 作業内容
 
