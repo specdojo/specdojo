@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-b2ec-resume-identical-untracked-restore
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:42:46Z"
+  completed_at: "2026-10-12T07:19:23Z"
+  conclusion: 再開時の同期で、統合先から入った同じ内容の未追跡ファイルを解消済みとして扱うようにした
 ---
 
 # PJR-B2EC 再開時の同期で内容が同じ未追跡ファイルを戻せず再開が拒否される

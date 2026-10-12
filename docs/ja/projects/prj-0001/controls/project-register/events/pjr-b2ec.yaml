@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b4cc6e8950c24135ad78b2aec1eb88ef
+- v: 1
+  id: reg_41e06f41c7ca46c99e87de4ef356f12b
+  ts: "2026-10-12T07:19:23Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（c3cfc95f6）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: 再開時の同期で、統合先から入った同じ内容の未追跡ファイルを解消済みとして扱うようにした
+  previous_event_id: reg_c11871afd65d43dc8566886d2906a913
