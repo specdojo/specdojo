@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0002:pjr-hktj-assets-repository
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-10-12T09:26:01Z"
+  completed_at: "2026-10-12T09:32:43Z"
+  conclusion: 選択肢 A。specdojo-assets に原本と規則を置き、exports.yaml で使うものだけを各リポジトリへ書き出して commit する。原本は AI での生成と手描きの両方を使い、書き出し先は当面 LP だけとする
 ---
 
 # PJR-HKTJ マスコットなどのアセットを specdojo-assets で管理し、使うものだけを各リポジトリへ書き出す
