@@ -17,7 +17,7 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 
 **この文書で分かること**
 
-- question の起票から decision、設計書の更新、change-request による修正までを記帳する流れ
+- question の起票から decision、仕様書の更新、change-request による修正までを記帳する流れ
 - CLI の初期設定と、register / schedule / routine の使い分け
 - issue / decision / todo から成果物カタログと Schedule へ展開する手順
 - npm package の kata を参照し、必要なものだけ eject する方法
@@ -31,12 +31,12 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 
 ## 1. 10分で体験する — 仕様の判断台帳
 
-**決めて、書いて、鍛え続ける。** SpecDojo は、迷っていることを記帳し、決めたことを設計書へ書き、後日の変更も同じ台帳に残します。この節では、共通サンプルの「駄菓子屋きぬや 販売管理システム構築」を題材に、次の流れを 10 分ほどで体験します。kata（型）や成果物カタログを事前に用意する必要はありません。
+**記して、形にして、磨き続ける。** SpecDojo は、迷っていることを記帳し、決めたことを仕様書へ書き、後日の変更も同じ台帳に残します。この節では、共通サンプルの「駄菓子屋きぬや 販売管理システム構築」を題材に、次の流れを 10 分ほどで体験します。kata（型）や成果物カタログを事前に用意する必要はありません。
 
 ```text
 question を起票する（迷っていること）
   -> decision で決める（選択肢・理由・決定）
-  -> 設計書を 1 つ書く（決定を反映する）
+  -> 仕様書を 1 つ書く（決定を反映する）
   -> 後日 change-request で直す（変更の理由を残す）
   -> 決定ログ・変更要求ログで振り返る
 ```
@@ -122,9 +122,9 @@ npx specdojo register close \
   --conclusion "decision で現金とつけを扱うと決定"
 ```
 
-### 1.4. 決めたことを設計書に書く
+### 1.4. 決めたことを仕様書に書く
 
-決定を設計書へ反映します。この体験では成果物カタログを使わず、Markdown を 1 つ作ります。設計書はプロダクトの文書なので、プロダクトリポジトリ（例: `app1/docs/ja/product/payment-policy.md`）に置きます。
+決定を仕様書へ反映します。この体験では成果物カタログを使わず、Markdown を 1 つ作ります。仕様書はプロダクトの文書なので、プロダクトリポジトリ（例: `app1/docs/ja/product/payment-policy.md`）に置きます。
 
 ```markdown
 # 支払い方法の基本方針
@@ -139,11 +139,11 @@ npx specdojo register close \
 - decision PJR-XXXX（初期リリースで扱う支払い方法を決める）
 ```
 
-設計書から decision の ID を参照しておくと、「なぜこう書いたか」を後から台帳でたどれます。
+仕様書から decision の ID を参照しておくと、「なぜこう書いたか」を後から台帳でたどれます。
 
 ### 1.5. 後日の変更をchange-requestで直す
 
-運用を始めた後、「子ども向けに交通系電子マネーも使いたい」という要望が出たとします。設計書をいきなり書き換えず、change-request として記帳します。
+運用を始めた後、「子ども向けに交通系電子マネーも使いたい」という要望が出たとします。仕様書をいきなり書き換えず、change-request として記帳します。
 
 ```bash
 # チャット:「change-request を起票して。タイトルは『交通系電子マネーを支払い方法に加える』」
@@ -154,10 +154,10 @@ npx specdojo register add \
   --topic add-ic-card-payment
 ```
 
-change-request の個票に `変更要求`、`影響評価`、`審査・決定` を書き、設計書 `payment-policy.md` の扱う支払い方法へ「交通系電子マネー」を追加して、根拠に change-request の ID を加えます。直し終えたら close します。change-request は close すると `done` になります。
+change-request の個票に `変更要求`、`影響評価`、`審査・決定` を書き、仕様書 `payment-policy.md` の扱う支払い方法へ「交通系電子マネー」を追加して、根拠に change-request の ID を加えます。直し終えたら close します。change-request は close すると `done` になります。
 
 ```bash
-# チャット:「change-request PJR-XXXX を『設計書へ反映』で完了して」
+# チャット:「change-request PJR-XXXX を『仕様書へ反映』で完了して」
 npx specdojo register close \
   --project prj-0001 \
   --id PJR-XXXX \
@@ -180,11 +180,11 @@ npx specdojo register build --project prj-0001
 | `controls/generated/pm-change-request-log.md`      | 変更要求ログ（change-request の一覧）         |
 | `controls/generated/pm-issue-log.md`               | 課題ログ（issue の一覧）                      |
 
-パスは `docs/ja/projects/prj-0001/` からの相対です。正本は個票の Markdown なので、`git log` でも SpecDojo なしでも読めます。作成された設定・個票・設計書を確認して commit すれば、体験は完了です。
+パスは `docs/ja/projects/prj-0001/` からの相対です。正本は個票の Markdown なので、`git log` でも SpecDojo なしでも読めます。作成された設定・個票・仕様書を確認して commit すれば、体験は完了です。
 
 ### 1.7. 次に進む
 
-- 型と実戦: 設計書を増やしたくなったら、成果物カタログ（`dct-<domain>.yaml`）で作る成果物を宣言し、型に沿って作ります。手順は以降の `CLIを初期設定する` と `成果物カタログからscheduleへ展開する` を参照してください。
+- 型と実戦: 仕様書を増やしたくなったら、成果物カタログ（`dct-<domain>.yaml`）で作る成果物を宣言し、型に沿って作ります。手順は以降の `CLIを初期設定する` と `成果物カタログからscheduleへ展開する` を参照してください。
 - 実戦（exec）: 起票した todo や issue を AI に実行させるには、[exec設定ガイド](exec-config-guide.md) で agent を設定し、`npx specdojo exec run --project prj-0001 --register PJR-XXXX` を実行します。
 - 評定（grade）と講評（review）: 成果物の品質評価と完了判断は [レビューガイド](review-guide.md) を参照してください。v0.3.0 の grade は試験的で、npm package では `grade list` / `plan` / `apply` / `validate` / `result` などの部品を利用できます。通しの実行に使う本体リポジトリの開発用 `tools/grade/run-per-document.sh` は package に含まれず、成果物の grade には project の `catalog_path` が必要です。
 - 記帳の種別と状態遷移は [登録簿運用ガイド](register-operation-guide.md) を参照してください。
@@ -194,17 +194,17 @@ npx specdojo register build --project prj-0001
 既定では、SpecDojo の成果物更新、登録簿の状態遷移、実行記録をプロダクトの Git 履歴に混ぜないため、次の **別リポジトリ構成**で始めます。
 
 - **プロダクトリポジトリ** `app1/`: ソースコードと、仕様・設計などのプロダクトドキュメントを置きます。
-- **プロジェクトリポジトリ** `app1-specdojo/`: 登録簿・計画・実行記録などのプロジェクトドキュメントと実践体系を置きます。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。
+- **プロジェクトリポジトリ** `app1-specdojo/`: 登録簿・計画・実行記録などのプロジェクトドキュメントと型（Kata）を置きます。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。
 - **worktree 用ディレクトリ** `app1-specdojo-worktrees/`: タスクごとの変更を隔離して進めるために、Git worktree を作る場所です。名前はプロジェクトリポジトリのディレクトリ名から決まります。
 
 ```text
-workspace/
+app1-workspace/
 ├── app1/             # 既存または新規のプロダクトリポジトリ
 ├── app1-specdojo/    # プロジェクトリポジトリ
 └── app1-specdojo-worktrees/ # task 単位の worktree 置き場
 ```
 
-workspace 直下でプロジェクトリポジトリと worktree 用ディレクトリを作成し、`app1-specdojo/` に依存パッケージと SpecDojo の設定ファイルを用意します。
+`app1-workspace/` 直下でプロジェクトリポジトリと worktree 用ディレクトリを作成し、`app1-specdojo/` に依存パッケージと SpecDojo の設定ファイルを用意します。
 
 ```bash
 mkdir app1-specdojo
@@ -266,7 +266,7 @@ npx specdojo config init
 
 `specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形は register だけを使える最小構成であり、project パスはリポジトリルートを基準とし、`run.worktree_base` はディレクトリ名から作る `../<リポジトリ名>-worktrees` を指します。例えば `app1-specdojo/` では `../app1-specdojo-worktrees` です。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。catalog、schedule、exec へ進むときに追加するキーと既定値は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] で確認できます。
 
-プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書と SpecDojo の実践体系は `app1-specdojo/docs/ja/projects/` と `app1-specdojo/docs/ja/specdojo/` に置きます。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
+プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書と SpecDojo の型（Kata）は `app1-specdojo/docs/ja/projects/` と `app1-specdojo/docs/ja/specdojo/` に置きます。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
 
 成果物と実装を常に同じ変更・履歴として扱う場合に限り、**同一リポジトリ構成**としてプロダクトリポジトリのルートで同じ初期化手順を実行できます。CLI は構成を強制しません。
 

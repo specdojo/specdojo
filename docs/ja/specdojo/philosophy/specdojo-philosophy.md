@@ -45,11 +45,11 @@ SpecDojo の特色は、この三つを別々の正本として保守しなが�
 
 ### 2.1. 三つの概念と役割
 
-| 概念 | 読み | 答える問い                                                 | SpecDojo 上の実体                                                                                           | 正本                                                                                                                |
-| ---- | ---- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Kata | 型   | この成果物には何を書き、どう作り、完成形はどうなるか       | 実践の型: rulebook / recipe / sample / template                                                             | [実践体系構成ガイド](../guides/practice-system-composition-guide.md)、[実践の型活用ガイド](../guides/kata-guide.md) |
-| Waza | 技   | 計画・実行・状態管理・機械検証をどう遂行するか             | `specdojo` CLI: catalog / schedule / exec / register / routine / grade など                                 | [遂行の技活用ガイド](../guides/waza-guide.md)、[CLIコマンドリファレンス](../references/command-reference.md)        |
-| Ryu  | 流   | 型の整備状況と目的に応じて、型をどこまで基準にして進めるか | `approach`: fully-guided / recipe-guided / freeform と、retrofit / bootstrap / maintenance 系 / finalize 系 | [実践の進め方ガイド](../guides/ryu-guide.md)、[Schedule設計ガイド](../guides/schedule-design-guide.md)              |
+| 概念 | 読み | 答える問い                                                 | SpecDojo 上の実体                                                                                           | 正本                                                                                                            |
+| ---- | ---- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Kata | 型   | この成果物には何を書き、どう作り、完成形はどうなるか       | 実践の型: rulebook / recipe / sample / template                                                             | [型の構成ガイド](../guides/practice-system-composition-guide.md)、[実践の型活用ガイド](../guides/kata-guide.md) |
+| Waza | 技   | 計画・実行・状態管理・機械検証をどう遂行するか             | `specdojo` CLI: catalog / schedule / exec / register / routine / grade など                                 | [遂行の技活用ガイド](../guides/waza-guide.md)、[CLIコマンドリファレンス](../references/command-reference.md)    |
+| Ryu  | 流   | 型の整備状況と目的に応じて、型をどこまで基準にして進めるか | `approach`: fully-guided / recipe-guided / freeform と、retrofit / bootstrap / maintenance 系 / finalize 系 | [実践の進め方ガイド](../guides/ryu-guide.md)、[Schedule設計ガイド](../guides/schedule-design-guide.md)          |
 
 Kata は「何を・どう書くか」の基準を文書として持ちます。Waza は基準そのものを定義せず、成果物カタログから Schedule・タスク・plan・result へ展開して遂行し、結果を記録・検証します。Ryu は両者の間に立ち、今回のタスクで Kata をどこまで基準にするかを決めます。
 
