@@ -56,6 +56,11 @@ ChatGPT で作ったマスコットの画像（道着を着たカワウソが、
 - `specdojo-lp:src/components/sections/Hero.astro` で暫定画像を読み込み、`astro:assets` の `<Image />` により幅 640 px で表示した。生成 HTML に `width="640"` と `height="640"` が出力され、元画像約 469 KB はビルド時に約 50 KB へ最適化された。
 - `data-placeholder="mascot"` の点線枠と「マスコット（準備中）」を削除し、Hero の背景色の上へ画像を直接配置した。代替テキストには、道着を着たカワウソが書き、削り出し、磨き上げる 3 コマであることを記載した。
 - `specdojo-lp` で `npm run build` が成功した。`tmp/` ディレクトリが存在しないことも確認した。
+- exec run は `waiting` に止まらず、runner が `specdojo-lp` の `feature/lp-v1` へ統合した（da0491f）。`specdojo-assets` は変更がなく統合を飛ばした。runner の親検証 7 種はすべて passed だった。今回の executor（codex-expert-executor）は sandbox の中で `specdojo-lp` の `npm run build` を実行できた。
+- orchestrator が sandbox の外で `feature/lp-v1` をビルドし、次を確認した（2026-10-12）。
+  - `npm run build` が成功した。Hero に `<img>`（`width="640"`・`height="640"`・`loading="eager"`・代替テキストあり）が出力され、仮の枠と「マスコット（準備中）」は残っていない。
+  - 書き出された画像は 640×640 の WebP（約 51 KB）で、背景の透明（アルファ）が保たれている。
+- あわせて、利用者の判断で Hero の小見出しを「Spec道（仕様道）の道場」から「はじめよう、Spec道（仕様道）」に改めた（4cffa25、本項目の範囲外の手直し）。
 - 公開前に、既存作品との目立った類似がないかを利用者が画像検索などで確認する。正式なマスコット完成後は [[prj-0002:pjr-fsmc-lp-mascot]] で差し替える。
 
 ## 5. 関連ドキュメント
