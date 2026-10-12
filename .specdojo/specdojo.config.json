@@ -27,7 +27,7 @@
         {
           "name": "specdojo-lp",
           "path": "../specdojo-lp",
-          "integration_branch": "main"
+          "integration_branch": "feature/lp-v1"
         }
       ],
       "run": {
