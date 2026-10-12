@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-4vac-job-review-result-trailing-newline
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-12T09:14:18Z"
+  completed_at: "2026-10-12T10:59:04Z"
+  conclusion: runner が書き換えた Job Run の review の result を整形し、末尾の改行の欠落で commit が止まらないようにした
 ---
 
 # PJR-4VAC Job Run の review の result が末尾改行を欠き commit 前の検査で統合が止まる

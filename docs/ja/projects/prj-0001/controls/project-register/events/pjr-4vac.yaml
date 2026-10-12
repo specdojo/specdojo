@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_976a9015f3bd421fb2ce265bce5fe06a
+- v: 1
+  id: reg_15c3da140c434d6bb947c95f9fc6265c
+  ts: "2026-10-12T10:59:04Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 2026-10-12 19:15 の試し実行（JBR-grade-kata-ee74ff697eaf）で、worktree での実行・runner の commit・claude-expert の review（complete-with-findings）・統合（f3b5b03e3）まで通った。review の記録の commit（f9f777a8a）が hook で止まらなかった
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: runner が書き換えた Job Run の review の result を整形し、末尾の改行の欠落で commit が止まらないようにした
+  previous_event_id: reg_14e0d3ebb4544739bbee8ec4b0ebca83
