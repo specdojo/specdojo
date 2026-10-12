@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-vqza-routine-commit-after-run
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-10-11T22:15:30Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T10:58:27Z"
+  conclusion: routine が起動する Job Run を worktree で実行し、runner の commit・review・verdict による統合を経る流れを入れた
 ---
 
 # PJR-VQZA 定期実行の出力を実行後に commit する
