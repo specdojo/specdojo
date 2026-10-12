@@ -102,6 +102,12 @@ v0.3.0 の公開前に、exec の再開・統合・判定まわりの未解決�
 - 基準 3: develop から `npm pack` した tarball（specdojo 0.3.0）を新しいリポジトリへ入れ、利用者と同じ手順で確かめた。`config init`（`.gitignore` に `node_modules/` が入る）→ `config scaffold --provider claude`（`orch:opus`・`orch:sonnet` が追加される）→ `exec-defaults.yaml` の `command_template` と `agent-members.yaml`（claude の 3 名）を案内どおり用意 → `register scaffold` → `register add`（todo）→ `exec run --register --worktree`（agent を指定せず `claude-executor` と `claude-reporter` が自動で選ばれた）→ 統合して `review` → `register close` まで通った。grade は v0.3.0 では部品のみ・試験的のため対象外とした。利用者のリポジトリに markdownlint が無い場合、result の commit 前の lint は飛ばされる（`result-markdownlint: markdownlint-cli not found; skipped`）。
 - routine の新しい流れ（PJR-VQZA・PJR-MD3C）: Job Run の worktree での実行、runner の commit、claude-expert の review、verdict による統合までを試し実行で確かめた（f3b5b03e3）。途中で見つかった PJR-4VAC・PJR-DXDC・PJR-BJTC は直して統合した。今夜の定期実行の結果を明朝確かめる。
 
+### 2.7. main への昇格後の確認（2026-10-12 夜）
+
+- PR #11 で develop（4a7143a64）を `main` へ昇格した（d23f5599b）。merge で起動した workflow はない。`main` と develop の先端は内容が一致する。
+- 基準 2: `main` と同じ内容で `npm run check` を実行し、2226 件中 2225 件が通った。残る 1 件（`doc-index.test.ts`）は 20 秒の時間切れで、単独の再実行では 28 件すべてが約 4 秒で通った。負荷による一時的な時間切れ（PJR-W2EB、既知の問題に記載）と判断した。
+- 公開の準備: `@specdojo/docs-lint` は 0.1.0 の公開（2026-09-23）以降に脆弱性の修正・lint の追加・依存の更新が入っているため、0.2.0 へ上げて公開する。`@specdojo/docs-site` 0.2.0 は未公開（PJR-CBQV）。`deploy.yml` が使う `github-pages` environment に `v*` のタグの規則を加える必要がある。
+
 ## 3. 作業内容
 
 | No  | 作業                                   | 担当         | 状態 | メモ                       |
