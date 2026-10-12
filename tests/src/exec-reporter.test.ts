@@ -441,6 +441,7 @@ describe("reporter structured output", () => {
     "blocks catalog validate reported as %s when the target project has catalog_path",
     (status) => {
       const input = evidence();
+      input.changes = [{ path: "docs/ja/projects/prj-0001/design/test.md", status: "M" }];
       input.validations = [
         {
           source: "executor",
@@ -467,6 +468,218 @@ describe("reporter structured output", () => {
       });
     },
   );
+
+  describe("catalog validate judged by the change scope", () => {
+    const catalogConfig = {
+      version: 1 as const,
+      current_project: "prj-0001",
+      projects: { "prj-0001": { catalog_path: "catalog" } },
+    };
+
+    it.each(["not_applicable", "not_run"] as const)(
+      "accepts catalog validate as %s when no change reaches docs/ja/projects/",
+      (status) => {
+        const input = evidence();
+        input.changes = [
+          { path: "src/exec-reporter.ts", status: "M" },
+          { path: "docs/ja/specdojo/guides/exec-config-guide.md", status: "M" },
+        ];
+        input.validations = [
+          {
+            source: "executor",
+            command: "npx specdojo catalog validate --project prj-0001",
+            status,
+            summary: "変更が docs/ja/projects/ 配下に及ばない",
+            ...(status === "not_applicable"
+              ? { reason: "変更が docs/ja/projects/ 配下に及ばない" }
+              : {}),
+          },
+        ];
+
+        expect(
+          deriveReporterFacts(input, {
+            packageDependencies: new Set(["specdojo"]),
+            specdojoConfig: catalogConfig,
+          }),
+        ).toMatchObject({ outcome: "complete", block_reason: "" });
+      },
+    );
+
+    it("blocks catalog validate as not_applicable when a renamed path reaches docs/ja/projects/", () => {
+      const input = evidence();
+      input.changes = [
+        { path: "docs/old.md -> docs/ja/projects/prj-0001/design/new.md", status: "R" },
+      ];
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx specdojo catalog validate --project prj-0001",
+          status: "not_applicable",
+          summary: "適用外として報告",
+          reason: "変更が docs/ja/projects/ 配下に及ばない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: catalogConfig,
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason:
+          "executor validation failed or not run: npx specdojo catalog validate --project prj-0001",
+      });
+    });
+
+    it("judges the change scope against the deliverable changes, not runner-managed records", () => {
+      const input = evidence();
+      input.changes = [
+        { path: "src/exec-reporter.ts", status: "M" },
+        {
+          path: "docs/ja/projects/prj-0001/execution/exec/results/pjr-ab12-result.md",
+          status: "M",
+        },
+      ];
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx specdojo catalog validate",
+          status: "not_run",
+          summary: "適用条件を確認していない",
+        },
+      ];
+      const selected = evidenceForReporter(input, {
+        repoRoot: "/repo",
+        worktreePath: "/repo",
+        executionPath: "/repo/docs/ja/projects/prj-0001/execution",
+        factOptions: {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: {
+            ...catalogConfig,
+            projects: {
+              "prj-0001": {
+                base_path: "docs/ja/projects/prj-0001",
+                catalog_path: "catalog",
+              },
+            },
+          },
+        },
+      });
+
+      expect(selected.runner_context?.mechanically_not_applicable).toEqual([
+        {
+          command: "npx specdojo catalog validate",
+          reason: "変更が docs/ja/projects/ 配下に及ばない",
+        },
+      ]);
+      expect(
+        deriveReporterFacts(selected, {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: catalogConfig,
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    });
+  });
+
+  describe("index build owned by the runner", () => {
+    it.each([
+      ["specdojo index build", "not_run"],
+      ["npx specdojo index build", "not_run"],
+      ["node --import tsx src/specdojo.ts index build", "not_run"],
+      ["npx tsx src/specdojo.ts index build", "not_run"],
+      ["node dist/specdojo.js index build", "not_run"],
+      ["npx specdojo index build", "not_applicable"],
+    ] as const)("accepts %s reported as %s", (command, status) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command,
+          status,
+          summary: ".specdojo/doc-index.json は agent が書き込めない",
+          ...(status === "not_applicable" ? { reason: "runner が index を再生成する" } : {}),
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: null,
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    });
+
+    it("still blocks an executor-reported failed index build", () => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx specdojo index build",
+          status: "failed",
+          summary: "EACCES",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: null,
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason: "executor validation failed or not run: npx specdojo index build",
+      });
+    });
+
+    it("does not accept the executor not_run when the runner failed to regenerate the index", () => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx specdojo index build",
+          status: "not_run",
+          summary: "runner へ委譲",
+        },
+        {
+          source: "runner",
+          command: "specdojo index build",
+          status: "not_run",
+          summary: "index の再生成を実行できなかった",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: null,
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason: expect.stringMatching(/^parent validation failed: /u),
+      });
+    });
+
+    it.each(["npx specdojo register build", "node --import tsx src/specdojo.ts exec refresh"])(
+      "keeps blocking other SpecDojo commands reported as not_run: %s",
+      (command) => {
+        const input = evidence();
+        input.validations = [
+          { source: "executor", command, status: "not_run", summary: "実行していない" },
+        ];
+
+        expect(
+          deriveReporterFacts(input, {
+            packageDependencies: new Set(["specdojo"]),
+            specdojoConfig: null,
+          }),
+        ).toMatchObject({
+          outcome: "blocked",
+          block_reason: `executor validation failed or not run: ${command}`,
+        });
+      },
+    );
+  });
 
   describe("not_applicable judged against the run's target project", () => {
     const multiProjectConfig = {
@@ -510,6 +723,7 @@ describe("reporter structured output", () => {
 
     it("blocks catalog validate without --project when the run's project sets catalog_path", () => {
       const input = evidence();
+      input.changes = [{ path: "docs/ja/projects/prj-0001/design/test.md", status: "M" }];
       input.validations = [
         {
           source: "executor",
