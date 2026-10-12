@@ -8,32 +8,32 @@ specdojo:
     - specdojo:docs-structure-guide
 ---
 
-# 実践体系構成ガイド
+# 型の構成ガイド
 
-Practice System Composition Guide
+Kata Composition Guide
 
-SpecDojo の実践体系（成果物の作成を支援する文書群）が、どの種別で構成され、各種別がどんな役割を持ち、成果物とどう結びつくかを示します。実践体系の全体像を記述する正本です。
+SpecDojo の型（Kata、成果物の作成を支援する文書群）が、どの種別で構成され、各種別がどんな役割を持ち、成果物とどう結びつくかを示します。型の全体像を記述する正本です。
 
 **対象読者**
 
-- 実践体系の全体像を把握したい利用者、支援文書を設計・保守する作成者、エージェント
+- 型の全体像を把握したい利用者、支援文書を設計・保守する作成者、エージェント
 
 **この文書で分かること**
 
-- 実践体系を構成する8種別の役割、種別間の関係、成果物への紐付け（解決の仕組み）
+- 型を構成する8種別の役割、種別間の関係、成果物への紐付け（解決の仕組み）
 
 **次に読む文書**
 
 - `approach` に応じた rulebook / recipe / sample / template の参照方法は [実践の進め方ガイド](ryu-guide.md) を参照してください。
 - 文書の分類・ライフサイクル・配置は [ドキュメント構成ガイド](docs-structure-guide.md) を参照してください。
 
-## 1. 実践体系とは
+## 1. 型とは
 
-SpecDojo は、成果物（プロダクトとプロジェクトの内容そのもの）と、その作成を支援する文書群を分けて管理します。後者を実践体系と呼びます。
+SpecDojo は、成果物（プロダクトとプロジェクトの内容そのもの）と、その作成を支援する文書群を分けて管理します。後者を型（Kata）と呼びます。
 
-実践体系は成果物を再掲するものではなく、成果物を「なぜ・何を・どう書くか」を支える別の役割を担います。本書は実践体系の構成の正本であり、[全体概要ガイド](specdojo-overview-guide.md) の `実践体系の役割` は本書の概要にあたります。
+型は成果物を再掲するものではなく、成果物を「なぜ・何を・どう書くか」を支える別の役割を担います。本書は型の構成の正本であり、[全体概要ガイド](specdojo-overview-guide.md) の `型の役割` は本書の概要にあたります。
 
-npm package が所有する実践体系文書は、package ごとの authority を ID に付けます。SpecDojo core は `specdojo:`、業界固有の variant package は `construction-dojo:` などを使用します。authority は論理IDにだけ含め、ファイル名には含めません。利用プロジェクトへコピーした標準文書を override する場合は同じ完全IDを維持し、独自文書を追加する場合は別IDを付けます。
+npm package が所有する型の文書は、package ごとの authority を ID に付けます。SpecDojo core は `specdojo:`、業界固有の variant package は `construction-dojo:` などを使用します。authority は論理IDにだけ含め、ファイル名には含めません。利用プロジェクトへコピーした標準文書を override する場合は同じ完全IDを維持し、独自文書を追加する場合は別IDを付けます。
 
 ### 1.1. npm package からの参照と eject
 
@@ -45,7 +45,7 @@ package の探索では `node_modules` 全体を再帰走査せず、resolver �
 
 ## 2. 種別と役割
 
-実践体系は次の8種類の文書で構成されます。各種別は同じ内容を再掲するのではなく、それぞれ異なる問いに答えます。
+型は次の8種類の文書で構成されます。各種別は同じ内容を再掲するのではなく、それぞれ異なる問いに答えます。
 
 | 種別       | 答える問い                               | 使い方                                         |
 | ---------- | ---------------------------------------- | ---------------------------------------------- |
@@ -85,7 +85,7 @@ flowchart TB
   RB -->|frontmatterで宣言| TPL
 ```
 
-| 実践体系                   | 成果物との紐付け方                                                                                                     | 例                                          |
+| 型の種別                   | 成果物との紐付け方                                                                                                     | 例                                          |
 | -------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
 | philosophy                 | standard / rulebook が前提とする方針・概念。個別成果物への直接の紐付けはない                                           | specdojo:needs-to-implementation-philosophy |
 | standard                   | 全成果物・全 rulebook が共通して従う規約。個別成果物への直接の紐付けはない                                             | specdojo:document-metadata-standard         |
@@ -99,13 +99,13 @@ flowchart TB
 
 ## 4. 実践の型サブセットと活用
 
-exec plan が実行時に参照するのは、実践体系のうち rulebook / recipe / sample / template の4種（実践の型）です。これらをどこまで参照するか（`approach` に応じた参照方針）は [実践の進め方ガイド](ryu-guide.md) を正本とします。
+exec plan が実行時に参照するのは、型のうち rulebook / recipe / sample / template の4種（実践の型）です。これらをどこまで参照するか（`approach` に応じた参照方針）は [実践の進め方ガイド](ryu-guide.md) を正本とします。
 
 philosophy / standard は全体に効く前提・共通規約として常に踏まえ、guide / reference は個別成果物に紐づかない横断文書として理解と参照に使います。
 
 ## 5. 関連ドキュメント
 
-- [全体概要ガイド](specdojo-overview-guide.md): 実践体系を含む SpecDojo 全体像
+- [全体概要ガイド](specdojo-overview-guide.md): 成果物・型・技を含む SpecDojo 全体像
 - [実践の進め方ガイド](ryu-guide.md): `approach` に応じた実践の型の参照方法
 - [ドキュメント構成ガイド](docs-structure-guide.md): 文書の分類、命名、ディレクトリ配置
 - [ドキュメントメタ情報標準](../standards/document-metadata-standard.md): 各種別の Frontmatter 規約

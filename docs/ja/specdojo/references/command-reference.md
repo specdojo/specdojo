@@ -101,7 +101,7 @@ specdojo config scaffold --provider antigravity --global
 
 ### 2.1. kata
 
-`kata` は、利用リポジトリで上書きした実践体系と npm package から参照中の実践体系を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。
+`kata` は、利用リポジトリで上書きした型（Kata）と npm package から参照中の型を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。
 
 | コマンド         | 用途                                                    | 例                                               |
 | ---------------- | ------------------------------------------------------- | ------------------------------------------------ |
