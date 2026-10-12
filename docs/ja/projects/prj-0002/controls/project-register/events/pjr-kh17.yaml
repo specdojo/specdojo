@@ -58,3 +58,32 @@
       from: in-progress
       to: review
   previous_event_id: reg_d88b24327229478f9b4723216d7916f8
+- v: 1
+  id: reg_5874a9d710534162985ea361f4f6b49f
+  ts: "2026-10-12T05:31:52Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_f1a6bea90a314733b2e13ae657ba33f3
+- v: 1
+  id: reg_2ff38f6193f9447288b6cf1bfb5d7d3d
+  ts: "2026-10-12T05:38:51Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: 'agent exited with non-zero code: executor validation failed or not run: npx prettier --write "$SPECDOJO_REPO_SPECDOJO_LP/src/pages/index.astro"'
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: 'agent exited with non-zero code: executor validation failed or not run: npx prettier --write "$SPECDOJO_REPO_SPECDOJO_LP/src/pages/index.astro"'
+  previous_event_id: reg_5874a9d710534162985ea361f4f6b49f

@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   owner: BA
   registered_at: "2026-10-12T04:53:43Z"
   due_on: "2026-10-31"
+  block_reason: 'agent exited with non-zero code: executor validation failed or not run: npx prettier --write "$SPECDOJO_REPO_SPECDOJO_LP/src/pages/index.astro"'
 ---
 
 # PJR-KH17 LP に「何に困ったら何を使うか」の使い分けを加える
