@@ -22,13 +22,20 @@ exec-defaults.yaml は project 間で共有され、プロダクトリポジト�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `exec-defaults.yaml` を複製せずに、project ごとに親 runner の検証（`pipeline.parent_validations` の要素、`{ id, repo }` を含む）を足せる。
+- _UNDECIDED_: 指定の場所と形（`projects.<id>.run` に追加の検証を書く、`exec-defaults` が別のファイルを引き継ぐ、など）は設計時に決める。
+- prj-0002 で `{ id: typecheck, repo: specdojo-lp }` と `{ id: lint-ts, repo: specdojo-lp }` を足しても、`repos` を持たない prj-0001 の run が影響を受けないことを、テストで確認している。
+- 足した検証が、その project の run の evidence に `source: runner` と `repo` 付きで記録される。
+- [[specdojo:exec-config-guide]] と [[specdojo:specdojo-config-reference]] に、指定の方法と、共有の `exec-defaults.yaml` との関係が書かれている。
+- 前提（2026-10-12）: `exec_defaults` は `projects.<id>.run` で project ごとに指定できるが、ファイルを引き継ぐ仕組みはない。`specdojo-lp` には prj-0002 の PJR-2CQC で `typecheck`・`lint:ts` の script を用意した。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                   | 担当 | 状態 | メモ                                    |
+| --- | -------------------------------------- | ---- | ---- | --------------------------------------- |
+| 1   | 指定の場所と形を設計する               | DEV  | open | -                                       |
+| 2   | 実装し、テストと文書を更新する         | DEV  | open | -                                       |
+| 3   | prj-0002 に `specdojo-lp` の検証を足す | DEV  | open | `.specdojo/` の変更は利用者の承認を得る |
 
 ## 4. 対応結果
 
@@ -36,4 +43,6 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0002:pjr-2cqc-lp-dev-environment]]: 本項目を必要とした項目。
+- [[specdojo:exec-config-guide]]: `parent_validations` と `{ id, repo }`。
+- [[prj-0001:pjr-ns8y-parent-validation-build-format-ids]]: 許可リストに `build`・`format` の ID がない問題。
