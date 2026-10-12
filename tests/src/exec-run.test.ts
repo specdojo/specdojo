@@ -198,7 +198,9 @@ describe("extractBlockReason", () => {
 
     expect(prompt).toContain("`not_applicable`");
     expect(prompt).toContain("non-empty `reason`");
-    expect(prompt).toContain("npm script or npx package is present");
+    expect(prompt).toContain("rejects the claim when it can confirm the check applies");
+    expect(prompt).toContain("judged by that repository's package.json");
+    expect(prompt).toContain("sets `catalog_path`");
   });
 
   it("再開 executor に既存差分と全 target の構造化確認を要求する", () => {

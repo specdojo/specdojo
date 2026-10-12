@@ -1,0 +1,111 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WP44
+
+Updated ticket status → ready: /tmp/specdojo-ticket-SCOQts/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-wE55F7/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-nBtSxj/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-LkDp74/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-KGybqh/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-o6vkGy/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+ ❯ tests/src/exec-run.test.ts (47 tests | 1 failed) 21ms
+     × not_applicable に理由を要求し、機械的な反証を伝える 5ms
+Would move 1 agent member(s) from /tmp/specdojo-members-7Niomw/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-7Niomw/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-7Niomw/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-7Niomw/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-leVHJK/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-QfRpK4/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 125 passed (126)
+      Tests  1 failed | 2002 passed (2003)
+   Start at  11:07:49
+   Duration  35.49s (transform 1.95s, setup 472ms, import 15.85s, tests 38.04s, environment 6ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec-run.test.ts > extractBlockReason > not_applicable に理由を要求し、機械的な反証を伝える
+AssertionError: expected '# Plan\n\n---\n\n# Pipeline executor …' to contain 'npm script or npx package is present'
+
+- Expected
++ Received
+
+- npm script or npx package is present
++ # Plan
++
++ ---
++
++ # Pipeline executor stage instructions
++
++ This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
++ artifacts required by the plan, but do not create or update the result file. Any plan instruction
++ that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
++ runner stage and does not apply here.
++
++ The parent runner owns Git commits and repository configuration. Do not run git commit or change
++ local, global, or system Git configuration, including user.name and user.email. A Git state change
++ will stop the pipeline before validation, reporting, commit, or merge.
++
++ When writing Markdown in the final evidence, wrap identifiers or field names containing an
++ underscore in inline code (for example, `depends_on`).
++
++
++
++ Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
++ such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
++ credentials or a host-side operation. Do not use it for a check that could run but was skipped;
++ report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
++ and does not block pipeline completion.
++
++ Use validation status `not_applicable` when the repository does not meet a check's applicability
++ conditions, and include a non-empty `reason`. The runner carries it into the result without
++ blocking completion, but rejects the claim when it can confirm the check applies:
++ - `npm run <script>` / `npm test`: the script exists in package.json.
++ - `npx <package>`: the package is in package.json dependencies or devDependencies.
++ - A command that targets a declared product repository (a `<repo>:<path>` argument or
++   `--prefix <repo>`) is judged by that repository's package.json, not the project repository's.
++ - `specdojo catalog validate`: the run's target project (or `--project <id>`) sets `catalog_path`.
++   A project without `catalog_path` is a valid reason; state it in `reason`.
++
++ End the final response with exactly one machine-readable report using this envelope. Do not place
++ Markdown fences around the JSON.
++
++ <specdojo_executor_evidence>
++ {"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]}
++ </specdojo_executor_evidence>
++
+
+ ❯ tests/src/exec-run.test.ts:201:20
+    199|     expect(prompt).toContain("`not_applicable`");
+    200|     expect(prompt).toContain("non-empty `reason`");
+    201|     expect(prompt).toContain("npm script or npx package is present");
+       |                    ^
+    202|   });
+    203|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
