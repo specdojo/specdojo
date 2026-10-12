@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-adz6-register-run-non-pipeline-agent-fallback
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T08:39:33Z"
+  completed_at: "2026-10-12T07:19:46Z"
+  conclusion: pipeline の指定がない register 実行で stage_role を持つ agent だけを自動選択するようにした
 ---
 
 # PJR-ADZ6 register の実行で pipeline 用でない agent が自動で選ばれる
