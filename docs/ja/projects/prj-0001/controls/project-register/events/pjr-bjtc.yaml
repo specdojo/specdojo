@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_16da56d59036482092031b8752ca34fa
+- v: 1
+  id: reg_8836ecc56d1f459ab9dba953ac698034
+  ts: "2026-10-12T10:59:30Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 2026-10-12 19:15 の試し実行（JBR-grade-kata-ee74ff697eaf）で、worktree での実行・runner の commit・claude-expert の review（complete-with-findings）・統合（f3b5b03e3）まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: Job Run の review では executor の not_run で止めず、verdict で統合を判断するようにした
+  previous_event_id: reg_3d4bda8ab29c4e38a39954210c7c2a34

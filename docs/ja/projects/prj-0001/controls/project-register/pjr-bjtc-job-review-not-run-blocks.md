@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-bjtc-job-review-not-run-blocks
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-12T09:51:26Z"
+  completed_at: "2026-10-12T10:59:30Z"
+  conclusion: Job Run の review では executor の not_run で止めず、verdict で統合を判断するようにした
 ---
 
 # PJR-BJTC Job Run の review で executor の not_run が統合を止める
