@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-gbvm-product-root-new-files-out-of-scope
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T13:43:02Z"
+  completed_at: "2026-10-12T07:19:39Z"
+  conclusion: 使い捨てのファイルを tmp/ に置くよう指示し、tmp/ を除外し、最上位の新規ファイルを commit して申し送りに列挙するようにした
 ---
 
 # PJR-GBVM 空のプロダクトリポジトリで最上位の新規ファイルが commit 範囲外になる
