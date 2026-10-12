@@ -37,7 +37,7 @@ ChatGPT で作ったマスコットの画像（道着を着たカワウソが、
 - 公開の前に、既存の作品と目立って似ていないことを画像検索などで確かめ、結果を対応結果に書く（利用者が確かめる）。
 - `specdojo-lp/tmp/` は commit しない。画像を `src/assets/mascot/` に移した後、`tmp/` を消す。
 - 変更は `specdojo-lp` の統合先（`feature/lp-v1`）へ入れる。
-- `specdojo-lp` で `npm run build` が成功する。agent の sandbox では npm を実行できないため、executor は evidence の `validations` でこの検証を `requires_human` と記録し、ビルドは orchestrator が sandbox の外で確認する。
+- `specdojo-lp` で `npm run build` が成功する。
 - prj-0002 は `catalog_path` を設定していないため、`specdojo catalog validate` は実行しない（evidence にも記録しない）。
 - `specdojo-lp` には Prettier などの整形・lint の道具がないため、`specdojo-lp` のファイルに対して `prettier` などを実行しない（evidence にも記録しない）。
 - 前提: exec の worktree は `feature/lp-v1` の commit から作られ、未追跡の `tmp/` の画像は worktree に入らない。そのため、orchestrator が実行の前に画像を `src/assets/mascot/dojo-otter.webp` として `feature/lp-v1` へ commit しておく。
@@ -47,13 +47,16 @@ ChatGPT で作ったマスコットの画像（道着を着たカワウソが、
 | No  | 作業                                             | 担当         | 状態 | メモ                                    |
 | --- | ------------------------------------------------ | ------------ | ---- | --------------------------------------- |
 | 1   | 画像を `src/assets/mascot/` に置いて commit する | orchestrator | done | 79f9612（feature/lp-v1）。tmp/ は消した |
-| 2   | Hero の仮の枠を `<Image />` に差し替える         | UX           | open | -                                       |
+| 2   | Hero の仮の枠を `<Image />` に差し替える         | UX           | done | 幅 640 px、代替テキスト付きで表示       |
 | 3   | 既存の作品との類似を確かめる                     | 利用者       | open | 公開の前                                |
-| 4   | ビルドを確認する                                 | orchestrator | open | sandbox の外で確認する                  |
+| 4   | ビルドを確認する                                 | orchestrator | done | `npm run build` 成功                    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `specdojo-lp:src/components/sections/Hero.astro` で暫定画像を読み込み、`astro:assets` の `<Image />` により幅 640 px で表示した。生成 HTML に `width="640"` と `height="640"` が出力され、元画像約 469 KB はビルド時に約 50 KB へ最適化された。
+- `data-placeholder="mascot"` の点線枠と「マスコット（準備中）」を削除し、Hero の背景色の上へ画像を直接配置した。代替テキストには、道着を着たカワウソが書き、削り出し、磨き上げる 3 コマであることを記載した。
+- `specdojo-lp` で `npm run build` が成功した。`tmp/` ディレクトリが存在しないことも確認した。
+- 公開前に、既存作品との目立った類似がないかを利用者が画像検索などで確認する。正式なマスコット完成後は [[prj-0002:pjr-fsmc-lp-mascot]] で差し替える。
 
 ## 5. 関連ドキュメント
 

@@ -1,0 +1,12 @@
+Hero の仮枠を暫定マスコット画像へ差し替えました。
+
+- `astro:assets` の `<Image />` を使用し、640×640 の寸法属性と指定の代替テキストを出力
+- ビルド時に画像を約469 KBから約50 KBへ最適化
+- 個票の作業内容・対応結果を更新
+- `npm run build`、register build、差分検査に成功
+- result ファイルは reporter stage のため未編集
+- 公開前の類似作品確認のみ、利用者による確認が必要
+
+<specdojo_executor_evidence>
+{"final_message":"Hero の仮枠を astro:assets の最適化画像へ差し替え、個票を更新しました。","validations":[{"command":"npm run build","status":"passed","summary":"Astro の静的ビルドに成功し、画像を約469 KBから約50 KBへ最適化しました。"},{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-xej4-lp-interim-mascot.md","status":"passed","summary":"個票は整形済みで変更不要でした。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0002","status":"passed","summary":"prj-0002 の登録簿生成に成功しました。"},{"command":"rg -q 'width=\"640\" height=\"640\"' dist/index.html && ! rg -q 'data-placeholder=\"mascot\"|マスコット（準備中）' dist/index.html","status":"passed","summary":"生成 HTML の寸法属性とプレースホルダ除去を確認しました。"},{"command":"git diff --check && git -C \"$SPECDOJO_REPO_SPECDOJO_LP\" diff --check","status":"passed","summary":"project と specdojo-lp の差分に空白エラーはありません。"},{"command":"画像検索による既存作品との類似確認","status":"requires_human","summary":"公開前に、利用者が既存作品との目立った類似がないことを確認する必要があります。"}]}
+</specdojo_executor_evidence>
