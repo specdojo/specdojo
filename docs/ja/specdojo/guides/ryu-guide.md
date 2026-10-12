@@ -224,7 +224,7 @@ review でも「整備状況に応じた進め方（approach）」を使いま�
 ## 4. 関連ドキュメント
 
 - [実践の型活用ガイド](kata-guide.md): rulebook / recipe / sample / template それぞれの役割と使い分け
-- [実践体系構成ガイド](practice-system-composition-guide.md): 実践の型を含む実践体系の種別と役割
+- [型の構成ガイド](practice-system-composition-guide.md): 実践の型を含む型（Kata）の種別と役割
 - [Schedule設計ガイド](schedule-design-guide.md): `approach` をタスクに設定し schedule で実行する方法
 - [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md): `exec plan` / `exec run` による plan・result の生成・命名・再実行
 - [exec運用ガイド](exec-operation-guide.md): exec plan を使った実行フロー

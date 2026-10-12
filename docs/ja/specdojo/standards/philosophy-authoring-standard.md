@@ -66,7 +66,7 @@ Philosophy Authoring Standard
 - ファイル名は `<subject>-philosophy.md` とする。
 - `id` / `type` / `status` を必須とし、共通原則は [document-metadata-standard.md](document-metadata-standard.md) に従う。
 - `type` は `philosophy` 固定とする。
-- `id` は `specdojo:<subject>-philosophy` 形式とし、authority は所有元、local-id は主題と文書種別だけを表す（[id-and-file-naming-standard.md](id-and-file-naming-standard.md) の `実践体系文書のlocal-id` に従う）。
+- `id` は `specdojo:<subject>-philosophy` 形式とし、authority は所有元、local-id は主題と文書種別だけを表す（[id-and-file-naming-standard.md](id-and-file-naming-standard.md) の `型の文書のlocal-id` に従う）。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 
 | 項目       | 必須 | 説明                                          |

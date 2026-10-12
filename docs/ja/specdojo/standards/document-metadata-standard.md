@@ -34,7 +34,7 @@ Markdown の Frontmatter と YAML・JSON の構造化メタデータに関する
 - SpecDojo が所有する項目はすべて `specdojo:` 名前空間（ネストしたオブジェクト）配下に置く。トップレベルは他フレームワーク（VitePress 等）の項目に明け渡し、SpecDojo は直接使わない。
 - `id` / `type` / `status` は全種別で必須とし、`specdojo:` 配下に置く。
 - `id` は共通スキーマの `idRef` に従い、`^[a-z0-9][a-z0-9-:]*$` に一致させる。
-- npm package が所有する実践体系文書の `id` は `<authority>:<local-id>` とし、SpecDojo core は `specdojo:` を使用する。これは Frontmatter の親キー `specdojo:` とは別に、ID値の所有元を表す namespace である。
+- npm package が所有する型（Kata）の文書の `id` は `<authority>:<local-id>` とし、SpecDojo core は `specdojo:` を使用する。これは Frontmatter の親キー `specdojo:` とは別に、ID値の所有元を表す namespace である。
 - `type` は各ドキュメント種別のスキーマに定義された値を使用する。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 - ドキュメント名は Frontmatter ではなく本文先頭の H1 に記述する。
