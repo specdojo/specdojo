@@ -43,6 +43,14 @@ LP の手順を新しいディレクトリで実際に実行して確認した�
 - 前提の明記: オーケストレーターの起動には Claude Code の導入とログインが必要で、`orch:opus` は `specdojo orchestrator launch --provider claude` を経由して `claude` を起動する。Node.js の必要な版とあわせて、「始める」の前に前提として書く。
 - register の考え方: 最初の一歩として入りやすい `todo` を先頭にし、register の 7 種類をすべて載せる。順序は `todo`（やること）→ `decision`（選択肢から方針を決める）→ `issue`（解決すべき問題）→ `question`（判断を保留し後で決める）→ `risk`（将来の不確実性）→ `change-request`（合意済み範囲の変更要求）→ `note`（記録として残す観測・分析。終端させない）とする。先頭の 3 種類を大きく、残りの 4 種類を小さく見せる。
 
+### 1.3. 再々改訂（2026-10-12）
+
+利用者のレビューを受けて次を改める。PDCA で見せる「これから」の節は別の todo で扱う。
+
+- 標語: 「記して、形にして、磨き続ける。」に改める。いつでも、どこからでも気軽に始めて、育てていけることを伝える。全体概要ガイドの標語の変更は prj-0001 の decision で扱う。
+- 「設計書」と書かない: SpecDojo のプロダクト文書は要求・要件・仕様が中心のため、「仕様書」または「要求・要件・仕様」と書く。
+- 別リポジトリ構成の図: 親ディレクトリを `app1-workspace/` とし、プロダクトごとに分けられるようにする。Quick Start とディレクトリレイアウトリファレンスの `workspace/` との差は、prj-0001 の decision で解消する。
+
 ## 2. 完了条件
 
 - LP の構成（セクションの並びと各セクションの目的）が、本個票の対応結果に記載されている。
@@ -53,6 +61,13 @@ LP の手順を新しいディレクトリで実際に実行して確認した�
   - 導入から一覧の生成までの手順と、詳しい文書への案内。
 - 「始める」セクションは、対話型オーケストレーターとの会話を主な経路とする。手順は概要の改訂の表に従い、会話の例は specdojo の README の「会話で操作する」と矛盾しない。状態を変える操作は承認を得てから実行し、`git push` などは行わないことを短く添える。
 - CLI のコマンドは参考として扱い、タブを切り替えたときだけ表示する。会話タブを既定で表示する。
+- 標語「記して、形にして、磨き続ける。」を `<title>` とヒーローの見出しに使い、ヒーローの説明文で「いつでも、どこからでも始められ、使うほど育つ」ことを伝える。
+- 原稿に「設計書」という語がない。プロダクト文書は「仕様書」または「要求・要件・仕様」と書く。
+- 「始める」の前提の次に、`app1-workspace/` の下に `app1/`・`app1-specdojo/`・`app1-specdojo-worktrees/` が並ぶ図を、両タブに共通して置く。次の 3 点を添える。
+  - register だけなら `app1-specdojo/` だけで始められる。
+  - worktree は exec で作業を隔離するときに作られる。
+  - 詳しくはディレクトリレイアウトリファレンス（<https://specdojo.github.io/specdojo/ja/specdojo/references/directory-layout-reference.html>）へ案内する。
+- 手順 1 のコマンドを、`app1-workspace/` の下に `app1-specdojo/` を作る形に合わせる。
 - タブは `role="tablist"`・`role="tab"`・`role="tabpanel"` と `aria-selected` を持ち、キーボード（左右キー）で切り替えられる。JavaScript が無効な環境では、両方のタブの内容を表示する。
 - 原稿に載せるコマンド（`npx specdojo config init`、`config scaffold --provider claude`、`register scaffold`、`register add`、`register build`）の引数と、起動用 script 名（`orch:opus` など）が、CLI の `--help`、command-reference、README に一致している。
 - 詳しい文書へのリンクは、公開中のドキュメントサイト（<https://specdojo.github.io/specdojo/ja/>）の実在するページを指している。
@@ -69,7 +84,8 @@ LP の手順を新しいディレクトリで実際に実行して確認した�
 | 2   | 原稿を書き、コマンドとリンクが正しいか確認する                             | UX   | done | -                                               |
 | 3   | `index.astro` に原稿を反映し、ビルドを確認する                             | DEV  | done | ビルドは orchestrator が sandbox の外で確認した |
 | 4   | 「始める」をオーケストレーター中心に改め、コマンドをタブで切り替える       | UX   | done | ビルドは orchestrator が sandbox の外で確認する |
-| 5   | register の 7 種類を todo から並べ、前提（Node.js・Claude Code）を書き足す | UX   | done | ビルドは orchestrator が sandbox の外で確認する |
+| 5   | register の 7 種類を todo から並べ、前提（Node.js・Claude Code）を書き足す | UX   | done | ビルドは orchestrator が sandbox の外で確認した |
+| 6   | 標語・「設計書」の語・別リポジトリ構成の図を改める                         | UX   | todo | ビルドは orchestrator が sandbox の外で確認する |
 
 ## 4. 対応結果
 
@@ -134,6 +150,7 @@ exec run は 2 回とも、成果物ではなく executor 検証の記録形式�
 - runner の親検証 7 種（lint-ts、lint-fm、lint-md、test-integration、validate-schema、typecheck、test-unit）は 2 回目ですべて passed だった。
 - orchestrator が worktree と、統合後の `specdojo-lp` の `main` で `npm run build` を実行し、`dist/index.html` が出力されること、見出しが本書の構成のとおりに並ぶことを確認した（2026-10-12）。
 - `specdojo-lp` では exec ブランチに原稿を commit し（cb7e4bb）、`main` へ `--no-ff` で merge した（ba8f1e8）。plan と result は runner の `wait` 記帳で `project/prj-0002/develop` に入っており、evidence は orchestrator が worktree から移した。
+- 再改訂（概要の再改訂）は 3 回目の exec run で `waiting` に止まらず、runner が `specdojo-lp` の `main` へ統合した（454595b）。orchestrator が 454595b で `npm run build` を実行し、`dist/index.html` が出力されること、見出しと register の 7 種類が本書の構成のとおりに並ぶことを確認した（2026-10-12）。
 
 ### 4.6. 残課題
 
