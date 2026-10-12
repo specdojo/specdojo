@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-dxdc-job-manual-run-id-mismatch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-12T09:14:26Z"
+  completed_at: "2026-10-12T10:59:17Z"
+  conclusion: "--scheduled-at なしの手動実行で、親で確定した実行枠を worktree 内の実行へ渡し Run ID を一致させた"
 ---
 
 # PJR-DXDC --scheduled-at なしの exec run --job で worktree と実行の Run ID が食い違う
