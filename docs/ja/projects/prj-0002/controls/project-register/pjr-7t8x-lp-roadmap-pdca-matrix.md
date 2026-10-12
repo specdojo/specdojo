@@ -9,8 +9,9 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
-  owner: UX
+  owner: BA
   registered_at: "2026-10-12T04:09:17Z"
+  due_on: "2026-10-31"
 ---
 
 # PJR-7T8X LP に PDCA マトリクスで「これから」の節を加える
