@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_253a28b1e8564e64ae523f21917e6e72
+- v: 1
+  id: reg_28008e99535148dfb3d9120b4d3e2833
+  ts: "2026-10-12T12:58:57Z"
+  action: close
+  actor: BA
+  from_status: review
+  to_status: done
+  reason: orchestrator のレビューで完了条件を満たすことを確かめ、BA が完了と判断した。exec run（register worktree）で実装した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: specdojo-lp の README の構成の表を今の構成（節ごとのコンポーネント、links.ts、暫定のマスコット画像）に合わせ、feature/lp-v1 へ統合した（0126899）。ソースのコメントと LP の文言に、直す古い記述はなかった
+  previous_event_id: reg_db272e1ee74d44c98fb4721ea168761b

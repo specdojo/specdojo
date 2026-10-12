@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-1qbz-lp-stale-docs
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-10-12T08:53:07Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T12:58:57Z"
+  conclusion: specdojo-lp の README の構成の表を今の構成（節ごとのコンポーネント、links.ts、暫定のマスコット画像）に合わせ、feature/lp-v1 へ統合した（0126899）。ソースのコメントと LP の文言に、直す古い記述はなかった
 ---
 
 # PJR-1QBZ specdojo-lp の README と古くなった記述を現状に合わせる
