@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_c001ce7c05ad49c0ae6627085c29034c
+- v: 1
+  id: reg_9a5689e32a3540b5932ab677d13b07a4
+  ts: "2026-10-12T01:59:52Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: specdojo index build"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: specdojo index build"
+  previous_event_id: reg_8acf537bb9704c5c86d427a71304d805
