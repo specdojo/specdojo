@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-9g9y-practice-execution-terminology
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: BA
   registered_at: "2026-10-12T04:10:12Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T06:11:35Z"
+  conclusion: 選択肢 C。3 つの体系を成果物・型（Kata）・技（Waza）に改め、流（Ryu）をそれらをつなぐ属性とする。標語・PDCA マトリクス・仕様書の語・app1-workspace/ もあわせて改める
 ---
 
 # PJR-9G9Y 体系の用語と標語を見直す
