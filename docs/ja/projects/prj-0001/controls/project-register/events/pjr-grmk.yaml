@@ -106,3 +106,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3996198dd86b4a519240271b14fda2d7
+- v: 1
+  id: reg_ec5100e78fcb4157a1ca3239ff144ee6
+  ts: "2026-10-12T07:20:01Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: lefthook.yml を exec handoff apply で適用し（09f730dd6）、再開して runner が統合（0b946d51f）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: catalog_path のない project では pre-commit の catalog-validate を飛ばすようにした
+  previous_event_id: reg_f4dd25da3bb54f839225f7fdd5408f28

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-grmk-catalog-validate-hook-without-catalog
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T04:10:29Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T07:20:01Z"
+  conclusion: catalog_path のない project では pre-commit の catalog-validate を飛ばすようにした
 ---
 
 # PJR-GRMK pre-commit の catalog-validate が `catalog_path` のない project で失敗する
