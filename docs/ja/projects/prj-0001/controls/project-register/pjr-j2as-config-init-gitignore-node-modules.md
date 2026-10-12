@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-j2as-config-init-gitignore-node-modules
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   registered_at: "2026-10-12T03:21:36Z"
+  completed_at: "2026-10-12T07:19:54Z"
+  conclusion: config init が .gitignore に node_modules/ を追記するようにした
 ---
 
 # PJR-J2AS config init が .gitignore に node_modules/ を加えない

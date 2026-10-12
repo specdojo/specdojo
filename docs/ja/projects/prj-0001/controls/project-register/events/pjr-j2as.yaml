@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_afbff29802a3470bb5eb2459bf79cbb5
+- v: 1
+  id: reg_f76ff02ad3844275a996a6690b5f96ef
+  ts: "2026-10-12T07:19:54Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（6763c427b）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: config init が .gitignore に node_modules/ を追記するようにした
+  previous_event_id: reg_87db7c6fc244426b99395772c0f8d502
