@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XY4C",
+  "run_id": "20261012T125314628Z-304dabfc",
+  "updated_at": "2026-10-12T21:57:00.549Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-10-12T12:54:21.579Z",
+      "completed_at": "2026-10-12T13:00:43.969Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XY4C/20261012T125314628Z-304dabfc/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "codex-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-12T13:04:19.662Z",
+      "completed_at": "2026-10-12T13:04:29.985Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-xy4c-20261012T125314Z-5f90-result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "codex-reporter",
+      "attempts": 4,
+      "started_at": "2026-10-12T21:57:00.549Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 18ms (unchanged); FAIL  tests/packages/docs-lint/remark-no-unescaped-angle-placeholder.test.ts > remarkNoUnescapedAnglePlaceholder against the real docs tree > produces no false positives on the existing docs/ markdown; Test Files  11 failed | 134 passed (145); Tests  18 failed | 2208 passed (2226)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-xy4c-20261012T125314Z-5f90-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-xy4c-20261012T125314Z-5f90-result.md"
+  }
+}

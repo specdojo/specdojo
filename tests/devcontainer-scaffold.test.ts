@@ -275,6 +275,13 @@ describe("runDevcontainerScaffold", () => {
 
     const shCall = findWriteCall("post-create.sh");
     expect(shCall[1]).toContain("curl -fsSL https://claude.ai/install.sh");
+    expect(shCall[1]).toContain(
+      "dpkg-query -W -f='${Status}' bubblewrap 2>/dev/null | grep -qx 'install ok installed'",
+    );
+    expect(shCall[1]).toContain("if ! sudo apt-get remove -y bubblewrap; then");
+    expect(shCall[1]).toContain(
+      "Warning: Failed to remove system bubblewrap; Codex sandbox may not start.",
+    );
     expect(shCall[1]).toContain("curl -fsSL https://chatgpt.com/codex/install.sh");
     expect(shCall[1]).toContain("sudo npm install -g @openai/codex@latest");
     expect(shCall[1]).toContain("sudo npm install -g opencode-ai@latest");
@@ -441,6 +448,8 @@ describe("runDevcontainerScaffold", () => {
     const jsonCall = findWriteCall("devcontainer.json");
     const json = JSON.parse(String(jsonCall[1]));
     expect(json).not.toHaveProperty("runArgs");
+    const shCall = findWriteCall("post-create.sh");
+    expect(shCall[1]).not.toContain("bubblewrap");
   });
 
   it("should normalize the repository name used as the volume prefix", async () => {
