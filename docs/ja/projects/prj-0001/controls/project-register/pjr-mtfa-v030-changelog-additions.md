@@ -21,13 +21,20 @@ PJR-HRMS の完了後に入った変更（複数リポジトリの worktree 準�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `CHANGELOG.md` の `## [0.3.0]` に、次の変更が既存の書式（`### 追加機能` / `### 不具合修正` / `### 既知の問題` の区分、項目ごとの記述と登録簿の ID の併記）で追記されている。各項目の内容は、該当する個票の対応結果と、develop に統合された実装から確かめて書く。
+  - 追加機能: routine が起動する Job Run を exec の worktree で実行し、runner の commit・review・verdict による統合を経る流れ（PJR-VQZA）。Job Definition の `task.review` による統合前 review の宣言と review agent の指名、routine の `action.commit` の互換の扱い（PJR-MD3C）。block された保護対象の設定変更を申し送りから統合先へ適用するコマンド（PJR-BJH6）。
+  - 不具合修正: 複数リポジトリの worktree 準備の順序（PJR-NN43）、複数 project での `specdojo build` の登録簿生成（PJR-WJ83）、register 実行での pipeline 用でない agent の自動選択（PJR-ADZ6）、`not_applicable` の判定（PJR-WP44）、プロダクトリポジトリの検証の `not_run` の扱い（PJR-2GZE）、プロダクト worktree への依存の導入（PJR-86Q5）、再開時の同期での同じ内容の未追跡ファイル（PJR-B2EC）、最上位の新規ファイルと `tmp/` の扱い（PJR-GBVM）、`config init` の `.gitignore` への `node_modules/` の追記（PJR-J2AS）、`index build` の `not_run` で run が止まる問題（PJR-HJ99）。
+  - 既知の問題: 負荷の高い一括のテスト実行で時間切れが起きる（PJR-W2EB）。devcontainer scaffold の作るコンテナのマウント先が利用者のフォルダ名によらず固定であることと、`--tmux` などの任意機能が既定で入らないこと（PJR-PV5B）。
+- 利用者の手順に影響する変更（`task.review`、`action.commit`、`tmp/` の規則、`config init` の追記）は、[[specdojo:release-v0-3-0-migration-guide]] にも必要な範囲で反映されている。
+- 開発用の hook など、利用者に配布されない変更（PJR-GRMK など）は追記しない。
+- `npm run lint:md` が通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                             | 担当 | 状態 | メモ |
+| --- | ------------------------------------------------ | ---- | ---- | ---- |
+| 1   | 各項目の個票と実装を確かめ、CHANGELOG に追記する | DEV  | open | -    |
+| 2   | 移行ガイドへの反映を確かめる                     | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -35,4 +42,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-hrms-v030-changelog-finalize]]: 前回の CHANGELOG の最終化
+- [[prj-0001:pjr-p8tk-release-stabilization-criteria]]: 公開の判定基準 6
