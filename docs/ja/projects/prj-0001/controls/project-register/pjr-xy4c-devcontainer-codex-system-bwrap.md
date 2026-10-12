@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-12T12:52:35Z"
-  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XY4C/20261012T125314628Z-304dabfc/evidence.json 35ms (unchanged); FAIL  tests/packages/docs-…"
+  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 14ms (unchanged); FAIL  tests/src/grade.test.ts > grade plan > lists refe…"
 ---
 
 # PJR-XY4C devcontainer scaffold の codex でシステムの bubblewrap が sandbox を失敗させる
@@ -41,7 +41,11 @@ scaffold が使う typescript-node:22 のイメージに /usr/bin/bwrap があ�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+解決内容: `codex` provider を指定した場合だけ、scaffold が生成する `post-create.sh` にシステムの `bubblewrap` package の導入状態を確認する処理を追加した。導入済みであれば `sudo apt-get remove -y bubblewrap` を実行し、Codex 同梱の bwrap を使わせる。削除に失敗した場合は警告を標準エラーへ出して後続処理を続ける。PJR-EZAF で追加した `--security-opt=seccomp=unconfined` は維持し、`--security-opt=systempaths=unconfined` は使用しない。
+
+確認結果: scaffold の unit test に、Codex を含む provider 構成では package 確認・削除・失敗時警告が生成され、Codex を含まない構成では削除処理が生成されないことの検証を追加した。[[specdojo:command-reference|SpecDojo コマンドリファレンス]] には、ベースイメージのシステム版 bwrap を削除する理由、Codex 同梱版へ切り替えること、削除失敗時の挙動を記載した。Host Mac 上での実機確認は利用者が実施する。
+
+再発防止策: provider 条件分岐の unit test に bubblewrap の処理を含め、Codex 以外の provider へ隔離緩和や package 削除が波及しないことを継続的に検査する。
 
 ## 5. 関連ドキュメント
 
