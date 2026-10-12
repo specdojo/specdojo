@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-2cqc-lp-dev-environment
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T06:05:24Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T12:59:07Z"
+  conclusion: specdojo-lp に Prettier・ESLint・astro check と推奨の拡張機能を入れ、既存のファイルを整形して feature/lp-v1 へ取り込んだ（7cb3b82、README の Node.js の版の直しは b087e01）。親 runner での検証は prj-0001 の PJR-HE9R へ引き継いだ
 ---
 
 # PJR-2CQC specdojo-lp に標準的な開発環境を整える

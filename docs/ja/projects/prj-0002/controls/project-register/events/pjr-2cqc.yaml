@@ -45,3 +45,22 @@
       from: open
       to: review
   previous_event_id: reg_b73fadad822b46eb86df96439e299ded
+- v: 1
+  id: reg_156f97601a224f23aa68c1c1ab0cb54d
+  ts: "2026-10-12T12:59:07Z"
+  action: close
+  actor: DEV
+  from_status: review
+  to_status: done
+  reason: orchestrator のレビューで完了条件を満たすことを確かめ、DEV が完了と判断した。orchestrator が実装者として直接対応した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: specdojo-lp に Prettier・ESLint・astro check と推奨の拡張機能を入れ、既存のファイルを整形して feature/lp-v1 へ取り込んだ（7cb3b82、README の Node.js の版の直しは b087e01）。親 runner での検証は prj-0001 の PJR-HE9R へ引き継いだ
+  previous_event_id: reg_413fe95d41264095b96ed7a6b3cd918a
