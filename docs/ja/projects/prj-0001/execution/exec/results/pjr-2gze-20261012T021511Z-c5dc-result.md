@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-2GZE
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-2gze-20261012T021511Z-c5dc-plan.md
   started_at: "2026-10-12T02:15:11.761Z"
+  completed_at: "2026-10-12T02:17:12.863Z"
   agent: claude-expert-executor
+  block_reason: "rate limit reached"
 ---
 
 # Edit Result

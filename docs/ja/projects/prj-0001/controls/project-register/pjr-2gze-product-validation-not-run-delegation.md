@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T15:00:34Z"
+  block_reason: rate limit reached
 ---
 
 # PJR-2GZE プロダクトリポジトリの検証を not_run の委譲先として満たせない
