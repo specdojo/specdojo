@@ -4834,10 +4834,11 @@ async function runJobMode(opts: RunOpts): Promise<void> {
   }
 }
 
-// 登録項目の owner（Role code または agent nickname）から実行 agent を解決する。
-// 優先順位: --by → owner の nickname 一致 → owner の Role code 一致
-// （priority 昇順）→ edit-mode の汎用自動選択。owner はロールとして解釈するため、
-// human member の nickname と一致しても human へは割り当てず自動選択へフォールバックする。
+// --register の単一 agent 実行（--by 指定時）の agent を解決する。owner（Role code）や
+// role からの自動選択は行わない（PJR-ADZ6）。agent は全員 stage_role を持つ pipeline
+// メンバーであり、owner・role から選ぶと pipeline 用でない agent（翻訳専用など）や
+// result を書かない executor が単独で選ばれてしまうため。--by が無い場合の agent は
+// resolveRegisterPipelineCommand が stage_role から選ぶ。
 export function resolveRegisterCommand(
   item: { id: string; owner: string },
   roster: MemberRoster | null,
@@ -4845,68 +4846,27 @@ export function resolveRegisterCommand(
   execDefaults: ExecDefaultsConfig = {},
 ): { command: string; actor: string } {
   const by = opts.by?.trim();
-  if (by) {
-    const member = roster?.members.find((m) => m.nickname === by && m.type === "agent");
-    const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
-    if (!command) throw new Error(`Agent command not found for actor: ${by}`);
-    return { command, actor: by };
-  }
-
-  const owner = item.owner.trim();
-  const hasOwner = owner !== "" && owner !== "-" && owner !== "_TODO_";
-  if (hasOwner && roster) {
-    const nicknameMatch = roster.members.find(
-      (m) =>
-        m.nickname === owner &&
-        m.type === "agent" &&
-        hasMemberCommandSource(execDefaults, m) &&
-        m.disabled !== true,
-    );
-    if (nicknameMatch) {
-      const command = resolveMemberCommand(execDefaults, nicknameMatch);
-      if (command) return { command, actor: nicknameMatch.nickname };
-    }
-    const roleMatches = roster.members
-      .filter(
-        (m) =>
-          m.type === "agent" &&
-          hasMemberCommandSource(execDefaults, m) &&
-          m.disabled !== true &&
-          (m.mode === undefined || m.mode === "edit") &&
-          m.roles.includes(owner),
-      )
-      .sort((a, b) => (a.priority ?? 999) - (b.priority ?? 999));
-    const roleMatch = roleMatches[0];
-    if (roleMatch) {
-      const command = resolveMemberCommand(execDefaults, roleMatch);
-      if (command) return { command, actor: roleMatch.nickname };
-    }
-  }
-
-  const candidates = selectCandidates(
-    { capabilities: [] },
-    roster,
-    "edit",
-    undefined,
-    execDefaults,
-  );
-  const candidate = candidates[0];
-  const command = candidate ? resolveMemberCommand(execDefaults, candidate) : undefined;
-  if (!candidate || !command) {
+  if (!by) {
     throw new Error(
-      `No agent found for register item ${item.id} (owner: ${item.owner || "-"}). Specify --by <nickname>.`,
+      `No agent specified for register item ${item.id} (owner: ${item.owner || "-"}). ` +
+        "Specify --by <nickname>, or --executor-by <nickname> --reporter-by <nickname>.",
     );
   }
-  return { command, actor: candidate.nickname };
+  const member = roster?.members.find((m) => m.nickname === by && m.type === "agent");
+  const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
+  if (!command) throw new Error(`Agent command not found for actor: ${by}`);
+  return { command, actor: by };
 }
 
-// --register が executor/reporter パイプラインで実行されたかどうかを、CLI フラグの有無から
-// 判定する。owner/--by による従来の単一エージェント解決とは互いに排他（isRegisterPipelineRequested
-// が true の間は resolveRegisterCommand を使わない）。
+// --register を executor/reporter パイプラインで実行するかを判定する。--executor-by /
+// --reporter-by の指定があれば pipeline、どちらも無く --by も無い場合も stage_role からの
+// 自動選択で pipeline にする。--by だけを指定した場合に限り、従来の単一 agent 実行
+// （resolveRegisterCommand）を使う。両者は互いに排他である。
 export function isRegisterPipelineRequested(
-  opts: Pick<RunOpts, "executorBy" | "reporterBy">,
+  opts: Pick<RunOpts, "by" | "executorBy" | "reporterBy">,
 ): boolean {
-  return !!(opts.executorBy || opts.reporterBy);
+  if (opts.executorBy || opts.reporterBy) return true;
+  return !opts.by?.trim();
 }
 
 export type RegisterExecutorSelection =
@@ -4971,8 +4931,10 @@ function selectedRegisterExecutor(
 }
 
 // --register 向けの executor/reporter 解決。Schedule タスクの agent_pipeline と異なり、
-// register 項目には per-item のパイプライン宣言が無いため、owner/role からの自動選択は行わず
-// --executor-by / --reporter-by の明示指定のみを受け付ける。
+// register 項目には per-item のパイプライン宣言が無いため、owner/role からの自動選択は行わない。
+// --executor-by / --reporter-by は両方そろえて明示する。どちらも無い場合は stage_role:
+// executor（mode: edit）と stage_role: reporter の agent から priority 順に自動選択する。
+// stage_role を持たない agent（翻訳専用など）は候補に入らない（PJR-ADZ6）。
 export function resolveRegisterPipelineCommand(
   roster: MemberRoster | null,
   opts: Pick<RunOpts, "executorBy" | "reporterBy">,
@@ -4981,6 +4943,9 @@ export function resolveRegisterPipelineCommand(
   executor: AgentRunCandidate & { actor: string };
   reporterCandidates: AgentRunCandidate[];
 } {
+  if (!opts.executorBy && !opts.reporterBy) {
+    return autoSelectRegisterPipelineAgents(roster, execDefaults);
+  }
   if (!opts.executorBy || !opts.reporterBy) {
     throw new Error("--register pipeline execution requires both --executor-by and --reporter-by.");
   }
@@ -5026,6 +4991,53 @@ export function resolveRegisterPipelineCommand(
       },
     ],
   };
+}
+
+// --executor-by / --reporter-by も --by も無い --register 実行の agent を stage_role から選ぶ。
+// executor は mode: edit の executor（mode 未指定を含む）、reporter は mode を問わない
+// reporter を priority 順に候補とする。stage_role を持たない agent は selectCandidates の
+// 段指定によって除外される。どちらかの段に候補が無い場合は明示指定を求めるエラーにする。
+function autoSelectRegisterPipelineAgents(
+  roster: MemberRoster | null,
+  execDefaults: ExecDefaultsConfig,
+): {
+  executor: AgentRunCandidate & { actor: string };
+  reporterCandidates: AgentRunCandidate[];
+} {
+  const toCandidates = (members: ProjectMember[]): (AgentRunCandidate & { actor: string })[] =>
+    members.flatMap((member) => {
+      const command = resolveMemberCommand(execDefaults, member);
+      return command ? [{ command, actor: member.nickname, provider: member.provider }] : [];
+    });
+  const executor = toCandidates(
+    selectCandidates(
+      { capabilities: [], stage_role: "executor" },
+      roster,
+      "edit",
+      undefined,
+      execDefaults,
+    ),
+  )[0];
+  const reporterCandidates = toCandidates(
+    selectCandidates(
+      { capabilities: [], stage_role: "reporter" },
+      roster,
+      undefined,
+      undefined,
+      execDefaults,
+    ),
+  );
+  if (!executor || reporterCandidates.length === 0) {
+    const missing = [
+      ...(executor ? [] : ["stage_role: executor (mode: edit)"]),
+      ...(reporterCandidates.length > 0 ? [] : ["stage_role: reporter"]),
+    ];
+    throw new Error(
+      `No agent found for --register pipeline stage (${missing.join(", ")}). ` +
+        "Specify --executor-by <nickname> --reporter-by <nickname>, or --by <nickname>.",
+    );
+  }
+  return { executor, reporterCandidates };
 }
 
 // register pipeline の reporter 段だけを実行する。executor 直後の通常経路と、executor が
