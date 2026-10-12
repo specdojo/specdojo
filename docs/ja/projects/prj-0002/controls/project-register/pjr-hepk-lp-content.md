@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: UX
   registered_at: "2026-10-11T06:37:19Z"
-  block_reason: "checkpoint failed: Checkpoint commit failed (exec(register PJR-HEPK): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0002/controls/project-register/events…"
 ---
 
 # PJR-HEPK ランディングページの構成と原稿を作る
