@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-7wg4-lp-split-components
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T07:21:38Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-12T12:10:01Z"
+  conclusion: index.astro を節ごとのコンポーネントに分け、分割前後で dist/index.html と CSS が一致することを確かめて specdojo-lp の main へ統合した（6c6d001）
 ---
 
 # PJR-7WG4 LP の index.astro を節ごとのコンポーネントに分ける

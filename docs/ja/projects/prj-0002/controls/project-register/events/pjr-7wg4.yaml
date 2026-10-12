@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_18c7cb57cf614e33bb91f08b947e1fb7
+- v: 1
+  id: reg_ec7130001b8947f88d120ebf45a56457
+  ts: "2026-10-12T12:10:01Z"
+  action: close
+  actor: DEV
+  from_status: review
+  to_status: done
+  reason: DEV が分割前後の出力の一致の確認を受けて完了と判断した。exec run（register worktree）で実装した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: index.astro を節ごとのコンポーネントに分け、分割前後で dist/index.html と CSS が一致することを確かめて specdojo-lp の main へ統合した（6c6d001）
+  previous_event_id: reg_e19eb0a155764cceb6801888d0e24e2d
