@@ -125,3 +125,19 @@
       from: "-"
       to: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema, npm run test:unit, npm run test:integration, npm run typecheck, npm run lint:ts, npm run lint:md, npm r…"
   previous_event_id: reg_20dd625656d94944999ef3fe24a4be33
+- v: 1
+  id: reg_e7ac3c761009489a9cb0cf08e37de3a6
+  ts: "2026-10-12T05:35:27Z"
+  action: review
+  actor: naoji3x
+  from_status: waiting
+  to_status: review
+  reason: runner の親検証は通ったが修正前の executor 検証の記録で止まったため、利用者の承認を得て orchestrator が統合した（bd86926ed）
+  changes:
+    - field: status
+      from: waiting
+      to: review
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema, npm run test:unit, npm run test:integration, npm run typecheck, npm run lint:ts, npm run lint:md, npm r…"
+      to: "-"
+  previous_event_id: reg_4d71d78d7c3a4c3d9f3e1dfe180d69df
