@@ -468,6 +468,218 @@ describe("reporter structured output", () => {
     },
   );
 
+  describe("not_applicable judged against the run's target project", () => {
+    const multiProjectConfig = {
+      version: 1 as const,
+      current_project: "prj-0001",
+      projects: {
+        "prj-0001": { base_path: "docs/ja/projects/prj-0001", catalog_path: "catalog" },
+        "prj-0002": { base_path: "docs/ja/projects/prj-0002" },
+      },
+    };
+
+    it("accepts catalog validate without --project when the run's project has no catalog_path", () => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx specdojo catalog validate",
+          status: "not_applicable",
+          summary: "適用外",
+          reason: "prj-0002 に catalog_path が設定されていない",
+        },
+      ];
+      const selected = evidenceForReporter(input, {
+        repoRoot: "/repo",
+        worktreePath: "/worktrees/task",
+        executionPath: "/repo/docs/ja/projects/prj-0002/execution",
+        factOptions: {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: multiProjectConfig,
+        },
+      });
+
+      expect(selected.runner_scope).toEqual({ project_id: "prj-0002" });
+      expect(
+        deriveReporterFacts(selected, {
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: multiProjectConfig,
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    });
+
+    it("blocks catalog validate without --project when the run's project sets catalog_path", () => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx specdojo catalog validate",
+          status: "not_applicable",
+          summary: "適用外",
+          reason: "catalog_path がない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          projectId: "prj-0001",
+          packageDependencies: new Set(["specdojo"]),
+          specdojoConfig: { ...multiProjectConfig, current_project: "prj-0002" },
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason: "executor validation failed or not run: npx specdojo catalog validate",
+      });
+    });
+
+    it("does not resolve a project from an execution path matched by no project", () => {
+      const selected = evidenceForReporter(evidence(), {
+        repoRoot: "/repo",
+        worktreePath: "/worktrees/task",
+        executionPath: "/repo/elsewhere/execution",
+        factOptions: { specdojoConfig: multiProjectConfig },
+      });
+
+      expect(selected.runner_scope).toBeUndefined();
+    });
+  });
+
+  describe("not_applicable for product repository commands", () => {
+    const productConfig = {
+      version: 1 as const,
+      current_project: "prj-0002",
+      projects: {
+        "prj-0002": { repos: [{ name: "specdojo-lp", path: "../specdojo-lp" }] },
+      },
+    };
+    const projectManifest = {
+      packageScripts: { build: "tsc -b" },
+      packageDependencies: new Set(["prettier"]),
+    };
+
+    it.each([
+      "npx prettier --write specdojo-lp:src/pages/index.astro",
+      "npx --prefix specdojo-lp prettier --write src/pages/index.astro",
+      "npm --prefix specdojo-lp run build",
+      "npm --prefix ../specdojo-lp/ run build",
+    ])("accepts %s when the product repository lacks the tool", (command) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command,
+          status: "not_applicable",
+          summary: "適用外",
+          reason: "specdojo-lp の package.json に該当がない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          ...projectManifest,
+          projectId: "prj-0002",
+          specdojoConfig: productConfig,
+          productPackageManifests: {
+            "specdojo-lp": { scripts: {}, dependencies: new Set() },
+          },
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    });
+
+    it.each([
+      "npx prettier --write specdojo-lp:src/pages/index.astro",
+      "npm --prefix specdojo-lp run build",
+    ])("blocks %s when the product repository provides the tool", (command) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command,
+          status: "not_applicable",
+          summary: "適用外",
+          reason: "未導入",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: {},
+          packageDependencies: new Set(),
+          projectId: "prj-0002",
+          specdojoConfig: productConfig,
+          productPackageManifests: {
+            "specdojo-lp": {
+              scripts: { build: "astro build" },
+              dependencies: new Set(["prettier"]),
+            },
+          },
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason: `executor validation failed or not run: ${command}`,
+      });
+    });
+
+    it("still blocks a project repository command whose tool the project repository provides", () => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx prettier --write docs/test.md",
+          status: "not_applicable",
+          summary: "適用外",
+          reason: "prettier は未導入",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          ...projectManifest,
+          projectId: "prj-0002",
+          specdojoConfig: productConfig,
+          productPackageManifests: {
+            "specdojo-lp": { scripts: {}, dependencies: new Set() },
+          },
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason: "executor validation failed or not run: npx prettier --write docs/test.md",
+      });
+    });
+
+    it("names the product repository in the mechanical not_run reason", () => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm --prefix specdojo-lp run build",
+          status: "not_run",
+          summary: "未実行",
+        },
+      ];
+      const selected = evidenceForReporter(input, {
+        repoRoot: "/repo",
+        worktreePath: "/worktrees/task",
+        executionPath: "/repo/execution",
+        projectId: "prj-0002",
+        factOptions: {
+          ...projectManifest,
+          specdojoConfig: productConfig,
+          productPackageManifests: {
+            "specdojo-lp": { scripts: {}, dependencies: new Set() },
+          },
+        },
+      });
+
+      expect(selected.runner_context?.mechanically_not_applicable).toEqual([
+        {
+          command: "npm --prefix specdojo-lp run build",
+          reason: "specdojo-lp の package.json に npm script 'build' がない",
+        },
+      ]);
+    });
+  });
+
   it("accepts not_run for an npx package that is not installed", () => {
     const input = evidence();
     input.validations = [
