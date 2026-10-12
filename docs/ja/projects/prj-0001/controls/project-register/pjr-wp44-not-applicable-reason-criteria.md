@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-wp44-not-applicable-reason-criteria
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T15:00:52Z"
+  completed_at: "2026-10-12T07:19:00Z"
+  conclusion: プロダクトリポジトリのコマンドはそのリポジトリの package.json で、specdojo コマンドは対象 project の設定で not_applicable を判定するよう直した
 ---
 
 # PJR-WP44 not_applicable の理由の条件が分かりにくく正当な対象外が失敗扱いになる

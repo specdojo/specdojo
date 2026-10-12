@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8fdfb80a99264450bfc5e9ef96aae149
+- v: 1
+  id: reg_7651ad08146442f4a62f35b322f9805a
+  ts: "2026-10-12T07:19:00Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（0b50d83e4）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: プロダクトリポジトリのコマンドはそのリポジトリの package.json で、specdojo コマンドは対象 project の設定で not_applicable を判定するよう直した
+  previous_event_id: reg_999aef3f66244be8bfaa744b82dbb5a9
