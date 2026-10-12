@@ -141,6 +141,7 @@ import {
   scaffoldResult,
   updateResultStatus,
 } from "./exec-results.js";
+import { formatMarkdownFile } from "./exec-format.js";
 import {
   completeJobRun,
   executeJobCommand,
@@ -4235,7 +4236,7 @@ function jobReviewVerdict(resultPath: string): string | undefined {
   return match?.[1];
 }
 
-function fillIncompleteJobReviewResult(resultPath: string, reason: string): void {
+async function fillIncompleteJobReviewResult(resultPath: string, reason: string): Promise<void> {
   const safeReason = reason.replace(/\s+/g, " ").trim();
   let content = readFileSync(resultPath, "utf8");
   content = content
@@ -4251,9 +4252,14 @@ function fillIncompleteJobReviewResult(resultPath: string, reason: string): void
     .replace(/_TODO_: `approach`[^\n]*/, "Job Run の出力は変更していない。")
     .replace(/- verdict: _TODO_（[^\n]*）/, "- verdict: incomplete");
   writeFileSync(resultPath, content, "utf8");
+  await formatMarkdownFile(resultPath);
 }
 
-function overrideJobReviewDecision(resultPath: string, verdict: string, reason: string): void {
+async function overrideJobReviewDecision(
+  resultPath: string,
+  verdict: string,
+  reason: string,
+): Promise<void> {
   let content = readFileSync(resultPath, "utf8");
   content = content.replace(
     /^- verdict:\s*(?:complete|complete-with-findings|incomplete|grade-stale|grade-unavailable|changed-during-review)\s*$/m,
@@ -4267,6 +4273,7 @@ function overrideJobReviewDecision(resultPath: string, verdict: string, reason: 
     );
   }
   writeFileSync(resultPath, content, "utf8");
+  await formatMarkdownFile(resultPath);
 }
 
 // Child process marker for the Job executed inside the review worktree. The child must run
@@ -4583,7 +4590,7 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
         stem: reviewTaskId,
       });
     }
-    fillIncompleteJobReviewResult(resultPath, reviewReason);
+    await fillIncompleteJobReviewResult(resultPath, reviewReason);
     await updateResultStatus(resultPath, "blocked", new Date().toISOString(), reviewReason);
     verdict = "incomplete";
   } finally {
@@ -4607,12 +4614,12 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   if (unexpected.length > 0) {
     reviewReason = `review executor changed Job output: ${unexpected.join(", ")}`;
     verdict = "changed-during-review";
-    overrideJobReviewDecision(resultPath, verdict, reviewReason);
+    await overrideJobReviewDecision(resultPath, verdict, reviewReason);
   }
   if (unexpected.length === 0 && record.state !== "succeeded") {
     reviewReason = record.attempts.at(-1)?.reason ?? `Job Run state is ${record.state}`;
     verdict = "incomplete";
-    overrideJobReviewDecision(resultPath, verdict, reviewReason);
+    await overrideJobReviewDecision(resultPath, verdict, reviewReason);
   }
   if (!reviewReason && verdict && !ACCEPTED_JOB_REVIEW_VERDICTS.has(verdict)) {
     reviewReason = `review verdict is ${verdict}`;

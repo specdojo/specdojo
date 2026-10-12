@@ -1,0 +1,10 @@
+実装完了です。
+
+- 両 review result 書き換え処理で `formatMarkdownFile` を実行するよう修正。
+- complete、runner 上書き、reporter 不在の各経路に末尾改行の回帰テストを追加。
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4VAC/docs/ja/projects/prj-0001/controls/project-register/pjr-4vac-job-review-result-trailing-newline.md)の対応結果を更新。
+- 登録簿生成・カタログ検証は成功。親 runner 担当の lint、型検査、unit/integration test は未実行です。
+
+<specdojo_executor_evidence>
+{"final_message":"Job Run review result の書き換え後に末尾改行を正規化し、両書き換え経路を直接検証する回帰テストを追加した。","validations":[{"command":"npx prettier --write src/exec-run.ts tests/src/exec-job-worktree.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-4vac-job-review-result-trailing-newline.md","status":"passed","summary":"変更対象を整形した。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の生成に成功した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"既存の参照先未配置警告のみで検証に成功した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーは検出されなかった。"}]}
+</specdojo_executor_evidence>
