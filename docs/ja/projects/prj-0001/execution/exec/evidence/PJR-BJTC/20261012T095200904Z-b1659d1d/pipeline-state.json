@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-BJTC",
   "run_id": "20261012T095200904Z-b1659d1d",
-  "updated_at": "2026-10-12T10:00:38.621Z",
+  "updated_at": "2026-10-12T10:02:09.887Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-bjtc-20261012T095200Z-98fd-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "codex-expert-executor",
       "attempts": 1,
       "started_at": "2026-10-12T10:00:38.621Z",
-      "completed_at": null,
+      "completed_at": "2026-10-12T10:02:09.887Z",
       "artifact_ref": null
     }
   },
