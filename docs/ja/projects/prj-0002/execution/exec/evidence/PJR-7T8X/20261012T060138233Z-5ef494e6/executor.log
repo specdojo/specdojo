@@ -1,0 +1,13 @@
+実装を完了しました。
+
+- `specdojo-lp:src/pages/index.astro`
+  - register の PDCA 1周を追加
+  - 「次の一歩」の後に「これから」を追加
+  - スマホはカード、PC は3行×4列グリッド
+- 個票の作業内容・対応結果を更新
+- result ファイルとステータスは未変更
+- 実ビルドは orchestrator に引き継ぎます
+
+<specdojo_executor_evidence>
+{"final_message":"LPへregisterの1周とレスポンシブなPDCAマトリクスを追加し、個票を更新した","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-7t8x-lp-roadmap-pdca-matrix.md","status":"passed","summary":"個票を整形"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0002","status":"passed","summary":"prj-0002の登録簿生成に成功"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書インデックス生成に成功"},{"command":"git diff --check","status":"passed","summary":"projectとspecdojo-lpの差分に空白エラーなし"},{"command":"npm run build","status":"requires_human","summary":"個票の指定に従い、orchestratorがsandbox外で実行する必要がある"}]}
+</specdojo_executor_evidence>
