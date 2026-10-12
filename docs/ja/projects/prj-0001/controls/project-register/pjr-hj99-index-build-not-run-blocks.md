@@ -10,7 +10,7 @@ specdojo:
   item_status: waiting
   priority: medium
   registered_at: "2026-10-12T03:32:21Z"
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: ERROR: Selected model is at capacity. Please try a different model."
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-HJ99 executor が実行できない index build の not_run で run が止まる
