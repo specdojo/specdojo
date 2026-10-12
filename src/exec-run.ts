@@ -4192,11 +4192,11 @@ async function runCommandJobMode(params: {
 
 const ACCEPTED_JOB_REVIEW_VERDICTS = new Set(["complete", "complete-with-findings"]);
 
-function jobChildArgs(opts: RunOpts, projectId: string): string[] {
+function jobChildArgs(opts: RunOpts, projectId: string, scheduledAt: string): string[] {
   const args = ["exec", "run", "--job", String(opts.job), "--project", projectId];
   const inputs = Array.isArray(opts.input) ? opts.input : opts.input ? [opts.input] : [];
   for (const input of inputs) args.push("--input", input);
-  if (opts.scheduledAt) args.push("--scheduled-at", opts.scheduledAt);
+  args.push("--scheduled-at", scheduledAt);
   if (opts.jobTrigger) args.push("--job-trigger", opts.jobTrigger);
   if (opts.by) args.push("--by", opts.by);
   if (opts.reporterBy) args.push("--reporter-by", opts.reporterBy);
@@ -4463,7 +4463,9 @@ async function runJobWorktreeMode(opts: RunOpts): Promise<void> {
   );
   const worktreeTaskId = `${projectId}-${preview.record.run_id}`;
   const worktree = ensureExecWorktree({ repoRoot, worktreeBase, taskId: worktreeTaskId });
-  const childArgs = jobChildArgs(opts, projectId);
+  // materializeJobRun resolves an omitted --scheduled-at to the manual launch time. Reuse that
+  // exact slot in the child so the worktree writes the Job Run that the parent previewed.
+  const childArgs = jobChildArgs(opts, projectId, preview.record.scheduled_at);
   const [executable, fullArgs] = selfRunArgs(childArgs);
   process.stdout.write(`Running Job Run ${preview.record.run_id} in ${worktree.path}.\n`);
   const child = spawnSync(executable, fullArgs, {

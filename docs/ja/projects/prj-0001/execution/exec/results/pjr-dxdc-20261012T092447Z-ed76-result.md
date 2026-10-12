@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-DXDC
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-dxdc-20261012T092447Z-ed76-plan.md
   started_at: "2026-10-12T09:24:47.624Z"
+  completed_at: "2026-10-12T09:34:35.399Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,18 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 親プロセスで確定した `scheduled_at` を worktree 内の子プロセスへ継承し、手動 Job 実行時の Run ID 不一致を修正しました。
+- `--scheduled-at` 省略時にも Run ID が一致し、Job Run record が作成されることを統合テストで検証しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `src/exec-run.ts`: 親で確定した `scheduled_at` を worktree 内の子プロセスへ引き継ぐようにしました。
+- `tests/src/exec-job-worktree.integration.test.ts`: `--scheduled-at` を省略した Job 実行で Run ID が一致し、Job Run record が作成される統合テストを追加しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- Prettier、登録簿派生ビュー生成、カタログ検証、差分空白検査、および runner 実行の lint・型検査・単体／統合テスト・スキーマ検証はすべて成功しました。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+親プロセスで一度確定した実行時刻を子プロセスにも渡すことで、worktree 作成時と子プロセス実行時で同一の実行枠から Run ID を導出するようにしました。

@@ -194,8 +194,10 @@ function setupFixture(
 function runJob(
   repo: string,
   worktrees: string,
-  options: { worktreeFlag?: boolean } = {},
+  options: { worktreeFlag?: boolean; scheduledAt?: string | null } = {},
 ): ReturnType<typeof spawnSync> {
+  const scheduledAt =
+    options.scheduledAt === undefined ? "2026-10-12T01:00:00.000Z" : options.scheduledAt;
   return spawnSync(
     process.execPath,
     [
@@ -207,8 +209,7 @@ function runJob(
       "test",
       "--job",
       "job-sample",
-      "--scheduled-at",
-      "2026-10-12T01:00:00.000Z",
+      ...(scheduledAt ? ["--scheduled-at", scheduledAt] : []),
       ...(options.worktreeFlag === false ? [] : ["--worktree"]),
       "--worktree-base",
       worktrees,
@@ -267,6 +268,26 @@ describe("Job Run worktree integration", () => {
     expect(reviewResult).toContain("- verdict: incomplete");
     expect(reviewResult).toContain("No reporter is available for Job Run review.");
     expectSingleTrailingNewline(reviewResult);
+  }, 120_000);
+
+  it("reuses the parent run identity when a reviewed manual Job omits --scheduled-at", () => {
+    const fixture = setupFixture("complete", { declareReview: true });
+    const result = runJob(fixture.repo, fixture.worktrees, {
+      worktreeFlag: false,
+      scheduledAt: null,
+    });
+
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+    const output = String(result.stdout);
+    const parentRunId = output.match(/Running Job Run (JBR-[^ ]+) in /)?.[1];
+    const completedRunId = output.match(/Job Run complete: (JBR-\S+)/)?.[1];
+    const mergedRunId = output.match(/\[routine-job\] merged run_id=(JBR-\S+)/)?.[1];
+    expect(parentRunId).toMatch(/^JBR-/);
+    expect(completedRunId).toBe(parentRunId);
+    expect(mergedRunId).toBe(parentRunId);
+    expect(git(fixture.repo, "ls-files", `execution/jobs/runs/${parentRunId}.json`)).toBe(
+      `execution/jobs/runs/${parentRunId}.json`,
+    );
   }, 120_000);
 
   it("reviews a Job that declares task.review without --worktree using the nominated review executor", () => {
