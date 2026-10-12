@@ -86,7 +86,7 @@ LP の手順を新しいディレクトリで実際に実行して確認した�
 | 3   | `index.astro` に原稿を反映し、ビルドを確認する                             | DEV  | done | ビルドは orchestrator が sandbox の外で確認した |
 | 4   | 「始める」をオーケストレーター中心に改め、コマンドをタブで切り替える       | UX   | done | ビルドは orchestrator が sandbox の外で確認する |
 | 5   | register の 7 種類を todo から並べ、前提（Node.js・Claude Code）を書き足す | UX   | done | ビルドは orchestrator が sandbox の外で確認した |
-| 6   | 標語・「設計書」の語・別リポジトリ構成の図を改める                         | UX   | done | ビルドは orchestrator が sandbox の外で確認する |
+| 6   | 標語・「設計書」の語・別リポジトリ構成の図を改める                         | UX   | done | ビルドは orchestrator が sandbox の外で確認した |
 
 ## 4. 対応結果
 
@@ -160,13 +160,28 @@ exec run は 2 回とも、成果物ではなく executor 検証の記録形式�
 - orchestrator が worktree と、統合後の `specdojo-lp` の `main` で `npm run build` を実行し、`dist/index.html` が出力されること、見出しが本書の構成のとおりに並ぶことを確認した（2026-10-12）。
 - `specdojo-lp` では exec ブランチに原稿を commit し（cb7e4bb）、`main` へ `--no-ff` で merge した（ba8f1e8）。plan と result は runner の `wait` 記帳で `project/prj-0002/develop` に入っており、evidence は orchestrator が worktree から移した。
 - 再改訂（概要の再改訂）は 3 回目の exec run で `waiting` に止まらず、runner が `specdojo-lp` の `main` へ統合した（454595b）。orchestrator が 454595b で `npm run build` を実行し、`dist/index.html` が出力されること、見出しと register の 7 種類が本書の構成のとおりに並ぶことを確認した（2026-10-12）。
+- 再々改訂の 4 回目の exec run は、agent を起動する前に `waiting` に止まった。原因は 2 つあった。
+  - runner の `start` の checkpoint commit が、`SPECDOJO_PROJECT=prj-0002` の環境で pre-commit の catalog-validate に止められた（prj-0001 の PJR-GRMK）。runner の `wait` 記帳も commit できず、orchestrator が代わりに commit した。
+  - `--executor-by` / `--reporter-by` なしで起動したため、stage_role を持たない `gemma26-translator` が選ばれていた（prj-0001 の PJR-ADZ6）。
+- 5 回目は、環境変数 `SPECDOJO_PROJECT` を外し、利用者の指定で executor に `codex-expert-executor`、reporter に `gemma26-reporter` を指名して `--force-restart` で再実行した。`waiting` に止まらず、runner が `specdojo-lp` の `main` へ統合した（9e1d922）。runner の親検証 7 種はすべて passed だった。
+- orchestrator が 9e1d922 で `npm run build` を実行し、`dist/index.html` が出力されることを確認した（2026-10-12）。あわせて次を確認した。
+  - `<title>` とヒーローの見出しが「記して、形にして、磨き続ける。」で、説明文に「いつでも、どこからでも小さく始められ、記録は使うほど育ちます。」がある。
+  - 原稿に「設計書」が 0 か所で、「仕様書」が 4 か所、ヒーローの説明が「要求・要件・仕様へ形にし」である。
+  - 「始める前に用意するもの」の直後、タブの前に `app1-workspace/` の構成図と 3 点の補足、ディレクトリレイアウトリファレンスへの案内がある。
+  - 手順 1 のコマンドが `mkdir app1-workspace` から始まり、`app1-workspace/app1-specdojo` を作って初期化する。
 
 ### 4.7. 残課題
 
 - Cloudflare への配置とマスコットの絵は本項目に含めない（マスコットは PJR-FSMC）。
+- LP とドキュメントサイトの食い違いが 2 点残る。prj-0001 の PJR-9G9Y で解消する。
+  - LP の Quick Start の紹介は「仕様書に書き」だが、[[specdojo:quick-start-guide]] は「設計書」のままである。
+  - LP の構成図は `app1-workspace/` だが、[[specdojo:quick-start-guide]] と [[specdojo:directory-layout-reference]] は `workspace/` のままである。
+- PDCA で見せる「これから」の節は PJR-7T8X で扱う。
 
 ## 5. 関連ドキュメント
 
 - [[prj-0002:pjr-fv3w-lp-tech-stack]]: 技術スタックの決定。
 - [[prj-0002:pjr-cm5w-lp-initial-setup]]: LP の初期構成とテーマ。
 - [[prj-0002:pjr-fsmc-lp-mascot]]: マスコット。配置場所の仮の枠を本項目で用意する。
+- [[prj-0002:pjr-7t8x-lp-roadmap-pdca-matrix]]: PDCA マトリクスで見せる「これから」の節。本項目のレビューから分けた。
+- [[prj-0001:pjr-9g9y-practice-execution-terminology]]: 体系の用語と標語の見直し。ドキュメントサイトとの食い違いを解消する。
