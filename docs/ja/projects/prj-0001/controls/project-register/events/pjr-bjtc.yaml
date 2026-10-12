@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_74fead88896c4f11924e3bb3138ccaa5
+  ts: "2026-10-12T09:51:28Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: routine の新しい流れの試し実行（2026-10-12 18:40）で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Job Run の review で executor の not_run が統合を止める
+    - field: description
+      from: ""
+      to: "Job Run の review（mode: review）でも、executor が実行しなかった任意の確認を not_run と記録すると edit と同じ規則で run が止まり、verdict が complete-with-findings でも統合されない。review では verdict で統合を判断し、not_run では止めない"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: _TODO_
