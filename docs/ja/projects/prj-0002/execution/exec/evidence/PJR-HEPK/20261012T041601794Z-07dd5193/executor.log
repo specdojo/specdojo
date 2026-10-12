@@ -1,0 +1,11 @@
+LP の構成・原稿を更新しました。
+
+- [index.astro](/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HEPK/specdojo-lp/src/pages/index.astro): 新標語、用語修正、別リポジトリ構成図、導入コマンドを反映
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HEPK/project/docs/ja/projects/prj-0002/controls/project-register/pjr-hepk-lp-content.md): 作業 No.6 と対応結果を更新
+- Markdown 整形・lint、register/index 生成、差分検査は成功
+- result ファイルは executor 指示どおり未編集
+- LP ビルドは sandbox 外での確認が必要です
+
+<specdojo_executor_evidence>
+{"final_message":"新標語、仕様書表現、app1-workspace 配下の構成図と導入手順を LP へ反映し、PJR-HEPK 個票の作業内容・対応結果を更新した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-hepk-lp-content.md","status":"passed","summary":"個票を Prettier で整形した。"},{"command":"npx markdownlint docs/ja/projects/prj-0002/controls/project-register/pjr-hepk-lp-content.md","status":"passed","summary":"個票の Markdown lint がエラーなく完了した。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0002","status":"passed","summary":"npx tsx は sandbox の IPC 制約で EPERM となったため、規定の代替起動で登録簿生成に成功した。"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"文書索引を 2585 件で生成した。"},{"command":"git diff --check && git -C \"$SPECDOJO_REPO_SPECDOJO_LP\" diff --check","status":"passed","summary":"project と specdojo-lp の差分に空白エラーはない。"},{"command":"test -f docs/ja/specdojo/references/directory-layout-reference.md && test -f docs/ja/specdojo/guides/quick-start-guide.md && test -f docs/ja/specdojo/guides/register-operation-guide.md && test -f docs/ja/specdojo/references/command-reference.md","status":"passed","summary":"LP が案内する VitePress 文書のローカル正本がすべて存在する。"},{"command":"npm --prefix /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HEPK/specdojo-lp run build","status":"requires_human","summary":"個票の完了条件に従い、orchestrator が sandbox 外でビルド成功と dist/index.html の生成を確認する必要がある。"}]}
+</specdojo_executor_evidence>
