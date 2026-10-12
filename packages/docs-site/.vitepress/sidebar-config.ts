@@ -242,9 +242,9 @@ export const specdojoSidebarItems = [
         false,
       ),
       group(
-        "実践体系で作る",
+        "型で作る",
         [
-          guide("実践体系構成", "practice-system-composition-guide"),
+          guide("型の構成", "practice-system-composition-guide"),
           guide("実践の進め方", "ryu-guide"),
           guide("実践の型活用", "kata-guide"),
           guide("レビュー", "review-guide"),
@@ -252,7 +252,7 @@ export const specdojoSidebarItems = [
         false,
       ),
       group(
-        "遂行体系で回す",
+        "技で回す",
         [
           guide("遂行の技活用", "waza-guide"),
           guide("オーケストレーター運用", "orchestrator-operation-guide"),

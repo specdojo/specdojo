@@ -22,11 +22,11 @@ SpecDojo で成果物を作成・更新・レビューするときに、rulebook
 **次に読む文書**
 
 - 整備状況に応じた進め方（`approach`）の選び方は [実践の進め方ガイド](ryu-guide.md) を参照してください。
-- 実践の型そのものの種別と役割は [実践体系構成ガイド](practice-system-composition-guide.md) を参照してください。
+- 実践の型そのものの種別と役割は [型の構成ガイド](practice-system-composition-guide.md) を参照してください。
 
 ## 1. 実践の型の使い分け
 
-実践の型は rulebook / recipe / sample / template の4種です。各種別の役割の正本は [実践体系構成ガイド](practice-system-composition-guide.md) とし、本章では成果物を書くときの使い方を示します。
+実践の型は rulebook / recipe / sample / template の4種です。各種別の役割の正本は [型の構成ガイド](practice-system-composition-guide.md) とし、本章では成果物を書くときの使い方を示します。
 
 | 種別     | 役割                           | 確認できること                                     |
 | -------- | ------------------------------ | -------------------------------------------------- |
@@ -79,11 +79,11 @@ template は、記述する部分を _TODO_ などのプレースホルダとし
 | 実践の型メンテナンス（`*-maintenance`）の進め方                | [実践の進め方ガイド](ryu-guide.md) |
 | review でどこまで実践の型に照らすか                            | [実践の進め方ガイド](ryu-guide.md) |
 
-型そのものの種別と実践体系全体での位置づけは [実践体系構成ガイド](practice-system-composition-guide.md) を正本とします。
+型そのものの種別と型全体での位置づけは [型の構成ガイド](practice-system-composition-guide.md) を正本とします。
 
 ## 4. 関連ドキュメント
 
 - [実践の進め方ガイド](ryu-guide.md): `approach` の選び方・一覧、参照の共通原則、メンテナンス・review への適用
-- [実践体系構成ガイド](practice-system-composition-guide.md): 実践の型を含む実践体系の種別と役割
+- [型の構成ガイド](practice-system-composition-guide.md): 実践の型を含む型（Kata）の種別と役割
 - [プロジェクト概要 作成レシピ](../recipes/prj-overview-recipe.md): rulebook / recipe / sample の役割分担の記述例
 - [レビューガイド](review-guide.md): レビューの進め方と、実践の型の活用方法

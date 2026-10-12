@@ -54,7 +54,7 @@ pre-commit:
 
     catalog-validate:
       glob: "docs/ja/projects/**"
-      run: npx tsx src/specdojo.ts catalog validate
+      run: node --import tsx tools/catalog-validate-if-configured.mjs
 
     exec-refresh:
       glob: "docs/**/sch-*.yaml"

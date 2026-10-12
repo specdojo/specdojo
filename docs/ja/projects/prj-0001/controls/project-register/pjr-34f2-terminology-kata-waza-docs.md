@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   owner: BA
   registered_at: "2026-10-12T06:10:44Z"
@@ -41,13 +41,19 @@ PJR-9G9Y の決定（C、名前は成果物・型・技）に従い、全体概�
 
 | No  | 作業                                                           | 担当 | 状態 | メモ |
 | --- | -------------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | 全体概要ガイドの体系の表・流の位置づけ・技のマトリクスを改める | BA   | open | -    |
-| 2   | 「実践体系」を使う 14 ファイルの語を改める                     | BA   | open | -    |
-| 3   | 標語・「仕様書」・`app1-workspace/` を反映する                 | BA   | open | -    |
+| 1   | 全体概要ガイドの体系の表・流の位置づけ・技のマトリクスを改める | BA   | done | -    |
+| 2   | 「実践体系」を使う 14 ファイルの語を改める                     | BA   | done | -    |
+| 3   | 標語・「仕様書」・`app1-workspace/` を反映する                 | BA   | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:specdojo-overview-guide]] の `SpecDojoとは` の表を成果物・型（Kata）・技（Waza）に改め、流（Ryu、`approach`）を成果物・型・技をつなぐ属性として説明した。`成果物から実行管理への展開` で、技を PDCA × register・schedule・routine + Job のマトリクスで説明し、「遂行体系」の語をなくした。章題 `実践体系の役割` は `型の役割` に改めた。
+- 「実践体系」を、完了条件に挙がる 14 ファイルで型（Kata）に改めた。[[specdojo:practice-system-composition-guide]] の題名は「型の構成ガイド」とし、id は変えていない。章題の変更（`成果物と型の関係`、`型の文書`、`型の文書のID`、`型の文書のlocal-id`）に合わせて、章題を参照する箇所も改めた。
+- ドキュメントサイトのサイドバー（`packages/docs-site/.vitepress/sidebar-config.ts`）の表示名を H1 に揃え、グループ名を「型で作る」「技で回す」に改めた。
+- 標語を `README.md`、`docs/ja/index.md`、[[specdojo:quick-start-guide]]、[[specdojo:specdojo-overview-guide]] で「記して、形にして、磨き続ける。」に改めた。
+- プロダクト文書を指す「設計書」を `README.md` と [[specdojo:quick-start-guide]] で「仕様書」に改めた。エージェント指示ファイルの「関連する設計書を確認する」など、設計の文書そのものを指す箇所は改めていない。
+- 別リポジトリ構成の親ディレクトリを `README.md`、[[specdojo:quick-start-guide]]、[[specdojo:directory-layout-reference]]、[[specdojo:docs-structure-guide]] で `app1-workspace/` に改めた。worktree 用ディレクトリ `app1-specdojo-worktrees/` はプロジェクトリポジトリ名から導かれる既存の名前と一致しているため、そのままとした。
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 

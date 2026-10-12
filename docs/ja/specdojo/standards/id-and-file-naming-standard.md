@@ -46,7 +46,7 @@ repo/apps/product-b/docs/
 
 ドキュメントIDは、原則として **SpecDojo Unit 内で一意** にする。
 
-npm package が所有する実践体系は、利用プロジェクトの成果物と同じ Unit に展開しても所有元を識別できるよう、package ごとに定めた authority を ID の namespace として持つ。SpecDojo core の authority は `specdojo` とする。
+npm package が所有する型（Kata）の文書は、利用プロジェクトの成果物と同じ Unit に展開しても所有元を識別できるよう、package ごとに定めた authority を ID の namespace として持つ。SpecDojo core の authority は `specdojo` とする。
 
 複数の SpecDojo Unit を横断して扱う場合は、必要に応じて Unit ID とドキュメントIDの組み合わせで識別する。
 
@@ -126,7 +126,7 @@ prj-0001:prj-charter
 prj-0001:sch-track-project-definition
 ```
 
-#### 3.1.3. 実践体系文書
+#### 3.1.3. 型の文書
 
 npm package が所有する philosophy / standard / rulebook / recipe / sample / template / guide / reference は、authority を namespace として持つ。
 
@@ -198,7 +198,7 @@ prj-0002
 
 #### 3.2.3. namespace付きID
 
-プロジェクト文書とpackage所有の実践体系文書は、namespace と `local-id` をコロンで連結する。
+プロジェクト文書とpackage所有の型の文書は、namespace と `local-id` をコロンで連結する。
 
 ```text
 <namespace>:<local-id>
@@ -220,7 +220,7 @@ id: "prj-0001:prj-overview"
 ### 3.3. ファイル名
 
 - 既定推奨は `ファイル名 = local-id`
-- プロジェクト文書でも実践体系文書でも、ファイル名には namespace を含めない
+- プロジェクト文書でも型の文書でも、ファイル名には namespace を含めない
 - namespace はID上の論理的な所有元を表し、配置先ディレクトリと対応させる
 
 例:
@@ -265,11 +265,11 @@ specdojo:
 
 SpecDojo のドキュメントIDには、次の3種類がある。
 
-| 種類                | 形式                      | 用途                           |
-| ------------------- | ------------------------- | ------------------------------ |
-| ローカルID          | `<local-id>`              | プロダクト文書                 |
-| プロジェクトID      | `<project-id>:<local-id>` | プロジェクト文書               |
-| authority付き実践ID | `<authority>:<local-id>`  | package が所有する実践体系文書 |
+| 種類                | 形式                      | 用途                       |
+| ------------------- | ------------------------- | -------------------------- |
+| ローカルID          | `<local-id>`              | プロダクト文書             |
+| プロジェクトID      | `<project-id>:<local-id>` | プロジェクト文書           |
+| authority付き実践ID | `<authority>:<local-id>`  | package が所有する型の文書 |
 
 ### 4.2. プロダクト文書のID
 
@@ -318,9 +318,9 @@ prj-0001:prj-overview
 prj-0002:prj-overview
 ```
 
-### 4.4. 実践体系文書のID
+### 4.4. 型の文書のID
 
-package が所有する実践体系文書は、package ごとに定めた authority を namespace として持つ。authority と local-id は英小文字、数字、ハイフンで構成し、`prj-` で始まる authority はプロジェクトIDとの混同を避けるため使用しない。
+package が所有する型の文書は、package ごとに定めた authority を namespace として持つ。authority と local-id は英小文字、数字、ハイフンで構成し、`prj-` で始まる authority はプロジェクトIDとの混同を避けるため使用しない。
 
 ```text
 specdojo:<local-id>
@@ -427,7 +427,7 @@ IDには、次の情報を含めない。
 | 日付                 | IDの永続性を損なうため。ただし議事録・進捗レポートなど時点そのものが識別子になる場合を除く |
 | ディレクトリ上の所属 | 配置ディレクトリが表すため。package の論理的な所有元は authority で表す                    |
 
-### 4.10. 実践体系文書のlocal-id
+### 4.10. 型の文書のlocal-id
 
 `docs/ja/specdojo/` 配下のフレームワーク文書（guide、standard、reference、rulebook、recipe、sample、template）は、成果物文書の `<prefix>-<term>` とは逆に、主題語の後ろへ文書種別のサフィックスを置く。
 
@@ -463,7 +463,7 @@ specdojo-exec-operation-guide
 
 SpecDojo では、frontmatter の `id` には正規IDを使用する。
 
-一方、参照フィールドでは、同一プロジェクト内に限りプロジェクト文書のローカル参照を許可する。package所有の実践体系文書は、所有元を曖昧にしないため常に authority 付き完全IDで参照する。
+一方、参照フィールドでは、同一プロジェクト内に限りプロジェクト文書のローカル参照を許可する。package所有の型の文書は、所有元を曖昧にしないため常に authority 付き完全IDで参照する。
 
 #### 5.1.1. 正規ID
 
@@ -789,7 +789,7 @@ specdojo deliverable trash --project prj-0001 --local-id cdfd-register-operation
 - 迷ったら「これは何についての文書か？」を名詞で考える
 - プロダクト文書はローカルIDを使う
 - プロジェクト文書は `<project-id>:<local-id>` を使う
-- package 所有の実践体系文書は `<authority>:<local-id>` を使い、SpecDojo core は `specdojo:` とする
+- package 所有の型の文書は `<authority>:<local-id>` を使い、SpecDojo core は `specdojo:` とする
 - 同一プロジェクト内の参照では `<project-id>:` を省略してよい
 - 他プロジェクトへの参照では完全IDを使う
 - 入口は `-index`、横断定義は `-common` を使う

@@ -19,7 +19,7 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 **この文書で分かること**
 
 - SpecDojo Unit、文書分類、ドキュメントオーナー、命名方針、標準ディレクトリ構成の考え方
-- 成果物と実践体系（philosophy / standard / rulebook / recipe / sample / template）の関係
+- 成果物と型（Kata、philosophy / standard / rulebook / recipe / sample / template）の関係
 - 成果物カタログ（dct）・Schedule（sch）・実行管理（exec）の関係
 
 **次に読む文書**
@@ -41,16 +41,16 @@ SpecDojoで扱うドキュメントの全体構成について、以下のガイ
 | 確認したいこと                    | 読む章                                                                            |
 | --------------------------------- | --------------------------------------------------------------------------------- |
 | 文書の分類と責任の考え方          | `SpecDojoで扱うドキュメントの全体構成`〜`ドキュメントオーナー`                    |
-| 成果物・DCT・Schedule・execの関係 | `成果物と実践体系の関係`〜`成果物カタログ・Schedule・実行管理の関係`              |
+| 成果物・DCT・Schedule・execの関係 | `成果物と型の関係`〜`成果物カタログ・Schedule・実行管理の関係`                    |
 | ディレクトリの命名・構成方針      | `ディレクトリ・ファイルの命名ルール` 以降                                         |
 | プロダクトと別リポジトリで運用    | `別リポジトリ構成`                                                                |
 | ファイル単位の完全な配置一覧      | [ディレクトリレイアウトリファレンス](../references/directory-layout-reference.md) |
 
 ## 1. SpecDojoで扱うドキュメントの全体構成
 
-- SpecDojo は、1つの SpecDojo Unit で1つのプロダクト文脈を扱うことを基本とします。SpecDojo Unit とは、プロダクトドキュメント、プロジェクトドキュメント、実践体系をまとめて扱う論理的な管理境界です。
+- SpecDojo は、1つの SpecDojo Unit で1つのプロダクト文脈を扱うことを基本とします。SpecDojo Unit とは、プロダクトドキュメント、プロジェクトドキュメント、型（Kata）をまとめて扱う論理的な管理境界です。
 - 1つの SpecDojo Unit には、対象プロダクトを構築・改修するための複数のプロジェクトが存在します。プロジェクトごとにプロジェクトドキュメントを作成します。
-- 既定の別リポジトリ構成では、プロダクトドキュメントをプロダクトリポジトリへ、プロジェクトドキュメントと実践体系をプロジェクトリポジトリへ置きます。同一リポジトリ構成では、これらを1つのリポジトリの `docs/` ルートに置きます。
+- 既定の別リポジトリ構成では、プロダクトドキュメントをプロダクトリポジトリへ、プロジェクトドキュメントと型をプロジェクトリポジトリへ置きます。同一リポジトリ構成では、これらを1つのリポジトリの `docs/` ルートに置きます。
 - 1つのリポジトリで複数プロダクトを扱う場合は、プロダクトごとに文書の管理境界を分け、それぞれを独立した SpecDojo Unit として扱います。
 - 成果物IDは、原則として SpecDojo Unit 内で一意にします。複数の SpecDojo Unit を横断して扱う場合は、必要に応じて Unit ID と成果物IDの組み合わせで識別します。
 
@@ -200,9 +200,9 @@ flowchart TB
 - 図中のアーキテクチャ設計は、個別仕様に先立つ全体構造の設計を表します。
 - 「業務要件を含む」とは、業務仕様の冒頭に業務要件相当（対象範囲・成功条件・制約等）を含めることを指します。
 
-## 5. 成果物と実践体系の関係
+## 5. 成果物と型の関係
 
-成果物と、その作成を支援する実践体系（philosophy / standard / rulebook / recipe / template / sample / guide / reference）の関係、各種別の役割、成果物への紐付け方（解決の仕組み）は [実践体系構成ガイド](practice-system-composition-guide.md) を正本とします。`approach` に応じた rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照してください。
+成果物と、その作成を支援する型（Kata、philosophy / standard / rulebook / recipe / template / sample / guide / reference）の関係、各種別の役割、成果物への紐付け方（解決の仕組み）は [型の構成ガイド](practice-system-composition-guide.md) を正本とします。`approach` に応じた rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照してください。
 
 ## 6. 成果物カタログ・Schedule・実行管理の関係
 
@@ -344,7 +344,7 @@ product/
 
 ## 10. 別リポジトリ構成
 
-別リポジトリ構成は、SpecDojo Unit の運用記録をプロダクトと同じリポジトリに置かず、プロジェクトリポジトリで管理する既定構成です。プロジェクトリポジトリとは、登録簿・計画・実行記録などのプロジェクトドキュメントと実践体系を置くリポジトリです。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。この構成により、SpecDojo のプロジェクト成果物、登録簿の状態遷移、exec の実行記録をプロダクトの Git 履歴から分離します。
+別リポジトリ構成は、SpecDojo Unit の運用記録をプロダクトと同じリポジトリに置かず、プロジェクトリポジトリで管理する既定構成です。プロジェクトリポジトリとは、登録簿・計画・実行記録などのプロジェクトドキュメントと型を置くリポジトリです。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。この構成により、SpecDojo のプロジェクト成果物、登録簿の状態遷移、exec の実行記録をプロダクトの Git 履歴から分離します。
 
 ### 10.1. 採用条件
 
@@ -359,10 +359,10 @@ product/
 
 ### 10.2. ディレクトリレイアウト
 
-3つのルートを互いに独立したディレクトリとして配置します。`app1/` と `app1-specdojo/` はそれぞれ別の Git リポジトリです。`app1-specdojo-worktrees/` は両リポジトリの外に置く worktree 用の領域です。
+プロダクトごとの親ディレクトリ（例: `app1-workspace/`）の下に、3つのルートを互いに独立したディレクトリとして配置します。`app1/` と `app1-specdojo/` はそれぞれ別の Git リポジトリです。`app1-specdojo-worktrees/` は両リポジトリの外に置く worktree 用の領域です。
 
 ```text
-workspace/
+app1-workspace/
 ├── app1/                    # プロダクトのリポジトリ
 │   ├── src/
 │   └── docs/ja/product/     # 実装と同期して更新するプロダクト文書
@@ -379,7 +379,7 @@ workspace/
 
 プロダクト文書は実装と同期して改訂するため、`app1/docs/ja/product/` に置きます。README、ソースコードから生成する API リファレンス、パッケージ利用者向けの手順など、コードと同じ revision で読む付属文書も `app1/` に置きます。
 
-`app1-specdojo/` には `docs/ja/projects/` と `docs/ja/specdojo/` を置きます。前者はプロジェクト固有の目的、判断、計画、実行記録、後者は運用に使う philosophy / standard / rulebook / recipe / sample / template などの実践体系です。この境界により、プロダクトの内容と同じ revision が必要な文書は `app1/`、SpecDojo の記帳と再利用可能な実践体系は `app1-specdojo/` の履歴に残ります。
+`app1-specdojo/` には `docs/ja/projects/` と `docs/ja/specdojo/` を置きます。前者はプロジェクト固有の目的、判断、計画、実行記録、後者は運用に使う philosophy / standard / rulebook / recipe / sample / template などの型です。この境界により、プロダクトの内容と同じ revision が必要な文書は `app1/`、SpecDojo の記帳と再利用可能な型は `app1-specdojo/` の履歴に残ります。
 
 プロダクト文書の catalog `base_path` を別リポジトリへ解決する機能と、[[prj-0001:pjr-xkks-grade-sidecar|PJR-XKKS grade result のサイドカー化]] で定める成果物へ書き込まない grade 運用は、プロダクト文書を成果物として管理する場合の前提です。exec はプロダクト文書をファイルとして変更・統合できますが、catalog・grade・doc index の対象にはしません。
 
