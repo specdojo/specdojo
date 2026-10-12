@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5492ec6546b0443fac7fbf633b638c4a
+  ts: "2026-10-12T08:54:11Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-ZDVQ（プロダクトリポジトリのブランチ戦略を求めない）の決定から派生した
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロダクトリポジトリを merge せず exec branch を残す統合方式を選べるようにする
+    - field: description
+      from: ""
+      to: プロダクト側の統合はローカルの merge commit しかない。GitHub flow で PR によるレビューを必須にするプロダクトのため、プロダクト側は merge せず exec branch を残し、PR はプロダクト側で作る方式を repos の設定で選べるようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"

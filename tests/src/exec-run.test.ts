@@ -198,7 +198,36 @@ describe("extractBlockReason", () => {
 
     expect(prompt).toContain("`not_applicable`");
     expect(prompt).toContain("non-empty `reason`");
-    expect(prompt).toContain("npm script or npx package is present");
+    expect(prompt).toContain("rejects the claim when it can confirm the check applies");
+    expect(prompt).toContain("judged by that repository's package.json");
+    expect(prompt).toContain("sets `catalog_path`");
+    expect(prompt).toContain("outside `docs/ja/projects/`, is a valid reason");
+  });
+
+  it("review executor に未実施の任意確認を validations へ記録しないよう伝える", () => {
+    const prompt = buildExecutorPrompt(
+      [
+        "---",
+        "specdojo:",
+        "  task_id: T-REVIEW-010",
+        "  mode: review",
+        "---",
+        "",
+        "# Review Plan",
+      ].join("\n"),
+    );
+
+    expect(prompt).toContain("For a review task, report only checks you actually ran");
+    expect(prompt).toContain("Do not add optional");
+    expect(prompt).toContain('under "確認できなかった範囲"');
+    expect(prompt).toContain("reflect it in the verdict");
+  });
+
+  it("index build は runner が担うため executor は実行も記録もしないと伝える", () => {
+    const prompt = buildExecutorPrompt("# Plan\n");
+
+    expect(prompt).toContain("Do not run or report `specdojo index build`.");
+    expect(prompt).toContain("the runner regenerates the index");
   });
 
   it("再開 executor に既存差分と全 target の構造化確認を要求する", () => {

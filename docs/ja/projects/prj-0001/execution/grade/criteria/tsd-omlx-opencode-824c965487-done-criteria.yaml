@@ -2,7 +2,7 @@
 id: tsd-omlx-opencode-grade-criteria
 document: tsd-omlx-opencode
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx-opencode.md
-graded_at: "2026-10-09T16:07:56.327Z"
+graded_at: "2026-10-11T16:17:01.421Z"
 graded_by: agy-expert-executor
 content_hash: b4b2b3f786191abbdb817d64ba44b4099842816bb4e48f58fce57a229b61743e
 summary:
@@ -16,28 +16,28 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 採用技術の選定理由と制約が業務要件と整合していることの説明が欠落している。
+    reason: Selection rationale and constraints are not aligned with business requirements.
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: 比較結果の合否閾値や承認者などの判断に必要な情報が不足している。
+    reason: Information necessary for PO approval such as decision criteria, approver, deadline, and impact is missing.
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: 対象モデルや関連ツールのライセンスおよびバージョン方針の記載がない。
+    reason: Technical constraints, software versions, update policies, and licenses cannot be identified.
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: テストフレームワークやCI/CD環境への参照が記述されていない。
+    reason: References and setup for test frameworks and CI/CD environments are absent.
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:

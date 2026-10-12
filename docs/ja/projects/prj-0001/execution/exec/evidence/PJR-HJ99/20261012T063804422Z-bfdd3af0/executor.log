@@ -1,0 +1,28 @@
+PJR-HJ99 の修正を入れました。executor が `specdojo index build` を `not_run` と記録しても、run が止まらないようになります。テストは書きましたが、私は実行していません。`npm run test:unit` と `npm run typecheck` はこのあと親 runner が実行します。私が実行した検査は Prettier、markdownlint、`catalog validate`（終了コード 0）で、すべて通りました。
+
+**変更内容**
+
+- **`src/exec-reporter.ts`**
+  - `specdojo index build` を「runner が担う検証」として判定するようにしました。`npx specdojo`、`node --import tsx src/specdojo.ts`、`npx tsx`、`node dist/specdojo.js` のどの書き方でも対象です。
+  - executor の `not_run` / `not_applicable` では止めません。executor 自身の `failed` は従来どおり止めます。
+  - runner が index の再生成に失敗した場合は、満たしたことになりません。失敗すると worktree の準備で run が止まるか、runner の記録に残った失敗で止まります。
+  - 個票の対応策 (3) も入れました。`catalog_path` を持つ project でも、変更が `docs/ja/projects/` 配下に及ばない run では `catalog validate` を適用外として受理します。run 管理用の記録は判定から除き、rename は変更前後の両方を見ます。
+- **`src/exec-results.ts`**: index build が `not_run` のとき、result の申し送りに「runner が担う検証」と1行追記します。
+- **`src/exec-run.ts`**: executor への指示に2点を加えました。`specdojo index build` は実行も記録もしないこと、`catalog validate` は変更範囲によって適用外になりうることです。
+- **テスト**: `tests/src/exec-reporter.test.ts` と `tests/src/exec-run.test.ts` に追加しました。
+  - index build の各書き方の `not_run` / `not_applicable` が受理されること
+  - executor の `failed` と runner の失敗では止まること
+  - ほかの `specdojo` コマンドの `not_run` は従来どおり止まること
+  - 変更範囲による `catalog validate` の受理と退け
+  - 指示文の内容
+- **既存テストの修正**: `catalog validate` が止まることを確認する既存テスト2件は、新しい判定では結果が変わってしまいます。この2件は変更パスを `docs/ja/projects/` 配下に変えました。
+- **文書**: `docs/ja/specdojo/guides/exec-config-guide.md` の該当箇所と、個票の「対応結果」を更新しました。
+
+**確認していただきたい点**
+
+- 統合テストは追加していません。今回の変更は単体テストで確かめられる範囲だったためです。
+- 一時スクリプト `tmp/hj99-edit.py` が残っています。削除コマンドが承認待ちで実行できませんでした。`tmp/` はコミット対象外ですが、不要なら削除してください。
+
+<specdojo_executor_evidence>
+{"final_message":"`specdojo index build` を runner が担う検証として扱うようにした。executor の `not_run` / `not_applicable` は受理し、`failed` と runner 側の失敗では止める。`catalog validate` は変更が `docs/ja/projects/` 配下に及ばない run で適用外とする。executor への指示、result の申し送り、exec-config-guide、個票を更新し、単体テストを追加した（実行はしておらず親 runner の検証待ち）。一時ファイル tmp/hj99-edit.py は削除の承認待ちで残っている。","validations":[{"command":"npx prettier --write src/exec-reporter.ts src/exec-results.ts src/exec-run.ts tests/src/exec-reporter.test.ts tests/src/exec-run.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-hj99-index-build-not-run-blocks.md","status":"passed","summary":"整形完了（test ファイルと個票を整形）"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-hj99-index-build-not-run-blocks.md docs/ja/specdojo/guides/exec-config-guide.md","status":"passed","summary":"エラーなし"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"exit 0（既存の based_on WARN のみ）"}]}
+</specdojo_executor_evidence>

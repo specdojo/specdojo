@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-wj83-multi-project-build-index-register
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-11T11:09:50Z"
+  completed_at: "2026-10-11T12:38:51Z"
+  conclusion: "--project なしの specdojo build が全 project の登録簿を生成するよう修正し、prj-0002 の worktree 準備で通過を確認した"
 ---
 
 # PJR-WJ83 project が複数あると specdojo build の index build が他 project の登録簿の欠落で失敗する
@@ -40,11 +42,11 @@ specdojo:
 
 ## 4. 対応結果
 
-| 項目       | 内容                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 解決内容   | `src/build-command.ts` に `resolveRegisterProjectIds` を追加した。`--project` なしの `specdojo build` では、`project_register_path` を持つすべての project について `register build --project <id>` を順に実行してから index build へ進む。`--project` を明示した場合は、従来どおりその project だけを対象にする。exec / catalog / dashboard の段は従来どおり 1 project を対象にする。                                                  |
-| 確認結果   | 単体テスト `tests/src/build-command.test.ts` で対象 project の解決と段の並びを確認する。統合テスト `tests/src/build-command.integration.test.ts` では、project を 2 つ持ち生成物のない fixture で、`specdojo build`（`--project` なし）と exec の worktree 準備（`generateWorktreeArtifacts`）が両 project の `generated/pjr-index.md` を生成して通ることを確認する。テストは親 runner の `test:unit` / `test:integration` で実行する。 |
-| 再発防止策 | 2 project の fixture を使う統合テストを追加し、index build が要求する登録簿の生成範囲と build の対象範囲がずれた場合に検知できるようにした。                                                                                                                                                                                                                                                                                            |
+| 項目       | 内容                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解決内容   | `src/build-command.ts` に `resolveRegisterProjectIds` を追加した。`--project` なしの `specdojo build` では、`project_register_path` を持つすべての project について `register build --project <id>` を順に実行してから index build へ進む。`--project` を明示した場合は、従来どおりその project だけを対象にする。exec / catalog / dashboard の段は従来どおり 1 project を対象にする。                                                                                                                                                                                                                                                                                                                                                                                    |
+| 確認結果   | 単体テスト `tests/src/build-command.test.ts` で対象 project の解決と段の並びを確認する。統合テスト `tests/src/build-command.integration.test.ts` では、project を 2 つ持ち生成物のない fixture で、`specdojo build`（`--project` なし）と exec の worktree 準備（`generateWorktreeArtifacts`）が両 project の `generated/pjr-index.md` を生成して通ることを確認する。テストは親 runner の `test:unit` / `test:integration` で実行する。実環境では、#10 で `main` へ昇格した修正を `project/prj-0002/develop` へ取り込み、prj-0002 の PJR-CM5W を `--worktree --force-restart` で再実行した。worktree 準備の `specdojo build` は `register build (prj-0001)`、`register build (prj-0002)`、`index build` を含む 7 段すべてを通過し、agent の起動まで進んだ（2026-10-11）。 |
+| 再発防止策 | 2 project の fixture を使う統合テストを追加し、index build が要求する登録簿の生成範囲と build の対象範囲がずれた場合に検知できるようにした。                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 ## 5. 関連ドキュメント
 

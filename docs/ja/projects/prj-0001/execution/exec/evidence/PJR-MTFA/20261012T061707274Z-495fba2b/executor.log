@@ -1,0 +1,43 @@
+CHANGELOG の `## [0.3.0]` と移行ガイドへの追記が終わりました。ただし HJ99 は「直した」とは書かず、「既知の問題」に入れています。このため、個票の完了条件のうちこの 1 点は満たしていません。
+
+**HJ99 の扱い（判断が必要です）**
+
+- 個票の完了条件は、HJ99（`index build` の `not_run` で run が止まる問題）を「不具合修正」に挙げるよう求めています。
+- しかし HJ99 の個票は `waiting` のままで、対応結果も `_TODO_` です。止まった理由はモデルの容量不足でした。`src/exec-reporter.ts` にも `index build` を扱う変更は入っていません。
+- 実装されていない修正を書くと事実と食い違うため、「対応は未完了で、止まった場合は人または orchestrator が統合する」と既知の問題に書きました。
+- HJ99 が develop に統合されたら、この項目を「不具合修正」へ移す必要があります。
+
+**`CHANGELOG.md` の追記**
+
+| 区分 | 追記した項目 |
+| --- | --- |
+| 追加機能 | PJR-VQZA、PJR-MD3C、PJR-BJH6 |
+| 不具合修正 | PJR-NN43、PJR-WJ83、PJR-ADZ6、PJR-WP44、PJR-2GZE、PJR-86Q5、PJR-B2EC、PJR-GBVM、PJR-J2AS |
+| 既知の問題 | PJR-W2EB、PJR-PV5B、PJR-HJ99 |
+
+- 内容は各個票の対応結果から書きました。
+- PJR-86Q5 は、実際の変更が「依存を導入しなかったことをログに出す」だけだったので、そのとおりに書いています。
+- PJR-W2EB と PJR-PV5B は個票の分析欄が未記入のため、課題内容とメモに書かれている事実だけを使いました。
+- 開発用の hook など配布されない変更（PJR-GRMK など）は入れていません。
+
+**移行ガイドの追記**
+
+`docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md` では、「更新前に確認する」の表に 3 行を足しました。
+
+- routine が起動する Job の出力: `task.review` を宣言する。`action.commit` は互換のため読まれるが推奨しない。
+- コピーした共通規約テンプレート: 作業用ファイルを `tmp/` に置く規則を同期する。
+- `config init` を再実行する場合: `.gitignore` に `node_modules/` が追記されるので確認する。
+
+Job と routine は v0.2.1 にもあったことを確かめたうえで載せています。
+
+**検証**
+
+- `npx prettier --write` で 2 ファイルを整形し、`npx markdownlint` はエラーなしでした。
+- `specdojo index build` は実行していません。出力先の `.specdojo/doc-index.json` は agent の書き込み禁止対象で、runner が再生成します。
+- `specdojo catalog validate` は対象外です。`docs/ja/projects/` 配下は変更していません。
+- `lint:md` などは、この後で親 runner が実行します。
+- 登録簿・個票・result は変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"CHANGELOG.md の 0.3.0 に追加機能 3 件（PJR-VQZA、PJR-MD3C、PJR-BJH6）、不具合修正 9 件、既知の問題 3 件（PJR-W2EB、PJR-PV5B、PJR-HJ99）を追記し、移行ガイドの「更新前に確認する」の表に `task.review`、`tmp/` の規則、`config init` の `.gitignore` 追記の 3 行を加えた。PJR-HJ99 は個票が waiting で実装が未統合のため、不具合修正ではなく既知の問題に記載した。完了条件との差分なので、HJ99 の統合後に不具合修正へ移す必要がある。","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md","status":"passed","summary":"CHANGELOG.md は変更なし、移行ガイドは表を整形した"},{"command":"npx markdownlint CHANGELOG.md docs/ja/specdojo/guides/release-v0-3-0-migration-guide.md","status":"passed","summary":"エラーなし"},{"command":"specdojo index build","status":"not_run","summary":"出力先の .specdojo/doc-index.json は agent の書き込み禁止対象で、runner が worktree の準備と統合の前に再生成する（PJR-HJ99 の事象）"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"docs/ja/projects/ 配下の変更がない","reason":"変更したのは CHANGELOG.md と docs/ja/specdojo/guides/ 配下だけで、表の適用条件（docs/ja/projects/ 配下の変更）に当たらない"}]}
+</specdojo_executor_evidence>

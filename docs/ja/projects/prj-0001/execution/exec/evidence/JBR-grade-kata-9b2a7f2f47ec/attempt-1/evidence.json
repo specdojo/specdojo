@@ -1,0 +1,201 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-9b2a7f2f47ec",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-11T21:00:07.847Z",
+    "completed_at": "2026-10-11T21:47:11.936Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-index-920a4c50dc-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-job-execution-f206c7f9d3-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-opencode-agent-settings-7921b7f527-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/sysd-orchestrator-agent-settings-b1c21895d4-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-39e4cdf49b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-home-mac-dev-server-usage-cd996e0bcb-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-1333c3ab83-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-ollama-opencode-9fe49a1fb7-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-f7cad9fd9b-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/criteria/tsd-omlx-opencode-824c965487-done-criteria.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdsd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cld-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cnd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cop-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cop-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cpd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cstd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cxd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dec-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dmd-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dmd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.etc-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.etc-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ifd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-index.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-job-execution.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-opencode-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/sysd-orchestrator-agent-settings.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server-usage.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-home-mac-dev-server.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama-opencode.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-ollama.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx-opencode.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/tsd-omlx.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-deliverable-97116bd546d1.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-9b2a7f2f47ec.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 37,
+    "summary": ".../sysd-index-920a4c50dc-done-criteria.yaml       |  10 +-\n ...ysd-job-execution-f206c7f9d3-done-criteria.yaml |   6 +-\n ...de-agent-settings-7921b7f527-done-criteria.yaml |  16 +-\n ...or-agent-settings-b1c21895d4-done-criteria.yaml |  22 +-\n ...me-mac-dev-server-39e4cdf49b-done-criteria.yaml |  18 +-\n ...-dev-server-usage-cd996e0bcb-done-criteria.yaml |  10 +-\n .../tsd-ollama-1333c3ab83-done-criteria.yaml       |  16 +-\n ...d-ollama-opencode-9fe49a1fb7-done-criteria.yaml |  12 +-\n .../tsd-omlx-f7cad9fd9b-done-criteria.yaml         |  20 +-\n ...tsd-omlx-opencode-824c965487-done-criteria.yaml |  10 +-\n .../grade/results/specdojo.cdfd-uc-sample.yaml     |   7 +-\n .../grade/results/specdojo.cdsd-sample.yaml        | 122 +++++++--\n .../grade/results/specdojo.cld-sample.yaml         | 112 ++++++--\n .../grade/results/specdojo.cnd-sample.yaml         | 234 ++++++++++++++---\n .../grade/results/specdojo.cop-index-sample.yaml   | 117 ++++++---\n .../grade/results/specdojo.cop-sample.yaml         | 269 ++++++++++++++++---\n .../grade/results/specdojo.cpd-sample.yaml         | 286 ++++++++++++++++++---\n .../grade/results/specdojo.cstd-sample.yaml        |  67 ++++-\n .../grade/results/specdojo.cxd-sample.yaml         | 124 ++++++---\n .../grade/results/specdojo.dec-sample.yaml         |  80 +++++-\n .../grade/results/specdojo.dmd-index-sample.yaml   |  97 +++++--\n .../grade/results/specdojo.dmd-sample.yaml         |  80 +++++-\n .../grade/results/specdojo.etc-index-sample.yaml   | 114 ++++++--\n .../grade/results/specdojo.etc-sample.yaml         | 268 ++++++++++++++++---\n .../grade/results/specdojo.ifd-sample.yaml         | 118 ++++++---\n .../execution/grade/results/sysd-index.yaml        |  64 +++--\n .../grade/results/sysd-job-execution.yaml          |  16 +-\n .../results/sysd-opencode-agent-settings.yaml      |  38 ++-\n .../results/sysd-orchestrator-agent-settings.yaml  |  66 +++--\n .../results/tsd-home-mac-dev-server-usage.yaml     |  56 ++--\n .../grade/results/tsd-home-mac-dev-server.yaml     |   8 +-\n .../grade/results/tsd-ollama-opencode.yaml         |  64 ++---\n .../execution/grade/results/tsd-ollama.yaml        |  88 +++----\n .../execution/grade/results/tsd-omlx-opencode.yaml |  80 +++---\n .../prj-0001/execution/grade/results/tsd-omlx.yaml | 111 ++++----\n 35 files changed, 2157 insertions(+), 669 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-9b2a7f2f47ec --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-9b2a7f2f47ec/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-9b2a7f2f47ec' \"$g…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-9b2a7f2f47ec --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-9b2a7f2f47ec/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-9b2a7f2f47ec' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-9b2a7f2f47ec/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-9b2a7f2f47ec/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.3.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-9b2a7f2f47ec project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-9b2a7f2f47ec\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/specdojo/samples/cdfd-uc-sample.md\ndocument complete: docs/ja/specdojo/samples/cdfd-uc-sample.md\ndocument start: docs/ja/specdojo/samples/cdsd-sample.md\ndocument complete: docs/ja/specdojo/samples/cdsd-sample.md\ndocument start: docs/ja/specdojo/samples/cld-sample.md\ndocument complete: docs/ja/specdojo/samples/cld-sample.md\ndocument start: docs/ja/specdojo/samples/cnd-sample.md\ndocument complete: docs/ja/specdojo/samples/cnd-sample.md\ndocument start: docs/ja/specdojo/samples/cop-index-sample.md\ndocument complete: docs/ja/specdojo/samples/cop-index-sample.md\ndocument start: docs/ja/specdojo/samples/cop-sample.md\ndocument complete: docs/ja/specdojo/samples/cop-sample.md\ndocument start: docs/ja/specdojo/samples/cpd-sample.md\ndocument complete: docs/ja/specdojo/samples/cpd-sample.md\ndocument start: docs/ja/specdojo/samples/cstd-sample.md\ndocument complete: docs/ja/specdojo/samples/cstd-sample.md\ndocument start: docs/ja/specdojo/samples/cxd-sample.md\ndocument complete: docs/ja/specdojo/samples/cxd-sample.md\ndocument start: docs/ja/specdojo/samples/dec-sample.md\ndocument complete: docs/ja/specdojo/samples/dec-sample.md\ndocument start: docs/ja/specdojo/samples/dmd-index-sample.md\ndocument complete: docs/ja/specdojo/samples/dmd-index-sample.md\ndocument start: docs/ja/specdojo/samples/dmd-sample.md\ndocument complete: docs/ja/specdojo/samples/dmd-sample.md\ndocument start: docs/ja/specdojo/samples/etc-index-sample.md\ndocument complete: docs/ja/specdojo/samples/etc-index-sample.md\ndocument start: docs/ja/specdojo/samples/etc-sample.md\ndocument complete: docs/ja/specdojo/samples/etc-sample.md\ndocument start: docs/ja/specdojo/samples/ifd-sample.md\ndocument complete: docs/ja/specdojo/samples/ifd-sample.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-9b2a7f2f47ec/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-11T21:01:43Z\tdocs/ja/specdojo/samples/cdfd-uc-sample.md\t1\tpassed\t85\tpass\t94\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:06:20Z\tdocs/ja/specdojo/samples/cdsd-sample.md\t1\tpassed\t275\tfail\t70\t5\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:08:10Z\tdocs/ja/specdojo/samples/cld-sample.md\t1\tpassed\t108\tneeds-work\t86\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:11:49Z\tdocs/ja/specdojo/samples/cnd-sample.md\t1\tpassed\t218\tfail\t60\t19\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:16:48Z\tdocs/ja/specdojo/samples/cop-index-sample.md\t1\tpassed\t297\tfail\t73\t5\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:19:56Z\tdocs/ja/specdojo/samples/cop-sample.md\t1\tpassed\t186\tfail\t46\t22\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:23:08Z\tdocs/ja/specdojo/samples/cpd-sample.md\t1\tpassed\t190\tfail\t33\t23\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:26:03Z\tdocs/ja/specdojo/samples/cstd-sample.md\t1\tpassed\t173\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:29:52Z\tdocs/ja/specdojo/samples/cxd-sample.md\t1\tpassed\t227\tneeds-work\t82\t5\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:31:31Z\tdocs/ja/specdojo/samples/dec-sample.md\t1\tpassed\t97\tpass\t93\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:34:30Z\tdocs/ja/specdojo/samples/dmd-index-sample.md\t1\tpassed\t178\tneeds-work\t91\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:36:41Z\tdocs/ja/specdojo/samples/dmd-sample.md\t1\tpassed\t129\tneeds-work\t93\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:41:24Z\tdocs/ja/specdojo/samples/etc-index-sample.md\t1\tpassed\t282\tfail\t71\t6\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:44:48Z\tdocs/ja/specdojo/samples/etc-sample.md\t1\tpassed\t202\tfail\t46\t23\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-11T21:47:10Z\tdocs/ja/specdojo/samples/ifd-sample.md\t1\tpassed\t140\tneeds-work\t81\t5\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-9b2a7f2f47ec/attempt-1/command.stdout.log",
+      "bytes": 4467,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-9b2a7f2f47ec/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

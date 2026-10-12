@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-GRMK",
+  "run_id": "20261012T060209461Z-627c6213",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "failed",
+    "started_at": "2026-10-12T06:03:37.862Z",
+    "completed_at": "2026-10-12T06:15:20.201Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-grmk-catalog-validate-hook-without-catalog.md",
+      "status": "M"
+    },
+    {
+      "path": "lefthook.yml",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/catalog-validate-if-configured.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/catalog-validate-if-configured.mjs",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-grmk-catalog-validate-hook-without-catalog.md",
+      "status": "M"
+    },
+    {
+      "path": "lefthook.yml",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/catalog-validate-if-configured.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/catalog-validate-if-configured.mjs",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": "...r-grmk-catalog-validate-hook-without-catalog.md |  4 +++-\n .../pjr-grmk-20261012T060209Z-4a2d-result.md       | 27 +++++++++++++++++++++-\n lefthook.yml                                       |  2 +-\n 3 files changed, 30 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write tools/catalog-validate-if-configured.mjs tests/tools/catalog-validate-if-configured.test.ts lefthook.yml docs/ja/projects/prj-0001/controls/project-register/pjr-grmk-catalog-validate-hook-without-catalog.md",
+      "status": "passed",
+      "summary": "変更対象4ファイルの整形に成功"
+    },
+    {
+      "source": "executor",
+      "command": "SPECDOJO_PROJECT=prj-0001 node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "設定済みcatalogを省略せず検証し終了コード0。既存の`based_on`警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿と派生ビューの生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "2591件の文書index生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --check tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "ラッパーの構文検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    }
+  ],
+  "final_message": "`catalog_path` のない project だけを安全にスキップする pre-commit ラッパーと回帰テストを追加し、個票を更新した。",
+  "block_reason": "agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result handoff for human or orchestrator application",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-GRMK/20261012T060209461Z-627c6213/executor.log",
+      "bytes": 2105,
+      "truncated": false
+    }
+  ]
+}

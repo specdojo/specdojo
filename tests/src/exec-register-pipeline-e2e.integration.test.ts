@@ -235,11 +235,19 @@ if (role === "executor") {
     );
   }
   if (nickname.includes("protected-write") && !existsSync("docs/protection-applied")) {
-    writeFileSync(
-      "package.json",
-      '{"scripts":{"test:integration":"echo ran > parent-validation-ran"}}\\n',
-      "utf8",
-    );
+    const proposed = '{"scripts":{"test:integration":"echo ran > parent-validation-ran"}}\\n';
+    const protectedRoot =
+      nickname === "exec-claude-protected-write"
+        ? process.env.SPECDOJO_REPO_APP1
+        : process.cwd();
+    if (!protectedRoot) throw new Error("protected product repository is missing");
+    const packagePath = protectedRoot + "/package.json";
+    if (existsSync(packagePath) && readFileSync(packagePath, "utf8") === proposed) {
+      mkdirSync("docs", { recursive: true });
+      writeFileSync("docs/protection-applied", "applied\\n", "utf8");
+    } else {
+      writeFileSync(packagePath, proposed, "utf8");
+    }
   }
   process.stdout.write(
     "<specdojo_executor_evidence>" +
@@ -1465,94 +1473,145 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
     },
   );
 
-  it.each(["exec-codex-protected-write", "exec-claude-protected-write"])(
+  it.each([
+    ["exec-codex-protected-write", false],
+    ["exec-claude-protected-write", true],
+  ] as const)(
     "blocks %s distinctly and resumes the executor after the handoff is applied",
-    async (executor) => {
+    async (executor, productProtected) => {
       await withRepo(async ({ root, worktreeBase }) => {
-        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-        const stderr: string[] = [];
-        vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
-          stderr.push(String(chunk));
-          return true;
-        });
-        const firstParentBefore = Number(
-          git(root, "rev-list", "--first-parent", "--count", "HEAD"),
-        );
+        const products = productProtected ? enableProductRepositories(root) : undefined;
+        try {
+          vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+          const stderr: string[] = [];
+          vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+            stderr.push(String(chunk));
+            return true;
+          });
+          const firstParentBefore = Number(
+            git(root, "rev-list", "--first-parent", "--count", "HEAD"),
+          );
 
-        await runExec([
-          "run",
-          "--project",
-          "test",
-          "--register",
-          "PJR-AB12",
-          "--executor-by",
-          executor,
-          "--reporter-by",
-          "report-1",
-          "--worktree",
-          "--worktree-base",
-          worktreeBase,
-        ]);
+          await runExec([
+            "run",
+            "--project",
+            "test",
+            "--register",
+            "PJR-AB12",
+            "--executor-by",
+            executor,
+            "--reporter-by",
+            "report-1",
+            "--worktree",
+            "--worktree-base",
+            worktreeBase,
+          ]);
 
-        const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8");
-        expect(ticket).toContain("item_status: waiting");
-        expect(ticket).toContain("block_reason:");
-        expect(ticket).not.toContain("conclusion:");
-        expect(readFileSync(join(root, "package.json"), "utf8")).toContain(
-          '"test:integration": "node -e \\"process.exit(0)\\""',
-        );
-        expect(existsSync(join(root, "parent-validation-ran"))).toBe(false);
-        expect(stderr.join("")).toContain(
-          "blocked: agent-config-write: protected configuration changes detected; paths=package.json",
-        );
-        expect(process.exitCode).toBe(1);
-        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
-          firstParentBefore + 1,
-        );
-        expect(git(root, "log", "-1", "--pretty=%s")).toBe("exec(register PJR-AB12): wait");
+          const ticket = readFileSync(
+            join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"),
+            "utf8",
+          );
+          expect(ticket).toContain("item_status: waiting");
+          expect(ticket).toContain("block_reason:");
+          expect(ticket).not.toContain("conclusion:");
+          expect(readFileSync(join(root, "package.json"), "utf8")).toContain(
+            '"test:integration": "node -e \\"process.exit(0)\\""',
+          );
+          expect(existsSync(join(root, "parent-validation-ran"))).toBe(false);
+          expect(stderr.join("")).toContain(
+            productProtected
+              ? "blocked: agent-config-write: protected configuration changes detected; paths=app1:package.json"
+              : "blocked: agent-config-write: protected configuration changes detected; paths=package.json",
+          );
+          expect(process.exitCode).toBe(1);
+          expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+            firstParentBefore + 1,
+          );
+          expect(git(root, "log", "-1", "--pretty=%s")).toBe("exec(register PJR-AB12): wait");
 
-        const worktreePath = execWorktreePath(root);
-        expect(worktreePath).not.toBeNull();
-        const evidenceDir = join(worktreePath ?? "", EXECUTION_REL, "exec", "evidence", "PJR-AB12");
-        const blockedRunId = readdirSync(evidenceDir)[0];
-        const blockedState = JSON.parse(
-          readFileSync(join(evidenceDir, blockedRunId, "pipeline-state.json"), "utf8"),
-        ) as { stages: { executor: { status: string } } };
-        expect(blockedState.stages.executor.status).toBe("blocked");
+          const worktreePath = execWorktreePath(root);
+          expect(worktreePath).not.toBeNull();
+          const evidenceDir = join(
+            worktreePath ?? "",
+            EXECUTION_REL,
+            "exec",
+            "evidence",
+            "PJR-AB12",
+          );
+          const blockedRunId = readdirSync(evidenceDir)[0];
+          const blockedState = JSON.parse(
+            readFileSync(join(evidenceDir, blockedRunId, "pipeline-state.json"), "utf8"),
+          ) as { stages: { executor: { status: string } } };
+          expect(blockedState.stages.executor.status).toBe("blocked");
 
-        // 人または orchestrator が申し送りを適用し、agent 由来の保護対象差分を worktree から
-        // 取り除いた状態を再現する。再開後の fake executor は marker を見て同じ変更を再提案しない。
-        writeFileSync(join(worktreePath ?? "", "package.json"), ORIGINAL_PACKAGE, "utf8");
-        writeFileSync(join(worktreePath ?? "", "docs", "protection-applied"), "applied\n", "utf8");
+          // 確認なしでは非対話実行を拒否し、統合先を変更しない。
+          process.exitCode = undefined;
+          await runExec(["handoff", "apply", "--project", "test", "--register", "PJR-AB12"]);
+          expect(process.exitCode).toBe(1);
+          const protectedRoot = products?.app1 ?? root;
+          const protectedPackage = join(protectedRoot, "package.json");
+          if (productProtected) expect(existsSync(protectedPackage)).toBe(false);
+          else expect(readFileSync(protectedPackage, "utf8")).toBe(ORIGINAL_PACKAGE);
 
-        const beforeResume = Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"));
-        process.exitCode = undefined;
-        await runExec([
-          "run",
-          "--project",
-          "test",
-          "--register",
-          "PJR-AB12",
-          "--worktree",
-          "--worktree-base",
-          worktreeBase,
-          "--resume",
-        ]);
+          // 人または orchestrator が申し送りの提案差分を確認して、統合先へ 1 コマンドで commit する。
+          process.exitCode = undefined;
+          await runExec([
+            "handoff",
+            "apply",
+            "--project",
+            "test",
+            "--register",
+            "PJR-AB12",
+            "--yes",
+          ]);
+          expect(process.exitCode ?? 0).toBe(0);
+          expect(readFileSync(protectedPackage, "utf8")).toContain(
+            '"test:integration":"echo ran > parent-validation-ran"',
+          );
+          expect(git(protectedRoot, "log", "-1", "--pretty=%s")).toBe(
+            "exec(handoff PJR-AB12): apply protected configuration",
+          );
+          expect(git(protectedRoot, "log", "-1", "--pretty=%B")).toContain("Refs: test:PJR-AB12");
 
-        expect(process.exitCode ?? 0).toBe(0);
-        expect(
-          readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
-        ).toContain("item_status: review");
-        expect(existsSync(join(root, "docs", "protection-applied"))).toBe(true);
-        const result = readRootResult(root);
-        expect(result.match(/## 2\. 変更ファイル\n\n([\s\S]*?)\n\n## 3\./u)?.[1]).toBe(
-          "- `docs/protection-applied`: 文書を更新した。",
-        );
-        expect(execWorktreePath(root)).toBeNull();
-        expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
-          beforeResume + 1,
-        );
-        expect(git(root, "log", "-1", "--pretty=%B")).toContain("Transition: start → review");
+          const beforeResume = Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"));
+          process.exitCode = undefined;
+          await runExec([
+            "run",
+            "--project",
+            "test",
+            "--register",
+            "PJR-AB12",
+            "--worktree",
+            "--worktree-base",
+            worktreeBase,
+            "--resume",
+          ]);
+
+          expect(process.exitCode ?? 0).toBe(0);
+          expect(
+            readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"), "utf8"),
+          ).toContain("item_status: review");
+          expect(existsSync(join(root, "docs", "protection-applied"))).toBe(true);
+          const result = readRootResult(root);
+          const changedFiles = result.match(/## 2\. 変更ファイル\n\n([\s\S]*?)\n\n## 3\./u)?.[1];
+          expect(changedFiles).toContain("`docs/protection-applied`");
+          if (productProtected) {
+            expect(changedFiles).toContain("`app1:src/feature.ts`");
+            expect(changedFiles).toContain("`app2:src/feature.ts`");
+          } else {
+            expect(changedFiles).toBe("- `docs/protection-applied`: 文書を更新した。");
+          }
+          expect(execWorktreePath(root)).toBeNull();
+          expect(Number(git(root, "rev-list", "--first-parent", "--count", "HEAD"))).toBe(
+            beforeResume + 1,
+          );
+          expect(git(root, "log", "-1", "--pretty=%B")).toContain("Transition: start → review");
+        } finally {
+          if (products) {
+            rmSync(products.app1, { recursive: true, force: true });
+            rmSync(products.app2, { recursive: true, force: true });
+          }
+        }
       });
     },
     120_000,

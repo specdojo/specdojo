@@ -1,0 +1,162 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4c71e81b220a4718a88d66376511e4cb
+  ts: "2026-10-11T13:43:03Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: prj-0002 PJR-CM5W の実行で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 空のプロダクトリポジトリで最上位の新規ファイルが commit 範囲外になる
+    - field: description
+      from: ""
+      to: register 由来タスクのプロダクト worktree では、最上位に作った新規ファイル（.gitignore・設定・README）が targets なしでは commit されず統合前検査で止まる。追跡済みディレクトリの無い初期構成の作業で必ず起きる
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-11"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_d10c6fe494394e23a970ba9db9236f4a
+  ts: "2026-10-12T02:20:01Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4c71e81b220a4718a88d66376511e4cb
+- v: 1
+  id: reg_333977cfd57c4c3bae7fbd6ca625f62a
+  ts: "2026-10-12T02:21:03Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_d10c6fe494394e23a970ba9db9236f4a
+- v: 1
+  id: reg_9a2f2463bc4a4f458589cae36f7a3969
+  ts: "2026-10-12T04:23:30Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_333977cfd57c4c3bae7fbd6ca625f62a
+- v: 1
+  id: reg_eb76f25f8db64e3b9745c02c6a93f36b
+  ts: "2026-10-12T04:47:33Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_9a2f2463bc4a4f458589cae36f7a3969
+- v: 1
+  id: reg_20dd625656d94944999ef3fe24a4be33
+  ts: "2026-10-12T05:17:50Z"
+  action: start
+  actor: codex-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_eb76f25f8db64e3b9745c02c6a93f36b
+- v: 1
+  id: reg_4d71d78d7c3a4c3d9f3e1dfe180d69df
+  ts: "2026-10-12T05:22:02Z"
+  action: wait
+  actor: codex-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema, npm run test:unit, npm run test:integration, npm run typecheck, npm run lint:ts, npm run lint:md, npm r…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema, npm run test:unit, npm run test:integration, npm run typecheck, npm run lint:ts, npm run lint:md, npm r…"
+  previous_event_id: reg_20dd625656d94944999ef3fe24a4be33
+- v: 1
+  id: reg_e7ac3c761009489a9cb0cf08e37de3a6
+  ts: "2026-10-12T05:35:27Z"
+  action: review
+  actor: naoji3x
+  from_status: waiting
+  to_status: review
+  reason: runner の親検証は通ったが修正前の executor 検証の記録で止まったため、利用者の承認を得て orchestrator が統合した（bd86926ed）
+  changes:
+    - field: status
+      from: waiting
+      to: review
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema, npm run test:unit, npm run test:integration, npm run typecheck, npm run lint:ts, npm run lint:md, npm r…"
+      to: "-"
+  previous_event_id: reg_4d71d78d7c3a4c3d9f3e1dfe180d69df
+- v: 1
+  id: reg_bc90f3a9eba14df4a34a578ec25d3275
+  ts: "2026-10-12T07:19:39Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: executor 検証の記録で run が止まったため利用者の承認を得て orchestrator が統合（bd86926ed）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: 使い捨てのファイルを tmp/ に置くよう指示し、tmp/ を除外し、最上位の新規ファイルを commit して申し送りに列挙するようにした
+  previous_event_id: reg_e7ac3c761009489a9cb0cf08e37de3a6

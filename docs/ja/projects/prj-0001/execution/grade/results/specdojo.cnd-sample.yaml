@@ -3,31 +3,77 @@ version: 1
 document: specdojo:cnd-sample
 path: docs/ja/specdojo/samples/cnd-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 53
-graded_at: "2026-09-05T00:16:12.693Z"
-graded_by: gemma-expert-executor
+score: 60
+graded_at: "2026-10-11T21:11:24.421Z"
+graded_by: agy-expert-executor
 content_hash: 292a90cdd4a78acc494f3a1d21eafc954ead3c156f45d759c80b431f35226018
 categories:
-  consistency:
-    score: 25
-  usability:
-    score: 58
+  purpose:
+    score: 88
+  operations:
+    score: 88
+  planning:
+    score: 92
+  business:
+    score: 75
   architecture:
-    score: 100
-  quality:
-    score: 38
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
+    score: 92
+  usability:
     score: 50
-  vp-arc-conciseness:
+  implementation:
+    score: 75
+  quality:
+    score: 50
+  consistency:
+    score: 0
+viewpoints:
+  vp-po-purpose-alignment:
     level: 4
     score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -43,54 +89,170 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 3
   major: 1
-  minor: 3
+  minor: 15
   note: 0
 findings:
-  - id: F002
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: 本文中のルールブック参照先が Frontmatter の指定 (`cnd-mermaid-rulebook`) と不整合である。
-    anchor: ""
-  - id: F004
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: 標準構成で必須とされる「C4コンテナ図（Mermaid）」および「要素の説明」の章が完全に欠落している。
-    anchor: ""
-  - id: F005
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: rulebook の必須要素（Mermaid図および要素説明）を満たしておらず、最小完成例となっていない。
-    anchor: ""
-  - id: F006
-    severity: blocker
-    rule: vp-ux-readability
-    line: 1
-    message: 実際の Mermaid 図面が提示されていないため、成果物の完成イメージを把握できず、利用者が目的（図の作成）を達成するための手段を理解できない。
-    anchor: ""
-  - id: F007
-    severity: minor
-    rule: vp-ux-language-consistency
-    line: 1
-    message: 準拠ルールブックの表記が Frontmatter と本文で不整合である。
-    anchor: ""
   - id: F001
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 4
-    message: Frontmatter の `type` は `architecture` である必要がある。
-    anchor: "## 1. 目的と適用範囲"
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      The unresolved issues section lacks decision makers, impact scope, and concrete next actions required for PO
+      sign-off.
+    message_ja: 未解決の問題のセクションにおいて、POの承認に必要な意思決定者、影響範囲、および具体的な次のアクションが不足しています。
+  - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      The sample does not define discrete work units, completion criteria, or responsible role codes necessary for task
+      scheduling.
+    message_ja: サンプルには、タスクスケジューリングに必要な個別の作業単位、完了基準、または担当ロールコードが定義されていません。
   - id: F003
+    severity: minor
+    rule: vp-ba-business-value
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      The sample does not articulate the specific business challenges, expected value, or operational benefits for the
+      candy store.
+    message_ja: サンプルには、キャンディショップにとっての具体的なビジネス課題、期待される価値、または運用上のメリットが明文化されていません。
+  - id: F004
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: Scope boundaries, out-of-scope exclusions, and user-level acceptance conditions are not explicitly defined.
+    message_ja: スコープの境界、対象外の除外事項、およびユーザーレベルの受け入れ条件が明示的に定義されていません。
+  - id: F005
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: Specific stakeholders and operational user roles (such as store clerk or store owner) are not clearly identified.
+    message_ja: 特定のステークホルダーや運用上のユーザーロール（店員や店主など）が明確に特定されていません。
+  - id: F006
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Technical constraints, architectural assumptions, and external dependencies for the listed containers are not
+      specified.
+    message_ja: リストされたコンテナの技術的な制約、アーキテクチャ上の仮定、および外部依存関係が指定されていません。
+  - id: F007
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      Section 4 duplicates the purpose and container list already stated in Section 1 and Section 3 without providing
+      distinct information.
+    message_ja: セクション4は、セクション1およびセクション3ですでに述べられている目的とコンテナのリストを、独自の情報を提示することなく重複しています。
+  - id: F008
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Granular configuration parameters, container interface boundaries, and data flow definitions needed for
+      implementation are missing.
+    message_ja: 実装に必要な詳細な設定パラメータ、コンテナのインターフェース境界、およびデータフローの定義が不足しています。
+  - id: F009
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: Impact scope on existing systems, shared database schemas, and integration points is not identified.
+    message_ja: 既存システムへの影響範囲、共有データベーススキーマ、および統合ポイントが特定されていません。
+  - id: F010
+    severity: minor
+    rule: vp-dev-testability
+    line: 1
+    anchor: "# [C4コンテナ図](../rulebooks/cnd-rulebook.md) サンプル"
+    message: >-
+      Verification commands and linting procedures for validating Mermaid diagram syntax and metadata schema are
+      missing.
+    message_ja: Mermaid図の構文とメタデータスキーマを検証するための検証コマンドとリンティング手順が不足しています。
+  - id: F011
     severity: minor
     rule: vp-qe-verifiability
     line: 26
+    anchor: "## 5. 未解決事項"
     message: サンプルとして、判定基準（Pass/Fail）を具体的にどう記述すべきかの例示が不足している。
+    message_ja: サンプルとして、判定基準（Pass/Fail）を具体的にどう記述すべきかの例示が不足している。
+  - id: F012
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [C4コンテナ図](../rulebooks/cnd-rulebook.md) サンプル"
+    message: 標準構成で必須とされる「C4コンテナ図（Mermaid）」および「要素の説明」の章が完全に欠落している。
+    message_ja: 標準構成で必須とされる「C4コンテナ図（Mermaid）」および「要素の説明」の章が完全に欠落している。
+  - id: F013
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [C4コンテナ図](../rulebooks/cnd-rulebook.md) サンプル"
+    message: rulebook の必須要素（Mermaid図および要素説明）を満たしておらず、最小完成例となっていない。
+    message_ja: rulebook の必須要素（Mermaid図および要素説明）を満たしておらず、最小完成例となっていない。
+  - id: F014
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [C4コンテナ図](../rulebooks/cnd-rulebook.md) サンプル"
+    message: 本文中のルールブック参照先が Frontmatter の指定 (`cnd-mermaid-rulebook`) と不整合である。
+    message_ja: 本文中のルールブック参照先が Frontmatter の指定 (`cnd-mermaid-rulebook`) と不整合である。
+  - id: F015
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 4
     anchor: ""
+    message: Frontmatter の `type` は `architecture` である必要がある。
+    message_ja: Frontmatter の `type` は `architecture` である必要がある。
+  - id: F016
+    severity: blocker
+    rule: vp-ux-readability
+    line: 1
+    anchor: "# [C4コンテナ図](../rulebooks/cnd-rulebook.md) サンプル"
+    message: 実際の Mermaid 図面が提示されていないため、成果物の完成イメージを把握できず、利用者が目的（図の作成）を達成するための手段を理解できない。
+    message_ja: 実際の Mermaid 図面が提示されていないため、成果物の完成イメージを把握できず、利用者が目的（図の作成）を達成するための手段を理解できない。
+  - id: F017
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# [C4コンテナ図](../rulebooks/cnd-rulebook.md) サンプル"
+    message: 準拠ルールブックの表記が Frontmatter と本文で不整合である。
+    message_ja: 準拠ルールブックの表記が Frontmatter と本文で不整合である。
+  - id: F018
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: Criteria and prerequisite checklists for promoting the document from draft to ready status are not specified.
+    message_ja: ドキュメントをドラフトから準備完了ステータスに昇格させるための基準と前提条件のチェックリストが指定されていません。
+  - id: F019
+    severity: minor
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# [C4コンテナ図](../rulebooks/cnd-rulebook.md) サンプル"
+    message: >-
+      Operational procedures for continuous diagram maintenance, model regeneration, and change management workflows are
+      omitted.
+    message_ja: 図の継続的なメンテナンス、モデルの再生成、および変更管理ワークフローの運用手順が省略されています。

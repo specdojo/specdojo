@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1eee18c9e79b45fd8eac3ab2ba3396ac
+  ts: "2026-10-12T04:10:12Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 の PJR-HEPK（LP）のレビューで、標語と体系の用語が分かりにくいと指摘された
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 体系の用語と標語を見直す
+    - field: description
+      from: ""
+      to: 成果物体系・実践体系・遂行体系と Kata・Waza・Ryu の名前が重なって分かりにくい。標語を「記して、形にして、磨き続ける。」へ改め、遂行体系を PDCA × register・schedule・routine + Job のマトリクスで説明する案を検討する。routine + Job の行は PJR-MD3C の task.review を前提にする。Quick Start の「設計書」と workspace/ もあわせて直す
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: PM
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_289cf985e75a48f496e4990d29632771
+  ts: "2026-10-12T04:15:36Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: 利用者の指示で担当と期限を決めた
+  changes:
+    - field: owner
+      from: PM
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-10-31"
+  previous_event_id: reg_1eee18c9e79b45fd8eac3ab2ba3396ac
+- v: 1
+  id: reg_114f56a1d88d4de6ae6a67b55a583c5f
+  ts: "2026-10-12T06:11:35Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: 利用者が orchestrator との会話で選択肢 C と名前の候補 1 を承認した。文書の反映は PJR-34F2 で行う
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: 選択肢 C。3 つの体系を成果物・型（Kata）・技（Waza）に改め、流（Ryu）をそれらをつなぐ属性とする。標語・PDCA マトリクス・仕様書の語・app1-workspace/ もあわせて改める
+  previous_event_id: reg_289cf985e75a48f496e4990d29632771

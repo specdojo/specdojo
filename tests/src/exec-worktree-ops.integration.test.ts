@@ -1229,8 +1229,8 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "custom", "added.md"), "# new file in tracked dir\n");
     writeFile(join(worktree.path, "modify.py"), "print('scratch')\n");
     writeFile(join(worktree.path, "scratch", "patch.js"), "// scratch\n");
-    // 一時ファイルが status: ready を含んでも、commit 対象外なので ready 昇格とはみなさない。
-    writeFile(join(worktree.path, "test-schema.yaml"), "id: tmp\nstatus: ready\n");
+    // 一時ファイルが status: ready を含んでも、tmp/ 配下は commit 対象外なので ready 昇格とはみなさない。
+    writeFile(join(worktree.path, "tmp", "test-schema.yaml"), "id: tmp\nstatus: ready\n");
     const scopeLogPath = join(
       worktree.path,
       "execution",
@@ -1253,24 +1253,30 @@ describe("exec worktree ops", () => {
       "custom/added.md",
       "docs/a.md",
       `execution/exec/evidence/${taskId}/run-1/integrate.log`,
+      // 最上位に追加したファイルを result の申し送りへ記録するため、result も commit 対象になる。
+      `execution/exec/results/${taskId}-result.md`,
+      "modify.py",
     ]);
     const log = readFileSync(scopeLogPath, "utf8");
     expect(log).toContain("commit-scope: skipped non-target changes (left in worktree):");
-    expect(log).toContain("  modify.py");
     expect(log).toContain("  scratch/patch.js");
-    expect(log).toContain("  test-schema.yaml");
-    expect(git(worktree.path, "show", "--name-only", "--pretty=format:", "HEAD")).not.toContain(
+    expect(log).toContain("最上位に追加したファイル:");
+    expect(log).toContain("  modify.py");
+    expect(git(worktree.path, "show", "--name-only", "--pretty=format:", "HEAD")).toContain(
       "modify.py",
     );
+    expect(git(worktree.path, "show", "--name-only", "--pretty=format:", "HEAD")).not.toContain(
+      "test-schema.yaml",
+    );
     expect(git(worktree.path, "status", "--porcelain", "-uall").split("\n").sort()).toEqual([
-      "?? modify.py",
       "?? scratch/patch.js",
-      "?? test-schema.yaml",
+      "?? tmp/test-schema.yaml",
     ]);
 
     mergeIntoRoot(fixture, worktree, taskId);
     expect(existsSync(join(fixture.repo, "docs", "a.md"))).toBe(true);
-    expect(existsSync(join(fixture.repo, "modify.py"))).toBe(false);
+    expect(existsSync(join(fixture.repo, "modify.py"))).toBe(true);
+    expect(existsSync(join(fixture.repo, "scratch", "patch.js"))).toBe(false);
   });
 
   it("commits edits to tracked root files and resolved targets for a register task", () => {
@@ -1295,11 +1301,16 @@ describe("exec worktree ops", () => {
 
     writeFile(join(worktree.path, "README.md"), "# edited tracked root file\n");
     writeFile(join(worktree.path, "ROOT-NOTE.md"), "# declared target\n");
-    writeFile(join(worktree.path, "patch.js"), "// scratch\n");
+    writeFile(join(worktree.path, "tmp", "patch.js"), "// scratch\n");
 
     const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
 
-    expect([...committed.targets].sort()).toEqual(["README.md", "ROOT-NOTE.md"]);
+    // ROOT-NOTE.md は最上位の新規ファイルとして result の申し送りへ記録されるため、result も commit 対象になる。
+    expect([...committed.targets].sort()).toEqual([
+      "README.md",
+      "ROOT-NOTE.md",
+      `execution/exec/results/${taskId}-result.md`,
+    ]);
   });
 
   it('still blocks a register task that promotes a committable deliverable to "ready"', () => {
@@ -1313,7 +1324,7 @@ describe("exec worktree ops", () => {
     );
 
     writeFile(join(worktree.path, "docs", "d.yaml"), "id: d\nstatus: ready\n");
-    writeFile(join(worktree.path, "test-schema.yaml"), "id: tmp\nstatus: ready\n");
+    writeFile(join(worktree.path, "tmp", "test-schema.yaml"), "id: tmp\nstatus: ready\n");
 
     expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
       /promotion to "ready" is human-only.*: docs\/d\.yaml$/,

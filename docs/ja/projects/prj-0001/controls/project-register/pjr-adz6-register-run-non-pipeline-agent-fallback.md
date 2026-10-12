@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-adz6-register-run-non-pipeline-agent-fallback
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T08:39:33Z"
+  completed_at: "2026-10-12T07:19:46Z"
+  conclusion: pipeline の指定がない register 実行で stage_role を持つ agent だけを自動選択するようにした
 ---
 
 # PJR-ADZ6 register の実行で pipeline 用でない agent が自動で選ばれる
@@ -40,7 +42,14 @@ exec run --register を --executor-by/--reporter-by なしで起動すると、o
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+推奨案 (b) で対応した。
+
+- 解決内容: `src/exec-run.ts` の `isRegisterPipelineRequested` は、`--by` を指定しない場合に常に pipeline 実行を選ぶ。`resolveRegisterPipelineCommand` は、`--executor-by` / `--reporter-by` がどちらも無い場合に `stage_role: executor`（`mode: edit` または未指定）と `stage_role: reporter` の agent から `priority` 順に自動で選ぶ。該当する agent がいない段がある場合は、明示指定を求めるエラーにする。`resolveRegisterCommand` は `--by` 指定時の単一 agent 実行だけを扱い、owner・role・汎用候補からの自動選択を廃止した。
+- 確認結果: `tests/src/exec-register.test.ts` に、`stage_role` の無い agent（`priority` が最も小さい翻訳専用 agent を想定）と `mode: review` の executor を候補から除外して選ぶテスト、`stage_role` の無い agent しかいない場合はエラーになるテスト、`--by` が無いと owner 一致の agent を自動選択しないテストを追加した。
+- 文書: [[specdojo:command-reference]] の `--register` の agent 選択の記述（既定は pipeline、`stage_role` からの自動選択、owner・role からは選ばない）を実装に合わせて改訂した。
+- 再発防止策: register の自動選択は、`stage_role` で段を指定する `selectCandidates` だけを経由する。`stage_role` を持たない agent は段指定の選択で除外されるため、自動選択の対象にならない。
+- 残課題: `.specdojo/agent-members.yaml` 冒頭の規約コメント「`type: agent` のメンバーは全員 `stage_role` を持つ」に対し、`gemma26-translator` は `stage_role` を持たない（`agent run --by` 専用）。同ファイルは agent の書き込み禁止対象のため、例外の明記または規約の見直しは人が行う。
+- 統合の経緯: 2026-10-12 の exec run で runner の親検証 7 種は通ったが、executor が `specdojo index build` を `not_run` と記録したことで run が止まった（出力先の `.specdojo/doc-index.json` は agent の書き込み禁止対象）。利用者の承認を得て orchestrator が exec ブランチへ commit し（57c36a760）、develop を取り込んで型検査と単体テスト 2014 件の通過を確かめたうえで、develop へ `--no-ff` で merge した（013daa695）。この止まり方は [[prj-0001:pjr-hj99-index-build-not-run-blocks]] で扱う。
 
 ## 5. 関連ドキュメント
 

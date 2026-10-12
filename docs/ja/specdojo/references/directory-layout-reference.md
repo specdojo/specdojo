@@ -17,7 +17,7 @@ SpecDojo Unit のプロジェクトドキュメントとプロダクトドキュ
 
 - `docs/ja/projects/<project-id>/` 配下のプロジェクトドキュメント構成
 - `docs/ja/product/` 配下のプロダクトドキュメント構成
-- 両者が共有する `docs/ja/specdojo/` 配下の実践体系ディレクトリ
+- 両者が共有する `docs/ja/specdojo/` 配下の型（Kata）のディレクトリ
 
 **ここで引けるもの**
 
@@ -35,7 +35,7 @@ SpecDojo Unit のプロジェクトドキュメントとプロダクトドキュ
 利用プロジェクトでは別リポジトリ構成を既定とし、プロダクトの内容と同じ revision が必要な文書と、SpecDojo の運用記録を別リポジトリに置きます。`app1-specdojo/` は、登録簿・計画・実行記録などのプロジェクトドキュメントを置く **プロジェクトリポジトリ**です。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。
 
 ```text
-workspace/
+app1-workspace/
 ├── app1/                            # プロダクトリポジトリ
 │   ├── src/
 │   └── docs/ja/product/             # プロダクトドキュメント
@@ -45,7 +45,7 @@ workspace/
 │   │   ├── agent-members.yaml       # repository 共通の保護された agent 定義
 │   │   └── exec-defaults.yaml       # provider 起動・実行ポリシー
 │   └── docs/ja/
-│       ├── specdojo/                # 実践体系
+│       ├── specdojo/                # 型（Kata）
 │       └── projects/<project-id>/   # プロジェクト文書と実行記録
 └── app1-specdojo-worktrees/         # task 単位の worktree 置き場（config init がリポジトリ名から設定）
 ```

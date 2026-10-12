@@ -1,0 +1,54 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-9b2a7f2f47ec project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-9b2a7f2f47ec
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/samples/cdfd-uc-sample.md
+document complete: docs/ja/specdojo/samples/cdfd-uc-sample.md
+document start: docs/ja/specdojo/samples/cdsd-sample.md
+document complete: docs/ja/specdojo/samples/cdsd-sample.md
+document start: docs/ja/specdojo/samples/cld-sample.md
+document complete: docs/ja/specdojo/samples/cld-sample.md
+document start: docs/ja/specdojo/samples/cnd-sample.md
+document complete: docs/ja/specdojo/samples/cnd-sample.md
+document start: docs/ja/specdojo/samples/cop-index-sample.md
+document complete: docs/ja/specdojo/samples/cop-index-sample.md
+document start: docs/ja/specdojo/samples/cop-sample.md
+document complete: docs/ja/specdojo/samples/cop-sample.md
+document start: docs/ja/specdojo/samples/cpd-sample.md
+document complete: docs/ja/specdojo/samples/cpd-sample.md
+document start: docs/ja/specdojo/samples/cstd-sample.md
+document complete: docs/ja/specdojo/samples/cstd-sample.md
+document start: docs/ja/specdojo/samples/cxd-sample.md
+document complete: docs/ja/specdojo/samples/cxd-sample.md
+document start: docs/ja/specdojo/samples/dec-sample.md
+document complete: docs/ja/specdojo/samples/dec-sample.md
+document start: docs/ja/specdojo/samples/dmd-index-sample.md
+document complete: docs/ja/specdojo/samples/dmd-index-sample.md
+document start: docs/ja/specdojo/samples/dmd-sample.md
+document complete: docs/ja/specdojo/samples/dmd-sample.md
+document start: docs/ja/specdojo/samples/etc-index-sample.md
+document complete: docs/ja/specdojo/samples/etc-index-sample.md
+document start: docs/ja/specdojo/samples/etc-sample.md
+document complete: docs/ja/specdojo/samples/etc-sample.md
+document start: docs/ja/specdojo/samples/ifd-sample.md
+document complete: docs/ja/specdojo/samples/ifd-sample.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-9b2a7f2f47ec/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-11T21:01:43Z	docs/ja/specdojo/samples/cdfd-uc-sample.md	1	passed	85	pass	94	3	agy-expert-executor	machine	none		
+2026-10-11T21:06:20Z	docs/ja/specdojo/samples/cdsd-sample.md	1	passed	275	fail	70	5	agy-expert-executor	machine	none		
+2026-10-11T21:08:10Z	docs/ja/specdojo/samples/cld-sample.md	1	passed	108	needs-work	86	3	agy-expert-executor	machine	none		
+2026-10-11T21:11:49Z	docs/ja/specdojo/samples/cnd-sample.md	1	passed	218	fail	60	19	agy-expert-executor	machine	none		
+2026-10-11T21:16:48Z	docs/ja/specdojo/samples/cop-index-sample.md	1	passed	297	fail	73	5	agy-expert-executor	machine	none		
+2026-10-11T21:19:56Z	docs/ja/specdojo/samples/cop-sample.md	1	passed	186	fail	46	22	agy-expert-executor	machine	none		
+2026-10-11T21:23:08Z	docs/ja/specdojo/samples/cpd-sample.md	1	passed	190	fail	33	23	agy-expert-executor	machine	none		
+2026-10-11T21:26:03Z	docs/ja/specdojo/samples/cstd-sample.md	1	passed	173	pass	100	0	agy-expert-executor	machine	none		
+2026-10-11T21:29:52Z	docs/ja/specdojo/samples/cxd-sample.md	1	passed	227	needs-work	82	5	agy-expert-executor	machine	none		
+2026-10-11T21:31:31Z	docs/ja/specdojo/samples/dec-sample.md	1	passed	97	pass	93	3	agy-expert-executor	machine	none		
+2026-10-11T21:34:30Z	docs/ja/specdojo/samples/dmd-index-sample.md	1	passed	178	needs-work	91	3	agy-expert-executor	machine	none		
+2026-10-11T21:36:41Z	docs/ja/specdojo/samples/dmd-sample.md	1	passed	129	needs-work	93	3	agy-expert-executor	machine	none		
+2026-10-11T21:41:24Z	docs/ja/specdojo/samples/etc-index-sample.md	1	passed	282	fail	71	6	agy-expert-executor	machine	none		
+2026-10-11T21:44:48Z	docs/ja/specdojo/samples/etc-sample.md	1	passed	202	fail	46	23	agy-expert-executor	machine	none		
+2026-10-11T21:47:10Z	docs/ja/specdojo/samples/ifd-sample.md	1	passed	140	needs-work	81	5	agy-expert-executor	machine	none		

@@ -3,44 +3,99 @@ version: 1
 document: specdojo:cxd-sample
 path: docs/ja/specdojo/samples/cxd-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 58
-graded_at: "2026-09-05T02:04:16.161Z"
-graded_by: gemma-expert-executor
+score: 82
+graded_at: "2026-10-11T21:29:50.578Z"
+graded_by: agy-expert-executor
 content_hash: ec35c659782294db609b0d439c4595adbb0329a64a9c9715ac427c8b6813aa13
 categories:
-  consistency:
-    score: 50
-  usability:
-    score: 75
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 100
   quality:
-    score: 25
+    score: 67
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 3
-    score: 75
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -53,32 +108,37 @@ finding_counts:
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: H1のリンク先がFrontmatterのrulebook指定と不整合である。
-    anchor: ""
-  - id: F002
     severity: major
     rule: vp-qe-verifiability
     line: 1
+    anchor: "# [C4コンテキスト図](../rulebooks/cxd-rulebook.md) サンプル"
     message: 具体的記述が欠落しているため、成功基準や品質基準の妥当性を検証できない。
-    anchor: ""
-  - id: F003
+    message_ja: 具体的記述が欠落しているため、成功基準や品質基準の妥当性を検証できない。
+  - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# [C4コンテキスト図](../rulebooks/cxd-rulebook.md) サンプル"
     message: C4コンテキスト図として必須となる「Mermaidによる図」および「要素の詳細説明」が欠落している。
-    anchor: ""
-  - id: F004
+    message_ja: C4コンテキスト図として必須となる「Mermaidによる図」および「要素の詳細説明」が欠落している。
+  - id: F003
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
+    anchor: "# [C4コンテキスト図](../rulebooks/cxd-rulebook.md) サンプル"
     message: サンプルとしての責務（完成例の提示）を果たしておらず、成果物のメタ記述に留まっている。
-    anchor: ""
+    message_ja: サンプルとしての責務（完成例の提示）を果たしておらず、成果物のメタ記述に留まっている。
+  - id: F004
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [C4コンテキスト図](../rulebooks/cxd-rulebook.md) サンプル"
+    message: H1のリンク先がFrontmatterのrulebook指定と不整合である。
+    message_ja: H1のリンク先がFrontmatterのrulebook指定と不整合である。
   - id: F005
     severity: major
     rule: vp-ux-readability
     line: 1
+    anchor: "# [C4コンテキスト図](../rulebooks/cxd-rulebook.md) サンプル"
     message: 具体的な記述例（図と文章の両方）が提示されていないため、成果物の品質基準や記載水準を理解することができない。
-    anchor: ""
+    message_ja: 具体的な記述例（図と文章の両方）が提示されていないため、成果物の品質基準や記載水準を理解することができない。

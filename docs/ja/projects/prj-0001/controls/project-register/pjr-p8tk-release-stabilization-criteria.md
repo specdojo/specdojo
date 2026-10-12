@@ -80,6 +80,28 @@ v0.3.0 の公開前に、exec の再開・統合・判定まわりの未解決�
 | 6   | PJR-HRMS と PJR-CBQV が済んでいる                                   | PJR-HRMS は 10/9 に完了（公開日の記入だけが公開当日の PO の作業）。PJR-CBQV は利用者の作業（npm の公開）                                                                                                            |
 | 7   | devcontainer scaffold の確認                                        | 未確認（PJR-2H5F・PJR-EZAF・PJR-J7WE は利用者の実機での確認待ち）                                                                                                                                                   |
 
+### 2.5. 判定基準ごとの状況（2026-10-12）
+
+利用者の判断（2026-10-12）により、全利用者に関わる PJR-WP44・PJR-ADZ6、複数リポジトリの PJR-B2EC・PJR-GBVM・PJR-BJH6・PJR-86Q5・PJR-2GZE、導入手順の PJR-J2AS、判定の PJR-HJ99 を公開前に直し、いずれも統合して閉じた。用語の整理（PJR-9G9Y・PJR-34F2）と CHANGELOG の追記（PJR-MTFA）も済んだ。
+
+| #   | 基準                                                                | 状況                                                                                                                                                                                                                                                    |
+| --- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | 成果物の消失・誤った状態・統合の誤りにつながる未解決の issue がない | 達成。未完了の issue は PJR-W2EB（負荷によるテストの時間切れ。公開後でよいと判定済みで CHANGELOG の既知の問題に記載）、PJR-1DKD・PJR-G85C（開発環境）のみ                                                                                               |
+| 2   | develop で `npm run check` が通る                                   | 統合ごとの親検証（lint・型検査・単体・統合テスト・schema）は通っている。公開の直前に main で確かめる                                                                                                                                                    |
+| 3   | 公開物での実地の確認                                                | 一部。2026-10-12 に `npm pack` の tarball で `config init` から `register build`、`config scaffold --provider claude`（`orch:opus` の追加）までを確かめた。10/09 以降の変更が多いため、main への昇格後に `exec run --register` から統合までを確かめ直す |
+| 4   | 直近の exec の 5 回が runner の不具合なしに終わる                   | 達成。判定の修正の統合後の 5 回（PJR-J2AS、PJR-34F2、PJR-GRMK の再開、PJR-HJ99 の再開、PJR-MTFA の再開）は runner の不具合なしに統合まで終わった。agent が書いたテストの誤りは数えない                                                                  |
+| 5   | 修正版がある high 以上の脆弱性を放置していない                      | 達成（2026-10-12 の `npm audit --omit=dev` は 0 件）                                                                                                                                                                                                    |
+| 6   | CHANGELOG と docs-site の公開                                       | CHANGELOG は PJR-MTFA で追記済み。PJR-CBQV（docs-site の公開）と PJR-WJZD（docs-lint の公開）は利用者の作業として残る                                                                                                                                   |
+| 7   | devcontainer scaffold の確認                                        | 利用者が実機で確認中（PJR-2H5F・PJR-EZAF・PJR-J7WE）。PJR-FPCM は本リポジトリの devcontainer の再ビルド時に確認する。確認で見つけた点は PJR-J2AS（直した）と PJR-PV5B（既知の問題に記載）へ分けた                                                       |
+
+残る作業は、明朝の定期実行の確認と PJR-VQZA・PJR-MD3C の close、main への昇格、main での `npm run check` と実地の確認、PJR-CBQV・PJR-WJZD・devcontainer の確認、`v0.3.0` のタグの push である。
+
+### 2.6. 公開前の確認（2026-10-12 夜）
+
+- 基準 2: develop（f3b5b03e3）で `npm run check` が通った（テスト 145 ファイル・2226 件）。main への昇格後にもう一度確かめる。
+- 基準 3: develop から `npm pack` した tarball（specdojo 0.3.0）を新しいリポジトリへ入れ、利用者と同じ手順で確かめた。`config init`（`.gitignore` に `node_modules/` が入る）→ `config scaffold --provider claude`（`orch:opus`・`orch:sonnet` が追加される）→ `exec-defaults.yaml` の `command_template` と `agent-members.yaml`（claude の 3 名）を案内どおり用意 → `register scaffold` → `register add`（todo）→ `exec run --register --worktree`（agent を指定せず `claude-executor` と `claude-reporter` が自動で選ばれた）→ 統合して `review` → `register close` まで通った。grade は v0.3.0 では部品のみ・試験的のため対象外とした。利用者のリポジトリに markdownlint が無い場合、result の commit 前の lint は飛ばされる（`result-markdownlint: markdownlint-cli not found; skipped`）。
+- routine の新しい流れ（PJR-VQZA・PJR-MD3C）: Job Run の worktree での実行、runner の commit、claude-expert の review、verdict による統合までを試し実行で確かめた（f3b5b03e3）。途中で見つかった PJR-4VAC・PJR-DXDC・PJR-BJTC は直して統合した。今夜の定期実行の結果を明朝確かめる。
+
 ## 3. 作業内容
 
 | No  | 作業                                   | 担当         | 状態 | メモ                       |

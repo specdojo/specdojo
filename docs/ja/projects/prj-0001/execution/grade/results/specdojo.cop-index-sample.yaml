@@ -3,34 +3,77 @@ version: 1
 document: specdojo:cop-index-sample
 path: docs/ja/specdojo/samples/cop-index-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 58
-graded_at: "2026-09-05T00:37:34.888Z"
-graded_by: gemma-expert-executor
+score: 73
+graded_at: "2026-10-11T21:16:46.923Z"
+graded_by: agy-expert-executor
 content_hash: fd31c36767e96caa3f121a95c1c912298d13fbd753b6a734a1b975983d18c6ed
 categories:
-  consistency:
-    score: 50
-  usability:
-    score: 75
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 100
   quality:
-    score: 25
+    score: 58
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -38,9 +81,18 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -52,33 +104,38 @@ finding_counts:
   minor: 1
   note: 0
 findings:
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 4
-    message: Frontmatter の `type` が `project` となっており、ルールブックで定義された `migration` と矛盾している。
-    anchor: ""
-  - id: F002
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 9
-    message: ルールブックで定義された必須見出し（1.概要 〜 10.関連ドキュメント）がすべて欠落している。
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-  - id: F004
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 9
-    message: 成果物の構造（必須構成）を無視した概要説明になっており、完成例としての責務を果たしていない。
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-  - id: F005
-    severity: major
-    rule: vp-ux-readability
-    line: 9
-    message: 必須構成が欠落し具体的記述がないため、成果物の正しい書き方を確認することができない。
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
   - id: F001
     severity: minor
     rule: vp-qe-verifiability
     line: 32
-    message: 「主な内容」の値が「要点のみ記載」となっており、具体的な記述例として不十分である。
     anchor: ""
+    message: 「主な内容」の値が「要点のみ記載」となっており、具体的な記述例として不十分である。
+    message_ja: 「主な内容」の値が「要点のみ記載」となっており、具体的な記述例として不十分である。
+  - id: F002
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: ルールブックで定義された必須見出し（1.概要 〜 10.関連ドキュメント）がすべて欠落している。
+    message_ja: ルールブックで定義された必須見出し（1.概要 〜 10.関連ドキュメント）がすべて欠落している。
+  - id: F003
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 成果物の構造（必須構成）を無視した概要説明になっており、完成例としての責務を果たしていない。
+    message_ja: 成果物の構造（必須構成）を無視した概要説明になっており、完成例としての責務を果たしていない。
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 4
+    anchor: ""
+    message: Frontmatter の `type` が `project` となっており、ルールブックで定義された `migration` と矛盾している。
+    message_ja: Frontmatter の `type` が `project` となっており、ルールブックで定義された `migration` と矛盾している。
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 必須構成が欠落し具体的記述がないため、成果物の正しい書き方を確認することができない。
+    message_ja: 必須構成が欠落し具体的記述がないため、成果物の正しい書き方を確認することができない。
