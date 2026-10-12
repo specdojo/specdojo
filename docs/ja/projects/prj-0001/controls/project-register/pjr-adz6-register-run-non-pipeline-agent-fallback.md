@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T08:39:33Z"
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: specdojo index build"
 ---
 
 # PJR-ADZ6 register の実行で pipeline 用でない agent が自動で選ばれる
