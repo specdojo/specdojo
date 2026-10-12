@@ -31,14 +31,17 @@ PJR-HRMS の完了後に入った変更（複数リポジトリの worktree 準�
 
 ## 3. 作業内容
 
-| No  | 作業                                             | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------ | ---- | ---- | ---- |
-| 1   | 各項目の個票と実装を確かめ、CHANGELOG に追記する | DEV  | open | -    |
-| 2   | 移行ガイドへの反映を確かめる                     | DEV  | open | -    |
+| No  | 作業                                             | 担当 | 状態 | メモ             |
+| --- | ------------------------------------------------ | ---- | ---- | ---------------- |
+| 1   | 各項目の個票と実装を確かめ、CHANGELOG に追記する | DEV  | done | CHANGELOG に追記 |
+| 2   | 移行ガイドへの反映を確かめる                     | DEV  | done | 表に 3 行を追加  |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: 2026-10-12 の exec run（claude-expert-executor / claude-reporter）で、`CHANGELOG.md` の 0.3.0 に追加機能 3 件（PJR-VQZA・PJR-MD3C・PJR-BJH6）、不具合修正 9 件、既知の問題を追記した。[[specdojo:release-v0-3-0-migration-guide]] の「更新前に確認する」の表に、`task.review`、`tmp/` の規則、`config init` の `.gitignore` 追記の 3 行を加えた。
+- 統合の経緯: 1 回目は、未統合だった PJR-HJ99 の判定（`index build` の `not_run` と、変更範囲による `catalog validate` の `not_applicable`）で止まった。PJR-HJ99 の統合後に `--resume` し、新しい判定で runner が統合した（aebcff031）。
+- 追記の補正: executor は PJR-HJ99 を未統合として既知の問題に書いたため、統合後に orchestrator が不具合修正へ移した（38edc7ff1）。PJR-34F2 の用語の整理も orchestrator が追加機能へ追記した（ba3c6790f）。
+- 残課題: なし。公開日の記入は公開当日の作業として PJR-HRMS の扱いに従う。
 
 ## 5. 関連ドキュメント
 
