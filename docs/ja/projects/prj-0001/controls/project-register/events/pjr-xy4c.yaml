@@ -93,3 +93,35 @@
       from: "-"
       to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 14ms (unchanged); FAIL  tests/src/grade.test.ts > grade plan > lists refe…"
   previous_event_id: reg_85dc848c739d4187a58118206052b931
+- v: 1
+  id: reg_d5e1cff7c1d849be963d9b04048d447d
+  ts: "2026-10-12T13:17:56Z"
+  action: start
+  actor: codex-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 14ms (unchanged); FAIL  tests/src/grade.test.ts > grade plan > lists refe…"
+      to: "-"
+  previous_event_id: reg_12ef31a908394743bf11d8ba81537955
+- v: 1
+  id: reg_8873e516067f493a838e28240c895cde
+  ts: "2026-10-12T13:26:51Z"
+  action: wait
+  actor: codex-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 18ms (unchanged); FAIL  tests/packages/docs-lint/remark-no-unescaped-angl…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 18ms (unchanged); FAIL  tests/packages/docs-lint/remark-no-unescaped-angl…"
+  previous_event_id: reg_d5e1cff7c1d849be963d9b04048d447d

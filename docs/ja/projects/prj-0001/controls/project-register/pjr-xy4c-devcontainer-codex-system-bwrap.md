@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-12T12:52:35Z"
-  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 14ms (unchanged); FAIL  tests/src/grade.test.ts > grade plan > lists refe…"
+  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 18ms (unchanged); FAIL  tests/packages/docs-lint/remark-no-unescaped-angl…"
 ---
 
 # PJR-XY4C devcontainer scaffold の codex でシステムの bubblewrap が sandbox を失敗させる
