@@ -93,3 +93,16 @@
       from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result …"
       to: "-"
   previous_event_id: reg_3113445dea2947a69a677633ad6a26ef
+- v: 1
+  id: reg_f4dd25da3bb54f839225f7fdd5408f28
+  ts: "2026-10-12T06:57:30Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3996198dd86b4a519240271b14fda2d7
