@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-HEPK
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0002
   origin: register
   plan_ref: exec/plans/pjr-hepk-20261012T001023Z-d0c1-plan.md
   started_at: "2026-10-12T00:10:23.836Z"
+  completed_at: "2026-10-12T00:17:55.879Z"
   agent: claude-expert-executor
 ---
 
@@ -16,16 +17,22 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- PJR-HEPK の再改訂を反映した。LP の `index.astro` で register の 7 種類を todo から順に並べ、先頭 3 種類を大きく、残り 4 種類を小さく表示するようにした。
+- 「始める前に」として、Node.js 22.13 以上と Claude Code の導入・ログインという前提を追加した。
+- 個票 `pjr-hepk-lp-content.md` の作業内容、構成表、再改訂の実施内容も更新した。この変更は runner 管理の attempt 変更なので、`changed_files` には載せていない。
+- executor が実行した個票の `prettier` と `markdownlint`、`index build` は成功した。runner の検証も `lint-ts`、`lint-fm`、`lint-md`、`test-integration`、`validate-schema`、`typecheck`、`test-unit` がすべて passed だった。
+- specdojo-lp の `npm run build` は sandbox で実行できず、`requires_human` のまま未確認である。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `specdojo-lp:src/pages/index.astro`: register の 7 種類を todo から順に並べ、先頭 3 種類を大きく、残り 4 種類を小さく表示するよう変更した。始める前の前提（Node.js 22.13 以上、Claude Code の導入とログイン）のセクションも追加した。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- sandbox の外で specdojo-lp の `npm run build` を実行し、成功と `dist/index.html` の出力を確認する。個票の完了条件であり、evidence 上は `requires_human` のままである。
+- `test-integration` の出力に、`pjr-ab12-pipeline-test.md` の frontmatter id 不一致メッセージが含まれている。検証自体は passed で、fixture 由来の出力と思われるが、evidence だけでは断定できない。
+- 人の確認が必要: `npm --prefix /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HEPK/specdojo-lp run build`（agent の sandbox では specdojo-lp の npm を実行できないため、orchestrator が sandbox の外で npm run build の成功と dist/index.html の出力を確認する（個票の完了条件に従う））
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+登録簿の PJR-HEPK と個票を基準に、LP の構成と原稿を `index.astro` へ反映した。個票は構成表と実施内容を更新した。Markdown の整形と lint、`index build` を executor が実行し、型検査、lint、schema、unit と integration の各テストは親 runner が実行して全件 passed となった。LP のビルドだけは sandbox の制約で人間の確認に回した。

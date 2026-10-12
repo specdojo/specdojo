@@ -1,0 +1,25 @@
+個票の作業 5（概要の再改訂）を LP 原稿と個票に反映しました。LP のビルドはまだ確認していません。sandbox からは npm を実行できないため、`specdojo-lp` での `npm run build` は orchestrator に sandbox の外で確認してもらう必要があります。
+
+**`specdojo-lp:src/pages/index.astro` の変更**
+- **register の考え方:** 7 種類を `todo` → `decision` → `issue` → `question` → `risk` → `change-request` → `note` の順で載せました。先頭の 3 種類は 3 列の大きいカード、残りの 4 種類は 4 列の小さいカードです。各説明は pjr-rulebook の `item_type` 別の終端基準と、登録簿運用ガイドの種類の表に合わせました。
+- **始める前に用意するもの:** 「5 つの手順で始める」のタブの前に、前提を 2 点置きました。
+  - Node.js 22.13 以上と Git。版は specdojo の `package.json` の `engines`（`>=22.13`）に合わせています。
+  - Claude Code の導入とログイン。`orch:opus` が `specdojo orchestrator launch --provider claude` を経由して `claude` を起動すること、コマンドで始める場合は不要なことも添えました。
+- **次の一歩:** 登録簿運用ガイドの説明文を「7 つの種類」に改めました。
+- **見た目:** 使った class はすべて PJR-CM5W の `global.css` にあるテーマのものです（`text-title-small`、`text-body-small`、`rounded-small` も定義済みであることを確認しました）。
+
+**個票 `docs/ja/projects/prj-0002/controls/project-register/pjr-hepk-lp-content.md` の更新**
+- 作業内容の No.5 を `done` にしました。
+- 構成表の 4 と 5 を新しい内容に合わせました。
+- 「4.4. 再改訂の実施内容（2026-10-12）」を追加し、既存の「統合の経緯」と「残課題」を 4.5、4.6 に繰り下げました。
+- frontmatter の `item_status` と登録簿は変更していません。
+
+**実行した検査**
+- prettier と markdownlint は、どちらも個票に対して成功しました。
+- `specdojo index build` は成功し、2580 件を出力しました。
+- `specdojo-lp` には prettier が入っていないため、Astro ファイルの整形は対象外です。
+- prj-0002 は `catalog_path` を設定していないため、`catalog validate` は完了条件に従って実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-HEPK の再改訂を反映した。index.astro で register の 7 種類を todo から並べ（先頭 3 種類を大きく、残り 4 種類を小さく）、始める前の前提（Node.js 22.13 以上、Claude Code の導入とログイン）を追加した。個票の作業内容・構成表・再改訂の実施内容を更新した。LP のビルドは sandbox の外で確認が必要。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-hepk-lp-content.md","status":"passed","summary":"個票の整形が完了した（差分なし）"},{"command":"npx markdownlint docs/ja/projects/prj-0002/controls/project-register/pjr-hepk-lp-content.md","status":"passed","summary":"エラーなし"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2580 entries → .specdojo/doc-index.json"},{"command":"npm --prefix /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-HEPK/specdojo-lp run build","status":"requires_human","summary":"agent の sandbox では specdojo-lp の npm を実行できないため、orchestrator が sandbox の外で npm run build の成功と dist/index.html の出力を確認する（個票の完了条件に従う）"}]}
+</specdojo_executor_evidence>
