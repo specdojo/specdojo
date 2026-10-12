@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-XEJ4",
   "run_id": "20261012T105630188Z-bd62a4cc",
-  "updated_at": "2026-10-12T11:05:00.384Z",
+  "updated_at": "2026-10-12T11:05:14.628Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,12 +21,29 @@
       "artifact_ref": "docs/ja/projects/prj-0002/execution/exec/results/pjr-xej4-20261012T105630Z-e1f2-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "codex-expert-executor",
       "attempts": 1,
       "started_at": "2026-10-12T11:05:00.384Z",
-      "completed_at": null,
-      "artifact_ref": null
+      "completed_at": "2026-10-12T11:05:14.628Z",
+      "artifact_ref": null,
+      "repos": {
+        "specdojo-lp": {
+          "status": "merged",
+          "commit": "da0491f8c9b2141c670314af1b9926339d67fa20",
+          "merged_at": "2026-10-12T11:05:13.615Z"
+        },
+        "specdojo-assets": {
+          "status": "unchanged",
+          "commit": null,
+          "merged_at": null
+        },
+        "project": {
+          "status": "merged",
+          "commit": null,
+          "merged_at": "2026-10-12T11:05:13.617Z"
+        }
+      }
     }
   },
   "artifacts": {
