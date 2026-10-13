@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9f803402705145e887e62714296ccf41
+- v: 1
+  id: reg_e969ffcb306b4c8e803a8d415bb8b963
+  ts: "2026-10-12T13:02:47Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 利用者が Host Mac で実機の確認をした（2026-10-12）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: devcontainer scaffold の --editor emacs で Emacs の設定をテンプレートから展開し、実機で C-h と eglot の LSP 接続を確かめた
+  previous_event_id: reg_dc277b2718fb45f8ba7bb0e1a24e5264

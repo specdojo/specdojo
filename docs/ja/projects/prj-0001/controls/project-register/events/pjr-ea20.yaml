@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3b3a5d373c494850be567a1f8facd34b
+  ts: "2026-10-13T14:33:21Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: CBQV の導入確認で、空のリポジトリへ README の手順で導入して再現した（2026-10-13）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs-site のビルドが docs/en のないリポジトリで失敗する
+    - field: description
+      from: ""
+      to: 公開済みの @specdojo/docs-site 0.2.0 は、docs/en がないと sidebar の走査で The path to scan does not exist になり build と dev が止まる。config init は docs/ja だけを作るため、README の手順どおりに導入した利用者が最初のビルドで失敗する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-13"
+- v: 1
+  id: reg_d601f144d6c34900a258be0128c019a7
+  ts: "2026-10-13T14:34:34Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3b3a5d373c494850be567a1f8facd34b
+- v: 1
+  id: reg_c5cc48da3d9644ca96f707e46847e832
+  ts: "2026-10-13T14:46:02Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d601f144d6c34900a258be0128c019a7
+- v: 1
+  id: reg_89db5b7ab5594bd7992199ed56e58039
+  ts: "2026-10-13T14:53:05Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に本リポジトリでの docs:build を確認した（2026-10-13）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-13"
+    - field: conclusion
+      from: "-"
+      to: docs/`<locale>` がない locale の sidebar の走査を飛ばすようにし、docs/ja だけ・docs/en だけの workspace と本リポジトリで docs-site のビルドが通ることを確かめた
+  previous_event_id: reg_c5cc48da3d9644ca96f707e46847e832

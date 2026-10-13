@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c367cdbd13be493bbc27682d5b9b8cda
+  ts: "2026-10-12T12:52:35Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: EZAF の実機確認（2026-10-12）で観測。システムの bubblewrap を外すと sandbox が動くことを利用者が確認
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer scaffold の codex でシステムの bubblewrap が sandbox を失敗させる
+    - field: description
+      from: ""
+      to: scaffold が使う typescript-node:22 のイメージに /usr/bin/bwrap があり、codex が同梱の bwrap ではなくそれを使うため codex sandbox が /proc のマウントで失敗する（PJR-27Z9 と同じ事象）。codex の provider を選んだ場合はシステムの bubblewrap を外し、同梱の bwrap を使わせる
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_146140a29aa7455f80796d352f537b93
+  ts: "2026-10-12T12:53:15Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c367cdbd13be493bbc27682d5b9b8cda
+- v: 1
+  id: reg_4c0a4557a8b64a8a8c429a40911b5b0f
+  ts: "2026-10-12T13:09:09Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XY4C/20261012T125314628Z-304dabfc/evidence.json 35ms (unchanged); FAIL  tests/packages/docs-…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XY4C/20261012T125314628Z-304dabfc/evidence.json 35ms (unchanged); FAIL  tests/packages/docs-…"
+  previous_event_id: reg_146140a29aa7455f80796d352f537b93
+- v: 1
+  id: reg_85dc848c739d4187a58118206052b931
+  ts: "2026-10-12T13:11:40Z"
+  action: start
+  actor: codex-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XY4C/20261012T125314628Z-304dabfc/evidence.json 35ms (unchanged); FAIL  tests/packages/docs-…"
+      to: "-"
+  previous_event_id: reg_4c0a4557a8b64a8a8c429a40911b5b0f
+- v: 1
+  id: reg_12ef31a908394743bf11d8ba81537955
+  ts: "2026-10-12T13:17:21Z"
+  action: wait
+  actor: codex-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 14ms (unchanged); FAIL  tests/src/grade.test.ts > grade plan > lists refe…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 14ms (unchanged); FAIL  tests/src/grade.test.ts > grade plan > lists refe…"
+  previous_event_id: reg_85dc848c739d4187a58118206052b931
+- v: 1
+  id: reg_d5e1cff7c1d849be963d9b04048d447d
+  ts: "2026-10-12T13:17:56Z"
+  action: start
+  actor: codex-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 14ms (unchanged); FAIL  tests/src/grade.test.ts > grade plan > lists refe…"
+      to: "-"
+  previous_event_id: reg_12ef31a908394743bf11d8ba81537955
+- v: 1
+  id: reg_8873e516067f493a838e28240c895cde
+  ts: "2026-10-12T13:26:51Z"
+  action: wait
+  actor: codex-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 18ms (unchanged); FAIL  tests/packages/docs-lint/remark-no-unescaped-angl…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 18ms (unchanged); FAIL  tests/packages/docs-lint/remark-no-unescaped-angl…"
+  previous_event_id: reg_d5e1cff7c1d849be963d9b04048d447d
+- v: 1
+  id: reg_e9b75d0138c74e4ba744d768c7ec9c57
+  ts: "2026-10-12T21:53:22Z"
+  action: start
+  actor: codex-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-xy4c.yaml 18ms (unchanged); FAIL  tests/packages/docs-lint/remark-no-unescaped-angl…"
+      to: "-"
+  previous_event_id: reg_8873e516067f493a838e28240c895cde
+- v: 1
+  id: reg_5eef1193dc7a4960a877749708952aee
+  ts: "2026-10-12T21:58:20Z"
+  action: review
+  actor: codex-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e9b75d0138c74e4ba744d768c7ec9c57
+- v: 1
+  id: reg_0c2e33b247284562b4192b3c31d5fd95
+  ts: "2026-10-13T14:00:48Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 利用者が Host Mac で実機の確認をした（2026-10-13）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-13"
+    - field: conclusion
+      from: "-"
+      to: codex を指定した scaffold の post-create でシステムの bubblewrap を削除し、生成した devcontainer で codex の sandbox が動くことを実機で確かめた
+  previous_event_id: reg_5eef1193dc7a4960a877749708952aee

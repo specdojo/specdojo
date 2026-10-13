@@ -3,29 +3,75 @@ version: 1
 document: specdojo:imp-business-sample
 path: docs/ja/specdojo/samples/imp-business-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-09-05T07:27:11.114Z"
-graded_by: gemma-expert-executor
+score: 95
+graded_at: "2026-10-12T21:03:04.404Z"
+graded_by: agy-expert-executor
 content_hash: a7336657f78d7f564d32d5d275c1bbbc7ca296a2e1827ec7304644f68519c6b0
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -56,11 +111,13 @@ findings:
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 20
-    message: 影響度（高・中・低）の判定尺度（基準）が定義されておらず、rulebook の禁止事項に抵触している。
     anchor: "| 影響度 | 件数 | 主な対象業務       | 優先対応 |"
+    message: 影響度（高・中・低）の判定尺度（基準）が定義されておらず、rulebook の禁止事項に抵触している。
+    message_ja: 影響度（高・中・低）の判定尺度（基準）が定義されておらず、rulebook の禁止事項に抵触している。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 20
-    message: 影響度の尺度定義を必須とする rulebook の禁止事項に従っていない。
     anchor: "| 影響度 | 件数 | 主な対象業務       | 優先対応 |"
+    message: 影響度の尺度定義を必須とする rulebook の禁止事項に従っていない。
+    message_ja: 影響度の尺度定義を必須とする rulebook の禁止事項に従っていない。

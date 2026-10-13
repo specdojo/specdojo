@@ -13,10 +13,18 @@
   // forwardPorts（VS Code 主導の動的トンネル）ではなく appPort（Docker レベルの固定ポート公開）を使う。
   // Remote SSH 越しに Dev Container を開くネスト構成では、forwardPorts は接続元 VS Code の起動有無に
   // 転送が依存し、複数クライアントからの接続で母艦側セッションが再接続される問題があったため。
-  "appPort": [5173, 4321],
+  "appPort": [5173, 5174, 5175, 4321],
   "portsAttributes": {
     "5173": {
       "label": "VitePress docs",
+      "onAutoForward": "notify"
+    },
+    "5174": {
+      "label": "VitePress docs (port 5174)",
+      "onAutoForward": "notify"
+    },
+    "5175": {
+      "label": "VitePress docs (port 5175)",
       "onAutoForward": "notify"
     },
     "4321": {

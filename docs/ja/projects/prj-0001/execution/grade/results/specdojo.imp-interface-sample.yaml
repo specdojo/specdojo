@@ -3,29 +3,75 @@ version: 1
 document: specdojo:imp-interface-sample
 path: docs/ja/specdojo/samples/imp-interface-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-09-05T07:56:28.198Z"
-graded_by: gemma-expert-executor
+score: 95
+graded_at: "2026-10-12T21:10:01.722Z"
+graded_by: agy-expert-executor
 content_hash: 1cdb0b45217a9389c17d968569f4760b1f40a5b3fd9c955376bf6278a96a5248
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -55,12 +110,14 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
-    line: 42
+    line: 6
+    anchor: 対象は「POS 連携 API」「商品マスタ連携 CSV」「通知 Webhook」「売上集計バッチ連携」の 4 I/F とする。
     message: 「目的と適用範囲」において、ルールブックで求められている「対象期間」の記載が不足している。
-    anchor: "## 6. 未解決事項"
+    message_ja: 「目的と適用範囲」において、ルールブックで求められている「対象期間」の記載が不足している。
   - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 53
+    line: 16
+    anchor: 評価観点は、契約互換性、障害波及、運用調整負荷の 3 点とする。
     message: ルールブックの禁止事項に基づき、影響度（高・中・低）を判定するための尺度定義を明記すべきである。
-    anchor: ""
+    message_ja: ルールブックの禁止事項に基づき、影響度（高・中・低）を判定するための尺度定義を明記すべきである。

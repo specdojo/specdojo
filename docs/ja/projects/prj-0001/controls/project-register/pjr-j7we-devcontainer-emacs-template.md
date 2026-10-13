@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-j7we-devcontainer-emacs-template
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-07T13:56:21Z"
   due_on: null
+  completed_at: "2026-10-12T13:02:47Z"
+  conclusion: devcontainer scaffold の --editor emacs で Emacs の設定をテンプレートから展開し、実機で C-h と eglot の LSP 接続を確かめた
 ---
 
 # PJR-J7WE devcontainer scaffold で Emacs の設定をテンプレートから展開する
@@ -42,11 +44,11 @@ scaffold のオプションで Emacs を選んだ場合に、必要なツール�
 
 ## 3. 作業内容
 
-| No  | 作業                                                              | 担当 | 状態 | メモ                        |
-| --- | ----------------------------------------------------------------- | ---- | ---- | --------------------------- |
-| 1   | scaffold のオプション・テンプレート・post-create の配置を実装する | DEV  | done | `--editor emacs` で実装した |
-| 2   | テストと文書を更新する                                            | DEV  | done | 単体テストと利用手順を更新  |
-| 3   | 生成した devcontainer で Emacs の動作を確かめる                   | PO   | open | 人が行う                    |
+| No  | 作業                                                              | 担当 | 状態 | メモ                          |
+| --- | ----------------------------------------------------------------- | ---- | ---- | ----------------------------- |
+| 1   | scaffold のオプション・テンプレート・post-create の配置を実装する | DEV  | done | `--editor emacs` で実装した   |
+| 2   | テストと文書を更新する                                            | DEV  | done | 単体テストと利用手順を更新    |
+| 3   | 生成した devcontainer で Emacs の動作を確かめる                   | PO   | done | Host Mac で確認（2026-10-12） |
 
 ## 4. 対応結果
 
@@ -55,6 +57,8 @@ scaffold のオプションで Emacs を選んだ場合に、必要なツール�
 - テンプレートは Emacs 組み込み機能だけを使い、`C-h`、UTF-8、行番号、括弧、バックアップ・自動保存、端末マウス、Eglot の設定をコメント付きで提供する。単体テストではオプションによる生成の有無、導入ツール、既存設定の保護条件、Emacs がある環境での batch 読み込みを検証する。
 - [[specdojo:command-reference]] と [[specdojo:remote-host-development-guide]] にオプション、テンプレートの配置・変更方法、dotfiles 優先の挙動を記載した。
 - 残課題は No. 3 の実機確認である。生成した Dev Container を作成し、端末 Emacs の `C-h` と TypeScript バッファの Eglot 接続を人が確認する。
+
+実機の確認（2026-10-12、利用者）: `--editor emacs` を指定して生成した devcontainer で、Emacs の `C-h` が後退として働くこと、TypeScript のファイルで eglot が LSP に接続することを確かめた。
 
 ## 5. 関連ドキュメント
 

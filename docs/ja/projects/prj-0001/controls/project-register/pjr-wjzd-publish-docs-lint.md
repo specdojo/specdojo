@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wjzd-publish-docs-lint
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: OPS
   registered_at: "2026-09-23T10:57:25Z"
   due_on: "2026-10-03"
+  completed_at: "2026-10-12T12:00:14Z"
+  conclusion: "@specdojo/docs-lint 0.2.0 を trusted publisher 経由で npm へ公開し、導入と動作を確かめた"
 ---
 
 # PJR-WJZD @specdojo/docs-lint を npm へ公開できるようにする
@@ -55,8 +57,8 @@ npm install --save-dev @specdojo/docs-lint
 | --- | ------------------------------------------------- | ---- | ---- | ----------------------------- |
 | 1   | `publish-docs-lint.yml` を追加する                | DEV  | done | `publish-specdojo.yml` と同型 |
 | 2   | `npm pack --dry-run` で同梱範囲を確認する         | DEV  | done | 不要ファイルの除外            |
-| 3   | npm 側の trusted publisher 設定を登録する         | OPS  | open | ブラウザ操作。人が行う        |
-| 4   | `main` への push で公開し、導入して動作を確認する | OPS  | open | 人が行う                      |
+| 3   | npm 側の trusted publisher 設定を登録する         | OPS  | done | ブラウザ操作。人が行う        |
+| 4   | `main` への push で公開し、導入して動作を確認する | OPS  | done | 人が行う                      |
 
 ## 4. 対応結果
 
@@ -65,6 +67,10 @@ npm install --save-dev @specdojo/docs-lint
 - `npm pack --dry-run` で同梱範囲を確認した。15 ファイル、package size 19.9 kB、unpacked 64.3 kB。内訳は `LICENSE` / `README.md` / `package.json` / `bin/specdojo-docs-lint.js` / `src` 配下の `.ts` 9 件と `.cjs` 3 件で、remark プラグインの公開 export が参照するファイルが揃っている。`node_modules`、`tsconfig.json`、`package-lock.json` は含まれない。
 - `.github/workflows/` は agent の書き込み保護対象であるため、exec へ流さずオーケストレーターが直接対応した。ローカル feature ブランチ `feature/prj-0001/publish-docs-lint` で実装し、`--no-ff` merge（`7469ca28`）で develop へ統合した。
 - 作業 3（npm 側の trusted publisher 設定）と作業 4（公開と導入確認）は人の作業として残る。`@specdojo/docs-lint` は未公開のため、scoped package の初回公開を Trusted Publishing で行えるかが未検証である。行えない場合は初回のみ手動 publish（`npm login` と 2FA）が必要になる。
+
+- 公開（2026-10-12）: 0.1.0 は利用者のアカウントから手動で公開しており（2026-09-23）、npm 側に trusted publisher が無かった。そのため `docs-lint-v0.2.0` のタグで起動した workflow は E401 で失敗した。利用者が npm に trusted publisher（`specdojo` / `specdojo` / `publish-docs-lint.yml`）を登録して workflow を再実行し、staged publishing を承認して 0.2.0 を公開した。公開者は GitHub Actions（trusted publisher）で、provenance（attestation）付きである。
+- 版: 0.1.0 以降の脆弱性の修正・lint の追加・依存の更新を含めるため、v0.3.0 にあわせて 0.2.0 へ上げた（5dce1ff64）。
+- 確認: 新しいディレクトリで `npm install --save-dev @specdojo/docs-lint@0.2.0` が成功し、`npx specdojo-docs-lint --help` が動作した。公開物は 18 ファイル、package size 21.6 kB。
 
 ## 5. 関連ドキュメント
 

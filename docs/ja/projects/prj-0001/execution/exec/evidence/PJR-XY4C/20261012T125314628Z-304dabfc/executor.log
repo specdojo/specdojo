@@ -1,0 +1,12 @@
+Codex provider 向けの bubblewrap 対応を実装しました。
+
+- system bubblewrap の導入確認・削除・失敗時警告を追加
+- Codex 以外では削除処理を生成しないテストを追加
+- コマンドリファレンスと個票を更新
+- scaffold スモーク検証、整形、catalog・履歴リンク検証は成功
+- result ファイルは executor 指示に従い未編集
+- Host 上の実 Dev Container 確認のみ利用者対応として残しています
+
+<specdojo_executor_evidence>
+{"final_message":"Codex provider 指定時だけ system bubblewrap を削除し、失敗時は警告して post-create を継続する実装・テスト・文書更新を完了した。result と pipeline evidence は編集していない。","validations":[{"command":"npx prettier --write src/devcontainer-scaffold.ts tests/devcontainer-scaffold.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-xy4c-devcontainer-codex-system-bwrap.md","status":"passed","summary":"対象4ファイルを整形し、変更不要であることを確認した。"},{"command":"node --import tsx tmp/pjr-xy4c-smoke.mjs","status":"passed","summary":"Codex の場合だけ bubblewrap 削除と seccomp 設定が生成され、削除が Codex 導入より前にあり、Codex なしでは生成されず、両方の shell 構文が有効であることを確認した。一時スクリプトと生成物は削除済み。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"プロジェクト登録簿の生成に成功した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"終了コード0。既存の欠落文書に関する警告のみ。"},{"command":"npm run validate:history-links","status":"passed","summary":"履歴リンク検証に成功した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"},{"command":"devcontainer up --workspace-folder . && devcontainer exec --workspace-folder . bash -lc 'command -v bwrap || echo \"no system bwrap\"; codex sandbox -- sh -c \"ls -d /; touch /etc/x\"'","status":"requires_human","summary":"個票の完了条件に従い、Host 上の生成 Dev Container で system bwrap が見つからないこと、sandbox が起動すること、/etc への書き込みが拒否されることを利用者が確認する。"}]}
+</specdojo_executor_evidence>

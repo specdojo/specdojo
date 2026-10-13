@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8987aa8c33374e1f8554ed03b2c0f0ed
+  ts: "2026-10-12T21:56:51Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: 2026-10-13 06:00 の定期実行（JBR-grade-kata-43607f377df1）で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agy がモデル名を一時的に受け付けず grade が失敗する
+    - field: description
+      from: ""
+      to: agy-expert-executor が --model gemini-3.1-pro-high を「既知のモデルでも custom model でもない」として拒否し exit 1 で失敗した。同じ Run で同じ設定の 12 件は成功しており、一時的な失敗と見られる。再試行や切り分けの方法を決める
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-13"
+    - field: due
+      from: ""
+      to: _TODO_

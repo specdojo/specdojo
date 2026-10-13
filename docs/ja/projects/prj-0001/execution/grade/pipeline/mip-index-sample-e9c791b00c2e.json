@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "project_id": "prj-0001",
+  "target": "kata",
+  "document": "docs/ja/specdojo/samples/mip-index-sample.md",
+  "content_hash": "7c8b1eadcfa7c7475b0b28c1e94bdb9d1f1f8721fed5dc240b0790c0f28c092a",
+  "stage_completed": 0,
+  "stage_failed": 1,
+  "stage_total": 1,
+  "consecutive_failures": 1,
+  "max_failures": 3,
+  "last_run_id": "JBR-grade-kata-43607f377df1",
+  "updated_at": "2026-10-12T21:27:59.773Z"
+}

@@ -3,29 +3,75 @@ version: 1
 document: specdojo:imp-data-sample
 path: docs/ja/specdojo/samples/imp-data-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 78
-graded_at: "2026-09-09T00:10:56.301Z"
-graded_by: gemma-expert-executor
+score: 85
+graded_at: "2026-10-12T21:06:00.803Z"
+graded_by: agy-expert-executor
 content_hash: a0afee676c959042dac6be1ecb9542100bbb675af3bc914ec1e3e5621fb14679
 categories:
-  consistency:
-    score: 75
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
+    score: 67
+  consistency:
     score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -56,17 +111,20 @@ findings:
     severity: major
     rule: vp-qe-verifiability
     line: 24
-    message: 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。
     anchor: "## 4. 影響詳細一覧"
+    message: 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。
+    message_ja: 変更要求の概要に、判定可能な「成功条件」が記載されていないため、目標状態の検証ができない。
   - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
     line: 24
-    message: 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。
     anchor: "## 4. 影響詳細一覧"
+    message: 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。
+    message_ja: 記述ガイド 6.2 で必須とされている「成功条件」の記述が欠落している。
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
     line: 28
-    message: 禁止事項（尺度定義なしの高・中・低の混在）に抵触しており、影響度の判定基準が不明確である。
     anchor: "| 商品マスタ           | 要       | 高     | 実施     | 商品コード未登録のままではバーコード会計時に照合失敗が発生し、会計停止が起こるため。 | 上位 30 品目を先行整備する。 |"
+    message: 禁止事項（尺度定義なしの高・中・低の混在）に抵触しており、影響度の判定基準が不明確である。
+    message_ja: 禁止事項（尺度定義なしの高・中・低の混在）に抵触しており、影響度の判定基準が不明確である。

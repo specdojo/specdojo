@@ -158,7 +158,16 @@ Host Mac 上の `host-mac` と devcontainer 内の `specdojo` は実行場所も
 
 ### 4.4. tmux で VitePress 開発サーバを継続実行する
 
-`.devcontainer/devcontainer.json` は VitePress の固定ポート 5173 を `appPort` で公開している。`appPort` は Docker レベルでコンテナ起動時に固定的にポートを公開するため、コマンドを起動した terminal の種類（devcontainer 内 tmux か VS Code 統合 terminal か）に依存しない。初回適用時または設定変更後は VS Code で Dev Container を rebuild する。
+`.devcontainer/devcontainer.json` は、開発サーバの固定ポートを `appPort` で公開している。
+
+| ポート | 用途                                                | 起動例                                                                       |
+| ------ | --------------------------------------------------- | ---------------------------------------------------------------------------- |
+| 5173   | VitePress（本リポジトリの文書）                     | `npm run docs:dev`                                                           |
+| 5174   | VitePress（別 checkout の文書を並べて見る場合など） | `npm --prefix packages/docs-site run docs:dev -- --host 0.0.0.0 --port 5174` |
+| 5175   | VitePress（予備）                                   | 5174 と同じ形で `--port 5175` を指定する                                     |
+| 4321   | Astro（`specdojo-lp` のランディングページ）         | `../specdojo-lp` で `npm run dev -- --host`                                  |
+
+`appPort` は Docker レベルでコンテナ起動時に固定的にポートを公開するため、コマンドを起動した terminal の種類（devcontainer 内 tmux か VS Code 統合 terminal か）に依存しない。初回適用時または設定変更後は VS Code で Dev Container を rebuild する。
 
 devcontainer 内の tmux session で開発サーバを起動する。
 
@@ -187,7 +196,12 @@ Host home-mbp-tmux
   RequestTTY force
   RemoteCommand ~/bin/specdojo-tmux
   LocalForward 5173 127.0.0.1:5173
+  LocalForward 5174 127.0.0.1:5174
+  LocalForward 5175 127.0.0.1:5175
+  LocalForward 4321 127.0.0.1:4321
 ```
+
+`LocalForward` は 1 行につき 1 ポートだけを転送する。`appPort` へポートを追加したときは、同じポートの `LocalForward` もこのエイリアスへ追加する。追加していないポートは、Host Mac 自身のブラウザからは開けても、接続元端末からは開けない。設定の変更は次の SSH 接続から反映されるため、接続し直す。
 
 新しく SSH 接続した後、接続元端末のブラウザから確認する。
 

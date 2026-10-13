@@ -1,0 +1,52 @@
+差分・evidence・評価結果サイドカーの照合が終わりました。最終判断をまとめます。
+
+# Job Run レビュー: `JBR-grade-deliverable-32011899df06`
+
+**判定:** `complete-with-findings`。Run は成功していて統合できる状態ですが、Job Run の result に記載漏れが2点あり、評価データにも1点気になる点があります。成果物・Job Run の出力・result ファイルはどれも変更していません。
+
+## 評価結果の確認
+- **出力範囲:** `0df29aae..dffafc3a` の差分は27ファイルで、すべて `docs/ja/projects/prj-0001/execution/` 配下です。中身は Run の plan・result・evidence 4件・Run JSON と、評価結果サイドカー10件、done_criteria 10件です。成果物本体や対象外のパスへの変更はありません。
+- **鮮度:** `grade list --target deliverable --project prj-0001` を `--changed-only` と `--dependency-changed` で実行しました。どちらも今回評価した10文書は出力しませんでした。出力に出た `pm-*.md` の5件は今回の選定外で、`--limit 10` により次回以降に回ったものです。
+- **未完了・上限到達:** `--incomplete` が出力したのは選定外の `pm-communication-plan.md` だけでした。`grade state --exhausted` は空でした。
+- **再確認:** verdict を決める直前に鮮度確認をもう一度実行し、結果は変わりませんでした。
+
+## 判断根拠
+- **記録の整合:** Run JSON は `state: succeeded`、`exit_code: 0` です。`evidence.json` の `job-command` は passed、exit 0 で、stderr は空です。stdout には `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0` と出ています。`results.tsv` の10行はすべて段1が `passed` で、`consecutive_failures` は空です。
+- **Job 固有の確認事項:**
+  - 終了コード75（rate limit）や中断による未完了段はなく、再開は不要です。
+  - `failed` の段も `retry_exhausted` の成果物もありません。
+- **verdict と score の分布:** `needs-work` が9件、`pass` が1件（`prj-overview`、95点）です。score は60〜95に分布しています。前回との差は次の3点だけでした。
+  - verdict と score の変化は `prj-success-criteria-and-acceptance-criteria` の 78→82 の1件だけです。
+  - `prj-assumptions-constraints-dependencies` の done_criteria が 3/4 から 1/4 に下がりました。評価者が codex から agy に替わった時点と重なります。
+  - 評価設定を見直すほどの偏りは見当たりません。
+- **done_criteria が未充足の成果物と確認担当ロール:**
+
+| 成果物 | 未充足（ロール） |
+| --- | --- |
+| `opr-agent-cli-update` (0/3) | DC-001 OPS, DC-002 ARC, DC-003 QE |
+| `prj-assumptions-constraints-dependencies` (1/4) | DC-001 BA, DC-002 PO, DC-004 PM |
+| `prj-charter` (2/3) | DC-002 PO |
+| `prj-comparison-of-alternatives` (2/4) | DC-001 BA, DC-004 PM |
+| `prj-scope` (3/4) | DC-004 PM |
+| `prj-success-criteria-and-acceptance-criteria` (2/4) | DC-002 PO, DC-004 QE |
+| `sysd-job-execution` (4/5) | DC-004 QE |
+
+`prj-overview`、`prj-issues-and-approach`、`prj-stakeholder-register` は全項目を満たしています。
+
+## 未充足事項・改善指示
+いずれも統合は妨げません。
+
+1. **result の記載漏れ:** Job Run の result は、未充足の done_criteria と確認担当ロールを「各 yaml に記録されている」と書くだけで、具体的に挙げていません。上の表の内容を result に反映する必要があります。
+2. **偏りの判断が書かれていない:** result は verdict と score の分布を説明していますが、評価設定の見直しが必要かどうかの判断を書いていません。
+3. **done_criteria の理由が英語のまま:** 今回更新された done_criteria の `reason` が日本語から英語に変わっています（stdout には `translation_by=gemma26-translator` が出ています）。findings の `message_ja` は日本語になっています。翻訳の対象範囲を確認する必要があります。
+
+## 確認できなかった範囲
+- 個々の finding の妥当性。成果物を評価し直さない方針のためです。
+- `logs/grade/runs/per-document/...` の作業ディレクトリ本体。コミット対象外のため見ていません。
+
+## decision
+- verdict: `complete-with-findings`
+
+<specdojo_executor_evidence>
+{"final_message":"verdict: complete-with-findings。0df29aae..dffafc3a の差分は27ファイルで、すべて docs/ja/projects/prj-0001/execution/ 配下にある Job Run の出力（plan・result・evidence・Run JSON・grade results 10件・done-criteria 10件）。成果物本体や対象外の変更はない。Run JSON は succeeded・exit 0。evidence の job-command は passed で stderr は空。stdout は selected=10 processed=10 incomplete=0 exhausted=0。`results.tsv` の10行はすべて段1 passed で、`consecutive_failures` は空。rate limit・中断・failed・`retry_exhausted` はいずれもない。grade list の --changed-only と --dependency-changed は評価済み10文書を出力せず（出力は選定外の pm-*.md のみ）、--incomplete は選定外の pm-communication-plan.md のみ、grade state --exhausted は空。verdict 直前の再確認でも変化なし。verdict 分布は needs-work 9件・pass 1件（prj-overview 95）、score 60〜95。前回からの verdict・score の変化は success-criteria の 78→82 のみ。assumptions-constraints-dependencies は評価者が codex→agy に替わり done_criteria が 3/4→1/4 に低下。評価設定の見直しを要する偏りは見当たらない。done_criteria 未充足：opr-agent-cli-update DC-001 OPS/DC-002 ARC/DC-003 QE、assumptions DC-001 BA/DC-002 PO/DC-004 PM、charter DC-002 PO、comparison DC-001 BA/DC-004 PM、scope DC-004 PM、success-criteria DC-002 PO/DC-004 QE、sysd-job-execution DC-004 QE。finding（統合は妨げない）：(1) Job Run の result が未充足の DC とロールを具体的に挙げず yaml 参照のみ、(2) 評価設定の見直し要否の判断がない、(3) 更新された done_criteria の reason が日本語から英語に変わった（findings の `message_ja` は日本語）。確認できなかった範囲：個々の finding の妥当性（再評価しない方針のため）、logs/grade/runs 作業ディレクトリ本体（コミット対象外）。","validations":[{"command":"git diff --stat / --name-status 0df29aaee5948e3a93d964e8ad26d7fd49ebf144..dffafc3a73d2664247d0dcd57a4376150191142f","status":"passed","summary":"27ファイル、すべて Job Run の出力（docs/ja/projects/prj-0001/execution/ 配下）"},{"command":"node --import tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"評価済み10文書は出力されず（選定外の pm-*.md 5件のみ）。評価結果は最新"},{"command":"node --import tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"評価済み10文書は出力されず（選定外の pm-*.md 3件のみ）"},{"command":"node --import tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"選定外の pm-communication-plan.md のみ。評価済み10文書は未完了なし"},{"command":"node --import tsx src/specdojo.ts grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力なし（上限到達の成果物はない）"}]}
+</specdojo_executor_evidence>

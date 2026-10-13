@@ -103,3 +103,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7cbf48c9967c4022bdcba288d4f0b4fc
+- v: 1
+  id: reg_3a254fac8d694cadb771f2144723090a
+  ts: "2026-10-12T13:02:31Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 利用者が Host Mac で実機の確認をした（2026-10-12）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: specdojo devcontainer scaffold で利用リポジトリに devcontainer を生成し、実機で orchestrator の起動を確かめた
+  previous_event_id: reg_1d5e4b4567444461a6bd703c97021209

@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-43607f377df1",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "failed",
+    "started_at": "2026-10-12T21:00:59.289Z",
+    "completed_at": "2026-10-12T21:46:54.927Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-business-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-data-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-interface-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-operations-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.imp-test-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.itc-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.mm-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.mtp-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-availability-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-integrity-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-operations-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/mip-index-sample-e9c791b00c2e.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/nfr-index-sample-8756d8fcbc97.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/nfr-maintainability-sample-8c8be7b7a882.json",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-43607f377df1.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 16,
+    "summary": ".../results/specdojo.imp-business-sample.yaml      |  79 +++++-\n .../grade/results/specdojo.imp-data-sample.yaml    |  80 +++++-\n .../results/specdojo.imp-interface-sample.yaml     |  83 +++++-\n .../results/specdojo.imp-operations-sample.yaml    |  99 +++++--\n .../grade/results/specdojo.imp-test-sample.yaml    | 160 ++++++++----\n .../grade/results/specdojo.itc-index-sample.yaml   | 287 ++++++++++++++++++---\n .../grade/results/specdojo.itc-sample.yaml         | 120 ++++++---\n .../grade/results/specdojo.mm-sample.yaml          |  79 +++++-\n .../grade/results/specdojo.mtp-sample.yaml         | 109 ++++++--\n .../results/specdojo.nfr-availability-sample.yaml  | 232 +++++++++++++++--\n .../results/specdojo.nfr-integrity-sample.yaml     | 248 +++++++++++++++---\n .../results/specdojo.nfr-operations-sample.yaml    | 257 +++++++++++++++---\n 12 files changed, 1540 insertions(+), 293 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-43607f377df1 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-43607f377df1/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-43607f377df1' \"$g…",
+      "status": "failed",
+      "summary": "exit 1"
+    }
+  ],
+  "final_message": "Runner command exit 1.",
+  "block_reason": "command exited with code 1",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-43607f377df1 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-43607f377df1/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-43607f377df1' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 1,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-43607f377df1/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-43607f377df1/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.3.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-43607f377df1 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-43607f377df1\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/specdojo/samples/imp-business-sample.md\ndocument complete: docs/ja/specdojo/samples/imp-business-sample.md\ndocument start: docs/ja/specdojo/samples/imp-data-sample.md\ndocument complete: docs/ja/specdojo/samples/imp-data-sample.md\ndocument start: docs/ja/specdojo/samples/imp-interface-sample.md\ndocument complete: docs/ja/specdojo/samples/imp-interface-sample.md\ndocument start: docs/ja/specdojo/samples/imp-operations-sample.md\ndocument complete: docs/ja/specdojo/samples/imp-operations-sample.md\ndocument start: docs/ja/specdojo/samples/imp-test-sample.md\ndocument complete: docs/ja/specdojo/samples/imp-test-sample.md\ndocument start: docs/ja/specdojo/samples/itc-index-sample.md\ndocument complete: docs/ja/specdojo/samples/itc-index-sample.md\ndocument start: docs/ja/specdojo/samples/itc-sample.md\ndocument complete: docs/ja/specdojo/samples/itc-sample.md\ndocument start: docs/ja/specdojo/samples/mip-index-sample.md\ndocument incomplete: docs/ja/specdojo/samples/mip-index-sample.md failed_stage=1\ndocument start: docs/ja/specdojo/samples/mm-sample.md\ndocument complete: docs/ja/specdojo/samples/mm-sample.md\ndocument start: docs/ja/specdojo/samples/mtp-sample.md\ndocument complete: docs/ja/specdojo/samples/mtp-sample.md\ndocument start: docs/ja/specdojo/samples/nfr-availability-sample.md\ndocument complete: docs/ja/specdojo/samples/nfr-availability-sample.md\ndocument start: docs/ja/specdojo/samples/nfr-index-sample.md\ndocument incomplete: docs/ja/specdojo/samples/nfr-index-sample.md failed_stage=1\ndocument start: docs/ja/specdojo/samples/nfr-integrity-sample.md\ndocument complete: docs/ja/specdojo/samples/nfr-integrity-sample.md\ndocument start: docs/ja/specdojo/samples/nfr-maintainability-sample.md\ndocument incomplete: docs/ja/specdojo/samples/nfr-maintainability-sample.md failed_stage=1\ndocument start: docs/ja/specdojo/samples/nfr-operations-sample.md\ndocument complete: docs/ja/specdojo/samples/nfr-operations-sample.md\ngrade pipeline complete: selected=15 processed=15 completed_now=12 incomplete=3 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-43607f377df1/results.tsv\n",
+    "stderr": "grade pipeline incomplete: incomplete=3 run_id=JBR-grade-kata-43607f377df1; rerun with --run-id JBR-grade-kata-43607f377df1 to retry the failed stages, or start a new run with --incomplete\ngrade pipeline incomplete document: docs/ja/specdojo/samples/mip-index-sample.md failed_stage=1\ngrade pipeline incomplete document: docs/ja/specdojo/samples/nfr-index-sample.md failed_stage=1\ngrade pipeline incomplete document: docs/ja/specdojo/samples/nfr-maintainability-sample.md failed_stage=1\ngrade pipeline failed: run_id=JBR-grade-kata-43607f377df1 exit_code=1\n"
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-43607f377df1/attempt-1/command.stdout.log",
+      "bytes": 2721,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-43607f377df1/attempt-1/command.stderr.log",
+      "bytes": 557,
+      "truncated": false
+    }
+  ]
+}

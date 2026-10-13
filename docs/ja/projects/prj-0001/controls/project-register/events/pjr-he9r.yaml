@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4996bc3b8ba141c0b1b55dc678de040b
+  ts: "2026-10-12T12:48:47Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 の PJR-2CQC で specdojo-lp の検証を親 runner に足そうとしたが、共有の exec-defaults.yaml を変えると prj-0001 の run が失敗するため見送った
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: project ごとに parent_validations を足せるようにする
+    - field: description
+      from: ""
+      to: exec-defaults.yaml は project 間で共有され、プロダクトリポジトリ向けの { id, repo } を足すと、その repos を持たない project の run で検証が failed になる。exec-defaults を複製せずに、project ごとに親 runner の検証を足せるようにする（`projects.<id>.run` での追加や、exec-defaults の引き継ぎなど）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"

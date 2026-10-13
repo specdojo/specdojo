@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9fc1ebf1565441b9a807910b97b5d459
+  ts: "2026-10-13T14:33:33Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: CBQV の導入確認で、空のリポジトリでのビルド結果の出力先から判明した（2026-10-13）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs-site のビルド結果が node_modules の中へ出力される
+    - field: description
+      from: ""
+      to: "@specdojo/docs-site 0.2.0 は outDir と cacheDir を package の中（node_modules/@specdojo/docs-site/.vitepress/dist）に置くため、利用者はビルドしたサイトを見つけにくく、npm ci で消える。README にも出力先の記載がない"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-13"
+- v: 1
+  id: reg_45e248a874a14bd48e29f5d0e3847577
+  ts: "2026-10-13T14:53:21Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9fc1ebf1565441b9a807910b97b5d459
+- v: 1
+  id: reg_cb233f415184473a95899035ae6f00dc
+  ts: "2026-10-13T14:59:14Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_45e248a874a14bd48e29f5d0e3847577
+- v: 1
+  id: reg_557204595f934b2f95e44ad1408af4d7
+  ts: "2026-10-13T15:05:43Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に deploy.yml を直し、docs:build の出力先を確認した（2026-10-14）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-14"
+    - field: conclusion
+      from: "-"
+      to: docs-site のビルド結果と cache を workspace 直下の .vitepress/ へ移し、deploy.yml と README を合わせて、本リポジトリと空のリポジトリで出力先を確かめた
+  previous_event_id: reg_cb233f415184473a95899035ae6f00dc
