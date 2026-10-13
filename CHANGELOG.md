@@ -4,7 +4,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [0.3.0] - 未定
 
-同梱パッケージは `@specdojo/docs-lint` 0.2.0 と `@specdojo/docs-site` 0.2.0 を同時に公開します。docs-lint は 0.1.0 以降の変更（下記の lint の追加、依存の更新、脆弱性の修正）を含みます。
+同梱パッケージは `@specdojo/docs-lint` 0.2.0 と `@specdojo/docs-site` 0.2.1 を同時に公開します。docs-lint は 0.1.0 以降の変更（下記の lint の追加、依存の更新、脆弱性の修正）を含みます。docs-site 0.2.1 は、先に公開した 0.2.0 の導入時の不具合 2 件（下記の不具合修正の PJR-EA20・PJR-CA0S）を直した版です。
 
 ### 破壊的変更
 
@@ -155,6 +155,13 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- docs-site の `build` と `dev` が、`docs/en` のないリポジトリでサイドバーの走査に失敗して止まる問題を
+  修正しました。`config init` は `docs/ja` だけを作るため、README の手順どおりに導入すると最初の
+  ビルドで失敗していました。`docs/<locale>` のない言語は走査しません（PJR-EA20）。
+- docs-site のビルド結果と cache が package の中（`node_modules/@specdojo/docs-site/.vitepress/`）へ
+  出力され、`npm ci` で消える問題を修正しました。出力先は VitePress の既定と同じ、利用リポジトリ直下の
+  `.vitepress/dist` と `.vitepress/cache` です。利用リポジトリの `.gitignore` へ `/.vitepress/dist` と
+  `/.vitepress/cache` を加えてください（PJR-CA0S）。
 - `npm test` が単体テストと統合テストを同時に実行すると負荷で時間切れになる問題を、
   既存の unit / integration 設定を 2 workers で実行し、統合テストには 30 秒の上限を適用する
   project 構成にして修正しました（PJR-W2EB）。
