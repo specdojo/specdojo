@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-jjjb-init-gitignore-node-modules
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: rejected
   priority: medium
   registered_at: "2026-10-13T14:50:07Z"
+  completed_at: "2026-10-13T21:17:57Z"
+  conclusion: PJR-J2AS の重複。config init と init は同じ既定の一覧から node_modules/ を .gitignore へ追記する（develop・main で修正済み）。検証に J2AS の修正を含まない版（npm の specdojo 0.2.1 など）を使ったとみられる
 ---
 
 # PJR-JJJB init が .gitignore に node_modules を追加しない
