@@ -42,7 +42,7 @@ scaffold が使う typescript-node:22 のイメージに /usr/bin/bwrap があ�
 
 解決内容: `codex` provider を指定した場合だけ、scaffold が生成する `post-create.sh` にシステムの `bubblewrap` package の導入状態を確認する処理を追加した。導入済みであれば `sudo apt-get remove -y bubblewrap` を実行し、Codex 同梱の bwrap を使わせる。削除に失敗した場合は警告を標準エラーへ出して後続処理を続ける。PJR-EZAF で追加した `--security-opt=seccomp=unconfined` は維持し、`--security-opt=systempaths=unconfined` は使用しない。
 
-確認結果: scaffold の unit test に、Codex を含む provider 構成では package 確認・削除・失敗時警告が生成され、Codex を含まない構成では削除処理が生成されないことの検証を追加した。[[specdojo:command-reference|SpecDojo コマンドリファレンス]] には、ベースイメージのシステム版 bwrap を削除する理由、Codex 同梱版へ切り替えること、削除失敗時の挙動を記載した。Host Mac 上での実機確認は利用者が実施する。
+確認結果: scaffold の unit test に、Codex を含む provider 構成では package 確認・削除・失敗時警告が生成され、Codex を含まない構成では削除処理が生成されないことの検証を追加した。[[specdojo:command-reference|SpecDojo コマンドリファレンス]] には、ベースイメージのシステム版 bwrap を削除する理由、Codex 同梱版へ切り替えること、削除失敗時の挙動を記載した。Host Mac 上での実機確認は利用者が実施する。2026-10-13 に、修正を含む tarball から作った devcontainer で `command -v bwrap` が何も表示せず、`codex sandbox -- sh -c "ls -d /; touch /etc/x"` で `/` が表示されて `/etc/x` への書き込みが拒否されることを利用者が確認した（記録は PJR-EZAF）。
 
 再発防止策: provider 条件分岐の unit test に bubblewrap の処理を含め、Codex 以外の provider へ隔離緩和や package 削除が波及しないことを継続的に検査する。
 

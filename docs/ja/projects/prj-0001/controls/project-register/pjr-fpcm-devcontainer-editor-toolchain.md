@@ -39,8 +39,8 @@ specdojo:
 | 1   | Dockerfile へのツールの導入（版の固定とチェックサム） | DEV  | done | Neovim 0.12.5、Marksman 2026-02-08、lazygit 0.65.1 と npm CLI を固定 |
 | 2   | `devcontainer.json` の mount と volume の変更         | DEV  | done | Host の Emacs bind を外し、Emacs / Neovim の data volume を追加      |
 | 3   | dotfiles のリポジトリを使う手順の記載                 | DEV  | done | 技術スタック定義 4.10.1〜4.10.2 に設定例と確認手順を追加             |
-| 4   | 今の Emacs の設定を dotfiles のリポジトリへ移す       | 人   | open | 4.10.1 の例に従い、再ビルド前に設定と生成物の保存先を移す            |
-| 5   | イメージの再ビルドとエディタでの動作確認              | 人   | open | 4.10.2 に従い、両エディタの LSP と lazygit を確認する                |
+| 4   | 今の Emacs の設定を dotfiles のリポジトリへ移す       | 人   | done | 2026-10-13、利用者が実施した                                         |
+| 5   | イメージの再ビルドとエディタでの動作確認              | 人   | done | 2026-10-13、利用者が確認した                                         |
 
 ## 4. 対応結果
 
@@ -48,6 +48,10 @@ specdojo:
 - `.devcontainer/devcontainer.json` から Host Mac の `~/dotfiles/.emacs.d` bind mount を削除し、`/home/node/.local/share/emacs` と `/home/node/.local/share/nvim` を named volume にした。Neovim の設定を Host から mount する設定は追加していない。
 - [[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] に、VS Code / Dev Container CLI から dotfiles を導入する手順、`emacs/`・`nvim/`・`install.sh` の構成例、Emacs の package・native compile・tree-sitter grammar を data volume へ置く `early-init.el` の例、再ビルド後の確認手順を追加した。
 - 残課題は人が担当する No. 4〜5 である。現在の Emacs 設定を dotfiles リポジトリへ移した後、Dev Container を再ビルドし、Neovim / Emacs Eglot の TypeScript・Markdown LSP、lazygit、named volume の再作成後の保持を実機で確認する。
+
+### 4.1. 再ビルド後の確認（2026-10-13）
+
+利用者が Emacs の設定を dotfiles のリポジトリへ移したあと、本リポジトリの Dev Container を再ビルドし、技術スタック定義の確認手順に従って Neovim と Emacs の LSP、`lazygit` が動くことを確認した。再ビルド後、接続元端末から specdojo-lp の 4321 へ到達できなかった。原因はコンテナではなく、接続元端末の SSH 設定に 4321 の `LocalForward` がなかったことである。運用ガイドへ公開ポートの一覧と、`appPort` へ追加したポートは `LocalForward` にも追加することを反映した（fd106f859）。
 
 ## 5. 関連ドキュメント
 

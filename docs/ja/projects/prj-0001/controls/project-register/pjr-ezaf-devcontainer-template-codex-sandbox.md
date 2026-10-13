@@ -30,11 +30,11 @@ specdojo devcontainer scaffold のテンプレートはシステムの bubblewra
 
 ## 3. 作業内容
 
-| No  | 作業                                                                       | 担当 | 状態 | メモ                                                              |
-| --- | -------------------------------------------------------------------------- | ---- | ---- | ----------------------------------------------------------------- |
-| 1   | Host Mac でテンプレートの devcontainer を作り、codex の sandbox を確認する | DEV  | open | 「確認の手順」。Docker が必要なため devcontainer の中ではできない |
-| 2   | 原因の特定と、codex provider の指定時だけ設定を加える実装                  | DEV  | done | Docker 既定 seccomp の名前空間作成制限に対応                      |
-| 3   | 文書とテストの更新、設定後の確認                                           | DEV  | open | 文書・unit test は更新済み。Host Mac での設定後確認が残る         |
+| No  | 作業                                                                       | 担当 | 状態 | メモ                                         |
+| --- | -------------------------------------------------------------------------- | ---- | ---- | -------------------------------------------- |
+| 1   | Host Mac でテンプレートの devcontainer を作り、codex の sandbox を確認する | DEV  | done | 2026-10-13、利用者が Host Mac で確認した     |
+| 2   | 原因の特定と、codex provider の指定時だけ設定を加える実装                  | DEV  | done | Docker 既定 seccomp の名前空間作成制限に対応 |
+| 3   | 文書とテストの更新、設定後の確認                                           | DEV  | done | PJR-XY4C の修正を含む tarball で確認した     |
 
 ### 3.1. 確認の手順
 
@@ -65,6 +65,18 @@ devcontainer exec --workspace-folder . bash -lc 'codex sandbox -- sh -c "ls -d /
 scaffold の unit test には、Codex を含む場合に上記 `runArgs` が生成されることと、Codex を含まない場合は生成されないことを追加した。[[specdojo:command-reference|SpecDojo コマンドリファレンス]] には、設定の適用条件、緩和する隔離の範囲、`systempaths=unconfined` を採用しない理由、Codex sandbox を引き続き使うことを記載した。
 
 executor 環境には Docker と Dev Container CLI がないため、Host Mac での実機確認は未実施である。「確認の手順」に従い、ベースイメージの system bubblewrap の有無、変更前の失敗、変更後の `codex sandbox` と `codex exec --sandbox workspace-write`、sandbox 外への書き込み拒否を確認して記録する必要がある。
+
+### 4.1. Host Mac での確認（2026-10-13）
+
+PJR-XY4C の修正（システムの bubblewrap の削除）を含む `npm pack` の tarball を空のリポジトリへ入れ、`devcontainer scaffold --provider claude,codex --editor emacs --tmux --force` で生成した devcontainer を `devcontainer up --remove-existing-container` で作り直して、利用者が確認した。
+
+| 確認                                             | 結果                                                   |
+| ------------------------------------------------ | ------------------------------------------------------ |
+| `whoami`                                         | `node`                                                 |
+| `command -v bwrap`                               | 何も表示されない（システムの bubblewrap は削除された） |
+| `codex sandbox -- sh -c "ls -d /; touch /etc/x"` | `/` が表示され、`/etc/x` への書き込みは拒否された      |
+
+修正前（2026-10-12）は、ベースイメージにシステムの bubblewrap（`/usr/bin/bwrap`）が入っており、`bwrap: Can't mount proc` で sandbox が起動しなかった（PJR-XY4C）。`codex exec --sandbox workspace-write` は個別には確認しておらず、同じ sandbox の起動と外への書き込みの拒否を `codex sandbox` で確かめたことで代えた。
 
 ## 5. 関連ドキュメント
 
