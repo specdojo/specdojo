@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-w2eb-npm-test-load-timeout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-10T22:39:00Z"
+  completed_at: "2026-10-13T14:01:12Z"
+  conclusion: vitest を unit と integration の project に分けて maxWorkers を 2 に抑え、統合テストの timeout を 30 秒にした。統合後の npm test は 2228 件が通った
 ---
 
 # PJR-W2EB npm test の一括実行で負荷によりテストがタイムアウトする

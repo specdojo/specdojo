@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7e1bab8d3d0c45f686ef31f7986b8174
+- v: 1
+  id: reg_e7d5642e41c5415b8f86dcd0f0f8ff7a
+  ts: "2026-10-13T14:01:12Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に orchestrator が npm test の完走を確認した（2026-10-13）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-13"
+    - field: conclusion
+      from: "-"
+      to: vitest を unit と integration の project に分けて maxWorkers を 2 に抑え、統合テストの timeout を 30 秒にした。統合後の npm test は 2228 件が通った
+  previous_event_id: reg_36b01ebd98624052a59de988f39438f6
