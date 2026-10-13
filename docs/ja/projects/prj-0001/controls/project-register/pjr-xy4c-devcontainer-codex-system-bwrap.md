@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-xy4c-devcontainer-codex-system-bwrap
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-12T12:52:35Z"
+  completed_at: "2026-10-13T14:00:48Z"
+  conclusion: codex を指定した scaffold の post-create でシステムの bubblewrap を削除し、生成した devcontainer で codex の sandbox が動くことを実機で確かめた
 ---
 
 # PJR-XY4C devcontainer scaffold の codex でシステムの bubblewrap が sandbox を失敗させる

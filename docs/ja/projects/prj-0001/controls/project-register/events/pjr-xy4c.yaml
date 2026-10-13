@@ -154,3 +154,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e9b75d0138c74e4ba744d768c7ec9c57
+- v: 1
+  id: reg_0c2e33b247284562b4192b3c31d5fd95
+  ts: "2026-10-13T14:00:48Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 利用者が Host Mac で実機の確認をした（2026-10-13）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-13"
+    - field: conclusion
+      from: "-"
+      to: codex を指定した scaffold の post-create でシステムの bubblewrap を削除し、生成した devcontainer で codex の sandbox が動くことを実機で確かめた
+  previous_event_id: reg_5eef1193dc7a4960a877749708952aee
