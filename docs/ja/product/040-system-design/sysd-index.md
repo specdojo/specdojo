@@ -38,12 +38,12 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 
 ## 3. 自動生成物
 
-| 生成物             | 入力SSOT                       | 生成コマンド              | 生成先                               | 更新方式          |
-| ------------------ | ------------------------------ | ------------------------- | ------------------------------------ | ----------------- |
-| 文書索引           | Markdown Frontmatter           | `npm run docs:index`      | VitePress参照用索引                  | コマンド生成      |
-| ドキュメントサイト | `docs/`、`packages/docs-site/` | `npm run docs:build`      | `packages/docs-site/.vitepress/dist` | CI / ローカル検証 |
-| Ready / CPM        | Schedule、event                | `specdojo exec refresh`   | projectの`execution/generated/`      | 実行前再生成      |
-| 登録簿ビュー       | 登録項目個票                   | `specdojo register build` | projectの`generated/`                | 必要時再生成      |
+| 生成物             | 入力SSOT                       | 生成コマンド              | 生成先                              | 更新方式          |
+| ------------------ | ------------------------------ | ------------------------- | ----------------------------------- | ----------------- |
+| 文書索引           | Markdown Frontmatter           | `npm run docs:index`      | VitePress参照用索引                 | コマンド生成      |
+| ドキュメントサイト | `docs/`、`packages/docs-site/` | `npm run docs:build`      | `.vitepress/dist`（workspace 直下） | CI / ローカル検証 |
+| Ready / CPM        | Schedule、event                | `specdojo exec refresh`   | projectの`execution/generated/`     | 実行前再生成      |
+| 登録簿ビュー       | 登録項目個票                   | `specdojo register build` | projectの`generated/`               | 必要時再生成      |
 
 ## 4. 変更の入口
 

@@ -26,11 +26,8 @@ import {
 } from "./kata-staging";
 import { scanLocaleSidebar } from "./locale-sidebar";
 import * as path from "path";
-import { fileURLToPath } from "url";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
-const CONFIG_DIR = path.dirname(fileURLToPath(import.meta.url));
-const PACKAGE_ROOT = path.resolve(CONFIG_DIR, "..");
 const WORKSPACE_ROOT = path.resolve(process.env.SPECDOJO_DOCS_ROOT ?? process.cwd());
 const CONTENT_ROOT = path.join(WORKSPACE_ROOT, "docs");
 const MERMAID_OUT_DIR = path.join(WORKSPACE_ROOT, "public", "mermaid");
@@ -923,15 +920,27 @@ export default defineConfig({
 
   // VitePress の設定は分離 package に置き、閲覧対象は呼び出し元 workspace とする。
   srcDir: WORKSPACE_ROOT,
-  outDir: path.join(PACKAGE_ROOT, ".vitepress", "dist"),
-  cacheDir: path.join(PACKAGE_ROOT, ".vitepress", "cache"),
+  // ビルド結果と cache は package の中（node_modules 配下）ではなく、閲覧対象の workspace 側へ置く。
+  // package の中に置くと利用者が出力を見つけにくく、npm ci で消え、package を共有する
+  // 複数 workspace の出力が混ざる。置き場所は VitePress の既定と同じ <workspace>/.vitepress/ とする。
+  outDir: path.join(WORKSPACE_ROOT, ".vitepress", "dist"),
+  cacheDir: path.join(WORKSPACE_ROOT, ".vitepress", "cache"),
 
   // srcDir は呼び出し元 workspace とする。
   // サイトに含めるのは workspace の docs/ 配下の Markdown のみとし、
   // リポジトリ直下の README 等やローカル作業用ディレクトリは除外する。
   // logs/ は agent 実行時の plan / 応答を蓄える。VitePress の走査対象にすると、
   // 未知タグを含む agent 出力が Vue のコンパイルを壊す。
-  srcExclude: ["*.md", "local/**", "workspaces/**", "templates/**", "logs/**", "packages/**"],
+  // .vitepress/ は上記のビルド結果と cache の置き場所であり、ページとして走査しない。
+  srcExclude: [
+    "*.md",
+    ".vitepress/**",
+    "local/**",
+    "workspaces/**",
+    "templates/**",
+    "logs/**",
+    "packages/**",
+  ],
 
   // サイト設定（サイドバーを含む）とページのハッシュ表は、既定では全ページの HTML へ
   // インライン展開される。ページ数が多いため、共有の JS チャンクへ切り出して 1 回だけ配信する。

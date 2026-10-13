@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-13T14:33:33Z"
@@ -51,7 +51,13 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+| 項目       | 内容                                                                                                                                                                                                                               |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解決内容   | `config.mts` の `outDir` / `cacheDir` を `WORKSPACE_ROOT` 基準の `<workspace>/.vitepress/dist`・`<workspace>/.vitepress/cache` へ変更し、`srcExclude` に `.vitepress/**` を追加した。未使用になった `PACKAGE_ROOT` を削除した      |
+| 文書       | `packages/docs-site/README.md` に出力先と利用リポジトリの `.gitignore` へ加える行を記載した。本リポジトリの `.gitignore` と `sysd-index.md` の生成先を新しい出力先へ更新した。`packages/docs-site/package.json` の版は変えていない |
+| 未完了     | `.github/workflows/deploy.yml` の upload `path` は agent の編集権限外のため未変更。人手で `packages/docs-site/.vitepress/dist` を `.vitepress/dist` へ変更する必要がある                                                           |
+| 確認結果   | 本リポジトリで `npm run docs:build` を実行し、出力が `.vitepress/dist` に作られることを確認する（結果は result を参照）                                                                                                            |
+| 再発防止策 | 出力先を package からではなく閲覧対象の workspace から組み立てる旨を `config.mts` のコメントに残した                                                                                                                               |
 
 ## 5. 関連ドキュメント
 
