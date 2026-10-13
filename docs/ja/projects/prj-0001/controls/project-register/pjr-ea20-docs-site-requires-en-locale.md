@@ -49,7 +49,14 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+| 項目       | 内容                                                                                                                                                                                                                                                                         |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解決内容   | `packages/docs-site/.vitepress/locale-sidebar.ts` に `docs/<locale>` の存在を判定する `shouldScanLocaleSidebar` と、存在するときだけ走査する `scanLocaleSidebar` を追加した。`config.mts` の `makeSidebar` はこれを経由し、フォルダーがない locale の sidebar を空として扱う |
+| 判定の基準 | `generateSidebar` は走査先を `process.cwd()` から解決するため、存在判定も `process.cwd()` を基準にした。`specdojo-docs-site` の起動スクリプトは workspace を `cwd` にして VitePress を起動する                                                                               |
+| 確認結果   | `docs/ja` だけ、`docs/en` だけの workspace をそれぞれ用意し、`specdojo-docs-site build` が設定の読み込みを含めて完了することを確かめた                                                                                                                                       |
+| 再発防止策 | 判定を関数に切り出し、`tests/packages/docs-site/locale-sidebar.test.ts` で、フォルダーがない locale を走査しないことと、ある locale はこれまでどおり走査することを検証する                                                                                                   |
+| 残課題     | 本リポジトリでの `npm run docs:build` は、agent の実行環境では Node.js の heap 上限（約 2 GB）に達して OOM で止まり、確認できていない。heap を広げた環境での確認が必要                                                                                                       |
+| 版         | `packages/docs-site/package.json` の版は変えていない                                                                                                                                                                                                                         |
 
 ## 5. 関連ドキュメント
 

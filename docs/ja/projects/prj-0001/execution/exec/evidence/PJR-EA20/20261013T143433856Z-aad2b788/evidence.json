@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-EA20",
+  "run_id": "20261013T143433856Z-aad2b788",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-13T14:35:37.630Z",
+    "completed_at": "2026-10-13T14:40:19.409Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ea20-docs-site-requires-en-locale.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/locale-sidebar.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-site/locale-sidebar.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-ea20-ws-en/docs/en/index.md",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-ea20-ws-en/public/mermaid/.manifest.json",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-ea20-ws/docs/ja/index.md",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-ea20-ws/public/mermaid/.manifest.json",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ea20-docs-site-requires-en-locale.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/locale-sidebar.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-site/locale-sidebar.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-ea20-ws-en/docs/en/index.md",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-ea20-ws-en/public/mermaid/.manifest.json",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-ea20-ws/docs/ja/index.md",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-ea20-ws/public/mermaid/.manifest.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": ".../pjr-ea20-docs-site-requires-en-locale.md       |  9 +++++++-\n packages/docs-site/.vitepress/config.mts           | 24 +++++++++++++++-------\n 2 files changed, 25 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node packages/docs-site/bin/specdojo-docs-site.js build tmp/pjr-ea20-ws",
+      "status": "passed",
+      "summary": "docs/en のない workspace（docs/ja のみ）で build complete"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-site/bin/specdojo-docs-site.js build tmp/pjr-ea20-ws-en",
+      "status": "passed",
+      "summary": "docs/ja のない workspace（docs/en のみ）で build complete"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "agent の環境では Node.js の heap 上限（約 2 GB）で OOM（SIGABRT）になり、heap を広げた再実行は許可されなかった。メモリを増やせる環境で本リポジトリの docs:build が通ることを確認する必要がある"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write packages/docs-site/.vitepress/locale-sidebar.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/locale-sidebar.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-ea20-docs-site-requires-en-locale.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-ea20-docs-site-requires-en-locale.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "npx tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "OK（以前からある based_on の WARN のみ）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EA20\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-rhzDyx/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-LLt5d5/prj-0001-T-LAUNCH-pm-plan-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EA20/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EA20/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EA20\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-W06Sgo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-yJb5QN/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-kfuqdY/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3jVXEn/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  42.53s (transform 2.31s, setup 579ms, import 20.46s, tests 46.22s, environment 7ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "locale のフォルダー（`docs/<locale>`）がない場合に sidebar の走査を飛ばす `scanLocaleSidebar` を追加して `config.mts` に組み込み、unit test を追加し、個票の対応結果を更新した。`docs/ja` だけ、`docs/en` だけの workspace で docs-site のビルドが通ることを確認した。本リポジトリでの `npm run docs:build` は agent の環境では Node.js の heap 上限による OOM で止まり、人による確認が必要。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EA20/20261013T143433856Z-aad2b788/executor.log",
+      "bytes": 4595,
+      "truncated": false
+    }
+  ]
+}
