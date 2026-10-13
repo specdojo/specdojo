@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_0ac2039334ef4664aef98b28625216f5
+  ts: "2026-10-13T21:08:12Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: 利用者が staged publish を承認し、公開版の導入を確認した（2026-10-14）
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-14"
+    - field: conclusion
+      from: "-"
+      to: "@specdojo/docs-site 0.2.1 を trusted publishing で公開し（provenance 付き、latest）、空のリポジトリで README の手順どおりに導入とビルドができることを確かめた"
+  previous_event_id: reg_c1933dd379ac45fca2cac729c9bab42a

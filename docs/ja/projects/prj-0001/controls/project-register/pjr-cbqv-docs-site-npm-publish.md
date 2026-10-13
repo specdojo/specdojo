@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-cbqv-docs-site-npm-publish
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-29T21:34:43Z"
+  completed_at: "2026-10-13T21:08:12Z"
+  conclusion: "@specdojo/docs-site 0.2.1 を trusted publishing で公開し（provenance 付き、latest）、空のリポジトリで README の手順どおりに導入とビルドができることを確かめた"
 ---
 
 # PJR-CBQV @specdojo/docs-site を npm へ公開する
