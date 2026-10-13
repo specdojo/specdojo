@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5e6e2cd853c14e54ae956a392237dd20
+  ts: "2026-10-13T12:52:56Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が LP の課題提示の順番を見直し、ほかの文言も続けて直したいと依頼したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: LP の文言を見直す
+    - field: description
+      from: ""
+      to: LP の各節の文言を見直し、課題提示の順番などを整える
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-13"
+    - field: due
+      from: ""
+      to: "2026-10-31"
