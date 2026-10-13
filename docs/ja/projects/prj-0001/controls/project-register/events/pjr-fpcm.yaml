@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0955b38bd4634fcebb383b2bc16726ea
+- v: 1
+  id: reg_bbb0f967bd144ada9478043746a66f9f
+  ts: "2026-10-13T14:01:04Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 利用者が再ビルド後に実機の確認をした（2026-10-13）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-13"
+    - field: conclusion
+      from: "-"
+      to: Dockerfile へ Neovim・LSP・lazygit などを版固定で導入し、dotfiles で設定を入れる構成に変えて、再ビルド後に両エディタの LSP と lazygit を確かめた
+  previous_event_id: reg_786b1da3b6944e92b8727700ead49dac

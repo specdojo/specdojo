@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-fpcm-devcontainer-editor-toolchain
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-02T11:47:42Z"
+  completed_at: "2026-10-13T14:01:04Z"
+  conclusion: Dockerfile へ Neovim・LSP・lazygit などを版固定で導入し、dotfiles で設定を入れる構成に変えて、再ビルド後に両エディタの LSP と lazygit を確かめた
 ---
 
 # PJR-FPCM devcontainer に Neovim と Emacs 用の開発ツールを導入する
