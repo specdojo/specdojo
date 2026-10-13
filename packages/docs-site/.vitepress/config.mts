@@ -24,6 +24,7 @@ import {
   stageBundledKata,
   toSiteDocIndexEntry,
 } from "./kata-staging";
+import { scanLocaleSidebar } from "./locale-sidebar";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
@@ -812,15 +813,24 @@ const transformSidebar = (
 };
 
 // ★ここ重要：言語フォルダを documentRootPath にする
+// generateSidebar は走査先を process.cwd() から解決するため、存在判定も同じ基準で行う。
+// docs/<locale> が無い workspace（config init 直後は docs/ja だけ）では走査せず空にする。
+const SIDEBAR_DOCUMENT_ROOT = "docs";
 const makeSidebar = (locale: Locale): SidebarItem[] =>
   transformSidebar(
-    generateSidebar({
-      documentRootPath: "docs",
-      scanStartPath: locale, // locale の中をスキャン
-      useTitleFromFileHeading: false,
-      collapseDepth: 2,
-      collapsed: true,
-    }) as SidebarItem[],
+    scanLocaleSidebar(
+      process.cwd(),
+      SIDEBAR_DOCUMENT_ROOT,
+      locale,
+      () =>
+        generateSidebar({
+          documentRootPath: SIDEBAR_DOCUMENT_ROOT,
+          scanStartPath: locale, // locale の中をスキャン
+          useTitleFromFileHeading: false,
+          collapseDepth: 2,
+          collapsed: true,
+        }) as SidebarItem[],
+    ),
     locale,
   );
 
