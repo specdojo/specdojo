@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9fc1ebf1565441b9a807910b97b5d459
+  ts: "2026-10-13T14:33:33Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: CBQV の導入確認で、空のリポジトリでのビルド結果の出力先から判明した（2026-10-13）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs-site のビルド結果が node_modules の中へ出力される
+    - field: description
+      from: ""
+      to: "@specdojo/docs-site 0.2.0 は outDir と cacheDir を package の中（node_modules/@specdojo/docs-site/.vitepress/dist）に置くため、利用者はビルドしたサイトを見つけにくく、npm ci で消える。README にも出力先の記載がない"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-13"
