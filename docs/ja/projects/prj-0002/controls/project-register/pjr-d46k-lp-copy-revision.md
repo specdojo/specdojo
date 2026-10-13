@@ -37,7 +37,8 @@ LP の各節の文言を見直し、課題提示の順番などを整える
 | 2   | 始め方（GetStarted）に実行編の 3 手順を加え、0.3.0 に合わせる                                     | orchestrator | done | 使い捨てリポジトリで `init --exec` から `exec run --dry-run` まで確認した |
 | 3   | 始め方の手順を LP 開発の題材で具体化し、Hero に実行編へのボタンを加える                           | orchestrator | done | 題材は FAQ の節の追加と OGP 画像の issue                                  |
 | 4   | 実行編を PDCA の 4 手順（つなぐ・Do・Check・Action）に組み直し、app1 を開発中の LP として説明する | orchestrator | done | -                                                                         |
-| 5   | _TODO_: ほかの節の文言を見直す                                                                    | _TODO_       | open | -                                                                         |
+| 5   | 例のリポジトリ名を app1 から landing-page に改める                                                | orchestrator | done | 何のリポジトリかを名前で伝えるため                                        |
+| 6   | _TODO_: ほかの節の文言を見直す                                                                    | _TODO_       | open | -                                                                         |
 
 ## 4. 対応結果
 
