@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ca0s-docs-site-output-in-node-modules
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-13T14:33:33Z"
   due_on: null
+  completed_at: "2026-10-13T15:05:43Z"
+  conclusion: docs-site のビルド結果と cache を workspace 直下の .vitepress/ へ移し、deploy.yml と README を合わせて、本リポジトリと空のリポジトリで出力先を確かめた
 ---
 
 # PJR-CA0S docs-site のビルド結果が node_modules の中へ出力される

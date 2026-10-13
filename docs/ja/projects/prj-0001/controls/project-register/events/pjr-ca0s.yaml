@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_45e248a874a14bd48e29f5d0e3847577
+- v: 1
+  id: reg_557204595f934b2f95e44ad1408af4d7
+  ts: "2026-10-13T15:05:43Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に deploy.yml を直し、docs:build の出力先を確認した（2026-10-14）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-14"
+    - field: conclusion
+      from: "-"
+      to: docs-site のビルド結果と cache を workspace 直下の .vitepress/ へ移し、deploy.yml と README を合わせて、本リポジトリと空のリポジトリで出力先を確かめた
+  previous_event_id: reg_cb233f415184473a95899035ae6f00dc
