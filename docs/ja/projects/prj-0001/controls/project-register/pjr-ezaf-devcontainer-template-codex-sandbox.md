@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ezaf-devcontainer-template-codex-sandbox
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-04T05:03:36Z"
   due_on: null
+  completed_at: "2026-10-13T14:00:56Z"
+  conclusion: codex 指定時に seccomp=unconfined とシステムの bubblewrap の削除を scaffold が加え、生成した devcontainer で codex の sandbox が動き外への書き込みが拒否されることを確かめた
 ---
 
 # PJR-EZAF devcontainer テンプレートで codex の sandbox が動くか確認し、必要な設定を加える
