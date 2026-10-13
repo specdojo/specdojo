@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3b3a5d373c494850be567a1f8facd34b
+  ts: "2026-10-13T14:33:21Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: CBQV の導入確認で、空のリポジトリへ README の手順で導入して再現した（2026-10-13）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: docs-site のビルドが docs/en のないリポジトリで失敗する
+    - field: description
+      from: ""
+      to: 公開済みの @specdojo/docs-site 0.2.0 は、docs/en がないと sidebar の走査で The path to scan does not exist になり build と dev が止まる。config init は docs/ja だけを作るため、README の手順どおりに導入した利用者が最初のビルドで失敗する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-13"
