@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ea20-docs-site-requires-en-locale
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-13T14:33:20Z"
   due_on: null
+  completed_at: "2026-10-13T14:53:05Z"
+  conclusion: docs/`<locale>` がない locale の sidebar の走査を飛ばすようにし、docs/ja だけ・docs/en だけの workspace と本リポジトリで docs-site のビルドが通ることを確かめた
 ---
 
 # PJR-EA20 docs-site のビルドが docs/en のないリポジトリで失敗する
