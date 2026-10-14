@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cc29de67e0db45c8b0b38843c9bae92b
+  ts: "2026-10-14T21:26:32Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-Y8P9 を分けて起票（2026-10-15、利用者が承認）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: dashboard.ts・catalog-build.ts・schedule-strategy-generate.ts を分ける
+    - field: description
+      from: ""
+      to: dashboard、カタログの build、schedule の戦略の生成（合わせて 3,832 行）を責務ごとのモジュールへ移す。 動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
