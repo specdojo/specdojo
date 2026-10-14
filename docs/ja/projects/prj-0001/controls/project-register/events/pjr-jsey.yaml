@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_15686feb67554e9d9f9237768625d8df
+  ts: "2026-10-14T15:10:59Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: exec-run.ts の分割の close の条件（統合後の動作確認）に使うため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec-run.ts の分割後に runner の動作を確かめる
+    - field: description
+      from: ""
+      to: exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、分割後の runner で exec run --register を 1 件流し、executor・親の検証・reporter・統合まで終わることを確かめるための動作確認用の項目
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
