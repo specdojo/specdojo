@@ -29,3 +29,29 @@
     - field: registered
       from: ""
       to: "2026-10-14"
+- v: 1
+  id: reg_1ab1a890f91046dd997d10f196254d47
+  ts: "2026-10-14T13:18:42Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ea8b6225f631485893c1832a3506dd59
+- v: 1
+  id: reg_dd61e40bc07b4cec95567247e244a98e
+  ts: "2026-10-14T13:26:21Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1ab1a890f91046dd997d10f196254d47

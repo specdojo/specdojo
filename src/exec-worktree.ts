@@ -143,6 +143,10 @@ export function runGitWithTransientRetry<T extends RetryableGitResult>(
   return result;
 }
 
+// spawnSync の既定の maxBuffer（1 MiB）では、未追跡のファイルが多い作業場所の
+// `git status --porcelain` などが打ち切られ、子プロセスが SIGTERM で止められる。
+export const GIT_OUTPUT_MAX_BUFFER = 256 * 1024 * 1024;
+
 export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof spawnSync> {
   const cwd = resolve(repoRoot);
   const run = (): ReturnType<typeof spawnSync> =>
@@ -152,6 +156,7 @@ export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof s
       cwd,
       encoding: "utf8",
       env: gitEnvironment(),
+      maxBuffer: GIT_OUTPUT_MAX_BUFFER,
       stdio: ["ignore", "pipe", "pipe"],
     });
 
@@ -224,7 +229,37 @@ export function summarizeGitStderr(
   return joined.length <= maxLength ? joined : `${joined.slice(0, maxLength - 1)}…`;
 }
 
-export function formatGitCommandFailure(args: readonly string[], stderr: string): string {
+export interface GitProcessOutcome {
+  status: number | null;
+  signal: NodeJS.Signals | null;
+  error?: Error;
+}
+
+// 起動の失敗や出力の上限超過（ENOBUFS）では stderr が空になるため、spawnSync の
+// error と signal から原因を組み立てる。git 自身が終了コードを返した場合は空文字を返す。
+export function describeGitProcessFailure(outcome: GitProcessOutcome): string {
+  const parts: string[] = [];
+  const error = outcome.error;
+  if (error) {
+    const code = "code" in error && typeof error.code === "string" ? error.code : undefined;
+    const message = error.message.trim();
+    if (code === "ENOBUFS") {
+      parts.push(`output exceeded maxBuffer (ENOBUFS): ${message}`);
+    } else if (code && !message.includes(code)) {
+      parts.push(`${code}: ${message}`);
+    } else {
+      parts.push(message || "spawn error");
+    }
+  }
+  if (outcome.signal) parts.push(`terminated by signal ${outcome.signal}`);
+  return parts.join("; ");
+}
+
+export function formatGitCommandFailure(
+  args: readonly string[],
+  stderr: string,
+  processFailure = "",
+): string {
   const subcommandIndex = args.findIndex((arg) => !arg.startsWith("-"));
   const label = subcommandIndex === -1 ? "git" : `git ${args[subcommandIndex]}`;
   const summary = summarizeGitArguments(
@@ -233,7 +268,9 @@ export function formatGitCommandFailure(args: readonly string[], stderr: string)
       : [...args.slice(0, subcommandIndex), ...args.slice(subcommandIndex + 1)],
   );
   const detail = summary ? ` (args: ${summary})` : "";
-  const cause = summarizeGitStderr(stderr);
+  const cause = [processFailure.trim(), summarizeGitStderr(stderr)]
+    .filter((part) => part !== "")
+    .join(" / ");
   return cause ? `${label} failed: ${cause}${detail}` : `${label} failed${detail}`;
 }
 
@@ -310,9 +347,13 @@ export class GitCommandError extends Error {
 
 export function gitOutput(repoRoot: string, args: string[]): string {
   const result = gitResult(repoRoot, args);
-  if (result.status !== 0) {
+  if (result.status !== 0 || result.error) {
     const stderr = typeof result.stderr === "string" ? result.stderr : "";
-    throw new GitCommandError(formatGitCommandFailure(args, stderr), args, stderr);
+    throw new GitCommandError(
+      formatGitCommandFailure(args, stderr, describeGitProcessFailure(result)),
+      args,
+      stderr,
+    );
   }
   return typeof result.stdout === "string" ? result.stdout : "";
 }
