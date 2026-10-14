@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-14T21:42:05Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
 ---
 
 # PJR-X60A 配布する雛形と文書の agy の model の ID が提供終了のものになっている
@@ -51,7 +52,11 @@ init が生成する exec-defaults の雛形・antigravity の雛形・ガイド
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `templates/init-exec-defaults.yaml` と Antigravity 向け配布原本、2 つのガイド、Antigravity のシステム設計、本リポジトリの `package.json` で、提供終了した ID を `gemini-3.8-flash-high`・`claude-sonnet-5-5-medium`・`claude-opus-5-5-high` へ置き換えた。
+- 雛形とガイドへ、利用可能なモデル ID は `agy models` で確認する旨を追記した。Claude Code のモデル別名を説明する `sysd-claude-agent-settings.md` の `claude-sonnet-4-6` は変更していない。
+- `specdojo init` が生成する Antigravity expert のモデルと、Antigravity 配布スニペットのモデル ID を固定する回帰テストを追加した。
+- CHANGELOG に 0.3.1 の不具合修正として本件を記載した。
+- Prettier、登録簿生成、成果物カタログ検証、差分の空白検査を実行し、すべて成功した。親 runner が lint、型検査、単体・統合テスト、schema 検証を続けて実行する。
 
 ## 5. 関連ドキュメント
 
