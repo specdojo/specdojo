@@ -122,3 +122,32 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: lint-ts"
   previous_event_id: reg_fb1857d04cc24b36922b62b23a14c870
+- v: 1
+  id: reg_d48a08ed463047c9a8886b310c88c674
+  ts: "2026-10-14T17:33:37Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_8060763a4c1145efa76d5513d76a6971
+- v: 1
+  id: reg_37435582cdeb411986927d726a0ac721
+  ts: "2026-10-14T17:42:38Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d48a08ed463047c9a8886b310c88c674
