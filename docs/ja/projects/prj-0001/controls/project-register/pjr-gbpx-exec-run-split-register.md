@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-gbpx-exec-run-split-register
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T13:49:29Z"
   due_on: null
+  completed_at: "2026-10-14T17:50:08Z"
+  conclusion: register の実行を core・state・mode・worktree・resume・command の 6 モジュール、run・cycle・resume のコマンドの登録を lifecycle-commands へ移し、exec-run.ts は 66 行の再 export になった。--help と export は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
 ---
 
 # PJR-GBPX exec-run.ts の register の実行とコマンドの登録を分ける

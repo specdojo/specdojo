@@ -151,3 +151,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d48a08ed463047c9a8886b310c88c674
+- v: 1
+  id: reg_ea7dc37b832f4371ba64bc716c7cf88a
+  ts: "2026-10-14T17:50:08Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に --help・export・循環 import を確かめ、分割後の runner で exec run --register（PJR-JSEY、41227a627）が統合まで通った（2026-10-15）。途中で codex の利用上限（2:19 まで）と、lint の未使用の import で 2 回止まり、再開で直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: register の実行を core・state・mode・worktree・resume・command の 6 モジュール、run・cycle・resume のコマンドの登録を lifecycle-commands へ移し、exec-run.ts は 66 行の再 export になった。--help と export は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_37435582cdeb411986927d726a0ac721
