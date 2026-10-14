@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jsey-exec-run-split-smoke
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
+  completed_at: "2026-10-14T17:50:20Z"
+  conclusion: exec-run.ts の分割 3 件（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
 ---
 
 # PJR-JSEY exec-run.ts の分割後に runner の動作を確かめる
