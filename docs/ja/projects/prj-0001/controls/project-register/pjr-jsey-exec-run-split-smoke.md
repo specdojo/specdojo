@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
@@ -34,8 +34,9 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 
 ## 4. 対応結果
 
-| 日時（JST） | 対象の分割 | agent |
-| ----------- | ---------- | ----- |
+| 日時（JST）      | 対象の分割 | agent                 |
+| ---------------- | ---------- | --------------------- |
+| 2026-10-15 00:12 | PJR-3W2N   | codex-expert-executor |
 
 ## 5. 関連ドキュメント
 

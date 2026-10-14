@@ -1,0 +1,5 @@
+PJR-JSEY 個票の対応結果に、PJR-3W2N のスモーク実行記録を追記しました。変更は個票のみです。親 runner の検証・reporter・統合へ引き渡します。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果に 2026-10-15 00:12 JST、PJR-3W2N、codex-expert-executor を追記した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown を整形した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成処理が成功した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"既存の欠落文書に関する警告はあるが、catalog 検証は終了コード 0 で成功した。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはなく、追跡対象の変更は個票 1 ファイルのみ。"}]}
+</specdojo_executor_evidence>
