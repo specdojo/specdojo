@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_aee227eaa9de493db4d6811b5a59a1cc
+  ts: "2026-10-14T21:42:05Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-VGNG の対応で本リポジトリの設定を直した際に、配布物にも同じ ID が残ることを見つけた。利用者の判断で 0.3.1 で直す（2026-10-15）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 配布する雛形と文書の agy の model の ID が提供終了のものになっている
+    - field: description
+      from: ""
+      to: init が生成する exec-defaults の雛形・antigravity の雛形・ガイドが、agy 1.3.5 で提供されていない gemini-3.1-pro-high・claude-sonnet-4-6・claude-opus-4-6-thinking を指す。0.3.0 で init から agy を設定した利用者は expert の agy が invalid model selection で起動しない。0.3.1 で直す
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"

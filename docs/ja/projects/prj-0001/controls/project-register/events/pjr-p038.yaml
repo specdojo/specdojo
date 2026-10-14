@@ -42,3 +42,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_85814db4130a48d39b253e55889dedb0
+- v: 1
+  id: reg_59a0648d73ac401fa0311a4e8902683d
+  ts: "2026-10-14T21:41:55Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged); FAIL  /unit/ tests/src/doc…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged); FAIL  /unit/ tests/src/doc…"
+  previous_event_id: reg_848550c6de214b7fa7c9d3518ac28157

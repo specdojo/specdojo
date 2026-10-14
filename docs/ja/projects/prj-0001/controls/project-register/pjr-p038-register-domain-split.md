@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:25:56Z"
   due_on: null
+  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged); FAIL  /unit/ tests/src/doc…"
 ---
 
 # PJR-P038 register.ts の残りのドメインの処理を分ける
