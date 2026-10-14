@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-qcmp-register-commands-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-02T12:14:24Z"
+  completed_at: "2026-10-14T14:21:59Z"
+  conclusion: registerRegisterCommands の 14 のサブコマンドの登録を作成・遷移・保守の 3 モジュールへ移し、依存はインターフェース経由で受け取る形にした。register.ts は 3,156 行から 2,418 行になり、--help の出力は分割の前後で一致した
 ---
 
 # PJR-QCMP register.ts のサブコマンドごとの分割
