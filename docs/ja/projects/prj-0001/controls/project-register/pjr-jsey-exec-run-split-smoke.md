@@ -22,18 +22,23 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 本個票の「対応結果」の表に、実行した日時（JST）、対象の分割の項目 ID、実行した agent の nickname を 1 行追記する。対象の分割の項目 ID は、実行時点で `review` または `done` になっている exec-run.ts の分割の項目（PJR-3W2N・PJR-2JFM・PJR-GBPX）のうち最も新しく統合されたものとする。
+- 本個票以外のファイルは変更しない。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通り、統合まで終わる。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                        | 担当 | 状態 | メモ                       |
+| --- | --------------------------- | ---- | ---- | -------------------------- |
+| 1   | 対応結果の表に 1 行追記する | DEV  | open | 分割の統合ごとに再実行する |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+| 日時（JST） | 対象の分割 | agent |
+| ----------- | ---------- | ----- |
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-3w2n-exec-run-split-shared]]
+- [[prj-0001:pjr-2jfm-exec-run-split-modes]]
+- [[prj-0001:pjr-gbpx-exec-run-split-register]]
