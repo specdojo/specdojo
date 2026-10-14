@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5306fcf835e541ea848faee064329b0e
+- v: 1
+  id: reg_7b815421e59143698227a9b2c3da74b6
+  ts: "2026-10-14T15:19:05Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に --help・export・循環 import を確かめ、分割後の runner で exec run --register（PJR-JSEY、4ddd615ab）が統合まで通った（2026-10-15）。初回は import の抜けで親の検証が失敗し、--resume-from executor で直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: exec-run.ts の共通部を exec-run-shared・exec-run-agent、pipeline を exec-run-agent-pipeline へ移し、exec-run.ts は 8,584 行から 6,949 行になった。--help と export は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_903b19c0939d4a4781a2f6a02c8fa435

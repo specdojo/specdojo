@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-3w2n-exec-run-split-shared
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T13:49:03Z"
   due_on: null
+  completed_at: "2026-10-14T15:19:05Z"
+  conclusion: exec-run.ts の共通部を exec-run-shared・exec-run-agent、pipeline を exec-run-agent-pipeline へ移し、exec-run.ts は 8,584 行から 6,949 行になった。--help と export は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
 ---
 
 # PJR-3W2N exec-run.ts の共通部と agent の pipeline を分ける
