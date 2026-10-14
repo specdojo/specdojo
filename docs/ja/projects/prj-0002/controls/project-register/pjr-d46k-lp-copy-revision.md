@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-d46k-lp-copy-revision
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-10-13T12:52:56Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-14T12:05:01Z"
+  conclusion: 課題提示の順番を見直し、始め方を「5 つの手順で始めて、4 つの手順で回す」構成へ組み直して、開発中の LP を題材に 0.3.0 の挙動へそろえた
 ---
 
 # PJR-D46K LP の文言を見直す

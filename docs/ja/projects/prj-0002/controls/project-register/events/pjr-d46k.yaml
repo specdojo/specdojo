@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_3e464360ad9d42bba313936766dacf7b
+  ts: "2026-10-14T12:05:01Z"
+  action: close
+  actor: orchestrator
+  from_status: open
+  to_status: done
+  reason: 利用者が他の節に修正はないと確認し、close を指示したため。orchestrator が実装者として直接対応した
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-14"
+    - field: conclusion
+      from: "-"
+      to: 課題提示の順番を見直し、始め方を「5 つの手順で始めて、4 つの手順で回す」構成へ組み直して、開発中の LP を題材に 0.3.0 の挙動へそろえた
+  previous_event_id: reg_5e6e2cd853c14e54ae956a392237dd20
