@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T13:49:29Z"
   due_on: null
+  block_reason: rate limit reached
 ---
 
 # PJR-GBPX exec-run.ts の register の実行とコマンドの登録を分ける
