@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-x60a-agy-model-ids-in-templates
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-14T21:42:05Z"
   due_on: null
+  completed_at: "2026-10-14T22:06:15Z"
+  conclusion: init の雛形・antigravity の雛形と README・ガイド 2 件・設計書・本リポジトリの orch:agy の agy の model の ID を提供中のものへ置き換え、agy models で確かめる旨を書き、init の雛形のテストを加えた。CHANGELOG の 0.3.1 に記載した
 ---
 
 # PJR-X60A 配布する雛形と文書の agy の model の ID が提供終了のものになっている

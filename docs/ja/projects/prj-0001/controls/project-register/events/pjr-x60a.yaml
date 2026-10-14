@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9a886f6caca047499a55b572c37eebdc
+- v: 1
+  id: reg_f346a5e64c5f463995a9edaf89151244
+  ts: "2026-10-14T22:06:15Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、対象に古い ID が残っていないこと、CHANGELOG の 0.3.1 の記載を確かめた（2026-10-15）。package.json は保護設定のため exec handoff apply で適用した（d6e1dd005）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: init の雛形・antigravity の雛形と README・ガイド 2 件・設計書・本リポジトリの orch:agy の agy の model の ID を提供中のものへ置き換え、agy models で確かめる旨を書き、init の雛形のテストを加えた。CHANGELOG の 0.3.1 に記載した
+  previous_event_id: reg_eec573da238949b4894a8b1f353b9852
