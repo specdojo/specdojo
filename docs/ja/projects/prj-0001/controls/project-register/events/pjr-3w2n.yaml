@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4f06fbdffa254a2a87b9c2b19df858a9
+  ts: "2026-10-14T13:49:04Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: リファクタリングの段取り（2026-10-14、利用者が承認）の段 4 として起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec-run.ts の共通部と agent の pipeline を分ける
+    - field: description
+      from: ""
+      to: src/exec-run.ts（8,584 行）のうち、実行モードに共通の型・agent の解決・worker pool・再試行と、executor / reporter の pipeline（runAgentPipeline・runReporterStage）を別のモジュールへ移す。動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-14"
