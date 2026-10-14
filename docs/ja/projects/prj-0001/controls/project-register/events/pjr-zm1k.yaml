@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_afa08a1b8ce249508bede8232f05bef9
+  ts: "2026-10-14T22:16:44Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の提案（2026-10-15）。model の指定が provider ごとに分散し、提供終了への対応で探す手間がかかったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent の名簿を model と役割の実体と別名の 2 段構成にする
+    - field: description
+      from: ""
+      to: agent-members の member を model と役割の実体（opus-executor など）と、役割と格の別名（claude-expert-executor → opus-executor）の 2 段にし、model の指定を実体の 1 か所へ集める方針を決める。名前の付け方、provider の区別、配布する雛形の互換、実施の時期を含む
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-15"
