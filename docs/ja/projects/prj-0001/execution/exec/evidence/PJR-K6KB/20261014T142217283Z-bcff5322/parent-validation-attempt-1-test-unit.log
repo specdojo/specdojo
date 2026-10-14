@@ -1,0 +1,537 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K6KB
+
+ ❯ tests/src/grade.test.ts (69 tests | 33 failed) 672ms
+     × combines verdict, score, finding-count, and changed-only filters 5ms
+     × counts all stored finding severities against the maximum 0ms
+     × selects only current, retryable pipeline state as incomplete 0ms
+     × parses JSON and enforces severity level caps 2ms
+     × accepts submissions without the legacy agent-supplied graded_by 1ms
+     × requires every applicable agent viewpoint and excludes deterministic viewpoints 2ms
+     × writes an idempotent compact grade snapshot that Prettier preserves 0ms
+     × normalizes repeated blank lines and trailing whitespace for content hashes 0ms
+     × normalizes trailing blank lines to exactly one newline 0ms
+     × keeps mappings outside grade in block style 0ms
+     × places a finding before the containing 'nested list' block 0ms
+     × places a finding before the containing 'table' block 0ms
+     × places a finding before the containing 'fenced code' block 0ms
+     × places a finding before a directive comment attached to its block 0ms
+     × detects count drift and edits after grading 0ms
+     × preserves the severity and level cap across repeated grading 0ms
+     × allows a lower severity for a different residual finding with rationale 0ms
+     × parses free-form executor rationale and rejects reporter judgment changes 1ms
+     × accepts presentation-only punctuation and whitespace differences in finding messages 0ms
+     × rejects semantic finding changes and reports the changed fields 0ms
+     × converts executor markers into a GradeSubmission without a reporter 0ms
+     × rejects executor output with a missing viewpoint marker 0ms
+     × clamps executor levels to the finding severity cap and records the correction 0ms
+     × writes the reference id into the grade and omits the key when unused 0ms
+     × requires every catalog criterion exactly once with a reason for unsatisfied 0ms
+     × converts executor markers with done_criteria into a deliverable GradeSubmission 0ms
+     × rejects deliverable executor output that omits a catalog criterion 0ms
+     × rejects reporter changes to criterion status or reason 0ms
+     × records a summary in the frontmatter and keeps score independent of satisfaction 0ms
+     × omits the summary when the document has no catalog criteria or is a kata 0ms
+     × writes one overwritten detail file per deliverable next to the grade 7ms
+     × writes the latest result sidecar without changing the deliverable 2ms
+     × carries severity by the canonical English message, not the Japanese display text 4ms
+Updated ticket status → ready: /tmp/specdojo-ticket-oSDMXq/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Y2CrrL/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-XCR1JA/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-rzeqrY/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-lhVMdp/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-PyFcOr/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-uefGBD/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-uefGBD/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-uefGBD/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-uefGBD/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-CQX8Zg/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-iZd9m6/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 129 passed (130)
+      Tests  33 failed | 2020 passed (2053)
+   Start at  23:33:03
+   Duration  37.32s (transform 2.17s, setup 514ms, import 17.03s, tests 40.08s, environment 6ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 33 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/grade.test.ts > grade target filters > combines verdict, score, finding-count, and changed-only filters
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:229:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade target filters > counts all stored finding severities against the maximum
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:299:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade target filters > selects only current, retryable pipeline state as incomplete
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:341:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade submission > parses JSON and enforces severity level caps
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ tests/src/grade.test.ts:402:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade submission > accepts submissions without the legacy agent-supplied graded_by
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ tests/src/grade.test.ts:416:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade submission > requires every applicable agent viewpoint and excludes deterministic viewpoints
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ tests/src/grade.test.ts:444:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade markdown update > writes an idempotent compact grade snapshot that Prettier preserves
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:496:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade markdown update > normalizes repeated blank lines and trailing whitespace for content hashes
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:543:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade markdown update > normalizes trailing blank lines to exactly one newline
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:574:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade markdown update > keeps mappings outside grade in block style
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:611:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade markdown update > places a finding before the containing 'nested list' block
+ FAIL  tests/src/grade.test.ts > grade markdown update > places a finding before the containing 'table' block
+ FAIL  tests/src/grade.test.ts > grade markdown update > places a finding before the containing 'fenced code' block
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:654:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade markdown update > places a finding before a directive comment attached to its block
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:691:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade markdown update > detects count drift and edits after grading
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:722:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade markdown update > preserves the severity and level cap across repeated grading
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:759:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade markdown update > allows a lower severity for a different residual finding with rationale
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:811:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade plan > parses free-form executor rationale and rejects reporter judgment changes
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ convertGradeExecutorOutput src/grade-apply.ts:340:18
+ ❯ validateGradeReporterFidelity src/grade-apply.ts:371:22
+ ❯ tests/src/grade.test.ts:964:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade plan > accepts presentation-only punctuation and whitespace differences in finding messages
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ convertGradeExecutorOutput src/grade-apply.ts:340:18
+ ❯ validateGradeReporterFidelity src/grade-apply.ts:371:22
+ ❯ tests/src/grade.test.ts:1066:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade plan > rejects semantic finding changes and reports the changed fields
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ convertGradeExecutorOutput src/grade-apply.ts:340:18
+ ❯ validateGradeReporterFidelity src/grade-apply.ts:371:22
+ ❯ tests/src/grade.test.ts:1110:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade plan > converts executor markers into a GradeSubmission without a reporter
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ convertGradeExecutorOutput src/grade-apply.ts:340:18
+ ❯ buildGradeSubmissionFromAnalysis src/grade-apply.ts:358:22
+ ❯ tests/src/grade.test.ts:1140:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade plan > rejects executor output with a missing viewpoint marker
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ convertGradeExecutorOutput src/grade-apply.ts:340:18
+ ❯ buildGradeSubmissionFromAnalysis src/grade-apply.ts:358:22
+ ❯ tests/src/grade.test.ts:1215:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade plan > clamps executor levels to the finding severity cap and records the correction
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ convertGradeExecutorOutput src/grade-apply.ts:340:18
+ ❯ buildGradeSubmissionFromAnalysis src/grade-apply.ts:358:22
+ ❯ tests/src/grade.test.ts:1257:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade plan > writes the reference id into the grade and omits the key when unused
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:1385:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade done_criteria for deliverables > requires every catalog criterion exactly once with a reason for unsatisfied
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ tests/src/grade.test.ts:1680:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade done_criteria for deliverables > converts executor markers with done_criteria into a deliverable GradeSubmission
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ convertGradeExecutorOutput src/grade-apply.ts:340:18
+ ❯ buildGradeSubmissionFromAnalysis src/grade-apply.ts:358:22
+ ❯ tests/src/grade.test.ts:1737:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade done_criteria for deliverables > rejects deliverable executor output that omits a catalog criterion
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ convertGradeExecutorOutput src/grade-apply.ts:340:18
+ ❯ buildGradeSubmissionFromAnalysis src/grade-apply.ts:358:22
+ ❯ tests/src/grade.test.ts:1752:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade done_criteria for deliverables > rejects reporter changes to criterion status or reason
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ convertGradeExecutorOutput src/grade-apply.ts:340:18
+ ❯ validateGradeReporterFidelity src/grade-apply.ts:371:22
+ ❯ tests/src/grade.test.ts:1770:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade done_criteria for deliverables > records a summary in the frontmatter and keeps score independent of satisfaction
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ tests/src/grade.test.ts:1820:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade done_criteria for deliverables > omits the summary when the document has no catalog criteria or is a kata
+ReferenceError: gradedViewpoints is not defined
+ ❯ deterministicResults src/grade-plan.ts:37:75
+     35|   const results: GradeViewpointInput[] = [];
+     36|   const metadata = document.data.specdojo as Record<string, unknown>;
+     37|   for (const viewpoint of gradedViewpoints(definitions, target, metada…
+       |                                                                           ^
+     38|     (item) => item.evaluation === "deterministic",
+     39|   )) {
+ ❯ gradeMarkdownDocument src/grade-markdown.ts:139:38
+ ❯ gradeMarkdownContent src/grade-markdown.ts:204:10
+ ❯ tests/src/grade.test.ts:1886:32
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade done_criteria for deliverables > writes one overwritten detail file per deliverable next to the grade
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ applyGradeSubmission src/grade-apply.ts:724:18
+ ❯ tests/src/grade.test.ts:1921:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade done_criteria for deliverables > writes the latest result sidecar without changing the deliverable
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ applyGradeSubmission src/grade-apply.ts:724:18
+ ❯ tests/src/grade.test.ts:1954:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/33]⎯
+
+ FAIL  tests/src/grade.test.ts > grade done_criteria for deliverables > carries severity by the canonical English message, not the Japanese display text
+ReferenceError: agentViewpoints is not defined
+ ❯ validateGradeSubmission src/grade-apply.ts:556:22
+    554|           .specdojo as Record<string, unknown>)
+    555|       : {};
+    556|     const required = agentViewpoints(doc, target, metadata);
+       |                      ^
+    557|     const allowed = new Map(required.map((viewpoint) => [viewpoint.id,…
+    558|     const expectedDoneCriteria =
+ ❯ applyGradeSubmission src/grade-apply.ts:724:18
+ ❯ tests/src/grade.test.ts:2007:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/33]⎯
+

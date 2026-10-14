@@ -1,0 +1,24 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 typecheck
+> tsc -b --noEmit
+
+src/grade-apply.ts(113,33): error TS2304: Cannot find name 'GradeCriterionStatus'.
+src/grade-apply.ts(502,52): error TS2304: Cannot find name 'GradeCriterionStatus'.
+src/grade-apply.ts(556,22): error TS2304: Cannot find name 'agentViewpoints'.
+src/grade-apply.ts(557,43): error TS7006: Parameter 'viewpoint' implicitly has an 'any' type.
+src/grade-plan.ts(37,27): error TS2304: Cannot find name 'gradedViewpoints'.
+src/grade-plan.ts(38,6): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/grade-apply.ts(113,33): error TS2304: Cannot find name 'GradeCriterionStatus'.
+src/grade-apply.ts(502,52): error TS2304: Cannot find name 'GradeCriterionStatus'.
+src/grade-apply.ts(556,22): error TS2304: Cannot find name 'agentViewpoints'.
+src/grade-apply.ts(557,43): error TS7006: Parameter 'viewpoint' implicitly has an 'any' type.
+src/grade-plan.ts(37,27): error TS2304: Cannot find name 'gradedViewpoints'.
+src/grade-plan.ts(38,6): error TS7006: Parameter 'item' implicitly has an 'any' type.
+
+
+--- stderr ---
