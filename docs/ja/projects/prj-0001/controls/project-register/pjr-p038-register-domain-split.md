@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-p038-register-domain-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:25:56Z"
   due_on: null
+  completed_at: "2026-10-14T21:49:34Z"
+  conclusion: register.ts の残りのドメインの処理を core・migration・renumber・update・views の 5 モジュールへ移し、register.ts は 2,418 行から 629 行になった。--help と export は分割の前後で一致した
 ---
 
 # PJR-P038 register.ts の残りのドメインの処理を分ける

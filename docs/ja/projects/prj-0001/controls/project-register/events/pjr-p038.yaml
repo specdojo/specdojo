@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_bb14fbbea1a34c25893eb0f1c17fe3a3
+- v: 1
+  id: reg_7c367f8045ce4349b6fbaabde7baf65b
+  ts: "2026-10-14T21:49:34Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に --help・export・循環 import を確かめた（2026-10-15）。初回は統合の commit の hook でテストが負荷により時間切れになり、--resume で統合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: register.ts の残りのドメインの処理を core・migration・renumber・update・views の 5 モジュールへ移し、register.ts は 2,418 行から 629 行になった。--help と export は分割の前後で一致した
+  previous_event_id: reg_96280ccf5cc8493ba3e3b9dc52dc89b9
