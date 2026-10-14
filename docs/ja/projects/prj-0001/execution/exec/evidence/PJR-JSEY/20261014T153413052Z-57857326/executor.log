@@ -1,0 +1,5 @@
+PJR-JSEY 個票の対応結果に、PJR-2JFM の動作確認記録（2026-10-15 00:35 JST）を追記しました。result・ステータスは変更していません。親検証は runner に委ねます。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果に PJR-2JFM の実行記録を1行追記した","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown は整形済み"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"tsx IPC 制約を規約指定の起動方法で回避し、登録簿生成に成功"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"既存の参照先不在警告はあるが、catalog 検証は成功"}]}
+</specdojo_executor_evidence>
