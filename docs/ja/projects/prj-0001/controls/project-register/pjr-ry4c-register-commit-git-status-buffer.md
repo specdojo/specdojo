@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ry4c-register-commit-git-status-buffer
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-13T21:18:07Z"
   due_on: null
+  completed_at: "2026-10-14T13:27:16Z"
+  conclusion: gitResult の spawnSync に maxBuffer（256 MiB）を指定し、ENOBUFS・signal・起動の失敗を失敗メッセージに含めるようにした
 ---
 
 # PJR-RY4C 未追跡のファイルが多いと register の --commit が git status failed で止まる

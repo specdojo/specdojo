@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1ab1a890f91046dd997d10f196254d47
+- v: 1
+  id: reg_8320ef4c2026472695d3e1f9201ff913
+  ts: "2026-10-14T13:27:16Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、再現に使ったリポジトリ（git status の出力 1.1 MB）で gitOutput が全件を受け取れることを確かめた（2026-10-14）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-14"
+    - field: conclusion
+      from: "-"
+      to: gitResult の spawnSync に maxBuffer（256 MiB）を指定し、ENOBUFS・signal・起動の失敗を失敗メッセージに含めるようにした
+  previous_event_id: reg_dd61e40bc07b4cec95567247e244a98e
