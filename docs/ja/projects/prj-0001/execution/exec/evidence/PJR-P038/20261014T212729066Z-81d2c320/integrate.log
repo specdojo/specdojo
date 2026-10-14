@@ -1,0 +1,1537 @@
+=== 2026-10-14T21:41:54.517Z git commit task changes ===
+exit: 1
+--- stdout ---
+
+--- stderr ---
+[38;2;56;56;56m╭──────────────────────────────────────────╮[m
+[38;2;56;56;56m│[m 🥊 lefthook  v2.1.15   hook:  [1mpre-commit[m [38;2;56;56;56m│[m
+[38;2;56;56;56m╰──────────────────────────────────────────╯[m
+│  catalog-build (skip) no matching staged files
+│  exec-refresh (skip) no matching staged files
+│  orchestrator-sync (skip) no matching staged files
+┃  format ❯ 
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged)
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/pipeline-state.json 2ms (unchanged)
+src/register-core.ts 82ms (unchanged)
+src/register-migration.ts 22ms (unchanged)
+src/register-renumber.ts 25ms (unchanged)
+src/register-update.ts 17ms (unchanged)
+src/register-views.ts 20ms (unchanged)
+src/register.ts 23ms (unchanged)
+
+┃  markdown ❯ 
+docs/ja/product/040-system-design/sysd-critical-flows.md 66ms (unchanged)
+docs/ja/product/040-system-design/sysd-index.md 19ms (unchanged)
+docs/ja/projects/prj-0001/controls/project-register/pjr-p038-register-domain-split.md 15ms (unchanged)
+
+┃  register-build ❯ 
+Generated: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md
+Generated: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-status.md
+Generated: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/controls/generated/pm-risk-register.md
+Generated: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/controls/generated/pm-issue-log.md
+Generated: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/controls/generated/pm-change-request-log.md
+Generated: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/controls/generated/pm-decision-log.md
+
+┃  catalog-validate ❯ 
+OK: dct-architecture.yaml
+OK: dct-business-acceptance-criteria.yaml
+OK: dct-business-model-bes.yaml
+OK: dct-business-model-bps.yaml
+OK: dct-business-model-br.yaml
+OK: dct-current-state.yaml
+OK: dct-data-flow.yaml
+OK: dct-data-model-bdd.yaml
+OK: dct-data-model-ccd.yaml
+OK: dct-data-model-cdsd.yaml
+OK: dct-data-model-cld.yaml
+OK: dct-data-model-stsd.yaml
+OK: dct-external-interface-specs.yaml
+OK: dct-glossary.yaml
+OK: dct-impact-analysis.yaml
+OK: dct-migration-planning.yaml
+OK: dct-non-functional-requirements.yaml
+OK: dct-operations.yaml
+OK: dct-planning.yaml
+OK: dct-project-definition.yaml
+OK: dct-project-management.yaml
+OK: dct-system-acceptance-criteria.yaml
+OK: dct-system-design.yaml
+OK: dct-system-functions.yaml
+OK: dct-test-specs.yaml
+OK: dct-user-interface-model.yaml
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: cxd-specdojo: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/010-c4/cxd-specdojo.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: cnd-specdojo: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/010-c4/cnd-specdojo.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: cpd-specdojo-cli: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/010-c4/cpd-specdojo-cli.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: ifd-specdojo: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/020-infrastructure/ifd-specdojo.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: tsd-specdojo-cli: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/020-infrastructure/tsd-specdojo-cli.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml: tsd-docs-site: based_on を検証する文書が見つかりません (docs/ja/product/030-architecture/020-infrastructure/tsd-docs-site.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-init: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-init.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-register-lifecycle: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-register-lifecycle.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-catalog-planning: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-catalog-planning.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-task-execution: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-task-execution.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-routine: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-routine.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-multi-project: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-multi-project.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-agent-config-operation: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-agent-config-operation.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-derived-content: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-derived-content.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-reporting: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-reporting.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-acceptance-criteria.yaml: bac-deprecation: based_on を検証する文書が見つかりません (docs/ja/product/050-business-acceptance-criteria/bac-deprecation.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-index: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bes-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-routine-due: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bes-routine-due.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-task-ready-selected: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bes-task-ready-selected.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bes.yaml: bes-derived-content-requested: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bes-derived-content-requested.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-init-required: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-init-required.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-init-optional: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-init-optional.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-register-required: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-register-required.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-register-response: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-register-response.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-register-resume-audit: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-register-resume-audit.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-planning-catalog-strategy-update: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-planning-catalog-strategy-update.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-planning-schedule-event-update: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-planning-schedule-event-update.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-routine-required: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-routine-required.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-routine-job-run: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-routine-job-run.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-task-selection-preparation: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-task-selection-preparation.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-task-edit: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-task-edit.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-task-verification: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-task-verification.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-task-judgment-integration: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-task-judgment-integration.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-parallel-required: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-parallel-required.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-parallel-isolation-work: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-parallel-isolation-work.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-parallel-sync-integration: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-parallel-sync-integration.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-parallel-main-promotion: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-parallel-main-promotion.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-reporting-monitoring-detection: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-reporting-monitoring-detection.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-reporting-consistency-delegation: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-reporting-consistency-delegation.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-reporting-conditional: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-reporting-conditional.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-derived-project-scoped: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-derived-project-scoped.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-derived-document-wide: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-derived-document-wide.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-derived-standalone: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-derived-standalone.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-config-change-evaluation: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-config-change-evaluation.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-config-change-proposal-approval: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-config-change-proposal-approval.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-config-change-apply-verify: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-config-change-apply-verify.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-deprecation-process: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-deprecation-process.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-deprecation-storage: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-deprecation-storage.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-bps.yaml: bps-routine-register-schedule-cycle: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/bps-routine-register-schedule-cycle.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml: br-task-selection-strategy: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/br-task-selection-strategy.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml: br-actor-assignment: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/br-actor-assignment.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml: br-execution-result-judgment: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/br-execution-result-judgment.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml: br-routine-action-routing: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/br-routine-action-routing.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml: br-review-verdict: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/br-review-verdict.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml: br-agent-config-safety-boundary: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/br-agent-config-safety-boundary.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml: br-branch-integration-direction: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/br-branch-integration-direction.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-business-model-br.yaml: br-deprecation-route-selection: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/030-business-model/br-deprecation-route-selection.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-current-state.yaml: cdfd-jibungoto-planet: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/040-current-state/cdfd-jibungoto-planet.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-project-config: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-project-config.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-operations-config: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-operations-config.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-register-entry: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-register-entry.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-deliverables-catalog: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-deliverables-catalog.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-schedule-strategy: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-schedule-strategy.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-schedule-track: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-schedule-track.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-exec-event: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-exec-event.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-exec-state: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-exec-state.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-exec-plan-result: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-exec-plan-result.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-exec-evidence: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-exec-evidence.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-worktree-branch: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-worktree-branch.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-routine-definition: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-routine-definition.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-job-run: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-job-run.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-deliverable: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-deliverable.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-derived-view: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-derived-view.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml: bdd-report-record: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/bdd-report-record.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-ccd.yaml: ccd-project-planning: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/ccd-project-planning.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-ccd.yaml: ccd-task-execution: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/ccd-task-execution.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-ccd.yaml: ccd-sharing: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/ccd-sharing.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml: cld-register-type: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/cld-register-type.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml: cld-deliverable-kind: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/cld-deliverable-kind.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml: cld-exec-mode: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/cld-exec-mode.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml: cld-routine-action-kind: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/cld-routine-action-kind.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml: cld-role: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/cld-role.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml: stsd-task-execution: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/stsd-task-execution.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml: stsd-deliverable: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/stsd-deliverable.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml: stsd-job-run: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/020-data-model/stsd-job-run.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml: ifx-index: based_on を検証する文書が見つかりません (docs/ja/product/020-external-interface-specs/ifx-index.yaml)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-impact-analysis.yaml: imp-business: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/050-impact-analysis/imp-business.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-impact-analysis.yaml: imp-data: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/050-impact-analysis/imp-data.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-impact-analysis.yaml: imp-interface: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/050-impact-analysis/imp-interface.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-impact-analysis.yaml: imp-test: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/050-impact-analysis/imp-test.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-impact-analysis.yaml: imp-operations: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/050-impact-analysis/imp-operations.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-migration-planning.yaml: mip-index: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/060-migration-planning/mip-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-migration-planning.yaml: dmd-index: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/060-migration-planning/dmd-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-migration-planning.yaml: mtp-index: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/060-migration-planning/mtp-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-migration-planning.yaml: cop-index: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/060-migration-planning/cop-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-migration-planning.yaml: otp-index: based_on を検証する文書が見つかりません (docs/ja/projects/prj-0001/060-migration-planning/otp-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml: nfr-index: based_on を検証する文書が見つかりません (docs/ja/product/060-non-functional-requirements/nfr-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml: nfr-reliability: based_on を検証する文書が見つかりません (docs/ja/product/060-non-functional-requirements/nfr-reliability.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml: nfr-availability: based_on を検証する文書が見つかりません (docs/ja/product/060-non-functional-requirements/nfr-availability.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml: nfr-maintainability: based_on を検証する文書が見つかりません (docs/ja/product/060-non-functional-requirements/nfr-maintainability.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml: nfr-integrity: based_on を検証する文書が見つかりません (docs/ja/product/060-non-functional-requirements/nfr-integrity.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml: nfr-security-safety: based_on を検証する文書が見つかりません (docs/ja/product/060-non-functional-requirements/nfr-security-safety.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml: nfr-performance: based_on を検証する文書が見つかりません (docs/ja/product/060-non-functional-requirements/nfr-performance.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml: nfr-operations: based_on を検証する文書が見つかりません (docs/ja/product/060-non-functional-requirements/nfr-operations.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-non-functional-requirements.yaml: nfr-usability: based_on を検証する文書が見つかりません (docs/ja/product/060-non-functional-requirements/nfr-usability.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml: opd-index: based_on を検証する文書が見つかりません (docs/ja/product/090-operations/opd-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml: opd-monitoring: based_on を検証する文書が見つかりません (docs/ja/product/090-operations/opd-monitoring.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml: opd-incident-response: based_on を検証する文書が見つかりません (docs/ja/product/090-operations/opd-incident-response.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml: opd-access-management: based_on を検証する文書が見つかりません (docs/ja/product/090-operations/opd-access-management.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml: opr-index: based_on を検証する文書が見つかりません (docs/ja/product/090-operations/opr-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml: opr-incident-response: based_on を検証する文書が見つかりません (docs/ja/product/090-operations/opr-incident-response.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-operations.yaml: opr-routine-monitoring: based_on を検証する文書が見つかりません (docs/ja/product/090-operations/opr-routine-monitoring.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml: sac-reliability: based_on を検証する文書が見つかりません (docs/ja/product/070-system-acceptance-criteria/sac-reliability.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml: sac-availability: based_on を検証する文書が見つかりません (docs/ja/product/070-system-acceptance-criteria/sac-availability.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml: sac-maintainability: based_on を検証する文書が見つかりません (docs/ja/product/070-system-acceptance-criteria/sac-maintainability.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml: sac-integrity: based_on を検証する文書が見つかりません (docs/ja/product/070-system-acceptance-criteria/sac-integrity.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml: sac-security-safety: based_on を検証する文書が見つかりません (docs/ja/product/070-system-acceptance-criteria/sac-security-safety.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml: sac-performance: based_on を検証する文書が見つかりません (docs/ja/product/070-system-acceptance-criteria/sac-performance.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml: sac-operations: based_on を検証する文書が見つかりません (docs/ja/product/070-system-acceptance-criteria/sac-operations.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-acceptance-criteria.yaml: sac-usability: based_on を検証する文書が見つかりません (docs/ja/product/070-system-acceptance-criteria/sac-usability.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-functions.yaml: sf-index: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/050-system-functions/sf-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: tsp-index: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/010-test-strategy-and-policy/tsp-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: utc-index: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/020-unit-test-catalog/utc-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: utc-catalog: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/020-unit-test-catalog/utc-catalog.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: utc-schedule: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/020-unit-test-catalog/utc-schedule.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: utc-exec-core: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/020-unit-test-catalog/utc-exec-core.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: utc-exec-schedule: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/020-unit-test-catalog/utc-exec-schedule.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: utc-exec-worktree: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/020-unit-test-catalog/utc-exec-worktree.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: utc-register: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/020-unit-test-catalog/utc-register.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: utc-routine-job: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/020-unit-test-catalog/utc-routine-job.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: utc-index-build: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/020-unit-test-catalog/utc-index-build.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: utc-cli-config: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/020-unit-test-catalog/utc-cli-config.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: itc-index: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/030-internal-integration-test-catalog/itc-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: itc-catalog-schedule: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/030-internal-integration-test-catalog/itc-catalog-schedule.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: itc-schedule-exec: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/030-internal-integration-test-catalog/itc-schedule-exec.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: itc-exec-register: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/030-internal-integration-test-catalog/itc-exec-register.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: itc-exec-worktree: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/030-internal-integration-test-catalog/itc-exec-worktree.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: itc-routine-exec: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/030-internal-integration-test-catalog/itc-routine-exec.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: itc-build-index: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/030-internal-integration-test-catalog/itc-build-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: etc-index: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/040-external-integration-test-catalog/etc-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: etc-provider-cli: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/040-external-integration-test-catalog/etc-provider-cli.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: etc-git-github: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/040-external-integration-test-catalog/etc-git-github.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-index: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-init: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-init.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-register-lifecycle: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-register-lifecycle.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-catalog-planning: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-catalog-planning.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-task-execution: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-task-execution.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-routine: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-routine.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-multi-project: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-multi-project.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-agent-config-operation: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-agent-config-operation.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-derived-content: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-derived-content.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-reporting: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-reporting.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: stc-deprecation: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/050-system-test-catalog/stc-deprecation.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-index: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-init: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-init.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-register-lifecycle: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-register-lifecycle.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-catalog-planning: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-catalog-planning.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-task-execution: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-task-execution.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-routine: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-routine.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-multi-project: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-multi-project.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-agent-config-operation: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-agent-config-operation.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-derived-content: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-derived-content.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-reporting: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-reporting.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml: atc-deprecation: based_on を検証する文書が見つかりません (docs/ja/product/080-test-specs/060-acceptance-test-catalog/atc-deprecation.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml: uis-index: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/040-user-interface-model/uis-index.md)
+WARN:  /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038/docs/ja/projects/prj-0001/010-deliverables-catalog/dct-user-interface-model.yaml: bds-index: based_on を検証する文書が見つかりません (docs/ja/product/010-business-specs/040-user-interface-model/bds-index.md)
+OK: dct-index.yaml
+
+┃  index-build ❯ 
+Built index: 2679 entries → .specdojo/doc-index.json
+
+┃  typecheck ❯ 
+
+> specdojo@0.3.0 typecheck
+> tsc -b --noEmit
+
+
+┃  test ❯ 
+
+> specdojo@0.3.0 test
+> vitest run
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-P038
+
+Warning: root index has unrelated staged changes; preserving them while preparing the checkpoint:
+  README.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-ekrDe2/T-T-doc-010
+Warning: root index has unrelated staged changes; preserving them while preparing the checkpoint:
+  README.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-uu7kHs/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-h5rxpu/T-T-doc-010
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-MPf5g3/T-T-doc-010
+[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-xnftIF/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-jDqXM3/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-jDqXM3/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-xGNGVu/T-T-doc-010
+commit-targets:
+  docs/shared.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-xGNGVu/T-T-doc-020
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-i6ZAwB/T-T-doc-010
+commit-targets:
+  docs/conflict.md
+Updated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-CYq51w/T-T-doc-010
+commit-targets:
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-eHG9cm/T-T-doc-010
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/a.md
+  [integrate] resolved bookkeeping conflicts with exec/T-T-doc-010: execution/exec/events/20260613T000000Z_agent_T-T-doc-010_claim.json, execution/exec/results/T-T-doc-010-result.md
+Updated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-UcdwAB/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-2peCYb/T-T-doc-010
+commit-targets:
+  docs/a.md
+  [integrate] merged register events as a union: docs/prj/controls/project-register/events/pjr-0abc.yaml (kept 1 event(s) only on the merge target)
+  [integrate] resolved bookkeeping conflicts with exec/T-T-doc-010: docs/prj/controls/project-register/events/pjr-0abc.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Bhvtj8/T-T-doc-010
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/conflict.md
+Updated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Q2m2Gv/T-T-doc-010
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Sqm5gl/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-MWxq1Z/T-T-doc-010
+commit-targets:
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-NBNWUr/T-T-doc-010
+commit-targets:
+  docs/unmerged.md
+Updated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/pjr-cd34-pipeline-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-c5MPD7/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Warning: forcing worktree removal; uncommitted changes may be lost.
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-hmfYgb/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-mnMMri/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Hw17eG/T-T-doc-010
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-1sTo7n/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-FeR78Y/T-T-doc-010
+commit-targets:
+  docs/d.yaml
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-b4G6oO/T-T-doc-030
+commit-scope: skipped non-target changes (left in worktree):
+  docs/tampered.md
+commit-targets:
+  execution/exec/results/T-T-doc-030-result.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-dJUyPv/T-T-doc-010
+commit-scope: skipped non-target changes (left in worktree):
+  src/sneaky.ts
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/a.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+pjr-cd34-pipeline-test.md: PJR-CD34 must match frontmatter id "test:pjr-cd34-topic" (expected *:pjr-cd34-pipeline-test)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-X6F0Eg/T-T-doc-140
+commit-scope: skipped non-target changes (left in worktree):
+  docs/stale.md
+  src/unrelated.ts
+commit-targets:
+  execution/exec/results/T-T-doc-140-result.md
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-N1fNHc/T-T-doc-010
+commit-scope: unresolved target doc id (not committable): prj-0001:doc-a
+commit-scope: skipped non-target changes (left in worktree):
+  docs/unrelated.md
+commit-targets:
+  docs/ja/specdojo/rulebooks/new-rulebook.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-kISIyI/T-T-doc-010
+commit-scope: skipped non-target changes (left in worktree):
+  src/evidence.ts
+commit-targets:
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Q9AgGR/T-T-doc-010
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-pipeline-test.md (PJR-CD34 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-oAyg4F/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-YT0Wbg/PJR-0137
+commit-targets:
+  docs/a.md
+  src/unrelated.ts
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-1JyIfe/PJR-0142
+commit-scope: skipped non-target changes (left in worktree):
+  scratch/patch.js
+最上位に追加したファイル:
+  modify.py
+commit-targets:
+  execution/exec/results/PJR-0142-result.md
+  custom/added.md
+  docs/a.md
+  execution/exec/evidence/PJR-0142/run-1/integrate.log
+  modify.py
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+pjr-cd34-pipeline-test.md: PJR-CD34 must match frontmatter id "test:pjr-cd34-topic" (expected *:pjr-cd34-pipeline-test)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-xsq1X8/PJR-0143
+最上位に追加したファイル:
+  ROOT-NOTE.md
+commit-targets:
+  README.md
+  execution/exec/results/PJR-0143-result.md
+  ROOT-NOTE.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-tcJkIl/PJR-0144
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-ZDvF93/PJR-0138
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-w9BM5S/PJR-0138-GENERATED
+commit-targets:
+  docs/a.md
+Updated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-tVZjSz/PJR-0139
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-afMo4o/T-T-doc-010
+commit-targets:
+  docs/new.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-VKp2z7/T-T-doc-010
+commit-targets:
+  docs/a.md
+Discarding regenerated files in worktree: .specdojo/doc-index.json
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-CXMUAP/PJR-0140
+commit-targets:
+  docs/kept.yaml
+  docs/removed.yaml
+  docs/added.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-SSyQiS/PJR-0141
+commit-targets:
+  docs/removed.yaml
+Updated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/pjr-cd34-pipeline-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → waiting)
+Updated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-QJT9aC/docs/ja/projects/test/controls/generated/pm-decision-log.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-WG52lu/execution/generated
+/tmp/specdojo-pipeline-e2e-WG52lu/execution/exec/events/20261014T213921Z_local-gemma-executor_T-TEST-doc-010_claim_0b54.json
+/tmp/specdojo-pipeline-e2e-WG52lu/execution/exec/events/20261014T213921Z_local-gemma-executor_T-TEST-doc-010_block_82fb.json
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-rwcbGB/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-pipeline-test.md (PJR-CD34 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-rwcbGB/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-rwcbGB/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-rwcbGB/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-rwcbGB/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-rwcbGB/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-rwcbGB/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-rwcbGB/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-rwcbGB/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-rwcbGB/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+/tmp/specdojo-pipeline-e2e-WG52lu/execution/exec/events/20261014T213922Z_local-gemma-executor_T-TEST-doc-010_complete_bd83.json
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-gMlH0v/execution/generated
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+pjr-cd34-pipeline-test.md: PJR-CD34 must match frontmatter id "test:pjr-cd34-topic" (expected *:pjr-cd34-pipeline-test)
+/tmp/specdojo-pipeline-e2e-gMlH0v/execution/exec/events/20261014T213925Z_local-gemma-executor_T-TEST-doc-010_claim_cbff.json
+Updated: /tmp/specdojo-register-pipeline-e2e-cUHPvR/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-cUHPvR/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-cUHPvR/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-cUHPvR/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-cUHPvR/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-cUHPvR/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-cUHPvR/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-cUHPvR/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-cUHPvR/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-cUHPvR/docs/ja/projects/test/controls/generated/pm-decision-log.md
+/tmp/specdojo-pipeline-e2e-gMlH0v/execution/exec/events/20261014T213926Z_local-gemma-executor_T-TEST-doc-010_block_25a0.json
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-w5KagW/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-w5KagW/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-w5KagW/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-w5KagW/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-w5KagW/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-w5KagW/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-w5KagW/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-w5KagW/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-w5KagW/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-w5KagW/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+/tmp/specdojo-pipeline-e2e-gMlH0v/execution/exec/events/20261014T213927Z_local-gemma-executor_T-TEST-doc-010_complete_c4f4.json
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Updated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/generated/pm-decision-log.md
+
+Generated: /tmp/specdojo-pipeline-e2e-DZAPIe/execution/generated
+/tmp/specdojo-pipeline-e2e-DZAPIe/execution/exec/events/20261014T213929Z_local-gemma-executor_T-TEST-doc-010_claim_1fec.json
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → waiting)
+Updated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GN7QL5/docs/ja/projects/test/controls/generated/pm-decision-log.md
+/tmp/specdojo-pipeline-e2e-DZAPIe/execution/exec/events/20261014T213931Z_local-gemma-executor_T-TEST-doc-010_block_095a.json
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+/tmp/specdojo-pipeline-e2e-DZAPIe/execution/exec/events/20261014T213933Z_local-gemma-executor_T-TEST-doc-010_complete_7ba5.json
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-ZQsa8N/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-rx4uIn/execution/generated
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+/tmp/specdojo-pipeline-e2e-rx4uIn/execution/exec/events/20261014T213935Z_local-gemma-executor_T-TEST-doc-010_claim_5179.json
+Updated: /tmp/specdojo-register-pipeline-e2e-JMconV/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-JMconV/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-JMconV/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JMconV/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JMconV/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JMconV/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JMconV/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JMconV/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JMconV/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JMconV/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-73NaZl/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-73NaZl/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-73NaZl/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-73NaZl/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-73NaZl/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-73NaZl/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-73NaZl/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-73NaZl/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-73NaZl/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-73NaZl/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-decision-log.md
+/tmp/specdojo-pipeline-e2e-rx4uIn/execution/exec/events/20261014T213937Z_local-gemma-executor_T-TEST-doc-010_block_7344.json
+/tmp/specdojo-pipeline-e2e-rx4uIn/execution/exec/events/20261014T213938Z_local-gemma-executor_T-TEST-doc-010_complete_7009.json
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Updated: /tmp/specdojo-register-pipeline-e2e-5lrhaz/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-5lrhaz/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-5lrhaz/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5lrhaz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5lrhaz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5lrhaz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5lrhaz/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5lrhaz/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5lrhaz/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5lrhaz/docs/ja/projects/test/controls/generated/pm-decision-log.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-ujwZ9R/execution/generated
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-aUWnZh/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-aUWnZh/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-aUWnZh/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-aUWnZh/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-aUWnZh/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-aUWnZh/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-aUWnZh/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-aUWnZh/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-aUWnZh/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-aUWnZh/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+/tmp/specdojo-pipeline-e2e-ujwZ9R/execution/exec/events/20261014T213940Z_local-gemma-executor_T-TEST-doc-010_claim_7976.json
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+/tmp/specdojo-pipeline-e2e-ujwZ9R/execution/exec/events/20261014T213941Z_local-gemma-executor_T-TEST-doc-010_block_fb26.json
+Updated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/generated/pm-decision-log.md
+/tmp/specdojo-pipeline-e2e-ujwZ9R/execution/exec/events/20261014T213942Z_local-gemma-executor_T-TEST-doc-010_complete_2292.json
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Updated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → waiting)
+Updated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-sLFi9i/docs/ja/projects/test/controls/generated/pm-decision-log.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-6ANxes/execution/generated
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+/tmp/specdojo-pipeline-e2e-6ANxes/execution/exec/events/20261014T213944Z_local-gemma-executor_T-TEST-doc-010_claim_7902.json
+/tmp/specdojo-pipeline-e2e-6ANxes/execution/exec/events/20261014T213945Z_local-gemma-executor_T-TEST-doc-010_block_bae3.json
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-t6n8P8/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+/tmp/specdojo-pipeline-e2e-6ANxes/execution/exec/events/20261014T213946Z_local-gemma-executor_T-TEST-doc-010_block_552c.json
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-aeAHmX/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-aeAHmX/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-aeAHmX/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-HaAY5Z/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-HaAY5Z/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-HaAY5Z/worktrees/prj-0001-T-T-doc-010/app2
+Generating worktree artifacts: specdojo build
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Bak3yU/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Bak3yU/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Bak3yU/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Bak3yU/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Bak3yU/worktrees/prj-0001-T-T-doc-010/app2
+Updated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-IAmvBY/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-IAmvBY/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-IAmvBY/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-RiAYWG/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-RiAYWG/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-RiAYWG/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-3mhmeP/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-3mhmeP/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-3mhmeP/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-1ppgbn/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-1ppgbn/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-1ppgbn/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets:
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-bWfSvl/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-bWfSvl/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-bWfSvl/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets:
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-vsqa6Y/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-vsqa6Y/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-vsqa6Y/worktrees/prj-0001-T-T-doc-010/app2
+Updated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → waiting)
+Updated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-eGRztV/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-brPJDO/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-brPJDO/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-brPJDO/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-CtLIt1/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-CtLIt1/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-CtLIt1/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-UMQ5kQ/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-UMQ5kQ/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-UMQ5kQ/worktrees/prj-0001-T-T-doc-010/app2
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (ed7613c33a00)
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (7e050c2abb07)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-kNZnOu/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-kNZnOu/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-kNZnOu/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-kPxF42/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-kPxF42/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-kPxF42/worktrees/prj-0001-T-T-doc-010/app2
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (41d6df2573b3)
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (56b534356349)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-RsU0gC/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-RsU0gC/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-RsU0gC/worktrees/prj-0001-T-T-doc-010/app2
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (3adda92d15aa)
+  [integrate] app1: already merged; skipped
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (1fdbb4231139)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-DouRNq/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-DouRNq/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-DouRNq/worktrees/prj-0001-T-T-doc-010/app2
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (6948647ff8e7)
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (de85fe7a5fbc)
+  [integrate] app1: already merged; skipped
+  [integrate] app2: already merged; skipped
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-XBFelP/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-XBFelP/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-XBFelP/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets (app1):
+  app1:src/feature.ts
+  [integrate] app2: no changes; skipped
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (50a887c4dc79)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-SuDbwk/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-SuDbwk/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-SuDbwk/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets (app1):
+  app1:.gitignore
+  app1:settings.json
+最上位に追加したファイル:
+  app1:.gitignore
+  app1:settings.json
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-sKxpBt/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-zEAuPw/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-zEAuPw/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-zEAuPw/worktrees/prj-0001-T-T-doc-010/app2
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (1698dcf15874)
+  [integrate] app1: already merged; skipped
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (41686ad2f92e)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-VIuLT0/worktrees/prj-0001-T-T-doc-010
+Warning: forcing worktree removal; uncommitted changes may be lost.
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-SiAo4c/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-niNItF/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-jsB46h/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-h3vv4e/worktrees/prj-0001-T-T-doc-010
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-L5qvDF/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-TFKJUS/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-cKglrs/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-cKglrs/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-cKglrs/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Z8y40x/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Z8y40x/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Z8y40x/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-tFZqdZ/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-lRTAHe/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-fHON26/worktrees/prj-0001-T-T-doc-010
+Updated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → waiting)
+Updated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → waiting)
+Updated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-g29vr1/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+Updated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → review)
+Updated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-K7Aaml/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-RnxsiU/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-raPsux/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+Updated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-JLfVqW/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-JLfVqW/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-JLfVqW/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JLfVqW/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JLfVqW/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JLfVqW/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JLfVqW/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JLfVqW/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JLfVqW/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-JLfVqW/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → waiting)
+Updated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-0k0n8T/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-0k0n8T/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-0k0n8T/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-0k0n8T/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-0k0n8T/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-0k0n8T/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-0k0n8T/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-0k0n8T/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-0k0n8T/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-0k0n8T/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+Updated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → review)
+Updated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-ueFUI3/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-t5L9Lp/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → waiting)
+Updated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-VVEQhG/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+Updated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → waiting)
+Updated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-BZZIhG/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+Updated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → review)
+Updated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-9nhGiy/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9xJ9Qf/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → waiting)
+Updated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rJWF85/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → waiting)
+Updated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+Updated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → review)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-cuhwkv/test-PJR-AB12/project/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+Updated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → review)
+Updated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-8nVWBJ/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-sXjXxH/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Updated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → waiting)
+Updated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-VdBBY0/test-PJR-AB12/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-wt-VdBBY0/test-PJR-AB12/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-VdBBY0/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-VdBBY0/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-VdBBY0/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-VdBBY0/test-PJR-AB12/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-VdBBY0/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-VdBBY0/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-VdBBY0/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-wt-VdBBY0/test-PJR-AB12/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → waiting)
+Updated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-04gf97/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Invalid register item files:
+pjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id "test:pjr-ab12-topic" (expected *:pjr-ab12-pipeline-test)
+Updated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → waiting)
+Updated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-9WlGAb/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → waiting)
+Updated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-ZnRc8K/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-61MOhF/prj-0001-T-LAUNCH-pm-plan-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-61MOhF/prj-0001-T-LAUNCH-pm-plan-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-0QC55c/prj-0001-trial-cmp-001-agent-a
+Installing worktree dependencies: .
+Installing worktree dependencies: packages/vscode-specdojo
+Installing worktree dependencies: .
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-AP691L/prj-0001-T-LAUNCH-pm-plan-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-jVoGMe/prj-0001-T-LAUNCH-pm-plan-010
+Updated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → waiting)
+Updated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-vykay0/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → waiting)
+Updated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → review)
+Updated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-wt-xRxvdR/test-PJR-CD34/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-9XVxSg/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Preparing worktree (new branch 'exec/pjr-44cw-runner-transition')
+Preparing worktree (new branch 'exec/pjr-44cw-agent-change')
+Generating worktree artifacts: specdojo build
+[build] step 1/4: register build (prj-0001)
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0001/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0001/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0001/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0001/controls/generated/pm-decision-log.md
+[build] done: register build (prj-0001) (0.8s)
+[build] step 2/4: register build (prj-0002)
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0002/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0002/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0002/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0002/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0002/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0002/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0002/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-build-multi-project-j4f75d/docs/ja/projects/prj-0002/controls/generated/pm-decision-log.md
+[build] done: register build (prj-0002) (0.8s)
+[build] step 3/4: yaml-pages build
+Generated YAML pages: 0 written, 0 unchanged, 0 skipped
+[build] done: yaml-pages build (0.7s)
+[build] step 4/4: index build
+Preparing worktree (new branch 'worktree/codex-work')
+Preparing worktree (checking out 'worktree/codex-work')
+Preparing worktree (new branch 'codex-work')
+Built index: 333 entries → .specdojo/doc-index.json
+[build] done: index build (1.3s)
+[build] all steps completed (3.6s)
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+Updated ticket status → ready: /tmp/specdojo-ticket-4rJQFi/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Rx5IGn/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-dqRiBm/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-8SEGaN/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-5bQFWS/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-YYYVnp/pjr-0001-topic.md
+reporter failedbefore
+problem
+  
+  
+docs/selected.md
+ ❯ |unit| tests/tools/grade-per-document.test.ts (31 tests | 2 failed) 36984ms
+     × excludes an exhausted stage from retries and reports it 5386ms
+     × does not reselect an exhausted ungraded document through the filter union 5520ms
+ ❯ |unit| tests/src/doc-index.test.ts (28 tests | 1 failed) 27665ms
+     × 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する 27571ms
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+Would move 1 agent member(s) from /tmp/specdojo-members-n5qjyi/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-n5qjyi/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-n5qjyi/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-n5qjyi/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-9lZDmO/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-NIBL2v/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  |unit| tests/tools/grade-per-document.test.ts > grade per-document pipeline > excludes an exhausted stage from retries and reports it
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/tools/grade-per-document.test.ts:591:3
+    589|   });
+    590|
+    591|   it("excludes an exhausted stage from retries and reports it", () => {
+       |   ^
+    592|     const fixture = makeFixture();
+    593|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  |unit| tests/tools/grade-per-document.test.ts > grade per-document pipeline > does not reselect an exhausted ungraded document through the filter union
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/tools/grade-per-document.test.ts:628:3
+    626|   });
+    627|
+    628|   it("does not reselect an exhausted ungraded document through the fil…
+       |   ^
+    629|     const fixture = makeFixture();
+    630|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  |unit| tests/src/doc-index.test.ts > prj-0001 project register references > 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する
+Error: Test timed out in 20000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/doc-index.test.ts:662:3
+    660|
+    661| describe("prj-0001 project register references", () => {
+    662|   it("個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する", () => {
+       |   ^
+    663|     const sourceRoot = process.cwd();
+    664|     const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-register-ref…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  2 failed | 145 passed (147)
+      Tests  3 failed | 2235 passed (2238)
+   Start at  06:39:03
+   Duration  170.58s (transform 4.43s, setup 818ms, import 29.50s, tests 281.34s, environment 8ms)
+
+
+exit status 1
+[38;2;56;56;56m  ────────────────────────────────────[m
+summary: (done in 171.86 seconds)
+✔️ format (0.63 seconds)
+✔️ markdown (1.54 seconds)
+✔️ register-build (5.28 seconds)
+✔️ catalog-validate (5.85 seconds)
+✔️ index-build (6.48 seconds)
+✔️ typecheck (7.70 seconds)
+🥊 test (171.56 seconds)
+
+
