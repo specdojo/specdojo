@@ -46,15 +46,29 @@ src/exec-run.ts のうち、register の実行（worktree での実行・統合�
 
 | No  | 作業                                                                | 担当         | 状態 | メモ                                    |
 | --- | ------------------------------------------------------------------- | ------------ | ---- | --------------------------------------- |
-| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV          | open | `exec run`・`exec cycle`・`exec resume` |
-| 2   | 対象の宣言をモジュールへ移し、`src/exec-run.ts` から再 export する  | DEV          | open | 移すだけ                                |
-| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV          | open | 差分なし                                |
-| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV          | open | -                                       |
+| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV          | done | `exec run`・`exec cycle`・`exec resume` |
+| 2   | 対象の宣言をモジュールへ移し、`src/exec-run.ts` から再 export する  | DEV          | done | register 系 7 モジュールへ移動          |
+| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV          | done | 3 コマンドとも差分なし                  |
+| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | reporter     | open | reporter stage で記録                   |
 | 5   | 統合の後に `exec run --register` を 1 回流して runner を確かめる    | orchestrator | open | close の条件                            |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+register の選択・in-place 実行を `src/exec-run-register-core.ts`、状態記帳を
+`src/exec-run-register-state.ts`、worktree 実行・統合を
+`src/exec-run-register-worktree.ts`、再開を `src/exec-run-register-resume.ts`、複数項目の
+実行制御を `src/exec-run-register-mode.ts` へ移した。run コマンドの登録は
+`src/exec-run-register-command.ts`、slots・cycle・resume の実行とコマンド登録は
+`src/exec-run-lifecycle-commands.ts` へ移した。
+
+`src/exec-run.ts` は 3,531 行から 66 行になり、既存の公開名だけを明示的に再 export する
+façade とした。新しいモジュールは最大でも `src/exec-run-lifecycle-commands.ts` の 710 行で、
+すべて 1,000 行以下である。新しいモジュールから `src/exec-run.ts` への import と、新しい循環
+import はない。分割前後で `exec run`・`exec cycle`・`exec resume` の `--help` に差分がなく、
+公開 export の名前も一致することを確認した。
+
+ロジックの改善や不具合修正は行っていない。統合後の runner の実動作確認は、完了条件どおり
+orchestrator が [[prj-0001:pjr-jsey-exec-run-split-smoke]] で行う。
 
 ## 5. 関連ドキュメント
 
