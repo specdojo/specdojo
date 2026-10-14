@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f9e43910a09e41dc8d11b876f5750a98
+  ts: "2026-10-14T22:18:45Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-ZM1K の決定のフォローアップ（2026-10-15）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 本リポジトリの agent の名簿を 2 段構成へ移す
+    - field: description
+      from: ""
+      to: 本リポジトリの agent-members.yaml と exec-defaults.yaml を実体と別名の 2 段へ移し、今の名前を別名として残す。Job・routine の指定が別名で動くことを確かめる。 PJR-ZM1K の決定に基づく（Y8P9 の完了後、0.4.0）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
