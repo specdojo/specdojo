@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-4zsn-lp-tech-stack-tsd
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T13:14:29Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-14T13:57:50Z"
+  conclusion: specdojo-lp に tsd-index.md を作り、採用技術と版を package.json に合わせてまとめ、README から案内した
 ---
 
 # PJR-4ZSN LP の技術スタックを TSD にまとめる
