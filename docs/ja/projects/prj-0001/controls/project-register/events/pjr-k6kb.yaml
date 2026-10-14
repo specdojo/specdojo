@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_63ac673f0c314094bbf2b9689be6819b
+- v: 1
+  id: reg_66ee524622854220892ff54d68b9eb31
+  ts: "2026-10-14T14:46:12Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、分割の前の checkout と grade の 10 コマンドの --help と grade.ts の export を比べた（2026-10-14）。初回は import の抜けで親の検証が失敗し、--resume-from executor で直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-14"
+    - field: conclusion
+      from: "-"
+      to: grade.ts を値の扱い・対象の探索・pipeline の状態・plan の生成・適用・Markdown・コマンドの登録の 11 モジュールへ移し、grade.ts は 22 行の再 export になった。--help と既存の export は分割の前後で保たれた。再 export が export * のため、内部用だった 52 の関数も grade.ts から見えるようになった点は改善点として残る
+  previous_event_id: reg_123cfffa87764b60a51ff50d230a2e6d

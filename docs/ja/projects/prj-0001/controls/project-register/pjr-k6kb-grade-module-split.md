@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-k6kb-grade-module-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-02T12:14:32Z"
+  completed_at: "2026-10-14T14:46:12Z"
+  conclusion: grade.ts を値の扱い・対象の探索・pipeline の状態・plan の生成・適用・Markdown・コマンドの登録の 11 モジュールへ移し、grade.ts は 22 行の再 export になった。--help と既存の export は分割の前後で保たれた。再 export が export * のため、内部用だった 52 の関数も grade.ts から見えるようになった点は改善点として残る
 ---
 
 # PJR-K6KB grade.ts の責務ごとの分割
