@@ -1,0 +1,32 @@
+parent validation: lint-ts
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 lint:ts
+> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'
+
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBPX/src/exec-run-register-command.ts
+  1:10  error  'join' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBPX/src/exec-run-register-core.ts
+  2:20  error  'join' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  3:1   error  Imports "ProviderConcurrencyGate" are only used as type                 @typescript-eslint/consistent-type-imports
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBPX/src/exec-run-register-resume.ts
+  2:10  error  'join' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBPX/src/exec-run-register-state.ts
+  2:29  error  'join' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBPX/src/exec-run-register-worktree.ts
+  2:10  error  'join' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 6 problems (6 errors, 0 warnings)
+  1 error and 0 warnings potentially fixable with the `--fix` option.
+
+
+
+--- stderr ---
