@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zm1k-agent-members-model-alias
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-10-14T22:16:44Z"
   due_on: null
+  completed_at: "2026-10-14T22:19:02Z"
+  conclusion: agent の名簿を、provider・model・effort・役割を持つ実体（opus-executor など、model の系統で命名）と、実体を指す別名（今の名前を残す）の 2 段構成にする。0.4.0 の対象とし、Y8P9 の完了後に実装する
 ---
 
 # PJR-ZM1K agent の名簿を model と役割の実体と別名の 2 段構成にする

@@ -29,3 +29,22 @@
     - field: registered
       from: ""
       to: "2026-10-15"
+- v: 1
+  id: reg_ff97d911e4b548e1b1b22eeb77aeacd0
+  ts: "2026-10-14T22:19:02Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: 利用者が orchestrator との会話で推奨案を承認した（2026-10-15）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: agent の名簿を、provider・model・effort・役割を持つ実体（opus-executor など、model の系統で命名）と、実体を指す別名（今の名前を残す）の 2 段構成にする。0.4.0 の対象とし、Y8P9 の完了後に実装する
+  previous_event_id: reg_afa08a1b8ce249508bede8232f05bef9
