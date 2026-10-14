@@ -1,0 +1,11 @@
+`grade.ts` の責務分割を完了しました。
+
+- [grade.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K6KB/src/grade.ts) は公開 API を再 export する22行の入口へ縮小。
+- 対象探索、plan生成、適用、Markdown処理、CLI登録などを11ファイルへ分割。最大911行、循環 import なし。
+- 移動した124関数の本体一致と、`grade`＋全9サブコマンドの help 完全一致を確認。
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K6KB/docs/ja/projects/prj-0001/controls/project-register/pjr-k6kb-grade-module-split.md) を更新。
+- result 作成および親検証は後続の reporter／runner に委ねています。
+
+<specdojo_executor_evidence>
+{"final_message":"grade.tsを責務別モジュールへ分割し、公開API、全CLI help、既存ロジックを維持した。src/grade.tsは22行、新規モジュールは最大911行で循環importはない。","validations":[{"command":"npx prettier --write src/grade.ts src/grade-apply.ts src/grade-command-apply.ts src/grade-command-inspect.ts src/grade-command-plan.ts src/grade-command-shared.ts src/grade-core.ts src/grade-markdown.ts src/grade-pipeline-state.ts src/grade-plan.ts src/grade-target-discovery.ts src/grade-targets.ts","status":"passed","summary":"全変更TypeScriptファイルを整形した"},{"command":"diff -ru tmp/pjr-k6kb-help-before tmp/pjr-k6kb-help-after","status":"passed","summary":"gradeと全9サブコマンドの分割前後のhelp出力に差分なし"},{"command":"node --import tsx src/specdojo.ts grade list --target kata --path docs/ja/specdojo/rulebooks/bps-rulebook.md","status":"passed","summary":"分割後の対象探索コマンドが指定文書を正常に列挙した"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"プロジェクト登録簿の生成に成功した"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"catalog検証に成功。既存の未作成成果物に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
