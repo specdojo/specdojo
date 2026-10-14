@@ -1,0 +1,14 @@
+実装を完了しました。
+
+- `exec-run.ts` を 8,584 行から 6,945 行へ縮小。
+- 共通制御を [exec-run-shared.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3W2N/src/exec-run-shared.ts)、agent 実行支援を [exec-run-agent.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3W2N/src/exec-run-agent.ts)、pipeline を [exec-run-agent-pipeline.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3W2N/src/exec-run-agent-pipeline.ts) へ分割。
+- 既存 export 52 件を明示的に再 export。追加・削除なし。
+- 移動した41個の関数・クラス本体に差分なし。
+- `exec run`、`exec cycle`、`exec resume` の help 出力は分割前後で一致。
+- 個票と関連システム設計を更新。
+- result ファイルは executor stage の指示に従い未編集です。
+- 親検証と、統合後の小規模な `exec run --register` 確認は後続 stage に委譲します。
+
+<specdojo_executor_evidence>
+{"final_message":"exec-run.ts の共通制御、agent実行支援、executor/reporter pipelineを3モジュールへ分割し、公開API・関数本体・CLI helpの互換性を維持しました。","validations":[{"command":"npx prettier --write src/exec-run.ts src/exec-run-shared.ts src/exec-run-agent.ts src/exec-run-agent-pipeline.ts docs/ja/product/040-system-design/sysd-index.md docs/ja/product/040-system-design/sysd-critical-flows.md docs/ja/projects/prj-0001/controls/project-register/pjr-3w2n-exec-run-split-shared.md","status":"passed","summary":"対象のTypeScriptとMarkdownを整形しました。"},{"command":"npx prettier --write docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md","status":"passed","summary":"追加更新した設計書を整形しました。"},{"command":"diff -u tmp/pjr-3w2n-before/{exec-run,exec-cycle,exec-resume}.txt tmp/pjr-3w2n-after/{exec-run,exec-cycle,exec-resume}.txt","status":"passed","summary":"exec run・exec cycle・exec resumeのhelp出力に差分はありませんでした。"},{"command":"node --input-type=module -e '<TypeScript AST export/body comparison>'","status":"passed","summary":"exec-run.tsの公開exportは分割前後とも52件で、移動した41個の関数・クラス本体に差分はありませんでした。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"npx tsxのIPC制約を規定のfallbackで回避し、登録簿ビューを正常生成しました。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証は終了コード0。既存の未作成文書に関する警告のみでした。"},{"command":"git diff --check","status":"passed","summary":"空白エラーや競合マーカーはありませんでした。"}]}
+</specdojo_executor_evidence>

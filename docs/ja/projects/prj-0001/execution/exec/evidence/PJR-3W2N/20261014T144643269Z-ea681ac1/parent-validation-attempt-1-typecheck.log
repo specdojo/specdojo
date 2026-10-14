@@ -1,0 +1,40 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 typecheck
+> tsc -b --noEmit
+
+src/exec-run-agent.ts(405,23): error TS2304: Cannot find name 'resolveMemberCommand'.
+src/exec-run-agent.ts(439,12): error TS2304: Cannot find name 'AgentExecution'.
+src/exec-run-agent.ts(480,7): error TS2304: Cannot find name 'isRateLimitError'.
+src/exec-run.ts(439,67): error TS2304: Cannot find name 'pinnedExecutor'.
+src/exec-run.ts(440,35): error TS2304: Cannot find name 'pinnedExecutor'.
+src/exec-run.ts(551,39): error TS2304: Cannot find name 'pinnedReporter'.
+src/exec-run.ts(1915,23): error TS2304: Cannot find name 'extractPhaseSuffix'.
+src/exec-run.ts(2052,40): error TS2304: Cannot find name 'pinnedExecutor'.
+src/exec-run.ts(2053,21): error TS2304: Cannot find name 'pinnedExecutor'.
+src/exec-run.ts(2173,5): error TS2304: Cannot find name 'reportProtectionHandoffRecord'.
+src/exec-run.ts(2188,5): error TS2304: Cannot find name 'reportProtectionHandoffRecord'.
+src/exec-run.ts(2306,30): error TS2304: Cannot find name 'pinnedReporter'.
+src/exec-run.ts(6283,16): error TS2304: Cannot find name 'resolveMaxConcurrentRuns'.
+src/exec-run.ts(6287,29): error TS2304: Cannot find name 'resolveMaxConcurrentRuns'.
+src/exec-run-agent.ts(405,23): error TS2304: Cannot find name 'resolveMemberCommand'.
+src/exec-run-agent.ts(439,12): error TS2304: Cannot find name 'AgentExecution'.
+src/exec-run-agent.ts(480,7): error TS2304: Cannot find name 'isRateLimitError'.
+src/exec-run.ts(439,67): error TS2304: Cannot find name 'pinnedExecutor'.
+src/exec-run.ts(440,35): error TS2304: Cannot find name 'pinnedExecutor'.
+src/exec-run.ts(551,39): error TS2304: Cannot find name 'pinnedReporter'.
+src/exec-run.ts(1915,23): error TS2304: Cannot find name 'extractPhaseSuffix'.
+src/exec-run.ts(2052,40): error TS2304: Cannot find name 'pinnedExecutor'.
+src/exec-run.ts(2053,21): error TS2304: Cannot find name 'pinnedExecutor'.
+src/exec-run.ts(2173,5): error TS2304: Cannot find name 'reportProtectionHandoffRecord'.
+src/exec-run.ts(2188,5): error TS2304: Cannot find name 'reportProtectionHandoffRecord'.
+src/exec-run.ts(2306,30): error TS2304: Cannot find name 'pinnedReporter'.
+src/exec-run.ts(6283,16): error TS2304: Cannot find name 'resolveMaxConcurrentRuns'.
+src/exec-run.ts(6287,29): error TS2304: Cannot find name 'resolveMaxConcurrentRuns'.
+
+
+--- stderr ---
