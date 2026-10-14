@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T13:49:03Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration, typecheck, test-unit"
 ---
 
 # PJR-3W2N exec-run.ts の共通部と agent の pipeline を分ける
