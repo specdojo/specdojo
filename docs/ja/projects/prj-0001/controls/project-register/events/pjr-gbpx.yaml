@@ -90,3 +90,35 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_b364bc1274584bd1b6bdd38973e76736
+- v: 1
+  id: reg_fb1857d04cc24b36922b62b23a14c870
+  ts: "2026-10-14T17:25:28Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_bb9c550eaafc42f69a1852e8a03b6ba1
+- v: 1
+  id: reg_8060763a4c1145efa76d5513d76a6971
+  ts: "2026-10-14T17:33:04Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-ts"
+  previous_event_id: reg_fb1857d04cc24b36922b62b23a14c870
