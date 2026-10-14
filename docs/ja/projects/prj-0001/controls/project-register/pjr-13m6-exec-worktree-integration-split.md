@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:26:09Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
 ---
 
 # PJR-13M6 exec-worktree-ops.ts・exec-repo-integration.ts・exec-reporter.ts を分ける
