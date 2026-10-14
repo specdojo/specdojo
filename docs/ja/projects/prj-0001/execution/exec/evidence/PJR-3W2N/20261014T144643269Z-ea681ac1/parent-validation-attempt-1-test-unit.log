@@ -1,0 +1,249 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3W2N
+
+Updated ticket status → ready: /tmp/specdojo-ticket-EzgMIc/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-HumWD7/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-ssqwg3/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-rqhW8L/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-oXx4iq/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-EbG9yP/pjr-0001-topic.md
+ ❯ tests/src/exec-run-inplace.test.ts (17 tests | 3 failed) 676ms
+     × runs only analysis reporter after a successful command that starts a nested process 67ms
+     × runs executor and reporter stages and renders the result from validated JSON 50ms
+     × persists succeeded executor state when the reporter fails 43ms
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-4ZzJY7/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-4ZzJY7/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-4ZzJY7/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-4ZzJY7/.specdojo/agent-members.yaml
+ ❯ tests/src/exec-run-resolve-command.test.ts (20 tests | 6 failed) 11ms
+     × auto-derives the actor from the capability-selected agent when --by is omitted 6ms
+     × uses the nickname pinned by the task when --by is omitted 0ms
+     × rejects a pinned nickname that is not a registered agent 2ms
+     × rejects human execution when --by is omitted 0ms
+     × selects an executor-stage agent from the pipeline stage requirements 0ms
+     × uses a schedule-pinned executor before auto selection and lets --executor-by override it 0ms
+ ❯ tests/src/agent-command.test.ts (3 tests | 2 failed) 80ms
+     × passes the plan on stdin and saves the selected agent stdout 59ms
+     × saves stdout and returns the dedicated rate-limit exit code 18ms
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  3 failed | 127 passed (130)
+      Tests  11 failed | 2042 passed (2053)
+   Start at  23:57:11
+   Duration  36.87s (transform 2.24s, setup 504ms, import 16.59s, tests 39.77s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+problem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+isRateLimitError is not defined
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 11 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/agent-command.test.ts > agent run > passes the plan on stdin and saves the selected agent stdout
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-agent-command-BhcQAG/outputs/response.txt'
+ ❯ tests/src/agent-command.test.ts:138:14
+    136|       ]);
+    137|
+    138|       expect(readFileSync(join(repo, "outputs", "response.txt"), "utf8…
+       |              ^
+    139|         "response:evaluate this plan\n",
+    140|       );
+ ❯ withRepo tests/src/agent-command.test.ts:100:5
+ ❯ tests/src/agent-command.test.ts:128:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯
+
+ FAIL  tests/src/agent-command.test.ts > agent run > saves stdout and returns the dedicated rate-limit exit code
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-agent-command-JtnnmS/outputs/partial.txt'
+ ❯ tests/src/agent-command.test.ts:186:14
+    184|       ]);
+    185|
+    186|       expect(readFileSync(join(repo, "outputs", "partial.txt"), "utf8"…
+       |              ^
+    187|       expect(process.exitCode).toBe(AGENT_RUN_RATE_LIMIT_EXIT_CODE);
+    188|       expect(stderr.join("")).toContain("rate limit: selected-agent");
+ ❯ withRepo tests/src/agent-command.test.ts:100:5
+ ❯ tests/src/agent-command.test.ts:170:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯
+
+ FAIL  tests/src/exec-run-inplace.test.ts > exec run (in-place, default) > runs only analysis reporter after a successful command that starts a nested process
+AssertionError: expected 'running' to be 'succeeded' // Object.is equality
+
+Expected: "succeeded"
+Received: "running"
+
+ ❯ tests/src/exec-run-inplace.test.ts:590:25
+    588|         readFileSync(join(executionPath, "jobs", "runs", runFile), "ut…
+    589|       ) as { run_id: string; state: string };
+    590|       expect(run.state).toBe("succeeded");
+       |                         ^
+    591|       const result = readFileSync(
+    592|         join(executionPath, "exec", "results", `${run.run_id}-result.m…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯
+
+ FAIL  tests/src/exec-run-inplace.test.ts > exec run (in-place, default) > runs executor and reporter stages and renders the result from validated JSON
+AssertionError: Running T-TEST-doc-010 in place: node -e "const fs=require('node:fs');fs.readFileSync(0,'utf8');fs.writeFileSync('pipeline-artifact.md','# Updated\n');console.log('<specdojo_executor_evidence>'+JSON.stringify({final_message:'artifact updated',validations:[{command:'npm test',status:'passed',summary:'ok'}]})+'</specdojo_executor_evidence>')"
+<specdojo_executor_evidence>{"final_message":"artifact updated","validations":[{"command":"npm test","status":"passed","summary":"ok"}]}</specdojo_executor_evidence>
+isRateLimitError is not defined
+: expected '---\nspecdojo:\n  id: test:xer-t-test…' to contain 'status: complete'
+
+- Expected
++ Received
+
+- status: complete
++ ---
++ specdojo:
++   id: test:xer-t-test-doc-010
++   type: exec-result
++   task_id: T-TEST-doc-010
++   mode: edit
++   status: in_progress
++   project_id: test
++   plan_ref: exec/plans/T-TEST-doc-010-plan.md
++   started_at: "2026-10-14T14:57:15.402Z"
++   agent: pipeline-executor
++   targets:
++     - test:doc
++ ---
++
++ ## 1. 実施内容
++
+
+ ❯ tests/src/exec-run-inplace.test.ts:642:39
+    640|         "utf8",
+    641|       );
+    642|       expect(result, output.join("")).toContain("status: complete");
+       |                                       ^
+    643|       expect(result).toContain("成果物を更新し、検証を完了した。");
+    644|       expect(result).toContain("`pipeline-artifact.md`: 文書を更新した。");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯
+
+ FAIL  tests/src/exec-run-inplace.test.ts > exec run (in-place, default) > persists succeeded executor state when the reporter fails
+AssertionError: expected 'running' to be 'succeeded' // Object.is equality
+
+Expected: "succeeded"
+Received: "running"
+
+ ❯ tests/src/exec-run-inplace.test.ts:727:44
+    725|         ),
+    726|       ) as { stages: { executor: { status: string }; reporter: { statu…
+    727|       expect(state.stages.executor.status).toBe("succeeded");
+       |                                            ^
+    728|       expect(state.stages.reporter.status).toBe("failed");
+    729|     } finally {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯
+
+ FAIL  tests/src/exec-run-resolve-command.test.ts > resolveInPlaceCommand actor derivation > auto-derives the actor from the capability-selected agent when --by is omitted
+ReferenceError: pinnedExecutor is not defined
+ ❯ resolveInPlaceCommand src/exec-run.ts:2053:15
+    2051|     task?.agent_pipeline
+    2052|       ? (opts.executorBy ?? opts.by ?? pinnedExecutor(task))
+    2053|       : (opts.by ?? pinnedExecutor(task))
+       |               ^
+    2054|   )?.trim();
+    2055|   if (by) {
+ ❯ tests/src/exec-run-resolve-command.test.ts:82:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯
+
+ FAIL  tests/src/exec-run-resolve-command.test.ts > resolveInPlaceCommand actor derivation > uses the nickname pinned by the task when --by is omitted
+ReferenceError: pinnedExecutor is not defined
+ ❯ resolveInPlaceCommand src/exec-run.ts:2053:15
+    2051|     task?.agent_pipeline
+    2052|       ? (opts.executorBy ?? opts.by ?? pinnedExecutor(task))
+    2053|       : (opts.by ?? pinnedExecutor(task))
+       |               ^
+    2054|   )?.trim();
+    2055|   if (by) {
+ ❯ tests/src/exec-run-resolve-command.test.ts:99:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯
+
+ FAIL  tests/src/exec-run-resolve-command.test.ts > resolveInPlaceCommand actor derivation > rejects a pinned nickname that is not a registered agent
+AssertionError: expected [Function] to throw error matching /Agent command not found for actor: mi…/ but got 'pinnedExecutor is not defined'
+
+- Expected:
+/Agent command not found for actor: missing-agent/
+
++ Received:
+"pinnedExecutor is not defined"
+
+ ❯ tests/src/exec-run-resolve-command.test.ts:121:7
+    119|     expect(() =>
+    120|       resolveInPlaceCommand(buildTask({ agent: "missing-agent" }), bui…
+    121|     ).toThrow(/Agent command not found for actor: missing-agent/);
+       |       ^
+    122|   });
+    123|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯
+
+ FAIL  tests/src/exec-run-resolve-command.test.ts > resolveInPlaceCommand actor derivation > rejects human execution when --by is omitted
+AssertionError: expected [Function] to throw error matching /Use --by <nickname> to override/ but got 'pinnedExecutor is not defined'
+
+- Expected:
+/Use --by <nickname> to override/
+
++ Received:
+"pinnedExecutor is not defined"
+
+ ❯ tests/src/exec-run-resolve-command.test.ts:146:7
+    144|     expect(() =>
+    145|       resolveInPlaceCommand(buildTask({ execution: "human" }), buildRo…
+    146|     ).toThrow(/Use --by <nickname> to override/);
+       |       ^
+    147|   });
+    148|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯
+
+ FAIL  tests/src/exec-run-resolve-command.test.ts > resolveInPlaceCommand actor derivation > selects an executor-stage agent from the pipeline stage requirements
+ReferenceError: pinnedExecutor is not defined
+ ❯ resolveInPlaceCommand src/exec-run.ts:2052:34
+    2050|   const by = (
+    2051|     task?.agent_pipeline
+    2052|       ? (opts.executorBy ?? opts.by ?? pinnedExecutor(task))
+       |                                  ^
+    2053|       : (opts.by ?? pinnedExecutor(task))
+    2054|   )?.trim();
+ ❯ tests/src/exec-run-resolve-command.test.ts:150:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯
+
+ FAIL  tests/src/exec-run-resolve-command.test.ts > resolveInPlaceCommand actor derivation > uses a schedule-pinned executor before auto selection and lets --executor-by override it
+ReferenceError: pinnedExecutor is not defined
+ ❯ resolveInPlaceCommand src/exec-run.ts:2052:34
+    2050|   const by = (
+    2051|     task?.agent_pipeline
+    2052|       ? (opts.executorBy ?? opts.by ?? pinnedExecutor(task))
+       |                                  ^
+    2053|       : (opts.by ?? pinnedExecutor(task))
+    2054|   )?.trim();
+ ❯ tests/src/exec-run-resolve-command.test.ts:207:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯
+

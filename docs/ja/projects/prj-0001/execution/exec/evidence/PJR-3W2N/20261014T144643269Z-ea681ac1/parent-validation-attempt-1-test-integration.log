@@ -1,0 +1,1930 @@
+parent validation: test-integration
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 test:integration
+> vitest run --config vitest.integration.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3W2N
+
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-cmnAit/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-RxQINB/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-RxQINB/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-RxQINB/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-EHzNTO/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-bqhYQz/prj-0001-T-LAUNCH-pm-plan-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-bqhYQz/prj-0001-T-LAUNCH-pm-plan-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-He6QNb/prj-0001-trial-cmp-001-agent-a
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-me2XVT/T-T-doc-010
+Installing worktree dependencies: .
+Installing worktree dependencies: packages/vscode-specdojo
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-knh3xs/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-knh3xs/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-knh3xs/worktrees/prj-0001-T-T-doc-010/app2
+Generating worktree artifacts: specdojo build
+Installing worktree dependencies: .
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-Kr5Rco/prj-0001-T-LAUNCH-pm-plan-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-87W34O/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-base-dDsTsM/prj-0001-T-LAUNCH-pm-plan-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-87W34O/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-87W34O/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-87W34O/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-87W34O/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-gIuXUJ/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-gIuXUJ/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-gIuXUJ/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-0pEauh/T-T-doc-010
+[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-GpfiUO/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-YZeIM8/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-YZeIM8/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-YZeIM8/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Be9iWI/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Be9iWI/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-sv41UU/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-sv41UU/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-sv41UU/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-oMU59Y/T-T-doc-010
+commit-targets:
+  docs/shared.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-335hdv/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-335hdv/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-335hdv/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets:
+  docs/a.md
+Updated: /tmp/specdojo-register-resume-e2e-FaXzVz/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-FaXzVz/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-FaXzVz/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-FaXzVz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-FaXzVz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-FaXzVz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-FaXzVz/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-FaXzVz/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-FaXzVz/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-FaXzVz/docs/ja/projects/test/controls/generated/pm-decision-log.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Updated: /tmp/specdojo-register-pipeline-e2e-FASiDn/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-FASiDn/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-FASiDn/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-FASiDn/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-FASiDn/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-FASiDn/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-FASiDn/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-FASiDn/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-FASiDn/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-FASiDn/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-oMU59Y/T-T-doc-020
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Ou1GMn/T-T-doc-010
+commit-targets:
+  docs/conflict.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-k2gMCU/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-k2gMCU/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-k2gMCU/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets:
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Wnhbgn/T-T-doc-010
+commit-targets:
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-NxAo9X/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-NxAo9X/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-NxAo9X/worktrees/prj-0001-T-T-doc-010/app2
+Updated: /tmp/specdojo-register-resume-e2e-Onn4dz/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-Onn4dz/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-Onn4dz/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-Onn4dz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-Onn4dz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-Onn4dz/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-Onn4dz/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-Onn4dz/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-Onn4dz/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-Onn4dz/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-UcfzQL/T-T-doc-010
+Updated: /tmp/specdojo-register-pipeline-e2e-kVTxxR/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-kVTxxR/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-kVTxxR/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kVTxxR/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kVTxxR/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kVTxxR/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kVTxxR/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kVTxxR/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kVTxxR/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kVTxxR/docs/ja/projects/test/controls/generated/pm-decision-log.md
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/a.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-GYBJsH/execution/generated
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-PCfUEG/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-PCfUEG/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-PCfUEG/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-2McbSt/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-2McbSt/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-2McbSt/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-s4qS0B/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-s4qS0B/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-s4qS0B/worktrees/prj-0001-T-T-doc-010/app2
+  [integrate] resolved bookkeeping conflicts with exec/T-T-doc-010: execution/exec/events/20260613T000000Z_agent_T-T-doc-010_claim.json, execution/exec/results/T-T-doc-010-result.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-WPxhn1/T-T-doc-010
+commit-targets:
+  docs/a.md
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (8662dceceb1b)
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (3b5531b92a82)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-oqSBI5/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-oqSBI5/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-oqSBI5/worktrees/prj-0001-T-T-doc-010/app2
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-mN9M7c/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-mN9M7c/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-mN9M7c/worktrees/prj-0001-T-T-doc-010/app2
+  [integrate] merged register events as a union: docs/prj/controls/project-register/events/pjr-0abc.yaml (kept 1 event(s) only on the merge target)
+Updated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/generated/pm-decision-log.md
+  [integrate] resolved bookkeeping conflicts with exec/T-T-doc-010: docs/prj/controls/project-register/events/pjr-0abc.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-SwnaQ8/T-T-doc-010
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (cbb9f077769f)
+Updated: /tmp/specdojo-register-pipeline-e2e-v9XmQ7/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-v9XmQ7/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-v9XmQ7/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-v9XmQ7/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-v9XmQ7/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-v9XmQ7/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-v9XmQ7/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-v9XmQ7/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-v9XmQ7/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-v9XmQ7/docs/ja/projects/test/controls/generated/pm-decision-log.md
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/conflict.md
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (bc8e6e9e2a23)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-9llowQ/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-9llowQ/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-9llowQ/worktrees/prj-0001-T-T-doc-010/app2
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (5fc77e24cde2)
+  [integrate] app1: already merged; skipped
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (e465c0f26d40)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-NOiDGQ/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-IvxlUF/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-NOiDGQ/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-NOiDGQ/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/a.md
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (2413a2a1dce6)
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (d695db566cf2)
+  [integrate] app1: already merged; skipped
+  [integrate] app2: already merged; skipped
+Generating worktree artifacts: specdojo build
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-YifzSs/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-YifzSs/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-YifzSs/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets (app1):
+  app1:src/feature.ts
+  [integrate] app2: no changes; skipped
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-3Gtd7L/prj-0001-T-T-doc-010
+Unchanged: /tmp/specdojo-register-resume-wt-1fPs8q/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34)
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (c9e27f9f87d2)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-uQeULe/T-T-doc-010
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-sQGaOG/execution/generated
+commit-targets:
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-ZklujM/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-ZklujM/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-ZklujM/worktrees/prj-0001-T-T-doc-010/app2
+commit-targets (app1):
+  app1:.gitignore
+  app1:settings.json
+最上位に追加したファイル:
+  app1:.gitignore
+  app1:settings.json
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-5Rh7KO/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-5Rh7KO/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-5Rh7KO/worktrees/prj-0001-T-T-doc-010/app2
+  [integrate] app1: merged exec/prj-0001-T-T-doc-010 into main (19f504b44ffe)
+  [integrate] app1: already merged; skipped
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-aA2TFA/T-T-doc-010
+commit-targets:
+  docs/unmerged.md
+  [integrate] app2: merged exec/prj-0001-T-T-doc-010 into release (3af1f21c62dc)
+[build] step 1/4: register build (prj-0001)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-mEIiqZ/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-nOXU4g/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-JBGxaY/worktrees/prj-0001-T-T-doc-010
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-f3CtPD/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-a95NyX/worktrees/prj-0001-T-T-doc-010
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-yUSnBS/prj-0001-T-T-doc-010
+Updated: /tmp/specdojo-register-pipeline-e2e-GsKVHS/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-GsKVHS/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-GsKVHS/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GsKVHS/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GsKVHS/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GsKVHS/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GsKVHS/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GsKVHS/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GsKVHS/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-GsKVHS/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Ndyb61/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-QxPF2N/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-K4TrZu/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-VBx2lK/T-T-doc-010
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-T3QxWh/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-xLGKdE/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-xLGKdE/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-xLGKdE/worktrees/prj-0001-T-T-doc-010/app2
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0001/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0001/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0001/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0001/controls/generated/pm-decision-log.md
+[build] done: register build (prj-0001) (1.1s)
+[build] step 2/4: register build (prj-0002)
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Pg5zvc/T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-e6kCV1/worktrees/prj-0001-T-T-doc-010/project
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-e6kCV1/worktrees/prj-0001-T-T-doc-010/app1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-e6kCV1/worktrees/prj-0001-T-T-doc-010/app2
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-cnLDDm/T-T-doc-010
+commit-targets:
+  docs/d.yaml
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-SiVqKp/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-4Yk9ll/worktrees/prj-0001-T-T-doc-010
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-E277ic/worktrees/prj-0001-T-T-doc-010
+Updated: /tmp/specdojo-register-resume-e2e-GP5P4Z/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-GP5P4Z/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-GP5P4Z/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-GP5P4Z/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-GP5P4Z/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-GP5P4Z/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-GP5P4Z/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-GP5P4Z/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-GP5P4Z/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-GP5P4Z/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-QZpHzU/T-T-doc-030
+commit-scope: skipped non-target changes (left in worktree):
+  docs/tampered.md
+commit-targets:
+  execution/exec/results/T-T-doc-030-result.md
+Updated: /tmp/specdojo-register-pipeline-e2e-M5E153/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-M5E153/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-M5E153/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-M5E153/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-M5E153/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-M5E153/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-M5E153/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-M5E153/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-M5E153/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-M5E153/docs/ja/projects/test/controls/generated/pm-decision-log.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-FcfzHL/execution/generated
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0002/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0002/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0002/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0002/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0002/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0002/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0002/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-build-multi-project-H5mKzz/docs/ja/projects/prj-0002/controls/generated/pm-decision-log.md
+[build] done: register build (prj-0002) (1.0s)
+[build] step 3/4: yaml-pages build
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-jveJZ9/T-T-doc-010
+commit-scope: skipped non-target changes (left in worktree):
+  src/sneaky.ts
+commit-targets:
+  execution/exec/results/T-T-doc-010-result.md
+  docs/a.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-pbDK3B/T-T-doc-140
+commit-scope: skipped non-target changes (left in worktree):
+  docs/stale.md
+  src/unrelated.ts
+commit-targets:
+  execution/exec/results/T-T-doc-140-result.md
+  docs/a.md
+Updated: /tmp/specdojo-register-resume-e2e-zbdcDM/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-zbdcDM/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-zbdcDM/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-zbdcDM/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-zbdcDM/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-zbdcDM/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-zbdcDM/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-zbdcDM/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-zbdcDM/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-zbdcDM/docs/ja/projects/test/controls/generated/pm-decision-log.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Generated YAML pages: 0 written, 0 unchanged, 0 skipped
+[build] done: yaml-pages build (0.9s)
+[build] step 4/4: index build
+Updated: /tmp/specdojo-register-pipeline-e2e-Krz3VE/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-Krz3VE/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-Krz3VE/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-Krz3VE/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-Krz3VE/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-Krz3VE/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-Krz3VE/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-Krz3VE/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-Krz3VE/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-Krz3VE/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-OndkKX/T-T-doc-010
+commit-scope: unresolved target doc id (not committable): prj-0001:doc-a
+commit-scope: skipped non-target changes (left in worktree):
+  docs/unrelated.md
+commit-targets:
+  docs/ja/specdojo/rulebooks/new-rulebook.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-zLLs5n/T-T-doc-010
+commit-scope: skipped non-target changes (left in worktree):
+  src/evidence.ts
+commit-targets:
+  docs/a.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-L8WNTR/execution/generated
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-5heEYH/T-T-doc-010
+Updated: /tmp/specdojo-register-resume-e2e-BXgRrd/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-BXgRrd/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-BXgRrd/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-BXgRrd/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-BXgRrd/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-BXgRrd/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-BXgRrd/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-BXgRrd/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-BXgRrd/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-BXgRrd/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Built index: 333 entries → .specdojo/doc-index.json
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Obbalb/PJR-0137
+[build] done: index build (1.3s)
+[build] all steps completed (4.3s)
+commit-targets:
+  docs/a.md
+  src/unrelated.ts
+Updated: /tmp/specdojo-register-pipeline-e2e-w9MRgR/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-w9MRgR/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-w9MRgR/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-w9MRgR/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-w9MRgR/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-w9MRgR/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-w9MRgR/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-w9MRgR/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-w9MRgR/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-w9MRgR/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Lu3C2H/PJR-0142
+commit-scope: skipped non-target changes (left in worktree):
+  scratch/patch.js
+最上位に追加したファイル:
+  modify.py
+commit-targets:
+  execution/exec/results/PJR-0142-result.md
+  custom/added.md
+  docs/a.md
+  execution/exec/evidence/PJR-0142/run-1/integrate.log
+  modify.py
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-sdgRIg/PJR-0143
+最上位に追加したファイル:
+  ROOT-NOTE.md
+commit-targets:
+  README.md
+  execution/exec/results/PJR-0143-result.md
+  ROOT-NOTE.md
+Updated: /tmp/specdojo-register-resume-e2e-Uwcq78/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-Uwcq78/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-Uwcq78/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-Uwcq78/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-Uwcq78/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-Uwcq78/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-Uwcq78/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-Uwcq78/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-Uwcq78/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-Uwcq78/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-bZcxf4/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-bZcxf4/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-bZcxf4/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-bZcxf4/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-bZcxf4/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-bZcxf4/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-bZcxf4/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-bZcxf4/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-bZcxf4/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-bZcxf4/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-9ZcqGV/PJR-0144
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-ofG5e0/PJR-0138
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-PYaHZ8/PJR-0138-GENERATED
+commit-targets:
+  docs/a.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-GaM50J/execution/generated
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-F2Qf0n/PJR-0139
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-LpC14q/T-T-doc-010
+Updated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34 → in-progress)
+Updated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/project-register/events/pjr-cd34.yaml
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/generated/pm-decision-log.md
+commit-targets:
+  docs/new.md
+Updated: /tmp/specdojo-register-pipeline-e2e-rNB9eG/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-rNB9eG/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-rNB9eG/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rNB9eG/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rNB9eG/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rNB9eG/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rNB9eG/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rNB9eG/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rNB9eG/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-rNB9eG/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-SL9WNZ/T-T-doc-010
+commit-targets:
+  docs/a.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-xeamZz/PJR-0140
+Unchanged: /tmp/specdojo-register-resume-wt-KjnLNR/test-PJR-CD34/docs/ja/projects/test/controls/project-register/pjr-cd34-resume-test.md (PJR-CD34)
+commit-targets:
+  docs/kept.yaml
+  docs/removed.yaml
+  docs/added.yaml
+Updated: /tmp/specdojo-register-pipeline-e2e-dKvHsn/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-dKvHsn/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-dKvHsn/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-dKvHsn/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-dKvHsn/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-dKvHsn/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-dKvHsn/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-dKvHsn/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-dKvHsn/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-dKvHsn/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-VtP2OI/PJR-0141
+commit-targets:
+  docs/removed.yaml
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-resume-e2e-gPCxZ6/docs/ja/projects/test/controls/generated/pm-decision-log.md
+OK: validation passed
+stats: events=0, event_files=0, schedule_ids=3, schedule_files=1
+
+Generated: /tmp/specdojo-pipeline-e2e-t3cCn0/execution/generated
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts (16 tests | 15 failed) 14999ms
+     × keeps the legacy single-agent flow unchanged for phases without agent_pipeline 110ms
+     × runs a local LLM executor and reporter selected from the same provider template 39ms
+     × renders by evidence path when reporter descriptions are missing, extra, and reordered 39ms
+     × hands the reporter bounded evidence only, keeping raw log text and secrets out of the prompt 39ms
+     × runs a cloud executor with the shared reporter and result path 38ms
+     × blocks on executor failure without starting the reporter 35ms
+     × records a failed parent validation and blocks even if the reporter returns complete 38ms
+     × fails a typecheck parent validation on a type-error fixture and blocks the task 37ms
+     × blocks on reporter output that never validates, keeping the executor evidence for resume 31ms
+     × rechecks every plan target when an executor resumes after a rate limit 2541ms
+     × resumes the reporter from persisted evidence instead of rerunning the executor 2419ms
+     × aborts a hook-rejected merge commit and resumes only integration 2487ms
+     × skips commit and merge when resuming after the branch was already merged 2380ms
+     × revalidates a resolved parent-validation failure before resuming the reporter 2414ms
+     × keeps blocking when parent validation still fails after reporter resume 2320ms
+ ❯ tests/src/exec-register-resume.integration.test.ts (10 tests | 8 failed) 15061ms
+     × resumes only the reporter stage and completes the item without re-running the executor 1568ms
+     × merges a fix committed on the integration branch after the wait before re-running parent validations 1366ms
+     × resumes a reporter-stage run from executor after syncing the integration branch 3458ms
+     × resumes a protected-config block after the human applies the same change on the integration branch 1330ms
+     × refuses a protected-config resume when the human and executor changes conflict 1378ms
+     × refuses the resume without losing executor results when restoring them conflicts 1468ms
+     × refuses to re-run the whole item while a succeeded executor result is uncommitted 1173ms
+     × restarts a stale running executor in the existing worktree and completes the pipeline 3108ms
+Updated: /tmp/specdojo-register-pipeline-e2e-kRFvLp/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-kRFvLp/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-kRFvLp/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kRFvLp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kRFvLp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kRFvLp/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kRFvLp/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kRFvLp/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kRFvLp/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-kRFvLp/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-5oDFSv/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-5oDFSv/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-5oDFSv/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5oDFSv/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5oDFSv/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5oDFSv/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5oDFSv/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5oDFSv/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5oDFSv/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-5oDFSv/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-L2IZOB/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-L2IZOB/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-L2IZOB/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-L2IZOB/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-L2IZOB/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-L2IZOB/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-L2IZOB/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-L2IZOB/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-L2IZOB/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-L2IZOB/docs/ja/projects/test/controls/generated/pm-decision-log.md
+Updated: /tmp/specdojo-register-pipeline-e2e-lLQ1Rh/docs/ja/projects/test/controls/project-register/pjr-ab12-pipeline-test.md (PJR-AB12 → in-progress)
+Updated: /tmp/specdojo-register-pipeline-e2e-lLQ1Rh/docs/ja/projects/test/controls/project-register/events/pjr-ab12.yaml
+Generated: /tmp/specdojo-register-pipeline-e2e-lLQ1Rh/docs/ja/projects/test/controls/project-register/generated/pjr-index.md
+Generated: /tmp/specdojo-register-pipeline-e2e-lLQ1Rh/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-status.md
+Generated: /tmp/specdojo-register-pipeline-e2e-lLQ1Rh/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-priority.md
+Generated: /tmp/specdojo-register-pipeline-e2e-lLQ1Rh/docs/ja/projects/test/controls/project-register/generated/pjr-views-by-owner.md
+Generated: /tmp/specdojo-register-pipeline-e2e-lLQ1Rh/docs/ja/projects/test/controls/generated/pm-risk-register.md
+Generated: /tmp/specdojo-register-pipeline-e2e-lLQ1Rh/docs/ja/projects/test/controls/generated/pm-issue-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-lLQ1Rh/docs/ja/projects/test/controls/generated/pm-change-request-log.md
+Generated: /tmp/specdojo-register-pipeline-e2e-lLQ1Rh/docs/ja/projects/test/controls/generated/pm-decision-log.md
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts (17 tests | 14 failed) 18374ms
+     × resolves --executor-by/--reporter-by, runs both stages, and transitions the item to review 1412ms
+     × runs two register items in parallel with different per-item executors 1370ms
+     × keeps an invalid failed item isolated while another parallel item integrates 2293ms
+     × runs the same pipeline in --worktree mode and merges the result back 1329ms
+     × resumes a hook-rejected merge without reverting changes added after branch creation 1245ms
+     × changes three repositories in one item and integrates them with the qualified Refs and the trace 1348ms
+     × keeps the single-repository layout and result when no repos are declared 1211ms
+     × releases resumed register bookkeeping when the app1 merge failed 1320ms
+     × releases resumed register bookkeeping when the app2 merge failed 1255ms
+     × releases resumed register bookkeeping when the project merge failed 1339ms
+     × resumes cleanup without a second merge when removal fails after integration 999ms
+     × blocks exec-codex-protected-write distinctly and resumes the executor after the handoff is applied 907ms
+     × blocks exec-claude-protected-write distinctly and resumes the executor after the handoff is applied 1032ms
+     × rejects a resumed target-less register executor that omits the first-attempt change lower bound 886ms
+ ❯ tests/src/exec-job-worktree.integration.test.ts (9 tests | 6 failed) 19656ms
+     × commits only Run output and merges an accepted review without moving root HEAD during the command 2675ms
+     × merges verdict complete even when the review executor records an optional check as not_run 2441ms
+     × merges verdict complete-with-findings even when the review executor records an optional check as not_run 2417ms
+     × keeps the worktree waiting when a review executor validation fails 2397ms
+     × reuses the parent run identity when a reviewed manual Job omits --scheduled-at 1681ms
+     × reviews a Job that declares task.review without --worktree using the nominated review executor 1477ms
+
+ Test Files  4 failed | 13 passed (17)
+      Tests  43 failed | 142 passed (185)
+   Start at  23:56:41
+   Duration  20.54s (transform 7.14s, setup 298ms, import 13.54s, tests 105.41s, environment 1ms)
+
+
+
+--- stderr ---
+Preparing worktree (new branch 'exec/pjr-44cw-runner-transition')
+Preparing worktree (new branch 'exec/pjr-44cw-agent-change')
+Warning: root index has unrelated staged changes; preserving them while preparing the checkpoint:
+  README.md
+Warning: root index has unrelated staged changes; preserving them while preparing the checkpoint:
+  README.md
+Preparing worktree (new branch 'worktree/codex-work')
+Preparing worktree (checking out 'worktree/codex-work')
+Preparing worktree (new branch 'codex-work')
+Warning: forcing worktree removal; uncommitted changes may be lost.
+Warning: forcing worktree removal; uncommitted changes may be lost.
+Discarding regenerated files in worktree: .specdojo/doc-index.json
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 43 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec-job-worktree.integration.test.ts > Job Run worktree integration > commits only Run output and merges an accepted review without moving root HEAD during the command
+AssertionError: Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-job-worktrees-p6tFC3/test-JBR-sample-f9ab41c36031
+Skipping worktree artifact generation: no SpecDojo CLI in /tmp/specdojo-job-worktrees-p6tFC3/test-JBR-sample-f9ab41c36031
+Running Job Run JBR-sample-f9ab41c36031 in /tmp/specdojo-job-worktrees-p6tFC3/test-JBR-sample-f9ab41c36031.
+Running Job Run JBR-sample-f9ab41c36031 command in place.
+Command evidence: execution/exec/evidence/JBR-sample-f9ab41c36031/attempt-1/evidence.json
+Job Run complete: JBR-sample-f9ab41c36031
+  Skipping reporter fixture-reporter: resolveMemberCommand is not defined
+[routine-job] waiting run_id=JBR-sample-f9ab41c36031 review=incomplete worktree=/tmp/specdojo-job-worktrees-p6tFC3/test-JBR-sample-f9ab41c36031 reason=No reporter is available for Job Run review.
+
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/src/exec-job-worktree.integration.test.ts:256:65
+    254|     const result = runJob(fixture.repo, fixture.worktrees);
+    255|
+    256|     expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0…
+       |                                                                 ^
+    257|     expect(readFileSync(join(fixture.repo, "output/run.txt"), "utf8").…
+    258|     expect(readFileSync(join(fixture.repo, "unrelated.txt"), "utf8")).…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/43]⎯
+
+ FAIL  tests/src/exec-job-worktree.integration.test.ts > Job Run worktree integration > merges verdict complete even when the review executor records an optional check as not_run
+AssertionError: Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-job-worktrees-sPaTid/test-JBR-sample-f9ab41c36031
+Skipping worktree artifact generation: no SpecDojo CLI in /tmp/specdojo-job-worktrees-sPaTid/test-JBR-sample-f9ab41c36031
+Running Job Run JBR-sample-f9ab41c36031 in /tmp/specdojo-job-worktrees-sPaTid/test-JBR-sample-f9ab41c36031.
+Running Job Run JBR-sample-f9ab41c36031 command in place.
+Command evidence: execution/exec/evidence/JBR-sample-f9ab41c36031/attempt-1/evidence.json
+Job Run complete: JBR-sample-f9ab41c36031
+  Skipping reporter fixture-reporter: resolveMemberCommand is not defined
+[routine-job] waiting run_id=JBR-sample-f9ab41c36031 review=incomplete worktree=/tmp/specdojo-job-worktrees-sPaTid/test-JBR-sample-f9ab41c36031 reason=No reporter is available for Job Run review.
+
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/src/exec-job-worktree.integration.test.ts:273:67
+    271|       const result = runJob(fixture.repo, fixture.worktrees);
+    272|
+    273|       expect(result.status, `${result.stdout}\n${result.stderr}`).toBe…
+       |                                                                   ^
+    274|       expect(String(result.stdout)).toContain(`[routine-job] merged`);
+    275|       expect(String(result.stdout)).toContain(`review=${verdict}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/43]⎯
+
+ FAIL  tests/src/exec-job-worktree.integration.test.ts > Job Run worktree integration > merges verdict complete-with-findings even when the review executor records an optional check as not_run
+AssertionError: Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-job-worktrees-khQYfc/test-JBR-sample-f9ab41c36031
+Skipping worktree artifact generation: no SpecDojo CLI in /tmp/specdojo-job-worktrees-khQYfc/test-JBR-sample-f9ab41c36031
+Running Job Run JBR-sample-f9ab41c36031 in /tmp/specdojo-job-worktrees-khQYfc/test-JBR-sample-f9ab41c36031.
+Running Job Run JBR-sample-f9ab41c36031 command in place.
+Command evidence: execution/exec/evidence/JBR-sample-f9ab41c36031/attempt-1/evidence.json
+Job Run complete: JBR-sample-f9ab41c36031
+  Skipping reporter fixture-reporter: resolveMemberCommand is not defined
+[routine-job] waiting run_id=JBR-sample-f9ab41c36031 review=incomplete worktree=/tmp/specdojo-job-worktrees-khQYfc/test-JBR-sample-f9ab41c36031 reason=No reporter is available for Job Run review.
+
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/src/exec-job-worktree.integration.test.ts:273:67
+    271|       const result = runJob(fixture.repo, fixture.worktrees);
+    272|
+    273|       expect(result.status, `${result.stdout}\n${result.stderr}`).toBe…
+       |                                                                   ^
+    274|       expect(String(result.stdout)).toContain(`[routine-job] merged`);
+    275|       expect(String(result.stdout)).toContain(`review=${verdict}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/43]⎯
+
+ FAIL  tests/src/exec-job-worktree.integration.test.ts > Job Run worktree integration > keeps the worktree waiting when a review executor validation fails
+AssertionError: expected 'Skipping worktree dependencies: no tr…' to contain 'executor validation failed'
+
+- Expected
++ Received
+
+- executor validation failed
++ Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-job-worktrees-AllWhb/test-JBR-sample-f9ab41c36031
++ Skipping worktree artifact generation: no SpecDojo CLI in /tmp/specdojo-job-worktrees-AllWhb/test-JBR-sample-f9ab41c36031
++ Running Job Run JBR-sample-f9ab41c36031 in /tmp/specdojo-job-worktrees-AllWhb/test-JBR-sample-f9ab41c36031.
++ Running Job Run JBR-sample-f9ab41c36031 command in place.
++ Command evidence: execution/exec/evidence/JBR-sample-f9ab41c36031/attempt-1/evidence.json
++ Job Run complete: JBR-sample-f9ab41c36031
++   Skipping reporter fixture-reporter: resolveMemberCommand is not defined
++ [routine-job] waiting run_id=JBR-sample-f9ab41c36031 review=incomplete worktree=/tmp/specdojo-job-worktrees-AllWhb/test-JBR-sample-f9ab41c36031 reason=No reporter is available for Job Run review.
++
++
+
+ ❯ tests/src/exec-job-worktree.integration.test.ts:297:50
+    295|     expect(result.status).toBe(1);
+    296|     expect(`${result.stdout}\n${result.stderr}`).toContain("[routine-j…
+    297|     expect(`${result.stdout}\n${result.stderr}`).toContain("executor v…
+       |                                                  ^
+    298|     expect(existsSync(join(fixture.repo, "output/run.txt"))).toBe(fals…
+    299|   }, 120_000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/43]⎯
+
+ FAIL  tests/src/exec-job-worktree.integration.test.ts > Job Run worktree integration > reuses the parent run identity when a reviewed manual Job omits --scheduled-at
+AssertionError: Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-job-worktrees-Zv1CBV/test-JBR-sample-3d6fdbbd0ece
+Skipping worktree artifact generation: no SpecDojo CLI in /tmp/specdojo-job-worktrees-Zv1CBV/test-JBR-sample-3d6fdbbd0ece
+Running Job Run JBR-sample-3d6fdbbd0ece in /tmp/specdojo-job-worktrees-Zv1CBV/test-JBR-sample-3d6fdbbd0ece.
+Running Job Run JBR-sample-3d6fdbbd0ece command in place.
+Command evidence: execution/exec/evidence/JBR-sample-3d6fdbbd0ece/attempt-1/evidence.json
+Job Run complete: JBR-sample-3d6fdbbd0ece
+<specdojo_executor_evidence>{"final_message":"reviewed","validations":[]}</specdojo_executor_evidence>
+[routine-job] waiting run_id=JBR-sample-3d6fdbbd0ece review=incomplete worktree=/tmp/specdojo-job-worktrees-Zv1CBV/test-JBR-sample-3d6fdbbd0ece reason=isRateLimitError is not defined
+
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/src/exec-job-worktree.integration.test.ts:335:65
+    333|     });
+    334|
+    335|     expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0…
+       |                                                                 ^
+    336|     const output = String(result.stdout);
+    337|     const parentRunId = output.match(/Running Job Run (JBR-[^ ]+) in /…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/43]⎯
+
+ FAIL  tests/src/exec-job-worktree.integration.test.ts > Job Run worktree integration > reviews a Job that declares task.review without --worktree using the nominated review executor
+AssertionError: Skipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-job-worktrees-1xyITe/test-JBR-sample-f9ab41c36031
+Skipping worktree artifact generation: no SpecDojo CLI in /tmp/specdojo-job-worktrees-1xyITe/test-JBR-sample-f9ab41c36031
+Running Job Run JBR-sample-f9ab41c36031 in /tmp/specdojo-job-worktrees-1xyITe/test-JBR-sample-f9ab41c36031.
+Running Job Run JBR-sample-f9ab41c36031 command in place.
+Command evidence: execution/exec/evidence/JBR-sample-f9ab41c36031/attempt-1/evidence.json
+Job Run complete: JBR-sample-f9ab41c36031
+<specdojo_executor_evidence>{"final_message":"reviewed","validations":[]}</specdojo_executor_evidence>
+[routine-job] waiting run_id=JBR-sample-f9ab41c36031 review=incomplete worktree=/tmp/specdojo-job-worktrees-1xyITe/test-JBR-sample-f9ab41c36031 reason=isRateLimitError is not defined
+
+: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/src/exec-job-worktree.integration.test.ts:352:65
+    350|     const result = runJob(fixture.repo, fixture.worktrees, { worktreeF…
+    351|
+    352|     expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0…
+       |                                                                 ^
+    353|     expect(String(result.stdout)).toContain("[routine-job] merged");
+    354|     expect(readFileSync(join(fixture.repo, "output/run.txt"), "utf8").…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline E2E > keeps the legacy single-agent flow unchanged for phases without agent_pipeline
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:703:25
+    701|     // agent 自身が result を記入する。evidence / pipeline state は作られない。
+    702|     const invocations = readInvocations(target.logPath);
+    703|     expect(invocations).toHaveLength(1);
+       |                         ^
+    704|     expect(invocations[0].nickname).toBe("legacy-edit-agent");
+    705|     expect(invocations[0].prompt).toContain("# Edit Plan: T-TEST-plain…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline E2E > runs a local LLM executor and reporter selected from the same provider template
+AssertionError: expected [] to deeply equal [ 'local-gemma-executor', …(1) ]
+
+- Expected
++ Received
+
+- [
+-   "local-gemma-executor",
+-   "local-gemma-reporter",
+- ]
++ []
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:723:54
+    721|     // provider の command_template がメンバー属性で展開される。
+    722|     const invocations = readInvocations(target.logPath);
+    723|     expect(invocations.map((item) => item.nickname)).toEqual([
+       |                                                      ^
+    724|       "local-gemma-executor",
+    725|       "local-gemma-reporter",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline E2E > renders by evidence path when reporter descriptions are missing, extra, and reordered
+AssertionError: expected 1 to be undefined
+
+- Expected:
+undefined
+
++ Received:
+1
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:804:30
+    802|     await runExec(["run", "--project", "test", "--task", "T-TEST-doc-0…
+    803|
+    804|     expect(process.exitCode).toBeUndefined();
+       |                              ^
+    805|     const runDir = evidenceRunDir(target, "T-TEST-doc-010");
+    806|     const evidence = JSON.parse(readFileSync(join(runDir, "evidence.js…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline E2E > hands the reporter bounded evidence only, keeping raw log text and secrets out of the prompt
+TypeError: Cannot read properties of undefined (reading 'prompt')
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:839:62
+    837|     await runExec(["run", "--project", "test", "--task", "T-TEST-doc-0…
+    838|
+    839|     const reporterPrompt = readInvocations(target.logPath)[1].prompt;
+       |                                                              ^
+    840|     // reporter へ渡すのは plan と上限つき evidence とスキーマだけで、生ログ本文は渡さない。
+    841|     expect(reporterPrompt).toContain("# Edit Plan: T-TEST-doc-010");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline E2E > runs a cloud executor with the shared reporter and result path
+AssertionError: expected [] to deeply equal [ 'cloud-expert-executor', …(1) ]
+
+- Expected
++ Received
+
+- [
+-   "cloud-expert-executor",
+-   "local-gemma-reporter",
+- ]
++ []
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:866:54
+    864|     // ローカル構成と同じ経路を共有する。
+    865|     const invocations = readInvocations(target.logPath);
+    866|     expect(invocations.map((item) => item.nickname)).toEqual([
+       |                                                      ^
+    867|       "cloud-expert-executor",
+    868|       "local-gemma-reporter",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline E2E > blocks on executor failure without starting the reporter
+AssertionError: expected [] to deeply equal [ 'local-gemma-executor' ]
+
+- Expected
++ Received
+
+- [
+-   "local-gemma-executor",
+- ]
++ []
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:900:74
+    898|
+    899|     expect(process.exitCode).toBe(1);
+    900|     expect(readInvocations(target.logPath).map((item) => item.nickname…
+       |                                                                          ^
+    901|       "local-gemma-executor",
+    902|     ]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline E2E > records a failed parent validation and blocks even if the reporter returns complete
+AssertionError: expected [] to deeply equal [ 'executor', 'reporter' ]
+
+- Expected
++ Received
+
+- [
+-   "executor",
+-   "reporter",
+- ]
++ []
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:927:70
+    925|
+    926|     expect(process.exitCode).toBe(1);
+    927|     expect(readInvocations(target.logPath).map((item) => item.role)).t…
+       |                                                                      ^
+    928|       "executor",
+    929|       "reporter",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline E2E > fails a typecheck parent validation on a type-error fixture and blocks the task
+Error: ENOENT: no such file or directory, scandir '/tmp/specdojo-pipeline-e2e-cZwEdV/execution/exec/evidence/T-TEST-doc-010'
+ ❯ evidenceRunDir tests/src/exec-pipeline-e2e.integration.test.ts:578:16
+    576| function evidenceRunDir(fixture: PipelineFixture, taskId: string): str…
+    577|   const taskDir = join(fixture.executionPath, "exec", "evidence", task…
+    578|   const runs = readdirSync(taskDir).sort();
+       |                ^
+    579|   expect(runs).toHaveLength(1);
+    580|   return join(taskDir, runs[0]);
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:963:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline E2E > blocks on reporter output that never validates, keeping the executor evidence for resume
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:998:68
+    996|     // 形式エラーは reporter だけを再実行し、executor は再実行しない。
+    997|     const invocations = readInvocations(target.logPath);
+    998|     expect(invocations.filter((item) => item.role === "executor")).toH…
+       |                                                                    ^
+    999|     expect(invocations.filter((item) => item.role === "reporter")).toH…
+    1000|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (worktree) > rechecks every plan target when an executor resumes after a rate limit
+AssertionError: expected 1 to be undefined
+
+- Expected:
+undefined
+
++ Received:
+1
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:1086:30
+    1084|     ]);
+    1085|     // rate limit は他の失敗と異なり、再開可能な中断として exitCode を設定しない。
+    1086|     expect(process.exitCode).toBeUndefined();
+       |                              ^
+    1087|     expect(
+    1088|       readInvocations(fixture.logPath).filter((item) => item.role === …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (worktree) > resumes the reporter from persisted evidence instead of rerunning the executor
+AssertionError: expected undefined to match object { pipeline_stage: 'reporter' }
+
+- Expected:
+{
+  "pipeline_stage": "reporter",
+}
+
++ Received:
+undefined
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:1166:30
+    1164|       (event) => event.type === "block",
+    1165|     );
+    1166|     expect(blockEvent?.meta).toMatchObject({ pipeline_stage: "reporter…
+       |                              ^
+    1167|     expect(String(blockEvent?.meta?.pipeline_state_ref)).toContain("pi…
+    1168|     expect(String(blockEvent?.meta?.evidence_ref)).toContain("evidence…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (worktree) > aborts a hook-rejected merge commit and resumes only integration
+Error: expected exactly one worktree under /tmp/specdojo-pipeline-e2e-wt-QMv7jM, found 0
+ ❯ onlyWorktreePath tests/src/exec-pipeline-e2e.integration.test.ts:643:11
+    641|   );
+    642|   if (entries.length !== 1) {
+    643|     throw new Error(`expected exactly one worktree under ${worktreeBas…
+       |           ^
+    644|   }
+    645|   return join(worktreeBase, entries[0]!.name);
+ ❯ readWorktreePipelineState tests/src/exec-pipeline-e2e.integration.test.ts:653:24
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:1252:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (worktree) > skips commit and merge when resuming after the branch was already merged
+Error: expected exactly one worktree under /tmp/specdojo-pipeline-e2e-wt-jwkEtV, found 0
+ ❯ onlyWorktreePath tests/src/exec-pipeline-e2e.integration.test.ts:643:11
+    641|   );
+    642|   if (entries.length !== 1) {
+    643|     throw new Error(`expected exactly one worktree under ${worktreeBas…
+       |           ^
+    644|   }
+    645|   return join(worktreeBase, entries[0]!.name);
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:1328:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (worktree) > revalidates a resolved parent-validation failure before resuming the reporter
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:1400:35
+    1398|     ]);
+    1399|
+    1400|     expect(process.exitCode ?? 0).toBe(0);
+       |                                   ^
+    1401|     expect(
+    1402|       readInvocations(fixture.logPath).filter((item) => item.role === …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/43]⎯
+
+ FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (worktree) > keeps blocking when parent validation still fails after reporter resume
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/src/exec-pipeline-e2e.integration.test.ts:1469:7
+    1467|     expect(
+    1468|       readInvocations(fixture.logPath).filter((item) => item.role === …
+    1469|     ).toHaveLength(1);
+       |       ^
+    1470|     expect(readFileSync(fixture.parentValidationLogPath, "utf8")).toBe…
+    1471|     // 失敗時は worktree をマージしないため、ブロック理由はリポジトリ側ではなく
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > resolves --executor-by/--reporter-by, runs both stages, and transitions the item to review
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-ab12-t…' to contain 'item_status: review'
+
+- Expected
++ Received
+
+- item_status: review
++ ---
++ specdojo:
++   id: test:pjr-ab12-topic
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-AB12 pipeline test item
++
++ ## 1. 概要
++
++ executor/reporter pipeline の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:780:24
+    778|
+    779|         const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12…
+    780|         expect(ticket).toContain("item_status: review");
+       |                        ^
+    781|
+    782|         const resultFiles = readdirSync(join(root, EXECUTION_REL, "exe…
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:763:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > runs two register items in parallel with different per-item executors
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-ab12-t…' to contain 'item_status: review'
+
+- Expected
++ Received
+
+- item_status: review
++ ---
++ specdojo:
++   id: test:pjr-ab12-topic
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-AB12 pipeline test item
++
++ ## 1. 概要
++
++ executor/reporter pipeline の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:856:78
+    854|           const ticketName =
+    855|             id === "PJR-AB12" ? "pjr-ab12-pipeline-test.md" : "pjr-cd3…
+    856|           expect(readFileSync(join(root, REGISTER_REL, ticketName), "u…
+       |                                                                              ^
+    857|             "item_status: review",
+    858|           );
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:812:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > keeps an invalid failed item isolated while another parallel item integrates
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-ab12-t…' to contain 'item_status: waiting'
+
+- Expected
++ Received
+
+- item_status: waiting
++ ---
++ specdojo:
++   id: test:pjr-ab12-topic
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-AB12 pipeline test item
++
++ ## 1. 概要
++
++ executor/reporter pipeline の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:939:56
+    937|
+    938|         const failedTicketPath = join(root, REGISTER_REL, "pjr-ab12-pi…
+    939|         expect(readFileSync(failedTicketPath, "utf8")).toContain("item…
+       |                                                        ^
+    940|         expect(readFileSync(failedTicketPath, "utf8")).not.toContain("…
+    941|         expect(readFileSync(join(root, REGISTER_REL, secondTicket), "u…
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:877:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > runs the same pipeline in --worktree mode and merges the result back
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-ab12-t…' to contain 'item_status: review'
+
+- Expected
++ Received
+
+- item_status: review
++ ---
++ specdojo:
++   id: test:pjr-ab12-topic
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-AB12 pipeline test item
++
++ ## 1. 概要
++
++ executor/reporter pipeline の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:993:24
+    991|
+    992|         const ticket = readFileSync(join(root, REGISTER_REL, "pjr-ab12…
+    993|         expect(ticket).toContain("item_status: review");
+       |                        ^
+    994|
+    995|         const resultFiles = readdirSync(join(root, EXECUTION_REL, "exe…
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:970:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > resumes a hook-rejected merge without reverting changes added after branch creation
+AssertionError: expected 2 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 2
+
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1115:84
+    1113|         expect(process.exitCode).toBe(1);
+    1114|         expect(() => git(root, "rev-parse", "--verify", "MERGE_HEAD"))…
+    1115|         expect(Number(git(root, "rev-list", "--first-parent", "--count…
+       |                                                                                    ^
+    1116|           firstParentBefore + 2,
+    1117|         );
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1062:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > changes three repositories in one item and integrates them with the qualified Refs and the trace
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1216:41
+    1214|           ]);
+    1215|
+    1216|           expect(process.exitCode ?? 0).toBe(0);
+       |                                         ^
+    1217|           expect(
+    1218|             readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-t…
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1195:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > keeps the single-repository layout and result when no repos are declared
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1293:39
+    1291|         ]);
+    1292|
+    1293|         expect(process.exitCode ?? 0).toBe(0);
+       |                                       ^
+    1294|         expect(
+    1295|           readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline-tes…
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1274:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > releases resumed register bookkeeping when the app1 merge failed
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > releases resumed register bookkeeping when the app2 merge failed
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > releases resumed register bookkeeping when the project merge failed
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-ab12-t…' to contain 'item_status: waiting'
+
+- Expected
++ Received
+
+- item_status: waiting
++ ---
++ specdojo:
++   id: test:pjr-ab12-topic
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-AB12 pipeline test item
++
++ ## 1. 概要
++
++ executor/reporter pipeline の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1371:15
+    1369|             expect(
+    1370|               readFileSync(join(root, REGISTER_REL, "pjr-ab12-pipeline…
+    1371|             ).toContain("item_status: waiting");
+       |               ^
+    1372|             const worktreePath = execWorktreePath(root);
+    1373|             expect(worktreePath).not.toBeNull();
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1343:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > resumes cleanup without a second merge when removal fails after integration
+AssertionError: expected 1 to be 2 // Object.is equality
+
+- Expected
++ Received
+
+- 2
++ 1
+
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1468:84
+    1466|
+    1467|         expect(process.exitCode).toBe(1);
+    1468|         expect(Number(git(root, "rev-list", "--first-parent", "--count…
+       |                                                                                    ^
+    1469|           firstParentBefore + 1,
+    1470|         );
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1445:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > blocks exec-codex-protected-write distinctly and resumes the executor after the handoff is applied
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > blocks exec-claude-protected-write distinctly and resumes the executor after the handoff is applied
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-ab12-t…' to contain 'item_status: waiting'
+
+- Expected
++ Received
+
+- item_status: waiting
++ ---
++ specdojo:
++   id: test:pjr-ab12-topic
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-AB12 pipeline test item
++
++ ## 1. 概要
++
++ executor/reporter pipeline の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1541:26
+    1539|             "utf8",
+    1540|           );
+    1541|           expect(ticket).toContain("item_status: waiting");
+       |                          ^
+    1542|           expect(ticket).toContain("block_reason:");
+    1543|           expect(ticket).not.toContain("conclusion:");
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1509:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/43]⎯
+
+ FAIL  tests/src/exec-register-pipeline-e2e.integration.test.ts > exec run --register executor/reporter pipeline (E2E) > rejects a resumed target-less register executor that omits the first-attempt change lower bound
+Error: ENOENT: no such file or directory, open '/tmp/specdojo-register-pipeline-e2e-wt-kJFjex/test-PJR-AB12/docs/ja/projects/test/execution/exec/evidence/PJR-AB12/20261014T145700816Z-495321d5/evidence.json'
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1676:11
+    1674|         const firstRunId = readdirSync(evidenceDir)[0];
+    1675|         const firstEvidence = JSON.parse(
+    1676|           readFileSync(join(evidenceDir, firstRunId, "evidence.json"),…
+       |           ^
+    1677|         ) as { attempt_changes?: Array<{ path: string }> };
+    1678|         expect(firstEvidence.attempt_changes).toEqual([{ path: PARTIAL…
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:660:7
+ ❯ tests/src/exec-register-pipeline-e2e.integration.test.ts:1651:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/43]⎯
+
+ FAIL  tests/src/exec-register-resume.integration.test.ts > exec run --register --worktree --resume > resumes only the reporter stage and completes the item without re-running the executor
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-cd34-r…' to contain 'item_status: waiting'
+
+- Expected
++ Received
+
+- item_status: waiting
++ ---
++ specdojo:
++   id: test:pjr-cd34-resume-test
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-CD34 resume test item
++
++ ## 1. 概要
++
++ reporter 再開の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-resume.integration.test.ts:425:62
+    423|
+    424|         // reporter 失敗後: 項目は waiting、worktree と executor の未コミット成果が残る。
+    425|         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain…
+       |                                                              ^
+    426|         const worktreePath = worktreePathFor(root);
+    427|         expect(worktreePath).not.toBeNull();
+ ❯ tests/src/exec-register-resume.integration.test.ts:330:7
+ ❯ tests/src/exec-register-resume.integration.test.ts:418:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/43]⎯
+
+ FAIL  tests/src/exec-register-resume.integration.test.ts > exec run --register --worktree --resume > merges a fix committed on the integration branch after the wait before re-running parent validations
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-cd34-r…' to contain 'item_status: waiting'
+
+- Expected
++ Received
+
+- item_status: waiting
++ ---
++ specdojo:
++   id: test:pjr-cd34-resume-test
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-CD34 resume test item
++
++ ## 1. 概要
++
++ reporter 再開の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-resume.integration.test.ts:523:62
+    521|
+    522|         await runWithFailingReporter(markerPath, worktreeBase);
+    523|         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain…
+       |                                                              ^
+    524|         const worktreePath = worktreePathFor(root) ?? "";
+    525|         expect(worktreePath).not.toBe("");
+ ❯ tests/src/exec-register-resume.integration.test.ts:330:7
+ ❯ tests/src/exec-register-resume.integration.test.ts:478:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/43]⎯
+
+ FAIL  tests/src/exec-register-resume.integration.test.ts > exec run --register --worktree --resume > resumes a reporter-stage run from executor after syncing the integration branch
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/src/exec-register-resume.integration.test.ts:626:39
+    624|         ]);
+    625|
+    626|         expect(process.exitCode ?? 0).toBe(0);
+       |                                       ^
+    627|         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain…
+    628|         const runIds = readdirSync(join(root, EXECUTION_REL, "exec", "…
+ ❯ tests/src/exec-register-resume.integration.test.ts:330:7
+ ❯ tests/src/exec-register-resume.integration.test.ts:596:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/43]⎯
+
+ FAIL  tests/src/exec-register-resume.integration.test.ts > exec run --register --worktree --resume > resumes a protected-config block after the human applies the same change on the integration branch
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-cd34-r…' to contain 'item_status: waiting'
+
+- Expected
++ Received
+
+- item_status: waiting
++ ---
++ specdojo:
++   id: test:pjr-cd34-resume-test
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-CD34 resume test item
++
++ ## 1. 概要
++
++ reporter 再開の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-resume.integration.test.ts:662:62
+    660|
+    661|         expect(process.exitCode).toBe(1);
+    662|         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain…
+       |                                                              ^
+    663|         const worktreePath = worktreePathFor(root) ?? "";
+    664|         expect(worktreePath).not.toBe("");
+ ❯ tests/src/exec-register-resume.integration.test.ts:330:7
+ ❯ tests/src/exec-register-resume.integration.test.ts:655:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/43]⎯
+
+ FAIL  tests/src/exec-register-resume.integration.test.ts > exec run --register --worktree --resume > refuses a protected-config resume when the human and executor changes conflict
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-cd34-r…' to contain 'item_status: waiting'
+
+- Expected
++ Received
+
+- item_status: waiting
++ ---
++ specdojo:
++   id: test:pjr-cd34-resume-test
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-CD34 resume test item
++
++ ## 1. 概要
++
++ reporter 再開の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-resume.integration.test.ts:759:62
+    757|         expect(process.exitCode).toBe(1);
+    758|         expect(stderr.join("")).toContain("uncommitted executor change…
+    759|         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain…
+       |                                                              ^
+    760|         expect(worktreePathFor(root)).toBe(worktreePath);
+    761|         expect(git(worktreePath, "rev-parse", "HEAD")).toBe(before);
+ ❯ tests/src/exec-register-resume.integration.test.ts:330:7
+ ❯ tests/src/exec-register-resume.integration.test.ts:724:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/43]⎯
+
+ FAIL  tests/src/exec-register-resume.integration.test.ts > exec run --register --worktree --resume > refuses the resume without losing executor results when restoring them conflicts
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-cd34-r…' to contain 'item_status: waiting'
+
+- Expected
++ Received
+
+- item_status: waiting
++ ---
++ specdojo:
++   id: test:pjr-cd34-resume-test
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-CD34 resume test item
++
++ ## 1. 概要
++
++ reporter 再開の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-resume.integration.test.ts:815:62
+    813|         expect(stderr.join("")).toContain("uncommitted executor change…
+    814|         expect(stderr.join("")).toContain(`resolve it in ${worktreePat…
+    815|         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain…
+       |                                                              ^
+    816|         expect(worktreePathFor(root)).toBe(worktreePath);
+    817|         expect(git(worktreePath, "rev-parse", "HEAD")).toBe(before);
+ ❯ tests/src/exec-register-resume.integration.test.ts:330:7
+ ❯ tests/src/exec-register-resume.integration.test.ts:777:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/43]⎯
+
+ FAIL  tests/src/exec-register-resume.integration.test.ts > exec run --register --worktree --resume > refuses to re-run the whole item while a succeeded executor result is uncommitted
+AssertionError: expected '---\nspecdojo:\n  id: test:pjr-cd34-r…' to contain 'item_status: waiting'
+
+- Expected
++ Received
+
+- item_status: waiting
++ ---
++ specdojo:
++   id: test:pjr-cd34-resume-test
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - test:pjr-index
++   item_type: todo
++   item_status: in-progress
++   priority: medium
++   owner: ARC
++   registered_at: "2026-08-01T00:00:00Z"
++   due_on: "2026-08-31"
++ ---
++
++ # PJR-CD34 resume test item
++
++ ## 1. 概要
++
++ reporter 再開の E2E 検証用ダミー項目。
++
++ ## 2. 完了条件
++
++ - ダミーの完了条件。
++
++ ## 3. 作業内容
++
++ | No | 作業 | 担当 | 状態 | メモ |
++ | --- | --- | --- | --- | --- |
++ | 1 | ダミー作業 | ARC | open | - |
++
++ ## 4. 対応結果
++
++ -
++
++ ## 5. 関連ドキュメント
++
++ -
++
+
+ ❯ tests/src/exec-register-resume.integration.test.ts:862:62
+    860|         expect(worktreePathFor(root)).toBe(worktreePath);
+    861|         expect(existsSync(join(worktreePath ?? "", ARTIFACT_NAME))).to…
+    862|         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain…
+       |                                                              ^
+    863|       });
+    864|     },
+ ❯ tests/src/exec-register-resume.integration.test.ts:330:7
+ ❯ tests/src/exec-register-resume.integration.test.ts:829:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/43]⎯
+
+ FAIL  tests/src/exec-register-resume.integration.test.ts > exec run --register --worktree --resume > restarts a stale running executor in the existing worktree and completes the pipeline
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ tests/src/exec-register-resume.integration.test.ts:930:39
+    928|         ]);
+    929|
+    930|         expect(process.exitCode ?? 0).toBe(0);
+       |                                       ^
+    931|         expect(readFileSync(join(root, TICKET_REL), "utf8")).toContain…
+    932|         expect(existsSync(join(root, ARTIFACT_NAME))).toBe(true);
+ ❯ tests/src/exec-register-resume.integration.test.ts:330:7
+ ❯ tests/src/exec-register-resume.integration.test.ts:871:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/43]⎯
+

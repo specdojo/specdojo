@@ -4,20 +4,14 @@ import { basename, dirname, join, relative, resolve, sep } from "node:path";
 import { type Command } from "commander";
 import { selfRunArgs } from "./spawn-self.js";
 import {
-  defaultExecDefaultsPath,
   createProviderCapacityTracker,
-  hasMemberCommandSource,
   loadExecDefaultsConfig,
   ProviderConcurrencyGate,
   providerSlotPoolPath,
   resolveMaxConcurrency,
   resolveMaxConcurrentRuns,
-  resolveRegisterExecution,
   resolveMemberCommand,
-  resolveRateLimitDetection,
-  resolveRateLimitPolicy,
   type ExecDefaultsConfig,
-  type RateLimitDetection,
 } from "./exec-agent-config.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
 import {
@@ -31,20 +25,14 @@ import {
 } from "./exec-events.js";
 import {
   limitEventMeta,
-  normalizeAgentLimit,
   selectDueDeferredLimitTasks,
-  type AgentLimitKind,
   type AgentLimitSignal,
 } from "./exec-limit.js";
 import { buildScheduleIndex, findStaleGeneratedTracks } from "./exec-schedule.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import { readReadySnapshot } from "./exec-schedule-ready.js";
-import { listFilesRecursive, qualifyTaskId, randomHex, readYaml } from "./exec-shared.js";
+import { qualifyTaskId, randomHex } from "./exec-shared.js";
 import {
-  getProjectExecutionPath,
-  getProjectSchedulePath,
-  loadConfig,
-  loadMemberRoster,
   specdojoRootDir,
   type AgentProvider,
   type MemberRoster,
@@ -54,43 +42,25 @@ import { type AgentPipeline, type ReadyTaskView } from "./exec-types.js";
 import type {
   AgentStageRole,
   CurrentState,
-  Proficiency,
   ScheduleIndex,
   StateSnapshot,
   TaskMode,
 } from "./exec-types.js";
 import {
-  acquireExecRunLock,
   collectExecLockUsage,
-  EXEC_RUN_LOCK_TOKEN_ENV,
   execLifecyclePoolPath,
   execLocksDir,
   formatExecLockUsage,
-  inheritsExecRunLock,
-  releaseExecRunLock,
   ROUTINE_BUSY_SKIP_EXIT_CODE,
   ROUTINE_EXEC_ENV,
-  type ExecRunBusyPolicy,
 } from "./exec-run-lock.js";
-import {
-  CrossProcessMutex,
-  getActiveExecLocksDir,
-  setActiveExecLocksDir,
-} from "./exec-slot-lock.js";
-import { replaceDocIndexRefs } from "./doc-index.js";
-import {
-  extractLocalId,
-  extractPhaseSuffix,
-  normalizePhaseSetSelection,
-  phaseSetNames,
-  type PhaseSetSelection,
-} from "./schedule-phase-sets.js";
+import { CrossProcessMutex } from "./exec-slot-lock.js";
+import { extractLocalId, extractPhaseSuffix } from "./schedule-phase-sets.js";
 import {
   archivePlan,
   buildInPlaceStem,
   generateDeliverablePlan,
   generateSinglePlan,
-  loadPlan,
   parsePlanTaskIdentity,
   resolveDeliverableTarget,
   finalizeResultSectionsForDeliverable,
@@ -169,16 +139,11 @@ import {
   summarizeGitHookFailure,
   worktreeNameFromTaskId,
   type ExecWorktree,
-  type ProductWorktree,
 } from "./exec-worktree.js";
 import {
   configuredProductRepos,
   missingProductWorktrees,
   plannedProjectWorktreePath,
-  productRepoEnvironment,
-  productRootsFromEnvironment,
-  withAgentExtraRoots,
-  withoutInheritedRepoEnvironment,
   withProductRepoPrompt,
   withProductWorktrees,
 } from "./exec-task-repos.js";
@@ -220,26 +185,15 @@ import {
 } from "./exec-repo-trace.js";
 import {
   agentProtectedConfigViolation,
-  captureAgentProtectedConfigAcrossRepos,
   captureAgentProtectedConfigSnapshot,
-  changedAgentProtectedConfigAcrossRepos,
   changedAgentProtectedConfigPaths,
-  qualifiedRepoPaths,
 } from "./exec-agent-protected-config.js";
 import {
   agentGitStateViolation,
-  captureAgentGitStateAcrossRepos,
   captureAgentGitStateSnapshot,
-  changedAgentGitStateAcrossRepos,
   changedAgentGitStateFields,
-  qualifiedGitStateFields,
 } from "./exec-agent-git-state.js";
-import {
-  recordGitStateBlock,
-  recordGitStateBlockAcrossRepos,
-  recordProtectedConfigBlock,
-  recordProtectedConfigBlockAcrossRepos,
-} from "./exec-protection-handoff.js";
+import { recordGitStateBlock, recordProtectedConfigBlock } from "./exec-protection-handoff.js";
 import {
   buildPhaseModeIndex,
   resolveAgentAssignment,
@@ -253,29 +207,12 @@ import {
 import {
   recordCommandEvidence,
   recordExecutorEvidence,
-  recordParentValidationFailureOutput,
   recordReporterFailureOutput,
-  snapshotWorktreeChanges,
-  validateResumedTargetCoverage,
-  writeExecutorEvidence,
-  type ExecEvidence,
 } from "./exec-evidence.js";
 import {
   failedParentValidationReason,
-  hasRecordedParentValidations,
-  parentValidationGateFor,
   parentValidationPoolPath,
-  replaceParentValidationResults,
-  parentValidationDisplayCommands,
-  parentValidationLabels,
-  parentValidationRoots,
-  recordedParentValidationLabel,
   resolveParentValidationConcurrency,
-  runParentValidationBatch,
-  type ParentValidationBatchResult,
-  type ParentValidationEntry,
-  type ParentValidationInvoker,
-  type ParentValidationRoots,
 } from "./exec-parent-validation.js";
 import {
   deriveReporterFacts,
@@ -301,171 +238,100 @@ import {
   type PipelineStageRole,
   type PipelineState,
 } from "./exec-pipeline-state.js";
+import {
+  EXCLUSIVE_EXEC_RUN,
+  SerialAsyncLock,
+  buildTaskPhaseMap,
+  collectBusyActors,
+  configuredWorktreeBase,
+  isRateLimitError,
+  parseExecRunBusyPolicy,
+  parseParallel,
+  pinnedExecutor,
+  pinnedReporter,
+  resolveAgentOverride,
+  resolveExecDefaultsPath,
+  resolveRegisterWorktree,
+  resolveTaskPhaseContext,
+  runCompletionDrivenWorkerPool,
+  selectCandidates,
+  withProjectExecRunLock,
+  type AgentOverrideResolution,
+  type AgentRunCandidate,
+  type AgentExecution,
+  type AsyncLock,
+  type CompletionDrivenWorkerPoolResult,
+  type ExecRunLockSharing,
+  type ModeAgentOverrides,
+  type ResolvedRequirements,
+  type RunOpts,
+  type RunResult,
+  type StageAgentOverrides,
+  type TaskPhaseContext,
+} from "./exec-run-shared.js";
+import {
+  agentEnvironment,
+  appendParentValidationsToExecutorEvidence,
+  buildExecutorPrompt,
+  executeAgent,
+  executorRequirements,
+  expandPromptRefs,
+  extractBlockReason,
+  loadPrompt,
+  loadRosterForExecutionPath,
+  pathInsideWorktree,
+  reportProtectionHandoffRecord,
+  reportProductWorktrees,
+  reporterRequirements,
+  resolveReporterAgentCandidates,
+  resumedTargetCoverageFailure,
+  runConfiguredParentValidationBatch,
+  runConfiguredParentValidations,
+  runWithRetry,
+  resolveResumedCoverageTargets,
+  type ParentValidationRunOptions,
+} from "./exec-run-agent.js";
+import {
+  refreshParentValidationsForReporterResume,
+  runAgentPipeline,
+  runReporterStage,
+} from "./exec-run-agent-pipeline.js";
 
-type StrategyPhase = {
-  id: string;
-  name: string;
-  task_suffix: string;
-  duration_days: number;
+export {
+  buildTaskPhaseMap,
+  isRateLimitError,
+  parseExecRunBusyPolicy,
+  resolveAgentOverride,
+  resolveRegisterWorktree,
+  resolveTaskPhaseContext,
+  runCompletionDrivenWorkerPool,
+  selectCandidates,
 };
-
-type StrategyOwnerRule = {
-  local_ids: string[];
-  owner: string;
-  phase_set?: string;
-  phase_sets?: PhaseSetSelection;
+export type {
+  AgentExecution,
+  AgentOverrideResolution,
+  CompletionDrivenWorkerPoolResult,
+  ModeAgentOverrides,
+  ResolvedRequirements,
+  RunOpts,
+  RunResult,
+  StageAgentOverrides,
+  TaskPhaseContext,
 };
-
-type StrategyFile = {
-  phase_sets: Record<string, StrategyPhase[]>;
-  default_phase_set?: string;
-  default_phase_sets?: PhaseSetSelection;
-  owner_rules: StrategyOwnerRule[];
+export {
+  buildExecutorPrompt,
+  executeAgent,
+  executorRequirements,
+  expandPromptRefs,
+  extractBlockReason,
+  loadPrompt,
+  loadRosterForExecutionPath,
+  reporterRequirements,
+  resolveResumedCoverageTargets,
+  runConfiguredParentValidationBatch,
+  runConfiguredParentValidations,
 };
-
-export type TaskPhaseContext = {
-  localId: string;
-  phaseSet: string;
-  phaseId: string;
-};
-
-export type RunOpts = {
-  project?: string;
-  by?: string;
-  strategy?: string;
-  execDefaults?: string;
-  agentConfig?: string;
-  dryRun?: boolean;
-  auto?: boolean;
-  task?: string;
-  deliverable?: string;
-  plan?: string;
-  register?: string | string[];
-  registerFilter?: boolean;
-  registerTypes?: string;
-  registerPriorities?: string;
-  registerStatuses?: string;
-  registerLimit?: string;
-  job?: string;
-  input?: string | string[];
-  scheduledAt?: string;
-  jobTrigger?: string;
-  registerCommit?: boolean;
-  onFailure?: string;
-  resume?: boolean;
-  resumeFrom?: string;
-  forceRestart?: boolean;
-  worktree?: boolean;
-  inPlace?: boolean;
-  trackState?: boolean;
-  archiveOnSuccess?: boolean;
-  editBy?: string;
-  reviewBy?: string;
-  executorBy?: string;
-  reporterBy?: string;
-  loop?: boolean;
-  maxRounds?: string;
-  parallel?: string;
-  worktreeBase?: string;
-  due?: boolean;
-  ifBusy?: string;
-  join?: boolean;
-  cycleRebuildStaleTracks?: boolean;
-};
-
-export type RunResult = "success" | "rate_limit" | "failure";
-
-export type AgentExecution = {
-  result: RunResult;
-  exitCode: number | null;
-  stdout: string;
-  stderr: string;
-  limit?: AgentLimitSignal;
-};
-
-// Mode-specific agent overrides from --edit-by / --review-by. Each value is an agent
-// nickname (not a raw command); the command is resolved from agent-members.yaml. undefined means
-// "auto-select for that mode".
-export type ModeAgentOverrides = {
-  edit?: string;
-  review?: string;
-};
-
-export type StageAgentOverrides = {
-  executor?: string;
-  reporter?: string;
-};
-
-// Outcome of resolving a per-task agent override.
-//   none    — no override applies; fall back to auto-selection
-//   command — resolved to a concrete command (with the actor nickname when known)
-//   error   — an override was requested but could not be resolved (caller should fail the task)
-export type AgentOverrideResolution =
-  | { kind: "none" }
-  | { kind: "command"; command: string; actor?: string; provider?: AgentProvider }
-  | { kind: "error"; message: string };
-
-// A runnable agent candidate: the shell command plus the provider it belongs to.
-// The provider selects the per-provider failure-handling override in exec-defaults.yaml.
-type AgentRunCandidate = { command: string; actor?: string; provider?: AgentProvider };
-
-function pinnedExecutor(task: ReadyTaskView | null | undefined): string | undefined {
-  return typeof task?.agent === "string" ? task.agent : task?.agent?.executor;
-}
-
-function pinnedReporter(task: ReadyTaskView | null | undefined): string | undefined {
-  return typeof task?.agent === "object" ? task.agent.reporter : undefined;
-}
-
-// Resolve the agent override for a task's mode. A single explicit --by nickname wins for every
-// mode. Otherwise the mode-specific --edit-by / --review-by nickname applies. Commands are always
-// resolved from agent-members.yaml and exec-defaults.yaml; raw command strings are not accepted.
-export function resolveAgentOverride(
-  mode: "edit" | "review",
-  agentNicknameOverride: string | undefined,
-  modeAgentOverrides: ModeAgentOverrides,
-  roster: MemberRoster | null,
-  execDefaults: ExecDefaultsConfig = {},
-  stageRole?: AgentStageRole,
-): AgentOverrideResolution {
-  const nickname =
-    agentNicknameOverride ??
-    (mode === "review" ? modeAgentOverrides.review : modeAgentOverrides.edit);
-  if (!nickname) return { kind: "none" };
-
-  const flag = agentNicknameOverride ? "--by" : mode === "review" ? "--review-by" : "--edit-by";
-  const member = roster?.members.find((m) => m.type === "agent" && m.nickname === nickname);
-  if (member && stageRole !== undefined && member.stage_role !== stageRole) {
-    return {
-      kind: "error",
-      message: `${flag} agent must have stage_role: ${stageRole} for this pipeline stage: ${nickname}`,
-    };
-  }
-  let command: string | undefined;
-  try {
-    command = member ? resolveMemberCommand(execDefaults, member) : undefined;
-  } catch (error) {
-    return { kind: "error", message: error instanceof Error ? error.message : String(error) };
-  }
-  if (!member || !command) {
-    return {
-      kind: "error",
-      message: `${flag} agent nickname not found in agent-members.yaml (or has no resolvable command): ${nickname}`,
-    };
-  }
-  return {
-    kind: "command",
-    command,
-    actor: member.nickname,
-    provider: member.provider,
-  };
-}
-
-export type ResolvedRequirements = {
-  capabilities: string[];
-  proficiency?: Proficiency;
-  stage_role?: AgentStageRole;
-};
+export type { ParentValidationRunOptions };
 
 type PreparedTask = {
   task: ReadyTaskView;
@@ -492,1148 +358,6 @@ type PlanGenPaths = {
   viewpointsPath?: string;
   projectContext?: string[];
 };
-
-type AsyncLock = {
-  runExclusive: <T>(fn: () => Promise<T> | T) => Promise<T>;
-};
-
-class SerialAsyncLock implements AsyncLock {
-  private tail: Promise<void> = Promise.resolve();
-
-  async runExclusive<T>(fn: () => Promise<T> | T): Promise<T> {
-    const previous = this.tail;
-    let release!: () => void;
-    this.tail = new Promise<void>((resolveTail) => {
-      release = resolveTail;
-    });
-    await previous;
-    try {
-      return await fn();
-    } finally {
-      release();
-    }
-  }
-}
-
-export type CompletionDrivenWorkerPoolResult = {
-  launched: number;
-  completed: number;
-};
-
-export async function runCompletionDrivenWorkerPool<TItem, TResult>(options: {
-  maxParallel: number;
-  fillSlots: (openSlots: number) => Promise<TItem[]> | TItem[];
-  runItem: (item: TItem) => Promise<TResult>;
-  onSettled?: (
-    item: TItem,
-    result: TResult,
-  ) => Promise<{ stop?: boolean } | void> | { stop?: boolean } | void;
-}): Promise<CompletionDrivenWorkerPoolResult> {
-  type RunningItem = {
-    token: number;
-    item: TItem;
-    promise: Promise<{ token: number; item: TItem; result: TResult }>;
-  };
-
-  const running = new Map<number, RunningItem>();
-  let nextToken = 1;
-  let stop = false;
-  let launched = 0;
-  let completed = 0;
-
-  const start = (item: TItem): void => {
-    const token = nextToken++;
-    running.set(token, {
-      token,
-      item,
-      promise: options.runItem(item).then((result) => ({ token, item, result })),
-    });
-    launched++;
-  };
-
-  const refill = async (): Promise<void> => {
-    if (stop || running.size >= options.maxParallel) return;
-    const items = await options.fillSlots(options.maxParallel - running.size);
-    for (const item of items) {
-      if (running.size >= options.maxParallel) break;
-      start(item);
-    }
-  };
-
-  await refill();
-  while (running.size > 0) {
-    const outcome = await Promise.race(
-      [...running.values()].map((runningItem) => runningItem.promise),
-    );
-    running.delete(outcome.token);
-    completed++;
-    const action = await options.onSettled?.(outcome.item, outcome.result);
-    if (action?.stop) stop = true;
-    await refill();
-  }
-
-  return { launched, completed };
-}
-
-export function buildTaskPhaseMap(schedulePath: string): {
-  localIdToPhaseSets: Map<string, string[]>;
-  phaseSetSuffixToId: Map<string, string>;
-} {
-  const localIdToPhaseSets = new Map<string, string[]>();
-  const phaseSetSuffixToId = new Map<string, string>();
-
-  const strategyFiles = listFilesRecursive(schedulePath).filter((f) =>
-    /sch-strategy-.*\.(yaml|yml)$/.test(f),
-  );
-
-  for (const filePath of strategyFiles) {
-    let strategy: StrategyFile;
-    try {
-      strategy = readYaml(filePath) as StrategyFile;
-    } catch {
-      continue;
-    }
-    if (!strategy?.phase_sets || !Array.isArray(strategy.owner_rules)) continue;
-
-    let defaultPhaseSets: string[];
-    try {
-      defaultPhaseSets = phaseSetNames(
-        normalizePhaseSetSelection(
-          strategy.default_phase_sets,
-          strategy.default_phase_set
-            ? [strategy.default_phase_set]
-            : Object.keys(strategy.phase_sets),
-        ),
-      );
-    } catch {
-      continue;
-    }
-
-    for (const [phaseSetName, phases] of Object.entries(strategy.phase_sets)) {
-      for (const phase of phases) {
-        phaseSetSuffixToId.set(`${phaseSetName}:${phase.task_suffix}`, phase.id);
-      }
-    }
-
-    for (const rule of strategy.owner_rules) {
-      let phaseSets: string[];
-      try {
-        phaseSets = rule.phase_sets
-          ? phaseSetNames(normalizePhaseSetSelection(rule.phase_sets, []))
-          : rule.phase_set
-            ? [rule.phase_set]
-            : defaultPhaseSets;
-      } catch {
-        continue;
-      }
-      for (const localId of rule.local_ids) {
-        localIdToPhaseSets.set(localId, phaseSets);
-      }
-    }
-  }
-
-  return { localIdToPhaseSets, phaseSetSuffixToId };
-}
-
-export function resolveTaskPhaseContext(
-  task: ReadyTaskView,
-  localIdToPhaseSets: Map<string, string[]>,
-  phaseSetSuffixToId: Map<string, string>,
-): TaskPhaseContext | null {
-  // ready.json/schedule 側で phase_set・phase_id が既に確定しているタスクは、それを正として
-  // 直接返す。cross-deliverable-pass タスク（single local_id を持たず target_local_ids のみを
-  // 持つ）はこの分岐でしか解決できないため、local_id の有無より先に判定する。ここで local_id
-  // チェックを先にすると、target_local_ids しか持たないタスクは常に「not found in sch-strategy
-  // files」で失敗する。
-  if (task.phase_set && task.phase_id) {
-    return { localId: task.local_id ?? "", phaseSet: task.phase_set, phaseId: task.phase_id };
-  }
-
-  const localId = task.local_id;
-  if (!localId) return null;
-
-  const suffix = task.phase_suffix ?? extractPhaseSuffix(task.id);
-  if (!suffix) return null;
-
-  const phaseSets = localIdToPhaseSets.get(localId);
-  if (!phaseSets) return null;
-
-  for (const phaseSet of task.phase_set ? [task.phase_set] : phaseSets) {
-    const phaseId = phaseSetSuffixToId.get(`${phaseSet}:${suffix}`);
-    if (phaseId) return { localId, phaseSet, phaseId };
-  }
-
-  return null;
-}
-
-export function selectCandidates(
-  requirements: ResolvedRequirements,
-  roster: MemberRoster | null,
-  taskMode?: string,
-  busyActors?: ReadonlySet<string>,
-  execDefaults: ExecDefaultsConfig = {},
-): ProjectMember[] {
-  if (!roster) return [];
-  const { capabilities: required, proficiency, stage_role: stageRole } = requirements;
-  return roster.members
-    .filter((m) => {
-      // Runnable agents need a command source: a provider command_template or an
-      // explicit member-level command override.
-      if (m.type !== "agent" || !hasMemberCommandSource(execDefaults, m)) return false;
-      // Temporarily disabled agents (e.g. to isolate one provider while testing rate limits)
-      // are skipped during auto-selection.
-      if (m.disabled === true) return false;
-      const caps = m.capabilities ?? [];
-      if (!required.every((c) => caps.includes(c))) return false;
-      if (proficiency !== undefined && m.proficiency !== proficiency) return false;
-      // Pipeline agents and legacy agents form disjoint auto-selection pools. This keeps newly
-      // introduced executor/reporter definitions out of existing single-agent tasks while also
-      // preventing legacy agents from silently filling a pipeline stage.
-      if (stageRole === undefined) {
-        if (m.stage_role !== undefined) return false;
-      } else if (m.stage_role !== stageRole) {
-        return false;
-      }
-      // If agent declares a mode and task has a mode, they must match.
-      // Agents without a mode field are mode-agnostic and match any task.
-      if (m.mode !== undefined && taskMode !== undefined && m.mode !== taskMode) return false;
-      return true;
-    })
-    .sort((a, b) => {
-      // Primary: agents already busy on a "doing" task sort last. This spreads parallel runs
-      // across agents instead of piling every task onto the same top-priority command and
-      // hitting its rate limit.
-      const aBusy = busyActors?.has(a.nickname) ? 1 : 0;
-      const bBusy = busyActors?.has(b.nickname) ? 1 : 0;
-      if (aBusy !== bBusy) return aBusy - bBusy;
-      // Secondary: priority (lower number = tried first)
-      const aPriority = a.priority ?? 999;
-      const bPriority = b.priority ?? 999;
-      if (aPriority !== bPriority) return aPriority - bPriority;
-      // Tertiary: fewest extra capabilities (tie-breaker within same priority)
-      const aExtra = (a.capabilities?.length ?? 0) - required.length;
-      const bExtra = (b.capabilities?.length ?? 0) - required.length;
-      return aExtra - bExtra;
-    });
-}
-
-// Collect the nicknames of actors currently working a "doing" task, derived from the event log
-// (not the state.json cache) so freshly claimed tasks within the same parallel round are seen.
-// Used to deprioritize busy agents during auto-selection. Failures degrade to "no busy info".
-function collectBusyActors(schedulePath: string): Set<string> {
-  const busy = new Set<string>();
-  try {
-    const sch = buildScheduleIndex(schedulePath);
-    const evts = readAllEventFiles(schedulePath);
-    const initTasks = buildInitialStateFromStrategy(schedulePath, sch);
-    const snap = foldEventsToState(evts, sch, schedulePath, initTasks);
-    for (const taskState of Object.values(snap.tasks ?? {})) {
-      if (taskState?.state === "doing" && taskState.last_by) busy.add(taskState.last_by);
-    }
-  } catch {
-    // ignore; selection falls back to priority-only ordering
-  }
-  return busy;
-}
-
-export function isRateLimitError(
-  exitCode: number | null,
-  output: string,
-  detection: RateLimitDetection | undefined,
-): boolean {
-  if (!detection) return false;
-  // exit_codes is a standalone signal: an exact configured code identifies a rate limit
-  // on its own. Keep this list minimal (see exec-defaults.yaml) since generic codes like 1
-  // also mean ordinary failure.
-  if (detection.exit_codes && exitCode !== null && detection.exit_codes.includes(exitCode)) {
-    return true;
-  }
-  if (detection.stderr_patterns) {
-    // `output` is the agent's combined stdout+stderr: some CLIs print the limit notice to
-    // stdout, not stderr (e.g. claude's "You've hit your session limit"), so scanning stderr
-    // alone misses it. By default a pattern only counts when the process also failed (non-zero
-    // or null exit). A successful run (exit 0) that merely echoes the phrase — e.g. an agent
-    // editing a file containing the literal text "rate limit" — is not a rate limit.
-    const requireNonzeroExit = detection.stderr_requires_nonzero_exit ?? true;
-    if (!requireNonzeroExit || exitCode !== 0) {
-      const lower = output.toLowerCase();
-      for (const pattern of detection.stderr_patterns) {
-        if (lower.includes(pattern.toLowerCase())) return true;
-      }
-    }
-  }
-  return false;
-}
-
-function resolveExecDefaultsPath(opts: RunOpts, schedulePath: string): string {
-  if (opts.execDefaults) return opts.execDefaults;
-  if (opts.agentConfig) return opts.agentConfig;
-
-  const { config } = loadConfig();
-  if (config) {
-    const rootDir = specdojoRootDir();
-    for (const project of Object.values(config.projects)) {
-      const projSchedulePath = resolve(rootDir, getProjectSchedulePath(project));
-      if (projSchedulePath === schedulePath && project.run?.exec_defaults) {
-        return resolve(rootDir, project.run.exec_defaults);
-      }
-      if (projSchedulePath === schedulePath && project.run?.agent_config) {
-        return resolve(rootDir, project.run.agent_config);
-      }
-    }
-  }
-
-  return defaultExecDefaultsPath();
-}
-
-function configuredWorktreeBase(schedulePath: string): string | undefined {
-  const { config } = loadConfig();
-  if (!config) return undefined;
-
-  const rootDir = specdojoRootDir();
-  for (const project of Object.values(config.projects)) {
-    if (resolve(rootDir, getProjectSchedulePath(project)) === schedulePath) {
-      return project.run?.worktree_base;
-    }
-  }
-  return undefined;
-}
-
-function parseParallel(value: string | undefined): number {
-  const text = value ?? "1";
-  if (!/^\d+$/.test(text)) {
-    throw new Error(`--parallel must be a positive integer: ${value ?? ""}`);
-  }
-  const parsed = Number.parseInt(text, 10);
-  if (!Number.isSafeInteger(parsed) || parsed < 1) {
-    throw new Error(`--parallel must be a positive integer: ${value ?? ""}`);
-  }
-  return parsed;
-}
-
-export function parseExecRunBusyPolicy(value: string | undefined): ExecRunBusyPolicy {
-  const policy = value ?? "fail";
-  if (policy !== "skip" && policy !== "wait" && policy !== "fail") {
-    throw new Error(`--if-busy must be "skip", "wait", or "fail": ${value ?? ""}`);
-  }
-  return policy;
-}
-
-export function resolveRegisterWorktree(
-  opts: Pick<RunOpts, "worktree" | "inPlace">,
-  execDefaults: ExecDefaultsConfig,
-): boolean {
-  if (opts.worktree && opts.inPlace) {
-    throw new Error("Specify either --worktree or --in-place, not both.");
-  }
-  if (opts.worktree) return true;
-  if (opts.inPlace) return false;
-  return resolveRegisterExecution(execDefaults) === "worktree";
-}
-
-// How the run shares the project exec-run lock. Only register worktree runs coordinate their
-// shared resources (agent slots, root lifecycle, parent validations) across processes, so only
-// they may run next to other processes.
-type ExecRunLockSharing = {
-  // The run tolerates `--join` runs next to it.
-  shareable: boolean;
-  // The run joins a running shareable run (`--join`).
-  join: boolean;
-};
-
-const EXCLUSIVE_EXEC_RUN: ExecRunLockSharing = { shareable: false, join: false };
-
-function resolveJoinSlotLimit(opts: RunOpts, schedulePath: string, executionPath: string): number {
-  const execDefaults = loadExecDefaultsConfig(
-    resolveExecDefaultsPath(opts, schedulePath),
-    executionPath,
-  );
-  return resolveMaxConcurrentRuns(execDefaults) - 1;
-}
-
-async function withProjectExecRunLock(
-  opts: RunOpts,
-  commandLabel: "run" | "resume" | "cycle",
-  action: () => Promise<void>,
-  sharing: ExecRunLockSharing = EXCLUSIVE_EXEC_RUN,
-): Promise<void> {
-  const resolvedPaths = resolveProjectPaths({ project: opts.project });
-  const locksDir = execLocksDir(resolvedPaths.executionPath);
-  const previousLocksDir = getActiveExecLocksDir();
-  if (inheritsExecRunLock(resolvedPaths.executionPath)) {
-    setActiveExecLocksDir(locksDir);
-    try {
-      await action();
-    } finally {
-      setActiveExecLocksDir(previousLocksDir);
-    }
-    return;
-  }
-  const policy = parseExecRunBusyPolicy(opts.ifBusy);
-  const joinLimit = sharing.join
-    ? resolveJoinSlotLimit(opts, resolvedPaths.schedulePath, resolvedPaths.executionPath)
-    : 0;
-  if (sharing.join && joinLimit < 1) {
-    throw new Error(
-      "--join is disabled: run.max_concurrent_runs in exec-defaults is 1 (raise it to allow joining runs)",
-    );
-  }
-  const handle = await acquireExecRunLock(resolvedPaths.executionPath, {
-    actor: opts.by ?? `exec-${commandLabel}`,
-    ifBusy: policy,
-    shareable: sharing.shareable || sharing.join,
-    ...(sharing.join ? { join: { limit: joinLimit } } : {}),
-    onWait: () =>
-      process.stdout.write(
-        sharing.join
-          ? `[${commandLabel}] exec busy — waiting for a join slot (see "exec slots")\n`
-          : `[${commandLabel}] exec busy — waiting\n`,
-      ),
-  });
-
-  if (!handle) {
-    process.stdout.write(`[${commandLabel}] skipped: exec busy\n`);
-    if (process.env[ROUTINE_EXEC_ENV] === "1") {
-      process.exitCode = ROUTINE_BUSY_SKIP_EXIT_CODE;
-    }
-    return;
-  }
-  if (sharing.join) {
-    process.stdout.write(
-      `[${commandLabel}] running as a joined exec (${basename(handle.lockDir)})\n`,
-    );
-  }
-
-  const previousInheritedToken = process.env[EXEC_RUN_LOCK_TOKEN_ENV];
-  process.env[EXEC_RUN_LOCK_TOKEN_ENV] = handle.token;
-  setActiveExecLocksDir(locksDir);
-  try {
-    await action();
-  } finally {
-    setActiveExecLocksDir(previousLocksDir);
-    if (previousInheritedToken === undefined) delete process.env[EXEC_RUN_LOCK_TOKEN_ENV];
-    else process.env[EXEC_RUN_LOCK_TOKEN_ENV] = previousInheritedToken;
-    releaseExecRunLock(handle);
-  }
-}
-
-function delay(ms: number): Promise<void> {
-  return new Promise((resolveDelay) => setTimeout(resolveDelay, ms));
-}
-
-export function expandPromptRefs(
-  prompt: string,
-  indexPath = resolve(specdojoRootDir(), ".specdojo/doc-index.json"),
-): string {
-  if (!existsSync(indexPath)) return prompt;
-
-  // Agents open the referenced files directly, so resolve [[id]] refs to canonical
-  // repo-relative paths (no leading slash) rather than markdown links. This keeps every
-  // path in the agent-consumed plan in one form that resolves from the run CWD.
-  const result = replaceDocIndexRefs(prompt, indexPath, {
-    format: "path",
-    missing: "keep",
-  });
-  if (result.missingIds.length > 0) {
-    process.stderr.write(`Unresolved ID reference(s): ${result.missingIds.join(", ")}\n`);
-  }
-  return result.content;
-}
-
-export function loadPrompt(executionPath: string, taskId: string): string | null {
-  const plan = loadPlan(executionPath, taskId);
-  return plan ? expandPromptRefs(plan) : null;
-}
-
-type ExecutorPromptOptions = {
-  mode?: TaskMode;
-  resumed?: boolean;
-  existingChanges?: readonly string[];
-  initialChangeTargets?: readonly string[];
-  resumeHandoff?: readonly string[];
-  coverageSource?: "declared" | "initial-changes" | "none";
-};
-
-export function resolveResumedCoverageTargets(
-  plan: string,
-  initialChangeTargets: readonly string[] = [],
-): { source: "declared" | "initial-changes" | "none"; targets: string[] } {
-  const declared = [
-    ...new Set((parsePlanTaskIdentity(plan)?.targets ?? []).map((target) => target.trim())),
-  ].filter(Boolean);
-  if (declared.length > 0) return { source: "declared", targets: declared };
-  const initial = [...new Set(initialChangeTargets.map((target) => target.trim()))].filter(Boolean);
-  return initial.length > 0
-    ? { source: "initial-changes", targets: initial }
-    : { source: "none", targets: [] };
-}
-
-function executorEvidenceContract(
-  parentValidations: readonly ParentValidationEntry[],
-  options: ExecutorPromptOptions = {},
-): string {
-  const parentValidationLabelList = parentValidationLabels(parentValidations);
-  const parentValidationCommands = parentValidationDisplayCommands(parentValidations);
-  const parentValidationInstruction =
-    parentValidationLabelList.length > 0
-      ? `\nThe SpecDojo parent runner will execute these allowlisted validations after you exit: ${parentValidationLabelList.join(", ")} (${parentValidationCommands.join(", ")}). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.\n`
-      : "";
-  const coverage = {
-    source: options.coverageSource ?? "none",
-    targets: [...(options.initialChangeTargets ?? [])],
-  };
-  const coverageInstruction =
-    coverage.source === "initial-changes"
-      ? `The plan declares no \`targets\`. The paths below were materially changed by the first
-executor attempt and are an incomplete lower bound, not an upper bound on the work required.
-Inspect the entire plan and any additional artifacts it requires. For each lower-bound path,
-include one \`target_coverage\` entry and use the path exactly as the entry's \`target\` value:
-${coverage.targets.map((target) => `- \`${target}\``).join("\n")}`
-      : coverage.source === "declared"
-        ? `For each entry in plan frontmatter \`targets\`, include one \`target_coverage\` entry in
-the evidence envelope. Use the target ID exactly as written in the plan. Declared targets take
-priority over any files recorded by an earlier attempt.`
-        : `The plan declares no \`targets\` and no first-attempt change lower bound was recorded.
-Omit \`target_coverage\` and state in \`final_message\` which artifacts you verified and which
-remain unverified.`;
-  const resumeInstruction = options.resumed
-    ? `
-This executor invocation resumes an interrupted attempt. Existing worktree changes may represent
-only a partial implementation; they are not proof that the plan is complete. Re-read the entire
-plan before reporting success. ${coverageInstruction}
-
-${
-  options.resumeHandoff?.length
-    ? `The previous attempt left these failure details. Address them before reporting success:\n${options.resumeHandoff.map((detail) => `- ${detail}`).join("\n")}\n`
-    : ""
-}
-
-A changed target must use status \`changed\`, provide its
-repository-relative \`path\`, and actually be present in the cumulative worktree diff. A target
-that legitimately needs no change must use status \`unchanged\` and provide a concrete \`reason\`;
-the runner will preserve that reason in the result. If you cannot account for every target, exit
-non-zero instead of claiming completion.${
-        options.existingChanges?.length
-          ? `\n\nChanges already present when this resumed invocation started:\n${options.existingChanges.map((path) => `- \`${path}\``).join("\n")}`
-          : ""
-      }
-`
-    : "";
-  const targetCoverageExample = options.resumed
-    ? ',"target_coverage":[{"target":"exact declared target id or lower-bound path","status":"changed|unchanged","path":"repo-relative path for changed targets","reason":"required when unchanged"}]'
-    : "";
-  const reviewValidationInstruction =
-    options.mode === "review"
-      ? `
-For a review task, report only checks you actually ran in \`validations\`. Do not add optional
-checks you chose not to run as \`not_run\` or \`not_applicable\`. Describe them instead in
-\`final_message\` under "確認できなかった範囲" so the reporter can record that scope in the
-review result and reflect it in the verdict.
-`
-      : "";
-  return `
-
----
-
-# Pipeline executor stage instructions
-
-This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
-artifacts required by the plan, but do not create or update the result file. Any plan instruction
-that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
-runner stage and does not apply here.
-
-The parent runner owns Git commits and repository configuration. Do not run git commit or change
-local, global, or system Git configuration, including user.name and user.email. A Git state change
-will stop the pipeline before validation, reporting, commit, or merge.
-
-Do not create disposable or scratch files at the repository root; place them in \`tmp/\` within
-the worktree or outside the repository. Files under \`tmp/\` are excluded from commits.
-
-When writing Markdown in the final evidence, wrap identifiers or field names containing an
-underscore in inline code (for example, \`depends_on\`).
-${parentValidationInstruction}
-${resumeInstruction}
-${reviewValidationInstruction}
-
-Use validation status \`requires_human\` only for a check that cannot run from the agent sandbox,
-such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
-credentials or a host-side operation. Do not use it for a check that could run but was skipped;
-report that as \`not_run\`. A \`requires_human\` check is carried into the result as a human handoff
-and does not block pipeline completion.
-
-Use validation status \`not_applicable\` when the repository does not meet a check's applicability
-conditions, and include a non-empty \`reason\`. The runner carries it into the result without
-blocking completion, but rejects the claim when it can confirm the check applies:
-- \`npm run <script>\` / \`npm test\`: the script exists in package.json.
-- \`npx <package>\`: the package is in package.json dependencies or devDependencies.
-- A command that targets a declared product repository (a \`<repo>:<path>\` argument or
-  \`--prefix <repo>\`) is judged by that repository's package.json, not the project repository's.
-- \`specdojo catalog validate\`: the run's target project (or \`--project <id>\`) sets \`catalog_path\`
-  and your changes reach \`docs/ja/projects/\`. A project without \`catalog_path\`, or changes
-  outside \`docs/ja/projects/\`, is a valid reason; state it in \`reason\`.
-
-Do not run or report \`specdojo index build\`. It writes \`.specdojo/doc-index.json\`, which the
-agent may not write, and the runner regenerates the index while preparing the worktree and before
-integration.
-
-End the final response with exactly one machine-readable report using this envelope. Do not place
-Markdown fences around the JSON.
-
-<specdojo_executor_evidence>
-{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]${targetCoverageExample}}
-</specdojo_executor_evidence>
-`;
-}
-
-export function buildExecutorPrompt(
-  plan: string,
-  parentValidations: readonly ParentValidationEntry[] = [],
-  options: ExecutorPromptOptions = {},
-): string {
-  const coverage = resolveResumedCoverageTargets(plan, options.initialChangeTargets);
-  return `${plan.trimEnd()}${executorEvidenceContract(parentValidations, {
-    ...options,
-    mode: options.mode ?? parsePlanTaskIdentity(plan)?.mode ?? "edit",
-    initialChangeTargets: coverage.targets,
-    coverageSource: coverage.source,
-  })}`;
-}
-
-function resumedTargetCoverageFailure(params: {
-  resumed: boolean;
-  plan: string;
-  evidence: ExecEvidence;
-  evidencePath: string;
-  initialChangeTargets?: readonly string[];
-}): string | undefined {
-  if (!params.resumed) return undefined;
-  const targets = resolveResumedCoverageTargets(params.plan, params.initialChangeTargets).targets;
-  const coverage = validateResumedTargetCoverage(targets, params.evidence);
-  if (coverage.ok) return undefined;
-
-  params.evidence.stage.status = "failed";
-  writeExecutorEvidence(params.evidencePath, params.evidence);
-  return coverage.reason;
-}
-
-export type ParentValidationRunOptions = {
-  // Identifies the waiting item in gate logs (task / register ID). Defaults to the cwd name.
-  label?: string;
-  invoke?: ParentValidationInvoker;
-};
-
-// 同じ exec run 内の親検証は run 全体の gate（既定 1 本）で直列化する。executor と reporter は
-// gate の外で並列に動き、検証だけが順番待ちになる。`cwd` に文字列を渡すとプロジェクト worktree
-// だけを持つ run として扱い、プロダクトリポジトリへ割り当てた検証は failed になる（PJR-V96B）。
-export async function runConfiguredParentValidationBatch(
-  execDefaults: ExecDefaultsConfig,
-  cwd: string | ParentValidationRoots,
-  options: ParentValidationRunOptions = {},
-): Promise<ParentValidationBatchResult> {
-  const entries = execDefaults.pipeline?.parent_validations;
-  if (!entries?.length) return { validations: [], failureOutputs: [] };
-  const labels = parentValidationLabels(entries);
-  const label = options.label ?? basename(typeof cwd === "string" ? cwd : cwd.project);
-  const batch = await parentValidationGateFor(execDefaults).run(label, labels, async () => {
-    process.stdout.write(`  Running parent validations (${label}): ${labels.join(", ")}\n`);
-    return await runParentValidationBatch(entries, cwd, options.invoke);
-  });
-  for (const validation of batch.validations) {
-    process.stdout.write(
-      `  Parent validation ${recordedParentValidationLabel(validation)}: ${validation.status}\n`,
-    );
-  }
-  return batch;
-}
-
-export async function runConfiguredParentValidations(
-  execDefaults: ExecDefaultsConfig,
-  cwd: string | ParentValidationRoots,
-  options: ParentValidationRunOptions = {},
-): Promise<ParentValidationBatchResult["validations"]> {
-  return (await runConfiguredParentValidationBatch(execDefaults, cwd, options)).validations;
-}
-
-async function refreshParentValidationsForReporterResume(params: {
-  execDefaults: ExecDefaultsConfig;
-  cwd: string;
-  productWorktrees?: readonly ProductWorktree[];
-  evidence: ExecEvidence;
-  evidencePath: string;
-  // 再開前に統合先の最新を取り込んだ場合は、記録済みの結果が成功でも検証し直す（PJR-GENJ）。
-  force?: boolean;
-  stageLabel?: string;
-}): Promise<ExecEvidence> {
-  const configuredEntries = params.execDefaults.pipeline?.parent_validations;
-  const force = params.force === true && (configuredEntries?.length ?? 0) > 0;
-  if (
-    !force &&
-    hasRecordedParentValidations(params.evidence.validations, configuredEntries) &&
-    !failedParentValidationReason(params.evidence.validations)
-  ) {
-    return params.evidence;
-  }
-
-  process.stdout.write(
-    `  Refreshing parent validations before ${params.stageLabel ?? "reporter"} resume` +
-      `${force ? " (integration targets were merged into the worktree)" : ""}.\n`,
-  );
-  const parentValidationBatch = await runConfiguredParentValidationBatch(
-    params.execDefaults,
-    parentValidationRoots(params.cwd, params.productWorktrees),
-    { label: params.evidence.task_id },
-  );
-  const evidenceWithValidations = replaceParentValidationResults(
-    params.evidence,
-    parentValidationBatch.validations,
-  );
-  const evidence = recordParentValidationFailureOutput({
-    worktreePath: params.cwd,
-    evidencePath: params.evidencePath,
-    evidence: evidenceWithValidations,
-    failureOutputs: parentValidationBatch.failureOutputs,
-  });
-  if (parentValidationBatch.failureOutputs.length === 0) {
-    writeExecutorEvidence(params.evidencePath, evidence);
-  }
-  process.stdout.write(
-    `  Refreshed executor evidence: ${relative(params.cwd, params.evidencePath).split(sep).join("/")}\n`,
-  );
-  return evidence;
-}
-
-// executor のプロセス結果は親検証より先に checkpoint する。親検証は長時間かかり得るため、
-// その途中で runner が終了しても agent 出力と変更一覧を失わないよう、ここでは保存済み evidence
-// へ runner-owned validation だけを追記する。
-async function appendParentValidationsToExecutorEvidence(params: {
-  execDefaults: ExecDefaultsConfig;
-  cwd: string;
-  productWorktrees?: readonly ProductWorktree[];
-  evidence: ExecEvidence;
-  evidencePath: string;
-}): Promise<ExecEvidence> {
-  const parentValidationBatch = await runConfiguredParentValidationBatch(
-    params.execDefaults,
-    parentValidationRoots(params.cwd, params.productWorktrees),
-    { label: params.evidence.task_id },
-  );
-  const evidenceWithValidations = replaceParentValidationResults(
-    params.evidence,
-    parentValidationBatch.validations,
-  );
-  const evidence = recordParentValidationFailureOutput({
-    worktreePath: params.cwd,
-    evidencePath: params.evidencePath,
-    evidence: evidenceWithValidations,
-    failureOutputs: parentValidationBatch.failureOutputs,
-  });
-  if (parentValidationBatch.failureOutputs.length === 0) {
-    writeExecutorEvidence(params.evidencePath, evidence);
-  }
-  return evidence;
-}
-
-export function executorRequirements(task: ReadyTaskView): ResolvedRequirements | undefined {
-  const executor = task.agent_pipeline?.stages[0];
-  if (!executor || executor.stage_role !== "executor") return undefined;
-  return {
-    capabilities: executor.capabilities ?? [],
-    proficiency: executor.proficiency,
-    stage_role: "executor",
-  };
-}
-
-export function reporterRequirements(task: ReadyTaskView): ResolvedRequirements | undefined {
-  const reporter = task.agent_pipeline?.stages[1];
-  if (!reporter || reporter.stage_role !== "reporter") return undefined;
-  return {
-    capabilities: reporter.capabilities ?? [],
-    proficiency: reporter.proficiency,
-    stage_role: "reporter",
-  };
-}
-
-function resolveReporterAgentCandidates(
-  task: ReadyTaskView,
-  roster: MemberRoster | null,
-  execDefaults: ExecDefaultsConfig,
-  busyActors?: ReadonlySet<string>,
-  nicknameOverride?: string,
-): AgentRunCandidate[] {
-  const requirements = reporterRequirements(task);
-  if (!requirements) return [];
-  if (nicknameOverride) {
-    const resolution = resolveAgentOverride(
-      task.mode ?? "edit",
-      nicknameOverride,
-      {},
-      roster,
-      execDefaults,
-      "reporter",
-    );
-    if (resolution.kind === "error") {
-      throw new Error(resolution.message.replace(/^--by/, "--reporter-by"));
-    }
-    if (resolution.kind === "command") {
-      return [
-        {
-          command: resolution.command,
-          actor: resolution.actor,
-          provider: resolution.provider,
-        },
-      ];
-    }
-  }
-  // Reporter behavior (turn captured evidence into a structured result; write nothing
-  // else) does not vary between edit and review tasks, unlike the executor stage. Do not
-  // filter reporter candidates by task.mode: a reporter member's own `mode` (if it has
-  // one, e.g. to resolve a provider command_template placeholder) only affects command
-  // construction, not eligibility.
-  const candidates: AgentRunCandidate[] = [];
-  for (const member of selectCandidates(
-    requirements,
-    roster,
-    undefined,
-    busyActors,
-    execDefaults,
-  )) {
-    try {
-      const command = resolveMemberCommand(execDefaults, member);
-      if (command) candidates.push({ command, actor: member.nickname, provider: member.provider });
-    } catch (error) {
-      process.stdout.write(
-        `  Skipping reporter ${member.nickname}: ${error instanceof Error ? error.message : String(error)}\n`,
-      );
-    }
-  }
-  return candidates;
-}
-
-export function loadRosterForExecutionPath(executionPath: string): MemberRoster | null {
-  const { config } = loadConfig();
-  if (!config) return null;
-
-  const rootDir = specdojoRootDir();
-  for (const project of Object.values(config.projects)) {
-    const projExecPath = resolve(rootDir, getProjectExecutionPath(project));
-    if (projExecPath === executionPath) {
-      return loadMemberRoster(rootDir, project);
-    }
-  }
-  return null;
-}
-
-export async function executeAgent(
-  agentCommand: string,
-  prompt: string,
-  detection: RateLimitDetection | undefined,
-  provider: AgentProvider | undefined,
-  cooldownSeconds: Partial<Record<AgentLimitKind, number>> | undefined,
-  cwd: string,
-  env: NodeJS.ProcessEnv,
-  quiet = false,
-): Promise<AgentExecution> {
-  if (!agentCommand.trim()) {
-    return { result: "failure", exitCode: null, stdout: "", stderr: "Empty agent command" };
-  }
-
-  // stdout is piped (not inherited) so it can be scanned for rate-limit signals: some CLIs print
-  // the limit notice to stdout, not stderr (e.g. claude's "session limit"). Unless quiet, each
-  // chunk is teed to the parent's stdout so live output/logging is preserved.
-  const child = spawn(agentCommand, {
-    cwd,
-    env,
-    shell: true,
-    stdio: ["pipe", "pipe", "pipe"],
-  });
-  // stdin を読まずに即終了するコマンドへの書き込みは EPIPE になる。未処理だと
-  // プロセスごと落ちて失敗時の後処理（block 遷移・result 更新）が走らないため無視する。
-  // 実行結果は終了コードで判定する。
-  child.stdin.on("error", () => undefined);
-  let stdout = "";
-  let stderr = "";
-  child.stdout.setEncoding("utf8");
-  child.stdout.on("data", (chunk: string) => {
-    stdout += chunk;
-    if (!quiet) process.stdout.write(chunk);
-  });
-  child.stderr.setEncoding("utf8");
-  child.stderr.on("data", (chunk: string) => {
-    stderr += chunk;
-    process.stderr.write(chunk);
-  });
-  child.stdin.end(prompt);
-
-  const exitCode = await new Promise<number | null>((resolveExit) => {
-    child.once("error", (error) => {
-      stderr += `${error.message}\n`;
-      resolveExit(null);
-    });
-    child.once("close", (code) => resolveExit(code));
-  });
-
-  const combinedOutput = `${stdout}\n${stderr}`;
-  if (isRateLimitError(exitCode, combinedOutput, detection)) {
-    return {
-      result: "rate_limit",
-      exitCode,
-      stdout,
-      stderr,
-      limit: normalizeAgentLimit({
-        output: combinedOutput,
-        provider,
-        cooldownSeconds,
-      }),
-    };
-  }
-  if (exitCode !== 0) {
-    return { result: "failure", exitCode, stdout, stderr };
-  }
-  return { result: "success", exitCode: 0, stdout, stderr: "" };
-}
-
-// Run the task's agent command, falling back through the remaining candidates on rate limit.
-// The next-priority candidate is assumed to be a different account/provider, so we switch to it
-// immediately (no wait). Only after every candidate is rate-limited do we wait+backoff and run
-// another full pass, bounded by rate_limit_policy.on_critical.retry.max_attempts. Applies to all
-// tasks (critical and non-critical) so a rate limit no longer stops the run outright.
-//
-// Detection is resolved per candidate from its provider (e.g. claude's "session limit" vs
-// opencode's "timeout"/"out of memory"); the run-level retry/backoff policy is governed by the
-// primary (highest-priority) candidate's provider.
-// 保護機構が block したとき、result へ自動記録できたかを実行ログにも残す。記録できない場合
-// （result 未 scaffold など）は、申し送りが result に無いことが分かるよう理由を出力する。
-function reportProtectionHandoffRecord(recorded: boolean, resultPath?: string): void {
-  process.stdout.write(
-    recorded
-      ? `  Handoff recorded in result: ${resultPath}\n`
-      : "  Handoff not recorded: no writable result for this run\n",
-  );
-}
-
-//
-// resultPath は保護機構が block したときの申し送り記録先（agent が動く cwd 側の result）。
-// 未指定でも block と終了コードの扱いは変わらない。
-function rateLimitPrefix(result: RunResult): string {
-  return result === "rate_limit" ? "rate limit reached; " : "";
-}
-
-async function runWithRetry(
-  candidates: AgentRunCandidate[],
-  prompt: string,
-  execDefaults: ExecDefaultsConfig,
-  cwd: string,
-  env: NodeJS.ProcessEnv,
-  resultPath?: string,
-): Promise<{
-  result: RunResult;
-  exitCode: number | null;
-  stdout: string;
-  stderr: string;
-  attempts: number;
-  limit?: AgentLimitSignal;
-  protectionBlock?: true;
-}> {
-  const policy = resolveRateLimitPolicy(execDefaults, candidates[0]?.provider);
-  let attempts = 0;
-  // PJR-98G4: agentEnvironment が渡したプロダクト worktree を、provider の追加ディレクトリと
-  // 保護設定・Git 状態の検査対象に加える。宣言の無い project では cwd だけになる。
-  const productRoots = productRootsFromEnvironment(env);
-  const agentRepos = [
-    { root: cwd },
-    ...productRoots.map((root) => ({ name: root.name, root: root.path })),
-  ];
-
-  // One pass tries every candidate in priority order with no wait between switches.
-  const runPass = async (): Promise<{
-    result: RunResult;
-    exitCode: number | null;
-    stdout: string;
-    stderr: string;
-    limit?: AgentLimitSignal;
-    protectionBlock?: true;
-  }> => {
-    let lastStderr = "";
-    let lastStdout = "";
-    let lastExitCode: number | null = null;
-    let lastLimit: AgentLimitSignal | undefined;
-    for (let idx = 0; idx < candidates.length; idx++) {
-      if (idx > 0) {
-        process.stdout.write(
-          `Rate limit detected. Switching to next agent (${idx + 1}/${candidates.length})...\n`,
-        );
-      }
-      const detection = resolveRateLimitDetection(execDefaults, candidates[idx].provider);
-      attempts++;
-      const protectedConfigBefore = captureAgentProtectedConfigAcrossRepos(agentRepos);
-      const gitStateBefore = captureAgentGitStateAcrossRepos(agentRepos);
-      const attempt = await executeAgent(
-        withAgentExtraRoots(
-          candidates[idx].command,
-          candidates[idx].provider,
-          productRoots.map((root) => root.path),
-        ),
-        prompt,
-        detection,
-        candidates[idx].provider,
-        policy?.cooldown_seconds,
-        cwd,
-        env,
-      );
-      const protectedConfigChanges = changedAgentProtectedConfigAcrossRepos(protectedConfigBefore);
-      if (protectedConfigChanges.length > 0) {
-        // 利用上限で止まった場合も保護の検査は飛ばさない。止まった理由として利用上限を先に記録する。
-        const reason =
-          rateLimitPrefix(attempt.result) +
-          agentProtectedConfigViolation(qualifiedRepoPaths(protectedConfigChanges));
-        process.stderr.write(`blocked: ${reason}\n`);
-        reportProtectionHandoffRecord(
-          recordProtectedConfigBlockAcrossRepos({
-            resultPath,
-            changes: protectedConfigChanges,
-            reason,
-          }),
-          resultPath,
-        );
-        return {
-          result: "failure",
-          exitCode: 1,
-          stdout: attempt.stdout,
-          stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
-          protectionBlock: true,
-        };
-      }
-      const gitStateChanges = changedAgentGitStateAcrossRepos(gitStateBefore);
-      if (gitStateChanges.length > 0) {
-        // 利用上限で止まった場合も保護の検査は飛ばさない。止まった理由として利用上限を先に記録する。
-        const reason =
-          rateLimitPrefix(attempt.result) +
-          agentGitStateViolation(qualifiedGitStateFields(gitStateChanges));
-        process.stderr.write(`blocked: ${reason}\n`);
-        reportProtectionHandoffRecord(
-          recordGitStateBlockAcrossRepos({
-            resultPath,
-            changes: gitStateChanges,
-            reason,
-          }),
-          resultPath,
-        );
-        return {
-          result: "failure",
-          exitCode: 1,
-          stdout: attempt.stdout,
-          stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
-          protectionBlock: true,
-        };
-      }
-      lastStderr = attempt.stderr;
-      lastStdout = attempt.stdout;
-      lastExitCode = attempt.exitCode;
-      lastLimit = attempt.limit;
-      if (attempt.result !== "rate_limit")
-        return {
-          result: attempt.result,
-          exitCode: attempt.exitCode,
-          stdout: attempt.stdout,
-          stderr: attempt.stderr,
-        };
-    }
-    return {
-      result: "rate_limit",
-      exitCode: lastExitCode,
-      stdout: lastStdout,
-      stderr: lastStderr,
-      limit: lastLimit,
-    };
-  };
-
-  const firstPass = await runPass();
-  if (firstPass.result !== "rate_limit") return { ...firstPass, attempts };
-
-  // Every candidate is rate-limited. Without a policy we cannot bound further retries, so stop.
-  if (!policy) {
-    process.stdout.write(`Rate limit: all ${candidates.length} agent(s) exhausted.\n`);
-    return { ...firstPass, attempts };
-  }
-
-  // Session and quota limits do not recover within the short in-process backoff loop. Keep their
-  // explicit reset/cooldown for a later routine invocation instead of sleeping and retrying now.
-  if (firstPass.limit?.kind === "session_limit" || firstPass.limit?.kind === "quota_exhausted") {
-    return { ...firstPass, attempts };
-  }
-
-  const { retry } = policy.on_critical;
-  let waitSeconds = retry.initial_wait_seconds;
-  let lastStderr = firstPass.stderr;
-  let lastStdout = firstPass.stdout;
-  let lastExitCode = firstPass.exitCode;
-  let lastLimit = firstPass.limit;
-
-  // First pass counts as attempt 1; remaining passes wait+backoff before retrying all candidates.
-  for (let pass = 2; pass <= retry.max_attempts; pass++) {
-    const actualWait = Math.min(waitSeconds, retry.max_wait_seconds);
-    process.stdout.write(
-      `Rate limit: all agents exhausted (attempt ${pass}/${retry.max_attempts}). Waiting ${actualWait}s before retry...\n`,
-    );
-    await delay(actualWait * 1000);
-
-    const result = await runPass();
-    lastStderr = result.stderr;
-    lastStdout = result.stdout;
-    lastExitCode = result.exitCode;
-    lastLimit = result.limit;
-    if (result.result !== "rate_limit") return { ...result, attempts };
-
-    waitSeconds = Math.min(waitSeconds * retry.backoff_multiplier, retry.max_wait_seconds);
-  }
-
-  process.stdout.write(
-    `Rate limit: all ${candidates.length} agent(s) exhausted after ${retry.max_attempts} attempt(s).\n`,
-  );
-  return {
-    result: "rate_limit",
-    exitCode: lastExitCode,
-    stdout: lastStdout,
-    stderr: lastStderr,
-    attempts,
-    limit: lastLimit,
-  };
-}
-
-function pathInsideWorktree(repoRoot: string, worktreePath: string, sourcePath: string): string {
-  const repoRelative = relative(repoRoot, sourcePath);
-  if (repoRelative === ".." || repoRelative.startsWith(`..${sep}`)) {
-    throw new Error(`Project path is outside repository root: ${sourcePath}`);
-  }
-  return resolve(worktreePath, repoRelative);
-}
-
-function reportProductWorktrees(worktree: ExecWorktree): void {
-  for (const product of worktree.repos ?? []) {
-    process.stdout.write(
-      `  [run] ${product.created ? "setup" : "reuse"}: worktree ${product.path} ` +
-        `(${product.branch} in ${product.name})\n`,
-    );
-  }
-}
-
-// productWorktrees（PJR-98G4）は、cwd（プロジェクト worktree）以外に agent が書き込むプロダクト
-// worktree。SPECDOJO_REPO_<NAME> で絶対パスを渡し、runWithRetry はここから provider の追加
-// ディレクトリと保護検査の対象を導く。
-function agentEnvironment(
-  repoRoot: string,
-  worktreePath: string,
-  schedulePath: string,
-  executionPath: string,
-  productWorktrees?: readonly ProductWorktree[],
-): NodeJS.ProcessEnv {
-  return {
-    ...withoutInheritedRepoEnvironment(gitEnvironment()),
-    SPECDOJO_SCHEDULE_PATH: pathInsideWorktree(repoRoot, worktreePath, schedulePath),
-    SPECDOJO_EXECUTION_PATH: pathInsideWorktree(repoRoot, worktreePath, executionPath),
-    ...productRepoEnvironment(worktreePath, productWorktrees),
-  };
-}
 
 function findClaimEventPath(schedulePath: string, taskId: string): string | null {
   const claims = readAllEventFiles(schedulePath).filter(
@@ -2886,27 +1610,6 @@ function spawnRelease(
 }
 
 // block 上限。block イベントログを読みやすく保つため、stderr から取り出した理由を切り詰める。
-const MAX_BLOCK_REASON_LENGTH = 500;
-
-// agent の stderr から block イベント用の簡潔な理由を取り出す。テンプレートは異常終了時に
-// `blocked: <reason>; need=...; ref=...`（review は `review-blocked: ...`）を出力させるため、
-// その行を優先する。無ければ最後の非空行、それも無ければ汎用メッセージにフォールバックする。
-export function extractBlockReason(stderr: string): string {
-  const fallback = "agent exited with non-zero code";
-  const lines = stderr
-    .split("\n")
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-  const tagged = lines.find((line) => /^(blocked|review-blocked):/i.test(line));
-  const reason = tagged ?? lines.at(-1);
-  if (!reason) return fallback;
-  const trimmed =
-    reason.length > MAX_BLOCK_REASON_LENGTH
-      ? `${reason.slice(0, MAX_BLOCK_REASON_LENGTH)}…`
-      : reason;
-  return `${fallback}: ${trimmed}`;
-}
-
 export function pipelineRecoveryMeta(input: {
   stage: PipelineStageRole;
   evidenceRef?: string;
@@ -5079,344 +3782,6 @@ function autoSelectRegisterPipelineAgents(
     );
   }
   return { executor, reporterCandidates };
-}
-
-// register pipeline の reporter 段だけを実行する。executor 直後の通常経路と、executor が
-// 成功したまま reporter だけが失敗した run の再開経路の双方から共有し、reporter 起動・
-// result 描画・pipeline-state 更新のみを担う（register の状態遷移と commit は呼び出し側）。
-async function runReporterStage(params: {
-  repoRoot: string;
-  cwd: string;
-  schedulePath: string;
-  executionPath: string;
-  reporterCandidates: AgentRunCandidate[];
-  planPrompt: string;
-  resultPath: string;
-  registerPaths?: readonly string[];
-  execDefaults: ExecDefaultsConfig;
-  evidence: ExecEvidence;
-  evidencePath: string;
-  state: PipelineState;
-  statePath: string;
-  providerConcurrencyGate?: ProviderConcurrencyGate;
-  productWorktrees?: readonly ProductWorktree[];
-  /** reporter が返す出力の mode。省略時は edit（Job Run の review だけが review を渡す）。 */
-  mode?: TaskMode;
-}): Promise<{
-  exitCode: 0 | 1;
-  runResult: RunResult;
-  blockReason?: string;
-  state: PipelineState;
-}> {
-  const { repoRoot, cwd, schedulePath, executionPath, reporterCandidates, execDefaults } = params;
-  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
-  const reporterEvidence = evidenceForReporter(params.evidence, {
-    repoRoot,
-    worktreePath: cwd,
-    executionPath,
-    resultPath: params.resultPath,
-    ...(params.registerPaths ? { registerPaths: params.registerPaths } : {}),
-  });
-  let state = params.state;
-
-  const reporterStartedAt = new Date().toISOString();
-  state = updatePipelineStage(
-    state,
-    "reporter",
-    {
-      status: "running",
-      actor: reporterCandidates[0]?.actor ?? null,
-      started_at: reporterStartedAt,
-      completed_at: null,
-    },
-    reporterStartedAt,
-  );
-  writePipelineState(params.statePath, state);
-  process.stdout.write(`  Running reporter: ${reporterCandidates[0]?.command ?? ""}\n`);
-
-  let reporterAttempts = 0;
-  const runReporter = () =>
-    runReporterWithFormatRetry({
-      plan: params.planPrompt,
-      evidence: reporterEvidence,
-      mode: params.mode ?? "edit",
-      invoke: async (reporterPrompt) => {
-        const reporterOutcome = await runWithRetry(
-          reporterCandidates,
-          reporterPrompt,
-          execDefaults,
-          cwd,
-          env,
-          params.resultPath,
-        );
-        reporterAttempts += reporterOutcome.attempts;
-        return {
-          result: reporterOutcome.result,
-          stdout: reporterOutcome.stdout,
-          stderr: reporterOutcome.stderr,
-        };
-      },
-    });
-  const reporter = params.providerConcurrencyGate
-    ? await params.providerConcurrencyGate.run(
-        reporterCandidates[0]?.provider,
-        runReporter,
-        `${params.evidence.task_id} reporter`,
-      )
-    : await runReporter();
-
-  let exitCode: 0 | 1 = 1;
-  let blockReason: string | undefined;
-  if (reporter.result === "success") {
-    try {
-      await renderReporterResult(params.resultPath, reporter.output, reporterEvidence);
-      const facts = deriveReporterFacts(reporterEvidence, { mode: params.mode ?? "edit" });
-      exitCode = facts.outcome === "complete" ? 0 : 1;
-      blockReason = facts.block_reason || undefined;
-      process.stdout.write(
-        `  Reporter complete: ${reporterCandidates[0]?.actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
-      );
-    } catch (error) {
-      exitCode = 1;
-      blockReason =
-        error instanceof Error
-          ? `reporter result rendering failed: ${error.message}`
-          : String(error);
-    }
-  } else {
-    blockReason = reporter.reason;
-    recordReporterFailureOutput({
-      worktreePath: cwd,
-      evidencePath: params.evidencePath,
-      evidence: params.evidence,
-      invocationOutputs: reporter.invocationOutputs,
-    });
-  }
-
-  const reporterCompletedAt = new Date().toISOString();
-  state = updatePipelineStage(
-    state,
-    "reporter",
-    {
-      status:
-        exitCode === 0 ? "succeeded" : reporter.result === "rate_limit" ? "rate_limited" : "failed",
-      attempts: state.stages.reporter.attempts + reporterAttempts,
-      completed_at: reporterCompletedAt,
-      artifact_ref:
-        reporter.result === "success"
-          ? relative(cwd, params.resultPath).split(sep).join("/")
-          : state.stages.reporter.artifact_ref,
-    },
-    reporterCompletedAt,
-  );
-  writePipelineState(params.statePath, state);
-
-  const runResult: RunResult =
-    exitCode === 0 ? "success" : reporter.result === "rate_limit" ? "rate_limit" : "failure";
-  return { exitCode, runResult, blockReason, state };
-}
-
-// 1件の plan/result を executor→reporter の2段階で実行する。register 項目と Job Run の
-// 双方が使い、in-place（cwd: repoRoot）・worktree（cwd: worktree.path）から共有する。
-// evidence・pipeline-state の記録先は
-// Schedule タスクの pipeline と同じ形式（exec/evidence/<taskId>/<runId>/）にすることで、
-// 監査証跡のフォーマットを実行経路によらず統一する。state には plan / result の参照も
-// 記録し、reporter だけが失敗した場合に `--resume` が入力を復元できるようにする。
-async function runAgentPipeline(params: {
-  repoRoot: string;
-  cwd: string;
-  schedulePath: string;
-  executionPath: string;
-  taskId: string;
-  executor: AgentRunCandidate & { actor: string };
-  reporterCandidates: AgentRunCandidate[];
-  planPath: string;
-  planPrompt: string;
-  resultPath: string;
-  registerPaths?: readonly string[];
-  execDefaults: ExecDefaultsConfig;
-  resumedExecutor?: boolean;
-  initialChangeTargets?: readonly string[];
-  resumeHandoff?: readonly string[];
-  providerConcurrencyGate?: ProviderConcurrencyGate;
-  productWorktrees?: readonly ProductWorktree[];
-  runId?: string;
-  /** reporter が返す出力の mode。省略時は edit。 */
-  mode?: TaskMode;
-}): Promise<{
-  exitCode: 0 | 1;
-  runResult: RunResult;
-  blockReason?: string;
-  stateRef: string;
-  evidenceRef?: string;
-}> {
-  const {
-    repoRoot,
-    cwd,
-    schedulePath,
-    executionPath,
-    taskId,
-    executor,
-    reporterCandidates,
-    planPrompt,
-    resultPath,
-    execDefaults,
-  } = params;
-  const startedAt = new Date().toISOString();
-  const runId = params.runId ?? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`;
-  const stateLocation = pipelineStateLocation({
-    repoRoot,
-    worktreePath: cwd,
-    executionPath,
-    taskId,
-    runId,
-  });
-  let state = createPipelineState({
-    taskId,
-    runId,
-    updatedAt: startedAt,
-    executorActor: executor.actor,
-    reporterActor: reporterCandidates[0]?.actor,
-    // plan は root（統合ブランチ）で生成して checkpoint 済みのため、repo 相対パスが
-    // worktree 内の相対パスと一致する。result は cwd（in-place は root、worktree 実行は
-    // worktree）からの相対で、evidence の artifact_ref と同じ基準に揃える。
-    artifacts: {
-      plan_ref: relative(repoRoot, params.planPath).split(sep).join("/"),
-      result_ref: relative(cwd, resultPath).split(sep).join("/"),
-    },
-  });
-  state = updatePipelineStage(
-    state,
-    "executor",
-    { status: "running", started_at: startedAt },
-    startedAt,
-  );
-  writePipelineState(stateLocation.path, state);
-
-  const env = agentEnvironment(repoRoot, cwd, schedulePath, executionPath, params.productWorktrees);
-  const executorPrompt = withProductRepoPrompt(
-    buildExecutorPrompt(planPrompt, execDefaults.pipeline?.parent_validations, {
-      mode: params.mode ?? "edit",
-      resumed: params.resumedExecutor,
-      ...(params.resumedExecutor ? { existingChanges: worktreeStatusPaths(cwd) } : {}),
-      ...(params.resumedExecutor
-        ? { initialChangeTargets: params.initialChangeTargets ?? [] }
-        : {}),
-      ...(params.resumedExecutor ? { resumeHandoff: params.resumeHandoff ?? [] } : {}),
-    }),
-    params.productWorktrees,
-  );
-  const changesBeforeAttempt = snapshotWorktreeChanges(cwd, params.productWorktrees);
-  const runExecutor = () =>
-    runWithRetry([executor], executorPrompt, execDefaults, cwd, env, resultPath);
-  const outcome = params.providerConcurrencyGate
-    ? await params.providerConcurrencyGate.run(executor.provider, runExecutor, `${taskId} executor`)
-    : await runExecutor();
-  const recorded = recordExecutorEvidence({
-    repoRoot,
-    worktreePath: cwd,
-    executionPath,
-    taskId,
-    runId,
-    actor: executor.actor,
-    status:
-      outcome.result === "success"
-        ? "succeeded"
-        : outcome.result === "rate_limit"
-          ? "rate_limited"
-          : "failed",
-    startedAt,
-    completedAt: new Date().toISOString(),
-    exitCode: outcome.exitCode,
-    attempts: outcome.attempts,
-    stdout: outcome.stdout,
-    stderr: outcome.stderr,
-    changesBeforeAttempt,
-    productWorktrees: params.productWorktrees,
-  });
-  const coverageFailure =
-    outcome.result === "success"
-      ? resumedTargetCoverageFailure({
-          resumed: !!params.resumedExecutor,
-          plan: planPrompt,
-          evidence: recorded.evidence,
-          evidencePath: recorded.evidencePath,
-          initialChangeTargets: params.initialChangeTargets,
-        })
-      : undefined;
-  const executorResult: RunResult = coverageFailure ? "failure" : outcome.result;
-  const evidenceRef = relative(cwd, recorded.evidencePath).split(sep).join("/");
-  const executorCompletedAt = new Date().toISOString();
-  state = updatePipelineStage(
-    state,
-    "executor",
-    {
-      status:
-        executorResult === "success"
-          ? "succeeded"
-          : outcome.protectionBlock
-            ? "blocked"
-            : executorResult === "rate_limit"
-              ? "rate_limited"
-              : "failed",
-      attempts: outcome.attempts,
-      completed_at: executorCompletedAt,
-      artifact_ref: evidenceRef,
-    },
-    executorCompletedAt,
-  );
-  writePipelineState(stateLocation.path, state);
-  process.stdout.write(`  Executor evidence: ${evidenceRef}\n`);
-
-  if (executorResult !== "success") {
-    const blockReason =
-      coverageFailure ??
-      (executorResult === "rate_limit"
-        ? "executor rate limit reached"
-        : extractBlockReason(outcome.stderr));
-    return {
-      exitCode: 1,
-      runResult: executorResult,
-      blockReason,
-      stateRef: stateLocation.ref,
-      evidenceRef,
-    };
-  }
-
-  recorded.evidence = await appendParentValidationsToExecutorEvidence({
-    execDefaults,
-    cwd,
-    productWorktrees: params.productWorktrees,
-    evidence: recorded.evidence,
-    evidencePath: recorded.evidencePath,
-  });
-
-  const reporterOutcome = await runReporterStage({
-    repoRoot,
-    cwd,
-    schedulePath,
-    executionPath,
-    reporterCandidates,
-    planPrompt,
-    resultPath,
-    registerPaths: params.registerPaths,
-    execDefaults,
-    evidence: recorded.evidence,
-    evidencePath: recorded.evidencePath,
-    state,
-    statePath: stateLocation.path,
-    providerConcurrencyGate: params.providerConcurrencyGate,
-    productWorktrees: params.productWorktrees,
-    mode: params.mode,
-  });
-
-  return {
-    exitCode: reporterOutcome.exitCode,
-    runResult: reporterOutcome.runResult,
-    blockReason: reporterOutcome.blockReason,
-    stateRef: stateLocation.ref,
-    evidenceRef,
-  };
 }
 
 // register の状態遷移を CLI 経由で実行する。register 側のガード（終端状態の拒否）と

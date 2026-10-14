@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T13:49:03Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration, typecheck, test-unit"
 ---
 
 # PJR-3W2N exec-run.ts の共通部と agent の pipeline を分ける
@@ -60,7 +59,7 @@ src/exec-run.ts（8,584 行）のうち、実行モードに共通の型・agent
 - `src/exec-run.ts` の既存 export 52 件は、`export *` を使わず同じ名前で明示的に再 export した。分割前後で export 名の追加・削除がないことを確認した。
 - `exec run`、`exec cycle`、`exec resume` の `--help` を分割前後で比較し、3 コマンドとも差分がないことを確認した。
 - 実装モジュールの参照先を `sysd-index`、`sysd-critical-flows`、`sysd-antigravity-agent-settings` で更新した。
-- 整形後の行数は `src/exec-run.ts` が 6,945 行、`src/exec-run-shared.ts` が 633 行、`src/exec-run-agent.ts` が 765 行、`src/exec-run-agent-pipeline.ts` が 430 行である。
+- 整形後の行数は `src/exec-run.ts` が 6,949 行、`src/exec-run-shared.ts` が 633 行、`src/exec-run-agent.ts` が 768 行、`src/exec-run-agent-pipeline.ts` が 430 行である。
 - ロジックの変更や、今回の分割と同時に直すべき不具合・改善点は見つからなかった。親検証は executor 終了後に runner が実行し、統合後の `exec run --register` による確認は orchestrator が行う。
 
 ## 5. 関連ドキュメント
