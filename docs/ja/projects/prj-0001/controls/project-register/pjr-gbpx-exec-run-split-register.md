@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-14T13:49:29Z"
   due_on: null
-  block_reason: rate limit reached
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts"
 ---
 
 # PJR-GBPX exec-run.ts の register の実行とコマンドの登録を分ける
