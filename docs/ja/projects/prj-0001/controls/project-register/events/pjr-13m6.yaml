@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7c60e12cb8d14014829dc625b117dfa3
+  ts: "2026-10-14T21:26:09Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-Y8P9 を分けて起票（2026-10-15、利用者が承認）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec-worktree-ops.ts・exec-repo-integration.ts・exec-reporter.ts を分ける
+    - field: description
+      from: ""
+      to: worktree の操作、プロダクトリポジトリの統合、reporter の処理（合わせて 3,748 行）を責務ごとのモジュールへ移す。 動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
