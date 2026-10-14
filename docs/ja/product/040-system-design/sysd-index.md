@@ -33,10 +33,10 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 | Register State | Register item files | `docs/ja/projects/prj-0001/controls/project-register/` | PM | 個票が正本、一覧は派生ビュー |
 | Register Runtime | TypeScript source | `src/register.ts`、`src/register-core.ts`、`src/register-migration.ts`、`src/register-views.ts`、`src/register-update.ts`、`src/register-renumber.ts` | DEV | 公開 façade、共通基盤、移行、派生ビュー、項目更新、再採番・topic変更 |
 | Execution State | Plan / result / event | `docs/ja/projects/prj-0001/execution/` | PM / ARC | eventはappend-only |
-| Execution Runtime | TypeScript source | `src/exec-run.ts`、`src/exec-run-*.ts` | DEV / ARC | 公開再export façade、コマンド登録、実行モード、共通制御、agent実行、executor / reporter pipeline |
+| Execution Runtime | TypeScript source | `src/exec-run.ts`、`src/exec-run-*.ts`、`src/exec-reporter.ts`、`src/exec-reporter-*.ts` | DEV / ARC | 公開再export façade、コマンド登録、実行モード、共通制御、agent実行、executor / reporter pipeline |
 | Job / Routine | TypeScript source and definitions | `src/job.ts`、`src/routine.ts` | DEV / OPS | Job Run生成と定期起動 |
 | Documentation Site | VitePress configuration | `packages/docs-site/` | DEV | CLIとは独立した文書索引・表示・build package |
-| Git Integration | Git source and repository policy | `src/exec-worktree.ts`、`src/exec-worktree-ops.ts`、`.github/` | DEV / ARC | branch / worktree / PR境界 |
+| Git Integration | Git source and repository policy | `src/exec-worktree.ts`、`src/exec-worktree-ops.ts`、`src/exec-worktree-ops-*.ts`、`src/exec-repo-integration.ts`、`src/exec-repo-integration-*.ts`、`.github/` | DEV / ARC | branch / worktree / repository integration / PR境界 |
 
 ## 3. 自動生成物
 

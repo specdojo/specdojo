@@ -24,7 +24,17 @@ import {
   type ExecWorktree,
   type ProductWorktree,
 } from "./exec-worktree.js";
-import { PROJECT_REPO_WORKTREE_DIRNAME, resolveRepoQualifiedRef } from "./specdojo-config.js";
+import { resolveRepoQualifiedRef } from "./specdojo-config.js";
+import {
+  PROJECT_REPO_NAME,
+  branchExists,
+  dirtyPaths,
+  gitText,
+  mergeInProgress,
+  zeroSeparated,
+} from "./exec-repo-integration-git.js";
+
+export { PROJECT_REPO_NAME } from "./exec-repo-integration-git.js";
 
 // PJR-0WAA: 1 つのタスクがプロジェクトリポジトリと宣言済みのプロダクトリポジトリ（`repos`）を
 // 変更する場合の統合段。commit 対象の算出と commit はリポジトリごとに行い、統合の前に全リポジトリ
@@ -32,9 +42,6 @@ import { PROJECT_REPO_WORKTREE_DIRNAME, resolveRepoQualifiedRef } from "./specdo
 // 状態を pipeline state（`stages.integrate.repos`）へ記録する。再開では統合済みのリポジトリを
 // Git の状態から判定して飛ばし、失敗した位置から続ける。`repos` を持たない project では、
 // プロジェクト側の手順だけを従来どおりの順で実行する。
-
-/** Name under which the project repository is recorded in `stages.integrate.repos`. */
-export const PROJECT_REPO_NAME = PROJECT_REPO_WORKTREE_DIRNAME;
 
 const DEFAULT_LOCK_TIMEOUT_MS = 10_000;
 const DEFAULT_LOCK_STALE_MS = 300_000;
@@ -47,14 +54,6 @@ export function isProductExcludedPath(path: string): boolean {
   if (PRODUCT_EXCLUDED_PATHS.has(normalized)) return true;
   if (normalized === "tmp" || normalized.startsWith("tmp/")) return true;
   return false;
-}
-
-function zeroSeparated(cwd: string, args: string[]): string[] {
-  return gitOutput(cwd, args).split("\0").filter(Boolean);
-}
-
-function gitText(value: unknown): string {
-  return typeof value === "string" ? value : "";
 }
 
 // ── commit 対象の算出と commit ─────────────────────────────────────────────
@@ -320,27 +319,9 @@ function mergeChangedPaths(repoRoot: string, target: string, branch: string): Se
   );
 }
 
-function dirtyPaths(cwd: string): Set<string> {
-  return new Set([
-    ...zeroSeparated(cwd, ["diff", "--no-renames", "--name-only", "-z"]),
-    ...zeroSeparated(cwd, ["diff", "--cached", "--no-renames", "--name-only", "-z"]),
-    ...zeroSeparated(cwd, ["ls-files", "--others", "--exclude-standard", "-z"]),
-  ]);
-}
-
-function mergeInProgress(cwd: string): boolean {
-  return gitResult(cwd, ["rev-parse", "--verify", "--quiet", "MERGE_HEAD"]).status === 0;
-}
-
 // 統合先ブランチを checkout している worktree（主 checkout を含む）。無ければ undefined。
 function checkoutOfBranch(repoRoot: string, branch: string): string | undefined {
   return listRegisteredWorktrees(repoRoot).find((worktree) => worktree.branch === branch)?.path;
-}
-
-function branchExists(repoRoot: string, branch: string): boolean {
-  return (
-    gitResult(repoRoot, ["rev-parse", "--verify", "--quiet", `refs/heads/${branch}`]).status === 0
-  );
 }
 
 /**
@@ -530,326 +511,14 @@ export function mergeProductIntoTarget(params: {
   return commit;
 }
 
-// ── 再開前の統合先取り込み ─────────────────────────────────────────────────
-
-// PJR-GENJ: `--resume` で reporter 段・統合段から再開する前に、統合先ブランチの最新を各リポジトリの
-// exec branch と worktree へ取り込む。取り込まないまま親検証を実行すると、統合先で直した不具合が
-// 検証に反映されず、同じ失敗を繰り返す。executor の成果は worktree に未 commit のまま残っているため、
-// 未追跡ファイルも含めて一時退避してから merge し、merge commit の作成後に index を復元せず戻す。
-// 戻すときに競合した場合は merge commit を巻き戻し、元の HEAD 上へ成果を戻して理由を返す。
-// commit 済み変更の競合は自動解決しない。ただし `theirsPaths`（項目自身の記帳ファイル）の競合だけは
-// 統合先の内容で解決する。wait commit 後の統合先が記帳の正本になるためである。
-
-export type IntegrationTargetSyncStatus = "merged" | "up-to-date" | "skipped";
-
-export type IntegrationTargetSync = {
-  repo: string;
-  target: string;
-  status: IntegrationTargetSyncStatus;
-  detail?: string;
-};
-
-function isAncestor(cwd: string, ancestor: string, descendant: string): boolean {
-  return gitResult(cwd, ["merge-base", "--is-ancestor", ancestor, descendant]).status === 0;
-}
-
-function hasPathAt(cwd: string, ref: string, path: string): boolean {
-  return gitResult(cwd, ["cat-file", "-e", `${ref}:${path}`]).status === 0;
-}
-
-function gitFailure(result: ReturnType<typeof gitResult>): string {
-  return [gitText(result.stdout), gitText(result.stderr)]
-    .join("\n")
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .join(" ");
-}
-
-type StashedWorktree = {
-  oid: string;
-  untrackedPaths: string[];
-};
-
-function stashWorktreeChanges(cwd: string, repo: string): StashedWorktree | undefined {
-  if (dirtyPaths(cwd).size === 0) return undefined;
-  const untrackedPaths = zeroSeparated(cwd, ["ls-files", "--others", "--exclude-standard", "-z"]);
-  const stash = gitResult(cwd, [
-    "stash",
-    "push",
-    "--include-untracked",
-    "--message",
-    `specdojo: ${repo} integration-target sync`,
-  ]);
-  if (stash.status !== 0) {
-    const detail = gitFailure(stash) || `exit ${stash.status ?? "unknown"}`;
-    throw new Error(`${repo}: cannot preserve uncommitted changes before sync: ${detail}`);
-  }
-  return {
-    oid: gitOutput(cwd, ["rev-parse", "--verify", "refs/stash"]).trim(),
-    untrackedPaths,
-  };
-}
-
-function dropStash(cwd: string, stashOid: string): void {
-  const stashes = gitOutput(cwd, ["stash", "list", "--format=%H"])
-    .split("\n")
-    .map((line) => line.trim());
-  const index = stashes.indexOf(stashOid);
-  if (index >= 0) gitOutput(cwd, ["stash", "drop", `stash@{${index}}`]);
-}
-
-function applyStashedWorktree(cwd: string, stashOid: string): ReturnType<typeof gitResult> {
-  // `--index` は merge commit 側の index と衝突し、同一ファイルの非競合 hunk も戻せないため使わない。
-  return gitResult(cwd, ["stash", "apply", "--quiet", stashOid]);
-}
-
-function treeObjectAt(cwd: string, ref: string, path: string): string | undefined {
-  const entry = gitResult(cwd, ["ls-tree", "-z", ref, "--", path]);
-  if (entry.status !== 0) return undefined;
-  const output = gitText(entry.stdout);
-  const separator = output.indexOf("\t");
-  if (separator < 0) return undefined;
-  return output.slice(0, separator).split(" ").at(-1);
-}
-
-function classifyTrackedStashedUntrackedPaths(
-  cwd: string,
-  stash: StashedWorktree,
-): { identical: string[]; conflicting: string[] } {
-  const identical: string[] = [];
-  const conflicting: string[] = [];
-  const untrackedRef = `${stash.oid}^3`;
-  for (const path of stash.untrackedPaths) {
-    const mergedObject = treeObjectAt(cwd, "HEAD", path);
-    if (!mergedObject) continue;
-    const stashedObject = treeObjectAt(cwd, untrackedRef, path);
-    (stashedObject === mergedObject ? identical : conflicting).push(path);
-  }
-  return { identical, conflicting };
-}
-
-function restoreOriginalWorktree(params: {
-  cwd: string;
-  repo: string;
-  originalHead: string;
-  stash: StashedWorktree;
-  reason: string;
-}): never {
-  const reset = gitResult(params.cwd, ["reset", "--hard", params.originalHead]);
-  if (reset.status === 0 && params.stash.untrackedPaths.length > 0) {
-    gitResult(params.cwd, ["clean", "-d", "-f", "--", ...params.stash.untrackedPaths]);
-  }
-  if (reset.status !== 0) {
-    const detail = gitFailure(reset) || `exit ${reset.status ?? "unknown"}`;
-    throw new Error(
-      `${params.repo}: ${params.reason}; failed to restore the original HEAD: ${detail}; ` +
-        `executor changes remain preserved in stash ${params.stash.oid}`,
-    );
-  }
-  const restored = applyStashedWorktree(params.cwd, params.stash.oid);
-  if (restored.status !== 0) {
-    const detail = gitFailure(restored) || `exit ${restored.status ?? "unknown"}`;
-    throw new Error(
-      `${params.repo}: ${params.reason}; failed to restore executor changes: ${detail}; ` +
-        `executor changes remain preserved in stash ${params.stash.oid}`,
-    );
-  }
-  dropStash(params.cwd, params.stash.oid);
-  throw new Error(`${params.repo}: ${params.reason}`);
-}
-
-/**
- * Merge `target` into the branch checked out at `cwd` (an exec worktree) with a merge commit.
- * Uncommitted changes (including untracked files) are stashed before the merge and restored
- * without restoring the old index. Conflicts on `theirsPaths` (repository-relative) take the
- * target side. Any other committed conflict aborts the merge. If restoring the stash conflicts,
- * the merge commit is rolled back and the executor changes are restored on the original HEAD.
- */
-export function syncWorktreeWithIntegrationTarget(params: {
-  repo: string;
-  cwd: string;
-  target: string;
-  message: string;
-  theirsPaths?: readonly string[];
-}): IntegrationTargetSync {
-  const { repo, cwd, target, message } = params;
-  if (isAncestor(cwd, target, "HEAD")) return { repo, target, status: "up-to-date" };
-
-  const originalHead = gitOutput(cwd, ["rev-parse", "HEAD"]).trim();
-  const stash = stashWorktreeChanges(cwd, repo);
-
-  const merge = gitResult(cwd, [
-    "merge",
-    "--no-commit",
-    "--no-ff",
-    "--no-verify",
-    "-m",
-    message,
-    target,
-  ]);
-  if (merge.status !== 0 && !mergeInProgress(cwd)) {
-    const output = gitFailure(merge);
-    const reason = `cannot merge ${target} into the exec branch` + (output ? `: ${output}` : "");
-    if (stash) {
-      restoreOriginalWorktree({ cwd, repo, originalHead, stash, reason });
-    }
-    throw new Error(`${repo}: ${reason}`);
-  }
-
-  try {
-    const conflicted = zeroSeparated(cwd, ["diff", "--name-only", "--diff-filter=U", "-z"]);
-    const theirs = new Set(params.theirsPaths ?? []);
-    const unexpected = conflicted.filter((path) => !theirs.has(path));
-    if (unexpected.length > 0) {
-      throw new Error(`${repo}: merge conflicts with ${target}: ${unexpected.join(", ")}`);
-    }
-    for (const path of conflicted) {
-      if (hasPathAt(cwd, target, path)) {
-        gitOutput(cwd, ["checkout", target, "--", path]);
-        gitOutput(cwd, ["add", "--", path]);
-      } else {
-        gitOutput(cwd, ["rm", "--quiet", "--force", "--", path]);
-      }
-    }
-    const unresolved = zeroSeparated(cwd, ["diff", "--name-only", "--diff-filter=U", "-z"]);
-    if (unresolved.length > 0) {
-      throw new Error(`${repo}: unresolved conflicts with ${target}: ${unresolved.join(", ")}`);
-    }
-    // The merge is runner-internal; hooks would re-run the very checks the resume is about to run.
-    gitOutput(cwd, ["commit", "--no-verify", "-m", message]);
-  } catch (error) {
-    if (mergeInProgress(cwd)) abortMerge(cwd);
-    if (stash) {
-      restoreOriginalWorktree({
-        cwd,
-        repo,
-        originalHead,
-        stash,
-        reason: error instanceof Error ? error.message.replace(`${repo}: `, "") : String(error),
-      });
-    }
-    throw error;
-  }
-
-  if (stash) {
-    const trackedUntracked = classifyTrackedStashedUntrackedPaths(cwd, stash);
-    if (trackedUntracked.conflicting.length > 0) {
-      restoreOriginalWorktree({
-        cwd,
-        repo,
-        originalHead,
-        stash,
-        reason:
-          `uncommitted executor changes conflict with ${target}: ` +
-          `untracked files differ from tracked integration files: ${trackedUntracked.conflicting.join(", ")}`,
-      });
-    }
-    if (trackedUntracked.identical.length > 0) {
-      const removed = gitResult(cwd, [
-        "rm",
-        "--quiet",
-        "--force",
-        "--",
-        ...trackedUntracked.identical,
-      ]);
-      if (removed.status !== 0) {
-        const detail = gitFailure(removed) || `exit ${removed.status ?? "unknown"}`;
-        restoreOriginalWorktree({
-          cwd,
-          repo,
-          originalHead,
-          stash,
-          reason: `cannot prepare identical untracked files for restore: ${detail}`,
-        });
-      }
-    }
-    const restored = applyStashedWorktree(cwd, stash.oid);
-    if (restored.status !== 0) {
-      const detail = gitFailure(restored) || `exit ${restored.status ?? "unknown"}`;
-      restoreOriginalWorktree({
-        cwd,
-        repo,
-        originalHead,
-        stash,
-        reason: `uncommitted executor changes conflict with ${target}: ${detail}`,
-      });
-    }
-    if (trackedUntracked.identical.length > 0) {
-      const resolved = gitResult(cwd, ["checkout", "HEAD", "--", ...trackedUntracked.identical]);
-      if (resolved.status !== 0) {
-        const detail = gitFailure(resolved) || `exit ${resolved.status ?? "unknown"}`;
-        restoreOriginalWorktree({
-          cwd,
-          repo,
-          originalHead,
-          stash,
-          reason: `cannot finish restoring identical untracked files: ${detail}`,
-        });
-      }
-    }
-    dropStash(cwd, stash.oid);
-  }
-  return { repo, target, status: "merged" };
-}
-
-/**
- * Bring every repository of a task up to date with its integration target before a resumed stage
- * re-runs parent validations: products in declaration order, then the project. A product whose
- * integration target is not a local branch is skipped (the integration preflight reports it).
- * Products named in `integratedProducts` are skipped too: merging into an already integrated exec
- * branch would make the integration stage merge it again.
- * Throws on the first repository that cannot be synced; earlier repositories keep their merge.
- */
-export function syncTaskWorktreesWithIntegrationTargets(params: {
-  worktree: ExecWorktree;
-  projectTarget: string;
-  message: string;
-  // project worktree からの相対パス。項目自身の記帳ファイルで、競合時は統合先の内容を採る。
-  projectTheirsPaths?: readonly string[];
-  // PJR-6RN3: 前回の統合段で統合済み（merged / unchanged）と記録されたプロダクト名。
-  integratedProducts?: ReadonlySet<string>;
-}): IntegrationTargetSync[] {
-  const synced: IntegrationTargetSync[] = [];
-  for (const product of params.worktree.repos ?? []) {
-    const target = productIntegrationTarget(product);
-    if (params.integratedProducts?.has(product.name)) {
-      synced.push({ repo: product.name, target, status: "skipped", detail: "already integrated" });
-      continue;
-    }
-    if (!existsSync(product.path)) {
-      synced.push({ repo: product.name, target, status: "skipped", detail: "worktree missing" });
-      continue;
-    }
-    if (target === "HEAD" || target === product.branch || !branchExists(product.repoRoot, target)) {
-      synced.push({
-        repo: product.name,
-        target,
-        status: "skipped",
-        detail: "integration branch is not a local branch",
-      });
-      continue;
-    }
-    synced.push(
-      syncWorktreeWithIntegrationTarget({
-        repo: product.name,
-        cwd: product.path,
-        target,
-        message: params.message,
-      }),
-    );
-  }
-  synced.push(
-    syncWorktreeWithIntegrationTarget({
-      repo: PROJECT_REPO_NAME,
-      cwd: params.worktree.path,
-      target: params.projectTarget,
-      message: params.message,
-      theirsPaths: params.projectTheirsPaths,
-    }),
-  );
-  return synced;
-}
+export {
+  syncTaskWorktreesWithIntegrationTargets,
+  syncWorktreeWithIntegrationTarget,
+} from "./exec-repo-integration-sync.js";
+export type {
+  IntegrationTargetSync,
+  IntegrationTargetSyncStatus,
+} from "./exec-repo-integration-sync.js";
 
 // ── 統合段 ─────────────────────────────────────────────────────────────────
 

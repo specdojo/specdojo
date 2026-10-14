@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:26:09Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
 ---
 
 # PJR-13M6 exec-worktree-ops.ts・exec-repo-integration.ts・exec-reporter.ts を分ける
@@ -42,16 +41,28 @@ worktree の操作、プロダクトリポジトリの統合、reporter の処�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                | 担当 | 状態 | メモ                     |
-| --- | ------------------------------------------------------------------- | ---- | ---- | ------------------------ |
-| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV  | open | 比べるコマンドがある場合 |
-| 2   | 責務ごとのモジュールへ移し、元のファイルから明示的に再 export する  | DEV  | open | 移すだけ                 |
-| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV  | open | 差分なし                 |
-| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV  | open | -                        |
+| No  | 作業                                                                | 担当         | 状態 | メモ                                    |
+| --- | ------------------------------------------------------------------- | ------------ | ---- | --------------------------------------- |
+| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV          | done | `exec run`・`exec cycle`・`exec resume` |
+| 2   | 責務ごとのモジュールへ移し、元のファイルから明示的に再 export する  | DEV          | done | 6 モジュールへ分割                      |
+| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV          | done | help 差分なし、親検証は runner が実行   |
+| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | reporter     | open | reporter stage で記録                   |
+| 5   | 統合後に `exec run --register` を 1 回流して runner を確かめる      | orchestrator | open | close の条件                            |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`src/exec-worktree-ops.ts` は commit 対象・commit、merge、worktree lifecycle の 3 モジュール、
+`src/exec-repo-integration.ts` は共通 Git 判定と再開時の統合先同期の 2 モジュール、
+`src/exec-reporter.ts` は reporter 出力 schema・parse の 1 モジュールへ処理を移した。元の 3
+ファイルは既存の公開名だけを明示的に再 export し、既存の import path を維持する。
+
+分割後の最大ファイルは `src/exec-reporter.ts` の 899 行で、対象ファイルと新規モジュールは
+すべて 1,000 行以下である。移動先から各 façade への import と新しい循環 import はない。
+分割前後で `exec run`・`exec cycle`・`exec resume` の `--help` に差分がなく、公開 export の名前も
+一致することを確認した。ロジックの改善や不具合修正は行っていない。
+
+親 runner が lint、型検査、単体・統合テスト、schema 検証を実行する。統合後の runner の実動作
+確認は、完了条件どおり orchestrator が `exec run --register` を 1 回流して行う。
 
 ## 5. 関連ドキュメント
 
