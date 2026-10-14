@@ -58,3 +58,19 @@
       from: "-"
       to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged); FAIL  /unit/ tests/src/doc…"
   previous_event_id: reg_848550c6de214b7fa7c9d3518ac28157
+- v: 1
+  id: reg_bb14fbbea1a34c25893eb0f1c17fe3a3
+  ts: "2026-10-14T21:43:40Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged); FAIL  /unit/ tests/src/doc…"
+      to: "-"
+  previous_event_id: reg_59a0648d73ac401fa0311a4e8902683d

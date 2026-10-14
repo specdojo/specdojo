@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-P038",
+  "run_id": "20261014T212729066Z-81d2c320",
+  "updated_at": "2026-10-14T21:46:14.277Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-10-14T21:28:22.008Z",
+      "completed_at": "2026-10-14T21:35:16.533Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-14T21:37:50.634Z",
+      "completed_at": "2026-10-14T21:39:01.275Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-p038-20261014T212729Z-4fae-result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-14T21:46:14.277Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged); FAIL  |unit| tests/src/doc-index.test.ts > prj-0001 project register references > 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する; Test Files  2 failed | 145 passed (147); Tests  3 failed | 2235 passed (2238)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-p038-20261014T212729Z-4fae-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-p038-20261014T212729Z-4fae-result.md"
+  }
+}

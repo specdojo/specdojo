@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:25:56Z"
   due_on: null
-  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged); FAIL  /unit/ tests/src/doc…"
 ---
 
 # PJR-P038 register.ts の残りのドメインの処理を分ける
@@ -42,16 +41,21 @@ src/register.ts（2,418 行）に残る登録簿のドメインの処理（移�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                | 担当 | 状態 | メモ                     |
-| --- | ------------------------------------------------------------------- | ---- | ---- | ------------------------ |
-| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV  | open | 比べるコマンドがある場合 |
-| 2   | 責務ごとのモジュールへ移し、元のファイルから明示的に再 export する  | DEV  | open | 移すだけ                 |
-| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV  | open | 差分なし                 |
-| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV  | open | -                        |
+| No  | 作業                                                                | 担当 | 状態 | メモ                |
+| --- | ------------------------------------------------------------------- | ---- | ---- | ------------------- |
+| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV  | done | 15 コマンド分を保存 |
+| 2   | 責務ごとのモジュールへ移し、元のファイルから明示的に再 export する  | DEV  | done | 5 モジュールへ分割  |
+| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV  | done | help 差分なし       |
+| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV  | open | reporter が記録する |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `src/register.ts` に残っていた処理を、共通基盤、旧一覧移行、派生ビュー、項目更新、再採番・topic 変更の責務へ分割した。
+- 移動先は、共通基盤が `src/register-core.ts`、旧一覧移行が `src/register-migration.ts`、派生ビューが `src/register-views.ts`、項目更新が `src/register-update.ts`、再採番・topic 変更が `src/register-renumber.ts` である。
+- `src/register.ts` は従来の公開名を明示的に再 export し、コマンド統合を担う façade とした。
+- 分割前後で `register` と全 14 サブコマンドの `--help` を比較し、差分がないことを確認した。
+- 各対象ファイルは 1,000 行以下であり、新規モジュールから `src/register.ts` への import はない。
+- 残課題はない。result の記入と親検証結果の反映は reporter / runner が行う。
 
 ## 5. 関連ドキュメント
 
