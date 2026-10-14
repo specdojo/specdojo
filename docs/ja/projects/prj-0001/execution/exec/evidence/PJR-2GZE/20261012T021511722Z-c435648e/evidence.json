@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-2GZE",
+  "run_id": "20261012T021511722Z-c435648e",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-10-12T02:16:06.098Z",
+    "completed_at": "2026-10-12T02:17:12.522Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [],
+  "final_message": "You've hit your session limit · resets 12pm (Asia/Tokyo)",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-2GZE/20261012T021511722Z-c435648e/executor.log",
+      "bytes": 57,
+      "truncated": false
+    }
+  ]
+}

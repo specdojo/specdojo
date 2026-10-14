@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_007e5374f4494cd6aaaa21dd19574081
+  ts: "2026-10-11T15:00:34Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: prj-0002 PJR-HEPK の実行で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロダクトリポジトリの検証を not_run の委譲先として満たせない
+    - field: description
+      from: ""
+      to: "executor が not_run と記録したプロダクトリポジトリの検証（例: npm --prefix specdojo-lp run build）は、runner がプロジェクト側で同じコマンドを通した場合しか満たされず、repo 指定の親検証でも解消できないため run が必ず止まる"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_87c3dacc448e4a9fa7d4ceab539533ea
+  ts: "2026-10-12T02:15:12Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_007e5374f4494cd6aaaa21dd19574081
+- v: 1
+  id: reg_e146938bf9b54551b8d6131c6ac8188d
+  ts: "2026-10-12T02:17:15Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_87c3dacc448e4a9fa7d4ceab539533ea
+- v: 1
+  id: reg_4f15d59b53814636b253341ce08dc796
+  ts: "2026-10-12T03:38:10Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_e146938bf9b54551b8d6131c6ac8188d
+- v: 1
+  id: reg_7b0027567fd740caaa5433a73a39f554
+  ts: "2026-10-12T03:46:29Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4f15d59b53814636b253341ce08dc796
+- v: 1
+  id: reg_75943007b47846e48111e26d95f1db6f
+  ts: "2026-10-12T07:19:15Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（b8a530b1d）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: repo を割り当てた親検証の結果で、同じリポジトリの executor の not_run を満たせるようにした
+  previous_event_id: reg_7b0027567fd740caaa5433a73a39f554

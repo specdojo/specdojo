@@ -1,0 +1,87 @@
+PJR-GBVM「空のプロダクトリポジトリで最上位の新規ファイルが commit 範囲外になる」に対する実装および検証を完了しました。
+
+### 実施内容のまとめ
+
+1. **予防 (Prevention)**
+   - [`xep-common-conventions-template.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBVM/docs/ja/specdojo/exec-templates/xep-common-conventions-template.md) および [`exec-run.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBVM/src/exec-run.ts#L1038-L1039) の executor 規約に、作業用・使い捨ての一時ファイルはリポジトリ最上位に作成せず worktree 内の `tmp/` またはリポジトリ外の一時ディレクトリに配置する規則を明記しました。
+
+2. **除外 (Exclusion)**
+   - [`exec-worktree-ops.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBVM/src/exec-worktree-ops.ts) および [`exec-repo-integration.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBVM/src/exec-repo-integration.ts) において、`.gitignore` の有無によらず `tmp/` 配下のファイルを commit 対象判定・残留変更検査・統合前ブロック検査から自動的に除外するよう実装しました。
+
+3. **緩和 (Relaxation)**
+   - `origin: register` 由来タスクの project worktree およびプロダクト worktree において、最上位の新規ファイル（パスに `/` を含まない新規ファイル）を commit 対象として許可しました。
+
+4. **安全網 (Safety Net)**
+   - commit された最上位新規ファイルを統合ログ（`scopeLogPath` / `integrate.log`）および result の `## 3. 申し送り` に「`最上位に追加したファイル:`」として記録する処理（`recordRootNewFilesHandoff`）を実装しました。
+   - [`exec-worktree-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBVM/docs/ja/specdojo/guides/exec-worktree-guide.md) の commit 対象および除外対象に関する記述を最新仕様に更新しました。
+
+5. **テスト拡充 & 個票更新**
+   - [`tests/src/exec-worktree-ops.integration.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBVM/tests/src/exec-worktree-ops.integration.test.ts) にて project worktree での最上位新規ファイル commit、`tmp/` 除外、申し送り・統合ログ記録を検証。
+   - [`tests/src/exec-task-repos.integration.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBVM/tests/src/exec-task-repos.integration.test.ts) にて追跡済みディレクトリの無いプロダクトリポジトリでの最上位新規ファイル（`.gitignore`, `settings.json`）の commit、`tmp/` 除外、統合ログ・申し送り記録、および `productMergeBlockers` 通過を検証する統合テストを追加。
+   - 個票 [`pjr-gbvm-product-root-new-files-out-of-scope.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBVM/docs/ja/projects/prj-0001/controls/project-register/pjr-gbvm-product-root-new-files-out-of-scope.md) の「`## 4. 対応結果`」を更新。
+   - `prettier`、`catalog validate`、`index build` を実行して整合性を確認。
+
+<specdojo_executor_evidence>
+{
+  "final_message": "PJR-GBVM: 空のプロダクトリポジトリおよびプロジェクトリポジトリにおいて、最上位の新規ファイルが commit 対象となり、tmp/ 配下が除外され、統合ログと申し送りに記録されるよう改修しました。統合テストの追加、ガイド・共通規約の更新、個票の対応結果の記載を行いました。",
+  "validations": [
+    {
+      "command": "npx prettier --write src/exec-worktree-ops.ts src/exec-repo-integration.ts src/exec-run.ts docs/ja/specdojo/exec-templates/xep-common-conventions-template.md docs/ja/specdojo/guides/exec-worktree-guide.md tests/src/exec-worktree-ops.integration.test.ts tests/src/exec-task-repos.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-gbvm-product-root-new-files-out-of-scope.md",
+      "status": "passed",
+      "summary": "変更ファイルのコード整形を実行"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "SpecDojo カタログの妥当性を検証"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts index build",
+      "status": "passed",
+      "summary": "SpecDojo ドキュメントインデックスを再構築"
+    },
+    {
+      "command": "npm run validate:schema",
+      "status": "not_applicable",
+      "summary": "スキーマ検証",
+      "reason": "親 runner が固定許可リストから実行して追記するため executor では非実行"
+    },
+    {
+      "command": "npm run test:unit",
+      "status": "not_applicable",
+      "summary": "ユニットテスト",
+      "reason": "親 runner が固定許可リストから実行して追記するため executor では非実行"
+    },
+    {
+      "command": "npm run test:integration",
+      "status": "not_applicable",
+      "summary": "統合テスト",
+      "reason": "親 runner が固定許可リストから実行して追記するため executor では非実行"
+    },
+    {
+      "command": "npm run typecheck",
+      "status": "not_applicable",
+      "summary": "TypeScript 型検査",
+      "reason": "親 runner が固定許可リストから実行して追記するため executor では非実行"
+    },
+    {
+      "command": "npm run lint:ts",
+      "status": "not_applicable",
+      "summary": "TypeScript リント検査",
+      "reason": "親 runner が固定許可リストから実行して追記するため executor では非実行"
+    },
+    {
+      "command": "npm run lint:md",
+      "status": "not_applicable",
+      "summary": "Markdown リント検査",
+      "reason": "親 runner が固定許可リストから実行して追記するため executor では非実行"
+    },
+    {
+      "command": "npm run lint:fm",
+      "status": "not_applicable",
+      "summary": "Frontmatter リント検査",
+      "reason": "親 runner が固定許可リストから実行して追記するため executor では非実行"
+    }
+  ]
+}
+</specdojo_executor_evidence>

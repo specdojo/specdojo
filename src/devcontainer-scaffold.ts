@@ -153,6 +153,9 @@ fi`);
       devcontainer.mounts.push(
         `source=${volumeName("codex")},target=/home/node/.codex,type=volume`,
       );
+      extraScripts.push(
+        "if dpkg-query -W -f='${Status}' bubblewrap 2>/dev/null | grep -qx 'install ok installed'; then\n  if ! sudo apt-get remove -y bubblewrap; then\n    echo \"Warning: Failed to remove system bubblewrap; Codex sandbox may not start.\" >&2\n  fi\nfi",
+      );
       // 本リポジトリの devcontainer と同じく公式の install.sh を使い、失敗したら npm で入れる。
       extraScripts.push(
         'if ! curl -fsSL https://chatgpt.com/codex/install.sh | CODEX_NON_INTERACTIVE=1 sh; then\n  echo "Warning: Codex installer failed; falling back to npm."\n  sudo npm install -g @openai/codex@latest\nfi',

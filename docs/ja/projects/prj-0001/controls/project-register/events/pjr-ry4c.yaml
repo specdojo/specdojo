@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ea8b6225f631485893c1832a3506dd59
+  ts: "2026-10-13T21:18:07Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-CA0S の close で発生し、利用者の判断で起票した（2026-10-14）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 未追跡のファイルが多いと register の --commit が git status failed で止まる
+    - field: description
+      from: ""
+      to: gitResult の spawnSync が maxBuffer を指定しないため、git status --porcelain の出力が既定の上限（1 MB）を超えると失敗し、原因を示さない git status failed になる。2026-10-14 に未追跡のファイル 8,575 個で register close --commit が止まった
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-14"

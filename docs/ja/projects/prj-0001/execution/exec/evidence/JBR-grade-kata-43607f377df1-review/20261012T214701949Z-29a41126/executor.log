@@ -1,0 +1,46 @@
+レビュー結果は **`incomplete`** です。Job Run は `failed` で終わり、選ばれた15文書のうち3文書の評価が未完了のまま残っています。同じ `--run-id` での再開は可能です。成果物や Job Run の出力は変更していません。
+
+**Run の状態と記録の整合**
+- 差分 `28bc370c..bf8377b7` は21ファイルで、すべて当該 Job Run の出力です。内訳は evidence 3件、plan、result、pipeline state 3件、評価結果12件、Run JSON です。対象外の変更は混ざっていません。
+- Run JSON は `state: failed`、`exit_code: 1` です。`evidence.json`、stderr、result（`status: blocked`）とも同じ失敗を記録しており、互いに整合しています。
+- runner の evidence には diff の内容（`diff_summary`）が12ファイル分しかありませんが、変更一覧（`changes`）には16件が載っています。
+
+**未完了の3文書**
+- 対象は `mip-index-sample`、`nfr-index-sample`、`nfr-maintainability-sample` で、いずれも第1段が5〜7秒で失敗しています。
+- 失敗の種類は agent 側の失敗です。rate limit（終了コード75）でも、`grade apply` の拒否でもありません。
+- 各文書の `commands.log` には、agy の次のエラーが出ています。
+  - `invalid model selection (--model "gemini-3.1-pro-high" ...): model gemini-3.1-pro-high is not recognized`
+  - このときの利用可能モデル一覧には Gemini 3.8 Flash しかありませんでした。
+- このモデルは `.specdojo/exec-defaults.yaml` の agy 設定で expert 用に指定されているものです。
+- 同じモデルを使った他の12文書は、失敗の前後の時刻でも成功しています。そのため、モデルの認識が一時的に失敗したものと見ていますが、原因は確認できていません。
+- 3文書とも連続失敗は 1/3 回で、上限到達（`retry_exhausted`）の文書は0件です。`grade state --exhausted` の出力も空でした。
+
+**評価結果（12文書）**
+- 鮮度：`grade list --changed-only` に12文書はどれも出ないため、評価結果は最新です。`--incomplete` には上記の3文書だけが出ます。
+- 評価者：全件が `gemma` / `codex` の executor から `agy-expert-executor` に置き換わりました。verdict は12件とも前回から変わっていません。
+- verdict の内訳は pass 4件、needs-work 3件、fail 5件です。
+
+| 区分 | 文書（今回の score、括弧内は前回） |
+| --- | --- |
+| pass（4件） | `imp-business` 95（93）、`imp-interface` 95（93）、`imp-operations` 95（93）、`mm` 95（93） |
+| needs-work（3件） | `imp-data` 85（78）、`imp-test` 75（65）、`nfr-operations` 69（62） |
+| fail（5件） | `itc-index` 57（変化なし）、`itc` 76（61）、`mtp` 70（58）、`nfr-availability` 56（53）、`nfr-integrity` 55（58） |
+
+- score は11件中10件で上がっています（-3〜+15）。下がったのは `nfr-integrity` だけです。評価者の交代による系統的な上振れかどうかは、この1回では判断できず、継続して見る必要があります。
+- verdict を変えるほどの偏りは見られませんでした。
+- `itc-sample` は score 76 でも fail のままですが、その理由（finding の内容など）までは読んでいません。
+
+**改善指示**
+1. agy の環境で `gemini-3.1-pro-high` が認識されるかを確認し、必要なら `exec-defaults` の expert 用モデルを見直してください。
+2. そのうえで `--run-id JBR-grade-kata-43607f377df1` を指定して再開し、3文書を評価し直してください。
+
+**確認できなかったこと**
+- モデルが一時的に認識されなかった原因（agy 側のモデル一覧の変化か、設定の問題か）
+- 12文書の finding の中身（再評価はしない方針のため）
+- result 内の終了状態を示すフィールドと、runner によるコミット処理の詳細
+
+なお、plan の「Job Run result」のパスに `_RUN../worktrees/...` という誤った接頭辞が付いています。実際の result は `exec/results/JBR-grade-kata-43607f377df1-result.md` にあり、読めています。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict: incomplete。差分 28bc370c..bf8377b7 は21ファイルですべて当該 Job Run の出力で、対象外の変更はない。Run JSON（`state: failed`、`exit_code` 1）、evidence、stderr、result（`status: blocked`）は互いに整合している。15文書のうち12件が完了し、3件（`mip-index-sample`、`nfr-index-sample`、`nfr-maintainability-sample`）は第1段が失敗した。失敗は agent 側の失敗で、agy が `--model gemini-3.1-pro-high` を unrecognized として拒否し、5〜7秒で exit 1 になった（`commands.log`）。rate limit（75）でも `grade apply` の拒否でもない。同じモデルで他の12文書は成功しており、一時的な失敗と見ているが原因は未確認。連続失敗はいずれも 1/3 で、`retry_exhausted` は0件（`grade state --exhausted` は空）。pipeline state が残っているため、`--run-id JBR-grade-kata-43607f377df1` で再開できる。評価結果の鮮度: `grade list --changed-only` に12文書は出ず最新。`--incomplete` は上記3件のみ。verdict の分布は pass 4、needs-work 3、fail 5 で、12件とも前回から verdict は変わらない。score は11件中10件で上昇（-3〜+15、評価者が gemma/codex から `agy-expert-executor` へ交代）。下がったのは `nfr-integrity` のみ（58→55）。評価者交代による系統的な上振れかどうかは1回では判断できず、verdict を変える偏りはない。改善指示: (1) agy の環境で `gemini-3.1-pro-high` が認識されるかを確認し、必要なら `exec-defaults` の expert 用モデルを見直す。(2) 同じ `--run-id` で再開して3文書を評価し直す。確認できなかった範囲: モデル不認識が一時的に起きた原因、12文書の finding の中身（再評価しない方針のため）、`itc-sample` が score 76 で fail のままである理由、result の終了状態フィールドと runner のコミット処理の詳細。補足: plan の Job Run result パスに `_RUN..` という誤った接頭辞が付いている（実ファイルは `exec/results/JBR-grade-kata-43607f377df1-result.md` で読めた）。evidence の `diff_summary` は12ファイル分しかないが、`changes` は16件載っている。","validations":[{"command":"git diff --stat / --name-status 28bc370c15b42fb60a26e4c2cc58381ba12ca617..bf8377b78cb76e97d5982ae41d8a494a266d7780","status":"passed","summary":"21ファイル。evidence 3、plan、result、grade/pipeline 3、grade/results 12、jobs/runs 1 で、すべて当該 Job Run の出力"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"mip-index-sample、nfr-index-sample、nfr-maintainability-sample の3件が未完了"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"出力は pm-organization-sample と pm-raci-sample のみ。今回評価した12文書は最新"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし。retry_exhausted は0件"}]}
+</specdojo_executor_evidence>

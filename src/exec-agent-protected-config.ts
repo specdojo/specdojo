@@ -317,7 +317,8 @@ function addedFileDiff(repoRoot: string, path: string, note: string): string {
   if (content.includes("\0")) return `${header}\n# binary content omitted`;
   const lines = content.split("\n");
   if (lines.at(-1) === "") lines.pop();
-  return [header, ...lines.map((line) => `+${line}`)].join("\n");
+  if (lines.length === 0) return `${header}\n@@ -0,0 +0,0 @@`;
+  return [header, `@@ -0,0 +1,${lines.length} @@`, ...lines.map((line) => `+${line}`)].join("\n");
 }
 
 // 対象パスごとの提案差分を1つのテキストにまとめる。差分を取得できないパスは、

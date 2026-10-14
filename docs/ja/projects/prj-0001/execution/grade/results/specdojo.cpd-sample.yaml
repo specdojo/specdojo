@@ -3,34 +3,80 @@ version: 1
 document: specdojo:cpd-sample
 path: docs/ja/specdojo/samples/cpd-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 54
-graded_at: "2026-09-05T01:23:28.122Z"
-graded_by: gemma-expert-executor
+score: 33
+graded_at: "2026-10-11T21:22:44.094Z"
+graded_by: agy-expert-executor
 content_hash: 170b64519576d48c190049467824306dcadbcc4266c4d08e447816f6b3feec57
 categories:
+  purpose:
+    score: 25
+  operations:
+    score: 56
+  planning:
+    score: 25
+  business:
+    score: 25
+  architecture:
+    score: 75
+  usability:
+    score: 50
+  implementation:
+    score: 25
+  quality:
+    score: 17
   consistency:
     score: 0
-  usability:
-    score: 67
-  architecture:
-    score: 100
-  quality:
-    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 0
-    score: 0
+  vp-po-purpose-alignment:
+    level: 1
+    score: 25
+  vp-po-decision-readiness:
+    level: 1
+    score: 25
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 1
+    score: 25
+  vp-pm-dependency-risk:
+    level: 1
+    score: 25
+  vp-pm-control-reporting:
+    level: 1
+    score: 25
+  vp-ba-business-value:
+    level: 1
+    score: 25
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 1
+    score: 25
+  vp-arc-technical-constraints:
+    level: 1
+    score: 25
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 1
+    score: 25
+  vp-dev-change-impact:
+    level: 1
+    score: 25
+  vp-dev-testability:
+    level: 1
+    score: 25
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -41,6 +87,15 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 1
+    score: 25
+  vp-ops-operability:
+    level: 1
+    score: 25
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,37 +103,200 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 5
-  major: 0
-  minor: 0
+  major: 15
+  minor: 3
   note: 0
 findings:
-  - id: F004
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: C4コンポーネント図 (Mermaid) の具体例が完全に欠落しており、サンプルとしての責務を果たしていない。
-    anchor: ""
+  - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: >-
+      The document specifies the target system as '駄菓子屋の販売管理システム' but fails to define the container scope, component
+      objectives, or architectural boundaries needed to align with the project purpose.
+    message_ja: >-
+      The document specifies the target system as '駄菓子屋の販売管理システム' but fails to define the container scope, component
+      objectives, or architectural boundaries needed to align with the project purpose.
   - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 27
+    anchor: ""
+    message: >-
+      The document lacks decision items, accountable decision makers, impact scope, and actionable next steps required
+      for PO approval.
+    message_ja: ドキュメントには、POの承認に必要な意思決定事項、責任ある意思決定者、影響範囲、および実行可能な次のステップが不足しています。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# [C4コンポーネント図](../rulebooks/cpd-rulebook.md) サンプル"
+    message: Human PO approval responsibility and sign-off accountability are not explicitly stated.
+    message_ja: 人間によるPOの承認責任と、最終的な承認責任が明示されていません。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 27
+    anchor: ""
+    message: >-
+      The document lacks actionable work units, completion criteria, responsible Role codes, and milestones needed for
+      task breakdown and scheduling.
+    message_ja: ドキュメントには、タスクの分解とスケジューリングに必要な実行可能な作業単位、完了基準、責任あるRoleコード、およびマイルストーンが不足しています。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 27
+    anchor: ""
+    message: Downstream deliverable dependencies, architectural risks, and schedule impacts are not identified.
+    message_ja: 下流の成果物への依存関係、アーキテクチャ上のリスク、およびスケジュールの影響が特定されていません。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 27
+    anchor: ""
+    message: >-
+      Items requiring escalation or transfer to project management records (PJR) are not separated and lack reporting
+      targets and responsible Role codes.
+    message_ja: エスカレーションまたはプロジェクト管理記録（PJR）への転記が必要な事項が分離されておらず、報告対象や責任あるRoleコードも不足しています。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: >-
+      Business problems, target user personas, expected business value, and success criteria for the target system are
+      missing.
+    message_ja: ビジネス上の課題、ターゲットとなるユーザーペルソナ、期待されるビジネス価値、およびターゲットシステムの成功基準が欠落しています。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 4
+    anchor: ""
+    message: >-
+      User-level requirements, acceptance criteria, system boundaries, and out-of-scope exclusions are completely
+      absent.
+    message_ja: ユーザーレベルの要件、受け入れ基準、システムの境界、およびスコープ外の除外事項が完全に欠落しています。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 14
+    anchor: ""
+    message: Concrete stakeholders, system users, reviewers, and agreement targets are not identified beyond abstract keywords.
+    message_ja: 具体的なステークホルダー、システムユーザー、レビュアー、および合意の対象が、抽象的なキーワード以外に特定されていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 8
+    anchor: ""
+    message: >-
+      Technical constraints, architectural assumptions, database/runtime prerequisites, and external integration
+      constraints are not specified.
+    message_ja: 技術的な制約、アーキテクチャ上の前提条件、データベース/ランタイムの前提条件、および外部連携の制約が指定されていません。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 21
+    anchor: >-
+      | ------------ | ----------------------------------------------------------------------------------- |
+      ------------------------------------ |
+    message: >-
+      The table in Section 4 redundantly duplicates text from Section 1 and Section 3 without providing distinct
+      architectural content.
+    message_ja: セクション4の表は、独自のアーキテクチャ内容を提供することなく、セクション1とセクション3のテキストを冗長に重複させています。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 8
+    anchor: ""
+    message: >-
+      No component specifications, interfaces, data flows, inputs/outputs, schemas, or implementation constraints are
+      provided for developers.
+    message_ja: 開発者向けに、コンポーネントの仕様、インターフェース、データフロー、入出力、スキーマ、または実装の制約が提供されていません。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 27
+    anchor: ""
+    message: >-
+      The impact of component changes on existing deliverables, container models, schemas, and downstream implementation
+      is not identified.
+    message_ja: コンポーネントの変更が、既存の成果物、コンテナモデル、スキーマ、および下流の実装に与える影響が特定されていません。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 8
+    anchor: ""
+    message: >-
+      Validation procedures, linting/rendering commands for Mermaid syntax, expected test outputs, and target
+      verification files are omitted.
+    message_ja: 検証手順、Mermaid構文のリンティング/レンダリングコマンド、期待されるテスト出力、および対象の検証ファイルが省略されています。
+  - id: F015
+    severity: major
+    rule: vp-qe-verifiability
+    line: 14
+    anchor: ""
+    message: >-
+      The document mentions verification viewpoints abstractly but provides no verifiable pass/fail criteria, concrete
+      conditions, or check procedures.
+    message_ja: ドキュメントでは検証の観点について抽象的に言及されていますが、検証可能な合否基準、具体的な条件、またはチェック手順が提供されていません。
+  - id: F016
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 4
-    message: Frontmatter の type が 'project' となっているが、CPD ルールに従い 'architecture' とする必要がある。
-    anchor: "## 1. 目的と適用範囲"
-  - id: F001
-    severity: blocker
-    rule: vp-arc-cross-document-consistency
-    line: 9
-    message: 参照している CPD ルールブックで規定された標準構成に従っておらず、文書構造に矛盾がある。
     anchor: ""
-  - id: F003
+    message: Frontmatter の type が 'project' となっているが、CPD ルールに従い 'architecture' とする必要がある。
+    message_ja: Frontmatter の type が 'project' となっているが、CPD ルールに従い 'architecture' とする必要がある。
+  - id: F017
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 11
+    anchor: "- 参照: `../rulebooks/cpd-mermaid-rulebook.md`"
     message: ルールブックで規定された必須章（概要、C4コンポーネント図、要素の説明、補足）がすべて欠落している。
-    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
-  - id: F005
+    message_ja: ルールブックで規定された必須章（概要、C4コンポーネント図、要素の説明、補足）がすべて欠落している。
+  - id: F018
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [C4コンポーネント図](../rulebooks/cpd-rulebook.md) サンプル"
+    message: C4コンポーネント図 (Mermaid) の具体例が完全に欠落しており、サンプルとしての責務を果たしていない。
+    message_ja: C4コンポーネント図 (Mermaid) の具体例が完全に欠落しており、サンプルとしての責務を果たしていない。
+  - id: F019
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 参照している CPD ルールブックで規定された標準構成に従っておらず、文書構造に矛盾がある。
+    message_ja: 参照している CPD ルールブックで規定された標準構成に従っておらず、文書構造に矛盾がある。
+  - id: F020
     severity: blocker
     rule: vp-ux-readability
     line: 13
+    anchor: "## 3. 記述内容"
     message: 具体的な記述例（図と説明）がなく、どのような内容をどのように記載すべきかが理解できない。
+    message_ja: 具体的な記述例（図と説明）がなく、どのような内容をどのように記載すべきかが理解できない。
+  - id: F021
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 6
     anchor: ""
+    message: Grammatical particles and phrasing are broken in Section 1 ('定義ための') and Section 3 ('など、と').
+    message_ja: Grammatical particles and phrasing are broken in Section 1 ('定義ための') and Section 3 ('など、と').
+  - id: F022
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 27
+    anchor: ""
+    message: >-
+      Criteria for transitioning from draft to ready, approval gates, and pre-release verification checklist are not
+      defined.
+    message_ja: ドラフトから準備完了への移行基準、承認ゲート、およびリリース前の検証チェックリストが定義されていません。
+  - id: F023
+    severity: major
+    rule: vp-ops-operability
+    line: 8
+    anchor: ""
+    message: >-
+      Operational procedures for diagram maintenance, regeneration steps, change management, and inquiry channels are
+      not provided.
+    message_ja: 図のメンテナンス、再生成の手順、変更管理、および問い合わせ窓口に関する運用手順が提供されていません。

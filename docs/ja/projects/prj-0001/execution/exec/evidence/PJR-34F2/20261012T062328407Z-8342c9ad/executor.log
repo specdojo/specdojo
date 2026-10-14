@@ -1,0 +1,29 @@
+PJR-34F2 の文書の変更は終わりました。ただし、完了条件の 1 つ `npm run docs:build` が通っていません。サンドボックス内でメモリ不足（JavaScript heap out of memory）になったためで、ヒープの上限を上げた再実行はこの環境では承認されませんでした。メモリに余裕のあるホストでの再実行が必要です。`lint:md` と `lint:fm` は、このあと親 runner が実行します。
+
+**変更内容**
+- **全体概要ガイド**:
+  - 3 つの体系の表を「成果物・型（Kata）・技（Waza）」に改め、それぞれ「何を作るか・どう作るか・どう回すか」の列を付けました。
+  - 流（Ryu、`approach`）は、成果物・型・技をつなぐ属性として説明し、技の使い方の種類とは書いていません。
+  - 「遂行体系」の語はなくしました。技は `成果物から実行管理への展開` で、PDCA × register・schedule・routine + Job のマトリクスとして説明しています。
+  - 章題 `実践体系の役割` は `型の役割` に改めました。
+- **「実践体系」の語**: 完了条件の 14 ファイルで「型（Kata）」「型の文書」などに改めました。
+  - practice-system-composition-guide の題名は「型の構成ガイド」にし、id は変えていません。
+  - 章題も変わったので（`成果物と型の関係`、`型の文書のID`、`型の文書のlocal-id` など）、章題を参照している箇所も合わせました。
+- **標語**: `README.md`、`docs/ja/index.md`、quick-start-guide、全体概要ガイドで「記して、形にして、磨き続ける。」に改めました。
+- **「仕様書」の語**: プロダクト文書を指す箇所だけ、`README.md` と quick-start-guide で改めました。エージェント指示ファイルの「関連する設計書を確認する」など、設計の文書そのものを指す箇所は残しています。
+- **`app1-workspace/`**: `README.md`、quick-start-guide、directory-layout-reference、docs-structure-guide のディレクトリ例を改めました。
+  - `app1-specdojo-worktrees/` はそのままです。プロジェクトリポジトリ名から自動で決まる名前のため、変える必要がないと判断しました。
+- **完了条件にない変更（2 件）**:
+  - サイドバーの設定 `packages/docs-site/.vitepress/sidebar-config.ts` で、表示名を新しい題名に揃えました（「型で作る」「型の構成」「技で回す」）。設定ファイルに「H1 を変えたらここも合わせる」と書かれているためです。
+  - 計画の手順 4 に従い、個票（`pjr-34f2-terminology-kata-waza-docs.md`）の「作業内容」を done にし、「対応結果」を記入しました。個票のステータス欄は変えていません。
+
+全体概要ガイドなど一部の文書は frontmatter が `status: ready` のままです。その値は変えずに本文だけ改めています。
+
+**検証**
+- 変更した 17 ファイルに `npx prettier --write` をかけ、4 ファイルが整形されました。
+- `specdojo index build` は通りました（2601 件）。
+- `specdojo catalog validate --project prj-0001` は通りました。既存の WARN（`based_on` の参照先の文書が見つからない）が出ていますが、今回の変更とは関係ありません。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-34F2: renamed the systems to 成果物・型（Kata）・技（Waza） in the overview guide, described 流（Ryu） as the attribute linking them, and explained 技 with the PDCA × register/schedule/routine + Job matrix. Replaced 実践体系 across the 14 target files (practice-system-composition-guide retitled 型の構成ガイド, id unchanged) and aligned the sidebar labels. Updated the slogan, 設計書→仕様書 for product docs, and workspace/→app1-workspace/. Filled in the ticket's work and outcome sections. npm run docs:build ran out of memory in the sandbox and must be rerun on a host with more memory.","validations":[{"command":"npx prettier --write README.md docs/ja/index.md docs/ja/specdojo/index.md docs/ja/specdojo/guides/*.md(changed) docs/ja/specdojo/philosophy/specdojo-philosophy.md docs/ja/specdojo/references/*.md(changed) docs/ja/specdojo/standards/*.md(changed) docs/ja/projects/prj-0001/controls/project-register/pjr-34f2-terminology-kata-waza-docs.md packages/docs-site/.vitepress/sidebar-config.ts","status":"passed","summary":"Formatted all changed files; 4 files reformatted, the rest unchanged"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2601 entries"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"OK: dct-index.yaml (pre-existing based_on WARNs only, unrelated to this change)"},{"command":"npm run docs:build","status":"requires_human","summary":"Ran in the sandbox but VitePress crashed with JavaScript heap out of memory (SIGABRT); a retry with a larger heap (NODE_OPTIONS=--max-old-space-size=6144) was not approved here. Rerun npm run docs:build on a host with enough memory to confirm the completion condition."}]}
+</specdojo_executor_evidence>

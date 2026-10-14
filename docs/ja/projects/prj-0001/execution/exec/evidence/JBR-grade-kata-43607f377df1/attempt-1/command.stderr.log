@@ -1,0 +1,5 @@
+grade pipeline incomplete: incomplete=3 run_id=JBR-grade-kata-43607f377df1; rerun with --run-id JBR-grade-kata-43607f377df1 to retry the failed stages, or start a new run with --incomplete
+grade pipeline incomplete document: docs/ja/specdojo/samples/mip-index-sample.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/samples/nfr-index-sample.md failed_stage=1
+grade pipeline incomplete document: docs/ja/specdojo/samples/nfr-maintainability-sample.md failed_stage=1
+grade pipeline failed: run_id=JBR-grade-kata-43607f377df1 exit_code=1

@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4b280232af684638b135cc72e0084409
+  ts: "2026-10-12T06:48:15Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: LP（prj-0002）の確認で、記帳と起票のどちらを使うべきか利用者から問いがあり、使い分けを用語集に書くことにした
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 用語集 gl-common に記帳と起票を加える
+    - field: description
+      from: ""
+      to: 起票（1 件の項目を新しく作ること）と記帳（起票・状態遷移・結論の記録・commit を含む、台帳への書き込み全般。register の Waza としての呼び名）の使い分けを、用語集 gl-common に定義する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"

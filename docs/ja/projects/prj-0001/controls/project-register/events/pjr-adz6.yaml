@@ -32,3 +32,67 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_8acf537bb9704c5c86d427a71304d805
+  ts: "2026-10-12T01:53:13Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c001ce7c05ad49c0ae6627085c29034c
+- v: 1
+  id: reg_9a5689e32a3540b5932ab677d13b07a4
+  ts: "2026-10-12T01:59:52Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: specdojo index build"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: specdojo index build"
+  previous_event_id: reg_8acf537bb9704c5c86d427a71304d805
+- v: 1
+  id: reg_e1bc06c1aab24b0e81781240a6c30413
+  ts: "2026-10-12T04:58:24Z"
+  action: review
+  actor: naoji3x
+  from_status: waiting
+  to_status: review
+  reason: executor 検証の記録（index build の not_run）で run が止まったため、利用者の承認を得て orchestrator が統合した（013daa695）
+  changes:
+    - field: status
+      from: waiting
+      to: review
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: specdojo index build"
+      to: "-"
+  previous_event_id: reg_9a5689e32a3540b5932ab677d13b07a4
+- v: 1
+  id: reg_2920d4e0283d4350bb5988113bb0d1b9
+  ts: "2026-10-12T07:19:46Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: executor 検証の記録で run が止まったため利用者の承認を得て orchestrator が統合（013daa695）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: pipeline の指定がない register 実行で stage_role を持つ agent だけを自動選択するようにした
+  previous_event_id: reg_e1bc06c1aab24b0e81781240a6c30413

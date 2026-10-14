@@ -88,3 +88,30 @@ properties:
           type: [integer, "null"]
         reason:
           type: string
+  review:
+    type: object
+    additionalProperties: false
+    required: [plan_ref, result_ref, reviewed_at, branch]
+    properties:
+      plan_ref:
+        type: string
+        minLength: 1
+      result_ref:
+        type: string
+        minLength: 1
+      reviewed_at:
+        type: string
+        format: date-time
+      branch:
+        type: string
+        pattern: "^exec/"
+      verdict:
+        enum:
+          - complete
+          - complete-with-findings
+          - incomplete
+          - grade-stale
+          - grade-unavailable
+          - changed-during-review
+      reason:
+        type: string

@@ -1,0 +1,21 @@
+ビルド結果の出力先を `node_modules` の外へ移しましたが、まだ完了していません。完了条件のうち 2 つが未達です。`.github/workflows/deploy.yml` は権限設定で編集を拒否されて変更できず、`npm run docs:build` も sandbox では承認が必要で実行できませんでした。
+
+**変更したファイル**
+- `packages/docs-site/.vitepress/config.mts`: `outDir` / `cacheDir` を、閲覧対象の workspace 側の `<workspace>/.vitepress/dist` と `<workspace>/.vitepress/cache` に変えました。`srcExclude` に `.vitepress/**` を足し、生成物がページとして走査されないようにしています。使われなくなった `PACKAGE_ROOT`、`CONFIG_DIR`、`fileURLToPath` の import も削除しました。
+- `packages/docs-site/README.md`: ビルド結果と cache の出力先、利用リポジトリの `.gitignore` に `/.vitepress/dist` と `/.vitepress/cache` を加えることを書きました。
+- `.gitignore`: `/packages/docs-site/.vitepress/{dist,cache}` を `/.vitepress/{dist,cache}` に置き換えました。
+- `docs/ja/product/040-system-design/sysd-index.md`: 生成先の記載が古くなるため、`.vitepress/dist`（workspace 直下）に直しました。個票の対象範囲には入っていない追加の変更です。
+- 個票 `pjr-ca0s-…md`: 「対応結果」を書きました。ステータス項目は変えていません。
+- `packages/docs-site/package.json` の版は変えていません。
+
+**人手で対応が必要なこと**
+- `.github/workflows/deploy.yml` 70 行目の `path: packages/docs-site/.vitepress/dist` を `path: .vitepress/dist` に直してください。直すまでは GitHub Pages への deploy が古い出力先を参照します。
+- `npm run docs:build` を実行し、出力が `.vitepress/dist` に作られることを確認してください。
+
+**検証**
+- Prettier による整形と、変更した Markdown 3 ファイルへの `markdownlint` は通りました。
+- `npx tsc -p packages/docs-site/.vitepress/tsconfig.json --noEmit` は通りました。
+
+<specdojo_executor_evidence>
+{"final_message":"docs-site output moved to <workspace>/.vitepress/{dist,cache}; .vitepress/** excluded from page scan; README, .gitignore, sysd-index updated. Not complete: deploy.yml edit was denied by permissions and docs:build could not run in the sandbox; both need a human.","validations":[{"command":"npx prettier --write packages/docs-site/.vitepress/config.mts packages/docs-site/README.md docs/ja/product/040-system-design/sysd-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-ca0s-docs-site-output-in-node-modules.md","status":"passed","summary":"formatted; 2 Markdown files reformatted"},{"command":"npx markdownlint packages/docs-site/README.md docs/ja/product/040-system-design/sysd-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-ca0s-docs-site-output-in-node-modules.md","status":"passed","summary":"no errors"},{"command":"npx tsc -p packages/docs-site/.vitepress/tsconfig.json --noEmit","status":"passed","summary":"docs-site VitePress config typechecks with no errors"},{"command":"npm run docs:build","status":"requires_human","summary":"Denied by the sandbox permission settings. On the host, run it and confirm the output appears in .vitepress/dist at the repository root, not in packages/docs-site/.vitepress/dist."},{"command":"edit .github/workflows/deploy.yml upload path","status":"requires_human","summary":"Edit was denied by permissions. Change path: packages/docs-site/.vitepress/dist to path: .vitepress/dist."}]}
+</specdojo_executor_evidence>

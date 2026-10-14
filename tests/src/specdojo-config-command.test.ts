@@ -134,6 +134,7 @@ describe("config init .gitignore", () => {
       expect(readFileSync(join(repo, ".gitignore"), "utf8")).toBe(
         `${GITIGNORE_HEADER}\n${DEFAULT_GITIGNORE_PATTERNS.join("\n")}\n`,
       );
+      expect(output.join("")).toContain("Added: node_modules/");
       expect(output.join("")).toContain("Added: docs/**/generated/*");
       expect(output.join("")).toContain("git rm -r --cached");
     } finally {
@@ -158,6 +159,8 @@ describe("config init .gitignore", () => {
       expect(afterFirst.match(/\.specdojo\/doc-index\.json/g)).toHaveLength(1);
       expect(readFileSync(join(repo, ".gitignore"), "utf8")).toBe(afterFirst);
       expect(output.join("")).toContain("Already exists:");
+      expect(afterFirst.match(/node_modules/g)).toHaveLength(1);
+      expect(output.join("")).toContain("Skipped (already present): node_modules/");
       expect(output.join("")).toContain("Skipped (already present): docs/**/generated/*");
       expect(output.join("")).not.toContain("git rm -r --cached");
     } finally {
@@ -176,7 +179,27 @@ describe("config init .gitignore", () => {
 
       expect(existsSync(join(repo, ".gitignore"))).toBe(false);
       expect(existsSync(join(repo, ".specdojo", "specdojo.config.json"))).toBe(false);
+      expect(output.join("")).toContain("Would add: node_modules/");
       expect(output.join("")).toContain("Would add: docs/**/generated/*");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("adds node_modules/ to an existing .gitignore that does not mention it", async () => {
+    const repo = mkdtempSync(join(tmpdir(), "specdojo-config-gitignore-"));
+    const output = captureStdout();
+
+    try {
+      mkdirSync(join(repo, ".git"));
+      writeFileSync(join(repo, ".gitignore"), "dist/\n", "utf8");
+      process.chdir(repo);
+      await runConfigCommand(["init"]);
+
+      expect(readFileSync(join(repo, ".gitignore"), "utf8")).toBe(
+        `dist/\n\n${GITIGNORE_HEADER}\n${DEFAULT_GITIGNORE_PATTERNS.join("\n")}\n`,
+      );
+      expect(output.join("")).toContain("Added: node_modules/");
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

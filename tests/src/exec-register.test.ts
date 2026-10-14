@@ -186,47 +186,6 @@ describe("sanitizeRegisterConclusion", () => {
 });
 
 describe("resolveRegisterCommand", () => {
-  it("owner が agent の nickname に一致すればその agent を使う", () => {
-    const roster = makeRoster([makeAgent({ nickname: "edit-bot", command: "run-edit-bot" })]);
-
-    const actual = resolveRegisterCommand(makeItem({ owner: "edit-bot" }), roster, {});
-
-    expect(actual).toEqual({ command: "run-edit-bot", actor: "edit-bot" });
-  });
-
-  it("owner の Role code に一致する agent を priority 昇順で選ぶ", () => {
-    const roster = makeRoster([
-      makeAgent({ nickname: "slow", roles: ["ARC"], priority: 20, command: "run-slow" }),
-      makeAgent({ nickname: "fast", roles: ["ARC"], priority: 10, command: "run-fast" }),
-    ]);
-
-    const actual = resolveRegisterCommand(makeItem({ owner: "ARC" }), roster, {});
-
-    expect(actual).toEqual({ command: "run-fast", actor: "fast" });
-  });
-
-  it("disabled な agent と review 専用 agent はロール一致でも選ばない", () => {
-    const roster = makeRoster([
-      makeAgent({ nickname: "off", roles: ["ARC"], disabled: true }),
-      makeAgent({ nickname: "reviewer", roles: ["ARC"], mode: "review", command: "run-review" }),
-      makeAgent({ nickname: "editor", roles: ["ARC"], mode: "edit", command: "run-editor" }),
-    ]);
-
-    const actual = resolveRegisterCommand(makeItem({ owner: "ARC" }), roster, {});
-
-    expect(actual).toEqual({ command: "run-editor", actor: "editor" });
-  });
-
-  it("owner で解決できない場合は edit-mode の自動選択にフォールバックする", () => {
-    const roster = makeRoster([
-      makeAgent({ nickname: "generic", roles: ["DEV"], priority: 1, command: "run-generic" }),
-    ]);
-
-    const actual = resolveRegisterCommand(makeItem({ owner: "QE" }), roster, {});
-
-    expect(actual).toEqual({ command: "run-generic", actor: "generic" });
-  });
-
   it("--by 指定は nickname から command を解決する", () => {
     const roster = makeRoster([makeAgent({ nickname: "named", command: "run-named" })]);
 
@@ -244,10 +203,15 @@ describe("resolveRegisterCommand", () => {
     );
   });
 
-  it("候補が全く無い場合は項目 ID と owner を含むエラーを投げる", () => {
-    expect(() => resolveRegisterCommand(makeItem({ id: "PJR-0042" }), null, {})).toThrow(
-      /PJR-0042/,
-    );
+  it("--by が無い場合は owner の nickname や Role code に一致する agent があっても自動選択しない", () => {
+    const roster = makeRoster([
+      makeAgent({ nickname: "ARC", roles: ["ARC"], command: "run-arc" }),
+      makeAgent({ nickname: "generic", roles: ["DEV"], priority: 1, command: "run-generic" }),
+    ]);
+
+    expect(() =>
+      resolveRegisterCommand(makeItem({ id: "PJR-0042", owner: "ARC" }), roster, {}),
+    ).toThrow(/No agent specified for register item PJR-0042 \(owner: ARC\)/);
   });
 });
 
@@ -263,8 +227,12 @@ describe("isRegisterPipelineRequested", () => {
     expect(isRegisterPipelineRequested({ reporterBy: "report-1" })).toBe(true);
   });
 
-  it("どちらも無指定なら false を返す", () => {
-    expect(isRegisterPipelineRequested({})).toBe(false);
+  it("どちらも無指定で --by も無ければ stage_role 自動選択の pipeline として true を返す", () => {
+    expect(isRegisterPipelineRequested({})).toBe(true);
+  });
+
+  it("--by だけを指定した場合は単一 agent 実行として false を返す", () => {
+    expect(isRegisterPipelineRequested({ by: "named" })).toBe(false);
   });
 });
 
@@ -390,5 +358,70 @@ describe("resolveRegisterPipelineCommand", () => {
     expect(() =>
       resolveRegisterPipelineCommand(roster, { executorBy: "exec-1", reporterBy: "unknown" }),
     ).toThrow(/--reporter-by agent nickname not found/);
+  });
+
+  it("指定が無い場合は stage_role を持つ agent から priority 順に自動選択し、stage_role の無い agent を選ばない", () => {
+    const roster = makeRoster([
+      makeAgent({ nickname: "translator", roles: [], priority: 0, command: "run-translator" }),
+      makeAgent({
+        nickname: "review-exec",
+        roles: [],
+        stage_role: "executor",
+        mode: "review",
+        priority: 0,
+        command: "run-review-exec",
+      }),
+      makeAgent({
+        nickname: "exec-slow",
+        roles: [],
+        stage_role: "executor",
+        mode: "edit",
+        priority: 5,
+        command: "run-exec-slow",
+      }),
+      makeAgent({
+        nickname: "exec-fast",
+        roles: [],
+        stage_role: "executor",
+        mode: "edit",
+        priority: 1,
+        command: "run-exec-fast",
+      }),
+      makeAgent({
+        nickname: "report-2",
+        roles: [],
+        stage_role: "reporter",
+        mode: "report",
+        priority: 2,
+        command: "run-report-2",
+      }),
+      makeAgent({
+        nickname: "report-1",
+        roles: [],
+        stage_role: "reporter",
+        priority: 1,
+        command: "run-report-1",
+      }),
+    ]);
+
+    const actual = resolveRegisterPipelineCommand(roster, {});
+
+    expect(actual).toEqual({
+      executor: { command: "run-exec-fast", actor: "exec-fast", provider: undefined },
+      reporterCandidates: [
+        { command: "run-report-1", actor: "report-1", provider: undefined },
+        { command: "run-report-2", actor: "report-2", provider: undefined },
+      ],
+    });
+  });
+
+  it("自動選択の候補が stage_role の無い agent だけの場合は明示指定を求めるエラーを投げる", () => {
+    const roster = makeRoster([
+      makeAgent({ nickname: "translator", roles: [], command: "run-translator" }),
+    ]);
+
+    expect(() => resolveRegisterPipelineCommand(roster, {})).toThrow(
+      /No agent found for --register pipeline stage \(stage_role: executor \(mode: edit\), stage_role: reporter\)\. Specify --executor-by/,
+    );
   });
 });

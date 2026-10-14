@@ -151,3 +151,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e2a7af7b66224b24b623234b493172d0
+- v: 1
+  id: reg_5be80a1342344084bb81ee0065403a8f
+  ts: "2026-10-13T14:00:56Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 利用者が Host Mac で実機の確認をした（2026-10-13）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-13"
+    - field: conclusion
+      from: "-"
+      to: codex 指定時に seccomp=unconfined とシステムの bubblewrap の削除を scaffold が加え、生成した devcontainer で codex の sandbox が動き外への書き込みが拒否されることを確かめた
+  previous_event_id: reg_d225a6f1bccf4b37ba24af10b2ccd750

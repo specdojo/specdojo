@@ -1,0 +1,35 @@
+`task.review` を Job Definition に追加し、routine の `action.commit` は互換として残しました。grade の 2 Job では `claude-expert-review-executor` と `claude-reporter` を指名しています。追加・更新した単体テストと統合テストはまだ実行していません。typecheck・lint・テストは、この後 runner がまとめて実行します。
+
+**動きの変更**
+- **統合前 review の宣言**: Job の `task.review` があれば、`--worktree` を付けなくても worktree での実行、runner の commit、review、verdict による統合の流れになります。routine から起動しても、手動で `exec run --job` を実行しても同じです。宣言は mode によらず書け、`review: {}` だけでも宣言になります。
+- **review agent の指名**: `task.review.agent.executor` は必須、`reporter` は任意です。書式と未知キーの扱いは既存の `task.agent` に揃え、`job validate` と `job.schema.yaml` の両方で検査します。
+- **解決順**: `--review-by` / `--reporter-by` → Job の指名 → 自動選択 の順です。
+- **routine の `action.commit`**: `true` なら従来どおり `--worktree` を渡します。Job が宣言している場合は、`commit` の有無や値によらず Job が優先されます。
+- **子プロセスの再入防止**: worktree 内で Job を実行する子プロセスは、新しい環境変数 `SPECDOJO_JOB_REVIEW_WORKTREE_CHILD` で識別し、review の流れに再び入らないようにしました。
+- **dry-run の表示**: `exec run --job --dry-run` は review executor / reporter の nickname と解決元を表示します。`routine run --dry-run` は job action ごとに review の有無と指名を表示します。
+
+**grade の Job と routine**: `job-grade-kata` と `job-grade-deliverable` に宣言と指名を書きました。`rtn-grade-recheck` と `rtn-grade-deliverable-recheck` からは `commit: true` を外しました。
+
+**dry-run での確認**
+- `exec run --job job-grade-kata --dry-run` では、executor が `claude-expert-review-executor (task.review.agent.executor)`、reporter が `claude-reporter (task.review.agent.reporter)` と解決されました。
+- `--review-by claude-review-executor` を付けると、executor だけが CLI の指定に置き換わりました。
+- routine が組み立てるのと同じ引数（`--worktree` なし）で `job-grade-deliverable` を dry-run しても、worktree での review の流れになり、同じ指名で解決されました。
+- `routine run --id rtn-grade-recheck --dry-run` と `rtn-grade-deliverable-recheck` の dry-run では、どちらも `review: job task.review (executor=claude-expert-review-executor, reporter=claude-reporter)` と表示されました。
+
+**ほかに確認したこと**: `job validate` は 8 件すべてエラーなしでした。`catalog validate` も OK で、出た WARN はこの変更と関係のない既存のものです。`index build` は成功し、`[[specdojo:job-definition-standard]]` へのリンクが解決されることも確かめました。変更したファイルは Prettier で整形済みです。
+
+**テスト**
+- 単体テスト: `tests/src/job.test.ts` に解決順・宣言の解析・宣言と `--worktree` の優先を、`tests/src/routine.test.ts` に `action.commit` との優先を追加しました。schema の検査は新しいファイル `tests/docs/specdojo/schemas/job-schema.test.ts` です。
+- 統合テスト: `tests/src/exec-job-worktree.integration.test.ts` に 1 件追加しました。宣言した Job が `--worktree` なしで review と統合まで進み、指名した executor が使われることを確かめます。自動選択なら選ばれない、優先度の低い executor を指名しているので、指名が効いていることを区別できます。
+
+**文書**: job-definition-standard、routine-operation-guide、sysd-job-execution を更新しました。
+- job-definition-standard には `統合前 review の宣言と review agent の規約` を新設したため、「inputs と冪等性」の節番号が 3.6 に繰り下がっています。
+- sysd-job-execution にあった「`exec run --job --worktree` は未対応」という古い記述も、現状に合わせて直しました。
+
+**個票**: 作業内容の表と対応結果の節に記入しました。ステータスの項目は変更していません。
+
+**残っていること**: 実際の agent を使った routine 起動は確認していません。次の定期実行で `[routine-job] merged` / `waiting` の出力と、review result の `agent` を見る必要があります。
+
+<specdojo_executor_evidence>
+{"final_message":"Job Definition に task.review（統合前 review の宣言）と task.review.agent（review executor/reporter の nickname 指名）を追加。exec run --job は宣言があれば --worktree なしで worktree→commit→review→統合の流れになり、review agent は --review-by/--reporter-by → Job の指名 → 自動選択の順で解決する。routine の action.commit は互換として残し、Job の宣言を優先する。grade の 2 Job に claude-expert-review-executor と claude-reporter を指名し、2 つの routine から commit: true を外した。schema・単体テスト・統合テスト・job-definition-standard・routine-operation-guide・sysd-job-execution・個票を更新した。追加したテストは executor では実行しておらず、runner の検証で実行される。dry-run では指名どおりに解決されることを確認した。","validations":[{"command":"node --import tsx src/specdojo.ts exec run --job job-grade-kata --project prj-0001 --input period=2026-W41 --scheduled-at 2026-10-12T21:00:00Z --dry-run","status":"passed","summary":"review executor: claude-expert-review-executor (task.review.agent.executor), review reporter: claude-reporter (task.review.agent.reporter)。--review-by claude-review-executor を付けると executor だけが CLI 指定 (--review-by) に置き換わった"},{"command":"node --import tsx src/specdojo.ts exec run --job job-grade-deliverable --project prj-0001 --scheduled-at 2026-10-12T16:00:00Z --job-trigger routine --if-busy skip --input period=2026-W42 --input limit=10 --dry-run","status":"passed","summary":"--worktree なし（routine が組み立てるのと同じ引数）でも worktree での review の流れになり、claude-expert-review-executor と claude-reporter に解決された"},{"command":"node --import tsx src/specdojo.ts routine run --id rtn-grade-recheck --project prj-0001 --dry-run","status":"passed","summary":"review: job task.review (executor=claude-expert-review-executor, reporter=claude-reporter) を表示。rtn-grade-deliverable-recheck も同じ表示"},{"command":"node --import tsx src/specdojo.ts job validate --project prj-0001","status":"passed","summary":"Validated: 8 job(s), 0 error(s)"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"OK: dct-index.yaml（based_on の WARN はこの変更と関係のない既存のもの）"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2565 entries。[[specdojo:job-definition-standard]] が解決されることを確認"},{"command":"npx prettier --write <changed files>","status":"passed","summary":"変更した ts/yaml/md を整形済み（tests/src/job.test.ts のみ書式を修正）"}]}
+</specdojo_executor_evidence>

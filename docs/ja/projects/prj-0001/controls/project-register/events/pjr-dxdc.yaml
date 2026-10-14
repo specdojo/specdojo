@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_998a00d82a8a4b5aa12f69f4d4e3a802
+  ts: "2026-10-12T09:14:26Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: routine の新しい流れの試し実行（2026-10-12）で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: "--scheduled-at なしの exec run --job で worktree と実行の Run ID が食い違う"
+    - field: description
+      from: ""
+      to: task.review を宣言した Job を --scheduled-at なしで手動実行すると、worktree の作成時と worktree 内の子プロセスの実行時に別々に現在時刻を実行枠に使うため Run ID が食い違い、Job Run record was not created in worktree で失敗する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_58858845376a446fb572889962fe4015
+  ts: "2026-10-12T09:24:49Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_998a00d82a8a4b5aa12f69f4d4e3a802
+- v: 1
+  id: reg_01434d8861a54020b9b2396504b47ebf
+  ts: "2026-10-12T09:35:54Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_58858845376a446fb572889962fe4015
+- v: 1
+  id: reg_532b6c6280d1434092d902cdb08613be
+  ts: "2026-10-12T10:59:17Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 2026-10-12 19:15 の試し実行（JBR-grade-kata-ee74ff697eaf）で、worktree での実行・runner の commit・claude-expert の review（complete-with-findings）・統合（f3b5b03e3）まで通った（--scheduled-at なしの手動実行で Run ID が一致した）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: "--scheduled-at なしの手動実行で、親で確定した実行枠を worktree 内の実行へ渡し Run ID を一致させた"
+  previous_event_id: reg_01434d8861a54020b9b2396504b47ebf

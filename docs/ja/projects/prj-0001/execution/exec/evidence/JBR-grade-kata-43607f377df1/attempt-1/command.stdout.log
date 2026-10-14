@@ -1,0 +1,38 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-43607f377df1 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-43607f377df1
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/samples/imp-business-sample.md
+document complete: docs/ja/specdojo/samples/imp-business-sample.md
+document start: docs/ja/specdojo/samples/imp-data-sample.md
+document complete: docs/ja/specdojo/samples/imp-data-sample.md
+document start: docs/ja/specdojo/samples/imp-interface-sample.md
+document complete: docs/ja/specdojo/samples/imp-interface-sample.md
+document start: docs/ja/specdojo/samples/imp-operations-sample.md
+document complete: docs/ja/specdojo/samples/imp-operations-sample.md
+document start: docs/ja/specdojo/samples/imp-test-sample.md
+document complete: docs/ja/specdojo/samples/imp-test-sample.md
+document start: docs/ja/specdojo/samples/itc-index-sample.md
+document complete: docs/ja/specdojo/samples/itc-index-sample.md
+document start: docs/ja/specdojo/samples/itc-sample.md
+document complete: docs/ja/specdojo/samples/itc-sample.md
+document start: docs/ja/specdojo/samples/mip-index-sample.md
+document incomplete: docs/ja/specdojo/samples/mip-index-sample.md failed_stage=1
+document start: docs/ja/specdojo/samples/mm-sample.md
+document complete: docs/ja/specdojo/samples/mm-sample.md
+document start: docs/ja/specdojo/samples/mtp-sample.md
+document complete: docs/ja/specdojo/samples/mtp-sample.md
+document start: docs/ja/specdojo/samples/nfr-availability-sample.md
+document complete: docs/ja/specdojo/samples/nfr-availability-sample.md
+document start: docs/ja/specdojo/samples/nfr-index-sample.md
+document incomplete: docs/ja/specdojo/samples/nfr-index-sample.md failed_stage=1
+document start: docs/ja/specdojo/samples/nfr-integrity-sample.md
+document complete: docs/ja/specdojo/samples/nfr-integrity-sample.md
+document start: docs/ja/specdojo/samples/nfr-maintainability-sample.md
+document incomplete: docs/ja/specdojo/samples/nfr-maintainability-sample.md failed_stage=1
+document start: docs/ja/specdojo/samples/nfr-operations-sample.md
+document complete: docs/ja/specdojo/samples/nfr-operations-sample.md
+grade pipeline complete: selected=15 processed=15 completed_now=12 incomplete=3 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-43607f377df1/results.tsv

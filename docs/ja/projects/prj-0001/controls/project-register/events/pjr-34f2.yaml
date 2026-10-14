@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d6e8965060c2420d9de1970b6d3d78d0
+  ts: "2026-10-12T06:10:46Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: PJR-9G9Y の決定（2026-10-12）の反映
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 体系の名前を成果物・型・技に改め、標語と PDCA マトリクスを文書へ反映する
+    - field: description
+      from: ""
+      to: PJR-9G9Y の決定（C、名前は成果物・型・技）に従い、全体概要ガイドの 3 つの体系を成果物・型（Kata）・技（Waza）に改め、流（Ryu）をそれらをつなぐ属性として説明する。標語・遂行の PDCA マトリクス・「仕様書」の語・app1-workspace/ を文書へ反映する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_27616351fd324e0a98ad5eb44dee2be4
+  ts: "2026-10-12T06:23:28Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d6e8965060c2420d9de1970b6d3d78d0
+- v: 1
+  id: reg_371948b8c0e84d269b60d6d09e8a0ef2
+  ts: "2026-10-12T06:36:16Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_27616351fd324e0a98ad5eb44dee2be4
+- v: 1
+  id: reg_0156e73f993c401ca5303d1fa14a6390
+  ts: "2026-10-12T07:20:24Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（521f13686）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: 体系の名前を成果物・型・技に改め、標語・PDCA マトリクス・仕様書の語・app1-workspace/ を文書へ反映した
+  previous_event_id: reg_371948b8c0e84d269b60d6d09e8a0ef2

@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2b1136c083c144948be3ba006ff9d355
+  ts: "2026-10-12T09:14:18Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: routine の新しい流れの試し実行（2026-10-12）で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Job Run の review の result が末尾改行を欠き commit 前の検査で統合が止まる
+    - field: description
+      from: ""
+      to: Job Run の review の後に runner が verdict を書き込む fillIncompleteJobReviewResult と overrideJobReviewDecision が result を整形せず末尾改行を欠くため、review の記録の commit が markdownlint の MD047 で失敗し、すべての Job Run が統合されない
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_976a9015f3bd421fb2ce265bce5fe06a
+  ts: "2026-10-12T09:15:06Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2b1136c083c144948be3ba006ff9d355
+- v: 1
+  id: reg_14e0d3ebb4544739bbee8ec4b0ebca83
+  ts: "2026-10-12T09:23:46Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_976a9015f3bd421fb2ce265bce5fe06a
+- v: 1
+  id: reg_15c3da140c434d6bb947c95f9fc6265c
+  ts: "2026-10-12T10:59:04Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 2026-10-12 19:15 の試し実行（JBR-grade-kata-ee74ff697eaf）で、worktree での実行・runner の commit・claude-expert の review（complete-with-findings）・統合（f3b5b03e3）まで通った。review の記録の commit（f9f777a8a）が hook で止まらなかった
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: runner が書き換えた Job Run の review の result を整形し、末尾の改行の欠落で commit が止まらないようにした
+  previous_event_id: reg_14e0d3ebb4544739bbee8ec4b0ebca83

@@ -1,0 +1,11 @@
+親で確定した `scheduled_at` を子プロセスへ渡し、Run ID の不一致を修正しました。
+
+- [exec-run.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DXDC/src/exec-run.ts): 確定済み実行枠を子へ継承
+- [統合テスト](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DXDC/tests/src/exec-job-worktree.integration.test.ts): 省略時の親・子・merge の Run ID と record を検証
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-DXDC/docs/ja/projects/prj-0001/controls/project-register/pjr-dxdc-job-manual-run-id-mismatch.md): 対応結果を記録
+
+親 runner 管轄の統合テスト、型検査、lint は未実行です。
+
+<specdojo_executor_evidence>
+{"final_message":"親で確定した `scheduled_at` をworktree内の子プロセスへ継承し、手動Job実行時のRun ID不一致を修正した。省略時のRun ID一致とJob Run record作成を検証する統合テストを追加した。","validations":[{"command":"npx prettier --write src/exec-run.ts tests/src/exec-job-worktree.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-dxdc-job-manual-run-id-mismatch.md","status":"passed","summary":"変更したTypeScriptとMarkdownを整形済み"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビュー生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証に成功。既存の未作成文書に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーなし"}]}
+</specdojo_executor_evidence>

@@ -154,6 +154,29 @@ $defs:
           minLength: 1
       proficiency:
         enum: [low, normal, high, expert]
+      review:
+        $ref: "#/$defs/review"
+  review:
+    description: >
+      Declares that the Run output is reviewed before integration. A Job with this mapping runs
+      in an exec worktree, is committed by the runner, reviewed, and merged only on an accepted
+      verdict, whether a routine or a manual exec run --job starts it. An empty mapping declares
+      the review without pinning agents. agent pins the review executor/reporter nicknames; the
+      resolution order is --review-by / --reporter-by, then this agent, then auto selection.
+    type: object
+    additionalProperties: false
+    properties:
+      agent:
+        type: object
+        additionalProperties: false
+        required: [executor]
+        properties:
+          executor:
+            type: string
+            pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+          reporter:
+            type: string
+            pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
   commandTask:
     type: object
     additionalProperties: false
@@ -196,3 +219,5 @@ $defs:
         $ref: "#/$defs/pathScope"
       paths:
         $ref: "#/$defs/pathScope"
+      review:
+        $ref: "#/$defs/review"

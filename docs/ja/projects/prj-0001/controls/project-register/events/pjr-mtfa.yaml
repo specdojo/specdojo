@@ -1,0 +1,143 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dd3872b1fb194376ab031337eed951fb
+  ts: "2026-10-12T06:01:18Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: P8TK の判定基準 6（CHANGELOG）を満たすため（2026-10-12 の残タスクの見直し）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.3.0 の CHANGELOG に 10 月 11 日以降の変更と既知の問題を追記する
+    - field: description
+      from: ""
+      to: PJR-HRMS の完了後に入った変更（複数リポジトリの worktree 準備と統合の修正、routine の Job Run の worktree 実行と統合前 review、Job の review agent 指名、register の agent 自動選択、not_applicable と not_run の判定、config init の .gitignore など）と、公開時点で残る既知の問題を CHANGELOG の 0.3.0 へ追記する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_678acf0b475e428fa7d3e2ce1d000de9
+  ts: "2026-10-12T06:17:07Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dd3872b1fb194376ab031337eed951fb
+- v: 1
+  id: reg_634e32f7c2764dd28cc8360146c22645
+  ts: "2026-10-12T06:23:04Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: specdojo index build, specdojo catalog validate"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: specdojo index build, specdojo catalog validate"
+  previous_event_id: reg_678acf0b475e428fa7d3e2ce1d000de9
+- v: 1
+  id: reg_e78ce92fe8614b9d86ab3728b865a10b
+  ts: "2026-10-12T06:58:57Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: specdojo index build, specdojo catalog validate"
+      to: "-"
+  previous_event_id: reg_634e32f7c2764dd28cc8360146c22645
+- v: 1
+  id: reg_6884edf73ff24ca89c3423bb2e302781
+  ts: "2026-10-12T07:02:42Z"
+  action: wait
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: specdojo index build, specdojo catalog validate"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: specdojo index build, specdojo catalog validate"
+  previous_event_id: reg_e78ce92fe8614b9d86ab3728b865a10b
+- v: 1
+  id: reg_43d4f6012f244c61adb185691d72be49
+  ts: "2026-10-12T07:08:56Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: specdojo index build, specdojo catalog validate"
+      to: "-"
+  previous_event_id: reg_6884edf73ff24ca89c3423bb2e302781
+- v: 1
+  id: reg_7b17538c43c1428cac3f5219cde7b7da
+  ts: "2026-10-12T07:12:28Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_43d4f6012f244c61adb185691d72be49
+- v: 1
+  id: reg_d38eb9f220304edfb8708612bfaaab3a
+  ts: "2026-10-12T07:20:16Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（aebcff031）。PJR-HJ99 の移動と用語の追記は orchestrator が補正
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: CHANGELOG の 0.3.0 に 10 月 11 日以降の変更と既知の問題を追記し、移行ガイドに 3 行を加えた
+  previous_event_id: reg_7b17538c43c1428cac3f5219cde7b7da

@@ -807,7 +807,9 @@ async function runOneTrial(params: {
     trial.reporter.format_attempts = reporter.formatAttempts;
     trial.reporter.format_retries = Math.max(0, reporter.formatAttempts - 1);
     if (reporter.result === "success") {
-      const facts = deriveReporterFacts(reporterEvidence);
+      const facts = deriveReporterFacts(reporterEvidence, {
+        mode: parsePlanTaskIdentity(params.plan)?.mode ?? "edit",
+      });
       trial.reporter.structured_output = true;
       trial.reporter.outcome = facts.outcome;
       trial.reporter.output = reporter.output;

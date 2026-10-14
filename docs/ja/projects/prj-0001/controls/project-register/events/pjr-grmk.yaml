@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5ec7ccc85ec746739f2e3cf6e3dfaaef
+  ts: "2026-10-12T04:10:29Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0002 の PJR-HEPK の記帳 commit が catalog-validate で止まった
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: pre-commit の catalog-validate が catalog_path のない project で失敗する
+    - field: description
+      from: ""
+      to: lefthook の catalog-validate は project を指定せずに catalog validate を実行するため、SPECDOJO_PROJECT が catalog_path のない project（prj-0002 など）を指すシェルでは、register の記帳だけの commit でも失敗する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_0ffbdeae52ee4ad689ca348de27fa114
+  ts: "2026-10-12T04:15:48Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: 利用者の指示で担当と期限を決めた
+  changes:
+    - field: owner
+      from: _TODO_
+      to: DEV
+    - field: due
+      from: _TODO_
+      to: "2026-10-31"
+  previous_event_id: reg_5ec7ccc85ec746739f2e3cf6e3dfaaef
+- v: 1
+  id: reg_14e2fad711da41c4b737efbd4ced2ec6
+  ts: "2026-10-12T06:02:12Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0ffbdeae52ee4ad689ca348de27fa114
+- v: 1
+  id: reg_3113445dea2947a69a677633ad6a26ef
+  ts: "2026-10-12T06:15:23Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result …"
+  previous_event_id: reg_14e2fad711da41c4b737efbd4ced2ec6
+- v: 1
+  id: reg_3996198dd86b4a519240271b14fda2d7
+  ts: "2026-10-12T06:47:09Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=lefthook.yml; agent must record the required change in the result …"
+      to: "-"
+  previous_event_id: reg_3113445dea2947a69a677633ad6a26ef
+- v: 1
+  id: reg_f4dd25da3bb54f839225f7fdd5408f28
+  ts: "2026-10-12T06:57:30Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3996198dd86b4a519240271b14fda2d7
+- v: 1
+  id: reg_ec5100e78fcb4157a1ca3239ff144ee6
+  ts: "2026-10-12T07:20:01Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: lefthook.yml を exec handoff apply で適用し（09f730dd6）、再開して runner が統合（0b946d51f）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: catalog_path のない project では pre-commit の catalog-validate を飛ばすようにした
+  previous_event_id: reg_f4dd25da3bb54f839225f7fdd5408f28

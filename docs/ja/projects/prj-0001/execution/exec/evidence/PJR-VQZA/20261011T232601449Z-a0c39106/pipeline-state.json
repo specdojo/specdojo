@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-VQZA",
+  "run_id": "20261011T232601449Z-a0c39106",
+  "updated_at": "2026-10-12T00:24:08.608Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "codex-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-10-11T23:27:09.422Z",
+      "completed_at": "2026-10-11T23:38:42.163Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-VQZA/20261011T232601449Z-a0c39106/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-12T00:12:32.469Z",
+      "completed_at": "2026-10-12T00:13:33.787Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-vqza-20261011T232601Z-849e-result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-12T00:22:55.169Z",
+      "completed_at": "2026-10-12T00:24:08.608Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-vqza.yaml 17ms (unchanged); FAIL  tests/src/exec-pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (worktree) > skips commit and merge when resuming after the branch was already merged; Test Files  2 failed | 140 passed (142); Tests  2 failed | 2142 passed (2144)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-vqza-20261011T232601Z-849e-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-vqza-20261011T232601Z-849e-result.md"
+  }
+}

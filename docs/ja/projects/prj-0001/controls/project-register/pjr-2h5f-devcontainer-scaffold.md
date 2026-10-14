@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2h5f-devcontainer-scaffold
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-09-28T23:27:46Z"
+  completed_at: "2026-10-12T13:02:31Z"
+  conclusion: specdojo devcontainer scaffold で利用リポジトリに devcontainer を生成し、実機で orchestrator の起動を確かめた
 ---
 
 # PJR-2H5F specdojo devcontainer scaffold で利用リポジトリに devcontainer を生成する
@@ -39,13 +41,13 @@ scaffold の土台として、`config scaffold --provider <name>` が provider �
 
 ## 3. 作業内容
 
-| No  | 作業                                                      | 担当 | 状態           | メモ                                                                     |
-| --- | --------------------------------------------------------- | ---- | -------------- | ------------------------------------------------------------------------ |
-| 1   | 配布用の最小構成とオプションを設計する                    | ARC  | done           | Node・Git を基本とし、provider と追加機能を任意指定にした                |
-| 2   | テンプレートと `devcontainer scaffold` コマンドを実装する | DEV  | done           | package 同梱の `templates/devcontainer/` から 2 ファイルを生成する       |
-| 3   | 実機でコンテナを作り、orchestrator の起動を確認する       | DEV  | requires-human | Docker Desktop on macOS が必要。executor の Linux sandbox に Docker 無し |
-| 4   | README・コマンドリファレンスへ記載する                    | DEV  | done           | 任意手順、オプション、上書き・認証情報の方針を記載した                   |
-| 5   | PJR-E8TT に判断の変更を追記する                           | PM   | done           | 2026-09-29 の追記として反映済み                                          |
+| No  | 作業                                                      | 担当 | 状態 | メモ                                                               |
+| --- | --------------------------------------------------------- | ---- | ---- | ------------------------------------------------------------------ |
+| 1   | 配布用の最小構成とオプションを設計する                    | ARC  | done | Node・Git を基本とし、provider と追加機能を任意指定にした          |
+| 2   | テンプレートと `devcontainer scaffold` コマンドを実装する | DEV  | done | package 同梱の `templates/devcontainer/` から 2 ファイルを生成する |
+| 3   | 実機でコンテナを作り、orchestrator の起動を確認する       | DEV  | done | Host Mac で確認（2026-10-12）                                      |
+| 4   | README・コマンドリファレンスへ記載する                    | DEV  | done | 任意手順、オプション、上書き・認証情報の方針を記載した             |
+| 5   | PJR-E8TT に判断の変更を追記する                           | PM   | done | 2026-09-29 の追記として反映済み                                    |
 
 ## 4. 対応結果
 
@@ -56,6 +58,12 @@ Ollama 接続、cron、tmux はそれぞれ `--ollama`、`--cron`、`--tmux` を
 README の「使い始める」では Dev Container を任意手順として案内し、[[specdojo:command-reference]] には全オプション、named volume の保存先、分離方針、dotfiles の扱いを記載した。[[prj-0001:pjr-e8tt-initial-release-positioning]] には、配布用の最小構成を分離できたため初期リリースへ含めるという判断変更を追記した。単体テストは基本構成、追加機能、provider ごとの mount と導入コマンド、既存構成の保護、`--force`、リポジトリ名の正規化を対象とする。
 
 executor 環境には Docker と `devcontainer` CLI が無いため、Docker Desktop on macOS での作成と orchestrator の起動確認は実施できない。Host Mac で空のリポジトリに `config scaffold --provider <provider>` と `devcontainer scaffold --provider <provider>` を適用し、`devcontainer up --workspace-folder .` の後に `devcontainer exec --workspace-folder . npm run orch:opus`（Claude）、`orch:codex`、`orch:opencode`、`orch:agy` をそれぞれ実行して確認する。この確認は対話ログインや provider の利用枠を使うため、人が実施する。Codex の sandbox 固有の確認は [[prj-0001:pjr-ezaf-devcontainer-template-codex-sandbox]] で追跡する。
+
+実機の確認（2026-10-12、利用者）: Host Mac の Docker Desktop で、`npm pack` の tarball（0.3.0）を入れた確認用のリポジトリに `specdojo devcontainer scaffold --provider claude,codex --editor emacs --tmux` で devcontainer を生成してコンテナを作り、`config init`・`config scaffold --provider claude` の後に `npm run orch:opus` で orchestrator が起動することを確かめた。確認の過程で次の点が分かった。
+
+- `docker exec` で直接入ると既定のユーザーが root になり、node のホームに入った `claude` が見つからない（`spawn claude ENOENT`）。`-u node` を付けると解消する。[[prj-0001:pjr-pv5b-devcontainer-scaffold-observations]] に記録した。
+- `--tmux` などの任意機能は指定しないと入らない（同上）。
+- codex の sandbox がシステムの bubblewrap で失敗する件は [[prj-0001:pjr-xy4c-devcontainer-codex-system-bwrap]] で扱う。
 
 ## 5. 関連ドキュメント
 

@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-ADZ6",
+  "run_id": "20261012T015313423Z-c3d227cd",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-12T01:54:06.589Z",
+    "completed_at": "2026-10-12T01:57:18.806Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-adz6-register-run-non-pipeline-agent-fallback.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-adz6-register-run-non-pipeline-agent-fallback.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": "...dz6-register-run-non-pipeline-agent-fallback.md |   8 +-\n docs/ja/specdojo/references/command-reference.md   |   6 +-\n src/exec-run.ts                                    | 134 +++++++++++----------\n tests/src/exec-register.test.ts                    | 127 +++++++++++--------\n 4 files changed, 163 insertions(+), 112 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-run.ts tests/src/exec-register.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-adz6-register-run-non-pipeline-agent-fallback.md",
+      "status": "passed",
+      "summary": "4ファイルとも整形済み（unchanged）"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "ERROR 0件。既存の based_on 対象文書未検出の WARN のみ"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo index build",
+      "status": "not_run",
+      "summary": "出力先の `.specdojo/doc-index.json` は agent の書き込み禁止対象のため、executor sandbox では実行しなかった。文書 id の追加・変更はない。runner または人が実行する"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ADZ6\n\nInstalling worktree dependencies: .\nInstalling worktree dependencies: packages/vscode-specdojo\nInstalling worktree dependencies: .\ncommit-targets:\n  execution/exec/results/T-T-doc-010-result.md\n  docs/a.md\nGenerating worktree artifacts: specdojo build\n[dry-run] git merge --no-ff --no-edit exec/T-T-doc-010\ncommit-targets\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ADZ6/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ADZ6/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ADZ6\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-vLujjo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ga8qd7/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-FprOIJ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-DvPV2D/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  37.04s (transform 2.26s, setup 554ms, import 17.12s, tests 39.51s, environment 6ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "PJR-ADZ6 は推奨案 (b) で対応した。`--by` も `--executor-by` / `--reporter-by` も無い `exec run --register` は、`stage_role: executor`（`mode: edit` または未指定）と `stage_role: reporter` の agent から `priority` 順に自動で選んで2段階で実行する。`stage_role` を持たない agent（`gemma26-translator` など）は選ばれない。どちらかの段に候補がいなければ明示指定を求めるエラーで止まる。`resolveRegisterCommand` は `--by` 指定時だけを扱い、owner・role・汎用候補からの自動選択をやめた。変更ファイル: `src/exec-run.ts`（`isRegisterPipelineRequested`、`resolveRegisterPipelineCommand`、`resolveRegisterCommand` の変更と `autoSelectRegisterPipelineAgents` の追加）、`tests/src/exec-register.test.ts`（旧 owner/role テストを削除し、自動選択の除外・エラー・owner 不使用のテストを追加）、`docs/ja/specdojo/references/command-reference.md`（`--register` の agent 選択の記述を改訂）、個票 `pjr-adz6-register-run-non-pipeline-agent-fallback.md`（対応結果を記入。ステータス項目は変更していない）。追加・更新したテストは executor では実行しておらず、親 runner の `test:unit` / `test:integration` が実行する。申し送り: `.specdojo/agent-members.yaml` 冒頭の規約コメント「agent は全員 `stage_role` を持つ」に対し `gemma26-translator` は `stage_role` を持たない。同ファイルは agent の書き込み禁止対象のため、例外の明記か規約の見直しは人が行う。個票の完了条件（pm-members 規約と実装の一致）はそれまで満たせない。また、フラグなしの `--register` は単一 agent 実行から2段階実行に変わったため、従来の動きが必要な場合は `--by` を指定する。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-ADZ6/20261012T015313423Z-c3d227cd/executor.log",
+      "bytes": 6041,
+      "truncated": false
+    }
+  ]
+}

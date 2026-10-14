@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e30f9da01fba4191bc668632f524fd1f
+  ts: "2026-10-11T22:15:35Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: 利用者の依頼（10/12 の定期 grade の出力の手動 commit を受けて）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 定期実行の出力を実行後に commit する
+    - field: description
+      from: ""
+      to: routine が起動する Job（grade など）は本体の作業場所で出力を作るが commit せず、人や orchestrator が後から手で記録している。実行後に出力を commit する仕組みを、ブランチを切る方式と統合先へ直接 commit する方式を比較して決め、実装する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-12"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_65ed1914fc784297871d7c141dad8a4d
+  ts: "2026-10-11T22:30:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e30f9da01fba4191bc668632f524fd1f
+- v: 1
+  id: reg_62b091a79dc2410b977068c920b299a6
+  ts: "2026-10-11T22:43:11Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_65ed1914fc784297871d7c141dad8a4d
+- v: 1
+  id: reg_1b4a641621d845358937fe26184d7ba5
+  ts: "2026-10-11T23:26:18Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_62b091a79dc2410b977068c920b299a6
+- v: 1
+  id: reg_3628a37a935c49658497c15785df533d
+  ts: "2026-10-11T23:42:12Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_1b4a641621d845358937fe26184d7ba5
+- v: 1
+  id: reg_32ff1ccb36ba4736843fa0d633607746
+  ts: "2026-10-12T00:09:19Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_3628a37a935c49658497c15785df533d
+- v: 1
+  id: reg_d0ede86731e0468194bd797e15b5b4f7
+  ts: "2026-10-12T00:16:13Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-vqza.yaml 17ms (unchanged); FAIL  tests/src/exec-pipeline-e2e.integration.test.ts >…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-vqza.yaml 17ms (unchanged); FAIL  tests/src/exec-pipeline-e2e.integration.test.ts >…"
+  previous_event_id: reg_32ff1ccb36ba4736843fa0d633607746
+- v: 1
+  id: reg_f220be6e8d844c50a3ba13235f278075
+  ts: "2026-10-12T00:19:32Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-vqza.yaml 17ms (unchanged); FAIL  tests/src/exec-pipeline-e2e.integration.test.ts >…"
+      to: "-"
+  previous_event_id: reg_d0ede86731e0468194bd797e15b5b4f7
+- v: 1
+  id: reg_734977add34040639e997f612002520b
+  ts: "2026-10-12T00:24:08Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f220be6e8d844c50a3ba13235f278075
+- v: 1
+  id: reg_aab0044e571a47f5aaeef5857cf366f4
+  ts: "2026-10-12T10:58:27Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: 2026-10-12 19:15 の試し実行（JBR-grade-kata-ee74ff697eaf）で、worktree での実行・runner の commit・claude-expert の review（complete-with-findings）・統合（f3b5b03e3）まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: routine が起動する Job Run を worktree で実行し、runner の commit・review・verdict による統合を経る流れを入れた
+  previous_event_id: reg_734977add34040639e997f612002520b

@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4da22fd23f2141569744d68fd31503e1
+  ts: "2026-10-11T13:42:47Z"
+  action: add
+  actor: naoji3x
+  from_status: null
+  to_status: open
+  reason: prj-0002 PJR-CM5W の実行で観測
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 再開時の同期で内容が同じ未追跡ファイルを戻せず再開が拒否される
+    - field: description
+      from: ""
+      to: "--resume の同期で、統合先に入れた保護対象と同じ内容の未追跡ファイルが worktree に残ると stash から戻せず再開を拒否する。exec-operation-guide は内容が同じなら解消すると記載している"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-11"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_e70dc5043ccc47d2985640c67d2058a6
+  ts: "2026-10-12T02:17:28Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4da22fd23f2141569744d68fd31503e1
+- v: 1
+  id: reg_6204460f8e0948eca864684383a6cd6b
+  ts: "2026-10-12T02:18:32Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_e70dc5043ccc47d2985640c67d2058a6
+- v: 1
+  id: reg_b4cc6e8950c24135ad78b2aec1eb88ef
+  ts: "2026-10-12T03:47:24Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_6204460f8e0948eca864684383a6cd6b
+- v: 1
+  id: reg_c11871afd65d43dc8566886d2906a913
+  ts: "2026-10-12T03:57:29Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b4cc6e8950c24135ad78b2aec1eb88ef
+- v: 1
+  id: reg_41e06f41c7ca46c99e87de4ef356f12b
+  ts: "2026-10-12T07:19:23Z"
+  action: close
+  actor: naoji3x
+  from_status: review
+  to_status: done
+  reason: exec run --register で実装し runner が統合。統合と対応結果の記録を orchestrator が確認（c3cfc95f6）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-12"
+    - field: conclusion
+      from: "-"
+      to: 再開時の同期で、統合先から入った同じ内容の未追跡ファイルを解消済みとして扱うようにした
+  previous_event_id: reg_c11871afd65d43dc8566886d2906a913

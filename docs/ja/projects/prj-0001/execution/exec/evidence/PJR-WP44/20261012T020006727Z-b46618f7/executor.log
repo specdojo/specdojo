@@ -1,0 +1,28 @@
+`not_applicable` の判定を修正しました。正当な対象外の検証は受理され、適用される検証を対象外と申告した場合は従来どおり退けられます。追加した単体テストは、まだ誰も実行していません。テストと型検査は親 runner に任せており、sandbox 内では実行していないためです。
+
+**原因と対応**（`src/exec-reporter.ts`）
+
+1. **run の対象 project で判定していなかった**: `specdojo catalog validate` を `--project` なしで実行すると、`catalog_path` を持つ `current_project`（prj-0001）で判定されていました。対象は「`--project` → run の対象 project → `current_project`」の順に決めるよう変えました。
+   - run の対象 project は、execution path が一致する project が設定内に 1 つだけある場合に特定します。0 件や複数件のときは特定しません。
+   - 特定した project は、reporter に渡す evidence の `runner_scope` に入れます（`evidence.json` には保存しません）。これで reporter 用の判定と最終の成否判定が同じ project を使います。
+2. **プロダクトリポジトリのコマンドを project 側の `package.json` で判定していた**: 引数に `<repo>:<path>` を含むコマンドと、`--prefix <repo>` 付きのコマンドは、対象 project が `repos` で宣言したそのリポジトリの `package.json` で script と依存を判定するようにしました。`--prefix` には、リポジトリ名と設定の `path` のどちらを書いても一致します。runner が対象外と判断したときの理由文にはリポジトリ名を入れます。
+
+**その他の変更**
+
+- **executor への指示**（`src/exec-run.ts`）: `not_applicable` が退けられる条件を箇条書きにしました。npm script・npx package・プロダクトリポジトリの扱い・`catalog_path` を書いています。
+- **単体テスト**（`tests/src/exec-reporter.test.ts`）: 個票の完了条件にある 4 つの場合をテストに追加しました。
+  - 受理される場合: プロダクト側に prettier や script が無い。run の対象 project に `catalog_path` が無い。
+  - 退けられる場合: project 側に依存がある。対象 project に `catalog_path` がある。
+- **ガイド**（`exec-config-guide.md`、`exec-operation-guide.md`）: 対象 project の決め方と、プロダクトリポジトリのコマンドの判定先を追記しました。
+- **個票**（`pjr-wp44-not-applicable-reason-criteria.md`）: 「対応結果」を記入しました。登録簿の行と個票のステータスは変えていません。
+
+**検証**
+
+- Prettier（変更した TS 3 ファイルと Markdown 3 ファイル）と markdownlint（Markdown 3 ファイル）は通りました。
+- `catalog validate` は最後に `OK: dct-index.yaml` と出ました。ほかの行は既存の `based_on` の WARN でした。出力末尾しか見ておらず、終了コードは取っていません。
+- `index build` は成功しました。
+- 親 runner が実行する lint・テスト・`typecheck` は、指示どおり実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-WP44: not_applicable judgement now uses the run's target project for specdojo catalog validate (--project, then the project whose execution path matches, then current_project). It also uses the declared product repository's package.json for commands with a <repo>:<path> argument or --prefix <repo>. The run's project is carried as runner_scope on the reporter-only evidence so evidenceForReporter and deriveReporterFacts agree. The executor prompt now lists the not_applicable rejection conditions. Added unit tests in tests/src/exec-reporter.test.ts, which have not run yet; parent runner owns test-unit and typecheck. Updated exec-config-guide, exec-operation-guide and the PJR-WP44 ticket's 対応結果 section. Changed: src/exec-reporter.ts, src/exec-run.ts, tests/src/exec-reporter.test.ts, docs/ja/specdojo/guides/exec-config-guide.md, docs/ja/specdojo/guides/exec-operation-guide.md, docs/ja/projects/prj-0001/controls/project-register/pjr-wp44-not-applicable-reason-criteria.md.","validations":[{"command":"npx prettier --write src/exec-reporter.ts src/exec-run.ts tests/src/exec-reporter.test.ts","status":"passed","summary":"formatted; src/exec-reporter.ts reformatted, others unchanged"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-wp44-not-applicable-reason-criteria.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md","status":"passed","summary":"formatted; ticket table reformatted"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-wp44-not-applicable-reason-criteria.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md","status":"passed","summary":"no markdownlint errors"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"output ends with OK: dct-index.yaml; only pre-existing based_on WARN lines; exit code not captured (output was piped through tail)"},{"command":"node --import tsx src/specdojo.ts index build","status":"passed","summary":"Built index: 2569 entries"},{"command":"specdojo register build","status":"not_applicable","summary":"pjr-index.md not changed","reason":"register build applies only when pjr-index.md is changed; only an individual ticket file was edited"}]}
+</specdojo_executor_evidence>

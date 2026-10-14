@@ -16,7 +16,14 @@ import {
   writeJson,
 } from "./exec-shared.js";
 import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./exec-run-lock.js";
-import { resolveJobPaths } from "./job.js";
+import {
+  jobDeclaresReview,
+  jobRunUsesReviewedIntegration,
+  loadJobDefinition,
+  resolveJobPaths,
+  resolveJobReviewAgentNominations,
+  type JobDefinition,
+} from "./job.js";
 
 // ================================
 // Types
@@ -28,6 +35,7 @@ export type RoutineJobAction = {
   kind: "job";
   job: string;
   inputs?: Record<string, string>;
+  commit?: boolean;
 };
 
 // exec の実行ロックを取らずに specdojo サブコマンドを直接起動する action。dashboard build のように
@@ -76,6 +84,7 @@ export type RoutineExecutionResult = "success" | "failure" | "skipped";
 export type RoutineStateEntry = {
   last_run: string;
   last_result?: RoutineExecutionResult;
+  last_reason?: string;
   last_scheduled_for?: string;
   last_action_results?: RoutineActionResult[];
 };
@@ -94,6 +103,7 @@ export type RoutineRunHistoryEntry = {
   completed_at: string;
   result: RoutineExecutionResult;
   job_run_ids: string[];
+  reason?: string;
 };
 
 export function routineActionKindLabel(action: RoutineActionList): string {
@@ -313,7 +323,7 @@ function parseRoutineAction(
   }
 
   const unknownKeys = Object.keys(value).filter(
-    (key) => key !== "kind" && key !== "job" && key !== "inputs",
+    (key) => key !== "kind" && key !== "job" && key !== "inputs" && key !== "commit",
   );
   if (unknownKeys.length > 0) {
     errors.push(`${fieldName} has unknown key(s): ${unknownKeys.sort().join(", ")}`);
@@ -331,11 +341,15 @@ function parseRoutineAction(
   ) {
     errors.push(`${fieldName}.inputs must be a mapping of string values`);
   }
+  if (value.commit !== undefined && typeof value.commit !== "boolean") {
+    errors.push(`${fieldName}.commit must be a boolean`);
+  }
 
   return {
     kind: "job",
     job: typeof value.job === "string" ? value.job : "",
     ...(isRecord(value.inputs) ? { inputs: value.inputs as Record<string, string> } : {}),
+    ...(typeof value.commit === "boolean" ? { commit: value.commit } : {}),
   };
 }
 
@@ -622,13 +636,35 @@ function ensureFreshDistForRoutineRun(): boolean {
   return result.outcome !== "rebuild-failed";
 }
 
+let lastRoutineSpawnReason: string | undefined;
+let lastRoutineSpawnRunId: string | undefined;
+
 function spawnSelf(args: string[]): RoutineExecutionResult {
+  lastRoutineSpawnReason = undefined;
+  lastRoutineSpawnRunId = undefined;
   const [exe, fullArgs] = selfRunArgs(args);
   const result = spawnSync(exe, fullArgs, {
-    stdio: "inherit",
+    encoding: "utf8",
+    stdio: ["inherit", "pipe", "pipe"],
+    maxBuffer: 128 * 1024 * 1024,
     cwd: specdojoRootDir(),
     env: { ...process.env, [ROUTINE_EXEC_ENV]: "1" },
   });
+  if (result.stdout) process.stdout.write(result.stdout);
+  if (result.stderr) process.stderr.write(result.stderr);
+  const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+  const marker = [...output.matchAll(/^\[routine-job\]\s+([^\n]+)$/gm)].at(-1)?.[1];
+  if (marker) {
+    lastRoutineSpawnRunId = marker.match(/\brun_id=([^\s]+)/)?.[1];
+    lastRoutineSpawnReason = marker.match(/\breason=(.+)$/)?.[1]?.trim();
+  }
+  if (!lastRoutineSpawnReason && result.status !== 0) {
+    lastRoutineSpawnReason = String(result.stderr ?? "")
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .at(-1);
+  }
   if (result.status === ROUTINE_BUSY_SKIP_EXIT_CODE) return "skipped";
   return result.status === 0 ? "success" : "failure";
 }
@@ -660,12 +696,34 @@ export function buildJobRunArgs(
     "--if-busy",
     "skip",
   ];
+  // action.commit is kept for compatibility. A Job that declares task.review is reviewed by
+  // exec run regardless of this flag, so the Job's declaration takes precedence.
+  if (action.commit) args.push("--worktree");
   for (const [key, value] of Object.entries(action.inputs ?? {}).sort(([a], [b]) =>
     a.localeCompare(b),
   )) {
     args.push("--input", `${key}=${renderRoutineInput(value, scheduledAt, timezone)}`);
   }
   return args;
+}
+
+/**
+ * Describes how a job action's Run is integrated and which review agents the Job nominates.
+ * The Job's task.review declaration wins over the legacy routine `commit`; routine never
+ * passes --review-by / --reporter-by, so an agent without a Job nomination is auto selected.
+ */
+export function describeJobActionReview(
+  action: RoutineJobAction,
+  definition: Pick<JobDefinition, "task">,
+): string {
+  if (!jobRunUsesReviewedIntegration(definition, { worktree: action.commit === true })) {
+    return "review: none (in-place)";
+  }
+  const source = jobDeclaresReview(definition)
+    ? "job task.review"
+    : "routine action.commit (compat)";
+  const nominations = resolveJobReviewAgentNominations({}, definition);
+  return `review: ${source} (executor=${nominations.executor?.nickname ?? "auto"}, reporter=${nominations.reporter?.nickname ?? "auto"})`;
 }
 
 export function aggregateRoutineActionResults(
@@ -699,7 +757,19 @@ function executeRoutineAction(
       ? buildSpecdojoActionArgs(action, projectId)
       : buildJobRunArgs(action, projectId, scheduledAt, doc.trigger?.timezone ?? "UTC");
   if (dryRun) {
+    lastRoutineSpawnReason = undefined;
+    lastRoutineSpawnRunId = undefined;
     process.stdout.write(`  [dry-run] specdojo ${args.join(" ")}\n`);
+    if (action.kind === "job") {
+      try {
+        const definition = loadJobDefinition(resolveJobPaths(projectId), action.job);
+        process.stdout.write(`  [dry-run] ${describeJobActionReview(action, definition)}\n`);
+      } catch (error) {
+        process.stdout.write(
+          `  [dry-run] review: unknown (${error instanceof Error ? error.message : String(error)})\n`,
+        );
+      }
+    }
     return "success";
   }
   return spawnSelf(args);
@@ -717,6 +787,7 @@ type RoutineRunResult = {
   result: RoutineExecutionResult;
   actionResults?: RoutineActionResult[];
   jobRunIds: string[];
+  reason?: string;
 };
 
 function findJobRunId(
@@ -765,7 +836,8 @@ function executeRoutine(
     const jobRunId = dryRun ? undefined : findJobRunId(doc.action, projectId, scheduledAt);
     return {
       result,
-      jobRunIds: jobRunId ? [jobRunId] : [],
+      jobRunIds: lastRoutineSpawnRunId ? [lastRoutineSpawnRunId] : jobRunId ? [jobRunId] : [],
+      ...(lastRoutineSpawnReason ? { reason: lastRoutineSpawnReason } : {}),
     };
   }
 
@@ -785,7 +857,14 @@ function executeRoutine(
         const runId = findJobRunId(action, projectId, scheduledAt);
         return runId ? [runId] : [];
       });
-  return { result, actionResults, jobRunIds };
+  return {
+    result,
+    actionResults,
+    jobRunIds: [
+      ...new Set([...(lastRoutineSpawnRunId ? [lastRoutineSpawnRunId] : []), ...jobRunIds]),
+    ],
+    ...(lastRoutineSpawnReason ? { reason: lastRoutineSpawnReason } : {}),
+  };
 }
 
 // ================================
@@ -993,6 +1072,7 @@ export function registerRoutineCommands(program: Command): void {
           state.routines[entry.doc.id] = {
             ...state.routines[entry.doc.id],
             last_result: result,
+            ...(execution.reason ? { last_reason: execution.reason } : { last_reason: undefined }),
             last_action_results: execution.actionResults,
           };
           writeRoutineState(paths, state);
@@ -1004,6 +1084,7 @@ export function registerRoutineCommands(program: Command): void {
             completed_at: nowUtcIsoSeconds(),
             result,
             job_run_ids: execution.jobRunIds,
+            ...(execution.reason ? { reason: execution.reason } : {}),
           });
         }
       }

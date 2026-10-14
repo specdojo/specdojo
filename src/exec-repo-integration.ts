@@ -7,6 +7,7 @@ import {
   abortMerge,
   commitTargetPaths,
   isExecBranchMergedIntoCurrent,
+  recordRootNewFilesHandoff,
   REGISTER_NEW_FILE_DIR_PREFIXES,
   repoRelative,
   stabilizeCommitTargets,
@@ -40,6 +41,13 @@ const DEFAULT_LOCK_STALE_MS = 300_000;
 
 // プロダクト側でも生成物として再生成されるため commit 対象にしないパス。
 const PRODUCT_EXCLUDED_PATHS: ReadonlySet<string> = new Set([".specdojo/doc-index.json"]);
+
+export function isProductExcludedPath(path: string): boolean {
+  const normalized = path.replaceAll("\\", "/");
+  if (PRODUCT_EXCLUDED_PATHS.has(normalized)) return true;
+  if (normalized === "tmp" || normalized.startsWith("tmp/")) return true;
+  return false;
+}
 
 function zeroSeparated(cwd: string, args: string[]): string[] {
   return gitOutput(cwd, args).split("\0").filter(Boolean);
@@ -87,7 +95,7 @@ export function partitionProductCommitTargets(
   targetPaths: readonly string[] = [],
 ): ProductCommitPartition {
   const candidates = worktreeStatusPaths(product.path).filter(
-    (path) => !PRODUCT_EXCLUDED_PATHS.has(path),
+    (path) => !isProductExcludedPath(path),
   );
   if (candidates.length === 0) return { targets: [], outOfScope: [] };
   const tracked = new Set(
@@ -113,9 +121,11 @@ export function partitionProductCommitTargets(
   const targets: string[] = [];
   const outOfScope: string[] = [];
   for (const path of candidates) {
+    const isTopLevel = !path.includes("/");
     const allowed =
       tracked.has(path) ||
       allowedFiles.has(path) ||
+      isTopLevel ||
       allowedPrefixes.some((prefix) => path.startsWith(prefix));
     (allowed ? targets : outOfScope).push(path);
   }
@@ -127,6 +137,7 @@ export type ProductCommitOutcome = {
   targets: string[];
   outOfScope: string[];
   committed: boolean;
+  rootNewFiles: string[];
 };
 
 /** Commit the commit targets of one product worktree onto its exec branch. */
@@ -136,12 +147,27 @@ export function commitProductWorktree(
 ): ProductCommitOutcome {
   const targetPaths = params.targetPaths ?? [];
   const { targets, outOfScope } = partitionProductCommitTargets(product, targetPaths);
+  const tracked = new Set(
+    zeroSeparated(product.path, [
+      "ls-tree",
+      "-r",
+      "--name-only",
+      "--full-tree",
+      "-z",
+      "HEAD",
+      "--",
+      ...targets,
+    ]),
+  );
+  const rootNewFiles = targets.filter((path) => !path.includes("/") && !tracked.has(path));
   if (targets.length === 0) {
-    return { repo: product.name, targets, outOfScope, committed: false };
+    return { repo: product.name, targets, outOfScope, committed: false, rootNewFiles: [] };
   }
   stageCommitTargets(product.path, targets);
   const staged = gitResult(product.path, ["diff", "--cached", "--quiet", "--", ...targets]);
-  if (staged.status === 0) return { repo: product.name, targets, outOfScope, committed: false };
+  if (staged.status === 0) {
+    return { repo: product.name, targets, outOfScope, committed: false, rootNewFiles: [] };
+  }
   if (staged.status !== 1) {
     throw new Error(`${product.name}: failed to inspect staged changes in ${product.path}`);
   }
@@ -167,7 +193,7 @@ export function commitProductWorktree(
     undefined,
     params.failureLogPath,
   );
-  return { repo: product.name, targets, outOfScope, committed: true };
+  return { repo: product.name, targets, outOfScope, committed: true, rootNewFiles };
 }
 
 /**
@@ -181,6 +207,7 @@ export function commitProductWorktrees(params: {
   targets?: readonly string[];
   scopeLogPath?: string;
   failureLogPath?: string;
+  resultPath?: string;
 }): ProductCommitOutcome[] {
   const products = params.worktree.repos ?? [];
   if (products.length === 0) return [];
@@ -200,6 +227,16 @@ export function commitProductWorktrees(params: {
           .join("\n")}\n`,
       );
     }
+    if (outcome.committed && outcome.rootNewFiles.length > 0) {
+      const rootNewWarning =
+        `最上位に追加したファイル:\n` +
+        `${outcome.rootNewFiles.map((path) => `  ${product.name}:${path}`).join("\n")}\n`;
+      process.stdout.write(rootNewWarning);
+      if (params.scopeLogPath) {
+        mkdirSync(dirname(params.scopeLogPath), { recursive: true });
+        appendFileSync(params.scopeLogPath, rootNewWarning, "utf8");
+      }
+    }
     if (outcome.outOfScope.length > 0) {
       const warning =
         `commit-scope: skipped non-target changes (left in worktree):\n` +
@@ -211,6 +248,12 @@ export function commitProductWorktrees(params: {
       }
     }
     outcomes.push(outcome);
+  }
+  const allProductRootNewFiles = outcomes
+    .filter((outcome) => outcome.committed)
+    .flatMap((outcome) => outcome.rootNewFiles.map((path) => `${outcome.repo}:${path}`));
+  if (params.resultPath && allProductRootNewFiles.length > 0) {
+    recordRootNewFilesHandoff(params.resultPath, allProductRootNewFiles);
   }
   return outcomes;
 }
@@ -308,9 +351,7 @@ export function productMergeBlockers(product: ProductWorktree): RepoIntegrationB
   const block = (message: string): RepoIntegrationBlocker => ({ repo: product.name, message });
   if (!existsSync(product.path)) return [block(`worktree is missing: ${product.path}`)];
   const blockers: RepoIntegrationBlocker[] = [];
-  const leftover = worktreeStatusPaths(product.path).filter(
-    (path) => !PRODUCT_EXCLUDED_PATHS.has(path),
-  );
+  const leftover = worktreeStatusPaths(product.path).filter((path) => !isProductExcludedPath(path));
   if (leftover.length > 0) {
     blockers.push(
       block(
@@ -563,6 +604,31 @@ function applyStashedWorktree(cwd: string, stashOid: string): ReturnType<typeof 
   return gitResult(cwd, ["stash", "apply", "--quiet", stashOid]);
 }
 
+function treeObjectAt(cwd: string, ref: string, path: string): string | undefined {
+  const entry = gitResult(cwd, ["ls-tree", "-z", ref, "--", path]);
+  if (entry.status !== 0) return undefined;
+  const output = gitText(entry.stdout);
+  const separator = output.indexOf("\t");
+  if (separator < 0) return undefined;
+  return output.slice(0, separator).split(" ").at(-1);
+}
+
+function classifyTrackedStashedUntrackedPaths(
+  cwd: string,
+  stash: StashedWorktree,
+): { identical: string[]; conflicting: string[] } {
+  const identical: string[] = [];
+  const conflicting: string[] = [];
+  const untrackedRef = `${stash.oid}^3`;
+  for (const path of stash.untrackedPaths) {
+    const mergedObject = treeObjectAt(cwd, "HEAD", path);
+    if (!mergedObject) continue;
+    const stashedObject = treeObjectAt(cwd, untrackedRef, path);
+    (stashedObject === mergedObject ? identical : conflicting).push(path);
+  }
+  return { identical, conflicting };
+}
+
 function restoreOriginalWorktree(params: {
   cwd: string;
   repo: string;
@@ -667,6 +733,37 @@ export function syncWorktreeWithIntegrationTarget(params: {
   }
 
   if (stash) {
+    const trackedUntracked = classifyTrackedStashedUntrackedPaths(cwd, stash);
+    if (trackedUntracked.conflicting.length > 0) {
+      restoreOriginalWorktree({
+        cwd,
+        repo,
+        originalHead,
+        stash,
+        reason:
+          `uncommitted executor changes conflict with ${target}: ` +
+          `untracked files differ from tracked integration files: ${trackedUntracked.conflicting.join(", ")}`,
+      });
+    }
+    if (trackedUntracked.identical.length > 0) {
+      const removed = gitResult(cwd, [
+        "rm",
+        "--quiet",
+        "--force",
+        "--",
+        ...trackedUntracked.identical,
+      ]);
+      if (removed.status !== 0) {
+        const detail = gitFailure(removed) || `exit ${removed.status ?? "unknown"}`;
+        restoreOriginalWorktree({
+          cwd,
+          repo,
+          originalHead,
+          stash,
+          reason: `cannot prepare identical untracked files for restore: ${detail}`,
+        });
+      }
+    }
     const restored = applyStashedWorktree(cwd, stash.oid);
     if (restored.status !== 0) {
       const detail = gitFailure(restored) || `exit ${restored.status ?? "unknown"}`;
@@ -677,6 +774,19 @@ export function syncWorktreeWithIntegrationTarget(params: {
         stash,
         reason: `uncommitted executor changes conflict with ${target}: ${detail}`,
       });
+    }
+    if (trackedUntracked.identical.length > 0) {
+      const resolved = gitResult(cwd, ["checkout", "HEAD", "--", ...trackedUntracked.identical]);
+      if (resolved.status !== 0) {
+        const detail = gitFailure(resolved) || `exit ${resolved.status ?? "unknown"}`;
+        restoreOriginalWorktree({
+          cwd,
+          repo,
+          originalHead,
+          stash,
+          reason: `cannot finish restoring identical untracked files: ${detail}`,
+        });
+      }
     }
     dropStash(cwd, stash.oid);
   }

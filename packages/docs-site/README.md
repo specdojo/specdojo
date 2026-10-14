@@ -13,6 +13,17 @@ npx specdojo-docs-site build .
 `npx specdojo-docs-site mermaid .` を使います。分離パッケージが未導入ならこれらのコマンドは
 利用できませんが、`specdojo` の `register` / `exec` / `catalog` / `grade` には影響しません。
 
+`build` の結果は閲覧対象の workspace（コマンドに渡したディレクトリ）の `.vitepress/dist`、
+cache は同じく `.vitepress/cache` へ出力します。package の中（`node_modules/@specdojo/docs-site/`）
+へは書き込まないため、`npm ci` や再導入で消えず、package を共有する複数の workspace でも出力が
+混ざりません。`.vitepress/` 配下はページとして走査しません。生成物を Git 管理対象から外すため、
+利用リポジトリの `.gitignore` に次を加えてください。
+
+```text
+/.vitepress/dist
+/.vitepress/cache
+```
+
 `build` と `dev` は、ページを走査する前に `specdojo` package が同梱する
 `docs/ja/specdojo` 配下（rulebook / standard / recipe / sample / template などの kata と、
 kata からリンクされる guide / reference）のうち、利用リポジトリに無いものを workspace 直下の

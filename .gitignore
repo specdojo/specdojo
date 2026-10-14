@@ -61,8 +61,8 @@ config/credentials.json
 *.key
 
 # vitepress build output
-/packages/docs-site/.vitepress/dist
-/packages/docs-site/.vitepress/cache
+/.vitepress/dist
+/.vitepress/cache
 /packages/docs-site/.vitepress/.temp
 /public/mermaid
 /local

@@ -5,8 +5,8 @@ path: docs/ja/product/030-architecture/020-infrastructure/tsd-omlx.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 53
-graded_at: "2026-10-09T16:09:24.874Z"
+score: 67
+graded_at: "2026-10-11T16:19:55.814Z"
 graded_by: agy-expert-executor
 content_hash: 7f1eeefb1bf53c1501bc80e7bd2fd3b7d38758383a042fd999946701eaec5923
 source_hashes:
@@ -18,57 +18,57 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 50
+    score: 63
   operations:
-    score: 38
+    score: 56
   planning:
-    score: 25
+    score: 50
   business:
-    score: 42
+    score: 58
   consistency:
-    score: 25
+    score: 50
   architecture:
-    score: 75
+    score: 83
   usability:
     score: 94
   implementation:
-    score: 25
+    score: 50
   quality:
-    score: 56
+    score: 69
 viewpoints:
   vp-po-purpose-alignment:
     level: 3
     score: 75
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-control-reporting:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-business-value:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 3
     score: 75
@@ -76,23 +76,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-testability:
     level: 3
     score: 75
   vp-qe-done-criteria:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,14 +103,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
     level: 3
     score: 75
   vp-ops-agent-boundary:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -142,15 +142,15 @@ findings:
   - id: F003
     severity: major
     rule: vp-po-publication-accountability
-    line: 45
-    anchor: ""
+    line: 35
+    anchor: "| 最終判断・難しい設計レビュー | Claude Code / Codex                     | ローカル LLM の結果を必要に応じて補完する                     |"
     message: 「最終判断・難しい設計レビュー」を Claude Code / Codex に割り当てず、Agent は判断支援に限定し、人間の PO または所定ロールが公開・採否の最終責任を負うことを明記する必要がある。
     message_ja: 「最終判断・難しい設計レビュー」を Claude Code / Codex に割り当てず、Agent は判断支援に限定し、人間の PO または所定ロールが公開・採否の最終責任を負うことを明記する必要がある。
   - id: F004
     severity: major
     rule: vp-pm-plan-feasibility
-    line: 56
-    anchor: ""
+    line: 46
+    anchor: "## 3. oMLXのインストール"
     message: セットアップと最適化の各作業について、担当 Role code、依存順序、所要時間または実施タイミング、完了条件を整理する必要がある。
     message_ja: セットアップと最適化の各作業について、担当 Role code、依存順序、所要時間または実施タイミング、完了条件を整理する必要がある。
   - id: F005
@@ -241,8 +241,10 @@ findings:
   - id: F014
     severity: major
     rule: vp-dev-change-impact
-    line: 58
-    anchor: ""
+    line: 48
+    anchor: >-
+      oMLX は macOS アプリ版を使う。Apple Silicon 向けのネイティブカーネルを同梱し、自動アップデートと Admin UI に対応しているためである。サーバーの起動・停止・監視はメニューバーから、設定は
+      Admin UI から行う。
     message: oMLXの自動更新時に確認するモデル・CLI引数・Admin UI・OpenAI互換API・`tsd-omlx-opencode`への影響、更新前バックアップ、問題発生時のロールバック方法を明記する必要がある。
     message_ja: oMLXの自動更新時に確認するモデル・CLI引数・Admin UI・OpenAI互換API・`tsd-omlx-opencode`への影響、更新前バックアップ、問題発生時のロールバック方法を明記する必要がある。
   - id: F015
@@ -264,11 +266,10 @@ findings:
   - id: F017
     severity: major
     rule: vp-qe-verifiability
-    line: 370
+    line: 360
     anchor: >-
-      Ornith の 64K × 2（約 2.7GB）、Qwen3.6 の 128K × 2（約 5.4GB）の KV cache はいずれも Memory guard に収まるため OFF のままとする。3 並列以上または
-      context をさらに増やし、実測した Peak memory や memory pressure に余裕がない場合に試す。試す場合は 6-bit から始める。4-bit はメモリの節約効果が大きいが、coding や
-      tool calling の用途では品質を確認してから採用する。
+      安定性を確認できたら、Lightning MTP を ON にして同じタスクを再実行する。生成速度、tool call の精度、重複生成、reasoning の破綻、JSON や tool
+      の引数の破損、テストの成功率を確認し、品質が落ちなければ ON を採用する。問題が出れば OFF に戻す。
     message: Lightning MTPなどの採否について、比較タスク、反復回数、速度改善率、tool call失敗率、テスト成功率、許容メモリ・swap量の閾値を定義する必要がある。
     message_ja: Lightning MTPなどの採否について、比較タスク、反復回数、速度改善率、tool call失敗率、テスト成功率、許容メモリ・swap量の閾値を定義する必要がある。
   - id: F018
@@ -299,8 +300,8 @@ findings:
   - id: F021
     severity: major
     rule: vp-ops-agent-boundary
-    line: 45
-    anchor: ""
+    line: 35
+    anchor: "| 最終判断・難しい設計レビュー | Claude Code / Codex                     | ローカル LLM の結果を必要に応じて補完する                     |"
     message: Claude Code / Codexを含むAgentの責務を分析・提案・レビュー支援までに限定し、設計採否、公開可否、説明責任を人間のPOまたは所定ロールが担うmanual gateを明記する必要がある。
     message_ja: Claude Code / Codexを含むAgentの責務を分析・提案・レビュー支援までに限定し、設計採否、公開可否、説明責任を人間のPOまたは所定ロールが担うmanual gateを明記する必要がある。
 done_criteria:

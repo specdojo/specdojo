@@ -3,16 +3,16 @@
 SpecDojo は、仕様道（Spec-Dō）の道場です。
 仕様と設計を作り、運用まで保つための体系を整えます。判断を記帳し、型に沿って実戦で書き、評定で鍛え続け、講評で完了を判断します。人と生成 AI が同じ成果物を作成・検証・更新できるようにし、仕様駆動開発のツールに対しては、その上流で仕様と設計の体系を担います。
 
-**決めて、書いて、鍛え続ける。**
+**記して、形にして、磨き続ける。**
 
 **記帳ひとつから始められます。** 設定 2 行で使い始め、必要になった分だけ広げられます。
-迷いを question として起票し、decision で決め、設計書に書き、後日 change-request で直すまでを 10 分で体験できます。kata（型）を事前に用意する必要はありません。手順は [Quick Start ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/quick-start-guide.html) 冒頭の「10分で体験する — 仕様の判断台帳」を参照してください。
+迷いを question として起票し、decision で決め、仕様書に書き、後日 change-request で直すまでを 10 分で体験できます。kata（型）を事前に用意する必要はありません。手順は [Quick Start ガイド](https://specdojo.github.io/specdojo/ja/specdojo/guides/quick-start-guide.html) 冒頭の「10分で体験する — 仕様の判断台帳」を参照してください。
 
-| 道場の言葉 | SpecDojo の仕組み                                                                |
-| ---------- | -------------------------------------------------------------------------------- |
-| 型（Kata） | 成果物の作り方を定める rulebook・recipe・sample・template                        |
-| 技（Waza） | `specdojo` CLI。決定を残す記帳、成果物を作る実戦、品質を見る評定、完了を見る講評 |
-| 流（Ryu）  | 守・破・離をはじめ、型をどこまで基準にするかを選ぶ `approach`                    |
+| 道場の言葉 | SpecDojo の仕組み                                                                                       |
+| ---------- | ------------------------------------------------------------------------------------------------------- |
+| 型（Kata） | 成果物の作り方を定める rulebook・recipe・sample・template                                               |
+| 技（Waza） | `specdojo` CLI。決定を残す記帳、成果物を作る実戦、品質を見る評定、完了を見る講評                        |
+| 流（Ryu）  | 成果物・型・技をつなぐ `approach`。タスクごとに型をどこまで基準にして技を使うか（守・破・離など）を表す |
 
 ## できること
 
@@ -58,17 +58,17 @@ v0.3.0 の `grade` は試験的な機能です。npm package では `grade list`
 既定では、SpecDojo の記録をプロダクトの Git 履歴に混ぜないため、次の **別リポジトリ構成**で始めます。
 
 - **プロダクトリポジトリ** `app1/`: ソースコードと、仕様・設計などのプロダクトドキュメントを置きます。
-- **プロジェクトリポジトリ** `app1-specdojo/`: 登録簿・計画・実行記録などのプロジェクトドキュメントと、文書の作り方を定める実践体系を置きます。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。
+- **プロジェクトリポジトリ** `app1-specdojo/`: 登録簿・計画・実行記録などのプロジェクトドキュメントと、文書の作り方を定める型（Kata）を置きます。1つのプロジェクトリポジトリに、複数のプロジェクトを格納できます。
 - **worktree 用ディレクトリ** `app1-specdojo-worktrees/`: タスクごとの変更を隔離して進めるために、Git worktree を作る場所です。名前はプロジェクトリポジトリのディレクトリ名から決まります。
 
 ```text
-workspace/
+app1-workspace/
 ├── app1/             # プロダクトリポジトリ
 ├── app1-specdojo/    # プロジェクトリポジトリ
 └── app1-specdojo-worktrees/ # タスクごとの作業場所
 ```
 
-workspace 直下で次を実行します。
+`app1-workspace/` 直下で次を実行します。
 
 ```sh
 mkdir app1-specdojo
@@ -83,7 +83,7 @@ SpecDojo は開発時に使う文書・実行管理ツールなので、`--save-
 
 `config init` は、登録簿を使い始めるための最小設定を `.specdojo/specdojo.config.json` に作成します。worktree の既定先はリポジトリのディレクトリ名から `../<リポジトリ名>-worktrees` として作られます。設定を変える方法は、後述の「設定を変えたいとき」を参照してください。
 
-あわせて、SpecDojo の生成物（`docs/**/generated/*`、`.specdojo/doc-index.json` など）を git の管理から外す行を `.gitignore` に用意します。`.gitignore` が無ければ作成し、既にあれば足りない行だけを末尾へ追記します。生成物を管理外にしておくと、登録簿の項目を並行実行したときに生成物どうしが衝突しません。追記する行は `npx specdojo config init --dry-run` で事前に確認できます。すでに生成物を git で管理している場合は、表示される案内に従って `git rm -r --cached` で管理から外し、コミットします。
+あわせて、`npm install` で作られる `node_modules/` と SpecDojo の生成物（`docs/**/generated/*`、`.specdojo/doc-index.json` など）を git の管理から外す行を `.gitignore` に用意します。`.gitignore` が無ければ作成し、既にあれば足りない行だけを末尾へ追記します。`node_modules`、`/node_modules` など同じ意味の行が既にあれば `node_modules/` は追記しません。生成物を管理外にしておくと、登録簿の項目を並行実行したときに生成物どうしが衝突しません。追記する行は `npx specdojo config init --dry-run` で事前に確認できます。すでに `node_modules/` や生成物を git で管理している場合は、表示される案内に従って `git rm -r --cached` で管理から外し、コミットします。
 
 ### オーケストレーターを配置する
 

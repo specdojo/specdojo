@@ -2,12 +2,12 @@
 id: prj-0001:prj-success-criteria-and-acceptance-criteria-grade-criteria
 document: prj-0001:prj-success-criteria-and-acceptance-criteria
 path: docs/ja/projects/prj-0001/020-project-definition/prj-success-criteria-and-acceptance-criteria.md
-graded_at: "2026-10-02T16:28:07.763Z"
+graded_at: "2026-10-12T16:51:23.088Z"
 graded_by: agy-expert-executor
 content_hash: 1f13815822bf1c827afc860617ef794e1c2a8cb4f76108a489582419a2393daf
 summary:
-  satisfied: 1
-  unsatisfied: 3
+  satisfied: 2
+  unsatisfied: 2
   total: 4
 criteria:
   - id: DC-001
@@ -22,18 +22,21 @@ criteria:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: SC-01の「重大な不一致」や上限値などの合否基準が曖昧であり、未確定事項の暫定影響もないためPOが承認できない。
+    reason: >-
+      Undefined passing criteria for SC-01 and lack of decision impact for undecided expense/work-hour limits in SC-02
+      and SC-03 prevent approval.
   - id: DC-003
     text: 技術的受入条件が確認できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: AC-02の「検証に合格」など、検証すべき技術的制約や手順が明示されていない。
+    status: satisfied
   - id: DC-004
     text: 受入条件が検証可能な形で記述されていること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 「重大な不一致がない」「代表試行に合格」など、第三者が合否を再現できる判定規則が定義されていない。
+    reason: >-
+      AC-01 and AC-02 lack objective pass/fail criteria and concrete validation definitions for third-party
+      verification.

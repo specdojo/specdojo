@@ -200,18 +200,19 @@ specdojo exec worktree commit \
 
 commit 対象から除外する主なパス:
 
-| 除外対象                         | 理由                                         |
-| -------------------------------- | -------------------------------------------- |
-| `exec/plans/`                    | plan は実行入力であり agent の成果物ではない |
-| 対象 task 以外の `exec/results/` | 他タスクの記録を混ぜない                     |
-| `exec/events/`                   | event は root 側の状態管理で扱う             |
-| `generated/`                     | 再生成物を task 成果物に混ぜない             |
+| 除外対象                         | 理由                                           |
+| -------------------------------- | ---------------------------------------------- |
+| `tmp/`                           | agent の作業用一時ファイルは commit に含めない |
+| `exec/plans/`                    | plan は実行入力であり agent の成果物ではない   |
+| 対象 task 以外の `exec/results/` | 他タスクの記録を混ぜない                       |
+| `exec/events/`                   | event は root 側の状態管理で扱う               |
+| `generated/`                     | 再生成物を task 成果物に混ぜない               |
 
 対象 task の result は成果物変更と同じ commit に含めます。変更がない場合は commit を作成しません。
 
 上表の除外に加え、プロンプトインジェクション対策として commit 対象を mode 別の許可リストで絞ります。review は対象 task の result のみ、edit は result と plan の `targets` から解決した成果物（maintenance / bootstrap 系 approach は実践の型ディレクトリも）だけを commit し、許可リスト外の変更は `commit-scope:` 警告を出して worktree に残します。詳細は [exec設定ガイド](exec-config-guide.md) の `agent 権限とプロンプトインジェクション対策` を参照します。
 
-登録簿由来（`origin: register`）のタスクは許可リストを使わず、上表の除外だけを適用して作業ツリーの差分を commit します。ただし agent が作業用に作った一時ファイルを混ぜないため、HEAD に無い新規ファイルは、既知の成果物ディレクトリ（`docs/`、`src/`、`tests/`、`tools/`、`scripts/`、`packages/`）、HEAD で追跡済みの最上位ディレクトリ、対象 task の result と evidence、plan の `targets` から解決した成果物に置かれたものだけを commit します。それ以外（リポジトリ直下の `modify.py` など）は `commit-scope:` 警告を出して worktree に残し、pipeline 実行では run の `integrate.log` にも記録します。既存ファイルの変更と削除、人間の作業（`execution: human`）は従来どおり commit します。`ready` への昇格検査は commit 対象のパスだけに適用するため、commit しない一時ファイルは統合を止めません。
+登録簿由来（`origin: register`）のタスクは許可リストを使わず、上表の除外だけを適用して作業ツリーの差分を commit します。HEAD に無い新規ファイルは、リポジトリ最上位、既知の成果物ディレクトリ（`docs/`、`src/`、`tests/`、`tools/`、`scripts/`、`packages/`）、HEAD で追跡済みの最上位ディレクトリ、対象 task の result と evidence、plan の `targets` から解決した成果物に置かれたものを commit します。`tmp/` 配下のファイルは常に commit 対象から除外します。それ以外の未追跡ディレクトリに置かれた新規ファイルは `commit-scope:` 警告を出して worktree に残し、pipeline 実行では run の `integrate.log` にも記録します。最上位に追加した新規ファイルを commit した場合は、統合ログと result の申し送りに「最上位に追加したファイル」として列挙します。既存ファイルの変更と削除、人間の作業（`execution: human`）は従来どおり commit します。`ready` への昇格検査は commit 対象のパスだけに適用するため、commit しない一時ファイルは統合を止めません。
 
 ### 2.5. merge
 

@@ -5,8 +5,8 @@ path: docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 48
-graded_at: "2026-10-09T16:06:27.490Z"
+score: 63
+graded_at: "2026-10-11T16:14:13.052Z"
 graded_by: agy-expert-executor
 content_hash: 4a4215fc57910ea677d1c754cb5b5930ee23e6a62834f968d2c5797bea7564da
 source_hashes:
@@ -18,57 +18,57 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 50
+    score: 63
   operations:
-    score: 38
+    score: 56
   planning:
-    score: 25
+    score: 50
   business:
-    score: 25
+    score: 50
   consistency:
-    score: 25
+    score: 50
   architecture:
-    score: 75
+    score: 83
   usability:
     score: 75
   implementation:
-    score: 50
+    score: 63
   quality:
-    score: 44
+    score: 63
 viewpoints:
   vp-po-purpose-alignment:
     level: 3
     score: 75
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-control-reporting:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 3
     score: 75
@@ -79,20 +79,20 @@ viewpoints:
     level: 3
     score: 75
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-done-criteria:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 3
     score: 75
@@ -103,14 +103,14 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
     level: 3
     score: 75
   vp-ops-agent-boundary:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-document-structure:
     level: 4
     score: 100
