@@ -17,6 +17,7 @@ import {
   execBranchExists,
   findExecWorktree,
   gitEnvironment,
+  gitOutput,
   installWorktreeDependencies,
   isGitIndexLockContention,
   listRegisteredWorktrees,
@@ -418,6 +419,28 @@ describe("exec worktree", () => {
       expect(git(repo, "show", "HEAD:generated.txt")).toBe("generated");
       expect(git(repo, "status", "--porcelain")).toBe("");
       expect(git(repo, "rev-list", "--count", "HEAD")).toBe("2");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("gitOutput", () => {
+  it("receives git status output larger than the 1 MiB spawnSync default", () => {
+    const repo = createGitRepository();
+    try {
+      // 長いディレクトリ名で 1 行あたりのバイト数を増やし、作るファイルの数を抑える。
+      const directory = join(repo, "untracked-".padEnd(200, "x"));
+      mkdirSync(directory);
+      const fileCount = 5000;
+      for (let index = 0; index < fileCount; index += 1) {
+        writeFileSync(join(directory, `file-${String(index).padStart(5, "0")}.txt`), "", "utf8");
+      }
+
+      const output = gitOutput(repo, ["status", "--porcelain=v1", "-z", "--untracked-files=all"]);
+
+      expect(Buffer.byteLength(output, "utf8")).toBeGreaterThan(1024 * 1024);
+      expect(output.split("\0").filter((entry) => entry.startsWith("?? "))).toHaveLength(fileCount);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

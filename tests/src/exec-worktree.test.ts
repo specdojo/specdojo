@@ -1,9 +1,11 @@
+import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   appendGitFailureLog,
+  describeGitProcessFailure,
   formatGitCommandFailure,
   formatWorktreeBuildFailure,
   generateWorktreeArtifacts,
@@ -329,6 +331,19 @@ describe("formatGitCommandFailure", () => {
     );
   });
 
+  it("puts the process failure cause first when git wrote nothing to stderr", () => {
+    expect(
+      formatGitCommandFailure(
+        ["status", "--porcelain=v1"],
+        "",
+        "output exceeded maxBuffer (ENOBUFS): spawnSync git ENOBUFS; terminated by signal SIGTERM",
+      ),
+    ).toBe(
+      "git status failed: output exceeded maxBuffer (ENOBUFS): spawnSync git ENOBUFS; " +
+        "terminated by signal SIGTERM (args: --porcelain=v1)",
+    );
+  });
+
   it("keeps the whole stderr in the record limit even with many pathspec entries", () => {
     const paths = Array.from(
       { length: 40 },
@@ -342,6 +357,34 @@ describe("formatGitCommandFailure", () => {
 
     expect(reason).toContain(stderr);
     expect(reason).toContain("-- 40 paths");
+  });
+});
+
+describe("describeGitProcessFailure", () => {
+  it("reports ENOBUFS and the signal when the output exceeds maxBuffer", () => {
+    const result = spawnSync(
+      process.execPath,
+      ["-e", "process.stdout.write('x'.repeat(64 * 1024))"],
+      { encoding: "utf8", maxBuffer: 1024, stdio: ["ignore", "pipe", "pipe"] },
+    );
+
+    const actual = describeGitProcessFailure(result);
+
+    expect(result.status).toBeNull();
+    expect(actual).toContain("output exceeded maxBuffer (ENOBUFS)");
+    expect(actual).toContain(`terminated by signal ${result.signal}`);
+  });
+
+  it("reports the error code of a spawn failure", () => {
+    const error = Object.assign(new Error("spawn git EACCES"), { code: "EACCES" });
+
+    expect(describeGitProcessFailure({ status: null, signal: null, error })).toBe(
+      "spawn git EACCES",
+    );
+  });
+
+  it("returns an empty cause when git exited with its own status", () => {
+    expect(describeGitProcessFailure({ status: 128, signal: null })).toBe("");
   });
 });
 
