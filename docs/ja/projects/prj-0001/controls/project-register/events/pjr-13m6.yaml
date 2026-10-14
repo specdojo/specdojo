@@ -58,3 +58,19 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
   previous_event_id: reg_cef54aa44423428aa034b6c5107654b4
+- v: 1
+  id: reg_a206dd6ff8374abdb267940265a087c5
+  ts: "2026-10-14T22:17:11Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+      to: "-"
+  previous_event_id: reg_3f6b647d917341618ef14ddc7eac5dd9
