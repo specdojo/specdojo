@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-p8tk-release-stabilization-criteria
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-08T03:45:54Z"
   due_on: null
+  completed_at: "2026-10-14T12:05:48Z"
+  conclusion: 必須の判定基準 7 件をすべて満たし、2026-10-14 に v0.3.0 を npm（provenance 付き）と GitHub Pages へ公開した。docs-lint 0.2.0 と docs-site 0.2.1 も同時期に公開した
 ---
 
 # PJR-P8TK 公開前に exec の未解決の不具合を棚卸しし、公開の判定基準を決める
