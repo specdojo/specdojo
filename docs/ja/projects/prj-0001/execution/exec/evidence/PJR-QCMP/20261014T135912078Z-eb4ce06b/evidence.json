@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-QCMP",
+  "run_id": "20261014T135912078Z-eb4ce06b",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-14T14:00:31.122Z",
+    "completed_at": "2026-10-14T14:14:43.521Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qcmp-register-commands-split.md",
+      "status": "M"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-command-types.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register-create-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register-maintenance-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register-transition-commands.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-qcmp-register-commands-split.md",
+      "status": "M"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-command-types.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register-create-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register-maintenance-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register-transition-commands.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 6,
+    "summary": ".../pjr-qcmp-register-commands-split.md            |  19 +-\n src/register.ts                                    | 830 ++-------------------\n 2 files changed, 58 insertions(+), 791 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/register.ts src/register-command-types.ts src/register-create-commands.ts src/register-transition-commands.ts src/register-maintenance-commands.ts docs/ja/projects/prj-0001/controls/project-register/pjr-qcmp-register-commands-split.md",
+      "status": "passed",
+      "summary": "変更したTypeScriptとMarkdownを整形"
+    },
+    {
+      "source": "executor",
+      "command": "for command_name in register scaffold add close reject defer reopen start wait review update migrate build history renumber; do node --import tsx src/specdojo.ts register ${command_name#register} --help; done; diff -ru tmp/PJR-QCMP-before tmp/PJR-QCMP-after",
+      "status": "passed",
+      "summary": "register本体と全14サブコマンドの分割前後のhelp出力に差分なし"
+    },
+    {
+      "source": "executor",
+      "command": "diff <(git show HEAD:src/register.ts | rg '^export ') <(rg '^export ' src/register.ts)",
+      "status": "passed",
+      "summary": "src/register.tsの公開exportを維持"
+    },
+    {
+      "source": "executor",
+      "command": "rg 'from \"./register.js\"' src/register-command-types.ts src/register-create-commands.ts src/register-transition-commands.ts src/register-maintenance-commands.ts",
+      "status": "passed",
+      "summary": "新規モジュールからregister.tsへの逆importなし"
+    },
+    {
+      "source": "executor",
+      "command": "wc -l src/register.ts src/register-command-types.ts src/register-create-commands.ts src/register-transition-commands.ts src/register-maintenance-commands.ts",
+      "status": "passed",
+      "summary": "新規モジュールは181〜342行で、すべて1000行以下"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の検証と派生ビュー生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "全カタログ検証に成功。既存の未作成based_on文書に関する警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QCMP\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-nrFfHk/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-akDrTo/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QCMP/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QCMP/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QCMP\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-j1GvwA/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3o1pUN/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-1oJr9k/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-GN1ErA/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  38.48s (transform 2.65s, setup 508ms, import 17.72s, tests 41.46s, environment 6ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "registerサブコマンドを3モジュールへ分割し、公開API・ヘルプ出力・循環importなしを維持した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-QCMP/20261014T135912078Z-eb4ce06b/executor.log",
+      "bytes": 2341,
+      "truncated": false
+    }
+  ]
+}
