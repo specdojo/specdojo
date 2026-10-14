@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T13:49:19Z"
@@ -46,15 +46,29 @@ src/exec-run.ts のうち、schedule のタスクの実行（prepareSingleTask�
 
 | No  | 作業                                                                | 担当         | 状態 | メモ                                    |
 | --- | ------------------------------------------------------------------- | ------------ | ---- | --------------------------------------- |
-| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV          | open | `exec run`・`exec cycle`・`exec resume` |
-| 2   | 対象の宣言をモジュールへ移し、`src/exec-run.ts` から再 export する  | DEV          | open | 移すだけ                                |
-| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV          | open | 差分なし                                |
-| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV          | open | -                                       |
+| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV          | done | `exec run`・`exec cycle`・`exec resume` |
+| 2   | 対象の宣言をモジュールへ移し、`src/exec-run.ts` から再 export する  | DEV          | done | モード別の 6 モジュールへ移動           |
+| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV          | done | 3 コマンドとも差分なし                  |
+| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | reporter     | open | reporter stage で記録                   |
 | 5   | 統合の後に `exec run --register` を 1 回流して runner を確かめる    | orchestrator | open | close の条件                            |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+Schedule の準備を `src/exec-run-schedule-prepare.ts`、単一タスクの実行を
+`src/exec-run-schedule-task.ts`、batch・manual と stale track の再構築を
+`src/exec-run-schedule-mode.ts` へ移した。in-place は
+`src/exec-run-in-place.ts`、Job は `src/exec-run-job.ts` へ移した。複数のモードと
+残存する register 実行から使う CLI 起動・統合記録の補助関数は
+`src/exec-run-mode-shared.ts` へ移した。
+
+`src/exec-run.ts` は 6,949 行から 3,531 行になった。新しいモジュールは最大でも
+`src/exec-run-job.ts` の 983 行であり、いずれも 1,000 行以下である。分割前後で
+`exec run`・`exec cycle`・`exec resume` の `--help` に差分がないことと、公開 export
+52 件の名前が一致することを確認した。新しいモジュールから `src/exec-run.ts` への
+import はない。
+
+ロジックの改善や不具合修正は行っていない。統合後の runner の実動作確認は、完了条件どおり
+orchestrator が [[prj-0001:pjr-jsey-exec-run-split-smoke]] で行う。
 
 ## 5. 関連ドキュメント
 
