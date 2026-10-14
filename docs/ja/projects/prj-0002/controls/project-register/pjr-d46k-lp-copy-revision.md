@@ -62,7 +62,10 @@ LP の各節の文言を見直し、課題提示の順番などを整える
 - agent を実際に起動する実行は試していない。実行編の会話例にあるオーケストレーターの返答は、ガイドと PJR-4ZSN の実績にもとづく例文である。
 - Hero の「4 つの手順で回す」の移動先は「会話で始める」タブの中にあり、「コマンドで始める」タブを開いているときは移動できない。
 - 画面での見た目（ボタンの折り返し、吹き出しの長さ、狭い幅での横スクロール）は orchestrator では確かめていない。
-- `feature/prj-0002/lp-copy-revision` は、統合先の `feature/lp-v1` へまだ統合していない。
+
+統合:
+
+- close 後に、利用者の指示で `feature/prj-0002/lp-copy-revision` を specdojo-lp の `feature/lp-v1` へ `--no-ff` で merge した（`697aead`）。merge 後の `feature/lp-v1` で `format:check` と `build` が成功した。
 
 ## 5. 関連ドキュメント
 
