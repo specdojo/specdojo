@@ -37,6 +37,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 日時（JST）      | 対象の分割 | agent                 |
 | ---------------- | ---------- | --------------------- |
 | 2026-10-15 00:12 | PJR-3W2N   | codex-expert-executor |
+| 2026-10-15 00:35 | PJR-2JFM   | codex-expert-executor |
 
 ## 5. 関連ドキュメント
 
