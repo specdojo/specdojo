@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-1dkd-integration-test-depends-on-generated-templates
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T09:18:58Z"
+  completed_at: "2026-10-14T14:01:03Z"
+  conclusion: fixture が登録簿の生成物を自分で作って commit し、実リポジトリからのテンプレートのコピーでは generated/ を除くようにして、生成物のない checkout でも並列実行の 2 件が通るようにした
 ---
 
 # PJR-1DKD 統合テストが生成済みテンプレートの有無に依存する
