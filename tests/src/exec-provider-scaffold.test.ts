@@ -119,6 +119,10 @@ describe("specdojoPackageRootDir", () => {
       ]),
     );
     expect(execDefaults).not.toContain("--dangerously-skip-permissions");
+    expect(execDefaults).toContain("expert: { model: gemini-3.8-flash-high }");
+    expect(execDefaults).toContain("agy-claude-executor: { model: claude-sonnet-5-5-medium }");
+    expect(execDefaults).toContain("agy-claude-expert-executor: { model: claude-opus-5-5-high }");
+    expect(execDefaults).not.toMatch(/gemini-3\.1-pro|claude-sonnet-4-6|claude-opus-4-6/);
   });
 });
 

@@ -2,6 +2,12 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [0.3.1] - 未定
+
+### 不具合修正
+
+- `specdojo init` と Antigravity 向け配布雛形・ガイドが、agy 1.3.5 で提供されないモデル ID を指定し、expert agent が `invalid model selection` で起動できない問題を修正しました。利用可能な ID は `agy models` で確認できます（PJR-X60A）。
+
 ## [0.3.0] - 2026-10-14
 
 同梱パッケージは `@specdojo/docs-lint` 0.2.0 と `@specdojo/docs-site` 0.2.1 を同時に公開します。docs-lint は 0.1.0 以降の変更（下記の lint の追加、依存の更新、脆弱性の修正）を含みます。docs-site 0.2.1 は、先に公開した 0.2.0 の導入時の不具合 2 件（下記の不具合修正の PJR-EA20・PJR-CA0S）を直した版です。

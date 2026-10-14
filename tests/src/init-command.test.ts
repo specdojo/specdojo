@@ -207,4 +207,28 @@ describe("specdojo init", () => {
       rmSync(repo, { recursive: true, force: true });
     }
   });
+
+  it("generates an Antigravity expert that uses a currently provided model", async () => {
+    const repo = createRepo("specdojo-init-antigravity-");
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runInit({ yes: true, provider: "antigravity", exec: true });
+
+      const defaults = yaml.load(
+        readFileSync(join(repo, ".specdojo/exec-defaults.yaml"), "utf8"),
+      ) as {
+        providers: {
+          antigravity: {
+            command_params: { by_proficiency: { expert: { model: string } } };
+          };
+        };
+      };
+      expect(defaults.providers.antigravity.command_params.by_proficiency.expert.model).toBe(
+        "gemini-3.8-flash-high",
+      );
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
 });
