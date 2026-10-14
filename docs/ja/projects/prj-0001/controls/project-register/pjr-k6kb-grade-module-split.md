@@ -21,13 +21,36 @@ src/grade.ts（3,561 行）を CLI の登録・対象の探索・plan の生成�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+リファクタリングの段取り（2026-10-14、利用者が承認）の段 3。対象は `src/grade.ts`（2026-10-14 時点で 4,110 行）である。
+
+対象の責務と宣言（2026-10-14 時点の名前。行数は目安）:
+
+- grade の値の扱い: 直列化（`serializeGrade` など）と finding の挿入（`insertFindings` など）。ファイルの先頭から約 800 行。
+- 対象の探索: `loadDeliverableCatalog`、`discoverGradeTargets`、`matchesParsedGradeTargetFilters` と、pipeline の状態（`parseGradePipelineState`、`recordGradePipelineStage`）。約 830 行。
+- plan の生成: `deterministicResults`、`gradePlanEmbedding`、`renderGradePlanWithEmbedding`、`renderGradeReporterPlan`、`writeGradePlans`。約 640 行。
+- 提出の検証と適用: `parseGradeExecutorAnalysis`、`doneCriteriaFidelityIssues`、`convertGradeExecutorOutput`、`validateGradeReporterFidelity`、`validateDoneCriteriaInput`、`validateGradeSubmission`、`scoreDocument`、`applyGradeSubmission`。約 930 行。
+- Markdown の grade と移行: `gradeMarkdownDocument`、`migrateInlineGrades`。約 300 行。
+- コマンドの登録: `registerGradeCommand`（608 行、10 のサブコマンド）。サブコマンドごと、または関係の深い組ごとのモジュールへ分ける。
+
+条件:
+
+- 上の責務ごとのモジュールへ移す。ファイル名は既存の `src/grade-result.ts` に揃え、`grade-` で始める。
+- 移すだけにし、ロジックは変えない。分割の途中で不具合や改善点を見つけても直さず、result に書く。
+- `src/grade.ts` が現在 export しているものは、すべて同じ名前で `src/grade.ts` から import できる（移した先から再 export する）。既存のテストは import のパスを含めて変更せずに通る。テストの追加は妨げない。
+- `registerGradeCommand` は `src/grade.ts` から引き続き export し、各モジュールの登録関数を呼ぶだけの関数にする（目安 150 行以下）。
+- 分割の前後で、`grade` とその全サブコマンドの `--help` の出力が一致する。前後の出力を `tmp/` に保存して比べ、比べたコマンドの一覧と差分がないことを result に記録する。
+- 新しく作るモジュールはそれぞれ 1,000 行以下とする。新しい循環 import を作らず、移した先のモジュールから `src/grade.ts` を import しない。
+- モジュールの構成に触れている設計書があれば更新する。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                                | 担当 | 状態 | メモ                     |
+| --- | ------------------------------------------------------------------- | ---- | ---- | ------------------------ |
+| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV  | open | `grade` と全サブコマンド |
+| 2   | 責務ごとのモジュールへ移し、`src/grade.ts` から再 export する       | DEV  | open | 移すだけ                 |
+| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV  | open | 差分なし                 |
+| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV  | open | -                        |
 
 ## 4. 対応結果
 
@@ -35,4 +58,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-qcmp-register-commands-split]]: 段 2。共通の完了条件を試した。
+- [[prj-0001:pjr-th4b-eslint-max-lines-guard]]: 分割後の行数の上限。
