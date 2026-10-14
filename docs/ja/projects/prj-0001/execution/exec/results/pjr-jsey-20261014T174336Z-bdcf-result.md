@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-JSEY
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-jsey-20261014T174336Z-bdcf-plan.md
   started_at: "2026-10-14T17:43:37.029Z"
+  completed_at: "2026-10-14T17:49:15.619Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,16 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 成果物 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` に対し、`PJR-GBPX` の smoke 実行記録を 1 行追記しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- タスクは完了しました。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` に、`PJR-GBPX` の実行結果（smoke テストの完了記録）を追記する作業を実施しました。

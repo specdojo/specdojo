@@ -1,0 +1,11 @@
+PJR-GBPX の動作確認記録を[個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JSEY/docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md:41)へ追記しました。
+
+- 実行日時: 2026-10-15 02:44 JST
+- agent: `codex-expert-executor`
+- Prettier、登録簿生成、catalog 検証、差分検査は成功
+- result、ステータス、runner 所有の evidence は変更していません
+- 親検証は指示どおり runner に委ねています
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果へ、PJR-GBPX の smoke 実行記録を1行追記しました。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown は整形済みで変更なし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビューを正常に生成"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全 catalog の検証に成功。既存の文書未作成警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
