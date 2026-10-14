@@ -17,17 +17,19 @@ providers:
     # agy のモデル ID は推論強度を含む（gemini-3.8-flash-{high,medium,low} など）。--effort を
     # 併用すると ID と食い違ったときに "invalid model selection" で起動に失敗するため、
     # 強度はモデル ID だけで指定する（2026-09-21 実測: flash-high + --effort medium で失敗）。
+    # 使える model の ID は `agy models` で確かめる。Gemini の Pro 系は提供されなくなったため、
+    # expert は Flash の high とする（2026-10-15、agy 1.3.5 で確認）。
     command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.1-pro-high }
+        expert: { model: gemini-3.8-flash-high }
       # Gemini 以外の Antigravity 提供モデルは member nickname で明示的に選ぶ。
       # by_nickname は proficiency / mode の既定値より優先される。
       by_nickname:
-        agy-claude-executor: { model: claude-sonnet-4-6 }
-        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
-        agy-claude-expert-review-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-executor: { model: claude-sonnet-5-5-medium }
+        agy-claude-expert-executor: { model: claude-opus-5-5-high }
+        agy-claude-expert-review-executor: { model: claude-opus-5-5-high }
         agy-gpt-executor: { model: gpt-oss-120b-medium }
     # Gemini API の制限文言は未観測。429 / quota / RESOURCE_EXHAUSTED を初期値とし、
     # 実観測した文言で更新する（observed-agent-limit-stderr と同じ扱い）。

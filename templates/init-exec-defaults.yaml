@@ -51,11 +51,13 @@ providers:
       exit_codes: []
       stderr_patterns: [timeout, connection refused, out of memory, model is loading]
   antigravity:
+    # 使える model の ID は `agy models` で確かめる。Gemini の Pro 系は提供されなくなったため、
+    # expert は Flash の high とする（2026-10-15、agy 1.3.5 で確認）。
     command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.1-pro-high }
+        expert: { model: gemini-3.8-flash-high }
     rate_limit_detection:
       stderr_patterns: [rate limit, "429", quota, RESOURCE_EXHAUSTED]
   copilot:

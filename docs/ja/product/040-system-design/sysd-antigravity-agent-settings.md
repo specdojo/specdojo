@@ -32,27 +32,27 @@ providers:
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.1-pro-high }
+        expert: { model: gemini-3.8-flash-high }
       by_nickname:
-        agy-claude-executor: { model: claude-sonnet-4-6 }
-        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
-        agy-claude-expert-review-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-executor: { model: claude-sonnet-5-5-medium }
+        agy-claude-expert-executor: { model: claude-opus-5-5-high }
+        agy-claude-expert-review-executor: { model: claude-opus-5-5-high }
         agy-gpt-executor: { model: gpt-oss-120b-medium }
 ```
 
-モデル ID 自体が推論強度を含み、`--effort` と組み合わせると選択が衝突するため `--effort` は指定しない。`--output-format json --json-schema` の出力は `structured_output` を含む envelope であり、reporter schema の生 JSON ではないため、reporter も既定のテキスト出力を使う。
+使えるモデル ID は `agy models` で確認する。モデル ID 自体が推論強度を含み、`--effort` と組み合わせると選択が衝突するため `--effort` は指定しない。`--output-format json --json-schema` の出力は `structured_output` を含む envelope であり、reporter schema の生 JSON ではないため、reporter も既定のテキスト出力を使う。
 
 ## 3. member とモデル
 
 | nickname                            | mode     | proficiency | model                      | 用途             |
 | ----------------------------------- | -------- | ----------- | -------------------------- | ---------------- |
 | `agy-executor`                      | `edit`   | `normal`    | `gemini-3.8-flash-medium`  | 標準 executor    |
-| `agy-expert-executor`               | `edit`   | `expert`    | `gemini-3.1-pro-high`      | expert executor  |
-| `agy-expert-review-executor`        | `review` | `expert`    | `gemini-3.1-pro-high`      | expert review    |
+| `agy-expert-executor`               | `edit`   | `expert`    | `gemini-3.8-flash-high`    | expert executor  |
+| `agy-expert-review-executor`        | `review` | `expert`    | `gemini-3.8-flash-high`    | expert review    |
 | `agy-reporter`                      | —        | `normal`    | `gemini-3.8-flash-medium`  | reporter         |
-| `agy-claude-executor`               | `edit`   | `normal`    | `claude-sonnet-4-6`        | Sonnet executor  |
-| `agy-claude-expert-executor`        | `edit`   | `expert`    | `claude-opus-4-6-thinking` | Opus executor    |
-| `agy-claude-expert-review-executor` | `review` | `expert`    | `claude-opus-4-6-thinking` | Opus review      |
+| `agy-claude-executor`               | `edit`   | `normal`    | `claude-sonnet-5-5-medium` | Sonnet executor  |
+| `agy-claude-expert-executor`        | `edit`   | `expert`    | `claude-opus-5-5-high`     | Opus executor    |
+| `agy-claude-expert-review-executor` | `review` | `expert`    | `claude-opus-5-5-high`     | Opus review      |
 | `agy-gpt-executor`                  | `edit`   | `normal`    | `gpt-oss-120b-medium`      | GPT OSS executor |
 
 `command_params.by_nickname` は member ごとのモデル差し替えだけに使う。権限フラグや worktree 指定は `command_template` に残し、同じ provider の全 member へ一括適用する。
