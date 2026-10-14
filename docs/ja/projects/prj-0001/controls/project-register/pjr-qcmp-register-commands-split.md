@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-02T12:14:24Z"
@@ -34,16 +34,21 @@ src/register.ts の registerRegisterCommands（752 行）をサブコマンド�
 
 ## 3. 作業内容
 
-| No  | 作業                                                                | 担当 | 状態 | メモ                           |
-| --- | ------------------------------------------------------------------- | ---- | ---- | ------------------------------ |
-| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV  | open | `register` と全サブコマンド    |
-| 2   | サブコマンドの登録をモジュールへ移す                                | DEV  | open | 移すだけ                       |
-| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV  | open | 差分なし                       |
-| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV  | open | 後続の K6KB の条件の調整に使う |
+| No  | 作業                                                                | 担当 | 状態 | メモ                        |
+| --- | ------------------------------------------------------------------- | ---- | ---- | --------------------------- |
+| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV  | done | `register` と全サブコマンド |
+| 2   | サブコマンドの登録をモジュールへ移す                                | DEV  | done | 移すだけ                    |
+| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV  | done | 差分なし                    |
+| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV  | open | reporter が記録する         |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `scaffold`・`add`・`update` の登録を `src/register-create-commands.ts`、`close`・`reject`・`defer`・`reopen`・`start`・`wait`・`review` の登録を `src/register-transition-commands.ts`、`migrate`・`build`・`history`・`renumber` の登録を `src/register-maintenance-commands.ts` へ移した。
+- 新しい登録モジュールから `src/register.ts` を import しないよう、コマンド登録に必要な既存処理を `src/register-command-types.ts` の依存インターフェース経由で受け取る構成にした。`src/register.ts` の既存 export と `src/specdojo.ts` の呼び出しは変更していない。
+- `registerRegisterCommands` は 7 行になり、`src/register.ts` は 3,156 行から 2,418 行になった。新規モジュールは 181〜342 行で、すべて 1,000 行以下である。
+- 分割前後について、`register`、`scaffold`、`add`、`close`、`reject`、`defer`、`reopen`、`start`、`wait`、`review`、`update`、`migrate`、`build`、`history`、`renumber` の `--help` 出力を比較し、差分がないことを確認した。
+- 個票では「15 のサブコマンド」と記載されていたが、実装上は 14 サブコマンドだった。今回の分割では実装に存在する全 14 サブコマンドを対象とし、コマンドの追加・削除は行っていない。
+- 親 runner が lint・型検査・単体テスト・統合テスト・schema 検証を実行する。result の記録は後続の reporter が行う。
 
 ## 5. 関連ドキュメント
 
