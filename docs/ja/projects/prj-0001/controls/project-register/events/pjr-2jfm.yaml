@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2fb597386fa341e79c74be41cf2fc456
+- v: 1
+  id: reg_56874e786b964b7bba86876fd0873435
+  ts: "2026-10-14T15:40:08Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に --help・export・循環 import を確かめ、分割後の runner で exec run --register（PJR-JSEY、8599f2bf7）が統合まで通った（2026-10-15）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: schedule のタスクの実行を準備・実行・モードの 3 モジュール、in-place と Job をそれぞれのモジュールへ移し、exec-run.ts は 6,949 行から 3,531 行になった。--help と export は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_15e176e9906c4be3b9e4c660b0bf2fb9

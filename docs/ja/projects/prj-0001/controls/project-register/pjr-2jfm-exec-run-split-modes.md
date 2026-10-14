@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-2jfm-exec-run-split-modes
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T13:49:19Z"
   due_on: null
+  completed_at: "2026-10-14T15:40:08Z"
+  conclusion: schedule のタスクの実行を準備・実行・モードの 3 モジュール、in-place と Job をそれぞれのモジュールへ移し、exec-run.ts は 6,949 行から 3,531 行になった。--help と export は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
 ---
 
 # PJR-2JFM exec-run.ts の schedule・in-place・job の実行モードを分ける
