@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_a66df896e6f84b9e9ada8433df7476bd
+- v: 1
+  id: reg_9477ec4049b64ac2bf948a896e0de389
+  ts: "2026-10-15T13:52:41Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  previous_event_id: reg_5b1065c3427a47d7aa88c8f0f94817e3
