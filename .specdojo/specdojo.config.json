@@ -27,12 +27,12 @@
         {
           "name": "specdojo-lp",
           "path": "../specdojo-lp",
-          "integration_branch": "feature/lp-v1"
+          "integration_branch": "develop"
         },
         {
           "name": "specdojo-assets",
           "path": "../specdojo-assets",
-          "integration_branch": "main"
+          "integration_branch": "develop"
         }
       ],
       "run": {
