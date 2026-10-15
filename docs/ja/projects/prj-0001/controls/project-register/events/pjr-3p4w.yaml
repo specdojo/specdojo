@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f47e658800464466b02c955b32eda715
+- v: 1
+  id: reg_e9d868a2024547698c7c48c490120e78
+  ts: "2026-10-15T11:35:24Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に export・--help・循環 import と routine・job の validate を確かめた（2026-10-15）。初回は import の抜けで検証に失敗し、--resume-from executor で直した。定期実行での動作は 2026-10-16 01:00 の実行で確かめる
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: job.ts と routine.ts の定義の読み込みと検証を job-definition・routine-definition へ移し、すべて 1,000 行以下にした。export と job・routine の 9 コマンドの --help は分割の前後で一致し、routine 9 件と job 8 件の validate が通った
+  previous_event_id: reg_66e921a3d2ed493f86f2fad7f35ddd6a

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-3p4w-job-routine-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:26:24Z"
   due_on: null
+  completed_at: "2026-10-15T11:35:24Z"
+  conclusion: job.ts と routine.ts の定義の読み込みと検証を job-definition・routine-definition へ移し、すべて 1,000 行以下にした。export と job・routine の 9 コマンドの --help は分割の前後で一致し、routine 9 件と job 8 件の validate が通った
 ---
 
 # PJR-3P4W job.ts・routine.ts を分ける
