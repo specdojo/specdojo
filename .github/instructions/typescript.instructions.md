@@ -47,6 +47,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 ## 4. 関数と制御フロー
 
 - 関数は 1 つの責務に絞り、入力、変換、出力の境界を分ける。
+- `src/**/*.ts` のファイルは空行とコメントを除き 1,000 行以内、関数は 200 行以内を目安とする。
+- ESLint の `max-lines` と `max-lines-per-function` の warn は、直ちに失敗とするのではなく、モジュールや関数の責務を見直して分割する候補として扱う。
 - 早期 return でネストを浅くする。
 - 非同期処理は `async` / `await` を使い、Promise の握りつぶしをしない。
 - 配列操作は意図が明確な場合に `map` / `filter` / `flatMap` / `reduce` を使う。複雑になる場合は通常のループを使う。
