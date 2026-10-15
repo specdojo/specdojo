@@ -15,6 +15,7 @@ import {
 } from "../../src/exec-results.js";
 import type { ExecEvidence } from "../../src/exec-evidence.js";
 import { specdojoRootDir } from "../../src/specdojo-config.js";
+import { load as loadCompatibleYaml } from "../../src/yaml.js";
 
 function reporterEvidence(changes: ExecEvidence["changes"]): ExecEvidence {
   return {
@@ -144,27 +145,37 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     );
   });
 
-  it("escapes embedded double quotes in block_reason to keep frontmatter valid", async () => {
+  it("preserves multiline block_reason through both supported YAML schemas", async () => {
+    const agent = 'agent: "quoted"\\name';
+    const planRef = "exec/plans/path: with space\\plan.md";
     const { resultPath } = await scaffoldResult({
       executionPath,
       taskId: "prj-overview",
       mode: "edit",
       projectId: "prj-0001",
-      planRef: "exec/plans/prj-overview-plan.md",
-      agent: "opencode-edit-agent",
+      planRef,
+      agent,
       startedAt: "2026-06-20T00:00:00.000Z",
     });
 
-    await updateResultStatus(
-      resultPath,
-      "blocked",
-      "2026-06-20T00:01:00.000Z",
-      'cannot read "config.yaml"',
+    const reason = 'cannot read "config.yaml": C:\\tmp\\config\nretry: later';
+    await updateResultStatus(resultPath, "blocked", "2026-06-20T00:01:00.000Z", reason);
+
+    const content = readFileSync(resultPath, "utf8");
+    const yaml = content.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1];
+    expect(yaml).toBeDefined();
+    expect(yaml).toContain(
+      'block_reason: "cannot read \\"config.yaml\\": C:\\\\tmp\\\\config\\nretry: later"',
     );
 
-    const frontmatter = readFileSync(resultPath, "utf8").split("\n---")[0];
-    expect(frontmatter).toContain("block_reason: \"cannot read 'config.yaml'\"");
-    expect(frontmatter).not.toContain('""');
+    for (const parse of [loadCompatibleYaml, load]) {
+      const parsed = parse(yaml ?? "") as {
+        specdojo: { agent: string; block_reason: string; plan_ref: string };
+      };
+      expect(parsed.specdojo.agent).toBe(agent);
+      expect(parsed.specdojo.block_reason).toBe(reason);
+      expect(parsed.specdojo.plan_ref).toBe(planRef);
+    }
   });
 
   it("clears block_reason when a previously blocked result transitions to complete", async () => {

@@ -14,6 +14,7 @@ import {
 } from "./exec-reporter.js";
 import type { ExecEvidence } from "./exec-evidence.js";
 import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
+import { dump } from "./yaml.js";
 
 const MISSING_CHANGED_FILE_SUMMARY = "reporter の説明がないため、変更差分を参照。";
 
@@ -27,35 +28,42 @@ function parseOrigin(value: string | undefined): TaskOrigin | undefined {
   return value === "register" || value === "schedule" || value === "job" ? value : undefined;
 }
 
+// js-yaml に単一スカラーとして直列化させ、通常の識別子は従来どおり plain style のまま
+// 保つ。改行を含む値だけは block scalar を frontmatter の行配列へ安全に埋め込めないため、
+// YAML 1.2 でも有効な JSON の二重引用符形式へフォールバックする。
+function serializeYamlString(value: string): string {
+  const serialized = dump(value, { lineWidth: -1, noRefs: true }).replace(/\n$/, "");
+  return serialized.includes("\n") ? JSON.stringify(value) : serialized;
+}
+
 function serializeFrontmatter(meta: ExecResultMeta): string {
   const inner = [
-    `id: ${meta.id}`,
+    `id: ${serializeYamlString(meta.id)}`,
     `type: ${meta.type}`,
-    `task_id: ${meta.task_id}`,
+    `task_id: ${serializeYamlString(meta.task_id)}`,
     `mode: ${meta.mode}`,
     `status: ${meta.status}`,
-    `project_id: ${meta.project_id}`,
+    `project_id: ${serializeYamlString(meta.project_id)}`,
   ];
   if (meta.origin) inner.push(`origin: ${meta.origin}`);
-  if (meta.job_id) inner.push(`job_id: ${meta.job_id}`);
-  if (meta.run_id) inner.push(`run_id: ${meta.run_id}`);
-  if (meta.plan_ref) inner.push(`plan_ref: ${meta.plan_ref}`);
-  inner.push(`started_at: "${meta.started_at}"`);
-  if (meta.completed_at) inner.push(`completed_at: "${meta.completed_at}"`);
-  if (meta.agent) inner.push(`agent: ${meta.agent}`);
+  if (meta.job_id) inner.push(`job_id: ${serializeYamlString(meta.job_id)}`);
+  if (meta.run_id) inner.push(`run_id: ${serializeYamlString(meta.run_id)}`);
+  if (meta.plan_ref) inner.push(`plan_ref: ${serializeYamlString(meta.plan_ref)}`);
+  inner.push(`started_at: ${JSON.stringify(meta.started_at)}`);
+  if (meta.completed_at) inner.push(`completed_at: ${JSON.stringify(meta.completed_at)}`);
+  if (meta.agent) inner.push(`agent: ${serializeYamlString(meta.agent)}`);
   if (meta.execution) inner.push(`execution: ${meta.execution}`);
   if (meta.approach) inner.push(`approach: ${meta.approach}`);
   if (meta.targets && meta.targets.length > 0) {
     inner.push("targets:");
-    for (const target of meta.targets) inner.push(`  - ${target}`);
+    for (const target of meta.targets) inner.push(`  - ${serializeYamlString(target)}`);
   }
   // reason は agent stderr や subprocess の生出力由来で任意文字を含みうる。まず ANSI エスケープ
-  // シーケンスや制御文字を除去し（色付き hook 出力が result 表示を壊すのを防ぐ）、YAML として
-  // 安全にするため二重引用符内へ収め、内部の二重引用符は単引用符へ置換する（extractBlockReason は
-  // 単一行を返すため改行は無い）。
+  // シーケンスや制御文字を除去し（色付き hook 出力が result 表示を壊すのを防ぐ）、JSON の
+  // 文字列形式で YAML へ埋め込む。改行・引用符・バックスラッシュも値を変えずに保持できる。
   if (meta.block_reason) {
-    const safeReason = stripTerminalControlSequences(meta.block_reason).replace(/"/g, "'");
-    inner.push(`block_reason: "${safeReason}"`);
+    const safeReason = stripTerminalControlSequences(meta.block_reason);
+    inner.push(`block_reason: ${JSON.stringify(safeReason)}`);
   }
   return buildSpecdojoFrontmatter(inner);
 }
