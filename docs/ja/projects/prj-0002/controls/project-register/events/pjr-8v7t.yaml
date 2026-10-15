@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_253c47986aa84fc1b3b1e8d555fa7e8a
+  ts: "2026-10-15T22:15:57Z"
+  action: add
+  actor: orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者から、agent を使う場合は develop を統合先にし、develop から main は人が取り込む運用にしたいと提案があったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: プロダクトリポジトリを develop と main で運用する
+    - field: description
+      from: ""
+      to: specdojo-lp と specdojo-assets に develop を置き、exec と orchestrator の統合先を develop、develop から main への取り込みを人が行う運用にする
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-16"
+    - field: due
+      from: ""
+      to: _TODO_
