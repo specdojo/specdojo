@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-TMAW
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-tmaw-20261015T145958Z-b5ce-plan.md
   started_at: "2026-10-15T14:59:58.937Z"
+  completed_at: "2026-10-15T15:05:09.918Z"
   agent: codex-expert-executor
+  block_reason: "rate limit reached"
 ---
 
 # Edit Result

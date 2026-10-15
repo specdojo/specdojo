@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T14:58:16Z"
   due_on: null
+  block_reason: rate limit reached
 ---
 
 # PJR-TMAW result の frontmatter の block_reason に改行があると不正な YAML になる
@@ -53,7 +54,16 @@ exec-results.ts が frontmatter を文字列の連結で書き、block_reason �
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+`src/exec-results.ts` の result frontmatter 生成で、利用者や agent の入力が入りうる
+文字列を YAML スカラーとして直列化するようにした。特に `block_reason` は、端末制御文字を
+除去した後に JSON 互換の二重引用符形式で出力し、改行・二重引用符・バックスラッシュを
+値を変えずに保持する。
+
+改行・二重引用符・バックスラッシュ・コロンと空白を含む `block_reason` を、互換
+ローダーと js-yaml の既定 schema の双方で読み戻す単体テストを追加した。過去 3 件の
+result は本文と他の frontmatter 項目を変えず、`block_reason` だけを同じ安全な形式へ
+修復した。`docs/ja/projects/` 配下を走査し、二重引用符の値の継続行が字下げされていない
+同形の result が残っていないことも確認した。
 
 ## 5. 関連ドキュメント
 
