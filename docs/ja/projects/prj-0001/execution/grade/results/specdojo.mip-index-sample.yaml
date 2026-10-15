@@ -3,31 +3,74 @@ version: 1
 document: specdojo:mip-index-sample
 path: docs/ja/specdojo/samples/mip-index-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 60
-graded_at: "2026-09-05T09:22:54.915Z"
-graded_by: gemma-expert-executor
+score: 47
+graded_at: "2026-10-15T21:03:03.553Z"
+graded_by: agy-expert-executor
 content_hash: 7c8b1eadcfa7c7475b0b28c1e94bdb9d1f1f8721fed5dc240b0790c0f28c092a
 categories:
-  consistency:
+  purpose:
     score: 50
-  usability:
-    score: 83
+  operations:
+    score: 69
+  planning:
+    score: 50
+  business:
+    score: 50
   architecture:
-    score: 100
+    score: 75
+  usability:
+    score: 67
+  implementation:
+    score: 50
   quality:
-    score: 25
+    score: 33
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
-  vp-arc-single-responsibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -41,6 +84,15 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,37 +100,185 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 2
-  major: 3
-  minor: 0
+  major: 17
+  minor: 3
   note: 0
 findings:
-  - id: F002
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 3
-    message: ルールブック 5 節で定義された必須章（1〜9章）がすべて不足している。
-    anchor: "## 1. 目的と適用範囲"
-  - id: F003
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 3
-    message: 見出し構成がルールブックで定義された必須構成（1〜9章の順序固定）に従っていない。
-    anchor: "## 1. 目的と適用範囲"
-  - id: F005
+  - id: F001
     severity: major
-    rule: vp-ux-readability
+    rule: vp-po-purpose-alignment
     line: 3
-    message: ルールブックで定義された標準構成から著しく乖離しており、正しく作成するための実例として機能していない。
     anchor: "## 1. 目的と適用範囲"
+    message: >-
+      The sample lacks concrete migration purpose, scope, and rationale for migration, preventing readers from
+      understanding how to align migration definitions with project objectives.
+    message_ja: サンプルには具体的な移行の目的、範囲、および移行の根拠が不足しており、読者が移行の定義をプロジェクトの目標にどのように合わせるべきかを理解することを妨げています。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      The sample does not define GO/NO-GO criteria, decision-makers, or milestone evaluation points required for PO
+      approval.
+    message_ja: サンプルでは、POの承認に必要なGO/NO-GO基準、意思決定者、またはマイルストーンの評価ポイントが定義されていません。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 5
+    anchor: 本書は、変更対象の移行方針と全体計画を定義し、切替リスクを管理するための最小サンプルである。
+    message: >-
+      The sample does not clearly illustrate human approval responsibilities or sign-off authority for publication and
+      release readiness.
+    message_ja: サンプルでは、出版やリリース準備に関する人間の承認責任や、最終的な署名権限が明確に示されていません。
   - id: F004
     severity: major
-    rule: vp-qe-kata-conformance
-    line: 4
-    message: Frontmatter の `type` が `project` となっており、ルールブック 4.1 節の規定（`migration` 固定）と矛盾している。
-    anchor: ""
-  - id: F001
+    rule: vp-pm-plan-feasibility
+    line: 15
+    anchor: "- 主な内容: 移行範囲、移行方式、体制、スケジュール、リスクと対策"
+    message: >-
+      The document lacks migration phases, timelines, work units, and completion criteria required to illustrate a
+      feasible project schedule.
+    message_ja: ドキュメントには、実行可能なプロジェクトスケジュールを示すために必要な移行フェーズ、タイムライン、作業単位、および完了基準が不足しています。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 15
+    anchor: "- 主な内容: 移行範囲、移行方式、体制、スケジュール、リスクと対策"
+    message: The sample completely omits migration risks, mitigation strategies, and dependencies on subsequent deliverables.
+    message_ja: サンプルでは、移行リスク、緩和戦略、および後続の成果物への依存関係が完全に省略されています。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      The sample does not provide actionable unresolved items, reporting channels, or assigned role codes suitable for
+      project tracking.
+    message_ja: サンプルには、プロジェクトの追跡に適した、実行可能な未解決事項、報告チャネル、または割り当てられたロールコードが提供されていません。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The sample lacks business context, specific operational problems, expected value, and business success criteria
+      for the migration.
+    message_ja: サンプルには、移行に関するビジネスの文脈、具体的な運用上の問題、期待される価値、およびビジネスの成功基準が不足しています。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: "- 主な内容: 移行範囲、移行方式、体制、スケジュール、リスクと対策"
+    message: >-
+      The document fails to provide a scope inventory (in-scope and out-of-scope) and acceptance criteria from a user
+      and operational perspective.
+    message_ja: ドキュメントでは、ユーザーおよび運用の観点からの範囲の目録（インスコープおよびアウトオブスコープ）と受け入れ基準が提供されていません。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: Stakeholder roles, responsibilities, review authorities, and approval participants are not defined in the sample.
+    message_ja: サンプルでは、ステークホルダーの役割、責任、レビュー権限、および承認の参加者が定義されていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: Technical assumptions, system constraints, outage windows, and external dependencies are not documented.
+    message_ja: 技術的な前提条件、システムの制約、停止時間、および外部依存関係が文書化されていません。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 24
+    anchor: "| 主な内容     | 移行範囲、移行方式、体制、スケジュール、リスクと対策       | 要点のみ記載                         |"
+    message: Section 3 and Section 4 redundantly repeat high-level metadata topics without providing substantive content.
+    message_ja: セクション 3 とセクション 4 は、実質的な内容を提供することなく、ハイレベルなメタデータのトピックを冗長に繰り返しています。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 15
+    anchor: "- 主な内容: 移行範囲、移行方式、体制、スケジュール、リスクと対策"
+    message: >-
+      The sample provides no technical inputs, data migration approaches, constraints, or completion conditions for
+      implementation teams.
+    message_ja: サンプルでは、実装チーム向けの技術的なインプット、データ移行のアプローチ、制約、または完了条件が提供されていません。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 15
+    anchor: "- 主な内容: 移行範囲、移行方式、体制、スケジュール、リスクと対策"
+    message: >-
+      The document fails to identify the scope of impact on existing systems, databases, interfaces, or operational
+      procedures.
+    message_ja: ドキュメントでは、既存のシステム、データベース、インターフェース、または運用手順への影響範囲が特定されていません。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 15
+    anchor: "- 主な内容: 移行範囲、移行方式、体制、スケジュール、リスクと対策"
+    message: >-
+      Verification methods, integrity checks, and validation procedures for post-migration testing are completely
+      missing.
+    message_ja: 移行後のテストのための検証方法、整合性チェック、およびバリデーション手順が完全に欠落しています。
+  - id: F015
     severity: major
     rule: vp-qe-verifiability
     line: 28
-    message: サンプルの記述例において、判定基準や成功条件に具体的な数値や検証可能な状態（pass/failを判定できる表現）が含まれていない。
     anchor: "| 論点           | 処理方針                 |"
+    message: サンプルの記述例において、判定基準や成功条件に具体的な数値や検証可能な状態（pass/failを判定できる表現）が含まれていない。
+    message_ja: サンプルの記述例において、判定基準や成功条件に具体的な数値や検証可能な状態（pass/failを判定できる表現）が含まれていない。
+  - id: F016
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: ルールブック 5 節で定義された必須章（1〜9章）がすべて不足している。
+    message_ja: ルールブック 5 節で定義された必須章（1〜9章）がすべて不足している。
+  - id: F017
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: 見出し構成がルールブックで定義された必須構成（1〜9章の順序固定）に従っていない。
+    message_ja: 見出し構成がルールブックで定義された必須構成（1〜9章の順序固定）に従っていない。
+  - id: F018
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 4
+    anchor: ""
+    message: Frontmatter の `type` が `project` となっており、ルールブック 4.1 節の規定（`migration` 固定）と矛盾している。
+    message_ja: Frontmatter の `type` が `project` となっており、ルールブック 4.1 節の規定（`migration` 固定）と矛盾している。
+  - id: F019
+    severity: major
+    rule: vp-ux-readability
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: ルールブックで定義された標準構成から著しく乖離しており、正しく作成するための実例として機能していない。
+    message_ja: ルールブックで定義された標準構成から著しく乖離しており、正しく作成するための実例として機能していない。
+  - id: F020
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: Standard role codes and artifact identifiers are not consistently exemplified across the sample.
+    message_ja: 標準的なロールコードやアーティファクト識別子が、サンプル全体で一貫した例として示されていません。
+  - id: F021
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      The sample lacks concrete readiness criteria, resolution plans for open issues, and approval gates required to
+      transition the document to ready status.
+    message_ja: サンプルには、ドキュメントを ready ステータスに移行するために必要な具体的な準備基準、未解決事項の解決計画、および承認ゲートが不足しています。
+  - id: F022
+    severity: major
+    rule: vp-ops-operability
+    line: 15
+    anchor: "- 主な内容: 移行範囲、移行方式、体制、スケジュール、リスクと対策"
+    message: >-
+      The sample completely omits post-migration hypercare policies, monitoring setup, and operational incident
+      escalation procedures.
+    message_ja: サンプルでは、移行後のハイパーケアポリシー、モニタリング設定、および運用上のインシデントのエスカレーション手順が完全に省略されています。

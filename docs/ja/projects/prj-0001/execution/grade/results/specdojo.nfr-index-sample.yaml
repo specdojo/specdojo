@@ -3,44 +3,96 @@ version: 1
 document: specdojo:nfr-index-sample
 path: docs/ja/specdojo/samples/nfr-index-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
 score: 75
-graded_at: "2026-09-05T10:20:27.910Z"
-graded_by: gemma-expert-executor
+graded_at: "2026-10-15T21:05:37.065Z"
+graded_by: agy-expert-executor
 content_hash: d741682e4dfd28b9a8a736826dd60b0ecd39144f32cb369c904fb3ee35314205
 categories:
-  consistency:
-    score: 63
-  usability:
+  purpose:
+    score: 88
+  operations:
+    score: 88
+  planning:
+    score: 75
+  business:
     score: 83
   architecture:
     score: 100
+  usability:
+    score: 75
+  implementation:
+    score: 75
   quality:
-    score: 63
+    score: 67
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
-  vp-arc-single-responsibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,24 +101,139 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 3
-  minor: 0
+  minor: 13
   note: 0
 findings:
   - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Section 5 lists an open issue but lacks the decision maker, impact scope, and concrete next actions required for
+      PO decision-making.
+    message_ja: セクション 5 に未解決の事項が記載されていますが、PO の意思決定に必要な意思決定者、影響範囲、および具体的な次のアクションが不足しています。
+  - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      The document lists the 8 NFR categories but does not specify the responsible role codes or completion conditions
+      required for work breakdown and scheduling.
+    message_ja: ドキュメントには 8 つの NFR カテゴリが記載されていますが、作業の分解とスケジューリングに必要な担当ロールコードや完了条件が明記されていません。
+  - id: F003
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      Upstream references are present, but downstream dependencies on individual NFR category documents and schedule
+      risks are not identified.
+    message_ja: アップストリームの参照は存在しますが、個別の NFR カテゴリ ドキュメントへのダウンストリームの依存関係やスケジュールのリスクが特定されていません。
+  - id: F004
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      The open issues table specifies a general policy but does not designate a reporting destination or responsible
+      role code for tracking.
+    message_ja: 未解決事項の表には一般的な方針が示されていますが、追跡のための報告先や担当ロールコードが指定されていません。
+  - id: F005
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Scope boundaries, exclusions, and acceptance criteria for the NFR index are described only at an abstract level
+      without concrete scope definitions.
+    message_ja: NFR インデックスのスコープ境界、除外事項、および受け入れ基準が、具体的なスコープ定義なしに抽象的なレベルでのみ説明されています。
+  - id: F006
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 15
+    anchor: "- 主な内容: 信頼性、可用性、保守性、完全性、機密性・安全性、性能、運用、操作性（各カテゴリの目的・代表指標・検証導線）"
+    message: Stakeholders, reviewers, and agreement targets for the non-functional requirements are not identified.
+    message_ja: 非機能要件に関するステークホルダー、レビュアー、および合意の対象が特定されていません。
+  - id: F007
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 20
+    anchor: >-
+      | 項目         |
+      値                                                                                                         |
+      備考                                 |
+    message: >-
+      Section 4's table redundantly duplicates the exact phrases for purpose and main contents already stated in Section
+      1 and Section 3 without adding new information.
+    message_ja: セクション 4 の表は、新しい情報を追加することなく、セクション 1 およびセクション 3 ですでに述べられている目的と主な内容の正確なフレーズを冗長に重複させています。
+  - id: F008
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      Specific file paths for individual NFR category documents and input/output constraints are missing, leaving
+      implementation tasks underspecified.
+    message_ja: 個別の NFR カテゴリ ドキュメントの具体的なファイルパスと入出力の制約が欠落しており、実装タスクが不明確なままになっています。
+  - id: F009
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: Procedures and impact analysis for adding, modifying, or consolidating NFR category documents are not identified.
+    message_ja: NFR カテゴリ ドキュメントの追加、変更、または統合のための手順と影響分析が特定されていません。
+  - id: F010
+    severity: minor
+    rule: vp-dev-testability
+    line: 1
+    anchor: "# [非機能要件](../rulebooks/nfr-index-rulebook.md) サンプル"
+    message: No verification procedures or lint/schema validation commands are specified to test deliverable compliance.
+    message_ja: 成果物の適合性をテストするための検証手順や lint/schema バリデーション コマンドが指定されていません。
+  - id: F011
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 15
+    anchor: "- 主な内容: 信頼性、可用性、保守性、完全性、機密性・安全性、性能、運用、操作性（各カテゴリの目的・代表指標・検証導線）"
+    message: >-
+      The document claims to provide verifiable requirements but fails to include measurable metrics, thresholds, or
+      pass/fail criteria.
+    message_ja: ドキュメントは検証可能な要件を提供すると主張していますが、測定可能な指標、しきい値、または合格/不合格の基準が含まれていません。
+  - id: F012
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# [非機能要件](../rulebooks/nfr-index-rulebook.md) サンプル"
     message: 第5章で定義された必須見出し構成（1.概要〜5.関連導線）が含まれていない。
-    anchor: ""
-  - id: F002
+    message_ja: 第5章で定義された必須見出し構成（1.概要〜5.関連導線）が含まれていない。
+  - id: F013
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
+    anchor: "# [非機能要件](../rulebooks/nfr-index-rulebook.md) サンプル"
     message: ルールブックの定義に従っておらず、実例として不適切である。
-    anchor: ""
-  - id: F003
+    message_ja: ルールブックの定義に従っておらず、実例として不適切である。
+  - id: F014
     severity: major
     rule: vp-ux-readability
     line: 1
+    anchor: "# [非機能要件](../rulebooks/nfr-index-rulebook.md) サンプル"
     message: ルールブックで定義された標準構成から逸脱しており、参照先としての役割・利用方法を正しく識別できない。
-    anchor: ""
+    message_ja: ルールブックで定義された標準構成から逸脱しており、参照先としての役割・利用方法を正しく識別できない。
+  - id: F015
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Prerequisites and clear exit criteria required to transition the document from draft to ready status are not
+      defined.
+    message_ja: ドキュメントをドラフトから ready ステータスに移行するために必要な前提条件と明確な終了基準が定義されていません。
+  - id: F016
+    severity: minor
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# [非機能要件](../rulebooks/nfr-index-rulebook.md) サンプル"
+    message: Operational workflows, ongoing maintenance procedures, and inquiry channels for the NFR index are not provided.
+    message_ja: NFR インデックスの運用ワークフロー、継続的なメンテナンス手順、および問い合わせ窓口が提供されていません。

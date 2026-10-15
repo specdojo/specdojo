@@ -3,29 +3,75 @@ version: 1
 document: specdojo:opd-index-sample
 path: docs/ja/specdojo/samples/opd-index-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 73
-graded_at: "2026-09-05T13:12:05.422Z"
-graded_by: gemma-expert-executor
+score: 78
+graded_at: "2026-10-15T21:27:54.662Z"
+graded_by: agy-expert-executor
 content_hash: cb0b59b311dd675ef75953c1a4627c2cbf82ff333b37c67a02ddcbcc0108643f
 categories:
-  consistency:
-    score: 50
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 81
+  planning:
+    score: 92
+  business:
     score: 83
   architecture:
-    score: 100
+    score: 92
+  usability:
+    score: 83
+  implementation:
+    score: 75
   quality:
-    score: 63
+    score: 83
+  consistency:
+    score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 3
     score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,12 +81,21 @@ viewpoints:
     level: 1
     score: 25
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,55 +103,124 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 6
-  minor: 2
+  major: 8
+  minor: 7
   note: 0
 findings:
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 5
-    message: 必須章（2, 5, 6, 7, 8, 9, 10, 11）が大幅に欠落している。
-    anchor: "## 1. 概要（index）"
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 5
-    message: ルールブックで定義された必須構成に従っておらず、サンプルとしての整合性が欠如している。
-    anchor: "## 1. 概要（index）"
-  - id: F008
-    severity: major
-    rule: vp-ux-readability
-    line: 5
-    message: 必須構成の大幅な省略により、運用方針の SSOT としての十分な情報を備えておらず、可読性と完結性に欠ける。
-    anchor: "## 1. 概要（index）"
   - id: F001
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 6
-    message: Frontmatter の rulebook 参照 ID が specdojo:opd-index-rulebook と不整合である。
-    anchor: ""
+    rule: vp-pm-plan-feasibility
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: >-
+      Specific operational work units, recurring schedules, and completion conditions are missing, reducing feasibility
+      for task planning and tracking.
+    message_ja: 具体的な業務単位、定期的なスケジュール、および完了条件が不足しており、タスクの計画と追跡の実現可能性を下げています。
   - id: F002
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: >-
+      Operational scope, prerequisites, and out-of-scope boundaries are entirely missing, preventing stakeholders from
+      verifying requirements coverage and acceptance boundaries.
+    message_ja: 業務範囲、前提条件、および対象外の境界が完全に欠落しており、ステークホルダーが要件の網羅性と受け入れ境界を検証できない状態になっています。
+  - id: F003
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 6
-    message: Frontmatter の必須項目 title が不足している。
-    anchor: ""
+    rule: vp-arc-technical-constraints
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: Technical constraints, external system dependencies, and recovery targets (RTO/RPO) are not specified.
+    message_ja: 技術的な制約、外部システムへの依存関係、およびリカバリ目標（RTO/RPO）が指定されていません。
   - id: F004
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 9
-    message: "章番号が不整合であり、SLO・SLA・KPI は ## 3 であるべきだが ## 2 となっている。"
-    anchor: "## 2. SLO・SLA・KPI"
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: >-
+      Essential implementation parameters such as monitoring thresholds, alert destinations, and change approval
+      criteria are missing, leaving configuration requirements incomplete.
+    message_ja: 監視のしきい値、アラートの送信先、および変更の承認基準などの不可欠な実装パラメータが不足しており、設定要件が不完全な状態です。
   - id: F005
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 17
-    message: "章番号が不整合であり、体制・責任分界 は ## 4 であるべきだが ## 3 となっている。"
-    anchor: "## 3. 体制・責任分界（RACI・当番・エスカレーション）"
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: >-
+      Change control criteria and rollback triggers are missing, leaving the impact evaluation process for system and
+      configuration changes undefined.
+    message_ja: 変更管理の基準とロールバックのトリガーが不足しており、システムや設定変更の影響評価プロセスが定義されていません。
   - id: F006
     severity: major
     rule: vp-qe-omissions-consistency
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: 必須章（2, 5, 6, 7, 8, 9, 10, 11）が大幅に欠落している。
+    message_ja: 必須章（2, 5, 6, 7, 8, 9, 10, 11）が大幅に欠落している。
+  - id: F007
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 6
+    anchor: ""
+    message: Frontmatter の必須項目 title が不足している。
+    message_ja: Frontmatter の必須項目 title が不足している。
+  - id: F008
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "## 2. SLO・SLA・KPI"
+    message: "章番号が不整合であり、SLO・SLA・KPI は ## 3 であるべきだが ## 2 となっている。"
+    message_ja: "章番号が不整合であり、SLO・SLA・KPI は ## 3 であるべきだが ## 2 となっている。"
+  - id: F009
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 17
+    anchor: "## 3. 体制・責任分界（RACI・当番・エスカレーション）"
+    message: "章番号が不整合であり、体制・責任分界 は ## 4 であるべきだが ## 3 となっている。"
+    message_ja: "章番号が不整合であり、体制・責任分界 は ## 4 であるべきだが ## 3 となっている。"
+  - id: F010
+    severity: major
+    rule: vp-qe-omissions-consistency
     line: 25
-    message: "章番号が不整合であり、関連ドキュメント導線 は ## 12 であるべきだが ## 4 となっている。"
     anchor: "## 4. 関連ドキュメント導線（`opr` 等）"
+    message: "章番号が不整合であり、関連ドキュメント導線 は ## 12 であるべきだが ## 4 となっている。"
+    message_ja: "章番号が不整合であり、関連ドキュメント導線 は ## 12 であるべきだが ## 4 となっている。"
+  - id: F011
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: ルールブックで定義された必須構成に従っておらず、サンプルとしての整合性が欠如している。
+    message_ja: ルールブックで定義された必須構成に従っておらず、サンプルとしての整合性が欠如している。
+  - id: F012
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 6
+    anchor: ""
+    message: Frontmatter の rulebook 参照 ID が specdojo:opd-index-rulebook と不整合である。
+    message_ja: Frontmatter の rulebook 参照 ID が specdojo:opd-index-rulebook と不整合である。
+  - id: F013
+    severity: major
+    rule: vp-ux-readability
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: 必須構成の大幅な省略により、運用方針の SSOT としての十分な情報を備えておらず、可読性と完結性に欠ける。
+    message_ja: 必須構成の大幅な省略により、運用方針の SSOT としての十分な情報を備えておらず、可読性と完結性に欠ける。
+  - id: F014
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: >-
+      Unresolved items and prerequisites required to transition the document status from draft to ready are not
+      documented.
+    message_ja: ドキュメントのステータスを draft から ready へ移行するために必要な未解決の項目および前提条件が文書化されていません。
+  - id: F015
+    severity: major
+    rule: vp-ops-operability
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: >-
+      Core operational policies including incident response, change management, periodic operations, and inquiry
+      handling are missing, preventing operators from obtaining essential guidance for ongoing operations.
+    message_ja: インシデント対応、変更管理、定期的な運用、および問い合わせ対応を含む主要な運用ポリシーが不足しており、運用担当者が継続的な運用に必要なガイドラインを得られない状態になっています。

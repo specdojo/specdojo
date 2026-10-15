@@ -3,44 +3,99 @@ version: 1
 document: specdojo:opr-access-control-sample
 path: docs/ja/specdojo/samples/opr-access-control-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 72
-graded_at: "2026-09-05T14:15:55.311Z"
-graded_by: gemma-expert-executor
+score: 63
+graded_at: "2026-10-15T21:36:45.861Z"
+graded_by: agy-expert-executor
 content_hash: f3853bfd37f375c6d9277d2fc3ee5f54bf6173c4b909007a2a162e15927c5beb
 categories:
-  consistency:
-    score: 25
-  usability:
-    score: 83
-  architecture:
-    score: 100
-  quality:
+  purpose:
+    score: 63
+  operations:
+    score: 88
+  planning:
     score: 75
+  business:
+    score: 67
+  architecture:
+    score: 92
+  usability:
+    score: 75
+  implementation:
+    score: 75
+  quality:
+    score: 58
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 2
     score: 50
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 0
     score: 0
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,31 +103,169 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 1
-  major: 3
-  minor: 0
+  major: 5
+  minor: 14
   note: 0
 findings:
+  - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 1
+    anchor: "# 運用手順: アカウント付与・剥奪 サンプル"
+    message: The document lacks a purpose and scope description aligning the procedure with project goals and upstream policy.
+    message_ja: ドキュメントには、手順をプロジェクトの目標や上位のポリシーと整合させる目的と範囲の説明が不足しています。
   - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 運用手順: アカウント付与・剥奪 サンプル"
+    message: The sample does not outline prerequisites, scope impacts, or unresolved points needed for decision readiness.
+    message_ja: サンプルには、意思決定の準備に必要な前提条件、範囲への影響、または未解決の事項が概説されていません。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 7
+    anchor: "| 手順 | 内容                 | 実施者      | 完了条件         | 証跡          |"
+    message: >-
+      The procedure lacks estimated task duration, execution deadlines, and prerequisites necessary for schedule
+      planning and progress tracking.
+    message_ja: 手順には、スケジュールの計画と進捗管理に必要なタスクの推定所要時間、実行期限、および前提条件が不足しています。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# 運用手順: アカウント付与・剥奪 サンプル"
+    message: >-
+      The document does not identify operational risks (such as unauthorized privilege escalation or approval delays) or
+      dependencies on related artifacts.
+    message_ja: ドキュメントには、運用上のリスク（権限の不正な昇格や承認の遅延など）や、関連する成果物への依存関係が特定されていません。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 7
+    anchor: "| 手順 | 内容                 | 実施者      | 完了条件         | 証跡          |"
+    message: The document lacks reporting lines and escalation pathways for handling abnormal situations or approval delays.
+    message_ja: ドキュメントには、異常事態や承認の遅延に対処するための報告ラインとエスカレーション経路が不足しています。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 1
+    anchor: "# 運用手順: アカウント付与・剥奪 サンプル"
+    message: >-
+      The document does not describe the business problem, target users, or expected value of proper access control
+      management.
+    message_ja: ドキュメントには、ビジネス上の課題、ターゲットユーザー、または適切なアクセス制御管理の期待される価値が記載されていません。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 7
+    anchor: "| 手順 | 内容                 | 実施者      | 完了条件         | 証跡          |"
+    message: >-
+      Scope boundaries, exclusions (such as privileged or break-glass accounts), and detailed acceptance criteria for
+      account requests are missing from the procedure.
+    message_ja: 手順には、スコープの境界、除外事項（特権アカウントやブレイクグラスアカウントなど）、およびアカウントリクエストの詳細な受け入れ基準が欠落しています。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 7
+    anchor: "| 手順 | 内容                 | 実施者      | 完了条件         | 証跡          |"
+    message: >-
+      Detailed stakeholder definitions and trigger scenarios for requesting and revoking accounts are not sufficiently
+      elaborated.
+    message_ja: アカウントのリクエストおよび削除のトリガーシナリオと、詳細なステークホルダーの定義が十分に詳述されていません。
+  - id: F009
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 7
+    anchor: "| 手順 | 内容                 | 実施者      | 完了条件         | 証跡          |"
+    message: >-
+      Technical constraints, target identity systems (IdP/IAM), and tool requirements for logging and ledger maintenance
+      are not specified.
+    message_ja: 技術的な制約、対象となるアイデンティティシステム（IdP/IAM）、およびロギングと台帳維持のためのツール要件が指定されていません。
+  - id: F010
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 9
+    anchor: "| 1    | 申請受付（チケット） | Support/Ops | 必要情報が揃う   | ticket_id     |"
+    message: >-
+      Specific input parameters, permission verification methods, and ledger formats required for execution are not
+      provided.
+    message_ja: 実行に必要な特定の入力パラメータ、権限の検証方法、および台帳の形式が提供されていません。
+  - id: F011
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 11
+    anchor: "| 3    | 付与/剥奪            | Ops         | 権限反映確認     | 実施ログ      |"
+    message: >-
+      Impact on existing services and rollback procedures in case of erroneous permission grant or revocation are not
+      identified.
+    message_ja: 誤った権限の付与または取り消しが発生した場合の、既存サービスへの影響とロールバック手順が特定されていません。
+  - id: F012
+    severity: minor
+    rule: vp-dev-testability
+    line: 12
+    anchor: "| 4    | 検証                 | 申請者      | ログイン確認     | スクショ/ログ |"
+    message: >-
+      Verification steps lack specific test procedures, expected outputs, and error handling methods beyond a generic
+      login check.
+    message_ja: 検証ステップにおいて、一般的なログインチェック以外に、具体的なテスト手順、期待される出力、およびエラー処理方法が不足しています。
+  - id: F013
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 9
+    anchor: "| 1    | 申請受付（チケット） | Support/Ops | 必要情報が揃う   | ticket_id     |"
+    message: Completion criteria such as '必要情報が揃う' and '権限反映確認' lack concrete pass/fail verification criteria.
+    message_ja: Completion criteria such as '必要情報が揃う' and '権限反映確認' lack concrete pass/fail verification criteria.
+  - id: F014
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# 運用手順: アカウント付与・剥奪 サンプル"
     message: "`opr-rulebook` で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バックアップ・リストア、バッチ再実行、運用変更、問い合わせ一次対応、証跡、関連文書導線）がすべて欠落している。"
-    anchor: ""
-  - id: F004
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    message: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
-    anchor: ""
-  - id: F003
+    message_ja: "`opr-rulebook` で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バックアップ・リストア、バッチ再実行、運用変更、問い合わせ一次対応、証跡、関連文書導線）がすべて欠落している。"
+  - id: F015
     severity: major
     rule: vp-qe-kata-conformance
     line: 5
-    message: 「アカウント付与/剥奪手順」の見出し番号が `## 1` となっているが、ルール規定の順序に従い `## 9` とすべきである。
-    anchor: ""
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 6
-    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
     anchor: "## 1. アカウント付与/剥奪手順"
+    message: 「アカウント付与/剥奪手順」の見出し番号が `## 1` となっているが、ルール規定の順序に従い `## 9` とすべきである。
+    message_ja: 「アカウント付与/剥奪手順」の見出し番号が `## 1` となっているが、ルール規定の順序に従い `## 9` とすべきである。
+  - id: F016
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 6
+    anchor: ""
+    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
+    message_ja: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
+  - id: F017
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    anchor: "# 運用手順: アカウント付与・剥奪 サンプル"
+    message: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+    message_ja: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+  - id: F018
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 7
+    anchor: "| 手順 | 内容                 | 実施者      | 完了条件         | 証跡          |"
+    message: >-
+      Role names ('Support/Ops', 'Ops Lead', 'Ops') are not defined in accordance with standardized project role
+      definitions.
+    message_ja: ロール名（'Support/Ops', 'Ops Lead', 'Ops'）が、標準化されたプロジェクトのロール定義に従って定義されていません。
+  - id: F019
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 運用手順: アカウント付与・剥奪 サンプル"
+    message: Prerequisites for transitioning status from draft to ready and designated approvers are not specified.
+    message_ja: ステータスをdraftからreadyへ移行するための前提条件と、指定された承認者が明記されていません。
+  - id: F020
+    severity: minor
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# 運用手順: アカウント付与・剥奪 サンプル"
+    message: >-
+      Information regarding procedural revision, contact pathways, and periodic review workflows for this runbook is
+      missing.
+    message_ja: このrunbookの、手順の改訂、連絡経路、および定期的なレビューワークフローに関する情報が不足しています。
