@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-tmaw-result-frontmatter-block-reason-yaml
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T14:58:16Z"
   due_on: null
+  completed_at: "2026-10-15T20:39:50Z"
+  conclusion: result の frontmatter の文字列の値を YAML として正しく書くようにし、過去の result 3 件を値を変えずに直した
 ---
 
 # PJR-TMAW result の frontmatter の block_reason に改行があると不正な YAML になる

@@ -119,3 +119,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_f50f02d471d84e5ab038cf59ca6c2be0
+- v: 1
+  id: reg_10755eaacabc448d8e9e8f690aeb047f
+  ts: "2026-10-15T20:39:50Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、過去の 3 件を orchestrator が直し、js-yaml 5 での npm run check が通った（2026-10-16）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-16"
+    - field: conclusion
+      from: "-"
+      to: result の frontmatter の文字列の値を YAML として正しく書くようにし、過去の result 3 件を値を変えずに直した
+  previous_event_id: reg_26a3cb7469734d8fa75cdd89a4fe4349
