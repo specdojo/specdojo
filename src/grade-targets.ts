@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { extname, isAbsolute, join, relative, resolve } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { collectResolvedDeliverables, loadCatalogDocs } from "./catalog-build.js";
 import { isTrashedPath, resolveBasePath } from "./catalog-paths.js";
 import { listFilesRecursive } from "./exec-shared.js";
@@ -124,7 +124,7 @@ function parseKataReference(path: string, kind: KataReference["kind"]): KataRefe
       metadata = parseMarkdown(readFileSync(path, "utf8"), repoRelativePath(path)).data
         .specdojo as Record<string, unknown>;
     } else {
-      const parsed = yaml.load(readFileSync(path, "utf8"));
+      const parsed = load(readFileSync(path, "utf8"));
       if (!isRecord(parsed)) return null;
       metadata = isRecord(parsed.specdojo) ? parsed.specdojo : parsed;
     }

@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { listFilesRecursive, readJson } from "./exec-shared.js";
 import {
   getProjectExecutionPath,
@@ -823,7 +823,7 @@ export function loadJobDefinition(paths: JobPaths, jobId: string): JobDefinition
   ];
   const filePath = candidates.find(existsSync);
   if (!filePath) throw new Error(`Job not found: ${normalized} (in ${paths.jobsPath})`);
-  const parsed = parseJobDefinition(yaml.load(readFileSync(filePath, "utf8")), basename(filePath));
+  const parsed = parseJobDefinition(load(readFileSync(filePath, "utf8")), basename(filePath));
   if (!parsed.job) throw new Error(parsed.errors.join("\n"));
   return parsed.job;
 }
@@ -836,10 +836,7 @@ export function loadAllJobs(jobsPath: string): { jobs: JobDefinition[]; errors: 
     .filter((path) => /(?:^|\/)job-[^/]+\.ya?ml$/.test(path))
     .sort()) {
     try {
-      const parsed = parseJobDefinition(
-        yaml.load(readFileSync(filePath, "utf8")),
-        basename(filePath),
-      );
+      const parsed = parseJobDefinition(load(readFileSync(filePath, "utf8")), basename(filePath));
       errors.push(...parsed.errors);
       if (parsed.job) jobs.push(parsed.job);
     } catch (error) {

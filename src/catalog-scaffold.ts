@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import type {
   DctDeliverableItem,
   DctDoc,
@@ -63,10 +63,10 @@ function applyFlowStyleRoles(yamlStr: string): string {
 // Single serialization used by every catalog writer so plan-driven generation and template
 // scaffolding produce byte-identical formatting for the same document.
 export function dumpDctDoc(doc: DctDoc): string {
-  const out = yaml.dump(doc, {
+  const out = dump(doc, {
     lineWidth: 120,
     noRefs: true,
-    quotingType: "'",
+    quoteStyle: "single",
     forceQuotes: false,
   });
   return applyFlowStyleRoles(out);
@@ -302,7 +302,7 @@ export function runScaffold(opts: {
   for (const [f, templatePath] of [...templateFiles].sort(([a], [b]) => a.localeCompare(b))) {
     try {
       const raw = readFileSync(templatePath, "utf8");
-      loaded.push({ filename: f, path: templatePath, template: yaml.load(raw) as DctTemplateDoc });
+      loaded.push({ filename: f, path: templatePath, template: load(raw) as DctTemplateDoc });
     } catch (err) {
       errors.push(`${templatePath}: ${err instanceof Error ? err.message : String(err)}`);
     }

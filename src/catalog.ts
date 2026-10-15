@@ -2,7 +2,7 @@ import { type Command } from "commander";
 import { join, relative, resolve } from "node:path";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import {
   getProjectCatalogPath,
   loadConfig,
@@ -335,7 +335,7 @@ export function registerCatalogCommands(program: Command): void {
         const filePath = `${catalogPath}/${f}`;
         try {
           const raw = readFileSync(filePath, "utf8");
-          const doc = yaml.load(raw) as DctDoc;
+          const doc = load(raw) as DctDoc;
           const result = validateDctDoc(doc, filePath, knownLocalIds, repoRoot);
           for (const err of result.errors) {
             process.stdout.write(`ERROR: ${err}\n`);

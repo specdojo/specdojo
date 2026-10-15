@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import type {
   DctDoc,
   DctIndexDoc,
@@ -57,7 +57,7 @@ function readPracticeDocumentId(filePath: string): string | undefined {
     const id = readSpecdojoNamespace(content).id;
     return typeof id === "string" ? id : undefined;
   }
-  const parsed = yaml.load(content);
+  const parsed = load(content);
   if (!isRecord(parsed)) return undefined;
   const nested = isRecord(parsed.specdojo) ? parsed.specdojo.id : undefined;
   const extensionMetadata = isRecord(parsed["x-spec-meta"]) ? parsed["x-spec-meta"].id : undefined;
@@ -83,7 +83,7 @@ export function collectCatalogLocalIds(catalogPath: string): Set<string> {
   for (const f of files) {
     let doc: DctDoc;
     try {
-      doc = yaml.load(readFileSync(join(catalogPath, f), "utf8")) as DctDoc;
+      doc = load(readFileSync(join(catalogPath, f), "utf8")) as DctDoc;
     } catch {
       continue;
     }
@@ -127,7 +127,7 @@ export function loadCatalogDocs(catalogPath: string): LoadedDctDoc[] {
     const filePath = join(catalogPath, f);
     let doc: DctDoc;
     try {
-      doc = yaml.load(readFileSync(filePath, "utf8")) as DctDoc;
+      doc = load(readFileSync(filePath, "utf8")) as DctDoc;
     } catch {
       continue;
     }
@@ -298,7 +298,7 @@ export function validateCatalogLocalIds(catalogPath: string): DctValidationResul
     const filePath = join(catalogPath, f);
     let doc: DctDoc;
     try {
-      doc = yaml.load(readFileSync(filePath, "utf8")) as DctDoc;
+      doc = load(readFileSync(filePath, "utf8")) as DctDoc;
     } catch {
       continue;
     }
@@ -342,7 +342,7 @@ export function validateRulebookKata(catalogPath: string): DctValidationResult {
   for (const f of files) {
     let doc: DctDoc;
     try {
-      doc = yaml.load(readFileSync(join(catalogPath, f), "utf8")) as DctDoc;
+      doc = load(readFileSync(join(catalogPath, f), "utf8")) as DctDoc;
     } catch {
       continue;
     }
@@ -765,7 +765,7 @@ function flattenDctIndexDomains(groups: DctIndexGroup[]): DctIndexDomainGroup["d
 export function loadDctIndex(catalogPath: string): DctIndexDoc | null {
   const filePath = join(catalogPath, DCT_INDEX_FILE);
   if (!existsSync(filePath)) return null;
-  return yaml.load(readFileSync(filePath, "utf8")) as DctIndexDoc;
+  return load(readFileSync(filePath, "utf8")) as DctIndexDoc;
 }
 
 // The index declaration and physical domain files must describe exactly the same domain set.
@@ -865,7 +865,7 @@ export function buildCatalog(catalogPath: string): { generated: string[]; errors
     const filePath = join(catalogPath, f);
     let doc: DctDoc;
     try {
-      doc = yaml.load(readFileSync(filePath, "utf8")) as DctDoc;
+      doc = load(readFileSync(filePath, "utf8")) as DctDoc;
     } catch (err) {
       errors.push(`${filePath}: ${err instanceof Error ? err.message : String(err)}`);
       continue;

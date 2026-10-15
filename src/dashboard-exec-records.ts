@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { sanitizeDashboardCell } from "./dashboard-shared.js";
 
 export const EXEC_RECORDS_FILE = "exec-records.md";
@@ -20,7 +20,7 @@ function readSpecdojoFrontmatter(filePath: string): Record<string, unknown> {
     const content = readFileSync(filePath, "utf8");
     const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
     if (!match) return {};
-    const parsed: unknown = yaml.load(match[1]);
+    const parsed: unknown = load(match[1]);
     if (typeof parsed !== "object" || parsed === null) return {};
     const specdojo: unknown = (parsed as Record<string, unknown>).specdojo;
     return typeof specdojo === "object" && specdojo !== null && !Array.isArray(specdojo)

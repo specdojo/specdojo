@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
-import { load } from "js-yaml";
+import { load } from "./yaml.js";
 import { specdojoRootDir } from "./specdojo-config.js";
 import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "./kata.js";
 import type { KataRefs } from "./kata.js";

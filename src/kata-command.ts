@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
 import { basename, dirname, extname, join, relative, resolve } from "node:path";
 import { type Command } from "commander";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import { type SpecdojoResolutionRoots, specdojoResourceCandidates } from "./template-resolution.js";
 
@@ -94,7 +94,7 @@ function filesBelow(root: string): string[] {
 function parseDataFileId(content: string, extension: string): string | undefined {
   let parsed: unknown;
   try {
-    parsed = extension === ".json" ? JSON.parse(content) : yaml.load(content);
+    parsed = extension === ".json" ? JSON.parse(content) : load(content);
   } catch {
     return undefined;
   }

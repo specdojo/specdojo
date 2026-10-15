@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import { type ResolvedDeliverable, collectResolvedDeliverables } from "./catalog-build.js";
 import { resolveBasePath } from "./catalog-paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
@@ -135,10 +135,7 @@ function fallbackMarkdown(item: DctDeliverableItem, projectId: string): string {
   const basedOn = (item.depends_on ?? []).map((dep) => `${projectId}:${dep}`);
   if (basedOn.length > 0) inner.based_on = basedOn;
 
-  const innerLines = yaml
-    .dump(inner, { lineWidth: 120, noRefs: true })
-    .replace(/\n+$/, "")
-    .split("\n");
+  const innerLines = dump(inner, { lineWidth: 120, noRefs: true }).replace(/\n+$/, "").split("\n");
   const frontmatter = buildSpecdojoFrontmatter(innerLines);
 
   return `${frontmatter}\n\n# ${item.name}\n\n${item.overview}\n\n_TODO_: 本文を記述する\n`;
@@ -154,7 +151,7 @@ function fallbackYaml(item: DctDeliverableItem, projectId: string): string {
   if (item.rulebook && item.rulebook !== "undecided") {
     doc.rulebook = item.rulebook === "not-needed" ? "none" : item.rulebook;
   }
-  return yaml.dump(doc, { lineWidth: 120, noRefs: true });
+  return dump(doc, { lineWidth: 120, noRefs: true });
 }
 
 // Flatten a YAML deliverable template (`metadata_template` + body, minus own-meta)
@@ -164,7 +161,7 @@ function expandYamlTemplate(
   item: DctDeliverableItem,
   projectId: string,
 ): string {
-  const loaded = yaml.load(readFileSync(templatePath, "utf8"));
+  const loaded = load(readFileSync(templatePath, "utf8"));
   if (!isRecord(loaded)) {
     throw new Error(`Template is not a YAML mapping: ${templatePath}`);
   }
@@ -174,7 +171,7 @@ function expandYamlTemplate(
   );
   const merged = isRecord(metadataTemplate) ? { ...metadataTemplate, ...body } : body;
   const doc = replaceGeneratedPlaceholders(merged, item, projectId);
-  return yaml.dump(doc, { lineWidth: 120, noRefs: true });
+  return dump(doc, { lineWidth: 120, noRefs: true });
 }
 
 function generateContent(
@@ -260,7 +257,7 @@ export function runGenerate(opts: {
     const filePath = join(catalogPath, f);
     let doc: DctDoc;
     try {
-      doc = yaml.load(readFileSync(filePath, "utf8")) as DctDoc;
+      doc = load(readFileSync(filePath, "utf8")) as DctDoc;
     } catch (err) {
       errors.push(`${filePath}: ${err instanceof Error ? err.message : String(err)}`);
       continue;

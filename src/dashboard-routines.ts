@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { readJson } from "./exec-shared.js";
 import {
   type RoutineDoc,
@@ -271,7 +271,7 @@ function readRoutineStateEntries(statePath: string): Record<string, DashboardRou
 function parseRoutineFileSafe(filePath: string): RoutineDoc | undefined {
   let parsed: unknown;
   try {
-    parsed = yaml.load(readFileSync(filePath, "utf8"));
+    parsed = load(readFileSync(filePath, "utf8"));
   } catch {
     return undefined;
   }

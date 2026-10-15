@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { resolve, relative, sep } from "node:path";
-import { load } from "js-yaml";
+import { load } from "./yaml.js";
 import type { Plugin } from "unified";
 import type { Root, Table, TableRow } from "mdast";
 import type { VFile } from "vfile";

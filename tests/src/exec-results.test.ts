@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { lint } from "markdownlint/sync";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import {
   isResultUnfilled,
   readResultFrontmatterSnapshot,
@@ -39,7 +39,7 @@ function reporterEvidence(changes: ExecEvidence["changes"]): ExecEvidence {
 }
 
 function markdownlintErrors(content: string): unknown[] {
-  const parsed = yaml.load(readFileSync(join(specdojoRootDir(), ".markdownlint.yaml"), "utf8"));
+  const parsed = load(readFileSync(join(specdojoRootDir(), ".markdownlint.yaml"), "utf8"));
   const config =
     typeof parsed === "object" && parsed !== null ? (parsed as Record<string, unknown>) : {};
   const results = lint({

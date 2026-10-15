@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import { getProjectExecutionPath, loadConfig, specdojoRootDir } from "./specdojo-config.js";
 import { resolveSpecdojoPath } from "./template-resolution.js";
 
@@ -64,7 +64,7 @@ export function gradeContentHash(content: string): string {
 export function markdownDocumentId(content: string, path: string): string {
   const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
   if (!match) throw new Error(`${path}: Markdown frontmatter is required`);
-  const parsed = yaml.load(match[1]);
+  const parsed = load(match[1]);
   const specdojo = isRecord(parsed) && isRecord(parsed.specdojo) ? parsed.specdojo : undefined;
   const id = specdojo?.id;
   if (typeof id !== "string" || !DOCUMENT_ID_RE.test(id)) {
@@ -114,7 +114,7 @@ export function gradeResultPathForDocument(opts: {
 }
 
 export function parseGradeResult(content: string, path: string): GradeResult {
-  const parsed = yaml.load(content);
+  const parsed = load(content);
   if (!isRecord(parsed)) throw new Error(`${path}: grade result must be a mapping`);
   const result = parsed as Partial<GradeResult>;
   if (
@@ -164,10 +164,10 @@ export function renderGradeResult(result: GradeResult, path: string): string {
   const schemaRef = relative(dirname(path), resolveSpecdojoPath(GRADE_RESULT_SCHEMA))
     .split(sep)
     .join("/");
-  return `# yaml-language-server: $schema=${schemaRef}\n${yaml.dump(result, {
+  return `# yaml-language-server: $schema=${schemaRef}\n${dump(result, {
     lineWidth: 120,
     noRefs: true,
-    quotingType: '"',
+    quoteStyle: "double",
   })}`;
 }
 

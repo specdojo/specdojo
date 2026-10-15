@@ -1,0 +1,14 @@
+非保護対象の実装は完了しました。[公式移行ガイド](https://github.com/nodeca/js-yaml/blob/master/docs/migrate_v4_to_v5.md)に沿って named import 化し、互換ローダーで日付と merge key の v4 挙動を維持しています。
+
+残る handoff は以下です。
+
+- ルート: `js-yaml` を `^5.4.3` へ更新
+- `packages/docs-lint`: `js-yaml` を `^5.4.3` へ更新
+- 両方の `@types/js-yaml` を削除
+- ルートと docs-lint の lock ファイルを再生成後、resume
+
+親 runner 管理の lint・typecheck・unit/integration test・schema 検証は指示どおり実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"named import化、YAML 1.1互換ローダー、日付・merge key単体テスト、v5オプション移行、CHANGELOG 0.4.0および個票更新を完了。handoffで両package.jsonのjs-yamlを^5.4.3へ更新し、@types/js-yamlを削除して各lockファイルを再生成後にresumeが必要。","validations":[{"command":"git status --porcelain | cut -c4- | rg -v '^docs/ja/projects/prj-0001/execution/exec/evidence/' | xargs npx prettier --write","status":"passed","summary":"変更対象をPrettierで整形"},{"command":"node --import tsx --input-type=module -e \"import { load } from './src/yaml.ts'; const parsed = load('base: &b { owner: DEV }\\nitem: { <<: *b, date: 2026-10-15 }\\n'); if (!(parsed.item.date instanceof Date) || parsed.item.owner !== 'DEV') process.exit(1); console.log('YAML v4 compatibility: OK')\"","status":"passed","summary":"引用符なしの日付とmerge keyのv4互換性を確認"},{"command":"node --check packages/docs-lint/src/remark-frontmatter-ajv2020.cjs","status":"passed","summary":"CommonJS構文エラーなし"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿生成に成功"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"全catalogがOK。既存の参照文書未作成警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

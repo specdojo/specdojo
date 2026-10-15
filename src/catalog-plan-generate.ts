@@ -15,7 +15,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { collectCatalogLocalIds, validateDctDoc } from "./catalog-build.js";
 import {
   collectTemplateEntries,
@@ -311,7 +311,7 @@ function collectCatalogLocalIdsExcept(catalogPath: string, skip: Set<string>): S
 function collectDocLocalIdsFromFile(filePath: string): string[] {
   let doc: DctDoc | null = null;
   try {
-    doc = yaml.load(readFileSync(filePath, "utf8")) as DctDoc;
+    doc = load(readFileSync(filePath, "utf8")) as DctDoc;
   } catch {
     return [];
   }

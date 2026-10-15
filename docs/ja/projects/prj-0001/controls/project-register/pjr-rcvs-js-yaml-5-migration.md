@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T22:17:17Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
 ---
 
 # PJR-RCVS js-yaml 5 への移行

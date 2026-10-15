@@ -3,7 +3,7 @@
 
 import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { collectResolvedDeliverables, type ResolvedDeliverable } from "./catalog-build.js";
 import { resolveBasePath } from "./catalog-paths.js";
 import type { DctDoc, DctKind } from "./catalog-types.js";
@@ -88,7 +88,7 @@ function readGrade(repoRoot: string, relPath: string, projectId: string): GradeF
       if (validateGradedMarkdown(content, relPath).length > 0) return undefined;
       metadata = readSpecdojoNamespace(content);
     } else {
-      const parsed = relPath.endsWith(".json") ? JSON.parse(content) : yaml.load(content);
+      const parsed = relPath.endsWith(".json") ? JSON.parse(content) : load(content);
       if (!isRecord(parsed)) return undefined;
       metadata = isRecord(parsed.specdojo) ? parsed.specdojo : parsed;
     }

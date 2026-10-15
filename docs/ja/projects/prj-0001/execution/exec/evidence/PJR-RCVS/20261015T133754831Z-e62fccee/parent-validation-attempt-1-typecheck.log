@@ -1,0 +1,14 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 typecheck
+> tsc -b --noEmit
+
+src/catalog-generate.ts(138,22): error TS2304: Cannot find name 'yaml'.
+src/catalog-generate.ts(138,22): error TS2304: Cannot find name 'yaml'.
+
+
+--- stderr ---

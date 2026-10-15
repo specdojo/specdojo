@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { lint } from "markdownlint/sync";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import { escapeMarkdownInline, inlineCodeAnglePlaceholders } from "../../src/exec-shared.js";
 import { generateRegisterPlan } from "../../src/exec-register.js";
 import { specdojoRootDir } from "../../src/specdojo-config.js";
@@ -19,7 +19,7 @@ const PROBLEMATIC_DESCRIPTION =
 
 function loadMarkdownlintConfig(): Record<string, unknown> {
   const configPath = path.join(specdojoRootDir(), ".markdownlint.yaml");
-  const parsed = yaml.load(readFileSync(configPath, "utf8"));
+  const parsed = load(readFileSync(configPath, "utf8"));
   return typeof parsed === "object" && parsed !== null ? (parsed as Record<string, unknown>) : {};
 }
 
@@ -231,7 +231,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     const frontmatterYaml = match![1];
 
     // JS-YAML で YAML として正しくパースできるか確認
-    const parsed = yaml.load(frontmatterYaml) as { specdojo: { name: string } };
+    const parsed = load(frontmatterYaml) as { specdojo: { name: string } };
 
     // name が元のタイトルと完全に一致するか確認
     expect(parsed.specdojo.name).toBe(titleWithSpecialChars);

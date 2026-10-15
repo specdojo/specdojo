@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import {
   specdojoDirectoryPaths,
@@ -283,7 +283,7 @@ function scanFile(
   try {
     const content = readFileSync(fullPath, "utf8");
     if (isYaml) {
-      const parsed = yaml.load(content);
+      const parsed = load(content);
       const topId = extractTopLevelId(parsed);
       if (topId) addId(collector, topId, entryPath, locale);
       const specs = nestedMap.get(scanRelPath);
@@ -399,7 +399,7 @@ function loadIndexConfig(repoRoot: string, configPath?: string): IndexConfig {
   const p = join(repoRoot, configPath ?? DEFAULT_CONFIG_REL);
   if (!existsSync(p)) return {};
   try {
-    const parsed = yaml.load(readFileSync(p, "utf8"));
+    const parsed = load(readFileSync(p, "utf8"));
     if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) {
       return parsed as IndexConfig;
     }
