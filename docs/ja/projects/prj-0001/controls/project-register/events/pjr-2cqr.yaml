@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_445fe3427d9f4f59b04a2d3e266d8e3d
+  ts: "2026-10-15T21:39:10Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-10-16 06:00 の kata の grade が実行中に routine list で failure と表示され、状況を誤認しかけた。利用者の判断で起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 実行中の routine が前回の結果のまま表示される
+    - field: description
+      from: ""
+      to: routine run は開始時に routine-state.json の last_run だけを更新し、前回の last_result と last_reason を残す。実行中の routine list は今回の開始時刻と前回の結果（failure など）を並べて表示するため、実行中の Run が失敗したように見える
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-16"
