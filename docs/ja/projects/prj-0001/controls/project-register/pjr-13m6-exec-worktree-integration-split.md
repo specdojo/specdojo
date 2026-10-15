@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-13m6-exec-worktree-integration-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:26:09Z"
   due_on: null
+  completed_at: "2026-10-15T10:42:23Z"
+  conclusion: exec-worktree-ops を commit・lifecycle・merge、exec-repo-integration を git・sync、exec-reporter を output のモジュールへ分け、すべて 1,000 行以下にした。export と --help は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
 ---
 
 # PJR-13M6 exec-worktree-ops.ts・exec-repo-integration.ts・exec-reporter.ts を分ける

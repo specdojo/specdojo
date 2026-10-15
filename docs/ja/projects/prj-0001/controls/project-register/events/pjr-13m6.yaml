@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a206dd6ff8374abdb267940265a087c5
+- v: 1
+  id: reg_2352673cc7234cc3b2b0da076f72338a
+  ts: "2026-10-15T10:42:23Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に export・--help・循環 import を確かめ、分割後の runner で exec run --register（PJR-JSEY、0bee0ad8c）が統合まで通った（2026-10-15）。初回は import の抜けで型検査に失敗し、--resume-from executor で直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: exec-worktree-ops を commit・lifecycle・merge、exec-repo-integration を git・sync、exec-reporter を output のモジュールへ分け、すべて 1,000 行以下にした。export と --help は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_25bb63a42db04a169341ac7cbf8b4802
