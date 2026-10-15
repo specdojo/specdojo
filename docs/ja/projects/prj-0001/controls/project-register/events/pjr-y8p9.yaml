@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_93f217a7f34a415199ac9822877dc466
+  ts: "2026-10-15T12:57:59Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: 子の 5 件（PJR-P038・PJR-13M6・PJR-NA04・PJR-3P4W・PJR-R0K4）がすべて閉じたため（2026-10-15）
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: 1,000 行を超える残りのソースを 5 件に分けて分割し、src に 1,000 行を超えるファイルはなくなった（最大 983 行）
+  previous_event_id: reg_80af49d3298242df895675ee2299d41d

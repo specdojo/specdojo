@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-y8p9-large-source-files-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-02T12:14:39Z"
+  completed_at: "2026-10-15T12:57:59Z"
+  conclusion: 1,000 行を超える残りのソースを 5 件に分けて分割し、src に 1,000 行を超えるファイルはなくなった（最大 983 行）
 ---
 
 # PJR-Y8P9 1,000 行を超える残りのソースの分割
