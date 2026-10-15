@@ -120,7 +120,7 @@
     "ajv": "^8.20.0",
     "commander": "^15.0.0",
     "dotenv": "^18.0.4",
-    "js-yaml": "^4.3.2",
+    "js-yaml": "^5.4.3",
     "prettier": "^3.8.4",
     "remark-parse": "^11.0.0",
     "unified": "^11.0.5"
@@ -128,7 +128,6 @@
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
     "@commitlint/config-conventional": "^21.0.2",
-    "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.9.2",
     "@typescript-eslint/eslint-plugin": "^8.61.0",
     "@typescript-eslint/parser": "^8.61.0",
