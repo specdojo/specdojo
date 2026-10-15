@@ -80,7 +80,10 @@ specdojo-lp を Cloudflare Workers の静的アセットとして配置する設
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 作業内容 No 6（2026-10-15）: 1.2. の事実をもとに、`specdojo-lp` の `docs/ja/product/030-architecture/020-infrastructure/tsd-cloudflare-workers.md` を作った。概要・採用理由、選定・バージョン、設定・セットアップ手順（`wrangler.jsonc`、Workers Builds とプレビュー、Custom Domains、Always Use HTTPS、`www` の転送）、動作確認（`wrangler dev` と、本番・プレビュー・http・`www` で期待する応答）、運用上の注意（起きたことと対処）を書いた。アカウントのサブドメインは `<アカウントのサブドメイン>` の形で書いた。
+- 同じく `tsd-index.md` を直した。ホスティングの行の `補足` から `tsd-cloudflare-workers.md` へリンクし、`wrangler` 4.x の行（区分は配置）を加え、ランタイムの行の `補足` に Workers Builds のビルドが既定の Node.js 24.18.0 で動くことを書いた。
+- `wrangler.jsonc`・`package.json`・ソースコードは変えていない。
+- 残課題: `main` にはまだ `previews` が入っていない（作業内容 No 7 のメモ）。変更の `feature/lp-v1` への統合は runner が行う。
 
 ## 5. 関連ドキュメント
 
