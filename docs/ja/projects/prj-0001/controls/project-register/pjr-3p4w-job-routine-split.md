@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:26:24Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts, typecheck, test-unit"
 ---
 
 # PJR-3P4W job.ts・routine.ts を分ける
@@ -41,16 +42,20 @@ Job と routine の処理（合わせて 2,644 行）を責務ごとのモジュ
 
 ## 3. 作業内容
 
-| No  | 作業                                                                | 担当 | 状態 | メモ                     |
-| --- | ------------------------------------------------------------------- | ---- | ---- | ------------------------ |
-| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV  | open | 比べるコマンドがある場合 |
-| 2   | 責務ごとのモジュールへ移し、元のファイルから明示的に再 export する  | DEV  | open | 移すだけ                 |
-| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV  | open | 差分なし                 |
-| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV  | open | -                        |
+| No  | 作業                                                                | 担当 | 状態 | メモ                    |
+| --- | ------------------------------------------------------------------- | ---- | ---- | ----------------------- |
+| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV  | done | 9 コマンドを保存        |
+| 2   | 責務ごとのモジュールへ移し、元のファイルから明示的に再 export する  | DEV  | done | 定義解析を分離          |
+| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV  | done | 9 コマンドで差分なし    |
+| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV  | done | reporter へ証跡を引継ぎ |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `src/job.ts` から型、Job Definition の解析・読込、入力とテンプレートの処理を `src/job-definition.ts` へ移した。`src/job.ts` は Job Run の生成・完了と CLI 登録を担い、従来の公開名だけを明示的に再 export する façade とした。
+- `src/routine.ts` から型、interval・cron 判定、Routine Definition の解析・読込を `src/routine-definition.ts` へ移した。`src/routine.ts` は状態・lock・action 実行と CLI 登録を担い、従来の公開名だけを明示的に再 export する façade とした。
+- 分割後の行数は `src/job.ts` 680 行、`src/job-definition.ts` 927 行、`src/routine.ts` 616 行、`src/routine-definition.ts` 535 行で、すべて 1,000 行以下である。
+- `job`・`routine` と指定された全サブコマンド、合計 9 コマンドの `--help` を分割前後で比較し、差分がないことを確認した。Job 8 件と routine 9 件の定義検証、および `routine run --id rtn-dashboard-refresh --dry-run` の読み取り確認も成功した。
+- 分割中に別途対応が必要な不具合・改善点は見つからなかった。親検証は pipeline runner が実行する。
 
 ## 5. 関連ドキュメント
 
