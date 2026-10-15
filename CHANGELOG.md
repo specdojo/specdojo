@@ -2,17 +2,23 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
-## [0.4.0] - 未定
+## [0.3.1] - 2026-10-16
 
-### 依存関係
-
-- SpecDojo 本体と `@specdojo/docs-lint` の js-yaml を 5.4.3 へ更新しました。named import と v5 のオプション名へ移行し、既存文書との互換性のため、引用符なしの日付と merge key は 4 系と同じ規則で読み込みます（PJR-RCVS）。
-
-## [0.3.1] - 未定
+同梱パッケージの `@specdojo/docs-lint` と `@specdojo/docs-site` は、この版では公開しません（docs-lint の js-yaml の更新は次の docs-lint の版で公開します）。
 
 ### 不具合修正
 
 - `specdojo init` と Antigravity 向け配布雛形・ガイドが、agy 1.3.5 で提供されないモデル ID を指定し、expert agent が `invalid model selection` で起動できない問題を修正しました。利用可能な ID は `agy models` で確認できます（PJR-X60A）。
+- exec の result の frontmatter で、改行を含む `block_reason` が字下げされずに書かれ、YAML として不正になる問題を修正しました。値は YAML として正しく引用して書きます（PJR-TMAW）。
+- 未追跡のファイルが多い作業場所で、`register --commit` などが原因の分からない `git status failed` で止まる問題を修正しました。git の出力を 1 MiB を超えても受け取り、出力の上限超過や signal による失敗はエラーのメッセージに原因を含めます（PJR-RY4C）。
+
+### 依存関係
+
+- SpecDojo 本体の js-yaml を 5.4.3 へ更新しました。既存文書との互換性のため、引用符なしの日付と merge key は 4 系と同じ規則で読み込みます（PJR-RCVS）。
+
+### 内部の変更
+
+- 大きくなったソースファイル（`exec-run.ts`・`grade.ts`・`register.ts` など）を責務ごとのモジュールへ分けました。CLI の動作と出力は変わりません（PJR-QCMP・PJR-K6KB・PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-Y8P9）。
 
 ## [0.3.0] - 2026-10-14
 
