@@ -73,6 +73,13 @@ specdojo-lp と specdojo-assets に develop を置き、exec と orchestrator �
 | 必要な対応 | 両リポジトリでの `develop` の作成と push、`integration_branch` の変更、README と `tsd-index` の修正、`feature/lp-v1` の削除                                 |
 | 追跡先     | orchestrator が本決定に続けて対応し、本個票の対応記録に残す。PJR-F34R の exec は、移行の後に `specdojo-assets` の `develop` へ統合する                      |
 
+### 6.1. 対応の記録（2026-10-16）
+
+- orchestrator が、`specdojo-lp`（`6873c87`）と `specdojo-assets`（`8792813`）の `main` の先端から `develop` を作った。push は利用者が行う。
+- orchestrator が、`.specdojo/specdojo.config.json` の両リポジトリの `integration_branch` を `develop` にした（`46c63fac2`、`project/prj-0002/develop` へ `fd61c67e4` で統合）。
+- orchestrator が、`specdojo-lp` の README の `ブランチと取り込みの運用` と `tsd-index` のソースコード管理の行を改めた（`572b135`、`develop` へ `2802020` で統合）。
+- 残り: 両リポジトリの `develop` の push と、`feature/lp-v1` の削除（利用者）。
+
 ## 7. 関連ドキュメント
 
 - [[prj-0001:pjr-zdvq-product-repo-branch-strategy]]: プロダクトリポジトリのブランチ戦略を SpecDojo は求めないとした決定。
