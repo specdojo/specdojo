@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-NA04",
+  "run_id": "20261015T104232858Z-c9493c28",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-15T10:43:29.803Z",
+    "completed_at": "2026-10-15T10:52:47.928Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-na04-exec-plans-trial-split.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-trial.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-plans-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-plans-generation.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-plans-storage.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-trial-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-trial-core.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-na04-exec-plans-trial-split.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-trial.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-plans-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-plans-generation.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-plans-storage.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-trial-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-trial-core.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": "docs/ja/product/040-system-design/sysd-index.md    |    2 +-\n .../pjr-na04-exec-plans-trial-split.md             |   27 +-\n src/exec-plans.ts                                  | 1404 +-------------------\n src/exec-trial.ts                                  | 1319 +-----------------\n src/exec.ts                                        | 1366 +------------------\n 5 files changed, 65 insertions(+), 4053 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/exec-plans.ts src/exec-plans-core.ts src/exec-plans-generation.ts src/exec-plans-storage.ts src/exec.ts src/exec-core.ts src/exec-commands.ts src/exec-trial.ts src/exec-trial-core.ts src/exec-trial-commands.ts docs/ja/projects/prj-0001/controls/project-register/pjr-na04-exec-plans-trial-split.md docs/ja/product/040-system-design/sysd-index.md",
+      "status": "passed",
+      "summary": "変更したTypeScript・Markdownを整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "for spec in 'exec' 'exec validate' 'exec refresh' 'exec plan' 'exec archive' 'exec scheduler' 'exec scaffold' 'exec status' 'exec where' 'exec run' 'exec cycle' 'exec resume' 'exec trial' 'exec trial run' 'exec trial status' 'exec trial rate' 'exec trial adopt' 'exec trial discard'; do name=${spec// /__}; node --import tsx src/specdojo.ts $spec --help > \"tmp/pjr-na04-help-after/$name.txt\" || exit 1; done; for before in tmp/pjr-na04-help-before/*.txt; do name=$(basename \"$before\"); diff -u \"$bef…",
+      "status": "passed",
+      "summary": "指定された18コマンドの分割前後のヘルプ出力が一致しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成に成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog検証に成功しました。既存の欠落文書に関する警告のみです。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーはありません。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec run --register",
+      "status": "requires_human",
+      "summary": "統合後にorchestratorが1回実行するclose条件です。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NA04\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-RGanb6/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-aAJj58/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-5R\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NA04/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NA04/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NA04\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-IWrzXb/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-qJFenG/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-bOrdJ6/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-C2Cv4g/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  37.50s (transform 2.36s, setup 501ms, import 17.09s, tests 40.33s, environment 6ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "exec-plans・exec・exec-trialを責務別の7モジュールへ分割し、公開APIとCLI出力を維持しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-NA04/20261015T104232858Z-c9493c28/executor.log",
+      "bytes": 2466,
+      "truncated": false
+    }
+  ]
+}
