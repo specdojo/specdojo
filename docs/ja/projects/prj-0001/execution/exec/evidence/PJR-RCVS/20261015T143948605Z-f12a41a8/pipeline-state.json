@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-RCVS",
   "run_id": "20261015T143948605Z-f12a41a8",
-  "updated_at": "2026-10-15T14:46:55.290Z",
+  "updated_at": "2026-10-15T14:49:16.565Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-rcvs-20261015T133754Z-c0bd-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "codex-expert-executor",
       "attempts": 1,
       "started_at": "2026-10-15T14:46:55.290Z",
-      "completed_at": null,
+      "completed_at": "2026-10-15T14:49:16.565Z",
       "artifact_ref": null
     }
   },
