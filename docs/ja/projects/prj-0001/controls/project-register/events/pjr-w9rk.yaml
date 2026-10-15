@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c56e40cf424d4d6bb05cbea2bc6764fd
+  ts: "2026-10-15T22:12:01Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-V23P の決定のフォローアップ（2026-10-16）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: dashboard と timeline を src/dashboard へ移す
+    - field: description
+      from: ""
+      to: 最初の移動として、codemod で dashboard と timeline を src/dashboard/ へ移し、手順と検証を確かめる。 PJR-V23P の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-16"
