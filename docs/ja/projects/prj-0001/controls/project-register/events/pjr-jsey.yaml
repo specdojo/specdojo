@@ -194,3 +194,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ce5ab5c70c8848f886cea04b8218fcfb
+- v: 1
+  id: reg_3a731e9684294ba1b812c6e8acfeccdc
+  ts: "2026-10-15T11:08:15Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: runner のコードの分割がすべて統合され、動作確認の役目を終えたため（2026-10-15）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: exec-run.ts の分割 3 件（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
+      to: runner のコードの分割 5 件（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
+  previous_event_id: reg_762497d313d74902830522c55e565bc3
