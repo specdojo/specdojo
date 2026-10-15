@@ -58,3 +58,35 @@
       from: "-"
       to: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md"
   previous_event_id: reg_99aefa0125d442b5aee8ed985c3fe42f
+- v: 1
+  id: reg_7b3a7f0b22904a5fa258e1a68bc78c68
+  ts: "2026-10-15T14:59:59Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md"
+      to: "-"
+  previous_event_id: reg_fc200b21d2834db1a52eee6084888e80
+- v: 1
+  id: reg_c12b56bf4f384d2d865e6dbe626b6fd8
+  ts: "2026-10-15T15:05:12Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_7b3a7f0b22904a5fa258e1a68bc78c68

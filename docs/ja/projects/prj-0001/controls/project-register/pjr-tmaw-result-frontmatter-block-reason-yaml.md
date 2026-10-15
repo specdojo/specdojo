@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-15T14:58:16Z"
   due_on: null
-  block_reason: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md"
+  block_reason: rate limit reached
 ---
 
 # PJR-TMAW result の frontmatter の block_reason に改行があると不正な YAML になる
