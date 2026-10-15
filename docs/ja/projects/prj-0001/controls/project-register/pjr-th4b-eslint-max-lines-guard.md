@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-th4b-eslint-max-lines-guard
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-02T12:14:46Z"
+  completed_at: "2026-10-15T13:34:18Z"
+  conclusion: src/**/*.ts に max-lines（1,000 行）と max-lines-per-function（200 行）を warn で入れ、TypeScript の実装ルールに上限と warn の扱いを書いた。warn はファイル 0 件・関数 25 件で、lint:ts は warn では失敗しない
 ---
 
 # PJR-TH4B ESLint の max-lines と max-lines-per-function を warn で導入する
