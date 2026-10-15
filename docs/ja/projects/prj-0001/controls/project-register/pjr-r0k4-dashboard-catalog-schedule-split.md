@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:26:32Z"
@@ -42,16 +42,18 @@ dashboard、カタログの build、schedule の戦略の生成（合わせて 3
 
 ## 3. 作業内容
 
-| No  | 作業                                                                | 担当 | 状態 | メモ                     |
-| --- | ------------------------------------------------------------------- | ---- | ---- | ------------------------ |
-| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV  | open | 比べるコマンドがある場合 |
-| 2   | 責務ごとのモジュールへ移し、元のファイルから明示的に再 export する  | DEV  | open | 移すだけ                 |
-| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV  | open | 差分なし                 |
-| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV  | open | -                        |
+| No  | 作業                                                                | 担当 | 状態 | メモ                    |
+| --- | ------------------------------------------------------------------- | ---- | ---- | ----------------------- |
+| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV  | done | 16 コマンドを保存       |
+| 2   | 責務ごとのモジュールへ移し、元のファイルから明示的に再 export する  | DEV  | done | 8 モジュールへ分割      |
+| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV  | done | executor 検証は差分なし |
+| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV  | open | reporter が記録する     |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`src/dashboard.ts` から timeline、routine、exec record、共通セル整形を分け、`src/catalog-build.ts` から Markdown 描画と `based_on` 検証を分け、`src/schedule-strategy-generate.ts` から scope・owner 解決と戦略文書構築を分けた。元ファイルは従来の公開名だけを明示的に再 export し、新規モジュールから元ファイルへの import は行っていない。
+
+分割後の行数は `src/dashboard.ts` が 817 行、`src/catalog-build.ts` が 923 行、`src/schedule-strategy-generate.ts` が 475 行であり、新規モジュールもすべて 1,000 行以下である。dashboard・catalog・schedule の 16 コマンドの `--help`、dashboard の dry-run、catalog の生成物 29 ファイル、schedule の全 4 トラックの dry-run を分割前後で比較し、差分がないことを確認した。親 runner が実施する検証と result への記録は後段へ引き継ぐ。
 
 ## 5. 関連ドキュメント
 
