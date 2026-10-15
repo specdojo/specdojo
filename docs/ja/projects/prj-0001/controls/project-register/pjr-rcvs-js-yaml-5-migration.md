@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-rcvs-js-yaml-5-migration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T22:17:17Z"
+  completed_at: "2026-10-15T20:39:58Z"
+  conclusion: js-yaml を 5.4.3 へ上げ、import を YAML 1.1 互換の読み込みをするラッパーへ寄せて、引用符なしの日付と merge key の読み込み結果を 4 系と同じにした
 ---
 
 # PJR-RCVS js-yaml 5 への移行

@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a16628c12a7d462da917c4cac1c97c7f
+- v: 1
+  id: reg_11c3ef560cdb4ca389d8c4aa0efb1cdf
+  ts: "2026-10-15T20:39:58Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: develop へ統合し（90b04fbdc）、npm run check と主なコマンドが js-yaml 5 で動くことを確かめた（2026-10-16）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-16"
+    - field: conclusion
+      from: "-"
+      to: js-yaml を 5.4.3 へ上げ、import を YAML 1.1 互換の読み込みをするラッパーへ寄せて、引用符なしの日付と merge key の読み込み結果を 4 系と同じにした
+  previous_event_id: reg_9a2ee36daf53478289adbc4b930d24a7
