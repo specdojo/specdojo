@@ -2,12 +2,12 @@
 id: tsd-home-mac-dev-server-grade-criteria
 document: tsd-home-mac-dev-server
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
-graded_at: "2026-10-11T16:05:40.833Z"
+graded_at: "2026-10-15T16:07:16.897Z"
 graded_by: agy-expert-executor
 content_hash: d0d3aa9edab9042511674be17988a318e62bdc18a2ffc0c497c43163e08d08c1
 summary:
-  satisfied: 2
-  unsatisfied: 3
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -15,31 +15,35 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      Business requirements and acceptance criteria are not explicitly defined to verify alignment with selected
+      technologies and constraints.
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
-    status: satisfied
+    status: unsatisfied
+    reason: Decision targets, approvers, open issues, and impact analysis are not provided for approval.
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: Version policies and license conditions for adopted technologies are not specified.
+    reason: Version policies and license conditions for adopted technologies are missing.
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: Test framework and CI/CD environment references are not provided.
+    reason: References and specifications for test frameworks and CI/CD environment are missing.
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: Library selection criteria or references are not provided.
+    reason: Library selection policies and Antigravity CLI specification in adoption settings are missing.

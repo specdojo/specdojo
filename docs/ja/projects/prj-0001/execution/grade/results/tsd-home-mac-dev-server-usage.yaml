@@ -6,15 +6,15 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 71
-graded_at: "2026-10-11T16:03:06.482Z"
+graded_at: "2026-10-15T16:05:04.283Z"
 graded_by: agy-expert-executor
-content_hash: 122a31bab81314a9f48992acb49cfcc55cf3d4233e9491dac0cb1833283203c9
+content_hash: 16177150b6dce7fb283d6df0cbbe75010783c784a89a856d96e8b4b3f2bc58e2
 source_hashes:
   catalog-entry: 7a7276acd5fe566ed20b44a4e60412b59f89092d1373198db88a54e6c5c2fd23
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   dependency:sysd-agent-settings: fcdb84f4ffd29a2119ae5aab0a3195a97a33b2e7cdc70c794e5e61ad2dee48c9
-  dependency:sysd-antigravity-agent-settings: ade83ab86eecf2ce4f88cc1219bea911534c633f15a5abe677a7eb397ad41027
+  dependency:sysd-antigravity-agent-settings: f70cceb7908677d8824886c649847345207405839f6d5fa94216c59603126e68
   dependency:sysd-claude-agent-settings: 656016bd0ef2d40684c65b13b89811990720553d1a7286a335eb777df5a443ab
   dependency:sysd-codex-agent-settings: 42a2cd4f17db9160725236e0e253365b83ba8383f39c224e60b1de5a8f56eeaf
   dependency:sysd-github-copilot-agent-settings: 3e7cc787e2b9c1e0978b891463416a1c906e896afd4bf7fcbde48f85303427fb
@@ -147,12 +147,8 @@ findings:
   - id: F003
     severity: major
     rule: vp-po-publication-accountability
-    line: 241
-    anchor: >-
-      Copilot CLI の `--allow-all-tools`、Claude Code の bypass 系権限、OpenCode の `--dangerously-skip-permissions`、Codex の
-      `danger-full-access` は通常運用で使わない。agent の `git push`、破壊的削除、秘密情報読み取りは、個別設定の deny 方針と実行 plan
-      の両方で禁止する。ネットワーク公開、SSH、Host Mac の基盤設定に関するセキュリティ方針は、[[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] の 6
-      章を正本とする。
+    line: 254
+    anchor: ""
     message: 秘密情報の禁止だけでなく、公開範囲、公開前確認項目、最終公開判断を担う人間の責任者を明示する必要がある。
     message_ja: 秘密情報の禁止だけでなく、公開範囲、公開前確認項目、最終公開判断を担う人間の責任者を明示する必要がある。
   - id: F004
@@ -165,14 +161,14 @@ findings:
   - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
-    line: 201
+    line: 215
     anchor: "## 6. 運用時のトラブルシュート"
     message: トラブルシュートで解消しない障害を PJR の課題・リスク・変更要求へ登録する条件と、長時間実行や作業予定への影響確認を追記するとよい。
     message_ja: トラブルシュートで解消しない障害を PJR の課題・リスク・変更要求へ登録する条件と、長時間実行や作業予定への影響確認を追記するとよい。
   - id: F006
     severity: major
     rule: vp-pm-control-reporting
-    line: 201
+    line: 215
     anchor: "## 6. 運用時のトラブルシュート"
     message: 運用中に発生した事象を進捗・課題・リスク・変更要求・決定事項へ分類し、報告先、担当 Role code、PJR 転記条件を定義する必要がある。
     message_ja: 運用中に発生した事象を進捗・課題・リスク・変更要求・決定事項へ分類し、報告先、担当 Role code、PJR 転記条件を定義する必要がある。
@@ -213,7 +209,7 @@ findings:
   - id: F011
     severity: minor
     rule: vp-arc-cross-document-consistency
-    line: 233
+    line: 247
     anchor: >-
       設定・認証情報の保存先と named volume の完全な一覧は、[[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] の 4.10.1
       を正本とする。`.devcontainer/devcontainer.json` の `mounts` が正本どおりか確認し、対象 volume を削除していないか調べる。OpenCode の API key は
@@ -241,7 +237,7 @@ findings:
   - id: F014
     severity: minor
     rule: vp-dev-change-impact
-    line: 233
+    line: 247
     anchor: >-
       設定・認証情報の保存先と named volume の完全な一覧は、[[tsd-home-mac-dev-server|自宅 MacBook Pro 開発サーバ技術スタック定義]] の 4.10.1
       を正本とする。`.devcontainer/devcontainer.json` の `mounts` が正本どおりか確認し、対象 volume を削除していないか調べる。OpenCode の API key は
@@ -251,7 +247,7 @@ findings:
   - id: F015
     severity: minor
     rule: vp-dev-testability
-    line: 201
+    line: 215
     anchor: "## 6. 運用時のトラブルシュート"
     message: 接続、detach、再接続、長時間処理継続、VitePress 到達、agent 実行について、確認コマンドと期待状態を対応付けた動作確認手順を追加するとよい。
     message_ja: 接続、detach、再接続、長時間処理継続、VitePress 到達、agent 実行について、確認コマンドと期待状態を対応付けた動作確認手順を追加するとよい。
@@ -300,7 +296,7 @@ findings:
   - id: F022
     severity: minor
     rule: vp-ops-operability
-    line: 201
+    line: 215
     anchor: "## 6. 運用時のトラブルシュート"
     message: 手順や依存 CLI の更新責任者、問い合わせ先、障害を解消できない場合のエスカレーション経路と変更管理方法を追記するとよい。
     message_ja: 手順や依存 CLI の更新責任者、問い合わせ先、障害を解消できない場合のエスカレーション経路と変更管理方法を追記するとよい。

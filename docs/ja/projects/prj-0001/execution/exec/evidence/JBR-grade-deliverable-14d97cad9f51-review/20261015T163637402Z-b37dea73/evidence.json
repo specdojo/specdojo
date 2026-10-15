@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-14d97cad9f51-review",
+  "run_id": "20261015T163637402Z-b37dea73",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-15T16:36:37.402Z",
+    "completed_at": "2026-10-15T16:38:19.126Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat 7a87be04ae0b6e155308e5ba5efe1b9bedb8d4ff..a4450a9b6d64cb6417765cd4fa29a54e06d49a4a && git diff --name-status 7a87be04ae0b6e155308e5ba5efe1b9bedb8d4ff..a4450a9b6d64cb6417765cd4fa29a54e06d49a4a",
+      "status": "passed",
+      "summary": "28ファイル。すべて Job Run の evidence / plan / result / Run JSON と grade の結果・完了条件・パイプライン状態に限られ、対象外の変更なし"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target deliverable --project prj-0001 --changed-only",
+      "status": "passed",
+      "summary": "出力は pm-raci.md のみ。評価した10件は含まれない（判断の前後で同じ結果）"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target deliverable --project prj-0001 --dependency-changed",
+      "status": "passed",
+      "summary": "出力は pm-raci.md のみ。評価した10件は含まれない"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target deliverable --project prj-0001 --incomplete",
+      "status": "passed",
+      "summary": "出力なし（未完了のパイプラインなし）"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade state --target deliverable --project prj-0001 --exhausted",
+      "status": "passed",
+      "summary": "出力なし（`retry_exhausted` の成果物なし）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-14d97cad9f51/src/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/w\n… output omitted …\nce/worktrees/prj-0001-JBR-grade-deliverable-14d97cad9f51/src/schedule-build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-14d97cad9f51/src/schedule-strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-14d97cad9f51\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/exec-agent-git-state.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 213\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/deliverable-trash.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 83\u001b[2mms\u001b[22m\u001b[39\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-14d97cad9f51/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-14d97cad9f51/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-14d97cad9f51\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/exec-reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m80 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 67\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 957\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-plans.test.ts \u001b[2m(\u001b[22m\u001b\n… output omitted …\nrated Markdown: ja/removed.md\n\n\u001b[90mstderr\u001b[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts\u001b[2m > \u001b[22m\u001b[2mMermaid SVG generation basics\u001b[2m > \u001b[22m\u001b[2mignores generated Markdown and removes any stale manifest entry\n\u001b[22m\u001b[39m[mermaid] skipping missing or generated Markdown: ja/generated/invalid.md\n\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "判定案: complete-with-findings。差分 7a87be04a..a4450a9b6 の28ファイルはすべて Job Run JBR-grade-deliverable-14d97cad9f51 の出力（evidence 4件、plan、result、Run JSON、評価結果10件、完了条件10件、grade/pipeline/pm-communication-plan-6a68d585dcbf.json の削除）で、成果物本文やコードの変更はない。Run JSON は state=succeeded・試行1回・exit 0、evidence も `exit_code` 0・stderr 空、stdout は selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 で相互に整合する。results.tsv の10行はすべて段1 passed で、`consecutive_failures` は空。終了コード75や中断による未完了の段、failed の段、`retry_exhausted` の成果物はない。削除された pipeline JSON は前回 Run JBR-grade-deliverable-710933c29195 の段1失敗状態（`consecutive_failures` 1/3）で、今回 resume start_stage=1 から完了したので削除は整合する。評価結果10件の verdict / score / findings 件数 / `graded_at` は results.tsv と一致し、`done_criteria` の集計も criteria ファイルと一致する。verdict は全件前回から不変で、score は pm-communication-plan 71→83、pm-quality-management-plan 79→88、sysd-critical-flows 55→71、sysd-cross-cutting-policy 56→66 に上がり、他6件は不変。分布は pass 1件（pm-plan 98点）、needs-work 9件（64〜98点）、blocker 0件。sysd/tsd 系6件が64〜71点、pm 系4件が83〜98点に分かれるが、評価1回分のため評価設定の見直しが必要とまでは判断できない。未充足の `done_criteria` と担当ロール: pm-communication-plan 1/3（DC-002 PM、DC-003 BA）、pm-quality-management-plan 2/3（DC-003 QE）、sysd-antigravity-agent-settings 0/5（BA/PO/ARC/QE/DEV）、sysd-critical-flows 1/5（DC-001 BA、DC-002 PO、DC-004 QE、DC-005 DEV）、sysd-cross-cutting-policy 2/4（DC-002 DEV、DC-004 OPS）、sysd-index 2/4（DC-001 ARC、DC-004 OPS）、tsd-home-mac-dev-server 0/5（BA/PO/ARC/QE/DEV）、tsd-home-mac-dev-server-usage 1/5（DC-001 BA、DC-002 PO、DC-003 ARC、DC-004 QE）。pm-organization と pm-plan は3/3で充足。鮮度: --changed-only と --dependency-changed は判断の前後とも pm-raci.md だけを出力し、評価した10件は含まれない。--incomplete と grade state --exhausted は出力なし。直すべき点（完了は妨げない）: (1) Job Run の result が、未充足の `done_criteria` とその担当ロール、および verdict / score の偏りの判断という Job 固有の確認事項を扱っていない。上記の内容を追記するよう reporter に指示が必要。(2) result が削除ファイルを「パイプライン定義の削除」と書いているが、実際は再開用の失敗状態ファイル。(3) pm-raci.md は変更済みのまま評価されていないので次回 Run で評価が必要。--limit 10 を超えた11件目として外れたと推定するが、実行時点の候補一覧は確認していない。(4) pm-organization は `done_criteria` 3/3 充足だが major の finding 1件のため needs-work のまま。確認できなかった範囲: logs/grade/runs/per-document/ 配下の results.tsv の実ファイルは読まず stdout の内容で照合した。finding の中身は再評価していない（review の範囲外）。前回 Run で段1が失敗した原因は未確認。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-14d97cad9f51-review/20261015T163637402Z-b37dea73/executor.log",
+      "bytes": 9827,
+      "truncated": false
+    }
+  ]
+}
