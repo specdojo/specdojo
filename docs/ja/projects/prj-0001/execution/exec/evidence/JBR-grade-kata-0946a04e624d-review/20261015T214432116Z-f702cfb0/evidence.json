@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-0946a04e624d-review",
+  "run_id": "20261015T214432116Z-f702cfb0",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-15T21:44:32.116Z",
+    "completed_at": "2026-10-15T21:45:37.783Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat / --name-status 14e09ddec3703aa7da56754ff75f593e5f68d4f6..b83484ff31bea6d3cba9dd2e727e86a300a9fdf9",
+      "status": "passed",
+      "summary": "25ファイルすべてがこの Job Run の出力（evidence、plan、result、Run JSON、サイドカー15件、再開して完了した途中状態ファイル3件の削除）"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade list --target kata --project prj-0001 (--changed-only|--incomplete|--ungraded|--rubric-outdated|--dependency-changed|--rulebook-changed)",
+      "status": "passed",
+      "summary": "評価した15件はどの条件でも出力されず、評価結果は最新"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts grade state --target kata --project prj-0001 --exhausted",
+      "status": "passed",
+      "summary": "出力なし。retry_exhausted の文書はない"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-kata-0946a04e624d/src/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspac\n… output omitted …\necdojo-workspace/worktrees/prj-0001-JBR-grade-kata-0946a04e624d/src/schedule-build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-kata-0946a04e624d/src/schedule-strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-kata-0946a04e624d\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/deliverable-trash.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 88\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-agent-git-state.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 172\u001b[2mms\u001b[22m\u001b[39m\nSkipp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-kata-0946a04e624d/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-kata-0946a04e624d/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-kata-0946a04e624d\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/exec-reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m80 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 61\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 870\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-plans.test.ts \u001b[2m(\u001b[22m\u001b[2m67 t\n… output omitted …\nrated Markdown: ja/removed.md\n\n\u001b[90mstderr\u001b[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts\u001b[2m > \u001b[22m\u001b[2mMermaid SVG generation basics\u001b[2m > \u001b[22m\u001b[2mignores generated Markdown and removes any stale manifest entry\n\u001b[22m\u001b[39m[mermaid] skipping missing or generated Markdown: ja/generated/invalid.md\n\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "verdict: complete-with-findings。Job Run は正常に終了し、評価された15件はすべて最新の結果を持つ。\n\n照合の根拠:\n- 差分 `14e09dd..b83484f`（25ファイル）はこの Job Run の出力だけで構成されていた。内訳は runner の evidence 4件・plan・result・Run JSON、評価結果ファイル（サイドカー）15件の更新、前回 run `JBR-grade-kata-43607f377df1` の失敗で残っていた途中状態ファイル3件（`mip-index`、`nfr-index`、`nfr-maintainability`。いずれも `stage_failed: 1`、`consecutive_failures: 1`）の削除。削除した3件は stdout の `document resume` 3件と一致し、今回再開して完了したもの。\n- Run JSON は `state: succeeded`、attempt 1 の終了コードは 0。evidence の終了コードも 0 で stderr は空。pipeline-state では executor と reporter がどちらも `succeeded`。stdout は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0`。\n- `results.tsv` の段の status は15件すべて `passed`。各文書の verdict・score・findings 件数は、サイドカーの `verdict` / `score` / `finding_counts` の合計と15件すべて一致した。\n- 鮮度: `grade list --target kata --project prj-0001` を `--changed-only`、`--incomplete`、`--ungraded`、`--rubric-outdated`、`--dependency-changed`、`--rulebook-changed` の6条件で実行し、15件はどれにも出なかった。`grade state --exhausted` も出力なし。終了コード75や中断で残った段、`failed` の段、`retry_exhausted` の文書はない。\n\n指摘（完了は妨げない）:\n- verdict の偏り: 15件すべてが `pass` にならなかった。`fail` が8件（score 47〜63、うち7件は blocker 1〜3件）、`needs-work` が7件（score 70〜88）。特に `nfr-*` と `opr-*` の各サンプルは major が多い。評価設定（rubric v2 と agy 単段）が厳しすぎるのか、サンプル自体の品質が低いのかは、今回の材料だけでは判断できないため人による確認を勧める。\n- Job Run の result の記述: 「`failed` (status が `fail`) の段はなく」は段の status（すべて `passed`）と評価の verdict（`fail`）を混同した書き方。変更ファイル一覧の Run JSON の説明も意味の通らない文。どちらも事実の誤りではない。\n\n確認できなかった範囲:\n- 前回 run の失敗が rate limit・agent 側の失敗・`grade apply` での拒否のどれだったか（残っていた状態ファイルに原因の記録がない）。\n- 実行環境だけにある `logs/grade/runs/per-document/JBR-grade-kata-0946a04e624d/` の中身（stdout に出た `results.tsv` 以外）。\n- findings の内容が妥当かどうか（再評価は行わない方針のため）。\n\n成果物と result は変更していない。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-0946a04e624d-review/20261015T214432116Z-f702cfb0/executor.log",
+      "bytes": 7693,
+      "truncated": false
+    }
+  ]
+}
