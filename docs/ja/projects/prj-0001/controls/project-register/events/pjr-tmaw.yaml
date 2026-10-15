@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2185a55e30f4413abed93eab08eff685
+  ts: "2026-10-15T14:58:17Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-RCVS の js-yaml 5 への版上げの検証で、lint:fm が 3 件の result の frontmatter を読めずに失敗した（2026-10-16）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: result の frontmatter の block_reason に改行があると不正な YAML になる
+    - field: description
+      from: ""
+      to: exec-results.ts が frontmatter を文字列の連結で書き、block_reason を二重引用符で囲むだけのため、改行を含む理由の 2 行目以降が字下げされず YAML として不正になる。js-yaml 4 は読めたが 5 では deficient indentation で失敗し、3 件の過去の result が lint:fm で落ちる
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
+- v: 1
+  id: reg_99aefa0125d442b5aee8ed985c3fe42f
+  ts: "2026-10-15T14:58:57Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2185a55e30f4413abed93eab08eff685
+- v: 1
+  id: reg_fc200b21d2834db1a52eee6084888e80
+  ts: "2026-10-15T14:58:58Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md"
+  previous_event_id: reg_99aefa0125d442b5aee8ed985c3fe42f
+- v: 1
+  id: reg_7b3a7f0b22904a5fa258e1a68bc78c68
+  ts: "2026-10-15T14:59:59Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md"
+      to: "-"
+  previous_event_id: reg_fc200b21d2834db1a52eee6084888e80
+- v: 1
+  id: reg_c12b56bf4f384d2d865e6dbe626b6fd8
+  ts: "2026-10-15T15:05:12Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_7b3a7f0b22904a5fa258e1a68bc78c68
+- v: 1
+  id: reg_f50f02d471d84e5ab038cf59ca6c2be0
+  ts: "2026-10-15T15:40:11Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_c12b56bf4f384d2d865e6dbe626b6fd8
+- v: 1
+  id: reg_26a3cb7469734d8fa75cdd89a4fe4349
+  ts: "2026-10-15T15:49:48Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f50f02d471d84e5ab038cf59ca6c2be0

@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-TMAW",
+  "run_id": "20261015T145958889Z-4a4a927d",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-10-15T15:00:55.801Z",
+    "completed_at": "2026-10-15T15:05:09.539Z",
+    "exit_code": 1,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-results.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-results.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": "...jr-tmaw-result-frontmatter-block-reason-yaml.md |  11 +-\n .../JBR-grade-deliverable-6df3fe1e1223-result.md   |   5 +-\n .../results/JBR-grade-kata-b4b6eff81713-result.md  |   5 +-\n .../T-DATA-FLOW-PDCA-cdfd-check-010-result.md      | 242 +--------------------\n src/exec-results.ts                                |  38 ++--\n tests/src/exec-results.test.ts                     |  33 ++-\n 6 files changed, 58 insertions(+), 276 deletions(-)"
+  },
+  "validations": [],
+  "final_message": "",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-TMAW/20261015T145958889Z-4a4a927d/executor.log",
+      "bytes": 65536,
+      "truncated": true
+    }
+  ]
+}
