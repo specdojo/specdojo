@@ -1,0 +1,406 @@
+Reading prompt from stdin...
+OpenAI Codex v0.162.1
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TMAW
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a14014-a156-7fe0-b6cf-01844c5eeea6
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-tmaw-20261015t145958z-b5ce
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-TMAW
+  name: "result の frontmatter の block_reason に改行があると不正な YAML になる"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: DEV
+---
+
+# Edit Plan: PJR-TMAW result の frontmatter の `block_reason` に改行があると不正な YAML になる
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-TMAW「result の frontmatter の `block_reason` に改行があると不正な YAML になる」に対応する。
+
+exec-results.ts が frontmatter を文字列の連結で書き、`block_reason` を二重引用符で囲むだけのため、改行を含む理由の 2 行目以降が字下げされず YAML として不正になる。js-yaml 4 は読めたが 5 では deficient indentation で失敗し、3 件の過去の result が lint:fm で落ちる
+
+## 2. 対象項目
+
+- `id`: PJR-TMAW
+- `type`: issue
+- `priority`: medium
+- `owner`: DEV
+- `due`: -
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-tmaw-20261015T145958Z-b5ce-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+### grade result から展開された finding
+
+- なし
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 作業用のファイル（編集用スクリプト、検証用の一時データなど）はリポジトリの外（一時ディレクトリ）または worktree の `tmp/` 配下に置き、終了前に削除する。使い捨てのファイルを最上位に作らない。`tmp/` 配下のファイルは commit の対象から除外される。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- 検査を実行する前に、リポジトリの `package.json`、`.specdojo/specdojo.config.json`、hook 設定を読み、下表の適用条件を確認する。条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する。`not_run` は適用される検査を実行しなかった場合だけに使う。誤って `not_run` と記録しても、npm script・依存 package の不在、または SpecDojo サブコマンドの設定上の非適用を runner が機械的に確定できる場合は適用外として扱われるが、この救済を前提に記録を省略しない。
+- 依存パッケージの有無は、対象リポジトリの `package.json` の `dependencies` / `devDependencies` と、リポジトリに固定された package manager の設定を基準に判断する。`npx` が未導入パッケージをネットワークから一時取得できることは、導入済みとはみなさない。設定ファイルがない、壊れているなどの理由で適用条件を確定できない検査は実行せず、validations に `not_applicable` として理由と次の確認事項を記録する。
+- Markdown 成果物を編集した場合、Prettier が導入されているときだけ `npx prettier --write <対象ファイル>` で整形する。`markdownlint-cli` または `markdownlint` が導入されているときだけ `npx markdownlint <対象ファイル>` を実行し、`markdownlint-cli2` を採用するリポジトリでは、そのリポジトリで定めた CLI2 のコマンドを実行する。適用した検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）のうち、現在のリポジトリに設定され、上記の適用条件を満たすものを先回りで実行する。適用した検査の失敗はすべて修正してから完了する。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当し、かつ適用条件を満たす行の検査を実行する。該当行がない場合や適用条件を満たさない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は、適用条件を満たす設定側のコマンドに合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx specdojo <subcommand>`、`npx tsx src/specdojo.ts <subcommand>` など）で実行する。ただし、sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する。
+
+| 変更したファイル                                                                                       | 適用条件                                                                            | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | 対応するローカル依存が `package.json` にある                                        | `npx prettier --write <対象ファイル>`、導入済み実装に対応する markdownlint コマンド                                                   |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | Prettier が `package.json` にある                                                   | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `package.json` に `typecheck` script がある                                         | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `test:unit`、それ以外は `test` script が `package.json` にある | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | 対象 project に `project_register_path` が設定されている                            | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | 対象 project に `schedule_path` が設定されている                                    | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | リポジトリで定められた起動方法により SpecDojo CLI を実行できる                      | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+Do not create disposable or scratch files at the repository root; place them in `tmp/` within
+the worktree or outside the repository. Files under `tmp/` are excluded from commits.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+
+
+Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
+Use validation status `not_applicable` when the repository does not meet a check's applicability
+conditions, and include a non-empty `reason`. The runner carries it into the result without
+blocking completion, but rejects the claim when it can confirm the check applies:
+- `npm run <script>` / `npm test`: the script exists in package.json.
+- `npx <package>`: the package is in package.json dependencies or devDependencies.
+- A command that targets a declared product repository (a `<repo>:<path>` argument or
+  `--prefix <repo>`) is judged by that repository's package.json, not the project repository's.
+- `specdojo catalog validate`: the run's target project (or `--project <id>`) sets `catalog_path`
+  and your changes reach `docs/ja/projects/`. A project without `catalog_path`, or changes
+  outside `docs/ja/projects/`, is a valid reason; state it in `reason`.
+
+Do not run or report `specdojo index build`. It writes `.specdojo/doc-index.json`, which the
+agent may not write, and the runner regenerates the index while preparing the worktree and before
+integration.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]}
+</specdojo_executor_evidence>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+関連する登録簿・個票・実装・テスト、および検査設定を確認してから、必要な範囲だけ修正します。result ファイルは pipeline 指示に従い編集しません。
+exec
+/bin/bash -lc "pwd && rg --files -g 'package.json' -g '.specdojo/specdojo.config.json' -g 'lefthook*.yml' -g 'lefthook*.yaml' -g '*exec-results*' -g 'pjr-index.md' -g 'pjr-tmaw-result-frontmatter-block-reason-yaml.md' -g '*result*.test.ts' -g '*result*.spec.ts' | sort" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TMAW
+ succeeded in 49ms:
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TMAW
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md
+lefthook.yml
+package.json
+packages/docs-lint/package.json
+packages/docs-site/package.json
+packages/vscode-specdojo/package.json
+src/exec-results.ts
+tests/src/exec-results.test.ts
+tests/src/grade-result.test.ts
+
+exec
+/bin/bash -lc "sed -n '1,240p' docs/ja/projects/prj-0001/controls/project-register/pjr-tmaw-result-frontmatter-block-reason-yaml.md
+sed -n '1,220p' docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md
+sed -n '1,280p' src/exec-results.ts
+sed -n '1,320p' tests/src/exec-results.test.ts
+sed -n '1,240p' package.json
+sed -n '1,240p' .specdojo/specdojo.config.json
+sed -n '1,240p' lefthook.yml" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-TMAW
+ succeeded in 0ms:
+---
+specdojo:
+  id: prj-0001:pjr-tmaw-result-frontmatter-block-reason-yaml
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: issue
+  item_status: in-progress
+  priority: medium
+  owner: DEV
+  registered_at: "2026-10-15T14:58:16Z"
+  due_on: null
+---
+
+# PJR-TMAW result の frontmatter の block_reason に改行があると不正な YAML になる
+
+## 1. 課題内容
+
+exec-results.ts が frontmatter を文字列の連結で書き、block_reason を二重引用符で囲むだけのため、改行を含む理由の 2 行目以降が字下げされず YAML として不正になる。js-yaml 4 は読めたが 5 では deficient indentation で失敗し、3 件の過去の result が lint:fm で落ちる
+
+## 2. 影響範囲
+
+| 観点         | 影響                                                                                                                         |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| スコープ     | `src/exec-results.ts` の result の frontmatter の書き出し（`block_reason` ほか文字列の連結で書く項目）と、過去の result 3 件 |
+| スケジュール | [[prj-0001:pjr-rcvs-js-yaml-5-migration]] の js-yaml 5 への版上げの前に直す                                                  |
+| コスト       | js-yaml 5 では該当する result の frontmatter が読めず、lint:fm が失敗する。runner が result を読み直す処理も失敗しうる       |
+| 品質         | 改行を含む `block_reason` を書くたびに、YAML として不正な frontmatter ができる                                               |
+| 関係者       | exec と routine の利用者                                                                                                     |
+
+## 3. 対応方針
+
+| 項目     | 内容                                                                                                                                                                                                                |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | `src/exec-results.ts` が `block_reason: "${safeReason}"` のように文字列を連結して書き、改行をエスケープしない。二重引用符の値が複数行になると、2 行目以降が字下げされず YAML の仕様に反する                         |
+| 対応策   | frontmatter の文字列の値を、YAML として正しい形（`JSON.stringify` による二重引用符のエスケープ、またはリポジトリの `src/yaml.ts` の `dump`）で書く。過去の result 3 件の frontmatter を、値を変えずに正しい形へ直す |
+| 依存事項 | なし                                                                                                                                                                                                                |
+| 完了条件 | 下記の完了条件を満たす                                                                                                                                                                                              |
+
+### 3.1. 完了条件
+
+- `src/exec-results.ts` の frontmatter の書き出しで、改行・二重引用符・バックスラッシュ・コロンと空白の並びなどを含む文字列の値が、YAML として正しく書かれる。`block_reason` に加え、同じ関数で文字列を連結して書くほかの項目も確かめ、利用者や agent の入力が入りうる値は同じ扱いにする。
+- 改行や二重引用符を含む `block_reason` を書き、`src/yaml.ts` の `load` と js-yaml の YAML 1.2 の既定の schema の両方で読み直して、元の値と一致することを確かめる単体テストを加える。
+- 次の 3 件の result の frontmatter を、`block_reason` の値（改行を含む）を変えずに YAML として正しい形へ直す。履歴の記録であるため、本文と他の項目は変えない。
+  - `docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-deliverable-6df3fe1e1223-result.md`
+  - `docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-kata-b4b6eff81713-result.md`
+  - `docs/ja/projects/prj-0001/execution/exec/results/T-DATA-FLOW-PDCA-cdfd-check-010-result.md`
+- `docs/ja/projects/` の result に、同じ形（二重引用符の値の 2 行目以降が字下げされていない frontmatter）が他に残っていないことを確かめ、result に書く。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+
+## 4. 対応結果
+
+_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+
+## 5. 関連ドキュメント
+
+- [[prj-0001:pjr-rcvs-js-yaml-5-migration]]: 本件が見つかった版上げ。
+---
+specdojo:
+  id: prj-0001:pjr-index
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+---
+
+# プロジェクト登録簿
+
+Project Register
+
+> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された一覧ビューです。正本は個票の Frontmatter であり、このファイルを手編集しても次回の `specdojo register build` で失われます。
+
+この文書は、prj-0001 プロジェクトのプロジェクト登録簿です。
+
+プロジェクト進行中に発生する TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘などの管理対象を一覧化します。
+
+記載ルール、項目定義、type / status / priority の定義は [[specdojo:pjr-rulebook]] に従います。
+登録の判断、状態遷移、個票の作成などの使い方は [[specdojo:register-operation-guide]] を参照します。
+
+## 1. 登録項目一覧
+
+<!-- prettier-ignore -->
+| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 登録日 | 期限 | 完了日 | 結論 | 個票 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| PJR-0001 | done | スケジュール展開スクリプト | 成果物カタログからスケジュールを展開するスクリプトを開発する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-17 | wbsの削除やrolesの役割変更などを反映 | [pjr-0001-item](../pjr-0001-item.md) |
+| PJR-0002 | done | Launch スケジュール | Track=Launch のスケジュールを作成 | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | sch-strategy-launchを作成 | [pjr-0002-launch](../pjr-0002-launch.md) |
+| PJR-0003 | done | 役割・担当者の定義方法 | 役割と担当者の定義方法を整理する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-07-22 | pm-roles, pm-membersに設定 | [pjr-0003-item](../pjr-0003-item.md) |
+| PJR-0004 | done | pjr-\*->generated展開スクリプト | pjr-\* を generated に展開するスクリプトを開発する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-23 | PJR-0059で対応 | [pjr-0004-pjr-generated](../pjr-0004-pjr-generated.md) |
+| PJR-0005 | done | specdojo:pjr-rulebook作成のtask化 | specdojo:pjr-rulebookの作成をスケジュールに記述 | todo | high | PO | _TODO_ | 2026-05-10 | 2026-07-23 | specdojo:pjr-rulebookを個別に作成 | [pjr-0005-specdojo-pjr-rulebook-task](../pjr-0005-specdojo-pjr-rulebook-task.md) |
+| PJR-0006 | done | `sch-<TRACK>-<DOMAIN>-<ARTIFACT>`にした影響 | スクリプトへの影響を確認する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-04 | スクリプト影響なし | [pjr-0006-sch-track-domain-artifact](../pjr-0006-sch-track-domain-artifact.md) |
+| PJR-0007 | done | `pjr-index`のスキーマ | `pjr-index`をvalidationできるようスキーマを作成する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-23 | PJR-0058で対応 | [pjr-0007-pjr-index](../pjr-0007-pjr-index.md) |
+| PJR-0008 | done | `sch-config-<track>.yaml`のスキーマ | 完了したtaskやtask分解ルールを設定できるように修正 | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-23 | PJR-0037 | [pjr-0008-sch-config-track-yaml](../pjr-0008-sch-config-track-yaml.md) |
+| PJR-0009 | rejected | WBS作成プロンプト | WBS統合により不要 | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-17 | WBS統合により却下 | [pjr-0009-wbs](../pjr-0009-wbs.md) |
+| PJR-0010 | done | claude, codex対応 | claude, codexで使えるように.agent/に設定をまとめる | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | .agent/設定を整備 | [pjr-0010-claude-codex](../pjr-0010-claude-codex.md) |
+| PJR-0011 | done | StakeholderのID体系 | StakeholderのIDをわかりやすい体系に修正する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-04 | ID体系を修正済み | [pjr-0011-stakeholder-id](../pjr-0011-stakeholder-id.md) |
+| PJR-0012 | done | claudeのSKILL対応 | .agent/skillsにSKILLを格納して.claude/skillsから参照する構成に変更する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | 構成変更済み | [pjr-0012-claude-skill](../pjr-0012-claude-skill.md) |
+| PJR-0013 | done | prj-overview-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0013-prj-overview](../pjr-0013-prj-overview.md) |
+| PJR-0014 | done | prj-stakeholder-register-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0014-prj-stakeholder-register](../pjr-0014-prj-stakeholder-register.md) |
+| PJR-0015 | done | prj-charter-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0015-prj-charter](../pjr-0015-prj-charter.md) |
+| PJR-0016 | done | prj-scope-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0016-prj-scope](../pjr-0016-prj-scope.md) |
+| PJR-0017 | done | prj-success-criteria-and-acceptance-criteria-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0017-prj-success-criteria-and-acceptance-criteria](../pjr-0017-prj-success-criteria-and-acceptance-criteria.md) |
+| PJR-0018 | done | prj-issues-and-approach-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0018-prj-issues-and-approach](../pjr-0018-prj-issues-and-approach.md) |
+| PJR-0019 | done | prj-assumptions-constraints-dependencies-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0019-prj-assumptions-constraints-dependencies](../pjr-0019-prj-assumptions-constraints-dependencies.md) |
+| PJR-0020 | done | prj-comparison-of-alternatives-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0020-prj-comparison-of-alternatives](../pjr-0020-prj-comparison-of-alternatives.md) |
+| PJR-0021 | done | pm-plan-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0021-pm-plan](../pjr-0021-pm-plan.md) |
+| PJR-0022 | done | pm-communication-plan-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0022-pm-communication-plan](../pjr-0022-pm-communication-plan.md) |
+| PJR-0023 | done | pm-quality-management-plan-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-24 | このtodoはschで管理 | [pjr-0023-pm-quality-management-plan](../pjr-0023-pm-quality-management-plan.md) |
+| PJR-0024 | done | pm-roles-\*作成 | yamlを作る前提でrulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0024-pm-roles](../pjr-0024-pm-roles.md) |
+| PJR-0025 | done | pm-members-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0025-pm-members](../pjr-0025-pm-members.md) |
+| PJR-0026 | done | pm-raci-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0026-pm-raci](../pjr-0026-pm-raci.md) |
+| PJR-0027 | done | プロジェクト名の見直し | 旧プロジェクト名となっている箇所を SpecDojo へ見直し | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-05 | 関連ドキュメントを更新済み | [pjr-0027-item](../pjr-0027-item.md) |
+| PJR-0028 | done | pm-organization-\*作成 | rulebookを作成して、instruction, sampleへ展開する | todo | high | PO | _TODO_ | 2026-05-10 | 2026-05-05 | rulebook/instruction/sample作成済み | [pjr-0028-pm-organization](../pjr-0028-pm-organization.md) |
+| PJR-0029 | done | devcontainerの見直し | claude, codex, copilot用にdevcontainerの設定を見直す | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-05 | devcontainer設定更新済み | [pjr-0029-devcontainer](../pjr-0029-devcontainer.md) |
+| PJR-0030 | rejected | wbs to schedule strategyの見直し | WBS統合により不要 | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-17 | WBS統合により却下 | [pjr-0030-wbs-to-schedule-strategy](../pjr-0030-wbs-to-schedule-strategy.md) |
+| PJR-0031 | done | wbs strategyの見直し | deliverable wbsへの展開をドメイン別に作成するように見直し | todo | high | ARC | _TODO_ | 2026-05-10 | 2026-05-15 | ドメイン別展開方針を策定済み | [pjr-0031-wbs-strategy](../pjr-0031-wbs-strategy.md) |
+| PJR-0032 | done | wbs を成果物カタログに統合 | 成果物カタログをyaml化して統合 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | dct-*.yaml として統合完了 | [pjr-0032-wbs](../pjr-0032-wbs.md) |
+| PJR-0033 | done | 成果物カタログのyamlからmd生成 | 可読性向上のため、yamlからmdへの変換を自動化 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | `specdojo catalog build` で自動生成 | [pjr-0033-yaml-md](../pjr-0033-yaml-md.md) |
+| PJR-0034 | done | wbsの削除 | 不要になったwbsファイルとその記述を削除 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-16 | wbs関連ファイル・記述をすべて削除済み | [pjr-0034-wbs](../pjr-0034-wbs.md) |
+| PJR-0035 | done | `dct-<domain>`雛形作成 | `dct-<domain>`のプロジェクト横断での雛形を作成 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-16 | `docs/specdojo/templates/` に small/medium/large 対応テンプレートを作成 | [pjr-0035-dct-domain](../pjr-0035-dct-domain.md) |
+| PJR-0036 | done | pjr-indexの一覧見直し | 一覧に完了日や結果を記入する欄の追加検討 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-16 | `完了日` と `結論` 列を追加 | [pjr-0036-pjr-index](../pjr-0036-pjr-index.md) |
+| PJR-0037 | done | schedule strategyの検討 | スケジュール展開戦略の追加の検討 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | strategy yamlを作成 | [pjr-0037-schedule-strategy](../pjr-0037-schedule-strategy.md) |
+| PJR-0038 | done | `pjr-<domain>.md`にdone_criteria追加 | done_criteriaをMarkdownに追加 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | done_criteriaの追加をscriptで自動化 | [pjr-0038-pjr-domain-md-done-criteria](../pjr-0038-pjr-domain-md-done-criteria.md) |
+| PJR-0039 | done | frontmatterのtypeの見直し | deliverables-catalogなどを追加するかを検討 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-18 | productの小分類を見直し | [pjr-0039-frontmatter-type](../pjr-0039-frontmatter-type.md) |
+| PJR-0040 | done | pjrの個票雛形作成 | todoなどのpjrの個票の雛形を作成 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-18 | 種類ごとの個票テンプレートを作成 | [pjr-0040-pjr](../pjr-0040-pjr.md) |
+| PJR-0041 | done | roles, membersの見直し | rolesに全ロールを記述して、membersに兼務を反映するように変更 | todo | high | PO | _TODO_ | 2026-05-17 | 2026-05-17 | rolesとmembers, 関連文書を見直し | [pjr-0041-roles-members](../pjr-0041-roles-members.md) |
+| PJR-0042 | done | pm-roles, pm-membersのschema作成 | schemaを作成して、rolesとmembersの構造を定義 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | schemaを作成し、rolesとmembersの構造を定義 | [pjr-0042-pm-roles-pm-members-schema](../pjr-0042-pm-roles-pm-members-schema.md) |
+| PJR-0043 | done | specdojo scheduleコマンドの作成 | 成果物カタログ、strategyからスケジュールを生成するコマンドを作成 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | scheduleコマンドでスケジュール生成を自動化 | [pjr-0043-specdojo-schedule](../pjr-0043-specdojo-schedule.md) |
+| PJR-0044 | done | specdojo commandの稼働確認 | コマンドが実行できるか一通り確認 | todo | high | ARC | _TODO_ | 2026-05-17 | 2026-05-17 | buildまで確認 | [pjr-0044-specdojo-command](../pjr-0044-specdojo-command.md) |
+| PJR-0045 | done | viewpoint_resultsの追加 | レビュー結果の記録を追加 | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-05-24 | review resultコマンドの追加 | [pjr-0045-viewpoint-results](../pjr-0045-viewpoint-results.md) |
+| PJR-0046 | done | draft agentの作成 | たたき台の内容を作成するAgentのinstructionを作成 | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-06-07 | pm-members.yamlにagentを定義 | [pjr-0046-draft-agent](../pjr-0046-draft-agent.md) |
+| PJR-0047 | done | guidelines/ -> guides/へ変更 | ディレクトリ名とリンクの更新 | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-05-19 | guidelines/ を guides/ にリネームし全参照を更新 | [pjr-0047-guidelines-guides](../pjr-0047-guidelines-guides.md) |
+| PJR-0048 | done | pm-review-policy.mdの要否確認 | pm-review-policy.mdの必要性を確認 | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-05-18 | 不要なため削除 | [pjr-0048-pm-review-policy-md](../pjr-0048-pm-review-policy-md.md) |
+| PJR-0049 | done | specdojo reviewコマンドの作成 | reviewのplan作成などのコマンドを作成 | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-05-21 | specdojo review plan等を作成 | [pjr-0049-specdojo-review](../pjr-0049-specdojo-review.md) |
+| PJR-0050 | done | review-viewpointsのtemplate化 | review-viewpointsをテンプレートに加える | todo | high | ARC | _TODO_ | 2026-05-19 | 2026-05-18 | テンプレートとスキーマを作成 | [pjr-0050-review-viewpoints-template](../pjr-0050-review-viewpoints-template.md) |
+| PJR-0051 | done | specdojo reviewコマンドの仕様作成 | reviewコマンドの仕様を作成 | todo | high | ARC | _TODO_ | 2026-05-20 | 2026-05-19 | command usage guideに仕様を作成 | [pjr-0051-specdojo-review](../pjr-0051-specdojo-review.md) |
+| PJR-0052 | done | idからパスを解決するコマンドの作成 | idからファイルのパスを解決するためのDB構築と検索コマンドを作成 | todo | high | ARC | _TODO_ | 2026-05-20 | 2026-05-21 | specdojo index コマンドを作成 | [pjr-0052-id](../pjr-0052-id.md) |
+| PJR-0053 | done | templateのプレースホルダーの変更 | `*CAPITAL_CASE*`の形式に見直し | todo | high | ARC | _TODO_ | 2026-05-20 | 2026-05-21 | PJR-0055, 0056が残件 | [pjr-0053-template](../pjr-0053-template.md) |
+| PJR-0054 | done | idのリンクをMarkdown previewへ反映 | Markdown previewにidリンクを反映する機能を追加 | todo | high | ARC | _TODO_ | 2026-05-20 | 2026-05-21 | Markdown preview,VitePressにidリンクを反映 | [pjr-0054-id-markdown-preview](../pjr-0054-id-markdown-preview.md) |
+| PJR-0055 | done | pjr個票生成コマンド作成 | pjr個票をテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | specdojo register addを追加 | [pjr-0055-pjr](../pjr-0055-pjr.md) |
+| PJR-0056 | done | レビュー観点生成コマンド作成 | レビュー観点yamlをテンプレートから生成するコマンドとvalidationを作成 | todo | high | ARC | _TODO_ | 2026-05-24 | 2026-05-21 | specdojo review scaffoldを作成 | [pjr-0056-item](../pjr-0056-item.md) |
+| PJR-0057 | done | `[[id]]`を別名表示できるようにする | `[[id\|alt]]`と別名を併記できるようにする | todo | high | ARC | _TODO_ | 2026-05-24 | 2026-05-21 | \|でaltを指定可能に変更 | [pjr-0057-id](../pjr-0057-id.md) |
+| PJR-0058 | done | pjr-indexのスキーマ作成 | pjr-indexのフォーマットチェックできるようにする | todo | high | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | templateとスキーマを作成 | [pjr-0058-pjr-index](../pjr-0058-pjr-index.md) |
+| PJR-0059 | done | pjrのscaffold | pjr-index等を自動生成するためのscaffoldを作成 | todo | high | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | specdojo register scaffold, buildを追加 | [pjr-0059-pjr-scaffold](../pjr-0059-pjr-scaffold.md) |
+| PJR-0060 | done | pjr-indexのvscodeでのリアルタイム検証 | .remarkrc.yamlに追加してvscodeでリアルタイム検証 | todo | high | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | remark-md-content.cjsを追加し.remarkrc.yamlに設定 | [pjr-0060-pjr-index-vscode](../pjr-0060-pjr-index-vscode.md) |
+| PJR-0061 | done | sch-defaultsにあるstart_dateをsch-strategyへ移行 | sch-defaultsにはdefault_start_dateを設定、sch-strategyにはstart_dateを設定 | todo | high | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | default_start_date、start_dateを設定 | [pjr-0061-sch-defaults-start-date-sch-strategy](../pjr-0061-sch-defaults-start-date-sch-strategy.md) |
+| PJR-0063 | rejected | sch-strategyの名前変更 | sch-strategyをsch-configにリネーム | todo | high | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | claudeからstrategyの方が適切と指摘を受けた | [pjr-0063-sch-strategy](../pjr-0063-sch-strategy.md) |
+| PJR-0064 | done | register.tsのTABLE_HEADERのリファクタ | TABLE_HEADERが決め打ちになっているのを修正 | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-07-23 | TABLE_HEADERをpjr-index.md由来に一本化し、章番号アンカーと派生ビューのtemplate駆動化で日本語ハードコードを除去（コミット18fc83db） | [pjr-0064-register-ts-table-header](../pjr-0064-register-ts-table-header.md) |
+| PJR-0065 | done | srcとtoolsが分かれているのを再考 | tools以下のコードもspecdojoのsrcに含めてもいいかを検討 | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | 依存しているコードを再整理。validate-templates.tsのテスト化が残 | [pjr-0065-src-tools](../pjr-0065-src-tools.md) |
+| PJR-0066 | done | テスト環境の構築 | vitestを導入 | todo | medium | ARC | _TODO_ | 2026-05-23 | 2026-05-23 | vitestを導入し、instructionsを整備 | [pjr-0066-item](../pjr-0066-item.md) |
+| PJR-0067 | done | validate-templatesをテスト化 | validate-templatesをテストに移行 | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | catalog-scaffold, register, review-planのテストへ分解 | [pjr-0067-validate-templates](../pjr-0067-validate-templates.md) |
+| PJR-0068 | done | auto-generateを追加 | ファイルの変更を検知して自動生成する機能を追加 | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | specdojo watchコマンドを追加 | [pjr-0068-auto-generate](../pjr-0068-auto-generate.md) |
+| PJR-0069 | done | register close reject等を追加 | registerのコマンドを拡張 | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-05-24 | start/wait/review/close/reject/defer/reopen/updateを追加 | [pjr-0069-register-close-reject](../pjr-0069-register-close-reject.md) |
+| PJR-0070 | done | sch-strategyに作成済み成果物を設定 | scheduleを生成するときに作成済みの成果物を考慮する | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | sch-strategyにinitial_stateを追加 | [pjr-0070-sch-strategy](../pjr-0070-sch-strategy.md) |
+| PJR-0071 | done | specdojo buildコマンドの追加 | 生成物の一括ビルドを行うコマンドを追加 | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-05-23 | specdojo buildコマンドを実装 | [pjr-0071-specdojo-build](../pjr-0071-specdojo-build.md) |
+| PJR-0072 | done | 単体テストの追加 | specdojoコマンドの単体テストを追加 | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-05-24 | vitestのコードを追加 | [pjr-0072-item](../pjr-0072-item.md) |
+| PJR-0073 | done | opencode用のagent memberを見直し | openspecに合わせたmemberに見直し | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-06-07 | pm-members.yamlに定義 | [pjr-0073-opencode-agent-member](../pjr-0073-opencode-agent-member.md) |
+| PJR-0074 | done | claude用のagent memberを見直し | claudeに合わせたmemberに見直し | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-06-07 | pm-members.yamlに定義 | [pjr-0074-claude-agent-member](../pjr-0074-claude-agent-member.md) |
+| PJR-0075 | done | worktreeに合わせたdevcontainer設定の変更 | マウントの変更等を実施 | todo | medium | ARC | _TODO_ | 2026-05-24 | 2026-05-24 | specdojo-workspaceに配置するよう見直し | [pjr-0075-worktree-devcontainer](../pjr-0075-worktree-devcontainer.md) |
+| PJR-0076 | done | 完了成果物をscheduleへ反映 | specdojo scheduleに完了成果物を反映して初期値をずらす | todo | medium | ARC | _TODO_ | 2026-05-26 | 2026-05-30 | 初期値をずらすのとgateの処理を追加 | [pjr-0076-schedule](../pjr-0076-schedule.md) |
+| PJR-0077 | done | specdojo exec runの追加 | agentの実行を管理するためのコマンドを追加 | todo | medium | ARC | _TODO_ | 2026-05-26 | 2026-05-27 | specdojo exec runコマンドを実装 | [pjr-0077-specdojo-exec-run](../pjr-0077-specdojo-exec-run.md) |
+| PJR-0078 | done | scheduleにgateを導入 | first_pass後にsecond_passに進めるよう、phase_gatesを導入 | todo | medium | ARC | _TODO_ | 2026-05-31 | 2026-05-30 | phase_gatesを導入、yamlとtsを修正 | [pjr-0078-schedule-gate](../pjr-0078-schedule-gate.md) |
+| PJR-0079 | done | taskをstep-by-stepで実行 | agentで実行する前にtaskをステップごとに実行 | todo | medium | ARC | _TODO_ | 2026-05-31 | 2026-07-22 | LAUNCH track実行の中で検証 | [pjr-0079-task-step-by-step](../pjr-0079-task-step-by-step.md) |
+| PJR-0080 | done | 成果物のscaffoldの追加 | 成果物をprojectサイズ別に一括生成するコマンドを追加 | todo | medium | ARC | _TODO_ | 2026-05-31 | 2026-07-23 | catalog generateコマンドを追加 | [pjr-0080-scaffold](../pjr-0080-scaffold.md) |
+| PJR-0081 | deferred | metadata.jsonの要否確認 | 少なくとも更新日付は不要、ファイル自体の用途も確認 | todo | medium | ARC | _TODO_ | 2026-05-31 | - | 人向けなのでしばらく運用して不要であれば削除 | [pjr-0081-metadata-json](../pjr-0081-metadata-json.md) |
+| PJR-0082 | done | pjr-by-\*の統合を検討 | コミットの変更が複数で発生するので統合を検討 | todo | medium | ARC | _TODO_ | 2026-05-31 | 2026-05-30 | pjr-viewsに統合 | [pjr-0082-pjr-by](../pjr-0082-pjr-by.md) |
+| PJR-0083 | done | milestoneをtimelineの上部に表示 | milestoneの表示位置をtimelineの上部に変更 | todo | medium | ARC | _TODO_ | 2026-05-31 | 2026-05-30 | 上部へ移動 | [pjr-0083-milestone-timeline](../pjr-0083-milestone-timeline.md) |
+| PJR-0084 | done | gateをtimelineに表示 | gateをtimelineのtaskの中に表示する | todo | medium | ARC | _TODO_ | 2026-05-31 | 2026-05-30 | phase_gateをtaskの中に行表示 | [pjr-0084-gate-timeline](../pjr-0084-gate-timeline.md) |
+| PJR-0085 | done | specdojo:docs-structure-guideの不整合修正 | ネーミングなどの不整合を修正 | todo | medium | ARC | _TODO_ | 2026-05-31 | 2026-05-30 | guideの内容とファイル配置を修正 | [pjr-0085-specdojo-docs-structure-guide](../pjr-0085-specdojo-docs-structure-guide.md) |
+| PJR-0086 | done | catalog-scaffold.test.tsの見直し | schemaでチェックできるようにしたのでテストは不要かどうかを検討 | todo | medium | ARC | _TODO_ | 2026-05-31 | 2026-07-22 | schemaチェックもtestに追加 | [pjr-0086-catalog-scaffold-test-ts](../pjr-0086-catalog-scaffold-test-ts.md) |
+| PJR-0087 | done | dct-\*-template.yamlのmarkdownの自動生成追加 | yamlでは可読性が低いのでmarkdown形式を自動生成する | todo | medium | ARC | _TODO_ | 2026-05-31 | 2026-07-23 | yaml-pages の dct テンプレ表示ページを catalog build と同じ表形式（成果物表＋完了条件）で描画する実装を追加（コミットd8e1b346） | [pjr-0087-dct-template-yaml-markdown](../pjr-0087-dct-template-yaml-markdown.md) |
+| PJR-0088 | done | agent-config-guideを追加 | エージェントの設定を一箇所で記述 | todo | medium | ARC | _TODO_ | 2026-05-31 | 2026-05-30 | exec-config-guide.mdに記述。設定ファイルも変更 | [pjr-0088-agent-config-guide](../pjr-0088-agent-config-guide.md) |
+| PJR-0089 | done | claude-agent-settingsの見直し | capability, proficiencyに対応して記述を見直し | todo | medium | ARC | _TODO_ | 2026-06-05 | 2026-06-02 | agent file含めて整備 | [pjr-0089-claude-agent-settings](../pjr-0089-claude-agent-settings.md) |
+| PJR-0090 | done | agent-briefとreview planの見直し | 重複している部分があり、完全分離か統合を検討 | todo | medium | ARC | _TODO_ | 2026-06-05 | 2026-06-02 | reviewをexecに統合 | [pjr-0090-agent-brief-review-plan](../pjr-0090-agent-brief-review-plan.md) |
+| PJR-0091 | done | taskのcompleteとcommit,pushの整理 | taskはcompleteで終了するが、その後のcommit, pushの関係を整理 | todo | medium | ARC | _TODO_ | 2026-06-05 | 2026-07-22 | complete後にcommit, pushを実行する運用で当面実行 | [pjr-0091-task-complete-commit-push](../pjr-0091-task-complete-commit-push.md) |
+| PJR-0092 | done | VitePressのルートをrepoルートに変更 | 将来的にソースコードへのリンクを容易にするため。また、vscodeの絶対パスとの整合性も保てる | todo | medium | ARC | _TODO_ | 2026-06-07 | 2026-06-10 | .vitepressをルートに移動 | [pjr-0092-vitepress-repo](../pjr-0092-vitepress-repo.md) |
+| PJR-0093 | done | sch-strategyのexecutionのautoを見直し | executionはauto/manualになっているがautoが単語として適切か確認 | todo | medium | ARC | _TODO_ | 2026-06-07 | 2026-06-03 | manual/autoではなくhuman/agentに変更 | [pjr-0093-sch-strategy-execution-auto](../pjr-0093-sch-strategy-execution-auto.md) |
+| PJR-0094 | done | sch-strategyのexecutionが後続に反映されているか | executionがmanualの場合、agentが実行しないなど適切に処理がされるかを確認 | todo | medium | ARC | _TODO_ | 2026-06-07 | 2026-06-07 | executionをhuman,agentに見直し後続へ反映 | [pjr-0094-sch-strategy-execution](../pjr-0094-sch-strategy-execution.md) |
+| PJR-0095 | done | specdojo exec buildの出力ログの修正 | ログで出力されるディレクトリが古い仕様なので修正 | todo | medium | ARC | _TODO_ | 2026-06-07 | 2026-06-02 | ログとその他の出力を修正 | [pjr-0095-specdojo-exec-build](../pjr-0095-specdojo-exec-build.md) |
+| PJR-0096 | done | edit-planのfrontmatter, based_onのエラー修正 | frontmatter typeの追加とbased_onで何も表示されない不具合を修正 | todo | medium | ARC | _TODO_ | 2026-06-07 | 2026-06-02 | .remarkrc.yamlでのschema適用優先順も含め修正 | [pjr-0096-edit-plan-frontmatter-based-on](../pjr-0096-edit-plan-frontmatter-based-on.md) |
+| PJR-0097 | done | xep-rulebookの追加 | edit plan用のrulebookを追加 | todo | medium | ARC | _TODO_ | 2026-06-07 | 2026-07-23 | xep, xrpについては自動生成のためrulebook不要 | [pjr-0097-xep-rulebook](../pjr-0097-xep-rulebook.md) |
+| PJR-0098 | done | specdojo exec auto選択時にcapabilitiesのロジック変更 | 最小剰余を使用してcapabilitiesを選択->制約条件に変更 | todo | medium | ARC | _TODO_ | 2026-06-07 | 2026-06-07 | priorityに基づいて選択するように変更 | [pjr-0098-specdojo-exec-auto-capabilities](../pjr-0098-specdojo-exec-auto-capabilities.md) |
+| PJR-0099 | done | exec planをcreation_mode毎に出力変更 | creation_modeを反映し、planテンプレートから生成 | todo | medium | ARC | _TODO_ | 2026-06-13 | 2026-06-10 | creation_modeをapproach_modeに変更してmode毎にテンプレート作成 | [pjr-0099-exec-plan-creation-mode](../pjr-0099-exec-plan-creation-mode.md) |
+| PJR-00QV | done | データストア名へ概念の英語名を併記し cdfd-rulebook の禁止事項に注記を加える | CDFD のデータストア名が日本語のみのため、実装を知る読み手が対応する語を特定できない。`実行計画` と `plan` は同じ概念の日本語名と英語名であり、併記できる。`cdfd-rulebook` の禁止事項が実装名を禁じているが、概念の英語名はこれに当たらないため、誤解を避ける注記を加える。 | todo | medium | ARC | 2026-09-26 | _TODO_ | 2026-09-26 | - | [pjr-00qv-cdfd-rulebook](../pjr-00qv-cdfd-rulebook.md) |
+| PJR-0100 | done | \*-instruction.mdを削除 | \*-instruction.mdを廃止 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-13 | *-instruction.mdを廃止し、rulebook、標準、Skill、サイドバー、関連文書からinstruction参照を削除 | [pjr-0100-instruction-md](../pjr-0100-instruction-md.md) |
+| PJR-0101 | done | xep-freeform-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0101-xep-freeform-template](../pjr-0101-xep-freeform-template.md) |
+| PJR-0102 | done | xep-fully-guided-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0102-xep-fully-guided-template](../pjr-0102-xep-fully-guided-template.md) |
+| PJR-0103 | done | xep-recipe-guided-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0103-xep-recipe-guided-template](../pjr-0103-xep-recipe-guided-template.md) |
+| PJR-0104 | done | xep-recipe-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0104-xep-recipe-maintenance-template](../pjr-0104-xep-recipe-maintenance-template.md) |
+| PJR-0105 | done | xep-rulebook-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0105-xep-rulebook-maintenance-template](../pjr-0105-xep-rulebook-maintenance-template.md) |
+| PJR-0106 | done | xep-sample-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0106-xep-sample-maintenance-template](../pjr-0106-xep-sample-maintenance-template.md) |
+| PJR-0107 | done | xep-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0107-xep-template](../pjr-0107-xep-template.md) |
+| PJR-0108 | done | xer-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0108-xer-template](../pjr-0108-xer-template.md) |
+| PJR-0109 | done | xrp-freeform-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0109-xrp-freeform-template](../pjr-0109-xrp-freeform-template.md) |
+| PJR-0110 | done | xrp-fully-guided-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0110-xrp-fully-guided-template](../pjr-0110-xrp-fully-guided-template.md) |
+| PJR-0111 | done | xrp-recipe-guided-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0111-xrp-recipe-guided-template](../pjr-0111-xrp-recipe-guided-template.md) |
+| PJR-0112 | done | xrp-recipe-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0112-xrp-recipe-maintenance-template](../pjr-0112-xrp-recipe-maintenance-template.md) |
+| PJR-0113 | done | xrp-rulebook-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0113-xrp-rulebook-maintenance-template](../pjr-0113-xrp-rulebook-maintenance-template.md) |
+| PJR-0114 | done | xrp-sample-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0114-xrp-sample-maintenance-template](../pjr-0114-xrp-sample-maintenance-template.md) |
+| PJR-0115 | done | xrp-template-maintenance-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0115-xrp-template-maintenance-template](../pjr-0115-xrp-template-maintenance-template.md) |
+| PJR-0116 | done | xrp-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0116-xrp-template](../pjr-0116-xrp-template.md) |
+| PJR-0117 | done | xrr-templateの拡充 | agentへの指示を明確化 | todo | medium | ARC | _TODO_ | 2026-06-14 | 2026-06-21 | idや参考資料の参照を見直し | [pjr-0117-xrr-template](../pjr-0117-xrr-template.md) |
+| PJR-0118 | done | Debian chromium 150のヘッドレス描画クラッシュ対応 | arm64 full版chromium 150.0.7871.46がヘッドレス描画時にbrk #0でクラッシュしmermaid SVG生成が失敗。chromium-headless-shellへ切替(Dockerfile変更済み)。 | issue | high | ARC | _TODO_ | 2026-07-08 | 2026-07-08 | Dockerfileを修正 | [pjr-0118-debian-chromium-150](../pjr-0118-debian-chromium-150.md) |
+| PJR-0119 | decided | プロジェクト憲章の承認 | prj-charter の立ち上げ認可と権限委譲を PO として承認する | decision | high | PO | _TODO_ | 2026-07-17 | 2026-07-17 | コミットce44286c時点の憲章を承認。立ち上げ認可と権限委譲を確定 | [pjr-0119-charter-approval](../pjr-0119-charter-approval.md) |
+| PJR-0120 | decided | 初期公開の範囲・ライセンス・貢献導線の確定 | 初期公開の対象範囲、ライセンス、貢献導線を PO の判断で確定する（旧 ACD-D03） | decision | high | PO | _TODO_ | - | 2026-07-24 | 採用ライセンスを MIT、貢献導線を GitHub issue / pull request として確定 | [pjr-0120-item](../pjr-0120-item.md) |
+| PJR-0121 | decided | 公開先・公開範囲・変更提案受付方法の確定 | 公開リポジトリの公開先、公開範囲、変更提案の受付方法を確定し、公開資料に機密情報や対象外の業務情報が含まれないことを確認する（旧 ACD-D04） | decision | high | PO | _TODO_ | - | 2026-07-24 | 公開先を GitHub + GitHub Pages、変更提案の受付方法を GitHub issue / pull request として確定 | [pjr-0121-item](../pjr-0121-item.md) |
+| PJR-0122 | done | launch trackの振り返り | workflowの改善点を振り返りまとめる。 | todo | medium | PO | _TODO_ | 2026-07-31 | 2026-07-26 | 改善点を一通り反映 | [pjr-0122-review-launch](../pjr-0122-review-launch.md) |
+| PJR-0123 | done | registerの個票の内容を見直し | idや基本情報を見直し | todo | medium | QE | _TODO_ | 2026-07-31 | 2026-07-26 | 重複した記述や個票間での違いを修正 | [pjr-0123-register](../pjr-0123-register.md) |
+| PJR-0124 | done | human実行時のplan非生成とresultへの統合 | execution:humanはplanを読まないため、human時はplanを生成せずresultへ統合し、commitスコープをresult由来に切替える | todo | medium | ARC | _TODO_ | 2026-07-31 | 2026-07-25 | human実行時のplan生成を廃止し、done_criteria確認をresultへ集約。commitスコープはhumanではresult frontmatterのtargets由来へ切替え（コミット0e0db54a） | [pjr-0124-human-plan-integrate-result](../pjr-0124-human-plan-integrate-result.md) |
+| PJR-0125 | done | specdojo:pjr-todo-templateのH1プレースホルダ不整合を修正 | pjr-todo-template.mdのH1がTASK_TITLE表記で、register addの生成ロジック（TODO_TITLE）と不一致。todo個票のタイトルが未置換で残る。他type同様のTYPE_TITLE規約へ揃える | todo | medium | ARC | _TODO_ | 2026-07-31 | 2026-07-24 | pjr-todo-template.mdのH1を_TODO_TITLE_へ修正。他type同様にタイトルが置換されることを確認 | [pjr-0125-specdojo-pjr-todo-template-h1](../pjr-0125-specdojo-pjr-todo-template-h1.md) |
+| PJR-0126 | done | PO承認をpull requestベースにする承認フロー整備 | decision起票のみでは証跡が弱いため、charter等のPO留保事項の承認をpull requestレビューで行う運用を整備する。対象範囲・branch保護/CODEOWNERS・承認証跡の書き戻しを検討 | todo | medium | PM | _TODO_ | 2026-07-31 | 2026-07-26 | pull requestで承認する運用を明記 | [pjr-0126-pr-based-po-approval](../pjr-0126-pr-based-po-approval.md) |
+| PJR-0127 | done | prj-overviewのプロジェクトWhyを明確化 | 後続文書の論点を安定させるため、対象者・課題・中心仮説・価値仮説・判断原則をプロジェクト概要の正本として明確化する | todo | high | BA | _TODO_ | 2026-07-31 | 2026-07-26 | IDを付与してトレースを明確化 | [pjr-0127-clarify-project-why](../pjr-0127-clarify-project-why.md) |
+| PJR-0128 | done | exec planへproject contextを伝播 | 全ての対象成果物生成でprj-ov
