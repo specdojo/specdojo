@@ -45,3 +45,29 @@
       from: specdojo-lp を Cloudflare Workers の静的アセットとして配置する設定（wrangler.jsonc、Workers Builds による GitHub 連携、本番とプレビューのブランチ、Node.js の版、独自ドメイン）を行う。本番の公開は 0.3.0 の公開を待つ
       to: specdojo-lp を Cloudflare Workers の静的アセットとして配置する設定は済んだ。残りは、確定した設定を tsd-cloudflare-workers.md にまとめ、tsd-index に wrangler とビルド環境の Node.js の版を反映すること
   previous_event_id: reg_c017d5eb327c444597da45f0498d3cd0
+- v: 1
+  id: reg_443dc5437f4c4b988aad0ae4e0396cec
+  ts: "2026-10-15T13:43:06Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_484f2435f5004d7999142ca93996f1ee
+- v: 1
+  id: reg_5ac554fe92d942a8a3b02c41a3c40293
+  ts: "2026-10-15T13:48:34Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_443dc5437f4c4b988aad0ae4e0396cec

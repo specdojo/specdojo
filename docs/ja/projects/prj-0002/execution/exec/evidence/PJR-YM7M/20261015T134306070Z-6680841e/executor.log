@@ -1,0 +1,32 @@
+作業内容 No 6 の残り作業（TSD の作成と `tsd-index` の更新）を終えました。specdojo-lp で `npm run format:check` が通り、個票の markdownlint もエラーなしです。
+
+**変更したファイル**
+- `specdojo-lp:docs/ja/product/030-architecture/020-infrastructure/tsd-cloudflare-workers.md`（新規）
+  - frontmatter は完了条件どおりで、`specdojo:` の下に `id: tsd-cloudflare-workers`、`type: architecture`、`status: draft`、`part_of: [tsd-index]`、`rulebook: specdojo:tsd-rulebook` を置きました。
+  - 本文は個票 1.2. の事実だけで書き、構成は 概要・採用理由 / 選定・バージョン / 設定・セットアップ手順 / 動作確認 / 運用上の注意 です。
+  - 設定・セットアップ手順には、`wrangler.jsonc` の内容と、ダッシュボードで行う設定（Workers Builds、プレビュー、Custom Domains、Always Use HTTPS、`www` の転送）を書きました。
+  - 動作確認には、`wrangler dev` の手順と、本番・プレビュー・http・`www` で期待する応答（200・404・301 と転送先）の表を書きました。
+  - 運用上の注意には、個票 1.2. の「起きたことと対処」の 3 件を書きました。
+  - アカウント ID・ダッシュボードの URL・API トークン・アカウントのサブドメインは書いていません。`workers.dev` の URL は `<アカウントのサブドメイン>` の形にしています。
+- `specdojo-lp:docs/ja/product/030-architecture/020-infrastructure/tsd-index.md`
+  - ホスティングの行の `補足` から `tsd-cloudflare-workers.md` へリンクしました。
+  - `wrangler` 4.x の行（区分は配置）を足しました。
+  - ランタイムの行の `補足` に、Workers Builds のビルドが既定の Node.js 24.18.0 で動くことを書きました。
+- `docs/ja/projects/prj-0002/controls/project-register/pjr-ym7m-lp-cloudflare-deploy.md`
+  - 対応結果に今回の作業内容と残課題を書きました。`item_status`、登録簿、result は変えていません。
+
+`wrangler.jsonc`、`package.json`、ソースコードは変えていません。
+
+**検証**
+- `npm run format:check`（specdojo-lp）: 通りました。
+- `npx prettier --write`: specdojo-lp の 2 文書と個票にかけました。個票は変化なしでした。
+- `npx markdownlint`（個票）: エラーなしです。
+- `specdojo catalog validate`: prj-0002 に `catalog_path` がないため実行していません。
+
+**残っていること**
+- `main` にはまだ `previews` が入っていません（作業内容 No 7 のメモのとおり）。
+- 変更の `feature/lp-v1` への統合は runner が行います。
+
+<specdojo_executor_evidence>
+{"final_message":"Created specdojo-lp:docs/ja/product/030-architecture/020-infrastructure/tsd-cloudflare-workers.md from the ticket's confirmed facts (section 1.2). Updated specdojo-lp tsd-index.md: hosting row now links to the new TSD, a wrangler 4.x row (category: deployment) was added, and the runtime row notes that Workers Builds builds on the default Node.js 24.18.0. Wrote the work done into the ticket's results section. wrangler.jsonc, package.json and source code were not changed.","validations":[{"command":"npm run format:check","status":"passed","summary":"specdojo-lp: All matched files use Prettier code style"},{"command":"npx prettier --write docs/ja/product/030-architecture/020-infrastructure/","status":"passed","summary":"specdojo-lp: formatted tsd-cloudflare-workers.md and tsd-index.md"},{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-ym7m-lp-cloudflare-deploy.md","status":"passed","summary":"ticket unchanged by formatting"},{"command":"npx markdownlint docs/ja/projects/prj-0002/controls/project-register/pjr-ym7m-lp-cloudflare-deploy.md","status":"passed","summary":"no errors"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"skipped","reason":"project prj-0002 has no catalog_path in .specdojo/specdojo.config.json"}]}
+</specdojo_executor_evidence>
