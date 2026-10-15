@@ -37,6 +37,7 @@ dashboard、カタログの build、schedule の戦略の生成（合わせて 3
 - 新しい循環 import を作らない。移した先のモジュールから元のファイルを import しない。
 - 新しいモジュールのファイル名は、元のファイル名で始める（例: `src/register-migration.ts`）。
 - モジュールの構成に触れている設計書（[[sysd-index]] など）があれば更新する。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通すこと。PJR-K6KB・PJR-3W2N・PJR-13M6・PJR-3P4W では、移した後の import の抜けや未使用の import を残したまま終え、親の検証で失敗した。
 - 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
 
 ## 3. 作業内容
