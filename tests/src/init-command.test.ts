@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 import { collectInitAnswers, runInit, type InitPrompter } from "../../src/init-command.js";
 import { loadExecDefaultsConfig, resolveMemberCommand } from "../../src/exec-agent-config.js";
 import { loadMemberRoster, type SpecDojoConfig } from "../../src/specdojo-config.js";
@@ -192,15 +192,15 @@ describe("specdojo init", () => {
       process.chdir(repo);
       await runInit({ yes: true, provider: "claude,opencode,copilot", exec: true });
 
-      const roster = yaml.load(
-        readFileSync(join(repo, ".specdojo/agent-members.yaml"), "utf8"),
-      ) as { members: Array<{ provider: string }> };
+      const roster = load(readFileSync(join(repo, ".specdojo/agent-members.yaml"), "utf8")) as {
+        members: Array<{ provider: string }>;
+      };
       expect(new Set(roster.members.map((member) => member.provider))).toEqual(
         new Set(["claude", "opencode", "copilot"]),
       );
-      const defaults = yaml.load(
-        readFileSync(join(repo, ".specdojo/exec-defaults.yaml"), "utf8"),
-      ) as { providers: Record<string, unknown> };
+      const defaults = load(readFileSync(join(repo, ".specdojo/exec-defaults.yaml"), "utf8")) as {
+        providers: Record<string, unknown>;
+      };
       expect(Object.keys(defaults.providers).sort()).toEqual(["claude", "copilot", "opencode"]);
       expect(existsSync(join(repo, ".github/agents/specdojo-orchestrator.md"))).toBe(true);
     } finally {
@@ -215,9 +215,7 @@ describe("specdojo init", () => {
       process.chdir(repo);
       await runInit({ yes: true, provider: "antigravity", exec: true });
 
-      const defaults = yaml.load(
-        readFileSync(join(repo, ".specdojo/exec-defaults.yaml"), "utf8"),
-      ) as {
+      const defaults = load(readFileSync(join(repo, ".specdojo/exec-defaults.yaml"), "utf8")) as {
         providers: {
           antigravity: {
             command_params: { by_proficiency: { expert: { model: string } } };

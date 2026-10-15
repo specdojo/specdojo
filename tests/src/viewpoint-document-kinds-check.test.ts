@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import {
   checkViewpointDocumentKinds,
   collectRulebookIds,
@@ -23,7 +23,7 @@ function rulebookMarkdown(id: string): string {
 }
 
 function viewpointsYaml(documentKinds: Record<string, unknown>): string {
-  return yaml.dump({
+  return dump({
     id: "specdojo:pm-review-viewpoints",
     viewpoints: [
       { id: "vp-arc-single-responsibility", document_kinds: documentKinds },

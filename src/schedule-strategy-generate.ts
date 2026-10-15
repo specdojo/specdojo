@@ -15,7 +15,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
-import yaml from "js-yaml";
+import { dump, load as loadYaml } from "./yaml.js";
 import { resolveSpecdojoPath } from "./template-resolution.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
@@ -68,10 +68,10 @@ export type {
 // ---- serialization & validation ------------------------------------------------
 
 export function dumpStrategy(doc: Record<string, unknown>): string {
-  return yaml.dump(doc, {
+  return dump(doc, {
     lineWidth: 120,
     noRefs: true,
-    quotingType: '"',
+    quoteStyle: "double",
     forceQuotes: false,
   });
 }
@@ -93,7 +93,7 @@ function compileStrategySchema(repoRoot: string): ValidateFunction {
       repositoryRoot: repoRoot,
     });
     try {
-      return yaml.load(readFileSync(filePath, "utf8"));
+      return loadYaml(readFileSync(filePath, "utf8"));
     } catch (error) {
       throw new Error(
         `Failed to read strategy schema: ${filePath} (${error instanceof Error ? error.message : String(error)})`,

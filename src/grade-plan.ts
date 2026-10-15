@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, extname, join } from "node:path";
-import yaml from "js-yaml";
+import { dump } from "./yaml.js";
 import {
   GRADE_PLAN_EMBEDDED_DOCUMENT_CHARACTER_LIMIT,
   agentViewpoints,
@@ -252,24 +252,22 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
       : [];
   const lines = [
     "---",
-    yaml
-      .dump(
-        {
-          specdojo: {
-            id: `${opts.projectId}:grade-${opts.target}-${taskHash.toLowerCase()}-plan`,
-            type: "exec-plan",
-            rulebook: "none",
-            task_id: taskId,
-            name: `grade: ${rel}`,
-            mode: "review",
-            status: "ready",
-            project_id: opts.projectId,
-            targets: [documentId],
-          },
+    dump(
+      {
+        specdojo: {
+          id: `${opts.projectId}:grade-${opts.target}-${taskHash.toLowerCase()}-plan`,
+          type: "exec-plan",
+          rulebook: "none",
+          task_id: taskId,
+          name: `grade: ${rel}`,
+          mode: "review",
+          status: "ready",
+          project_id: opts.projectId,
+          targets: [documentId],
         },
-        { lineWidth: 120, noRefs: true },
-      )
-      .trimEnd(),
+      },
+      { lineWidth: 120, noRefs: true },
+    ).trimEnd(),
     "---",
     "",
     `# Review Plan: ${taskId} grade: ${rel}`,
@@ -457,24 +455,22 @@ export function renderGradeReporterPlan(opts: {
       : [];
   const lines = [
     "---",
-    yaml
-      .dump(
-        {
-          specdojo: {
-            id: `${opts.projectId}:grade-${opts.target}-${taskHash.toLowerCase()}-reporter-plan`,
-            type: "exec-plan",
-            rulebook: "none",
-            task_id: taskId,
-            name: `grade reporter: ${rel}`,
-            mode: "review",
-            status: "ready",
-            project_id: opts.projectId,
-            targets: [documentId],
-          },
+    dump(
+      {
+        specdojo: {
+          id: `${opts.projectId}:grade-${opts.target}-${taskHash.toLowerCase()}-reporter-plan`,
+          type: "exec-plan",
+          rulebook: "none",
+          task_id: taskId,
+          name: `grade reporter: ${rel}`,
+          mode: "review",
+          status: "ready",
+          project_id: opts.projectId,
+          targets: [documentId],
         },
-        { lineWidth: 120, noRefs: true },
-      )
-      .trimEnd(),
+      },
+      { lineWidth: 120, noRefs: true },
+    ).trimEnd(),
     "---",
     "",
     `# Reporter Plan: ${taskId} grade: ${rel}`,

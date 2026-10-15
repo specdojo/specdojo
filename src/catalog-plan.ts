@@ -7,7 +7,7 @@
 
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import { resolveSpecdojoPath, specdojoDirectoryPaths } from "./template-resolution.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
@@ -142,7 +142,7 @@ function compilePlanSchema(repoRoot: string): ValidateFunction {
   }
   let schema: unknown;
   try {
-    schema = yaml.load(readFileSync(schemaPath, "utf8"));
+    schema = load(readFileSync(schemaPath, "utf8"));
   } catch (error) {
     throw new Error(
       `Failed to read DCT plan schema: ${schemaPath} (${error instanceof Error ? error.message : String(error)})`,
@@ -201,7 +201,7 @@ export function loadTemplatesForDomain(
   for (const [file, filePath] of [...files].sort(([a], [b]) => a.localeCompare(b))) {
     let template: DctTemplateDoc;
     try {
-      template = yaml.load(readFileSync(filePath, "utf8")) as DctTemplateDoc;
+      template = load(readFileSync(filePath, "utf8")) as DctTemplateDoc;
     } catch {
       continue;
     }
@@ -557,10 +557,10 @@ export function normalizePlan(plan: DctPlan): DctPlan {
 }
 
 export function dumpPlan(plan: DctPlan): string {
-  return yaml.dump(normalizePlan(plan), {
+  return dump(normalizePlan(plan), {
     lineWidth: 120,
     noRefs: true,
-    quotingType: "'",
+    quoteStyle: "single",
     forceQuotes: false,
   });
 }
@@ -568,7 +568,7 @@ export function dumpPlan(plan: DctPlan): string {
 export function parsePlan(content: string, filePath: string): DctPlan {
   let parsed: unknown;
   try {
-    parsed = yaml.load(content);
+    parsed = load(content);
   } catch (error) {
     throw new Error(
       `${filePath}: failed to parse YAML (${error instanceof Error ? error.message : String(error)})`,

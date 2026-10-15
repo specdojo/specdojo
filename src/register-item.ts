@@ -6,7 +6,7 @@
 
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import { inlineCodeAnglePlaceholders } from "./exec-shared.js";
 import { registerDateFromTimestamp } from "./register-date.js";
 
@@ -232,7 +232,7 @@ export function readRegisterItemContent(
   if (match) {
     let parsed: unknown;
     try {
-      parsed = yaml.load(match[1]);
+      parsed = load(match[1]);
     } catch {
       parsed = undefined;
     }
@@ -336,7 +336,7 @@ export function validateRegisterItemDocs(
     let frontmatterId: string | undefined;
     if (match) {
       try {
-        const parsed = yaml.load(match[1]);
+        const parsed = load(match[1]);
         if (isRecord(parsed) && isRecord(parsed.specdojo)) {
           frontmatterId = asString(parsed.specdojo.id);
         }
@@ -427,7 +427,7 @@ export function updateSpecdojoFields(
   mutate(fields);
 
   const document = { ...parsed, specdojo: orderSpecdojoKeys(fields) };
-  const dumped = yaml.dump(document, { lineWidth: -1, noRefs: true, quotingType: '"' });
+  const dumped = dump(document, { lineWidth: -1, noRefs: true, quoteStyle: "double" });
   return `---\n${dumped}---\n${match[2] ?? ""}`;
 }
 
@@ -448,7 +448,7 @@ export function readSpecdojoFields(content: string): Record<string, unknown> {
 function parseFrontmatterDocument(frontmatter: string): Record<string, unknown> {
   let parsed: unknown;
   try {
-    parsed = yaml.load(frontmatter);
+    parsed = load(frontmatter);
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
     throw new Error(`Failed to parse register item frontmatter: ${detail}`);
@@ -485,7 +485,7 @@ export function readRegisterItemLegacyDates(content: string): RegisterItemLegacy
 
   let parsed: unknown;
   try {
-    parsed = yaml.load(match[1]);
+    parsed = load(match[1]);
   } catch {
     return {};
   }

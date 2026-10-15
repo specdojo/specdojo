@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-09-29T22:17:17Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
 ---
 
 # PJR-RCVS js-yaml 5 への移行
@@ -37,14 +36,18 @@ named import への書き換え、引用符なしの日付が文字列になる�
 
 | No  | 作業                                                | 担当         | 状態 | メモ                    |
 | --- | --------------------------------------------------- | ------------ | ---- | ----------------------- |
-| 1   | js-yaml 5 の変更点を確かめ、影響する箇所を洗い出す  | DEV          | open | import・日付・merge key |
-| 2   | import と日付の扱いを書き換え、テストを加える       | DEV          | open | -                       |
+| 1   | js-yaml 5 の変更点を確かめ、影響する箇所を洗い出す  | DEV          | done | import・日付・merge key |
+| 2   | import と日付の扱いを書き換え、テストを加える       | DEV          | done | -                       |
 | 3   | `package.json` の変更を申し送りに提案差分として書く | DEV          | open | 保護設定                |
 | 4   | 申し送りを適用し、lock ファイルを再生成して再開する | orchestrator | open | `exec handoff apply`    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- js-yaml を利用する本体コードを named import の互換ラッパー経由へ変更し、v5 では `YAML11_SCHEMA`、依存更新前の v4 では `DEFAULT_SCHEMA` を使うようにした。これにより、引用符なしの日付と merge key の読み込み結果を 4 系と同じに保つ。
+- js-yaml 5 で廃止された `quotingType` を `quoteStyle` へ変更し、依存更新前にも実行できるよう互換ラッパーで変換するようにした。
+- 引用符なしの日付、引用符付きの日付、merge key の互換性を確認する単体テストを追加した。リポジトリ内の実データには merge key（`<<:`）がないことを確認した。
+- ESM default import をすべて named import に変更し、CHANGELOG の 0.4.0 節へ依存更新を記載した。
+- 残課題は、保護対象の本体および `packages/docs-lint` の `package.json` で js-yaml を `^5.4.3` に変更し、v5 が型定義を同梱するため両方の `@types/js-yaml` を削除して、各 lock ファイルを再生成することである。reporter の申し送り後に orchestrator が `exec handoff apply` を実行し、本タスクを再開する。
 
 ## 5. 関連ドキュメント
 

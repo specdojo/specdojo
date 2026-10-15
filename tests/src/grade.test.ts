@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
-import yaml from "js-yaml";
+import { dump, load } from "js-yaml";
 import { format } from "prettier";
 import {
   applyGradeSubmission,
@@ -175,7 +175,7 @@ describe("grade target filters", () => {
     writeFileSync(trashedPath, markdown, "utf8");
     writeFileSync(
       join(catalogRoot, "dct-test.yaml"),
-      yaml.dump({
+      dump({
         id: "prj-0001:dct-test",
         type: "project",
         status: "draft",
@@ -348,7 +348,7 @@ describe("grade target filters", () => {
       now: new Date("2026-08-31T00:00:00.000Z"),
     });
     const parts = graded.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-    const frontmatter = yaml.load(parts?.[1] ?? "") as Record<string, unknown>;
+    const frontmatter = load(parts?.[1] ?? "") as Record<string, unknown>;
     const state: GradePipelineState = {
       version: 1,
       project_id: "prj-0001",
@@ -467,7 +467,7 @@ describe("grade submission", () => {
 });
 
 describe("common grade rubric", () => {
-  const common = yaml.load(
+  const common = load(
     readFileSync("docs/ja/specdojo/defaults/pm-review-viewpoints.yaml", "utf8"),
   ) as ReviewViewpointsDoc & { categories: { id: string }[] };
 
@@ -527,7 +527,7 @@ describe("grade markdown update", () => {
     expect(formatted).toContain("architecture: { score: 100 }");
     expect(formatted).toContain("vp-qe-kata-conformance: { level: 4, score: 100 }");
     expect(formatted).toContain("findings: { blocker: 0, major: 0, minor: 1, note: 0 }");
-    const frontmatterOf = (value: string) => yaml.load(value.match(/^---\n([\s\S]*?)\n---/)![1]);
+    const frontmatterOf = (value: string) => load(value.match(/^---\n([\s\S]*?)\n---/)![1]);
     expect(frontmatterOf(formatted)).toEqual(frontmatterOf(first));
     expect(validateGradedMarkdown(formatted, submission.documents[0].path)).toEqual([]);
     expect(
@@ -1507,7 +1507,7 @@ LEVEL: 4
     const resultsDirectory = mkdtempSync(join(tmpdir(), "specdojo-grade-results-"));
     writeFileSync(
       join(resultsDirectory, "specdojo.previous-findings-test.yaml"),
-      yaml.dump({
+      dump({
         version: 1,
         document: "specdojo:previous-findings-test",
         path,
@@ -1845,7 +1845,7 @@ DC-002: unsatisfied: 承認時点の記載がない。
     );
 
     const grade = (
-      yaml.load(graded.content.match(/^---\n([\s\S]*?)\n---/)![1]) as {
+      load(graded.content.match(/^---\n([\s\S]*?)\n---/)![1]) as {
         specdojo: { grade: { content_hash: string } };
       }
     ).specdojo.grade;
@@ -1926,7 +1926,7 @@ DC-002: unsatisfied: 承認時点の記載がない。
       expect(detail).toMatch(
         /^# yaml-language-server: \$schema=(?:\.\.\/)+docs\/specdojo\/schemas\/v1\/grade-done-criteria\.schema\.yaml\n/,
       );
-      expect(yaml.load(detail.split("\n").slice(1).join("\n"))).toMatchObject({
+      expect(load(detail.split("\n").slice(1).join("\n"))).toMatchObject({
         id: "prj-0001:example-doc-grade-criteria",
         summary: { satisfied: 1, unsatisfied: 1, total: 2 },
       });
@@ -2027,7 +2027,7 @@ DC-002: unsatisfied: 承認時点の記載がない。
         resultsDirectory,
       });
 
-      const stored = yaml.load(
+      const stored = load(
         readFileSync(join(resultsDirectory, "prj-0001.example-doc.yaml"), "utf8")
           .split("\n")
           .slice(1)

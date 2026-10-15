@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import { viewpointAppliesToDocument } from "./review-plan.js";
@@ -239,7 +239,7 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
 export function parseMarkdown(content: string, path: string): MarkdownDocument {
   const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/);
   if (!match) throw new Error(`${path}: Markdown frontmatter is required`);
-  const parsed = yaml.load(match[1]);
+  const parsed = load(match[1]);
   if (!isRecord(parsed) || !isRecord(parsed.specdojo)) {
     throw new Error(`${path}: frontmatter must contain a specdojo mapping`);
   }
@@ -257,25 +257,28 @@ function serializeGrade(grade: Record<string, unknown>): string {
     doneCriteria && isRecord(doneCriteria.unsatisfied) ? doneCriteria.unsatisfied : undefined;
   if (doneCriteria && unsatisfied) doneCriteria.unsatisfied = GRADE_UNSATISFIED_PLACEHOLDER;
 
-  let dumped = yaml
-    .dump(
-      { grade: gradeForDump },
-      // categories / viewpoints の各値だけをフロー化する。grade 全体や各 collection
-      // までフロー化すると一行が長くなり、差分も読みづらくなる。
-      { lineWidth: 120, noRefs: true, flowLevel: 3, quotingType: '"' },
-    )
-    .trimEnd();
+  let dumped = dump(
+    { grade: gradeForDump },
+    // categories / viewpoints の各値だけをフロー化する。grade 全体や各 collection
+    // までフロー化すると一行が長くなり、差分も読みづらくなる。
+    { lineWidth: 120, noRefs: true, flowLevel: 3, quoteStyle: "double" },
+  ).trimEnd();
   if (findings) {
-    const inlineFindings = yaml
-      .dump(findings, { lineWidth: -1, noRefs: true, flowLevel: 0 })
-      .trimEnd();
+    const inlineFindings = dump(findings, {
+      lineWidth: -1,
+      noRefs: true,
+      flowLevel: 0,
+    }).trimEnd();
     dumped = dumped.replace(GRADE_FINDINGS_PLACEHOLDER, inlineFindings);
   }
   if (unsatisfied) {
     // 未充足条件は viewpoints と同じく「条件ごとに1行、値はフロー」で記録する。
     // 条件数が増えても1行が伸びず、Prettier の整形後も同じ形を保つ。
-    const blockUnsatisfied = yaml
-      .dump(unsatisfied, { lineWidth: -1, noRefs: true, flowLevel: 1 })
+    const blockUnsatisfied = dump(unsatisfied, {
+      lineWidth: -1,
+      noRefs: true,
+      flowLevel: 1,
+    })
       .trimEnd()
       .split("\n")
       .map((line) => `      ${line}`)
@@ -295,7 +298,7 @@ export function serializeMarkdown(document: MarkdownDocument): string {
   const specdojo = isRecord(dataForDump.specdojo) ? dataForDump.specdojo : undefined;
   const grade = specdojo && isRecord(specdojo.grade) ? specdojo.grade : undefined;
   if (!specdojo || !grade) {
-    return `---\n${yaml.dump(dataForDump, { lineWidth: 120, noRefs: true }).trimEnd()}\n---\n\n${document.body.replace(/^\n+/, "")}`;
+    return `---\n${dump(dataForDump, { lineWidth: 120, noRefs: true }).trimEnd()}\n---\n\n${document.body.replace(/^\n+/, "")}`;
   }
 
   specdojo.grade = GRADE_PLACEHOLDER;
@@ -303,8 +306,7 @@ export function serializeMarkdown(document: MarkdownDocument): string {
     .split("\n")
     .map((line) => `  ${line}`)
     .join("\n");
-  const frontmatter = yaml
-    .dump(dataForDump, { lineWidth: 120, noRefs: true })
+  const frontmatter = dump(dataForDump, { lineWidth: 120, noRefs: true })
     .trimEnd()
     .replace(`  grade: ${GRADE_PLACEHOLDER}`, gradeBlock);
   return `---\n${frontmatter}\n---\n\n${document.body.replace(/^\n+/, "")}`;
@@ -336,7 +338,7 @@ export function legacyInlineContentHash(document: MarkdownDocument): string {
   const specdojo = isRecord(cloned.specdojo) ? cloned.specdojo : {};
   delete specdojo.grade;
   return createHash("sha256")
-    .update(yaml.dump(cloned, { sortKeys: true, noRefs: true, lineWidth: -1 }))
+    .update(dump(cloned, { sortKeys: true, noRefs: true, lineWidth: -1 }))
     .update("\n")
     .update(normalizeContentForHash(withoutFindingComments(document.body)))
     .digest("hex");

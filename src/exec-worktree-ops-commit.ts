@@ -8,7 +8,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
-import { load } from "js-yaml";
+import { load } from "./yaml.js";
 import {
   deliverableDocPath,
   parsePlanTaskIdentity,

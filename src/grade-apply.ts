@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
-import yaml from "js-yaml";
+import { dump } from "./yaml.js";
 import { extractJsonText } from "./agent-response.js";
 import {
   CRITERION_ID_RE,
@@ -706,7 +706,7 @@ export function renderDoneCriteriaDetail(
   const schemaRef = relative(dirname(detailPath), resolveSpecdojoPath(DONE_CRITERIA_SCHEMA))
     .split(sep)
     .join("/");
-  return `# yaml-language-server: $schema=${schemaRef}\n${yaml.dump(detail, { lineWidth: 120, noRefs: true, quotingType: '"' })}`;
+  return `# yaml-language-server: $schema=${schemaRef}\n${dump(detail, { lineWidth: 120, noRefs: true, quoteStyle: "double" })}`;
 }
 
 export function applyGradeSubmission(opts: {

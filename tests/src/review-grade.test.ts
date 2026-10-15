@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import type { GradeResult } from "../../src/grade-result.js";
 import { gradeContentHash } from "../../src/grade-result.js";
 import {
@@ -53,7 +53,7 @@ function gradeResult(overrides: Partial<GradeResult> = {}): GradeResult {
 }
 
 function sidecar(result: GradeResult): string {
-  return yaml.dump(result);
+  return dump(result);
 }
 
 describe("classifyReviewGrade", () => {

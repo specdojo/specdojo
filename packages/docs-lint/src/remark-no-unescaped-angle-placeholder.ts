@@ -1,7 +1,7 @@
 import type { Plugin } from "unified";
 import type { Root, Html, Yaml } from "mdast";
 import type { VFile } from "vfile";
-import { load } from "js-yaml";
+import { load } from "./yaml.js";
 
 // 実在する HTML 要素名（許可リスト）。
 // remark は本文中の `<xxx>` を、tag 名が HTML 文法に合致すると `html` ノードとして解釈する。

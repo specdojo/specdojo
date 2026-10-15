@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import type {
   DctDeliverableItem,
@@ -56,7 +56,7 @@ function buildCatalogGraph(catalogPath: string): Map<string, CatalogNode> {
     const filePath = join(catalogPath, f);
     let doc: DctDoc;
     try {
-      doc = yaml.load(readFileSync(filePath, "utf8")) as DctDoc;
+      doc = load(readFileSync(filePath, "utf8")) as DctDoc;
     } catch {
       continue;
     }

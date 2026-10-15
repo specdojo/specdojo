@@ -3,7 +3,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { load } from "js-yaml";
+import { load } from "./yaml.js";
 import { globFilesSync } from "./glob-files.js";
 import { resolveSpecdojoAssetPath } from "./specdojo-package.js";
 

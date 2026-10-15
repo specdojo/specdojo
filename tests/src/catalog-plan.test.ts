@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import {
   buildPlanSkeleton,
   diffPlanText,
@@ -303,7 +303,7 @@ describe("resolvePlanInputs", () => {
   async function writeDataFlowCatalog(catalogPath: string, localIds: string[]): Promise<void> {
     await writeFile(
       join(catalogPath, "dct-data-flow.yaml"),
-      yaml.dump({
+      dump({
         id: "prj-0001:dct-data-flow",
         type: "project",
         status: "draft",
@@ -350,7 +350,7 @@ describe("resolvePlanInputs", () => {
     await withCatalog(async ({ root, catalogPath }) => {
       await writeFile(
         join(catalogPath, "dct-data-flow.yaml"),
-        yaml.dump({
+        dump({
           id: "prj-0001:dct-data-flow",
           type: "project",
           status: "draft",
