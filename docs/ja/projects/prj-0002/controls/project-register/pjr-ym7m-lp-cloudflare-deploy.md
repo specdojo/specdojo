@@ -27,24 +27,44 @@ specdojo-lp を Cloudflare Workers の静的アセットとして配置する設
 - `specdojo-lp` は GitHub flow で運用し、`main` を公開している状態とする。今の作業は `feature/lp-v1` にある。
 - 本番の公開（`main` への取り込みと配置）は、specdojo 0.3.0 の npm への公開を待つ。
 
+### 1.2. 確定した設定（2026-10-14）
+
+作業内容 No 1〜5・7 で設定し、orchestrator が確かめた事実。TSD はここに書いた事実だけをもとに書く。
+
+- リポジトリの設定（specdojo-lp）
+  - `wrangler` 4.x を devDependencies に入れた。
+  - `wrangler.jsonc` に `$schema`・`name: "specdojo-lp"`・`compatibility_date: "2026-10-14"`・`assets.directory: "./dist"`・`previews: {}` を書いた。`previews` は `npx wrangler preview` に必要で、空なら本番と同じ設定を使う。`assets.not_found_handling` は書いておらず、存在しないパスには 404 が返る。
+  - `wrangler dev` が作る `.wrangler/` を `.gitignore` と ESLint の対象から外した。
+  - 手元では `npm run build` の後に `npx wrangler dev` で表示を確かめられる。
+- Workers Builds（ダッシュボードで利用者が設定）
+  - GitHub の `specdojo/specdojo-lp` を連携した。Build command は `npm run build`、Deploy command は `npx wrangler deploy`、本番のブランチは `main`。
+  - Settings > Build > Branch control で Enable Preview Builds を有効にした。本番以外のブランチへの push で `npx wrangler preview`（open beta）が動き、ブランチ名の `/` を `-` にした名前のプレビューができる。プレビューの URL は `<プレビュー名>-specdojo-lp.<アカウントのサブドメイン>.workers.dev`。
+  - Node.js の版は指定しておらず、Workers Builds の既定の 24.18.0 で動く。固定する場合は `NODE_VERSION` か `.node-version` を使う。
+- 独自ドメイン（ダッシュボードで利用者が設定）
+  - Workers の Custom Domains で `specdojo.org` を割り当てた。証明書は自動で発行された。
+  - ゾーンの SSL/TLS > Edge Certificates で Always Use HTTPS を有効にし、http は 301 で https へ転送される。
+  - `www` は、proxied な `A` レコード（`192.0.2.0`）と、Redirect Rule（`https://www.*` を `https://${1}` へ 301、クエリを保つ）でルートへ転送する。http の `www` は 2 回の転送でルートに着く。
+- 起きたことと対処
+  - GitHub の `main` に LP のファイルがない間は、本番のビルドが `package.json` を見つけられずに失敗した。`main` へ取り込んで解消した。
+  - `previews` のブロックがないと、プレビューのビルドが失敗した。空の `previews` を加えて解消した。
+  - DNS のレコードを作る前に名前を引くと、存在しないという結果が最大 30 分（SOA の negative TTL）残り、その間は手元から `www` を引けない。
+
 ## 2. 完了条件
 
-- 配置の形: Cloudflare Workers の静的アセットとする（Astro の公式ガイドの推奨。利用者が決めた、2026-10-12）。
-- `specdojo-lp` に次がある。`package.json` の変更は exec の保護の対象のため、orchestrator が行う。
-  - `wrangler` を devDependencies に入れている。
-  - `wrangler.jsonc` に、`name`・`compatibility_date`・`assets.directory`（`./dist`）を書いている。404 のページを用意する場合は `assets.not_found_handling` も書く。
-  - 手元で `npm run build` の後に `npx wrangler dev` を実行し、LP が表示されることを確かめている。
-- Cloudflare のダッシュボード（利用者が行う）で、`specdojo/specdojo-lp` を Workers Builds に連携している。
-  - ビルドのコマンドは `npm run build`、配置のコマンドは `npx wrangler deploy` とする。
-  - 本番のブランチは `main` とする。`feature/lp-v1` などの本番以外のブランチは、プレビューとして配置されるようにし、プレビューの URL で LP を確かめている。
-  - ビルドで使う Node.js の版を 22.13.0 以上にしている（指定の方法は、設定するときに Cloudflare の公式の文書で確かめる）。
-- 独自ドメインは `specdojo.org` を使う（利用者が決めた、2026-10-12）。Workers の Custom Domains で LP に割り当て、本番の URL として表示を確かめる。DNS とドメインの設定は利用者が行う。
-- 認証情報（API トークンなど）をリポジトリや個票に書かない。Cloudflare への認証は、利用者がダッシュボードや `wrangler login` で行う。
-- 設定の内容を、`specdojo-lp` の `tsd-<term>`（例: `tsd-cloudflare-workers.md`）にまとめ、[[prj-0002:pjr-4zsn-lp-tech-stack-tsd]] の `tsd-index` から参照できるようにしている。
-- `tsd-index` を、PJR-4ZSN の後の変化に合わせて直している。
-  - devDependencies に加えた `wrangler`（4.x）を載せている。
-  - Workers Builds のビルドが既定の Node.js 24.18.0 で動くことを、ランタイムの行の `補足` に書いている。
-- 本番の公開は 0.3.0 の公開の後とし、`main` へ取り込んで配置したら、本番の URL で表示を確かめている。
+配置の形の決定、`wrangler` の導入、Workers Builds への連携、プレビューと本番での確認、独自ドメインの設定は達成済みである（作業内容 No 1〜5・7）。本節には、残りの TSD の作成の条件だけを置く。
+
+- `specdojo-lp` の `docs/ja/product/030-architecture/020-infrastructure/tsd-cloudflare-workers.md` がある。frontmatter は `specdojo:` 名前空間の下に `id: tsd-cloudflare-workers`・`type: architecture`・`status: draft`・`part_of: [tsd-index]`・`rulebook: specdojo:tsd-rulebook` を持つ。
+- tsd-rulebook の観点（概要・採用理由、選定・バージョン、設定・セットアップ手順、動作確認、運用上の注意）を、1.2. の事実だけで書いている。
+  - 設定・セットアップ手順に、`wrangler.jsonc` の内容と、ダッシュボードで行う設定（Workers Builds、プレビュー、Custom Domains、Always Use HTTPS、`www` の転送）を書いている。
+  - 動作確認に、`wrangler dev` の手順と、本番・プレビュー・http・`www` で期待する応答（200・404・301 と転送先）を書いている。
+  - 運用上の注意に、1.2. の「起きたことと対処」を書いている。
+- アカウント ID、ダッシュボードの URL、API トークン、アカウントのサブドメインを書かない。`workers.dev` の URL は `<アカウントのサブドメイン>` のような置き換えの形で書く。
+- `tsd-index.md` を次のように直している。
+  - ホスティングの行の `補足` から `tsd-cloudflare-workers.md` へリンクしている。
+  - `wrangler` 4.x の行（区分は配置）を加えている。
+  - ランタイムの行の `補足` に、Workers Builds のビルドが既定の Node.js 24.18.0 で動くことを書いている。
+- `wrangler.jsonc`・`package.json`・ソースコードは変えない。
+- `npm run format:check` が通る。変更は `specdojo-lp` の `feature/lp-v1` へ統合される。
 
 ## 3. 作業内容
 
