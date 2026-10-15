@@ -74,3 +74,16 @@
       from: "agent exited with non-zero code: parent validation failed: lint-ts, typecheck, test-unit"
       to: "-"
   previous_event_id: reg_141fa4054a97448fb68861083864db31
+- v: 1
+  id: reg_66e921a3d2ed493f86f2fad7f35ddd6a
+  ts: "2026-10-15T11:31:19Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f47e658800464466b02c955b32eda715
