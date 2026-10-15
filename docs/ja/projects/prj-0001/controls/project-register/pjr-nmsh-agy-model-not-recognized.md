@@ -42,7 +42,7 @@ agy-expert-executor が --model gemini-3.1-pro-high を「既知のモデルで�
 
 - 2026-10-15、利用者の承認を得て、orchestrator が `feature/prj-0001/agy-model-ids` で `.specdojo/exec-defaults.yaml` の 4 か所を置き換え、develop へ統合した（c3394b157、merge d9b8f2b6d）。c3394b157 の commit メッセージの `Refs:` は誤って PJR-VGNG と書いたが、本件の対応である。
 - 置き換えた 3 つの model（`gemini-3.8-flash-high`・`claude-sonnet-5-5-medium`・`claude-opus-5-5-high`）は、agy から起動して応答が返ることを確かめた。
-- 残り: 2026-10-16 01:00 の成果物の grade が統合まで通ることを確かめて close する。
+- 2026-10-16 01:00 の成果物の grade（JBR-grade-deliverable-14d97cad9f51）は `succeeded`、review の verdict は `complete-with-findings` で、6 文書の評価結果が統合された（2493a349f）。`invalid model selection` は 0 件だった。
 
 ## 5. 関連ドキュメント
 
