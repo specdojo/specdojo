@@ -3,23 +3,60 @@ version: 1
 document: specdojo:opr-backup-restore-sample
 path: docs/ja/specdojo/samples/opr-backup-restore-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 57
-graded_at: "2026-09-05T14:44:24.554Z"
-graded_by: gemma-expert-executor
+score: 53
+graded_at: "2026-10-15T21:40:00.919Z"
+graded_by: agy-expert-executor
 content_hash: b78af64578475fe1346283855de2fe324628f7a83cc5d434b08e4fd8254b98dc
 categories:
-  consistency:
-    score: 25
+  purpose:
+    score: 50
+  operations:
+    score: 69
+  planning:
+    score: 58
+  business:
+    score: 50
+  architecture:
+    score: 83
   usability:
     score: 75
-  architecture:
-    score: 100
+  implementation:
+    score: 63
   quality:
-    score: 38
+    score: 42
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
     level: 2
     score: 50
   vp-arc-conciseness:
@@ -28,6 +65,15 @@ viewpoints:
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -38,9 +84,18 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,43 +103,191 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 3
-  major: 2
-  minor: 1
+  major: 14
+  minor: 5
   note: 0
 findings:
-  - id: F003
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: Frontmatter の必須項目 `title` が不足している。
-    anchor: ""
-  - id: F004
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 5
-    message: "`opr-rulebook` で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バッチ再実行、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線）がすべて欠落している。"
-    anchor: ""
-  - id: F005
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 5
-    message: 見出し番号が `## 1` となっているが、ルール規定およびテンプレートの順序に従い `## 6` とすべきである。
-    anchor: ""
-  - id: F006
-    severity: major
-    rule: vp-ux-readability
-    line: 5
-    message: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
-    anchor: ""
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 6
-    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
-    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    rule: vp-po-purpose-alignment
+    line: 1
+    anchor: "# 運用手順: バックアップ確認・リストア サンプル"
+    message: >-
+      The document lacks a dedicated purpose and overview section, failing to explain specific operational objectives,
+      scope, and rationale aligned with the parent operational design.
+    message_ja: ドキュメントには専用の目的および概要セクションが不足しており、上位の運用設計に沿った具体的な運用目的、範囲、および根拠が説明されていません。
   - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 12
+    anchor: "- 所要時間を記録し、RTO/RPO達成可否を判定する"
+    message: >-
+      The document lacks explicit decision criteria, escalation triggers, and responsible roles for PO sign-off when
+      RTO/RPO targets are not met during drills.
+    message_ja: ドキュメントには、演習中にRTO/RPOターゲットが満たされない場合の明示的な決定基準、エスカレーションのトリガー、およびPOの承認に関する責任済みロールが不足しています。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# 運用手順: バックアップ確認・リストア サンプル"
+    message: The document does not specify human approval responsibility or publication accountability for operational release.
+    message_ja: ドキュメントには、運用のリリースにおける人間の承認責任や公開責任が明記されていません。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: >-
+      Operational tasks lack assigned roles, detailed steps, dependencies, and explicit completion conditions, making
+      task breakdown and estimation infeasible.
+    message_ja: 運用タスクには割り当てられたロール、詳細なステップ、依存関係、および明示的な完了条件が不足しており、タスクの分解と見積もりが不可能です。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: >-
+      Risks and dependencies such as staging environment readiness, data volume growth, and failure escalation to
+      schedule or project risks are not identified.
+    message_ja: ステージング環境の準備状況、データ量の増加、およびスケジュールやプロジェクトのリスクへの失敗時のエスカレーションなどのリスクと依存関係が特定されていません。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 9
+    anchor: "- 失敗があればチケット起票（P2）"
+    message: >-
+      Reporting destinations, responsible roles, and tracking mechanisms for drill reports and backup failure tickets
+      are not clearly specified.
+    message_ja: 演習レポートおよびバックアップ失敗チケットの報告先、責任者、および追跡メカニズムが明確に指定されていません。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: >-
+      The document does not describe the business value, impact of data loss or unavailability, or specific business
+      continuity success criteria addressed by backup and restore procedures.
+    message_ja: ドキュメントには、バックアップおよびリストア手順によって対処されるビジネス価値、データ紛失や利用不能の影響、または具体的なビジネス継続性の成功基準が記述されていません。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: >-
+      Target scope, excluded resources, and detailed acceptance conditions for backup verification and restore drills
+      are not defined.
+    message_ja: バックアップ検証およびリストア演習の対象範囲、除外されるリソース、および詳細な受け入れ条件が定義されていません。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: >-
+      Stakeholders, operators, reviewers, and approvers involved in the backup verification and restore drill process
+      are entirely omitted.
+    message_ja: バックアップ検証およびリストア演習プロセスに関与するステークホルダー、オペレーター、レビュアー、および承認者が完全に省略されています。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: >-
+      Technical constraints, storage locations, backup and restore tooling, and environment prerequisites such as data
+      masking or capacity are not described.
+    message_ja: 技術的な制約、ストレージの場所、バックアップおよびリストアのツール、およびデータマスキングや容量などの環境の前提条件が記述されていません。
+  - id: F011
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: >-
+      Operational commands, script parameters, input/output specifications, and step-by-step procedures required for
+      execution are completely missing.
+    message_ja: 実行に必要な運用コマンド、スクリプトのパラメータ、入出力仕様、およびステップバイステップの手順が完全に欠落しています。
+  - id: F012
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 12
+    anchor: "- 所要時間を記録し、RTO/RPO達成可否を判定する"
+    message: >-
+      The impact of staging restores on existing staging data, ongoing testing, and schema compatibility is not
+      evaluated.
+    message_ja: ステージング環境でのリストアが、既存のステージングデータ、進行中のテスト、およびスキーマの互換性に与える影響が評価されていません。
+  - id: F013
+    severity: major
+    rule: vp-dev-testability
+    line: 12
+    anchor: "- 所要時間を記録し、RTO/RPO達成可否を判定する"
+    message: >-
+      Specific verification commands, test queries, expected results, and error-handling procedures for post-restore
+      validation are missing.
+    message_ja: リストア後の検証のための具体的な検証コマンド、テストクエリ、期待される結果、およびエラーハンドリングの手順が欠落しています。
+  - id: F014
     severity: minor
     rule: vp-qe-verifiability
     line: 14
+    anchor: "証跡:"
     message: 「主要テーブルの件数/参照整合を確認」などの判定基準が具体的に記述されておらず、検証不能である。
+    message_ja: 「主要テーブルの件数/参照整合を確認」などの判定基準が具体的に記述されておらず、検証不能である。
+  - id: F015
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# 運用手順: バックアップ確認・リストア サンプル"
+    message: Frontmatter の必須項目 `title` が不足している。
+    message_ja: Frontmatter の必須項目 `title` が不足している。
+  - id: F016
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: "`opr-rulebook` で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バッチ再実行、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線）がすべて欠落している。"
+    message_ja: "`opr-rulebook` で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バッチ再実行、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線）がすべて欠落している。"
+  - id: F017
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: 見出し番号が `## 1` となっているが、ルール規定およびテンプレートの順序に従い `## 6` とすべきである。
+    message_ja: 見出し番号が `## 1` となっているが、ルール規定およびテンプレートの順序に従い `## 6` とすべきである。
+  - id: F018
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 6
     anchor: ""
+    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
+    message_ja: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
+  - id: F019
+    severity: major
+    rule: vp-ux-readability
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+    message_ja: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+  - id: F020
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 15
+    anchor: ""
+    message: >-
+      The label '証跡:' is formatted as plain text rather than a standardized Markdown heading, causing structural
+      inconsistency.
+    message_ja: ラベル '証跡:' が標準化されたMarkdownの見出しではなくプレーンテキストとしてフォーマットされており、構造的な不整合が生じています。
+  - id: F021
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 運用手順: バックアップ確認・リストア サンプル"
+    message: >-
+      The document remains in draft status without specifying prerequisites, unresolved issues, or approval criteria
+      required for transition to ready.
+    message_ja: ドキュメントはドラフト状態のままであり、readyへの移行に必要な前提条件、未解決の問題、または承認基準が指定されていません。
+  - id: F022
+    severity: major
+    rule: vp-ops-operability
+    line: 5
+    anchor: "## 1. バックアップ確認・リストア手順（演習含む）"
+    message: >-
+      Information for operational maintenance, change management, and escalation contacts for backup and restore
+      procedures is missing.
+    message_ja: バックアップおよびリストア手順の運用保守、変更管理、およびエスカレーション先に関する情報が欠落しています。

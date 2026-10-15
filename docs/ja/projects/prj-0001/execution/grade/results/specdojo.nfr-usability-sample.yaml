@@ -3,44 +3,99 @@ version: 1
 document: specdojo:nfr-usability-sample
 path: docs/ja/specdojo/samples/nfr-usability-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 60
-graded_at: "2026-09-05T12:03:16.338Z"
-graded_by: gemma-expert-executor
+score: 70
+graded_at: "2026-10-15T21:18:10.654Z"
+graded_by: agy-expert-executor
 content_hash: 90c81af05e0943a5deb78593f6bcc2b687337fd253d8c16c314b2c6e11346d41
 categories:
-  consistency:
-    score: 63
+  purpose:
+    score: 75
+  operations:
+    score: 81
+  planning:
+    score: 75
+  business:
+    score: 67
+  architecture:
+    score: 92
   usability:
     score: 75
-  architecture:
-    score: 100
+  implementation:
+    score: 75
   quality:
-    score: 25
+    score: 58
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,31 +103,173 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 4
-  minor: 0
+  major: 5
+  minor: 15
   note: 0
 findings:
-  - id: F004
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    message: 具体的な記述例（完成例）ではなく「記述内容の案内」になっており、サンプルとしての役割を果たしていない。
-    anchor: ""
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 5
-    message: ルールブックで必須と定義されている「操作性要件一覧」「測定・検証方法」「関連ドキュメント導線」の見出しと内容が欠落している。
-    anchor: ""
-  - id: F003
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 5
-    message: "ルールブックで定義された必須の見出し構成（## 1. 概要... ## 5. 関連ドキュメント導線）に従っておらず、形式的に不適合である。"
-    anchor: ""
   - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、使いやすさと誤操作防止を定義するための最小サンプルである。
+    message: >-
+      The document states it is for a candy store sales management system, but fails to clarify the project purpose,
+      expected outcomes, or why specific usability targets are needed in alignment with higher-level goals.
+    message_ja: ドキュメントには菓子店の販売管理システム用であると記載されていますが、プロジェクトの目的、期待される成果、または上位目標に沿って特定のユーザビリティ目標が必要である理由が明確にされていません。
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Unresolved issues in section 5 lack specific decision owners, impact scope, prerequisites, and concrete next
+      actions required for PO evaluation.
+    message_ja: セクション5の未解決の問題には、POによる評価に必要な具体的な意思決定者、影響範囲、前提条件、および具体的な次のアクションが不足しています。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# [非機能要件 / 操作性](../rulebooks/nfr-usability-rulebook.md) サンプル"
+    message: >-
+      The document does not clearly designate human PO approval responsibility or review gates before publication or
+      readiness.
+    message_ja: ドキュメントには、人のPOによる承認責任や、公開または準備完了前のレビューゲートが明確に指定されていません。
+  - id: F004
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Usability verification activities, work units, completion conditions, and responsible role codes are not broken
+      down to a feasible level for planning and estimation.
+    message_ja: ユーザビリティの検証活動、作業単位、完了条件、および責任者のロールコードが、計画と見積もりが可能なレベルまで細分化されていません。
+  - id: F005
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      Dependencies on downstream deliverables (such as UI specifications or test cases) and associated schedule risks
+      are not identified.
+    message_ja: 後続の成果物（UI仕様書やテストケースなど）への依存関係と、それに伴うスケジュールのリスクが特定されていません。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Items requiring tracking such as unresolved requirements details lack reporting targets, responsible role codes,
+      and tracking policies.
+    message_ja: 未解決の要件の詳細など、追跡が必要な項目について、報告対象、責任者のロールコード、および追跡ポリシーが不足しています。
+  - id: F007
+    severity: minor
+    rule: vp-ba-business-value
+    line: 5
+    anchor: 本書は、使いやすさと誤操作防止を定義するための最小サンプルである。
+    message: >-
+      The document does not describe the specific business problems, user personas, or expected business value and
+      effects achieved by meeting usability requirements.
+    message_ja: ドキュメントには、具体的なビジネス上の課題、ユーザーペルソナ、またはユーザビリティ要件を満たすことで得られる期待されるビジネス価値や効果が記載されていません。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Usability requirements, acceptance criteria, and explicit in-scope/out-of-scope boundaries from a user perspective
+      are completely missing and only abstract topic names are listed.
+    message_ja: ユーザビリティ要件、受け入れ基準、およびユーザーの視点からの明確なインスコープ/アウトオブスコープの境界が完全に欠落しており、抽象的なトピック名のみがリストされています。
+  - id: F009
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: Specific stakeholders, user profiles, usage contexts, and approvers are not clearly specified.
+    message_ja: 特定のステークホルダー、ユーザープロファイル、使用コンテキスト、および承認者が明確に指定されていません。
+  - id: F010
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      Technical constraints and prerequisites, such as target devices, supported browsers, screen resolutions, or client
+      environments, are not stated.
+    message_ja: 対象デバイス、サポートされているブラウザ、画面解像度、またはクライアント環境などの技術的な制約と前提条件が記載されていません。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      Section 3 and Section 4 duplicate the same high-level bullet points and table contents without providing distinct
+      informational value.
+    message_ja: セクション3とセクション4は、異なる情報価値を提供することなく、同じハイレベルな箇条書きとテーブルの内容を重複させています。
+  - id: F012
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Implementation constraints and done criteria for usability (e.g., required confirmation dialogs, error message
+      patterns) are missing.
+    message_ja: ユーザビリティの実装制約と完了基準（例：必要な確認ダイアログやエラーメッセージのパターン）が不足しています。
+  - id: F013
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: The impact of changing usability criteria on downstream deliverables and UI designs is not identified.
+    message_ja: ユーザビリティ基準の変更が後続の成果物やUIデザインに与える影響が特定されていません。
+  - id: F014
+    severity: minor
+    rule: vp-dev-testability
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      The document does not describe test procedures, verification methods, or tools needed to evaluate compliance with
+      usability requirements.
+    message_ja: ドキュメントには、ユーザビリティ要件への適合性を評価するために必要なテスト手順、検証方法、またはツールが記載されていません。
+  - id: F015
     severity: major
     rule: vp-qe-verifiability
     line: 18
+    anchor: "## 4. 最小記述例"
     message: 指標名のみが記載されており、判定基準となる具体的な数値や状態が定義されていない。
-    anchor: ""
+    message_ja: 指標名のみが記載されており、判定基準となる具体的な数値や状態が定義されていない。
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 5
+    anchor: 本書は、使いやすさと誤操作防止を定義するための最小サンプルである。
+    message: ルールブックで必須と定義されている「操作性要件一覧」「測定・検証方法」「関連ドキュメント導線」の見出しと内容が欠落している。
+    message_ja: ルールブックで必須と定義されている「操作性要件一覧」「測定・検証方法」「関連ドキュメント導線」の見出しと内容が欠落している。
+  - id: F017
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 5
+    anchor: 本書は、使いやすさと誤操作防止を定義するための最小サンプルである。
+    message: "ルールブックで定義された必須の見出し構成（## 1. 概要... ## 5. 関連ドキュメント導線）に従っておらず、形式的に不適合である。"
+    message_ja: "ルールブックで定義された必須の見出し構成（## 1. 概要... ## 5. 関連ドキュメント導線）に従っておらず、形式的に不適合である。"
+  - id: F018
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    anchor: "# [非機能要件 / 操作性](../rulebooks/nfr-usability-rulebook.md) サンプル"
+    message: 具体的な記述例（完成例）ではなく「記述内容の案内」になっており、サンプルとしての役割を果たしていない。
+    message_ja: 具体的な記述例（完成例）ではなく「記述内容の案内」になっており、サンプルとしての役割を果たしていない。
+  - id: F019
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: Conditions and reviewers required to promote the sample from draft to ready status are not specified.
+    message_ja: サンプルをdraftからreadyの状態に昇格させるために必要な条件とレビュアーが指定されていません。
+  - id: F020
+    severity: minor
+    rule: vp-ops-operability
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Information for ongoing maintenance, change management, and responsible role codes for updating the document is
+      not documented.
+    message_ja: 継続的なメンテナンス、変更管理、およびドキュメントを更新するための責任者のロールコードに関する情報が文書化されていません。

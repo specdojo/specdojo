@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-0946a04e624d",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-15T21:00:57.369Z",
+    "completed_at": "2026-10-15T21:40:32.376Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/mip-index-sample-e9c791b00c2e.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/nfr-index-sample-8756d8fcbc97.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/pipeline/nfr-maintainability-sample-8c8be7b7a882.json",
+      "status": "D"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.mip-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-maintainability-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-performance-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-reliability-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-security-safety-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.nfr-usability-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.ntp-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-access-control-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-incident-management-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-monitoring-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-access-control-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-backup-restore-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-0946a04e624d.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 19,
+    "summary": ".../pipeline/mip-index-sample-e9c791b00c2e.json    |  14 -\n .../pipeline/nfr-index-sample-8756d8fcbc97.json    |  14 -\n .../nfr-maintainability-sample-8c8be7b7a882.json   |  14 -\n .../grade/results/specdojo.mip-index-sample.yaml   | 266 ++++++++++++++++---\n .../grade/results/specdojo.nfr-index-sample.yaml   | 209 +++++++++++++--\n .../specdojo.nfr-maintainability-sample.yaml       | 260 ++++++++++++++++---\n .../results/specdojo.nfr-performance-sample.yaml   | 257 ++++++++++++++++--\n .../results/specdojo.nfr-reliability-sample.yaml   | 257 +++++++++++++++---\n .../specdojo.nfr-security-safety-sample.yaml       | 247 +++++++++++++++---\n .../results/specdojo.nfr-usability-sample.yaml     | 271 ++++++++++++++++---\n .../grade/results/specdojo.ntp-sample.yaml         |  96 +++++--\n .../specdojo.opd-access-control-sample.yaml        | 103 ++++++--\n .../specdojo.opd-incident-management-sample.yaml   | 101 ++++++--\n .../grade/results/specdojo.opd-index-sample.yaml   | 200 +++++++++++---\n .../results/specdojo.opd-monitoring-sample.yaml    |  99 +++++--\n .../grade/results/specdojo.opd-sample.yaml         | 288 ++++++++++++++++++---\n .../specdojo.opr-access-control-sample.yaml        | 251 +++++++++++++++---\n .../specdojo.opr-backup-restore-sample.yaml        | 261 ++++++++++++++++---\n 18 files changed, 2739 insertions(+), 469 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-0946a04e624d --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-0946a04e624d/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-0946a04e624d' \"$g…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-0946a04e624d --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-0946a04e624d/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-0946a04e624d' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-0946a04e624d/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-0946a04e624d/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.3.0 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-0946a04e624d project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-0946a04e624d\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/specdojo/samples/mip-index-sample.md\ndocument resume: docs/ja/specdojo/samples/mip-index-sample.md start_stage=1\ndocument complete: docs/ja/specdojo/samples/mip-index-sample.md\ndocument start: docs/ja/specdojo/samples/nfr-index-sample.md\ndocument resume: docs/ja/specdojo/samples/nfr-index-sample.md start_stage=1\ndocument complete: docs/ja/specdojo/samples/nfr-index-sample.md\ndocument start: docs/ja/specdojo/samples/nfr-maintainability-sample.md\ndocument resume: docs/ja/specdojo/samples/nfr-maintainability-sample.md start_stage=1\ndocument complete: docs/ja/specdojo/samples/nfr-maintainability-sample.md\ndocument start: docs/ja/specdojo/samples/nfr-performance-sample.md\ndocument complete: docs/ja/specdojo/samples/nfr-performance-sample.md\ndocument start: docs/ja/specdojo/samples/nfr-reliability-sample.md\ndocument complete: docs/ja/specdojo/samples/nfr-reliability-sample.md\ndocument start: docs/ja/specdojo/samples/nfr-security-safety-sample.md\ndocument complete: docs/ja/specdojo/samples/nfr-security-safety-sample.md\ndocument start: docs/ja/specdojo/samples/nfr-usability-sample.md\ndocument complete: docs/ja/specdojo/samples/nfr-usability-sample.md\ndocument start: docs/ja/specdojo/samples/ntp-sample.md\ndocument complete: docs/ja/specdojo/samples/ntp-sample.md\ndocument start: docs/ja/specdojo/samples/opd-access-control-sample.md\ndocument complete: docs/ja/specdojo/samples/opd-access-control-sample.md\ndocument start: docs/ja/specdojo/samples/opd-incident-management-sample.md\ndocument complete: docs/ja/specdojo/samples/opd-incident-management-sample.md\ndocument start: docs/ja/specdojo/samples/opd-index-sample.md\ndocument complete: docs/ja/specdojo/samples/opd-index-sample.md\ndocument start: docs/ja/specdojo/samples/opd-monitoring-sample.md\ndocument complete: docs/ja/specdojo/samples/opd-monitoring-sample.md\ndocument start: docs/ja/specdojo/samples/opd-sample.md\ndocument complete: docs/ja/specdojo/samples/opd-sample.md\ndocument start: docs/ja/specdojo/samples/opr-access-control-sample.md\ndocument complete: docs/ja/specdojo/samples/opr-access-control-sample.md\ndocument start: docs/ja/specdojo/samples/opr-backup-restore-sample.md\ndocument complete: docs/ja/specdojo/samples/opr-backup-restore-sample.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-0946a04e624d/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-15T21:03:35Z\tdocs/ja/specdojo/samples/mip-index-sample.md\t1\tpassed\t148\tfail\t47\t22\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:06:09Z\tdocs/ja/specdojo/samples/nfr-index-sample.md\t1\tpassed\t152\tneeds-work\t75\t16\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:08:39Z\tdocs/ja/specdojo/samples/nfr-maintainability-sample.md\t1\tpassed\t148\tfail\t61\t21\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:11:02Z\tdocs/ja/specdojo/samples/nfr-performance-sample.md\t1\tpassed\t141\tfail\t56\t20\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:13:47Z\tdocs/ja/specdojo/samples/nfr-reliability-sample.md\t1\tpassed\t163\tfail\t51\t20\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:16:15Z\tdocs/ja/specdojo/samples/nfr-security-safety-sample.md\t1\tpassed\t147\tfail\t56\t20\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:18:31Z\tdocs/ja/specdojo/samples/nfr-usability-sample.md\t1\tpassed\t134\tneeds-work\t70\t20\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:20:27Z\tdocs/ja/specdojo/samples/ntp-sample.md\t1\tpassed\t114\tneeds-work\t79\t5\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:22:39Z\tdocs/ja/specdojo/samples/opd-access-control-sample.md\t1\tpassed\t130\tneeds-work\t88\t4\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:24:47Z\tdocs/ja/specdojo/samples/opd-incident-management-sample.md\t1\tpassed\t126\tneeds-work\t88\t4\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:28:32Z\tdocs/ja/specdojo/samples/opd-index-sample.md\t1\tpassed\t223\tneeds-work\t78\t15\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:31:03Z\tdocs/ja/specdojo/samples/opd-monitoring-sample.md\t1\tpassed\t149\tneeds-work\t88\t4\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:33:41Z\tdocs/ja/specdojo/samples/opd-sample.md\t1\tpassed\t156\tfail\t49\t23\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:37:07Z\tdocs/ja/specdojo/samples/opr-access-control-sample.md\t1\tpassed\t204\tfail\t63\t20\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-15T21:40:31Z\tdocs/ja/specdojo/samples/opr-backup-restore-sample.md\t1\tpassed\t202\tfail\t53\t22\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-0946a04e624d/attempt-1/command.stdout.log",
+      "bytes": 5133,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-0946a04e624d/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}
