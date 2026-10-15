@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-nmsh-agy-model-not-recognized
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T21:56:50Z"
+  completed_at: "2026-10-15T20:38:37Z"
+  conclusion: agy の提供終了の model の ID を agy models の一覧にある ID へ置き換え、直した後の最初の定期実行の grade が統合まで通った
 ---
 
 # PJR-NMSH agy がモデル名を一時的に受け付けず grade が失敗する
