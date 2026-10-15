@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-g5s2-src-move-codemod
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:11:53Z"
   due_on: null
+  completed_at: "2026-10-15T22:26:52Z"
+  conclusion: tools/src-move-codemod.mjs を作った。対応表を入力に git mv による src と tests の移動、相対 import の書き換え、自分の位置からパスを組み立てる箇所と文字列のパスの検出を行い、--dry-run と未 commit の変更での停止を備える。検出の一覧に履歴のファイル（個票・evidence）が含まれる点は改善点として残る
 ---
 
 # PJR-G5S2 src の移動の codemod を作る

@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9f15450476244e2d858678fef8f1aff6
+- v: 1
+  id: reg_184deeffad1b4c91ad8ff113fea51397
+  ts: "2026-10-15T22:26:52Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、一時 worktree で timeline の移動を dry-run し、移動・import の書き換え・検出が意図どおりに出ることを確かめた（2026-10-16）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-16"
+    - field: conclusion
+      from: "-"
+      to: tools/src-move-codemod.mjs を作った。対応表を入力に git mv による src と tests の移動、相対 import の書き換え、自分の位置からパスを組み立てる箇所と文字列のパスの検出を行い、--dry-run と未 commit の変更での停止を備える。検出の一覧に履歴のファイル（個票・evidence）が含まれる点は改善点として残る
+  previous_event_id: reg_9afd90797d7242f7a2458f02c121e53b
