@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_01a9c3408f93402cb0f915df37ee0bd6
+  ts: "2026-10-15T22:07:49Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の提案（2026-10-16）。分割でファイルが増え、機能の境界が一覧で分かりにくくなったため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: src を機能ごとのサブディレクトリに分ける
+    - field: description
+      from: ""
+      to: src の直下の 167 ファイルを、exec・register・grade・catalog などの機能ごとのサブディレクトリへ移す方針を決める。ディレクトリの分け方、共通の処理の置き場所、ファイル名の接頭辞の扱い、依存の向きの規則、実施の順番を含む
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-16"
