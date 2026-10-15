@@ -1,0 +1,18 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 typecheck
+> tsc -b --noEmit
+
+src/job.ts(113,15): error TS2304: Cannot find name 'getPath'.
+src/job.ts(436,13): error TS2304: Cannot find name 'MaterializedJobRun'.
+src/routine.ts(263,8): error TS2304: Cannot find name 'RoutineDoc'.
+src/job.ts(113,15): error TS2304: Cannot find name 'getPath'.
+src/job.ts(436,13): error TS2304: Cannot find name 'MaterializedJobRun'.
+src/routine.ts(263,8): error TS2304: Cannot find name 'RoutineDoc'.
+
+
+--- stderr ---

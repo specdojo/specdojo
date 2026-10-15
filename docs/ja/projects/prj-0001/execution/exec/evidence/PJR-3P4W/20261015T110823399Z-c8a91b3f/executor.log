@@ -1,0 +1,12 @@
+実装を完了しました。
+
+- Job 定義解析を [job-definition.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3P4W/src/job-definition.ts)、routine 定義・スケジュール判定を [routine-definition.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3P4W/src/routine-definition.ts) へ分離。
+- 元の [job.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3P4W/src/job.ts)・[routine.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3P4W/src/routine.ts) は従来 API を明示的に再 export。
+- 全4ファイルが1,000行以下。新規循環 import なし。
+- 対象9コマンドの `--help` は分割前後で差分なし。
+- 個票とシステム設計を更新。result は executor stage 指示に従い未編集です。
+- 親 runner 担当の lint・型検査・テスト・schema 検証は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"Job・routineを責務別モジュールへ分割し、公開API・CLIヘルプ・動作確認を維持した","validations":[{"command":"npx prettier --write src/job.ts src/job-definition.ts src/routine.ts src/routine-definition.ts docs/ja/product/040-system-design/sysd-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-3p4w-job-routine-split.md","status":"passed","summary":"変更したTypeScript・Markdownを整形"},{"command":"node tmp/pjr-3p4w-help/capture-help.mjs before/after; diff -u before-*.txt after-*.txt","status":"passed","summary":"job・routineと指定サブコマンド計9件の--helpに差分なし"},{"command":"node --import tsx src/specdojo.ts job validate --project prj-0001","status":"passed","summary":"Job Definition 8件、エラー0件"},{"command":"node --import tsx src/specdojo.ts routine validate --project prj-0001","status":"passed","summary":"Routine Definition 9件、エラー0件"},{"command":"node --import tsx src/specdojo.ts routine run --project prj-0001 --id rtn-dashboard-refresh --dry-run","status":"passed","summary":"読み取り専用dry-runが成功"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"catalog検証成功。未作成文書に関する既存warningのみ"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の派生ビュー生成成功"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>
