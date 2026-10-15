@@ -2,8 +2,8 @@
 id: prj-0001:pm-communication-plan-grade-criteria
 document: prj-0001:pm-communication-plan
 path: docs/ja/projects/prj-0001/030-project-management/pm-communication-plan.md
-graded_at: "2026-09-24T16:38:32.296Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-15T16:22:32.254Z"
+graded_by: agy-expert-executor
 content_hash: 9079267db2d4ded76eaf486b2ae824cc1c2706cfb132d257fe65c54f63217edb
 summary:
   satisfied: 1
@@ -22,11 +22,15 @@ criteria:
       - PM
     viewpoint: vp-pm-control-reporting
     status: unsatisfied
-    reason: 進捗の報告先、および通常の課題・リスクについて報告者、報告先、手段、記録先を結ぶ経路が定義されていない。
+    reason: >-
+      Reporting routes for regular issues and risks connecting reporter, recipient, means, and record target are
+      missing, and progress recipients are unspecified.
   - id: DC-003
     text: 関係者ごとの情報要求・関与方針が業務観点で確認できること
     roles:
       - BA
     viewpoint: vp-ba-stakeholder-clarity
     status: unsatisfied
-    reason: 異なる情報要求を持つ代表利用者・協働組織・将来の貢献者が併合され、関係者ごとの情報要求と関与方針を確認できない。
+    reason: >-
+      Stakeholders with distinct information requirements and engagement policies are merged, preventing tracking from a
+      business perspective.
