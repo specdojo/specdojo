@@ -29,3 +29,22 @@
     - field: registered
       from: ""
       to: "2026-10-16"
+- v: 1
+  id: reg_6105500e3a9f47ca868734c27437ba21
+  ts: "2026-10-15T22:12:59Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: 利用者が orchestrator との会話で推奨案を承認した（2026-10-16）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-16"
+    - field: conclusion
+      from: "-"
+      to: src を機能ごとのサブディレクトリ（exec・register・grade・catalog・schedule・dashboard・job・routine・kata・deliverable・devcontainer・review・docs と共通の shared）へ移し、ディレクトリと重なる接頭辞を外す。移動は codemod で 1 件ずつ行い、依存の向きの規則は移した後に入れる
+  previous_event_id: reg_01a9c3408f93402cb0f915df37ee0bd6

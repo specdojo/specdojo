@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-v23p-src-subdirectory-layout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-10-15T22:07:48Z"
   due_on: null
+  completed_at: "2026-10-15T22:12:59Z"
+  conclusion: src を機能ごとのサブディレクトリ（exec・register・grade・catalog・schedule・dashboard・job・routine・kata・deliverable・devcontainer・review・docs と共通の shared）へ移し、ディレクトリと重なる接頭辞を外す。移動は codemod で 1 件ずつ行い、依存の向きの規則は移した後に入れる
 ---
 
 # PJR-V23P src を機能ごとのサブディレクトリに分ける
