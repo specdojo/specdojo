@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0002:pjr-8v7t-product-repo-develop-branch
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: BA
   registered_at: "2026-10-15T22:15:57Z"
+  completed_at: "2026-10-15T22:17:01Z"
+  conclusion: specdojo-lp と specdojo-assets に develop を置き、統合先を develop、develop から main への取り込みを人が行う
 ---
 
 # PJR-8V7T プロダクトリポジトリを develop と main で運用する

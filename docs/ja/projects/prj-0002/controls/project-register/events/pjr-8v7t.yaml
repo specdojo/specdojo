@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_1fe3999034d7434da0de411ef0075706
+  ts: "2026-10-15T22:17:01Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: agent の成果を人が確かめる前に main へ入れないため、選択肢 A を承認した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-16"
+    - field: conclusion
+      from: "-"
+      to: specdojo-lp と specdojo-assets に develop を置き、統合先を develop、develop から main への取り込みを人が行う
+  previous_event_id: reg_253c47986aa84fc1b3b1e8d555fa7e8a
