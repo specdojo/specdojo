@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:11:53Z"
@@ -41,13 +41,17 @@ specdojo:
 
 | No  | 作業                       | 担当 | 状態 | メモ                          |
 | --- | -------------------------- | ---- | ---- | ----------------------------- |
-| 1   | codemod のスクリプトを作る | DEV  | open | 移動・import の書き換え・検出 |
-| 2   | 単体テストを加える         | DEV  | open | 一時リポジトリで確かめる      |
-| 3   | 使い方を書く               | DEV  | open | -                             |
+| 1   | codemod のスクリプトを作る | DEV  | done | 移動・import の書き換え・検出 |
+| 2   | 単体テストを加える         | DEV  | done | 一時リポジトリで確かめる      |
+| 3   | 使い方を書く               | DEV  | done | スクリプト先頭に記載          |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tools/src-move-codemod.mjs` を追加した。JSON または TSV の対応表を入力し、`src/` と対応する `tests/src/` を `git mv` で移動して、TypeScript の相対 import を構文木に基づいて書き換える。
+- `--dry-run`、作業ツリーの未 commit 変更の拒否、`import.meta.url`・`import.meta.dirname`・`__dirname`・`dist/`・`src/*.ts` 参照の報告を実装した。検出箇所は自動修正せず、移動ごとに確認する。
+- `tests/tools/src-move-codemod.integration.test.ts` を追加し、一時 Git リポジトリで source と test の移動、静的・動的 import と `vi.mock` の書き換え、パス依存箇所の検出、dry run、dirty worktree の拒否を確認する。
+- スクリプト先頭に対応表の形式、実行方法、検出結果の扱いを記載した。移動後は `npm run build` を実行するよう案内する。既存の build script は最初に `dist/` 全体を削除してから再生成するため、移動前の出力は残らない。
+- 残課題はない。後続の移動項目で対応表を作り、dry run の検出結果を確認してから適用する。
 
 ## 5. 関連ドキュメント
 

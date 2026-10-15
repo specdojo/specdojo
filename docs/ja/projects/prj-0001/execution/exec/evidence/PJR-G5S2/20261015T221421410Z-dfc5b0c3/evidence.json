@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-G5S2",
+  "run_id": "20261015T221421410Z-dfc5b0c3",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-15T22:15:16.968Z",
+    "completed_at": "2026-10-15T22:20:25.043Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-g5s2-src-move-codemod.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/src-move-codemod.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/src-move-codemod.mjs",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-g5s2-src-move-codemod.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/src-move-codemod.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tools/src-move-codemod.mjs",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 3,
+    "summary": ".../controls/project-register/pjr-g5s2-src-move-codemod.md   | 12 ++++++++----\n 1 file changed, 8 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write tools/src-move-codemod.mjs tests/tools/src-move-codemod.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-g5s2-src-move-codemod.md",
+      "status": "passed",
+      "summary": "変更した実装・テスト・Markdownを整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --check tools/src-move-codemod.mjs",
+      "status": "passed",
+      "summary": "codemod の構文確認に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/src-move-codemod.mjs --help",
+      "status": "passed",
+      "summary": "CLI が起動し、usage を表示した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の生成に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog 検証に成功した。既存の欠落文書に関する警告のみ出力された。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーは検出されなかった。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5S2/src/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspa\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5S2/src/schedule-build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5S2/src/schedule-strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5S2\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Y7Crpn/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-x8xzV0/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5S2/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5S2/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5S2\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-rOCpfO/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-qdmAS4/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-jewujn/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-kMXBgR/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  38.25s (transform 2.62s, setup 524ms, import 18.55s, tests 40.71s, environment 6ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "src 移動 codemod、実 Git integration test、利用説明、個票更新を完了した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-G5S2/20261015T221421410Z-dfc5b0c3/executor.log",
+      "bytes": 1704,
+      "truncated": false
+    }
+  ]
+}
