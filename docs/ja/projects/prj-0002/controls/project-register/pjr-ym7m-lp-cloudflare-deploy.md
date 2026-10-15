@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-ym7m-lp-cloudflare-deploy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T13:14:13Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-15T14:40:01Z"
+  conclusion: specdojo-lp を Cloudflare Workers の静的アセットとして specdojo.org に配置し、設定を tsd-cloudflare-workers.md にまとめた
 ---
 
 # PJR-YM7M LP を Cloudflare に配置する設定を行う

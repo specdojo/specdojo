@@ -71,3 +71,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_443dc5437f4c4b988aad0ae4e0396cec
+- v: 1
+  id: reg_6c9c648eba584cb5a6717049cb9dcd21
+  ts: "2026-10-15T14:40:01Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 完了条件との照合で、すべての条件を満たしていることを確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: specdojo-lp を Cloudflare Workers の静的アセットとして specdojo.org に配置し、設定を tsd-cloudflare-workers.md にまとめた
+  previous_event_id: reg_5ac554fe92d942a8a3b02c41a3c40293
