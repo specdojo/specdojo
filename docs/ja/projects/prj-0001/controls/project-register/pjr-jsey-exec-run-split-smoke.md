@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-10-14T17:50:20Z"
   conclusion: exec-run.ts の分割 3 件（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
 ---
 
