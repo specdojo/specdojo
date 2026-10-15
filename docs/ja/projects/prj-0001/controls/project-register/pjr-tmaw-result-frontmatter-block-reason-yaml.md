@@ -59,9 +59,7 @@ exec-results.ts が frontmatter を文字列の連結で書き、block_reason �
 値を変えずに保持する。
 
 改行・二重引用符・バックスラッシュ・コロンと空白を含む `block_reason` を、互換
-ローダーと js-yaml の既定 schema の双方で読み戻す単体テストを追加した。過去 3 件の
-result は本文と他の frontmatter 項目を変えず、`block_reason` だけを同じ安全な形式へ
-修復した。`docs/ja/projects/` 配下を走査し、二重引用符の値の継続行が字下げされていない
+ローダーと js-yaml の既定 schema の双方で読み戻す単体テストを追加した。過去 3 件の result の修復は、executor が worktree で行ったと報告したが、result は runner が管理する場所のため agent の変更が commit の対象にならず、統合（7a87be04a）には入らなかった。orchestrator が `feature/prj-0001/js-yaml-5` で、js-yaml 4 で読んだ値が変わらないことを確かめたうえで JSON の二重引用符形式へ直した（5d36efc20、merge 90b04fbdc）。`docs/ja/projects/` 配下を走査し、二重引用符の値の継続行が字下げされていない
 同形の result が残っていないことも確認した。
 
 ## 5. 関連ドキュメント

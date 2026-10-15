@@ -49,6 +49,10 @@ named import への書き換え、引用符なしの日付が文字列になる�
 - ESM default import をすべて named import に変更し、CHANGELOG の 0.4.0 節へ依存更新を記載した。
 - 残課題は、保護対象の本体および `packages/docs-lint` の `package.json` で js-yaml を `^5.4.3` に変更し、v5 が型定義を同梱するため両方の `@types/js-yaml` を削除して、各 lock ファイルを再生成することである。reporter の申し送り後に orchestrator が `exec handoff apply` を実行し、本タスクを再開する。
 
+- 2026-10-16、orchestrator が `feature/prj-0001/js-yaml-5` で残課題を行った。本体と `packages/docs-lint` の `package.json` の js-yaml を `^5.4.3` に上げ、`@types/js-yaml` を外して lock ファイルを再生成した（7952bffc1）。
+- js-yaml 5 での `npm run check` で、過去の result 3 件の frontmatter が読めないことが分かった。原因は result の書き出しの不具合で、[[prj-0001:pjr-tmaw-result-frontmatter-block-reason-yaml]] として直し、3 件の frontmatter は orchestrator が値を変えずに直した（5d36efc20）。
+- その後の `npm run check`（テスト 148 ファイル・2,241 件）が通り、develop へ統合した（90b04fbdc）。本体の作業場所の `node_modules` を入れ替え、`register build`・`routine validate`・`job validate`・`catalog validate`・`index build` が js-yaml 5 で動くことを確かめた。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-q3f0-dev-dependencies-major-update]]: 段 7 の 2 件目。
