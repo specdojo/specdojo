@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_484f2435f5004d7999142ca93996f1ee
+  ts: "2026-10-15T13:42:32Z"
+  action: update
+  actor: orchestrator
+  from_status: open
+  to_status: open
+  reason: No 6 を exec で agent に任せるにあたり、計画の冒頭に入る説明を残りの作業に合わせるため
+  changes:
+    - field: description
+      from: specdojo-lp を Cloudflare Workers の静的アセットとして配置する設定（wrangler.jsonc、Workers Builds による GitHub 連携、本番とプレビューのブランチ、Node.js の版、独自ドメイン）を行う。本番の公開は 0.3.0 の公開を待つ
+      to: specdojo-lp を Cloudflare Workers の静的アセットとして配置する設定は済んだ。残りは、確定した設定を tsd-cloudflare-workers.md にまとめ、tsd-index に wrangler とビルド環境の Node.js の版を反映すること
+  previous_event_id: reg_c017d5eb327c444597da45f0498d3cd0
