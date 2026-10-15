@@ -38,13 +38,15 @@ specdojo:
 
 | No  | 作業                                                 | 担当 | 状態 | メモ               |
 | --- | ---------------------------------------------------- | ---- | ---- | ------------------ |
-| 1   | `eslint.config.js` に 2 つのルールを warn で加える   | DEV  | open | `src/**/*.ts` のみ |
-| 2   | `npm run lint:ts` の warn を数えて result に記録する | DEV  | open | 関数の一覧を含む   |
-| 3   | TypeScript の実装ルールに上限と扱いを書く            | DEV  | open | -                  |
+| 1   | `eslint.config.js` に 2 つのルールを warn で加える   | DEV  | done | `src/**/*.ts` のみ |
+| 2   | `npm run lint:ts` の warn を数えて result に記録する | DEV  | done | 関数の一覧を含む   |
+| 3   | TypeScript の実装ルールに上限と扱いを書く            | DEV  | done | -                  |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`eslint.config.js` の `src/**/*.ts` 限定で、空行とコメントを除く `max-lines` 1,000 行と `max-lines-per-function` 200 行を warn として設定した。`npm run lint:ts` に `--max-warnings` は追加していない。
+
+`.github/instructions/typescript.instructions.md` に同じ上限と、warn をモジュールや関数の責務を見直して分割する候補として扱う方針を追記した。warn の件数と対象関数は、親 runner が実行する `npm run lint:ts` の結果を exec result に記録する。残課題はない。
 
 ## 5. 関連ドキュメント
 

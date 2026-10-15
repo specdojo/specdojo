@@ -37,6 +37,16 @@ export default tseslint.config(
     },
   },
 
+  // Keep production modules and functions small enough to review and maintain. These are
+  // warnings so existing oversized functions remain visible without blocking development.
+  {
+    files: ["src/**/*.ts"],
+    rules: {
+      "max-lines": ["warn", { max: 1000, skipBlankLines: true, skipComments: true }],
+      "max-lines-per-function": ["warn", { max: 200, skipBlankLines: true, skipComments: true }],
+    },
+  },
+
   // packages/docs-lint
   {
     files: ["packages/docs-lint/src/**/*.ts"],

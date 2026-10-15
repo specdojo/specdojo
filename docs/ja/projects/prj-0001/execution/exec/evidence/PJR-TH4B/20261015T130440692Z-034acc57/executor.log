@@ -1,0 +1,13 @@
+`src/**/*.ts` 限定で以下を導入しました。
+
+- `max-lines`: 1,000 行、warn
+- `max-lines-per-function`: 200 行、warn
+- 空行・コメントは除外
+- TypeScript 実装ルールと個票の対応結果を更新
+- Prettier、登録簿生成、カタログ検証、差分検査に成功
+
+exec result は executor stage の指示に従い編集していません。ESLint 等の親検証は runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"ESLintの行数警告をsrc限定で導入し、TypeScript実装ルールとPJR個票を更新した。","validations":[{"command":"npx prettier --write eslint.config.js .github/instructions/typescript.instructions.md docs/ja/projects/prj-0001/controls/project-register/pjr-th4b-eslint-max-lines-guard.md","status":"passed","summary":"変更した3ファイルを整形した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成に成功した。通常のtsx起動はsandboxのIPC制約によりEPERMとなったため、規約指定の代替起動方式を使用した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログがOK。既存の未配置成果物参照に関する警告のみ。"},{"command":"node --input-type=module -e \"import assert from 'node:assert/strict'; const { default: config } = await import('./eslint.config.js'); const guard = config.find((entry) => JSON.stringify(entry.files) === JSON.stringify(['src/**/*.ts']) && entry.rules?.['max-lines']); assert.deepEqual(guard.rules['max-lines'], ['warn', { max: 1000, skipBlankLines: true, skipComments: true }]); assert.deepEqual(guard.rules['max-lines-per-function'], ['warn', { max: 200, skipBlankLines: true, skipComments: true }]); console.log('OK: src-only max-lines guards match the requested thresholds');\"","status":"passed","summary":"src限定のルール、warnレベル、上限値、空行・コメント除外を確認した。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはない。"}]}
+</specdojo_executor_evidence>
