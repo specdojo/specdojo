@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: deferred
   priority: low
   owner: DEV
   registered_at: "2026-09-29T22:17:28Z"
+  conclusion: typescript-eslint が TypeScript 7 に未対応（<6.1.0）のため延期する。typescript-eslint が対応したら再開する
 ---
 
 # PJR-Q3F0 開発用依存の major 更新
