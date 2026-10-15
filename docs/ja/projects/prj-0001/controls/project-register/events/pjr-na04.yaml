@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_556aaaa7b0ce429ba761d9257ed10811
+- v: 1
+  id: reg_102a8469a1824764a2aa33690d044d2e
+  ts: "2026-10-15T11:08:02Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に export・--help・循環 import を確かめ、分割後の runner で exec run --register（PJR-JSEY、b8565fac0）が統合まで通った（2026-10-15）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: exec-plans を core・generation・storage、exec を core・commands、exec-trial を core・commands のモジュールへ分け、すべて 1,000 行以下にした。export と exec の 18 コマンドの --help は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_474f668cd30b4da0bc83d1eb6ad14408

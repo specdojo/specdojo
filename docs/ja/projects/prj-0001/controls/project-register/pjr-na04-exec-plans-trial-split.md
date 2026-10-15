@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-na04-exec-plans-trial-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:26:16Z"
   due_on: null
+  completed_at: "2026-10-15T11:08:02Z"
+  conclusion: exec-plans を core・generation・storage、exec を core・commands、exec-trial を core・commands のモジュールへ分け、すべて 1,000 行以下にした。export と exec の 18 コマンドの --help は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
 ---
 
 # PJR-NA04 exec-plans.ts・exec.ts・exec-trial.ts を分ける
