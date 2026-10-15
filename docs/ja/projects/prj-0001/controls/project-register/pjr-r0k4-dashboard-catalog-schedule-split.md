@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-r0k4-dashboard-catalog-schedule-split
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:26:32Z"
   due_on: null
+  completed_at: "2026-10-15T12:57:19Z"
+  conclusion: dashboard・catalog-build・schedule-strategy-generate を責務ごとのモジュールへ分け、すべて 1,000 行以下にした。export と 14 コマンドの --help は分割の前後で一致し、分割の前後のコードで build を流した生成物の差分は生成時刻と本件の状態だけだった
 ---
 
 # PJR-R0K4 dashboard.ts・catalog-build.ts・schedule-strategy-generate.ts を分ける
