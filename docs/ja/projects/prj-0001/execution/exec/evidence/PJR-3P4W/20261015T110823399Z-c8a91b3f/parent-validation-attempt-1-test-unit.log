@@ -1,0 +1,109 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3P4W
+
+Updated ticket status → ready: /tmp/specdojo-ticket-Nio0hz/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Xc6sEN/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-UVuukq/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-TPDszW/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-YI39md/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-nMudUh/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+ ❯ tests/src/job.test.ts (37 tests | 4 failed) 199ms
+     × materializes one idempotent Run and advances checkpoint only on success 8ms
+     × keeps the previous checkpoint after failure and appends a retry attempt 5ms
+     × records the review verdict and waiting reason on the Job Run 5ms
+     × skips a structurally invalid Run file and keeps checkpoints from valid history 5ms
+Would move 1 agent member(s) from /tmp/specdojo-members-25yFeZ/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-25yFeZ/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-25yFeZ/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-25yFeZ/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-Fjijuj/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-2qQRC4/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 129 passed (130)
+      Tests  4 failed | 2050 passed (2054)
+   Start at  20:18:10
+   Duration  52.90s (transform 3.03s, setup 691ms, import 26.29s, tests 55.36s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/job.test.ts > Job Run lifecycle > materializes one idempotent Run and advances checkpoint only on success
+ReferenceError: getPath is not defined
+ ❯ resolveInputs src/job.ts:113:7
+    111|     let value: unknown = raw[key];
+    112|     if (value === undefined && input.from_checkpoint)
+    113|       value = getPath(checkpoint, input.from_checkpoint);
+       |       ^
+    114|     if (value === undefined && input.resolve === "git_head") {
+    115|       const result = spawnSync("git", ["rev-parse", "HEAD"], {
+ ❯ materializeJobRun src/job.ts:443:18
+ ❯ tests/src/job.test.ts:753:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/src/job.test.ts > Job Run lifecycle > keeps the previous checkpoint after failure and appends a retry attempt
+ReferenceError: getPath is not defined
+ ❯ resolveInputs src/job.ts:113:7
+    111|     let value: unknown = raw[key];
+    112|     if (value === undefined && input.from_checkpoint)
+    113|       value = getPath(checkpoint, input.from_checkpoint);
+       |       ^
+    114|     if (value === undefined && input.resolve === "git_head") {
+    115|       const result = spawnSync("git", ["rev-parse", "HEAD"], {
+ ❯ materializeJobRun src/job.ts:443:18
+ ❯ tests/src/job.test.ts:792:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/src/job.test.ts > Job Run file validation > records the review verdict and waiting reason on the Job Run
+ReferenceError: getPath is not defined
+ ❯ resolveInputs src/job.ts:113:7
+    111|     let value: unknown = raw[key];
+    112|     if (value === undefined && input.from_checkpoint)
+    113|       value = getPath(checkpoint, input.from_checkpoint);
+       |       ^
+    114|     if (value === undefined && input.resolve === "git_head") {
+    115|       const result = spawnSync("git", ["rev-parse", "HEAD"], {
+ ❯ materializeJobRun src/job.ts:443:18
+ ❯ tests/src/job.test.ts:818:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/src/job.test.ts > Job Run file validation > skips a structurally invalid Run file and keeps checkpoints from valid history
+ReferenceError: getPath is not defined
+ ❯ resolveInputs src/job.ts:113:7
+    111|     let value: unknown = raw[key];
+    112|     if (value === undefined && input.from_checkpoint)
+    113|       value = getPath(checkpoint, input.from_checkpoint);
+       |       ^
+    114|     if (value === undefined && input.resolve === "git_head") {
+    115|       const result = spawnSync("git", ["rev-parse", "HEAD"], {
+ ❯ materializeJobRun src/job.ts:443:18
+ ❯ tests/src/job.test.ts:847:25
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: low
   owner: DEV
   registered_at: "2026-10-14T21:26:24Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts, typecheck, test-unit"
 ---
 
 # PJR-3P4W job.ts・routine.ts を分ける
