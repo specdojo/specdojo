@@ -164,7 +164,7 @@ Kata と成果物の定期評価は、SpecDojo 本体リポジトリ内で execu
 
 成果物は `rtn-grade-deliverable-recheck` が `job-grade-deliverable` を起動します。Job は同じ script を `--stages 1 --target deliverable` で実行し、成果物カタログから変更済み・未評価・段未完了・旧 rubric の Markdown 成果物だけを最大10件選びます。評価結果は成果物の最新 grade と成果物ごとの `done_criteria` 詳細へ上書きされるため、実行ごとの review result は増やしません。
 
-`rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日6時に実行し、いずれも `missed_run: skip` とします。`rtn-dashboard-refresh` は `action.kind: specdojo` で毎時 `dashboard build` を直接起動します（exec の実行ロックを取らないため、grade や register の実行中でも並行して動きます）。devcontainer の cron は毎時 `routine run --due` を呼びますが、各 routine の発火時刻は routine 側の cron で決まります。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
+`rtn-grade-deliverable-recheck` は毎日1時、`rtn-grade-recheck` は毎日5時に実行し、いずれも `missed_run: skip` とします。`rtn-dashboard-refresh` は `action.kind: specdojo` で毎時 `dashboard build` を直接起動します（exec の実行ロックを取らないため、grade や register の実行中でも並行して動きます）。devcontainer の cron は毎時 `routine run --due` を呼びますが、各 routine の発火時刻は routine 側の cron で決まります。コンテナ停止中の実行枠を日中へ持ち越さず、対話的な register 実行との競合を避けます。
 
 `changed_only: true` は、本文の変更に加えて、観点定義の `comparison_sources` で宣言した突き合わせ先（成果物カタログの自身の項目、依存先、Schedule、メンバー定義、ロール定義、RACI、組織定義）の変更も検出します。検出範囲と検出しない変更は `command-reference.md` の `grade` の説明に従います。突き合わせ先の記録（`source_hashes`）を持たない既存の評価は一度だけ変更扱いになるため、導入直後は `rtn-grade-deliverable-recheck` の選択が上限の10件に張り付きます。2026-09-27 時点の成果物 46 件がすべて該当し、約5日で記録が揃います。その後は突き合わせ先を変更した日だけ、その突き合わせ先を持つ成果物が選ばれます。現在の宣言では Kata に適用される観点は突き合わせ先を持たないため、`rtn-grade-recheck` の選択は変わりません。
 
