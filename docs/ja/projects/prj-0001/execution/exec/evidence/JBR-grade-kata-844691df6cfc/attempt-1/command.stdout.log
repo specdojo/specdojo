@@ -1,0 +1,54 @@
+
+> specdojo@0.3.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-844691df6cfc project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-844691df6cfc
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/samples/opr-batch-sample.md
+document complete: docs/ja/specdojo/samples/opr-batch-sample.md
+document start: docs/ja/specdojo/samples/opr-change-sample.md
+document complete: docs/ja/specdojo/samples/opr-change-sample.md
+document start: docs/ja/specdojo/samples/opr-incident-sample.md
+document complete: docs/ja/specdojo/samples/opr-incident-sample.md
+document start: docs/ja/specdojo/samples/opr-index-sample.md
+document complete: docs/ja/specdojo/samples/opr-index-sample.md
+document start: docs/ja/specdojo/samples/opr-monitoring-sample.md
+document complete: docs/ja/specdojo/samples/opr-monitoring-sample.md
+document start: docs/ja/specdojo/samples/opr-sample.md
+document complete: docs/ja/specdojo/samples/opr-sample.md
+document start: docs/ja/specdojo/samples/opr-support-sample.md
+document complete: docs/ja/specdojo/samples/opr-support-sample.md
+document start: docs/ja/specdojo/samples/otp-index-sample.md
+document complete: docs/ja/specdojo/samples/otp-index-sample.md
+document start: docs/ja/specdojo/samples/otp-sample.md
+document complete: docs/ja/specdojo/samples/otp-sample.md
+document start: docs/ja/specdojo/samples/pm-change-request-log-sample.md
+document complete: docs/ja/specdojo/samples/pm-change-request-log-sample.md
+document start: docs/ja/specdojo/samples/pm-communication-plan-sample.md
+document complete: docs/ja/specdojo/samples/pm-communication-plan-sample.md
+document start: docs/ja/specdojo/samples/pm-issue-log-sample.md
+document complete: docs/ja/specdojo/samples/pm-issue-log-sample.md
+document start: docs/ja/specdojo/samples/pm-organization-sample.md
+document complete: docs/ja/specdojo/samples/pm-organization-sample.md
+document start: docs/ja/specdojo/samples/pm-plan-sample.md
+document complete: docs/ja/specdojo/samples/pm-plan-sample.md
+document start: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
+document complete: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-844691df6cfc/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-16T20:05:22Z	docs/ja/specdojo/samples/opr-batch-sample.md	1	passed	256	needs-work	67	21	agy-expert-executor	machine	none		
+2026-10-16T20:09:13Z	docs/ja/specdojo/samples/opr-change-sample.md	1	passed	229	fail	44	20	agy-expert-executor	machine	none		
+2026-10-16T20:12:45Z	docs/ja/specdojo/samples/opr-incident-sample.md	1	passed	210	needs-work	70	18	agy-expert-executor	machine	none		
+2026-10-16T20:17:57Z	docs/ja/specdojo/samples/opr-index-sample.md	1	passed	310	needs-work	75	18	agy-expert-executor	machine	none		
+2026-10-16T20:22:11Z	docs/ja/specdojo/samples/opr-monitoring-sample.md	1	passed	252	needs-work	75	15	agy-expert-executor	machine	none		
+2026-10-16T20:25:09Z	docs/ja/specdojo/samples/opr-sample.md	1	passed	176	fail	53	23	agy-expert-executor	machine	none		
+2026-10-16T20:30:36Z	docs/ja/specdojo/samples/opr-support-sample.md	1	passed	325	fail	58	20	agy-expert-executor	machine	none		
+2026-10-16T20:32:37Z	docs/ja/specdojo/samples/otp-index-sample.md	1	passed	119	needs-work	89	6	agy-expert-executor	machine	none		
+2026-10-16T20:34:49Z	docs/ja/specdojo/samples/otp-sample.md	1	passed	130	needs-work	92	6	agy-expert-executor	machine	none		
+2026-10-16T20:36:19Z	docs/ja/specdojo/samples/pm-change-request-log-sample.md	1	passed	88	pass	95	3	agy-expert-executor	machine	none		
+2026-10-16T20:39:01Z	docs/ja/specdojo/samples/pm-communication-plan-sample.md	1	passed	160	needs-work	77	14	agy-expert-executor	machine	none		
+2026-10-16T20:42:44Z	docs/ja/specdojo/samples/pm-issue-log-sample.md	1	passed	221	needs-work	94	2	agy-expert-executor	machine	none		
+2026-10-16T20:45:51Z	docs/ja/specdojo/samples/pm-organization-sample.md	1	passed	185	needs-work	79	11	agy-expert-executor	machine	none		
+2026-10-16T20:49:56Z	docs/ja/specdojo/samples/pm-plan-sample.md	1	passed	243	needs-work	84	9	agy-expert-executor	machine	none		
+2026-10-16T20:52:26Z	docs/ja/specdojo/samples/pm-quality-management-plan-sample.md	1	passed	148	needs-work	90	3	agy-expert-executor	machine	none		

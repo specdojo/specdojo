@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-change-request-log-sample
 path: docs/ja/specdojo/samples/pm-change-request-log-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 93
-graded_at: "2026-09-05T18:45:30.520Z"
-graded_by: gemma-expert-executor
+score: 95
+graded_at: "2026-10-16T20:36:17.355Z"
+graded_by: agy-expert-executor
 content_hash: 44a9122b4fec0bd47d3a1e0a9020d72b93cb78926345a6ee46331fc97626c1f6
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -52,21 +107,24 @@ finding_counts:
   minor: 3
   note: 0
 findings:
-  - id: F003
-    severity: minor
-    rule: vp-qe-kata-conformance
-    line: 2
-    message: テンプレートで定義されている「個票から生成された派生ビュー（再生成可能）」という性質や注記が反映されておらず、手動管理のログ形式となっている。
-    anchor: ""
   - id: F001
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 5
-    message: 概要に「運用期間」と「記録単位」の記載が不足している。
     anchor: 本書は、駄菓子屋の販売管理システム構築プロジェクトにおける変更要求の申請・審査・決定・実施追跡を管理する最小サンプルである。
+    message: 概要に「運用期間」と「記録単位」の記載が不足している。
+    message_ja: 概要に「運用期間」と「記録単位」の記載が不足している。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 19
-    message: 影響評価の一覧に, rulebook で指定されている「品質」への影響項目が不足している。
     anchor: "| CR-002 | 帳票・IF  | 2人日    | 1日延長  | 中   |"
+    message: 影響評価の一覧に, rulebook で指定されている「品質」への影響項目が不足している。
+    message_ja: 影響評価の一覧に, rulebook で指定されている「品質」への影響項目が不足している。
+  - id: F003
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 2
+    anchor: ""
+    message: テンプレートで定義されている「個票から生成された派生ビュー（再生成可能）」という性質や注記が反映されておらず、手動管理のログ形式となっている。
+    message_ja: テンプレートで定義されている「個票から生成された派生ビュー（再生成可能）」という性質や注記が反映されておらず、手動管理のログ形式となっている。
