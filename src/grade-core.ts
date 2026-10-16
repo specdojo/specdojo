@@ -2,8 +2,8 @@ import { createHash } from "node:crypto";
 import { dump, load } from "./yaml.js";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
-import { viewpointAppliesToDocument } from "./review-plan.js";
-import type { ReviewViewpoint, ReviewViewpointsDoc } from "./review-types.js";
+import { viewpointAppliesToDocument } from "./review/plan.js";
+import type { ReviewViewpoint, ReviewViewpointsDoc } from "./review/types.js";
 import { gradeContentHash, type GradeResult } from "./grade-result.js";
 
 export type GradeTarget = "kata" | "deliverable";

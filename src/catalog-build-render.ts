@@ -1,6 +1,6 @@
 import type { DctDeliverableItem, DctDoc, DctSection, DctTemplateDoc } from "./catalog-types.js";
 import { resolveBasePath } from "./catalog-paths.js";
-import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
+import { buildSpecdojoFrontmatter } from "./docs/frontmatter-namespace.js";
 
 function formatDependsOn(deps: string[] | undefined): string {
   if (!deps || deps.length === 0) return "-";

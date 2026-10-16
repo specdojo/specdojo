@@ -34,7 +34,7 @@ import {
   type JobDefinition,
   type JobReviewAgentNomination,
   type JobRunRecord,
-} from "./job.js";
+} from "./job/job.js";
 import {
   ensureExecWorktree,
   gitOutput,

@@ -188,13 +188,13 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: routineのdue判定・委譲・実行結果更新
           - kind: implementation
             path: src/exec.ts
             purpose: exec コマンド入口から到達するresume・状態再計算・autoを単一ロック内で順次実行するcycle制御
           - kind: implementation
-            path: src/job.ts
+            path: src/job/job.ts
             purpose: Job Definition検証・Job Run生成・checkpoint更新
         depends_on:
           - cdfd-register-lifecycle
@@ -270,10 +270,10 @@ groups:
             path: src/catalog.ts
             purpose: catalog コマンド入口から到達するカタログから成果物雛形を生成する処理
           - kind: implementation
-            path: src/index-command.ts
+            path: src/docs/index-command.ts
             purpose: index コマンド入口から到達する文書索引の収集・生成処理
           - kind: implementation
-            path: src/yaml-pages-command.ts
+            path: src/docs/yaml-pages-command.ts
             purpose: yaml-pages コマンド入口から到達するYAML正本から表示ページを生成する処理
         depends_on:
           - cdfd-register-lifecycle
@@ -327,7 +327,7 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/deliverable.ts
+            path: src/deliverable/deliverable.ts
             purpose: deliverable コマンド入口から到達する非推奨化した成果物ファイルのtrashディレクトリへの移動とカタログpath書き換え、frontmatterのspecdojo名前空間・status読込
           - kind: implementation
             path: src/catalog.ts
@@ -398,10 +398,10 @@ groups:
             path: src/schedule.ts
             purpose: schedule コマンド入口から到達する成果物カタログとスケジュール戦略からの track 生成、intent と Kata grade からの approach 導出
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: 定期実行定義の検証と due 判定
           - kind: implementation
-            path: src/job.ts
+            path: src/job/job.ts
             purpose: ジョブ定義の検証と Job Run の生成
         depends_on:
           - cdfd-overview
@@ -462,7 +462,7 @@ groups:
             path: src/build-command.ts
             purpose: 派生生成の一括実行
           - kind: implementation
-            path: src/index-command.ts
+            path: src/docs/index-command.ts
             purpose: index コマンド入口から到達する文書索引の生成
         depends_on:
           - cdfd-overview
@@ -488,7 +488,7 @@ groups:
             path: src/exec.ts
             purpose: exec コマンド入口から到達する登録項目の review と close の遷移、agent・provider・実行既定値の稼働構成
           - kind: implementation
-            path: src/deliverable.ts
+            path: src/deliverable/deliverable.ts
             purpose: deliverable コマンド入口から到達する非推奨化した成果物の trash への退避
         depends_on:
           - cdfd-overview
@@ -511,7 +511,7 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: 定期実行の due 判定と起動、routine-state の記録
           - kind: implementation
             path: src/exec.ts

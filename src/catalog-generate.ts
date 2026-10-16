@@ -3,14 +3,14 @@ import { dirname, join } from "node:path";
 import { dump, load } from "./yaml.js";
 import { type ResolvedDeliverable, collectResolvedDeliverables } from "./catalog-build.js";
 import { resolveBasePath } from "./catalog-paths.js";
-import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
+import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./docs/frontmatter-namespace.js";
 import { practiceLocalId } from "./practice-id.js";
-import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
+import { flattenTemplateFrontmatter } from "./docs/template-frontmatter.js";
 import { isDctCatalogFileName, type DctDeliverableItem, type DctDoc } from "./catalog-types.js";
 import {
   resolveSpecdojoPathIfExists,
   type SpecdojoResolutionRoots,
-} from "./template-resolution.js";
+} from "./docs/template-resolution.js";
 
 const PROJECT_ID_PLACEHOLDER = "_PROJECT_ID_";
 const LOCAL_ID_PLACEHOLDER = "_LOCAL_ID_";

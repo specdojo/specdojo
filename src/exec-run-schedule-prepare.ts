@@ -18,8 +18,8 @@ import {
   targetDocIdsForScheduledTask,
   reviewGradeSubject,
 } from "./exec-plans.js";
-import { ensureReviewGrade } from "./review-grade.js";
-import { type ReviewGradeOutcome } from "./review-grade.js";
+import { ensureReviewGrade } from "./review/grade.js";
+import { type ReviewGradeOutcome } from "./review/grade.js";
 import { isResultUnfilled, readResultFrontmatterSnapshot, scaffoldResult } from "./exec-results.js";
 import { worktreeNameFromTaskId, type ExecWorktree } from "./exec-worktree.js";
 import { configuredProductRepos, plannedProjectWorktreePath } from "./exec-task-repos.js";

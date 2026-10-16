@@ -73,10 +73,10 @@ groups:
             path: src/exec.ts
             purpose: exec コマンド入口から到達する実行イベントストアのスキーマ・追記規則、実行状態（Ready）ストアの算出、plan/resultストアのscaffold規則、worktreeストアの命名・配置
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: 定期処理ストアのスキーマ
           - kind: implementation
-            path: src/job.ts
+            path: src/job/job.ts
             purpose: Job Runストアのスキーマ
         done_criteria:
           - text: データストアの業務的役割・内容・粒度が記述されていること
@@ -100,7 +100,7 @@ groups:
         rulebook: specdojo:cdsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/deliverable.ts
+            path: src/deliverable/deliverable.ts
             purpose: 成果物本体ストアの読込・雛形生成
           - kind: implementation
             path: src/catalog.ts

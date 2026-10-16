@@ -21,7 +21,7 @@ import {
   type GeneratedTask,
 } from "./schedule-build.js";
 import { readYaml } from "./exec-shared.js";
-import { resolveSpecdojoPath } from "./template-resolution.js";
+import { resolveSpecdojoPath } from "./docs/template-resolution.js";
 import { generateStrategy, writeStrategyFile } from "./schedule-strategy-generate.js";
 
 type ResolvedScheduleContext = {

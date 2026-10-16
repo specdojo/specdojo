@@ -18,8 +18,8 @@ import {
   type GradeTarget,
   type MarkdownDocument,
 } from "./grade-core.js";
-import { resolveViewpointsDoc } from "./review-plan.js";
-import type { GradeRubric, ReviewViewpointsDoc } from "./review-types.js";
+import { resolveViewpointsDoc } from "./review/plan.js";
+import type { GradeRubric, ReviewViewpointsDoc } from "./review/types.js";
 import {
   assertValidActor,
   getProjectCatalogPath,

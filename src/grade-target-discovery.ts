@@ -33,7 +33,7 @@ import {
   resolveSafeMarkdownPath,
   sourceHashesChanged,
 } from "./grade-targets.js";
-import type { ReviewViewpointsDoc } from "./review-types.js";
+import type { ReviewViewpointsDoc } from "./review/types.js";
 import { getProjectExecutionPath, specdojoRootDir } from "./specdojo-config.js";
 
 export function discoverGradeTargets(

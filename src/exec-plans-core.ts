@@ -2,13 +2,13 @@ import { existsSync, readFileSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import { load } from "./yaml.js";
 import { specdojoRootDir } from "./specdojo-config.js";
-import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "./kata.js";
-import type { KataRefs } from "./kata.js";
+import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "./kata/kata.js";
+import type { KataRefs } from "./kata/kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { isDctPlanFileName } from "./catalog-plan.js";
-import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./frontmatter-namespace.js";
+import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./docs/frontmatter-namespace.js";
 import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "./practice-id.js";
-import { resolveViewpointsDoc, viewpointAppliesToDocument } from "./review-plan.js";
+import { resolveViewpointsDoc, viewpointAppliesToDocument } from "./review/plan.js";
 import {
   listFilesRecursive,
   nowUtcIsoSeconds,
@@ -17,16 +17,16 @@ import {
 } from "./exec-shared.js";
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from "./exec-types.js";
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "./catalog-types.js";
-import type { ReviewViewpoint } from "./review-types.js";
+import type { ReviewViewpoint } from "./review/types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
 import {
   gradeFindingDisplayMessage,
   gradeResultPathForDocument,
   readGradeResultForDocument,
 } from "./grade-result.js";
-import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
-import { renderReviewGradeSummary, reviewGradeFreshness } from "./review-grade.js";
-import type { ReviewGradeOutcome, ReviewGradeTarget } from "./review-grade.js";
+import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./docs/template-resolution.js";
+import { renderReviewGradeSummary, reviewGradeFreshness } from "./review/grade.js";
+import type { ReviewGradeOutcome, ReviewGradeTarget } from "./review/grade.js";
 
 // Internal types
 // ---------------------------------------------------------------------------

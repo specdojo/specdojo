@@ -3,13 +3,13 @@ import { join, relative } from "node:path";
 import { specdojoRootDir } from "./specdojo-config.js";
 import { nowUtcIsoSeconds, randomHex, tsForFilenameUtc } from "./exec-shared.js";
 import type { Approach, TaskMode, TaskOrigin } from "./exec-types.js";
-import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
+import { readSpecdojoNamespace } from "./docs/frontmatter-namespace.js";
 import {
   gradeFindingDisplayMessage,
   gradeResultPathForDocument,
   readGradeResultForDocument,
 } from "./grade-result.js";
-import { lookupDocIndex } from "./doc-index.js";
+import { lookupDocIndex } from "./docs/doc-index.js";
 
 export function archivePlan(opts: { executionPath: string; slug: string; delete?: boolean }): {
   from: string;

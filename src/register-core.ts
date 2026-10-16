@@ -43,7 +43,7 @@ import {
   loadEnv,
   specdojoRootDir,
 } from "./specdojo-config.js";
-import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
+import { flattenTemplateFrontmatter } from "./docs/template-frontmatter.js";
 
 // ================================
 // Types

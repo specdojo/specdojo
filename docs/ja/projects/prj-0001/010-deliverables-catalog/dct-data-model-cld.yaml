@@ -83,7 +83,7 @@ groups:
         rulebook: specdojo:cld-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: action.kind（register/exec-auto/exec-resume/exec-cycle/job）の許容値定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること

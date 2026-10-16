@@ -11,10 +11,10 @@ vi.mock("node:fs", async (importOriginal) => {
 });
 import * as fs from "node:fs";
 
-vi.mock("../../src/doc-index.js", () => ({
+vi.mock("../../src/docs/doc-index.js", () => ({
   lookupDocIndex: vi.fn(),
 }));
-import * as docIndex from "../../src/doc-index.js";
+import * as docIndex from "../../src/docs/doc-index.js";
 
 vi.mock("../../src/grade-result.js", () => ({
   gradeFindingDisplayMessage: vi.fn(

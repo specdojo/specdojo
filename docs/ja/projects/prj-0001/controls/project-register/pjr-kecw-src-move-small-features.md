@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:10Z"
@@ -77,15 +77,21 @@ codemod で小さい機能のファイルを src/job/・src/routine/・src/kata/
 
 ## 3. 作業内容
 
-| No  | 作業                                                      | 担当 | 状態 | メモ                                  |
-| --- | --------------------------------------------------------- | ---- | ---- | ------------------------------------- |
-| 1   | codemod で対応表のとおりに移す                            | DEV  | open | 手で書き換えない                      |
-| 2   | `import.meta.url` などから組み立てるパスを直す            | DEV  | open | `viewpoint-document-kinds-check` ほか |
-| 3   | `--help` を比べ、`dist/` の古い出力と文書のパスを確かめる | DEV  | open | -                                     |
+| No  | 作業                                                      | 担当 | 状態 | メモ                             |
+| --- | --------------------------------------------------------- | ---- | ---- | -------------------------------- |
+| 1   | codemod で対応表のとおりに移す                            | DEV  | done | 実装 21 件・テスト 13 件を移動   |
+| 2   | `import.meta.url` などから組み立てるパスを直す            | DEV  | done | `routine` の dist 基準パスを補正 |
+| 3   | `--help` を比べ、`dist/` の古い出力と文書のパスを確かめる | DEV  | done | 23 コマンド一致・古い出力なし    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tools/src-move-codemod.mjs` に、従来の `tests/` 直下にある対応テストも `tests/src/` の移動先へ移せる処理を追加し、統合テストで確認した。codemod に対応表を渡し、実装 21 ファイルとテスト 13 ファイルを `src/job/`・`src/routine/`・`src/kata/`・`src/deliverable/`・`src/devcontainer/`・`src/review/`・`src/docs/` および対応する `tests/src/` 配下へ移した。相対 import の書き換えも codemod の出力を反映した。
+- codemod の検出結果を確認し、`src/routine/routine.ts` がコンパイル後も `dist/specdojo.js` を基準に鮮度確認するよう、`import.meta.url` から組み立てるパスを 1 階層分補正した。`src/docs/viewpoint-document-kinds-check.ts` の `import.meta.url` は実行対象自身との比較にだけ使われ、リポジトリ内の相対パスを組み立てていないため補正不要であることを確認した。
+- 現行の設計書・ガイド 3 文書と成果物カタログ 7 ファイルにある移動対象のパスを更新した。個票・plan・result などの履歴内にある旧パスは変更していない。
+- 移動前後に `job`・`routine`・`kata`・`devcontainer`・`index`・`yaml-pages` と各サブコマンドの `--help` を合計 23 件比較し、すべて差分がないことを確認した。
+- `npm run build` が成功し、`dist/job/`・`dist/routine/`・`dist/kata/`・`dist/deliverable/`・`dist/devcontainer/`・`dist/review/`・`dist/docs/` に出力された。移動前の旧出力 21 ファイルは残っていない。
+- `specdojo catalog build` と `specdojo catalog validate` は成功した。validate が出力した未作成文書の `based_on` 警告は既存データに対する警告であり、本件のパス移動によるエラーはない。
+- 残課題はない。lint・frontmatter・Markdown・schema・typecheck・unit test・integration test は親 runner が実行する。
 
 ## 5. 関連ドキュメント
 
