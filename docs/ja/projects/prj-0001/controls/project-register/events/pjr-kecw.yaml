@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a246c233b2524c2bb995f1c670518467
+- v: 1
+  id: reg_a5830e9c383a4ebcacc95bec3224ad04
+  ts: "2026-10-16T14:48:55Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に rename・dist・移す前の 0.3.1 との --help を比べ、kata list・index build・routine と job の validate を確かめた（2026-10-16）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-16"
+    - field: conclusion
+      from: "-"
+      to: codemod で job・routine・kata・deliverable・devcontainer・review・docs の 21 ファイルとテスト 13 件を各ディレクトリへ移した。git は 34 件を rename と認識し、dist の古い出力は残らず、--help（23 コマンド）は移す前の 0.3.1 と一致した
+  previous_event_id: reg_774d90655cf24e94b79a91954e6dc869

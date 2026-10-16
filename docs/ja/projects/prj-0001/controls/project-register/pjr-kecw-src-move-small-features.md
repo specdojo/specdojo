@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-kecw-src-move-small-features
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:10Z"
   due_on: null
+  completed_at: "2026-10-16T14:48:55Z"
+  conclusion: codemod で job・routine・kata・deliverable・devcontainer・review・docs の 21 ファイルとテスト 13 件を各ディレクトリへ移した。git は 34 件を rename と認識し、dist の古い出力は残らず、--help（23 コマンド）は移す前の 0.3.1 と一致した
 ---
 
 # PJR-KECW job・routine・kata・deliverable・devcontainer・review・docs を移す
