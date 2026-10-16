@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-w9rk-src-move-dashboard
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:01Z"
   due_on: null
+  completed_at: "2026-10-16T14:31:19Z"
+  conclusion: codemod で dashboard と timeline の 7 ファイルとテスト 2 件を src/dashboard・tests/src/dashboard へ移し、検出の一覧から履歴のファイルを除くよう codemod を直した。git は 9 件を rename と認識し、dist の古い出力は残らず、--help は移す前の 0.3.1 と一致した
 ---
 
 # PJR-W9RK dashboard と timeline を src/dashboard へ移す
