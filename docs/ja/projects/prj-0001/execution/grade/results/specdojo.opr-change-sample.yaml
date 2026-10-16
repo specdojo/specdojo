@@ -3,31 +3,77 @@ version: 1
 document: specdojo:opr-change-sample
 path: docs/ja/specdojo/samples/opr-change-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 57
-graded_at: "2026-09-05T15:30:20.775Z"
-graded_by: gemma-expert-executor
+score: 44
+graded_at: "2026-10-16T20:08:27.877Z"
+graded_by: agy-expert-executor
 content_hash: 5b73860cf218b7196df45421107fd1958a5975a929a12647abc732dfb536bf63
 categories:
-  consistency:
+  purpose:
     score: 25
+  operations:
+    score: 63
+  planning:
+    score: 33
+  business:
+    score: 33
+  architecture:
+    score: 75
   usability:
     score: 75
-  architecture:
-    score: 100
-  quality:
+  implementation:
     score: 38
+  quality:
+    score: 33
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 1
+    score: 25
+  vp-po-decision-readiness:
+    level: 1
+    score: 25
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 1
+    score: 25
+  vp-pm-dependency-risk:
+    level: 1
+    score: 25
+  vp-pm-control-reporting:
     level: 2
     score: 50
+  vp-ba-business-value:
+    level: 1
+    score: 25
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 1
+    score: 25
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 1
+    score: 25
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 1
+    score: 25
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -43,42 +89,191 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 1
+    score: 25
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 1
-  major: 4
-  minor: 0
+  major: 18
+  minor: 1
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 6
-    message: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別と矛盾している。
-    anchor: ""
+    rule: vp-po-purpose-alignment
+    line: 1
+    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
+    message: >-
+      The deliverable lacks any statement of purpose, scope, or alignment with project objectives, failing to explain
+      why and how operational changes are governed.
+    message_ja: 成果物に目的、範囲、またはプロジェクト目標との整合性に関する記述がなく、運用の変更がなぜ、どのように管理されるのかが説明されていません。
   - id: F002
     severity: major
-    rule: vp-qe-verifiability
-    line: 51
-    message: 「実施ログ（誰が/いつ/何を）を残す」という表現のみでは, 証跡として十分な内容であるかを判定できず, 再現性を担保できない。
-    anchor: ""
+    rule: vp-po-decision-readiness
+    line: 5
+    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
+    message: >-
+      The document does not provide the decision criteria, open issues, impact scope, or next actions needed for a PO to
+      make informed approval or escalation decisions.
+    message_ja: ドキュメントには、POが十分な情報に基づいた承認またはエスカレーションの決定を行うために必要な、決定基準、未解決の問題、影響範囲、または次のアクションが提供されていません。
   - id: F003
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 41
-    message: "`opr-rulebook` 第5章で定義された必須構成（概要、適用範囲・前提、証跡、関連文書導線等）がほぼすべて欠落しており、文書として不成立である。"
-    anchor: ""
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
+    message: >-
+      The deliverable does not explicitly document the target audience or publication accountability framework for
+      operational releases.
+    message_ja: 成果物に、運用のリリースに関するターゲットオーディエンスまたは公開の責任フレームワークが明示的に文書化されていません。
   - id: F004
     severity: major
-    rule: vp-qe-kata-conformance
-    line: 41
-    message: "`opr-template.md` の構成に従っておらず、サンプルとしてあるべき「rulebook に準拠した具体的な記述例」を提示できていない。"
-    anchor: ""
+    rule: vp-pm-plan-feasibility
+    line: 5
+    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
+    message: >-
+      Operational change tasks lack concrete work units, execution sequence, completion criteria, and estimated
+      timeframes required for project scheduling.
+    message_ja: 運用の変更タスクに、プロジェクトのスケジューリングに必要な具体的な作業単位、実行順序、完了基準、および予定されるタイムフレームが不足しています。
   - id: F005
     severity: major
+    rule: vp-pm-dependency-risk
+    line: 5
+    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
+    message: >-
+      Risks, operational dependencies, and open issues associated with deployment and configuration changes are not
+      identified or evaluated.
+    message_ja: デプロイおよび構成変更に関連するリスク、運用の依存関係、および未解決の問題が特定または評価されていません。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 12
+    anchor: "- ロールバック:"
+    message: >-
+      Reporting destinations, escalation targets, and project record transcription items for anomalies or change
+      outcomes are not defined.
+    message_ja: 異常や変更結果に関する報告先、エスカレーション先、およびプロジェクト記録の転記項目が定義されていません。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 1
+    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
+    message: >-
+      The deliverable fails to explain the target users, business problems, expected value, and success criteria for
+      operational change governance.
+    message_ja: 成果物に、運用の変更管理におけるターゲットユーザー、ビジネス上の問題、期待される価値、および成功基準の説明が不足しています。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 5
+    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
+    message: >-
+      Requirements, scope, out-of-scope boundaries, and acceptance criteria for configuration changes and deployments
+      are missing.
+    message_ja: 構成変更およびデプロイに関する要件、範囲、スコープ外の境界、および受け入れ基準が不足しています。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 5
+    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
+    message: >-
+      Stakeholders, operator roles, reviewers, and agreement targets involved in the change management lifecycle are not
+      sufficiently defined.
+    message_ja: 変更管理ライフサイクルに関与するステークホルダー、オペレーターの役割、レビュアー、および合意の対象が十分に定義されていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 5
+    anchor: "## 1. 運用変更作業（設定変更・デプロイ・ロールバック）"
+    message: >-
+      Technical prerequisites, execution constraints, tooling dependencies, and validation methods for changes and
+      rollbacks are completely omitted.
+    message_ja: 変更およびロールバックに関する技術的な前提条件、実行の制約、ツールの依存関係、および検証方法が完全に省略されています。
+  - id: F011
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 10
+    anchor: "- 実施:"
+    message: >-
+      Input parameters, target configuration items, execution steps, and completion verification conditions required to
+      perform the change are not specified.
+    message_ja: 変更を実行するために必要な入力パラメータ、ターゲットとなる構成アイテム、実行ステップ、および完了の検証条件が指定されていません。
+  - id: F012
+    severity: major
+    rule: vp-dev-change-impact
+    line: 8
+    anchor: "- 変更チケット起票（承認者: Ops Lead）"
+    message: >-
+      The deliverable merely mentions impact assessment without defining the criteria or scope for evaluating system,
+      schema, and operational impacts.
+    message_ja: 成果物は影響評価に言及しているだけで、システム、スキーマ、および運用の影響を評価するための基準や範囲が定義されていません。
+  - id: F013
+    severity: major
+    rule: vp-dev-testability
+    line: 10
+    anchor: "- 実施:"
+    message: Post-change and rollback validation steps, verification commands, and expected test outcomes are not provided.
+    message_ja: 変更後およびロールバック時の検証ステップ、検証コマンド、および期待されるテスト結果が提供されていません。
+  - id: F014
+    severity: major
+    rule: vp-qe-verifiability
+    line: 11
+    anchor: "- 実施ログ（誰が/いつ/何を）を残す"
+    message: 「実施ログ（誰が/いつ/何を）を残す」という表現のみでは, 証跡として十分な内容であるかを判定できず, 再現性を担保できない。
+    message_ja: 「実施ログ（誰が/いつ/何を）を残す」という表現のみでは, 証跡として十分な内容であるかを判定できず, 再現性を担保できない。
+  - id: F015
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
+    message: "`opr-rulebook` 第5章で定義された必須構成（概要、適用範囲・前提、証跡、関連文書導線等）がほぼすべて欠落しており、文書として不成立である。"
+    message_ja: "`opr-rulebook` 第5章で定義された必須構成（概要、適用範囲・前提、証跡、関連文書導線等）がほぼすべて欠落しており、文書として不成立である。"
+  - id: F016
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
+    message: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別と矛盾している。
+    message_ja: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別と矛盾している。
+  - id: F017
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
+    message: "`opr-template.md` の構成に従っておらず、サンプルとしてあるべき「rulebook に準拠した具体的な記述例」を提示できていない。"
+    message_ja: "`opr-template.md` の構成に従っておらず、サンプルとしてあるべき「rulebook に準拠した具体的な記述例」を提示できていない。"
+  - id: F018
+    severity: major
     rule: vp-ux-readability
-    line: 41
+    line: 1
+    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
     message: 記載内容が極めて不十分であり、初見の読者が OPR の具体的な記述水準や構成を把握し、模倣するためのリファレンスとして機能していない。
-    anchor: ""
+    message_ja: 記載内容が極めて不十分であり、初見の読者が OPR の具体的な記述水準や構成を把握し、模倣するためのリファレンスとして機能していない。
+  - id: F019
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
+    message: >-
+      Criteria, prerequisites, and unresolved review issues required to advance the document status from draft to ready
+      are not defined.
+    message_ja: >-
+      Criteria, prerequisites, and unresolved review issues required to advance the document status from draft to ready
+      are not defined.
+  - id: F020
+    severity: major
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# 運用手順: 運用変更（設定変更・デプロイ） サンプル"
+    message: >-
+      Maintenance procedures, contact channels for operational inquiries, and update management guidelines for this
+      runbook are missing.
+    message_ja: このランブックのメンテナンス手順、運用の問い合わせに関する連絡窓口、およびアップデート管理のガイドラインが不足しています。

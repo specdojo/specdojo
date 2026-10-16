@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-844691df6cfc",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-16T20:00:57.196Z",
+    "completed_at": "2026-10-16T20:52:27.594Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-batch-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-change-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-incident-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-monitoring-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.opr-support-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.otp-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.otp-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-change-request-log-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-communication-plan-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-issue-log-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-organization-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-plan-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-quality-management-plan-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-844691df6cfc.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 16,
+    "summary": ".../grade/results/specdojo.opr-batch-sample.yaml   | 260 +++++++++++++++++---\n .../grade/results/specdojo.opr-change-sample.yaml  | 247 +++++++++++++++++--\n .../results/specdojo.opr-incident-sample.yaml      | 235 +++++++++++++++---\n .../grade/results/specdojo.opr-index-sample.yaml   | 233 ++++++++++++++++--\n .../results/specdojo.opr-monitoring-sample.yaml    | 206 +++++++++++++---\n .../grade/results/specdojo.opr-sample.yaml         | 268 ++++++++++++++++++---\n .../grade/results/specdojo.opr-support-sample.yaml | 246 +++++++++++++++++--\n .../grade/results/specdojo.otp-index-sample.yaml   | 100 ++++++--\n .../grade/results/specdojo.otp-sample.yaml         | 111 +++++++--\n .../specdojo.pm-change-request-log-sample.yaml     |  92 +++++--\n .../specdojo.pm-communication-plan-sample.yaml     | 221 +++++++++++------\n .../results/specdojo.pm-issue-log-sample.yaml      |  81 ++++++-\n .../results/specdojo.pm-organization-sample.yaml   | 204 +++++++++++-----\n .../grade/results/specdojo.pm-plan-sample.yaml     | 164 +++++++++----\n ...specdojo.pm-quality-management-plan-sample.yaml |  96 ++++++--\n 15 files changed, 2292 insertions(+), 472 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-844691df6cfc --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-844691df6cfc/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-844691df6cfc' \"$g…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "npm run build\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-844691df6cfc --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-844691df6cfc/results.tsv\nelse\n  grade_status=$?\n  printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-844691df6cfc' \"$grade_status\" >&2\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-844691df6cfc/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-844691df6cfc/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.3.1 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-844691df6cfc project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-844691df6cfc\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/specdojo/samples/opr-batch-sample.md\ndocument complete: docs/ja/specdojo/samples/opr-batch-sample.md\ndocument start: docs/ja/specdojo/samples/opr-change-sample.md\ndocument complete: docs/ja/specdojo/samples/opr-change-sample.md\ndocument start: docs/ja/specdojo/samples/opr-incident-sample.md\ndocument complete: docs/ja/specdojo/samples/opr-incident-sample.md\ndocument start: docs/ja/specdojo/samples/opr-index-sample.md\ndocument complete: docs/ja/specdojo/samples/opr-index-sample.md\ndocument start: docs/ja/specdojo/samples/opr-monitoring-sample.md\ndocument complete: docs/ja/specdojo/samples/opr-monitoring-sample.md\ndocument start: docs/ja/specdojo/samples/opr-sample.md\ndocument complete: docs/ja/specdojo/samples/opr-sample.md\ndocument start: docs/ja/specdojo/samples/opr-support-sample.md\ndocument complete: docs/ja/specdojo/samples/opr-support-sample.md\ndocument start: docs/ja/specdojo/samples/otp-index-sample.md\ndocument complete: docs/ja/specdojo/samples/otp-index-sample.md\ndocument start: docs/ja/specdojo/samples/otp-sample.md\ndocument complete: docs/ja/specdojo/samples/otp-sample.md\ndocument start: docs/ja/specdojo/samples/pm-change-request-log-sample.md\ndocument complete: docs/ja/specdojo/samples/pm-change-request-log-sample.md\ndocument start: docs/ja/specdojo/samples/pm-communication-plan-sample.md\ndocument complete: docs/ja/specdojo/samples/pm-communication-plan-sample.md\ndocument start: docs/ja/specdojo/samples/pm-issue-log-sample.md\ndocument complete: docs/ja/specdojo/samples/pm-issue-log-sample.md\ndocument start: docs/ja/specdojo/samples/pm-organization-sample.md\ndocument complete: docs/ja/specdojo/samples/pm-organization-sample.md\ndocument start: docs/ja/specdojo/samples/pm-plan-sample.md\ndocument complete: docs/ja/specdojo/samples/pm-plan-sample.md\ndocument start: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md\ndocument complete: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-844691df6cfc/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-16T20:05:22Z\tdocs/ja/specdojo/samples/opr-batch-sample.md\t1\tpassed\t256\tneeds-work\t67\t21\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:09:13Z\tdocs/ja/specdojo/samples/opr-change-sample.md\t1\tpassed\t229\tfail\t44\t20\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:12:45Z\tdocs/ja/specdojo/samples/opr-incident-sample.md\t1\tpassed\t210\tneeds-work\t70\t18\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:17:57Z\tdocs/ja/specdojo/samples/opr-index-sample.md\t1\tpassed\t310\tneeds-work\t75\t18\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:22:11Z\tdocs/ja/specdojo/samples/opr-monitoring-sample.md\t1\tpassed\t252\tneeds-work\t75\t15\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:25:09Z\tdocs/ja/specdojo/samples/opr-sample.md\t1\tpassed\t176\tfail\t53\t23\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:30:36Z\tdocs/ja/specdojo/samples/opr-support-sample.md\t1\tpassed\t325\tfail\t58\t20\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:32:37Z\tdocs/ja/specdojo/samples/otp-index-sample.md\t1\tpassed\t119\tneeds-work\t89\t6\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:34:49Z\tdocs/ja/specdojo/samples/otp-sample.md\t1\tpassed\t130\tneeds-work\t92\t6\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:36:19Z\tdocs/ja/specdojo/samples/pm-change-request-log-sample.md\t1\tpassed\t88\tpass\t95\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:39:01Z\tdocs/ja/specdojo/samples/pm-communication-plan-sample.md\t1\tpassed\t160\tneeds-work\t77\t14\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:42:44Z\tdocs/ja/specdojo/samples/pm-issue-log-sample.md\t1\tpassed\t221\tneeds-work\t94\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:45:51Z\tdocs/ja/specdojo/samples/pm-organization-sample.md\t1\tpassed\t185\tneeds-work\t79\t11\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:49:56Z\tdocs/ja/specdojo/samples/pm-plan-sample.md\t1\tpassed\t243\tneeds-work\t84\t9\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-16T20:52:26Z\tdocs/ja/specdojo/samples/pm-quality-management-plan-sample.md\t1\tpassed\t148\tneeds-work\t90\t3\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-844691df6cfc/attempt-1/command.stdout.log",
+      "bytes": 4847,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-844691df6cfc/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

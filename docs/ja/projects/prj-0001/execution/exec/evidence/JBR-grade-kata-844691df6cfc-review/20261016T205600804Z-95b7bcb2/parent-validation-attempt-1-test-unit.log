@@ -1,0 +1,650 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.11 [39m[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-kata-844691df6cfc[39m
+
+ [32m✓[39m tests/src/exec-reporter.test.ts [2m([22m[2m80 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [31m❯[39m tests/src/grade.test.ts [2m([22m[2m69 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 869[2mms[22m[39m
+     [32m✓[39m discovers artifact templates but excludes internal exec templates from kata[32m 13[2mms[22m[39m
+     [32m✓[39m excludes generated documents and rejects their explicit selection[32m 2[2mms[22m[39m
+     [32m✓[39m excludes trashed deliverables for every selection mode and rejects explicit selection[32m 12[2mms[22m[39m
+     [32m✓[39m combines verdict, score, finding-count, and changed-only filters[32m 10[2mms[22m[39m
+     [32m✓[39m counts all stored finding severities against the maximum[32m 2[2mms[22m[39m
+     [32m✓[39m defines ungraded as the absence of specdojo.grade[32m 0[2mms[22m[39m
+     [32m✓[39m selects only current, retryable pipeline state as incomplete[32m 3[2mms[22m[39m
+     [32m✓[39m rejects invalid score and finding thresholds[32m 0[2mms[22m[39m
+     [32m✓[39m parses JSON and enforces severity level caps[32m 1[2mms[22m[39m
+     [32m✓[39m accepts submissions without the legacy agent-supplied graded_by[32m 0[2mms[22m[39m
+     [32m✓[39m resolves the grading actor from the member roster[32m 1[2mms[22m[39m
+     [32m✓[39m requires every applicable agent viewpoint and excludes deterministic viewpoints[32m 0[2mms[22m[39m
+     [32m✓[39m rejects a rubric that has no weight for a graded viewpoint category[32m 0[2mms[22m[39m
+     [32m✓[39m weights all nine categories for both targets and sums each target to 100[32m 0[2mms[22m[39m
+     [32m✓[39m grades every common viewpoint without a continuous flag[32m 0[2mms[22m[39m
+     [32m✓[39m writes an idempotent compact grade snapshot that Prettier preserves[32m 37[2mms[22m[39m
+     [32m✓[39m normalizes repeated blank lines and trailing whitespace for content hashes[32m 1[2mms[22m[39m
+     [32m✓[39m normalizes trailing blank lines to exactly one newline[32m 1[2mms[22m[39m
+     [32m✓[39m keeps mappings outside grade in block style[32m 1[2mms[22m[39m
+     [32m✓[39m places a finding before the containing 'nested list' block[32m 4[2mms[22m[39m
+     [32m✓[39m places a finding before the containing 'table' block[32m 1[2mms[22m[39m
+     [32m✓[39m places a finding before the containing 'fenced code' block[32m 1[2mms[22m[39m
+     [32m✓[39m places a finding before a directive comment attached to its block[32m 7[2mms[22m[39m
+     [32m✓[39m detects count drift and edits after grading[32m 1[2mms[22m[39m
+     [32m✓[39m preserves the severity and level cap across repeated grading[32m 1[2mms[22m[39m
+     [32m✓[39m allows a lower severity for a different residual finding with rationale[32m 0[2mms[22m[39m
+     [32m✓[39m renders an executor plan without a GradeSubmission JSON contract[32m 3[2mms[22m[39m
+     [32m✓[39m document_kinds で対象外の viewpoint を prompt へ含めない[32m 2[2mms[22m[39m
+     [32m✓[39m document_kinds で対象外の done_criteria を prompt へ含めない[32m 2[2mms[22m[39m
+     [32m✓[39m renders a reporter plan that only structures the executor declaration[32m 1[2mms[22m[39m
+     [32m✓[39m parses free-form executor rationale and rejects reporter judgment changes[32m 8[2mms[22m[39m
+     [32m✓[39m accepts presentation-only punctuation and whitespace differences in finding messages[32m 3[2mms[22m[39m
+     [32m✓[39m rejects semantic finding changes and reports the changed fields[32m 0[2mms[22m[39m
+     [32m✓[39m converts executor markers into a GradeSubmission without a reporter[32m 0[2mms[22m[39m
+     [32m✓[39m normalizes bold, list, and quote decorations around markers without changing messages[32m 0[2mms[22m[39m
+     [32m✓[39m does not treat a FINDING embedded in prose as a marker[32m 0[2mms[22m[39m
+     [32m✓[39m rejects executor output with a missing viewpoint marker[32m 3[2mms[22m[39m
+     [32m✓[39m rejects executor output without an END VIEWPOINT marker[32m 0[2mms[22m[39m
+     [32m✓[39m clamps executor levels to the finding severity cap and records the correction[32m 0[2mms[22m[39m
+     [32m✓[39m resolves declared and reverse-linked Kata references[32m 168[2mms[22m[39m
+[31m     [31m×[31m lists reference paths without embedding target or reference contents[39m[32m 147[2mms[22m[39m
+     [32m✓[39m embeds frontmatter separately and numbers body lines from the H1[32m 14[2mms[22m[39m
+     [32m✓[39m falls back to path references when embedded documents exceed the character limit[32m 2[2mms[22m[39m
+     [32m✓[39m selects a ready reference example from the same Kata kind on each run[32m 4[2mms[22m[39m
+     [32m✓[39m records the comparison reference as a document id[32m 0[2mms[22m[39m
+     [32m✓[39m keeps an already resolved id as is[32m 0[2mms[22m[39m
+     [32m✓[39m writes the reference id into the grade and omits the key when unused[32m 2[2mms[22m[39m
+     [32m✓[39m omits the reference section entirely when no example is given[32m 1[2mms[22m[39m
+     [32m✓[39m uses the given reference instead of selecting one[32m 124[2mms[22m[39m
+     [32m✓[39m reports no reference when candidates are empty[32m 142[2mms[22m[39m
+     [32m✓[39m returns nothing when no ready document shares the target kind[32m 1[2mms[22m[39m
+     [32m✓[39m records a good example as comparison material without evaluating it[32m 3[2mms[22m[39m
+     [32m✓[39m carries previous finding facts into the next plan without previous scores[32m 1[2mms[22m[39m
+     [32m✓[39m lists catalog done_criteria in the executor plan with roles, viewpoint, and markers[32m 2[2mms[22m[39m
+     [32m✓[39m ignores done_criteria for kata plans[32m 3[2mms[22m[39m
+     [32m✓[39m adds a done_criteria template to the reporter plan[32m 0[2mms[22m[39m
+     [32m✓[39m parses the DONE_CRITERIA block and rejects malformed entries[32m 0[2mms[22m[39m
+     [32m✓[39m requires every catalog criterion exactly once with a reason for unsatisfied[32m 1[2mms[22m[39m
+     [32m✓[39m converts executor markers with done_criteria into a deliverable GradeSubmission[32m 0[2mms[22m[39m
+     [32m✓[39m rejects deliverable executor output that omits a catalog criterion[32m 0[2mms[22m[39m
+     [32m✓[39m rejects reporter changes to criterion status or reason[32m 3[2mms[22m[39m
+     [32m✓[39m records a summary in the frontmatter and keeps score independent of satisfaction[32m 6[2mms[22m[39m
+     [32m✓[39m omits the summary when the document has no catalog criteria or is a kata[32m 0[2mms[22m[39m
+     [32m✓[39m writes one overwritten detail file per deliverable next to the grade[32m 14[2mms[22m[39m
+     [32m✓[39m writes the latest result sidecar without changing the deliverable[32m 34[2mms[22m[39m
+     [32m✓[39m carries severity by the canonical English message, not the Japanese display text[32m 70[2mms[22m[39m
+     [32m✓[39m requires exact inline code preservation and translation of ordinary English phrases[32m 0[2mms[22m[39m
+     [32m✓[39m hashes blank lines and legacy finding comments as document content[32m 0[2mms[22m[39m
+     [32m✓[39m changes when non-blank content changes[32m 0[2mms[22m[39m
+ [32m✓[39m tests/src/exec-plans.test.ts [2m([22m[2m67 tests[22m[2m)[22m[33m 1106[2mms[22m[39m
+ [32m✓[39m tests/src/exec-results.test.ts [2m([22m[2m40 tests[22m[2m)[22m[33m 622[2mms[22m[39m
+ [32m✓[39m tests/src/register-commands.test.ts [2m([22m[2m46 tests[22m[2m)[22m[33m 1338[2mms[22m[39m
+Updated ticket status → ready: /tmp/specdojo-ticket-A133M1/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-OZCdmI/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-ar34eR/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-T2ZiCP/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-vtMTnI/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-0zRRxL/pjr-0001-topic.md
+ [32m✓[39m tests/src/register.test.ts [2m([22m[2m59 tests[22m[2m)[22m[33m 477[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-inplace.test.ts [2m([22m[2m17 tests[22m[2m)[22m[33m 693[2mms[22m[39m
+ [32m✓[39m tests/src/exec-events.test.ts [2m([22m[2m84 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+before
+  
+  
+docs/selected.md
+ [32m✓[39m tests/src/job/job.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 153[2mms[22m[39m
+ [32m✓[39m tests/src/docs/doc-index.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 4574[2mms[22m[39m
+     [33m[2m✓[22m[39m 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する [33m 4541[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run.test.ts [2m([22m[2m49 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/src/schedule/build.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m tests/src/exec-provider-scaffold.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 108[2mms[22m[39m
+ [32m✓[39m tests/src/exec-register-resume.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/tools/grade-per-document.test.ts [2m([22m[2m31 tests[22m[2m)[22m[33m 7601[2mms[22m[39m
+     [33m[2m✓[22m[39m runs all three stages for one document and skips it on resume [33m 485[2mms[22m[39m
+     [33m[2m✓[22m[39m routes deliverables through deliverable grade plans and apply [33m 467[2mms[22m[39m
+     [33m[2m✓[22m[39m exits with 1 and reports how to resume when a stage failure leaves a document incomplete [33m 306[2mms[22m[39m
+     [33m[2m✓[22m[39m exits with 0 when no document is left incomplete [33m 431[2mms[22m[39m
+     [33m[2m✓[22m[39m retries a failed stage in a new run without repeating completed stages [33m 620[2mms[22m[39m
+     [33m[2m✓[22m[39m excludes an exhausted stage from retries and reports it [33m 920[2mms[22m[39m
+     [33m[2m✓[22m[39m does not reselect an exhausted ungraded document through the filter union [33m 629[2mms[22m[39m
+     [33m[2m✓[22m[39m reruns the executor once when grade apply rejects the executor markers [33m 332[2mms[22m[39m
+     [33m[2m✓[22m[39m leaves the current stage incomplete on rate limit and resumes it [33m 554[2mms[22m[39m
+     [33m[2m✓[22m[39m reuses the initial filtered selection when resuming [33m 567[2mms[22m[39m
+ [32m✓[39m tests/src/catalog/plan.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 127[2mms[22m[39m
+ [32m✓[39m tests/src/kata/kata.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+ [32m✓[39m tests/src/dashboard/dashboard.test.ts [2m([22m[2m27 tests[22m[2m)[22m[33m 358[2mms[22m[39m
+ [32m✓[39m tests/src/exec-parent-validation.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 250[2mms[22m[39m
+ [32m✓[39m tests/src/exec-worktree.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m tests/src/register-item.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 103[2mms[22m[39m
+ [32m✓[39m tests/src/register-history.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+ [32m✓[39m tests/src/catalog/build.test.ts [2m([22m[2m36 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/src/grade-triggers.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 177[2mms[22m[39m
+ [32m✓[39m tests/src/devcontainer/scaffold.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+ [32m✓[39m tests/src/catalog/generate.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+ [32m✓[39m tests/src/routine/routine.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+ [32m✓[39m tests/src/review/plan.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 126[2mms[22m[39m
+ [32m✓[39m tests/src/exec-agent-protected-config.test.ts [2m([22m[2m46 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m tests/src/exec-register.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/src/exec-evidence.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m tests/src/specdojo-config-repos.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m tests/src/schedule/strategy-generate.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 405[2mms[22m[39m
+ [32m✓[39m tests/src/dashboard/timeline-build.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m tests/src/exec-agent-config.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 247[2mms[22m[39m
+ [32m✓[39m tests/src/exec-pipeline-state.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws SVG when mermaid-cli version or config changes, reuses otherwise
+[22m[39m🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-Telkb9/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-Telkb9/public/mermaid/147b6cb4.svg
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-Telkb9/docs/ja/test.md
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws SVG when mermaid-cli version or config changes, reuses otherwise
+[22m[39m🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-Telkb9/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-Telkb9/public/mermaid/4b643ccb.svg
+🧹 Removing orphan mermaid SVG: 147b6cb4.svg
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws SVG when mermaid-cli version or config changes, reuses otherwise
+[22m[39m🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-Telkb9/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-Telkb9/public/mermaid/6a0876a7.svg
+🧹 Removing orphan mermaid SVG: 4b643ccb.svg
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mreuses the file-level manifest cache when version and config are unchanged
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-Swj9qF/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-Swj9qF/public/mermaid/147b6cb4.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mreuses the file-level manifest cache when version and config are unchanged
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws despite a matching manifest entry when the config changes
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-AhGQWN/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-AhGQWN/public/mermaid/147b6cb4.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws despite a matching manifest entry when the config changes
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-AhGQWN/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-AhGQWN/public/mermaid/4b643ccb.svg
+🧹 Removing orphan mermaid SVG: 147b6cb4.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws despite a matching manifest entry when the mermaid-cli version changes
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-uUQV61/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-uUQV61/public/mermaid/147b6cb4.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws despite a matching manifest entry when the mermaid-cli version changes
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-uUQV61/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-uUQV61/public/mermaid/e4c1c6ef.svg
+🧹 Removing orphan mermaid SVG: 147b6cb4.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation cache[2m > [22m[2mredraws when a previous manifest entry lacks the version and config hash
+[22m[39m🔍 Scanning docs for mermaid code blocks...
+🌀 Generating mermaid SVG from: ../../../../tmp/specdojo-mermaid-cache-wFFZps/docs/ja/test.md
+🌀 Generating mermaid SVG: ../../../../tmp/specdojo-mermaid-cache-wFFZps/public/mermaid/147b6cb4.svg
+🧹 Removing orphan mermaid SVG: 1234abcd.svg
+✅ Mermaid SVG generation done.
+
+[90mstdout[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation basics[2m > [22m[2mremoves a missing Markdown entry from the manifest without throwing
+[22m[39m🧹 Removing orphan mermaid SVG: 1234abcd.svg
+
+ [32m✓[39m tests/packages/docs-site/gen-mermaid-svg.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+ [32m✓[39m tests/src/catalog/merge.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m tests/src/catalog/plan-command.test.ts [2m([22m[2m10 tests[22m[2m)[22m[33m 611[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-ready.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m tests/src/exec-deliverable.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 187[2mms[22m[39m
+ [32m✓[39m tests/src/grade-result.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/src/catalog/scaffold.test.ts [2m([22m[2m65 tests[22m[2m)[22m[33m 1812[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/remark-md-content.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 56[2mms[22m[39m
+Would move 1 agent member(s) from /tmp/specdojo-members-tRt78A/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-tRt78A/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-tRt78A/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-tRt78A/.specdojo/agent-members.yaml
+ [32m✓[39m tests/src/specdojo-config.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 61[2mms[22m[39m
+ [32m✓[39m tests/src/catalog/index.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 121[2mms[22m[39m
+ [32m✓[39m tests/src/schedule/command.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m tests/src/review/grade.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-resolve-command.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/dist-freshness.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m tests/src/kata/command.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m tests/src/exec-trial.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m tests/src/orchestrator-command.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/src/exec-register-plan-escape.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 279[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-lock.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 102[2mms[22m[39m
+ [32m✓[39m tests/src/exec-protection-handoff.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/src/exec-strategy.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-cpm.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/src/exec.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/src/init-command.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 139[2mms[22m[39m
+ [32m✓[39m tests/src/register-date.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/src/exec-event-msg-default.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32m✓[39m tests/src/exec-agent-config-command.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/docs/yaml-pages.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m tests/src/specdojo-config-command.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-calendar.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/src/catalog/plan-generate.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m tests/src/git-environment-isolation.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 667[2mms[22m[39m
+     [33m[2m✓[22m[39m TypeScript から git を起動する箇所はすべて gitEnvironment() を使う [33m 660[2mms[22m[39m
+ [32m✓[39m tests/src/exec-release-all-blocked.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m tests/src/exec-reopen-command.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 56[2mms[22m[39m
+ [32m✓[39m tests/src/register-migrate-timestamps.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m tests/src/register-event-merge.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m tests/src/docs/template-frontmatter.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/src/catalog/based-on.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m tests/src/exec-register-multiple-ids.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/register-migration.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 105[2mms[22m[39m
+ [32m✓[39m tests/src/docs/template-resolution.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/src/exec-plans-grade-findings.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+Wrote agent stdout: /tmp/specdojo-agent-command-qqMBBz/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-E2RLtN/outputs/partial.txt
+ [32m✓[39m tests/src/agent-command.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-parent-validation-gate.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-hash.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m tests/docs/specdojo/schemas/sch-strategy-schema.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-progress.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/docs/viewpoint-document-kinds-check.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 46[2mms[22m[39m
+ [32m✓[39m tests/src/exec-project.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/src/exec-shared.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-downgrade-unfilled.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/tools/build-if-stale.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m tests/src/exec-task-repos.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/exec-repo-trace.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tests/src/exec-format.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 64[2mms[22m[39m
+ [32m✓[39m tests/tools/validate-orchestrator-sync.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-gantt-chart-scope.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/src/cli-verb-taxonomy.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/src/specdojo-gitignore.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/register-view-order.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tests/tools/catalog-validate-if-configured.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-resolve-claiming-actor.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-lock-command.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m tests/src/exec-slot-lock.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 85[2mms[22m[39m
+ [32m✓[39m tests/src/exec-limit.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/rulebook-schema-enums.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-gantt-chart-render.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+ [32m✓[39m tests/src/exec-worktree-ops.test.ts [2m([22m[2m5 tests[22m[2m)[22m[33m 559[2mms[22m[39m
+ [32m✓[39m tests/src/exec-scheduler-command.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32m✓[39m tests/docs/specdojo/schemas/specdojo-config-schema.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/exec-schedule-validation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m tests/src/build-command.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/remark-frontmatter-ajv2020.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m tests/src/register-migrate-events.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/markdownlint-rule-no-chinese-glyphs.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 124[2mms[22m[39m
+ [32m✓[39m tests/src/exec-run-worker-pool.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/glossary-references.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/history-links.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m tests/docs/specdojo/schemas/pm-members-schema.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m tests/src/agent-response.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-site/locale-sidebar.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m tests/tools/protect-main-push.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tests/docs/specdojo/schemas/job-schema.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m tests/src/spawn-self.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/exec-handoff.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/src/package-paths.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/catalog/paths.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/vscode-markdown-table.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/src/exec-shared-display-width.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/glob-files.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m tests/src/practice-id.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/vitest-config.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m tests/src/yaml.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/src/specdojo-config-env.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m tests/packages/docs-lint/remark-no-unescaped-angle-placeholder.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 12600[2mms[22m[39m
+     [33m[2m✓[22m[39m produces no false positives on the existing docs/ markdown [33m 12581[2mms[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m130 passed[39m[22m[90m (131)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2055 passed[39m[22m[90m (2056)[39m
+[2m   Start at [22m 05:59:05
+[2m   Duration [22m 37.11s[2m (transform 2.56s, setup 514ms, import 17.90s, tests 39.06s, environment 6ms)[22m
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+[90mstderr[2m | tests/src/schedule/strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2mDCT・Timeline・intent・grade から混在 profile、owner、gate、依存を生成する
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/src/schedule/strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2m既存 scope の local_ids を保ち、選択した成果物だけの strategy を再生成する
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/src/schedule/strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2m既存 scope の local_ids がカタログに存在しない場合は停止する
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/src/schedule/strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2mowner を解決できない場合は推測せず停止する
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/src/schedule/strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2mintent 宣言が不足する場合は候補を返さない
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/src/schedule/strategy-generate.test.ts[2m > [22m[2mstrategy generator[2m > [22m[2mschedule strategy generate CLI が正準パスへ strategy を生成する
+[22m[39munknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+unknown format "date" ignored in schema at path "./sch-common.schema.yaml#/$defs/Date"
+
+[90mstderr[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation basics[2m > [22m[2mremoves a missing Markdown entry from the manifest without throwing
+[22m[39m[mermaid] skipping missing or generated Markdown: ja/removed.md
+
+[90mstderr[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts[2m > [22m[2mMermaid SVG generation basics[2m > [22m[2mignores generated Markdown and removes any stale manifest entry
+[22m[39m[mermaid] skipping missing or generated Markdown: ja/generated/invalid.md
+
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m tests/src/grade.test.ts[2m > [22mgrade plan[2m > [22mlists reference paths without embedding target or reference contents
+[31m[1mAssertionError[22m: expected '---\nspecdojo:\n  id: prj-0001:grade-…' not to contain '# 運用手順: バッチ再実行・失敗対応 サンプル'[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- # 運用手順: バッチ再実行・失敗対応 サンプル[39m
+[31m+ ---[39m
+[31m+ specdojo:[39m
+[31m+   id: prj-0001:grade-kata-0e1384b32eef-plan[39m
+[31m+   type: exec-plan[39m
+[31m+   rulebook: none[39m
+[31m+   task_id: GRADE-KATA-0E1384B32EEF[39m
+[31m+   name: 'grade: docs/ja/specdojo/samples/opr-batch-sample.md'[39m
+[31m+   mode: review[39m
+[31m+   status: ready[39m
+[31m+   project_id: prj-0001[39m
+[31m+   targets:[39m
+[31m+     - specdojo:opr-batch-sample[39m
+[31m+ ---[39m
+[31m+[39m
+[31m+ # Review Plan: GRADE-KATA-0E1384B32EEF grade: docs/ja/specdojo/samples/opr-batch-sample.md[39m
+[31m+[39m
+[31m+ この plan は grade pipeline の executor stage 用である。評価と根拠の記述だけを行い、GradeSubmission JSON は作成しない。`grade apply` が最終応答の marker を機械的に解析して GradeSubmission を生成し、契約を満たさない応答は拒否して executor を再実行する。[39m
+[31m+[39m
+[31m+ ## 1. このタスクで行うこと[39m
+[31m+[39m
+[31m+ 評価対象 `docs/ja/specdojo/samples/opr-batch-sample.md` を共通 viewpoint と category rubric で 0-4 判定する。deterministic viewpoint は CLI が判定するため、agent の出力には含めない。[39m
+[31m+[39m
+[31m+ ## 2. 対象項目[39m
+[31m+[39m
+[31m+ - `target`: kata[39m
+[31m+ - `rubric`: grade-rubric-v1[39m
+[31m+ - `document_id`: specdojo:opr-batch-sample[39m
+[31m+ - `評価対象`: `docs/ja/specdojo/samples/opr-batch-sample.md`[39m
+[31m+[39m
+[31m+ ### 参考資料[39m
+[31m+[39m
+[31m+ 参考資料は評価対象ではなく、成果物間整合を判定するための材料である。参考資料自体を評価しない。[39m
+[31m+[39m
+[31m+ - `docs/ja/specdojo/rulebooks/opd-rulebook.md`[39m
+[31m+ - `docs/ja/specdojo/rulebooks/opr-rulebook.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opd-access-control-sample.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opd-incident-management-sample.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opd-monitoring-sample.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opd-sample.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opr-access-control-sample.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opr-backup-restore-sample.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opr-change-sample.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opr-incident-sample.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opr-monitoring-sample.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opr-sample.md`[39m
+[31m+ - `docs/ja/specdojo/samples/opr-support-sample.md`[39m
+[31m+ - `docs/ja/specdojo/templates/opr-template.md`[39m
+[31m+[39m
+[31m+ ## 3. 進め方[39m
+[31m+[39m
+[31m+ 1. 評価対象をファイル読み取りツールで全文読み、実行ログに読み取り操作を残す。plan に対象本文は埋め込まれていないため、この手順を省略しない。[39m
+[31m+ 2. 参考資料と良い実例がある場合は列挙された全ファイルを全文読み、実行ログに各パスの読み取り操作を残す。参考資料や良い実例を評価対象と混同しない。[39m
+[31m+ 3. 良い実例がある場合は、章ごとの具体性、根拠の密度、過不足を評価対象と比較して記載水準を判定する。表現の類似や実例自体の欠点を評価理由にせず、rubric と viewpoint を最終的な判定基準にする。[39m
+[31m+ 4. 評価対象を次の rubric と viewpoint に照らし、各 viewpoint を 0-4 で判定する。ある viewpoint の finding の有無から、ほかの viewpoint の判定を推論しない。[39m
+[31m+ 5. 判定根拠と新しい finding の message は英語で記述する。固有名詞・識別子・引用は原文を保ってよい。日本語だけの既存 finding は互換用の正本として扱い、未解消ならその message を翻訳せず原文のまま再掲する。[39m
+[31m+ 6. level 3 以下には finding を付ける。finding には severity（blocker / major / minor / note）、対象直前の本文行番号、具体的な修正理由を含める。line は Frontmatter を除く本文の1始まり（通常は H1 が1行目）とする。level 4 は finding なしとする。[39m
+[31m+ 7. 前回の指摘を対象の現在内容と照合し、解消済みか確認する。未解消なら前回の canonical message を変更せず今回の finding に含め、severity は前回と同等以上を指定する。前回の rule は前回評価時の分類として扱い、各 viewpoint は現在の根拠から独立に評価する。前回の問題が解消され、別の軽微な問題だけが残るため severity を引き下げる場合は、その根拠を新しい finding の message に含める。[39m
+[31m+ 8. 前回の指摘の確認だけで終了せず、前回の指摘にない問題もすべての viewpoint で独立して検出する。[39m
+[31m+[39m
+[31m+ ### 3.1. 前回の指摘[39m
+[31m+[39m
+[31m+ grade result サイドカーに記録された前回の finding を示す。対象本文には評価コメントを書き込まない。[39m
+[31m+[39m
+[31m+ ```json[39m
+[31m+ [[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-po-purpose-alignment",[39m
+[31m+     "line": 1,[39m
+[31m+     "anchor": "# 運用手順: バッチ再実行・失敗対応 サンプル",[39m
+[31m+     "message": "The document lacks a clear description of its specific operational purpose, scope, and expected outcomes, presenting only isolated procedure fragments without connecting them to project goals."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-po-decision-readiness",[39m
+[31m+     "line": 1,[39m
+[31m+     "anchor": "# 運用手順: バッチ再実行・失敗対応 サンプル",[39m
+[31m+     "message": "Open issues, prerequisites, and operational impact scope required for PO approval or review are not documented."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-pm-plan-feasibility",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "The procedures lack concrete work units, execution sequence, completion criteria, and assigned role codes necessary for task scheduling and progress tracking."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-pm-dependency-risk",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "Risks and dependencies regarding batch failure impacts on subsequent processing schedules and dependent deliverables are not identified."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-pm-control-reporting",[39m
+[31m+     "line": 11,[39m
+[31m+     "anchor": "- エスカレーション:",[39m
+[31m+     "message": "Reporting destinations and ticket recording requirements for escalation and rerun decisions are not clearly separated or specified."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-ba-business-value",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "The document does not describe the operational issues, target users, or business value served by the batch retry and escalation controls."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "major",[39m
+[31m+     "rule": "vp-ba-requirements-completeness",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "Applicable batch scope, exclusions, prerequisite conditions, and acceptance criteria are missing, preventing operators from verifying procedural completeness."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-ba-stakeholder-clarity",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "Stakeholders, primary operators, notification recipients, and agreed responsibilities beyond Ops Lead are not clearly defined."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-arc-technical-constraints",[39m
+[31m+     "line": 9,[39m
+[31m+     "anchor": "- 同一run_idで再実行可否を確認（冪等性方式に従う）",[39m
+[31m+     "message": "Technical constraints, idempotency verification mechanisms, and external system dependencies are not concretely specified."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "major",[39m
+[31m+     "rule": "vp-dev-implementation-readiness",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "Concrete execution commands, required input parameters, prerequisite checks, and completion conditions needed to carry out the batch retry are completely missing."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-dev-change-impact",[39m
+[31m+     "line": 11,[39m
+[31m+     "anchor": "- エスカレーション:",[39m
+[31m+     "message": "Side effects and impact of batch rerun execution on database states, downstream jobs, and related systems are insufficiently identified."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-dev-testability",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "Verification procedures, expected log patterns, and validation steps to confirm successful batch rerun execution are not provided."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-qe-verifiability",[39m
+[31m+     "line": 9,[39m
+[31m+     "anchor": "- 同一run_idで再実行可否を確認（冪等性方式に従う）",[39m
+[31m+     "message": "The criteria for verifying whether a rerun is permissible under the idempotency rule are not defined in an objectively testable pass/fail format."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "major",[39m
+[31m+     "rule": "vp-qe-omissions-consistency",[39m
+[31m+     "line": 1,[39m
+[31m+     "anchor": "# 運用手順: バッチ再実行・失敗対応 サンプル",[39m
+[31m+     "message": "Frontmatter の必須項目 `title` が不足している。"[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "major",[39m
+[31m+     "rule": "vp-qe-omissions-consistency",[39m
+[31m+     "line": 1,[39m
+[31m+     "anchor": "# 運用手順: バッチ再実行・失敗対応 サンプル",[39m
+[31m+     "message": "Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。"[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "major",[39m
+[31m+     "rule": "vp-qe-omissions-consistency",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "`opr-rulebook` 第 5 章で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バックアップ・リストア、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線）がすべて省略されており、ルールに違反している。"[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "major",[39m
+[31m+     "rule": "vp-qe-kata-conformance",[39m
+[31m+     "line": 1,[39m
+[31m+     "anchor": "# 運用手順: バッチ再実行・失敗対応 サンプル",[39m
+[31m+     "message": "Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。"[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "major",[39m
+[31m+     "rule": "vp-qe-kata-conformance",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 7` とすべきである。"[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "major",[39m
+[31m+     "rule": "vp-ux-readability",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "必須構成を大幅に省略しており、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。"[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "minor",[39m
+[31m+     "rule": "vp-ops-release-readiness",[39m
+[31m+     "line": 1,[39m
+[31m+     "anchor": "# 運用手順: バッチ再実行・失敗対応 サンプル",[39m
+[31m+     "message": "Open issues, prerequisite verification items, and criteria to promote the document from draft to ready are not specified."[39m
+[31m+   },[39m
+[31m+   {[39m
+[31m+     "severity": "major",[39m
+[31m+     "rule": "vp-ops-operability",[39m
+[31m+     "line": 6,[39m
+[31m+     "anchor": "",[39m
+[31m+     "message": "Essential operational procedures including execution tooling, log and trail storage locations, inquiry contacts, and change workflows are completely omitted, preventing operational execution."[39m
+[31m+   }[39m
+[31m+ ][39m
+[31m+ ```[39m
+[31m+[39m
+[31m+ ### 3.2. Rubric[39m
+[31m+[39m
+[31m+ - 0 (L0, review=incomplete): level 0[39m
+[31m+ - 1 (L1, review=incomplete): level 1[39m
+[31m+ - 2 (L2, review=incomplete): level 2[39m
+[31m+ - 3 (L3, review=complete-with-findings): level 3[39m
+[31m+ - 4 (L4, review=complete): level 4[39m
+[31m+[39m
+[31m+ ### 3.3. Viewpoints[39m
+[31m+[39m
+[31m+ - vp-qe-kata-conformance [quality/referential]: check Kata Evidence: authoring standard[39m
+[31m+ - vp-arc-conciseness [usability/discretionary]: check repetition Evidence: paragraphs[39m
+[31m+[39m
+[31m+ ## 4. 完了手順[39m
+[31m+[39m
+[31m+ 1. すべての agent viewpoint の判定と、必要な finding が揃っていることを確認する。[39m
+[31m+ 2. 最終応答では各 viewpoint を次のマーカーで1回ずつ宣言する。マーカー間には根拠や検討過程を自由形式で詳しく記述してよい。JSON、Markdown コードフェンス、GradeSubmission は出力しない。[39m
+[31m+ 3. `LEVEL` と各 `FINDING` は `grade apply` が機械的に読み取る申告値である。marker・`LEVEL`・`FINDING` はそれぞれ行頭に1行で記し、message は英語で1行に具体的に記す。message は正本としてそのまま記録される。finding がない場合は `FINDING` 行を記さない。[39m
+[31m+ 4. すべての viewpoint marker、0-4 の level、level 3 以下の finding、severity と非空 message が揃っていることを確認する。[39m
+[31m+[39m
+[31m+ ```text[39m
+[31m+ [VIEWPOINT vp-qe-kata-conformance][39m
+[31m+ LEVEL: <0-4>[39m
+[31m+ 根拠を自由形式で記述する。[39m
+[31m+ FINDING <severity> line=<line>: level 3 以下の場合だけ、具体的な修正理由を1行で記述する。[39m
+[31m+ [END VIEWPOINT][39m
+[31m+[39m
+[31m+ [VIEWPOINT vp-arc-conciseness][39m
+[31m+ LEVEL: <0-4>[39m
+[31m+ 根拠を自由形式で記述する。[39m
+[31m+ FINDING <severity> line=<line>: level 3 以下の場合だけ、具体的な修正理由を1行で記述する。[39m
+[31m+ [END VIEWPOINT][39m
+[31m+[39m
+[31m+ ```[39m
+[31m+[39m
+[31m+ ## 5. 異常終了の条件[39m
+[31m+[39m
+[31m+ - 評価対象、参考資料、または良い実例を読み取れない場合は、内容を推測せず異常終了する。[39m
+[31m+ - rubric または viewpoint に不足があり、全項目を判定できない場合は異常終了する。[39m
+[31m+ - すべての viewpoint の level と finding を申告できない場合は異常終了する。[39m
+[31m+[39m
+
+[36m [2m❯[22m tests/src/grade.test.ts:[2m1299:22[22m[39m
+    [90m1297|[39m     expect(plan).toContain("`docs/ja/specdojo/rulebooks/opr-rulebook.m…
+    [90m1298|[39m     [34mexpect[39m(plan)[33m.[39mnot[33m.[39m[34mtoContain[39m([32m"本文（finding.line"[39m)[33m;[39m
+    [90m1299|[39m     [34mexpect[39m(plan)[33m.[39mnot[33m.[39m[34mtoContain[39m([32m"# 運用手順: バッチ再実行・失敗対応 サンプル"[39m)[33m;[39m
+    [90m   |[39m                      [31m^[39m
+    [90m1300|[39m     [34mexpect[39m(plan)[33m.[39mnot[33m.[39m[34mtoContain[39m([32m"# 運用手順 作成ルール"[39m)[33m;[39m
+    [90m1301|[39m     [34mexpect[39m(plan[33m.[39mlength)[33m.[39m[34mtoBeLessThan[39m([34m20_000[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
