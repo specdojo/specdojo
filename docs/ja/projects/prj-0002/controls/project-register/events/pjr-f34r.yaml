@@ -74,3 +74,32 @@
       from: "-"
       to: "integrate failed: specdojo-assets: pre-integration check failed (no repository was integrated in this attempt): specdojo-assets: uncommitted changes outside the commit scope: specdojo-assets:assets/ch…"
   previous_event_id: reg_770f9473cf354f6b9b16c9f267c234b4
+- v: 1
+  id: reg_21204085edc34c1cbe0a8c2b39ffde1b
+  ts: "2026-10-16T14:40:42Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: specdojo-assets: pre-integration check failed (no repository was integrated in this attempt): specdojo-assets: uncommitted changes outside the commit scope: specdojo-assets:assets/ch…"
+      to: "-"
+  previous_event_id: reg_fe51d312fa5148bd9106736e510e257a
+- v: 1
+  id: reg_20420bba2e884c9fb680e2afd6f9a273
+  ts: "2026-10-16T14:41:01Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_21204085edc34c1cbe0a8c2b39ffde1b
