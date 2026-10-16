@@ -119,6 +119,17 @@ specdojo:
 本文です。
 `;
 
+function renderGradePlanWithoutStoredResults(
+  options: Parameters<typeof renderGradePlan>[0],
+): string {
+  const resultsDirectory = mkdtempSync(join(tmpdir(), "specdojo-grade-results-empty-"));
+  try {
+    return renderGradePlan({ ...options, resultsDirectory });
+  } finally {
+    rmSync(resultsDirectory, { recursive: true, force: true });
+  }
+}
+
 describe("grade target filters", () => {
   const passSubmission: GradeSubmission = {
     rubric: "grade-rubric-v1",
@@ -828,7 +839,7 @@ describe("grade markdown update", () => {
 describe("grade plan", () => {
   it("renders an executor plan without a GradeSubmission JSON contract", () => {
     const path = "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md";
-    const plan = renderGradePlan({
+    const plan = renderGradePlanWithoutStoredResults({
       target: "kata",
       path,
       references: [],
@@ -864,7 +875,7 @@ describe("grade plan", () => {
     if (!conciseness) throw new Error("test viewpoint is missing");
     conciseness.document_kinds = { include: ["specdojo:bps-rulebook"] };
 
-    const plan = renderGradePlan({
+    const plan = renderGradePlanWithoutStoredResults({
       target: "kata",
       path,
       references: [],
@@ -885,7 +896,7 @@ describe("grade plan", () => {
     if (!conciseness) throw new Error("test viewpoint is missing");
     conciseness.document_kinds = { include: ["specdojo:bps-rulebook"] };
 
-    const plan = renderGradePlan({
+    const plan = renderGradePlanWithoutStoredResults({
       target: "deliverable",
       path,
       references: [],
@@ -1284,27 +1295,27 @@ LEVEL: 4
   });
 
   it("lists reference paths without embedding target or reference contents", () => {
-    const path = "docs/ja/specdojo/samples/opr-batch-sample.md";
-    const references = resolveGradeReferencePaths(path);
-    const plan = renderGradePlan({
+    const path = "tests/fixtures/grade/non-embedded-target.md";
+    const reference = "tests/fixtures/grade/non-embedded-reference.md";
+    const plan = renderGradePlanWithoutStoredResults({
       target: "kata",
       path,
-      references,
+      references: [reference],
       viewpoints,
       projectId: "prj-0001",
     });
     expect(plan).toContain(`- \`評価対象\`: \`${path}\``);
-    expect(plan).toContain("`docs/ja/specdojo/rulebooks/opr-rulebook.md`");
+    expect(plan).toContain(`\`${reference}\``);
     expect(plan).not.toContain("本文（finding.line");
-    expect(plan).not.toContain("# 運用手順: バッチ再実行・失敗対応 サンプル");
-    expect(plan).not.toContain("# 運用手順 作成ルール");
+    expect(plan).not.toContain("TARGET_BODY_MUST_NOT_BE_EMBEDDED");
+    expect(plan).not.toContain("REFERENCE_BODY_MUST_NOT_BE_EMBEDDED");
     expect(plan.length).toBeLessThan(20_000);
   });
 
   it("embeds frontmatter separately and numbers body lines from the H1", () => {
     const path = "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md";
     const reference = "docs/ja/specdojo/rulebooks/cdfd-rulebook.md";
-    const plan = renderGradePlan({
+    const plan = renderGradePlanWithoutStoredResults({
       target: "kata",
       path,
       references: [reference],
@@ -1326,7 +1337,7 @@ LEVEL: 4
 
   it("falls back to path references when embedded documents exceed the character limit", () => {
     const path = "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md";
-    const plan = renderGradePlan({
+    const plan = renderGradePlanWithoutStoredResults({
       target: "kata",
       path,
       references: [],
@@ -1409,7 +1420,7 @@ LEVEL: 4
   it("omits the reference section entirely when no example is given", () => {
     // 空の節に「なし」と記すと、候補が存在しないのか指定していないのかを読み手が
     // 区別できない。
-    const plan = renderGradePlan({
+    const plan = renderGradePlanWithoutStoredResults({
       target: "kata",
       path: "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md",
       references: [],
@@ -1483,7 +1494,7 @@ LEVEL: 4
   it("records a good example as comparison material without evaluating it", () => {
     const path = "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md";
     const referenceExample = "docs/ja/specdojo/rulebooks/cdfd-rulebook.md";
-    const plan = renderGradePlan({
+    const plan = renderGradePlanWithoutStoredResults({
       target: "kata",
       path,
       references: [],
@@ -1606,7 +1617,7 @@ DC-002: unsatisfied: 承認時点の記載がない。
 `;
 
   it("lists catalog done_criteria in the executor plan with roles, viewpoint, and markers", () => {
-    const plan = renderGradePlan({
+    const plan = renderGradePlanWithoutStoredResults({
       target: "deliverable",
       path: deliverablePath,
       references: [],
@@ -1628,7 +1639,7 @@ DC-002: unsatisfied: 承認時点の記載がない。
   });
 
   it("ignores done_criteria for kata plans", () => {
-    const plan = renderGradePlan({
+    const plan = renderGradePlanWithoutStoredResults({
       target: "kata",
       path: deliverablePath,
       references: [],

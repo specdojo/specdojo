@@ -50,7 +50,10 @@ tests/src/grade.test.ts の plan の生成のテストが、リポジトリの�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `renderGradePlan` の単体テストでは、テストごとに作成した空の一時結果ディレクトリを `resultsDirectory` へ渡す共通 helper を使うようにした。これにより、リポジトリに保存された `execution/grade/results/` のfinding・`anchor`・評価履歴は plan の検証結果に影響しない。
+- 評価対象と参考資料の本文を埋め込まないことは、専用 fixture の本文にしかない固有文字列が plan に現れないことで確認する。実サンプルの見出しを否定検証する依存を除いた。
+- `tests/src/grade.test.ts` 内の `renderGradePlan` 利用を調べ、前回findingの引き継ぎ自体を確認するテスト以外はすべて上記 helper 経由にした。引き継ぎテストは従来どおり、テスト自身が一時ディレクトリへ作成した固定 sidecar だけを読む。
+- `src/` は変更していない。検証結果は exec result に記録する。
 
 ## 5. 関連ドキュメント
 
