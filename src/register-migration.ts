@@ -18,7 +18,7 @@ import {
   setRegisterItemTitle,
   type PjrItem,
 } from "./register-item.js";
-import { resolveSpecdojoTemplatePath } from "./template-resolution.js";
+import { resolveSpecdojoTemplatePath } from "./docs/template-resolution.js";
 import { loadRegisterItems } from "./register-views.js";
 
 // ================================

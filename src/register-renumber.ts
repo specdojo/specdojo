@@ -17,7 +17,7 @@ import {
   buildRegisterEvent,
   registerEventFilePath,
 } from "./register-events.js";
-import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
+import { parseSpecdojoDocument } from "./docs/frontmatter-namespace.js";
 import {
   applyRegisterItemFields,
   PJR_ID_RE,

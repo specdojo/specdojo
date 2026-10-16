@@ -8,10 +8,10 @@ import { collectResolvedDeliverables, type ResolvedDeliverable } from "./catalog
 import { resolveBasePath } from "./catalog-paths.js";
 import type { DctDoc, DctKind } from "./catalog-types.js";
 import { readYaml } from "./exec-shared.js";
-import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
+import { readSpecdojoNamespace } from "./docs/frontmatter-namespace.js";
 import { validateGradedMarkdown } from "./grade.js";
 import { readGradeResultForDocument, validateGradeResult } from "./grade-result.js";
-import { KATA_MISSING, loadRulebookRefs, resolveKataRefs, type KataRefs } from "./kata.js";
+import { KATA_MISSING, loadRulebookRefs, resolveKataRefs, type KataRefs } from "./kata/kata.js";
 import type { Approach } from "./exec-types.js";
 
 export type KataKindKey = keyof KataRefs;

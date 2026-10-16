@@ -16,7 +16,7 @@ import {
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
 import { dump, load as loadYaml } from "./yaml.js";
-import { resolveSpecdojoPath } from "./template-resolution.js";
+import { resolveSpecdojoPath } from "./docs/template-resolution.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import { diffPlanText } from "./catalog-plan.js";

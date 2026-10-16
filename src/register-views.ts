@@ -20,8 +20,8 @@ import {
   type PjrDisplayItem,
   type PjrItem,
 } from "./register-item.js";
-import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
-import { resolveSpecdojoTemplatePath } from "./template-resolution.js";
+import { flattenTemplateFrontmatter } from "./docs/template-frontmatter.js";
+import { resolveSpecdojoTemplatePath } from "./docs/template-resolution.js";
 
 // ================================
 // Derived View Generation

@@ -81,7 +81,7 @@ groups:
             path: src/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの読込・検証の中核処理、カタログ検証・表示ビュー生成
           - kind: implementation
-            path: src/deliverable.ts
+            path: src/deliverable/deliverable.ts
             purpose: 成果物本体の読込・雛形生成
         done_criteria: &utc-target-done-criteria
           - text: 個別対象の範囲・観点・代表条件が記述されていること
@@ -165,10 +165,10 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: 定期処理定義のdue判定・実行委譲
           - kind: implementation
-            path: src/job.ts
+            path: src/job/job.ts
             purpose: Job Run生成・実行・checkpoint更新
         done_criteria: *utc-target-done-criteria
       - local_id: utc-index-build
@@ -181,7 +181,7 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/index-command.ts
+            path: src/docs/index-command.ts
             purpose: index コマンド入口から到達する文書ID索引の構造・生成規則
           - kind: implementation
             path: src/build-command.ts
@@ -302,7 +302,7 @@ groups:
         rulebook: specdojo:itc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: action.kind別（exec-auto/exec-resume/exec-cycle）の委譲規則
           - kind: implementation
             path: src/exec.ts
@@ -321,7 +321,7 @@ groups:
             path: src/build-command.ts
             purpose: 一括再生成（exec→catalog→register→yaml-pages→index）の順序制御
           - kind: implementation
-            path: src/index-command.ts
+            path: src/docs/index-command.ts
             purpose: index コマンド入口から到達する文書索引の再構築
         done_criteria: *itc-target-done-criteria
 
@@ -484,13 +484,13 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-routine
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: 定期実行対象選択・実行試行記録・結果反映
           - kind: implementation
             path: src/exec.ts
             purpose: exec コマンド入口から到達するroutineから委譲された実行
           - kind: implementation
-            path: src/job.ts
+            path: src/job/job.ts
             purpose: Job Run生成・実行
         done_criteria: *stc-target-done-criteria
       - local_id: stc-multi-project
@@ -532,10 +532,10 @@ groups:
             path: src/catalog.ts
             purpose: catalog コマンド入口から到達するカタログ表示ビュー生成
           - kind: implementation
-            path: src/index-command.ts
+            path: src/docs/index-command.ts
             purpose: index コマンド入口から到達する文書索引生成
           - kind: implementation
-            path: src/yaml-pages-command.ts
+            path: src/docs/yaml-pages-command.ts
             purpose: yaml-pages コマンド入口から到達するYAML表示ページ生成
         done_criteria: *stc-target-done-criteria
       - local_id: stc-reporting
@@ -562,7 +562,7 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-deprecation
           - kind: implementation
-            path: src/deliverable.ts
+            path: src/deliverable/deliverable.ts
             purpose: deliverable コマンド入口から到達する文書のtrash移動・カタログ更新
           - kind: implementation
             path: src/catalog.ts

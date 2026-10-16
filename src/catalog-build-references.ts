@@ -10,7 +10,7 @@ import type {
   DctValidationResult,
 } from "./catalog-types.js";
 import { isDctCatalogFileName } from "./catalog-types.js";
-import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
+import { readSpecdojoNamespace } from "./docs/frontmatter-namespace.js";
 
 export type ResolvedDeliverable = {
   item: DctDeliverableItem;

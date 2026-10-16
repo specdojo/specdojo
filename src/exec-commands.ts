@@ -48,7 +48,7 @@ import {
 } from "./exec-plans.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./exec-provider-scaffold.js";
 import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./exec-register.js";
-import { scaffoldViewpoints } from "./review-plan.js";
+import { scaffoldViewpoints } from "./review/plan.js";
 import {
   registerCycleCommand,
   registerResumeCommand,

@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "./frontmatter-namespace.js";
+import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "./docs/frontmatter-namespace.js";
 import { expandTemplate, stripTerminalControlSequences } from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./exec-types.js";
@@ -13,7 +13,7 @@ import {
   type ReviewReporterOutput,
 } from "./exec-reporter.js";
 import type { ExecEvidence } from "./exec-evidence.js";
-import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./template-resolution.js";
+import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./docs/template-resolution.js";
 import { dump } from "./yaml.js";
 
 const MISSING_CHANGED_FILE_SUMMARY = "reporter の説明がないため、変更差分を参照。";

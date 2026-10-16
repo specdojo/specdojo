@@ -7,7 +7,7 @@ import { lint } from "markdownlint/sync";
 import { globSync } from "tinyglobby";
 import { buildValidator, formatErrors } from "../helpers/schema.js";
 import { specdojoRootDir } from "../../src/specdojo-config.js";
-import { flattenTemplateFrontmatter } from "../../src/template-frontmatter.js";
+import { flattenTemplateFrontmatter } from "../../src/docs/template-frontmatter.js";
 import {
   type RegisterAddFields,
   PJR_ID_RE,

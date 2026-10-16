@@ -9,7 +9,7 @@ import {
   type RateLimitDetection,
 } from "./exec-agent-config.js";
 import { normalizeAgentLimit, type AgentLimitKind, type AgentLimitSignal } from "./exec-limit.js";
-import { replaceDocIndexRefs } from "./doc-index.js";
+import { replaceDocIndexRefs } from "./docs/doc-index.js";
 import { loadPlan, parsePlanTaskIdentity } from "./exec-plans.js";
 import type { ReadyTaskView, TaskMode } from "./exec-types.js";
 import {

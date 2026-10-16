@@ -14,10 +14,10 @@
  * the repository so the clean-worktree precondition remains true.
  *
  * The command refuses a dirty worktree. It uses `git mv` for each mapped source and
- * for matching `.test.ts` / `.integration.test.ts` files under `tests/src`, then
- * rewrites relative TypeScript import/export, import(), require(), and vi/jest mock
- * specifiers in src, tests, tools, and scripts. A dry run prints the same plan but
- * makes no changes.
+ * for matching `.test.ts` / `.integration.test.ts` files under `tests/src` (or the
+ * legacy `tests/` root), then rewrites relative TypeScript import/export, import(),
+ * require(), and vi/jest mock specifiers in src, tests, tools, and scripts. A dry
+ * run prints the same plan but makes no changes.
  *
  * `import.meta.url`, `import.meta.dirname`, `__dirname`, and literal `dist/...` or
  * `src/...ts` references are reported only. Review those findings manually. After
@@ -172,6 +172,12 @@ function testPathFor(sourcePath, suffix) {
   return `tests/${stem}${suffix}`;
 }
 
+function legacyTestPathFor(sourcePath, suffix) {
+  const extension = path.posix.extname(sourcePath);
+  const stem = sourcePath.slice("src/".length, -extension.length);
+  return `tests/${stem}${suffix}`;
+}
+
 function buildMoves(repoRoot, mappings, trackedFiles) {
   const tracked = new Set(trackedFiles);
   const moves = [];
@@ -180,8 +186,17 @@ function buildMoves(repoRoot, mappings, trackedFiles) {
       throw new Error(`mapped source is not tracked: ${mapping.from}`);
     moves.push(mapping);
     for (const suffix of [".test.ts", ".integration.test.ts"]) {
-      const from = testPathFor(mapping.from, suffix);
-      if (tracked.has(from)) moves.push({ from, to: testPathFor(mapping.to, suffix) });
+      const candidates = [
+        testPathFor(mapping.from, suffix),
+        legacyTestPathFor(mapping.from, suffix),
+      ].filter((candidate) => tracked.has(candidate));
+      if (candidates.length > 1) {
+        throw new Error(
+          `multiple matching tests exist for ${mapping.from}: ${candidates.join(", ")}`,
+        );
+      }
+      const from = candidates[0];
+      if (from) moves.push({ from, to: testPathFor(mapping.to, suffix) });
     }
   }
 

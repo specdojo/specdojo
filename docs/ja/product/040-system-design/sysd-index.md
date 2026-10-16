@@ -37,7 +37,7 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 | Register Runtime | TypeScript source | `src/register.ts`、`src/register-core.ts`、`src/register-migration.ts`、`src/register-views.ts`、`src/register-update.ts`、`src/register-renumber.ts` | DEV | 公開 façade、共通基盤、移行、派生ビュー、項目更新、再採番・topic変更 |
 | Execution State | Plan / result / event | `docs/ja/projects/prj-0001/execution/` | PM / ARC | eventはappend-only |
 | Execution Runtime | TypeScript source | `src/exec.ts`、`src/exec-core.ts`、`src/exec-commands.ts`、`src/exec-plans*.ts`、`src/exec-run.ts`、`src/exec-run-*.ts`、`src/exec-trial*.ts`、`src/exec-reporter.ts`、`src/exec-reporter-*.ts` | DEV / ARC | 公開再export façade、plan生成、コマンド登録、実行モード、trial、共通制御、agent実行、executor / reporter pipeline |
-| Job / Routine | TypeScript source and definitions | `src/job.ts`、`src/job-definition.ts`、`src/routine.ts`、`src/routine-definition.ts` | DEV / OPS | 公開 façade、定義解析、Job Run生成、定期起動 |
+| Job / Routine | TypeScript source and definitions | `src/job/job.ts`、`src/job/definition.ts`、`src/routine/routine.ts`、`src/routine/definition.ts` | DEV / OPS | 公開 façade、定義解析、Job Run生成、定期起動 |
 | Documentation Site | VitePress configuration | `packages/docs-site/` | DEV | CLIとは独立した文書索引・表示・build package |
 | Git Integration | Git source and repository policy | `src/exec-worktree.ts`、`src/exec-worktree-ops.ts`、`src/exec-worktree-ops-*.ts`、`src/exec-repo-integration.ts`、`src/exec-repo-integration-*.ts`、`.github/` | DEV / ARC | branch / worktree / repository integration / PR境界 |
 

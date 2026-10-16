@@ -17,7 +17,7 @@ import {
 } from "../../src/exec-plans.js";
 import type { CriteriaItem } from "../../src/catalog-types.js";
 import type { RoleDefinition } from "../../src/role-types.js";
-import type { ReviewViewpoint } from "../../src/review-types.js";
+import type { ReviewViewpoint } from "../../src/review/types.js";
 
 function roleMapOf(roles: RoleDefinition[]): Map<string, RoleDefinition> {
   return new Map(roles.map((role) => [role.code, role]));

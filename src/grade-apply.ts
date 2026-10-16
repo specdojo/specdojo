@@ -51,9 +51,9 @@ import {
   resolveSafeMarkdownPath,
   resolveSafeRepositoryPath,
 } from "./grade-targets.js";
-import type { ReviewViewpointsDoc } from "./review-types.js";
+import type { ReviewViewpointsDoc } from "./review/types.js";
 import { specdojoRootDir } from "./specdojo-config.js";
-import { resolveSpecdojoPath } from "./template-resolution.js";
+import { resolveSpecdojoPath } from "./docs/template-resolution.js";
 
 export function normalizeGradeExecutorLine(line: string): string {
   let normalized = line.replace(/^\s*(?:>\s*)*(?:[-*+]\s+)?/, "");

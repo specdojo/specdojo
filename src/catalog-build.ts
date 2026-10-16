@@ -10,9 +10,9 @@ import type {
   DctValidationResult,
 } from "./catalog-types.js";
 import { isDctCatalogFileName } from "./catalog-types.js";
-import { declaredIncludes, declaredKata } from "./kata.js";
-import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
-import { flattenTemplateFrontmatter } from "./template-frontmatter.js";
+import { declaredIncludes, declaredKata } from "./kata/kata.js";
+import { readSpecdojoNamespace } from "./docs/frontmatter-namespace.js";
+import { flattenTemplateFrontmatter } from "./docs/template-frontmatter.js";
 import { specdojoRootDir } from "./specdojo-config.js";
 import {
   buildMarkdown,
@@ -26,7 +26,7 @@ import {
   resolveSpecdojoPathIfExists,
   specdojoDirectoryPaths,
   specdojoResourceCandidates,
-} from "./template-resolution.js";
+} from "./docs/template-resolution.js";
 
 type CatalogKataKind = "rulebook" | "recipe" | "sample" | "template";
 

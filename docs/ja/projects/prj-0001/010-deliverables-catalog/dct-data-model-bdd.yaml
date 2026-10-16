@@ -325,7 +325,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/routine.ts
+                path: src/routine/routine.ts
                 purpose: 定期処理定義（routine）のスキーマ・due判定・last_run/last_result更新規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
@@ -351,7 +351,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/job.ts
+                path: src/job/job.ts
                 purpose: Job Definition・Job Runのスキーマ、idempotency key・attempt・checkpointの生成規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
@@ -379,7 +379,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/deliverable.ts
+                path: src/deliverable/deliverable.ts
                 purpose: 成果物本体の共通メタ情報（frontmatter）の読込・雛形生成
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
@@ -408,7 +408,7 @@ groups:
                 path: src/catalog.ts
                 purpose: catalog コマンド入口から到達する成果物カタログ表示ビュー（generated/dct-<domain>.md）の生成規則
               - kind: implementation
-                path: src/index-command.ts
+                path: src/docs/index-command.ts
                 purpose: index コマンド入口から到達する文書ID索引（.specdojo/doc-index.json）の構造・生成規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること

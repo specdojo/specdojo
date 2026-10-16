@@ -18,7 +18,7 @@ import {
   type PjrItem,
   type RegisterItemFieldUpdates,
 } from "./register-item.js";
-import { resolveSpecdojoTemplatePath } from "./template-resolution.js";
+import { resolveSpecdojoTemplatePath } from "./docs/template-resolution.js";
 import type { RegisterAddFields, RegisterCommandDependencies } from "./register-command-types.js";
 
 export function registerCreateCommands(

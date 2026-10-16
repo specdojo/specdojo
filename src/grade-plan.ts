@@ -25,8 +25,8 @@ import {
   resolveSafeRepositoryPath,
   selectGradeReferenceExampleFromCatalog,
 } from "./grade-targets.js";
-import { viewpointAppliesToDocument } from "./review-plan.js";
-import type { ReviewViewpointsDoc } from "./review-types.js";
+import { viewpointAppliesToDocument } from "./review/plan.js";
+import type { ReviewViewpointsDoc } from "./review/types.js";
 
 export function deterministicResults(
   document: MarkdownDocument,

@@ -233,9 +233,9 @@ groups:
         note: 既存文書のretrofit（現状status=ready）。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation
-            path: src/job.ts
+            path: src/job/job.ts
             purpose: Job Definition／Job Runの概念モデル・生成・実行フロー
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: action.kind＝jobによるJob Run起動の委譲規則
         done_criteria: *sysd-term-done-criteria

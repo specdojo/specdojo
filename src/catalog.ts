@@ -21,7 +21,7 @@ import {
   validateDctDoc,
   validateRulebookKata,
 } from "./catalog-build.js";
-import { collectDocIndexEntries } from "./doc-index.js";
+import { collectDocIndexEntries } from "./docs/doc-index.js";
 import { deriveProjectId, runScaffold, type ProjectSize } from "./catalog-scaffold.js";
 import { isDctCatalogFileName, type DctDoc } from "./catalog-types.js";
 import {
@@ -46,7 +46,7 @@ import { generateCatalogsFromPlan, writeGeneratedCatalogs } from "./catalog-plan
 import {
   resolveSpecdojoReferencePathIfExists,
   resolveSpecdojoTemplatesDir,
-} from "./template-resolution.js";
+} from "./docs/template-resolution.js";
 
 function readSizeFromDeclaration(catalogPath: string): ProjectSize | null {
   const size = loadDctIndex(catalogPath)?.size;

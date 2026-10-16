@@ -3,7 +3,7 @@ import { basename, join } from "node:path";
 import { atomicWriteFile, prepareRegisterEventFile, type TicketStatus } from "./register-core.js";
 import type { RegisterItemView, RegisterPaths } from "./register-command-types.js";
 import { buildRegisterEvent, type RegisterEventAction } from "./register-events.js";
-import { parseSpecdojoDocument } from "./frontmatter-namespace.js";
+import { parseSpecdojoDocument } from "./docs/frontmatter-namespace.js";
 import {
   applyRegisterItemFields,
   formatRegisterItemFields,

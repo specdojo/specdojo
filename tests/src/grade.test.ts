@@ -31,7 +31,7 @@ import {
   type GradeSubmission,
   pipelineContentHash,
 } from "../../src/grade.js";
-import type { ReviewViewpointsDoc } from "../../src/review-types.js";
+import type { ReviewViewpointsDoc } from "../../src/review/types.js";
 import type { MemberRoster } from "../../src/specdojo-config.js";
 import type { GradeResult, StoredGradeFinding } from "../../src/grade-result.js";
 

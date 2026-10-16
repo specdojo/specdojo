@@ -8,7 +8,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
 import { dump, load } from "./yaml.js";
-import { resolveSpecdojoPath, specdojoDirectoryPaths } from "./template-resolution.js";
+import { resolveSpecdojoPath, specdojoDirectoryPaths } from "./docs/template-resolution.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import { collectResolvedDeliverables, loadCatalogDocs } from "./catalog-build.js";

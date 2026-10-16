@@ -18,7 +18,7 @@ import {
   MISSING,
   registerGradeFindingsText,
 } from "./exec-plans.js";
-import { buildSpecdojoFrontmatter } from "./frontmatter-namespace.js";
+import { buildSpecdojoFrontmatter } from "./docs/frontmatter-namespace.js";
 import {
   escapeMarkdownInline,
   expandTemplate,

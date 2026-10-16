@@ -4,7 +4,7 @@ import { dirname, join, relative } from "node:path";
 import type { Command } from "commander";
 import { dump, load } from "./yaml.js";
 import { runScaffold, type ProjectSize } from "./catalog-scaffold.js";
-import { runDevcontainerScaffold } from "./devcontainer-scaffold.js";
+import { runDevcontainerScaffold } from "./devcontainer/scaffold.js";
 import { runProviderScaffold } from "./exec-provider-scaffold.js";
 import { generateDerivedViewFiles, type RegisterPaths } from "./register.js";
 import {

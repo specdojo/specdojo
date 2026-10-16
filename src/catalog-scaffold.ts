@@ -9,7 +9,10 @@ import type {
   DctTemplateDoc,
 } from "./catalog-types.js";
 import { practiceLocalId } from "./practice-id.js";
-import { specdojoDirectoryPaths, type SpecdojoResolutionRoots } from "./template-resolution.js";
+import {
+  specdojoDirectoryPaths,
+  type SpecdojoResolutionRoots,
+} from "./docs/template-resolution.js";
 
 export type ProjectSize = "small" | "medium" | "large";
 export type ScaffoldVariables = Record<string, string>;

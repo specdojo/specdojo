@@ -1,8 +1,8 @@
 import Ajv2020Module from "ajv/dist/2020.js";
 import { extractJsonText } from "./agent-response.js";
 import type { TaskMode } from "./exec-types.js";
-import { REVIEW_VERDICTS, describeInvalidReviewVerdict, isReviewVerdict } from "./review-types.js";
-import type { ReviewVerdict } from "./review-types.js";
+import { REVIEW_VERDICTS, describeInvalidReviewVerdict, isReviewVerdict } from "./review/types.js";
+import type { ReviewVerdict } from "./review/types.js";
 
 export const MAX_TEXT_LENGTH = 4_000;
 

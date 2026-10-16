@@ -10,7 +10,7 @@ import {
   routineActionKindLabel,
   type RoutineExecutionResult,
   type RoutineRunHistoryEntry,
-} from "../routine.js";
+} from "../routine/routine.js";
 
 export type DashboardRoutineRow = {
   id: string;

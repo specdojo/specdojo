@@ -41,6 +41,7 @@ function createFixture(): { root: string; repo: string; mappingPath: string } {
     ].join("\n"),
   );
   writeFixtureFile(repo, "src/beta.ts", "export const beta = 2;\n");
+  writeFixtureFile(repo, "src/legacy.ts", "export const legacy = 3;\n");
   writeFixtureFile(repo, "src/shared.ts", "export const shared = 1;\n");
   writeFixtureFile(
     repo,
@@ -63,6 +64,11 @@ function createFixture(): { root: string; repo: string; mappingPath: string } {
     repo,
     "tests/src/beta.integration.test.ts",
     'import { beta } from "../../src/beta.js";\nvoid beta;\n',
+  );
+  writeFixtureFile(
+    repo,
+    "tests/legacy.test.ts",
+    'import { legacy } from "../src/legacy.js";\nvoid legacy;\n',
   );
   writeFixtureFile(
     repo,
@@ -89,6 +95,7 @@ function createFixture(): { root: string; repo: string; mappingPath: string } {
     `${JSON.stringify({
       "src/alpha.ts": "src/feature/alpha.ts",
       "src/beta.ts": "src/feature/renamed.ts",
+      "src/legacy.ts": "src/feature/legacy.ts",
     })}\n`,
     "utf8",
   );
@@ -118,6 +125,7 @@ describe("tools/src-move-codemod.mjs", () => {
     expect(dryRunOutput).toContain(
       "MOVE tests/src/beta.integration.test.ts -> tests/src/feature/renamed.integration.test.ts",
     );
+    expect(dryRunOutput).toContain("MOVE tests/legacy.test.ts -> tests/src/feature/legacy.test.ts");
     expect(dryRunOutput).toContain("DETECT path-construction src/feature/alpha.ts:2");
     expect(dryRunOutput).toContain("DETECT literal-path docs/guide.md:1");
     expect(dryRunOutput).not.toContain("controls/project-register/history.md");
@@ -149,6 +157,9 @@ describe("tools/src-move-codemod.mjs", () => {
     expect(
       readFileSync(path.join(repo, "tests/src/feature/renamed.integration.test.ts"), "utf8"),
     ).toContain('from "../../../src/feature/renamed.js"');
+    expect(readFileSync(path.join(repo, "tests/src/feature/legacy.test.ts"), "utf8")).toContain(
+      'from "../../../src/feature/legacy.js"',
+    );
     expect(readFileSync(path.join(repo, "tools/check.ts"), "utf8")).toContain(
       'from "../src/feature/alpha.js"',
     );
