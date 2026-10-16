@@ -1,6 +1,6 @@
 import { existsSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
-import { type DctSection } from "./catalog-types.js";
+import { type DctSection } from "./catalog/types.js";
 import { type ScheduleCalendar, type ScheduleIndex, type ScheduleNode } from "./exec-types.js";
 import {
   isSchYamlFilename,

@@ -15,7 +15,7 @@ import {
   targetDocIdsForDeliverable,
   stemFromPlanPath,
 } from "../../src/exec-plans.js";
-import type { CriteriaItem } from "../../src/catalog-types.js";
+import type { CriteriaItem } from "../../src/catalog/types.js";
 import type { RoleDefinition } from "../../src/role-types.js";
 import type { ReviewViewpoint } from "../../src/review/types.js";
 

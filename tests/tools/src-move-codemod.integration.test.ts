@@ -62,6 +62,11 @@ function createFixture(): { root: string; repo: string; mappingPath: string } {
   );
   writeFixtureFile(
     repo,
+    "tests/src/alpha-behavior.test.ts",
+    'import { alpha } from "../../src/alpha.js";\nvoid alpha;\n',
+  );
+  writeFixtureFile(
+    repo,
     "tests/src/beta.integration.test.ts",
     'import { beta } from "../../src/beta.js";\nvoid beta;\n',
   );
@@ -96,6 +101,8 @@ function createFixture(): { root: string; repo: string; mappingPath: string } {
       "src/alpha.ts": "src/feature/alpha.ts",
       "src/beta.ts": "src/feature/renamed.ts",
       "src/legacy.ts": "src/feature/legacy.ts",
+      "tests/src/alpha.test.ts": "tests/src/feature/alpha.test.ts",
+      "tests/src/alpha-behavior.test.ts": "tests/src/feature/alpha-behavior.test.ts",
     })}\n`,
     "utf8",
   );
@@ -122,6 +129,9 @@ describe("tools/src-move-codemod.mjs", () => {
 
     expect(dryRunOutput).toContain("DRY RUN: no files will be changed");
     expect(dryRunOutput).toContain("MOVE src/alpha.ts -> src/feature/alpha.ts");
+    expect(dryRunOutput).toContain(
+      "MOVE tests/src/alpha-behavior.test.ts -> tests/src/feature/alpha-behavior.test.ts",
+    );
     expect(dryRunOutput).toContain(
       "MOVE tests/src/beta.integration.test.ts -> tests/src/feature/renamed.integration.test.ts",
     );
@@ -154,6 +164,9 @@ describe("tools/src-move-codemod.mjs", () => {
     expect(readFileSync(path.join(repo, "tests/src/feature/alpha.test.ts"), "utf8")).toContain(
       'from "../../../src/feature/alpha.js"',
     );
+    expect(
+      readFileSync(path.join(repo, "tests/src/feature/alpha-behavior.test.ts"), "utf8"),
+    ).toContain('from "../../../src/feature/alpha.js"');
     expect(
       readFileSync(path.join(repo, "tests/src/feature/renamed.integration.test.ts"), "utf8"),
     ).toContain('from "../../../src/feature/renamed.js"');

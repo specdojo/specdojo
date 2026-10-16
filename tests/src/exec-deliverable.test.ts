@@ -15,7 +15,7 @@ import {
   generateDeliverablePlan,
   resolveDeliverableTarget,
 } from "../../src/exec-plans.js";
-import { validateCatalogDomains, validateCatalogLocalIds } from "../../src/catalog-build.js";
+import { validateCatalogDomains, validateCatalogLocalIds } from "../../src/catalog/build.js";
 
 let root: string;
 

@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, posix } from "node:path";
 import { dump, load } from "../yaml.js";
 import { collectDocIndexEntries } from "./doc-index.js";
-import { isDctTemplateCatalog, renderCatalogTemplateBody } from "../catalog-build.js";
+import { isDctTemplateCatalog, renderCatalogTemplateBody } from "../catalog/build.js";
 
 // YAML は VitePress のページにならないため、doc-index に載っている YAML ごとに
 // 同階層の generated/<name>.md へ表示用ページ（本文を yaml コードブロックで埋め込んだ

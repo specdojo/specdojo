@@ -39,7 +39,7 @@ import {
   normalizePhaseSetSelection,
   phaseSetNames,
   type PhaseSetSelection,
-} from "./schedule-phase-sets.js";
+} from "./schedule/phase-sets.js";
 import type { AgentStageRole, Proficiency } from "./exec-types.js";
 import type { ReadyTaskView } from "./exec-types.js";
 

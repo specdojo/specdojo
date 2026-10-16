@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { resolveCatalogPath } from "../../src/catalog.js";
+import { resolveCatalogPath } from "../../src/catalog/catalog.js";
 import {
   registerConfigCommands,
   SPECDOJO_CONFIG_REFERENCE_URL,

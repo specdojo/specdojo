@@ -78,7 +78,7 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの読込・検証の中核処理、カタログ検証・表示ビュー生成
           - kind: implementation
             path: src/deliverable/deliverable.ts
@@ -100,7 +100,7 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/schedule.ts
+            path: src/schedule/schedule.ts
             purpose: schedule コマンド入口から到達するsch-track読込・タスクID導出、sch-strategyからのsch-track生成
         done_criteria: *utc-target-done-criteria
       - local_id: utc-exec-core
@@ -238,10 +238,10 @@ groups:
         rulebook: specdojo:itc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの検証・確定
           - kind: implementation
-            path: src/schedule.ts
+            path: src/schedule/schedule.ts
             purpose: schedule コマンド入口から到達する検証済みカタログからのsch-track生成
         done_criteria: &itc-target-done-criteria
           - text: 個別結合範囲・テスト条件・合格基準が記述されていること
@@ -418,7 +418,7 @@ groups:
             path: src/specdojo-config.ts
             purpose: プロジェクト構成の初期化
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの初期生成
           - kind: implementation
             path: src/exec.ts
@@ -454,10 +454,10 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-catalog-planning
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの検証
           - kind: implementation
-            path: src/schedule.ts
+            path: src/schedule/schedule.ts
             purpose: schedule コマンド入口から到達するSchedule展開
           - kind: implementation
             path: src/exec.ts
@@ -529,7 +529,7 @@ groups:
             path: src/build-command.ts
             purpose: 一括再生成の順序制御
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達するカタログ表示ビュー生成
           - kind: implementation
             path: src/docs/index-command.ts
@@ -565,7 +565,7 @@ groups:
             path: src/deliverable/deliverable.ts
             purpose: deliverable コマンド入口から到達する文書のtrash移動・カタログ更新
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する保管先パスの解決
         done_criteria: *stc-target-done-criteria
 

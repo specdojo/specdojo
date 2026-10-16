@@ -12,14 +12,14 @@ export function missingCatalogProject(output) {
 }
 
 async function resolveCatalog() {
-  const { resolveCatalogPath } = await import("../src/catalog.ts");
+  const { resolveCatalogPath } = await import("../src/catalog/catalog.ts");
   return resolveCatalogPath({});
 }
 
 async function validateCatalog() {
   const [{ Command }, { registerCatalogCommands }] = await Promise.all([
     import("commander"),
-    import("../src/catalog.ts"),
+    import("../src/catalog/catalog.ts"),
   ]);
   const previousExitCode = process.exitCode;
   process.exitCode = undefined;

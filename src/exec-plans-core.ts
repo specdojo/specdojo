@@ -4,8 +4,8 @@ import { load } from "./yaml.js";
 import { specdojoRootDir } from "./specdojo-config.js";
 import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "./kata/kata.js";
 import type { KataRefs } from "./kata/kata.js";
-import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
-import { isDctPlanFileName } from "./catalog-plan.js";
+import { resolveBasePath, resolveDeliverablePath } from "./catalog/paths.js";
+import { isDctPlanFileName } from "./catalog/plan.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./docs/frontmatter-namespace.js";
 import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "./practice-id.js";
 import { resolveViewpointsDoc, viewpointAppliesToDocument } from "./review/plan.js";
@@ -16,7 +16,7 @@ import {
   tsForFilenameUtc,
 } from "./exec-shared.js";
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from "./exec-types.js";
-import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "./catalog-types.js";
+import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "./catalog/types.js";
 import type { ReviewViewpoint } from "./review/types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
 import {

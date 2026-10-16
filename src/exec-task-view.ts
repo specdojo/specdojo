@@ -12,7 +12,7 @@ import {
   resolveTaskMode,
   resolveTaskProficiency,
 } from "./exec-strategy.js";
-import { extractLocalId, extractPhaseSuffix } from "./schedule-phase-sets.js";
+import { extractLocalId, extractPhaseSuffix } from "./schedule/phase-sets.js";
 import { type ReadyTaskView } from "./exec-types.js";
 
 // Reconstruct a full ReadyTaskView for a task from the schedule (+ ready.json when

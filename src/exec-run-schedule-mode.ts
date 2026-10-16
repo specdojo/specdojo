@@ -9,7 +9,7 @@ import { readReadySnapshot } from "./exec-schedule-ready.js";
 import { specdojoRootDir } from "./specdojo-config.js";
 import { type ReadyTaskView } from "./exec-types.js";
 import { type CurrentState } from "./exec-types.js";
-import { extractLocalId, extractPhaseSuffix } from "./schedule-phase-sets.js";
+import { extractLocalId, extractPhaseSuffix } from "./schedule/phase-sets.js";
 import { resolveWorktreeBase } from "./exec-worktree.js";
 import {
   buildPhaseModeIndex,

@@ -2,8 +2,8 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { extname, isAbsolute, join, relative, resolve } from "node:path";
 import { load } from "./yaml.js";
-import { collectResolvedDeliverables, loadCatalogDocs } from "./catalog-build.js";
-import { isTrashedPath, resolveBasePath } from "./catalog-paths.js";
+import { collectResolvedDeliverables, loadCatalogDocs } from "./catalog/build.js";
+import { isTrashedPath, resolveBasePath } from "./catalog/paths.js";
 import { listFilesRecursive } from "./exec-shared.js";
 import { gradeContentHash } from "./grade-result.js";
 import {

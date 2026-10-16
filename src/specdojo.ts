@@ -5,9 +5,9 @@ import { evaluateDistFreshness, inspectDistEntryFreshness } from "./dist-freshne
 import { specdojoPackageVersion } from "./package-paths.js";
 import { registerConfigCommands, registerProjectCommands } from "./specdojo-config.js";
 import { registerExecCommands } from "./exec.js";
-import { registerCatalogCommands } from "./catalog.js";
+import { registerCatalogCommands } from "./catalog/catalog.js";
 import { registerDeliverableCommands } from "./deliverable/deliverable.js";
-import { registerScheduleCommands } from "./schedule.js";
+import { registerScheduleCommands } from "./schedule/schedule.js";
 import { registerTimelineCommands } from "./dashboard/timeline.js";
 import { registerIndexCommands } from "./docs/index-command.js";
 import { registerRegisterCommands } from "./register.js";

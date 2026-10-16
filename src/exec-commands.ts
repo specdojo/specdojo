@@ -1,7 +1,7 @@
 import { type Command } from "commander";
 import { existsSync } from "node:fs";
 import { join, resolve as pathResolve } from "node:path";
-import { validateCatalogLocalIds, validateRulebookKata } from "./catalog-build.js";
+import { validateCatalogLocalIds, validateRulebookKata } from "./catalog/build.js";
 import {
   acquireSchedulerLock,
   canBlockTask,

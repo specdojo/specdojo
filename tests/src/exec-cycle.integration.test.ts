@@ -6,7 +6,7 @@ import { dump } from "js-yaml";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../src/exec.js";
 import { rebuildStaleGeneratedTracksForCycle } from "../../src/exec-run.js";
-import { registerScheduleCommands } from "../../src/schedule.js";
+import { registerScheduleCommands } from "../../src/schedule/schedule.js";
 
 const originalCwd = process.cwd();
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];

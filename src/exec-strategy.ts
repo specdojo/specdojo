@@ -13,7 +13,7 @@ import {
   normalizePhaseSetSelection,
   phaseSetNames,
   type PhaseSetSelection,
-} from "./schedule-phase-sets.js";
+} from "./schedule/phase-sets.js";
 
 type StrategyPhaseMinimal = {
   id: string;

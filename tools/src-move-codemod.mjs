@@ -8,6 +8,8 @@
  *
  * JSON accepts either an object whose keys are old paths and values are new paths,
  * or an array of { "from": "src/old.ts", "to": "src/new/old.ts" } objects.
+ * Source mappings stay under `src/`; tests whose names do not match a source can
+ * be mapped explicitly within `tests/`.
  * TSV uses one `old-path<TAB>new-path` pair per line; blank lines and lines whose
  * first non-space character is `#` are ignored. Paths are repository-relative. If
  * the mapping is inside the repository, commit it first; otherwise keep it outside
@@ -15,7 +17,8 @@
  *
  * The command refuses a dirty worktree. It uses `git mv` for each mapped source and
  * for matching `.test.ts` / `.integration.test.ts` files under `tests/src` (or the
- * legacy `tests/` root), then rewrites relative TypeScript import/export, import(),
+ * legacy `tests/` root). Explicit test mappings take precedence over inferred test
+ * moves. The command then rewrites relative TypeScript import/export, import(),
  * require(), and vi/jest mock specifiers in src, tests, tools, and scripts. A dry
  * run prints the same plan but makes no changes.
  *
@@ -142,8 +145,13 @@ function loadMappings(mappingPath) {
   const sources = new Set();
   const destinations = new Set();
   for (const mapping of mappings) {
-    if (!mapping.from.startsWith("src/") || !mapping.to.startsWith("src/")) {
-      throw new Error(`source mappings must stay under src/: ${mapping.from} -> ${mapping.to}`);
+    const mappingRoot = mapping.from.startsWith("src/")
+      ? "src/"
+      : mapping.from.startsWith("tests/")
+        ? "tests/"
+        : undefined;
+    if (!mappingRoot || !mapping.to.startsWith(mappingRoot)) {
+      throw new Error(`mappings must stay within src/ or tests/: ${mapping.from} -> ${mapping.to}`);
     }
     if (!TYPESCRIPT_EXTENSIONS.includes(path.posix.extname(mapping.from))) {
       throw new Error(`source mapping must name a TypeScript file: ${mapping.from}`);
@@ -180,11 +188,13 @@ function legacyTestPathFor(sourcePath, suffix) {
 
 function buildMoves(repoRoot, mappings, trackedFiles) {
   const tracked = new Set(trackedFiles);
+  const explicitlyMapped = new Set(mappings.map((mapping) => mapping.from));
   const moves = [];
   for (const mapping of mappings) {
     if (!tracked.has(mapping.from))
       throw new Error(`mapped source is not tracked: ${mapping.from}`);
     moves.push(mapping);
+    if (!mapping.from.startsWith("src/")) continue;
     for (const suffix of [".test.ts", ".integration.test.ts"]) {
       const candidates = [
         testPathFor(mapping.from, suffix),
@@ -196,7 +206,9 @@ function buildMoves(repoRoot, mappings, trackedFiles) {
         );
       }
       const from = candidates[0];
-      if (from) moves.push({ from, to: testPathFor(mapping.to, suffix) });
+      if (from && !explicitlyMapped.has(from)) {
+        moves.push({ from, to: testPathFor(mapping.to, suffix) });
+      }
     }
   }
 

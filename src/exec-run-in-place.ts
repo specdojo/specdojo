@@ -11,7 +11,7 @@ import { randomHex } from "./exec-shared.js";
 import { specdojoRootDir, type AgentProvider, type MemberRoster } from "./specdojo-config.js";
 import { type AgentPipeline, type ReadyTaskView } from "./exec-types.js";
 import { type AgentStageRole } from "./exec-types.js";
-import { extractLocalId } from "./schedule-phase-sets.js";
+import { extractLocalId } from "./schedule/phase-sets.js";
 import {
   archivePlan,
   buildInPlaceStem,
