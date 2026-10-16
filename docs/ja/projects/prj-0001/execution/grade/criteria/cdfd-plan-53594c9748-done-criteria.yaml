@@ -2,7 +2,7 @@
 id: cdfd-plan-grade-criteria
 document: cdfd-plan
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-plan.md
-graded_at: "2026-10-07T16:13:41.368Z"
+graded_at: "2026-10-16T16:17:20.743Z"
 graded_by: agy-expert-executor
 content_hash: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
 summary:
@@ -16,7 +16,9 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: The major output "Orchestrator への計画要求への応答" is missing from the main outputs and generation processes.
+    reason: >-
+      The major output 'Orchestrator への計画要求への応答' defined in cdfd-overview is not detailed in the process domain (P-02
+      through P-06) outputs.
   - id: DC-002
     text: 登録簿、成果物カタログ、スケジュール戦略、Schedule（track）、実行計画、定期実行定義、ジョブ定義への読み書きがプロセス単位で識別でき、名称が全体概要の「データストア」と一致していること
     roles:

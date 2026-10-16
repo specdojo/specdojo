@@ -5,12 +5,12 @@ path: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 50
-graded_at: "2026-10-08T16:02:06.860Z"
+score: 65
+graded_at: "2026-10-16T16:26:41.102Z"
 graded_by: agy-expert-executor
 content_hash: 465645a27f2f91f437f68825eea853917093aa68ab32e62fc2c271fd80e8c020
 source_hashes:
-  catalog-entry: b4e6602f27a2738ac3267a1293e65bd203ca4f0f124efcaf6272ea7d75179b65
+  catalog-entry: 8dbe5ca87af9887c31f0964b94d5fd4667524e04d4c3ff8864121113afb50de0
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
@@ -18,39 +18,39 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 25
+    score: 50
   operations:
-    score: 69
-  planning:
-    score: 42
-  business:
-    score: 58
-  consistency:
-    score: 25
-  architecture:
     score: 75
+  planning:
+    score: 58
+  business:
+    score: 67
+  consistency:
+    score: 50
+  architecture:
+    score: 83
   usability:
     score: 94
   implementation:
-    score: 25
+    score: 50
   quality:
-    score: 31
+    score: 50
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 3
     score: 75
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-control-reporting:
     level: 3
     score: 75
@@ -58,17 +58,17 @@ viewpoints:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
   vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -76,23 +76,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-done-criteria:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,8 +103,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
     level: 3
     score: 75
