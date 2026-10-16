@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_97a55afb28e740268596e1ba8ab83fc3
+- v: 1
+  id: reg_8eb0d0c564444598a73735efa501537a
+  ts: "2026-10-16T22:46:22Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、05:00 の kata の Run（評価結果を更新したもの）を develop へ統合した状態で test-unit（2,056 件）が通った（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: grade の plan のテストを fixture の評価対象と参照で確かめる形に直し、保存済みの評価結果に左右されないようにした
+  previous_event_id: reg_ba67aa7a7ed248e69d599031c732bd27

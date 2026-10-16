@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6cds-grade-test-depends-on-stored-results
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-16T22:32:48Z"
   due_on: null
+  completed_at: "2026-10-16T22:46:22Z"
+  conclusion: grade の plan のテストを fixture の評価対象と参照で確かめる形に直し、保存済みの評価結果に左右されないようにした
 ---
 
 # PJR-6CDS grade の単体テストがリポジトリの実際の評価結果に左右される
