@@ -17,7 +17,7 @@ import {
   type RegisterFailureMode,
   type RegisterItemSummary,
 } from "./exec-register.js";
-import { loadRegisterItems, resolveRegisterPaths } from "./register.js";
+import { loadRegisterItems, resolveRegisterPaths } from "./register/register.js";
 import { findExecWorktree, resolveWorktreeBase } from "./exec-worktree.js";
 import { findResumableRegisterRun } from "./exec-register-resume.js";
 import {

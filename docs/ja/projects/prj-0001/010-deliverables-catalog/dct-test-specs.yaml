@@ -152,7 +152,7 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: register コマンド入口から到達する登録項目の状態遷移・派生ビュー更新、登録項目個票のフィールド定義・生成
         done_criteria: *utc-target-done-criteria
       - local_id: utc-routine-job
@@ -276,7 +276,7 @@ groups:
             path: src/exec.ts
             purpose: exec コマンド入口から到達する登録項目に紐づくexecタスクの実行連携
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: 登録項目の状態遷移
         done_criteria: *itc-target-done-criteria
       - local_id: itc-exec-worktree
@@ -439,7 +439,7 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-register-lifecycle
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: register コマンド入口から到達する登録項目の状態遷移・派生ビュー更新、登録項目個票のフィールド定義
           - kind: implementation
             path: src/exec.ts
@@ -550,7 +550,7 @@ groups:
             path: src/exec.ts
             purpose: exec コマンド入口から到達する進捗・タスク状態の集約表示、CPM・クリティカルパスの算出
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: 登録簿の状態集計
         done_criteria: *stc-target-done-criteria
       - local_id: stc-deprecation

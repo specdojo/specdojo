@@ -161,10 +161,10 @@ flowchart LR
 
 ## 5. 関連ドキュメント導線（SDI/テスト/運用/DEC）
 
-| Flow ID | SDI・一次情報                                         | テスト                    | 運用                  | DEC・判断記録 |
-| ------- | ----------------------------------------------------- | ------------------------- | --------------------- | ------------- |
-| scf-001 | Git運用標準、register CDFD、`.github/`                | branch protection確認     | 登録簿運用ガイド      | `PJR-0126`    |
-| scf-002 | `src/exec-worktree*.ts`、multi-project CDFD           | `exec-worktree*` test     | 障害対応OPR（未作成） | （なし）      |
-| scf-003 | `src/register.ts`、`src/register-*.ts`、register CDFD | register / doc-index test | 登録簿運用ガイド      | `PJR-37WN`    |
-| scf-004 | `src/exec-run*.ts`、task execution CDFD               | exec parallel test        | 障害対応OPR（未作成） | （なし）      |
-| scf-005 | `.specdojo/exec-defaults.yaml`、`src/exec-run*.ts`    | limit / resume test       | 障害対応OPR（未作成） | （なし）      |
+| Flow ID | SDI・一次情報                                                  | テスト                    | 運用                  | DEC・判断記録 |
+| ------- | -------------------------------------------------------------- | ------------------------- | --------------------- | ------------- |
+| scf-001 | Git運用標準、register CDFD、`.github/`                         | branch protection確認     | 登録簿運用ガイド      | `PJR-0126`    |
+| scf-002 | `src/exec-worktree*.ts`、multi-project CDFD                    | `exec-worktree*` test     | 障害対応OPR（未作成） | （なし）      |
+| scf-003 | `src/register/register.ts`、`src/register/*.ts`、register CDFD | register / doc-index test | 登録簿運用ガイド      | `PJR-37WN`    |
+| scf-004 | `src/exec-run*.ts`、task execution CDFD                        | exec parallel test        | 障害対応OPR（未作成） | （なし）      |
+| scf-005 | `.specdojo/exec-defaults.yaml`、`src/exec-run*.ts`             | limit / resume test       | 障害対応OPR（未作成） | （なし）      |

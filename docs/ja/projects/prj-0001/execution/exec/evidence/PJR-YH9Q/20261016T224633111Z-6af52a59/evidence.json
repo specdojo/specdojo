@@ -1,0 +1,1078 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-YH9Q",
+  "run_id": "20261016T224633111Z-6af52a59",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-16T22:47:27.413Z",
+    "completed_at": "2026-10-16T22:51:31.954Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-yh9q-src-move-grade-register.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-md-content.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-apply.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-command-apply.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-command-inspect.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-command-plan.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-command-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-markdown.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-pipeline-state.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-plan.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-result.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-target-discovery.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-targets.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/init-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-command-types.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-create-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-date.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-event-merge.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-events.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-history.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-item.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-maintenance-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-migrate-timestamps.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-migration.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-renumber.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-transition-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-update.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-views.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/deliverable/trash.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans-grade-findings.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-multiple-ids.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade-result.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/grade-triggers.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-commands.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-commit.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-date.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-event-merge.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-history.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-item.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-migrate-events.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-migrate-timestamps.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-migration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-view-order.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/review/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-apply.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-inspect.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/grade.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/result.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/date.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/event-merge.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/history.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/maintenance-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/migrate-timestamps.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/migration.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/renumber.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/transition-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/update.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/views.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/result.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/triggers.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/commands.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/commit.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/date.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/event-merge.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/history.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/item.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/migrate-events.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/migrate-timestamps.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/migration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/register.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/view-order.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-yh9q-src-move-grade-register.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-md-content.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-apply.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-command-apply.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-command-inspect.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-command-plan.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-command-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-markdown.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-pipeline-state.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-plan.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-result.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-target-discovery.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-targets.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/init-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-command-types.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-create-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-date.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-event-merge.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-events.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-history.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-item.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-maintenance-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-migrate-timestamps.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-migration.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-renumber.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-transition-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-update.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-views.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/deliverable/trash.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans-grade-findings.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-multiple-ids.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade-result.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/grade-triggers.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-commands.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-commit.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-date.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-event-merge.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-history.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-item.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-migrate-events.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-migrate-timestamps.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-migration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register-view-order.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/review/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-apply.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-inspect.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/grade.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/result.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/date.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/event-merge.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/history.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/maintenance-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/migrate-timestamps.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/migration.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/renumber.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/transition-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/update.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/views.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/result.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/triggers.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/commands.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/commit.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/date.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/event-merge.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/history.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/item.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/migrate-events.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/migrate-timestamps.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/migration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/register.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/view-order.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 120,
+    "summary": ".../040-system-design/sysd-critical-flows.md       |   14 +-\n docs/ja/product/040-system-design/sysd-index.md    |   18 +-\n .../010-deliverables-catalog/dct-data-flow.yaml    |   12 +-\n .../dct-data-model-bdd.yaml                        |    2 +-\n .../dct-data-model-cdsd.yaml                       |    2 +-\n .../dct-data-model-cld.yaml                        |    2 +-\n .../dct-data-model-stsd.yaml                       |    2 +-\n .../010-deliverables-catalog/dct-test-specs.yaml   |    8 +-\n .../pjr-yh9q-src-move-grade-register.md            |   15 +-\n packages/docs-lint/src/remark-md-content.ts        |    2 +-\n src/dashboard/dashboard.ts                         |    6 +-\n src/exec-plans-core.ts                             |    2 +-\n src/exec-plans-storage.ts                          |    2 +-\n src/exec-register.ts                               |    2 +-\n src/exec-run-register-core.ts                      |    6 +-\n src/exec-run-register-mode.ts                      |    2 +-\n src/exec-run-register-resume.ts                    |    2 +-\n src/exec-run-register-state.ts                     |    4 +-\n src/exec-run-register-worktree.ts                  |    2 +-\n src/exec-worktree-ops-merge.ts                     |    6 +-\n src/grade-apply.ts                                 |  912 ---------\n src/grade-command-apply.ts                         |  361 ----\n src/grade-command-inspect.ts                       |  156 --\n src/grade-command-plan.ts                          |  130 --\n src/grade-command-shared.ts                        |  113 --\n src/grade-core.ts                                  |  501 -----\n src/grade-markdown.ts                              |  351 ----\n src/grade-pipeline-state.ts                        |  246 ---\n src/grade-plan.ts                                  |  652 ------\n src/grade-result.ts                                |  389 ----\n src/grade-target-discovery.ts                      |  357 ----\n src/grade-targets.ts                               |  585 ------\n src/grade.ts                                       |   22 -\n src/init-command.ts                                |    2 +-\n src/register-command-types.ts                      |  181 --\n src/register-core.ts                               |  525 -----\n src/register-create-commands.ts                    |  342 ----\n src/register-date.ts                               |  175 --\n src/register-event-merge.ts                        |  214 --\n src/register-events.ts                             |  455 -----\n src/register-history.ts                            |  440 ----\n src/register-item.ts                               |  577 ------\n src/register-maintenance-commands.ts               |  255 ---\n src/register-migrate-timestamps.ts                 |  264 ---\n src/register-migration.ts                          |  337 ----\n src/register-renumber.ts                           |  429 ----\n src/register-transition-commands.ts                |  297 ---\n src/register-update.ts                             |  312 ---\n src/register-views.ts                              |  376 ----\n src/register.ts                                    |  629 ------\n src/review/grade.ts                                |    4 +-\n src/schedule/approach.ts                           |    4 +-\n src/specdojo.ts                                    |    4 +-\n tests/src/cli-verb-taxonomy.test.ts                |    2 +-\n tests/src/deliverable/trash.integration.test.ts    |    4 +-\n tests/src/exec-plans-grade-findings.test.ts        |    6 +-\n .../exec-register-multiple-ids.integration.test.ts |    2 +-\n .../exec-register-pipeline-e2e.integration.test.ts |    2 +-\n tests/src/exec-register-plan-escape.test.ts        |    4 +-\n .../src/exec-register-worktree.integration.test.ts |    2 +-\n tests/src/exec-register.test.ts                    |    2 +-\n tests/src/exec-worktree-ops.integration.test.ts    |    4 +-\n tests/src/grade-result.test.ts                     |  343 ----\n tests/src/grade-triggers.test.ts     …"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "diff -ru /tmp/pjr-yh9q-executor-20261016T224633111Z/help-before /tmp/pjr-yh9q-executor-20261016T224633111Z/help-after",
+      "status": "passed",
+      "summary": "grade/register と全サブコマンド、合計25件の --help 出力が一致"
+    },
+    {
+      "source": "executor",
+      "command": "{ git diff --name-only --diff-filter=ACMR -z; find src/grade src/register tests/src/grade tests/src/register -type f -print0; } | sort -zu | xargs -0 npx prettier --write",
+      "status": "passed",
+      "summary": "変更対象をPrettierで整形"
+    },
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "TypeScript build成功。dist/grade・dist/registerへ29件を生成し、直下の旧出力なし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build --project prj-0001",
+      "status": "passed",
+      "summary": "更新したカタログYAMLから生成物を正常に再生成"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検証成功。未作成文書のbased_onに関する既存警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YH9Q/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YH9Q/src/schedule/build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YH9Q/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YH9Q\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-YsKuq7/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-VtMzwu/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YH9Q/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YH9Q/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YH9Q\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-k9XkYQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-AmLNSU/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Dl1LpW/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-WZ36LW/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  41.18s (transform 2.60s, setup 543ms, import 19.64s, tests 43.73s, environment 7ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "grade/register の実装29件とテスト14件をサブディレクトリへ移し、参照・設計文書・個票を更新した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YH9Q/20261016T224633111Z-6af52a59/executor.log",
+      "bytes": 2042,
+      "truncated": false
+    }
+  ]
+}

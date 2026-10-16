@@ -30,7 +30,7 @@ groups:
         # 実装エビデンス（evidence_refs[].path は同名フィールドだが対象外）
         evidence_refs:
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: 登録簿項目の生成
         done_criteria:
           - text: something
@@ -121,7 +121,7 @@ describe("deliverable trash", () => {
     const catalogContent = readFileSync(join(catalogDir, "dct-data-flow.yaml"), "utf8");
     expect(catalogContent).toContain("path: /docs/ja/product/trash/cdfd-register-operation.md");
     // The unrelated evidence_refs[].path (same field name, different nesting) is untouched.
-    expect(catalogContent).toContain("path: src/register.ts");
+    expect(catalogContent).toContain("path: src/register/register.ts");
     // Comments survive because the catalog is edited as text, not re-dumped.
     expect(catalogContent).toContain(
       "# 実装エビデンス（evidence_refs[].path は同名フィールドだが対象外）",

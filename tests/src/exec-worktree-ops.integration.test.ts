@@ -39,8 +39,8 @@ import {
   serializeRegisterEvents,
   validateRegisterEventLog,
   type RegisterEventV1,
-} from "../../src/register-events.js";
-import { readSpecdojoFields } from "../../src/register-item.js";
+} from "../../src/register/events.js";
+import { readSpecdojoFields } from "../../src/register/item.js";
 
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));

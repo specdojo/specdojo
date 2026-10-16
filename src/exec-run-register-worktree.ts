@@ -11,7 +11,7 @@ import {
   ticketPathFromItem,
   type RegisterItemSummary,
 } from "./exec-register.js";
-import { type PjrItem, type RegisterPaths } from "./register.js";
+import { type PjrItem, type RegisterPaths } from "./register/register.js";
 import {
   readResultFrontmatterSnapshot,
   scaffoldResult,

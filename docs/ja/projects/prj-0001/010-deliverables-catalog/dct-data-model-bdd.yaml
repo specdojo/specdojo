@@ -80,7 +80,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/register.ts
+                path: src/register/register.ts
                 purpose: register コマンド入口から到達する登録項目個票のフィールド定義（type・priority・status・owner・due_on等）と生成規則、登録項目の状態遷移・派生ビュー更新・ID競合復旧の扱い
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること

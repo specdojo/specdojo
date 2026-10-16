@@ -10,7 +10,7 @@ import {
   ticketPathFromItem,
   type RegisterItemSummary,
 } from "./exec-register.js";
-import { type PjrItem, type RegisterPaths } from "./register.js";
+import { type PjrItem, type RegisterPaths } from "./register/register.js";
 import { readResultFrontmatterSnapshot } from "./exec-results.js";
 import { findExecWorktree, type ExecWorktree } from "./exec-worktree.js";
 import {

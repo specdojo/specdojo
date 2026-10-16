@@ -25,7 +25,7 @@ groups:
         rulebook: specdojo:cld-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: register コマンド入口から到達する登録項目のtype（risk/issue/change-request/decision等）の許容値定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
