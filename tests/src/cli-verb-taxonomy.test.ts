@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import { describe, expect, it } from "vitest";
-import { registerCatalogCommands } from "../../src/catalog.js";
+import { registerCatalogCommands } from "../../src/catalog/catalog.js";
 import { registerDeliverableCommands } from "../../src/deliverable/deliverable.js";
 import { registerExecCommands } from "../../src/exec.js";
 import { registerGradeCommand } from "../../src/grade.js";

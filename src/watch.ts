@@ -13,7 +13,7 @@ import {
   specdojoRootDir,
 } from "./specdojo-config.js";
 import { selfRunArgs } from "./spawn-self.js";
-import { isDctPlanFileName } from "./catalog-plan.js";
+import { isDctPlanFileName } from "./catalog/plan.js";
 
 // ================================
 // Types

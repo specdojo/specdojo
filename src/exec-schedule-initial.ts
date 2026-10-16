@@ -5,7 +5,7 @@ import {
   normalizePhaseSetSelection,
   type NormalizedPhaseSetSelection,
   type PhaseSetSelection,
-} from "./schedule-phase-sets.js";
+} from "./schedule/phase-sets.js";
 
 type StrategyPhase = {
   id: string;

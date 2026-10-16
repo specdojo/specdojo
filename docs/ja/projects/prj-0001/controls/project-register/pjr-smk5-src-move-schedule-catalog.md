@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:18Z"
@@ -74,15 +74,21 @@ codemod で schedule と catalog のファイルを各ディレクトリへ移�
 
 ## 3. 作業内容
 
-| No  | 作業                                                  | 担当 | 状態 | メモ             |
-| --- | ----------------------------------------------------- | ---- | ---- | ---------------- |
-| 1   | codemod で対応表のとおりに移す                        | DEV  | open | 手で書き換えない |
-| 2   | `--help` と `specdojo build` の生成物を移す前と比べる | DEV  | open | -                |
-| 3   | `dist/` の古い出力と文書のパスを確かめる              | DEV  | open | -                |
+| No  | 作業                                                  | 担当 | 状態 | メモ                         |
+| --- | ----------------------------------------------------- | ---- | ---- | ---------------------------- |
+| 1   | codemod で対応表のとおりに移す                        | DEV  | done | 実装 19 件・テスト 13 件     |
+| 2   | `--help` と `specdojo build` の生成物を移す前と比べる | DEV  | done | 14 コマンド・65 生成物が一致 |
+| 3   | `dist/` の古い出力と文書のパスを確かめる              | DEV  | done | 旧出力・旧パスの残存なし     |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tools/src-move-codemod.mjs` が `tests/` 間の明示マッピングを受け取れるようにし、自動検出したテスト移動と重複しない処理と統合テストを追加した。対応表を入力して、実装 19 件を `src/catalog/`・`src/schedule/`、テスト 13 件を `tests/src/catalog/`・`tests/src/schedule/` へ移し、相対 import を書き換えた。
+- codemod の検出結果に基づく手修正は、`tools/catalog-validate-if-configured.mjs` の動的 import 2 か所、`tests/src/catalog/plan.test.ts` の `import.meta.url` 基準パス、`tests/src/catalog/build.test.ts` の実装パス fixture、現行設計書 1 件と成果物カタログ 6 件の実装パスである。個票・plan・result など履歴内の旧パスは変更していない。
+- 移動前後に `catalog`・`schedule` と各サブコマンドの `--help` を合計 14 件比較し、すべて差分がないことを確認した。
+- 移動前後に `specdojo build --scope catalog --project prj-0001` と `specdojo build --scope exec --project prj-0001` を実行し、catalog・schedule・execution の生成物 65 件に差分がないことを確認した。pipeline が禁止する index build は実行していない。
+- `npm run build` が成功し、`dist/catalog/`・`dist/schedule/` に新しい出力 19 件が生成された。移動前の `dist/` 直下の `catalog*.js`・`schedule*.js` は残っていない。
+- `npx prettier --write`、`specdojo catalog validate`、`git diff --check` は成功した。catalog validate の未作成文書に対する `based_on` 警告は既存データ由来であり、今回の移動によるエラーはない。親 runner が lint・typecheck・unit test・integration test・schema 検証を実行する。
+- 残課題はない。
 
 ## 5. 関連ドキュメント
 

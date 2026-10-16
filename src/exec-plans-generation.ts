@@ -5,7 +5,7 @@ import { resolveDeliverableSchemaRef, resolveKataRefs } from "./kata/kata.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import { expandTemplate } from "./exec-shared.js";
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from "./exec-types.js";
-import type { CriteriaItem } from "./catalog-types.js";
+import type { CriteriaItem } from "./catalog/types.js";
 import type { ReviewViewpoint } from "./review/types.js";
 import type { RoleDefinition } from "./role-types.js";
 import type { ReviewGradeOutcome } from "./review/grade.js";

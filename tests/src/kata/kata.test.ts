@@ -10,7 +10,7 @@ import {
   resolveKataRefs,
 } from "../../../src/kata/kata.js";
 import { practiceLocalId } from "../../../src/practice-id.js";
-import { validateRulebookKata } from "../../../src/catalog-build.js";
+import { validateRulebookKata } from "../../../src/catalog/build.js";
 
 // specdojoRootDir() は cwd から上方探索するため、temp ルートへ chdir して
 // docs/ja/specdojo/* を温度差なく解決できるようにする。

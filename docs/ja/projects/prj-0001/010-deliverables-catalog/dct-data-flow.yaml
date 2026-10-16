@@ -47,7 +47,7 @@ groups:
             path: src/specdojo-config.ts
             purpose: プロジェクト設定の読込・初期化経路
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの初期生成処理
           - kind: implementation
             path: src/exec.ts
@@ -133,10 +133,10 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの検証・表示ビュー生成
           - kind: implementation
-            path: src/schedule.ts
+            path: src/schedule/schedule.ts
             purpose: schedule コマンド入口から到達するカタログと戦略からScheduleへ展開する処理
           - kind: implementation
             path: src/exec.ts
@@ -267,7 +267,7 @@ groups:
             path: src/build-command.ts
             purpose: 派生生成コマンド全体の起動順序
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達するカタログから成果物雛形を生成する処理
           - kind: implementation
             path: src/docs/index-command.ts
@@ -330,7 +330,7 @@ groups:
             path: src/deliverable/deliverable.ts
             purpose: deliverable コマンド入口から到達する非推奨化した成果物ファイルのtrashディレクトリへの移動とカタログpath書き換え、frontmatterのspecdojo名前空間・status読込
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達するbase_path・pathの解決規則
         depends_on:
           - cdfd-init
@@ -363,7 +363,7 @@ groups:
             path: src/exec.ts
             purpose: exec コマンド入口から到達するprovider 別の agent 定義・設定の雛形配置
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの雛形生成
           - kind: implementation
             path: src/register.ts
@@ -392,10 +392,10 @@ groups:
             path: src/register.ts
             purpose: 登録項目の起票・更新・状態遷移
           - kind: implementation
-            path: src/catalog.ts
+            path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの検証と派生生成
           - kind: implementation
-            path: src/schedule.ts
+            path: src/schedule/schedule.ts
             purpose: schedule コマンド入口から到達する成果物カタログとスケジュール戦略からの track 生成、intent と Kata grade からの approach 導出
           - kind: implementation
             path: src/routine/routine.ts
@@ -571,7 +571,7 @@ groups:
         rulebook: specdojo:cdfd-uc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/schedule.ts
+            path: src/schedule/schedule.ts
             purpose: schedule コマンド入口から到達する成果物カタログから Schedule task への展開
           - kind: implementation
             path: src/exec.ts
