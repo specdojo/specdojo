@@ -18,7 +18,7 @@ specdojo:
 
 ## 1. 概要
 
-specdojo-assets に README.md のディレクトリ体系どおりの骨組み（assets/・exports.yaml・BRAND.md・templates/・scripts/）、exports.yaml に従って書き出すスクリプトを用意し、prj-0002 の repos に specdojo-assets を加える
+specdojo-assets に README.md のディレクトリ体系どおりの骨組み（assets/・exports.yaml・BRAND.md・templates/）と、exports.yaml に従って原本を specdojo-lp の src/assets/ へそのまま書き出す scripts/export.ts を作り、暫定マスコットを見本に確かめる
 
 ## 2. 完了条件
 
