@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-f34r-assets-repository-setup
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T09:49:11Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-16T14:48:08Z"
+  conclusion: specdojo-assets に骨組みと、exports.yaml に従って原本を specdojo-lp の src/assets へそのまま書き出す scripts/export.ts を作り、暫定マスコットで確かめた
 ---
 
 # PJR-F34R specdojo-assets の骨組みと書き出しの仕組みを作る

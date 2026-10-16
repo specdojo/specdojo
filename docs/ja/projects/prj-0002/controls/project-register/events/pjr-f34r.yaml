@@ -103,3 +103,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_21204085edc34c1cbe0a8c2b39ffde1b
+- v: 1
+  id: reg_1108d8c8510745cebb0c7d00233bc656
+  ts: "2026-10-16T14:48:08Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 完了条件との照合で、すべての条件を満たしていることを確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-16"
+    - field: conclusion
+      from: "-"
+      to: specdojo-assets に骨組みと、exports.yaml に従って原本を specdojo-lp の src/assets へそのまま書き出す scripts/export.ts を作り、暫定マスコットで確かめた
+  previous_event_id: reg_20420bba2e884c9fb680e2afd6f9a273
