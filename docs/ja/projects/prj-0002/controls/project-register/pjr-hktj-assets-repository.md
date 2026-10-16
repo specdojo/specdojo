@@ -111,3 +111,11 @@ specdojo-workspace/
 - 原本ごとの作り方（AI での生成か手描きか）・作者・ライセンスは、アセットごとの `asset.yaml` に書く。`BRAND.md` は、ブランド全体の規則（色・余白・使ってよい場面・ライセンスの方針）だけにする。
 - 書き出しの定義は `exports.yaml` 1 つにまとめ、書き出し先のリポジトリを `targets`、書き出すものを `exports` に書く。`specdojo-lp` への書き出し先は `public/assets/` の下とし、構成の案の `public/mascot/` を置き換える。
 - 新しいアセットの雛形を `templates/asset.yaml`、書き出しのスクリプトを `scripts/export.mjs` に置く。
+
+## 10. 追記（2026-10-16、書き出し先と書き出しの方法）
+
+利用者の判断で、追記 9 の書き出し先と書き出しのスクリプトを次のように改める。追記 9 のほかの内容は変えない。
+
+- 書き出し先: `specdojo-lp` への書き出し先を、`public/assets/` から `src/assets/<種類>/`（例: `src/assets/mascot/`）の下に改める。LP の画像は Astro の `<Image>` で読み込み、ビルド時に形式と幅を作って最適化している（暫定マスコットは 469 kB から 50 kB になった）。`public/` に置いた画像は、最適化の対象にならない。
+- 書き出しの方法: `specdojo-assets` では、形式の変換も縮小もせず、原本をそのまま書き出す。LP で使う形式と大きさは Astro に任せる。そのため、`exports.yaml` は形式と幅の項目を持たない。
+- スクリプト: 書き出しのスクリプトは、`scripts/export.mjs` に代えて TypeScript の `scripts/export.ts` とし、Node.js の型の除去で `node scripts/export.ts` として実行する。`exports.yaml` は `yaml` パッケージで読む。依存と `package.json` は、orchestrator が用意した（`specdojo-assets` の `66ad5b5`）。
