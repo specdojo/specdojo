@@ -62,6 +62,18 @@ specdojo:
 7. 小さい機能から 1 件ずつ移し（`dashboard` から始めて `exec` を最後にする）、各件で typecheck・全テスト・`--help` の一致を確かめる。runner のコードを含む件では `exec run` を 1 回流す。
 8. [[prj-0001:pjr-zm1k-agent-members-model-alias]] の実装より先に行う。
 
+### 3.1. 追加の決定（2026-10-16）
+
+決定の時点で行き先を決めていなかったファイルについて、利用者が次のとおり承認した。
+
+| ファイル                                                                                                        | 行き先                  |
+| --------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| `build-command`・`init-command`・`orchestrator`・`watch`・`agent`（`src/specdojo.ts` だけが使うコマンドの実装） | `src/commands/`（新設） |
+| `practice-id`（catalog・exec・kata から使う）                                                                   | `src/shared/`           |
+| `role-types`（exec だけが使う）                                                                                 | `src/exec/`             |
+
+`src/commands/` と `src/shared/` への移動は [[prj-0001:pjr-mhhp-src-move-shared]] で、`role-types` は [[prj-0001:pjr-xp0j-src-move-exec]] で行う。
+
 ## 4. 採択理由
 
 - 機能の境界がディレクトリで一覧でき、依存の向きを機械的に確かめる土台になる。
