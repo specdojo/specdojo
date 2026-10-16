@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-F34R",
   "run_id": "20261016T142257121Z-b89bed4b",
-  "updated_at": "2026-10-16T14:40:43.670Z",
+  "updated_at": "2026-10-16T14:41:01.451Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0002/execution/exec/results/pjr-f34r-20261016T142257Z-4964-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma26-reporter",
       "attempts": 2,
       "started_at": "2026-10-16T14:40:43.670Z",
-      "completed_at": null,
+      "completed_at": "2026-10-16T14:41:01.451Z",
       "artifact_ref": null,
       "repos": {
         "specdojo-lp": {
@@ -34,15 +34,14 @@
           "merged_at": null
         },
         "specdojo-assets": {
-          "status": "failed",
-          "commit": null,
-          "merged_at": null,
-          "error": "uncommitted changes outside the commit scope: specdojo-assets:assets/characters/dojo-otter/asset.yaml, specdojo-assets:assets/characters/dojo-otter/source/dojo-otter-temporary.webp, specdojo-assets:assets/icons/.gitkeep, specdojo-assets:assets/illustrations/.gitkeep, specdojo-assets:assets/logos/.gitkeep, specdojo-assets:assets/social/.gitkeep, specdojo-assets:templates/asset.yaml"
+          "status": "merged",
+          "commit": "cdcf1a37cf618b0049bbc2b020b577e30d380054",
+          "merged_at": "2026-10-16T14:41:00.793Z"
         },
         "project": {
-          "status": "pending",
+          "status": "merged",
           "commit": null,
-          "merged_at": null
+          "merged_at": "2026-10-16T14:41:00.795Z"
         }
       }
     }
