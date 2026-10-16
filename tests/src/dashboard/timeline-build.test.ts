@@ -12,7 +12,7 @@ import {
   renderTimelineOrderMarkdown,
   validateTimelineTracks,
   type TimelineTrackPlan,
-} from "../../src/timeline-build.js";
+} from "../../../src/dashboard/timeline-build.js";
 
 function track(partial: Partial<TimelineTrackPlan> & Pick<TimelineTrackPlan, "track">) {
   return {

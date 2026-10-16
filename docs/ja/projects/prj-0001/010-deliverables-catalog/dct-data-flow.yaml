@@ -456,7 +456,7 @@ groups:
             path: src/grade.ts
             purpose: Kata と成果物の評価、done_criteria の判定、content_hash による変更検知
           - kind: implementation
-            path: src/dashboard.ts
+            path: src/dashboard/dashboard.ts
             purpose: 進捗ダッシュボードの生成
           - kind: implementation
             path: src/build-command.ts

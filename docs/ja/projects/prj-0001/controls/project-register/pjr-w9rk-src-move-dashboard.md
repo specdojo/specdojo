@@ -54,13 +54,18 @@ specdojo:
 
 | No  | 作業                                                      | 担当 | 状態 | メモ             |
 | --- | --------------------------------------------------------- | ---- | ---- | ---------------- |
-| 1   | codemod の検出から履歴のファイルを除く                    | DEV  | open | テストも直す     |
-| 2   | codemod で対応表のとおりに移す                            | DEV  | open | 手で書き換えない |
-| 3   | `--help` を比べ、`dist/` の古い出力と文書のパスを確かめる | DEV  | open | -                |
+| 1   | codemod の検出から履歴のファイルを除く                    | DEV  | done | テストも更新済み |
+| 2   | codemod で対応表のとおりに移す                            | DEV  | done | 手作業の移動なし |
+| 3   | `--help` を比べ、`dist/` の古い出力と文書のパスを確かめる | DEV  | done | 差分・残存なし   |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tools/src-move-codemod.mjs` の検出対象から、`docs/ja/projects/**/controls/project-register/**`、`docs/ja/projects/**/execution/**`、`logs/**` を除外し、統合テストへ各除外ケースを追加した。
+- codemod に対応表を渡し、実装 7 ファイルを `src/dashboard/`、テスト 2 ファイルを `tests/src/dashboard/` へ移した。相対 import の書き換えも codemod が行い、検出後に手で修正した実装パスはない。
+- 設計書 `docs/ja/product/040-system-design/sysd-index.md` とカタログ `docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml` の実装パスを更新した。履歴ファイル内の旧パスは変更していない。
+- 移動前後に `node --import tsx src/specdojo.ts dashboard --help`、`node --import tsx src/specdojo.ts dashboard build --help`、`node --import tsx src/specdojo.ts timeline --help` を実行して比較し、3 件とも差分がないことを確認した。
+- `npm run build` が成功し、`dist/dashboard/` に新しい出力が生成された。移動前の `dist/dashboard.js`、`dist/dashboard-*.js`、`dist/timeline.js`、`dist/timeline-build.js` は残っていない。
+- 残課題はない。親 runner が lint・typecheck・unit test・integration test・schema 検証を実行する。
 
 ## 5. 関連ドキュメント
 

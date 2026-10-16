@@ -70,6 +70,17 @@ function createFixture(): { root: string; repo: string; mappingPath: string } {
     'import { alpha } from "../src/alpha.js";\nvoid alpha;\n',
   );
   writeFixtureFile(repo, "docs/guide.md", "See `src/alpha.ts` and `dist/alpha.js`.\n");
+  writeFixtureFile(
+    repo,
+    "docs/ja/projects/example/controls/project-register/history.md",
+    "Historical `src/alpha.ts` and `dist/alpha.js`.\n",
+  );
+  writeFixtureFile(
+    repo,
+    "docs/ja/projects/example/execution/results/result.md",
+    "Execution record `src/alpha.ts` and `dist/alpha.js`.\n",
+  );
+  writeFixtureFile(repo, "logs/previous.log", "Logged `src/alpha.ts` and `dist/alpha.js`.\n");
   git(repo, "add", ".");
   git(repo, "commit", "-m", "fixture");
 
@@ -109,6 +120,9 @@ describe("tools/src-move-codemod.mjs", () => {
     );
     expect(dryRunOutput).toContain("DETECT path-construction src/feature/alpha.ts:2");
     expect(dryRunOutput).toContain("DETECT literal-path docs/guide.md:1");
+    expect(dryRunOutput).not.toContain("controls/project-register/history.md");
+    expect(dryRunOutput).not.toContain("execution/results/result.md");
+    expect(dryRunOutput).not.toContain("logs/previous.log");
     expect(git(repo, "status", "--short")).toBe("");
 
     const output = runCodemod(repo, mappingPath);

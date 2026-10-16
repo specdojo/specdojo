@@ -7,7 +7,7 @@ import {
   loadConfig,
   loadEnv,
   specdojoRootDir,
-} from "./specdojo-config.js";
+} from "../specdojo-config.js";
 import {
   buildTimeline,
   renderCatalogScaffoldMarkdown,

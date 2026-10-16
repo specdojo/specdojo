@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { load } from "./yaml.js";
-import { readJson } from "./exec-shared.js";
+import { load } from "../yaml.js";
+import { readJson } from "../exec-shared.js";
 import {
   type RoutineDoc,
   cronMatches,
@@ -10,7 +10,7 @@ import {
   routineActionKindLabel,
   type RoutineExecutionResult,
   type RoutineRunHistoryEntry,
-} from "./routine.js";
+} from "../routine.js";
 
 export type DashboardRoutineRow = {
   id: string;

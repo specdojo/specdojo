@@ -1,9 +1,9 @@
 import { mkdirSync, existsSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import type { Command } from "commander";
-import type { ExecEventV1, StateSnapshot } from "./exec-types.js";
-import { readJson, toArtifactPath } from "./exec-shared.js";
-import { readAllEventFiles } from "./exec-events.js";
+import type { ExecEventV1, StateSnapshot } from "../exec-types.js";
+import { readJson, toArtifactPath } from "../exec-shared.js";
+import { readAllEventFiles } from "../exec-events.js";
 import {
   getProjectExecutionPath,
   getProjectRoutinesPath,
@@ -12,19 +12,19 @@ import {
   loadConfig,
   loadEnv,
   specdojoRootDir,
-} from "./specdojo-config.js";
-import type { SpecDojoProjectConfig } from "./specdojo-config.js";
+} from "../specdojo-config.js";
+import type { SpecDojoProjectConfig } from "../specdojo-config.js";
 import {
   resolveRegisterPaths,
   loadRegisterItems,
   type PjrItem,
   type RegisterItemView,
-} from "./register.js";
+} from "../register.js";
 import {
   readRegisterEventsFromContent,
   registerEventFilePath,
   type RegisterEventV1,
-} from "./register-events.js";
+} from "../register-events.js";
 import { buildTimelineWaves, loadTimelineIndex, type TimelineTrackPlan } from "./timeline-build.js";
 import {
   buildTimelineGanttSvg,
@@ -37,14 +37,10 @@ import {
   formatZonedDateTime,
   ROUTINE_ROW_COLLAPSE_THRESHOLD,
   zonedDateKey,
-} from "./dashboard-routines.js";
-import {
-  buildExecRecordsMarkdown,
-  collectExecRecords,
-  EXEC_RECORDS_FILE,
-} from "./dashboard-exec-records.js";
-import { sanitizeDashboardCell } from "./dashboard-shared.js";
-import { gradeFindingCount, parseGradeResult, type GradeResult } from "./grade-result.js";
+} from "./routines.js";
+import { buildExecRecordsMarkdown, collectExecRecords, EXEC_RECORDS_FILE } from "./exec-records.js";
+import { sanitizeDashboardCell } from "./shared.js";
+import { gradeFindingCount, parseGradeResult, type GradeResult } from "../grade-result.js";
 
 // ================================
 // Types
@@ -295,12 +291,12 @@ export {
   computeRoutineDue,
   formatZonedDateTime,
   readRoutineRunHistory,
-} from "./dashboard-routines.js";
+} from "./routines.js";
 export type {
   DashboardDailyRoutineRow,
   DashboardRoutineRow,
   DashboardRoutineStateEntry,
-} from "./dashboard-routines.js";
+} from "./routines.js";
 
 // ================================
 // Markdown rendering
@@ -654,7 +650,7 @@ function renderAttentionSection(paths: DashboardPaths): string[] {
 // ================================
 
 export { buildExecRecordsMarkdown, collectExecRecords, EXEC_RECORDS_FILE };
-export type { ExecRecordRow } from "./dashboard-exec-records.js";
+export type { ExecRecordRow } from "./exec-records.js";
 
 function execRecordsPath(paths: DashboardPaths): string {
   return join(paths.executionGeneratedPath, "..", "exec");
