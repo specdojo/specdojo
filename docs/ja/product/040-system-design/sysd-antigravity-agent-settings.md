@@ -32,27 +32,27 @@ providers:
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.1-pro-high }
+        expert: { model: gemini-3.8-flash-high }
       by_nickname:
-        agy-claude-executor: { model: claude-sonnet-4-6 }
-        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
-        agy-claude-expert-review-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-executor: { model: claude-sonnet-5-5-medium }
+        agy-claude-expert-executor: { model: claude-opus-5-5-high }
+        agy-claude-expert-review-executor: { model: claude-opus-5-5-high }
         agy-gpt-executor: { model: gpt-oss-120b-medium }
 ```
 
-モデル ID 自体が推論強度を含み、`--effort` と組み合わせると選択が衝突するため `--effort` は指定しない。`--output-format json --json-schema` の出力は `structured_output` を含む envelope であり、reporter schema の生 JSON ではないため、reporter も既定のテキスト出力を使う。
+使えるモデル ID は `agy models` で確認する。モデル ID 自体が推論強度を含み、`--effort` と組み合わせると選択が衝突するため `--effort` は指定しない。`--output-format json --json-schema` の出力は `structured_output` を含む envelope であり、reporter schema の生 JSON ではないため、reporter も既定のテキスト出力を使う。
 
 ## 3. member とモデル
 
 | nickname                            | mode     | proficiency | model                      | 用途             |
 | ----------------------------------- | -------- | ----------- | -------------------------- | ---------------- |
 | `agy-executor`                      | `edit`   | `normal`    | `gemini-3.8-flash-medium`  | 標準 executor    |
-| `agy-expert-executor`               | `edit`   | `expert`    | `gemini-3.1-pro-high`      | expert executor  |
-| `agy-expert-review-executor`        | `review` | `expert`    | `gemini-3.1-pro-high`      | expert review    |
+| `agy-expert-executor`               | `edit`   | `expert`    | `gemini-3.8-flash-high`    | expert executor  |
+| `agy-expert-review-executor`        | `review` | `expert`    | `gemini-3.8-flash-high`    | expert review    |
 | `agy-reporter`                      | —        | `normal`    | `gemini-3.8-flash-medium`  | reporter         |
-| `agy-claude-executor`               | `edit`   | `normal`    | `claude-sonnet-4-6`        | Sonnet executor  |
-| `agy-claude-expert-executor`        | `edit`   | `expert`    | `claude-opus-4-6-thinking` | Opus executor    |
-| `agy-claude-expert-review-executor` | `review` | `expert`    | `claude-opus-4-6-thinking` | Opus review      |
+| `agy-claude-executor`               | `edit`   | `normal`    | `claude-sonnet-5-5-medium` | Sonnet executor  |
+| `agy-claude-expert-executor`        | `edit`   | `expert`    | `claude-opus-5-5-high`     | Opus executor    |
+| `agy-claude-expert-review-executor` | `review` | `expert`    | `claude-opus-5-5-high`     | Opus review      |
 | `agy-gpt-executor`                  | `edit`   | `normal`    | `gpt-oss-120b-medium`      | GPT OSS executor |
 
 `command_params.by_nickname` は member ごとのモデル差し替えだけに使う。権限フラグや worktree 指定は `command_template` に残し、同じ provider の全 member へ一括適用する。
@@ -61,7 +61,7 @@ providers:
 
 `agy` は repository root まで探索し、`AGENTS.md`、`.agents/rules/*.md`、`.agents/skills/<name>/SKILL.md` を読む。プロジェクト共通の言語・安全規則は `AGENTS.md`、環境別の薄い規則ラッパーは `.agents/rules/`、再利用手順は `.agents/skills/` を正本とする。
 
-executor / reporter の stage 契約は `src/exec-run.ts` が plan 末尾へ付加する。executor は成果物の編集と検証だけを行い result・lifecycle を更新せず、reporter は evidence から構造化結果を返すだけでファイルを書かない。したがって `templates/antigravity/agents/` は設けない。一方、`config scaffold --provider antigravity` はオーケストレーターと provider 設定スニペットをリポジトリへ配置し、`--global` 指定時だけ CLI のユーザー権限設定をマージする。
+executor 向けの stage 契約は `src/exec-run-agent.ts` が plan 末尾へ付加し、reporter の prompt・出力契約は `src/exec-reporter.ts`、両 stage の進行は `src/exec-run-agent-pipeline.ts` が担う。executor は成果物の編集と検証だけを行い result・lifecycle を更新せず、reporter は evidence から構造化結果を返すだけでファイルを書かない。したがって `templates/antigravity/agents/` は設けない。一方、`config scaffold --provider antigravity` はオーケストレーターと provider 設定スニペットをリポジトリへ配置し、`--global` 指定時だけ CLI のユーザー権限設定をマージする。
 
 対話型オーケストレーターはファイル定義 agent ではなく、`npm run orch:agy` が `.agents/specdojo-orchestrator.agent.md` の本文を `-i` で渡して起動する。
 

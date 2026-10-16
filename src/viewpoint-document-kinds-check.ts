@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 
 // PJR-H220 / PJR-VJP8: 観点の document_kinds は rulebook ID の列挙で宣言する。rulebook を
 // 追加したときに観点ごとの扱いの判断が漏れないよう、include / exclude / confirmed_default の
@@ -34,7 +34,7 @@ function rulebookIdFromMarkdown(markdown: string, filePath: string): string | un
   if (!match) return undefined;
   let parsed: unknown;
   try {
-    parsed = yaml.load(match[1]);
+    parsed = load(match[1]);
   } catch (error) {
     throw new Error(`Invalid rulebook frontmatter: ${filePath}`, { cause: error });
   }
@@ -120,7 +120,7 @@ export function checkViewpointDocumentKinds(
   if (rulebookIds.length === 0) {
     return { rulebookCount: 0, errors: [`No rulebooks found: ${rulebookDir}`] };
   }
-  const doc = yaml.load(readFileSync(viewpointsPath, "utf8"));
+  const doc = load(readFileSync(viewpointsPath, "utf8"));
   const errors = lintViewpointDocumentKinds(doc, rulebookIds).map(
     formatViewpointDocumentKindsFinding,
   );

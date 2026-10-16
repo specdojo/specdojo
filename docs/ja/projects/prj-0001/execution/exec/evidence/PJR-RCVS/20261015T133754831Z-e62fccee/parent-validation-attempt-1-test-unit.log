@@ -1,0 +1,250 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-RCVS
+
+Updated ticket status → ready: /tmp/specdojo-ticket-9wg79v/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-keGpba/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-6ASES5/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-BLCcYy/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-oEVO9X/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-B3ekiq/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+ ❯ tests/src/catalog-generate.test.ts (17 tests | 10 failed) 58ms
+     × カタログ情報から Frontmatter・H1・overview・_TODO_ を持つ Markdown 雛形を生成する 9ms
+     × rulebook が undecided の場合は生成物へ未判断値を転記しない 5ms
+     × template: not-needed は local_id 慣例テンプレートがあっても最小雛形へ退避する 2ms
+     × template: undecided は local_id 慣例テンプレートがあっても最小雛形へ退避する 3ms
+     × template 未宣言は local_id 慣例テンプレートがあっても最小雛形へ退避する 2ms
+     × 既存ファイルは上書きせず skip し、--force で上書きする 3ms
+     × --dry-run では書き込まず生成予定のみ報告する 2ms
+     × --dct 指定時は該当 dct のみ生成する 2ms
+     × dct- プレフィックスや .yaml 付きの指定も一致する 3ms
+     × 複数指定で複数 dct を対象にできる 3ms
+Would move 1 agent member(s) from /tmp/specdojo-members-8j3rWn/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-8j3rWn/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-8j3rWn/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-8j3rWn/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-Wi78N5/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-CzZO1P/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 130 passed (131)
+      Tests  10 failed | 2046 passed (2056)
+   Start at  22:51:36
+   Duration  39.39s (transform 2.39s, setup 519ms, import 19.34s, tests 41.71s, environment 10ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/catalog-generate.test.ts > runGenerate — テンプレートがない成果物 > カタログ情報から Frontmatter・H1・overview・_TODO_ を持つ Markdown 雛形を生成する
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "out/prj-charter.md: yaml is not defined",
++ ]
+
+ ❯ tests/src/catalog-generate.test.ts:116:27
+    114|     const result = run(fx);
+    115|
+    116|     expect(result.errors).toEqual([]);
+       |                           ^
+    117|     expect(result.written).toEqual(["out/prj-charter.md"]);
+    118|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  tests/src/catalog-generate.test.ts > runGenerate — テンプレートがない成果物 > rulebook が undecided の場合は生成物へ未判断値を転記しない
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "out/undecided-md.md: yaml is not defined",
++ ]
+
+ ❯ tests/src/catalog-generate.test.ts:191:27
+    189|     const result = run(fx);
+    190|
+    191|     expect(result.errors).toEqual([]);
+       |                           ^
+    192|     expect(readFileSync(outPath(fx, "undecided-md.md"), "utf8")).not.t…
+    193|     expect(load(readFileSync(outPath(fx, "undecided-yaml.yaml"), "utf8…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  tests/src/catalog-generate.test.ts > runGenerate — テンプレートがある成果物 > template: not-needed は local_id 慣例テンプレートがあっても最小雛形へ退避する
+ FAIL  tests/src/catalog-generate.test.ts > runGenerate — テンプレートがある成果物 > template: undecided は local_id 慣例テンプレートがあっても最小雛形へ退避する
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "out/prj-charter.md: yaml is not defined",
++ ]
+
+ ❯ tests/src/catalog-generate.test.ts:360:29
+    358|       const result = run(fx);
+    359|
+    360|       expect(result.errors).toEqual([]);
+       |                             ^
+    361|       const content = readFileSync(outPath(fx, "prj-charter.md"), "utf…
+    362|       expect(content).not.toContain("この慣例テンプレートは使わない");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  tests/src/catalog-generate.test.ts > runGenerate — テンプレートがある成果物 > template 未宣言は local_id 慣例テンプレートがあっても最小雛形へ退避する
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "out/prj-charter.md: yaml is not defined",
++ ]
+
+ ❯ tests/src/catalog-generate.test.ts:378:27
+    376|     const result = run(fx);
+    377|
+    378|     expect(result.errors).toEqual([]);
+       |                           ^
+    379|     const content = readFileSync(outPath(fx, "prj-charter.md"), "utf8"…
+    380|     expect(content).not.toContain("この慣例テンプレートは使わない");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+ FAIL  tests/src/catalog-generate.test.ts > runGenerate — 生成対象の絞り込みと上書き防止 > 既存ファイルは上書きせず skip し、--force で上書きする
+AssertionError: expected [] to deeply equal [ 'out/prj-charter.md' ]
+
+- Expected
++ Received
+
+- [
+-   "out/prj-charter.md",
+- ]
++ []
+
+ ❯ tests/src/catalog-generate.test.ts:429:28
+    427|
+    428|     const forced = run(fx, true);
+    429|     expect(forced.written).toEqual(["out/prj-charter.md"]);
+       |                            ^
+    430|     expect(readFileSync(target, "utf8")).not.toBe("既存の本文");
+    431|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯
+
+ FAIL  tests/src/catalog-generate.test.ts > runGenerate — 生成対象の絞り込みと上書き防止 > --dry-run では書き込まず生成予定のみ報告する
+AssertionError: expected [] to deeply equal [ 'out/prj-charter.md' ]
+
+- Expected
++ Received
+
+- [
+-   "out/prj-charter.md",
+- ]
++ []
+
+ ❯ tests/src/catalog-generate.test.ts:438:28
+    436|     const result = run(fx, false, true);
+    437|
+    438|     expect(result.written).toEqual(["out/prj-charter.md"]);
+       |                            ^
+    439|     expect(existsSync(outPath(fx, "prj-charter.md"))).toBe(false);
+    440|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯
+
+ FAIL  tests/src/catalog-generate.test.ts > runGenerate — dct フィルタ > --dct 指定時は該当 dct のみ生成する
+AssertionError: expected [] to deeply equal [ 'out/prj-charter.md' ]
+
+- Expected
++ Received
+
+- [
+-   "out/prj-charter.md",
+- ]
++ []
+
+ ❯ tests/src/catalog-generate.test.ts:460:28
+    458|     const result = run(fx, false, false, ["project-definition"]);
+    459|
+    460|     expect(result.written).toEqual(["out/prj-charter.md"]);
+       |                            ^
+    461|     expect(existsSync(outPath(fx, "pm-plan.md"))).toBe(false);
+    462|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯
+
+ FAIL  tests/src/catalog-generate.test.ts > runGenerate — dct フィルタ > dct- プレフィックスや .yaml 付きの指定も一致する
+AssertionError: expected [] to deeply equal [ 'out/pm-plan.md' ]
+
+- Expected
++ Received
+
+- [
+-   "out/pm-plan.md",
+- ]
++ []
+
+ ❯ tests/src/catalog-generate.test.ts:467:28
+    465|     const result = run(fx, false, false, ["dct-project-management.yaml…
+    466|
+    467|     expect(result.written).toEqual(["out/pm-plan.md"]);
+       |                            ^
+    468|   });
+    469|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯
+
+ FAIL  tests/src/catalog-generate.test.ts > runGenerate — dct フィルタ > 複数指定で複数 dct を対象にできる
+AssertionError: expected [] to deeply equal [ 'out/prj-charter.md', …(1) ]
+
+- Expected
++ Received
+
+- [
+-   "out/prj-charter.md",
+-   "out/pm-plan.md",
+- ]
++ []
+
+ ❯ tests/src/catalog-generate.test.ts:473:28
+    471|     const result = run(fx, false, false, ["project-definition", "proje…
+    472|
+    473|     expect(result.written).toEqual(["out/prj-charter.md", "out/pm-plan…
+       |                            ^
+    474|   });
+    475|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯
+

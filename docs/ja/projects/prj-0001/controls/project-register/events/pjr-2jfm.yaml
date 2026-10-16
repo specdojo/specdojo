@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_fec3aea1bdf04e7f87736c788438f256
+  ts: "2026-10-14T13:49:19Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: リファクタリングの段取り（2026-10-14、利用者が承認）の段 4 として起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec-run.ts の schedule・in-place・job の実行モードを分ける
+    - field: description
+      from: ""
+      to: src/exec-run.ts のうち、schedule のタスクの実行（prepareSingleTask・runPreparedTask・batch・manual）、in-place の実行、Job の実行をモードごとのモジュールへ移す。動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-14"
+- v: 1
+  id: reg_2fb597386fa341e79c74be41cf2fc456
+  ts: "2026-10-14T15:19:17Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_fec3aea1bdf04e7f87736c788438f256
+- v: 1
+  id: reg_15e176e9906c4be3b9e4c660b0bf2fb9
+  ts: "2026-10-14T15:33:13Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2fb597386fa341e79c74be41cf2fc456
+- v: 1
+  id: reg_56874e786b964b7bba86876fd0873435
+  ts: "2026-10-14T15:40:08Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に --help・export・循環 import を確かめ、分割後の runner で exec run --register（PJR-JSEY、8599f2bf7）が統合まで通った（2026-10-15）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: schedule のタスクの実行を準備・実行・モードの 3 モジュール、in-place と Job をそれぞれのモジュールへ移し、exec-run.ts は 6,949 行から 3,531 行になった。--help と export は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_15e176e9906c4be3b9e4c660b0bf2fb9

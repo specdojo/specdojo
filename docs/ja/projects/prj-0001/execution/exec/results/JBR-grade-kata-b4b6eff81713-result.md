@@ -13,10 +13,7 @@ specdojo:
   started_at: "2026-10-06T21:00:08.988Z"
   completed_at: "2026-10-06T21:34:48.829Z"
   agent: gemma-reporter
-  block_reason: "
-> gemma-reporter · gemma4:31b-mlx-work-64k
-
-Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
+  block_reason: " > gemma-reporter · gemma4:31b-mlx-work-64k\nError: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
 ---
 
 # Edit Result

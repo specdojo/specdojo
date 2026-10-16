@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import yaml from "js-yaml";
+import { dump, load } from "js-yaml";
 import {
   buildViewpointsOverlay,
   documentKind,
@@ -28,7 +28,7 @@ function writeOverlay(dir: string, patch: Record<string, unknown> = {}): string 
   const path = join(dir, "pm-review-viewpoints.yaml");
   writeFileSync(
     path,
-    yaml.dump({ ...buildViewpointsOverlay(resolve(COMMON_PATH), "prj-0001"), ...patch }),
+    dump({ ...buildViewpointsOverlay(resolve(COMMON_PATH), "prj-0001"), ...patch }),
     "utf8",
   );
   return path;
@@ -89,12 +89,12 @@ describe("resolveViewpointsDoc", () => {
 
   it("共通側の更新をプロジェクトファイルの再生成なしで反映する", () => {
     withTempDir((dir) => {
-      const common = yaml.load(readFileSync(resolve(COMMON_PATH), "utf8")) as ReviewViewpointsDoc;
+      const common = load(readFileSync(resolve(COMMON_PATH), "utf8")) as ReviewViewpointsDoc;
       const first = common.viewpoints?.[0];
       if (!first) throw new Error("common viewpoints fixture is empty");
       first.title = "更新された共通タイトル";
       const commonPath = join(dir, "common.yaml");
-      writeFileSync(commonPath, yaml.dump(common), "utf8");
+      writeFileSync(commonPath, dump(common), "utf8");
       const projectPath = writeOverlay(dir);
 
       const resolved = resolveViewpointsDoc(projectPath, commonPath);
@@ -178,7 +178,7 @@ describe("resolveViewpointsDoc", () => {
       const path = join(dir, "legacy.yaml");
       writeFileSync(
         path,
-        yaml.dump({
+        dump({
           id: "test:viewpoints",
           viewpoints: [{ id: "vp-qe-sample", evaluation: "referential", continuous: true }],
         }),
@@ -193,7 +193,7 @@ describe("resolveViewpointsDoc", () => {
       const path = join(dir, "legacy.yaml");
       writeFileSync(
         path,
-        yaml.dump({
+        dump({
           id: "test:viewpoints",
           viewpoints: [{ id: "vp-qe-sample", evaluation: "agent" }],
         }),
@@ -223,7 +223,7 @@ describe("resolveViewpointsDoc", () => {
       const path = join(dir, "legacy.yaml");
       writeFileSync(
         path,
-        yaml.dump({
+        dump({
           id: "test:viewpoints",
           viewpoints: [],
           grade_rubric: {
@@ -247,7 +247,7 @@ describe("resolveViewpointsDoc", () => {
       const path = join(dir, "legacy.yaml");
       writeFileSync(
         path,
-        yaml.dump({
+        dump({
           id: "test:viewpoints",
           viewpoints: [],
           grade_rubric: {
@@ -390,7 +390,7 @@ describe("scaffoldViewpoints", () => {
       });
 
       expect(actual).toEqual({ written: true, skipped: false });
-      const doc = yaml.load(readFileSync(outputPath, "utf8")) as Record<string, unknown>;
+      const doc = load(readFileSync(outputPath, "utf8")) as Record<string, unknown>;
       expect(doc).toMatchObject({
         id: "prj-0001:pm-review-viewpoints",
         project_id: "prj-0001",
@@ -434,7 +434,7 @@ describe("pm-review-viewpoints schema", () => {
   it("共通正本、プロジェクト差分、解決後の全量定義が適合する", () => {
     withTempDir((dir) => {
       const validator = buildValidator("docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml");
-      const common = yaml.load(readFileSync(resolve(COMMON_PATH), "utf8"));
+      const common = load(readFileSync(resolve(COMMON_PATH), "utf8"));
       expect(validator(common), formatErrors(validator.errors)).toBe(true);
 
       const overlay = buildViewpointsOverlay(resolve(COMMON_PATH), "prj-0001");

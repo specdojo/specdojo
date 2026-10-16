@@ -1,7 +1,7 @@
 import { type Command } from "commander";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { existsSync, readdirSync, writeFileSync } from "node:fs";
-import yaml from "js-yaml";
+import { dump } from "./yaml.js";
 import {
   getProjectCatalogPath,
   getProjectRolesPath,
@@ -222,7 +222,7 @@ export function updateMilestonesFile(
   const outYaml = withSchemaModeline(
     filePath,
     MILESTONES_SCHEMA,
-    yaml.dump(doc, { lineWidth: 120, noRefs: true }),
+    dump(doc, { lineWidth: 120, noRefs: true }),
   );
 
   if (dryRun) {
@@ -511,9 +511,9 @@ export function registerScheduleCommands(program: Command): void {
       const outYaml = withSchemaModeline(
         outFile,
         TRACK_SCHEMA,
-        yaml.dump(outDoc, {
+        dump(outDoc, {
           lineWidth: 120,
-          quotingType: '"' as const,
+          quoteStyle: "double" as const,
           forceQuotes: false,
           noRefs: true,
         }),

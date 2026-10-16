@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import { describe, expect, it } from "vitest";
 import { buildInitialStateFromStrategy } from "../../src/exec-schedule-initial.js";
 import { buildScheduleIndex } from "../../src/exec-schedule-index.js";
@@ -12,7 +12,7 @@ import type { MemberRoster } from "../../src/specdojo-config.js";
 function writeCatalog(dir: string): void {
   writeFileSync(
     join(dir, "catalog.yaml"),
-    yaml.dump({
+    dump({
       groups: [
         {
           name: "sample",
@@ -35,7 +35,7 @@ function writeCatalog(dir: string): void {
 function writeTrack(dir: string, tasks: unknown[], track = "test"): void {
   writeFileSync(
     join(dir, `sch-track-${track}.yaml`),
-    yaml.dump({
+    dump({
       kind: "track",
       id: `prj-test:sch-track-${track}`,
       type: "project",
@@ -79,7 +79,7 @@ describe("buildScheduleTrack agent assignments", () => {
     const strategyPath = join(dir, "sch-strategy-test.yaml");
     writeFileSync(
       strategyPath,
-      yaml.dump({
+      dump({
         kind: "strategy",
         id: "prj-test:sch-strategy-test",
         type: "project",
@@ -154,7 +154,7 @@ function writeScopedStrategy(
   const strategyPath = join(dir, `sch-strategy-${track}.yaml`);
   writeFileSync(
     strategyPath,
-    yaml.dump({
+    dump({
       kind: "strategy",
       id: `prj-test:sch-strategy-${track}`,
       type: "project",
@@ -186,7 +186,7 @@ describe("buildScheduleTrack deliverable scope", () => {
   function writeTwoDeliverableCatalog(dir: string): void {
     writeFileSync(
       join(dir, "catalog.yaml"),
-      yaml.dump({
+      dump({
         groups: [
           {
             name: "sample",
@@ -281,7 +281,7 @@ describe("buildScheduleTrack phase set repetition", () => {
     try {
       writeFileSync(
         join(dir, "catalog.yaml"),
-        yaml.dump({
+        dump({
           groups: [
             {
               name: "sample",
@@ -297,7 +297,7 @@ describe("buildScheduleTrack phase set repetition", () => {
       const strategyPath = join(dir, "sch-strategy-test.yaml");
       writeFileSync(
         strategyPath,
-        yaml.dump({
+        dump({
           kind: "strategy",
           id: "prj-test:sch-strategy-test",
           type: "project",
@@ -376,7 +376,7 @@ describe("buildScheduleTrack phase set repetition", () => {
     try {
       writeFileSync(
         join(dir, "catalog.yaml"),
-        yaml.dump({
+        dump({
           groups: [
             {
               name: "sample",
@@ -392,7 +392,7 @@ describe("buildScheduleTrack phase set repetition", () => {
       const strategyPath = join(dir, "sch-strategy-test.yaml");
       writeFileSync(
         strategyPath,
-        yaml.dump({
+        dump({
           kind: "strategy",
           id: "prj-test:sch-strategy-test",
           type: "project",
@@ -452,7 +452,7 @@ describe("buildScheduleTrack phase set repetition", () => {
       const strategyPath = join(dir, "sch-strategy-test.yaml");
       writeFileSync(
         strategyPath,
-        yaml.dump({
+        dump({
           kind: "strategy",
           id: "prj-test:sch-strategy-test",
           type: "project",
@@ -544,7 +544,7 @@ describe("buildScheduleTrack phase set repetition", () => {
       const strategyPath = join(dir, "sch-strategy-test.yaml");
       writeFileSync(
         strategyPath,
-        yaml.dump({
+        dump({
           kind: "strategy",
           id: "prj-test:sch-strategy-test",
           type: "project",
@@ -584,7 +584,7 @@ describe("buildScheduleTrack phase set repetition", () => {
       const strategyPath = join(dir, "sch-strategy-test.yaml");
       writeFileSync(
         strategyPath,
-        yaml.dump({
+        dump({
           kind: "strategy",
           id: "prj-test:sch-strategy-test",
           type: "project",
@@ -657,7 +657,7 @@ describe("buildScheduleTrack status propagation", () => {
       owner_rules: [{ local_ids: ["doc"], owner: "BA" }],
     };
     if (status !== undefined) doc.status = status;
-    writeFileSync(strategyPath, yaml.dump(doc), "utf8");
+    writeFileSync(strategyPath, dump(doc), "utf8");
     return strategyPath;
   }
 
@@ -713,7 +713,7 @@ describe("buildScheduleIndex start_date precedence", () => {
   function writeDefaults(dir: string, defaultStartDate: string): void {
     writeFileSync(
       join(dir, "sch-defaults.yaml"),
-      yaml.dump({
+      dump({
         kind: "defaults",
         id: "prj-test:sch-defaults",
         type: "project",
@@ -729,7 +729,7 @@ describe("buildScheduleIndex start_date precedence", () => {
   function writeTrackWithStartDate(dir: string, startDate: string | null): void {
     writeFileSync(
       join(dir, "sch-track-test.yaml"),
-      yaml.dump({
+      dump({
         kind: "track",
         id: "prj-test:sch-track-test",
         type: "project",
@@ -782,7 +782,7 @@ describe("buildScheduleIndex start_date precedence", () => {
       mkdirSync(nestedDir);
       writeFileSync(
         join(nestedDir, "sch-track-archived.yaml"),
-        yaml.dump({ kind: "track", track: "archived", tasks: [] }),
+        dump({ kind: "track", track: "archived", tasks: [] }),
         "utf8",
       );
 

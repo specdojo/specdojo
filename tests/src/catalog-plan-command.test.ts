@@ -11,7 +11,7 @@ import {
 } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import { registerCatalogCommands } from "../../src/catalog.js";
 
 // catalog plan サブコマンドを CLI 経由で確認する。一時リポジトリを cwd にして
@@ -39,7 +39,7 @@ function writeDataFlowCatalog(root: string): void {
   const catalogDir = join(root, CATALOG_REL);
   writeFileSync(
     join(catalogDir, "dct-data-flow.yaml"),
-    yaml.dump({
+    dump({
       id: "prj-0001:dct-data-flow",
       type: "project",
       status: "draft",
@@ -153,7 +153,7 @@ function agentPlan(overrides: Record<string, unknown> = {}): Record<string, unkn
 
 function writeAgentPlan(root: string, plan: Record<string, unknown>): string {
   const path = join(root, "agent-plan.yaml");
-  writeFileSync(path, yaml.dump(plan), "utf8");
+  writeFileSync(path, dump(plan), "utf8");
   return path;
 }
 

@@ -1,7 +1,7 @@
 import { randomBytes } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { basename, join, relative } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { specdojoRootDir } from "./specdojo-config.js";
 
 export function nowUtcIsoSeconds(): string {
@@ -235,7 +235,7 @@ export function writeJson(path: string, data: unknown): void {
 }
 
 export function readYaml(path: string): unknown {
-  return yaml.load(readFileSync(path, "utf8"));
+  return load(readFileSync(path, "utf8"));
 }
 
 export function isSchYamlFilename(path: string): boolean {

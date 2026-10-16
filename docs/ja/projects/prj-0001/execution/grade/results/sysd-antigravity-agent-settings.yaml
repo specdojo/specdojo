@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 67
-graded_at: "2026-10-10T16:12:14.087Z"
+graded_at: "2026-10-15T16:09:18.903Z"
 graded_by: agy-expert-executor
-content_hash: ade83ab86eecf2ce4f88cc1219bea911534c633f15a5abe677a7eb397ad41027
+content_hash: f70cceb7908677d8824886c649847345207405839f6d5fa94216c59603126e68
 source_hashes:
   catalog-entry: 6c03a31aaa64e3906ac4156a91ce5382b83cc66ddfe08ecee3cd53358faa57b7
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b

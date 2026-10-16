@@ -2,7 +2,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, utimesSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Command } from "commander";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../src/exec.js";
 import { rebuildStaleGeneratedTracksForCycle } from "../../src/exec-run.js";
@@ -41,7 +41,7 @@ function setupProject(): { repo: string; schedulePath: string; trackPath: string
   );
   writeFileSync(
     join(repo, "catalog.yaml"),
-    yaml.dump({
+    dump({
       groups: [
         {
           name: "launch",
@@ -55,7 +55,7 @@ function setupProject(): { repo: string; schedulePath: string; trackPath: string
   );
   writeFileSync(
     strategyPath,
-    yaml.dump({
+    dump({
       kind: "strategy",
       id: "test:sch-strategy-launch",
       type: "project",

@@ -3,31 +3,77 @@ version: 1
 document: specdojo:nfr-performance-sample
 path: docs/ja/specdojo/samples/nfr-performance-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 68
-graded_at: "2026-09-05T11:20:37.356Z"
-graded_by: gemma-expert-executor
+score: 56
+graded_at: "2026-10-15T21:10:38.360Z"
+graded_by: agy-expert-executor
 content_hash: 4e856e75cf781a61e53570d368c666e9f18a87ce664b46dba417100c03611957
 categories:
-  consistency:
+  purpose:
     score: 50
-  usability:
-    score: 83
+  operations:
+    score: 81
+  planning:
+    score: 58
+  business:
+    score: 50
   architecture:
-    score: 100
+    score: 83
+  usability:
+    score: 75
+  implementation:
+    score: 63
   quality:
     score: 50
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -43,36 +89,191 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 1
-  major: 3
-  minor: 0
+  major: 13
+  minor: 6
   note: 0
 findings:
+  - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、応答性と処理能力を定義するための最小サンプルである。
+    message: >-
+      The document fails to explain how performance targets align with the project goals, scope, and business priorities
+      of the candy store sales management system.
+    message_ja: ドキュメントでは、パフォーマンス目標が candy store sales management system のプロジェクトの目標、スコープ、およびビジネスの優先事項とどのように一致するかについて説明されていません。
   - id: F002
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 6
-    message: ルールブックで定義された必須見出し構成（順序固定）に従っていない。
-    anchor: ""
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      The open issues table does not provide specific decision criteria, impact analysis, or next actions necessary for
+      the Product Owner to evaluate and approve the document.
+    message_ja: オープンな課題のテーブルには、プロダクトオーナーがドキュメントを評価し承認するために必要な、具体的な意思決定基準、影響分析、または次に行うべきアクションが記載されていません。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: >-
+      The document lists accountability and responsible roles as required viewpoints but does not specify actual
+      responsible roles or approval authorities.
+    message_ja: ドキュメントでは、説明責任と責任ある役割を必須の視点としてリストしていますが、実際の責任ある役割や承認権限については特定されていません。
   - id: F004
     severity: major
-    rule: vp-ux-readability
-    line: 6
-    message: ルールブックの構成を無視しているため、正解例としての可読性・参照価値が著しく低い。
-    anchor: ""
-  - id: F003
+    rule: vp-pm-plan-feasibility
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: >-
+      The document lacks tasks, work breakdown, completion criteria, and assigned roles, making it impossible to
+      schedule or estimate the required performance engineering work.
+    message_ja: ドキュメントにはタスク、作業分解、完了基準、および割り当てられた役割が不足しているため、必要なパフォーマンスエンジニアリング作業のスケジューリングや見積もりが不可能です。
+  - id: F005
     severity: major
-    rule: vp-qe-kata-conformance
+    rule: vp-pm-dependency-risk
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: >-
+      Dependencies on subsequent deliverables (e.g., acceptance criteria, test specifications, operational monitoring)
+      and associated project risks are not identified.
+    message_ja: 後続の成果物（例：受け入れ基準、テスト仕様書、運用監視）への依存関係、および関連するプロジェクトのリスクが特定されていません。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      Items to be transferred to project management records, such as reporting destinations and responsible role codes
+      for open issues, are not clearly separated.
+    message_ja: レポートの提出先やオープンな課題の責任者コードなど、プロジェクト管理記録に転記すべき項目が明確に分けられていません。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
     line: 9
-    message: 成果物の「完成例」ではなく「記述ガイド」になっており、sample の責務を果たしていない。
     anchor: "- 対象: 駄菓子屋の販売管理システム"
-  - id: F001
+    message: >-
+      The document does not describe the target users, business challenges, or expected business value addressed by the
+      performance requirements.
+    message_ja: ドキュメントでは、パフォーマンス要件によって対処されるターゲットユーザー、ビジネス上の課題、または期待されるビジネス価値について説明されていません。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: "- 主な内容: P95/P99レイテンシ、RPS(吞吐量)、リソース効率"
+    message: >-
+      Specific performance requirements, acceptance criteria, target scopes, and exclusions are completely missing,
+      preventing verification from a business analysis perspective.
+    message_ja: 具体的なパフォーマンス要件、受け入れ基準、対象スコープ、および除外事項が完全に欠落しており、ビジネス分析の観点からの検証ができません。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: >-
+      Stakeholders, operational usage scenarios, reviewers, and agreement scopes are not specified for the target
+      system.
+    message_ja: 対象となるシステムについて、ステークホルダー、運用の使用シナリオ、レビュー担当者、および合意の範囲が特定されていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: Technical prerequisites, constraints, external dependencies, and architectural assumptions are not specified.
+    message_ja: 技術的な前提条件、制約事項、外部依存関係、およびアーキテクチャの仮定が特定されていません。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 20
+    anchor: "| 項目         | 値                                                            | 備考                                 |"
+    message: >-
+      The table in Section 4 duplicates the exact statements of purpose and main contents already presented in Section 1
+      and Section 3 without adding distinct architectural value.
+    message_ja: セクション 4 のテーブルは、セクション 1 およびセクション 3 で既に示されている目的と主な内容を、独自のアーキテクチャ上の価値を追加することなく重複して記載しています。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 15
+    anchor: "- 主な内容: P95/P99レイテンシ、RPS(吞吐量)、リソース効率"
+    message: >-
+      Input parameters, latency constraints, and completion criteria required for implementation and system tuning are
+      completely absent.
+    message_ja: 実装とシステムチューニングに必要な入力パラメータ、レイテンシの制約、および完了基準が完全に欠落しています。
+  - id: F013
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      The document does not describe the scope of impact or affected components (e.g., APIs, databases, batch jobs)
+      resulting from performance requirements.
+    message_ja: ドキュメントでは、パフォーマンス要件によって生じる影響の範囲や、影響を受けるコンポーネント（例：API、データベース、バッチジョブ）について説明されていません。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 20
+    anchor: "| 項目         | 値                                                            | 備考                                 |"
+    message: >-
+      Verification commands, measurement tools, and expected test outcomes are not documented, preventing performance
+      testing.
+    message_ja: 検証コマンド、測定ツール、および期待されるテスト結果がドキュメント化されていないため、パフォーマンスのテストができません。
+  - id: F015
     severity: major
     rule: vp-qe-verifiability
     line: 19
-    message: 具体的な判定基準（数値や閾値）が記載されておらず、検証不可能な状態である。
     anchor: ""
+    message: 具体的な判定基準（数値や閾値）が記載されておらず、検証不可能な状態である。
+    message_ja: 具体的な判定基準（数値や閾値）が記載されておらず、検証不可能な状態である。
+  - id: F016
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 6
+    anchor: ""
+    message: ルールブックで定義された必須見出し構成（順序固定）に従っていない。
+    message_ja: ルールブックで定義された必須見出し構成（順序固定）に従っていない。
+  - id: F017
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 成果物の「完成例」ではなく「記述ガイド」になっており、sample の責務を果たしていない。
+    message_ja: 成果物の「完成例」ではなく「記述ガイド」になっており、sample の責務を果たしていない。
+  - id: F018
+    severity: major
+    rule: vp-ux-readability
+    line: 6
+    anchor: ""
+    message: ルールブックの構成を無視しているため、正解例としての可読性・参照価値が著しく低い。
+    message_ja: ルールブックの構成を無視しているため、正解例としての可読性・参照価値が著しく低い。
+  - id: F019
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: >-
+      The document lacks explicit criteria, review gates, and prerequisite conditions required to transition the status
+      from draft to ready.
+    message_ja: ドキュメントには、ステータスを draft から ready へ移行するために必要な明確な基準、レビューゲート、および前提条件が不足しています。
+  - id: F020
+    severity: minor
+    rule: vp-ops-operability
+    line: 30
+    anchor: "| 要件詳細の補強 | 実案件適用時に具体化する |"
+    message: >-
+      Operational procedures, contact channels for performance degradation inquiries, and maintenance responsibilities
+      are not documented.
+    message_ja: 運用の手順、パフォーマンス低下に関する問い合わせの連絡先、および保守の責任がドキュメント化されていません。

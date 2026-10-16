@@ -4,7 +4,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import {
   CELL_NONE,
   displayIdFromTicketFilename,
@@ -258,7 +258,7 @@ export function validateRegisterEventShape(value: unknown, source: string): stri
 export function readRegisterEventsFromContent(content: string, source: string): RegisterEventV1[] {
   let parsed: unknown;
   try {
-    parsed = yaml.load(content);
+    parsed = load(content);
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
     throw new Error(`${source}: invalid register event YAML: ${detail}`);
@@ -274,10 +274,10 @@ export function readRegisterEventsFromContent(content: string, source: string): 
 }
 
 export function serializeRegisterEvents(events: readonly RegisterEventV1[]): string {
-  return `${REGISTER_EVENTS_SCHEMA_MODELINE}\n${yaml.dump([...events], {
+  return `${REGISTER_EVENTS_SCHEMA_MODELINE}\n${dump([...events], {
     lineWidth: -1,
     noRefs: true,
-    quotingType: '"',
+    quoteStyle: "double",
   })}`;
 }
 

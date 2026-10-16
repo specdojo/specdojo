@@ -1,0 +1,172 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_363d4a77e03d46a89a310a31b347ccee
+  ts: "2026-10-14T13:49:29Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: リファクタリングの段取り（2026-10-14、利用者が承認）の段 4 として起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec-run.ts の register の実行とコマンドの登録を分ける
+    - field: description
+      from: ""
+      to: src/exec-run.ts のうち、register の実行（worktree での実行・統合・再開）と、run・cycle・resume のコマンドの登録を別のモジュールへ移す。動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-14"
+- v: 1
+  id: reg_adba538fa131498ab065f9efd5f4771c
+  ts: "2026-10-14T15:40:21Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_363d4a77e03d46a89a310a31b347ccee
+- v: 1
+  id: reg_3a4ccf1ab5124f6f9890663db7068d8e
+  ts: "2026-10-14T15:46:07Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_adba538fa131498ab065f9efd5f4771c
+- v: 1
+  id: reg_b364bc1274584bd1b6bdd38973e76736
+  ts: "2026-10-14T15:46:54Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_3a4ccf1ab5124f6f9890663db7068d8e
+- v: 1
+  id: reg_bb9c550eaafc42f69a1852e8a03b6ba1
+  ts: "2026-10-14T15:47:00Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_b364bc1274584bd1b6bdd38973e76736
+- v: 1
+  id: reg_fb1857d04cc24b36922b62b23a14c870
+  ts: "2026-10-14T17:25:28Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_bb9c550eaafc42f69a1852e8a03b6ba1
+- v: 1
+  id: reg_8060763a4c1145efa76d5513d76a6971
+  ts: "2026-10-14T17:33:04Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-ts"
+  previous_event_id: reg_fb1857d04cc24b36922b62b23a14c870
+- v: 1
+  id: reg_d48a08ed463047c9a8886b310c88c674
+  ts: "2026-10-14T17:33:37Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_8060763a4c1145efa76d5513d76a6971
+- v: 1
+  id: reg_37435582cdeb411986927d726a0ac721
+  ts: "2026-10-14T17:42:38Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d48a08ed463047c9a8886b310c88c674
+- v: 1
+  id: reg_ea7dc37b832f4371ba64bc716c7cf88a
+  ts: "2026-10-14T17:50:08Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に --help・export・循環 import を確かめ、分割後の runner で exec run --register（PJR-JSEY、41227a627）が統合まで通った（2026-10-15）。途中で codex の利用上限（2:19 まで）と、lint の未使用の import で 2 回止まり、再開で直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: register の実行を core・state・mode・worktree・resume・command の 6 モジュール、run・cycle・resume のコマンドの登録を lifecycle-commands へ移し、exec-run.ts は 66 行の再 export になった。--help と export は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_37435582cdeb411986927d726a0ac721

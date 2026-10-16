@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0964ca12a68949d3a5ee8562eaf67fdf
+  ts: "2026-10-15T22:12:10Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-V23P の決定のフォローアップ（2026-10-16）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: job・routine・kata・deliverable・devcontainer・review・docs を移す
+    - field: description
+      from: ""
+      to: codemod で小さい機能のファイルを src/job/・src/routine/・src/kata/・src/deliverable/・src/devcontainer/・src/review/・src/docs/ へ移す。 PJR-V23P の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-16"

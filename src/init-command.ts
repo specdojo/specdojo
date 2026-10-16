@@ -2,7 +2,7 @@ import { createInterface } from "node:readline/promises";
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import type { Command } from "commander";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import { runScaffold, type ProjectSize } from "./catalog-scaffold.js";
 import { runDevcontainerScaffold } from "./devcontainer-scaffold.js";
 import { runProviderScaffold } from "./exec-provider-scaffold.js";
@@ -258,7 +258,7 @@ function writeNewFile(
 }
 
 function humanRoster(answers: InitAnswers): string {
-  return yaml.dump(
+  return dump(
     {
       id: `${answers.projectId}:pm-members`,
       type: "project",
@@ -284,7 +284,7 @@ function humanRoster(answers: InitAnswers): string {
 }
 
 function loadInitTemplate(packageRoot: string, filename: string): Record<string, unknown> {
-  return yaml.load(readFileSync(join(packageRoot, "templates", filename), "utf8")) as Record<
+  return load(readFileSync(join(packageRoot, "templates", filename), "utf8")) as Record<
     string,
     unknown
   >;
@@ -378,16 +378,13 @@ function writeExecConfiguration(
   writeNewFile(
     repoRoot,
     ".specdojo/agent-members.yaml",
-    yaml.dump({ version: 1, members }, { lineWidth: 120, noRefs: true }),
+    dump({ version: 1, members }, { lineWidth: 120, noRefs: true }),
     dryRun,
   );
   writeNewFile(
     repoRoot,
     ".specdojo/exec-defaults.yaml",
-    yaml.dump(
-      { ...configuredDefaults, providers: providerDefaults },
-      { lineWidth: 120, noRefs: true },
-    ),
+    dump({ ...configuredDefaults, providers: providerDefaults }, { lineWidth: 120, noRefs: true }),
     dryRun,
   );
   const primaryProvider = providers[0];
@@ -438,7 +435,7 @@ function catalogTemplateEntries(
     .filter((file) => /^dct-.+-template\.yaml$/.test(file))
     .sort()
     .map((file) => {
-      const doc = yaml.load(readFileSync(join(templateDir, file), "utf8")) as {
+      const doc = load(readFileSync(join(templateDir, file), "utf8")) as {
         domain: string;
         title?: string;
       };
@@ -466,7 +463,7 @@ function scaffoldCatalog(
   writeNewFile(
     repoRoot,
     join(catalogRel, "dct-index.yaml"),
-    yaml.dump(
+    dump(
       {
         id: `${answers.projectId}:dct-index`,
         type: "project",

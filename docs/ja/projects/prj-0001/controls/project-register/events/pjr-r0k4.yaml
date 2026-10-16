@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cc29de67e0db45c8b0b38843c9bae92b
+  ts: "2026-10-14T21:26:32Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-Y8P9 を分けて起票（2026-10-15、利用者が承認）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: dashboard.ts・catalog-build.ts・schedule-strategy-generate.ts を分ける
+    - field: description
+      from: ""
+      to: dashboard、カタログの build、schedule の戦略の生成（合わせて 3,832 行）を責務ごとのモジュールへ移す。 動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
+- v: 1
+  id: reg_21ed6cb5dec7434ca1bb32a9b0c7f67a
+  ts: "2026-10-15T11:35:43Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cc29de67e0db45c8b0b38843c9bae92b
+- v: 1
+  id: reg_ee8081aaeff54fae9dbf3df2de38499f
+  ts: "2026-10-15T11:55:37Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_21ed6cb5dec7434ca1bb32a9b0c7f67a
+- v: 1
+  id: reg_075c8bd4187d4dedabb5220b1e4fb0f7
+  ts: "2026-10-15T12:57:19Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に export・--help・循環 import を確かめ、分割の直前（start）と直後（8e3ddf50a）の worktree で specdojo build を流して生成物を比べた（2026-10-15）。初回で親の検証まで通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: dashboard・catalog-build・schedule-strategy-generate を責務ごとのモジュールへ分け、すべて 1,000 行以下にした。export と 14 コマンドの --help は分割の前後で一致し、分割の前後のコードで build を流した生成物の差分は生成時刻と本件の状態だけだった
+  previous_event_id: reg_ee8081aaeff54fae9dbf3df2de38499f

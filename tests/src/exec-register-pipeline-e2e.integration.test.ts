@@ -122,6 +122,27 @@ function buildIndex(): string {
   ].join("\n");
 }
 
+function buildGeneratedIndex(): string {
+  return [
+    "---",
+    "specdojo:",
+    "  id: test:pjr-index",
+    "  type: project",
+    "  status: ready",
+    "  rulebook: specdojo:pjr-rulebook",
+    "---",
+    "",
+    "# プロジェクト登録簿",
+    "",
+    "## 1. 登録項目一覧",
+    "",
+    "| ID | ステータス | タイトル |",
+    "| --- | --- | --- |",
+    "| PJR-AB12 | open | pipeline test item |",
+    "",
+  ].join("\n");
+}
+
 function buildTicket(id: string): string {
   return [
     "---",
@@ -444,6 +465,13 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
         buildTicket("PJR-AB12"),
         "utf8",
       );
+      // config init より前から生成物を追跡していた利用者の移行経路を fixture 自身で再現する。
+      // 実リポジトリに無視済みの生成物が残っているかどうかには依存させない。
+      writeFileSync(
+        join(root, REGISTER_REL, "generated", "pjr-index.md"),
+        buildGeneratedIndex(),
+        "utf8",
+      );
       cpSync(
         join(REAL_REPO_ROOT, "docs/ja/specdojo/exec-templates"),
         join(root, "docs/ja/specdojo/exec-templates"),
@@ -453,13 +481,11 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
       );
       // register add は個票の雛形として templates 配下の pjr-*-template.md を読む。
       // exec-templates とは別ディレクトリのため、両方を用意する必要がある。
-      cpSync(
-        join(REAL_REPO_ROOT, "docs/ja/specdojo/templates"),
-        join(root, "docs/ja/specdojo/templates"),
-        {
-          recursive: true,
-        },
-      );
+      const templatesRoot = join(REAL_REPO_ROOT, "docs/ja/specdojo/templates");
+      cpSync(templatesRoot, join(root, "docs/ja/specdojo/templates"), {
+        recursive: true,
+        filter: (source) => !relative(templatesRoot, source).split(sep).includes("generated"),
+      });
       // spawnSelf は specdojoRootDir()（= 一時リポジトリ）配下の node_modules/.bin/tsx を
       // 探すため、実リポジトリの node_modules をシンボリックリンクして解決可能にする。
       symlinkSync(join(REAL_REPO_ROOT, "node_modules"), join(root, "node_modules"));
@@ -798,7 +824,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         const trackedIgnored = git(root, "ls-files", "-ci", "--exclude-standard")
           .split("\n")
           .filter((line) => line.length > 0);
-        expect(trackedIgnored.length).toBeGreaterThan(0);
+        expect(trackedIgnored).toContain(`${REGISTER_REL}/generated/pjr-index.md`);
         git(root, "rm", "-r", "--cached", "--quiet", ...trackedIgnored);
         git(root, "add", "-A");
         git(root, "commit", "-m", "add second register item");
@@ -857,6 +883,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         const trackedIgnored = git(root, "ls-files", "-ci", "--exclude-standard")
           .split("\n")
           .filter((line) => line.length > 0);
+        expect(trackedIgnored).toContain(`${REGISTER_REL}/generated/pjr-index.md`);
         git(root, "rm", "-r", "--cached", "--quiet", ...trackedIgnored);
         git(root, "add", "-A");
         git(root, "commit", "-m", "add second register item");

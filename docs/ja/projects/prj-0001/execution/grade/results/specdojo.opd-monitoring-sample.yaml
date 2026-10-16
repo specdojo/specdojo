@@ -3,23 +3,60 @@ version: 1
 document: specdojo:opd-monitoring-sample
 path: docs/ja/specdojo/samples/opd-monitoring-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 82
-graded_at: "2026-09-05T13:29:57.981Z"
-graded_by: gemma-expert-executor
+score: 88
+graded_at: "2026-10-15T21:31:01.819Z"
+graded_by: agy-expert-executor
 content_hash: b31cf6371dcb1159ed2ae518afab2900629bd7ca15411b9d16cebd3237119a1c
 categories:
-  consistency:
-    score: 63
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
-    score: 75
+    score: 83
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
@@ -28,12 +65,21 @@ viewpoints:
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 2
     score: 50
@@ -41,6 +87,15 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -56,23 +111,27 @@ findings:
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# 運用方針・設計: 監視 サンプル"
     message: Frontmatter の必須項目 `title` が不足している。
-    anchor: ""
+    message_ja: Frontmatter の必須項目 `title` が不足している。
   - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
     line: 7
+    anchor: 監視・アラートの方針を `opd-index` の差分として定義する（指標・閾値・通知先・初動の具体化）。
     message: "`opd-rulebook` の「5. 本文構成（標準テンプレ）」で定義されている必須見出し（2, 3, 4, 6, 7, 8, 9, 10, 11）が不足している。"
-    anchor: ""
-  - id: F004
-    severity: minor
-    rule: vp-ux-readability
-    line: 7
-    message: 必須構成を省略しているため、`opd-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
-    anchor: ""
+    message_ja: "`opd-rulebook` の「5. 本文構成（標準テンプレ）」で定義されている必須見出し（2, 3, 4, 6, 7, 8, 9, 10, 11）が不足している。"
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
     line: 12
+    anchor: "| -------- | --------------------- | ------ | -------------------------------------------- | ---------------- |"
     message: "見出し番号が `opd-rulebook` の定義する順序（## 5. 監視・アラート方針... ## 12. 関連ドキュメント導線...）と不一致である。"
-    anchor: "| 監視対象 | 指標/閾値             | 通知先 | 初動（誰が何をするか）                       | 備考             |"
+    message_ja: "見出し番号が `opd-rulebook` の定義する順序（## 5. 監視・アラート方針... ## 12. 関連ドキュメント導線...）と不一致である。"
+  - id: F004
+    severity: minor
+    rule: vp-ux-readability
+    line: 7
+    anchor: 監視・アラートの方針を `opd-index` の差分として定義する（指標・閾値・通知先・初動の具体化）。
+    message: 必須構成を省略しているため、`opd-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+    message_ja: 必須構成を省略しているため、`opd-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。

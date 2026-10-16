@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, posix } from "node:path";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import { collectDocIndexEntries } from "./doc-index.js";
 import { isDctTemplateCatalog, renderCatalogTemplateBody } from "./catalog-build.js";
 
@@ -69,7 +69,7 @@ export function yamlPageRelPath(yamlRelPath: string): string {
 function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta & { title?: string } {
   let parsed: unknown;
   try {
-    parsed = yaml.load(content);
+    parsed = load(content);
   } catch {
     parsed = undefined;
   }
@@ -118,7 +118,7 @@ function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta & { titl
 // 本文中のバッククォート連続より長いフェンスを使って壊れないようにする。
 export function renderYamlPage(yamlRelPath: string, content: string): string {
   const { title, ...meta } = deriveMeta(yamlRelPath, content);
-  const frontmatter = yaml.dump({ specdojo: meta }, { lineWidth: -1 }).trimEnd();
+  const frontmatter = dump({ specdojo: meta }, { lineWidth: -1 }).trimEnd();
   const fileName = posix.basename(yamlRelPath);
   const heading = title ?? fileName;
   const note = `> このページは \`${yamlRelPath}\` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。`;
@@ -127,7 +127,7 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
   // インスタンス（catalog build）と同じ表形式で本文を描画する。
   let parsed: unknown;
   try {
-    parsed = yaml.load(content);
+    parsed = load(content);
   } catch {
     parsed = undefined;
   }

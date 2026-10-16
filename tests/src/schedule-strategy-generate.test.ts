@@ -3,7 +3,7 @@ import { Command } from "commander";
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, relative } from "node:path";
-import yaml from "js-yaml";
+import { dump, load } from "js-yaml";
 import {
   buildStrategyDocument,
   generateStrategy,
@@ -56,7 +56,7 @@ function catalog(): Record<string, unknown> {
 function writeIntentStrategy(): void {
   write(
     "schedule/sch-strategy-demo.yaml",
-    yaml.dump({
+    dump({
       kind: "strategy",
       id: "prj-0001:sch-strategy-demo",
       type: "project",
@@ -97,10 +97,10 @@ beforeEach(() => {
   cpSync(join(originalRoot, "docs/specdojo/schemas/v1"), join(root, "docs/specdojo/schemas/v1"), {
     recursive: true,
   });
-  write("catalog/dct-demo.yaml", yaml.dump(catalog()));
+  write("catalog/dct-demo.yaml", dump(catalog()));
   write(
     "timeline/tml-index.yaml",
-    yaml.dump({
+    dump({
       id: "prj-0001:tml-index",
       project_id: "prj-0001",
       status: "draft",
@@ -109,7 +109,7 @@ beforeEach(() => {
       ],
     }),
   );
-  write(rolesPath, yaml.dump({ roles: [{ code: "DEV" }, { code: "PO" }, { code: "QE" }] }));
+  write(rolesPath, dump({ roles: [{ code: "DEV" }, { code: "PO" }, { code: "QE" }] }));
   mkdirSync(schedulePath, { recursive: true });
   writeIntentStrategy();
 });
@@ -206,7 +206,7 @@ describe("strategy generator", () => {
 
   it("既存 scope の local_ids を保ち、選択した成果物だけの strategy を再生成する", () => {
     const path = join(schedulePath, "sch-strategy-demo.yaml");
-    const strategy = yaml.load(readFileSync(path, "utf8")) as Record<string, unknown>;
+    const strategy = load(readFileSync(path, "utf8")) as Record<string, unknown>;
     const scope = strategy.scope as { catalogs: Array<Record<string, unknown>> };
     scope.catalogs[0].local_ids = ["representative"];
     strategy.approach_rules = [
@@ -216,7 +216,7 @@ describe("strategy generator", () => {
         bootstrap_scope: ["rulebook", "recipe", "sample", "template"],
       },
     ];
-    write("schedule/sch-strategy-demo.yaml", yaml.dump(strategy));
+    write("schedule/sch-strategy-demo.yaml", dump(strategy));
 
     const result = generateStrategy({
       repoRoot: root,
@@ -246,11 +246,11 @@ describe("strategy generator", () => {
 
   it("既存 scope の local_ids がカタログに存在しない場合は停止する", () => {
     const path = join(schedulePath, "sch-strategy-demo.yaml");
-    const strategy = yaml.load(readFileSync(path, "utf8")) as Record<string, unknown>;
+    const strategy = load(readFileSync(path, "utf8")) as Record<string, unknown>;
     const scope = strategy.scope as { catalogs: Array<Record<string, unknown>> };
     scope.catalogs[0].local_ids = ["missing"];
     strategy.approach_rules = [{ local_ids: ["missing"], intent: "author-deliverable" }];
-    write("schedule/sch-strategy-demo.yaml", yaml.dump(strategy));
+    write("schedule/sch-strategy-demo.yaml", dump(strategy));
 
     const result = generateStrategy({
       repoRoot: root,
@@ -289,11 +289,11 @@ describe("strategy generator", () => {
   });
 
   it("intent 宣言が不足する場合は候補を返さない", () => {
-    const strategy = yaml.load(
+    const strategy = load(
       readFileSync(join(schedulePath, "sch-strategy-demo.yaml"), "utf8"),
     ) as Record<string, unknown>;
     strategy.approach_rules = [];
-    write("schedule/sch-strategy-demo.yaml", yaml.dump(strategy));
+    write("schedule/sch-strategy-demo.yaml", dump(strategy));
     const result = generateStrategy({
       repoRoot: root,
       schedulePath,

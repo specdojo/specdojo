@@ -1,0 +1,57 @@
+
+> specdojo@0.3.0 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-0946a04e624d project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-0946a04e624d
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/samples/mip-index-sample.md
+document resume: docs/ja/specdojo/samples/mip-index-sample.md start_stage=1
+document complete: docs/ja/specdojo/samples/mip-index-sample.md
+document start: docs/ja/specdojo/samples/nfr-index-sample.md
+document resume: docs/ja/specdojo/samples/nfr-index-sample.md start_stage=1
+document complete: docs/ja/specdojo/samples/nfr-index-sample.md
+document start: docs/ja/specdojo/samples/nfr-maintainability-sample.md
+document resume: docs/ja/specdojo/samples/nfr-maintainability-sample.md start_stage=1
+document complete: docs/ja/specdojo/samples/nfr-maintainability-sample.md
+document start: docs/ja/specdojo/samples/nfr-performance-sample.md
+document complete: docs/ja/specdojo/samples/nfr-performance-sample.md
+document start: docs/ja/specdojo/samples/nfr-reliability-sample.md
+document complete: docs/ja/specdojo/samples/nfr-reliability-sample.md
+document start: docs/ja/specdojo/samples/nfr-security-safety-sample.md
+document complete: docs/ja/specdojo/samples/nfr-security-safety-sample.md
+document start: docs/ja/specdojo/samples/nfr-usability-sample.md
+document complete: docs/ja/specdojo/samples/nfr-usability-sample.md
+document start: docs/ja/specdojo/samples/ntp-sample.md
+document complete: docs/ja/specdojo/samples/ntp-sample.md
+document start: docs/ja/specdojo/samples/opd-access-control-sample.md
+document complete: docs/ja/specdojo/samples/opd-access-control-sample.md
+document start: docs/ja/specdojo/samples/opd-incident-management-sample.md
+document complete: docs/ja/specdojo/samples/opd-incident-management-sample.md
+document start: docs/ja/specdojo/samples/opd-index-sample.md
+document complete: docs/ja/specdojo/samples/opd-index-sample.md
+document start: docs/ja/specdojo/samples/opd-monitoring-sample.md
+document complete: docs/ja/specdojo/samples/opd-monitoring-sample.md
+document start: docs/ja/specdojo/samples/opd-sample.md
+document complete: docs/ja/specdojo/samples/opd-sample.md
+document start: docs/ja/specdojo/samples/opr-access-control-sample.md
+document complete: docs/ja/specdojo/samples/opr-access-control-sample.md
+document start: docs/ja/specdojo/samples/opr-backup-restore-sample.md
+document complete: docs/ja/specdojo/samples/opr-backup-restore-sample.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-0946a04e624d/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-15T21:03:35Z	docs/ja/specdojo/samples/mip-index-sample.md	1	passed	148	fail	47	22	agy-expert-executor	machine	none		
+2026-10-15T21:06:09Z	docs/ja/specdojo/samples/nfr-index-sample.md	1	passed	152	needs-work	75	16	agy-expert-executor	machine	none		
+2026-10-15T21:08:39Z	docs/ja/specdojo/samples/nfr-maintainability-sample.md	1	passed	148	fail	61	21	agy-expert-executor	machine	none		
+2026-10-15T21:11:02Z	docs/ja/specdojo/samples/nfr-performance-sample.md	1	passed	141	fail	56	20	agy-expert-executor	machine	none		
+2026-10-15T21:13:47Z	docs/ja/specdojo/samples/nfr-reliability-sample.md	1	passed	163	fail	51	20	agy-expert-executor	machine	none		
+2026-10-15T21:16:15Z	docs/ja/specdojo/samples/nfr-security-safety-sample.md	1	passed	147	fail	56	20	agy-expert-executor	machine	none		
+2026-10-15T21:18:31Z	docs/ja/specdojo/samples/nfr-usability-sample.md	1	passed	134	needs-work	70	20	agy-expert-executor	machine	none		
+2026-10-15T21:20:27Z	docs/ja/specdojo/samples/ntp-sample.md	1	passed	114	needs-work	79	5	agy-expert-executor	machine	none		
+2026-10-15T21:22:39Z	docs/ja/specdojo/samples/opd-access-control-sample.md	1	passed	130	needs-work	88	4	agy-expert-executor	machine	none		
+2026-10-15T21:24:47Z	docs/ja/specdojo/samples/opd-incident-management-sample.md	1	passed	126	needs-work	88	4	agy-expert-executor	machine	none		
+2026-10-15T21:28:32Z	docs/ja/specdojo/samples/opd-index-sample.md	1	passed	223	needs-work	78	15	agy-expert-executor	machine	none		
+2026-10-15T21:31:03Z	docs/ja/specdojo/samples/opd-monitoring-sample.md	1	passed	149	needs-work	88	4	agy-expert-executor	machine	none		
+2026-10-15T21:33:41Z	docs/ja/specdojo/samples/opd-sample.md	1	passed	156	fail	49	23	agy-expert-executor	machine	none		
+2026-10-15T21:37:07Z	docs/ja/specdojo/samples/opr-access-control-sample.md	1	passed	204	fail	63	20	agy-expert-executor	machine	none		
+2026-10-15T21:40:31Z	docs/ja/specdojo/samples/opr-backup-restore-sample.md	1	passed	202	fail	53	22	agy-expert-executor	machine	none		

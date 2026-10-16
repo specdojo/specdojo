@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7c60e12cb8d14014829dc625b117dfa3
+  ts: "2026-10-14T21:26:09Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-Y8P9 を分けて起票（2026-10-15、利用者が承認）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec-worktree-ops.ts・exec-repo-integration.ts・exec-reporter.ts を分ける
+    - field: description
+      from: ""
+      to: worktree の操作、プロダクトリポジトリの統合、reporter の処理（合わせて 3,748 行）を責務ごとのモジュールへ移す。 動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
+- v: 1
+  id: reg_cef54aa44423428aa034b6c5107654b4
+  ts: "2026-10-14T22:06:26Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7c60e12cb8d14014829dc625b117dfa3
+- v: 1
+  id: reg_3f6b647d917341618ef14ddc7eac5dd9
+  ts: "2026-10-14T22:16:28Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+  previous_event_id: reg_cef54aa44423428aa034b6c5107654b4
+- v: 1
+  id: reg_a206dd6ff8374abdb267940265a087c5
+  ts: "2026-10-14T22:17:11Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+      to: "-"
+  previous_event_id: reg_3f6b647d917341618ef14ddc7eac5dd9
+- v: 1
+  id: reg_25bb63a42db04a169341ac7cbf8b4802
+  ts: "2026-10-14T22:26:35Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a206dd6ff8374abdb267940265a087c5
+- v: 1
+  id: reg_2352673cc7234cc3b2b0da076f72338a
+  ts: "2026-10-15T10:42:23Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に export・--help・循環 import を確かめ、分割後の runner で exec run --register（PJR-JSEY、0bee0ad8c）が統合まで通った（2026-10-15）。初回は import の抜けで型検査に失敗し、--resume-from executor で直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: exec-worktree-ops を commit・lifecycle・merge、exec-repo-integration を git・sync、exec-reporter を output のモジュールへ分け、すべて 1,000 行以下にした。export と --help は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_25bb63a42db04a169341ac7cbf8b4802

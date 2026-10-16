@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-13M6",
+  "run_id": "20261014T221712923Z-b04e62bb",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-14T22:17:12.923Z",
+    "completed_at": "2026-10-14T22:20:58.102Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-13m6.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-13m6-exec-worktree-integration-split.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-integration-git.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-repo-integration-sync.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-reporter-output.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-worktree-ops-commit.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-worktree-ops-lifecycle.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec-worktree-ops-merge.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "src/exec-worktree-ops-lifecycle.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": "docs/ja/product/040-system-design/sysd-index.md    |    4 +-\n .../controls/project-register/events/pjr-13m6.yaml |   16 +\n .../pjr-13m6-exec-worktree-integration-split.md    |    3 +-\n src/exec-repo-integration.ts                       |  369 +----\n src/exec-reporter.ts                               |  262 +---\n src/exec-worktree-ops.ts                           | 1635 +-------------------\n 6 files changed, 97 insertions(+), 2192 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/040-system-design/sysd-index.md docs/ja/projects/prj-0001/controls/project-register/pjr-13m6-exec-worktree-integration-split.md src/exec-repo-integration.ts src/exec-reporter.ts src/exec-worktree-ops.ts src/exec-repo-integration-git.ts src/exec-repo-integration-sync.ts src/exec-reporter-output.ts src/exec-worktree-ops-commit.ts src/exec-worktree-ops-lifecycle.ts src/exec-worktree-ops-merge.ts",
+      "status": "passed",
+      "summary": "対象11ファイルは整形済みで、追加の書式変更はなかった。"
+    },
+    {
+      "source": "executor",
+      "command": "diff -u tmp/pjr-13m6-help/before-exec-run.txt tmp/pjr-13m6-help/after-exec-run.txt",
+      "status": "passed",
+      "summary": "exec run --help は分割前後で差分なし。"
+    },
+    {
+      "source": "executor",
+      "command": "diff -u tmp/pjr-13m6-help/before-exec-cycle.txt tmp/pjr-13m6-help/after-exec-cycle.txt",
+      "status": "passed",
+      "summary": "exec cycle --help は分割前後で差分なし。"
+    },
+    {
+      "source": "executor",
+      "command": "diff -u tmp/pjr-13m6-help/before-exec-resume.txt tmp/pjr-13m6-help/after-exec-resume.txt",
+      "status": "passed",
+      "summary": "exec resume --help は分割前後で差分なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "プロジェクト登録簿の派生ビューを正常に生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "全カタログを検証完了。既存の未作成文書に関する警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec run --register",
+      "status": "requires_human",
+      "summary": "統合後に orchestrator が1回実行して runner の実動作を確認する close 条件。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-13M6\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-Mp25Ai/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-bfcyub/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-13M6/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-13M6/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-13M6\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nUpdated ticket status → ready: /tmp/specdojo-ticket-EF3MyS/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-lH8tGa/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-B4nuTT/pjr-0001-topic.md\nUpd\n… output omitted …\n  38.06s (transform 2.41s, setup 513ms, import 19.53s, tests 39.43s, environment 9ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nreporter failedproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "changed",
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-13m6-exec-worktree-integration-split.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-13m6-exec-worktree-integration-split.md",
+      "reason": ""
+    },
+    {
+      "target": "src/exec-repo-integration.ts",
+      "status": "changed",
+      "path": "src/exec-repo-integration.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec-reporter.ts",
+      "status": "changed",
+      "path": "src/exec-reporter.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec-worktree-ops.ts",
+      "status": "changed",
+      "path": "src/exec-worktree-ops.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec-repo-integration-git.ts",
+      "status": "changed",
+      "path": "src/exec-repo-integration-git.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec-repo-integration-sync.ts",
+      "status": "changed",
+      "path": "src/exec-repo-integration-sync.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec-reporter-output.ts",
+      "status": "changed",
+      "path": "src/exec-reporter-output.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec-worktree-ops-commit.ts",
+      "status": "changed",
+      "path": "src/exec-worktree-ops-commit.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec-worktree-ops-lifecycle.ts",
+      "status": "changed",
+      "path": "src/exec-worktree-ops-lifecycle.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec-worktree-ops-merge.ts",
+      "status": "changed",
+      "path": "src/exec-worktree-ops-merge.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "責務分割を維持し、前回失敗の import 漏れを修正した。公開 export・help 出力の一致、1,000行以下、循環 import なしを確認済み。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-13M6/20261014T221712923Z-b04e62bb/executor.log",
+      "bytes": 3552,
+      "truncated": false
+    }
+  ]
+}

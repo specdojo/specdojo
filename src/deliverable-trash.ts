@@ -11,7 +11,7 @@
 
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
-import yaml from "js-yaml";
+import { load } from "./yaml.js";
 import { isDctCatalogFileName, type DctDoc, type DctSection } from "./catalog-types.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog-paths.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
@@ -57,7 +57,7 @@ function locateDeliverable(
     const fullPath = join(catalogDir, file);
     let doc: DctDoc;
     try {
-      doc = yaml.load(readFileSync(fullPath, "utf8")) as DctDoc;
+      doc = load(readFileSync(fullPath, "utf8")) as DctDoc;
     } catch {
       continue;
     }
@@ -161,7 +161,7 @@ export function applyTrash(repoRoot: string, plan: TrashPlan): TrashResult {
 
   // Verify the rewrite parses and resolves to the expected path before touching the
   // filesystem, so a formatting assumption that doesn't hold aborts cleanly.
-  const reparsed = yaml.load(rewritten) as DctDoc;
+  const reparsed = load(rewritten) as DctDoc;
   const resolvedAfter = reparsed?.groups
     ? findDeliverablePath(reparsed.groups, resolveBasePath("", reparsed.base_path), plan.localId)
     : null;

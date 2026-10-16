@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import { resolveSpecdojoPath } from "./template-resolution.js";
 import {
   GRADE_LEVEL_REVIEW_VERDICTS,
@@ -79,7 +79,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 }
 
 function loadYamlMapping(path: string): Record<string, unknown> {
-  const loaded = yaml.load(readFileSync(path, "utf8"));
+  const loaded = load(readFileSync(path, "utf8"));
   if (!isRecord(loaded)) throw new Error(`Review viewpoints file is not a YAML mapping: ${path}`);
   return loaded;
 }
@@ -385,6 +385,6 @@ export function scaffoldViewpoints(opts: {
   const dir = outputPath.includes("/") ? outputPath.slice(0, outputPath.lastIndexOf("/")) : ".";
   if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
 
-  writeFileSync(outputPath, yaml.dump(doc, { lineWidth: 120, noRefs: true }), "utf8");
+  writeFileSync(outputPath, dump(doc, { lineWidth: 120, noRefs: true }), "utf8");
   return { written: true, skipped: false };
 }

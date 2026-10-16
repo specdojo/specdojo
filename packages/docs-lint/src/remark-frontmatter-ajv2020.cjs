@@ -2,7 +2,13 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { createRequire } = require("node:module");
 const { pathToFileURL } = require("node:url");
-const { load } = require("js-yaml");
+const { load: loadWithJsYaml, YAML11_SCHEMA, DEFAULT_SCHEMA } = require("js-yaml");
+
+const legacyLoadSchema = YAML11_SCHEMA ?? DEFAULT_SCHEMA;
+
+function load(source, options = {}) {
+  return loadWithJsYaml(source, { ...options, schema: options.schema ?? legacyLoadSchema });
+}
 const Ajv2020 = require("ajv/dist/2020").default;
 const addFormats = require("ajv-formats");
 

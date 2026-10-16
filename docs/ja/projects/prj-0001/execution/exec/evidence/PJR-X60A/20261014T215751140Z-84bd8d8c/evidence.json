@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-X60A",
+  "run_id": "20261014T215751140Z-84bd8d8c",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-14T21:57:51.140Z",
+    "completed_at": "2026-10-14T21:59:45.682Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-x60a.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-x60a-agy-model-ids-in-templates.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/orchestrator-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "templates/antigravity/README.md",
+      "status": "M"
+    },
+    {
+      "path": "templates/antigravity/exec-defaults-snippet.yaml",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-exec-defaults.yaml",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-provider-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/init-command.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-x60a-agy-model-ids-in-templates.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 11,
+    "summary": "CHANGELOG.md                                       |  6 ++++\n .../sysd-antigravity-agent-settings.md             | 20 ++++++------\n .../controls/project-register/events/pjr-x60a.yaml | 16 +++++++++\n .../pjr-x60a-agy-model-ids-in-templates.md         |  5 ++-\n docs/ja/specdojo/guides/exec-config-guide.md       | 12 +++----\n .../guides/orchestrator-operation-guide.md         | 38 ++++++++++++----------\n templates/antigravity/README.md                    |  6 ++--\n templates/antigravity/exec-defaults-snippet.yaml   | 10 +++---\n templates/init-exec-defaults.yaml                  |  4 ++-\n tests/src/exec-provider-scaffold.test.ts           |  4 +++\n tests/src/init-command.test.ts                     | 24 ++++++++++++++\n 11 files changed, 100 insertions(+), 45 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write CHANGELOG.md docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md docs/ja/projects/prj-0001/controls/project-register/events/pjr-x60a.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-x60a-agy-model-ids-in-templates.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/orchestrator-operation-guide.md templates/antigravity/README.md templates/antigravity/exec-defaults-snippet.yaml templates/init-exec-defaults.yaml tests/src/exec-p…",
+      "status": "passed",
+      "summary": "全対象ファイルが整形済みだった。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿と関連ビューを正常に再生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ検証は終了コード 0。既存の未作成文書に関する警告のみだった。"
+    },
+    {
+      "source": "executor",
+      "command": "rg による対象成果物の旧モデル ID 不在、新モデル ID・agy models 記載、Claude Code 用別名の保持確認",
+      "status": "passed",
+      "summary": "対象範囲から旧 ID が消え、新 ID と確認手順が存在し、Claude Code 用の別名は保持されている。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーはなかった。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X60A\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-IpcjMi/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-MnmrUV/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X60A/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X60A/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X60A\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-17Gkxq/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-DtSCMW/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-15y7c3/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3Iq49U/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  37.32s (transform 2.32s, setup 502ms, import 17.11s, tests 40.01s, environment 6ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "配布雛形、ガイド、設計書、CHANGELOG、個票、回帰テストを更新・確認した。package.json は HEAD ですでに新 ID のため差分不要。未確認の成果物はなく、親 runner の検証のみ後続実行となる。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-X60A/20261014T215751140Z-84bd8d8c/executor.log",
+      "bytes": 1755,
+      "truncated": false
+    }
+  ]
+}

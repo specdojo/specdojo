@@ -2,7 +2,7 @@ import { Command } from "commander";
 import { mkdtempSync, readFileSync, rmSync, unlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
-import yaml from "js-yaml";
+import { dump, load } from "js-yaml";
 import { describe, expect, it } from "vitest";
 import {
   collectProjectMilestones,
@@ -22,7 +22,7 @@ function writeMilestoneStrategy(
   const catalogFile = `catalog-${track}.yaml`;
   writeFileSync(
     join(dir, catalogFile),
-    yaml.dump({
+    dump({
       groups: [
         {
           name: track,
@@ -36,7 +36,7 @@ function writeMilestoneStrategy(
   const strategyFile = `sch-strategy-${track}.yaml`;
   writeFileSync(
     join(dir, strategyFile),
-    yaml.dump({
+    dump({
       kind: "strategy",
       id: `${projectId}:sch-strategy-${track}`,
       type: "project",
@@ -110,7 +110,7 @@ describe("project milestone rebuild", () => {
       writeMilestoneStrategy(dir, "data-flow", "G-DATA-FLOW-first");
       const rebuilt = collectProjectMilestones(dir, dir, "prj-test");
       updateMilestonesFile(dir, "prj-test", rebuilt.milestones, false);
-      const doc = yaml.load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
+      const doc = load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
         milestones: Array<{ id: string }>;
       };
 
@@ -143,7 +143,7 @@ describe("project milestone rebuild", () => {
         tags: ["rebuilt"],
       };
       const update = updateMilestonesFile(dir, "prj-test", rebuilt.milestones, false);
-      const doc = yaml.load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
+      const doc = load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
         milestones: Array<{ id: string; owner: string; tags?: string[] }>;
       };
 
@@ -178,7 +178,7 @@ describe("project milestone rebuild", () => {
       const result = collectProjectMilestones(dir, dir, "prj-test");
 
       updateMilestonesFile(dir, "prj-test", result.milestones, false);
-      const doc = yaml.load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
+      const doc = load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
         status: string;
       };
 
@@ -200,7 +200,7 @@ describe("project milestone rebuild", () => {
         writeMilestoneStrategy(dir, "alpha", "G-ALPHA-first", "prj-test", strategyStatus);
         writeFileSync(
           join(dir, "sch-milestones.yaml"),
-          yaml.dump({
+          dump({
             kind: "milestones",
             id: "prj-test:sch-milestones",
             type: "project",
@@ -215,7 +215,7 @@ describe("project milestone rebuild", () => {
         const result = collectProjectMilestones(dir, dir, "prj-test");
 
         updateMilestonesFile(dir, "prj-test", result.milestones, false);
-        const doc = yaml.load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
+        const doc = load(readFileSync(join(dir, "sch-milestones.yaml"), "utf8")) as {
           status: string;
         };
 

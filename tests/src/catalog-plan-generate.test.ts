@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import {
   generateCatalogsFromPlan,
   writeGeneratedCatalogs,
@@ -19,7 +19,7 @@ function write(path: string, content: string): void {
 }
 
 function template(domain: string, localId: string, part = ""): string {
-  return yaml.dump({
+  return dump({
     id: `specdojo:dct-${domain}${part}-template`,
     type: "template",
     status: "draft",

@@ -29,3 +29,22 @@
     - field: registered
       from: ""
       to: "2026-10-08"
+- v: 1
+  id: reg_73311ed62fd54be28a9608a1505da3dd
+  ts: "2026-10-14T12:05:48Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: v0.3.0 の公開と、npm・GitHub Pages の公開物を確認した（2026-10-14）
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-14"
+    - field: conclusion
+      from: "-"
+      to: 必須の判定基準 7 件をすべて満たし、2026-10-14 に v0.3.0 を npm（provenance 付き）と GitHub Pages へ公開した。docs-lint 0.2.0 と docs-site 0.2.1 も同時期に公開した
+  previous_event_id: reg_f703e99eca644727ba6c2a87dff50f3e

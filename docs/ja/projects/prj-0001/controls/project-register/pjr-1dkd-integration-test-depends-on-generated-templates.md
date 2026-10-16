@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-1dkd-integration-test-depends-on-generated-templates
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T09:18:58Z"
+  completed_at: "2026-10-14T14:01:03Z"
+  conclusion: fixture が登録簿の生成物を自分で作って commit し、実リポジトリからのテンプレートのコピーでは generated/ を除くようにして、生成物のない checkout でも並列実行の 2 件が通るようにした
 ---
 
 # PJR-1DKD 統合テストが生成済みテンプレートの有無に依存する
@@ -40,7 +42,9 @@ exec-register-pipeline-e2e の並列実行の 2 件が、実リポジトリの�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- fixture 内で `generated/pjr-index.md` を作成し、初回 commit の時点で追跡済みにすることで、`config init` による生成物の追跡解除を fixture だけで再現できるようにした。
+- 実リポジトリからテンプレートをコピーする際は `generated/` を除外し、作業ツリーに無視済み生成物が存在しても利用しないようにした。
+- 対象の並列実行 2 件では、fixture が作成した登録簿生成物が `git ls-files -ci --exclude-standard` の結果に含まれることを明示的に検証するようにした。
 
 ## 5. 関連ドキュメント
 

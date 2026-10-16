@@ -2,12 +2,12 @@
 id: sysd-critical-flows-grade-criteria
 document: sysd-critical-flows
 path: docs/ja/product/040-system-design/sysd-critical-flows.md
-graded_at: "2026-10-10T16:18:55.565Z"
+graded_at: "2026-10-15T16:11:55.258Z"
 graded_by: agy-expert-executor
-content_hash: 966617c380ef236d4b8e01cde7d9122583b38dadea3d63971773790324dc133f
+content_hash: 0617c763ae4acc31e89f7720dc40286b69bc8e7b17849e4e7fa4e8180cc13d83
 summary:
-  satisfied: 0
-  unsatisfied: 5
+  satisfied: 1
+  unsatisfied: 4
   total: 5
 criteria:
   - id: DC-001
@@ -16,23 +16,24 @@ criteria:
       - BA
     viewpoint: vp-ba-business-value
     status: unsatisfied
-    reason: The selection reasons for critical flows and specific business impacts if ignored are not documented.
+    reason: >-
+      Selection rationale compared to other candidates and specific business impact when left unaddressed are not
+      documented for each critical flow.
   - id: DC-002
     text: 重要フローの内容を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: Pending issues, impact scope, and approvers necessary for the PO's approval decision are not explicitly stated.
+    reason: >-
+      Decision criteria, unresolved items, stakeholder impact, and approvers required for PO approval are not clearly
+      specified.
   - id: DC-003
     text: フローの境界・永続化点・再実行性・失敗時挙動が定義されていること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: >-
-      While persistence points are listed, system boundaries and technical configuration constraints remain
-      insufficiently defined.
+    status: satisfied
   - id: DC-004
     text: 重要フローのテストシナリオ設計に活用できること
     roles:
@@ -40,7 +41,7 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Test references use glob patterns and lack specific execution commands or expected results, making them unusable
+      Test references lack concrete file paths or test IDs, command lines, and expected pass/fail verification criteria
       for scenario design.
   - id: DC-005
     text: フロー実装の共通理解として参照できること
@@ -49,5 +50,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Specific configuration keys (e.g., parallel limits, retry backoffs) are not traceable for establishing a shared
-      understanding of the implementation.
+      Implementation target files, configuration keys, values, and concrete inputs/outputs are missing for critical
+      execution and concurrency limits.

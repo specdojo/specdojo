@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ce028d75c9804ef385dd5c355ab3ca6c
+  ts: "2026-10-15T22:11:53Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-V23P の決定のフォローアップ（2026-10-16）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: src の移動の codemod を作る
+    - field: description
+      from: ""
+      to: 移す前後のパスの対応表を入力に、git mv による src と tests のファイルの移動、相対 import の書き換え、dist のパスを参照する箇所の検出を機械的に行うスクリプトを作る。 PJR-V23P の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-16"
+- v: 1
+  id: reg_9f15450476244e2d858678fef8f1aff6
+  ts: "2026-10-15T22:14:21Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ce028d75c9804ef385dd5c355ab3ca6c
+- v: 1
+  id: reg_9afd90797d7242f7a2458f02c121e53b
+  ts: "2026-10-15T22:25:28Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9f15450476244e2d858678fef8f1aff6
+- v: 1
+  id: reg_184deeffad1b4c91ad8ff113fea51397
+  ts: "2026-10-15T22:26:52Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、一時 worktree で timeline の移動を dry-run し、移動・import の書き換え・検出が意図どおりに出ることを確かめた（2026-10-16）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-16"
+    - field: conclusion
+      from: "-"
+      to: tools/src-move-codemod.mjs を作った。対応表を入力に git mv による src と tests の移動、相対 import の書き換え、自分の位置からパスを組み立てる箇所と文字列のパスの検出を行い、--dry-run と未 commit の変更での停止を備える。検出の一覧に履歴のファイル（個票・evidence）が含まれる点は改善点として残る
+  previous_event_id: reg_9afd90797d7242f7a2458f02c121e53b

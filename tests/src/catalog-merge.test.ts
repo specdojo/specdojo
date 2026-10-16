@@ -1,7 +1,7 @@
 import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, join, resolve } from "node:path";
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import { afterEach, describe, expect, it } from "vitest";
 import { buildCatalog, loadCatalogDocs, mergeDomainCatalogs } from "../../src/catalog-build.js";
 import { runScaffold } from "../../src/catalog-scaffold.js";
@@ -63,7 +63,7 @@ function deliverable(localId: string): DctDeliverableItem {
 }
 
 function dctWithGroups(domain: string, groups: DctSection[]): string {
-  return yaml.dump({
+  return dump({
     id: `prj-test:dct-${domain}`,
     type: "project",
     status: "draft",

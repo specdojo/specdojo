@@ -1,0 +1,215 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_15686feb67554e9d9f9237768625d8df
+  ts: "2026-10-14T15:10:59Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: exec-run.ts の分割の close の条件（統合後の動作確認）に使うため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec-run.ts の分割後に runner の動作を確かめる
+    - field: description
+      from: ""
+      to: exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、分割後の runner で exec run --register を 1 件流し、executor・親の検証・reporter・統合まで終わることを確かめるための動作確認用の項目
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
+- v: 1
+  id: reg_28c22d95668f4c32b433e8fb947a4b46
+  ts: "2026-10-14T15:11:34Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_15686feb67554e9d9f9237768625d8df
+- v: 1
+  id: reg_d4b6b6aa9b944e71bc53e8d29e08906e
+  ts: "2026-10-14T15:18:14Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_28c22d95668f4c32b433e8fb947a4b46
+- v: 1
+  id: reg_534c8f73968747cebb26fb560f6d96be
+  ts: "2026-10-14T15:34:14Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_d4b6b6aa9b944e71bc53e8d29e08906e
+- v: 1
+  id: reg_8cb6fd39709e4018a3de3245395708f6
+  ts: "2026-10-14T15:39:25Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_534c8f73968747cebb26fb560f6d96be
+- v: 1
+  id: reg_d39953ca3ed64c4e98d8fa6513247666
+  ts: "2026-10-14T17:43:38Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_8cb6fd39709e4018a3de3245395708f6
+- v: 1
+  id: reg_cf2fc08bd59b4b6e8f3d05d459c510d3
+  ts: "2026-10-14T17:49:23Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d39953ca3ed64c4e98d8fa6513247666
+- v: 1
+  id: reg_4459eb571a6343d9acab5f77cd678464
+  ts: "2026-10-14T17:50:20Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec-run.ts の分割がすべて統合され、動作確認の役目を終えたため（2026-10-15）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: exec-run.ts の分割 3 件（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
+  previous_event_id: reg_cf2fc08bd59b4b6e8f3d05d459c510d3
+- v: 1
+  id: reg_1ea5e50bf5ce4dd8955fc1f99f968c99
+  ts: "2026-10-15T10:35:30Z"
+  action: reopen
+  actor: claude-orchestrator
+  from_status: done
+  to_status: open
+  reason: Y8P9 の runner のコードの分割（PJR-13M6・PJR-NA04）の後の動作確認に使うため（2026-10-15）
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-15"
+      to: "-"
+  previous_event_id: reg_4459eb571a6343d9acab5f77cd678464
+- v: 1
+  id: reg_b45c79e8c1c44d15a06631a74dd1f4f2
+  ts: "2026-10-15T10:35:45Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1ea5e50bf5ce4dd8955fc1f99f968c99
+- v: 1
+  id: reg_509d92c7ff714bf8ab0d3722c9f48a0b
+  ts: "2026-10-15T10:41:33Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b45c79e8c1c44d15a06631a74dd1f4f2
+- v: 1
+  id: reg_ce5ab5c70c8848f886cea04b8218fcfb
+  ts: "2026-10-15T11:00:27Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_509d92c7ff714bf8ab0d3722c9f48a0b
+- v: 1
+  id: reg_762497d313d74902830522c55e565bc3
+  ts: "2026-10-15T11:07:10Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ce5ab5c70c8848f886cea04b8218fcfb
+- v: 1
+  id: reg_3a731e9684294ba1b812c6e8acfeccdc
+  ts: "2026-10-15T11:08:15Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: runner のコードの分割がすべて統合され、動作確認の役目を終えたため（2026-10-15）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: exec-run.ts の分割 3 件（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
+      to: runner のコードの分割 5 件（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
+  previous_event_id: reg_762497d313d74902830522c55e565bc3

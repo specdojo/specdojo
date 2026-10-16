@@ -2,7 +2,7 @@ import { type Command } from "commander";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, isAbsolute, join, posix, relative, resolve } from "node:path";
 import dotenv from "dotenv";
-import yaml from "js-yaml";
+import { dump, load } from "./yaml.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./exec-types.js";
@@ -531,7 +531,7 @@ const memberSchemaValidators = new Map<string, ValidateFunction>();
 
 function readYamlFile(path: string): unknown {
   try {
-    return yaml.load(readFileSync(path, "utf8"));
+    return load(readFileSync(path, "utf8"));
   } catch (error) {
     throw new Error(
       `Invalid YAML: ${path}: ${error instanceof Error ? error.message : String(error)}`,
@@ -576,8 +576,7 @@ function dumpMemberFile(path: string, schemaName: string, value: unknown): strin
   );
   const schemaRef = relative(dirname(path), schemaPath).replaceAll("\\", "/");
   return (
-    `# yaml-language-server: $schema=${schemaRef}\n` +
-    yaml.dump(value, { lineWidth: 100, noRefs: true })
+    `# yaml-language-server: $schema=${schemaRef}\n` + dump(value, { lineWidth: 100, noRefs: true })
   );
 }
 

@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_686a9c3b21ed4cf3a0ced385ec7ce150
+  ts: "2026-10-14T22:18:36Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-ZM1K の決定のフォローアップ（2026-10-15）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent の定義を役割ごとの 1 ファイルにまとめる
+    - field: description
+      from: ""
+      to: claude・opencode の agent の定義を model ごとの複製から役割（executor・review executor・reporter など）ごとの 1 ファイルにまとめ、model は --model で渡す。 PJR-ZM1K の決定に基づく（Y8P9 の完了後、0.4.0）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
