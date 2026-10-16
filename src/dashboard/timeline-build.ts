@@ -1,6 +1,6 @@
 import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { normalizeDateOnly, readYaml } from "./exec-shared.js";
+import { normalizeDateOnly, readYaml } from "../exec-shared.js";
 
 export type CatalogStatus = "not_started" | "draft" | "primary";
 

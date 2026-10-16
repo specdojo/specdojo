@@ -20,11 +20,14 @@ import {
   type DashboardRegisterCandidate,
   type DashboardPaths,
   type TimelineTrackSchedule,
-} from "../../src/dashboard.js";
-import { addWorkingDaysToDate, countWorkingDaysBetween } from "../../src/exec-schedule-calendar.js";
-import type { ScheduleCalendar } from "../../src/exec-types.js";
-import type { TimelineIndex, TimelineTrackPlan } from "../../src/timeline-build.js";
-import type { RoutineDoc } from "../../src/routine.js";
+} from "../../../src/dashboard/dashboard.js";
+import {
+  addWorkingDaysToDate,
+  countWorkingDaysBetween,
+} from "../../../src/exec-schedule-calendar.js";
+import type { ScheduleCalendar } from "../../../src/exec-types.js";
+import type { TimelineIndex, TimelineTrackPlan } from "../../../src/dashboard/timeline-build.js";
+import type { RoutineDoc } from "../../../src/routine.js";
 
 // 平日のみ稼働・休日なしのカレンダー。addWorkingDaysToDate / countWorkingDaysBetween は
 // work_hours_per_day に依存しない（isWorkingDateUtc は曜日・休日のみ判定）ため値は任意。

@@ -22,7 +22,8 @@
  * `import.meta.url`, `import.meta.dirname`, `__dirname`, and literal `dist/...` or
  * `src/...ts` references are reported only. Review those findings manually. After
  * a real move, run `npm run build`; this repository's build script removes `dist`
- * before rebuilding, so obsolete compiled files cannot remain.
+ * before rebuilding, so obsolete compiled files cannot remain. Historical records
+ * under project-register, execution, and logs are excluded from detection reports.
  */
 
 import { spawnSync } from "node:child_process";
@@ -369,6 +370,14 @@ function isSensitivePath(filePath) {
   );
 }
 
+function isDetectionHistoryPath(filePath) {
+  return (
+    filePath.startsWith("logs/") ||
+    /^docs\/ja\/projects\/[^/]+\/controls\/project-register\//u.test(filePath) ||
+    /^docs\/ja\/projects\/[^/]+\/execution\//u.test(filePath)
+  );
+}
+
 function pathConstructionLines(source, filePath) {
   const sourceFile = ts.createSourceFile(
     filePath,
@@ -401,7 +410,11 @@ function collectDetections(repoRoot, trackedFiles, moves) {
   );
   const findings = [];
   for (const filePath of trackedFiles) {
-    if (isSensitivePath(filePath) || !DETECTION_EXTENSIONS.has(path.posix.extname(filePath)))
+    if (
+      isSensitivePath(filePath) ||
+      isDetectionHistoryPath(filePath) ||
+      !DETECTION_EXTENSIONS.has(path.posix.extname(filePath))
+    )
       continue;
     const absolutePath = path.join(repoRoot, filePath);
     if (!existsSync(absolutePath) || !statSync(absolutePath).isFile()) continue;

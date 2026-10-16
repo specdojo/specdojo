@@ -24,7 +24,7 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 | Project Catalog | Deliverables catalog | `docs/ja/projects/prj-0001/010-deliverables-catalog/` | ARC / PM | 成果物の構成・依存・完了条件 |
 | Catalog Runtime | TypeScript source | `src/catalog-build.ts`、`src/catalog-build-*.ts` | DEV | 公開再export façade、Markdown描画、参照整合性検証、カタログbuild |
 | Schedule Strategy Runtime | TypeScript source | `src/schedule-strategy-generate.ts`、`src/schedule-strategy-generate-*.ts` | DEV / PM | 公開再export façade、scope・owner解決、戦略文書構築、検証・書き出し |
-| Dashboard Runtime | TypeScript source | `src/dashboard.ts`、`src/dashboard-*.ts` | DEV / PM | 公開再export façade、timeline・routine・実行記録の集計、ダッシュボードbuild |
+| Dashboard Runtime | TypeScript source | `src/dashboard/dashboard.ts`、`src/dashboard/*.ts` | DEV / PM | 公開再export façade、timeline・routine・実行記録の集計、ダッシュボードbuild |
 | Schedule | Strategy YAML | `docs/ja/projects/prj-0001/schedule/sch-strategy-*.yaml` | PM | phase・mode・依存・実行順序 |
 | Configurations | Agent runner defaults | `.specdojo/exec-defaults.yaml` | ARC / DEV | provider起動、検証、retry / fallback |
 | Configurations | Human member registry | `docs/ja/projects/prj-0001/030-project-management/pm-members.yaml` | PM | 人間のidentity、連絡先、Role code |
