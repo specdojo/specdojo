@@ -23,7 +23,7 @@ import {
   gradeFindingDisplayMessage,
   gradeResultPathForDocument,
   readGradeResultForDocument,
-} from "./grade-result.js";
+} from "./grade/result.js";
 import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./docs/template-resolution.js";
 import { renderReviewGradeSummary, reviewGradeFreshness } from "./review/grade.js";
 import type { ReviewGradeOutcome, ReviewGradeTarget } from "./review/grade.js";

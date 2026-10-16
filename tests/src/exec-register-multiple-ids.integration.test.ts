@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { commitRegisterItemChanges } from "../../src/exec-run.js";
 import { worktreeStatusPaths } from "../../src/exec-worktree-ops.js";
 import { gitEnvironment } from "../../src/exec-worktree.js";
-import type { PjrItem } from "../../src/register.js";
+import type { PjrItem } from "../../src/register/register.js";
 
 function git(cwd: string, ...args: string[]): string {
   const result = spawnSync("git", args, {

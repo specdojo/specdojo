@@ -19,12 +19,12 @@ import {
   loadRegisterItems,
   type PjrItem,
   type RegisterItemView,
-} from "../register.js";
+} from "../register/register.js";
 import {
   readRegisterEventsFromContent,
   registerEventFilePath,
   type RegisterEventV1,
-} from "../register-events.js";
+} from "../register/events.js";
 import { buildTimelineWaves, loadTimelineIndex, type TimelineTrackPlan } from "./timeline-build.js";
 import {
   buildTimelineGanttSvg,
@@ -40,7 +40,7 @@ import {
 } from "./routines.js";
 import { buildExecRecordsMarkdown, collectExecRecords, EXEC_RECORDS_FILE } from "./exec-records.js";
 import { sanitizeDashboardCell } from "./shared.js";
-import { gradeFindingCount, parseGradeResult, type GradeResult } from "../grade-result.js";
+import { gradeFindingCount, parseGradeResult, type GradeResult } from "../grade/result.js";
 
 // ================================
 // Types

@@ -11,7 +11,7 @@ import {
   VALID_TYPES,
   type PjrItem,
   type RegisterPaths,
-} from "./register.js";
+} from "./register/register.js";
 import {
   execTemplatePath,
   injectCommonConventions,

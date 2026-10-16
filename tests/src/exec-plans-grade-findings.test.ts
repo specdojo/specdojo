@@ -16,15 +16,15 @@ vi.mock("../../src/docs/doc-index.js", () => ({
 }));
 import * as docIndex from "../../src/docs/doc-index.js";
 
-vi.mock("../../src/grade-result.js", () => ({
+vi.mock("../../src/grade/result.js", () => ({
   gradeFindingDisplayMessage: vi.fn(
     (finding: { message: string; message_ja?: string }) => finding.message_ja ?? finding.message,
   ),
   gradeResultPathForDocument: vi.fn(),
   readGradeResultForDocument: vi.fn(),
 }));
-import * as gradeResult from "../../src/grade-result.js";
-import type { GradeResult } from "../../src/grade-result.js";
+import * as gradeResult from "../../src/grade/result.js";
+import type { GradeResult } from "../../src/grade/result.js";
 
 import { join } from "node:path";
 import { specdojoRootDir } from "../../src/specdojo-config.js";

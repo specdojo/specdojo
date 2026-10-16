@@ -1,9 +1,9 @@
 import { lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, resolve } from "node:path";
 import { acquireSchedulerLock, releaseSchedulerLock } from "./exec-events.js";
-import { rebuildRegisterTicketFromEvents, unionRegisterEventLogs } from "./register-event-merge.js";
-import { displayIdFromRegisterEventFilename, REGISTER_EVENTS_DIRNAME } from "./register-events.js";
-import { displayIdFromTicketFilename } from "./register-item.js";
+import { rebuildRegisterTicketFromEvents, unionRegisterEventLogs } from "./register/event-merge.js";
+import { displayIdFromRegisterEventFilename, REGISTER_EVENTS_DIRNAME } from "./register/events.js";
+import { displayIdFromTicketFilename } from "./register/item.js";
 import {
   appendGitFailureLog,
   gitOutput,

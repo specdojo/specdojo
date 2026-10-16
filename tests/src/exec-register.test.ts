@@ -15,7 +15,7 @@ import {
   resolveRegisterCommand,
   resolveRegisterPipelineCommand,
 } from "../../src/exec-run.js";
-import type { PjrItem } from "../../src/register.js";
+import type { PjrItem } from "../../src/register/register.js";
 import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
 
 function makeItem(overrides: Partial<PjrItem> = {}): PjrItem {

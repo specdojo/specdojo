@@ -75,7 +75,7 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: register コマンド入口から到達する登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧、個票Frontmatter正本の読込・更新・検証と一覧値の導出、個票のGit履歴から登録項目単位の変更履歴を再構成する処理、登録日・完了日のタイムゾーン解決と検証
           - kind: implementation
             path: src/exec.ts
@@ -104,7 +104,7 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: register コマンド入口から到達する登録簿項目の生成・状態遷移・派生ビュー更新・ID競合復旧、個票Frontmatter正本の読込・更新・検証と一覧値の導出、個票のGit履歴から登録項目単位の変更履歴を再構成する処理、登録日・完了日のタイムゾーン解決と検証
           - kind: implementation
             path: src/exec.ts
@@ -300,7 +300,7 @@ groups:
             path: src/exec.ts
             purpose: exec コマンド入口から到達するReady・doing等の実行状態ビュー生成、CPM・余裕時間・クリティカルパスの計算
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: register コマンド入口から到達する登録簿から課題・リスク・決定等の管理ビューを生成する処理、登録項目の追加・変更・削除と状態遷移の監査履歴を再構成する処理
         depends_on:
           - cdfd-register-lifecycle
@@ -366,7 +366,7 @@ groups:
             path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの雛形生成
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: 登録簿の初期化（scaffold）
         depends_on:
           - cdfd-overview
@@ -389,7 +389,7 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: 登録項目の起票・更新・状態遷移
           - kind: implementation
             path: src/catalog/catalog.ts
@@ -453,7 +453,7 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/grade.ts
+            path: src/grade/grade.ts
             purpose: Kata と成果物の評価、done_criteria の判定、content_hash による変更検知
           - kind: implementation
             path: src/dashboard/dashboard.ts

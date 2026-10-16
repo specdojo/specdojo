@@ -1,0 +1,15 @@
+実装完了しました。
+
+- `grade` 13件、`register` 16件、テスト14件を各サブディレクトリへ移動
+- 相対 import、設計書、カタログ、fixture の参照を更新
+- 25件の `--help` が移動前後で一致
+- build 成功、旧 `dist/grade*.js`・`dist/register*.js` の残存なし
+- 個票の作業内容・対応結果を更新
+- result ファイルと登録簿ステータスは未変更
+- 親 runner 対象の lint・typecheck・test は指示どおり未実行
+
+主な入口: [grade.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YH9Q/src/grade/grade.ts)、[register.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YH9Q/src/register/register.ts)
+
+<specdojo_executor_evidence>
+{"final_message":"grade/register の実装29件とテスト14件をサブディレクトリへ移し、参照・設計文書・個票を更新した","validations":[{"command":"diff -ru /tmp/pjr-yh9q-executor-20261016T224633111Z/help-before /tmp/pjr-yh9q-executor-20261016T224633111Z/help-after","status":"passed","summary":"grade/register と全サブコマンド、合計25件の --help 出力が一致"},{"command":"{ git diff --name-only --diff-filter=ACMR -z; find src/grade src/register tests/src/grade tests/src/register -type f -print0; } | sort -zu | xargs -0 npx prettier --write","status":"passed","summary":"変更対象をPrettierで整形"},{"command":"npm run build","status":"passed","summary":"TypeScript build成功。dist/grade・dist/registerへ29件を生成し、直下の旧出力なし"},{"command":"node --import tsx src/specdojo.ts catalog build --project prj-0001","status":"passed","summary":"更新したカタログYAMLから生成物を正常に再生成"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証成功。未作成文書のbased_onに関する既存警告のみ"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>

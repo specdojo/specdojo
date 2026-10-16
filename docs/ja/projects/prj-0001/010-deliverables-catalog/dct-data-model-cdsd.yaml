@@ -33,7 +33,7 @@ groups:
             path: src/specdojo-config.ts
             purpose: プロジェクト構成ストアの読込・検証
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: 登録簿ストアの生成・状態遷移
           - kind: implementation
             path: src/catalog/catalog.ts

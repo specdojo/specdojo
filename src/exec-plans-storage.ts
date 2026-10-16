@@ -8,7 +8,7 @@ import {
   gradeFindingDisplayMessage,
   gradeResultPathForDocument,
   readGradeResultForDocument,
-} from "./grade-result.js";
+} from "./grade/result.js";
 import { lookupDocIndex } from "./docs/doc-index.js";
 
 export function archivePlan(opts: { executionPath: string; slug: string; delete?: boolean }): {

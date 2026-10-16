@@ -8,8 +8,8 @@ import { load } from "js-yaml";
 import { escapeMarkdownInline, inlineCodeAnglePlaceholders } from "../../src/exec-shared.js";
 import { generateRegisterPlan } from "../../src/exec-register.js";
 import { specdojoRootDir } from "../../src/specdojo-config.js";
-import type { PjrItem } from "../../src/register.js";
-import type { RegisterPaths } from "../../src/register.js";
+import type { PjrItem } from "../../src/register/register.js";
+import type { RegisterPaths } from "../../src/register/register.js";
 
 // PJR-0XXZ の close 時に実際に破損した種類の自由記述。アンダースコア入り識別子と
 // `_TODO_` / `_ASSUMPTION_` プレースホルダを生のまま含む。

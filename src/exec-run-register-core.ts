@@ -19,9 +19,9 @@ import {
   type RegisterItemSummary,
   type RegisterItemTransition,
 } from "./exec-register.js";
-import { type PjrItem, type RegisterPaths } from "./register.js";
-import { registerEventFilePath } from "./register-events.js";
-import { displayIdFromTicketFilename } from "./register-item.js";
+import { type PjrItem, type RegisterPaths } from "./register/register.js";
+import { registerEventFilePath } from "./register/events.js";
+import { displayIdFromTicketFilename } from "./register/item.js";
 import {
   isResultUnfilled,
   readResultFrontmatterSnapshot,

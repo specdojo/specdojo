@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:26Z"
@@ -86,14 +86,19 @@ codemod で grade と register のファイルを各ディレクトリへ移す�
 
 ## 3. 作業内容
 
-| No  | 作業                                                      | 担当 | 状態 | メモ             |
-| --- | --------------------------------------------------------- | ---- | ---- | ---------------- |
-| 1   | codemod で対応表のとおりに移す                            | DEV  | open | 手で書き換えない |
-| 2   | `--help` を比べ、`dist/` の古い出力と文書のパスを確かめる | DEV  | open | -                |
+| No  | 作業                                                      | 担当 | 状態 | メモ                     |
+| --- | --------------------------------------------------------- | ---- | ---- | ------------------------ |
+| 1   | codemod で対応表のとおりに移す                            | DEV  | done | 実装 29 件・テスト 14 件 |
+| 2   | `--help` を比べ、`dist/` の古い出力と文書のパスを確かめる | DEV  | done | 25 コマンドが一致        |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tools/src-move-codemod.mjs` に個票の対応表を渡し、実装 29 件を `src/grade/`・`src/register/`、テスト 14 件を `tests/src/grade/`・`tests/src/register/` へ移し、相対 import を書き換えた。sandbox では worktree の Git index が読み取り専用のため、リポジトリの Git 状態を変えない一時 index を使って codemod の `git mv` を実行した。
+- codemod の検出結果に基づく手修正は、現行設計書 2 件、成果物カタログ 6 件、docs-lint の実装参照コメント 1 件、deliverable テストの fixture 1 件にある旧実装パスの更新である。移動対象内に `import.meta.url`・`import.meta.dirname`・`__dirname` を基準とするパス構築はなかった。個票・plan・result など履歴内の旧パスは変更していない。
+- 移動前後に `grade`・`register` と各サブコマンドの `--help` を合計 25 件比較し、すべて差分がないことを確認した。
+- `npm run build` が成功し、`dist/grade/`・`dist/register/` に新しい出力 29 件が生成された。移動前の `dist/` 直下の `grade*.js`・`register*.js` は残っていない。
+- Prettier、`specdojo catalog build`、`specdojo catalog validate`、`git diff --check` を実行した。catalog validate の未作成文書に対する `based_on` 警告は既存データ由来であり、今回の移動によるエラーはない。親 runner が lint・typecheck・unit test・integration test・schema 検証を実行する。
+- 残課題はない。
 
 ## 5. 関連ドキュメント
 

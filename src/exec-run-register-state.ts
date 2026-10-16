@@ -5,13 +5,13 @@ import {
   type RegisterItemSummary,
   type RegisterItemTransition,
 } from "./exec-register.js";
-import { type PjrItem, type RegisterPaths } from "./register.js";
+import { type PjrItem, type RegisterPaths } from "./register/register.js";
 import {
   applyRegisterItemFields,
   CELL_NONE,
   readRegisterItemContent,
   registerItemFieldsFromItem,
-} from "./register-item.js";
+} from "./register/item.js";
 import {
   appendGitFailureLog,
   gitOutput,
