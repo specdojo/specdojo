@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_24a60be1240f411b8962a38059d274cf
+  ts: "2026-10-16T22:32:48Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-10-17 05:00 の kata の定期実行が review の検証（test-unit）で waiting になった。利用者の判断で起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の単体テストがリポジトリの実際の評価結果に左右される
+    - field: description
+      from: ""
+      to: tests/src/grade.test.ts の plan の生成のテストが、リポジトリの本物のサンプルと保存済みの評価結果を読む。定期評価で opr-batch-sample の指摘の anchor に見出しが入り、plan に載ったため、2026-10-17 05:00 の kata の Run の review の検証で失敗した。Run を統合すると develop でも失敗する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
