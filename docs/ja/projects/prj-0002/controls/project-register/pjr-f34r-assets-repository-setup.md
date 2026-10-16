@@ -49,11 +49,20 @@ specdojo-assets に README.md のディレクトリ体系どおりの骨組み�
 | --- | ------------------------------------------------------ | ------------ | ---- | -------------------------------------------------------------------------------------------------------------------- |
 | 1   | 最初の commit を作り、`repos` に加える                 | orchestrator | done | df10f80（specdojo-assets）、56813ee21（repos）                                                                       |
 | 2   | Node.js の環境（TypeScript・Markdown・YAML）を用意する | orchestrator | done | `66ad5b5`（`main` へ利用者が `8792813` で取り込み）。`package.json` は exec の保護対象のため orchestrator が用意した |
-| 3   | 骨組みと書き出しのスクリプトを作り、見本で確かめる     | DEV          | open | exec で `develop` へ統合する                                                                                         |
+| 3   | 骨組みと書き出しのスクリプトを作り、見本で確かめる     | DEV          | open | exec で `develop` へ統合する。骨組み・`scripts/export.ts`・見本の書き出しを作成済み（PJR-F34R の exec）              |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容（PJR-F34R の exec、2026-10-16）:
+  - `specdojo-assets` に、`assets/`（`characters/`・`logos/`・`illustrations/`・`icons/`・`social/`。空のディレクトリは `.gitkeep`）、`templates/asset.yaml`、`exports.yaml`、`BRAND.md`、`scripts/export.ts` を作った。
+  - `exports.yaml` は `targets.specdojo-lp.path: ../specdojo-lp/src/assets` とし、`exports` の各項目は `source`・`target`・`name` だけを持つ。`scripts/export.ts` は、項目を `exports.yaml` の順に検証し、原本がない・`target` が `targets` にない・`name` が書き出し先の外を指す・ほかの項目を持つ・書き出し先が重なる場合は、項目と理由を示して何も書き出さずに失敗する。誤りがなければ `<target のパス>/<name>.<原本の拡張子>` へそのままコピーする。
+  - 見本として、`specdojo-lp` の `src/assets/mascot/dojo-otter.webp` を `assets/characters/dojo-otter/source/dojo-otter-temporary.webp` に置き、`asset.yaml` に暫定の画像であることと取り込み元（PJR-XEJ4）を書いた。作り方・作者・ライセンス・表示名は `_TODO_` のまま残した。
+  - `node scripts/export.ts` を実行し、`specdojo-lp` の `src/assets/mascot/dojo-otter.webp` が実行前と同じ SHA-256（`9bdf3883…fc26f`）で、原本とバイト単位で同じことを確かめた。
+  - `README.md` の `書き出し` を `src/assets` への原本のままのコピーに改め、`scripts/export.mjs` を `scripts/export.ts` に直し、`開発` の章でコマンドを案内した。
+  - `BRAND.md` の色は `global.css` の Material 3 のテーマを参照として載せ、ブランドの色・余白・使ってよい場面・ライセンスの方針は `_TODO_` のまま残した。
+- 残課題:
+  - `specdojo-lp` に差分が出ないことの `git status` による確認と、`npm run` 経由の `format:check`・`lint:md`・`lint:ts`・`typecheck` は、executor の環境で承認が要ったため、orchestrator が sandbox の外で確かめる（同じ検査はローカルの実行ファイルを直接起動して通過を確認済み）。
+  - `BRAND.md` と `asset.yaml` の `_TODO_` は、[[prj-0002:pjr-pevv-mascot-character-source]] などで決まった時点で埋める。
 
 ## 5. 関連ドキュメント
 

@@ -1,0 +1,11 @@
+最上位に追加したファイル:
+  specdojo-assets:BRAND.md
+  specdojo-assets:exports.yaml
+commit-scope: skipped non-target changes (left in worktree):
+  specdojo-assets:assets/characters/dojo-otter/asset.yaml
+  specdojo-assets:assets/characters/dojo-otter/source/dojo-otter-temporary.webp
+  specdojo-assets:assets/icons/.gitkeep
+  specdojo-assets:assets/illustrations/.gitkeep
+  specdojo-assets:assets/logos/.gitkeep
+  specdojo-assets:assets/social/.gitkeep
+  specdojo-assets:templates/asset.yaml

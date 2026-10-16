@@ -1,0 +1,31 @@
+タスク PJR-F34R の対応を終えました。`specdojo-assets` に骨組みと書き出しのスクリプトを作り、暫定マスコットの書き出しでは `specdojo-lp` の `src/assets/mascot/dojo-otter.webp` が元のファイルとバイト単位で一致しました。ただし、`specdojo-lp` に差分が出ないことの `git status` での確認と、`npm run` 経由の 4 つの検査は承認が要って実行できず、sandbox の外で確かめる必要があります。
+
+**作ったもの（`specdojo-assets`）**
+- `specdojo-assets:assets/` 配下に種類ごとのディレクトリを作りました。空の `logos/`・`illustrations/`・`icons/`・`social/` には `.gitkeep` を置いています。
+- `specdojo-assets:templates/asset.yaml`: メタ情報の雛形です。原本ごとの作り方・作者・ライセンスを書く欄があり、未定の値は `_TODO_` にしています。
+- `specdojo-assets:exports.yaml`: 書き出し先は `../specdojo-lp/src/assets` です。各項目は `source`・`target`・`name` だけを持ち、見本として `name: mascot/dojo-otter` の項目を載せました。
+- `specdojo-assets:scripts/export.ts`: Node.js の標準機能と `yaml` だけで動き、原本を形式も大きさも変えずにコピーします。誤りが 1 件でもあれば、何も書き出さずに項目と理由を示して失敗します。
+  - 完了条件にある 3 つ（原本がない、`target` が `targets` にない、`name` に `..` を含む）に加え、`formats` のような余計な項目と、書き出し先の重複も止めるようにしました。
+- `specdojo-assets:BRAND.md`: 色は `global.css` の Material 3 テーマを参照として載せました。ブランドの色・余白・使ってよい場面・ライセンスの方針は `_TODO_` のままです。
+- `specdojo-assets:assets/characters/dojo-otter/`: `specdojo-lp` の暫定マスコットを `source/dojo-otter-temporary.webp` として置きました。`asset.yaml` には暫定であることと取り込み元（PJR-XEJ4）を書き、表示名・作り方・作者・ライセンスは `_TODO_` のままです。
+- `specdojo-assets:README.md`: `書き出し` の説明を実際の形に合わせ、`開発` の章を足しました。`public/assets`・`formats`・`widths`・`export.mjs` の記述は残っていません。
+
+**確かめたこと**
+- `node scripts/export.ts` は終了コード 0 で、書き出し後のハッシュは実行前と同じ `9bdf3883…` でした。
+- `/tmp` に作った複製で失敗する 5 つのケースを試し、どれも終了コード 1 で何も書き出さないことを確認しました。複製は削除済みです。
+- `npm` の実行に承認が要ったため、同じ検査（Prettier・markdownlint-cli2・ESLint・`tsc --noEmit`）を、インストール済みのツールを `node` で直接起動して実行しました。4 つとも通っています。
+
+**sandbox の外での確認が必要なもの**
+- `specdojo-lp` で `git status` を実行し、差分が出ていないこと。
+- `specdojo-assets` で `npm run format:check`・`lint:md`・`lint:ts`・`typecheck` を正式な手順で実行すること。
+
+**個票（`pjr-f34r-assets-repository-setup.md`）**
+- `作業内容` の No 3 のメモと `対応結果` を、実施内容と残りの課題で更新しました。
+- `item_status`・`status`・No 3 の状態（`open`）は変えていません。`develop` への統合がまだ済んでいないためです。
+- 個票は `npx prettier --write` で整形し、`npx markdownlint` が通っています。
+
+`package.json` などの保護対象と result ファイルには手を付けていません。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-F34R の対応を終えた。specdojo-assets に骨組み（assets/ と種類のディレクトリ、templates/asset.yaml、exports.yaml、BRAND.md）と scripts/export.ts を作り、README を更新した。暫定マスコットを原本として置き、node scripts/export.ts で specdojo-lp:src/assets/mascot/dojo-otter.webp へ書き出し、元のファイルとバイト単位で同じことを確認した。個票の作業内容と対応結果を更新した。状態の項目は変えていない。","validations":[{"command":"node scripts/export.ts (specdojo-assets)","status":"passed","summary":"終了コード 0 で 1 件を書き出した。sha256 は書き出し前後で同じ 9bdf3883…fc26f、cmp でも原本と同じ"},{"command":"node scripts/export.ts の失敗ケース（/tmp に作った一時の複製で実行）","status":"passed","summary":"原本がない・target が未定義・name に .. を含む・formats のような余計な項目・書き出し先の重複の 5 件とも、終了コード 1 で項目と理由を示し、何も書き出さなかった。一時ディレクトリは削除済み"},{"command":"specdojo-assets で npm run format:check","status":"requires_human","summary":"sandbox では npm の実行に承認が要った。代わりに node_modules/prettier/bin/prettier.cjs --check . を cwd=specdojo-assets で実行し、通過した（export.ts を整形したあと）。npm 経由の実行を orchestrator が確認する"},{"command":"specdojo-assets で npm run lint:md","status":"requires_human","summary":"代わりに node_modules/markdownlint-cli2/markdownlint-cli2-bin.mjs を cwd=specdojo-assets で実行し、2 ファイルで 0 件だった。npm 経由の実行を orchestrator が確認する"},{"command":"specdojo-assets で npm run lint:ts","status":"requires_human","summary":"代わりに node_modules/eslint/bin/eslint.js . を cwd=specdojo-assets で実行し、終了コード 0 だった。npm 経由の実行を orchestrator が確認する"},{"command":"specdojo-assets で npm run typecheck","status":"requires_human","summary":"代わりに node_modules/typescript/bin/tsc --noEmit を cwd=specdojo-assets で実行し、終了コード 0 だった。npm 経由の実行を orchestrator が確認する"},{"command":"git -C specdojo-lp status --porcelain","status":"requires_human","summary":"sandbox では承認が要った。specdojo-lp に差分がないことを確認する。書き出し前後の sha256 が同じなので差分は出ない見込み"},{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-f34r-assets-repository-setup.md","status":"passed","summary":"個票を整形した"},{"command":"npx markdownlint docs/ja/projects/prj-0002/controls/project-register/pjr-f34r-assets-repository-setup.md","status":"passed","summary":"エラーなし"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"prj-0002 に catalog_path がない","reason":".specdojo/specdojo.config.json の prj-0002 に catalog_path が設定されていない"},{"command":"specdojo register build","status":"not_applicable","summary":"pjr-index.md を変えていない","reason":"変えたのは個票だけで、pjr-index.md は変えていない"}]}
+</specdojo_executor_evidence>
