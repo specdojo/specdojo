@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T09:49:11Z"
   due_on: "2026-10-31"
-  block_reason: "integrate failed: specdojo-assets: pre-integration check failed (no repository was integrated in this attempt): specdojo-assets: uncommitted changes outside the commit scope: specdojo-assets:assets/ch…"
 ---
 
 # PJR-F34R specdojo-assets の骨組みと書き出しの仕組みを作る
