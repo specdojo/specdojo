@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-smk5-src-move-schedule-catalog
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:18Z"
   due_on: null
+  completed_at: "2026-10-16T22:29:01Z"
+  conclusion: codemod で schedule と catalog の 19 ファイルとテスト 13 件を src/schedule・src/catalog へ移した。git は 32 件を rename と認識し、--help（10 コマンド）は移す前の 0.3.1 と一致し、移す前後のコードの build の生成物に差分はなかった
 ---
 
 # PJR-SMK5 schedule と catalog を src/schedule・src/catalog へ移す

@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_edce1e5fafe7418f8f233209e1476cba
+- v: 1
+  id: reg_f2f2e88e1aa84ad39450e7c4b173d8de
+  ts: "2026-10-16T22:29:01Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に rename・移す前の 0.3.1 との --help・移す前後の worktree での specdojo build の生成物を比べた（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: codemod で schedule と catalog の 19 ファイルとテスト 13 件を src/schedule・src/catalog へ移した。git は 32 件を rename と認識し、--help（10 コマンド）は移す前の 0.3.1 と一致し、移す前後のコードの build の生成物に差分はなかった
+  previous_event_id: reg_84442b86488d4c70acd14f1fa97e14af
