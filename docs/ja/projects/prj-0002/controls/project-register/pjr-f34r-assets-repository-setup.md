@@ -49,7 +49,7 @@ specdojo-assets に README.md のディレクトリ体系どおりの骨組み�
 | --- | ------------------------------------------------------ | ------------ | ---- | -------------------------------------------------------------------------------------------------------------------- |
 | 1   | 最初の commit を作り、`repos` に加える                 | orchestrator | done | df10f80（specdojo-assets）、56813ee21（repos）                                                                       |
 | 2   | Node.js の環境（TypeScript・Markdown・YAML）を用意する | orchestrator | done | `66ad5b5`（`main` へ利用者が `8792813` で取り込み）。`package.json` は exec の保護対象のため orchestrator が用意した |
-| 3   | 骨組みと書き出しのスクリプトを作り、見本で確かめる     | DEV          | open | exec で `develop` へ統合する。骨組み・`scripts/export.ts`・見本の書き出しを作成済み（PJR-F34R の exec）              |
+| 3   | 骨組みと書き出しのスクリプトを作り、見本で確かめる     | DEV          | done | `claude-expert-executor` が exec で対応し、`specdojo-assets` の `develop` へ `cdcf1a3` で統合された（2026-10-16）    |
 
 ## 4. 対応結果
 
@@ -63,6 +63,13 @@ specdojo-assets に README.md のディレクトリ体系どおりの骨組み�
 - 残課題:
   - `specdojo-lp` に差分が出ないことの `git status` による確認と、`npm run` 経由の `format:check`・`lint:md`・`lint:ts`・`typecheck` は、executor の環境で承認が要ったため、orchestrator が sandbox の外で確かめる（同じ検査はローカルの実行ファイルを直接起動して通過を確認済み）。
   - `BRAND.md` と `asset.yaml` の `_TODO_` は、[[prj-0002:pjr-pevv-mascot-character-source]] などで決まった時点で埋める。
+
+### 4.1. orchestrator の確認と手での取り込み（2026-10-16）
+
+- 最初の実行は、統合の前に止まった（`waiting`）。`assets/` と `templates/` が HEAD にない新しい最上位ディレクトリだったため、その下の 7 ファイル（`asset.yaml`・見本の原本・4 つの `.gitkeep`・`templates/asset.yaml`）が runner の commit の範囲から外れて worktree に残り、runner が範囲外の未 commit の変更として統合を止めた。どちらのリポジトリにも統合されていなかった。
+- orchestrator が worktree に残った成果物を確かめ、7 ファイルを exec branch に手で commit した（`1d46fca`）。そのうえで `exec run --resume` で統合の段だけを再開し、`specdojo-assets` の `develop` へ `cdcf1a3` で統合された。`specdojo-lp` は差分がなく、統合されていない。
+- 統合後の `specdojo-assets` の `develop` で、`npm ci` の後に `npm run format:check`・`lint:md`・`lint:ts`・`typecheck` がすべて通り、`node scripts/export.ts` が 1 件を書き出し、`specdojo-lp` の `git status` に差分が出ないことを確かめた。
+- 今回の統合で `assets/` と `templates/` が HEAD で追跡されるため、以後この下に増えるファイルは runner の commit の範囲に入る。
 
 ## 5. 関連ドキュメント
 
