@@ -45,3 +45,32 @@
       from: specdojo-assets に README.md のディレクトリ体系どおりの骨組み（assets/・exports.yaml・BRAND.md・templates/・scripts/）、exports.yaml に従って書き出すスクリプトを用意し、prj-0002 の repos に specdojo-assets を加える
       to: specdojo-assets に README.md のディレクトリ体系どおりの骨組み（assets/・exports.yaml・BRAND.md・templates/）と、exports.yaml に従って原本を specdojo-lp の src/assets/ へそのまま書き出す scripts/export.ts を作り、暫定マスコットを見本に確かめる
   previous_event_id: reg_8a118619fd774ecc944d6023c77b08de
+- v: 1
+  id: reg_770f9473cf354f6b9b16c9f267c234b4
+  ts: "2026-10-16T14:22:57Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2787cfce1d7c45e5b9a0c4fb02711231
+- v: 1
+  id: reg_fe51d312fa5148bd9106736e510e257a
+  ts: "2026-10-16T14:34:06Z"
+  action: wait
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: specdojo-assets: pre-integration check failed (no repository was integrated in this attempt): specdojo-assets: uncommitted changes outside the commit scope: specdojo-assets:assets/ch…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: specdojo-assets: pre-integration check failed (no repository was integrated in this attempt): specdojo-assets: uncommitted changes outside the commit scope: specdojo-assets:assets/ch…"
+  previous_event_id: reg_770f9473cf354f6b9b16c9f267c234b4
