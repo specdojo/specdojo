@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-mhhp-src-move-shared
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:34Z"
   due_on: null
+  completed_at: "2026-10-17T07:09:43Z"
+  conclusion: codemod でコマンドの実装 5 ファイルを src/commands、共通の処理 11 ファイルを src/shared、テスト 17 件を各ディレクトリへ移し、hook の入口（tools/build-if-stale.mjs）と自分の位置から求めるパスを直した。全 106 コマンドの --help は移す前の 0.3.1 と一致し、分割後の runner で PJR-JSEY が統合まで通った
 ---
 
 # PJR-MHHP 共通の処理を src/shared へ移す

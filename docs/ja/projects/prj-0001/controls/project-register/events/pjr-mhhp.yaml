@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3d98e7c1a2fc4bf2afea3df822551ada
+- v: 1
+  id: reg_6da9dab7592e443a9202409c791c3564
+  ts: "2026-10-17T07:09:43Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に全コマンドの --help、node tools/build-if-stale.mjs、dist の配置を確かめ、exec run --register（PJR-JSEY、47639f6e2）が統合まで通った（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: codemod でコマンドの実装 5 ファイルを src/commands、共通の処理 11 ファイルを src/shared、テスト 17 件を各ディレクトリへ移し、hook の入口（tools/build-if-stale.mjs）と自分の位置から求めるパスを直した。全 106 コマンドの --help は移す前の 0.3.1 と一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_feae468c6c2f4b399d303a12ac09d9fe
