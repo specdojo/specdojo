@@ -74,3 +74,16 @@
       from: "checkpoint failed: git worktree failed: fatal: a branch named 'exec/prj-0001-PJR-MX4F' already exists (args: add /workspaces/specdojo-workspace/worktree… -b exec/prj-0001-PJR-MX4F)"
       to: "-"
   previous_event_id: reg_9cb25d63270b4f2eb9878e7ab1cd00bf
+- v: 1
+  id: reg_c1ebea7ec1034c3ba9902c7022dda53b
+  ts: "2026-10-17T09:42:14Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_84fc2745da74421abcaf82f24ef1914f
