@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b62c68333d604bcba15fabdc5ee5f069
+  ts: "2026-10-17T14:40:01Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: prj-0001 の orchestrator との議論（2026-10-17）からの申し送り
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: LP で plan モードと比べた register の価値を伝える
+    - field: description
+      from: ""
+      to: AI のコーディングツールの plan モードの plan（会話の中の下書き、ランダムな名前、既定で約 30 日で消える）と比べ、SpecDojo の register が ID・種類・状態の遷移・実行の plan と result への接続・decision の承認の記録を持ち、判断と作業を台帳として残せることを、LP の説明の材料にする。prj-0001 の PJR-YFBW（運用ガイドの使い分け）と内容を揃える
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-17"
