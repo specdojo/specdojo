@@ -1,0 +1,5 @@
+PJR-JSEY 個票に、最新対象 PJR-DT3Q の動作確認記録を追記しました。変更は個票のみです。親検証・reporter・統合は runner に引き継ぎます。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果へ、PJR-DT3Q の実行記録（2026-10-17 19:47 JST、codex-expert-executor）を追記した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown は整形済みで変更なし。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と関連ビューの生成に成功。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検証に成功。既存の未配置文書に関する警告のみ。"},{"command":"git diff --check -- docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md && git diff --name-only && git diff -- docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"空白エラーなし。追跡対象の変更は個票への1行追加のみ。"}]}
+</specdojo_executor_evidence>
