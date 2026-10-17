@@ -29,3 +29,22 @@
     - field: registered
       from: ""
       to: "2026-10-17"
+- v: 1
+  id: reg_2fca99404a794cbab5c237812196c78c
+  ts: "2026-10-17T12:18:16Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: 利用者が orchestrator との会話で推奨案を承認した（2026-10-17）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: 個票に approach と対象を書き、exec run --register が schedule と同じ plan の作り方を使う。DCT の done_criteria を基本に個票の完了条件を加え、owner は個票の owner、kata は id と保守の approach で指定する。exec run --deliverable は互換のため残す
+  previous_event_id: reg_a3d146c57084411aacf6a943d3d821bf

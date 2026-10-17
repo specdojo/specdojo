@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-h72a-register-approach-execution
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-10-17T12:11:07Z"
   due_on: null
+  completed_at: "2026-10-17T12:18:16Z"
+  conclusion: 個票に approach と対象を書き、exec run --register が schedule と同じ plan の作り方を使う。DCT の done_criteria を基本に個票の完了条件を加え、owner は個票の owner、kata は id と保守の approach で指定する。exec run --deliverable は互換のため残す
 ---
 
 # PJR-H72A register の todo から approach を使って成果物と kata を作る・直す方針を決める
