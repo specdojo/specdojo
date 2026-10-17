@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-JSEY",
   "run_id": "20261017T235009861Z-192b0573",
-  "updated_at": "2026-10-17T23:54:59.908Z",
+  "updated_at": "2026-10-17T23:55:14.196Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-jsey-20261017T235009Z-5c87-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "codex-expert-executor",
       "attempts": 1,
       "started_at": "2026-10-17T23:54:59.908Z",
-      "completed_at": null,
+      "completed_at": "2026-10-17T23:55:14.196Z",
       "artifact_ref": null
     }
   },
