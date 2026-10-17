@@ -300,3 +300,19 @@
       from: runner のコードの分割 5 件（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
       to: runner のコードの分割 5 件と、runner に関わる移動 2 件（PJR-MHHP・PJR-XP0J）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
   previous_event_id: reg_85a03ba76aad4c6e8310eaad7fb49314
+- v: 1
+  id: reg_fba62e885e944635a624d4bc81d9a803
+  ts: "2026-10-17T08:47:48Z"
+  action: reopen
+  actor: claude-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-BZ9J（exec の run と schedule の分割）の統合後の動作確認（2026-10-17）
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-17"
+      to: "-"
+  previous_event_id: reg_a6e6c95808d441f68233f7830f5351ff
