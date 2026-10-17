@@ -1,0 +1,54 @@
+
+> specdojo@0.3.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-9754f0fd9a50 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-9754f0fd9a50
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/rulebooks/pjr-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pjr-rulebook.md
+document start: docs/ja/specdojo/samples/pm-raci-sample.md
+document complete: docs/ja/specdojo/samples/pm-raci-sample.md
+document start: docs/ja/specdojo/samples/pm-risk-register-sample.md
+document complete: docs/ja/specdojo/samples/pm-risk-register-sample.md
+document start: docs/ja/specdojo/samples/pr-sample.md
+document complete: docs/ja/specdojo/samples/pr-sample.md
+document start: docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md
+document complete: docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md
+document start: docs/ja/specdojo/samples/prj-charter-sample.md
+document complete: docs/ja/specdojo/samples/prj-charter-sample.md
+document start: docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md
+document complete: docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md
+document start: docs/ja/specdojo/samples/prj-issues-and-approach-sample.md
+document complete: docs/ja/specdojo/samples/prj-issues-and-approach-sample.md
+document start: docs/ja/specdojo/samples/prj-overview-sample.md
+document complete: docs/ja/specdojo/samples/prj-overview-sample.md
+document start: docs/ja/specdojo/samples/prj-scope-sample.md
+document complete: docs/ja/specdojo/samples/prj-scope-sample.md
+document start: docs/ja/specdojo/samples/prj-stakeholder-register-sample.md
+document complete: docs/ja/specdojo/samples/prj-stakeholder-register-sample.md
+document start: docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md
+document complete: docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md
+document start: docs/ja/specdojo/samples/sac-sample.md
+document complete: docs/ja/specdojo/samples/sac-sample.md
+document start: docs/ja/specdojo/samples/sf-index-sample.md
+document complete: docs/ja/specdojo/samples/sf-index-sample.md
+document start: docs/ja/specdojo/samples/sf-sample.md
+document complete: docs/ja/specdojo/samples/sf-sample.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-9754f0fd9a50/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-17T20:03:05Z	docs/ja/specdojo/rulebooks/pjr-rulebook.md	1	passed	117	needs-work	82	6	agy-expert-executor	machine	none		
+2026-10-17T20:04:27Z	docs/ja/specdojo/samples/pm-raci-sample.md	1	passed	80	pass	97	2	agy-expert-executor	machine	none		
+2026-10-17T20:06:47Z	docs/ja/specdojo/samples/pm-risk-register-sample.md	1	passed	138	fail	83	6	agy-expert-executor	machine	none		
+2026-10-17T20:08:50Z	docs/ja/specdojo/samples/pr-sample.md	1	passed	121	pass	97	2	agy-expert-executor	machine	none		
+2026-10-17T20:11:39Z	docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md	1	passed	167	pass	97	2	agy-expert-executor	machine	none		
+2026-10-17T20:14:17Z	docs/ja/specdojo/samples/prj-charter-sample.md	1	passed	156	needs-work	86	11	agy-expert-executor	machine	none		
+2026-10-17T20:16:48Z	docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md	1	passed	149	needs-work	88	3	agy-expert-executor	machine	none		
+2026-10-17T20:18:30Z	docs/ja/specdojo/samples/prj-issues-and-approach-sample.md	1	passed	100	pass	98	1	agy-expert-executor	machine	none		
+2026-10-17T20:19:59Z	docs/ja/specdojo/samples/prj-overview-sample.md	1	passed	87	pass	100	0	agy-expert-executor	machine	none		
+2026-10-17T20:21:34Z	docs/ja/specdojo/samples/prj-scope-sample.md	1	passed	93	pass	97	2	agy-expert-executor	machine	none		
+2026-10-17T20:24:33Z	docs/ja/specdojo/samples/prj-stakeholder-register-sample.md	1	passed	177	needs-work	76	13	agy-expert-executor	machine	none		
+2026-10-17T20:26:15Z	docs/ja/specdojo/samples/prj-success-criteria-and-acceptance-criteria-sample.md	1	passed	100	pass	100	0	agy-expert-executor	machine	none		
+2026-10-17T20:28:51Z	docs/ja/specdojo/samples/sac-sample.md	1	passed	154	needs-work	67	18	agy-expert-executor	machine	none		
+2026-10-17T20:30:57Z	docs/ja/specdojo/samples/sf-index-sample.md	1	passed	124	needs-work	80	5	agy-expert-executor	machine	none		
+2026-10-17T20:34:39Z	docs/ja/specdojo/samples/sf-sample.md	1	passed	220	fail	51	22	agy-expert-executor	machine	none		
