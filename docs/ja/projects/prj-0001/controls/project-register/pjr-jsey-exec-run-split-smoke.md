@@ -49,6 +49,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 2026-10-17 19:47 | PJR-DT3Q   | codex-expert-executor |
 | 2026-10-17 20:47 | PJR-GBWW   | codex-expert-executor |
 | 2026-10-17 21:04 | PJR-CY80   | codex-expert-executor |
+| 2026-10-18 08:51 | PJR-BHMH   | codex-expert-executor |
 
 ## 5. 関連ドキュメント
 
