@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f083030d9ed14d6097db36f5e2675a0e
+  ts: "2026-10-17T12:17:04Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-H72A の決定
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 個票に approach と対象を書けるようにする
+    - field: description
+      from: ""
+      to: 個票の frontmatter と schema に approach と targets（成果物の local_id か kata の id）を加え、register add --approach --target で指定でき、組み合わせの誤りを起票の時点で止める。PJR-H72A の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
