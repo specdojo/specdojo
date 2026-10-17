@@ -3,34 +3,80 @@ version: 1
 document: specdojo:sf-sample
 path: docs/ja/specdojo/samples/sf-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 30
-graded_at: "2026-09-06T01:21:00.683Z"
-graded_by: gemma-expert-executor
+score: 51
+graded_at: "2026-10-17T20:34:15.478Z"
+graded_by: agy-expert-executor
 content_hash: 7c2987eae3ef4bbeac2d1763da85054cc664bd75df7ce7295a075bc67b4ed7e8
 categories:
-  consistency:
-    score: 0
-  usability:
+  purpose:
+    score: 50
+  operations:
+    score: 88
+  planning:
+    score: 58
+  business:
     score: 50
   architecture:
+    score: 83
+  usability:
+    score: 58
+  implementation:
     score: 63
   quality:
-    score: 13
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 0
+    score: 42
+  consistency:
     score: 0
-  vp-arc-conciseness:
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
     level: 4
     score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -38,65 +84,202 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 4
-  major: 4
-  minor: 0
+  major: 12
+  minor: 6
   note: 0
 findings:
   - id: F001
-    severity: blocker
-    rule: vp-arc-cross-document-consistency
+    severity: major
+    rule: vp-po-purpose-alignment
     line: 1
-    message: 参照ルールブックで定義されている「機能一覧（表形式）」ではなく、「個別機能定義」のサンプルとなっており、整合性が完全に失われている。
-    anchor: ""
+    anchor: "# [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) サンプル"
+    message: >-
+      The sample describes its purpose as defining individual system function specifications rather than providing a
+      system function list aligned with the project scope and purpose defined in sf-rulebook.md.
+    message_ja: このサンプルは、その目的を、sf-rulebook.mdで定義されたプロジェクトのスコープや目的に沿ったシステム機能一覧を提供することではなく、個々のシステム機能仕様を定義することであると述べています。
   - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Unresolved items lack concrete decision criteria, owners, impacts, and actionable next steps required for PO
+      review.
+    message_ja: 未解決事項には、POレビューに必要な具体的な決定基準、担当者、影響、および実行可能な次のステップが不足しています。
+  - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      The sample does not provide concrete system functions or work units, making it impossible to derive tasks,
+      sequencing, or estimation for project management.
+    message_ja: サンプルには具体的なシステム機能や作業単位が記載されていないため、プロジェクト管理のためのタスク、順序付け、または見積もりの算出が不可能です。
+  - id: F004
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      Dependencies on subsequent deliverables, related specifications, and associated project risks are not identified
+      in the functional definitions or unresolved items.
+    message_ja: 機能定義や未解決事項において、後続の成果物、関連する仕様、および関連するプロジェクトリスクに関する依存関係が特定されていません。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: Unresolved issues lack assigned Role codes, reporting targets, and tracking mechanisms for project control.
+    message_ja: 未解決の課題には、プロジェクト管理のためのRoleコード、報告先、および追跡メカニズムが割り当てられていません。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      The sample fails to articulate specific business problems, target users, or expected values for the candy store
+      business context.
+    message_ja: サンプルは、キャンディショップのビジネスコンテキストにおける具体的なビジネス課題、ターゲットユーザー、または期待される価値を明文化できていません。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      Functional requirements, acceptance criteria, scope boundaries, and exclusions are completely absent from the
+      sample.
+    message_ja: 機能要件、受け入れ基準、スコープの境界、および除外事項がサンプルから完全に欠落しています。
+  - id: F008
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: Stakeholders, user roles, reviewers, and responsible actors are not identified in the functional sample.
+    message_ja: 機能のサンプルにおいて、ステークホルダー、ユーザーロール、レビュアー、および責任あるアクターが特定されていません。
+  - id: F009
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      The bullet points under '## 3. 記述内容' duplicate the exact text presented in the table under '## 4. 最小記述例' without
+      adding distinct informational value.
+    message_ja: 「## 3. 記述内容」の下の箇条書きは、「## 4. 最小記述例」の下の表に示されているテキストと全く同じ内容を重複しており、独自の付加価値を与えていません。
+  - id: F010
     severity: major
     rule: vp-arc-single-responsibility
     line: 1
+    anchor: "# [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) サンプル"
     message: ルールブックが規定する「機能一覧」のサンプルではなく、「個別機能定義」のサンプルとなっており、期待される役割を果たしていない。
-    anchor: ""
-  - id: F007
+    message_ja: ルールブックが規定する「機能一覧」のサンプルではなく、「個別機能定義」のサンプルとなっており、期待される役割を果たしていない。
+  - id: F011
     severity: major
-    rule: vp-ux-readability
-    line: 1
-    message: タイトルに「個別」とあり、内容も個別定義となっているが、SFLルールブックのサンプルとして提示されているため、正解となる記述形式が不明確である。
-    anchor: ""
-  - id: F004
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 4
-    message: メタデータの type がルールブック指定の domain ではなく project となっている。
-    anchor: "## 1. 目的と適用範囲"
-  - id: F008
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 4
-    message: メタデータ type の値が, ルールブックで定義されている domain ではなく project と表記されており, 不整合である。
-    anchor: "## 1. 目的と適用範囲"
-  - id: F003
+    rule: vp-dev-implementation-readiness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      The sample lacks concrete inputs, outputs, and interface specifications for individual functions, failing to
+      provide implementation readiness.
+    message_ja: サンプルには個々の機能に関する具体的な入力、出力、およびインターフェースの仕様が不足しており、実装の準備が整っていることが確認できません。
+  - id: F012
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      The sample does not demonstrate how to specify related specification IDs (e.g., UI, process, reports), hindering
+      change impact analysis across deliverables.
+    message_ja: サンプルには関連する仕様ID（例：UI、プロセス、レポート）の指定方法が示されておらず、成果物横断的な変更影響分析の妨げとなっています。
+  - id: F013
+    severity: minor
+    rule: vp-dev-testability
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      The functional definition lacks concrete input/output criteria necessary to establish test conditions or
+      acceptance verification.
+    message_ja: 機能定義には、テスト条件または受け入れ検証を確立するために必要な具体的な入出力基準が不足しています。
+  - id: F014
     severity: major
     rule: vp-qe-verifiability
     line: 26
+    anchor: "## 5. 未解決事項"
     message: 表内の「値」がメタ記述となっており、具体的で検証可能な機能定義の例となっていない。
+    message_ja: 表内の「値」がメタ記述となっており、具体的で検証可能な機能定義の例となっていない。
+  - id: F015
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 4
     anchor: ""
-  - id: F005
+    message: メタデータの type がルールブック指定の domain ではなく project となっている。
+    message_ja: メタデータの type がルールブック指定の domain ではなく project となっている。
+  - id: F016
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 26
+    anchor: "## 5. 未解決事項"
     message: ルールブックで必須とされている「機能一覧（1行1機能の表形式）」が記載されていない。
-    anchor: ""
-  - id: F006
+    message_ja: ルールブックで必須とされている「機能一覧（1行1機能の表形式）」が記載されていない。
+  - id: F017
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) サンプル"
+    message: 参照ルールブックで定義されている「機能一覧（表形式）」ではなく、「個別機能定義」のサンプルとなっており、整合性が完全に失われている。
+    message_ja: 参照ルールブックで定義されている「機能一覧（表形式）」ではなく、「個別機能定義」のサンプルとなっており、整合性が完全に失われている。
+  - id: F018
     severity: blocker
     rule: vp-qe-kata-conformance
     line: 26
+    anchor: "## 5. 未解決事項"
     message: ルールブックで定義された標準列（機能ID, 機能名等）を持たない表形式となっており、作成ルールに全く準拠していない。
+    message_ja: ルールブックで定義された標準列（機能ID, 機能名等）を持たない表形式となっており、作成ルールに全く準拠していない。
+  - id: F019
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    anchor: "# [システム化機能一覧 / 個別](../rulebooks/sf-rulebook.md) サンプル"
+    message: タイトルに「個別」とあり、内容も個別定義となっているが、SFLルールブックのサンプルとして提示されているため、正解となる記述形式が不明確である。
+    message_ja: タイトルに「個別」とあり、内容も個別定義となっているが、SFLルールブックのサンプルとして提示されているため、正解となる記述形式が不明確である。
+  - id: F020
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 4
     anchor: ""
+    message: メタデータ type の値が, ルールブックで定義されている domain ではなく project と表記されており, 不整合である。
+    message_ja: メタデータ type の値が, ルールブックで定義されている domain ではなく project と表記されており, 不整合である。
+  - id: F021
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      The sample does not specify the criteria or approver required to transition the document from draft to ready
+      status.
+    message_ja: サンプルには、ドキュメントをドラフトからレディの状態に移行するために必要な基準や承認者が指定されていません。
+  - id: F022
+    severity: minor
+    rule: vp-ops-operability
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: Guidance or role assignments for ongoing maintenance and updates to the function list are omitted.
+    message_ja: 機能一覧の継続的なメンテナンスおよび更新のためのガイダンスやロールの割り当てが省略されています。
