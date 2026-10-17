@@ -1,4 +1,4 @@
-import { stripTerminalControlSequences } from "../exec-shared.js";
+import { stripTerminalControlSequences } from "../exec/shared.js";
 
 const MAX_DASHBOARD_CELL_LENGTH = 200;
 

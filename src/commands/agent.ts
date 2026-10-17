@@ -8,9 +8,9 @@ import {
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
   type ExecDefaultsConfig,
-} from "../exec-agent-config.js";
-import { resolveProjectPaths } from "../exec-project.js";
-import { executeAgent, loadRosterForExecutionPath, type AgentExecution } from "../exec-run.js";
+} from "../exec/agent-config.js";
+import { resolveProjectPaths } from "../exec/project.js";
+import { executeAgent, loadRosterForExecutionPath, type AgentExecution } from "../exec/run.js";
 import { gitEnvironment } from "../shared/git-environment.js";
 import {
   specdojoRootDir,

@@ -3,7 +3,7 @@ import { basename, join, relative, resolve } from "node:path";
 import { collectResolvedDeliverables } from "../catalog/build.js";
 import { resolveBasePath } from "../catalog/paths.js";
 import type { DctDoc } from "../catalog/types.js";
-import { readYaml } from "../exec-shared.js";
+import { readYaml } from "../exec/shared.js";
 import { collectCatalogFilesByDomain, loadTimelineIndex } from "../dashboard/timeline-build.js";
 
 export type StrategyCatalogRef = {

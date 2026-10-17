@@ -52,7 +52,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec.ts
+                path: src/exec/exec.ts
                 purpose: exec コマンド入口から到達するpm-members.yaml・.specdojo/exec-defaults.yamlの読込、provider別設定の解決規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
@@ -134,7 +134,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec.ts
+                path: src/exec/exec.ts
                 purpose: exec コマンド入口から到達するsch-strategy-<track>.yamlのphase_sets・owner_rules・cross_deliverable_passes等の型・解決規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
@@ -160,7 +160,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec.ts
+                path: src/exec/exec.ts
                 purpose: exec コマンド入口から到達するtask・milestone・依存関係の型定義
               - kind: implementation
                 path: src/schedule/schedule.ts
@@ -191,7 +191,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec.ts
+                path: src/exec/exec.ts
                 purpose: exec コマンド入口から到達する実行イベント（claim/complete/block/reopen等）のスキーマ・追記規則
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
@@ -217,7 +217,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec.ts
+                path: src/exec/exec.ts
                 purpose: exec コマンド入口から到達するReady task算出のためのtask状態・依存判定、CPM・クリティカルパス・slackの算出
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
@@ -243,7 +243,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec.ts
+                path: src/exec/exec.ts
                 purpose: exec コマンド入口から到達するedit/review plan frontmatterの生成・scaffold規則、result frontmatter・必須節のscaffold・記入検証
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
@@ -269,7 +269,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec.ts
+                path: src/exec/exec.ts
                 purpose: exec コマンド入口から到達する実施根拠記録（evidence）の格納先・構造
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること
@@ -297,7 +297,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/exec.ts
+                path: src/exec/exec.ts
                 purpose: exec コマンド入口から到達するworktree・branchの命名規則・配置、worktreeの作成・削除・同期操作
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること

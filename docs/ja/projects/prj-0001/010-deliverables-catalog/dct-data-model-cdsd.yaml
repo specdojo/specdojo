@@ -39,7 +39,7 @@ groups:
             path: src/catalog/catalog.ts
             purpose: 成果物カタログストアの読込・検証
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するSchedule戦略ストアの型・解決規則
           - kind: implementation
             path: src/schedule/schedule.ts
@@ -70,7 +70,7 @@ groups:
         rulebook: specdojo:cdsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達する実行イベントストアのスキーマ・追記規則、実行状態（Ready）ストアの算出、plan/resultストアのscaffold規則、worktreeストアの命名・配置
           - kind: implementation
             path: src/routine/routine.ts

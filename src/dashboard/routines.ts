@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { load } from "../shared/yaml.js";
-import { readJson } from "../exec-shared.js";
+import { readJson } from "../exec/shared.js";
 import {
   type RoutineDoc,
   cronMatches,

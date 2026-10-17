@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it } from "vitest";
-import { gitEnvironment } from "../../../src/exec-worktree.js";
+import { gitEnvironment } from "../../../src/exec/worktree.js";
 import { applyTrash, planTrash } from "../../../src/deliverable/trash.js";
 
 function git(cwd: string, ...args: string[]): string {
