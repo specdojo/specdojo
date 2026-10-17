@@ -145,3 +145,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a801c66e043d4e96ac1b40d8cb7de5f9
+- v: 1
+  id: reg_8b2421f29d47451d85573d407d3c74e7
+  ts: "2026-10-17T23:16:30Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、未作成の成果物を fully-guided の対象にできること、rulebook-maintenance で kata を対象にできること、種類の合わない組み合わせとカタログにない対象で止まることを dry-run で確かめた（2026-10-18）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 個票の frontmatter に approach を加え、register add・update の --approach・--target で書けるようにした。approach を書いた個票は対象を 1 件必須とし、成果物の approach の対象は成果物カタログで、kata の approach の対象は文書の索引で解決し、組み合わせの誤りを起票の時点で止める
+  previous_event_id: reg_883be9244491469498860fbeeb0456b4

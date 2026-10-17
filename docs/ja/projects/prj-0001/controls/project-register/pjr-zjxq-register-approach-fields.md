@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zjxq-register-approach-fields
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T12:17:03Z"
   due_on: null
+  completed_at: "2026-10-17T23:16:30Z"
+  conclusion: 個票の frontmatter に approach を加え、register add・update の --approach・--target で書けるようにした。approach を書いた個票は対象を 1 件必須とし、成果物の approach の対象は成果物カタログで、kata の approach の対象は文書の索引で解決し、組み合わせの誤りを起票の時点で止める
 ---
 
 # PJR-ZJXQ 個票に approach と対象を書けるようにする
