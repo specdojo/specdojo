@@ -69,7 +69,7 @@ flowchart TD
 ### 2.1. 新規プロジェクトを最短で立ち上げる
 
 - ゴール: 設定から1タスク完了までを最短で通す。
-- 進め方: `config init` → 成果物カタログ作成・検証・生成 → トラック戦略作成 → `schedule build` → `exec refresh` → 1タスクを claim / complete。
+- 進め方: `specdojo init` → `register add` → 個票へ完了条件を記入 → `exec run --register --worktree` → 変更と動作を確認 → `register close`。成果物を計画的に増やす場合は、その後に成果物カタログと Schedule へ広げる。
 - 主に使う文書: [Quick Startガイド](quick-start-guide.md)、[遂行の技活用ガイド](waza-guide.md)。
 
 ### 2.2. 課題整理から目的・スコープを固める
