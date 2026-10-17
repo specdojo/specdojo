@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-GBWW
   mode: edit
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-gbww-20261017T105336Z-45ea-plan.md
   started_at: "2026-10-17T10:53:36.622Z"
+  completed_at: "2026-10-17T11:11:11.659Z"
   agent: codex-expert-executor
 ---
 
