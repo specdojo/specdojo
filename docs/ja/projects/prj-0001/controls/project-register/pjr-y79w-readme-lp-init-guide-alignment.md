@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T11:27:04Z"
@@ -78,13 +78,17 @@ LP の会話の例は、README の「会話で操作する」に合わせて作�
 
 | No  | 作業                                                         | 担当 | 状態 | メモ                   |
 | --- | ------------------------------------------------------------ | ---- | ---- | ---------------------- |
-| 1   | README の導入と始め方を LP に揃え、specdojo.org へリンクする | DEV  | open | 2.1 を正とする         |
-| 2   | init を説明するガイドを LP に揃える                          | DEV  | open | quick-start-guide ほか |
-| 3   | LP の側に直すべき点を result に書く                          | DEV  | open | prj-0002 へ依頼する    |
+| 1   | README の導入と始め方を LP に揃え、specdojo.org へリンクする | DEV  | done | 2.1 を正として反映     |
+| 2   | init を説明するガイドを LP に揃える                          | DEV  | done | quick-start-guide ほか |
+| 3   | LP の側に直すべき点を result に書く                          | DEV  | done | 該当なし               |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `README.md` の利用開始手順を、`app1-workspace/app1-specdojo` への `specdojo` 導入、対話式 `npx specdojo init`、Claude Code のオーケストレーター起動、登録簿への起票、プロダクトリポジトリの接続、executor / reporter による実行、確認・close の流れへ揃えた。
+- `README.md` の冒頭近くに <https://specdojo.org/> へのリンクを加え、既存のドキュメントサイトへのリンクを残した。
+- [[specdojo:quick-start-guide|Quick Start ガイド]] の導入構成と `init` 後の手順、および [[specdojo:use-case-guide|ユースケース別ガイド]] の最短立ち上げフローを README・LP と揃えた。
+- `@specdojo/docs-lint` は必須の導入手順から外し、文書検査を使う場合だけ導入する任意手順とした。
+- README の「会話で操作する」は LP の会話例との対応を保つため変更していない。個票へ転記された LP の内容に、LP 側で直すべき不整合は見つからなかった。
 
 ## 5. 関連ドキュメント
 

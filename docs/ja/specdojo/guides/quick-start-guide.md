@@ -48,9 +48,10 @@ question を起票する（迷っていること）
 プロジェクトリポジトリを作り、SpecDojo を導入して `init` の質問に答えます。
 
 ```bash
-mkdir app1-specdojo
-git -C app1-specdojo init
-cd app1-specdojo
+mkdir app1-workspace
+mkdir app1-workspace/app1-specdojo
+git -C app1-workspace/app1-specdojo init
+cd app1-workspace/app1-specdojo
 npm init -y
 npm install --save-dev specdojo
 npx specdojo init
@@ -191,6 +192,8 @@ npx specdojo register build --project prj-0001
 
 ## 2. CLIを初期設定する
 
+Node.js 22.13 以上と Git を用意します。オーケストレーターに Claude Code を使う場合は、Claude Code も導入してログインしておきます。ほかの provider も選べます。
+
 既定では、SpecDojo の成果物更新、登録簿の状態遷移、実行記録をプロダクトの Git 履歴に混ぜないため、次の **別リポジトリ構成**で始めます。
 
 - **プロダクトリポジトリ** `app1/`: ソースコードと、仕様・設計などのプロダクトドキュメントを置きます。
@@ -204,14 +207,15 @@ app1-workspace/
 └── app1-specdojo-worktrees/ # task 単位の worktree 置き場
 ```
 
-`app1-workspace/` 直下でプロジェクトリポジトリと worktree 用ディレクトリを作成し、`app1-specdojo/` に依存パッケージと SpecDojo の設定ファイルを用意します。
+既に開発している `app1/` と並べてプロジェクトリポジトリを作り、`app1-specdojo/` に SpecDojo を導入します。worktree 用ディレクトリは、最初の隔離実行時に設定に従って作られます。
 
 ```bash
-mkdir app1-specdojo
-git -C app1-specdojo init
-cd app1-specdojo
+mkdir app1-workspace
+mkdir app1-workspace/app1-specdojo
+git -C app1-workspace/app1-specdojo init
+cd app1-workspace/app1-specdojo
 npm init -y
-npm install --save-dev specdojo @specdojo/docs-lint
+npm install --save-dev specdojo
 # 質問に答えて project、register、agent 実行までを初期設定する
 npx specdojo init
 ```
@@ -244,8 +248,65 @@ npx specdojo init --yes \
 `exec run --register <id> --executor-by <executor> --reporter-by <reporter>` で実行できます。
 作成された設定と文書は内容を確認して commit してください。
 
-`@specdojo/docs-lint` は SpecDojo 文書向けの remark プラグインと検証コマンドを提供します。
-最小構成では、リポジトリルートの `.remarkrc.yaml` から次のように公開 export を参照できます。
+LP の例と同じく Claude Code へ作業を任せる場合は、provider の質問に `claude`、exec の質問に「はい」と答えます。初期化後は `npm run orch:opus`（または `npm run orch:sonnet`）でオーケストレーターを起動できます。
+
+プロダクトを変更する前に、`.specdojo/specdojo.config.json` の `projects.prj-0001` へ、同じ workspace にあるプロダクトリポジトリを接続します。
+
+```json
+"repos": [
+  {
+    "name": "app1",
+    "path": "../app1",
+    "integration_branch": "main"
+  }
+]
+```
+
+最初の作業を起票して個票へ完了条件を書いたら、Claude Code の executor と reporter を指定して実行できます。
+
+```bash
+npx specdojo register add \
+  --project prj-0001 \
+  --type todo \
+  --title "最初のタスク"
+npx specdojo exec run \
+  --project prj-0001 \
+  --register PJR-XXXX \
+  --worktree \
+  --executor-by claude-executor \
+  --reporter-by claude-reporter
+```
+
+実行後は両方のリポジトリの commit とプロダクトの動作を確認します。
+
+```bash
+git -C ../app1 log --oneline -1
+git log --oneline -1
+npm --prefix ../app1 run dev
+```
+
+人が result と成果物を確認し、気づいた改善を次の `todo` や `issue` として残してから、元の登録項目を close します。
+
+```bash
+npx specdojo register add \
+  --project prj-0001 \
+  --type todo \
+  --title "次の改善" \
+  --commit
+npx specdojo register close \
+  --project prj-0001 \
+  --id PJR-XXXX \
+  --conclusion "完了条件を満たした" \
+  --commit
+```
+
+`@specdojo/docs-lint` は初期設定に必須ではありません。SpecDojo 文書向けの remark プラグインと検証コマンドを使う場合だけ追加します。
+
+```bash
+npm install --save-dev @specdojo/docs-lint
+```
+
+リポジトリルートの `.remarkrc.yaml` から次のように公開 export を参照できます。
 
 ```yaml
 plugins:
