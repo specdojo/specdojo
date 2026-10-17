@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-y79w-readme-lp-init-guide-alignment
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T11:27:04Z"
   due_on: null
+  completed_at: "2026-10-17T12:34:33Z"
+  conclusion: LP を正として、README の始め方を app1-workspace/app1-specdojo の構成と npx specdojo init に揃え、docs-lint を任意の手順に、config init と config scaffold を個別の設定の章に移し、specdojo.org へリンクした。quick-start-guide と use-case-guide も揃えた。init の最後の案内が orch:sonnet を勧める点は PJR-B3XQ で直す
 ---
 
 # PJR-Y79W README・LP・init のガイドの内容を揃え、README に specdojo.org へのリンクを加える

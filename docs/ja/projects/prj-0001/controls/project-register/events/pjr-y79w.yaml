@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_18ee718dc62442f3ba1726abc4162d1e
+- v: 1
+  id: reg_51b1a16b8ece46daafff116194783253
+  ts: "2026-10-17T12:34:33Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に README と LP の手順の一致、specdojo.org へのリンクを確かめた（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: LP を正として、README の始め方を app1-workspace/app1-specdojo の構成と npx specdojo init に揃え、docs-lint を任意の手順に、config init と config scaffold を個別の設定の章に移し、specdojo.org へリンクした。quick-start-guide と use-case-guide も揃えた。init の最後の案内が orch:sonnet を勧める点は PJR-B3XQ で直す
+  previous_event_id: reg_8cb2dfe3c6804d83b015773239f69b50
