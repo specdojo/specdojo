@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T09:13:21Z"
@@ -50,7 +50,10 @@ tests/src/exec/worktree.test.ts の reports ENOBUFS のテストは、子プロ�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `tests/src/exec/worktree.test.ts` の子プロセスを、64 KiB を一度だけ出力して終了する処理から、停止されるまで同じ出力を続ける処理へ変更した。親が `maxBuffer` 超過を検知する前に子が正常終了する競合をなくした。
+- `result.error.code` が `ENOBUFS` であることを直接検証し、あわせて上限超過時の `status` が `null`、signal が非 `null` であり、`describeGitProcessFailure` のメッセージに `output exceeded maxBuffer (ENOBUFS)` と signal が含まれることを検証するようにした。
+- `spawnSync` が上限超過時に子プロセスを停止してから返るため、テスト終了後に子プロセスは残らない。`src/` の動作は変更していない。
+- 同じ子プロセスと `describeGitProcessFailure` を使うスモーク検証を20回連続で実行し、20回すべてで `ENOBUFS`、`status: null`、非 `null` の signal、期待するメッセージ、および子プロセスが残っていないことを確認した。単体テスト全件は親 runner の検証で確認する。
 
 ## 5. 関連ドキュメント
 

@@ -364,13 +364,19 @@ describe("describeGitProcessFailure", () => {
   it("reports ENOBUFS and the signal when the output exceeds maxBuffer", () => {
     const result = spawnSync(
       process.execPath,
-      ["-e", "process.stdout.write('x'.repeat(64 * 1024))"],
+      [
+        "-e",
+        "const { writeSync } = require('node:fs'); " +
+          "const chunk = 'x'.repeat(64 * 1024); for (;;) writeSync(1, chunk)",
+      ],
       { encoding: "utf8", maxBuffer: 1024, stdio: ["ignore", "pipe", "pipe"] },
     );
 
     const actual = describeGitProcessFailure(result);
 
+    expect(result.error).toMatchObject({ code: "ENOBUFS" });
     expect(result.status).toBeNull();
+    expect(result.signal).not.toBeNull();
     expect(actual).toContain("output exceeded maxBuffer (ENOBUFS)");
     expect(actual).toContain(`terminated by signal ${result.signal}`);
   });
