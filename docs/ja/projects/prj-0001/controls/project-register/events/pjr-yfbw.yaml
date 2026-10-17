@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_19d127b165c8409893b5814f924b234d
+  ts: "2026-10-17T14:39:32Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者との議論（2026-10-17）で、register の運用の方が体系的であることを確かめた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターの運用ガイドに plan モードと register の使い分けを書く
+    - field: description
+      from: ""
+      to: Claude Code などの plan モードの plan（会話の中の下書き、既定で約 30 日で消える）と、register（ID・種類・状態の遷移・exec の plan と result への接続・decision の承認の記録）の違いと使い分けを、オーケストレーターの運用ガイドに書く。plan モードは下書きとし、残す判断は decision、作業の範囲は todo の完了条件へ書き写す流れを示す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
