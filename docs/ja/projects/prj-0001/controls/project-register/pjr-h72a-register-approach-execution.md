@@ -39,7 +39,7 @@ approach（`fully-guided`・`recipe-guided`・`retrofit`・`rulebook-maintenance
 
 ## 3. 決定内容
 
-_TODO_: 利用者の確認後に記載する。orchestrator の推奨は次のとおり。
+推奨のとおり、次のように決める。
 
 1. 選択肢 C を採る。
 2. 個票の frontmatter に `approach` と、対象の `targets`（成果物の local_id、または kata の id）を書けるようにする。`register add --approach <approach> --target <id>` でも指定できるようにする。
@@ -53,16 +53,18 @@ _TODO_: 利用者の確認後に記載する。orchestrator の推奨は次の�
 
 ## 4. 採択理由
 
-- _TODO_: 決定後に記載する。
+- worktree・統合・review・登録簿の記帳がそろった register の実行をそのまま使え、approach の作業を 1 件ずつ登録簿で追える。
+- plan の作り方は schedule と共通にするため、approach のテンプレートと kata の参照を二重に持たない。
+- 組み合わせの誤りを起票の時点で止めることで、誤った plan で agent を動かさない。
 
 ## 5. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 決定者   | _TODO_ |
-| 決定日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                                         |
+| -------- | ---------------------------------------------------------------------------- |
+| 決定者   | 利用者（PO）                                                                 |
+| 決定日   | 2026-10-17                                                                   |
+| 承認方式 | orchestrator との会話で、推奨の 9 点を「すべて推奨でお願いします」として承認 |
+| 証跡     | orchestrator との会話（2026-10-17）                                          |
 
 - 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
 - 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
