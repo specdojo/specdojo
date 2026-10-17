@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-yh9q-src-move-grade-register
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:26Z"
   due_on: null
+  completed_at: "2026-10-17T06:15:09Z"
+  conclusion: codemod で grade の 13 ファイルと register の 16 ファイル、テスト 14 件を src/grade・src/register へ移した。--help（25 コマンド）は移す前の 0.3.1 と一致した。src/grade.ts は再 export だけの 22 行で import のパスがすべて変わったため、git は rename ではなく追加と削除と判定した
 ---
 
 # PJR-YH9Q grade と register を src/grade・src/register へ移す

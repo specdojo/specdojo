@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7f0c1999d3374c058de33c35c6ffe78f
+- v: 1
+  id: reg_f6e27308e6874843bfe78d68bdc9a4db
+  ts: "2026-10-17T06:15:09Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に rename・dist・移す前の 0.3.1 との --help を比べ、register build と grade list を確かめた（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: codemod で grade の 13 ファイルと register の 16 ファイル、テスト 14 件を src/grade・src/register へ移した。--help（25 コマンド）は移す前の 0.3.1 と一致した。src/grade.ts は再 export だけの 22 行で import のパスがすべて変わったため、git は rename ではなく追加と削除と判定した
+  previous_event_id: reg_f2db899d11b74a9b944c15bcb3cc3f03
