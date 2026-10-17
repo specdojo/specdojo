@@ -141,6 +141,18 @@ export function registerRunCommand(exec: Command): void {
     "--reporter-by <nickname>",
     "agent-members.yaml reporter nickname for agent_pipeline tasks (with --plan / --deliverable, runs the executor/reporter pipeline)",
   );
+  rcmd.option(
+    "--on-rate-limit <action>",
+    "Pinned-agent rate-limit action: stop|wait|fallback (overrides rate_limit_policy.pinned)",
+  );
+  rcmd.option(
+    "--fallback-executor-by <nickname>",
+    "Fallback executor used when --on-rate-limit fallback is selected",
+  );
+  rcmd.option(
+    "--fallback-reporter-by <nickname>",
+    "Fallback reporter used when --on-rate-limit fallback is selected",
+  );
   rcmd.option("--dry-run", "Print resolved command without executing", false);
 
   rcmd.action(async (opts: RunOpts) => {
@@ -296,6 +308,11 @@ export function registerRunCommand(exec: Command): void {
       }
       if (opts.by && opts.executorBy) {
         process.stdout.write("Specify either --by or --executor-by, not both.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (opts.onRateLimit && !["stop", "wait", "fallback"].includes(opts.onRateLimit)) {
+        process.stdout.write('--on-rate-limit must be "stop", "wait", or "fallback".\n');
         process.exitCode = 1;
         return;
       }

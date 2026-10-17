@@ -68,6 +68,8 @@ import {
   selectCandidates,
   type AgentExecution,
   type AgentRunCandidate,
+  type PinnedRateLimitRunOptions,
+  type RateLimitRecoveryEvent,
   type ResolvedRequirements,
   type RunResult,
 } from "./shared.js";
@@ -532,6 +534,7 @@ export async function runWithRetry(
   cwd: string,
   env: NodeJS.ProcessEnv,
   resultPath?: string,
+  pinned?: PinnedRateLimitRunOptions,
 ): Promise<{
   result: RunResult;
   exitCode: number | null;
@@ -540,6 +543,8 @@ export async function runWithRetry(
   attempts: number;
   limit?: AgentLimitSignal;
   protectionBlock?: true;
+  actor?: string;
+  rateLimitEvents: RateLimitRecoveryEvent[];
 }> {
   const policy = resolveRateLimitPolicy(execDefaults, candidates[0]?.provider);
   let attempts = 0;
@@ -552,38 +557,45 @@ export async function runWithRetry(
   ];
 
   // One pass tries every candidate in priority order with no wait between switches.
-  const runPass = async (): Promise<{
+  const runPass = async (
+    passCandidates = candidates,
+  ): Promise<{
     result: RunResult;
     exitCode: number | null;
     stdout: string;
     stderr: string;
     limit?: AgentLimitSignal;
     protectionBlock?: true;
+    actor?: string;
   }> => {
     let lastStderr = "";
     let lastStdout = "";
     let lastExitCode: number | null = null;
     let lastLimit: AgentLimitSignal | undefined;
-    for (let idx = 0; idx < candidates.length; idx++) {
+    let lastActor: string | undefined;
+    for (let idx = 0; idx < passCandidates.length; idx++) {
       if (idx > 0) {
         process.stdout.write(
-          `Rate limit detected. Switching to next agent (${idx + 1}/${candidates.length})...\n`,
+          `Rate limit detected. Switching to next agent (${idx + 1}/${passCandidates.length})...\n`,
         );
       }
-      const detection = resolveRateLimitDetection(execDefaults, candidates[idx].provider);
+      const candidate = passCandidates[idx];
+      const detection = resolveRateLimitDetection(execDefaults, candidate.provider);
+      const candidatePolicy = resolveRateLimitPolicy(execDefaults, candidate.provider);
       attempts++;
+      lastActor = candidate.actor;
       const protectedConfigBefore = captureAgentProtectedConfigAcrossRepos(agentRepos);
       const gitStateBefore = captureAgentGitStateAcrossRepos(agentRepos);
       const attempt = await executeAgent(
         withAgentExtraRoots(
-          candidates[idx].command,
-          candidates[idx].provider,
+          candidate.command,
+          candidate.provider,
           productRoots.map((root) => root.path),
         ),
         prompt,
         detection,
-        candidates[idx].provider,
-        policy?.cooldown_seconds,
+        candidate.provider,
+        candidatePolicy?.cooldown_seconds,
         cwd,
         env,
       );
@@ -608,6 +620,7 @@ export async function runWithRetry(
           stdout: attempt.stdout,
           stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
           protectionBlock: true,
+          actor: candidate.actor,
         };
       }
       const gitStateChanges = changedAgentGitStateAcrossRepos(gitStateBefore);
@@ -631,6 +644,7 @@ export async function runWithRetry(
           stdout: attempt.stdout,
           stderr: `${attempt.stderr}${attempt.stderr.endsWith("\n") || !attempt.stderr ? "" : "\n"}${reason}\n`,
           protectionBlock: true,
+          actor: candidate.actor,
         };
       }
       lastStderr = attempt.stderr;
@@ -643,6 +657,7 @@ export async function runWithRetry(
           exitCode: attempt.exitCode,
           stdout: attempt.stdout,
           stderr: attempt.stderr,
+          actor: candidate.actor,
         };
     }
     return {
@@ -651,22 +666,77 @@ export async function runWithRetry(
       stdout: lastStdout,
       stderr: lastStderr,
       limit: lastLimit,
+      actor: lastActor,
     };
   };
 
-  const firstPass = await runPass();
-  if (firstPass.result !== "rate_limit") return { ...firstPass, attempts };
+  const recoveryEvents: RateLimitRecoveryEvent[] = [];
+  const firstPass = await runPass(pinned ? candidates.slice(0, 1) : candidates);
+  if (firstPass.result !== "rate_limit") {
+    return { ...firstPass, attempts, rateLimitEvents: recoveryEvents };
+  }
+
+  if (pinned) {
+    const primary = candidates[0];
+    if (pinned.action === "fallback" && pinned.fallbackCandidate) {
+      const fallback = pinned.fallbackCandidate;
+      const resumedAt = (pinned.now?.() ?? new Date()).toISOString();
+      process.stdout.write(
+        `Rate limit detected for pinned agent ${primary?.actor ?? "-"}. ` +
+          `Falling back to ${fallback.actor} at ${resumedAt}.\n`,
+      );
+      recoveryEvents.push({
+        action: "fallback",
+        from_actor: primary?.actor ?? "unknown",
+        to_actor: fallback.actor,
+        resumed_at: resumedAt,
+      });
+      const fallbackResult = await runPass([fallback]);
+      return { ...fallbackResult, attempts, rateLimitEvents: recoveryEvents };
+    }
+
+    if (pinned.action === "wait" && firstPass.limit?.resume_at) {
+      const now = pinned.now?.() ?? new Date();
+      const resumeAt = new Date(firstPass.limit.resume_at);
+      const waitMilliseconds = resumeAt.getTime() - now.getTime();
+      if (
+        Number.isFinite(waitMilliseconds) &&
+        waitMilliseconds >= 0 &&
+        waitMilliseconds <= pinned.maxWaitSeconds * 1000
+      ) {
+        process.stdout.write(
+          `Rate limit detected for pinned agent ${primary?.actor ?? "-"}. ` +
+            `Waiting until ${resumeAt.toISOString()} before resuming the same stage.\n`,
+        );
+        await (pinned.sleep ?? delay)(waitMilliseconds);
+        const resumedAt = (pinned.now?.() ?? new Date()).toISOString();
+        recoveryEvents.push({
+          action: "wait",
+          from_actor: primary?.actor ?? "unknown",
+          to_actor: primary?.actor ?? "unknown",
+          resume_at: resumeAt.toISOString(),
+          resumed_at: resumedAt,
+        });
+        const resumed = await runPass(candidates.slice(0, 1));
+        return { ...resumed, attempts, rateLimitEvents: recoveryEvents };
+      }
+      process.stdout.write(
+        `Pinned-agent wait skipped: resume time is invalid or exceeds ${pinned.maxWaitSeconds}s.\n`,
+      );
+    }
+    return { ...firstPass, attempts, rateLimitEvents: recoveryEvents };
+  }
 
   // Every candidate is rate-limited. Without a policy we cannot bound further retries, so stop.
   if (!policy) {
     process.stdout.write(`Rate limit: all ${candidates.length} agent(s) exhausted.\n`);
-    return { ...firstPass, attempts };
+    return { ...firstPass, attempts, rateLimitEvents: recoveryEvents };
   }
 
   // Session and quota limits do not recover within the short in-process backoff loop. Keep their
   // explicit reset/cooldown for a later routine invocation instead of sleeping and retrying now.
   if (firstPass.limit?.kind === "session_limit" || firstPass.limit?.kind === "quota_exhausted") {
-    return { ...firstPass, attempts };
+    return { ...firstPass, attempts, rateLimitEvents: recoveryEvents };
   }
 
   const { retry } = policy.on_critical;
@@ -689,7 +759,9 @@ export async function runWithRetry(
     lastStdout = result.stdout;
     lastExitCode = result.exitCode;
     lastLimit = result.limit;
-    if (result.result !== "rate_limit") return { ...result, attempts };
+    if (result.result !== "rate_limit") {
+      return { ...result, attempts, rateLimitEvents: recoveryEvents };
+    }
 
     waitSeconds = Math.min(waitSeconds * retry.backoff_multiplier, retry.max_wait_seconds);
   }
@@ -704,6 +776,8 @@ export async function runWithRetry(
     stderr: lastStderr,
     attempts,
     limit: lastLimit,
+    actor: candidates.at(-1)?.actor,
+    rateLimitEvents: recoveryEvents,
   };
 }
 

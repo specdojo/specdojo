@@ -18,6 +18,10 @@ rate_limit_detection:
 rate_limit_policy:
   cooldown_seconds:
     rate_limit: 900
+  # Agent を nickname で指名した実行の既定。CLI の --on-rate-limit が優先する。
+  pinned:
+    action: stop
+    max_wait_seconds: 28800
   on_non_critical:
     action: skip
   on_critical:

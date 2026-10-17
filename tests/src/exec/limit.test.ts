@@ -41,6 +41,21 @@ describe("normalizeAgentLimit", () => {
     });
   });
 
+  it("timezone を省略した try again at をローカル時刻として読む", () => {
+    const localObservedAt = new Date(2026, 6, 25, 1, 0, 0);
+    const actual = normalizeAgentLimit({
+      provider: "codex",
+      output: "You've hit your usage limit. Try again at 1:29 AM",
+      observedAt: localObservedAt,
+    });
+    const resumeAt = new Date(actual.resume_at ?? "invalid");
+
+    expect(actual.resume_source).toBe("provider_reset");
+    expect(resumeAt.getHours()).toBe(1);
+    expect(resumeAt.getMinutes()).toBe(29);
+    expect(resumeAt.getTime()).toBeGreaterThan(localObservedAt.getTime());
+  });
+
   it("時刻不明では推定せず、明示 cooldown がある場合だけ再開時刻を設定する", () => {
     const unknown = normalizeAgentLimit({
       provider: "codex",

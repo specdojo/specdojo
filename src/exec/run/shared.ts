@@ -6,6 +6,7 @@ import {
   resolveMaxConcurrentRuns,
   resolveMemberCommand,
   resolveRegisterExecution,
+  resolvePinnedRateLimitPolicy,
   type ExecDefaultsConfig,
   type RateLimitDetection,
 } from "../agent-config.js";
@@ -104,6 +105,9 @@ export type RunOpts = {
   reviewBy?: string;
   executorBy?: string;
   reporterBy?: string;
+  onRateLimit?: string;
+  fallbackExecutorBy?: string;
+  fallbackReporterBy?: string;
   loop?: boolean;
   maxRounds?: string;
   parallel?: string;
@@ -149,6 +153,88 @@ export type AgentOverrideResolution =
 // A runnable agent candidate: the shell command plus the provider it belongs to.
 // The provider selects the per-provider failure-handling override in exec-defaults.yaml.
 export type AgentRunCandidate = { command: string; actor?: string; provider?: AgentProvider };
+
+export type PinnedRateLimitAction = "stop" | "wait" | "fallback";
+
+export type RateLimitRecoveryEvent = {
+  action: "wait" | "fallback";
+  from_actor: string;
+  to_actor: string;
+  resumed_at: string;
+  resume_at?: string;
+};
+
+export function rateLimitRecoveryReason(events: readonly RateLimitRecoveryEvent[]): string {
+  return events
+    .map((event) =>
+      event.action === "wait"
+        ? `rate limit wait: ${event.to_actor} resumed at ${event.resumed_at}`
+        : `rate limit fallback: ${event.from_actor} -> ${event.to_actor} at ${event.resumed_at}`,
+    )
+    .join("; ");
+}
+
+export type PinnedRateLimitRunOptions = {
+  action: PinnedRateLimitAction;
+  maxWaitSeconds: number;
+  fallbackCandidate?: AgentRunCandidate & { actor: string };
+  /** Test seams: production callers leave these unset. */
+  now?: () => Date;
+  sleep?: (milliseconds: number) => Promise<void>;
+};
+
+export function isPinnedRateLimitAction(value: string): value is PinnedRateLimitAction {
+  return value === "stop" || value === "wait" || value === "fallback";
+}
+
+/**
+ * Resolve CLI-over-config recovery for one pinned pipeline stage. A fallback action without a
+ * fallback nickname intentionally degrades to stop, preserving the historical non-switching
+ * behaviour instead of choosing an arbitrary agent.
+ */
+export function resolvePinnedRateLimitRunOptions(
+  opts: Pick<RunOpts, "onRateLimit" | "fallbackExecutorBy" | "fallbackReporterBy">,
+  execDefaults: ExecDefaultsConfig,
+  roster: MemberRoster | null,
+  stageRole: AgentStageRole,
+  primary: AgentRunCandidate,
+): PinnedRateLimitRunOptions {
+  const configured = resolvePinnedRateLimitPolicy(execDefaults, primary.provider);
+  const requested = opts.onRateLimit;
+  if (requested !== undefined && !isPinnedRateLimitAction(requested)) {
+    throw new Error(`--on-rate-limit must be "stop", "wait", or "fallback": ${requested}`);
+  }
+  const action = requested ?? configured.action;
+  const nickname =
+    stageRole === "executor"
+      ? (opts.fallbackExecutorBy ?? configured.fallbackExecutorBy)
+      : (opts.fallbackReporterBy ?? configured.fallbackReporterBy);
+  if (action !== "fallback" || !nickname) {
+    return {
+      action: action === "fallback" ? "stop" : action,
+      maxWaitSeconds: configured.maxWaitSeconds,
+    };
+  }
+  const resolution = resolveAgentOverride("edit", nickname, {}, roster, execDefaults, stageRole);
+  if (resolution.kind !== "command") {
+    const flag = stageRole === "executor" ? "--fallback-executor-by" : "--fallback-reporter-by";
+    const detail =
+      resolution.kind === "error" ? resolution.message : `agent not found: ${nickname}`;
+    throw new Error(`${flag}: ${detail.replace(/^--by/, flag)}`);
+  }
+  if (resolution.actor === primary.actor) {
+    throw new Error(`Fallback ${stageRole} must differ from the pinned agent: ${nickname}`);
+  }
+  return {
+    action,
+    maxWaitSeconds: configured.maxWaitSeconds,
+    fallbackCandidate: {
+      command: resolution.command,
+      actor: resolution.actor ?? nickname,
+      provider: resolution.provider,
+    },
+  };
+}
 
 export function pinnedExecutor(task: ReadyTaskView | null | undefined): string | undefined {
   return typeof task?.agent === "string" ? task.agent : task?.agent?.executor;

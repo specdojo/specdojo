@@ -584,6 +584,7 @@ export async function runResumeMode(opts: RunOpts): Promise<void> {
                       ? snapshot.tasks[taskId]?.meta?.pipeline_state_ref
                       : undefined,
                 },
+                opts,
               );
         if (typeof prepared !== "string") {
           const attempts = snapshot.tasks[taskId]?.meta?.limit_attempts;
@@ -675,6 +676,12 @@ export function registerResumeCommand(exec: Command): void {
   );
   cmd.option("--executor-by <nickname>", "agent-members.yaml executor nickname for pipeline tasks");
   cmd.option("--reporter-by <nickname>", "agent-members.yaml reporter nickname for pipeline tasks");
+  cmd.option(
+    "--on-rate-limit <action>",
+    "Pinned-agent rate-limit action: stop|wait|fallback (overrides rate_limit_policy.pinned)",
+  );
+  cmd.option("--fallback-executor-by <nickname>", "Fallback executor after a rate limit");
+  cmd.option("--fallback-reporter-by <nickname>", "Fallback reporter after a rate limit");
   cmd.option("--parallel <n>", "Number of tasks to resume in parallel", "1");
   cmd.option("--worktree-base <path>", "Override worktree base directory");
   cmd.option(
@@ -692,6 +699,11 @@ export function registerResumeCommand(exec: Command): void {
     try {
       if (opts.by && opts.executorBy) {
         process.stdout.write("Specify either --by or --executor-by, not both.\n");
+        process.exitCode = 1;
+        return;
+      }
+      if (opts.onRateLimit && !["stop", "wait", "fallback"].includes(opts.onRateLimit)) {
+        process.stdout.write('--on-rate-limit must be "stop", "wait", or "fallback".\n');
         process.exitCode = 1;
         return;
       }

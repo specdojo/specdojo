@@ -128,7 +128,7 @@ pipeline 専用 agent には `stage_role: executor` または `stage_role: repor
 
 ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。auto 選択以外では、register の worktree モードで実行する executor/reporter pipeline（`--parallel` / `--resume` を含む）に適用し、項目ごとの各 stage を provider の空き枠まで待機させます。その他の Schedule phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や Schedule task の resume 実行には適用しません。
 
-phase の by-name agent が rate limit になった場合は、別 agent へ自動フォールバックせず待機状態にします。`exec resume` は同じ agent を再開し、運用者が差し替える場合だけ stage override を指定します。
+phase の by-name agent や `--executor-by` / `--reporter-by` で指名した agent の rate limit は、`--on-rate-limit stop|wait|fallback` で扱いを選べます。`stop`（既定）は従来どおり待機状態にし、`wait` は provider の reset / retry-after（無ければ `cooldown_seconds`）まで待って同じ段を同じ agent で1回再開します。待ち時間が `pinned.max_wait_seconds`（既定8時間）を超える、または再開時刻が得られない場合は停止します。`fallback` は `--fallback-executor-by` / `--fallback-reporter-by`（または後述の既定）で指定した agent へ1回だけ切り替え、未指定時や fallback も rate limit の場合は停止します。`exec resume` でも同じ指定が使えます。
 
 ## 4. 実行フロー
 
@@ -187,6 +187,11 @@ rate_limit_detection:
 rate_limit_policy:
   cooldown_seconds:
     rate_limit: 900
+  pinned:
+    action: stop # stop | wait | fallback。CLI の --on-rate-limit が優先
+    max_wait_seconds: 28800 # 既定も8時間
+    # fallback_executor_by: claude-expert-executor
+    # fallback_reporter_by: claude-reporter
   on_non_critical:
     action: skip
   on_critical:
@@ -198,6 +203,8 @@ rate_limit_policy:
       max_wait_seconds: 600
     on_exhausted: block
 ```
+
+`wait` の待機中は、同一 worktree と register / pipeline の状態を別 run から保護するため project の実行ロックを保持します。register worktree の `--join` 実行は共有枠の範囲で引き続き動作できます。wait / fallback の再開時刻と切替元・切替先は pipeline state と executor evidence に記録されます。
 
 `test-integration` は組み込み許可リストで `npm run test:integration` へ解決されます。設定や executor evidence に command・引数を書くことはできません。未知 ID、重複 ID は agent 起動前の設定エラーになります。親 runner は `shell: false` の固定 argv で実行し、現時点で許可される ID は `validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md` の 7 つです。
 

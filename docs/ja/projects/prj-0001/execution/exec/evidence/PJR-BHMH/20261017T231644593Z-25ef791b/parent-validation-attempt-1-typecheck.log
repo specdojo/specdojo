@@ -1,0 +1,18 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 typecheck
+> tsc -b --noEmit
+
+src/exec/run/in-place.ts(587,13): error TS7034: Variable 'reporterRateLimitEvents' implicitly has type 'any[]' in some locations where its type cannot be determined.
+src/exec/run/in-place.ts(628,14): error TS7005: Variable 'reporterRateLimitEvents' implicitly has an 'any[]' type.
+src/exec/run/in-place.ts(681,36): error TS7005: Variable 'reporterRateLimitEvents' implicitly has an 'any[]' type.
+src/exec/run/in-place.ts(587,13): error TS7034: Variable 'reporterRateLimitEvents' implicitly has type 'any[]' in some locations where its type cannot be determined.
+src/exec/run/in-place.ts(628,14): error TS7005: Variable 'reporterRateLimitEvents' implicitly has an 'any[]' type.
+src/exec/run/in-place.ts(681,36): error TS7005: Variable 'reporterRateLimitEvents' implicitly has an 'any[]' type.
+
+
+--- stderr ---

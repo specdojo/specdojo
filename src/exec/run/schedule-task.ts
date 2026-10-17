@@ -27,7 +27,11 @@ import {
   PROJECT_REPO_NAME,
   RepoIntegrationError,
 } from "../repo-integration.js";
-import { recordExecutorEvidence, recordReporterFailureOutput } from "../evidence.js";
+import {
+  recordExecutorEvidence,
+  recordReporterFailureOutput,
+  writeExecutorEvidence,
+} from "../evidence.js";
 import {
   deriveReporterFacts,
   evidenceForReporter,
@@ -41,7 +45,7 @@ import {
   writePipelineState,
   type PipelineState,
 } from "../pipeline-state.js";
-import { type AsyncLock, type RunResult } from "./shared.js";
+import { type AsyncLock, type RateLimitRecoveryEvent, type RunResult } from "./shared.js";
 import {
   agentEnvironment,
   appendParentValidationsToExecutorEvidence,
@@ -105,6 +109,8 @@ export async function runPreparedTask(
   let pipelineBlockReason: string | undefined;
   let reporterLimit: AgentLimitSignal | undefined;
   let reporterAttempts = 0;
+  let reporterActor = prepared.reporterCandidates?.[0]?.actor;
+  const reporterRateLimitEvents: RateLimitRecoveryEvent[] = [];
   let pipelineState: PipelineState | undefined;
   let pipelineStatePath: string | undefined;
   let pipelineStateRef: string | undefined;
@@ -126,6 +132,7 @@ export async function runPreparedTask(
         prepared.worktree.repos,
       ),
       worktreeResultPath,
+      prepared.executorRateLimitOptions,
     );
     result = outcome.result;
     stderr = outcome.stderr;
@@ -133,6 +140,7 @@ export async function runPreparedTask(
     stdout = outcome.stdout;
     attempts = outcome.attempts;
     limit = outcome.limit;
+    prepared.actor = outcome.actor ?? prepared.actor;
   }
 
   if (prepared.pipelineRunId && prepared.pipelineStateRef) {
@@ -257,6 +265,7 @@ export async function runPreparedTask(
         prepared.worktree.repos,
       ),
       worktreeResultPath,
+      prepared.executorRateLimitOptions,
     );
     result = executorOutcome.result;
     stderr = executorOutcome.stderr;
@@ -264,13 +273,14 @@ export async function runPreparedTask(
     stdout = executorOutcome.stdout;
     attempts = executorOutcome.attempts;
     limit = executorOutcome.limit;
+    prepared.actor = executorOutcome.actor ?? prepared.actor;
     const recorded = recordExecutorEvidence({
       repoRoot,
       worktreePath: prepared.worktree.path,
       executionPath,
       taskId: prepared.task.id,
       runId: pipelineState.run_id,
-      actor: prepared.actor,
+      actor: executorOutcome.actor ?? prepared.actor,
       status:
         result === "success" ? "succeeded" : result === "rate_limit" ? "rate_limited" : "failed",
       startedAt: executorStartedAt,
@@ -280,6 +290,7 @@ export async function runPreparedTask(
       stdout,
       stderr,
       productWorktrees: prepared.worktree.repos,
+      rateLimitEvents: executorOutcome.rateLimitEvents,
     });
     executorEvidenceRef = relative(prepared.worktree.path, recorded.evidencePath)
       .split(sep)
@@ -314,8 +325,12 @@ export async function runPreparedTask(
                 ? "rate_limited"
                 : "failed",
         attempts: pipelineState.stages.executor.attempts + attempts,
+        actor: executorOutcome.actor ?? prepared.actor,
         completed_at: executorCompletedAt,
         artifact_ref: executorEvidenceRef,
+        ...(executorOutcome.rateLimitEvents.length > 0
+          ? { rate_limit_events: executorOutcome.rateLimitEvents }
+          : {}),
       },
       executorCompletedAt,
     );
@@ -383,12 +398,23 @@ export async function runPreparedTask(
               prepared.worktree.repos,
             ),
             worktreeResultPath,
+            prepared.reporterRateLimitOptions,
           );
           reporterAttempts += outcome.attempts;
+          reporterActor = outcome.actor ?? reporterActor;
+          reporterRateLimitEvents.push(...outcome.rateLimitEvents);
           if (outcome.limit) reporterLimit = outcome.limit;
           return { result: outcome.result, stdout: outcome.stdout, stderr: outcome.stderr };
         },
       });
+      if (reporterRateLimitEvents.length > 0 && executorEvidence && executorEvidencePath) {
+        executorEvidence.rate_limit_events = [
+          ...(executorEvidence.rate_limit_events ?? []),
+          ...reporterRateLimitEvents,
+        ];
+        reporterEvidence.rate_limit_events = executorEvidence.rate_limit_events;
+        writeExecutorEvidence(executorEvidencePath, executorEvidence);
+      }
       if (reporter.result === "success") {
         try {
           await renderReporterResult(worktreeResultPath, reporter.output, reporterEvidence);
@@ -399,7 +425,7 @@ export async function runPreparedTask(
           pipelineBlockReason = facts.block_reason || undefined;
           if (pipelineBlockReason) stderr = pipelineBlockReason;
           process.stdout.write(
-            `  Reporter complete: ${prepared.reporterCandidates[0].actor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
+            `  Reporter complete: ${reporterActor ?? "reporter"} (format attempts: ${reporter.formatAttempts})\n`,
           );
           if (result === "success") {
             const reporterCompletedAt = new Date().toISOString();
@@ -409,10 +435,14 @@ export async function runPreparedTask(
               {
                 status: "succeeded",
                 attempts: pipelineState.stages.reporter.attempts + reporterAttempts,
+                actor: reporterActor ?? null,
                 completed_at: reporterCompletedAt,
                 artifact_ref: relative(prepared.worktree.path, worktreeResultPath)
                   .split(sep)
                   .join("/"),
+                ...(reporterRateLimitEvents.length > 0
+                  ? { rate_limit_events: reporterRateLimitEvents }
+                  : {}),
               },
               reporterCompletedAt,
             );
@@ -447,11 +477,15 @@ export async function runPreparedTask(
           {
             status: result === "rate_limit" ? "rate_limited" : "failed",
             attempts: pipelineState.stages.reporter.attempts + reporterAttempts,
+            actor: reporterActor ?? null,
             completed_at: reporterCompletedAt,
             artifact_ref:
               reporter.result === "success"
                 ? relative(prepared.worktree.path, worktreeResultPath).split(sep).join("/")
                 : pipelineState.stages.reporter.artifact_ref,
+            ...(reporterRateLimitEvents.length > 0
+              ? { rate_limit_events: reporterRateLimitEvents }
+              : {}),
           },
           reporterCompletedAt,
         );

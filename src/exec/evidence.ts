@@ -3,6 +3,7 @@ import { dirname, join, relative, sep } from "node:path";
 import { ensureDir, redactSensitiveText, safeSlug } from "./shared.js";
 import { gitOutput } from "./worktree.js";
 import type { AgentStageRole } from "./types.js";
+import type { RateLimitRecoveryEvent } from "./run/shared.js";
 
 const MAX_LOG_BYTES = 64 * 1024;
 const MAX_CHANGE_FILES = 1_000;
@@ -54,6 +55,8 @@ export type ExecEvidence = {
   validations: EvidenceValidation[];
   /** Executor-reported disposition of plan targets. Required by the runner on executor resume. */
   target_coverage?: EvidenceTargetCoverage[];
+  /** Runner-recorded pinned-agent wait/fallback history for this stage. */
+  rate_limit_events?: RateLimitRecoveryEvent[];
   final_message: string;
   /** Runner-derived failure/protection reason. Present only when the executor did not succeed. */
   block_reason?: string;
@@ -116,6 +119,7 @@ export type RecordExecutorEvidenceInput = {
    * `<name>:<path>` beside the project worktree changes, which keep their bare paths.
    */
   productWorktrees?: readonly EvidenceProductWorktree[];
+  rateLimitEvents?: RateLimitRecoveryEvent[];
 };
 
 export type EvidenceProductWorktree = { name: string; path: string };
@@ -512,6 +516,7 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
       },
       validations,
       ...(report.targetCoverage.length > 0 ? { target_coverage: report.targetCoverage } : {}),
+      ...(input.rateLimitEvents?.length ? { rate_limit_events: input.rateLimitEvents } : {}),
       final_message: report.finalMessage,
       ...(input.status === "succeeded"
         ? {}
@@ -592,6 +597,7 @@ export function recordExecutorEvidence(input: RecordExecutorEvidenceInput): {
     diffStat,
     logRefPath: repoRelative(input.worktreePath, logPath),
     parentValidations: input.parentValidations,
+    rateLimitEvents: input.rateLimitEvents,
   });
   writeFileSync(logPath, logExcerpt, "utf8");
   writeFileSync(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`, "utf8");

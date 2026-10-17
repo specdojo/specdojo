@@ -47,7 +47,11 @@ import {
   changedAgentGitStateFields,
 } from "../agent-git-state.js";
 import { recordGitStateBlock, recordProtectedConfigBlock } from "../protection-handoff.js";
-import { recordExecutorEvidence, recordReporterFailureOutput } from "../evidence.js";
+import {
+  recordExecutorEvidence,
+  recordReporterFailureOutput,
+  writeExecutorEvidence,
+} from "../evidence.js";
 import {
   deriveReporterFacts,
   evidenceForReporter,
@@ -62,8 +66,10 @@ import {
 import {
   pinnedExecutor,
   pinnedReporter,
+  resolvePinnedRateLimitRunOptions,
   resolveExecDefaultsPath,
   selectCandidates,
+  type RateLimitRecoveryEvent,
   type RunOpts,
 } from "./shared.js";
 import {
@@ -494,6 +500,13 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
         SPECDOJO_EXECUTION_PATH: executionPath,
       },
       resultPath,
+      (opts.executorBy ?? opts.by ?? pinnedExecutor(task))
+        ? resolvePinnedRateLimitRunOptions(opts, execDefaults, roster, "executor", {
+            command,
+            actor,
+            provider,
+          })
+        : undefined,
     );
     const recorded = recordExecutorEvidence({
       repoRoot,
@@ -501,7 +514,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
       executionPath,
       taskId: task.id,
       runId: pipelineRunId,
-      actor,
+      actor: outcome.actor ?? actor,
       status:
         outcome.result === "success"
           ? "succeeded"
@@ -514,6 +527,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
       attempts: outcome.attempts,
       stdout: outcome.stdout,
       stderr: outcome.stderr,
+      rateLimitEvents: outcome.rateLimitEvents,
     });
     pipelineEvidenceRef = relative(repoRoot, recorded.evidencePath).split(sep).join("/");
     const executorCompletedAt = new Date().toISOString();
@@ -530,8 +544,12 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
                 ? "rate_limited"
                 : "failed",
         attempts: outcome.attempts,
+        actor: outcome.actor ?? actor,
         completed_at: executorCompletedAt,
         artifact_ref: pipelineEvidenceRef,
+        ...(outcome.rateLimitEvents.length > 0
+          ? { rate_limit_events: outcome.rateLimitEvents }
+          : {}),
       },
       executorCompletedAt,
     );
@@ -566,6 +584,8 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
       );
       writePipelineState(stateLocation.path, pipelineState);
       let reporterAttempts = 0;
+      let reporterActor = reporterCandidates?.[0]?.actor;
+      const reporterRateLimitEvents: RateLimitRecoveryEvent[] = [];
       process.stdout.write(`Running reporter: ${reporterCandidates?.[0]?.command ?? ""}\n`);
       const reporter = await runReporterWithFormatRetry({
         plan: planPrompt,
@@ -583,8 +603,19 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
               SPECDOJO_EXECUTION_PATH: executionPath,
             },
             resultPath,
+            (opts.reporterBy ?? pinnedReporter(task))
+              ? resolvePinnedRateLimitRunOptions(
+                  opts,
+                  execDefaults,
+                  roster,
+                  "reporter",
+                  reporterCandidates![0],
+                )
+              : undefined,
           );
           reporterAttempts += reporterOutcome.attempts;
+          reporterActor = reporterOutcome.actor ?? reporterActor;
+          reporterRateLimitEvents.push(...reporterOutcome.rateLimitEvents);
           return {
             result: reporterOutcome.result,
             stdout: reporterOutcome.stdout,
@@ -592,6 +623,14 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
           };
         },
       });
+      if (reporterRateLimitEvents.length > 0) {
+        recorded.evidence.rate_limit_events = [
+          ...(recorded.evidence.rate_limit_events ?? []),
+          ...reporterRateLimitEvents,
+        ];
+        reporterEvidence.rate_limit_events = recorded.evidence.rate_limit_events;
+        writeExecutorEvidence(recorded.evidencePath, recorded.evidence);
+      }
       if (reporter.result === "success" && resultPath) {
         try {
           await renderReporterResult(resultPath, reporter.output, reporterEvidence);
@@ -633,11 +672,15 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
                 ? "rate_limited"
                 : "failed",
           attempts: reporterAttempts,
+          actor: reporterActor ?? null,
           completed_at: reporterCompletedAt,
           artifact_ref:
             reporter.result === "success" && resultPath
               ? relative(repoRoot, resultPath).split(sep).join("/")
               : null,
+          ...(reporterRateLimitEvents.length > 0
+            ? { rate_limit_events: reporterRateLimitEvents }
+            : {}),
         },
         reporterCompletedAt,
       );

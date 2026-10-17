@@ -37,6 +37,8 @@ import {
 } from "../worktree-ops.js";
 import {
   resolveAgentOverride,
+  resolvePinnedRateLimitRunOptions,
+  rateLimitRecoveryReason,
   selectCandidates,
   type AgentRunCandidate,
   type RunOpts,
@@ -432,6 +434,7 @@ export async function runSingleRegisterItem(
 
   let exitCode: number;
   let pipelineBlockReason: string | undefined;
+  let transitionReason: string | undefined;
   if (pipelineAgents) {
     process.stdout.write(`Running ${item.id} in place (executor/reporter pipeline)\n`);
     const pipelineOutcome = await runAgentPipeline({
@@ -448,9 +451,28 @@ export async function runSingleRegisterItem(
       registerPaths: registerReporterManagedPaths(registerPaths),
       execDefaults: context.execDefaults,
       providerConcurrencyGate: context.providerConcurrencyGate,
+      executorRateLimitOptions: opts.executorBy
+        ? resolvePinnedRateLimitRunOptions(
+            opts,
+            context.execDefaults,
+            context.roster,
+            "executor",
+            pipelineAgents.executor,
+          )
+        : undefined,
+      reporterRateLimitOptions: opts.reporterBy
+        ? resolvePinnedRateLimitRunOptions(
+            opts,
+            context.execDefaults,
+            context.roster,
+            "reporter",
+            pipelineAgents.reporterCandidates[0]!,
+          )
+        : undefined,
     });
     exitCode = pipelineOutcome.exitCode;
     pipelineBlockReason = pipelineOutcome.blockReason;
+    transitionReason = rateLimitRecoveryReason(pipelineOutcome.rateLimitEvents) || undefined;
     if (pipelineOutcome.exitCode !== 0) {
       process.stdout.write(
         `run blocked: ${item.id} (${pipelineOutcome.blockReason ?? "pipeline failed"})\n`,
@@ -493,7 +515,16 @@ export async function runSingleRegisterItem(
   if (effectiveExit === 0) {
     let transition: RegisterItemTransition = "review";
     let reason: string | undefined;
-    if (!spawnRegisterTransition(projectId, ["review", "--id", item.id, "--by", actor])) {
+    if (
+      !spawnRegisterTransition(projectId, [
+        "review",
+        "--id",
+        item.id,
+        "--by",
+        actor,
+        ...(transitionReason ? ["--reason", transitionReason] : []),
+      ])
+    ) {
       process.stderr.write(`register review transition failed: ${item.id}\n`);
       transition = "none";
       reason = "register review transition failed";
@@ -550,7 +581,9 @@ export async function runSingleRegisterItem(
   }
 
   const waitingReason = sanitizeRegisterConclusion(
-    blockReason ?? `agent exited with non-zero code (exit ${exitCode})`,
+    [blockReason ?? `agent exited with non-zero code (exit ${exitCode})`, transitionReason]
+      .filter(Boolean)
+      .join("; "),
   );
   if (
     !spawnRegisterTransition(projectId, [

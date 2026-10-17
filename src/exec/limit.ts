@@ -134,11 +134,13 @@ function parseProviderReset(output: string, observedAt: Date): Date | undefined 
   }
 
   const timeOnly = output.match(
-    /resets?(?:\s+at)?\s+(\d{1,2}):(\d{2})\s*(am|pm)?(?:\s*\(([^)]+)\)|\s+(UTC|GMT|JST|(?:UTC|GMT)?[+-]\d{1,2}(?::?\d{2})?))?/i,
+    /(?:resets?(?:\s+at)?|(?:retry|try)\s+again\s+at)\s+(\d{1,2}):(\d{2})\s*(am|pm)?(?:\s*\(([^)]+)\)|\s+(UTC|GMT|JST|(?:UTC|GMT)?[+-]\d{1,2}(?::?\d{2})?))?/i,
   );
   if (!timeOnly) return undefined;
-  const offset = timezoneOffsetMinutes(timeOnly[4] ?? timeOnly[5]);
-  if (offset === undefined) return undefined;
+  // Provider CLIs commonly omit the timezone for a reset shown in the operator's local time
+  // (for example, "try again at 1:29 AM"). In that form use the process-local offset.
+  const offset =
+    timezoneOffsetMinutes(timeOnly[4] ?? timeOnly[5]) ?? -observedAt.getTimezoneOffset();
   let hour = Number.parseInt(timeOnly[1], 10);
   const minute = Number.parseInt(timeOnly[2], 10);
   const meridiem = timeOnly[3]?.toLowerCase();
@@ -158,9 +160,17 @@ export function normalizeAgentLimit(input: {
 }): AgentLimitSignal {
   const observedAt = input.observedAt ?? new Date();
   const kind = limitKind(input.output);
-  const retryableKind = kind !== "quota_exhausted";
-  const retryAfter = retryableKind ? parseRetryAfter(input.output, observedAt) : undefined;
-  const providerReset = retryableKind ? parseProviderReset(input.output, observedAt) : undefined;
+  const parsedRetryAfter = parseRetryAfter(input.output, observedAt);
+  const parsedProviderReset = parseProviderReset(input.output, observedAt);
+  // A quota/usage limit is normally not safe to auto-resume, but an explicit future retry/reset
+  // supplied by the provider is authoritative. Vague text such as "resets tomorrow" remains
+  // non-retryable and does not pick up a configured cooldown.
+  const retryableKind =
+    kind !== "quota_exhausted" ||
+    parsedRetryAfter !== undefined ||
+    parsedProviderReset !== undefined;
+  const retryAfter = retryableKind ? parsedRetryAfter : undefined;
+  const providerReset = retryableKind ? parsedProviderReset : undefined;
   const configuredCooldown = input.cooldownSeconds?.[kind];
   const cooldown =
     retryableKind &&

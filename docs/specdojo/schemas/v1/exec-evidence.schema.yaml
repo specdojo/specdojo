@@ -176,6 +176,29 @@ properties:
         reason:
           type: string
           maxLength: 1000
+  rate_limit_events:
+    description: Runner-recorded wait/fallback history for a pinned executor.
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [action, from_actor, to_actor, resumed_at]
+      properties:
+        action:
+          type: string
+          enum: [wait, fallback]
+        from_actor:
+          type: string
+          minLength: 1
+        to_actor:
+          type: string
+          minLength: 1
+        resumed_at:
+          type: string
+          format: date-time
+        resume_at:
+          type: string
+          format: date-time
   final_message:
     type: string
     maxLength: 4000

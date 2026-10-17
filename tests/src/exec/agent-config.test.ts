@@ -11,6 +11,7 @@ import {
   providerSlotPoolPath,
   resolveMaxConcurrency,
   resolveMaxConcurrentRuns,
+  resolvePinnedRateLimitPolicy,
   resolveRegisterExecution,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
@@ -175,6 +176,38 @@ describe("resolveRateLimitPolicy", () => {
     const actual = resolveRateLimitPolicy(config, "codex");
 
     expect(actual).toBe(globalPolicy);
+  });
+});
+
+describe("resolvePinnedRateLimitPolicy", () => {
+  it("keeps stop and an eight-hour maximum as backward-compatible defaults", () => {
+    expect(resolvePinnedRateLimitPolicy({})).toEqual({
+      action: "stop",
+      maxWaitSeconds: 28_800,
+    });
+  });
+
+  it("resolves provider-specific pinned fallback defaults", () => {
+    const configured: ExecDefaultsConfig = {
+      providers: {
+        codex: {
+          rate_limit_policy: {
+            ...globalPolicy,
+            pinned: {
+              action: "fallback",
+              max_wait_seconds: 120,
+              fallback_executor_by: "claude-executor",
+            },
+          },
+        },
+      },
+    };
+
+    expect(resolvePinnedRateLimitPolicy(configured, "codex")).toEqual({
+      action: "fallback",
+      maxWaitSeconds: 120,
+      fallbackExecutorBy: "claude-executor",
+    });
   });
 });
 
