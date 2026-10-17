@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e01d2ba8374c41859f3d29c0ba2932c4
+  ts: "2026-10-17T09:33:17Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-MX4F の実行が、worktree の作成の再試行で失敗して止まった（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: git の一時的な失敗の再試行が worktree の作成で失敗する
+    - field: description
+      from: ""
+      to: src/exec/worktree.ts は dubious ownership などの一時的な git の失敗を再試行する。git worktree add -b は最初の試みで worktree と branch を作ったうえで失敗を返すことがあり、再試行が branch がすでにあるで失敗して run が waiting になる。2026-10-17 の PJR-MX4F で起きた
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
