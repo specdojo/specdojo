@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-xp0j-src-move-exec
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:43Z"
   due_on: null
+  completed_at: "2026-10-17T08:12:27Z"
+  conclusion: codemod で exec の 73 ファイルと role-types を src/exec、テスト 66 件を tests/src/exec へ移し、src の直下は specdojo.ts だけになった。全 106 コマンドの --help は移す前の 0.3.1 と一致し、hook の入口が動き、分割後の runner で PJR-JSEY が統合まで通った。src/exec の 74 ファイルは run 18・schedule 11・worktree 6 などで、さらに分けるかは別に判断する
 ---
 
 # PJR-XP0J exec を src/exec へ移す
