@@ -100,3 +100,19 @@
       from: review
       to: in-progress
   previous_event_id: reg_d40d5ed572fd4be8ac65dbfc8a0448a1
+- v: 1
+  id: reg_61aae42d32f044429c0ed32f5824a31f
+  ts: "2026-10-17T15:00:12Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_4cd196c1cc744c3d8217bc0913abcb4a
