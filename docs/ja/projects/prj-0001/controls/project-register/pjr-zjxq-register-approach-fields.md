@@ -34,7 +34,7 @@ specdojo:
 - 組み合わせを、起票と更新の時点で確かめ、誤りなら理由を出して止める。
   - 成果物を作る・直す approach（`fully-guided`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`cross-deliverable-dedup`・`finalize`・`bootstrap-finalize`）は、成果物カタログ（DCT）にある成果物の doc id を対象にする。
   - kata を直す approach（`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance`）は、それぞれ rulebook・recipe・sample・template の doc id を対象にする（例: `rulebook-maintenance` は `specdojo:pjr-rulebook`）。
-  - 対象の doc id が文書の索引で解決できない場合も止める。
+  - 対象の doc id が解決できない場合も止める。ただし、成果物を作る・直す approach の対象は、文書の索引ではなく成果物カタログ（DCT）で解決する。まだ文書のない成果物（例: カタログにあって未作成の `prj-0001:cxd-specdojo`）を `fully-guided`・`bootstrap` などで作るためである（2026-10-18、1 回目の統合の後の確認で、未作成の成果物を対象にできないことが分かった）。kata の対象は、従来どおり文書の索引で解決する。
 - `register build` の一覧（`pjr-index.md`）は変えない（approach を列に加えない）。
 - `exec run --register` は、本件では `approach` を読まない（後続の PJR-H06F で扱う）。`approach` を書いた個票を実行しても、従来の register の plan で動くことを確かめる。
 - register の個票の規則（`docs/ja/specdojo/rulebooks/pjr-rulebook.md`）と、`docs/ja/specdojo/references/command-reference.md` の `register add`・`register update` に、`approach` と `--target` を書く。
