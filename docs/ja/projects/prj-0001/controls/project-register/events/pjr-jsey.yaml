@@ -316,3 +316,29 @@
       from: "2026-10-17"
       to: "-"
   previous_event_id: reg_a6e6c95808d441f68233f7830f5351ff
+- v: 1
+  id: reg_3b773fc384354e60911f64b3fce5492a
+  ts: "2026-10-17T08:48:02Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_fba62e885e944635a624d4bc81d9a803
+- v: 1
+  id: reg_077ba21860bd4880b6a3f68723c7d53a
+  ts: "2026-10-17T08:52:57Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3b773fc384354e60911f64b3fce5492a
