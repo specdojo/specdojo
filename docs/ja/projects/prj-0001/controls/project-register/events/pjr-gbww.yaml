@@ -74,3 +74,19 @@
       from: "checkpoint failed: Failed to inspect execution checkpoint changes."
       to: "-"
   previous_event_id: reg_3a03708addf54021b2d3424cf18d7344
+- v: 1
+  id: reg_efa2715a70894604890708b4be5f9c8f
+  ts: "2026-10-17T11:12:43Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_aea7b1f187e24f849907b6194fcd67f0

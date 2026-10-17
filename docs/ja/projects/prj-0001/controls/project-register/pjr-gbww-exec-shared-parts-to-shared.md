@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:45:01Z"
   due_on: null
+  block_reason: rate limit reached
 ---
 
 # PJR-GBWW exec の汎用の部品を src/shared へ移す
