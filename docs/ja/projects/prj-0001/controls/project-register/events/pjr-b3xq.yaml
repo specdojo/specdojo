@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_88e417f1090746b08cda6b3d9d43acf7
+- v: 1
+  id: reg_aa4517c2ba9d43dbaf61349470cd0efd
+  ts: "2026-10-17T13:09:19Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、疑似端末で対話式の init を流し、provider に未知の値を入れると provider の質問だけを聞き直してそれまでの答えが保たれること、最後の案内が npm run orch:opus になることを確かめた（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: 対話式の init で、各質問の直後に答えを検証し、誤りなら理由を出してその質問だけを聞き直すようにした。非対話では従来どおり誤りで終える。Claude Code を選んだときの最後の案内を orch:opus に揃えた
+  previous_event_id: reg_463d967643a84f4a879528a7c5c877c3

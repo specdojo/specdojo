@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-b3xq-init-provider-retry-restarts
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T11:27:15Z"
   due_on: null
+  completed_at: "2026-10-17T13:09:19Z"
+  conclusion: 対話式の init で、各質問の直後に答えを検証し、誤りなら理由を出してその質問だけを聞き直すようにした。非対話では従来どおり誤りで終える。Claude Code を選んだときの最後の案内を orch:opus に揃えた
 ---
 
 # PJR-B3XQ specdojo init で provider の入力を誤ると最初から入力し直しになる
