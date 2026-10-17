@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0be244530fb142e59b4f400d43fbc36f
+- v: 1
+  id: reg_b4d964ca9a6c4198b030484680e3d8b6
+  ts: "2026-10-17T14:01:19Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、app1-workspace/app1-specdojo で scaffold して /workspaces/app1-workspace になること、--workspace-name my-ws で上書きできること、bad/name で止まることを確かめた（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: devcontainer scaffold が作業ディレクトリに親のディレクトリの名前を使い、--workspace-name で上書きできるようにした。パスに使えない名前は理由を出して止める。CHANGELOG の記載は公開済みの 0.3.1 の節に入っていたため、0.4.0 の節へ移した（73a28cecd）
+  previous_event_id: reg_7d7b979bbb9f459eb299af5df74bf516

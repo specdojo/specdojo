@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-8gq4-devcontainer-workspace-dir-fixed
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T11:27:24Z"
   due_on: null
+  completed_at: "2026-10-17T14:01:19Z"
+  conclusion: devcontainer scaffold が作業ディレクトリに親のディレクトリの名前を使い、--workspace-name で上書きできるようにした。パスに使えない名前は理由を出して止める。CHANGELOG の記載は公開済みの 0.3.1 の節に入っていたため、0.4.0 の節へ移した（73a28cecd）
 ---
 
 # PJR-8GQ4 devcontainer の作業ディレクトリが /workspaces/specdojo-workspace に固定されている
