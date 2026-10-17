@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-mx4f-integrate-conflict-commit-skips-dist-rebuild
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-17T09:23:53Z"
   due_on: null
+  completed_at: "2026-10-17T10:03:08Z"
+  conclusion: 統合の完了後に、衝突の有無によらず runner が tools/build-if-stale.mjs を起動して dist の鮮度を判定するようにした。dist を bin とする開発のリポジトリだけを対象とし、失敗しても統合を失敗させない。記帳の衝突を解く統合の後に起動されることを統合テストで確かめた
 ---
 
 # PJR-MX4F 記帳の衝突を解いた統合のあとに dist が作り直されない
