@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4e8aa83035ee4a32a88759b7715b6b2e
+  ts: "2026-10-17T23:11:40Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-10-17 の夜に codex の上限で ZJXQ が止まり、朝まで再開されなかった。利用者の提案で起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent を指定した実行で、上限のときに待つか代わりの agent へ切り替えるかを選べるようにする
+    - field: description
+      from: ""
+      to: exec run --register などで --executor-by により agent を指定した実行は、上限に達すると waiting で止まり、人が --resume するまで再開しない。解ける時刻まで待って同じ agent で再開する（wait）か、指定した代わりの agent へ切り替えて続ける（fallback）かを、コマンドの引数と exec-defaults の既定で選べるようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
