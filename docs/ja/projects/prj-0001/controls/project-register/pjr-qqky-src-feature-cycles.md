@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-qqky-src-feature-cycles
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: low
   owner: ARC
   registered_at: "2026-10-17T08:39:38Z"
   due_on: null
+  completed_at: "2026-10-17T08:45:37Z"
+  conclusion: exec の汎用の部品のうち他の機能が使う部分を src/shared へ移し、残る循環を 1 件ずつ直し、循環がなくなった組から依存の向きの規則を足す
 ---
 
 # PJR-QQKY src の機能どうしの循環する依存をほどく方針を決める

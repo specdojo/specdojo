@@ -29,3 +29,22 @@
     - field: registered
       from: ""
       to: "2026-10-17"
+- v: 1
+  id: reg_ea9e5e94412e45749ef5366597fdb7bb
+  ts: "2026-10-17T08:45:37Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: 利用者が orchestrator との会話で推奨案を承認した（2026-10-17）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: exec の汎用の部品のうち他の機能が使う部分を src/shared へ移し、残る循環を 1 件ずつ直し、循環がなくなった組から依存の向きの規則を足す
+  previous_event_id: reg_db06e614572f490896aa435c355b9d2f
