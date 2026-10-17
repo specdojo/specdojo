@@ -1,0 +1,6 @@
+コマンド `node --import tsx src/specdojo.ts catalog validate` を実行しました。完了を待ちます。
+オーケストレーターの運用ガイド（[`orchestrator-operation-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YFBW/docs/ja/specdojo/guides/orchestrator-operation-guide.md)）に「3.1. plan モードと register の使い分け」を追加し、登録簿の個票（[`pjr-yfbw-guide-plan-mode-vs-register.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YFBW/docs/ja/projects/prj-0001/controls/project-register/pjr-yfbw-guide-plan-mode-vs-register.md)）の作業内容と対応結果を更新しました。
+
+<specdojo_executor_evidence>
+{"final_message":"Added section on choosing between plan mode and register to the orchestrator operation guide, and updated the PJR-YFBW register item.","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-yfbw-guide-plan-mode-vs-register.md","status":"passed","summary":"Formatted modified markdown files with Prettier"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"Validated catalog deliverables for project prj-0001"}]}
+</specdojo_executor_evidence>

@@ -37,11 +37,24 @@ Claude Code などの plan モードの plan（会話の中の下書き、既定
 
 | No  | 作業                                                       | 担当 | 状態 | メモ                 |
 | --- | ---------------------------------------------------------- | ---- | ---- | -------------------- |
-| 1   | 運用ガイドに plan モードと register の使い分けの節を加える | DEV  | open | 対比の表と運用の流れ |
+| 1   | 運用ガイドに plan モードと register の使い分けの節を加える | DEV  | done | 対比の表と運用の流れ |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 実施内容
+
+- `docs/ja/specdojo/guides/orchestrator-operation-guide.md` の「3. 対話の進め方」に「3.1. plan モードと register の使い分け」を追加。
+  - plan モードの plan の性質（会話中の下書き、保存先 `~/.claude/plans/`、一定期間での失効、`plansDirectory` 設定、他ツールへの共通性）を記述。
+  - register の性質との対比表（識別・種類・状態の遷移とイベント・exec/commit との接続・意思決定の記録・履歴の永続性・一覧での見渡し）を記載。
+  - 運用の流れ（下書きは使い捨て、判断は `decision`、作業範囲は `todo` の完了条件へ転記、残す場合は `tmp/plans` を利用）を整理。
+
+### 成果物
+
+- [[specdojo:orchestrator-operation-guide]]: `docs/ja/specdojo/guides/orchestrator-operation-guide.md`
+
+### 残課題
+
+- なし
 
 ## 5. 関連ドキュメント
 

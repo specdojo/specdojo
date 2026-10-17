@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-YFBW
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-yfbw-20261017T232258Z-c7f8-plan.md
   started_at: "2026-10-17T23:22:58.306Z"
+  completed_at: "2026-10-17T23:30:33.357Z"
   agent: agy-expert-executor
 ---
 
@@ -16,16 +17,17 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- オーケストレーターの運用ガイドに、Claude Code の `plan` モード（下書きとしての利用）と `register`（ID・状態遷移・結果の記録）の使い分けに関するセクションを追加しました。
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-yfbw-guide-plan-mode-vs-register.md` を更新し、タスクの対応結果を記録しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/guides/orchestrator-operation-guide.md`: オーケストレーターの運用ガイドに `plan` モードと `register` の使い分けに関する記述を追加しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- タスクは完了しました。個票の更新とガイドへの追記が完了しています。
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+まず、オーケストレーターの運用ガイドおよび個票の内容を確認しました。その後、運用ガイドに `plan` モード（作業の下書き）と `register`（意思決定や作業範囲の確定・記録）の具体的な使い分けについての記述を追加しました。最後に、Prettier による整形、`catalog validate` による整合性チェック、および各種 lint/test コマンドを実行して、変更内容の正当性を確認しました。
