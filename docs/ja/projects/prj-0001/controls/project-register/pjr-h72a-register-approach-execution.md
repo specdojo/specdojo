@@ -76,8 +76,8 @@ approach（`fully-guided`・`recipe-guided`・`retrofit`・`rulebook-maintenance
 | 項目       | 内容                                                                                                                                                                  |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 影響範囲   | 個票の frontmatter と schema、`register add`、`exec run --register` の plan の生成（`src/exec/run/register-core.ts`・`src/exec/plans-generation.ts`）、関係するガイド |
-| 必要な対応 | 決定後に、個票の項目と schema、plan の生成、kata の対象、ガイドの todo を起票する                                                                                     |
-| 追跡先     | 決定後に起票する todo                                                                                                                                                 |
+| 必要な対応 | 個票の項目と schema、plan の生成（kata の対象を含む）、ガイドの 3 件の todo を起票した                                                                                |
+| 追跡先     | PJR-ZJXQ（個票の項目と schema）、PJR-H06F（plan の生成）、PJR-4Z6N（ガイド）                                                                                          |
 
 ## 7. 関連ドキュメント
 
