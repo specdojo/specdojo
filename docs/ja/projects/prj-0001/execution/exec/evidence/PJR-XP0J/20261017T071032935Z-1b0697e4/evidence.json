@@ -1,0 +1,2852 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XP0J",
+  "run_id": "20261017T071032935Z-1b0697e4",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-17T07:11:28.239Z",
+    "completed_at": "2026-10-17T07:22:05.331Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-ccd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xp0j-src-move-exec.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard-timeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable/trash.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-config.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-agent-git-state.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-agent-protected-config.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-events.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-evidence.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-format.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-handoff.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-limit.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-parent-validation.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-pipeline-state.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-plans-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-plans-generation.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-plans-storage.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-project.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-protection-handoff.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-provider-scaffold.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-register-resume.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-repo-integration-git.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-repo-integration-sync.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-repo-integration.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-repo-trace.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-reporter-output.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-agent-pipeline.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-agent.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-in-place.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-job.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-lifecycle-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-lock.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-mode-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-mode.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-resume.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-state.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-worktree.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-schedule-mode.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-schedule-prepare.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-schedule-task.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-calendar.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-cpm.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-gantt-chart-render.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-gantt-chart-scope.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-gantt-chart.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-hash.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-index.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-initial.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-progress.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-ready.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-slot-lock.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-strategy.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-task-repos.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-task-view.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-trial-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-trial-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-trial.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-types.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree-ops-commit.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree-ops-lifecycle.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree-ops-merge.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/history.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/migrate-timestamps.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/transition-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/role-types.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-document.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-scope.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-profiles.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/build.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/deliverable/trash.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-agent-config-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-agent-config.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-agent-git-state.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-agent-protected-config.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-cycle.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-deliverable.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-event-msg-default.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-events.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-evidence.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-format.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-handoff.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-job-worktree.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-limit.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-parent-validation.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-pipeline-state.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-plans-grade-findings.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-project.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-protection-handoff.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-provider-scaffold.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-multiple-ids.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-multiple-ids.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-plan-escape.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-resume.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-resume.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-worktree.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-release-all-blocked.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-release-reset-worktree.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-reopen-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-repo-trace.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-reporter.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-results.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-downgrade-unfilled.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-inplace.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-lock-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-lock.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-parent-validation-gate.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-resolve-claiming-actor.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-resolve-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-worker-pool.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-calendar.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-cpm.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-gantt-chart-render.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-gantt-chart-scope.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-hash.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-progress.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-ready.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-validation.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-scheduler-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-shared-display-width.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-shared.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-slot-lock.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-strategy.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-task-repos.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-task-repos.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-trial.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-worktree-command.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-worktree.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-worktree.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register/commit.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/history.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/build.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/dist-freshness.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/open-agent-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/e2e/exec-run-e2e.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/agent-git-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/agent-protected-config.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/events.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/evidence.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/exec.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/format.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/handoff.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/limit.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/parent-validation.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/pipeline-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/plans-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/plans-generation.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/plans-storage.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/plans.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/project.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/protection-handoff.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/provider-scaffold.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/register-resume.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/repo-integration-git.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/repo-integration-sync.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/repo-trace.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/reporter-output.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/reporter.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/results.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/role-types.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-agent-pipeline.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-agent.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-in-place.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-job.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-lifecycle-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-lock.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-mode-shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-mode.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-resume.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-worktree.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-schedule-mode.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-schedule-prepare.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-schedule-task.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-calendar.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-cpm.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart-render.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart-scope.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-hash.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-index.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-initial.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-progress.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-ready.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/slot-lock.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/strategy.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/task-view.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/trial-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/trial-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/trial.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/types.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree-ops.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/agent-config-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/agent-config.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/agent-git-state.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/agent-protected-config.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/cycle.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/deliverable.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/event-msg-default.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/events.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/evidence.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/exec.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/format.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/handoff.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/job-worktree.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/limit.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/parent-validation.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/pipeline-state.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/plans-grade-findings.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/plans.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/project.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/protection-handoff.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/provider-scaffold.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-multiple-ids.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-multiple-ids.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-resume.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-worktree.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/release-all-blocked.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/release-reset-worktree.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/reopen-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/repo-trace.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/reporter.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/results.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-downgrade-unfilled.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-inplace.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-lock-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-lock.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-parent-validation-gate.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-resolve-claiming-actor.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-resolve-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-worker-pool.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-calendar.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-cpm.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-gantt-chart-render.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-gantt-chart-scope.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-hash.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-progress.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-ready.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-validation.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/scheduler-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/shared-display-width.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/shared.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/slot-lock.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/strategy.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/task-repos.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/trial.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree-command.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-critical-flows.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-architecture.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-ccd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-external-interface-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xp0j-src-move-exec.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard-timeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable/trash.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-config.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-agent-git-state.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-agent-protected-config.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-events.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-evidence.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-format.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-handoff.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-limit.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-parent-validation.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-pipeline-state.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-plans-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-plans-generation.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-plans-storage.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-plans.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-project.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-protection-handoff.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-provider-scaffold.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-register-resume.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-repo-integration-git.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-repo-integration-sync.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-repo-integration.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-repo-trace.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-reporter-output.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-agent-pipeline.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-agent.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-in-place.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-job.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-lifecycle-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-lock.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-mode-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-mode.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-resume.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-state.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-register-worktree.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-schedule-mode.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-schedule-prepare.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-schedule-task.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-run.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-calendar.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-cpm.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-gantt-chart-render.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-gantt-chart-scope.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-gantt-chart.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-hash.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-index.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-initial.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-progress.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule-ready.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-schedule.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-slot-lock.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-strategy.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-task-repos.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-task-view.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-trial-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-trial-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-trial.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-types.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree-ops-commit.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree-ops-lifecycle.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree-ops-merge.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree-ops.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-worktree.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/history.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/migrate-timestamps.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/transition-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/role-types.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-document.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-scope.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-profiles.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/build.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/deliverable/trash.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-agent-config-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-agent-config.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-agent-git-state.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-agent-protected-config.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-cycle.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-deliverable.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-event-msg-default.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-events.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-evidence.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-format.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-handoff.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-job-worktree.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-limit.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-parent-validation.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-pipeline-state.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-plans-grade-findings.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-project.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-protection-handoff.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-provider-scaffold.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-multiple-ids.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-multiple-ids.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-plan-escape.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-resume.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-resume.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register-worktree.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-register.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-release-all-blocked.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-release-reset-worktree.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-reopen-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-repo-trace.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-reporter.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-results.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-downgrade-unfilled.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-inplace.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-lock-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-lock.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-parent-validation-gate.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-resolve-claiming-actor.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-resolve-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run-worker-pool.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-run.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-calendar.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-cpm.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-gantt-chart-render.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-gantt-chart-scope.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-hash.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-progress.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-ready.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-schedule-validation.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-scheduler-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-shared-display-width.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-shared.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-slot-lock.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-strategy.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-task-repos.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-task-repos.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-trial.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-worktree-command.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-worktree-ops.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-worktree.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-worktree.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register/commit.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/history.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/build.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/dist-freshness.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/open-agent-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/e2e/exec-run-e2e.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/agent-git-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/agent-protected-config.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/events.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/evidence.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/exec.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/format.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/handoff.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/limit.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/parent-validation.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/pipeline-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/plans-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/plans-generation.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/plans-storage.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/plans.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/project.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/protection-handoff.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/provider-scaffold.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/register-resume.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/repo-integration-git.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/repo-integration-sync.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/repo-trace.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/reporter-output.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/reporter.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/results.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/role-types.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-agent-pipeline.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-agent.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-in-place.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-job.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-lifecycle-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-lock.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-mode-shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-mode.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-resume.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-register-worktree.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-schedule-mode.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-schedule-prepare.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-schedule-task.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run-shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-calendar.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-cpm.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart-render.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart-scope.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-hash.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-index.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-initial.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-progress.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule-ready.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/slot-lock.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/strategy.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/task-view.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/trial-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/trial-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/trial.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/types.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree-ops-commit.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree-ops-lifecycle.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree-ops.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/worktree.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/agent-config-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/agent-config.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/agent-git-state.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/agent-protected-config.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/cycle.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/deliverable.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/event-msg-default.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/events.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/evidence.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/exec.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/format.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/handoff.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/job-worktree.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/limit.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/parent-validation.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/pipeline-e2e.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/pipeline-state.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/plans-grade-findings.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/plans.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/project.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/protection-handoff.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/provider-scaffold.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-multiple-ids.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-multiple-ids.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-resume.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-resume.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register-worktree.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/register.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/release-all-blocked.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/release-reset-worktree.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/reopen-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/repo-trace.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/reporter.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/results.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-downgrade-unfilled.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-inplace.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-lock-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-lock.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-parent-validation-gate.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-resolve-claiming-actor.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-resolve-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run-worker-pool.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-calendar.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-cpm.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-gantt-chart-render.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-gantt-chart-scope.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-hash.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-progress.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-ready.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule-validation.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/scheduler-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/shared-display-width.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/shared.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/slot-lock.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/strategy.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/task-repos.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/trial.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree-command.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/worktree.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 341,
+    "summary": ".../040-system-design/sysd-agent-settings.md       |    2 +-\n .../sysd-antigravity-agent-settings.md             |    2 +-\n .../040-system-design/sysd-critical-flows.md       |    6 +-\n .../040-system-design/sysd-cross-cutting-policy.md |    4 +-\n docs/ja/product/040-system-design/sysd-index.md    |    6 +-\n .../010-deliverables-catalog/dct-architecture.yaml |    2 +-\n .../010-deliverables-catalog/dct-data-flow.yaml    |   30 +-\n .../dct-data-model-bdd.yaml                        |   16 +-\n .../dct-data-model-ccd.yaml                        |    4 +-\n .../dct-data-model-cdsd.yaml                       |    4 +-\n .../dct-data-model-cld.yaml                        |    4 +-\n .../dct-data-model-stsd.yaml                       |    2 +-\n .../dct-external-interface-specs.yaml              |    2 +-\n .../dct-system-design.yaml                         |   16 +-\n .../010-deliverables-catalog/dct-test-specs.yaml   |   34 +-\n .../project-register/pjr-xp0j-src-move-exec.md     |   21 +-\n docs/ja/specdojo/guides/exec-config-guide.md       |    6 +-\n src/commands/agent.ts                              |    6 +-\n src/commands/init.ts                               |    2 +-\n src/commands/orchestrator.ts                       |    2 +-\n src/dashboard/dashboard-timeline.ts                |    6 +-\n src/dashboard/dashboard.ts                         |    6 +-\n src/dashboard/routines.ts                          |    2 +-\n src/dashboard/shared.ts                            |    2 +-\n src/dashboard/timeline-build.ts                    |    2 +-\n src/deliverable/trash.ts                           |    2 +-\n src/exec-agent-config.ts                           |  443 -----\n src/exec-agent-git-state.ts                        |  201 ---\n src/exec-agent-protected-config.ts                 |  375 -----\n src/exec-commands.ts                               |  738 ---------\n src/exec-core.ts                                   |  663 --------\n src/exec-events.ts                                 |  573 -------\n src/exec-evidence.ts                               |  806 ---------\n src/exec-format.ts                                 |   53 -\n src/exec-handoff.ts                                |  398 -----\n src/exec-limit.ts                                  |  268 ---\n src/exec-parent-validation.ts                      |  599 -------\n src/exec-pipeline-state.ts                         |  344 ----\n src/exec-plans-core.ts                             |  868 ----------\n src/exec-plans-generation.ts                       |  389 -----\n src/exec-plans-storage.ts                          |  171 --\n src/exec-plans.ts                                  |   29 -\n src/exec-project.ts                                |  147 --\n src/exec-protection-handoff.ts                     |  301 ----\n src/exec-provider-scaffold.ts                      |  476 ------\n src/exec-register-resume.ts                        |  348 ----\n src/exec-register.ts                               |  418 -----\n src/exec-repo-integration-git.ts                   |   31 -\n src/exec-repo-integration-sync.ts                  |  323 ----\n src/exec-repo-integration.ts                       |  699 --------\n src/exec-repo-trace.ts                             |  232 ---\n src/exec-reporter-output.ts                        |  245 ---\n src/exec-reporter.ts                               |  899 ----------\n src/exec-results.ts                                |  669 --------\n src/exec-run-agent-pipeline.ts                     |  430 -----\n src/exec-run-agent.ts                              |  768 ---------\n src/exec-run-in-place.ts                           |  732 ---------\n src/exec-run-job.ts                                |  983 -----------\n src/exec-run-lifecycle-commands.ts                 |  710 --------\n src/exec-run-lock.ts                               |  230 ---\n src/exec-run-mode-shared.ts                        |  179 --\n src/exec-run-register-command.ts                   |  370 -----\n src/exec-run-register-core.ts    …"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "ビルド成功。dist/exec に74件を生成し、dist直下に旧exec出力は残っていない"
+    },
+    {
+      "source": "executor",
+      "command": "diff -ru tmp/exec-help-before-final tmp/exec-help-after-final",
+      "status": "passed",
+      "summary": "トップレベルを含む全123コマンドの help に差分なし"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/build-if-stale.mjs",
+      "status": "passed",
+      "summary": "hook入口が正常終了"
+    },
+    {
+      "source": "executor",
+      "command": "{ git diff --name-only --diff-filter=M -z; find src/exec tests/src/exec -maxdepth 1 -type f -name '*.ts' -print0; } | sort -zu | xargs -0 npx prettier --write",
+      "status": "passed",
+      "summary": "変更対象のTypeScript・Markdown・YAMLを整形"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "27 catalogが成功。既存の未作成文書に関する警告166件のみ"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --cached --check",
+      "status": "passed",
+      "summary": "一時indexへ全移動先を含めた差分検査に成功"
+    },
+    {
+      "source": "executor",
+      "command": "post-integration orchestrator smoke check: exec run --register",
+      "status": "requires_human",
+      "summary": "統合後にorchestratorが別のregister項目を1回実行し、統合完了まで確認するclose条件"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XP0J/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XP0J/src/schedule/build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XP0J/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XP0J\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-m0t3oe/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-zxH69r/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XP0J/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XP0J/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XP0J\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-Tgnp0S/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-hPMHxQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-xiQ3P7/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-TNwmo8/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  38.35s (transform 2.53s, setup 537ms, import 18.39s, tests 40.94s, environment 6ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "exec 実装74件とテスト66件を src/exec・tests/src/exec へ移し、import・パス参照・設計書・個票を更新した。全123コマンドの help は一致し、build と catalog validate も成功した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XP0J/20261017T071032935Z-1b0697e4/executor.log",
+      "bytes": 2070,
+      "truncated": false
+    }
+  ]
+}

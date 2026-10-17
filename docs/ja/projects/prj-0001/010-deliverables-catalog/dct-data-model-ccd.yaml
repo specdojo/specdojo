@@ -33,7 +33,7 @@ groups:
             path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログ関連エンティティの型定義・参照関係
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するSchedule戦略とカタログ・登録項目の参照関係
         done_criteria:
           - text: エンティティ関係・属性が業務観点で正確に表現されていること
@@ -65,7 +65,7 @@ groups:
         rulebook: specdojo:ccd-mermaid-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するタスク・plan・result・event間の参照関係の型定義、タスク実行時のエンティティ間の受け渡し（event・plan・result・worktree）
         done_criteria:
           - text: エンティティ関係・属性が業務観点で正確に表現されていること

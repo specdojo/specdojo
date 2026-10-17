@@ -64,7 +64,7 @@ groups:
         rulebook: specdojo:cld-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するmode（edit/review）・execution（agent/human）の型定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること
@@ -102,7 +102,7 @@ groups:
         rulebook: specdojo:cld-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するロールコード（PO/PM/BA/ARC/DEV/QE/UX/OPS）の型定義
         done_criteria:
           - text: 分類名・説明が業務観点で正確に定義されていること

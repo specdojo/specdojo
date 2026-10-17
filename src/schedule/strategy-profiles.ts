@@ -3,7 +3,7 @@
 // code constants rather than free-form YAML so every generated sch-strategy-<track>.yaml uses
 // the same phase ids, task suffixes, durations, modes and execution kinds.
 
-import type { Approach, Proficiency } from "../exec-types.js";
+import type { Approach, Proficiency } from "../exec/types.js";
 
 export type PhaseExecution = "agent" | "human";
 export type PhaseMode = "edit" | "review";

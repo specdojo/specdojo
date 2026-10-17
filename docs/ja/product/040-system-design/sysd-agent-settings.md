@@ -67,4 +67,4 @@ agent起動時は親プロセスの`GIT_DIR`、`GIT_WORK_TREE`その他のreposi
 | 重要フロー | [システム設計重要フロー](sysd-critical-flows.md)                     | 並列・統合・ID・PR・延期再開         |
 | Job        | [Job実行設計](sysd-job-execution.md)                                 | Job Runからexec基盤への委譲          |
 | 運用手順   | [外部エージェントCLI更新](../090-operations/opr-agent-cli-update.md) | CLI更新と証跡                        |
-| 検証       | `tests/src/exec-*.test.ts`                                           | member選択、worktree、retry、resume  |
+| 検証       | `tests/src/exec/*.test.ts`                                           | member選択、worktree、retry、resume  |

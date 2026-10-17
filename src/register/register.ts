@@ -1,11 +1,11 @@
 import { type Command } from "commander";
 import { existsSync, readFileSync } from "node:fs";
 import { relative, sep } from "node:path";
-import { execLifecyclePoolPath } from "../exec-run-lock.js";
-import { CrossProcessMutex } from "../exec-slot-lock.js";
-import { inlineCodeAnglePlaceholders } from "../exec-shared.js";
-import { repoRelative, stageCommitTargets, worktreeStatusPaths } from "../exec-worktree-ops.js";
-import { gitOutput, gitResult } from "../exec-worktree.js";
+import { execLifecyclePoolPath } from "../exec/run-lock.js";
+import { CrossProcessMutex } from "../exec/slot-lock.js";
+import { inlineCodeAnglePlaceholders } from "../exec/shared.js";
+import { repoRelative, stageCommitTargets, worktreeStatusPaths } from "../exec/worktree-ops.js";
+import { gitOutput, gitResult } from "../exec/worktree.js";
 import {
   atomicWriteFile,
   buildRegisterItemContent,

@@ -2,7 +2,7 @@ import { spawn, type SpawnOptions } from "node:child_process";
 import { constants as osConstants } from "node:os";
 import { resolve } from "node:path";
 import { type Command } from "commander";
-import { agentExtraRootArguments, resolveProductRepos } from "../exec-task-repos.js";
+import { agentExtraRootArguments, resolveProductRepos } from "../exec/task-repos.js";
 import {
   loadConfig,
   specdojoRootDir,

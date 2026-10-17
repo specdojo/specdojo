@@ -15,7 +15,7 @@ import {
   buildRegisterEvent,
   registerEventFilePath,
 } from "../../../src/register/events.js";
-import { gitEnvironment } from "../../../src/exec-worktree.js";
+import { gitEnvironment } from "../../../src/exec/worktree.js";
 
 // lefthook などの git フック配下でテストを実行すると、親の git が GIT_DIR / GIT_INDEX_FILE を
 // 環境変数へ設定する。それを引き継いだまま git を起動すると、一時ディレクトリで実行したつもりの

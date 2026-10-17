@@ -4,7 +4,7 @@ import { Command } from "commander";
 import { evaluateDistFreshness, inspectDistEntryFreshness } from "./shared/dist-freshness.js";
 import { specdojoPackageVersion } from "./shared/package-paths.js";
 import { registerConfigCommands, registerProjectCommands } from "./shared/specdojo-config.js";
-import { registerExecCommands } from "./exec.js";
+import { registerExecCommands } from "./exec/exec.js";
 import { registerCatalogCommands } from "./catalog/catalog.js";
 import { registerDeliverableCommands } from "./deliverable/deliverable.js";
 import { registerScheduleCommands } from "./schedule/schedule.js";

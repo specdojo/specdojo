@@ -1,4 +1,4 @@
-import type { Approach } from "../exec-types.js";
+import type { Approach } from "../exec/types.js";
 import type { ApproachRule } from "./approach.js";
 import {
   AUTHOR_PHASE_SETS,

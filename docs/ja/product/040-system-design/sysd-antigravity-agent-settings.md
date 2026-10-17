@@ -61,7 +61,7 @@ providers:
 
 `agy` は repository root まで探索し、`AGENTS.md`、`.agents/rules/*.md`、`.agents/skills/<name>/SKILL.md` を読む。プロジェクト共通の言語・安全規則は `AGENTS.md`、環境別の薄い規則ラッパーは `.agents/rules/`、再利用手順は `.agents/skills/` を正本とする。
 
-executor 向けの stage 契約は `src/exec-run-agent.ts` が plan 末尾へ付加し、reporter の prompt・出力契約は `src/exec-reporter.ts`、両 stage の進行は `src/exec-run-agent-pipeline.ts` が担う。executor は成果物の編集と検証だけを行い result・lifecycle を更新せず、reporter は evidence から構造化結果を返すだけでファイルを書かない。したがって `templates/antigravity/agents/` は設けない。一方、`config scaffold --provider antigravity` はオーケストレーターと provider 設定スニペットをリポジトリへ配置し、`--global` 指定時だけ CLI のユーザー権限設定をマージする。
+executor 向けの stage 契約は `src/exec/run-agent.ts` が plan 末尾へ付加し、reporter の prompt・出力契約は `src/exec/reporter.ts`、両 stage の進行は `src/exec/run-agent-pipeline.ts` が担う。executor は成果物の編集と検証だけを行い result・lifecycle を更新せず、reporter は evidence から構造化結果を返すだけでファイルを書かない。したがって `templates/antigravity/agents/` は設けない。一方、`config scaffold --provider antigravity` はオーケストレーターと provider 設定スニペットをリポジトリへ配置し、`--global` 指定時だけ CLI のユーザー権限設定をマージする。
 
 対話型オーケストレーターはファイル定義 agent ではなく、`npm run orch:agy` が `.agents/specdojo-orchestrator.agent.md` の本文を `-i` で渡して起動する。
 

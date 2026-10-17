@@ -1,8 +1,8 @@
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
-import { readYaml } from "../exec-shared.js";
+import { readYaml } from "../exec/shared.js";
 import type { DctDoc, DctSection } from "../catalog/types.js";
-import type { AgentAssignment } from "../exec-types.js";
+import type { AgentAssignment } from "../exec/types.js";
 import type { MemberRoster } from "../shared/specdojo-config.js";
 import {
   expandPhaseSetSelection,

@@ -1,0 +1,443 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { listFilesRecursive, readYaml } from "./shared.js";
+import { acquirePoolSlot, releaseLock } from "./slot-lock.js";
+import {
+  specdojoRootDir,
+  type AgentMode,
+  type AgentProvider,
+  type ProjectMember,
+} from "../shared/specdojo-config.js";
+import type { AgentLimitKind } from "./limit.js";
+import type { Proficiency } from "./types.js";
+import {
+  resolveParentValidationConcurrency,
+  resolveParentValidationDefinitions,
+  type ParentValidationEntry,
+} from "./parent-validation.js";
+
+// ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
+
+export type RateLimitDetection = {
+  exit_codes?: number[];
+  stderr_patterns?: string[];
+  // When true (the default), stderr_patterns only count as a rate-limit signal if the
+  // agent process also exited non-zero. This avoids false positives where a successful
+  // run merely echoes a pattern phrase (e.g. an agent editing a file that contains the
+  // literal text "rate limit"). Set to false to match stderr patterns regardless of exit code.
+  stderr_requires_nonzero_exit?: boolean;
+};
+
+export type RateLimitRetry = {
+  max_attempts: number;
+  initial_wait_seconds: number;
+  backoff_multiplier: number;
+  max_wait_seconds: number;
+};
+
+export type RateLimitPolicy = {
+  // Used only when the provider output has no explicit reset time or retry-after. Omitted kinds
+  // stay blocked without an estimated resume time.
+  cooldown_seconds?: Partial<Record<AgentLimitKind, number>>;
+  on_non_critical: {
+    action: "skip";
+  };
+  on_critical: {
+    action: "try_next";
+    retry: RateLimitRetry;
+    on_exhausted: "block";
+  };
+};
+
+// Placeholder name -> value pairs inserted into command_template as-is.
+export type CommandVariableSet = Record<string, string>;
+
+// Extra command_template variables resolved by member attributes. Lower-priority layers are
+// applied first, so a nickname-specific value can intentionally override a proficiency- or
+// mode-specific default.
+export type CommandParams = {
+  by_mode?: Partial<Record<AgentMode, CommandVariableSet>>;
+  by_proficiency?: Partial<Record<Proficiency, CommandVariableSet>>;
+  by_nickname?: Record<string, CommandVariableSet>;
+};
+
+// Per-provider override. Each present key fully replaces the matching global
+// value for members of this provider; absent keys fall back to the global value.
+// command_template / command_params have no global counterpart.
+export type ProviderOverride = {
+  // Non-interactive launch command template for this provider's agents. Built-in
+  // placeholders {nickname}, {mode}, {proficiency} expand to the member's attributes;
+  // additional placeholders come from command_params.
+  command_template?: string;
+  command_params?: CommandParams;
+  rate_limit_detection?: RateLimitDetection;
+  rate_limit_policy?: RateLimitPolicy;
+  // Maximum number of this provider's agents allowed to run concurrently within a single
+  // `exec run` round. Caps a provider that shares a constrained resource (e.g. opencode's
+  // local single-model Ollama host) without lowering the global `--parallel` for other
+  // providers. Absent or non-positive means no per-provider limit.
+  max_concurrency?: number;
+};
+
+export type ExecDefaultsConfig = {
+  run?: {
+    // Default execution location for register items. Omitted keeps the historical in-place
+    // behavior so existing repositories do not start creating worktrees after an upgrade.
+    register_execution?: "in-place" | "worktree";
+    // Maximum number of `exec run` processes that may run at once for one project, counting the
+    // primary run and every `--join` run (default 4). 1 disables `--join`.
+    max_concurrent_runs?: number;
+  };
+  pipeline?: {
+    // A string runs in the project repository; `{ id, repo }` runs in the named repository.
+    parent_validations?: ParentValidationEntry[];
+    parent_validation_concurrency?: number;
+  };
+  rate_limit_detection?: RateLimitDetection;
+  rate_limit_policy?: RateLimitPolicy;
+  providers?: Partial<Record<AgentProvider, ProviderOverride>>;
+};
+
+// ── Launch command resolution ───────────────────────────────────────────────
+// A member's launch command comes from its provider's command_template expanded with
+// member attributes. The member-level `command` is an escape hatch for template-less
+// setups (e.g. provider: custom) and always wins when present.
+
+type CommandMemberAttributes = Pick<
+  ProjectMember,
+  "nickname" | "provider" | "mode" | "proficiency" | "command"
+>;
+
+const PLACEHOLDER_PATTERN = /\{([a-z][a-z0-9_]*)\}/g;
+const BUILTIN_VARIABLE_NAMES = new Set(["nickname", "mode", "proficiency"]);
+
+// Mirror of the nickname pattern in docs/specdojo/schemas/v1/agent-members.schema.yaml.
+// The runtime loader validates the registry; this remains defense in depth immediately before
+// command_template interpolation and shell execution.
+const NICKNAME_PATTERN = /^[a-z0-9][a-z0-9_-]{0,62}$/;
+
+// True when the member has any command source: an explicit override or a provider
+// command_template. Used to filter selectable agents without expanding the template.
+export function hasMemberCommandSource(
+  config: ExecDefaultsConfig,
+  member: CommandMemberAttributes,
+): boolean {
+  if (member.command?.trim()) return true;
+  if (!member.provider) return false;
+  return Boolean(config.providers?.[member.provider]?.command_template);
+}
+
+function buildCommandVariables(
+  provider: AgentProvider,
+  member: CommandMemberAttributes,
+  params: CommandParams | undefined,
+): Map<string, string> {
+  const variables = new Map<string, string>();
+  if (!NICKNAME_PATTERN.test(member.nickname)) {
+    throw new Error(
+      `Invalid nickname ${JSON.stringify(member.nickname)} for provider ${provider}: ` +
+        `must match ${NICKNAME_PATTERN.source} (agent-members.schema.yaml). ` +
+        `nickname is expanded into command_template and executed with shell: true; ` +
+        `refusing to build a command.`,
+    );
+  }
+  variables.set("nickname", member.nickname);
+  if (member.mode) variables.set("mode", member.mode);
+  if (member.proficiency) variables.set("proficiency", member.proficiency);
+
+  const byMode = member.mode ? params?.by_mode?.[member.mode] : undefined;
+  const byProficiency = member.proficiency
+    ? params?.by_proficiency?.[member.proficiency]
+    : undefined;
+  const byNickname = params?.by_nickname?.[member.nickname];
+  // Built-in collision checks look at the full tables (not just the member's rows) so a
+  // broken definition fails for every member of the provider, not only for some attributes.
+  const modeKeys = Object.values(params?.by_mode ?? {}).flatMap((set) => Object.keys(set ?? {}));
+  const proficiencyKeys = Object.values(params?.by_proficiency ?? {}).flatMap((set) =>
+    Object.keys(set ?? {}),
+  );
+  const nicknameKeys = Object.values(params?.by_nickname ?? {}).flatMap((set) =>
+    Object.keys(set ?? {}),
+  );
+  for (const key of [...modeKeys, ...proficiencyKeys, ...nicknameKeys]) {
+    if (BUILTIN_VARIABLE_NAMES.has(key)) {
+      throw new Error(
+        `exec-defaults providers.${provider}.command_params must not redefine built-in variable {${key}}`,
+      );
+    }
+  }
+
+  for (const [key, value] of Object.entries(byMode ?? {})) variables.set(key, value);
+  for (const [key, value] of Object.entries(byProficiency ?? {})) variables.set(key, value);
+  for (const [key, value] of Object.entries(byNickname ?? {})) variables.set(key, value);
+  return variables;
+}
+
+// Resolve the shell command that launches a member's agent. Returns undefined when the
+// member has neither a command override nor a provider command_template (such a member is
+// not runnable by exec run). Throws when a template exists but cannot be fully expanded,
+// so a broken definition surfaces as an error instead of launching a malformed command.
+export function resolveMemberCommand(
+  config: ExecDefaultsConfig,
+  member: CommandMemberAttributes,
+): string | undefined {
+  const override = member.command?.trim();
+  if (override) return override;
+
+  const provider = member.provider;
+  const template = provider ? config.providers?.[provider]?.command_template : undefined;
+  if (!provider || !template) return undefined;
+
+  const variables = buildCommandVariables(
+    provider,
+    member,
+    config.providers?.[provider]?.command_params,
+  );
+  const expanded = template.replace(PLACEHOLDER_PATTERN, (match, name: string) => {
+    return variables.get(name) ?? match;
+  });
+
+  const unresolved = [...expanded.matchAll(PLACEHOLDER_PATTERN)].map((m) => m[0]);
+  if (unresolved.length > 0) {
+    throw new Error(
+      `Cannot resolve ${[...new Set(unresolved)].join(", ")} in providers.${provider}.command_template for member ${member.nickname} (mode: ${member.mode ?? "-"}, proficiency: ${member.proficiency ?? "-"})`,
+    );
+  }
+  return expanded;
+}
+
+// ── Provider resolution ─────────────────────────────────────────────────────
+// Detection and policy are resolved independently: a provider override for one
+// key does not drop the global value for the other.
+
+export function resolveRateLimitDetection(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): RateLimitDetection | undefined {
+  const override = provider ? config.providers?.[provider]?.rate_limit_detection : undefined;
+  return override ?? config.rate_limit_detection;
+}
+
+export function resolveRateLimitPolicy(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): RateLimitPolicy | undefined {
+  const override = provider ? config.providers?.[provider]?.rate_limit_policy : undefined;
+  return override ?? config.rate_limit_policy;
+}
+
+// Resolve a provider's concurrency cap, validating the YAML-sourced value. A missing,
+// non-integer, or non-positive value means "no limit" (returns undefined).
+export function resolveMaxConcurrency(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): number | undefined {
+  if (!provider) return undefined;
+  const raw = config.providers?.[provider]?.max_concurrency;
+  if (typeof raw !== "number" || !Number.isInteger(raw) || raw <= 0) return undefined;
+  return raw;
+}
+
+// Tracks how many agents of each provider are currently running within one `exec run`
+// invocation, so the scheduler can keep a capped provider (e.g. opencode) from launching more
+// than its `max_concurrency` instances at once.
+export type ProviderCapacityTracker = {
+  // Whether another agent of this provider may start now (true when uncapped or below cap).
+  hasCapacity: (provider?: AgentProvider) => boolean;
+  // Record that one agent of this provider has started.
+  reserve: (provider?: AgentProvider) => void;
+  // Record that one agent of this provider has finished.
+  release: (provider?: AgentProvider) => void;
+};
+
+export function createProviderCapacityTracker(config: ExecDefaultsConfig): ProviderCapacityTracker {
+  const counts = new Map<AgentProvider, number>();
+  return {
+    hasCapacity(provider?: AgentProvider): boolean {
+      const cap = resolveMaxConcurrency(config, provider);
+      if (cap === undefined || !provider) return true;
+      return (counts.get(provider) ?? 0) < cap;
+    },
+    reserve(provider?: AgentProvider): void {
+      if (!provider) return;
+      counts.set(provider, (counts.get(provider) ?? 0) + 1);
+    },
+    release(provider?: AgentProvider): void {
+      if (!provider) return;
+      const next = (counts.get(provider) ?? 0) - 1;
+      if (next > 0) counts.set(provider, next);
+      else counts.delete(provider);
+    },
+  };
+}
+
+export function providerSlotPoolPath(lockRoot: string, provider: AgentProvider): string {
+  return join(lockRoot, `provider-${provider}`);
+}
+
+export const DEFAULT_MAX_CONCURRENT_RUNS = 4;
+export const DEFAULT_REGISTER_EXECUTION = "in-place" as const;
+
+export type RegisterExecution = "in-place" | "worktree";
+
+// Preserve the historical default for repositories that have not opted into worktree execution.
+// Invalid YAML-sourced values are rejected instead of silently changing where agents write.
+export function resolveRegisterExecution(config: ExecDefaultsConfig): RegisterExecution {
+  const raw = config.run?.register_execution;
+  if (raw === undefined) return DEFAULT_REGISTER_EXECUTION;
+  if (raw !== "in-place" && raw !== "worktree") {
+    throw new Error(
+      `run.register_execution in exec-defaults must be "in-place" or "worktree": ${String(raw)}`,
+    );
+  }
+  return raw;
+}
+
+// Resolve how many `exec run` processes may run at once for one project. Invalid values fall back
+// to the default so a typo cannot silently disable the busy guard.
+export function resolveMaxConcurrentRuns(config: ExecDefaultsConfig): number {
+  const raw = config.run?.max_concurrent_runs;
+  if (typeof raw !== "number" || !Number.isInteger(raw) || raw < 1) {
+    return DEFAULT_MAX_CONCURRENT_RUNS;
+  }
+  return raw;
+}
+
+// Waits for provider capacity instead of dropping work. Register worktree runs already have a
+// fixed item-to-agent assignment, so unlike auto selection they cannot switch to another provider
+// when a cap is full; each pipeline stage queues until that provider has room.
+//
+// When `lockRoot` is given, the cap also holds across `exec run` processes: after taking an
+// in-process slot, the stage takes one of the provider's slot locks under
+// `<lockRoot>/provider-<name>/`. The in-process queue keeps arrival order within the process;
+// between processes the slot locks are polled without ordering guarantees.
+export class ProviderConcurrencyGate {
+  private readonly active = new Map<AgentProvider, number>();
+  private readonly waiters = new Map<AgentProvider, Array<() => void>>();
+
+  constructor(
+    private readonly config: ExecDefaultsConfig,
+    private readonly lockRoot?: string,
+    private readonly log: (line: string) => void = (line) => {
+      process.stdout.write(line);
+    },
+  ) {}
+
+  async run<T>(
+    provider: AgentProvider | undefined,
+    task: () => Promise<T>,
+    label?: string,
+  ): Promise<T> {
+    const release = await this.acquire(provider);
+    try {
+      const cap = resolveMaxConcurrency(this.config, provider);
+      if (!this.lockRoot || !provider || cap === undefined) return await task();
+      const suffix = label ? `: ${label}` : "";
+      const slot = await acquirePoolSlot(
+        providerSlotPoolPath(this.lockRoot, provider),
+        cap,
+        { actor: `provider:${provider}`, ...(label ? { label } : {}) },
+        {
+          onWait: () =>
+            this.log(
+              `  Waiting for ${provider} slot held by another exec run (max_concurrency: ${cap})${suffix}\n`,
+            ),
+        },
+      );
+      try {
+        return await task();
+      } finally {
+        releaseLock(slot);
+      }
+    } finally {
+      release();
+    }
+  }
+
+  private async acquire(provider: AgentProvider | undefined): Promise<() => void> {
+    const cap = resolveMaxConcurrency(this.config, provider);
+    if (!provider || cap === undefined) return () => undefined;
+
+    if ((this.active.get(provider) ?? 0) < cap) {
+      this.active.set(provider, (this.active.get(provider) ?? 0) + 1);
+      return () => this.release(provider);
+    }
+
+    await new Promise<void>((resolve) => {
+      const queue = this.waiters.get(provider) ?? [];
+      queue.push(resolve);
+      this.waiters.set(provider, queue);
+    });
+    return () => this.release(provider);
+  }
+
+  private release(provider: AgentProvider): void {
+    const queue = this.waiters.get(provider);
+    const next = queue?.shift();
+    if (queue?.length === 0) this.waiters.delete(provider);
+    if (next) {
+      // Transfer the existing slot directly so a newly arriving task cannot overtake the queue.
+      next();
+      return;
+    }
+
+    const nextActive = (this.active.get(provider) ?? 1) - 1;
+    if (nextActive > 0) this.active.set(provider, nextActive);
+    else this.active.delete(provider);
+  }
+}
+
+// ── Loaders ───────────────────────────────────────────────────────────────────
+
+export function defaultExecDefaultsPath(): string {
+  return join(specdojoRootDir(), ".specdojo", "exec-defaults.yaml");
+}
+
+function legacyAgentConfigPath(): string {
+  return join(specdojoRootDir(), ".specdojo", "exec-agent.yaml");
+}
+
+function loadLegacyRateLimitPolicy(executionPath?: string): RateLimitPolicy | undefined {
+  if (!executionPath || !existsSync(executionPath)) return undefined;
+  const files = listFilesRecursive(executionPath).filter((f) =>
+    /exec-strategy-.*\.(yaml|yml)$/.test(f),
+  );
+  for (const file of files) {
+    let raw: { rate_limit_policy?: RateLimitPolicy } | undefined;
+    try {
+      raw = readYaml(file) as { rate_limit_policy?: RateLimitPolicy };
+    } catch {
+      continue;
+    }
+    if (raw?.rate_limit_policy) return raw.rate_limit_policy;
+  }
+  return undefined;
+}
+
+export function loadExecDefaultsConfig(
+  configPath?: string,
+  executionPath?: string,
+): ExecDefaultsConfig {
+  const path = configPath ?? defaultExecDefaultsPath();
+  let defaults: ExecDefaultsConfig = {};
+
+  if (existsSync(path)) {
+    defaults = (readYaml(path) as ExecDefaultsConfig) ?? {};
+  } else {
+    const legacyPath = legacyAgentConfigPath();
+    if (existsSync(legacyPath)) {
+      defaults = (readYaml(legacyPath) as ExecDefaultsConfig) ?? {};
+    }
+  }
+
+  if (!defaults.rate_limit_policy) {
+    const legacyPolicy = loadLegacyRateLimitPolicy(executionPath);
+    if (legacyPolicy) defaults.rate_limit_policy = legacyPolicy;
+  }
+
+  resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
+  resolveParentValidationConcurrency(defaults.pipeline?.parent_validation_concurrency);
+  resolveRegisterExecution(defaults);
+
+  return defaults;
+}

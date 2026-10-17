@@ -113,7 +113,7 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するタスク選択・claim・agent起動・完了処理の中核、plan frontmatterの生成・scaffold規則、result frontmatter・必須節のscaffold・記入検証
         done_criteria: *utc-target-done-criteria
       - local_id: utc-exec-schedule
@@ -126,7 +126,7 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するCPM・クリティカルパス・slackの算出、Ready task算出
         done_criteria: *utc-target-done-criteria
       - local_id: utc-exec-worktree
@@ -139,7 +139,7 @@ groups:
         rulebook: specdojo:utc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するworktree・branchの命名規則・配置、worktreeの作成・削除・同期操作
         done_criteria: *utc-target-done-criteria
       - local_id: utc-register
@@ -260,7 +260,7 @@ groups:
         rulebook: specdojo:itc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するSchedule検証・状態再計算のexec側処理、Ready task算出
         done_criteria: *itc-target-done-criteria
       - local_id: itc-exec-register
@@ -273,7 +273,7 @@ groups:
         rulebook: specdojo:itc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達する登録項目に紐づくexecタスクの実行連携
           - kind: implementation
             path: src/register/register.ts
@@ -289,7 +289,7 @@ groups:
         rulebook: specdojo:itc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するclaim時のworktree割当・完了時の統合制御、worktreeの作成・削除操作
         done_criteria: *itc-target-done-criteria
       - local_id: itc-routine-exec
@@ -305,7 +305,7 @@ groups:
             path: src/routine/routine.ts
             purpose: action.kind別（exec-auto/exec-resume/exec-cycle）の委譲規則
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するroutineから委譲された実行の処理
         done_criteria: *itc-target-done-criteria
       - local_id: itc-build-index
@@ -359,7 +359,7 @@ groups:
         rulebook: specdojo:etc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するAI provider CLIの起動コマンド解決・非対話実行
         done_criteria: &etc-target-done-criteria
           - text: I/Fごとのテスト条件・前提・合格基準が記述されていること
@@ -378,7 +378,7 @@ groups:
         rulebook: specdojo:etc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するGit操作（worktree作成・commit・push等）の実行箇所
         done_criteria: *etc-target-done-criteria
 
@@ -421,7 +421,7 @@ groups:
             path: src/catalog/catalog.ts
             purpose: catalog コマンド入口から到達する成果物カタログの初期生成
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するprovider実行構成の初期生成
         done_criteria: &stc-target-done-criteria
           - text: 個別シナリオの前提・データ準備・テスト条件・期待結果が記述されていること
@@ -442,7 +442,7 @@ groups:
             path: src/register/register.ts
             purpose: register コマンド入口から到達する登録項目の状態遷移・派生ビュー更新、登録項目個票のフィールド定義
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達する登録項目に紐づくexecタスクの実行連携
         done_criteria: *stc-target-done-criteria
       - local_id: stc-catalog-planning
@@ -460,7 +460,7 @@ groups:
             path: src/schedule/schedule.ts
             purpose: schedule コマンド入口から到達するSchedule展開
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達する実行入力検証・状態再構成
         done_criteria: *stc-target-done-criteria
       - local_id: stc-task-execution
@@ -472,7 +472,7 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-task-execution
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するタスク選択・claim・agent起動・完了処理、実行ロックの排他制御、実行イベントの記録、worktree分離
         done_criteria: *stc-target-done-criteria
       - local_id: stc-routine
@@ -487,7 +487,7 @@ groups:
             path: src/routine/routine.ts
             purpose: 定期実行対象選択・実行試行記録・結果反映
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するroutineから委譲された実行
           - kind: implementation
             path: src/job/job.ts
@@ -502,7 +502,7 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-multi-project
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するproject develop作成・並行実行割当、feature/exec worktree分離
         done_criteria: *stc-target-done-criteria
       - local_id: stc-agent-config-operation
@@ -514,7 +514,7 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-agent-config-operation
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するagent・provider設定の解決とコマンド生成、phaseの実行要件とapproachの解決
         done_criteria: *stc-target-done-criteria
       - local_id: stc-derived-content
@@ -547,7 +547,7 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-reporting
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達する進捗・タスク状態の集約表示、CPM・クリティカルパスの算出
           - kind: implementation
             path: src/register/register.ts

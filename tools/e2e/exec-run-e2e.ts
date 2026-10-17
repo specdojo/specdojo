@@ -9,7 +9,7 @@
  *
  * This is intentionally NOT part of `vitest run`: it spawns the built CLI as subprocesses and
  * copies the full template set, which is too heavy for the standard suite. The core git logic
- * is covered by tests/src/exec-worktree-ops.test.ts; this script verifies the end-to-end wiring.
+ * is covered by tests/src/exec/worktree-ops.test.ts; this script verifies the end-to-end wiring.
  *
  * Usage: npm run test:e2e   (runs `npm run build` first)
  */
@@ -27,7 +27,7 @@ import {
 import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { gitEnvironment } from "../../src/exec-worktree.js";
+import { gitEnvironment } from "../../src/exec/worktree.js";
 
 const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const cliPath = join(projectRoot, "dist", "specdojo.js");

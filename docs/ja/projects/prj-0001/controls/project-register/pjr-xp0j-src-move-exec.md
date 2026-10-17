@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:43Z"
@@ -51,17 +51,22 @@ codemod で exec の 73 ファイルを src/exec/ へ移し、移した後の ex
 
 ## 3. 作業内容
 
-| No  | 作業                                                           | 担当         | 状態 | メモ             |
-| --- | -------------------------------------------------------------- | ------------ | ---- | ---------------- |
-| 1   | 規則から対応表を作り、codemod で移す                           | DEV          | open | 手で書き換えない |
-| 2   | 自分の位置や文字列から組み立てるパスを直す                     | DEV          | open | -                |
-| 3   | 全コマンドの `--help` を比べ、hook の入口と `dist/` を確かめる | DEV          | open | -                |
-| 4   | `src/exec/` のファイルを名前の先頭の語ごとに数える             | DEV          | open | 判断材料         |
-| 5   | 統合の後に `exec run --register` を 1 回流す                   | orchestrator | open | close の条件     |
+| No  | 作業                                                           | 担当         | 状態 | メモ                     |
+| --- | -------------------------------------------------------------- | ------------ | ---- | ------------------------ |
+| 1   | 規則から対応表を作り、codemod で移す                           | DEV          | done | 実装 74 件・テスト 66 件 |
+| 2   | 自分の位置や文字列から組み立てるパスを直す                     | DEV          | done | テスト・設計書・カタログ |
+| 3   | 全コマンドの `--help` を比べ、hook の入口と `dist/` を確かめる | DEV          | done | 123 コマンド一致         |
+| 4   | `src/exec/` のファイルを名前の先頭の語ごとに数える             | DEV          | done | 追加分割は見送る         |
+| 5   | 統合の後に `exec run --register` を 1 回流す                   | orchestrator | open | close の条件             |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 規則から `tmp/exec-move-mapping.json` に 140 件（実装 74 件、テスト 66 件）の対応表を機械生成し、`tools/src-move-codemod.mjs` で `src/exec/`・`tests/src/exec/` へ移した。codemod は相対 import を 756 か所書き換えた。sandbox の共有 Git index は読み取り専用だったため、一時 index の複製を `GIT_INDEX_FILE` に指定して codemod の `git mv` を実行し、HEAD・共有 index・Git 設定は変更していない。
+- codemod の検出結果から、移動で基準位置が変わるテスト 7 件の repository root / schema path を 1 階層分直した。現行の設計書・ガイド、成果物カタログ、テスト fixture にある旧 `src/exec*.ts` パスも新しいパスへ更新した。個票・plan・result・event などの履歴は更新していない。
+- 移動前後でトップレベルを含む全 123 コマンドの `--help` を比較し、差分がないことを確認した。`npm run build` と `node tools/build-if-stale.mjs` は成功し、`dist/exec/` に 74 件が生成され、`dist/` 直下に旧 `exec*.js`・`role-types.js` は残っていない。
+- 名前の先頭の語ごとの件数は、`run` 18、`schedule` 11、`worktree` 6、`plans` 4、`repo` 4、`agent` 3、`trial` 3、`register` 2、`reporter` 2、`task` 2、その他 18 語が各 1 件だった。`run` と `schedule` は将来の分割候補だが、現時点では 74 件を 1 階層で把握でき、次の [[prj-0001:pjr-x8y9-src-dependency-direction-rules]] で依存方向を先に固定するため、本件では追加分割を見送る。
+- Prettier と `specdojo catalog validate` は成功した。catalog validate が出した未作成文書の `based_on` 警告は既存データ由来で、エラーはない。lint・schema・typecheck・unit / integration test は親 runner の検証に委ねる。
+- 残る作業は、統合後に orchestrator が `exec run --register` を 1 回実行して統合まで確認する No. 5 の close 条件だけである。
 
 ## 5. 関連ドキュメント
 

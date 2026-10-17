@@ -5,7 +5,7 @@ import {
   loadEnv,
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
-import { listFilesRecursive, readYaml } from "../exec-shared.js";
+import { listFilesRecursive, readYaml } from "../exec/shared.js";
 
 // ================================
 // Types

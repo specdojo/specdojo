@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { buildScheduleIndex } from "../exec-schedule-index.js";
-import { listFilesRecursive } from "../exec-shared.js";
+import { buildScheduleIndex } from "../exec/schedule-index.js";
+import { listFilesRecursive } from "../exec/shared.js";
 import { gradeContentHash, gradeFindingCount, readGradeResultForDocument } from "./result.js";
 import {
   KATA_DIRS,
