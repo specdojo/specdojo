@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5caf721323604d8c9bfadd8394f79ae0
+- v: 1
+  id: reg_78cdd3c0b1684eb1af416d41f525fb51
+  ts: "2026-10-17T08:53:37Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に全コマンドの --help、hook の入口、exec run --register（PJR-JSEY、3ea815bb6）を確かめた（2026-10-17）。統合の直後は dist が作り直される前で、dist-freshness の警告が出た
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: codemod で src/exec の run の 18 ファイルを src/exec/run、schedule の 11 ファイルを src/exec/schedule へ移し、テストも同じ構成にした。src/exec の直下は 45 ファイルになった。全 106 コマンドの --help は移す前と一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_ea4f8b4ca9344ad3a0aba3422982723c

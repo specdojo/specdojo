@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bz9j-src-exec-run-schedule-subdirs
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:21:51Z"
   due_on: null
+  completed_at: "2026-10-17T08:53:37Z"
+  conclusion: codemod で src/exec の run の 18 ファイルを src/exec/run、schedule の 11 ファイルを src/exec/schedule へ移し、テストも同じ構成にした。src/exec の直下は 45 ファイルになった。全 106 コマンドの --help は移す前と一致し、分割後の runner で PJR-JSEY が統合まで通った
 ---
 
 # PJR-BZ9J src/exec の run と schedule をサブディレクトリへ分ける
