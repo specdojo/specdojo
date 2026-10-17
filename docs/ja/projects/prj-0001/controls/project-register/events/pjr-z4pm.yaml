@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7ed641bd29564e38b3aa54cb27efc68a
+- v: 1
+  id: reg_65674b0b2d7d420f9b45244b55d6237e
+  ts: "2026-10-17T23:48:12Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に残る循環を数え、grade・yaml-pages・catalog の 18 コマンドの --help が移す前の 0.3.1 と一致することを確かめた（2026-10-18）。機能に属する処理が shared に移った点は PJR-WSET で線引きを見直す
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: review/grade.ts が使う grade の結果を src/shared/grade-result.ts、yaml-pages が使うカタログの描画とパスを src/shared/catalog-render.ts・catalog-paths.ts へ移し、grade と review、catalog と docs の循環をほどいた。残る循環は exec と grade・register・job の 3 組
+  previous_event_id: reg_d1d8721880234375bb4ba09cdd5be6ef

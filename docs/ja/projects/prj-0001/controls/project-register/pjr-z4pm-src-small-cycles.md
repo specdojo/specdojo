@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-z4pm-src-small-cycles
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:45:20Z"
   due_on: null
+  completed_at: "2026-10-17T23:48:12Z"
+  conclusion: review/grade.ts が使う grade の結果を src/shared/grade-result.ts、yaml-pages が使うカタログの描画とパスを src/shared/catalog-render.ts・catalog-paths.ts へ移し、grade と review、catalog と docs の循環をほどいた。残る循環は exec と grade・register・job の 3 組
 ---
 
 # PJR-Z4PM review と grade、docs と catalog の循環をほどく
