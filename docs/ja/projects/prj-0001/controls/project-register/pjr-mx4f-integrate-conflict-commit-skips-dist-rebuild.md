@@ -51,7 +51,21 @@ exec の統合で登録簿の記帳の衝突を解くと、runner は git commit
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+解決内容:
+
+- `mergeWorktreeIntoCurrent` が統合に成功した後、scheduler lock を解放する前に、統合先リポジトリの `tools/build-if-stale.mjs` を明示的に起動するようにした。通常の `git merge` と、記帳の衝突を `git commit --no-verify` で解消した場合の両方が同じ後処理を通る。
+- `package.json` の `bin.specdojo` が `dist/specdojo.js` を指し、既存の `build-if-stale` 入口を持つ開発 checkout だけを対象とする。入口をそのまま使うため、primary worktree、`tsx` の有無、`src/` と `dist/` の鮮度に関する判定は hook と一致し、利用者リポジトリでは何もしない。
+- 起動エラーや非ゼロ終了を警告として扱い、再ビルドに失敗しても完了済みの統合を失敗へ変えない best-effort 動作にした。
+
+確認結果:
+
+- 記帳ファイルの衝突を自動解消する統合テストへ、統合後に `tools/build-if-stale.mjs` が起動されたことを確認する assertion を追加した。
+- 変更ファイルの Prettier 整形、register build、catalog validate を実行し、成功した。typecheck、lint、unit test、integration test、schema validate は executor 終了後に親 runner が実行する。
+- orchestrator から `exec run --register` を 1 回統合まで流す確認は、この変更自体が統合された後に行う close 条件として runner・人間へ引き継ぐ。
+
+再発防止:
+
+- post-merge hook の発火有無に依存せず、runner 自身が統合成功後の鮮度確認を必ず要求する。hook と重複して起動しても、既に `dist/` が最新なら既存判定により再ビルドされない。
 
 ## 5. 関連ドキュメント
 

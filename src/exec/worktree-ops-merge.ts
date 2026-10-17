@@ -1,4 +1,5 @@
-import { lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { existsSync, lstatSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, resolve } from "node:path";
 import { acquireSchedulerLock, releaseSchedulerLock } from "./events.js";
 import {
@@ -25,6 +26,50 @@ import {
 
 const DEFAULT_LOCK_TIMEOUT_MS = 10_000;
 const DEFAULT_LOCK_STALE_MS = 300_000;
+
+// A successful `git merge` runs post-merge, but a merge completed by the bookkeeping-conflict
+// resolver below uses `git commit --no-verify` and therefore skips that hook. Invoke the same
+// repository-local entry point explicitly after either path. Only a SpecDojo development checkout
+// whose local bin points at dist is eligible; repositories consuming SpecDojo from node_modules
+// remain unaffected. The script and this launcher are both best-effort so a dist rebuild failure
+// never turns a completed merge into an integration failure.
+function usesLocalSpecdojoDistBin(repoRoot: string): boolean {
+  try {
+    const packageJson = JSON.parse(readFileSync(resolve(repoRoot, "package.json"), "utf8")) as {
+      name?: unknown;
+      bin?: unknown;
+    };
+    if (packageJson.name !== "specdojo" || typeof packageJson.bin !== "object") return false;
+    return (packageJson.bin as { specdojo?: unknown } | null)?.specdojo === "dist/specdojo.js";
+  } catch {
+    return false;
+  }
+}
+
+function runBuildIfStaleAfterMerge(repoRoot: string): void {
+  try {
+    const scriptPath = resolve(repoRoot, "tools", "build-if-stale.mjs");
+    if (!existsSync(scriptPath) || !usesLocalSpecdojoDistBin(repoRoot)) return;
+    const result = spawnSync(process.execPath, [scriptPath], {
+      cwd: repoRoot,
+      stdio: "inherit",
+      shell: false,
+    });
+    if (result.error) {
+      process.stderr.write(
+        `  [integrate] warning: build-if-stale could not start: ${result.error.message}\n`,
+      );
+    } else if (result.status !== 0) {
+      process.stderr.write(
+        `  [integrate] warning: build-if-stale failed with exit code ${result.status ?? "unknown"}\n`,
+      );
+    }
+  } catch (error) {
+    process.stderr.write(
+      `  [integrate] warning: build-if-stale failed: ${error instanceof Error ? error.message : String(error)}\n`,
+    );
+  }
+}
 
 // A root working copy of an execution bookkeeping file (plan / result / claim or register event)
 // captured before the merge releases it. `content` is null when the path did not exist.
@@ -323,6 +368,7 @@ export function mergeWorktreeIntoCurrent(params: {
       throw new Error(`git merge failed: ${summary}`);
     }
   } finally {
+    if (merged) runBuildIfStaleAfterMerge(context.repoRoot);
     if (!merged && released.length > 0) restoreRootWorkingCopies(context.repoRoot, released);
     if (lockDir) releaseSchedulerLock(lockDir);
   }
