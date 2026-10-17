@@ -97,6 +97,49 @@ describe("transient git failure retry", () => {
     expect(waits).toEqual([2000, 5000]);
   });
 
+  it("accepts a recovered postcondition without repeating a non-idempotent command", () => {
+    let calls = 0;
+    const waits: number[] = [];
+
+    const actual = runGitWithTransientRetry(
+      () => {
+        calls += 1;
+        return { status: 128, stderr: dubiousOwnership };
+      },
+      () => undefined,
+      (milliseconds) => waits.push(milliseconds),
+      undefined,
+      () => true,
+    );
+
+    expect(actual).toEqual({ status: 0, stderr: "" });
+    expect(calls).toBe(1);
+    expect(waits).toEqual([]);
+  });
+
+  it("checks a recovered postcondition even after exhausting the retry delays", () => {
+    let calls = 0;
+    let recoveries = 0;
+
+    const actual = runGitWithTransientRetry(
+      () => {
+        calls += 1;
+        return { status: 128, stderr: dubiousOwnership };
+      },
+      () => undefined,
+      () => undefined,
+      undefined,
+      () => {
+        recoveries += 1;
+        return recoveries === 4;
+      },
+    );
+
+    expect(actual.status).toBe(0);
+    expect(calls).toBe(4);
+    expect(recoveries).toBe(4);
+  });
+
   it("does not retry a different git failure", () => {
     let calls = 0;
     let retryReports = 0;

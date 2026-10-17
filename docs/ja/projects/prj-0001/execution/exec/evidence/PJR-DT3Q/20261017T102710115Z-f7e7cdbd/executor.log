@@ -1,0 +1,12 @@
+`git worktree add` の再試行を安全化しました。
+
+- 作成済みなら成功扱い
+- 同一 commit の部分状態なら片付けて再試行
+- 異なる commit の branch は保持して明示的に失敗
+- 単体・統合テストと設計ガイド、個票を更新
+- Prettier、登録簿生成、catalog 検証、差分検査は成功
+- テスト・型検査・lint は指示どおり親 runner に委譲
+
+<specdojo_executor_evidence>
+{"final_message":"worktree add の一時エラー後に目的状態を照合し、作成済み・部分作成・競合 branch を安全に処理する実装とテスト、関連文書を更新した","validations":[{"command":"npx prettier --write src/exec/worktree.ts tests/src/exec/worktree.test.ts tests/src/exec/worktree.integration.test.ts docs/ja/specdojo/guides/exec-worktree-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-dt3q-transient-git-retry-not-idempotent.md","status":"passed","summary":"変更した TypeScript・Markdown を整形した"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"tsx CLI の IPC EPERM 後、規定の代替起動方法で登録簿生成に成功した"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検証は終了コード 0。既存の参照先未配置警告のみだった"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"specdojo exec run --register","status":"requires_human","summary":"統合後に orchestrator が実行し、完了まで確認する close 条件"}]}
+</specdojo_executor_evidence>

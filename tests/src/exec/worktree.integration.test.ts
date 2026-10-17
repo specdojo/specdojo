@@ -39,6 +39,39 @@ function createGitRepository(): string {
   return repo;
 }
 
+function simulateOneShotWorktreeAddFailure(mode: "complete" | "branch-only"): () => void {
+  const binDir = mkdtempSync(join(tmpdir(), "specdojo-git-wrapper-"));
+  const wrapper = join(binDir, "git");
+  const marker = join(binDir, "failed-once");
+  const realGit = execFileSync("sh", ["-c", "command -v git"], { encoding: "utf8" }).trim();
+  const setup =
+    mode === "complete"
+      ? '"$real_git" "$@" || exit $?\n'
+      : '"$real_git" -C "$2" branch "$7" "${8:-HEAD}" || exit $?\n';
+  writeFileSync(
+    wrapper,
+    `#!/bin/sh
+real_git=${JSON.stringify(realGit)}
+marker=${JSON.stringify(marker)}
+if [ ! -e "$marker" ] && [ "$3" = "worktree" ] && [ "$4" = "add" ]; then
+  : > "$marker"
+  ${setup}  printf '%s\\n' "fatal: detected dubious ownership in repository at '$2'" >&2
+  exit 128
+fi
+exec "$real_git" "$@"
+`,
+    "utf8",
+  );
+  chmodSync(wrapper, 0o755);
+  const originalPath = process.env.PATH;
+  process.env.PATH = `${binDir}:${originalPath ?? ""}`;
+  return () => {
+    if (originalPath === undefined) delete process.env.PATH;
+    else process.env.PATH = originalPath;
+    rmSync(binDir, { recursive: true, force: true });
+  };
+}
+
 function addNpmPackage(repo: string, packagePath = "."): void {
   const packageDir = resolve(repo, packagePath);
   const name = packagePath === "." ? "fixture-root" : "fixture-package";
@@ -154,6 +187,76 @@ describe("exec worktree", () => {
 
       expect(git(created.path, "rev-parse", "HEAD")).toBe(startPoint);
       expect(existsSync(join(created.path, "later.txt"))).toBe(false);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
+  it("continues when worktree add reports a transient failure after completing", () => {
+    const repo = createGitRepository();
+    const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
+    const restoreGit = simulateOneShotWorktreeAddFailure("complete");
+    try {
+      const created = ensureExecWorktree({
+        repoRoot: repo,
+        worktreeBase: base,
+        taskId: "PJR-DT3Q-complete",
+        installDependencies: () => undefined,
+        generateArtifacts: () => undefined,
+      });
+
+      expect(created.created).toBe(true);
+      expect(git(created.path, "branch", "--show-current")).toBe(created.branch);
+      expect(findExecWorktree(repo, "PJR-DT3Q-complete")?.path).toBe(created.path);
+    } finally {
+      restoreGit();
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
+  it("removes a same-commit branch-only partial state before retrying worktree add", () => {
+    const repo = createGitRepository();
+    const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
+    const restoreGit = simulateOneShotWorktreeAddFailure("branch-only");
+    try {
+      const created = ensureExecWorktree({
+        repoRoot: repo,
+        worktreeBase: base,
+        taskId: "PJR-DT3Q-branch-only",
+        installDependencies: () => undefined,
+        generateArtifacts: () => undefined,
+      });
+
+      expect(created.created).toBe(true);
+      expect(git(created.path, "branch", "--show-current")).toBe(created.branch);
+      expect(git(created.path, "rev-parse", "HEAD")).toBe(git(repo, "rev-parse", "HEAD"));
+    } finally {
+      restoreGit();
+      rmSync(repo, { recursive: true, force: true });
+      rmSync(base, { recursive: true, force: true });
+    }
+  });
+
+  it("preserves an existing branch that differs from the requested start point", () => {
+    const repo = createGitRepository();
+    const base = mkdtempSync(join(tmpdir(), "specdojo-worktree-base-"));
+    const taskId = "PJR-DT3Q-mismatched-branch";
+    const branch = `exec/${taskId}`;
+    try {
+      const startPoint = git(repo, "rev-parse", "HEAD");
+      writeFileSync(join(repo, "later.txt"), "later\n", "utf8");
+      git(repo, "add", "later.txt");
+      git(repo, "commit", "-m", "later");
+      const existingTip = git(repo, "rev-parse", "HEAD");
+      git(repo, "branch", branch, existingTip);
+
+      expect(() =>
+        ensureExecWorktree({ repoRoot: repo, worktreeBase: base, taskId, startPoint }),
+      ).toThrow("Refusing to delete or reuse it");
+      expect(git(repo, "rev-parse", branch)).toBe(existingTip);
+      expect(findExecWorktree(repo, taskId)).toBeNull();
     } finally {
       rmSync(repo, { recursive: true, force: true });
       rmSync(base, { recursive: true, force: true });

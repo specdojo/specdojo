@@ -51,7 +51,11 @@ src/exec/worktree.ts は dubious ownership などの一時的な git の失敗�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `runGitWithTransientRetry` に、一時的な失敗の後で非冪等なコマンドを再実行する前に目的状態を回復・照合するフックを追加した。
+- `git worktree add` では、目的の path・branch・分岐元 commit が作成済みなら成功として続行する。branch だけが同じ commit に作られた場合は、その branch と未登録 path を除去してから再試行する。
+- 既存 branch が分岐元と異なる commit を指す場合、または別 worktree で使用中の場合は削除せず、理由を示して失敗させる。
+- 作成完了後に一時エラーが返る場合、branch だけが残る場合、異なる commit の branch がある場合のテストを追加した。共通の単体・統合テスト、型検査、lint は executor 終了後の親 runner が実行する。
+- 共通再試行を使うほかの変更系 Git 操作も確認した。`commit`、`merge`、`worktree remove`、branch 削除、`stash drop` などは一般には再実行が非冪等になり得るが、今回のように複数段階の処理後に ownership エラーを返した既知事例は `worktree add` だけである。今回追加した回復フックは、同様の事例が確認されたコマンドへ個別の完了状態照合を追加できる形にした。
 
 ## 5. 関連ドキュメント
 
