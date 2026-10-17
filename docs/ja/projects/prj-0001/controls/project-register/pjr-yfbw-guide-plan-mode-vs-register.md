@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-yfbw-guide-plan-mode-vs-register
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-17T14:39:31Z"
   due_on: null
+  completed_at: "2026-10-17T23:37:47Z"
+  conclusion: オーケストレーターの運用ガイドに「plan モードと register の使い分け」の節を加え、識別・種類・状態・実行とのつながり・承認の記録・履歴・一覧の観点の対比と、plan モードの下書きから decision と todo へ書き写す運用の流れを書いた
 ---
 
 # PJR-YFBW オーケストレーターの運用ガイドに plan モードと register の使い分けを書く
