@@ -10,7 +10,7 @@ import {
   mergeProviderGlobalSettings,
   runProviderScaffold,
   specdojoPackageRootDir,
-} from "../../../src/exec/provider-scaffold.js";
+} from "../../../src/shared/provider-scaffold.js";
 import {
   PROTECTED_DIRECTORY_PREFIXES,
   PROTECTED_EXACT_PATHS,

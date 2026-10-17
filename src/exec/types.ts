@@ -1,4 +1,6 @@
-export type TaskMode = "edit" | "review";
+import type { AgentStageRole, SchedulerStrategy, TaskMode } from "../shared/agent-types.js";
+
+export type { AgentStageRole, SchedulerStrategy, TaskMode } from "../shared/agent-types.js";
 
 // タスクの進め方プロファイル。前3者は成果物作業で参考資料をどの程度参照するかを表し、
 // <kind>-maintenance は成果物や finding が指す規範を根拠に対象の参考資料を見直す進め方
@@ -24,8 +26,6 @@ export type Approach =
   | "bootstrap-finalize";
 
 export type Proficiency = "low" | "normal" | "high" | "expert";
-
-export type AgentStageRole = "executor" | "reporter";
 
 export type AgentPipelineStage = {
   stage_role: AgentStageRole;
@@ -55,8 +55,6 @@ export type ExecEventType =
   | "estimate";
 
 export type ExecState = "todo" | "doing" | "blocked" | "done" | "cancelled";
-
-export type SchedulerStrategy = "critical-first" | "fifo";
 
 export type ExecEventV1 = {
   v: 1;

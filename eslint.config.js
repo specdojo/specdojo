@@ -14,6 +14,25 @@ const sharedRules = {
   ],
 };
 
+const srcFeatureDirectories = [
+  "catalog",
+  "commands",
+  "dashboard",
+  "deliverable",
+  "devcontainer",
+  "docs",
+  "exec",
+  "grade",
+  "job",
+  "kata",
+  "register",
+  "review",
+  "routine",
+  "schedule",
+];
+const srcFeatureImportRegex = `^(?:\\.\\./)+(?:${srcFeatureDirectories.join("|")})(?:/|$)|^(?:\\.\\./)+specdojo(?:\\.js)?$`;
+const cliImportRegex = "^(?:\\.\\./)+(?:commands(?:/|$)|specdojo(?:\\.js)?$)";
+
 export default tseslint.config(
   { ignores: ["dist/**", "node_modules/**", "**/*.d.ts"] },
 
@@ -44,6 +63,43 @@ export default tseslint.config(
     rules: {
       "max-lines": ["warn", { max: 1000, skipBlankLines: true, skipComments: true }],
       "max-lines-per-function": ["warn", { max: 200, skipBlankLines: true, skipComments: true }],
+    },
+  },
+
+  // shared is the dependency root: it must not reach into a feature or the CLI entry point.
+  {
+    files: ["src/shared/**/*.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: srcFeatureImportRegex,
+              message: "Modules under src/shared must not import other src features.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // Feature modules must not depend on command wiring or the top-level CLI entry point.
+  {
+    files: ["src/**/*.ts"],
+    ignores: ["src/commands/**/*.ts", "src/shared/**/*.ts", "src/specdojo.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: cliImportRegex,
+              message: "Feature modules must not import src/commands or src/specdojo.ts.",
+            },
+          ],
+        },
+      ],
     },
   },
 

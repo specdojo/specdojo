@@ -2,9 +2,12 @@ import { existsSync } from "node:fs";
 import { copyFile, mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import path from "node:path";
-import { isRecord } from "./shared.js";
 
-export { specdojoPackageRootDir } from "../shared/package-paths.js";
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+export { specdojoPackageRootDir } from "./package-paths.js";
 
 export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = {
   claude: {

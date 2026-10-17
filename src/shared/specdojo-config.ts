@@ -5,8 +5,8 @@ import dotenv from "dotenv";
 import { dump, load } from "./yaml.js";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
-import type { AgentStageRole, SchedulerStrategy, TaskMode } from "../exec/types.js";
-import { runProviderScaffold, specdojoPackageRootDir } from "../exec/provider-scaffold.js";
+import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./agent-types.js";
+import { runProviderScaffold, specdojoPackageRootDir } from "./provider-scaffold.js";
 import {
   ensureGitignore,
   formatGitignoreReport,

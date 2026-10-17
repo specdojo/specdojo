@@ -1,0 +1,15 @@
+実装を完了しました。
+
+- `shared` から `exec` への依存を解消
+- provider scaffold と共通型を `shared` へ移動
+- ESLint に依存方向の規則を error で追加
+- TypeScript 実装ルールと個票を更新
+- 違反 import 2 種が ESLint error になることを確認
+- 全 123 コマンドの `--help` が変更前後で一致
+- register build、catalog validate、Prettier、差分検査が完了
+
+result ファイルは executor 段階の指示どおり編集していません。typecheck・全 lint・test・schema は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"src の依存方向を ESLint で強制し、shared から exec への既存依存を解消した。全123件の CLI help は変更前後で一致した。","validations":[{"command":"npx eslint src/shared/dependency-direction-violation.ts","status":"passed","summary":"一時的な shared→exec import が no-restricted-imports の error になることを確認し、一時ファイルを削除した"},{"command":"npx eslint src/catalog/dependency-direction-violation.ts","status":"passed","summary":"一時的な feature→commands import が no-restricted-imports の error になることを確認し、一時ファイルを削除した"},{"command":"変更前HEADと変更後ソースの全コマンド・サブコマンド --help 比較","status":"passed","summary":"123件の出力に差分なし"},{"command":"npx prettier --write .github/instructions/typescript.instructions.md eslint.config.js src/commands/init.ts src/exec/commands.ts src/exec/types.ts src/shared/agent-types.ts src/shared/provider-scaffold.ts src/shared/specdojo-config.ts tests/src/shared/provider-scaffold.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-x8y9-src-dependency-direction-rules.md","status":"passed","summary":"変更対象はすべて整形済み"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビューを正常に生成した"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログがOK。未作成成果物に関する既存警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
