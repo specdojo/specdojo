@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_aa5a179cedc14ad9a4bd02c08d837059
+  ts: "2026-10-17T09:13:21Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-X8Y9 の親の検証（test-unit）で、変更と関係なく失敗した（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ENOBUFS のテストが負荷によって失敗する
+    - field: description
+      from: ""
+      to: tests/src/exec/worktree.test.ts の reports ENOBUFS のテストは、子プロセスに 64 KB を書かせて maxBuffer 1 KB で止められることを確かめる。負荷が高いと子プロセスが止められる前に書き終えて終了コード 0 になり、status が null でなくなって失敗する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
