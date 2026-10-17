@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-cy80-checkpoint-inspect-failure-no-detail
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T11:14:31Z"
   due_on: null
+  completed_at: "2026-10-17T12:09:54Z"
+  conclusion: checkpoint の確認の git の失敗で、終了コード・stdout・stderr を失敗のログに残し、エラーのメッセージに原因の要約を含めるようにした。src/exec の同じように原因を残さない箇所も直した
 ---
 
 # PJR-CY80 checkpoint の確認の git の失敗が原因を残さない

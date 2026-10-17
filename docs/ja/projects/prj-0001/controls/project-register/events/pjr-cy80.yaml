@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_57aff0d6188f4388b88fc78e7d7638a9
+- v: 1
+  id: reg_f78c0a80e496468db815fbecd4048eca
+  ts: "2026-10-17T12:09:54Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に、修正後の runner で exec run --register（PJR-JSEY、bde36e3c0）が統合まで通った（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: checkpoint の確認の git の失敗で、終了コード・stdout・stderr を失敗のログに残し、エラーのメッセージに原因の要約を含めるようにした。src/exec の同じように原因を残さない箇所も直した
+  previous_event_id: reg_e060a2da1c814e68ad85ef3158f62901
