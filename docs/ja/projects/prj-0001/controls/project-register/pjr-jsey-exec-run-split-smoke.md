@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-10-15T11:08:15Z"
   conclusion: runner のコードの分割 5 件（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
 ---
 
