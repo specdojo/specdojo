@@ -5,6 +5,7 @@ import { execLifecyclePoolPath } from "../exec/run/lock.js";
 import { CrossProcessMutex } from "../exec/slot-lock.js";
 import { gitOutput, gitResult } from "../shared/git.js";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
+import type { Approach } from "../shared/agent-types.js";
 import { repoRelative, stageCommitTargets, worktreeStatusPaths } from "../exec/worktree-ops.js";
 import {
   atomicWriteFile,
@@ -148,6 +149,8 @@ export type RegisterAddFields = {
   due: string;
   completedAt: string;
   conclusion: string;
+  approach?: Approach;
+  targets?: string[];
 };
 
 // 作成する個票ファイル名と割り当て ID を算出する純粋関数。I/O を持たず、

@@ -118,6 +118,64 @@ function writeInitialEvent(
   writeFileSync(path, appendRegisterEvent(undefined, event), "utf8");
 }
 
+function writeApproachTargets(root: string): void {
+  const catalogDir = join(root, "docs/ja/projects/prj-0001/010-deliverables-catalog");
+  mkdirSync(catalogDir, { recursive: true });
+  mkdirSync(join(root, "docs/ja/product"), { recursive: true });
+  mkdirSync(join(root, "docs/ja/specdojo/rulebooks"), { recursive: true });
+  writeFileSync(
+    join(root, "docs/ja/product/deliverable.md"),
+    [
+      "---",
+      "specdojo:",
+      "  id: deliverable-doc",
+      "  type: project",
+      "  status: draft",
+      "---",
+      "",
+      "# Deliverable",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(root, "docs/ja/specdojo/rulebooks/example-rulebook.md"),
+    [
+      "---",
+      "specdojo:",
+      "  id: specdojo:example-rulebook",
+      "  type: rulebook",
+      "  status: draft",
+      "---",
+      "",
+      "# Rulebook",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(catalogDir, "dct-example.yaml"),
+    [
+      "id: prj-0001:dct-example",
+      "type: project",
+      "status: draft",
+      "project_id: prj-0001",
+      "domain: example",
+      "base_path: /docs/ja/product",
+      "groups:",
+      "  - deliverables:",
+      "      - local_id: deliverable",
+      "        name: Deliverable",
+      "        kind: work",
+      "        overview: Example",
+      "        path: deliverable.md",
+      "        done_criteria: []",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+}
+
 // テンプレート（個票・派生ビュー）は実リポジトリのものを temp へ複製し、生成処理を成立させる。
 function withRepo(
   fn: (fixture: Fixture) => Promise<void> | void,
@@ -232,6 +290,98 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(readFileSync(join(registerDir, "generated/pjr-views-by-status.md"), "utf8")).toContain(
         "PJR-AB12",
       );
+    });
+  });
+
+  it("add は approach と target を検証して個票へ書く", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      writeApproachTargets(root);
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "成果物を直す",
+        "--topic",
+        "edit-deliverable",
+        "--id",
+        "PJR-AB12",
+        "--approach",
+        "fully-guided",
+        "--target",
+        "deliverable-doc",
+      ]);
+
+      const ticket = readFileSync(join(registerDir, "pjr-ab12-edit-deliverable.md"), "utf8");
+      expect(ticket).toContain("  approach: fully-guided");
+      expect(ticket).toContain("  targets:\n    - deliverable-doc");
+      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toEqual(
+        expect.arrayContaining([
+          { field: "approach", from: "", to: "fully-guided" },
+          { field: "targets", from: "", to: '["deliverable-doc"]' },
+        ]),
+      );
+    });
+  });
+
+  it("add は approach がない target を複数回指定できる", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      writeApproachTargets(root);
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "複数文書を直す",
+        "--topic",
+        "edit-documents",
+        "--id",
+        "PJR-AB12",
+        "--target",
+        "deliverable-doc",
+        "--target",
+        "specdojo:example-rulebook",
+      ]);
+
+      const ticket = readFileSync(join(registerDir, "pjr-ab12-edit-documents.md"), "utf8");
+      expect(ticket).not.toContain("  approach:");
+      expect(ticket).toContain(
+        "  targets:\n    - deliverable-doc\n    - specdojo:example-rulebook",
+      );
+    });
+  });
+
+  it("add は approach と target の不一致をファイル作成前に拒否する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      writeApproachTargets(root);
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "誤った対象",
+        "--topic",
+        "wrong-target",
+        "--id",
+        "PJR-AB12",
+        "--approach",
+        "rulebook-maintenance",
+        "--target",
+        "deliverable-doc",
+      ]);
+
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+        "requires a rulebook document target",
+      );
+      expect(existsSync(join(registerDir, "pjr-ab12-wrong-target.md"))).toBe(false);
     });
   });
 
@@ -748,6 +898,43 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(updated).toContain('  due_on: "2026-09-30"');
       expect(updated).toContain("# PJR-AB12 在庫初期値を見直す");
       expect(updated).toContain("仕入れ先変更に伴う見直し。");
+    });
+  });
+
+  it("update は approach と target を変更・削除できる", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      writeApproachTargets(root);
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: open",
+          "priority: high",
+          "approach: fully-guided",
+          "targets:",
+          "  - deliverable-doc",
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--approach",
+        "rulebook-maintenance",
+        "--target",
+        "specdojo:example-rulebook",
+      ]);
+      const changed = readFileSync(ticketPath, "utf8");
+      expect(changed).toContain("  approach: rulebook-maintenance");
+      expect(changed).toContain("    - specdojo:example-rulebook");
+
+      await runRegister(["update", "--id", "PJR-AB12", "--approach", "-", "--target", "-"]);
+      const removed = readFileSync(ticketPath, "utf8");
+      expect(removed).not.toContain("  approach:");
+      expect(removed).not.toContain("  targets:");
     });
   });
 

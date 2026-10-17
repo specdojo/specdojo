@@ -55,6 +55,8 @@ $defs:
           - completed
           - conclusion
           - block_reason
+          - approach
+          - targets
       from:
         type: string
       to:

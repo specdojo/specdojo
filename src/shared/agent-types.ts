@@ -16,19 +16,22 @@ export type SchedulerStrategy = "critical-first" | "fifo";
 // cross-deliverable-dedup は明示した成果物群を横断して正本を選び、重複を要約と参照へ置換する。
 // finalize は human が成果物のみを最終確認して status を ready へ確定する進め方、
 // bootstrap-finalize は bootstrap と対になり、成果物と参考資料一式をまとめて確定する進め方。
-export type Approach =
-  | "fully-guided"
-  | "recipe-guided"
-  | "freeform"
-  | "bootstrap"
-  | "retrofit"
-  | "cross-deliverable-dedup"
-  | "rulebook-maintenance"
-  | "recipe-maintenance"
-  | "sample-maintenance"
-  | "template-maintenance"
-  | "finalize"
-  | "bootstrap-finalize";
+export const APPROACHES = [
+  "fully-guided",
+  "recipe-guided",
+  "freeform",
+  "bootstrap",
+  "retrofit",
+  "cross-deliverable-dedup",
+  "rulebook-maintenance",
+  "recipe-maintenance",
+  "sample-maintenance",
+  "template-maintenance",
+  "finalize",
+  "bootstrap-finalize",
+] as const;
+
+export type Approach = (typeof APPROACHES)[number];
 
 export type Proficiency = "low" | "normal" | "high" | "expert";
 

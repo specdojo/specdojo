@@ -32,6 +32,8 @@ export const REGISTER_EVENT_FIELDS = [
   "completed",
   "conclusion",
   "block_reason",
+  "approach",
+  "targets",
 ] as const;
 
 export type RegisterEventField = (typeof REGISTER_EVENT_FIELDS)[number];
@@ -115,6 +117,8 @@ export function registerEventFieldValues(
     completed: item.completed,
     conclusion: item.conclusion,
     block_reason: parsed.blockReason,
+    approach: item.approach ?? CELL_NONE,
+    targets: item.targets ? JSON.stringify(item.targets) : CELL_NONE,
   };
 }
 

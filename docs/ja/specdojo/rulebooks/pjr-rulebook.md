@@ -71,6 +71,7 @@ Project Register Documentation Rules
 | `completed_at`  | 完了・却下・決定日時                         | 条件 |
 | `block_reason`  | `waiting` へ遷移した直近の理由               | 任意 |
 | `conclusion`    | 終端時の結論要約                             | 任意 |
+| `approach`      | 対象を作成・修正するときの進め方             | 任意 |
 | `targets`       | 変更対象文書の doc id リスト                 | 任意 |
 
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
@@ -132,11 +133,12 @@ Project Register Documentation Rules
 - 結果・結論には、完了を判定した根拠と後続対応を記載する。
 - 関連ドキュメントには、判断根拠、変更対象、影響先、追跡先のうち該当する文書を記載する。
 - 本項目の実施において確実に変更する対象文書が分かっている場合は、その文書 ID を Frontmatter の `targets` 配列へ宣言する。宣言した `targets` は agent 実行時の変更網羅検証（target coverage）に用いられる。未知の場合や対象を固定しない場合は宣言を省略する。
+- `approach` を宣言する場合、`targets` は 1 件だけ必須とする。`fully-guided`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`cross-deliverable-dedup`・`finalize`・`bootstrap-finalize` の対象は成果物カタログにある成果物の doc id とする。`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` の対象は、名前に対応する種別の kata の doc id とする。文書索引で解決できない ID や、`approach` と種別が合わない対象は使用しない。
 
 ### 5.2. 構造化フィールドと生成
 
 - 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 type で個票を省略しない。
-- 担当・期限・結論・topic などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。待機理由は `register wait --reason` で記録し、誤った現在値を手動補正するときは `register update --block-reason -` で削除する。
+- 担当・期限・結論・topic・`approach`・`targets` などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。`register add` と `register update` では `--approach` と繰り返し指定できる `--target` を使う。`approach` または対象を削除するときは、それぞれ `--approach -`、`--target -` を指定する。待機理由は `register wait --reason` で記録し、誤った現在値を手動補正するときは `register update --block-reason -` で削除する。
 - `register build` は個票を読み取り、一覧・派生ビューを再生成する。一覧を編集して個票へ反映する経路はない。
 - `register add`、状態遷移、`register update`、`register renumber` は現在値を個票へ、イベントを対応する項目別ログへ記録する。`--by` で actor、`--reason` で理由を明示でき、省略時もコマンドが既定値を記録する。
 - 同じ現在値へ同じ操作を再実行した場合は、新しいイベントを追加しない。イベント ID と直前イベント参照を保ったまま再実行し、既存イベントの置換や削除で重複を解消しない。

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
@@ -19,6 +19,8 @@ import {
   type PjrItem,
 } from "../../../src/register/item.js";
 import { buildValidator } from "../../helpers/schema.js";
+import { APPROACHES } from "../../../src/shared/agent-types.js";
+import { load } from "../../../src/shared/yaml.js";
 
 // 登録項目の個票。frontmatter の登録項目フィールドは可変にして、
 // 移行済み（item_status あり）と未移行（なし）の両方を作れるようにする。
@@ -154,6 +156,15 @@ describe("readRegisterItemContent — 個票からの一覧行の導出", () => 
     );
 
     expect(parsed?.item.targets).toEqual(["prj-0001:cdfd-overview", "prj-0001:cdfd-check"]);
+  });
+
+  it("個票の approach を読み取る", () => {
+    const parsed = readRegisterItemContent(
+      buildItemFile([...MIGRATED_FIELDS, "approach: fully-guided"]),
+      "pjr-ab12-inventory-seed.md",
+    );
+
+    expect(parsed?.item.approach).toBe("fully-guided");
   });
 
   it("targets が無い個票は targets を持たない", () => {
@@ -316,6 +327,35 @@ describe("validateRegisterItemDocs — 個票正本の横断検証", () => {
 });
 
 describe("register-item-frontmatter schema — enum 検証", () => {
+  it("Approach 型の値と schema の enum が一致する", () => {
+    const schema = load(
+      readFileSync("docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml", "utf8"),
+    ) as { $defs: { Approach: { enum: string[] } } };
+
+    expect(schema.$defs.Approach.enum).toEqual([...APPROACHES]);
+  });
+
+  it("approach がある場合は targets を 1 件だけ要求する", () => {
+    const validator = buildValidator(
+      "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+    );
+    const base = {
+      id: "prj-0001:pjr-ab12-inventory-seed",
+      type: "project",
+      status: "draft",
+      rulebook: "specdojo:pjr-rulebook",
+      part_of: ["prj-0001:pjr-index"],
+      item_type: "todo",
+      item_status: "open",
+      priority: "medium",
+      approach: "fully-guided",
+    };
+
+    expect(validator({ specdojo: base })).toBe(false);
+    expect(validator({ specdojo: { ...base, targets: ["doc-a", "doc-b"] } })).toBe(false);
+    expect(validator({ specdojo: { ...base, targets: ["doc-a"] } })).toBe(true);
+  });
+
   it("不正な item_status と priority を拒否する", () => {
     const validator = buildValidator(
       "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",

@@ -196,6 +196,28 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     expect(content).toContain("origin: register");
   });
 
+  it("個票に approach があっても後続対応までは従来の register plan を生成する", async () => {
+    const outPath = path.join(dir, "plan-with-item-approach.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({
+        approach: "fully-guided",
+        targets: ["prj-test:cdfd-overview"],
+      }),
+      stem: "xep-pjr-test",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+
+    expect(content).toContain("origin: register");
+    expect(content).toContain("targets:\n    - prj-test:cdfd-overview");
+    expect(content).not.toContain("approach: fully-guided");
+    expect(content).toContain("# Edit Plan: PJR-TEST");
+  });
+
   it("個票が targets を宣言していなければ plan frontmatter に targets が含まれない", async () => {
     const outPath = path.join(dir, "plan-without-targets.md");
     await generateRegisterPlan({

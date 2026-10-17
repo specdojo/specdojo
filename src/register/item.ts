@@ -8,6 +8,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { dump, load } from "../shared/yaml.js";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
+import type { Approach } from "../shared/agent-types.js";
 import { registerDateFromTimestamp } from "./date.js";
 
 // ================================
@@ -30,6 +31,8 @@ export type PjrItem = {
   completedAt: string;
   conclusion: string;
   ticket: string;
+  // approach を持つ項目は targets 1 件と組み合わせ、起票・更新時に対象種別を検証する。
+  approach?: Approach;
   // 個票が宣言する対象文書の doc id リスト。plan frontmatter の targets へ転記され、
   // target coverage 検証に使われる。宣言がない項目は undefined（検証 skip）。
   targets?: string[];
@@ -95,6 +98,8 @@ export type RegisterItemFieldUpdates = {
   completed_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   block_reason?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   conclusion?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
+  approach?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  targets?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
 
 // 日時へ移行する前の個票が持っていた日付フィールド。移行処理だけが読み書きする。
@@ -139,6 +144,7 @@ const SPECDOJO_KEY_ORDER = [
   "completed_at",
   "block_reason",
   "conclusion",
+  "approach",
   "targets",
 ];
 
@@ -244,6 +250,7 @@ export function readRegisterItemContent(
         (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
       )
     : undefined;
+  const approach = asString(fields.approach) as Approach | undefined;
 
   const item: PjrItem = {
     id,
@@ -262,6 +269,7 @@ export function readRegisterItemContent(
     completedAt: asString(fields.completed_at) ?? CELL_NONE,
     conclusion: asString(fields.conclusion) ?? CELL_NONE,
     ticket: ticketRefCell(filename),
+    ...(approach ? { approach } : {}),
     ...(targets && targets.length > 0 ? { targets } : {}),
   };
 
@@ -393,6 +401,8 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
     conclusion: isPlaceholderCell(item.conclusion)
       ? null
       : inlineCodeAnglePlaceholders(item.conclusion.trim()),
+    ...(item.approach ? { approach: item.approach } : {}),
+    ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
   };
 }
 
