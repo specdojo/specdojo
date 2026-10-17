@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8f7535ce58c048f0b6f6a41f84ae75b5
+  ts: "2026-10-17T08:45:12Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 汎用の部品の移動の後に残る循環をほどく
+    - field: description
+      from: ""
+      to: register から exec/worktree-ops・exec/slot-lock、job から exec/plans、grade から exec/schedule-index、exec から grade/result などの残りを 1 件ずつ見て、shared へ移すか依存の向きを逆にする。 PJR-QQKY の決定に基づく。動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
