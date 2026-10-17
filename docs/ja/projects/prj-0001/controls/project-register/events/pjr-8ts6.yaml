@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1a1db83cbbf24b54a4a6d533be903937
+  ts: "2026-10-17T08:22:08Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 0.3.0 の公開前に見送った軽い指摘が、src の移動の result で目立ったため。利用者の判断で起票（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: result の変更ファイルの説明が「reporter の説明がないため」で埋まる
+    - field: description
+      from: ""
+      to: reporter が変更ファイルごとの説明を返さないと、runner が result の変更ファイルの欄を「reporter の説明がないため、変更差分を参照」で埋める。PJR-XP0J の result では多くの行がこの文で、何を変えたかが result から読めない
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
