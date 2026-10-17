@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 import type {
   DctDoc,
   DctIndexDoc,
@@ -13,7 +13,7 @@ import { isDctCatalogFileName } from "./types.js";
 import { declaredIncludes, declaredKata } from "../kata/kata.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { flattenTemplateFrontmatter } from "../docs/template-frontmatter.js";
-import { specdojoRootDir } from "../specdojo-config.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 import {
   buildMarkdown,
   isRecord,

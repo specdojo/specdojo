@@ -16,7 +16,7 @@ import {
   resolveProject,
   resolveSafeMarkdownPath,
 } from "./targets.js";
-import { getProjectExecutionPath, specdojoRootDir } from "../specdojo-config.js";
+import { getProjectExecutionPath, specdojoRootDir } from "../shared/specdojo-config.js";
 
 function gradePipelineStateDirectory(projectOption?: string, rootDir = specdojoRootDir()): string {
   const { project } = resolveProject(projectOption);

@@ -1,6 +1,6 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { DEFAULT_PROJECT_CONTEXT } from "./specdojo-config.js";
+import { DEFAULT_PROJECT_CONTEXT } from "./shared/specdojo-config.js";
 import { resolveDeliverableSchemaRef, resolveKataRefs } from "./kata/kata.js";
 import { formatMarkdownFile } from "./exec-format.js";
 import { expandTemplate } from "./exec-shared.js";

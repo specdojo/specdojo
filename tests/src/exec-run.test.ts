@@ -17,7 +17,7 @@ import { mkdtempSync, utimesSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { ExecDefaultsConfig, RateLimitDetection } from "../../src/exec-agent-config.js";
-import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
+import type { MemberRoster, ProjectMember } from "../../src/shared/specdojo-config.js";
 
 describe("commitSubject", () => {
   const prefix = "exec(register PJR-AB12): ";

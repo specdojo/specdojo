@@ -10,8 +10,8 @@ import {
   resolveRepoQualifiedRef,
   resolveRepoRoot,
   validateProjectRepos,
-} from "../../src/specdojo-config.js";
-import type { SpecDojoProjectConfig } from "../../src/specdojo-config.js";
+} from "../../../src/shared/specdojo-config.js";
+import type { SpecDojoProjectConfig } from "../../../src/shared/specdojo-config.js";
 
 const originalCwd = process.cwd();
 let root: string;

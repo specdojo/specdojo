@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { qualifyTaskId, randomHex } from "./exec-shared.js";
-import { type AgentProvider } from "./specdojo-config.js";
+import { type AgentProvider } from "./shared/specdojo-config.js";
 import { buildInPlaceStem } from "./exec-plans.js";
 import {
   generateRegisterPlan,

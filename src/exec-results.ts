@@ -14,7 +14,7 @@ import {
 } from "./exec-reporter.js";
 import type { ExecEvidence } from "./exec-evidence.js";
 import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "./docs/template-resolution.js";
-import { dump } from "./yaml.js";
+import { dump } from "./shared/yaml.js";
 
 const MISSING_CHANGED_FILE_SUMMARY = "reporter の説明がないため、変更差分を参照。";
 

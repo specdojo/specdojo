@@ -8,7 +8,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
-import { load } from "./yaml.js";
+import { load } from "./shared/yaml.js";
 import {
   deliverableDocPath,
   parsePlanTaskIdentity,
@@ -24,7 +24,7 @@ import {
 } from "./exec-agent-protected-config.js";
 import { recordProtectedConfigBlockAcrossRepos } from "./exec-protection-handoff.js";
 import { assertNoPendingProductChanges, productIntegrationTarget } from "./exec-task-repos.js";
-import { specdojoPackageRootDir } from "./package-paths.js";
+import { specdojoPackageRootDir } from "./shared/package-paths.js";
 import {
   appendGitFailureLog,
   gitEnvironment,

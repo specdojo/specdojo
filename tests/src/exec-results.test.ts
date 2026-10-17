@@ -14,8 +14,8 @@ import {
   updateResultStatus,
 } from "../../src/exec-results.js";
 import type { ExecEvidence } from "../../src/exec-evidence.js";
-import { specdojoRootDir } from "../../src/specdojo-config.js";
-import { load as loadCompatibleYaml } from "../../src/yaml.js";
+import { specdojoRootDir } from "../../src/shared/specdojo-config.js";
+import { load as loadCompatibleYaml } from "../../src/shared/yaml.js";
 
 function reporterEvidence(changes: ExecEvidence["changes"]): ExecEvidence {
   return {

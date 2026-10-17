@@ -6,7 +6,7 @@ vi.mock("dotenv", () => ({
   default: { config },
 }));
 
-import { loadEnv } from "../../src/specdojo-config.js";
+import { loadEnv } from "../../../src/shared/specdojo-config.js";
 
 describe("loadEnv", () => {
   beforeEach(() => {

@@ -41,7 +41,7 @@ import {
   withProductRepoPrompt,
   withProductWorktrees,
 } from "./exec-task-repos.js";
-import type { AgentProvider } from "./specdojo-config.js";
+import type { AgentProvider } from "./shared/specdojo-config.js";
 import {
   buildTaskPhaseMap,
   loadPrompt,
@@ -72,7 +72,7 @@ import {
   taskPaths,
   worktreeStatusPaths,
 } from "./exec-worktree-ops.js";
-import { getProjectSchedulePath, loadConfig, specdojoRootDir } from "./specdojo-config.js";
+import { getProjectSchedulePath, loadConfig, specdojoRootDir } from "./shared/specdojo-config.js";
 
 export { isCommitTargetPath, stabilizeCommitTargets } from "./exec-worktree-ops.js";
 

@@ -2,11 +2,11 @@ import { createInterface } from "node:readline/promises";
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import type { Command } from "commander";
-import { dump, load } from "./yaml.js";
-import { runScaffold, type ProjectSize } from "./catalog/scaffold.js";
-import { runDevcontainerScaffold } from "./devcontainer/scaffold.js";
-import { runProviderScaffold } from "./exec-provider-scaffold.js";
-import { generateDerivedViewFiles, type RegisterPaths } from "./register/register.js";
+import { dump, load } from "../shared/yaml.js";
+import { runScaffold, type ProjectSize } from "../catalog/scaffold.js";
+import { runDevcontainerScaffold } from "../devcontainer/scaffold.js";
+import { runProviderScaffold } from "../exec-provider-scaffold.js";
+import { generateDerivedViewFiles, type RegisterPaths } from "../register/register.js";
 import {
   defaultWorktreeBase,
   projectGitignoreLayout,
@@ -14,13 +14,13 @@ import {
   type ProjectMember,
   type SpecDojoConfig,
   type SpecDojoProjectConfig,
-} from "./specdojo-config.js";
+} from "../shared/specdojo-config.js";
 import {
   ensureGitignore,
   formatGitignoreReport,
   gitignorePatternsForLayouts,
-} from "./specdojo-gitignore.js";
-import { specdojoPackageRootDir } from "./package-paths.js";
+} from "../shared/specdojo-gitignore.js";
+import { specdojoPackageRootDir } from "../shared/package-paths.js";
 
 const PROVIDERS = ["claude", "codex", "opencode", "antigravity", "copilot"] as const;
 type InitProvider = (typeof PROVIDERS)[number];

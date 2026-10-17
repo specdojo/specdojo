@@ -2,9 +2,9 @@ import { spawnSync } from "node:child_process";
 import { appendFileSync, existsSync, lstatSync, mkdirSync, unlinkSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { redactSensitiveText, stripTerminalControlSequences } from "./exec-shared.js";
-import { gitEnvironment } from "./git-environment.js";
+import { gitEnvironment } from "./shared/git-environment.js";
 
-export { GIT_LOCAL_ENV_VARS, gitEnvironment } from "./git-environment.js";
+export { GIT_LOCAL_ENV_VARS, gitEnvironment } from "./shared/git-environment.js";
 
 export type ExecWorktree = {
   path: string;

@@ -4,7 +4,11 @@ import { canCompleteTask, readAllEventFiles, foldEventsToState } from "./exec-ev
 import { buildScheduleIndex } from "./exec-schedule.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import { qualifyTaskId, randomHex } from "./exec-shared.js";
-import { type AgentProvider, type MemberRoster, type ProjectMember } from "./specdojo-config.js";
+import {
+  type AgentProvider,
+  type MemberRoster,
+  type ProjectMember,
+} from "./shared/specdojo-config.js";
 import { type ReadyTaskView } from "./exec-types.js";
 import {
   type AgentStageRole,

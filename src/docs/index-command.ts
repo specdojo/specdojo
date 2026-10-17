@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { type Command } from "commander";
 import { resolve } from "node:path";
-import { loadEnv, specdojoRootDir } from "../specdojo-config.js";
+import { loadEnv, specdojoRootDir } from "../shared/specdojo-config.js";
 import {
   assertControlGeneratedIndexes,
   buildDocIndex,

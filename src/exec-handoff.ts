@@ -20,7 +20,7 @@ import { refsTrailer, withCommitTrailers } from "./exec-repo-trace.js";
 import { configuredProductReposForProject } from "./exec-task-repos.js";
 import { parseSpecdojoDocument } from "./docs/frontmatter-namespace.js";
 import { qualifyTaskId } from "./exec-shared.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { specdojoRootDir } from "./shared/specdojo-config.js";
 import { findExecWorktree, gitEnvironment, gitOutput, gitResult } from "./exec-worktree.js";
 import {
   stageCommitTargets,

@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, renameSync, rmSync } from "node:fs";
 import { join, relative } from "node:path";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { specdojoRootDir } from "./shared/specdojo-config.js";
 import { nowUtcIsoSeconds, randomHex, tsForFilenameUtc } from "./exec-shared.js";
 import type { Approach, TaskMode, TaskOrigin } from "./exec-types.js";
 import { readSpecdojoNamespace } from "./docs/frontmatter-namespace.js";

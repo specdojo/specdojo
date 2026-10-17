@@ -9,7 +9,7 @@ import {
   resolveIncludedRulebooks,
   resolveKataRefs,
 } from "../../../src/kata/kata.js";
-import { practiceLocalId } from "../../../src/practice-id.js";
+import { practiceLocalId } from "../../../src/shared/practice-id.js";
 import { validateRulebookKata } from "../../../src/catalog/build.js";
 
 // specdojoRootDir() は cwd から上方探索するため、temp ルートへ chdir して

@@ -8,7 +8,7 @@ import {
   resolveDeliverableDoneCriteria,
   resolveProject,
 } from "./targets.js";
-import { getProjectExecutionPath } from "../specdojo-config.js";
+import { getProjectExecutionPath } from "../shared/specdojo-config.js";
 import {
   addGradeSelectionOptions as addSelection,
   commandError,

@@ -4,7 +4,7 @@ import {
   resolveMemberCommand,
   type ExecDefaultsConfig,
 } from "../../src/exec-agent-config.js";
-import type { ProjectMember } from "../../src/specdojo-config.js";
+import type { ProjectMember } from "../../src/shared/specdojo-config.js";
 
 function buildMember(overrides: Partial<ProjectMember> = {}): ProjectMember {
   return {

@@ -27,7 +27,7 @@ import {
   type PjrItem,
   type RegisterItemFieldUpdates,
 } from "./item.js";
-import { specdojoRootDir } from "../specdojo-config.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { loadItemForUpdate } from "./update.js";
 import { findRegisterItem, loadRegisterItems, writeDerivedViews } from "./views.js";
 

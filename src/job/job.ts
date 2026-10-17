@@ -31,8 +31,8 @@ import {
   type JobTaskDefinition,
   type MaterializedJobRun,
 } from "./definition.js";
-import { specdojoRootDir } from "../specdojo-config.js";
-import { selfRunCommand } from "../spawn-self.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { selfRunCommand } from "../shared/spawn-self.js";
 
 export {
   isJobAgentTask,

@@ -1,8 +1,8 @@
 import { type Command } from "commander";
 import { spawnSync } from "node:child_process";
-import { loadConfig, loadEnv, specdojoRootDir } from "./specdojo-config.js";
-import type { SpecDojoConfig, SpecDojoProjectConfig } from "./specdojo-config.js";
-import { selfRunArgs } from "./spawn-self.js";
+import { loadConfig, loadEnv, specdojoRootDir } from "../shared/specdojo-config.js";
+import type { SpecDojoConfig, SpecDojoProjectConfig } from "../shared/specdojo-config.js";
+import { selfRunArgs } from "../shared/spawn-self.js";
 
 // ================================
 // Types

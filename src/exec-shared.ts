@@ -1,8 +1,8 @@
 import { randomBytes } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { basename, join, relative } from "node:path";
-import { load } from "./yaml.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { load } from "./shared/yaml.js";
+import { specdojoRootDir } from "./shared/specdojo-config.js";
 
 export function nowUtcIsoSeconds(): string {
   return new Date().toISOString().replace(/\.\d{3}Z$/, "Z");

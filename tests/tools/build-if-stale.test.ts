@@ -118,7 +118,7 @@ describe("tools/build-if-stale.mjs", () => {
       process.execPath,
       [
         path.join(root, "node_modules", "tsx", "dist", "cli.mjs"),
-        path.join(root, "src", "build-if-stale.ts"),
+        path.join(root, "src", "shared", "build-if-stale.ts"),
       ],
       { cwd: root, stdio: "inherit", shell: false },
     );

@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
-import { dump } from "../yaml.js";
-import { extractJsonText } from "../agent-response.js";
+import { dump } from "../shared/yaml.js";
+import { extractJsonText } from "../shared/agent-response.js";
 import {
   CRITERION_ID_RE,
   CRITERION_STATUSES,
@@ -52,7 +52,7 @@ import {
   resolveSafeRepositoryPath,
 } from "./targets.js";
 import type { ReviewViewpointsDoc } from "../review/types.js";
-import { specdojoRootDir } from "../specdojo-config.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { resolveSpecdojoPath } from "../docs/template-resolution.js";
 
 export function normalizeGradeExecutorLine(line: string): string {

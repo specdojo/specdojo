@@ -2,7 +2,7 @@ import { join } from "node:path";
 import { loadExecDefaultsConfig, ProviderConcurrencyGate } from "./exec-agent-config.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
 import { qualifyTaskId } from "./exec-shared.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { specdojoRootDir } from "./shared/specdojo-config.js";
 import { execLifecyclePoolPath, execLocksDir } from "./exec-run-lock.js";
 import { CrossProcessMutex } from "./exec-slot-lock.js";
 import { buildInPlaceStem } from "./exec-plans.js";

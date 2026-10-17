@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { type Command } from "commander";
-import { extractJsonArrayText } from "../agent-response.js";
+import { extractJsonArrayText } from "../shared/agent-response.js";
 import {
   applyGradeSubmission,
   buildGradeSubmissionFromAnalysis,
@@ -33,7 +33,11 @@ import {
   resolveProject,
   resolveSafeRepositoryPath,
 } from "./targets.js";
-import { getProjectExecutionPath, loadMemberRoster, specdojoRootDir } from "../specdojo-config.js";
+import {
+  getProjectExecutionPath,
+  loadMemberRoster,
+  specdojoRootDir,
+} from "../shared/specdojo-config.js";
 
 export function renderGradeFindingTranslationPlan(
   result: GradeResult,

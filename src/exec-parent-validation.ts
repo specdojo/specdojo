@@ -4,7 +4,7 @@ import { gitEnvironment } from "./exec-worktree.js";
 import { acquirePoolSlot, getActiveExecLocksDir, releaseLock } from "./exec-slot-lock.js";
 import type { EvidenceValidation, ExecEvidence } from "./exec-evidence.js";
 import { redactSensitiveText } from "./exec-evidence.js";
-import { PROJECT_REPO_WORKTREE_DIRNAME, REPO_NAME_PATTERN } from "./specdojo-config.js";
+import { PROJECT_REPO_WORKTREE_DIRNAME, REPO_NAME_PATTERN } from "./shared/specdojo-config.js";
 
 export const MAX_PARENT_VALIDATION_STREAM_BYTES = 1024 * 1024;
 const MAX_SUMMARY_LENGTH = 1_000;

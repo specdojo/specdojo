@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { isAbsolute, join, relative, resolve } from "node:path";
-import { specdojoPackageRootDir } from "../package-paths.js";
-import { specdojoRootDir } from "../specdojo-config.js";
+import { specdojoPackageRootDir } from "../shared/package-paths.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 
 const SPECDOJO_TEMPLATES_RELATIVE_DIR = "docs/ja/specdojo/templates";
 

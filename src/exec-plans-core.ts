@@ -1,13 +1,13 @@
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
-import { load } from "./yaml.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { load } from "./shared/yaml.js";
+import { specdojoRootDir } from "./shared/specdojo-config.js";
 import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "./kata/kata.js";
 import type { KataRefs } from "./kata/kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "./catalog/paths.js";
 import { isDctPlanFileName } from "./catalog/plan.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "./docs/frontmatter-namespace.js";
-import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "./practice-id.js";
+import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "./shared/practice-id.js";
 import { resolveViewpointsDoc, viewpointAppliesToDocument } from "./review/plan.js";
 import {
   listFilesRecursive,

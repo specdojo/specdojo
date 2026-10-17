@@ -5,7 +5,7 @@ import {
   type ExecDefaultsConfig,
   type ProviderConcurrencyGate,
 } from "./exec-agent-config.js";
-import { type MemberRoster, type ProjectMember } from "./specdojo-config.js";
+import { type MemberRoster, type ProjectMember } from "./shared/specdojo-config.js";
 import { buildInPlaceStem } from "./exec-plans.js";
 import {
   generateRegisterPlan,

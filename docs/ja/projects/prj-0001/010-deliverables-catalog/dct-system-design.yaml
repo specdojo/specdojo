@@ -105,7 +105,7 @@ groups:
         note: 既存文書のretrofit。横断ルールと運用手順を移設し、5providerとorchestrator設計へのhubへ縮小済み
         evidence_refs:
           - kind: implementation
-            path: src/specdojo-config.ts
+            path: src/shared/specdojo-config.ts
             purpose: AgentProvider（opencode/claude/codex/copilot/antigravity/custom）の型定義
           - kind: implementation
             path: src/exec.ts

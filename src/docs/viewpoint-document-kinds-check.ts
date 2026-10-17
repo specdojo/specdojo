@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 
 // PJR-H220 / PJR-VJP8: 観点の document_kinds は rulebook ID の列挙で宣言する。rulebook を
 // 追加したときに観点ごとの扱いの判断が漏れないよう、include / exclude / confirmed_default の

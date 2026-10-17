@@ -11,7 +11,7 @@
 
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { basename, dirname, join, relative } from "node:path";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 import { isDctCatalogFileName, type DctDoc, type DctSection } from "../catalog/types.js";
 import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { load } from "../../src/yaml.js";
+import { load } from "../../../src/shared/yaml.js";
 
 describe("YAML compatibility loader", () => {
   it("keeps an unquoted date as a Date while preserving a quoted date as a string", () => {

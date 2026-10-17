@@ -3,9 +3,9 @@ import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { load } from "js-yaml";
-import { collectInitAnswers, runInit, type InitPrompter } from "../../src/init-command.js";
-import { loadExecDefaultsConfig, resolveMemberCommand } from "../../src/exec-agent-config.js";
-import { loadMemberRoster, type SpecDojoConfig } from "../../src/specdojo-config.js";
+import { collectInitAnswers, runInit, type InitPrompter } from "../../../src/commands/init.js";
+import { loadExecDefaultsConfig, resolveMemberCommand } from "../../../src/exec-agent-config.js";
+import { loadMemberRoster, type SpecDojoConfig } from "../../../src/shared/specdojo-config.js";
 
 const originalCwd = process.cwd();
 

@@ -8,7 +8,7 @@ import {
 } from "./migrate-timestamps.js";
 import { registerEventFilePath, validateRegisterEventDocs } from "./events.js";
 import { validateRegisterItemDocs } from "./item.js";
-import { specdojoRootDir } from "../specdojo-config.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 import type { BuildScope, RegisterCommandDependencies } from "./command-types.js";
 
 export function registerMaintenanceCommands(

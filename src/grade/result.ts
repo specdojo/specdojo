@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve, sep } from "node:path";
-import { dump, load } from "../yaml.js";
-import { getProjectExecutionPath, loadConfig, specdojoRootDir } from "../specdojo-config.js";
+import { dump, load } from "../shared/yaml.js";
+import { getProjectExecutionPath, loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
 import { resolveSpecdojoPath } from "../docs/template-resolution.js";
 
 export type StoredGradeTarget = "kata" | "deliverable";

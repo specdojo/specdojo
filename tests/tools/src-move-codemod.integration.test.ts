@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { gitEnvironment } from "../../src/git-environment.js";
+import { gitEnvironment } from "../../src/shared/git-environment.js";
 
 const scriptPath = path.resolve("tools/src-move-codemod.mjs");
 const fixtures: string[] = [];

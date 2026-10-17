@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import { fileURLToPath } from "node:url";
 import { Command } from "commander";
-import { evaluateDistFreshness, inspectDistEntryFreshness } from "./dist-freshness.js";
-import { specdojoPackageVersion } from "./package-paths.js";
-import { registerConfigCommands, registerProjectCommands } from "./specdojo-config.js";
+import { evaluateDistFreshness, inspectDistEntryFreshness } from "./shared/dist-freshness.js";
+import { specdojoPackageVersion } from "./shared/package-paths.js";
+import { registerConfigCommands, registerProjectCommands } from "./shared/specdojo-config.js";
 import { registerExecCommands } from "./exec.js";
 import { registerCatalogCommands } from "./catalog/catalog.js";
 import { registerDeliverableCommands } from "./deliverable/deliverable.js";
@@ -13,16 +13,16 @@ import { registerIndexCommands } from "./docs/index-command.js";
 import { registerRegisterCommands } from "./register/register.js";
 import { registerRoutineCommands } from "./routine/routine.js";
 import { registerJobCommands } from "./job/job.js";
-import { registerWatchCommand } from "./watch.js";
-import { registerBuildCommand } from "./build-command.js";
+import { registerWatchCommand } from "./commands/watch.js";
+import { registerBuildCommand } from "./commands/build.js";
 import { registerYamlPagesCommands } from "./docs/yaml-pages-command.js";
 import { registerDashboardCommands } from "./dashboard/dashboard.js";
 import { registerGradeCommand } from "./grade/grade.js";
-import { registerAgentCommands } from "./agent.js";
+import { registerAgentCommands } from "./commands/agent.js";
 import { registerKataCommands } from "./kata/command.js";
 import { registerDevcontainerCommands } from "./devcontainer/command.js";
-import { registerInitCommand } from "./init-command.js";
-import { registerOrchestratorCommands } from "./orchestrator.js";
+import { registerInitCommand } from "./commands/init.js";
+import { registerOrchestratorCommands } from "./commands/orchestrator.js";
 
 /**
  * bin は dist/specdojo.js を指すため、開発チェックアウトで `npm run build` を忘れると

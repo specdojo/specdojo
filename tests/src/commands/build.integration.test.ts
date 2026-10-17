@@ -11,7 +11,7 @@ import {
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { generateWorktreeArtifacts, gitEnvironment } from "../../src/exec-worktree.js";
+import { generateWorktreeArtifacts, gitEnvironment } from "../../../src/exec-worktree.js";
 
 // project を 2 つ持つ checkout で、生成物（git 管理外の generated/）が無い状態から
 // `specdojo build`（--project なし）が通ることを、実 CLI の子プロセスで確認する。

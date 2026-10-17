@@ -26,7 +26,7 @@ groups:
             rulebook: specdojo:bdd-rulebook
             evidence_refs:
               - kind: implementation
-                path: src/specdojo-config.ts
+                path: src/shared/specdojo-config.ts
                 purpose: プロジェクト構成（project_id・current_project・paths等）の読込・検証・既定値解決
             done_criteria:
               - text: エンティティ・属性の業務的定義が正確に記述されていること

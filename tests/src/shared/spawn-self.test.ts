@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { selfRunArgs, selfRunCommand } from "../../src/spawn-self.js";
+import { selfRunArgs, selfRunCommand } from "../../../src/shared/spawn-self.js";
 
 const originalScript = process.argv[1];
 const originalCwd = process.cwd();

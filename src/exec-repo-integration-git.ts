@@ -1,5 +1,5 @@
 import { gitOutput, gitResult } from "./exec-worktree.js";
-import { PROJECT_REPO_WORKTREE_DIRNAME } from "./specdojo-config.js";
+import { PROJECT_REPO_WORKTREE_DIRNAME } from "./shared/specdojo-config.js";
 
 /** Name under which the project repository is recorded in `stages.integrate.repos`. */
 export const PROJECT_REPO_NAME = PROJECT_REPO_WORKTREE_DIRNAME;

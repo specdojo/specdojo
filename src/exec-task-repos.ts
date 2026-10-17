@@ -9,7 +9,7 @@ import {
   specdojoRootDir,
   type AgentProvider,
   type SpecDojoProjectConfig,
-} from "./specdojo-config.js";
+} from "./shared/specdojo-config.js";
 import {
   ensureExecWorktree,
   execBranchExists,

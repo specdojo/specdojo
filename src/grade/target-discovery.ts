@@ -34,7 +34,7 @@ import {
   sourceHashesChanged,
 } from "./targets.js";
 import type { ReviewViewpointsDoc } from "../review/types.js";
-import { getProjectExecutionPath, specdojoRootDir } from "../specdojo-config.js";
+import { getProjectExecutionPath, specdojoRootDir } from "../shared/specdojo-config.js";
 
 export function discoverGradeTargets(
   opts: {

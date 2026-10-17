@@ -45,7 +45,7 @@ import {
   resolveWorktreeBase,
   type ExecWorktree,
 } from "./exec-worktree.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { specdojoRootDir } from "./shared/specdojo-config.js";
 import {
   TRIAL_PROMPT_SUFFIX,
   buildComparisonRecord,

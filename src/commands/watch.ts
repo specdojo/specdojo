@@ -11,9 +11,9 @@ import {
   loadConfig,
   loadEnv,
   specdojoRootDir,
-} from "./specdojo-config.js";
-import { selfRunArgs } from "./spawn-self.js";
-import { isDctPlanFileName } from "./catalog/plan.js";
+} from "../shared/specdojo-config.js";
+import { selfRunArgs } from "../shared/spawn-self.js";
+import { isDctPlanFileName } from "../catalog/plan.js";
 
 // ================================
 // Types

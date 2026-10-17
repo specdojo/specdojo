@@ -15,7 +15,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 import { collectCatalogLocalIds, validateDctDoc } from "./build.js";
 import {
   collectTemplateEntries,

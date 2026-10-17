@@ -1,8 +1,8 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { dump, load } from "../yaml.js";
+import { dump, load } from "../shared/yaml.js";
 import type { DctDeliverableItem, DctDoc, DctKind, DctSection, DctTemplateDoc } from "./types.js";
-import { practiceLocalId } from "../practice-id.js";
+import { practiceLocalId } from "../shared/practice-id.js";
 import {
   specdojoDirectoryPaths,
   type SpecdojoResolutionRoots,

@@ -7,7 +7,7 @@ import { lint } from "markdownlint/sync";
 import { load } from "js-yaml";
 import { escapeMarkdownInline, inlineCodeAnglePlaceholders } from "../../src/exec-shared.js";
 import { generateRegisterPlan } from "../../src/exec-register.js";
-import { specdojoRootDir } from "../../src/specdojo-config.js";
+import { specdojoRootDir } from "../../src/shared/specdojo-config.js";
 import type { PjrItem } from "../../src/register/register.js";
 import type { RegisterPaths } from "../../src/register/register.js";
 

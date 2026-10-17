@@ -3,7 +3,7 @@ import { appendFileSync, existsSync, mkdirSync, readdirSync, rmSync, statSync } 
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { type Command } from "commander";
-import { ensureFreshDistBuildForEntry } from "../dist-freshness.js";
+import { ensureFreshDistBuildForEntry } from "../shared/dist-freshness.js";
 import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "../exec-run-lock.js";
 import {
   ensureDir,
@@ -42,8 +42,8 @@ import {
   type RoutineStateEntry,
   type RoutineStateFile,
 } from "./definition.js";
-import { selfRunArgs } from "../spawn-self.js";
-import { specdojoRootDir } from "../specdojo-config.js";
+import { selfRunArgs } from "../shared/spawn-self.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 
 export {
   cronMatches,

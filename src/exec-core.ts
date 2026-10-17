@@ -16,7 +16,7 @@ import {
   loadConfig,
   loadMemberRoster,
   specdojoRootDir,
-} from "./specdojo-config.js";
+} from "./shared/specdojo-config.js";
 import {
   buildScheduleIndex,
   computeCpm,

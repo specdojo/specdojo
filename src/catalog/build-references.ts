@@ -1,6 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 import { resolveBasePath, resolveDeliverablePath } from "./paths.js";
 import type {
   DctDeliverableItem,

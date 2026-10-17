@@ -4,7 +4,7 @@ import { registerCatalogCommands } from "../../src/catalog/catalog.js";
 import { registerDeliverableCommands } from "../../src/deliverable/deliverable.js";
 import { registerExecCommands } from "../../src/exec.js";
 import { registerGradeCommand } from "../../src/grade/grade.js";
-import { registerConfigCommands } from "../../src/specdojo-config.js";
+import { registerConfigCommands } from "../../src/shared/specdojo-config.js";
 
 function subcommandNames(program: Command, name: string): string[] {
   return (

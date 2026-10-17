@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { dump, load } from "../yaml.js";
+import { dump, load } from "../shared/yaml.js";
 import remarkParse from "remark-parse";
 import { unified } from "unified";
 import { viewpointAppliesToDocument } from "../review/plan.js";

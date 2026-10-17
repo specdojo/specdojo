@@ -12,8 +12,8 @@ import {
   loadConfig,
   loadEnv,
   specdojoRootDir,
-} from "../specdojo-config.js";
-import type { SpecDojoProjectConfig } from "../specdojo-config.js";
+} from "../shared/specdojo-config.js";
+import type { SpecDojoProjectConfig } from "../shared/specdojo-config.js";
 import {
   resolveRegisterPaths,
   loadRegisterItems,
