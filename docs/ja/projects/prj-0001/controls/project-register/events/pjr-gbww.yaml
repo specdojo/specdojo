@@ -29,3 +29,32 @@
     - field: registered
       from: ""
       to: "2026-10-17"
+- v: 1
+  id: reg_11081fe3809c41f5b0bd9ab482cad4fe
+  ts: "2026-10-17T10:53:37Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c4239316d5a949439df18b76fc094040
+- v: 1
+  id: reg_3a03708addf54021b2d3424cf18d7344
+  ts: "2026-10-17T10:54:34Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Failed to inspect execution checkpoint changes."
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Failed to inspect execution checkpoint changes."
+  previous_event_id: reg_11081fe3809c41f5b0bd9ab482cad4fe
