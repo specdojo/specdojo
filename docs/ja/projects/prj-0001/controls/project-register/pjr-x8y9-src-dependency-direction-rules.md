@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:51Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-X8Y9 src の機能の間の依存の向きの規則を入れる
@@ -46,14 +45,20 @@ specdojo:
 
 | No  | 作業                                                            | 担当 | 状態 | メモ           |
 | --- | --------------------------------------------------------------- | ---- | ---- | -------------- |
-| 1   | `src/shared/specdojo-config.ts` の `src/exec/` への依存をなくす | DEV  | open | 動作は変えない |
-| 2   | ESLint に依存の向きの規則を error で入れる                      | DEV  | open | 追加の依存なし |
-| 3   | 違反を書くと lint が失敗することを確かめる                      | DEV  | open | -              |
-| 4   | TypeScript の実装ルールに規則を書く                             | DEV  | open | -              |
+| 1   | `src/shared/specdojo-config.ts` の `src/exec/` への依存をなくす | DEV  | done | 動作は変えない |
+| 2   | ESLint に依存の向きの規則を error で入れる                      | DEV  | done | 追加の依存なし |
+| 3   | 違反を書くと lint が失敗することを確かめる                      | DEV  | done | -              |
+| 4   | TypeScript の実装ルールに規則を書く                             | DEV  | done | -              |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `AgentStageRole`・`SchedulerStrategy`・`TaskMode` の定義を `src/shared/agent-types.ts` へ移し、既存の import との互換性を保つため `src/exec/types.ts` から再 export した。
+- provider の雛形配置は config・commands・exec から共用する処理なので、`src/exec/provider-scaffold.ts` を `src/shared/provider-scaffold.ts` へ移した。exec の `isRecord` への依存は同じ小さい型ガードをモジュール内に置いて解消した。対応するテストも `tests/src/shared/` へ移した。
+- `eslint.config.js` に、`src/shared/` からほかの機能や `src/specdojo.ts` への import と、機能から `src/commands/`・`src/specdojo.ts` への import を禁止する `no-restricted-imports` を error で追加した。追加依存はない。
+- 2 種類の違反 import を一時的に作り、それぞれを対象に ESLint を実行して `no-restricted-imports` の error になることを確認した。一時ファイルは削除済みである。
+- `.github/instructions/typescript.instructions.md` に依存方向の規則を追記し、機能どうしの循環は組ごとの登録簿項目で解消してから規則を追加する方針を明記した。
+- 変更前の Git HEAD と変更後のソースから、`specdojo --help` に表示される全コマンドとサブコマンド 123 件の `--help` を取得して比較し、差分がないことを確認した。
+- 残課題はない。executor の後に実行する typecheck・lint・test などの親検証は runner に委ねる。
 
 ## 5. 関連ドキュメント
 
