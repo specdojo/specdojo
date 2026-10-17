@@ -47,6 +47,7 @@ specdojo:
 - 非対話（`--yes`、引数での指定）では、従来どおり誤りの理由を出して終える。
 - 対話の入力を差し替えられる既存の仕組み（`InitPrompter`）で、誤った答えのあとに正しい答えを入れたときに 1 回で完了する単体テストを加える。
 - `docs/ja/specdojo/guides/` の init のガイドで、入力を誤ったときの振る舞いに触れている箇所があれば直す。
+- `init` の最後の「次の手順」の案内が、Claude Code の場合に `npm run orch:sonnet` を勧めている（`src/commands/init.ts`）。LP（<https://specdojo.org/>）と README の始め方は `npm run orch:opus` を勧めるため、案内を `orch:opus` に揃える（[[prj-0001:pjr-y79w-readme-lp-init-guide-alignment]] で見つかった食い違い）。案内の文言を確かめている単体テストがあれば合わせる。
 - 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
 - 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
 
