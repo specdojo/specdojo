@@ -1,4 +1,5 @@
 import type { Command } from "commander";
+import type { Approach } from "../shared/agent-types.js";
 import type { RegisterEventAction } from "./events.js";
 import type { PjrItem, RegisterItemFieldUpdates } from "./item.js";
 
@@ -31,6 +32,8 @@ export type RegisterAddFields = {
   due: string;
   completedAt: string;
   conclusion: string;
+  approach?: Approach;
+  targets?: string[];
 };
 
 export type BuildScope = "register" | "controls" | "all";

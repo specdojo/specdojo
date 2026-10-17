@@ -516,6 +516,8 @@ export function buildRegisterItemContent(opts: {
       completedAt: opts.fields.completedAt,
       conclusion: opts.fields.conclusion,
       ticket: "-",
+      ...(opts.fields.approach ? { approach: opts.fields.approach } : {}),
+      ...(opts.fields.targets ? { targets: opts.fields.targets } : {}),
     }),
   );
 }

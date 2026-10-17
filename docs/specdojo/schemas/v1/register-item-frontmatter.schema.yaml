@@ -43,6 +43,19 @@ properties:
           # required と同じ位置で対象プロパティを宣言する。
           properties:
             completed_at: true
+      - if:
+          required:
+            - approach
+          properties:
+            approach: true
+        then:
+          required:
+            - targets
+          properties:
+            targets:
+              type: array
+              minItems: 1
+              maxItems: 1
       - type: object
         required:
           - rulebook
@@ -143,6 +156,13 @@ properties:
               rejection. Omit the key while it is undetermined; the details stay in
               the body (list column: 結論).
 
+          approach:
+            $ref: "#/$defs/Approach"
+            description: >
+              Execution approach for the single target. When present, targets must
+              contain exactly one document id whose kind is compatible with the
+              approach.
+
           targets:
             type: array
             items:
@@ -199,6 +219,23 @@ $defs:
       - medium
       - low
     description: "Handling priority of a register item."
+
+  Approach:
+    type: string
+    enum:
+      - fully-guided
+      - recipe-guided
+      - freeform
+      - bootstrap
+      - retrofit
+      - cross-deliverable-dedup
+      - rulebook-maintenance
+      - recipe-maintenance
+      - sample-maintenance
+      - template-maintenance
+      - finalize
+      - bootstrap-finalize
+    description: "Execution approach shared with src/shared/agent-types.ts."
 
   Date:
     type: string

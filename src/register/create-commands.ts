@@ -2,6 +2,7 @@ import type { Command } from "commander";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
+import { APPROACHES, type Approach } from "../shared/agent-types.js";
 import { appendRegisterEvent, buildRegisterEvent, registerEventFilePath } from "./events.js";
 import { nowUtcTimestamp } from "./date.js";
 import {
@@ -16,6 +17,22 @@ import {
 } from "./item.js";
 import { resolveSpecdojoTemplatePath } from "../docs/template-resolution.js";
 import type { RegisterAddFields, RegisterCommandDependencies } from "./command-types.js";
+import { validateRegisterApproachTargetsForProject } from "./approach.js";
+
+function collectTarget(value: string, previous: string[] = []): string[] {
+  return [...previous, value];
+}
+
+function normalizedTargets(values: string[] | undefined): string[] | undefined {
+  if (values === undefined) return undefined;
+  const targets = [...new Set(values.map((value) => value.trim()).filter(Boolean))];
+  if (targets.includes("-")) {
+    if (targets.length !== 1) throw new Error("--target - cannot be combined with other targets");
+    return undefined;
+  }
+  if (targets.length === 0) throw new Error("--target must contain a document id");
+  return targets;
+}
 
 export function registerCreateCommands(
   reg: Command,
@@ -89,6 +106,12 @@ export function registerCreateCommands(
     "-",
   );
   addCmd.option("--conclusion <text>", "Conclusion or resolution summary", "-");
+  addCmd.option("--approach <approach>", `Execution approach: ${APPROACHES.join(" | ")}`);
+  addCmd.option(
+    "--target <doc-id>",
+    "Target document id (repeatable; approach requires exactly one)",
+    collectTarget,
+  );
   addCmd.option("--id <id>", "Display ID (e.g., PJR-0061); auto-incremented if omitted");
   addCmd.option(
     "--topic <topic>",
@@ -113,6 +136,16 @@ export function registerCreateCommands(
 
       const registeredAt = parseRegisterTimestampOption(opts.registered, "registered", CELL_TODO);
       const completedAt = parseRegisterTimestampOption(opts.completed, "completed", CELL_NONE);
+      if (opts.target?.some((target: string) => target.trim() === "-")) {
+        throw new Error("--target - is only valid with register update");
+      }
+      const targets = normalizedTargets(opts.target);
+      validateRegisterApproachTargetsForProject({
+        projectId: paths.projectId,
+        ...(opts.approach !== undefined ? { approach: opts.approach } : {}),
+        ...(targets !== undefined ? { targets } : {}),
+        validateTargetsWithoutApproach: opts.target !== undefined,
+      });
 
       const fields: RegisterAddFields = {
         type: opts.type,
@@ -125,6 +158,8 @@ export function registerCreateCommands(
         due: opts.due,
         completedAt: completedAt ?? CELL_NONE,
         conclusion: opts.conclusion,
+        ...(opts.approach !== undefined ? { approach: opts.approach as Approach } : {}),
+        ...(targets !== undefined ? { targets } : {}),
       };
       const templatePath = resolveSpecdojoTemplatePath(`pjr-${opts.type}-template.md`);
 
@@ -220,6 +255,15 @@ export function registerUpdateCommand(
   updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
   updateCmd.option("--block-reason <text>", "Update the waiting reason or use - to remove it");
   updateCmd.option(
+    "--approach <approach>",
+    `Update execution approach (${APPROACHES.join(" | ")}; use - to remove)`,
+  );
+  updateCmd.option(
+    "--target <doc-id>",
+    "Replace target document ids (repeatable; use - to remove)",
+    collectTarget,
+  );
+  updateCmd.option(
     "--topic <topic>",
     "Update the topic slug in the ticket filename and document ID",
   );
@@ -241,11 +285,13 @@ export function registerUpdateCommand(
         "due",
         "conclusion",
         "blockReason",
+        "approach",
+        "target",
         "topic",
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --block-reason, --topic)",
+          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --block-reason, --approach, --target, --topic)",
         );
       }
 
@@ -284,6 +330,31 @@ export function registerUpdateCommand(
                   ? REMOVE_REGISTER_ITEM_FIELD
                   : inlineCodeAnglePlaceholders(blockReason),
             };
+      const nextApproach =
+        opts.approach === undefined
+          ? item.approach
+          : opts.approach.trim() === "-"
+            ? undefined
+            : opts.approach.trim();
+      const nextTargets = opts.target === undefined ? item.targets : normalizedTargets(opts.target);
+      validateRegisterApproachTargetsForProject({
+        projectId: paths.projectId,
+        ...(nextApproach !== undefined ? { approach: nextApproach } : {}),
+        ...(nextTargets !== undefined ? { targets: nextTargets } : {}),
+        validateTargetsWithoutApproach: opts.target !== undefined,
+      });
+      const approachTargetUpdates: RegisterItemFieldUpdates = {
+        ...(opts.approach !== undefined
+          ? {
+              approach: nextApproach === undefined ? REMOVE_REGISTER_ITEM_FIELD : nextApproach,
+            }
+          : {}),
+        ...(opts.target !== undefined
+          ? {
+              targets: nextTargets ?? REMOVE_REGISTER_ITEM_FIELD,
+            }
+          : {}),
+      };
 
       const updated: PjrItem = {
         ...item,
@@ -294,6 +365,14 @@ export function registerUpdateCommand(
         ...(opts.due !== undefined ? { due: opts.due } : {}),
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
+      if (opts.approach !== undefined) {
+        if (nextApproach === undefined) delete updated.approach;
+        else updated.approach = nextApproach as Approach;
+      }
+      if (opts.target !== undefined) {
+        if (nextTargets === undefined) delete updated.targets;
+        else updated.targets = nextTargets;
+      }
       const currentTopic = view.ticketFilename
         ? ticketTopicFromFilename(opts.id, view.ticketFilename)
         : undefined;
@@ -310,7 +389,9 @@ export function registerUpdateCommand(
           topic,
           updated,
           dryRun: opts.dryRun,
-          ...(blockReasonUpdates ? { fieldUpdates: blockReasonUpdates } : {}),
+          ...(blockReasonUpdates || Object.keys(approachTargetUpdates).length > 0
+            ? { fieldUpdates: { ...blockReasonUpdates, ...approachTargetUpdates } }
+            : {}),
           ...(opts.title !== undefined ? { title: opts.title } : {}),
           ...(opts.description !== undefined ? { description: opts.description } : {}),
           actor: registerEventActor(opts),
@@ -327,7 +408,9 @@ export function registerUpdateCommand(
         action: "fields updated",
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
-        ...(blockReasonUpdates ? { fieldUpdates: blockReasonUpdates } : {}),
+        ...(blockReasonUpdates || Object.keys(approachTargetUpdates).length > 0
+          ? { fieldUpdates: { ...blockReasonUpdates, ...approachTargetUpdates } }
+          : {}),
         eventAction: "update",
         eventActor: registerEventActor(opts),
         eventReason: opts.reason?.trim() || "fields updated",
