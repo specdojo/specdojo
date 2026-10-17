@@ -2,7 +2,7 @@
 id: cdfd-action-grade-criteria
 document: cdfd-action
 path: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
-graded_at: "2026-10-16T16:03:23.904Z"
+graded_at: "2026-10-17T16:04:31.079Z"
 graded_by: agy-expert-executor
 content_hash: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
 summary:
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Missing 'Orchestrator への完了・改善判断' in process area outputs and inconsistent distribution of approval results and
-      deprecation decisions compared to cdfd-overview.
+      Major inputs (approval results, deprecation decisions) and output (completion and improvement decisions to
+      Orchestrator) from cdfd-overview are missing or inconsistent in the process area definitions.
   - id: DC-002
     text: 完了記録、稼働構成、Kata のバージョン、成果物カタログ、保管庫への更新がプロセス単位で識別でき、Plan への再計画要求がグループ外委譲として示されていること
     roles:
@@ -32,5 +32,5 @@ criteria:
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
     reason: >-
-      Approval and accountability boundaries for configuration changes and deprecation are assigned to ARC/PM instead of
-      PO in contradiction with pm-raci, and completion criteria are missing.
+      Approval boundaries are not ready for PO approval because PO final accountability is missing for configuration
+      change and deprecation, and completion criteria are omitted across all process tables.
