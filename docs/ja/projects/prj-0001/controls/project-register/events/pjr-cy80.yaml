@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_218e4495fa0349189c8d5a5c43521986
+  ts: "2026-10-17T11:14:31Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-GBWW の実行が checkpoint で原因不明のまま止まった。利用者の判断で起票（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: checkpoint の確認の git の失敗が原因を残さない
+    - field: description
+      from: ""
+      to: src/exec/worktree-ops-lifecycle.ts は checkpoint の前に git diff --cached --quiet で変更を確かめ、終了コードが 0 と 1 以外なら Failed to inspect execution checkpoint changes. とだけ出す。git の終了コードと stderr を記録しないため、2026-10-17 の PJR-GBWW で止まった原因を特定できなかった
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
