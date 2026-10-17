@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { appendFileSync, existsSync, lstatSync, mkdirSync, unlinkSync } from "node:fs";
+import { appendFileSync, existsSync, lstatSync, mkdirSync, rmSync, unlinkSync } from "node:fs";
 import { dirname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { redactSensitiveText, stripTerminalControlSequences } from "./shared.js";
 import { gitEnvironment } from "../shared/git-environment.js";
@@ -92,6 +92,8 @@ export type TransientGitRetryNotice = DubiousOwnershipRetryNotice & {
   reason: TransientGitRetryReason;
 };
 
+export type TransientGitRecovery = (reason: TransientGitRetryReason) => boolean;
+
 export function transientGitFailureReason(
   stderr: string,
   repoRoot?: string,
@@ -108,6 +110,7 @@ export function runGitWithTransientRetry<T extends RetryableGitResult>(
   onTransientFailureRetry: (notice: TransientGitRetryNotice) => void = () => undefined,
   sleep: (milliseconds: number) => void = sleepSync,
   repoRoot?: string,
+  recoverFromTransientFailure?: TransientGitRecovery,
 ): T {
   let indexLockRetries = 0;
   let transientFailureRetries = 0;
@@ -116,21 +119,26 @@ export function runGitWithTransientRetry<T extends RetryableGitResult>(
   while (result.status !== 0) {
     const stderr = typeof result.stderr === "string" ? result.stderr : "";
     const transientFailure = transientGitFailureReason(stderr, repoRoot);
-    if (
-      transientFailureRetries < TRANSIENT_GIT_RETRY_DELAYS_MS.length &&
-      transientFailure !== undefined
-    ) {
-      const waitMilliseconds = TRANSIENT_GIT_RETRY_DELAYS_MS[transientFailureRetries];
-      transientFailureRetries += 1;
-      onTransientFailureRetry({
-        attempt: transientFailureRetries,
-        maxAttempts: TRANSIENT_GIT_RETRY_DELAYS_MS.length,
-        waitMilliseconds,
-        reason: transientFailure,
-      });
-      sleep(waitMilliseconds);
-      result = run();
-      continue;
+    if (transientFailure !== undefined) {
+      // Some multi-step Git commands can finish their mutation before a later ownership check
+      // reports a transient failure. Give those commands a chance to verify/reconcile their
+      // postcondition before blindly repeating a non-idempotent operation.
+      if (recoverFromTransientFailure?.(transientFailure)) {
+        return { ...result, status: 0, stderr: "" } as T;
+      }
+      if (transientFailureRetries < TRANSIENT_GIT_RETRY_DELAYS_MS.length) {
+        const waitMilliseconds = TRANSIENT_GIT_RETRY_DELAYS_MS[transientFailureRetries];
+        transientFailureRetries += 1;
+        onTransientFailureRetry({
+          attempt: transientFailureRetries,
+          maxAttempts: TRANSIENT_GIT_RETRY_DELAYS_MS.length,
+          waitMilliseconds,
+          reason: transientFailure,
+        });
+        sleep(waitMilliseconds);
+        result = run();
+        continue;
+      }
     }
     if (indexLockRetries < INDEX_LOCK_RETRY_ATTEMPTS && isGitIndexLockContention(stderr)) {
       indexLockRetries += 1;
@@ -147,7 +155,11 @@ export function runGitWithTransientRetry<T extends RetryableGitResult>(
 // `git status --porcelain` などが打ち切られ、子プロセスが SIGTERM で止められる。
 export const GIT_OUTPUT_MAX_BUFFER = 256 * 1024 * 1024;
 
-export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof spawnSync> {
+export function gitResult(
+  repoRoot: string,
+  args: string[],
+  recoverFromTransientFailure?: TransientGitRecovery,
+): ReturnType<typeof spawnSync> {
   const cwd = resolve(repoRoot);
   const run = (): ReturnType<typeof spawnSync> =>
     spawnSync("git", ["-C", cwd, ...args], {
@@ -171,6 +183,7 @@ export function gitResult(repoRoot: string, args: string[]): ReturnType<typeof s
     },
     sleepSync,
     cwd,
+    recoverFromTransientFailure,
   );
 }
 
@@ -345,8 +358,12 @@ export class GitCommandError extends Error {
   }
 }
 
-export function gitOutput(repoRoot: string, args: string[]): string {
-  const result = gitResult(repoRoot, args);
+export function gitOutput(
+  repoRoot: string,
+  args: string[],
+  recoverFromTransientFailure?: TransientGitRecovery,
+): string {
+  const result = gitResult(repoRoot, args, recoverFromTransientFailure);
   if (result.status !== 0 || result.error) {
     const stderr = typeof result.stderr === "string" ? result.stderr : "";
     throw new GitCommandError(
@@ -589,6 +606,80 @@ export function execWorktreePath(
   return resolve(repoDirName ? join(worktreeBase, name, repoDirName) : join(worktreeBase, name));
 }
 
+function branchTip(repoRoot: string, branch: string): string | undefined {
+  const args = ["rev-parse", "--verify", "--quiet", `refs/heads/${branch}^{commit}`];
+  const result = gitResult(repoRoot, args);
+  if (result.status === 1 && !result.error) return undefined;
+  if (result.status !== 0 || result.error) {
+    const stderr = typeof result.stderr === "string" ? result.stderr : "";
+    throw new GitCommandError(
+      formatGitCommandFailure(args, stderr, describeGitProcessFailure(result)),
+      args,
+      stderr,
+    );
+  }
+  if (typeof result.stdout !== "string") return undefined;
+  return result.stdout.trim();
+}
+
+function assertExpectedBranchTip(repoRoot: string, branch: string, expectedCommit: string): void {
+  const actualCommit = branchTip(repoRoot, branch);
+  if (actualCommit === expectedCommit) return;
+  throw new Error(
+    `Existing branch ${branch} points to ${actualCommit ?? "an unreadable commit"}; ` +
+      `expected ${expectedCommit}. Refusing to delete or reuse it.`,
+  );
+}
+
+function recoverWorktreeAddAfterTransientFailure(params: {
+  repoRoot: string;
+  worktreePath: string;
+  branch: string;
+  expectedCommit: string;
+  branchWasCreatedByAdd: boolean;
+}): boolean {
+  const { repoRoot, worktreePath, branch, expectedCommit, branchWasCreatedByAdd } = params;
+  let registered = listRegisteredWorktrees(repoRoot);
+  const registeredAtPath = registered.find((item) => item.path === worktreePath);
+
+  if (registeredAtPath) {
+    if (registeredAtPath.branch !== branch) {
+      throw new Error(
+        `Worktree ${worktreePath} uses branch ${registeredAtPath.branch ?? "(detached)"}; ` +
+          `expected ${branch}. Refusing to remove it after a transient Git failure.`,
+      );
+    }
+    assertExpectedBranchTip(repoRoot, branch, expectedCommit);
+    if (existsSync(worktreePath)) return true;
+
+    // The add registered the worktree but did not leave its directory behind. Prune only the
+    // missing registration; a live worktree at another path is never removed by this recovery.
+    gitOutput(repoRoot, ["worktree", "prune", "--expire=now"]);
+    registered = listRegisteredWorktrees(repoRoot);
+    if (registered.some((item) => item.path === worktreePath)) {
+      throw new Error(`Failed to prune incomplete worktree registration: ${worktreePath}`);
+    }
+  }
+
+  const registeredForBranch = registered.find((item) => item.branch === branch);
+  if (registeredForBranch) {
+    throw new Error(
+      `Branch ${branch} is already checked out at ${registeredForBranch.path}; ` +
+        `refusing to alter it after a transient Git failure.`,
+    );
+  }
+
+  // ensureExecWorktree rejected a pre-existing unregistered path before starting `worktree add`,
+  // so an unregistered entry appearing here belongs to the failed attempt and is safe to remove.
+  if (existsSync(worktreePath)) rmSync(worktreePath, { recursive: true, force: true });
+
+  const actualCommit = branchTip(repoRoot, branch);
+  if (actualCommit === undefined) return false;
+  assertExpectedBranchTip(repoRoot, branch, expectedCommit);
+  if (branchWasCreatedByAdd) gitOutput(repoRoot, ["branch", "-D", branch]);
+  return false;
+}
+
 export function ensureExecWorktree(opts: {
   repoRoot: string;
   worktreeBase: string;
@@ -629,8 +720,17 @@ export function ensureExecWorktree(opts: {
   }
 
   mkdirSync(dirname(worktreePath), { recursive: true });
-  const branchExists =
-    gitResult(repoRoot, ["show-ref", "--verify", "--quiet", `refs/heads/${branch}`]).status === 0;
+  const expectedCommit = gitOutput(repoRoot, [
+    "rev-parse",
+    "--verify",
+    `${opts.startPoint ?? "HEAD"}^{commit}`,
+  ]).trim();
+  const branchExists = branchTip(repoRoot, branch) !== undefined;
+  const registeredForBranch = registered.find((item) => item.branch === branch);
+  if (registeredForBranch) {
+    throw new Error(`Branch ${branch} is already checked out at ${registeredForBranch.path}`);
+  }
+  if (branchExists) assertExpectedBranchTip(repoRoot, branch, expectedCommit);
   const args = branchExists
     ? ["worktree", "add", worktreePath, branch]
     : [
@@ -641,7 +741,15 @@ export function ensureExecWorktree(opts: {
         branch,
         ...(opts.startPoint ? [opts.startPoint] : []),
       ];
-  gitOutput(repoRoot, args);
+  gitOutput(repoRoot, args, () =>
+    recoverWorktreeAddAfterTransientFailure({
+      repoRoot,
+      worktreePath,
+      branch,
+      expectedCommit,
+      branchWasCreatedByAdd: !branchExists,
+    }),
+  );
 
   (opts.installDependencies ?? installWorktreeDependencies)(worktreePath);
   (opts.generateArtifacts ?? generateWorktreeArtifacts)(worktreePath);
