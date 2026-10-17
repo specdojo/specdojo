@@ -21,6 +21,7 @@ export function registerDevcontainerCommands(program: Command): void {
     .option("--ollama", "Add Ollama connection settings", false)
     .option("--cron", "Add cron support", false)
     .option("--tmux", "Add tmux", false)
+    .option("--workspace-name <name>", "Override the workspace parent name used under /workspaces")
     .option("--force", "Overwrite existing .devcontainer/", false)
     .option("--dry-run", "Show planned files without writing", false)
     .action(async (opts) => {
@@ -28,6 +29,7 @@ export function registerDevcontainerCommands(program: Command): void {
         await runDevcontainerScaffold({
           packageRoot: specdojoPackageRootDir(),
           repoRoot: specdojoRootDir(),
+          workspaceName: opts.workspaceName === undefined ? undefined : String(opts.workspaceName),
           providers: opts.provider
             ? String(opts.provider)
                 .split(",")

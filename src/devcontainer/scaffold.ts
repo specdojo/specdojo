@@ -5,6 +5,7 @@ import * as path from "node:path";
 export interface RunDevcontainerScaffoldOptions {
   packageRoot: string;
   repoRoot: string;
+  workspaceName?: string;
   providers: string[];
   editors: string[];
   ollama: boolean;
@@ -14,6 +15,16 @@ export interface RunDevcontainerScaffoldOptions {
   dryRun: boolean;
 }
 
+function resolveWorkspaceName(repoRoot: string, override: string | undefined): string {
+  const workspaceName = override ?? path.basename(path.dirname(path.resolve(repoRoot)));
+  if (workspaceName === "." || workspaceName === ".." || !/^[A-Za-z0-9._-]+$/.test(workspaceName)) {
+    throw new Error(
+      `Invalid workspace name: ${JSON.stringify(workspaceName)}. Use only ASCII letters, numbers, dot, underscore, and hyphen.`,
+    );
+  }
+  return workspaceName;
+}
+
 function repositoryVolumePrefix(repoRoot: string): string {
   const repositoryName = path.basename(path.resolve(repoRoot)).toLowerCase();
   const safeName = repositoryName.replace(/[^a-z0-9_.-]+/g, "-").replace(/^[._-]+|[._-]+$/g, "");
@@ -21,8 +32,20 @@ function repositoryVolumePrefix(repoRoot: string): string {
 }
 
 export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptions): Promise<void> {
-  const { packageRoot, repoRoot, providers, editors, ollama, cron, tmux, force, dryRun } = opts;
+  const {
+    packageRoot,
+    repoRoot,
+    workspaceName: workspaceNameOverride,
+    providers,
+    editors,
+    ollama,
+    cron,
+    tmux,
+    force,
+    dryRun,
+  } = opts;
   const devcontainerDir = path.join(repoRoot, ".devcontainer");
+  const workspaceName = resolveWorkspaceName(repoRoot, workspaceNameOverride);
 
   if (existsSync(devcontainerDir) && !force) {
     if (dryRun) {
@@ -42,6 +65,9 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
   const devcontainerJsonPath = path.join(templateDir, "devcontainer.json");
   const baseJsonStr = await readFile(devcontainerJsonPath, "utf8");
   const devcontainer = JSON.parse(baseJsonStr);
+  const workspaceRoot = `/workspaces/${workspaceName}`;
+  devcontainer.workspaceMount = `source=\${localWorkspaceFolder}/..,target=${workspaceRoot},type=bind,consistency=cached`;
+  devcontainer.workspaceFolder = `${workspaceRoot}/\${localWorkspaceFolderBasename}`;
   const volumePrefix = repositoryVolumePrefix(repoRoot);
   const volumeName = (name: string) => `${volumePrefix}-specdojo-${name}`;
   devcontainer.mounts = devcontainer.mounts.map((mount: string) =>

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T11:27:24Z"
@@ -54,7 +54,11 @@ devcontainer scaffold の雛形が、親のディレクトリを /workspaces/spe
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容: `devcontainer scaffold` が scaffold 対象リポジトリの親ディレクトリ名を取得し、`workspaceMount` と `workspaceFolder` の `/workspaces/<親名>` に反映するようにした。`--workspace-name <name>` で名前を上書きでき、`specdojo init --devcontainer` からも同じ指定を渡せる。
+- 入力検証: 親名と `--workspace-name` は英数字・`.`・`_`・`-` だけを許可し、`.`・`..`、空白、`/`、制御文字などを含む値は、意図しない名前へ置換せず理由を表示して停止する。
+- 関連処理: `post-create.sh` は実行時の Git ルートから親を求めるため、生成された `workspaceFolder` に追従して `safe.directory` を設定する。本リポジトリ自身の `.devcontainer/devcontainer.json` は変更していない。
+- 確認内容: 親名の反映、`--workspace-name` の上書き、不正値の拒否、`specdojo init --devcontainer` からの引き渡しを単体テストへ追加した。CLI リファレンス、常時稼働ホスト運用ガイド、CHANGELOG へ新しい挙動と Git worktree の絶対パスに関する注意を記載した。
+- 再発防止策: scaffold のテストが生成された `workspaceMount` と `workspaceFolder` を検証し、テンプレートには固定の利用者名ではなく scaffold が置き換えるプレースホルダを保持する。
 
 ## 5. 関連ドキュメント
 

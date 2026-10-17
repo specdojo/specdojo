@@ -8,6 +8,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `devcontainer scaffold` が親ディレクトリを常に `/workspaces/specdojo-workspace` としていた問題を修正し、ホスト側の親名を反映するようにしました。`--workspace-name` で明示的に固定でき、`specdojo init --devcontainer` からも指定できます。既に生成済みの `.devcontainer/` は、`--force` で作り直すまで従来のままです（PJR-8GQ4）。
 - `specdojo init` と Antigravity 向け配布雛形・ガイドが、agy 1.3.5 で提供されないモデル ID を指定し、expert agent が `invalid model selection` で起動できない問題を修正しました。利用可能な ID は `agy models` で確認できます（PJR-X60A）。
 - exec の result の frontmatter で、改行を含む `block_reason` が字下げされずに書かれ、YAML として不正になる問題を修正しました。値は YAML として正しく引用して書きます（PJR-TMAW）。
 - 未追跡のファイルが多い作業場所で、`register --commit` などが原因の分からない `git status failed` で止まる問題を修正しました。git の出力を 1 MiB を超えても受け取り、出力の上限超過や signal による失敗はエラーのメッセージに原因を含めます（PJR-RY4C）。

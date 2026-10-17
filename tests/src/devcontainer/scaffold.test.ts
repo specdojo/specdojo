@@ -11,7 +11,7 @@ vi.mock("node:fs/promises");
 
 describe("runDevcontainerScaffold", () => {
   const packageRoot = "/pkg";
-  const repoRoot = "/repo";
+  const repoRoot = "/workspaces/app1-workspace/repo";
   const stdoutWrite = vi.spyOn(process.stdout, "write");
   const existsSyncMock = vi.mocked(fs.existsSync);
   const readFileMock = vi.mocked(fsPromises.readFile);
@@ -40,8 +40,9 @@ describe("runDevcontainerScaffold", () => {
         return Promise.resolve(
           JSON.stringify({
             workspaceMount:
-              "source=${localWorkspaceFolder}/..,target=/workspaces/specdojo-workspace,type=bind,consistency=cached",
-            workspaceFolder: "/workspaces/specdojo-workspace/${localWorkspaceFolderBasename}",
+              "source=${localWorkspaceFolder}/..,target=/workspaces/__SPECDOJO_WORKSPACE_NAME__,type=bind,consistency=cached",
+            workspaceFolder:
+              "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
             features: {},
             mounts: [
               "source=specdojo-git,target=/home/node/.config/git,type=volume",
@@ -138,11 +139,9 @@ describe("runDevcontainerScaffold", () => {
     const jsonCall = findWriteCall("devcontainer.json");
     const json = JSON.parse(String(jsonCall[1]));
     expect(json.workspaceMount).toBe(
-      "source=${localWorkspaceFolder}/..,target=/workspaces/specdojo-workspace,type=bind,consistency=cached",
+      "source=${localWorkspaceFolder}/..,target=/workspaces/app1-workspace,type=bind,consistency=cached",
     );
-    expect(json.workspaceFolder).toBe(
-      "/workspaces/specdojo-workspace/${localWorkspaceFolderBasename}",
-    );
+    expect(json.workspaceFolder).toBe("/workspaces/app1-workspace/${localWorkspaceFolderBasename}");
     expect(json.features).not.toHaveProperty(
       "ghcr.io/rocker-org/devcontainer-features/apt-packages:1",
     );
@@ -164,6 +163,7 @@ describe("runDevcontainerScaffold", () => {
       path.join(process.cwd(), "templates/devcontainer/post-create.sh"),
       "utf8",
     );
+    expect(devcontainerTemplate).toContain("/workspaces/__SPECDOJO_WORKSPACE_NAME__");
     readFileMock.mockImplementation(async (p) => {
       const file = String(p);
       if (file.endsWith("devcontainer.json")) {
@@ -187,11 +187,9 @@ describe("runDevcontainerScaffold", () => {
 
     const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
     expect(json.workspaceMount).toBe(
-      "source=${localWorkspaceFolder}/..,target=/workspaces/specdojo-workspace,type=bind,consistency=cached",
+      "source=${localWorkspaceFolder}/..,target=/workspaces/app1-workspace,type=bind,consistency=cached",
     );
-    expect(json.workspaceFolder).toBe(
-      "/workspaces/specdojo-workspace/${localWorkspaceFolderBasename}",
-    );
+    expect(json.workspaceFolder).toBe("/workspaces/app1-workspace/${localWorkspaceFolderBasename}");
     const script = String(findWriteCall("post-create.sh")[1]);
     expect(script).toContain('WORKSPACE_PARENT="$(dirname "$WORKSPACE_DIR")"');
     expect(script).toContain('SAFE_DIRECTORY_SCOPE="${WORKSPACE_PARENT}/*"');
@@ -470,5 +468,64 @@ describe("runDevcontainerScaffold", () => {
     expect(json.mounts).toContain(
       "source=my-project-specdojo-git,target=/home/node/.config/git,type=volume",
     );
+  });
+
+  it("should override the workspace parent name", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      workspaceName: "stable-workspace",
+      providers: [],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+    expect(json.workspaceMount).toContain("target=/workspaces/stable-workspace,");
+    expect(json.workspaceFolder).toBe(
+      "/workspaces/stable-workspace/${localWorkspaceFolderBasename}",
+    );
+  });
+
+  it.each(["has space", "nested/path", "control\nname", ".", ".."])(
+    "should reject an invalid workspace name: %j",
+    async (workspaceName) => {
+      await expect(
+        runDevcontainerScaffold({
+          packageRoot,
+          repoRoot,
+          workspaceName,
+          providers: [],
+          editors: [],
+          ollama: false,
+          cron: false,
+          tmux: false,
+          force: false,
+          dryRun: false,
+        }),
+      ).rejects.toThrow("Invalid workspace name");
+      expect(writeFileMock).not.toHaveBeenCalled();
+    },
+  );
+
+  it("should reject an invalid detected workspace parent name", async () => {
+    await expect(
+      runDevcontainerScaffold({
+        packageRoot,
+        repoRoot: "/workspaces/has space/app1-specdojo",
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      }),
+    ).rejects.toThrow("Invalid workspace name");
+    expect(writeFileMock).not.toHaveBeenCalled();
   });
 });

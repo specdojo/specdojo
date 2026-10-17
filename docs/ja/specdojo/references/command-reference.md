@@ -55,19 +55,20 @@ provider、exec、成果物カタログの規模、Dev Container の順に質問
 
 非対話環境では質問せず、次の主要オプションと既定値を使います。
 
-| オプション              | 用途                                                | 既定値          |
-| ----------------------- | --------------------------------------------------- | --------------- |
-| `--yes`                 | 質問せず既定値と指定済みオプションで実行する        | -               |
-| `--project <id>`        | project ID                                          | `prj-0001`      |
-| `--name <name>`         | project の表示名                                    | `My Project`    |
-| `--no-register`         | register を作らない                                 | register を作る |
-| `--nickname <nickname>` | 人の名簿に書く nickname                             | `owner`         |
-| `--display-name <name>` | 人の名簿に書く表示名                                | `Project Owner` |
-| `--provider <names>`    | provider をカンマ区切りで指定する                   | `codex`         |
-| `--exec`                | executor / reporter の名簿と起動設定を作る          | 作らない        |
-| `--catalog <size>`      | `small` / `medium` / `large` の成果物カタログを作る | 作らない        |
-| `--devcontainer`        | 選んだ provider の Dev Container を作る             | 作らない        |
-| `--dry-run`             | 作成・変更予定だけを表示する                        | 書き込む        |
+| オプション                | 用途                                                | 既定値          |
+| ------------------------- | --------------------------------------------------- | --------------- |
+| `--yes`                   | 質問せず既定値と指定済みオプションで実行する        | -               |
+| `--project <id>`          | project ID                                          | `prj-0001`      |
+| `--name <name>`           | project の表示名                                    | `My Project`    |
+| `--no-register`           | register を作らない                                 | register を作る |
+| `--nickname <nickname>`   | 人の名簿に書く nickname                             | `owner`         |
+| `--display-name <name>`   | 人の名簿に書く表示名                                | `Project Owner` |
+| `--provider <names>`      | provider をカンマ区切りで指定する                   | `codex`         |
+| `--exec`                  | executor / reporter の名簿と起動設定を作る          | 作らない        |
+| `--catalog <size>`        | `small` / `medium` / `large` の成果物カタログを作る | 作らない        |
+| `--devcontainer`          | 選んだ provider の Dev Container を作る             | 作らない        |
+| `--workspace-name <name>` | Dev Container 内で使う親ディレクトリ名              | ホスト側の親名  |
+| `--dry-run`               | 作成・変更予定だけを表示する                        | 書き込む        |
 
 `init` が作る `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml` は、選択した
 provider だけを含みます。親 runner の検証は、対応する `package.json` の npm script が存在する
@@ -896,15 +897,16 @@ Claude Code、Codex、Antigravity、GitHub Copilot には exec と同じ追加�
 
 主要オプション:
 
-| オプション           | 用途                                                        |
-| -------------------- | ----------------------------------------------------------- |
-| `--provider <names>` | `claude,codex` のようにカンマ区切りで provider を指定する。 |
-| `--editor emacs`     | 端末版 Emacs、LSP・検索ツール、初期設定を追加する。         |
-| `--ollama`           | Ollama への接続設定（環境変数）を追加する。                 |
-| `--cron`             | cron をインストールし、起動時にサービスを開始する。         |
-| `--tmux`             | tmux をインストールする。                                   |
-| `--force`            | `.devcontainer/` が既に存在する場合に上書きする。           |
-| `--dry-run`          | 実際にファイルを作成せず、作成予定のファイルを表示する。    |
+| オプション                | 用途                                                        |
+| ------------------------- | ----------------------------------------------------------- |
+| `--provider <names>`      | `claude,codex` のようにカンマ区切りで provider を指定する。 |
+| `--editor emacs`          | 端末版 Emacs、LSP・検索ツール、初期設定を追加する。         |
+| `--ollama`                | Ollama への接続設定（環境変数）を追加する。                 |
+| `--cron`                  | cron をインストールし、起動時にサービスを開始する。         |
+| `--tmux`                  | tmux をインストールする。                                   |
+| `--workspace-name <name>` | Dev Container 内で使う親ディレクトリ名を上書きする。        |
+| `--force`                 | `.devcontainer/` が既に存在する場合に上書きする。           |
+| `--dry-run`               | 実際にファイルを作成せず、作成予定のファイルを表示する。    |
 
 ```bash
 # claude と codex 用の CLI を含む Dev Container を生成する
@@ -915,11 +917,16 @@ npx specdojo devcontainer scaffold --provider claude --ollama --tmux
 
 # 端末版 Emacs と、すぐ使える組み込み機能だけの設定を追加する
 npx specdojo devcontainer scaffold --provider claude --editor emacs
+
+# ホスト側の親名を変えた後も、コンテナ内の従来パスを保つ
+npx specdojo devcontainer scaffold --workspace-name app1-workspace
 ```
 
 `.devcontainer/` が既に存在する場合は何も書き込まず、置き換える場合だけ `--force` を指定します。上書き前や初回生成前は `--dry-run` で対象ファイルを確認してください。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存してコンテナ再作成後も利用できるようにし、ホストの認証情報・秘密鍵・`.env` を直接マウントしません。認証は生成したコンテナ内で行います。
 
-生成する `devcontainer.json` は `${localWorkspaceFolder}/..` を `/workspaces/specdojo-workspace` へマウントし、`workspaceFolder` をその中の `${localWorkspaceFolderBasename}` へ向けます。別リポジトリ構成の `repos` と `worktree_base` はプロジェクトリポジトリの外にあるため、親ディレクトリを共有することでプロダクトリポジトリと exec の worktree をコンテナから利用できます。`post-create.sh` はマウントした親ディレクトリ配下の Git リポジトリと worktree を `safe.directory` の対象にします。親ディレクトリ内のその他のファイルもコンテナから見えるため、コンテナへ公開しないファイルは同じ親ディレクトリに置かないでください。
+生成する `devcontainer.json` は `${localWorkspaceFolder}/..` を、ホスト側の親ディレクトリ名に合わせた `/workspaces/<親名>` へマウントし、`workspaceFolder` をその中の `${localWorkspaceFolderBasename}` へ向けます。例えば `app1-workspace/app1-specdojo` で scaffold すると、作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成の `repos` と `worktree_base` はプロジェクトリポジトリの外にあるため、親ディレクトリを共有することでプロダクトリポジトリと exec の worktree をコンテナから利用できます。`post-create.sh` はマウントした親ディレクトリ配下の Git リポジトリと worktree を `safe.directory` の対象にします。親ディレクトリ内のその他のファイルもコンテナから見えるため、コンテナへ公開しないファイルは同じ親ディレクトリに置かないでください。
+
+親名には英数字・`.`・`_`・`-` だけを使用できます。空白、`/`、制御文字などを含む場合は、意図しないパスへ置換せずエラーにします。必要なら `--workspace-name <name>` で有効な名前を指定してください。`specdojo init --devcontainer` でも同じオプションを指定できます。コンテナ内で作った Git worktree は作成時の絶対パスを記録するため、ホスト側の親ディレクトリ名を変えて `.devcontainer/` を作り直す場合は、`--workspace-name` に以前の名前を指定してコンテナ内のパスを保ってください。
 
 `codex` provider を指定した場合だけ、生成する `devcontainer.json` の `runArgs` に `--security-opt=seccomp=unconfined` を追加します。Docker の既定 seccomp profile は Codex 同梱の bubblewrap が sandbox 作成時に使う user namespace の作成を拒否するためです。この設定は devcontainer 全体の syscall filter を無効にしてコンテナの隔離を弱めますが、追加の Linux capability は付与せず、Docker が保護する `/proc` や `/sys` の system path も公開しません。`--security-opt=systempaths=unconfined` は保護範囲をさらに広げるため使用しません。
 
