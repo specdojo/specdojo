@@ -1,31 +1,20 @@
-import type { AgentStageRole, SchedulerStrategy, TaskMode } from "../shared/agent-types.js";
+import type {
+  AgentAssignment,
+  AgentStageRole,
+  Approach,
+  Proficiency,
+  SchedulerStrategy,
+  TaskMode,
+} from "../shared/agent-types.js";
 
-export type { AgentStageRole, SchedulerStrategy, TaskMode } from "../shared/agent-types.js";
-
-// タスクの進め方プロファイル。前3者は成果物作業で参考資料をどの程度参照するかを表し、
-// <kind>-maintenance は成果物や finding が指す規範を根拠に対象の参考資料を見直す進め方
-// （参照の向きが逆転する）。
-// bootstrap は成果物とその参考資料一式（rulebook/recipe/sample/template）を一貫した一組として
-// 同一タスクで作成・整備する進め方（初期立ち上げ専用）。
-// retrofit は宣言済みの実装エビデンスを現在動作の根拠として読み、成果物へ反映・新設する。
-// cross-deliverable-dedup は明示した成果物群を横断して正本を選び、重複を要約と参照へ置換する。
-// finalize は human が成果物のみを最終確認して status を ready へ確定する進め方、
-// bootstrap-finalize は bootstrap と対になり、成果物と参考資料一式をまとめて確定する進め方。
-export type Approach =
-  | "fully-guided"
-  | "recipe-guided"
-  | "freeform"
-  | "bootstrap"
-  | "retrofit"
-  | "cross-deliverable-dedup"
-  | "rulebook-maintenance"
-  | "recipe-maintenance"
-  | "sample-maintenance"
-  | "template-maintenance"
-  | "finalize"
-  | "bootstrap-finalize";
-
-export type Proficiency = "low" | "normal" | "high" | "expert";
+export type {
+  AgentAssignment,
+  AgentStageRole,
+  Approach,
+  Proficiency,
+  SchedulerStrategy,
+  TaskMode,
+} from "../shared/agent-types.js";
 
 export type AgentPipelineStage = {
   stage_role: AgentStageRole;
@@ -35,11 +24,6 @@ export type AgentPipelineStage = {
 
 export type AgentPipeline = {
   stages: [AgentPipelineStage, AgentPipelineStage];
-};
-
-export type AgentAssignment = {
-  executor: string;
-  reporter?: string;
 };
 
 export type ExecEventType =

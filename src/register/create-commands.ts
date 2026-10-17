@@ -1,7 +1,7 @@
 import type { Command } from "commander";
 import { existsSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { inlineCodeAnglePlaceholders } from "../exec/shared.js";
+import { inlineCodeAnglePlaceholders } from "../shared/text.js";
 import { appendRegisterEvent, buildRegisterEvent, registerEventFilePath } from "./events.js";
 import { nowUtcTimestamp } from "./date.js";
 import {

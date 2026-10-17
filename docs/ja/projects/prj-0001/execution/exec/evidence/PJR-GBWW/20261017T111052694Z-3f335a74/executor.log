@@ -1,0 +1,367 @@
+Reading prompt from stdin...
+OpenAI Codex v0.162.1
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBWW
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a1498f-ffcf-70d0-b636-c651c474727c
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-gbww-20261017t111052z-2632
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-GBWW
+  name: "exec の汎用の部品を src/shared へ移す"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: DEV
+---
+
+# Edit Plan: PJR-GBWW exec の汎用の部品を src/shared へ移す
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-GBWW「exec の汎用の部品を src/shared へ移す」に対応する。
+
+exec/shared の補助関数、exec/types の共通の型、exec/worktree の git と worktree の操作のうち、exec 以外の機能から使われる部分を src/shared へ移す。 PJR-QQKY の決定に基づく。動作は変えない
+
+## 2. 対象項目
+
+- `id`: PJR-GBWW
+- `type`: todo
+- `priority`: low
+- `owner`: DEV
+- `due`: -
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-gbww-20261017T111052Z-2632-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+### grade result から展開された finding
+
+- なし
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 作業用のファイル（編集用スクリプト、検証用の一時データなど）はリポジトリの外（一時ディレクトリ）または worktree の `tmp/` 配下に置き、終了前に削除する。使い捨てのファイルを最上位に作らない。`tmp/` 配下のファイルは commit の対象から除外される。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- 検査を実行する前に、リポジトリの `package.json`、`.specdojo/specdojo.config.json`、hook 設定を読み、下表の適用条件を確認する。条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する。`not_run` は適用される検査を実行しなかった場合だけに使う。誤って `not_run` と記録しても、npm script・依存 package の不在、または SpecDojo サブコマンドの設定上の非適用を runner が機械的に確定できる場合は適用外として扱われるが、この救済を前提に記録を省略しない。
+- 依存パッケージの有無は、対象リポジトリの `package.json` の `dependencies` / `devDependencies` と、リポジトリに固定された package manager の設定を基準に判断する。`npx` が未導入パッケージをネットワークから一時取得できることは、導入済みとはみなさない。設定ファイルがない、壊れているなどの理由で適用条件を確定できない検査は実行せず、validations に `not_applicable` として理由と次の確認事項を記録する。
+- Markdown 成果物を編集した場合、Prettier が導入されているときだけ `npx prettier --write <対象ファイル>` で整形する。`markdownlint-cli` または `markdownlint` が導入されているときだけ `npx markdownlint <対象ファイル>` を実行し、`markdownlint-cli2` を採用するリポジトリでは、そのリポジトリで定めた CLI2 のコマンドを実行する。適用した検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）のうち、現在のリポジトリに設定され、上記の適用条件を満たすものを先回りで実行する。適用した検査の失敗はすべて修正してから完了する。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当し、かつ適用条件を満たす行の検査を実行する。該当行がない場合や適用条件を満たさない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は、適用条件を満たす設定側のコマンドに合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx specdojo <subcommand>`、`npx tsx src/specdojo.ts <subcommand>` など）で実行する。ただし、sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する。
+
+| 変更したファイル                                                                                       | 適用条件                                                                            | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | 対応するローカル依存が `package.json` にある                                        | `npx prettier --write <対象ファイル>`、導入済み実装に対応する markdownlint コマンド                                                   |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | Prettier が `package.json` にある                                                   | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `package.json` に `typecheck` script がある                                         | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `test:unit`、それ以外は `test` script が `package.json` にある | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | 対象 project に `project_register_path` が設定されている                            | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | 対象 project に `schedule_path` が設定されている                                    | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | リポジトリで定められた起動方法により SpecDojo CLI を実行できる                      | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+Do not create disposable or scratch files at the repository root; place them in `tmp/` within
+the worktree or outside the repository. Files under `tmp/` are excluded from commits.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+
+
+Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
+Use validation status `not_applicable` when the repository does not meet a check's applicability
+conditions, and include a non-empty `reason`. The runner carries it into the result without
+blocking completion, but rejects the claim when it can confirm the check applies:
+- `npm run <script>` / `npm test`: the script exists in package.json.
+- `npx <package>`: the package is in package.json dependencies or devDependencies.
+- A command that targets a declared product repository (a `<repo>:<path>` argument or
+  `--prefix <repo>`) is judged by that repository's package.json, not the project repository's.
+- `specdojo catalog validate`: the run's target project (or `--project <id>`) sets `catalog_path`
+  and your changes reach `docs/ja/projects/`. A project without `catalog_path`, or changes
+  outside `docs/ja/projects/`, is a valid reason; state it in `reason`.
+
+Do not run or report `specdojo index build`. It writes `.specdojo/doc-index.json`, which the
+agent may not write, and the runner regenerates the index while preparing the worktree and before
+integration.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]}
+</specdojo_executor_evidence>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+まず登録簿・個票・PJR-QQKY の設計判断と、現在の `exec` / `shared` の依存関係を確認します。親 runner が担当する検証コマンドは実行せず、重複しない範囲で実装と確認を進めます。
+exec
+/bin/bash -lc "pwd && rg -n \"PJR-GBWW|PJR-QQKY|exec/shared|exec/types|exec/worktree\" docs/ja/projects/prj-0001/controls/project-register docs/ja src tests package.json .specdojo/specdojo.config.json lefthook.yml 2>/dev/null | head -n 240 && rg --files src tests docs/ja/projects/prj-0001 | sed -n '1,240p'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBWW
+ succeeded in 1792ms:
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBWW
+tests/src/commands/build.integration.test.ts:14:import { generateWorktreeArtifacts, gitEnvironment } from "../../../src/exec/worktree.js";
+tests/tools/open-agent-worktree.integration.test.ts:6:import { gitEnvironment } from "../../src/exec/worktree.js";
+tests/src/exec/worktree.integration.test.ts:26:} from "../../../src/exec/worktree.js";
+tests/src/exec/worktree.integration.test.ts:27:import { isCommitTargetPath, stabilizeCommitTargets } from "../../../src/exec/worktree-command.js";
+tests/src/exec/shared-display-width.test.ts:2:import { displayWidth, padEndDisplay } from "../../../src/exec/shared.js";
+tests/src/exec/job-worktree.integration.test.ts:16:import { gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/deliverable/trash.integration.test.ts:6:import { gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/exec/pipeline-e2e.integration.test.ts:18:import { gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/register/commit.integration.test.ts:9:import { gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/exec/release-reset-worktree.integration.test.ts:8:import { findExecWorktree, gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/register/history.test.ts:18:import { gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/exec/shared.test.ts:12:} from "../../../src/exec/shared.js";
+tests/src/dashboard/dashboard.test.ts:28:import type { ScheduleCalendar } from "../../../src/exec/types.js";
+src/register/register.ts:6:import { inlineCodeAnglePlaceholders } from "../exec/shared.js";
+src/register/register.ts:7:import { repoRelative, stageCommitTargets, worktreeStatusPaths } from "../exec/worktree-ops.js";
+src/register/register.ts:8:import { gitOutput, gitResult } from "../exec/worktree.js";
+tests/src/exec/agent-git-state.integration.test.ts:11:import { gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/exec/run/resolve-command.test.ts:8:import type { AgentPipeline, ReadyTaskView } from "../../../../src/exec/types.js";
+src/register/events.ts:17:import { isUtcIsoSeconds, nowUtcIsoSeconds } from "../exec/shared.js";
+src/register/create-commands.ts:4:import { inlineCodeAnglePlaceholders } from "../exec/shared.js";
+tests/src/exec/worktree-ops.integration.test.ts:19:} from "../../../src/exec/worktree.js";
+tests/src/exec/worktree-ops.integration.test.ts:36:} from "../../../src/exec/worktree-ops.js";
+tests/src/exec/limit.test.ts:7:import type { StateSnapshot } from "../../../src/exec/types.js";
+src/register/core.ts:12:import { inlineCodeAnglePlaceholders } from "../exec/shared.js";
+tests/src/exec/worktree-command.integration.test.ts:8:import { findExecWorktree, gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/exec/register-plan-escape.test.ts:8:import { escapeMarkdownInline, inlineCodeAnglePlaceholders } from "../../../src/exec/shared.js";
+src/register/transition-commands.ts:2:import { inlineCodeAnglePlaceholders } from "../exec/shared.js";
+tests/src/exec/run/inplace.test.ts:15:import * as execWorktree from "../../../../src/exec/worktree.js";
+tests/src/exec/trial.test.ts:15:import { gitEnvironment } from "../../../src/exec/worktree.js";
+src/register/migrate-timestamps.ts:28:import { gitResult } from "../exec/worktree.js";
+tests/src/exec/events.test.ts:25:} from "../../../src/exec/types.js";
+tests/src/exec/agent-protected-config.test.ts:6:import { gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/exec/run/resolve-claiming-actor.test.ts:6:import type { CurrentState, ScheduleIndex, StateSnapshot } from "../../../../src/exec/types.js";
+docs/ja/product/040-system-design/sysd-index.md:42:| Git Integration | Git source and repository policy | `src/exec/worktree.ts`、`src/exec/worktree-ops*.ts`、`src/exec/repo-integration*.ts`、`.github/` | DEV / ARC | branch / worktree / repository integration / PR境界 |
+docs/ja/product/040-system-design/sysd-index.md:59:| 並列実行・worktree変更 | `src/exec/run*.ts`、`src/exec/worktree*.ts`               | 横断ルール、重要フロー、統合テスト             | 競合・block・resume経路を検証 |
+tests/src/exec/worktree-ops.test.ts:9:} from "../../../src/exec/worktree-ops.js";
+tests/src/exec/worktree-ops.test.ts:10:import type { ExecWorktree } from "../../../src/exec/worktree.js";
+tests/src/exec/worktree.test.ts:21:} from "../../../src/exec/worktree.js";
+tests/src/exec/register-worktree.integration.test.ts:6:import { gitEnvironment } from "../../../src/exec/worktree.js";
+docs/ja/product/040-system-design/sysd-cross-cutting-policy.md:187:- **References（参照）**: [[prj-0001:pjr-3s8q-agent-writable-config-scope|PJR-3S8Q 実行コマンドを定義する設定ファイルは agent の書き込み範囲に含めない]]、`src/exec/agent-protected-config.ts`、`src/exec/worktree-ops.ts`。
+tests/src/exec/register-multiple-ids.integration.test.ts:7:import { worktreeStatusPaths } from "../../../src/exec/worktree-ops.js";
+tests/src/exec/register-multiple-ids.integration.test.ts:8:import { gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/exec/task-repos.integration.test.ts:33:import { gitOutput, gitResult, type ExecWorktree } from "../../../src/exec/worktree.js";
+tests/src/exec/task-repos.integration.test.ts:56:} from "../../../src/exec/worktree-ops.js";
+src/register/item.ts:10:import { inlineCodeAnglePlaceholders } from "../exec/shared.js";
+tests/src/exec/register-resume.integration.test.ts:18:import { gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/exec/schedule/calendar.test.ts:13:import type { ScheduleCalendar } from "../../../../src/exec/types.js";
+docs/ja/product/040-system-design/sysd-critical-flows.md:167:| scf-002 | `src/exec/worktree*.ts`、multi-project CDFD                    | `exec/worktree*` test     | 障害対応OPR（未作成） | （なし）      |
+src/register/history.ts:11:import { gitOutput, gitResult } from "../exec/worktree.js";
+tests/src/exec/schedule/gantt-chart-scope.test.ts:7:import type { CpmNode, CpmResult, ScheduleIndex } from "../../../../src/exec/types.js";
+tests/src/exec/schedule/cpm.test.ts:3:import type { ScheduleIndex } from "../../../../src/exec/types.js";
+tests/src/exec/register-pipeline-e2e.integration.test.ts:22:import { gitEnvironment } from "../../../src/exec/worktree.js";
+tests/src/exec/schedule/progress.test.ts:6:import type { ScheduleIndex } from "../../../../src/exec/types.js";
+tests/src/exec/schedule/ready.test.ts:12:import type { CpmResult, ScheduleIndex } from "../../../../src/exec/types.js";
+src/dashboard/dashboard-timeline.ts:3:import type { ScheduleCalendar } from "../exec/types.js";
+tests/src/exec/schedule/gantt-chart-render.test.ts:3:import type { CpmNode, CpmResult, ScheduleIndex } from "../../../../src/exec/types.js";
+tests/src/exec/schedule/hash.test.ts:6:import type { ScheduleHash, ScheduleIndex, ScheduleNode } from "../../../../src/exec/types.js";
+src/dashboard/shared.ts:1:import { stripTerminalControlSequences } from "../exec/shared.js";
+src/deliverable/trash.ts:18:import { gitOutput } from "../exec/worktree.js";
+docs/ja/projects/prj-0001/controls/project-register/pjr-dt3q-transient-git-retry-not-idempotent.md:23:src/exec/worktree.ts は dubious ownership などの一時的な git の失敗を再試行する。git worktree add -b は最初の試みで worktree と branch を作ったうえで失敗を返すことがあり、再試行が branch がすでにあるで失敗して run が waiting になる。2026-10-17 の PJR-MX4F で起きた
+docs/ja/projects/prj-0001/controls/project-register/pjr-dt3q-transient-git-retry-not-idempotent.md:29:| スコープ     | `src/exec/worktree.ts` の一時的な git の失敗の再試行（`runGitWithTransientRetry`）と、それを使う worktree の作成 |
+src/dashboard/dashboard.ts:4:import type { ExecEventV1, StateSnapshot } from "../exec/types.js";
+src/dashboard/dashboard.ts:5:import { readJson, toArtifactPath } from "../exec/shared.js";
+src/schedule/build.ts:3:import { readYaml } from "../exec/shared.js";
+src/schedule/build.ts:5:import type { AgentAssignment } from "../exec/types.js";
+src/dashboard/timeline-build.ts:3:import { normalizeDateOnly, readYaml } from "../exec/shared.js";
+src/dashboard/routines.ts:4:import { readJson } from "../exec/shared.js";
+src/schedule/strategy-generate-scope.ts:6:import { readYaml } from "../exec/shared.js";
+src/grade/pipeline-state.ts:4:import { listFilesRecursive } from "../exec/shared.js";
+src/schedule/strategy-generate.ts:24:import { readYaml } from "../exec/shared.js";
+src/schedule/approach.ts:10:import { readYaml } from "../exec/shared.js";
+src/schedule/approach.ts:15:import type { Approach } from "../exec/types.js";
+src/grade/target-discovery.ts:4:import { listFilesRecursive } from "../exec/shared.js";
+src/grade/targets.ts:7:import { listFilesRecursive } from "../exec/shared.js";
+src/routine/routine.ts:15:} from "../exec/shared.js";
+src/schedule/strategy-generate-document.ts:1:import type { Approach } from "../exec/types.js";
+src/schedule/strategy-profiles.ts:6:import type { Approach, Proficiency } from "../exec/types.js";
+src/routine/definition.ts:8:import { listFilesRecursive, readYaml } from "../exec/shared.js";
+docs/ja/projects/prj-0001/controls/project-register/pjr-e025-src-remaining-cycles.md:21:register から exec/worktree-ops・exec/slot-lock、job から exec/plans、grade から exec/schedule-index、exec から grade/result などの残りを 1 件ずつ見て、shared へ移すか依存の向きを逆にする。 PJR-QQKY の決定に基づく。動作は変えない
+src/schedule/schedule.ts:23:import { readYaml } from "../exec/shared.js";
+src/job/job.ts:9:import { expandTemplate, listFilesRecursive, writeJson } from "../exec/shared.js";
+src/job/job.ts:10:import { gitEnvironment } from "../exec/worktree.js";
+src/job/definition.ts:4:import { listFilesRecursive, readJson } from "../exec/shared.js";
+src/job/definition.ts:13:import type { Proficiency, TaskMode } from "../exec/types.js";
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:17:# PJR-GBWW exec の汎用の部品を src/shared へ移す
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:21:exec/shared の補助関数、exec/types の共通の型、exec/worktree の git と worktree の操作のうち、exec 以外の機能から使われる部分を src/shared へ移す。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:29:| `src/exec/shared.ts`   | `ensureDir`（routine）、`expandTemplate`（job）、`inlineCodeAnglePlaceholders`（register）、`isUtcIsoSeconds`（register）、`listFilesRecursive`（grade・job・routine）、`normalizeDateOnly`（dashboard）、`nowUtcIsoSeconds`（register・routine）、`padEndDisplay`（routine）、`readJson`（dashboard・job・routine）、`readYaml`（dashboard・routine・schedule）、`stripTerminalControlSequences`（dashboard）、`toArtifactPath`（dashboard）、`writeJson`（job・routine） | `src/shared/` の新しいモジュール（例: ファイルの読み書きは `src/shared/fs.ts`、時刻は `src/shared/time.ts`、文字列の整形は `src/shared/text.ts` など、責務ごとに分けてよい） |
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:30:| `src/exec/types.ts`    | `AgentAssignment`・`Approach`・`Proficiency`（schedule）、`Proficiency`・`TaskMode`（job）                                                                                                                                                                                                                                                                                                                                                                                 | `src/shared/agent-types.ts`（[[prj-0001:pjr-x8y9-src-dependency-direction-rules]] で作った）                                                                                 |
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:31:| `src/exec/worktree.ts` | `gitOutput`・`gitResult`（register・deliverable）、`gitEnvironment`（job。定義は既に `src/shared/git-environment.ts`）                                                                                                                                                                                                                                                                                                                                                     | `src/shared/` の新しいモジュール（例: `src/shared/git.ts`）。一時的な失敗の再試行（`runGitWithTransientRetry` と関係する関数）も一緒に移す                                   |
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:33:`src/exec/types.ts` のうち `ExecEventV1`・`StateSnapshot`・`ScheduleCalendar` は `dashboard` だけが使い、`dashboard` ⇄ `exec` は循環していないため移さない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:50:| 1   | `exec/shared` の汎用の補助関数を `src/shared/` へ移す | DEV          | open | 責務ごとに分けてよい |
+docs/ja/projects/prj-0001/controls/project-register/pjr-z4pm-src-small-cycles.md:21:review から grade/result と、docs から catalog/build の 1 件ずつの依存を直す。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/controls/project-register/pjr-613h-enobufs-test-flaky.md:23:tests/src/exec/worktree.test.ts の reports ENOBUFS のテストは、子プロセスに 64 KB を書かせて maxBuffer 1 KB で止められることを確かめる。負荷が高いと子プロセスが止められる前に書き終えて終了コード 0 になり、status が null でなくなって失敗する
+docs/ja/projects/prj-0001/controls/project-register/pjr-613h-enobufs-test-flaky.md:29:| スコープ     | `tests/src/exec/worktree.test.ts` の「reports ENOBUFS and the signal when the output exceeds maxBuffer」 |
+docs/ja/projects/prj-0001/controls/project-register/pjr-613h-enobufs-test-flaky.md:48:- テストを 20 回続けて実行して、すべて通ることを確かめ、result に書く（例: `npx vitest run --project unit tests/src/exec/worktree.test.ts -t ENOBUFS --repeat 20` など、使える方法で）。
+docs/ja/projects/prj-0001/controls/project-register/pjr-613h-enobufs-test-flaky.md:55:- `tests/src/exec/worktree.test.ts` の子プロセスを、64 KiB を一度だけ出力して終了する処理から、停止されるまで同じ出力を続ける処理へ変更した。親が `maxBuffer` 超過を検知する前に子が正常終了する競合をなくした。
+docs/ja/projects/prj-0001/controls/project-register/pjr-x8y9-src-dependency-direction-rules.md:16:  conclusion: src/shared/specdojo-config.ts の src/exec への依存をなくし（型を src/shared/agent-types.ts、provider-scaffold を src/shared へ移した）、src/shared が他の機能を、機能が src/commands と src/specdojo.ts を import しない規則を ESLint の no-restricted-imports で error として入れた。機能どうしの循環は PJR-QQKY で扱う
+docs/ja/projects/prj-0001/controls/project-register/pjr-x8y9-src-dependency-direction-rules.md:31:- `src/shared/` → ほかの機能: `src/shared/specdojo-config.ts` が `../exec/types.js`（`AgentStageRole`・`SchedulerStrategy`・`TaskMode` の型）と `../exec/provider-scaffold.js`（`runProviderScaffold`・`specdojoPackageRootDir`）を import している。
+docs/ja/projects/prj-0001/controls/project-register/pjr-x8y9-src-dependency-direction-rules.md:57:- `AgentStageRole`・`SchedulerStrategy`・`TaskMode` の定義を `src/shared/agent-types.ts` へ移し、既存の import との互換性を保つため `src/exec/types.ts` から再 export した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-qqky-src-feature-cycles.md:19:# PJR-QQKY src の機能どうしの循環する依存をほどく方針を決める
+docs/ja/projects/prj-0001/controls/project-register/pjr-qqky-src-feature-cycles.md:27:| `exec` ⇄ `register` | 7 ⇄ 8              | `register` → `exec/shared`（6）・`exec/worktree`（3）・`exec/worktree-ops`・`exec/slot-lock` |
+docs/ja/projects/prj-0001/controls/project-register/pjr-qqky-src-feature-cycles.md:28:| `exec` ⇄ `schedule` | 6 ⇄ 7              | `schedule` → `exec/shared`（5）・`exec/types`（4）。`exec` → `schedule/phase-sets`（6）      |
+docs/ja/projects/prj-0001/controls/project-register/pjr-qqky-src-feature-cycles.md:29:| `exec` ⇄ `grade`    | 2 ⇄ 3              | `grade` → `exec/shared`（3）・`exec/schedule-index`。`exec` → `grade/result`（2）            |
+docs/ja/projects/prj-0001/controls/project-register/pjr-qqky-src-feature-cycles.md:30:| `exec` ⇄ `job`      | 1 ⇄ 2              | `job` → `exec/shared`・`exec/types`・`exec/plans`・`exec/worktree`                           |
+docs/ja/projects/prj-0001/controls/project-register/pjr-qqky-src-feature-cycles.md:34:`exec` ⇄ 他の機能の循環の多くは、`exec` の中にある汎用の部品（`exec/shared` の補助関数、`exec/types` の共通の型、`exec/worktree` の git と worktree の操作）を他の機能が使っていることが原因である。
+docs/ja/projects/prj-0001/controls/project-register/pjr-qqky-src-feature-cycles.md:49:2. `src/shared/` へ移すのは、他の機能から使われている汎用の部分に限る。`exec/shared` の補助関数のうち exec 以外から使われるもの、`exec/types` のうち他の機能が使う共通の型、`exec/worktree` の git と worktree の操作のうち `register`・`job` が使うもの。exec だけが使う部分は `exec` に残す。
+docs/ja/projects/prj-0001/controls/project-register/pjr-qqky-src-feature-cycles.md:50:3. 移した後に残る循環（`register` → `exec/worktree-ops`・`exec/slot-lock`、`job` → `exec/plans`、`grade` → `exec/schedule-index`、`exec` → `grade/result`）は 1 件ずつ見て、`shared` へ移すか、依存の向きを逆にするかを決める。
+docs/ja/projects/prj-0001/controls/project-register/pjr-qqky-src-feature-cycles.md:80:| 追跡先     | PJR-GBWW（汎用の部品の移動）、PJR-E025（残りの循環）、PJR-Z4PM（小さい 2 件）、PJR-WSET（依存の向きの規則）                                            |
+docs/ja/projects/prj-0001/controls/project-register/pjr-mx4f-integrate-conflict-commit-skips-dist-rebuild.md:29:| スコープ     | `src/exec/worktree-ops-merge.ts` の `mergeWorktreeIntoCurrent` と `resolveBranchOwnedConflicts`、統合の後の dist の更新                                                                |
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-613h.yaml:19:      to: tests/src/exec/worktree.test.ts の reports ENOBUFS のテストは、子プロセスに 64 KB を書かせて maxBuffer 1 KB で止められることを確かめる。負荷が高いと子プロセスが止められる前に書き終えて終了コード 0 になり、status が null でなくなって失敗する
+docs/ja/projects/prj-0001/controls/project-register/pjr-wset-src-feature-direction-rules.md:21:循環がなくなった機能の組（register は exec を import しない、など）の依存の向きを ESLint の規則として error で足す。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x8y9.yaml:107:      to: src/shared/specdojo-config.ts の src/exec への依存をなくし（型を src/shared/agent-types.ts、provider-scaffold を src/shared へ移した）、src/shared が他の機能を、機能が src/commands と src/specdojo.ts を import しない規則を ESLint の no-restricted-imports で error として入れた。機能どうしの循環は PJR-QQKY で扱う
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-z4pm.yaml:9:  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-z4pm.yaml:19:      to: review から grade/result と、docs から catalog/build の 1 件ずつの依存を直す。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-wset.yaml:9:  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-wset.yaml:19:      to: 循環がなくなった機能の組（register は exec を import しない、など）の依存の向きを ESLint の規則として error で足す。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gbww.yaml:9:  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gbww.yaml:19:      to: exec/shared の補助関数、exec/types の共通の型、exec/worktree の git と worktree の操作のうち、exec 以外の機能から使われる部分を src/shared へ移す。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-dt3q.yaml:19:      to: src/exec/worktree.ts は dubious ownership などの一時的な git の失敗を再試行する。git worktree add -b は最初の試みで worktree と branch を作ったうえで失敗を返すことがあり、再試行が branch がすでにあるで失敗して run が waiting になる。2026-10-17 の PJR-MX4F で起きた
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-e025.yaml:9:  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-e025.yaml:19:      to: register から exec/worktree-ops・exec/slot-lock、job から exec/plans、grade から exec/schedule-index、exec から grade/result などの残りを 1 件ずつ見て、shared へ移すか依存の向きを逆にする。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/controls/project-register/pjr-dt3q-transient-git-retry-not-idempotent.md:23:src/exec/worktree.ts は dubious ownership などの一時的な git の失敗を再試行する。git worktree add -b は最初の試みで worktree と branch を作ったうえで失敗を返すことがあり、再試行が branch がすでにあるで失敗して run が waiting になる。2026-10-17 の PJR-MX4F で起きた
+docs/ja/projects/prj-0001/controls/project-register/pjr-dt3q-transient-git-retry-not-idempotent.md:29:| スコープ     | `src/exec/worktree.ts` の一時的な git の失敗の再試行（`runGitWithTransientRetry`）と、それを使う worktree の作成 |
+docs/ja/projects/prj-0001/execution/exec/results/pjr-gbww-20261017T105336Z-45ea-result.md:5:  task_id: PJR-GBWW
+docs/ja/projects/prj-0001/controls/project-register/pjr-e025-src-remaining-cycles.md:21:register から exec/worktree-ops・exec/slot-lock、job から exec/plans、grade から exec/schedule-index、exec から grade/result などの残りを 1 件ずつ見て、shared へ移すか依存の向きを逆にする。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/execution/exec/results/pjr-x8y9-20261017T085350Z-a651-result.md:33:- `src/exec/types.ts`: 共有する型を `src/shared/agent-types.ts` へ切り出したことに合わせて更新した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:17:# PJR-GBWW exec の汎用の部品を src/shared へ移す
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:21:exec/shared の補助関数、exec/types の共通の型、exec/worktree の git と worktree の操作のうち、exec 以外の機能から使われる部分を src/shared へ移す。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:29:| `src/exec/shared.ts`   | `ensureDir`（routine）、`expandTemplate`（job）、`inlineCodeAnglePlaceholders`（register）、`isUtcIsoSeconds`（register）、`listFilesRecursive`（grade・job・routine）、`normalizeDateOnly`（dashboard）、`nowUtcIsoSeconds`（register・routine）、`padEndDisplay`（routine）、`readJson`（dashboard・job・routine）、`readYaml`（dashboard・routine・schedule）、`stripTerminalControlSequences`（dashboard）、`toArtifactPath`（dashboard）、`writeJson`（job・routine） | `src/shared/` の新しいモジュール（例: ファイルの読み書きは `src/shared/fs.ts`、時刻は `src/shared/time.ts`、文字列の整形は `src/shared/text.ts` など、責務ごとに分けてよい） |
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:30:| `src/exec/types.ts`    | `AgentAssignment`・`Approach`・`Proficiency`（schedule）、`Proficiency`・`TaskMode`（job）                                                                                                                                                                                                                                                                                                                                                                                 | `src/shared/agent-types.ts`（[[prj-0001:pjr-x8y9-src-dependency-direction-rules]] で作った）                                                                                 |
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:31:| `src/exec/worktree.ts` | `gitOutput`・`gitResult`（register・deliverable）、`gitEnvironment`（job。定義は既に `src/shared/git-environment.ts`）                                                                                                                                                                                                                                                                                                                                                     | `src/shared/` の新しいモジュール（例: `src/shared/git.ts`）。一時的な失敗の再試行（`runGitWithTransientRetry` と関係する関数）も一緒に移す                                   |
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:33:`src/exec/types.ts` のうち `ExecEventV1`・`StateSnapshot`・`ScheduleCalendar` は `dashboard` だけが使い、`dashboard` ⇄ `exec` は循環していないため移さない。
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md:50:| 1   | `exec/shared` の汎用の補助関数を `src/shared/` へ移す | DEV          | open | 責務ごとに分けてよい |
+docs/ja/projects/prj-0001/execution/exec/results/pjr-bz9j-20261017T082307Z-faa9-result.md:67:- `src/exec/worktree-command.ts`: 移動後のパスを参照するよう import を更新した。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-mx4f-20261017T093201Z-3170-result.md:20:- 記帳の衝突を解いた統合の経路でも `dist` が作り直されるよう、統合成功後に既存の build-if-stale を明示的に実行する変更を `src/exec/worktree-ops-merge.ts` に加えた。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-mx4f-20261017T093201Z-3170-result.md:22:- 記帳衝突の解消経路を検証する統合テストを `tests/src/exec/worktree-ops.integration.test.ts` に追加・更新した。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-mx4f-20261017T093201Z-3170-result.md:27:- `src/exec/worktree-ops-merge.ts`: 記帳の衝突を解いた統合が成功したあとに、既存の build-if-stale を明示的に実行するようにした。post-merge hook が動かない `--no-verify` の commit 経路でも `dist` が更新される。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-mx4f-20261017T093201Z-3170-result.md:28:- `tests/src/exec/worktree-ops.integration.test.ts`: 記帳衝突を解消する統合経路で、統合後に build-if-stale が実行されることを確認する統合テストを更新した。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-mx4f-20261017T093201Z-3170-result.md:40:個票と実装を確認し、記帳衝突の解消後に `git commit --no-verify` で merge を完了させる経路を原因として特定した。post-merge hook は merge が完了したときにしか動かない。そこで `src/exec/worktree-ops-merge.ts` で、統合成功後に build-if-stale を明示実行する最小変更にした。あわせて統合テストを更新し、整形と登録簿ビルドを実行し、`catalog validate` と `git diff --check` で確認した。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-613h-20261017T100319Z-b359-result.md:20:- `tests/src/exec/worktree.test.ts` の ENOBUFS テストを、負荷に依存せず安定して通るよう変更しました。従来は子プロセスが 64 KB を書いて終了するだけでした。そのため、`maxBuffer` 1 KB で止められる前に書き終えると終了コード 0 になり、status が null にならず失敗していました。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-613h-20261017T100319Z-b359-result.md:27:- `tests/src/exec/worktree.test.ts`: `reports ENOBUFS` のテストで、子プロセスの出力を 64 KB の有限出力から、停止されるまで続く同期連続出力に変更しました。負荷で子プロセスが先に終了することがなくなり、フレーキーさを解消します。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-gbww-20261017T111052Z-2632-result.md:5:  task_id: PJR-GBWW
+docs/ja/projects/prj-0001/execution/exec/results/pjr-dt3q-20261017T102710Z-a350-result.md:27:- `src/exec/worktree.ts`: worktree add の一時エラー後に、worktree と branch の状態を照合する処理を追加した。作成済み・部分作成・競合 branch を安全に扱い、再試行が冪等になるようにした。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-dt3q-20261017T102710Z-a350-result.md:28:- `tests/src/exec/worktree.integration.test.ts`: 実 Git を使い、worktree add の一時エラー後の再試行が冪等になることを確認する統合テストを追加・更新した。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-dt3q-20261017T102710Z-a350-result.md:29:- `tests/src/exec/worktree.test.ts`: 一時エラー後の状態照合ロジックについて、単体テストを追加・更新した。
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gbww.yaml:9:  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-gbww.yaml:19:      to: exec/shared の補助関数、exec/types の共通の型、exec/worktree の git と worktree の操作のうち、exec 以外の機能から使われる部分を src/shared へ移す。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:289:- `src/exec/shared.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:297:- `src/exec/types.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:298:- `src/exec/worktree-command.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:299:- `src/exec/worktree-ops-commit.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:300:- `src/exec/worktree-ops-lifecycle.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:301:- `src/exec/worktree-ops-merge.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:302:- `src/exec/worktree-ops.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:303:- `src/exec/worktree.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:358:- `tests/src/exec/shared-display-width.test.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:359:- `tests/src/exec/shared.test.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:365:- `tests/src/exec/worktree-command.integration.test.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:366:- `tests/src/exec/worktree-ops.integration.test.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:367:- `tests/src/exec/worktree-ops.test.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:368:- `tests/src/exec/worktree.integration.test.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/execution/exec/results/pjr-xp0j-20261017T071032Z-1957-result.md:369:- `tests/src/exec/worktree.test.ts`: reporter の説明がないため、変更差分を参照。
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-e025.yaml:9:  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-e025.yaml:19:      to: register から exec/worktree-ops・exec/slot-lock、job から exec/plans、grade から exec/schedule-index、exec から grade/result などの残りを 1 件ずつ見て、shared へ移すか依存の向きを逆にする。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-dt3q.yaml:19:      to: src/exec/worktree.ts は dubious ownership などの一時的な git の失敗を再試行する。git worktree add -b は最初の試みで worktree と branch を作ったうえで失敗を返すことがあり、再試行が branch がすでにあるで失敗して run が waiting になる。2026-10-17 の PJR-MX4F で起きた
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-gbww-20261017T105336Z-45ea-plan.md:6:  task_id: PJR-GBWW
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-gbww-20261017T105336Z-45ea-plan.md:15:# Edit Plan: PJR-GBWW exec の汎用の部品を src/shared へ移す
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-gbww-20261017T105336Z-45ea-plan.md:19:プロジェクト登録簿の項目 PJR-GBWW「exec の汎用の部品を src/shared へ移す」に対応する。
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-gbww-20261017T105336Z-45ea-plan.md:21:exec/shared の補助関数、exec/types の共通の型、exec/worktree の git と worktree の操作のうち、exec 以外の機能から使われる部分を src/shared へ移す。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-gbww-20261017T105336Z-45ea-plan.md:25:- `id`: PJR-GBWW
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-X8Y9/20261017T085350121Z-d0bc2ee0/parent-validation-attempt-1-test-unit.log:23: ❯ tests/src/exec/worktree.test.ts (35 tests | 1 failed) 37ms
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-X8Y9/20261017T085350121Z-d0bc2ee0/parent-validation-attempt-1-test-unit.log:51: FAIL  tests/src/exec/worktree.test.ts > describeGitProcessFailure > reports ENOBUFS and the signal when the output exceeds maxBuffer
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-X8Y9/20261017T085350121Z-d0bc2ee0/parent-validation-attempt-1-test-unit.log:60: ❯ tests/src/exec/worktree.test.ts:373:27
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-X8Y9/20261017T085350121Z-d0bc2ee0/executor.log:14:{"final_message":"src の依存方向を ESLint で強制し、shared から exec への既存依存を解消した。全123件の CLI help は変更前後で一致した。","validations":[{"command":"npx eslint src/shared/dependency-direction-violation.ts","status":"passed","summary":"一時的な shared→exec import が no-restricted-imports の error になることを確認し、一時ファイルを削除した"},{"command":"npx eslint src/catalog/dependency-direction-violation.ts","status":"passed","summary":"一時的な feature→commands import が no-restricted-imports の error になることを確認し、一時ファイルを削除した"},{"command":"変更前HEADと変更後ソースの全コマンド・サブコマンド --help 比較","status":"passed","summary":"123件の出力に差分なし"},{"command":"npx prettier --write .github/instructions/typescript.instructions.md eslint.config.js src/commands/init.ts src/exec/commands.ts src/exec/types.ts src/shared/agent-types.ts src/shared/provider-scaffold.ts src/shared/specdojo-config.ts tests/src/shared/provider-scaffold.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-x8y9-src-dependency-direction-rules.md","status":"passed","summary":"変更対象はすべて整形済み"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビューを正常に生成した"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログがOK。未作成成果物に関する既存警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-X8Y9/20261017T085350121Z-d0bc2ee0/evidence.json:40:      "path": "src/exec/types.ts",
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-X8Y9/20261017T085350121Z-d0bc2ee0/evidence.json:90:      "path": "src/exec/types.ts",
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-X8Y9/20261017T085350121Z-d0bc2ee0/evidence.json:116:    "summary": ".github/instructions/typescript.instructions.md    |   2 +\n .../pjr-x8y9-src-dependency-direction-rules.md     |  16 +-\n eslint.config.js                                   |  56 ++\n src/commands/init.ts                               |   2 +-\n src/exec/commands.ts                               |   2 +-\n src/exec/provider-scaffold.ts                      | 476 ---------------\n src/exec/types.ts                                  |   8 +-\n src/shared/specdojo-config.ts                      |   4 +-\n tests/src/exec/provider-scaffold.test.ts           | 655 ---------------------\n 9 files changed, 76 insertions(+), 1145 deletions(-)"
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-X8Y9/20261017T085350121Z-d0bc2ee0/evidence.json:139:      "command": "npx prettier --write .github/instructions/typescript.instructions.md eslint.config.js src/commands/init.ts src/exec/commands.ts src/exec/types.ts src/shared/agent-types.ts src/shared/provider-scaffold.ts src/shared/specdojo-config.ts tests/src/shared/provider-scaffold.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-x8y9-src-dependency-direction-rules.md",
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-GBWW/20261017T111052694Z-3f335a74/pipeline-state.json:3:  "task_id": "PJR-GBWW",
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MX4F/20261017T093201509Z-87d5b3be/executor.log:3:- 統合成功後、lock 解放前に `build-if-stale` を明示実行します。[worktree-ops-merge.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MX4F/src/exec/worktree-ops-merge.ts:30)
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MX4F/20261017T093201509Z-87d5b3be/executor.log:4:- 記帳衝突の解消経路を統合テストで検証します。[worktree-ops.integration.test.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MX4F/tests/src/exec/worktree-ops.integration.test.ts:570)
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MX4F/20261017T093201509Z-87d5b3be/executor.log:10:{"final_message":"統合成功後に既存の build-if-stale を明示実行し、記帳衝突解消経路の統合テストと個票を更新した","validations":[{"command":"npx prettier --write src/exec/worktree-ops-merge.ts tests/src/exec/worktree-ops.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-mx4f-integrate-conflict-commit-skips-dist-rebuild.md","status":"passed","summary":"変更した TypeScript・テスト・Markdown を整形した"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の派生ビューを正常に生成した"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"終了コード0。既存の未配置文書に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"specdojo exec run --register","status":"requires_human","summary":"変更統合後に orchestrator から1回統合まで流す close 条件"}]}
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MX4F/20261017T093201509Z-87d5b3be/evidence.json:20:      "path": "src/exec/worktree-ops-merge.ts",
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MX4F/20261017T093201509Z-87d5b3be/evidence.json:24:      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MX4F/20261017T093201509Z-87d5b3be/evidence.json:34:      "path": "src/exec/worktree-ops-merge.ts",
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MX4F/20261017T093201509Z-87d5b3be/evidence.json:38:      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MX4F/20261017T093201509Z-87d5b3be/evidence.json:44:    "summary": "...integrate-conflict-commit-skips-dist-rebuild.md | 16 +++++++-\n src/exec/worktree-ops-merge.ts                     | 48 +++++++++++++++++++++-\n tests/src/exec/worktree-ops.integration.test.ts    | 17 +++++++-\n 3 files changed, 78 insertions(+), 3 deletions(-)"
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MX4F/20261017T093201509Z-87d5b3be/evidence.json:49:      "command": "npx prettier --write src/exec/worktree-ops-merge.ts tests/src/exec/worktree-ops.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-mx4f-integrate-conflict-commit-skips-dist-rebuild.md",
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-gbww-20261017T111052Z-2632-plan.md:6:  task_id: PJR-GBWW
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-gbww-20261017T111052Z-2632-plan.md:15:# Edit Plan: PJR-GBWW exec の汎用の部品を src/shared へ移す
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-gbww-20261017T111052Z-2632-plan.md:19:プロジェクト登録簿の項目 PJR-GBWW「exec の汎用の部品を src/shared へ移す」に対応する。
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-gbww-20261017T111052Z-2632-plan.md:21:exec/shared の補助関数、exec/types の共通の型、exec/worktree の git と worktree の操作のうち、exec 以外の機能から使われる部分を src/shared へ移す。 PJR-QQKY の決定に基づく。動作は変えない
+docs/ja/projects/prj-0001/execution/exec/plans/pjr-gbww-20261017T111052Z-2632-plan.md:25:- `id`: PJR-GBWW
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-BZ9J/20261017T082307834Z-2b14328f/evidence.json:168:      "path": "src/exec/worktree-command.ts",
+docs/ja/projects/prj-0001/execution/exec/evidence/PJR-BZ9J/20261017T082307834Z-2b14328f/evidence.json:642:      "path": "src/exec/worktree-com

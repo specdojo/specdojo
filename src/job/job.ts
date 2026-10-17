@@ -6,8 +6,9 @@ import type { Command } from "commander";
 import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
 import { formatMarkdownFile } from "../exec/format.js";
 import { execTemplatePath, injectCommonConventions, MISSING } from "../exec/plans.js";
-import { expandTemplate, listFilesRecursive, writeJson } from "../exec/shared.js";
-import { gitEnvironment } from "../exec/worktree.js";
+import { listFilesRecursive, writeJson } from "../shared/fs.js";
+import { gitEnvironment } from "../shared/git.js";
+import { expandTemplate } from "../shared/text.js";
 import {
   isJobAgentTask,
   isJobCommandTask,

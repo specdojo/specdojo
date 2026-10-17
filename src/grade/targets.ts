@@ -4,7 +4,7 @@ import { extname, isAbsolute, join, relative, resolve } from "node:path";
 import { load } from "../shared/yaml.js";
 import { collectResolvedDeliverables, loadCatalogDocs } from "../catalog/build.js";
 import { isTrashedPath, resolveBasePath } from "../catalog/paths.js";
-import { listFilesRecursive } from "../exec/shared.js";
+import { listFilesRecursive } from "../shared/fs.js";
 import { gradeContentHash } from "./result.js";
 import {
   GRADE_TARGETS,

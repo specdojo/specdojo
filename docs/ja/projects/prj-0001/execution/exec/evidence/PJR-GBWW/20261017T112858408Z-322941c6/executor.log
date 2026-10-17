@@ -1,0 +1,5 @@
+実装と個票更新を完了しました。共通処理を責務別に `src/shared` へ移し、既存 API は明示的再 export で互換性を維持しています。`schedule → exec` の依存は解消済みです。result は reporter 管轄のため変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"実装、個票、残存循環、全123コマンドのhelp一致を確認済み。親runnerの検証と統合後のexec run --registerは未検証。","validations":[{"command":"npm run build","status":"passed","summary":"TypeScriptのビルドが成功した。"},{"command":"cmp -s /tmp/pjr-gbww-help-head.txt /tmp/pjr-gbww-help-after-2.txt","status":"passed","summary":"Git HEADと変更後で全123コマンド／サブコマンドのhelp出力が一致した。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"プロジェクト登録簿の生成に成功した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全catalogがOK。未作成文書に関する警告のみだった。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはなかった。"},{"command":"specdojo exec run --register","status":"requires_human","summary":"統合後にorchestratorが1回完走させるclose条件。"}]}
+</specdojo_executor_evidence>

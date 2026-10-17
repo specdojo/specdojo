@@ -20,7 +20,7 @@ import {
   type GeneratedMilestone,
   type GeneratedTask,
 } from "./build.js";
-import { readYaml } from "../exec/shared.js";
+import { readYaml } from "../shared/fs.js";
 import { resolveSpecdojoPath } from "../docs/template-resolution.js";
 import { generateStrategy, writeStrategyFile } from "./strategy-generate.js";
 

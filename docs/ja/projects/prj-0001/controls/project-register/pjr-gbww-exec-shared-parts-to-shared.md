@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:45:01Z"
   due_on: null
-  block_reason: rate limit reached
 ---
 
 # PJR-GBWW exec の汎用の部品を src/shared へ移す
@@ -46,17 +45,26 @@ exec/shared の補助関数、exec/types の共通の型、exec/worktree の git
 
 ## 3. 作業内容
 
-| No  | 作業                                                  | 担当         | 状態 | メモ                 |
-| --- | ----------------------------------------------------- | ------------ | ---- | -------------------- |
-| 1   | `exec/shared` の汎用の補助関数を `src/shared/` へ移す | DEV          | open | 責務ごとに分けてよい |
-| 2   | 共通の型を `src/shared/agent-types.ts` へ移す         | DEV          | open | -                    |
-| 3   | git の起動と再試行を `src/shared/` へ移す             | DEV          | open | -                    |
-| 4   | 残っている循環を数えて result に書く                  | DEV          | open | E025 の入力          |
-| 5   | 統合の後に `exec run --register` を 1 回流す          | orchestrator | open | close の条件         |
+| No  | 作業                                                  | 担当         | 状態 | メモ                                          |
+| --- | ----------------------------------------------------- | ------------ | ---- | --------------------------------------------- |
+| 1   | `exec/shared` の汎用の補助関数を `src/shared/` へ移す | DEV          | done | 責務別の shared モジュールへ移動              |
+| 2   | 共通の型を `src/shared/agent-types.ts` へ移す         | DEV          | done | `exec/types.ts` から明示的に再 export         |
+| 3   | git の起動と再試行を `src/shared/` へ移す             | DEV          | done | `src/shared/git.ts` へ移動                    |
+| 4   | 残っている循環を数えて result に書く                  | DEV          | done | 下記に集計。result への転記は reporter が行う |
+| 5   | 統合の後に `exec run --register` を 1 回流す          | orchestrator | open | close の条件                                  |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `src/exec/shared.ts` にあった汎用処理を、責務ごとに `src/shared/fs.ts`・`src/shared/time.ts`・`src/shared/text.ts`・`src/shared/artifact-path.ts` へ移した。`exec` 内の既存 import の互換性は、元のモジュールからの明示的な再 export で維持した。
+- `Approach`・`Proficiency`・`AgentAssignment` を `src/shared/agent-types.ts` へ移し、`schedule` と `job` は shared から直接 import するようにした。`TaskMode` は既に同ファイルにあったため import 先だけを変更した。
+- git の起動・一時失敗の再試行・失敗診断を `src/shared/git.ts` へ移し、`register`・`deliverable`・`job` は shared から直接 import するようにした。worktree 固有の作成・準備処理は `src/exec/worktree.ts` に残し、移した API は同ファイルから明示的に再 export した。
+- 移動後に `exec` 外から `exec/shared` と `exec/worktree` を参照する import は 0 件になった。`exec/types` への残り 2 件は、完了条件で移動対象外とされた dashboard の `ExecEventV1`・`StateSnapshot`・`ScheduleCalendar` だけである。
+- 循環の残数（import 元ファイル数）は、`exec` ⇄ `register` が 7 ⇄ 1、`exec` ⇄ `schedule` が 8 ⇄ 0、`exec` ⇄ `grade` が 2 ⇄ 1、`exec` ⇄ `job` が 1 ⇄ 1 となった。`schedule` との循環は解消した。残る逆向き import は次のとおりで、[[prj-0001:pjr-e025-src-remaining-cycles]] の対象と一致する。
+  - `src/register/register.ts` → `src/exec/run/lock.ts`・`src/exec/slot-lock.ts`・`src/exec/worktree-ops.ts`
+  - `src/grade/target-discovery.ts` → `src/exec/schedule/index.ts`
+  - `src/job/job.ts` → `src/exec/format.ts`・`src/exec/plans.ts`
+- `npm run build` が成功した。Git HEAD から復元した変更前コードと変更後コードについて、全 123 コマンド／サブコマンドの help 出力が一致した。親 runner が実行する lint・型検査・単体／統合テスト・schema 検証は executor では重複実行していない。
+- 残課題は、親 runner の検証完了と、統合後に orchestrator が `exec run --register` を 1 回完走させる close 条件である。
 
 ## 5. 関連ドキュメント
 
