@@ -41,7 +41,12 @@ import {
   runConfiguredParentValidationBatch,
   runWithRetry,
 } from "./agent.js";
-import type { AgentRunCandidate, RunResult } from "./shared.js";
+import type {
+  AgentRunCandidate,
+  PinnedRateLimitRunOptions,
+  RateLimitRecoveryEvent,
+  RunResult,
+} from "./shared.js";
 
 export async function refreshParentValidationsForReporterResume(params: {
   execDefaults: ExecDefaultsConfig;
@@ -112,6 +117,7 @@ export async function runReporterStage(params: {
   productWorktrees?: readonly ProductWorktree[];
   /** reporter が返す出力の mode。省略時は edit（Job Run の review だけが review を渡す）。 */
   mode?: TaskMode;
+  rateLimitOptions?: PinnedRateLimitRunOptions;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
@@ -145,6 +151,8 @@ export async function runReporterStage(params: {
   process.stdout.write(`  Running reporter: ${reporterCandidates[0]?.command ?? ""}\n`);
 
   let reporterAttempts = 0;
+  let reporterActor = reporterCandidates[0]?.actor;
+  const rateLimitEvents: RateLimitRecoveryEvent[] = [];
   const runReporter = () =>
     runReporterWithFormatRetry({
       plan: params.planPrompt,
@@ -158,8 +166,11 @@ export async function runReporterStage(params: {
           cwd,
           env,
           params.resultPath,
+          params.rateLimitOptions,
         );
         reporterAttempts += reporterOutcome.attempts;
+        reporterActor = reporterOutcome.actor ?? reporterActor;
+        rateLimitEvents.push(...reporterOutcome.rateLimitEvents);
         return {
           result: reporterOutcome.result,
           stdout: reporterOutcome.stdout,
@@ -174,6 +185,14 @@ export async function runReporterStage(params: {
         `${params.evidence.task_id} reporter`,
       )
     : await runReporter();
+  if (rateLimitEvents.length > 0) {
+    params.evidence.rate_limit_events = [
+      ...(params.evidence.rate_limit_events ?? []),
+      ...rateLimitEvents,
+    ];
+    reporterEvidence.rate_limit_events = params.evidence.rate_limit_events;
+    writeExecutorEvidence(params.evidencePath, params.evidence);
+  }
 
   let exitCode: 0 | 1 = 1;
   let blockReason: string | undefined;
@@ -211,11 +230,13 @@ export async function runReporterStage(params: {
       status:
         exitCode === 0 ? "succeeded" : reporter.result === "rate_limit" ? "rate_limited" : "failed",
       attempts: state.stages.reporter.attempts + reporterAttempts,
+      actor: reporterActor ?? null,
       completed_at: reporterCompletedAt,
       artifact_ref:
         reporter.result === "success"
           ? relative(cwd, params.resultPath).split(sep).join("/")
           : state.stages.reporter.artifact_ref,
+      ...(rateLimitEvents.length > 0 ? { rate_limit_events: rateLimitEvents } : {}),
     },
     reporterCompletedAt,
   );
@@ -253,12 +274,15 @@ export async function runAgentPipeline(params: {
   runId?: string;
   /** reporter が返す出力の mode。省略時は edit。 */
   mode?: TaskMode;
+  executorRateLimitOptions?: PinnedRateLimitRunOptions;
+  reporterRateLimitOptions?: PinnedRateLimitRunOptions;
 }): Promise<{
   exitCode: 0 | 1;
   runResult: RunResult;
   blockReason?: string;
   stateRef: string;
   evidenceRef?: string;
+  rateLimitEvents: RateLimitRecoveryEvent[];
 }> {
   const {
     repoRoot,
@@ -318,7 +342,15 @@ export async function runAgentPipeline(params: {
   );
   const changesBeforeAttempt = snapshotWorktreeChanges(cwd, params.productWorktrees);
   const runExecutor = () =>
-    runWithRetry([executor], executorPrompt, execDefaults, cwd, env, resultPath);
+    runWithRetry(
+      [executor],
+      executorPrompt,
+      execDefaults,
+      cwd,
+      env,
+      resultPath,
+      params.executorRateLimitOptions,
+    );
   const outcome = params.providerConcurrencyGate
     ? await params.providerConcurrencyGate.run(executor.provider, runExecutor, `${taskId} executor`)
     : await runExecutor();
@@ -328,7 +360,7 @@ export async function runAgentPipeline(params: {
     executionPath,
     taskId,
     runId,
-    actor: executor.actor,
+    actor: outcome.actor ?? executor.actor,
     status:
       outcome.result === "success"
         ? "succeeded"
@@ -343,6 +375,7 @@ export async function runAgentPipeline(params: {
     stderr: outcome.stderr,
     changesBeforeAttempt,
     productWorktrees: params.productWorktrees,
+    rateLimitEvents: outcome.rateLimitEvents,
   });
   const coverageFailure =
     outcome.result === "success"
@@ -370,8 +403,10 @@ export async function runAgentPipeline(params: {
               ? "rate_limited"
               : "failed",
       attempts: outcome.attempts,
+      actor: outcome.actor ?? executor.actor,
       completed_at: executorCompletedAt,
       artifact_ref: evidenceRef,
+      ...(outcome.rateLimitEvents.length > 0 ? { rate_limit_events: outcome.rateLimitEvents } : {}),
     },
     executorCompletedAt,
   );
@@ -390,6 +425,7 @@ export async function runAgentPipeline(params: {
       blockReason,
       stateRef: stateLocation.ref,
       evidenceRef,
+      rateLimitEvents: outcome.rateLimitEvents,
     };
   }
 
@@ -418,6 +454,7 @@ export async function runAgentPipeline(params: {
     providerConcurrencyGate: params.providerConcurrencyGate,
     productWorktrees: params.productWorktrees,
     mode: params.mode,
+    rateLimitOptions: params.reporterRateLimitOptions,
   });
 
   return {
@@ -426,5 +463,6 @@ export async function runAgentPipeline(params: {
     blockReason: reporterOutcome.blockReason,
     stateRef: stateLocation.ref,
     evidenceRef,
+    rateLimitEvents: recorded.evidence.rate_limit_events ?? [],
   };
 }

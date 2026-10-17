@@ -262,6 +262,26 @@ $defs:
           oom:
             type: number
             exclusiveMinimum: 0
+      pinned:
+        type: object
+        additionalProperties: false
+        description: >
+          Recovery for an agent selected by nickname. CLI --on-rate-limit and fallback stage
+          flags override these values. Omitted action preserves the historical stop behavior.
+        properties:
+          action:
+            type: string
+            enum: [stop, wait, fallback]
+          max_wait_seconds:
+            type: number
+            minimum: 0
+            description: Maximum wait for reset/retry-after/cooldown (default 28800 seconds).
+          fallback_executor_by:
+            type: string
+            pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+          fallback_reporter_by:
+            type: string
+            pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
       on_non_critical:
         type: object
         additionalProperties: false

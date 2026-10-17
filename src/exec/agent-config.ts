@@ -47,6 +47,14 @@ export type RateLimitPolicy = {
     retry: RateLimitRetry;
     on_exhausted: "block";
   };
+  /** Behaviour after a rate limit when a concrete agent was selected by name. */
+  pinned?: {
+    action?: "stop" | "wait" | "fallback";
+    /** Maximum time a single in-process wait may hold the run (default: 8 hours). */
+    max_wait_seconds?: number;
+    fallback_executor_by?: string;
+    fallback_reporter_by?: string;
+  };
 };
 
 // Placeholder name -> value pairs inserted into command_template as-is.
@@ -224,6 +232,41 @@ export function resolveRateLimitPolicy(
 ): RateLimitPolicy | undefined {
   const override = provider ? config.providers?.[provider]?.rate_limit_policy : undefined;
   return override ?? config.rate_limit_policy;
+}
+
+export const DEFAULT_PINNED_RATE_LIMIT_MAX_WAIT_SECONDS = 8 * 60 * 60;
+
+export type PinnedRateLimitPolicy = {
+  action: "stop" | "wait" | "fallback";
+  maxWaitSeconds: number;
+  fallbackExecutorBy?: string;
+  fallbackReporterBy?: string;
+};
+
+/** Resolve and validate the policy used only for agents selected by nickname. */
+export function resolvePinnedRateLimitPolicy(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): PinnedRateLimitPolicy {
+  const pinned = resolveRateLimitPolicy(config, provider)?.pinned;
+  const action = pinned?.action ?? "stop";
+  if (action !== "stop" && action !== "wait" && action !== "fallback") {
+    throw new Error(
+      `rate_limit_policy.pinned.action in exec-defaults must be "stop", "wait", or "fallback": ${String(action)}`,
+    );
+  }
+  const maxWaitSeconds = pinned?.max_wait_seconds ?? DEFAULT_PINNED_RATE_LIMIT_MAX_WAIT_SECONDS;
+  if (!Number.isFinite(maxWaitSeconds) || maxWaitSeconds < 0) {
+    throw new Error(
+      `rate_limit_policy.pinned.max_wait_seconds in exec-defaults must be a non-negative number: ${String(maxWaitSeconds)}`,
+    );
+  }
+  return {
+    action,
+    maxWaitSeconds,
+    ...(pinned?.fallback_executor_by ? { fallbackExecutorBy: pinned.fallback_executor_by } : {}),
+    ...(pinned?.fallback_reporter_by ? { fallbackReporterBy: pinned.fallback_reporter_by } : {}),
+  };
 }
 
 // Resolve a provider's concurrency cap, validating the YAML-sourced value. A missing,
@@ -438,6 +481,12 @@ export function loadExecDefaultsConfig(
   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
   resolveParentValidationConcurrency(defaults.pipeline?.parent_validation_concurrency);
   resolveRegisterExecution(defaults);
+  resolvePinnedRateLimitPolicy(defaults);
+  for (const provider of Object.keys(defaults.providers ?? {}) as AgentProvider[]) {
+    if (defaults.providers?.[provider]?.rate_limit_policy) {
+      resolvePinnedRateLimitPolicy(defaults, provider);
+    }
+  }
 
   return defaults;
 }

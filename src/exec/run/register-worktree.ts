@@ -44,7 +44,13 @@ import {
 } from "../repo-trace.js";
 import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
 import { findResumableRegisterRun } from "../register-resume.js";
-import { type AsyncLock, type RunOpts, type RunResult } from "./shared.js";
+import {
+  resolvePinnedRateLimitRunOptions,
+  rateLimitRecoveryReason,
+  type AsyncLock,
+  type RunOpts,
+  type RunResult,
+} from "./shared.js";
 import {
   agentEnvironment,
   expandPromptRefs,
@@ -133,6 +139,7 @@ export async function finalizeRegisterWorktreeRun(params: {
   bookkeepingPaths: readonly string[];
   // pipeline 実行の run state（統合段の記録先）。単一 agent 実行では未指定。
   pipelineStatePath?: string;
+  transitionReason?: string;
   // 統合段の再試行。前回の attempt が merge 済みで後段だけ失敗した場合に備え、
   // 取り込み済みの exec ブランチを再 merge せず後続の手順を続ける。
   resumedIntegration?: boolean;
@@ -327,7 +334,14 @@ export async function finalizeRegisterWorktreeRun(params: {
           if (
             !spawnRegisterTransition(
               projectId,
-              ["review", "--id", item.id, "--by", actor],
+              [
+                "review",
+                "--id",
+                item.id,
+                "--by",
+                actor,
+                ...(params.transitionReason ? ["--reason", params.transitionReason] : []),
+              ],
               worktree.path,
             )
           ) {
@@ -433,13 +447,14 @@ export async function finalizeRegisterWorktreeRun(params: {
   }
 
   // 失敗 / rate limit: worktree は保持し（調査・再開のため）、waiting へ遷移する。
-  const reason = params.runnerBlockReason
+  const baseReason = params.runnerBlockReason
     ? params.runnerBlockReason
     : unfilledBlock
       ? "agent exited 0 but result is incomplete or its frontmatter differs from the scaffold (treated as blocked)"
       : agentResult === "rate_limit"
         ? "rate limit reached"
         : extractBlockReason(params.stderr);
+  const reason = [baseReason, params.transitionReason].filter(Boolean).join("; ");
   await updateResultStatus(
     worktreeResultPath,
     "blocked",
@@ -636,6 +651,8 @@ export async function runSingleRegisterItemWorktree(
   let stderr = "";
   // pipeline 実行のみ run state を持つ。統合段の記録先として Phase 3 へ渡す。
   let pipelineStatePath: string | undefined;
+  let transitionReason: string | undefined;
+  let completionActor = actor;
   if (pipelineAgents) {
     process.stdout.write(
       `Running ${item.id} in worktree (executor/reporter pipeline)\n  CWD: ${worktree.path}\n`,
@@ -657,10 +674,29 @@ export async function runSingleRegisterItemWorktree(
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,
       runId: pipelineRunId,
+      executorRateLimitOptions: opts.executorBy
+        ? resolvePinnedRateLimitRunOptions(
+            opts,
+            context.execDefaults,
+            context.roster,
+            "executor",
+            pipelineAgents.executor,
+          )
+        : undefined,
+      reporterRateLimitOptions: opts.reporterBy
+        ? resolvePinnedRateLimitRunOptions(
+            opts,
+            context.execDefaults,
+            context.roster,
+            "reporter",
+            pipelineAgents.reporterCandidates[0]!,
+          )
+        : undefined,
     });
     agentResult = pipelineOutcome.runResult;
     stderr = pipelineOutcome.blockReason ?? "";
     pipelineStatePath = resolve(worktree.path, pipelineOutcome.stateRef);
+    transitionReason = rateLimitRecoveryReason(pipelineOutcome.rateLimitEvents) || undefined;
   } else {
     process.stdout.write(`Running ${item.id} in worktree: ${command}\n  CWD: ${worktree.path}\n`);
     const outcome = await runWithRetry(
@@ -670,9 +706,16 @@ export async function runSingleRegisterItemWorktree(
       worktree.path,
       env,
       pathInsideWorktree(repoRoot, worktree.path, resultPath),
+      resolvePinnedRateLimitRunOptions(opts, context.execDefaults, context.roster, "executor", {
+        command,
+        actor,
+        provider: resolvedProvider,
+      }),
     );
     agentResult = outcome.result;
     stderr = outcome.stderr;
+    completionActor = outcome.actor ?? actor;
+    transitionReason = rateLimitRecoveryReason(outcome.rateLimitEvents) || undefined;
   }
 
   // Phase 3: 成果物統合と状態遷移（root で直列化）。通常実行と再開経路で共通化する。
@@ -688,9 +731,10 @@ export async function runSingleRegisterItemWorktree(
       resultScaffold,
       agentResult,
       stderr,
-      actor,
+      actor: completionActor,
       bookkeepingPaths,
       pipelineStatePath,
+      transitionReason,
     });
 
   return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-17T23:11:40Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
 ---
 
 # PJR-BHMH agent を指定した実行で、上限のときに待つか代わりの agent へ切り替えるかを選べるようにする

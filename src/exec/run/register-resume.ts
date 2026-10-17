@@ -32,6 +32,8 @@ import {
 import { integratedRepoNames } from "../pipeline-state.js";
 import {
   resolveAgentOverride,
+  resolvePinnedRateLimitRunOptions,
+  rateLimitRecoveryReason,
   type AgentRunCandidate,
   type AsyncLock,
   type RunOpts,
@@ -455,6 +457,20 @@ export async function resumeSingleRegisterItemWorktree(
       resumeHandoff: target.handoff,
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,
+      executorRateLimitOptions: resolvePinnedRateLimitRunOptions(
+        opts,
+        context.execDefaults,
+        context.roster,
+        "executor",
+        executor.candidate,
+      ),
+      reporterRateLimitOptions: resolvePinnedRateLimitRunOptions(
+        opts,
+        context.execDefaults,
+        context.roster,
+        "reporter",
+        reporter.candidate,
+      ),
     });
 
     const finalize = async (): Promise<RegisterItemSummary> =>
@@ -472,6 +488,7 @@ export async function resumeSingleRegisterItemWorktree(
         actor: executor.candidate.actor,
         bookkeepingPaths: bookkeepingPaths(),
         pipelineStatePath: resolve(worktree.path, outcome.stateRef),
+        transitionReason: rateLimitRecoveryReason(outcome.rateLimitEvents) || undefined,
       });
     return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();
   }
@@ -518,6 +535,13 @@ export async function resumeSingleRegisterItemWorktree(
     state: target.state,
     statePath: target.statePath,
     providerConcurrencyGate: context.providerConcurrencyGate,
+    rateLimitOptions: resolvePinnedRateLimitRunOptions(
+      opts,
+      context.execDefaults,
+      context.roster,
+      "reporter",
+      reporter.candidate,
+    ),
     productWorktrees: worktree.repos,
   });
 
@@ -536,6 +560,8 @@ export async function resumeSingleRegisterItemWorktree(
       actor: reporter.candidate.actor,
       bookkeepingPaths: bookkeepingPaths(),
       pipelineStatePath: target.statePath,
+      transitionReason:
+        rateLimitRecoveryReason(outcome.state.stages.reporter.rate_limit_events ?? []) || undefined,
     });
 
   return lifecycleLock ? lifecycleLock.runExclusive(finalize) : finalize();

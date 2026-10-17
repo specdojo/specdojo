@@ -449,6 +449,11 @@ function renderEditReporterBody(
       const command = reporterInlineText(validation.command).replace(/`/g, "'");
       return [`適用外の検証（runner の判定）: \`${command}\`（${reporterInlineText(reason)}）`];
     });
+  const rateLimitRecoveryNotes = (evidence.rate_limit_events ?? []).map((event) =>
+    event.action === "wait"
+      ? `rate limit 後に ${event.resume_at ?? "再開可能時刻"} まで待ち、${event.to_actor} で ${event.resumed_at} に再開`
+      : `rate limit 後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
+  );
   return [
     "# Edit Result",
     "",
@@ -470,6 +475,7 @@ function renderEditReporterBody(
         ...runnerOwnedValidationNotes,
         ...runnerJudgedNotApplicableNotes,
         ...humanValidationNotes,
+        ...rateLimitRecoveryNotes,
       ],
       "なし",
     ),
@@ -482,7 +488,12 @@ function renderEditReporterBody(
 
 // review result の章立ては xrr-template.md と一致させる。review は成果物を再評価しないため、
 // 観点別の結果ではなく評価結果の確認・判断根拠・改善指示・verdict を記録する。
-function renderReviewReporterBody(output: ReviewReporterOutput): string {
+function renderReviewReporterBody(output: ReviewReporterOutput, evidence: ExecEvidence): string {
+  const rateLimitRecoveryNotes = (evidence.rate_limit_events ?? []).map((event) =>
+    event.action === "wait"
+      ? `rate limit 後に ${event.resume_at ?? "再開可能時刻"} まで待ち、${event.to_actor} で ${event.resumed_at} に再開`
+      : `rate limit 後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
+  );
   return [
     "# Review Result",
     "",
@@ -492,7 +503,7 @@ function renderReviewReporterBody(output: ReviewReporterOutput): string {
     "",
     "## 2. 判断根拠",
     "",
-    reporterBulletList(output.rationale, "なし"),
+    reporterBulletList([...output.rationale, ...rateLimitRecoveryNotes], "なし"),
     "",
     "## 3. 未充足事項・改善指示",
     "",
@@ -528,7 +539,7 @@ export async function renderReporterResult(
   const body =
     output.mode === "edit"
       ? renderEditReporterBody(output, evidence)
-      : renderReviewReporterBody(output);
+      : renderReviewReporterBody(output, evidence);
   writeFileSync(resultPath, frontmatterWithBody(frontmatter, body), "utf8");
   await formatMarkdownFile(resultPath);
 }

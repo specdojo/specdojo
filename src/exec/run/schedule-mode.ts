@@ -163,6 +163,8 @@ export async function runBatchMode(opts: RunOpts): Promise<void> {
           planGenPaths,
           execDefaults,
           capacity.hasCapacity,
+          undefined,
+          opts,
         );
         // "deferred": every candidate provider is at its cap; try it again after a slot frees.
         if (prepared === "deferred") continue;
@@ -466,6 +468,9 @@ export async function runManualMode(opts: RunOpts): Promise<void> {
     worktreeBase,
     planGenPaths,
     execDefaults,
+    undefined,
+    undefined,
+    opts,
   );
 
   if (typeof prepared === "string") {

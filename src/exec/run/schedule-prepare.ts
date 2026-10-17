@@ -34,12 +34,15 @@ import {
   pinnedExecutor,
   pinnedReporter,
   resolveAgentOverride,
+  resolvePinnedRateLimitRunOptions,
   resolveTaskPhaseContext,
   selectCandidates,
   type AgentRunCandidate,
   type ModeAgentOverrides,
   type ResolvedRequirements,
   type RunResult,
+  type RunOpts,
+  type PinnedRateLimitRunOptions,
   type StageAgentOverrides,
 } from "./shared.js";
 import {
@@ -69,6 +72,8 @@ export type PreparedTask = {
   pipelineResumeStage?: PipelineStageRole;
   pipelineStateRef?: string;
   reporterCandidates?: AgentRunCandidate[];
+  executorRateLimitOptions?: PinnedRateLimitRunOptions;
+  reporterRateLimitOptions?: PinnedRateLimitRunOptions;
 };
 
 export type PlanGenPaths = {
@@ -143,6 +148,10 @@ export async function prepareSingleTask(
   execDefaults: ExecDefaultsConfig,
   hasProviderCapacity?: (provider?: AgentProvider) => boolean,
   pipelineResume?: { stage?: AgentStageRole; stateRef?: string },
+  rateLimitOverrides: Pick<
+    RunOpts,
+    "onRateLimit" | "fallbackExecutorBy" | "fallbackReporterBy"
+  > = {},
 ): Promise<PreparedTask | RunResult | "deferred"> {
   const mode = task.mode ?? "edit";
   process.stdout.write(`Task: ${task.id}${task.name ? ` — ${task.name}` : ""}  [${mode}]\n`);
@@ -264,14 +273,17 @@ export async function prepareSingleTask(
   }
 
   let reporterCandidates: AgentRunCandidate[] | undefined;
+  let reporterPinned = false;
   if (task.agent_pipeline) {
     const requirements = reporterRequirements(task);
+    const reporterNickname = stageAgentOverrides.reporter ?? pinnedReporter(task);
+    reporterPinned = !!reporterNickname || !!pipelineResume;
     reporterCandidates = resolveReporterAgentCandidates(
       task,
       roster,
       execDefaults,
       collectBusyActors(schedulePath),
-      stageAgentOverrides.reporter ?? pinnedReporter(task),
+      reporterNickname,
     );
     if (reporterCandidates.length === 0) {
       process.stdout.write(
@@ -280,6 +292,27 @@ export async function prepareSingleTask(
       return "failure";
     }
   }
+
+  const executorRateLimitOptions =
+    overrideResolution.kind === "command" || !!pipelineResume
+      ? resolvePinnedRateLimitRunOptions(
+          rateLimitOverrides,
+          execDefaults,
+          roster,
+          "executor",
+          agentCandidates[0],
+        )
+      : undefined;
+  const reporterRateLimitOptions =
+    reporterPinned && reporterCandidates?.[0]
+      ? resolvePinnedRateLimitRunOptions(
+          rateLimitOverrides,
+          execDefaults,
+          roster,
+          "reporter",
+          reporterCandidates[0],
+        )
+      : undefined;
 
   const reviewGradeOutcome = await gradeBeforeReviewPlan({
     task,
@@ -350,6 +383,8 @@ export async function prepareSingleTask(
       pipelineResumeStage: pipelineResume?.stage,
       pipelineStateRef: pipelineResume?.stateRef,
       reporterCandidates,
+      executorRateLimitOptions,
+      reporterRateLimitOptions,
     };
   }
 
@@ -469,6 +504,8 @@ export async function prepareSingleTask(
     pipelineResumeStage: pipelineResume?.stage,
     pipelineStateRef: pipelineResume?.stateRef,
     reporterCandidates,
+    executorRateLimitOptions,
+    reporterRateLimitOptions,
   };
 }
 

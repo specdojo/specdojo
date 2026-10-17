@@ -3,6 +3,7 @@ import { dirname, join, relative, resolve, sep } from "node:path";
 import type { ExecEvidence } from "./evidence.js";
 import { ensureDir, safeSlug } from "./shared.js";
 import type { AgentStageRole } from "./types.js";
+import type { RateLimitRecoveryEvent } from "./run/shared.js";
 
 export type PipelineStageStatus =
   "pending" | "running" | "succeeded" | "failed" | "rate_limited" | "blocked";
@@ -18,6 +19,7 @@ export type PipelineStageState = {
   started_at: string | null;
   completed_at: string | null;
   artifact_ref: string | null;
+  rate_limit_events?: RateLimitRecoveryEvent[];
 };
 
 // PJR-0WAA: 複数リポジトリの統合で、リポジトリごとの統合状態を記録する。
@@ -131,6 +133,21 @@ export function pipelineStateLocation(input: {
 function isStageState(value: unknown): value is PipelineStageState {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const stage = value as Record<string, unknown>;
+  const events = stage.rate_limit_events;
+  const validEvents =
+    events === undefined ||
+    (Array.isArray(events) &&
+      events.every((event) => {
+        if (!event || typeof event !== "object" || Array.isArray(event)) return false;
+        const record = event as Record<string, unknown>;
+        return (
+          (record.action === "wait" || record.action === "fallback") &&
+          typeof record.from_actor === "string" &&
+          typeof record.to_actor === "string" &&
+          typeof record.resumed_at === "string" &&
+          (record.resume_at === undefined || typeof record.resume_at === "string")
+        );
+      }));
   return (
     (stage.status === "pending" ||
       stage.status === "running" ||
@@ -143,7 +160,8 @@ function isStageState(value: unknown): value is PipelineStageState {
     (stage.attempts as number) >= 0 &&
     (typeof stage.started_at === "string" || stage.started_at === null) &&
     (typeof stage.completed_at === "string" || stage.completed_at === null) &&
-    (typeof stage.artifact_ref === "string" || stage.artifact_ref === null)
+    (typeof stage.artifact_ref === "string" || stage.artifact_ref === null) &&
+    validEvents
   );
 }
 
