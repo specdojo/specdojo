@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { dump, load } from "../yaml.js";
+import { dump, load } from "../shared/yaml.js";
 import { resolveSpecdojoPath } from "../docs/template-resolution.js";
 import {
   GRADE_LEVEL_REVIEW_VERDICTS,

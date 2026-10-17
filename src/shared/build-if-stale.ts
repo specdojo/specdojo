@@ -21,7 +21,7 @@ function isPrimaryWorktree(repoRoot: string): boolean {
 }
 
 function main(): void {
-  const repoRoot = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+  const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
   if (!isPrimaryWorktree(repoRoot)) {
     // linked worktree は dist を持たず、agent は tsx で src を直接実行するため対象外。
     return;

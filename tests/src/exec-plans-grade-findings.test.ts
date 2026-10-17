@@ -27,7 +27,7 @@ import * as gradeResult from "../../src/grade/result.js";
 import type { GradeResult } from "../../src/grade/result.js";
 
 import { join } from "node:path";
-import { specdojoRootDir } from "../../src/specdojo-config.js";
+import { specdojoRootDir } from "../../src/shared/specdojo-config.js";
 
 describe("registerGradeFindingsText", () => {
   beforeEach(() => {

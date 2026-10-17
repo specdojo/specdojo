@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 import { listFilesRecursive, readJson } from "../exec-shared.js";
 import {
   getProjectExecutionPath,
@@ -9,7 +9,7 @@ import {
   loadEnv,
   specdojoRootDir,
   type SpecDojoProjectConfig,
-} from "../specdojo-config.js";
+} from "../shared/specdojo-config.js";
 import type { Proficiency, TaskMode } from "../exec-types.js";
 
 export type JobInputType = "string" | "integer" | "boolean" | "list";

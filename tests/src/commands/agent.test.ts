@@ -3,7 +3,10 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { AGENT_RUN_RATE_LIMIT_EXIT_CODE, registerAgentCommands } from "../../src/agent.js";
+import {
+  AGENT_RUN_RATE_LIMIT_EXIT_CODE,
+  registerAgentCommands,
+} from "../../../src/commands/agent.js";
 
 const originalCwd = process.cwd();
 const projectEnvKeys = [

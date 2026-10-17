@@ -8,11 +8,15 @@ import {
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
   type ExecDefaultsConfig,
-} from "./exec-agent-config.js";
-import { resolveProjectPaths } from "./exec-project.js";
-import { executeAgent, loadRosterForExecutionPath, type AgentExecution } from "./exec-run.js";
-import { gitEnvironment } from "./git-environment.js";
-import { specdojoRootDir, type MemberRoster, type ProjectMember } from "./specdojo-config.js";
+} from "../exec-agent-config.js";
+import { resolveProjectPaths } from "../exec-project.js";
+import { executeAgent, loadRosterForExecutionPath, type AgentExecution } from "../exec-run.js";
+import { gitEnvironment } from "../shared/git-environment.js";
+import {
+  specdojoRootDir,
+  type MemberRoster,
+  type ProjectMember,
+} from "../shared/specdojo-config.js";
 
 // Rate limit は通常失敗と異なり、呼び出し側が処理済みにせず中断・再開する必要がある。
 // shell script が出力文字列を解析せず分岐できるよう、一時失敗を表す専用コードにする。

@@ -6,7 +6,7 @@ import { readAllEventFiles, foldEventsToState } from "./exec-events.js";
 import { buildScheduleIndex, findStaleGeneratedTracks } from "./exec-schedule.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import { readReadySnapshot } from "./exec-schedule-ready.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { specdojoRootDir } from "./shared/specdojo-config.js";
 import { type ReadyTaskView } from "./exec-types.js";
 import { type CurrentState } from "./exec-types.js";
 import { extractLocalId, extractPhaseSuffix } from "./schedule/phase-sets.js";

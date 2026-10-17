@@ -7,7 +7,7 @@ import {
   type AgentMode,
   type AgentProvider,
   type ProjectMember,
-} from "./specdojo-config.js";
+} from "./shared/specdojo-config.js";
 import type { AgentLimitKind } from "./exec-limit.js";
 import type { Proficiency } from "./exec-types.js";
 import {

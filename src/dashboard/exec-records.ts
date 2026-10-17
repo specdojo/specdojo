@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 import { sanitizeDashboardCell } from "./shared.js";
 
 export const EXEC_RECORDS_FILE = "exec-records.md";

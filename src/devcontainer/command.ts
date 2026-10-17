@@ -1,7 +1,7 @@
 import type { Command } from "commander";
 import { runDevcontainerScaffold } from "./scaffold.js";
-import { specdojoPackageRootDir } from "../package-paths.js";
-import { specdojoRootDir } from "../specdojo-config.js";
+import { specdojoPackageRootDir } from "../shared/package-paths.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 
 export function registerDevcontainerCommands(program: Command): void {
   const dc = program.command("devcontainer").description("Dev Container helpers");

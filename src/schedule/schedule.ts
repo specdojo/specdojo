@@ -1,7 +1,7 @@
 import { type Command } from "commander";
 import { dirname, join, relative, resolve, sep } from "node:path";
 import { existsSync, readdirSync, writeFileSync } from "node:fs";
-import { dump } from "../yaml.js";
+import { dump } from "../shared/yaml.js";
 import {
   getProjectCatalogPath,
   getProjectRolesPath,
@@ -13,7 +13,7 @@ import {
   specdojoRootDir,
   type MemberRoster,
   type SpecDojoProjectConfig,
-} from "../specdojo-config.js";
+} from "../shared/specdojo-config.js";
 import {
   buildScheduleTrack,
   type BuildResult,

@@ -10,7 +10,7 @@ import {
   inspectDistEntryFreshness,
   resolveInvokedCommand,
   type DistFreshnessResult,
-} from "../../src/dist-freshness.js";
+} from "../../../src/shared/dist-freshness.js";
 
 async function createCheckout(options: {
   root: string;

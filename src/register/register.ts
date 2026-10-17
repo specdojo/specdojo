@@ -70,7 +70,7 @@ import {
   VALID_BUILD_SCOPES,
   writeDerivedViews,
 } from "./views.js";
-import { specdojoRootDir } from "../specdojo-config.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 
 export {
   PJR_ID_ALPHABET,

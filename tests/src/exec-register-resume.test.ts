@@ -16,7 +16,7 @@ import {
 } from "../../src/exec-run.js";
 import type { ExecEvidence } from "../../src/exec-evidence.js";
 import { createPipelineState, type PipelineState } from "../../src/exec-pipeline-state.js";
-import type { MemberRoster, ProjectMember } from "../../src/specdojo-config.js";
+import type { MemberRoster, ProjectMember } from "../../src/shared/specdojo-config.js";
 
 const TASK_ID = "PJR-AB12";
 const EXECUTION_REL = path.join("docs", "ja", "projects", "test", "execution");

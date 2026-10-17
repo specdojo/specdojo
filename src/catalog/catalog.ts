@@ -2,14 +2,14 @@ import { type Command } from "commander";
 import { join, relative, resolve } from "node:path";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 import {
   getProjectCatalogPath,
   loadConfig,
   loadEnv,
   SPECDOJO_CONFIG_REFERENCE_URL,
   specdojoRootDir,
-} from "../specdojo-config.js";
+} from "../shared/specdojo-config.js";
 import {
   buildCatalog,
   collectCatalogLocalIds,

@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { getFileInfo } from "prettier";
 import { findPrettierIgnorePath, formatMarkdownFile } from "../../src/exec-format.js";
-import { specdojoRootDir } from "../../src/specdojo-config.js";
+import { specdojoRootDir } from "../../src/shared/specdojo-config.js";
 
 describe("formatMarkdownFile", () => {
   it("Markdown ファイルを Prettier で整形して上書きする", async () => {

@@ -1,10 +1,10 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { dump, load } from "../yaml.js";
+import { dump, load } from "../shared/yaml.js";
 import { type ResolvedDeliverable, collectResolvedDeliverables } from "./build.js";
 import { resolveBasePath } from "./paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import { practiceLocalId } from "../practice-id.js";
+import { practiceLocalId } from "../shared/practice-id.js";
 import { flattenTemplateFrontmatter } from "../docs/template-frontmatter.js";
 import { isDctCatalogFileName, type DctDeliverableItem, type DctDoc } from "./types.js";
 import {

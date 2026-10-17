@@ -1,6 +1,6 @@
 import { type Command } from "commander";
 import { resolve } from "node:path";
-import { loadEnv, specdojoRootDir } from "../specdojo-config.js";
+import { loadEnv, specdojoRootDir } from "../shared/specdojo-config.js";
 import { buildYamlPages } from "./yaml-pages.js";
 
 function printCommandError(error: unknown): void {

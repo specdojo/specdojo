@@ -10,7 +10,7 @@ import {
   timestampFromDateInTimeZone,
   todayInTimeZone,
 } from "../../../src/register/date.js";
-import type { SpecDojoConfig } from "../../../src/specdojo-config.js";
+import type { SpecDojoConfig } from "../../../src/shared/specdojo-config.js";
 
 describe("formatDateInTimeZone", () => {
   it("UTC で暦日を YYYY-MM-DD 形式へ整形する", () => {

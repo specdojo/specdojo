@@ -1,8 +1,8 @@
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
-import { selfRunArgs } from "./spawn-self.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { selfRunArgs } from "./shared/spawn-self.js";
+import { specdojoRootDir } from "./shared/specdojo-config.js";
 import {
   readPipelineState,
   updatePipelineRepoIntegration,

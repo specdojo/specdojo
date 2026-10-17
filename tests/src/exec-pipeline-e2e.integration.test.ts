@@ -16,7 +16,7 @@ import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../src/exec.js";
 import { gitEnvironment } from "../../src/exec-worktree.js";
-import * as spawnSelfModule from "../../src/spawn-self.js";
+import * as spawnSelfModule from "../../src/shared/spawn-self.js";
 
 // executor / reporter パイプラインの E2E 検証。plan 生成、agent 起動、evidence 収集、
 // reporter 出力の検証、result 描画までを CLI 経路で通し、従来の単一 agent フローとの

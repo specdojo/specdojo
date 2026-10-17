@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { parsePracticeId, practiceLocalId, qualifyPracticeId } from "../../src/practice-id.js";
+import {
+  parsePracticeId,
+  practiceLocalId,
+  qualifyPracticeId,
+} from "../../../src/shared/practice-id.js";
 
 describe("practice ID", () => {
   it("authority と local ID を分離し、ファイル名には local ID だけを使える", () => {

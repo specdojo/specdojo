@@ -6,7 +6,7 @@
 
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { dump, load } from "../yaml.js";
+import { dump, load } from "../shared/yaml.js";
 import { inlineCodeAnglePlaceholders } from "../exec-shared.js";
 import { registerDateFromTimestamp } from "./date.js";
 

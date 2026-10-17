@@ -21,7 +21,7 @@ import { selectDueDeferredLimitTasks } from "./exec-limit.js";
 import { buildScheduleIndex } from "./exec-schedule.js";
 import { buildInitialStateFromStrategy } from "./exec-schedule-initial.js";
 import { qualifyTaskId } from "./exec-shared.js";
-import { specdojoRootDir, type AgentProvider } from "./specdojo-config.js";
+import { specdojoRootDir, type AgentProvider } from "./shared/specdojo-config.js";
 import { type ReadyTaskView, type CurrentState } from "./exec-types.js";
 import { collectExecLockUsage, execLocksDir, formatExecLockUsage } from "./exec-run-lock.js";
 import { buildTaskView } from "./exec-task-view.js";

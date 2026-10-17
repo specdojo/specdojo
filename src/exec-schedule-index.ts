@@ -9,7 +9,7 @@ import {
   readYaml,
   toScheduleFilePath,
 } from "./exec-shared.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { specdojoRootDir } from "./shared/specdojo-config.js";
 
 export function defaultScheduleCalendar(): ScheduleCalendar {
   return {

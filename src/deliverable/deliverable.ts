@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { type Command } from "commander";
 import { addProjectOption, printCommandError, resolveCatalogPath } from "../catalog/catalog.js";
 import { runGenerate } from "../catalog/generate.js";
-import { specdojoRootDir } from "../specdojo-config.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { resolveSpecdojoPath } from "../docs/template-resolution.js";
 import { applyTrash, planTrash } from "./trash.js";
 

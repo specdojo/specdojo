@@ -7,7 +7,7 @@ import { buildInitialStateFromStrategy } from "../../../src/exec-schedule-initia
 import { buildScheduleIndex } from "../../../src/exec-schedule-index.js";
 import { buildScheduleTrack } from "../../../src/schedule/build.js";
 import { createScheduleTrackDocument } from "../../../src/schedule/schedule.js";
-import type { MemberRoster } from "../../../src/specdojo-config.js";
+import type { MemberRoster } from "../../../src/shared/specdojo-config.js";
 
 function writeCatalog(dir: string): void {
   writeFileSync(

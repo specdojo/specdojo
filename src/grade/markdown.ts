@@ -38,7 +38,7 @@ import {
   resolveSafeMarkdownPath,
 } from "./targets.js";
 import type { GradeRubric, ReviewViewpointsDoc } from "../review/types.js";
-import { specdojoRootDir } from "../specdojo-config.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 
 export function scoreDocument(
   input: GradeDocumentInput,

@@ -9,7 +9,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { displayIdFromTicketFilename, isPlaceholderCell } from "./item.js";
 import { gitOutput, gitResult } from "../exec-worktree.js";
-import { DEFAULT_REGISTER_DATE_TIMEZONE } from "../specdojo-config.js";
+import { DEFAULT_REGISTER_DATE_TIMEZONE } from "../shared/specdojo-config.js";
 import {
   REGISTER_EVENT_FIELDS,
   REGISTER_EVENTS_DIRNAME,

@@ -5,7 +5,7 @@
 // 対象は Markdown frontmatter のみ。独立 YAML データファイル（dct-*.yaml / pm-*.yaml /
 // sch-*.yaml など）は名前空間化しないため、本モジュールは使わない。
 
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 
 const FRONTMATTER_RE = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/;
 

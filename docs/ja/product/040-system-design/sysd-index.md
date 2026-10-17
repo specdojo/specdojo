@@ -20,7 +20,7 @@ SpecDojo のシステム設計情報と、コード・設定ファイルを正�
 | 種別 | SSOT | 参照先 | 更新責任 | 備考 |
 | --- | --- | --- | --- | --- |
 | CLI Commands | TypeScript source | `src/specdojo.ts`、`src/*-command.ts` | DEV | 公開コマンドと委譲先 |
-| Configuration Schema | TypeScript type / JSON Schema | `src/specdojo-config.ts`、`docs/specdojo/schemas/v1/` | DEV / ARC | 設定の型・検証規則 |
+| Configuration Schema | TypeScript type / JSON Schema | `src/shared/specdojo-config.ts`、`docs/specdojo/schemas/v1/` | DEV / ARC | 設定の型・検証規則 |
 | Project Catalog | Deliverables catalog | `docs/ja/projects/prj-0001/010-deliverables-catalog/` | ARC / PM | 成果物の構成・依存・完了条件 |
 | Catalog Runtime | TypeScript source | `src/catalog/catalog.ts`、`src/catalog/build.ts`、`src/catalog/build-*.ts` | DEV | 公開再export façade、Markdown描画、参照整合性検証、カタログbuild |
 | Schedule Strategy Runtime | TypeScript source | `src/schedule/strategy-generate.ts`、`src/schedule/strategy-generate-*.ts` | DEV / PM | 公開再export façade、scope・owner解決、戦略文書構築、検証・書き出し |

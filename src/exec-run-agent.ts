@@ -38,7 +38,7 @@ import {
   specdojoRootDir,
   type AgentProvider,
   type MemberRoster,
-} from "./specdojo-config.js";
+} from "./shared/specdojo-config.js";
 import {
   agentProtectedConfigViolation,
   captureAgentProtectedConfigAcrossRepos,

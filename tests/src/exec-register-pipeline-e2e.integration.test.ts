@@ -18,7 +18,7 @@ import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../src/exec.js";
 import { registerRegisterCommands } from "../../src/register/register.js";
-import { registerConfigCommands } from "../../src/specdojo-config.js";
+import { registerConfigCommands } from "../../src/shared/specdojo-config.js";
 import { gitEnvironment } from "../../src/exec-worktree.js";
 
 // PJR-TNDH: `exec run --register` を executor/reporter パイプラインで実行する E2E 検証。

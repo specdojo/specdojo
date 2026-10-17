@@ -32,7 +32,7 @@ import {
   pipelineContentHash,
 } from "../../../src/grade/grade.js";
 import type { ReviewViewpointsDoc } from "../../../src/review/types.js";
-import type { MemberRoster } from "../../../src/specdojo-config.js";
+import type { MemberRoster } from "../../../src/shared/specdojo-config.js";
 import type { GradeResult, StoredGradeFinding } from "../../../src/grade/result.js";
 
 const viewpoints: ReviewViewpointsDoc = {

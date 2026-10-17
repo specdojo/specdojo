@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { resolveRegisterProjectIds, resolveSteps } from "../../src/build-command.js";
-import type { SpecDojoConfig } from "../../src/specdojo-config.js";
+import { resolveRegisterProjectIds, resolveSteps } from "../../../src/commands/build.js";
+import type { SpecDojoConfig } from "../../../src/shared/specdojo-config.js";
 
 const TWO_PROJECT_CONFIG: SpecDojoConfig = {
   version: 1,

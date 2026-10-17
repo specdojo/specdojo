@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, extname, join } from "node:path";
-import { dump } from "../yaml.js";
+import { dump } from "../shared/yaml.js";
 import {
   GRADE_PLAN_EMBEDDED_DOCUMENT_CHARACTER_LIMIT,
   agentViewpoints,

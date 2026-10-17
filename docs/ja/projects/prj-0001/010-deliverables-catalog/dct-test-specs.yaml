@@ -184,7 +184,7 @@ groups:
             path: src/docs/index-command.ts
             purpose: index コマンド入口から到達する文書ID索引の構造・生成規則
           - kind: implementation
-            path: src/build-command.ts
+            path: src/commands/build.ts
             purpose: 一括再生成（exec→catalog→register→yaml-pages→index）の順序制御
         done_criteria: *utc-target-done-criteria
       - local_id: utc-cli-config
@@ -200,7 +200,7 @@ groups:
             path: src/specdojo.ts
             purpose: CLIエントリポイント・サブコマンド登録
           - kind: implementation
-            path: src/specdojo-config.ts
+            path: src/shared/specdojo-config.ts
             purpose: プロジェクト構成の読込・検証・既定値解決
         done_criteria: *utc-target-done-criteria
 
@@ -318,7 +318,7 @@ groups:
         rulebook: specdojo:itc-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/build-command.ts
+            path: src/commands/build.ts
             purpose: 一括再生成（exec→catalog→register→yaml-pages→index）の順序制御
           - kind: implementation
             path: src/docs/index-command.ts
@@ -415,7 +415,7 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-init
           - kind: implementation
-            path: src/specdojo-config.ts
+            path: src/shared/specdojo-config.ts
             purpose: プロジェクト構成の初期化
           - kind: implementation
             path: src/catalog/catalog.ts
@@ -526,7 +526,7 @@ groups:
         rulebook: specdojo:stc-rulebook
         evidence_refs: &evidence-derived-content
           - kind: implementation
-            path: src/build-command.ts
+            path: src/commands/build.ts
             purpose: 一括再生成の順序制御
           - kind: implementation
             path: src/catalog/catalog.ts

@@ -3,7 +3,7 @@
 
 import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 import { collectResolvedDeliverables, type ResolvedDeliverable } from "../catalog/build.js";
 import { resolveBasePath } from "../catalog/paths.js";
 import type { DctDoc, DctKind } from "../catalog/types.js";

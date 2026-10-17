@@ -4,7 +4,7 @@ import { homedir } from "node:os";
 import path from "node:path";
 import { isRecord } from "./exec-shared.js";
 
-export { specdojoPackageRootDir } from "./package-paths.js";
+export { specdojoPackageRootDir } from "./shared/package-paths.js";
 
 export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = {
   claude: {

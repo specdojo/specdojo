@@ -24,7 +24,7 @@ import {
   type ExecWorktree,
   type ProductWorktree,
 } from "./exec-worktree.js";
-import { resolveRepoQualifiedRef } from "./specdojo-config.js";
+import { resolveRepoQualifiedRef } from "./shared/specdojo-config.js";
 import {
   PROJECT_REPO_NAME,
   branchExists,

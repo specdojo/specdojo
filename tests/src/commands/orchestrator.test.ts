@@ -9,7 +9,7 @@ import {
   resolveOrchestratorLaunch,
   runOrchestratorLaunch,
   type OrchestratorLaunch,
-} from "../../src/orchestrator.js";
+} from "../../../src/commands/orchestrator.js";
 
 const originalCwd = process.cwd();
 const originalProject = process.env.SPECDOJO_PROJECT;

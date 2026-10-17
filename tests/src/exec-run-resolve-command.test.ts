@@ -4,7 +4,7 @@ import {
   resolveInPlaceCommand,
   type RunOpts,
 } from "../../src/exec-run.js";
-import type { MemberRoster } from "../../src/specdojo-config.js";
+import type { MemberRoster } from "../../src/shared/specdojo-config.js";
 import type { AgentPipeline, ReadyTaskView } from "../../src/exec-types.js";
 
 function buildRoster(): MemberRoster {

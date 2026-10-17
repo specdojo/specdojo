@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { type ExecDefaultsConfig } from "./exec-agent-config.js";
 import { qualifyTaskId } from "./exec-shared.js";
-import { type MemberRoster } from "./specdojo-config.js";
+import { type MemberRoster } from "./shared/specdojo-config.js";
 import {
   requireRunnableRegisterItem,
   resolveRegisterRunTarget,

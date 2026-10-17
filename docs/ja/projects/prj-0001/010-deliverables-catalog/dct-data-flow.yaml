@@ -44,7 +44,7 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/specdojo-config.ts
+            path: src/shared/specdojo-config.ts
             purpose: プロジェクト設定の読込・初期化経路
           - kind: implementation
             path: src/catalog/catalog.ts
@@ -264,7 +264,7 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/build-command.ts
+            path: src/commands/build.ts
             purpose: 派生生成コマンド全体の起動順序
           - kind: implementation
             path: src/catalog/catalog.ts
@@ -357,7 +357,7 @@ groups:
         rulebook: specdojo:cdfd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/specdojo-config.ts
+            path: src/shared/specdojo-config.ts
             purpose: specdojo.config.json の読込と初期化
           - kind: implementation
             path: src/exec.ts
@@ -459,7 +459,7 @@ groups:
             path: src/dashboard/dashboard.ts
             purpose: 進捗ダッシュボードの生成
           - kind: implementation
-            path: src/build-command.ts
+            path: src/commands/build.ts
             purpose: 派生生成の一括実行
           - kind: implementation
             path: src/docs/index-command.ts

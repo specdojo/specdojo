@@ -6,7 +6,7 @@ import { load } from "js-yaml";
 import { lint } from "markdownlint/sync";
 import { globSync } from "tinyglobby";
 import { buildValidator, formatErrors } from "../../helpers/schema.js";
-import { specdojoRootDir } from "../../../src/specdojo-config.js";
+import { specdojoRootDir } from "../../../src/shared/specdojo-config.js";
 import { flattenTemplateFrontmatter } from "../../../src/docs/template-frontmatter.js";
 import {
   type RegisterAddFields,

@@ -26,7 +26,7 @@ import {
   stripTerminalControlSequences,
 } from "./exec-shared.js";
 import { formatMarkdownFile } from "./exec-format.js";
-import { specdojoRootDir } from "./specdojo-config.js";
+import { specdojoRootDir } from "./shared/specdojo-config.js";
 
 // ---------------------------------------------------------------------------
 // Item category

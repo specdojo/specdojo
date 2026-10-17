@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
 import { basename, dirname, extname, join, relative, resolve } from "node:path";
 import { type Command } from "commander";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import {
   type SpecdojoResolutionRoots,

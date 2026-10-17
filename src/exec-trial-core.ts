@@ -22,7 +22,7 @@ import {
   specdojoRootDir,
   type MemberRoster,
   type ProjectMember,
-} from "./specdojo-config.js";
+} from "./shared/specdojo-config.js";
 
 type TrialStatus =
   "pending" | "prepared" | "running" | "succeeded" | "failed" | "adopted" | "discarded";

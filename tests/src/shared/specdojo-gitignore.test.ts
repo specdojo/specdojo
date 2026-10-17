@@ -5,8 +5,8 @@ import {
   gitignorePatternsForLayouts,
   mergeGitignore,
   NODE_MODULES_PATTERN,
-} from "../../src/specdojo-gitignore.js";
-import { projectGitignoreLayout } from "../../src/specdojo-config.js";
+} from "../../../src/shared/specdojo-gitignore.js";
+import { projectGitignoreLayout } from "../../../src/shared/specdojo-config.js";
 
 describe("gitignorePatternsForLayouts", () => {
   it("returns only the defaults when the project lives under docs/", () => {

@@ -1,5 +1,5 @@
-import { DEFAULT_REGISTER_DATE_TIMEZONE } from "../specdojo-config.js";
-import type { SpecDojoConfig } from "../specdojo-config.js";
+import { DEFAULT_REGISTER_DATE_TIMEZONE } from "../shared/specdojo-config.js";
+import type { SpecDojoConfig } from "../shared/specdojo-config.js";
 
 // 登録項目の日時（registered_at / completed_at）と、そこから導出する表示日の共通ヘルパー。
 //

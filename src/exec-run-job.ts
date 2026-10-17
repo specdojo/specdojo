@@ -1,14 +1,14 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { relative, resolve, sep } from "node:path";
-import { selfRunArgs } from "./spawn-self.js";
+import { selfRunArgs } from "./shared/spawn-self.js";
 import {
   loadExecDefaultsConfig,
   resolveMemberCommand,
   type ExecDefaultsConfig,
 } from "./exec-agent-config.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "./exec-project.js";
-import { specdojoRootDir, type MemberRoster } from "./specdojo-config.js";
+import { specdojoRootDir, type MemberRoster } from "./shared/specdojo-config.js";
 import { type ReadyTaskView } from "./exec-types.js";
 import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "./exec-run-lock.js";
 import {

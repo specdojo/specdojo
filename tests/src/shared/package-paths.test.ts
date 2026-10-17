@@ -4,9 +4,12 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
-import { specdojoPackageRootDir, specdojoPackageVersion } from "../../src/package-paths.js";
+import {
+  specdojoPackageRootDir,
+  specdojoPackageVersion,
+} from "../../../src/shared/package-paths.js";
 
-const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
 
 function repositoryPackageVersion(): string {
   const parsed: unknown = JSON.parse(

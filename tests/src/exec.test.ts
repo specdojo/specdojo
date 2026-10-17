@@ -16,7 +16,7 @@ import {
   resolveTaskMode,
   resolveTaskProficiency,
 } from "../../src/exec-strategy.js";
-import type { MemberRoster } from "../../src/specdojo-config.js";
+import type { MemberRoster } from "../../src/shared/specdojo-config.js";
 
 function makeRoster(members: MemberRoster["members"]): MemberRoster {
   return {

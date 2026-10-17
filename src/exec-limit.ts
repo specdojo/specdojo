@@ -1,4 +1,4 @@
-import type { AgentProvider } from "./specdojo-config.js";
+import type { AgentProvider } from "./shared/specdojo-config.js";
 import type { CurrentState, StateSnapshot } from "./exec-types.js";
 
 export type AgentLimitKind =

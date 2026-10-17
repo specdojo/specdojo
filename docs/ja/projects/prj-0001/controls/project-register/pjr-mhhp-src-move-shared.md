@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:34Z"
@@ -82,14 +82,19 @@ codemod で yaml・git-environment・specdojo-config・spawn-self などの共�
 
 | No  | 作業                                                           | 担当         | 状態 | メモ                            |
 | --- | -------------------------------------------------------------- | ------------ | ---- | ------------------------------- |
-| 1   | codemod で対応表のとおりに移す                                 | DEV          | open | 手で書き換えない                |
-| 2   | 自分の位置や文字列から組み立てるパスを直す                     | DEV          | open | `tools/build-if-stale.mjs` ほか |
-| 3   | 全コマンドの `--help` を比べ、hook の入口と `dist/` を確かめる | DEV          | open | -                               |
+| 1   | codemod で対応表のとおりに移す                                 | DEV          | done | 実装 16 件、テスト 17 件        |
+| 2   | 自分の位置や文字列から組み立てるパスを直す                     | DEV          | done | `tools/build-if-stale.mjs` ほか |
+| 3   | 全コマンドの `--help` を比べ、hook の入口と `dist/` を確かめる | DEV          | done | help 123 対象で差分なし         |
 | 4   | 統合の後に `exec run --register` を 1 回流す                   | orchestrator | open | close の条件                    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tools/src-move-codemod.mjs` に対応表を渡し、コマンド実装 5 件を `src/commands/`、共通処理 11 件を `src/shared/`、対応テスト 17 件を `tests/src/commands/`・`tests/src/shared/` へ移した。相対 import の書き換えも codemod の出力を反映した。
+- codemod の検出結果に基づき、`tools/build-if-stale.mjs` の委譲先と対応テスト、`src/shared/build-if-stale.ts` と `src/shared/package-paths.ts` の package root、移動したテスト 2 件の repository root を手動で補正した。`src/shared/yaml.ts` の `createRequire(import.meta.url)`、`src/shared/spawn-self.ts`、`src/shared/dist-freshness.ts` は移動後も同じ対象を指すため変更不要と確認した。
+- `.github/instructions/vitest.instructions.md`、製品設計書、運用ガイド、設定 schema、成果物カタログに記載された旧 `src/...` パスを新配置へ更新した。
+- CLI ルートを含む全 123 help 対象の出力を移動前後で比較し、差分がないことを確認した。`npm run build` で `dist/` を全消去して再生成し、旧直下出力が残らず `dist/commands/`・`dist/shared/` に新配置どおり出力されることを確認した。`node tools/build-if-stale.mjs` も終了コード 0 で完了した。
+- `catalog build`・`catalog validate`・`register build` を実行し、更新したカタログと個票から生成物を再生成できることを確認した。catalog 検証は成功し、既存の未作成文書に対する `based_on` 警告だけを報告した。
+- 親 runner の検証は executor 終了後に実行される。統合後の `exec run --register` は orchestrator が実施する close 条件として残る。
 
 ## 5. 関連ドキュメント
 

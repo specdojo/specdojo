@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { extractJsonArrayText, extractJsonText } from "../../src/agent-response.js";
+import { extractJsonArrayText, extractJsonText } from "../../../src/shared/agent-response.js";
 
 describe("extractJsonText", () => {
   it("returns the input unchanged when the response is bare JSON", () => {

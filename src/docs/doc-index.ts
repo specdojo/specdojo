@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { load } from "../yaml.js";
+import { load } from "../shared/yaml.js";
 import { readSpecdojoNamespace } from "./frontmatter-namespace.js";
 import {
   specdojoDirectoryPaths,

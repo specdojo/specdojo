@@ -3,15 +3,18 @@ import { join, relative } from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
 import { describe, expect, it } from "vitest";
-import { GIT_LOCAL_ENV_VARS, removeGitLocalEnvironment } from "../../src/git-environment.js";
-import { TEST_GIT_ENVIRONMENT } from "../helpers/git-environment.js";
+import {
+  GIT_LOCAL_ENV_VARS,
+  removeGitLocalEnvironment,
+} from "../../../src/shared/git-environment.js";
+import { TEST_GIT_ENVIRONMENT } from "../../helpers/git-environment.js";
 
 // git フック（lefthook の pre-commit など）の下でテストやツールを実行すると、親の git が
 // GIT_DIR / GIT_INDEX_FILE / GIT_WORK_TREE を環境変数へ設定する。それを引き継いだまま git を
 // 起動すると、一時ディレクトリで完結させたつもりの init / add / commit が実リポジトリへ適用され、
 // core.bare の書き換えや不正なコミットが起きる（PJR-X3E8 / PJR-A99J / PJR-TPY9 で3度再発）。
 // Vitest の入口で環境を無害化したうえで、直接起動箇所も gitEnvironment() 経由に限定する。
-const ROOT = fileURLToPath(new URL("../..", import.meta.url));
+const ROOT = fileURLToPath(new URL("../../..", import.meta.url));
 const SCAN_DIRS = ["src", "tests", "tools", "scripts"];
 const GIT_LAUNCHERS = new Set(["spawnSync", "spawn", "execFileSync", "execFile"]);
 

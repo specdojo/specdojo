@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { load as loadYaml } from "js-yaml";
-import { specdojoPackageRootDir } from "../../src/package-paths.js";
+import { specdojoPackageRootDir } from "../../../src/shared/package-paths.js";
 import {
   assertValidActor,
   getProjectCatalogPath,
@@ -13,8 +13,8 @@ import {
   getProjectSchedulePath,
   loadMemberRoster,
   migrateAgentMembers,
-} from "../../src/specdojo-config.js";
-import type { MemberRoster, SpecDojoProjectConfig } from "../../src/specdojo-config.js";
+} from "../../../src/shared/specdojo-config.js";
+import type { MemberRoster, SpecDojoProjectConfig } from "../../../src/shared/specdojo-config.js";
 
 function makeRoster(nicknames: string[]): MemberRoster {
   return {

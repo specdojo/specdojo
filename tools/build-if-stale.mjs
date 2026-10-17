@@ -50,7 +50,7 @@ export function runBuildIfStale(repoRoot, { runScript = spawnSync, reportMessage
 
   const result = runScript(
     process.execPath,
-    [tsxCli, path.join(repoRoot, "src", "build-if-stale.ts")],
+    [tsxCli, path.join(repoRoot, "src", "shared", "build-if-stale.ts")],
     {
       cwd: repoRoot,
       stdio: "inherit",

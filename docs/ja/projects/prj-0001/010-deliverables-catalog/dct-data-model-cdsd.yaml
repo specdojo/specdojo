@@ -30,7 +30,7 @@ groups:
         rulebook: specdojo:cdsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/specdojo-config.ts
+            path: src/shared/specdojo-config.ts
             purpose: プロジェクト構成ストアの読込・検証
           - kind: implementation
             path: src/register/register.ts

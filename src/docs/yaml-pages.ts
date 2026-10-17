@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, posix } from "node:path";
-import { dump, load } from "../yaml.js";
+import { dump, load } from "../shared/yaml.js";
 import { collectDocIndexEntries } from "./doc-index.js";
 import { isDctTemplateCatalog, renderCatalogTemplateBody } from "../catalog/build.js";
 

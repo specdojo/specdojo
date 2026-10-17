@@ -13,7 +13,7 @@ import {
   type SpecDojoConfig,
   type SpecDojoProjectConfig,
   type SpecDojoRepoConfig,
-} from "./specdojo-config.js";
+} from "./shared/specdojo-config.js";
 import {
   MAX_TEXT_LENGTH,
   parseReporterOutput,

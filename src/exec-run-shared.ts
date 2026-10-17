@@ -21,7 +21,7 @@ import {
   type AgentProvider,
   type MemberRoster,
   type ProjectMember,
-} from "./specdojo-config.js";
+} from "./shared/specdojo-config.js";
 import {
   acquireExecRunLock,
   EXEC_RUN_LOCK_TOKEN_ENV,

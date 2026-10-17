@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { gitEnvironment } from "../git-environment.js";
+import { gitEnvironment } from "../shared/git-environment.js";
 import type { GradeResult } from "../grade/result.js";
 import {
   gradeContentHash,
