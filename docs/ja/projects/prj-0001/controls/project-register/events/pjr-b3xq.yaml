@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f66cb6fe622a4d74818af8f6894eccae
+  ts: "2026-10-17T11:27:15Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の報告（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: specdojo init で provider の入力を誤ると最初から入力し直しになる
+    - field: description
+      from: ""
+      to: 対話式の specdojo init で agent の provider の設定を誤ると、プロジェクトや名簿などの入力を含めて最初からやり直しになる。誤った provider の設定だけを入力し直せるようにする
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
