@@ -32,21 +32,22 @@ devcontainer scaffold の雛形が、親のディレクトリを /workspaces/spe
 
 ## 3. 対応方針
 
-| 項目     | 内容                                                                                                                                                                                                                                                    |
-| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 原因     | 雛形が `target=/workspaces/specdojo-workspace` と `workspaceFolder` の `/workspaces/specdojo-workspace/${localWorkspaceFolderBasename}` を固定で持ち、scaffold がそのまま書き出す。devcontainer.json の変数には、親のディレクトリの名前を表すものがない |
-| 対応策   | scaffold が、実行したリポジトリの親のディレクトリの名前（例: `app1-workspace`）を取得し、`/workspaces/<親のディレクトリの名前>` を `workspaceMount` の `target` と `workspaceFolder` に書く                                                             |
-| 依存事項 | なし                                                                                                                                                                                                                                                    |
-| 完了条件 | 下記の完了条件を満たす                                                                                                                                                                                                                                  |
+| 項目     | 内容                                                                                                                                                                                                                                                                                                                                                    |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | 雛形が `target=/workspaces/specdojo-workspace` と `workspaceFolder` の `/workspaces/specdojo-workspace/${localWorkspaceFolderBasename}` を固定で持ち、scaffold がそのまま書き出す。devcontainer.json の変数には、親のディレクトリの名前を表すものがない                                                                                                 |
+| 対応策   | 既定では、scaffold が実行したリポジトリの親のディレクトリの名前（例: `app1-workspace`）を取得し、`/workspaces/<親のディレクトリの名前>` を `workspaceMount` の `target` と `workspaceFolder` に書く。`--workspace-name <name>` を指定した場合は、その名前を使う（2026-10-17、利用者が承認。固定の名前にする案は、ホストの構成と対応しないため採らない） |
+| 依存事項 | なし                                                                                                                                                                                                                                                                                                                                                    |
+| 完了条件 | 下記の完了条件を満たす                                                                                                                                                                                                                                                                                                                                  |
 
 ### 3.1. 完了条件
 
 - `devcontainer scaffold` を `app1-workspace/app1-specdojo` で実行すると、`workspaceMount` の `target` が `/workspaces/app1-workspace`、`workspaceFolder` が `/workspaces/app1-workspace/${localWorkspaceFolderBasename}` になる。
-- 親のディレクトリの名前に、devcontainer.json やパスとして使えない文字が含まれる場合の扱い（置き換えるか、理由を出して止めるか）を決めて実装し、result に書く。
+- `devcontainer scaffold --workspace-name <name>` で、親のディレクトリの名前の代わりに `<name>` を使える。ホストで親のディレクトリの名前を変えた後も、前の名前を指定して同じパスを保てる。`specdojo init --devcontainer` から scaffold する場合も、同じ指定を渡せるようにするか、渡せない理由を result に書く。
+- 親のディレクトリの名前や `--workspace-name` の値に、パスとして使えない文字（`/`・空白・制御文字など）が含まれる場合の扱い（置き換えるか、理由を出して止めるか）を決めて実装し、result に書く。
 - `safe.directory` など、ほかに `/workspaces/specdojo-workspace` を前提にしている雛形や scaffold の処理（`post-create.sh` など）も、同じ名前に合わせる。
 - 本リポジトリの `.devcontainer/devcontainer.json` は、本リポジトリの親のディレクトリが実際に `specdojo-workspace` であるため変えない。
-- scaffold の単体テストで、親のディレクトリの名前が反映されることを確かめる。
-- 雛形の説明、`docs/ja/specdojo/references/command-reference.md` の `devcontainer scaffold`、関係するガイドの `/workspaces/specdojo-workspace` の記載を直す。
+- scaffold の単体テストで、親のディレクトリの名前が反映されることと、`--workspace-name` で上書きできることを確かめる。
+- 雛形の説明、`docs/ja/specdojo/references/command-reference.md` の `devcontainer scaffold`（新しい引数を含む）、関係するガイドの `/workspaces/specdojo-workspace` の記載を直す。コンテナの中で作った git worktree は絶対パスを記録するため、親のディレクトリの名前を変えるときは `--workspace-name` で前の名前を保つよう注意書きを加える。
 - CHANGELOG の次の版の節に、生成される作業ディレクトリが変わることを記載する（既に scaffold した利用者は、作り直すまで従来のまま）。
 - 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
 - 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
