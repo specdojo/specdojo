@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-x8y9-src-dependency-direction-rules
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-15T22:12:51Z"
   due_on: null
+  completed_at: "2026-10-17T09:23:43Z"
+  conclusion: src/shared/specdojo-config.ts の src/exec への依存をなくし（型を src/shared/agent-types.ts、provider-scaffold を src/shared へ移した）、src/shared が他の機能を、機能が src/commands と src/specdojo.ts を import しない規則を ESLint の no-restricted-imports で error として入れた。機能どうしの循環は PJR-QQKY で扱う
 ---
 
 # PJR-X8Y9 src の機能の間の依存の向きの規則を入れる
