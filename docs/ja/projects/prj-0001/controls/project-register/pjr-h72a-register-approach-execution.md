@@ -18,21 +18,42 @@ specdojo:
 
 ## 1. 背景
 
-approach を使った成果物の作成と kata の生成・修正は schedule のタスクからしか実行できない。個票に approach と対象を書き、exec run --register で schedule と同じ plan の作り方（approach のテンプレート・kata の参照・DCT の done_criteria）を使えるようにする方針を決める
+approach（`fully-guided`・`recipe-guided`・`retrofit`・`rulebook-maintenance` など。`src/shared/agent-types.ts` の `Approach`）を使った成果物の作成と、kata（rulebook・recipe・sample・template）の生成・修正は、schedule のタスクからしか実行できない。利用者から、register の todo から実行できるようにする提案があった（2026-10-17）。
+
+2026-10-17 時点の経路:
+
+| 経路                                                      | approach と kata の扱い                                                                                                                                                                                                                                                            | 足りないもの                                            |
+| --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| schedule のタスク                                         | `sch-strategy` の approach から plan を作り、kata の参照と成果物カタログ（DCT）の `done_criteria` を plan に入れる（`src/exec/plans-generation.ts`）。kata の保守は、成果物に対応する kata を `rulebook-maintenance` などの approach で直す（`src/schedule/strategy-profiles.ts`） | 実行するには schedule のタスクにする必要がある          |
+| `exec plan --deliverable <localId> --approach <approach>` | schedule なしで同じ作り方の plan を作れる                                                                                                                                                                                                                                          | plan を作るだけ                                         |
+| `exec run --deliverable <localId>`                        | 作業場所でそのまま実行する（`src/exec/run/in-place.ts`）                                                                                                                                                                                                                           | worktree・統合・review を使わず、登録簿の状態も追わない |
+| `exec run --register`                                     | 個票の完了条件から plan を作り、worktree・統合・review・記帳がそろっている                                                                                                                                                                                                         | approach と kata の参照がない                           |
 
 ## 2. 検討した選択肢
 
-| 選択肢 | 内容   | 利点   | 懸念   |
-| ------ | ------ | ------ | ------ |
-| A      | _TODO_ | _TODO_ | _TODO_ |
+| 選択肢 | 内容                                                                                       | 利点                                                       | 欠点                                                                 |
+| ------ | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------- | -------------------------------------------------------------------- |
+| A      | 現状のまま（approach の作業は schedule のタスクにする）                                    | 変更が要らない                                             | 1 件の成果物や kata を直すだけでも schedule のタスクを作る必要がある |
+| B      | `exec run --deliverable` を拡張し、worktree と登録簿の追跡を足す                           | 既存の入口を使える                                         | register の実行と同じ仕組みを、別の入口に作り直すことになる          |
+| C      | 個票に approach と対象を書き、`exec run --register` が schedule と同じ plan の作り方を使う | worktree・統合・review・記帳をそのまま使え、登録簿で追える | 個票の項目と plan の作り方の分岐が増える                             |
 
 ## 3. 決定内容
 
-_TODO_: 採択した内容を明確に記載する。
+_TODO_: 利用者の確認後に記載する。orchestrator の推奨は次のとおり。
+
+1. 選択肢 C を採る。
+2. 個票の frontmatter に `approach` と、対象の `targets`（成果物の local_id、または kata の id）を書けるようにする。`register add --approach <approach> --target <id>` でも指定できるようにする。
+3. `exec run --register` は、個票に `approach` があれば、schedule のタスクと同じ plan の作り方（approach のテンプレート、kata の参照、DCT の `done_criteria`）を使う。個票の完了条件は、それに加える条件として plan に載せる。
+4. DCT の `done_criteria` と個票の完了条件は両方を載せる。DCT を基本とし、個票の完了条件を追加の条件とする。
+5. owner の役割は個票の `owner` を使い、schedule の `owner_rules` は使わない。
+6. kata の生成・修正は、kata の id（`specdojo:pjr-rulebook` など）を対象にし、approach（`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance`）で rulebook・recipe・sample・template のどれかを決める。
+7. approach と対象の組み合わせが合わない場合（成果物に `rulebook-maintenance`、kata に `fully-guided` など）は、起票と実行の時点でエラーにする。
+8. 既存の `exec run --deliverable`（in-place）は互換のために残し、ガイドでは register の経路を勧める。
+9. 実装は、利用者向けの改善（PJR-Y79W・PJR-B3XQ・PJR-8GQ4）の後に行う。
 
 ## 4. 採択理由
 
-- _TODO_: 判断根拠を記載する。
+- _TODO_: 決定後に記載する。
 
 ## 5. 承認
 
@@ -48,12 +69,13 @@ _TODO_: 採択した内容を明確に記載する。
 
 ## 6. 影響範囲とフォローアップ
 
-| 項目       | 内容   |
-| ---------- | ------ |
-| 影響範囲   | _TODO_ |
-| 必要な対応 | _TODO_ |
-| 追跡先     | _TODO_ |
+| 項目       | 内容                                                                                                                                                                  |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 影響範囲   | 個票の frontmatter と schema、`register add`、`exec run --register` の plan の生成（`src/exec/run/register-core.ts`・`src/exec/plans-generation.ts`）、関係するガイド |
+| 必要な対応 | 決定後に、個票の項目と schema、plan の生成、kata の対象、ガイドの todo を起票する                                                                                     |
+| 追跡先     | 決定後に起票する todo                                                                                                                                                 |
 
 ## 7. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-config-guide]]: exec の設定。
+- [[prj-0001:pjr-y79w-readme-lp-init-guide-alignment]]: 先に行う利用者向けの改善。
