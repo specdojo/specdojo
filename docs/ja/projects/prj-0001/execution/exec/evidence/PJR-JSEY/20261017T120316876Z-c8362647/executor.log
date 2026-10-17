@@ -1,0 +1,9 @@
+PJR-JSEY の対応結果へ、最新統合対象 PJR-CY80 の動作確認記録を追記しました。
+
+変更: [pjr-jsey-exec-run-split-smoke.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JSEY/docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md:51)
+
+整形、登録簿生成、catalog 検証、差分検査は成功しています。残りの親検証は runner に委譲します。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果へ、2026-10-17 21:04 JST、対象 PJR-CY80、agent codex-expert-executor の記録を1行追記した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown は整形済みで変更なし。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"npx tsx の IPC 制約を規約指定の起動方法で回避し、登録簿とビューを生成した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全 catalog の検証が成功した。既存の未作成文書に関する警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>
