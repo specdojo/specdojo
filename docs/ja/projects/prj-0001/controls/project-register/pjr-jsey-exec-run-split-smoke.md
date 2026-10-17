@@ -43,6 +43,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 2026-10-15 19:37 | PJR-13M6   | codex-expert-executor |
 | 2026-10-15 20:00 | PJR-NA04   | codex-expert-executor |
 | 2026-10-17 16:04 | PJR-MHHP   | codex-expert-executor |
+| 2026-10-17 17:07 | PJR-XP0J   | codex-expert-executor |
 
 ## 5. 関連ドキュメント
 

@@ -1,0 +1,5 @@
+PJR-XP0J の動作確認記録を 1 行追記しました。変更は個票のみです。Prettier、登録簿生成、catalog 検証、差分検査は成功しています。親検証は runner に委ねます。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果に PJR-XP0J の実行記録（2026-10-17 17:07 JST、codex-expert-executor）を追記した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown は整形済みで変更なし。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と関連ビューの生成に成功。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog 検証に成功。既存の未作成文書に関する警告のみ。"},{"command":"git diff --check -- docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"whitespace エラーなし。差分は対象個票への1行追加のみ。"}]}
+</specdojo_executor_evidence>
