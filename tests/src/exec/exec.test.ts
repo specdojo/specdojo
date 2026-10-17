@@ -7,7 +7,7 @@ import {
   buildTaskPhaseMap,
   expandPromptRefs,
   resolveTaskPhaseContext,
-} from "../../../src/exec/run.js";
+} from "../../../src/exec/run/run.js";
 import {
   buildPhaseModeIndex,
   resolveApproach,

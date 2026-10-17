@@ -24,7 +24,7 @@ import {
 import {
   addWorkingDaysToDate,
   countWorkingDaysBetween,
-} from "../../../src/exec/schedule-calendar.js";
+} from "../../../src/exec/schedule/calendar.js";
 import type { ScheduleCalendar } from "../../../src/exec/types.js";
 import type { TimelineIndex, TimelineTrackPlan } from "../../../src/dashboard/timeline-build.js";
 import type { RoutineDoc } from "../../../src/routine/routine.js";

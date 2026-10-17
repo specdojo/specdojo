@@ -13,7 +13,7 @@ import {
 import {
   resolveRegisterResumeExecutor,
   resolveRegisterResumeReporter,
-} from "../../../src/exec/run.js";
+} from "../../../src/exec/run/run.js";
 import type { ExecEvidence } from "../../../src/exec/evidence.js";
 import { createPipelineState, type PipelineState } from "../../../src/exec/pipeline-state.js";
 import type { MemberRoster, ProjectMember } from "../../../src/shared/specdojo-config.js";

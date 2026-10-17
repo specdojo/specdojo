@@ -48,9 +48,9 @@ import {
   loadRosterForExecutionPath,
   resolveTaskPhaseContext,
   selectCandidates,
-} from "./run.js";
-import { buildScheduleIndex } from "./schedule.js";
-import { buildInitialStateFromStrategy } from "./schedule-initial.js";
+} from "./run/run.js";
+import { buildScheduleIndex } from "./schedule/schedule.js";
+import { buildInitialStateFromStrategy } from "./schedule/initial.js";
 import { generateSinglePlan } from "./plans.js";
 import { qualifyTaskId } from "./shared.js";
 import { buildTaskView } from "./task-view.js";

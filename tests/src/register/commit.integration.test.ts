@@ -4,7 +4,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Command } from "commander";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { execLifecyclePoolPath } from "../../../src/exec/run-lock.js";
+import { execLifecyclePoolPath } from "../../../src/exec/run/lock.js";
 import { CrossProcessMutex } from "../../../src/exec/slot-lock.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 import { registerRegisterCommands } from "../../../src/register/register.js";

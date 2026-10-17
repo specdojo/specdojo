@@ -49,15 +49,19 @@ src/exec の 74 ファイルのうち、run- の 18 ファイルを src/exec/run
 
 ## 3. 作業内容
 
-| No  | 作業                                                           | 担当         | 状態 | メモ             |
-| --- | -------------------------------------------------------------- | ------------ | ---- | ---------------- |
-| 1   | 規則から対応表を作り、codemod で移す                           | DEV          | open | 手で書き換えない |
-| 2   | 全コマンドの `--help` を比べ、hook の入口と `dist/` を確かめる | DEV          | open | -                |
-| 3   | 統合の後に `exec run --register` を 1 回流す                   | orchestrator | open | close の条件     |
+| No  | 作業                                                           | 担当         | 状態 | メモ                                                                                      |
+| --- | -------------------------------------------------------------- | ------------ | ---- | ----------------------------------------------------------------------------------------- |
+| 1   | 規則から対応表を作り、codemod で移す                           | DEV          | done | 実装29件と明示テスト16件の対応表を生成し、対応テスト1件を含む計46件を codemod で移動した  |
+| 2   | 全コマンドの `--help` を比べ、hook の入口と `dist/` を確かめる | DEV          | done | 123コマンドの help が一致し、build・stale 判定と旧 `dist/exec/run*.js` 等の不在を確認した |
+| 3   | 統合の後に `exec run --register` を 1 回流す                   | orchestrator | open | close の条件。executor worktree の統合後に実施する                                        |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+`tmp/exec-run-schedule-mapping.json` の対応表を `tools/src-move-codemod.mjs` へ渡し、`src/exec/run.ts` と `run-*.ts` の計18件を `src/exec/run/`、`src/exec/schedule.ts` と `schedule-*.ts` の計11件を `src/exec/schedule/` へ移した。テストは規則に該当する16件に加え、codemod が対応ソースへ追従させた `run.test.ts` の計17件を `tests/src/exec/run/`・`tests/src/exec/schedule/` へ移した。
+
+codemod の残件検出に従い、製品設計書の2パス、`plans-core.ts` の説明用パス、`dist-freshness.test.ts` の模擬パスを新しい配置へ手で更新した。`npm run build` で `dist/` を再生成し、旧配置の出力が残らないことと `node tools/build-if-stale.mjs` の成功を確認した。移動前後の123コマンドの help は `tmp/pjr-bz9j-help-before.json` と `tmp/pjr-bz9j-help-after.json` に保存し、完全一致を確認した。
+
+残課題は、親 runner の検証と統合後に orchestrator が `exec run --register` を1回実行して統合まで完了することの確認である。
 
 ## 5. 関連ドキュメント
 

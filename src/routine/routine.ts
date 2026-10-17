@@ -4,7 +4,7 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { type Command } from "commander";
 import { ensureFreshDistBuildForEntry } from "../shared/dist-freshness.js";
-import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "../exec/run-lock.js";
+import { ROUTINE_BUSY_SKIP_EXIT_CODE, ROUTINE_EXEC_ENV } from "../exec/run/lock.js";
 import {
   ensureDir,
   listFilesRecursive,

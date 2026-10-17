@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it } from "vitest";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
-import { registerStatePaths } from "../../../src/exec/run.js";
+import { registerStatePaths } from "../../../src/exec/run/run.js";
 import type { RegisterPaths } from "../../../src/register/register.js";
 
 function git(cwd: string, ...args: string[]): string {

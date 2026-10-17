@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { buildScheduleIndex } from "./schedule.js";
-import { readReadySnapshot } from "./schedule-ready.js";
+import { buildScheduleIndex } from "./schedule/schedule.js";
+import { readReadySnapshot } from "./schedule/ready.js";
 import {
   buildPhaseModeIndex,
   resolveAgentAssignment,
