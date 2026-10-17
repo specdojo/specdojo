@@ -1,0 +1,12 @@
+PJR-JSEY 個票へ、最新の統合対象 PJR-MX4F の動作確認記録を追記しました。
+
+- 追記日時: 2026-10-17 18:58 JST
+- agent: `codex-expert-executor`
+- 変更は個票の1行のみ
+- Prettier、register build、catalog validate、差分検査に成功
+- result とステータスは未変更
+- 親 runner の検証・reporter・統合へ引き継ぎます
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果へ、最新の review 項目 PJR-MX4F の動作確認記録を1行追記した。変更は個票のみで、親 runner の検証・reporter・統合へ引き継ぐ。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown は整形済みで変更なし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"tsx IPC 制約を規定の代替起動方法で回避し、登録簿生成に成功"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog validate は終了コード0。既存の未配置文書に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。成果物差分は個票への1行追加のみ"}]}
+</specdojo_executor_evidence>
