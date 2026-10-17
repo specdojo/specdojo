@@ -2,13 +2,29 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [0.4.0] - 未定
+
+### 不具合修正
+
+- `devcontainer scaffold` が親ディレクトリを常に `/workspaces/specdojo-workspace` としていた問題を修正し、ホスト側の親名を反映するようにしました。`--workspace-name` で明示的に固定でき、`specdojo init --devcontainer` からも指定できます。既に生成済みの `.devcontainer/` は、`--force` で作り直すまで従来のままです（PJR-8GQ4）。
+- 対話式の `specdojo init` で provider などの入力を誤ると、最初から入力し直しになっていた問題を修正しました。答えを質問ごとに確かめ、誤りがあればその質問だけを聞き直します。非対話（`--yes` や引数での指定）では、従来どおり誤りの理由を出して終えます。Claude Code を選んだときの最後の案内も、`npm run orch:opus` に揃えました（PJR-B3XQ）。
+- exec の worktree を作るときに、git が一時的なエラー（dubious ownership など）を返しても実際には作成できていた場合、再試行が「branch がすでにある」で失敗していた問題を修正しました。再試行の前に目的の状態を確かめます（PJR-DT3Q）。
+- exec の checkpoint の確認で git が失敗したときに、原因が記録されなかった問題を修正しました。終了コードと stderr を失敗のログとエラーのメッセージに含めます（PJR-CY80）。
+
+### 文書
+
+- README の始め方を、ランディングページ（<https://specdojo.org/>）と同じ `npx specdojo init` の手順と `<アプリ>-workspace/<アプリ>-specdojo` の構成に揃え、specdojo.org へのリンクを加えました（PJR-Y79W）。
+
+### 内部の変更
+
+- `src/` を機能ごとのサブディレクトリ（`exec/`・`register/`・`grade/`・`shared/` など）へ分け、機能の間の依存の向きを ESLint で検査するようにしました。CLI の動作と出力は変わりません（PJR-V23P・PJR-X8Y9 ほか）。
+
 ## [0.3.1] - 2026-10-16
 
 同梱パッケージの `@specdojo/docs-lint` と `@specdojo/docs-site` は、この版では公開しません（docs-lint の js-yaml の更新は次の docs-lint の版で公開します）。
 
 ### 不具合修正
 
-- `devcontainer scaffold` が親ディレクトリを常に `/workspaces/specdojo-workspace` としていた問題を修正し、ホスト側の親名を反映するようにしました。`--workspace-name` で明示的に固定でき、`specdojo init --devcontainer` からも指定できます。既に生成済みの `.devcontainer/` は、`--force` で作り直すまで従来のままです（PJR-8GQ4）。
 - `specdojo init` と Antigravity 向け配布雛形・ガイドが、agy 1.3.5 で提供されないモデル ID を指定し、expert agent が `invalid model selection` で起動できない問題を修正しました。利用可能な ID は `agy models` で確認できます（PJR-X60A）。
 - exec の result の frontmatter で、改行を含む `block_reason` が字下げされずに書かれ、YAML として不正になる問題を修正しました。値は YAML として正しく引用して書きます（PJR-TMAW）。
 - 未追跡のファイルが多い作業場所で、`register --commit` などが原因の分からない `git status failed` で止まる問題を修正しました。git の出力を 1 MiB を超えても受け取り、出力の上限超過や signal による失敗はエラーのメッセージに原因を含めます（PJR-RY4C）。
