@@ -582,8 +582,20 @@ describe("exec worktree ops", () => {
     writeFile(join(worktree.path, "docs", "a.md"), "deliverable after resume\n");
     writeFile(join(worktree.path, resultRel), `# Result ${taskId}\n\nstatus: complete\n`);
     commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    writeFile(
+      join(worktree.path, "tools", "build-if-stale.mjs"),
+      [
+        'import { writeFileSync } from "node:fs";',
+        'writeFileSync(new URL("../.git/build-if-stale-called", import.meta.url), "called\\n");',
+        "",
+      ].join("\n"),
+    );
+    writeFile(
+      join(worktree.path, "package.json"),
+      `${JSON.stringify({ name: "specdojo", bin: { specdojo: "dist/specdojo.js" } }, null, 2)}\n`,
+    );
     writeFile(join(worktree.path, eventRel), `{"type":"review"}\n`);
-    git(worktree.path, "add", "--", eventRel);
+    git(worktree.path, "add", "--", eventRel, "package.json", "tools/build-if-stale.mjs");
     git(worktree.path, "commit", "-m", `exec(register ${taskId}): review`);
 
     mergeWorktreeIntoCurrent({
@@ -604,6 +616,9 @@ describe("exec worktree ops", () => {
     expect(readFileSync(join(fixture.repo, eventRel), "utf8")).toBe(`{"type":"review"}\n`);
     expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe(
       "deliverable after resume\n",
+    );
+    expect(readFileSync(join(fixture.repo, ".git", "build-if-stale-called"), "utf8")).toBe(
+      "called\n",
     );
     expect(git(fixture.repo, "status", "--porcelain", "-uall")).toBe("");
   });
