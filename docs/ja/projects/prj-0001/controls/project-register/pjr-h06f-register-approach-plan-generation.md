@@ -22,13 +22,38 @@ specdojo:
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+[[prj-0001:pjr-h72a-register-approach-execution]] の決定の 3〜6 に基づく 2 件目。[[prj-0001:pjr-zjxq-register-approach-fields]] で個票に書けるようにした `approach` と `targets` を、`exec run --register` の plan の生成に反映する。
+
+2026-10-17 時点の手がかり:
+
+- register の plan は `src/exec/register.ts` の `generateRegisterPlan` が作り、worktree での実行は `src/exec/run/register-worktree.ts` がそれを呼ぶ。
+- 成果物の plan は `generateDeliverablePlan`（`exec plan --deliverable --approach` が使う。`src/exec/commands.ts`）が、対象・mode・approach・owner を受け取って作る。approach のテンプレート、kata の参照、DCT の `done_criteria` はここで入る。
+- schedule での kata の保守は、成果物に対応する kata を `rulebook-maintenance` などで直す（`src/schedule/strategy-profiles.ts`）。
+
+条件:
+
+- 個票に `approach` がない場合は、従来どおり `generateRegisterPlan` で plan を作り、出力を変えない（既存の register の plan と一致することをテストで確かめる）。
+- 個票に成果物を作る・直す approach（`fully-guided` など）があり、`targets` が成果物カタログの成果物を指す場合は、`generateDeliverablePlan` と同じ作り方で plan を作る。approach のテンプレート、kata の参照、DCT の `done_criteria` が plan に入る。
+- 上の plan に、個票の完了条件を「追加の条件」として載せる（決定の 4）。DCT の `done_criteria` と個票の完了条件の両方が plan に現れることを確かめる。
+- owner の役割は、個票の `owner` を使い、schedule の `owner_rules` を参照しない（決定の 5）。
+- 個票に kata を直す approach（`rulebook-maintenance` など）があり、`targets` が kata の doc id を指す場合の plan の作り方を、schedule の kata の保守の plan に合わせて決めて実装する。schedule の作り方が成果物を前提にしていて kata の id だけでは作れない場合は、どう対応したか（成果物カタログから対応する成果物を探す、など）と理由を result に書く。
+- plan の frontmatter は register の実行として扱われる形（task id・result のパス・`targets` など）を保ち、worktree・統合・review・登録簿の記帳がこれまでどおり動く。
+- `exec plan --register <PJR-ID>` でも、同じ plan を作れる（実行の前に plan を確かめるため）。
+- 単体テストで、approach なし・成果物の approach・kata の approach の 3 通りの plan を確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG に記載する場合は、未公開の版の節（`## [0.4.0] - 未定`）に書く。公開済みの版の節は変えない。
+- runner のコードを変えるため、統合の後に orchestrator が `exec run --register` を 1 回流し、統合まで終わることを確かめる（本件の close の条件）。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                    | 担当         | 状態 | メモ                          |
+| --- | ------------------------------------------------------- | ------------ | ---- | ----------------------------- |
+| 1   | approach の有無で plan の作り方を分ける                 | DEV          | open | approach なしは出力を変えない |
+| 2   | 成果物の approach の plan に、個票の完了条件を加える    | DEV          | open | DCT の done_criteria と両方   |
+| 3   | kata の approach の plan の作り方を決めて実装する       | DEV          | open | 理由を result に書く          |
+| 4   | `exec plan --register` でも同じ plan を作れるようにする | DEV          | open | -                             |
+| 5   | 統合の後に `exec run --register` を 1 回流す            | orchestrator | open | close の条件                  |
 
 ## 4. 対応結果
 
@@ -36,4 +61,6 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-h72a-register-approach-execution]]: 決定。
+- [[prj-0001:pjr-zjxq-register-approach-fields]]: 個票の項目（先に行う）。
+- [[prj-0001:pjr-4z6n-register-approach-guide]]: ガイド（後に行う）。
