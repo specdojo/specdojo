@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c4239316d5a949439df18b76fc094040
+  ts: "2026-10-17T08:45:02Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec の汎用の部品を src/shared へ移す
+    - field: description
+      from: ""
+      to: exec/shared の補助関数、exec/types の共通の型、exec/worktree の git と worktree の操作のうち、exec 以外の機能から使われる部分を src/shared へ移す。 PJR-QQKY の決定に基づく。動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
