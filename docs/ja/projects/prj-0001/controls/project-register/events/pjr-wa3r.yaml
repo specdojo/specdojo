@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f4f9bbeed27a4e47b01d7753475a2b1a
+  ts: "2026-10-17T12:15:56Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の提案（2026-10-17）。以前の差し込みの判断（全 agent に届けるため）を見直す
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec の plan の共通の規約を本文への差し込みから参照へ改める
+    - field: description
+      from: ""
+      to: exec の plan は共通の規約（記法・成果物規約）を毎回本文へ差し込み、plan の約 4 割を占める。守らないと失敗に直結する要点と異常終了の条件だけを本文に残し、詳細は別ファイルを参照させる形へ改める
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-17"
