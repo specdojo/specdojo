@@ -1,0 +1,11 @@
+対象テストの競合を解消しました。
+
+- 子プロセスを停止まで同期出力し続ける方式へ変更。
+- `ENOBUFS`、`status`、signal、診断メッセージを明示的に検証。
+- 20回連続のスモーク検証に成功し、子プロセスが残らないことも確認。
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-613H/docs/ja/projects/prj-0001/controls/project-register/pjr-613h-enobufs-test-flaky.md:51)の対応結果を更新。
+- `src/`、登録簿ステータス、result は変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"ENOBUFS テストを有限出力から停止されるまでの同期連続出力へ変更し、20回連続で安定動作と子プロセス回収を確認した。","validations":[{"command":"npx prettier --write tests/src/exec/worktree.test.ts","status":"passed","summary":"対象 TypeScript ファイルの整形に成功"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-613h-enobufs-test-flaky.md","status":"passed","summary":"個票の整形に成功"},{"command":"node --import tsx --input-type=module -e 'import{spawnSync as s}from\"node:child_process\";import{describeGitProcessFailure as d}from\"./src/exec/worktree.ts\";for(let i=0;i<20;i++){const r=s(process.execPath,[\"-e\",\"const{writeSync:w}=require(\\\"node:fs\\\"),b=\\\"x\\\".repeat(65536);for(;;)w(1,b)\"],{encoding:\"utf8\",maxBuffer:1024}),m=d(r);if(r.error?.code!==\"ENOBUFS\"||r.status!==null||!r.signal||!m.includes(\"output exceeded maxBuffer (ENOBUFS)\")||!m.includes(\"terminated by signal \"+r.signal))throw Error(\"attempt \"+i);try{process.kill(r.pid,0);throw Error(\"child remains\")}catch(e){if(e.code!==\"ESRCH\")throw e}}console.log(\"20/20 passed\")'","status":"passed","summary":"20/20 回で ENOBUFS、終了状態、signal、メッセージ、子プロセス回収を確認"},{"command":"node --import tsx src/specdojo.ts register build && node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"登録簿生成とカタログ検証に成功。既存の product 文書不在に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>
