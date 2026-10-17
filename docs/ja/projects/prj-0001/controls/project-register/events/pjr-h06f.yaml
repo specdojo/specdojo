@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_67f4c30340a5442ba3482ea72be4b126
+  ts: "2026-10-17T12:17:16Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-H72A の決定
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run --register で approach の plan の作り方を使う
+    - field: description
+      from: ""
+      to: 個票に approach があれば、schedule と同じ plan の作り方（approach のテンプレート、kata の参照、DCT の done_criteria）を使い、個票の完了条件を追加の条件として載せる。kata の id を対象にした保守の approach にも対応する。PJR-H72A の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
