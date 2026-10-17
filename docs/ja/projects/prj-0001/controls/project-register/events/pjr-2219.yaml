@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_82571dbc11bf46e68e896c888fd3b548
+  ts: "2026-10-17T12:17:44Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-WA3R の決定
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: plan の共通の規約を参照にする
+    - field: description
+      from: ""
+      to: plan の本文には異常終了の条件と共通の規約の要点だけを残し、詳細は worktree から読める別ファイルを参照させる。PJR-WA3R の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
