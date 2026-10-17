@@ -12,9 +12,11 @@ import {
 } from "./task-repos.js";
 import {
   appendGitFailureLog,
+  appendGitResultFailureLog,
   ensureExecWorktree,
   execBranchExists,
   findExecWorktree,
+  formatGitResultFailure,
   generateWorktreeArtifacts,
   gitOutput,
   gitResult,
@@ -22,6 +24,7 @@ import {
   summarizeGitHookFailure,
   worktreeNameFromTaskId,
   type ExecWorktree,
+  type GitCommandOutcome,
   type ProductWorktree,
 } from "./worktree.js";
 import {
@@ -236,6 +239,18 @@ function copyCheckpointPath(sourceRoot: string, targetRoot: string, relPath: str
   copyFileSync(source, target);
 }
 
+export function assertCheckpointInspection(
+  args: readonly string[],
+  result: GitCommandOutcome,
+  failureLogPath?: string,
+): void {
+  if (result.status === 0 || result.status === 1) return;
+  appendGitResultFailureLog(failureLogPath, "git diff checkpoint inspection", result);
+  throw new Error(
+    `Failed to inspect execution checkpoint changes: ${formatGitResultFailure(args, result)}`,
+  );
+}
+
 // Create the task worktree from the current integration HEAD, then commit the execution
 // checkpoint (plan / result / claim or register-start bookkeeping) on the exec branch only. The
 // root keeps its uncommitted copies so the task state stays visible there while the agent runs;
@@ -342,7 +357,9 @@ function checkpointAndEnsureProjectWorktree(
     const worktree = ensureProjectWorktree();
     for (const path of paths) copyCheckpointPath(context.repoRoot, worktree.path, path);
     stageCommitTargets(worktree.path, paths);
-    const checkpoint = gitResult(worktree.path, ["diff", "--cached", "--quiet", "--", ...paths]);
+    const checkpointArgs = ["diff", "--cached", "--quiet", "--", ...paths];
+    const checkpoint = gitResult(worktree.path, checkpointArgs);
+    assertCheckpointInspection(checkpointArgs, checkpoint, params.failureLogPath);
     if (checkpoint.status === 1) {
       const committed = gitResult(worktree.path, [
         "commit",
@@ -379,8 +396,6 @@ function checkpointAndEnsureProjectWorktree(
             `(likely a failing git hook): ${summarizeGitHookFailure(output)}`,
         );
       }
-    } else if (checkpoint.status !== 0) {
-      throw new Error("Failed to inspect execution checkpoint changes.");
     }
     return worktree;
   }

@@ -218,6 +218,11 @@ export interface GitProcessOutcome {
   error?: Error;
 }
 
+export interface GitCommandOutcome extends GitProcessOutcome {
+  stdout?: unknown;
+  stderr?: unknown;
+}
+
 // 起動の失敗や出力の上限超過（ENOBUFS）では stderr が空になるため、spawnSync の
 // error と signal から原因を組み立てる。git 自身が終了コードを返した場合は空文字を返す。
 export function describeGitProcessFailure(outcome: GitProcessOutcome): string {
@@ -255,6 +260,16 @@ export function formatGitCommandFailure(
     .filter((part) => part !== "")
     .join(" / ");
   return cause ? `${label} failed: ${cause}${detail}` : `${label} failed${detail}`;
+}
+
+// gitResult を直接扱う呼び出し元でも、gitOutput と同じ stderr 要約に加えて終了コードを
+// 必ず残す。status が null の起動失敗・signal 終了では describeGitProcessFailure が原因を補う。
+export function formatGitResultFailure(args: readonly string[], result: GitCommandOutcome): string {
+  const stderr = typeof result.stderr === "string" ? result.stderr : "";
+  const processFailure = [`exit ${result.status ?? "unknown"}`, describeGitProcessFailure(result)]
+    .filter(Boolean)
+    .join("; ");
+  return formatGitCommandFailure(args, stderr, processFailure);
 }
 
 // lefthook などの hook 出力から、block reason に載せる失敗ステップ名と最初のエラー行を
@@ -314,6 +329,25 @@ export function appendGitFailureLog(path: string | undefined, lines: readonly st
   if (!path) return;
   mkdirSync(dirname(path), { recursive: true });
   appendFileSync(path, redactSensitiveText(`${lines.join("\n")}\n`), "utf8");
+}
+
+/** Appends a complete gitResult failure record while keeping the caller's operation label. */
+export function appendGitResultFailureLog(
+  path: string | undefined,
+  label: string,
+  result: GitCommandOutcome,
+): void {
+  appendGitFailureLog(path, [
+    `=== ${new Date().toISOString()} ${label} ===`,
+    `exit: ${result.status ?? "unknown"}`,
+    `signal: ${result.signal ?? "none"}`,
+    `error: ${result.error?.message ?? "none"}`,
+    "--- stdout ---",
+    typeof result.stdout === "string" ? result.stdout : "",
+    "--- stderr ---",
+    typeof result.stderr === "string" ? result.stderr : "",
+    "",
+  ]);
 }
 
 // message は block reason 向けに要約する一方、調査に必要な stderr 全文は失わない。

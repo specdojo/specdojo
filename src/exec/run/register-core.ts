@@ -28,7 +28,7 @@ import {
   scaffoldResult,
   updateResultStatus,
 } from "../results.js";
-import { gitOutput, gitResult } from "../worktree.js";
+import { formatGitResultFailure, gitOutput, gitResult } from "../worktree.js";
 import {
   stabilizeCommitTargets,
   stageCommitTargets,
@@ -296,9 +296,14 @@ export function commitRegisterItemChanges(
 
   try {
     stageCommitTargets(repoRoot, paths);
-    const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
+    const stagedArgs = ["diff", "--cached", "--quiet", "--", ...paths];
+    const staged = gitResult(repoRoot, stagedArgs);
     if (staged.status === 0) return { committed: false };
-    if (staged.status !== 1) throw new Error("Failed to inspect staged register changes.");
+    if (staged.status !== 1) {
+      throw new Error(
+        `Failed to inspect staged register changes: ${formatGitResultFailure(stagedArgs, staged)}`,
+      );
+    }
 
     const subject = commitSubject(`exec(register ${item.id}): `, item.title);
     gitOutput(repoRoot, ["commit", "-m", subject, "--", ...paths]);

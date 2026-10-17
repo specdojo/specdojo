@@ -17,6 +17,8 @@ import {
 } from "./worktree-ops.js";
 import {
   appendGitFailureLog,
+  appendGitResultFailureLog,
+  formatGitResultFailure,
   gitOutput,
   gitResult,
   listRegisteredWorktrees,
@@ -163,12 +165,21 @@ export function commitProductWorktree(
     return { repo: product.name, targets, outOfScope, committed: false, rootNewFiles: [] };
   }
   stageCommitTargets(product.path, targets);
-  const staged = gitResult(product.path, ["diff", "--cached", "--quiet", "--", ...targets]);
+  const stagedArgs = ["diff", "--cached", "--quiet", "--", ...targets];
+  const staged = gitResult(product.path, stagedArgs);
   if (staged.status === 0) {
     return { repo: product.name, targets, outOfScope, committed: false, rootNewFiles: [] };
   }
   if (staged.status !== 1) {
-    throw new Error(`${product.name}: failed to inspect staged changes in ${product.path}`);
+    appendGitResultFailureLog(
+      params.failureLogPath,
+      `${product.name}: git diff staged-change inspection`,
+      staged,
+    );
+    throw new Error(
+      `${product.name}: failed to inspect staged changes in ${product.path}: ` +
+        formatGitResultFailure(stagedArgs, staged),
+    );
   }
   const commit = gitResult(product.path, ["commit", "-m", params.message, "--", ...targets]);
   if (commit.status !== 0) {
