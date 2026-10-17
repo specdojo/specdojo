@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-gbww-exec-shared-parts-to-shared
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:45:01Z"
   due_on: null
+  completed_at: "2026-10-17T11:51:42Z"
+  conclusion: exec の汎用の補助関数を src/shared の fs・time・text・artifact-path、共通の型を src/shared/agent-types.ts、git の起動と再試行を src/shared/git.ts へ移した。循環は 6 組から 5 組になり、exec と schedule の循環が解け、register から exec は 12 件から 3 件に減った
 ---
 
 # PJR-GBWW exec の汎用の部品を src/shared へ移す

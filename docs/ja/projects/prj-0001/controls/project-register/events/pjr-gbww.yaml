@@ -119,3 +119,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_49f14d33f95e4560a91243c32c2f2560
+- v: 1
+  id: reg_beb72e6119a145f8a36410dc880637b1
+  ts: "2026-10-17T11:51:42Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に残った循環を数え、修正後の runner で exec run --register（PJR-JSEY、e7eed7a2c）が統合まで通った（2026-10-17）。初回は checkpoint の原因不明の失敗（PJR-CY80）と codex の利用上限で止まり、やり直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: exec の汎用の補助関数を src/shared の fs・time・text・artifact-path、共通の型を src/shared/agent-types.ts、git の起動と再試行を src/shared/git.ts へ移した。循環は 6 組から 5 組になり、exec と schedule の循環が解け、register から exec は 12 件から 3 件に減った
+  previous_event_id: reg_5993ccfdbb6440ddb7677eeb6cc0756a
