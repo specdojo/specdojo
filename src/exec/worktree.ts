@@ -12,8 +12,10 @@ import {
 
 export {
   appendGitFailureLog,
+  appendGitResultFailureLog,
   describeGitProcessFailure,
   formatGitCommandFailure,
+  formatGitResultFailure,
   GIT_LOCAL_ENV_VARS,
   GIT_OUTPUT_MAX_BUFFER,
   GitCommandError,
@@ -31,6 +33,7 @@ export {
 } from "../shared/git.js";
 export type {
   DubiousOwnershipRetryNotice,
+  GitCommandOutcome,
   GitProcessOutcome,
   TransientGitRecovery,
   TransientGitRetryNotice,

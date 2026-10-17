@@ -14,6 +14,8 @@ import {
 } from "../../register/item.js";
 import {
   appendGitFailureLog,
+  appendGitResultFailureLog,
+  formatGitResultFailure,
   gitOutput,
   gitResult,
   summarizeGitHookFailure,
@@ -83,9 +85,15 @@ export function commitRegisterState(
   const remainingPaths = (): string[] => registerStatePaths(repoRoot, registerPaths, ticketPath);
   try {
     stageCommitTargets(repoRoot, paths);
-    const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
+    const stagedArgs = ["diff", "--cached", "--quiet", "--", ...paths];
+    const staged = gitResult(repoRoot, stagedArgs);
     if (staged.status === 0) return;
-    if (staged.status !== 1) throw new Error("Failed to inspect staged register-state changes.");
+    if (staged.status !== 1) {
+      appendGitResultFailureLog(failureLogPath, "git diff register-state inspection", staged);
+      throw new Error(
+        `Failed to inspect staged register-state changes: ${formatGitResultFailure(stagedArgs, staged)}`,
+      );
+    }
     const commit = gitResult(repoRoot, ["commit", "-m", message, "--", ...paths]);
     if (commit.status !== 0) {
       const output = [commit.stdout, commit.stderr]

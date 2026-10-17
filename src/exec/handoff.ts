@@ -21,7 +21,13 @@ import { configuredProductReposForProject } from "./task-repos.js";
 import { parseSpecdojoDocument } from "../docs/frontmatter-namespace.js";
 import { qualifyTaskId } from "./shared.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
-import { findExecWorktree, gitEnvironment, gitOutput, gitResult } from "./worktree.js";
+import {
+  findExecWorktree,
+  formatGitResultFailure,
+  gitEnvironment,
+  gitOutput,
+  gitResult,
+} from "./worktree.js";
 import {
   stageCommitTargets,
   stabilizeCommitTargets,
@@ -234,10 +240,13 @@ function applyAndCommit(repo: RepoPatch, message: string): string {
   if (applied.error || applied.status !== 0) throw new Error(gitApplyError(applied));
   try {
     stageCommitTargets(repo.root, repo.paths);
-    const staged = gitResult(repo.root, ["diff", "--cached", "--quiet", "--", ...repo.paths]);
+    const stagedArgs = ["diff", "--cached", "--quiet", "--", ...repo.paths];
+    const staged = gitResult(repo.root, stagedArgs);
     if (staged.status !== 1) {
       if (staged.status === 0) throw new Error("The proposed patch produced no staged change.");
-      throw new Error("Could not inspect the staged handoff change.");
+      throw new Error(
+        `Could not inspect the staged handoff change: ${formatGitResultFailure(stagedArgs, staged)}`,
+      );
     }
     const commit = gitResult(repo.root, ["commit", "-m", message, "--", ...repo.paths]);
     if (commit.status !== 0) {

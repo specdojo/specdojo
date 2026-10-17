@@ -27,6 +27,8 @@ import { assertNoPendingProductChanges, productIntegrationTarget } from "./task-
 import { specdojoPackageRootDir } from "../shared/package-paths.js";
 import {
   appendGitFailureLog,
+  appendGitResultFailureLog,
+  formatGitResultFailure,
   gitEnvironment,
   gitOutput,
   gitResult,
@@ -638,7 +640,8 @@ export function stabilizeCommitTargets(
     if (paths.length === 0) return;
 
     stageCommitTargets(repoRoot, paths);
-    const staged = gitResult(repoRoot, ["diff", "--cached", "--quiet", "--", ...paths]);
+    const stagedArgs = ["diff", "--cached", "--quiet", "--", ...paths];
+    const staged = gitResult(repoRoot, stagedArgs);
     if (staged.status === 0) {
       // pathspec commit は hook が再stageした内容を commit した後、元の index を復元して
       // HEAD と逆向きの差分を残す場合がある。この場合は add が index を HEAD へ揃えて
@@ -647,7 +650,12 @@ export function stabilizeCommitTargets(
       if (remaining.length === 0) return;
       throw new Error(`Failed to stage post-hook commit-target changes: ${remaining.join(", ")}`);
     }
-    if (staged.status !== 1) throw new Error("Failed to inspect post-hook worktree changes.");
+    if (staged.status !== 1) {
+      appendGitResultFailureLog(failureLogPath, "git diff post-hook worktree inspection", staged);
+      throw new Error(
+        `Failed to inspect post-hook worktree changes: ${formatGitResultFailure(stagedArgs, staged)}`,
+      );
+    }
 
     const commitArgs = ["commit", "--amend", "--no-edit", "--", ...paths];
     const commit = gitResult(repoRoot, commitArgs);
@@ -840,12 +848,18 @@ export function commitWorktreeChanges(params: {
 
   assertResultMarkdownlint(context, worktree, taskId);
   stageCommitTargets(worktree.path, paths);
-  const staged = gitResult(worktree.path, ["diff", "--cached", "--quiet", "--", ...paths]);
+  const stagedArgs = ["diff", "--cached", "--quiet", "--", ...paths];
+  const staged = gitResult(worktree.path, stagedArgs);
   if (staged.status === 0) {
     process.stdout.write("No staged commit-target changes.\n");
     return { targets: paths, committed: false };
   }
-  if (staged.status !== 1) throw new Error("Failed to inspect staged worktree changes.");
+  if (staged.status !== 1) {
+    appendGitResultFailureLog(params.failureLogPath, "git diff staged worktree inspection", staged);
+    throw new Error(
+      `Failed to inspect staged worktree changes: ${formatGitResultFailure(stagedArgs, staged)}`,
+    );
+  }
   const commitArgs = [
     "commit",
     "-m",

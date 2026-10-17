@@ -1,0 +1,14 @@
+実装完了です。
+
+- checkpoint 確認失敗時に終了コード・stderr 要約をエラーへ含め、stdout/stderr 全文を失敗ログへ保存。
+- 同種の staged diff 検査 9 経路と trial 基準 commit の診断を共通化。
+- checkpoint の異常終了と正常な終了コード 0・1を検証する単体テストを追加。
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CY80/docs/ja/projects/prj-0001/controls/project-register/pjr-cy80-checkpoint-inspect-failure-no-detail.md)の対応結果を更新。
+- result ファイルは executor stage の指示に従い未編集です。
+- 親 runner が lint・typecheck・unit/integration test・schema 検証を実行します。
+
+`register build` は通常起動で sandbox の IPC 制約に遭遇しましたが、指定のフォールバックで正常完了しました。
+
+<specdojo_executor_evidence>
+{"final_message":"checkpoint の Git 検査失敗に終了コード・stderr 要約・完全な失敗ログを追加し、同種経路と単体テスト、個票を更新した。","validations":[{"command":"npx prettier --write src/shared/git.ts src/exec/worktree.ts src/exec/worktree-ops-lifecycle.ts src/exec/handoff.ts src/exec/run/register-core.ts src/exec/run/job.ts src/exec/run/register-state.ts src/exec/trial-commands.ts src/exec/repo-integration.ts src/exec/worktree-ops-commit.ts tests/src/exec/worktree-ops-lifecycle.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-cy80-checkpoint-inspect-failure-no-detail.md","status":"passed","summary":"変更した TypeScript・テスト・Markdown を整形した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"通常の tsx 起動が sandbox の IPC 制約で EPERM となったため指定のフォールバックを使用し、登録簿派生ビューを生成した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全カタログが OK。既存文書を参照できない警告は出たが終了コードは 0。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはない。"}]}
+</specdojo_executor_evidence>

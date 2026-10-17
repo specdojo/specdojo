@@ -50,7 +50,10 @@ src/exec/worktree-ops-lifecycle.ts は checkpoint の前に git diff --cached --
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容: `gitResult` の異常終了を整形する `formatGitResultFailure` と、終了コード・signal・起動エラー・stdout・stderr を失敗ログへ保存する `appendGitResultFailureLog` を共通化した。checkpoint の `git diff --cached --quiet` が 0・1 以外で終わった場合は、エラーに終了コードと stderr の要約を含め、run 単位の失敗ログへ完全な出力を残すようにした。0（差分なし）と 1（差分あり）の既存処理は変更していない。
+- 調査範囲: `src/exec/` 配下で `gitResult` の終了状態を判定して例外を投げる箇所を検索した。同じ固定文言だけで失敗していた staged diff の確認経路（checkpoint、post-hook の収束、task worktree、product worktree、handoff、register commit、register-state、Job Run、trial adopt）を共通の診断形式へ変更した。失敗ログのパスを受け取る経路では完全な出力も保存する。加えて、`trial run` の基準 commit 解決失敗にも同じ診断を付けた。存在確認など、終了コード 1 を通常の「存在しない」として扱う述語は挙動を維持した。
+- 確認結果: checkpoint の確認が終了コード 128 と stderr を返すケースについて、エラーメッセージに終了コードと stderr の要約が入り、失敗ログに stdout と stderr が残る単体テストを追加した。終了コード 0・1 を受理することも同じテストで固定した。静的検査とテスト全件は executor/reporter pipeline の親 runner 検証へ委譲する。
+- 再発防止: `gitResult` を直接判定する新しい経路でも共通フォーマッタと共通ログ関数を利用できるようにし、診断項目の欠落と経路ごとの表現差を避けた。
 
 ## 5. 関連ドキュメント
 

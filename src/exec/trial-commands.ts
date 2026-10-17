@@ -37,6 +37,7 @@ import {
   ensureExecWorktree,
   execBranchExists,
   findExecWorktree,
+  formatGitResultFailure,
   gitOutput,
   gitResult,
   resolveWorktreeBase,
@@ -302,13 +303,13 @@ function resolveTrialDefinitions(opts: TrialRunOptions): {
 }
 
 function resolveBaseCommit(repoRoot: string, revision: string): string {
-  const result = gitResult(repoRoot, [
-    "rev-parse",
-    "--verify",
-    "--end-of-options",
-    `${revision}^{commit}`,
-  ]);
-  if (result.status !== 0) throw new Error(`Trial base is not a commit: ${revision}`);
+  const args = ["rev-parse", "--verify", "--end-of-options", `${revision}^{commit}`];
+  const result = gitResult(repoRoot, args);
+  if (result.status !== 0) {
+    throw new Error(
+      `Trial base is not a commit: ${revision}; ${formatGitResultFailure(args, result)}`,
+    );
+  }
   return String(result.stdout).trim();
 }
 
@@ -563,7 +564,8 @@ function commitSelectedTrial(
   const protectedPaths = changedPaths(trial.worktree).filter(isAgentProtectedConfigPath);
   if (protectedPaths.length > 0) throw new Error(agentProtectedConfigViolation(protectedPaths));
   gitOutput(trial.worktree, ["add", "-A"]);
-  const staged = gitResult(trial.worktree, ["diff", "--cached", "--quiet"]);
+  const stagedArgs = ["diff", "--cached", "--quiet"];
+  const staged = gitResult(trial.worktree, stagedArgs);
   if (staged.status === 1) {
     const commit = gitResult(trial.worktree, [
       "commit",
@@ -575,7 +577,9 @@ function commitSelectedTrial(
       throw new Error(`Trial commit failed: ${commit.stderr || commit.stdout}`);
     }
   } else if (staged.status !== 0) {
-    throw new Error("Failed to inspect selected trial changes.");
+    throw new Error(
+      `Failed to inspect selected trial changes: ${formatGitResultFailure(stagedArgs, staged)}`,
+    );
   }
   const ahead = Number(
     gitOutput(trial.worktree, ["rev-list", "--count", `${record.base_commit}..HEAD`]).trim(),

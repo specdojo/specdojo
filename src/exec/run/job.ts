@@ -37,6 +37,7 @@ import {
 } from "../../job/job.js";
 import {
   ensureExecWorktree,
+  formatGitResultFailure,
   gitOutput,
   gitResult,
   resolveWorktreeBase,
@@ -331,9 +332,14 @@ function commitJobPaths(
   const unique = [...new Set(paths)].sort();
   if (unique.length === 0) throw new Error("Job Run produced no tracked output to commit.");
   stageCommitTargets(worktreePath, unique);
-  const staged = gitResult(worktreePath, ["diff", "--cached", "--quiet", "--", ...unique]);
+  const stagedArgs = ["diff", "--cached", "--quiet", "--", ...unique];
+  const staged = gitResult(worktreePath, stagedArgs);
   if (staged.status === 0) throw new Error("Job Run output has no staged changes.");
-  if (staged.status !== 1) throw new Error("Failed to inspect staged Job Run output.");
+  if (staged.status !== 1) {
+    throw new Error(
+      `Failed to inspect staged Job Run output: ${formatGitResultFailure(stagedArgs, staged)}`,
+    );
+  }
   const commit = gitResult(worktreePath, ["commit", "-m", subject, "-m", body, "--", ...unique]);
   if (commit.status !== 0) {
     const output = [commit.stdout, commit.stderr]
