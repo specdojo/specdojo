@@ -66,6 +66,72 @@ describe("specdojo init", () => {
     expect(closed).toBe(true);
   });
 
+  it("retries only an invalid interactive question and keeps earlier answers", async () => {
+    const answers = [
+      "project-1234",
+      "prj-1234",
+      "Example Project",
+      "maybe",
+      "yes",
+      "Alice!",
+      "alice",
+      "Alice",
+      "claud",
+      "none",
+      "yes",
+      "codex",
+      "huge",
+      "small",
+      "later",
+      "no",
+    ];
+    const prompts: string[] = [];
+    const errors: string[] = [];
+    let closed = false;
+    vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+      errors.push(String(chunk));
+      return true;
+    });
+    const prompter: InitPrompter = {
+      async question(prompt) {
+        prompts.push(prompt);
+        return answers.shift() ?? "";
+      },
+      close() {
+        closed = true;
+      },
+    };
+
+    await expect(collectInitAnswers({}, prompter)).resolves.toEqual({
+      projectId: "prj-1234",
+      projectName: "Example Project",
+      register: true,
+      nickname: "alice",
+      displayName: "Alice",
+      providers: ["codex"],
+      exec: true,
+      catalog: "small",
+      devcontainer: false,
+    });
+    expect(prompts.filter((prompt) => prompt.startsWith("Project ID"))).toHaveLength(2);
+    expect(prompts.filter((prompt) => prompt.startsWith("Project name"))).toHaveLength(1);
+    expect(prompts.filter((prompt) => prompt.startsWith("Orchestrator providers"))).toHaveLength(3);
+    expect(prompts.filter((prompt) => prompt.startsWith("Delegate work"))).toHaveLength(1);
+    expect(errors.join("")).toContain("Available: claude, codex, opencode, antigravity, copilot");
+    expect(errors.join("")).toContain("--exec requires at least one --provider");
+    expect(errors.join("")).toContain("Invalid catalog size: huge");
+    expect(closed).toBe(true);
+  });
+
+  it("still rejects invalid non-interactive options", async () => {
+    await expect(collectInitAnswers({ provider: "claud" })).rejects.toThrow(
+      "Unknown provider: claud",
+    );
+    await expect(collectInitAnswers({ provider: "none", exec: true })).rejects.toThrow(
+      "--exec requires at least one --provider",
+    );
+  });
+
   it("creates a non-interactive exec-ready configuration and resolves its agents", async () => {
     const repo = createRepo("specdojo-init-");
     const output: string[] = [];
@@ -225,6 +291,24 @@ describe("specdojo init", () => {
       expect(defaults.providers.antigravity.command_params.by_proficiency.expert.model).toBe(
         "gemini-3.8-flash-high",
       );
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("recommends the Opus orchestrator for Claude", async () => {
+    const repo = createRepo("specdojo-init-claude-next-step-");
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      output.push(String(chunk));
+      return true;
+    });
+    try {
+      process.chdir(repo);
+      await runInit({ yes: true, provider: "claude", dryRun: true });
+
+      expect(output.join("")).toContain("Run npm run orch:opus");
+      expect(output.join("")).not.toContain("Run npm run orch:sonnet");
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

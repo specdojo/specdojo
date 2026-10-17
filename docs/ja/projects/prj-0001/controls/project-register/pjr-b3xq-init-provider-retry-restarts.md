@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T11:27:15Z"
@@ -53,7 +53,13 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+`collectInitAnswers` の対話入力を質問単位で検証するように変更した。不正な project ID、真偽値、
+nickname、provider、catalog は理由を表示して同じ質問だけを再表示し、それまでの回答を保持する。
+`--exec` 選択時に provider が空の場合も provider の質問へ戻す。非対話入力は従来どおり例外で終了する。
+
+Claude Code を選んだ場合の最後の案内は `npm run orch:opus` に統一した。対話入力を差し替える単体
+テストに、不正値からの再試行、`--exec` と空 provider の組み合わせ、非対話入力のエラー維持、
+Claude Code の案内を追加した。コマンドリファレンスと Quick Start ガイドにも再入力の挙動を追記した。
 
 ## 5. 関連ドキュメント
 
