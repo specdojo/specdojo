@@ -229,3 +229,16 @@
       from: "2026-10-15"
       to: "-"
   previous_event_id: reg_3a731e9684294ba1b812c6e8acfeccdc
+- v: 1
+  id: reg_ea448069385c47839e9713d87c652593
+  ts: "2026-10-17T07:03:48Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4c921bdf858143f0ba401940e22dbe19
