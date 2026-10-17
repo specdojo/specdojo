@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T12:17:03Z"
   due_on: null
+  block_reason: rate limit reached
 ---
 
 # PJR-ZJXQ 個票に approach と対象を書けるようにする
