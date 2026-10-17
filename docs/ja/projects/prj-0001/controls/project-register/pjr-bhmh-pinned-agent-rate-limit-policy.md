@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-17T23:11:40Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
 ---
 
 # PJR-BHMH agent を指定した実行で、上限のときに待つか代わりの agent へ切り替えるかを選べるようにする
@@ -49,17 +50,22 @@ exec run --register などで --executor-by により agent を指定した実�
 
 ## 3. 作業内容
 
-| No  | 作業                                                           | 担当         | 状態 | メモ                                    |
-| --- | -------------------------------------------------------------- | ------------ | ---- | --------------------------------------- |
-| 1   | `wait` を実装する（解ける時刻を読んで待ち、同じ agent で再開） | DEV          | open | 時刻の読み取りは既存の reset 検出を使う |
-| 2   | `fallback` を実装する（代わりの agent へ切り替え）             | DEV          | open | -                                       |
-| 3   | 引数と `exec-defaults.yaml` の既定で選べるようにする           | DEV          | open | 既定は従来どおり止める                  |
-| 4   | ガイドとコマンドリファレンスを更新する                         | DEV          | open | -                                       |
-| 5   | 統合の後に `exec run --register` を 1 回流す                   | orchestrator | open | close の条件                            |
+| No  | 作業                                                           | 担当         | 状態 | メモ                                             |
+| --- | -------------------------------------------------------------- | ------------ | ---- | ------------------------------------------------ |
+| 1   | `wait` を実装する（解ける時刻を読んで待ち、同じ agent で再開） | DEV          | done | 既存の reset / retry-after / cooldown 検出を使用 |
+| 2   | `fallback` を実装する（代わりの agent へ切り替え）             | DEV          | done | executor / reporter ごとに1回だけ切替            |
+| 3   | 引数と `exec-defaults.yaml` の既定で選べるようにする           | DEV          | done | 既定は従来どおり `stop`                          |
+| 4   | ガイドとコマンドリファレンスを更新する                         | DEV          | done | 実行ロックを保持する判断も記載                   |
+| 5   | 統合の後に `exec run --register` を 1 回流す                   | orchestrator | open | close の条件                                     |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `--on-rate-limit stop|wait|fallback`、`--fallback-executor-by`、`--fallback-reporter-by` を `exec run` と `exec resume` に追加した。
+- `rate_limit_policy.pinned` に action、最大待機秒数、executor / reporter の fallback 既定を追加した。CLI 指定を優先し、fallback agent 未指定時は互換性を優先して `stop` とする。
+- `wait` は既存の provider reset / retry-after / cooldown から再開時刻を決め、既定8時間以内なら同じ段を同じ agent で1回再開する。待機中は worktree と lifecycle の一貫性を守るため project 実行ロックを保持する。
+- wait / fallback の時刻と agent は executor evidence、pipeline state、result、register の review event 理由へ記録する。
+- schedule の自動選択候補を順に試す既存処理は変更していない。
+- 単体テストに実待機しない sleep 差し替えと fallback 切替を追加した。親 runner の検証後、orchestrator が実 agent を使う `exec run --register` を1回実行して統合完了を確認する作業は No. 5 として残る。
 
 ## 5. 関連ドキュメント
 
