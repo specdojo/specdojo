@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T12:17:03Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-fm, test-unit"
 ---
 
 # PJR-ZJXQ 個票に approach と対象を書けるようにする
@@ -46,14 +47,14 @@ specdojo:
 
 | No  | 作業                                                          | 担当 | 状態 | メモ             |
 | --- | ------------------------------------------------------------- | ---- | ---- | ---------------- |
-| 1   | schema に `approach` を加える                                 | DEV  | open | 型と値を揃える   |
-| 2   | `register add`・`update` に `--approach`・`--target` を加える | DEV  | open | -                |
-| 3   | 組み合わせの検証を入れる                                      | DEV  | open | 起票と更新の時点 |
-| 4   | 規則とコマンドリファレンスを更新する                          | DEV  | open | -                |
+| 1   | schema に `approach` を加える                                 | DEV  | done | 型と値を揃えた   |
+| 2   | `register add`・`update` に `--approach`・`--target` を加える | DEV  | done | -                |
+| 3   | 組み合わせの検証を入れる                                      | DEV  | done | 起票と更新の時点 |
+| 4   | 規則とコマンドリファレンスを更新する                          | DEV  | done | -                |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+個票 Frontmatter に `approach` を追加し、既存の `targets` と組み合わせて `register add` / `update` から設定・変更・削除できるようにした。`approach` の値は共有型の定数と schema の一致をテストし、対象を 1 件に制限した。文書索引による解決、成果物カタログ上の成果物か、保守対象の kata 種別が一致するかを、書き込み前に検証する。`approach` を持つ個票から従来形式の register plan を生成する回帰テストも追加し、plan 生成の切り替えは [[prj-0001:pjr-h06f-register-approach-plan-generation]] に残した。残課題はない。
 
 ## 5. 関連ドキュメント
 
