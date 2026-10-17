@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-dt3q-transient-git-retry-not-idempotent
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T09:33:16Z"
   due_on: null
+  completed_at: "2026-10-17T10:52:31Z"
+  conclusion: 一時的な git の失敗の再試行の前に目的の状態を照合する仕組みを加え、git worktree add では作成済みなら続行し、branch だけの作りかけは片付けて再試行し、別の commit を指す branch は消さずに失敗させるようにした
 ---
 
 # PJR-DT3Q git の一時的な失敗の再試行が worktree の作成で失敗する

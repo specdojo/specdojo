@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_5213509d1ddb431a99e650df0c9949fb
+- v: 1
+  id: reg_38c628eeef164274a3e3633f5a797d35
+  ts: "2026-10-17T10:52:31Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に、修正後の runner で exec run --register（PJR-JSEY、2adae2390）が統合まで通った（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: 一時的な git の失敗の再試行の前に目的の状態を照合する仕組みを加え、git worktree add では作成済みなら続行し、branch だけの作りかけは片付けて再試行し、別の commit を指す branch は消さずに失敗させるようにした
+  previous_event_id: reg_3ffa40cd6569475093d13d4621b6376e
