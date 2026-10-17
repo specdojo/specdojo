@@ -2,13 +2,13 @@ import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { gitEnvironment } from "../shared/git-environment.js";
-import type { GradeResult } from "../grade/result.js";
+import type { GradeResult } from "../shared/grade-result.js";
 import {
   gradeContentHash,
   gradeFindingDisplayMessage,
   gradeResultPathForDocument,
   parseGradeResult,
-} from "../grade/result.js";
+} from "../shared/grade-result.js";
 
 // review フェーズの前段で runner が行う grade の実行判断と、その結果を review plan へ提示する
 // 文面を扱う（PJR-KCMH）。評価は grade が 1 回だけ行い、review は評価結果を事実として受け取る

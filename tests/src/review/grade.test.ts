@@ -3,8 +3,8 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { dump } from "js-yaml";
-import type { GradeResult } from "../../../src/grade/result.js";
-import { gradeContentHash } from "../../../src/grade/result.js";
+import type { GradeResult } from "../../../src/shared/grade-result.js";
+import { gradeContentHash } from "../../../src/shared/grade-result.js";
 import {
   classifyReviewGrade,
   decideReviewGradeAction,
