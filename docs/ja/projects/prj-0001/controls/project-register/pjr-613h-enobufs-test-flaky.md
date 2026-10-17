@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-613h-enobufs-test-flaky
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T09:13:21Z"
   due_on: null
+  completed_at: "2026-10-17T10:26:57Z"
+  conclusion: ENOBUFS のテストの子プロセスが止められるまで書き続けるようにし、確かめる中心を result.error の ENOBUFS にした。src の動作は変えていない
 ---
 
 # PJR-613H ENOBUFS のテストが負荷によって失敗する
