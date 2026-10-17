@@ -174,6 +174,27 @@ function writeApproachTargets(root: string): void {
     ].join("\n"),
     "utf8",
   );
+  writeFileSync(
+    join(catalogDir, "dct-uncreated.yaml"),
+    [
+      "id: prj-0001:dct-uncreated",
+      "type: project",
+      "status: draft",
+      "project_id: prj-0001",
+      "domain: uncreated",
+      "base_path: /docs/ja/product/specs",
+      "groups:",
+      "  - deliverables:",
+      "      - local_id: uncreated",
+      "        name: Uncreated",
+      "        kind: work",
+      "        overview: Example",
+      "        path: uncreated.md",
+      "        done_criteria: []",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
 }
 
 // テンプレート（個票・派生ビュー）は実リポジトリのものを temp へ複製し、生成処理を成立させる。
@@ -323,6 +344,33 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
           { field: "targets", from: "", to: '["deliverable-doc"]' },
         ]),
       );
+    });
+  });
+
+  it("add は DCT にある未作成成果物の doc id を target にできる", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      writeApproachTargets(root);
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "成果物を作る",
+        "--topic",
+        "create-deliverable",
+        "--id",
+        "PJR-AB12",
+        "--approach",
+        "bootstrap",
+        "--target",
+        "prj-0001:uncreated",
+      ]);
+
+      const ticket = readFileSync(join(registerDir, "pjr-ab12-create-deliverable.md"), "utf8");
+      expect(ticket).toContain("  approach: bootstrap");
+      expect(ticket).toContain("  targets:\n    - prj-0001:uncreated");
     });
   });
 
