@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wa3r-exec-plan-common-conventions-reference
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-10-17T12:15:56Z"
   due_on: null
+  completed_at: "2026-10-17T12:18:30Z"
+  conclusion: plan の本文には異常終了の条件と共通の規約の要点だけを残し、詳細は worktree から読める別ファイルを参照させる
 ---
 
 # PJR-WA3R exec の plan の共通の規約を本文への差し込みから参照へ改める
