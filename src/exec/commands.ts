@@ -46,7 +46,7 @@ import {
   resolveDeliverableTarget,
   stemFromPlanPath,
 } from "./plans.js";
-import { runProviderScaffold, specdojoPackageRootDir } from "./provider-scaffold.js";
+import { runProviderScaffold, specdojoPackageRootDir } from "../shared/provider-scaffold.js";
 import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./register.js";
 import { scaffoldViewpoints } from "../review/plan.js";
 import {

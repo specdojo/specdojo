@@ -5,7 +5,7 @@ import type { Command } from "commander";
 import { dump, load } from "../shared/yaml.js";
 import { runScaffold, type ProjectSize } from "../catalog/scaffold.js";
 import { runDevcontainerScaffold } from "../devcontainer/scaffold.js";
-import { runProviderScaffold } from "../exec/provider-scaffold.js";
+import { runProviderScaffold } from "../shared/provider-scaffold.js";
 import { generateDerivedViewFiles, type RegisterPaths } from "../register/register.js";
 import {
   defaultWorktreeBase,
