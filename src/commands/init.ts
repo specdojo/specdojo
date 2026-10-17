@@ -112,19 +112,59 @@ function parseCatalog(value: string | undefined): ProjectSize | undefined {
   throw new Error(`Invalid catalog size: ${value}. Must be small, medium, large, or none`);
 }
 
-function validateAnswers(answers: InitAnswers): InitAnswers {
-  if (!/^prj-[0-9]{4,}$/.test(answers.projectId)) {
-    throw new Error(`Invalid project ID: ${answers.projectId}. Expected prj-0001 style`);
+function validateProjectId(projectId: string): string {
+  if (!/^prj-[0-9]{4,}$/.test(projectId)) {
+    throw new Error(`Invalid project ID: ${projectId}. Expected prj-0001 style`);
   }
-  if (!answers.projectName.trim()) throw new Error("Project name must not be empty");
-  if (!/^[a-z0-9][a-z0-9_-]{0,62}$/.test(answers.nickname)) {
-    throw new Error(`Invalid nickname: ${answers.nickname}`);
+  return projectId;
+}
+
+function validateProjectName(projectName: string): string {
+  if (!projectName.trim()) throw new Error("Project name must not be empty");
+  return projectName;
+}
+
+function validateNickname(nickname: string): string {
+  if (!/^[a-z0-9][a-z0-9_-]{0,62}$/.test(nickname)) {
+    throw new Error(`Invalid nickname: ${nickname}`);
   }
-  if (!answers.displayName.trim()) throw new Error("Display name must not be empty");
-  if (answers.exec && answers.providers.length === 0) {
+  return nickname;
+}
+
+function validateDisplayName(displayName: string): string {
+  if (!displayName.trim()) throw new Error("Display name must not be empty");
+  return displayName;
+}
+
+function validateExecProviders(providers: InitProvider[], exec: boolean): InitProvider[] {
+  if (exec && providers.length === 0) {
     throw new Error("--exec requires at least one --provider");
   }
+  return providers;
+}
+
+function validateAnswers(answers: InitAnswers): InitAnswers {
+  validateProjectId(answers.projectId);
+  validateProjectName(answers.projectName);
+  validateNickname(answers.nickname);
+  validateDisplayName(answers.displayName);
+  validateExecProviders(answers.providers, answers.exec);
   return answers;
+}
+
+async function promptUntilValid<T>(
+  prompter: InitPrompter,
+  prompt: string,
+  parse: (answer: string) => T,
+): Promise<T> {
+  while (true) {
+    const answer = await prompter.question(prompt);
+    try {
+      return parse(answer);
+    } catch (error) {
+      process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+    }
+  }
 }
 
 export async function collectInitAnswers(
@@ -169,36 +209,55 @@ export async function collectInitAnswers(
     const execDefault = !!options.exec;
     const catalogDefault = options.catalog?.trim() || "none";
     const devcontainerDefault = !!options.devcontainer;
-    const projectId =
-      (await prompter.question(`Project ID [${projectDefault}]: `)).trim() || projectDefault;
-    const projectName =
-      (await prompter.question(`Project name [${nameDefault}]: `)).trim() || nameDefault;
-    const register = parseBoolean(
-      await prompter.question(`Create a project register? [${registerDefault ? "Y/n" : "y/N"}]: `),
-      registerDefault,
+    const providerPrompt = `Orchestrator providers (${PROVIDERS.join(", ")}) [${providerDefault}]: `;
+    const projectId = await promptUntilValid(
+      prompter,
+      `Project ID [${projectDefault}]: `,
+      (answer) => validateProjectId(answer.trim() || projectDefault),
     );
-    const nickname =
-      (await prompter.question(`Your nickname [${nicknameDefault}]: `)).trim() || nicknameDefault;
-    const displayName =
-      (await prompter.question(`Your display name [${displayNameDefault}]: `)).trim() ||
-      displayNameDefault;
-    const providers = parseProviders(
-      (await prompter.question(
-        `Orchestrator providers (${PROVIDERS.join(", ")}) [${providerDefault}]: `,
-      )) || providerDefault,
+    const projectName = await promptUntilValid(
+      prompter,
+      `Project name [${nameDefault}]: `,
+      (answer) => validateProjectName(answer.trim() || nameDefault),
     );
-    const exec = parseBoolean(
-      await prompter.question(`Delegate work to agents (exec)? [${execDefault ? "Y/n" : "y/N"}]: `),
-      execDefault,
+    const register = await promptUntilValid(
+      prompter,
+      `Create a project register? [${registerDefault ? "Y/n" : "y/N"}]: `,
+      (answer) => parseBoolean(answer, registerDefault),
     );
-    const catalog = parseCatalog(
-      (await prompter.question(
-        `Deliverables catalog (none|small|medium|large) [${catalogDefault}]: `,
-      )) || catalogDefault,
+    const nickname = await promptUntilValid(
+      prompter,
+      `Your nickname [${nicknameDefault}]: `,
+      (answer) => validateNickname(answer.trim() || nicknameDefault),
     );
-    const devcontainer = parseBoolean(
-      await prompter.question(`Create a Dev Container? [${devcontainerDefault ? "Y/n" : "y/N"}]: `),
-      devcontainerDefault,
+    const displayName = await promptUntilValid(
+      prompter,
+      `Your display name [${displayNameDefault}]: `,
+      (answer) => validateDisplayName(answer.trim() || displayNameDefault),
+    );
+    let providers = await promptUntilValid(prompter, providerPrompt, (answer) =>
+      parseProviders(answer.trim() || providerDefault),
+    );
+    const exec = await promptUntilValid(
+      prompter,
+      `Delegate work to agents (exec)? [${execDefault ? "Y/n" : "y/N"}]: `,
+      (answer) => parseBoolean(answer, execDefault),
+    );
+    if (exec && providers.length === 0) {
+      process.stderr.write("--exec requires at least one --provider\n");
+      providers = await promptUntilValid(prompter, providerPrompt, (answer) =>
+        validateExecProviders(parseProviders(answer.trim() || providerDefault), true),
+      );
+    }
+    const catalog = await promptUntilValid(
+      prompter,
+      `Deliverables catalog (none|small|medium|large) [${catalogDefault}]: `,
+      (answer) => parseCatalog(answer.trim() || catalogDefault),
+    );
+    const devcontainer = await promptUntilValid(
+      prompter,
+      `Create a Dev Container? [${devcontainerDefault ? "Y/n" : "y/N"}]: `,
+      (answer) => parseBoolean(answer, devcontainerDefault),
     );
     return validateAnswers({
       projectId,
@@ -580,7 +639,7 @@ export async function runInit(
   const firstProvider = answers.providers[0];
   const script =
     firstProvider === "claude"
-      ? "orch:sonnet"
+      ? "orch:opus"
       : firstProvider === "antigravity"
         ? "orch:agy"
         : `orch:${firstProvider}`;

@@ -71,6 +71,10 @@ Deliverables catalog (none|small|medium|large) [none]:  <- Enter（カタログ�
 Create a Dev Container? [y/N]:                      <- Enter
 ```
 
+入力が不正な場合は理由が表示され、同じ質問だけがもう一度表示されます。たとえば provider に
+`claud` と入力すると、利用可能な provider の一覧に続いて provider の質問だけが再表示されます。
+それまでに答えた project や名簿の内容を入力し直す必要はありません。
+
 登録簿は `docs/ja/projects/prj-0001/controls/project-register/` に作られます。オーケストレーターで進める場合は、終了時に表示される `npm run orch:<provider>` で起動します。
 
 ### 1.2. 迷っていることを起票する（question）
@@ -225,7 +229,8 @@ exec・成果物カタログ・Dev Container の要否を順に質問します�
 agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`、exec の起動設定を
 作成します。exec の親検証は、対応する npm script が `package.json` にあるものだけを設定し、
 該当する script がなければ省略します。既存ファイルは上書きせず、作成内容は `--dry-run` で
-先に確認できます。
+先に確認できます。対話中に不正な値を入力した場合は理由を表示して同じ質問だけをやり直し、
+それまでの回答は保持します。非対話環境や `--yes` では再質問せず、不正な指定をエラーとして終了します。
 
 CI や標準入力が端末でない環境では質問しません。次のようにオプションだけで同じ初期設定を
 行えます。省略値は画面に表示されます。
