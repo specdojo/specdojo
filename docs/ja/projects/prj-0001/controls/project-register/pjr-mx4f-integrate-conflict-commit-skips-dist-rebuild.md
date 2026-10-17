@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-17T09:23:53Z"
   due_on: null
-  block_reason: "checkpoint failed: git worktree failed: fatal: a branch named 'exec/prj-0001-PJR-MX4F' already exists (args: add /workspaces/specdojo-workspace/worktree… -b exec/prj-0001-PJR-MX4F)"
 ---
 
 # PJR-MX4F 記帳の衝突を解いた統合のあとに dist が作り直されない
