@@ -133,8 +133,8 @@ describe("evaluateDistFreshness", () => {
   const staleResult: DistFreshnessResult = {
     status: "stale",
     packageRoot: "/repo",
-    newestSourcePath: "/repo/src/exec/run.ts",
-    newestDistPath: "/repo/dist/exec/run.js",
+    newestSourcePath: "/repo/src/exec/run/run.ts",
+    newestDistPath: "/repo/dist/exec/run/run.js",
   };
 
   it("blocks exec commands so configured validations are not silently skipped", () => {
@@ -146,7 +146,7 @@ describe("evaluateDistFreshness", () => {
 
     expect(actual.action).toBe("block");
     expect(actual.action === "block" && actual.message).toContain("npm run build");
-    expect(actual.action === "block" && actual.message).toContain("src/exec/run.ts");
+    expect(actual.action === "block" && actual.message).toContain("src/exec/run/run.ts");
   });
 
   it("warns for non-exec commands instead of blocking", () => {

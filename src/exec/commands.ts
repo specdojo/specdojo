@@ -34,8 +34,8 @@ import {
   writeCpmFiles,
   writeGeneratedCore,
   writeScheduleHashAndDiff,
-} from "./schedule.js";
-import { readReadySnapshot } from "./schedule-ready.js";
+} from "./schedule/schedule.js";
+import { readReadySnapshot } from "./schedule/ready.js";
 import type { ExecEventType, ExecEventV1, StateSnapshot } from "./types.js";
 import { displayWidth, nowUtcIsoSeconds, padEndDisplay, requireNonEmpty } from "./shared.js";
 import {
@@ -54,7 +54,7 @@ import {
   registerResumeCommand,
   registerRunCommand,
   registerSlotsCommand,
-} from "./run.js";
+} from "./run/run.js";
 import { buildTaskView } from "./task-view.js";
 import { registerExecWorktreeCommands } from "./worktree-command.js";
 import { registerExecTrialCommands } from "./trial.js";

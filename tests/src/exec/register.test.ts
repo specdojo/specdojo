@@ -14,7 +14,7 @@ import {
   parseRegisterExecutorSelection,
   resolveRegisterCommand,
   resolveRegisterPipelineCommand,
-} from "../../../src/exec/run.js";
+} from "../../../src/exec/run/run.js";
 import type { PjrItem } from "../../../src/register/register.js";
 import type { MemberRoster, ProjectMember } from "../../../src/shared/specdojo-config.js";
 

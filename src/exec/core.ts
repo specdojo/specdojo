@@ -26,14 +26,14 @@ import {
   writeCpmFiles,
   writeGeneratedCore,
   writeScheduleHashAndDiff,
-} from "./schedule.js";
+} from "./schedule/schedule.js";
 import type { Approach, ExecEventType, SchedulerStrategy, TaskMode } from "./types.js";
 import { qualifyTaskId, requireNonEmpty } from "./shared.js";
 import { finalizeResultSectionsForDeliverable, targetDocIdsForScheduledTask } from "./plans.js";
 import { resetResultForClaim, scaffoldResult } from "./results.js";
 import { discardStaleExecWorktree } from "./worktree-ops.js";
 import { configuredProductRepos } from "./task-repos.js";
-import { buildInitialStateFromStrategy } from "./schedule-initial.js";
+import { buildInitialStateFromStrategy } from "./schedule/initial.js";
 import {
   buildPhaseModeIndex,
   resolveApproach,

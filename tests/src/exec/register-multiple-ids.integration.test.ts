@@ -3,7 +3,7 @@ import { chmodSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync 
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { commitRegisterItemChanges } from "../../../src/exec/run.js";
+import { commitRegisterItemChanges } from "../../../src/exec/run/run.js";
 import { worktreeStatusPaths } from "../../../src/exec/worktree-ops.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 import type { PjrItem } from "../../../src/register/register.js";

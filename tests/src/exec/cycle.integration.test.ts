@@ -5,7 +5,7 @@ import { Command } from "commander";
 import { dump } from "js-yaml";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { registerExecCommands } from "../../../src/exec/exec.js";
-import { rebuildStaleGeneratedTracksForCycle } from "../../../src/exec/run.js";
+import { rebuildStaleGeneratedTracksForCycle } from "../../../src/exec/run/run.js";
 import { registerScheduleCommands } from "../../../src/schedule/schedule.js";
 
 const originalCwd = process.cwd();
