@@ -20,9 +20,13 @@ function resolvedIndexPath(repoRoot: string, indexedPath: string): string {
   return resolve(isAbsolute(withoutLine) ? withoutLine : resolve(repoRoot, withoutLine));
 }
 
-function catalogDeliverablePaths(catalogPath: string, repoRoot: string): Set<string> {
-  const paths = new Set<string>();
-  if (!existsSync(catalogPath)) return paths;
+function catalogDeliverableDocIds(
+  catalogPath: string,
+  repoRoot: string,
+  projectId: string,
+): Set<string> {
+  const ids = new Set<string>();
+  if (!existsSync(catalogPath)) return ids;
 
   for (const loaded of loadCatalogDocs(catalogPath)) {
     const deliverables: Parameters<typeof collectResolvedDeliverables>[2] = [];
@@ -32,10 +36,29 @@ function catalogDeliverablePaths(catalogPath: string, repoRoot: string): Set<str
       deliverables,
     );
     for (const deliverable of deliverables) {
-      paths.add(resolve(repoRoot, deliverable.resolvedPath));
+      // register の対象指定では、PJR-H72A が定める成果物 local_id の canonical 形式も
+      // 受け付ける。文書が既にあれば、その frontmatter の実 ID も同じ成果物として扱う。
+      ids.add(`${projectId}:${deliverable.item.local_id}`);
+      const path = resolve(repoRoot, deliverable.resolvedPath);
+      if (existsSync(path)) {
+        try {
+          const id = readSpecdojoNamespace(readFileSync(path, "utf8")).id;
+          if (typeof id === "string" && id.trim()) {
+            ids.add(id.trim());
+            continue;
+          }
+        } catch {
+          // 読み取り不能・不正 frontmatter は配置規約による ID へフォールバックする。
+        }
+      }
+
+      const normalizedPath = deliverable.resolvedPath.replaceAll("\\", "/").replace(/^\/+/, "");
+      if (/^docs\/[a-z]{2}\/product(?:\/|$)/.test(normalizedPath)) {
+        ids.add(deliverable.item.local_id);
+      }
     }
   }
-  return paths;
+  return ids;
 }
 
 function targetDocumentType(path: string): string | undefined {
@@ -61,7 +84,8 @@ export type RegisterApproachValidationOptions = {
 };
 
 // register の個票に approach を書く時点で、対象が一意かつ実行方式に合うことを保証する。
-// 索引は都度 docs から収集し、生成済みの .specdojo/doc-index.json の鮮度には依存しない。
+// kata は都度 docs から収集した索引、成果物は DCT を正本として解決し、生成済みの
+// .specdojo/doc-index.json の鮮度や成果物文書の作成済み・未作成には依存しない。
 export function validateRegisterApproachTargets(opts: RegisterApproachValidationOptions): void {
   const approachText = opts.approach?.trim();
   const targets = [...new Set((opts.targets ?? []).map((target) => target.trim()).filter(Boolean))];
@@ -85,22 +109,26 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
   if (targets.length === 0) return;
 
   const entries = collectDocIndexEntries(resolve(opts.repoRoot, "docs"), opts.repoRoot);
-  const resolvedTargets = targets.map((target) => {
-    const indexedPath = entries[target];
-    if (!indexedPath) {
-      throw new Error(`Target document id is not resolvable via the document index: ${target}`);
+  if (!approach) {
+    for (const target of targets) {
+      if (!entries[target]) {
+        throw new Error(`Target document id is not resolvable via the document index: ${target}`);
+      }
     }
-    return { id: target, path: resolvedIndexPath(opts.repoRoot, indexedPath) };
-  });
+    return;
+  }
 
-  if (!approach) return;
   const expectedKind = MAINTENANCE_TARGET_KIND[approach];
-  const [target] = resolvedTargets;
+  const [targetId] = targets;
   if (expectedKind) {
-    const actualKind = targetDocumentType(target.path);
+    const indexedPath = entries[targetId];
+    if (!indexedPath) {
+      throw new Error(`Target document id is not resolvable via the document index: ${targetId}`);
+    }
+    const actualKind = targetDocumentType(resolvedIndexPath(opts.repoRoot, indexedPath));
     if (actualKind !== expectedKind) {
       throw new Error(
-        `Approach "${approach}" requires a ${expectedKind} document target, but ${target.id} has type "${actualKind ?? "unknown"}"`,
+        `Approach "${approach}" requires a ${expectedKind} document target, but ${targetId} has type "${actualKind ?? "unknown"}"`,
       );
     }
     return;
@@ -111,10 +139,14 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
       `Approach "${approach}" requires a deliverable target, but catalog_path is not configured for project ${opts.projectId}`,
     );
   }
-  const deliverablePaths = catalogDeliverablePaths(opts.catalogPath, opts.repoRoot);
-  if (!deliverablePaths.has(target.path)) {
+  const deliverableDocIds = catalogDeliverableDocIds(
+    opts.catalogPath,
+    opts.repoRoot,
+    opts.projectId,
+  );
+  if (!deliverableDocIds.has(targetId)) {
     throw new Error(
-      `Approach "${approach}" requires a deliverable document from the project catalog, but ${target.id} is not a catalog deliverable`,
+      `Approach "${approach}" requires a deliverable document from the project catalog, but ${targetId} is not a catalog deliverable`,
     );
   }
 }

@@ -133,7 +133,7 @@ Project Register Documentation Rules
 - 結果・結論には、完了を判定した根拠と後続対応を記載する。
 - 関連ドキュメントには、判断根拠、変更対象、影響先、追跡先のうち該当する文書を記載する。
 - 本項目の実施において確実に変更する対象文書が分かっている場合は、その文書 ID を Frontmatter の `targets` 配列へ宣言する。宣言した `targets` は agent 実行時の変更網羅検証（target coverage）に用いられる。未知の場合や対象を固定しない場合は宣言を省略する。
-- `approach` を宣言する場合、`targets` は 1 件だけ必須とする。`fully-guided`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`cross-deliverable-dedup`・`finalize`・`bootstrap-finalize` の対象は成果物カタログにある成果物の doc id とする。`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` の対象は、名前に対応する種別の kata の doc id とする。文書索引で解決できない ID や、`approach` と種別が合わない対象は使用しない。
+- `approach` を宣言する場合、`targets` は 1 件だけ必須とする。`fully-guided`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`cross-deliverable-dedup`・`finalize`・`bootstrap-finalize` の対象は成果物カタログにある成果物の doc id とし、まだ文書がない成果物もカタログで解決する。`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` の対象は、名前に対応する種別の kata の doc id とし、文書索引で解決する。対応する正本で解決できない ID や、`approach` と種別が合わない対象は使用しない。
 
 ### 5.2. 構造化フィールドと生成
 

@@ -94,6 +94,27 @@ describe("validateRegisterApproachTargets", () => {
       ].join("\n"),
       "utf8",
     );
+    writeFileSync(
+      join(catalogPath, "dct-uncreated.yaml"),
+      [
+        "id: prj-test:dct-uncreated",
+        "type: project",
+        "status: draft",
+        "project_id: prj-test",
+        "domain: uncreated",
+        "base_path: /docs/ja/product/specs",
+        "groups:",
+        "  - deliverables:",
+        "      - local_id: uncreated",
+        "        name: Uncreated",
+        "        kind: work",
+        "        overview: Example",
+        "        path: uncreated.md",
+        "        done_criteria: []",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
   });
 
   afterEach(() => {
@@ -108,6 +129,18 @@ describe("validateRegisterApproachTargets", () => {
         catalogPath,
         approach: "fully-guided",
         targets: ["deliverable-doc"],
+      }),
+    ).not.toThrow();
+  });
+
+  it("成果物 approach は文書が未作成でも DCT の doc id を受け付ける", () => {
+    expect(() =>
+      validateRegisterApproachTargets({
+        repoRoot: root,
+        projectId: "prj-test",
+        catalogPath,
+        approach: "bootstrap",
+        targets: ["prj-test:uncreated"],
       }),
     ).not.toThrow();
   });
@@ -171,6 +204,6 @@ describe("validateRegisterApproachTargets", () => {
         approach: "freeform",
         targets: ["missing-doc"],
       }),
-    ).toThrow(/not resolvable via the document index/);
+    ).toThrow(/is not a catalog deliverable/);
   });
 });

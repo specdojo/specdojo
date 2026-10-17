@@ -170,11 +170,13 @@ properties:
               minLength: 1
             minItems: 1
             description: >
-              Doc ids of documents this register item targets, each resolvable
-              via the doc index. When present, exec plan generation copies these
-              into the plan frontmatter so that target coverage validation works
-              for register-originated plans. Omit the key when the target
-              documents are unknown or not applicable.
+              Doc ids of documents this register item targets. Deliverable targets
+              used with an approach are resolved via the project catalog so that
+              not-yet-created deliverables can be selected; kata and standalone
+              targets are resolved via the doc index. When present, exec plan
+              generation copies these into the plan frontmatter so that target
+              coverage validation works for register-originated plans. Omit the
+              key when the target documents are unknown or not applicable.
 
 $defs:
   ItemType:
