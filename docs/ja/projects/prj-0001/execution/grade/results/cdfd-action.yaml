@@ -6,11 +6,11 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 73
-graded_at: "2026-10-16T16:03:23.904Z"
+graded_at: "2026-10-17T16:04:31.079Z"
 graded_by: agy-expert-executor
 content_hash: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
 source_hashes:
-  catalog-entry: 07feca238557c57b443fa294f10fef02f3396af40f9712f630a6ad1c3412cc92
+  catalog-entry: 13a3f1bee8ca15ccabb50c5aabcedc7ce92c9cdda40f595a6305268767581f05
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   dependency:cdfd-overview: 9b8b4b2f64e2ef5c6ce0069204a94780e3ae43bc1b7d68004a654308d80abd7a

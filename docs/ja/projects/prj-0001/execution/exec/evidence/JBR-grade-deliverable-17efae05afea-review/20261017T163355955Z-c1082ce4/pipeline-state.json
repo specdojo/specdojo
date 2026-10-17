@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-17efae05afea-review",
+  "run_id": "20261017T163355955Z-c1082ce4",
+  "updated_at": "2026-10-17T16:38:09.155Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "claude-expert-review-executor",
+      "attempts": 1,
+      "started_at": "2026-10-17T16:33:55.955Z",
+      "completed_at": "2026-10-17T16:35:21.408Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-17efae05afea-review/20261017T163355955Z-c1082ce4/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "claude-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-17T16:37:57.507Z",
+      "completed_at": "2026-10-17T16:38:09.155Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-deliverable-17efae05afea-review-result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/JBR-grade-deliverable-17efae05afea-review-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-deliverable-17efae05afea-review-result.md"
+  }
+}

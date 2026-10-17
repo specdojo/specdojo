@@ -3,29 +3,75 @@ version: 1
 document: specdojo:prj-comparison-of-alternatives-sample
 path: docs/ja/specdojo/samples/prj-comparison-of-alternatives-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 84
-graded_at: "2026-09-05T22:41:20.408Z"
-graded_by: gemma-expert-executor
+score: 88
+graded_at: "2026-10-17T20:16:47.064Z"
+graded_by: agy-expert-executor
 content_hash: 3a1a84372cc984b43b503c0da653d1f7e8a0a5e4a7542efc1d22e47ff785c2c5
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
-    score: 75
+    score: 83
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -56,21 +111,24 @@ findings:
     severity: major
     rule: vp-qe-omissions-consistency
     line: 80
-    message: 評価軸の最低ラインである「リスク」と「技術実現性」が表から欠落しており、かつ省略理由の記載もないため、rulebook の必須要件を満たしていない。
     anchor: >-
       | ------------ | ---------------------------------------------------------- |
       ----------------------------------------------------------- |
+    message: 評価軸の最低ラインである「リスク」と「技術実現性」が表から欠落しており、かつ省略理由の記載もないため、rulebook の必須要件を満たしていない。
+    message_ja: 評価軸の最低ラインである「リスク」と「技術実現性」が表から欠落しており、かつ省略理由の記載もないため、rulebook の必須要件を満たしていない。
   - id: F002
     severity: major
     rule: vp-qe-kata-conformance
     line: 80
-    message: 完成例である sample が rulebook/recipe で定める最低評価軸を省略し、かつその正当な理由を明示していないため、標準的な書き方の正解例として機能していない。
     anchor: >-
       | ------------ | ---------------------------------------------------------- |
       ----------------------------------------------------------- |
+    message: 完成例である sample が rulebook/recipe で定める最低評価軸を省略し、かつその正当な理由を明示していないため、標準的な書き方の正解例として機能していない。
+    message_ja: 完成例である sample が rulebook/recipe で定める最低評価軸を省略し、かつその正当な理由を明示していないため、標準的な書き方の正解例として機能していない。
   - id: F003
     severity: minor
     rule: vp-ux-language-consistency
     line: 85
-    message: 最低ラインの評価軸名称が rulebook では「運用適合」となっているが、本 sample では「業務適合」となっており、用語が不統一である。
     anchor: ""
+    message: 最低ラインの評価軸名称が rulebook では「運用適合」となっているが、本 sample では「業務適合」となっており、用語が不統一である。
+    message_ja: 最低ラインの評価軸名称が rulebook では「運用適合」となっているが、本 sample では「業務適合」となっており、用語が不統一である。

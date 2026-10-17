@@ -3,44 +3,99 @@ version: 1
 document: specdojo:sac-sample
 path: docs/ja/specdojo/samples/sac-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 57
-graded_at: "2026-09-06T00:49:53.215Z"
-graded_by: gemma-expert-executor
+score: 67
+graded_at: "2026-10-17T20:28:20.096Z"
+graded_by: agy-expert-executor
 content_hash: 2c624d11fed83bfb342f69e815913cb4a41ed355d2c64632c9231613bfc71c6b
 categories:
-  consistency:
-    score: 38
-  usability:
-    score: 83
+  purpose:
+    score: 75
+  operations:
+    score: 88
+  planning:
+    score: 92
+  business:
+    score: 67
   architecture:
-    score: 100
+    score: 92
+  usability:
+    score: 67
+  implementation:
+    score: 88
   quality:
+    score: 58
+  consistency:
     score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
-  vp-arc-conciseness:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
     level: 4
     score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
+  vp-arc-conciseness:
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 1
     score: 25
   vp-qe-kata-conformance:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,37 +103,155 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 0
+  major: 6
+  minor: 12
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 4
-    message: type は specdojo:sac-rulebook の定義に従い test とすべきである。
-    anchor: ""
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、システム全体としての合格基準を定義するための最小サンプルである。
+    message: >-
+      The document defines its purpose as providing a minimal sample for system acceptance criteria for a candy store
+      sales management system, but fails to provide actual acceptance criteria aligned with that purpose.
+    message_ja: このドキュメントは、目的を菓子店販売管理システムのシステム受け入れ基準のための最小限のサンプルを提供することと定義していますが、その目的に沿った実際の受け入れ基準が提供されていません。
   - id: F002
-    severity: major
-    rule: vp-qe-verifiability
-    line: 57
-    message: 受入条件の具体例として、数値や単位を含む検証可能な判定基準（例：「3秒以内」など）を提示すべきである。
-    anchor: ""
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      The unresolved issues section lacks specific decision points, impacts, and next actions needed for PO evaluation,
+      only stating generic deferral to actual project implementation.
+    message_ja: 未解決事項のセクションには、POによる評価に必要な具体的な意思決定ポイント、影響、および次にとるべきアクションが不足しており、実際のプロジェクト実装への一般的な延期のみが記載されています。
   - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 36
-    message: rulebook の 5 節で定義された標準構成（概要、受入条件、メモ/将来課題）に従って記述すべきである。
-    anchor: ""
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: >-
+      The document lists mandatory perspectives including responsible parties, but does not specify actual role codes or
+      verification completion conditions for tasks.
+    message_ja: ドキュメントには責任者を含む必須の観点がリストされていますが、実際のロールコードやタスクの検証完了条件は指定されていません。
   - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 34
-    message: SAC の具体例ではなく解説書となっているため、実際に運用可能な SAC 文書の形式で完成例を提示すべきである。
-    anchor: ""
+    severity: minor
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The sample specifies the target system as a candy store sales management system, but does not describe the
+      business problem, expected value, or how the acceptance criteria serve stakeholder needs.
+    message_ja: サンプルでは対象システムを菓子店販売管理システムとして規定していますが、ビジネス上の課題、期待される価値、または受け入れ基準がどのようにステークホルダーのニーズに応えるのかについては説明されていません。
   - id: F005
     severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: "- 主な内容: 機能・非機能・障害・移行などの受け入れ条件"
+    message: >-
+      Specific acceptance conditions, target scope, and out-of-scope boundaries are completely missing, only listing
+      abstract category names.
+    message_ja: 具体的な受け入れ条件、対象スコープ、およびスコープ外の境界が完全に欠落しており、抽象的なカテゴリ名がリストされているだけです。
+  - id: F006
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The document does not clearly identify the stakeholders, users (e.g., store clerk/owner), or approvers for the
+      acceptance criteria.
+    message_ja: ドキュメントは、受け入れ基準に関するステークホルダー、ユーザー（例：店員/オーナー）、または承認者を明確に特定していません。
+  - id: F007
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: >-
+      The sample mentions adherence to the handbook policy but omits technical constraints, environment prerequisites,
+      and external dependencies necessary for system acceptance.
+    message_ja: サンプルではハンドブックのポリシーへの準拠について言及されていますが、システムの受け入れに必要な技術的な制約、環境の前提条件、および外部依存関係は省略されています。
+  - id: F008
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      Section 4 merely duplicates the points already stated in Section 3 regarding document purpose and main contents
+      without providing additional actionable information.
+    message_ja: セクション4は、追加の実行可能な情報を提供することなく、ドキュメントの目的と主な内容に関してセクション3ですでに述べられている点を単に重複させているだけです。
+  - id: F009
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 15
+    anchor: "- 主な内容: 機能・非機能・障害・移行などの受け入れ条件"
+    message: >-
+      Inputs, operations, constraints, and completion criteria needed to prepare or implement acceptance test cases are
+      not specified.
+    message_ja: 受け入れテストケースの準備または実施に必要な入力、操作、制約、および完了基準が指定されていません。
+  - id: F010
+    severity: minor
+    rule: vp-dev-testability
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      The sample does not provide verification methods or pass/fail criteria necessary to test the acceptance
+      conditions.
+    message_ja: サンプルには、受け入れ条件をテストするために必要な検証方法や合否基準が提供されていません。
+  - id: F011
+    severity: major
+    rule: vp-qe-verifiability
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 受入条件の具体例として、数値や単位を含む検証可能な判定基準（例：「3秒以内」など）を提示すべきである。
+    message_ja: 受入条件の具体例として、数値や単位を含む検証可能な判定基準（例：「3秒以内」など）を提示すべきである。
+  - id: F012
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [システム受入条件](../rulebooks/sac-rulebook.md) サンプル"
+    message: type は specdojo:sac-rulebook の定義に従い test とすべきである。
+    message_ja: type は specdojo:sac-rulebook の定義に従い test とすべきである。
+  - id: F013
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: rulebook の 5 節で定義された標準構成（概要、受入条件、メモ/将来課題）に従って記述すべきである。
+    message_ja: rulebook の 5 節で定義された標準構成（概要、受入条件、メモ/将来課題）に従って記述すべきである。
+  - id: F014
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [システム受入条件](../rulebooks/sac-rulebook.md) サンプル"
+    message: SAC の具体例ではなく解説書となっているため、実際に運用可能な SAC 文書の形式で完成例を提示すべきである。
+    message_ja: SAC の具体例ではなく解説書となっているため、実際に運用可能な SAC 文書の形式で完成例を提示すべきである。
+  - id: F015
+    severity: major
     rule: vp-ux-readability
-    line: 57
+    line: 18
+    anchor: "## 4. 最小記述例"
     message: 最小記述例として表形式ではなく, rulebook で推奨されるシナリオ形式（前提・操作・期待結果）を用いた具体例を記載すべきである。
-    anchor: ""
+    message_ja: 最小記述例として表形式ではなく, rulebook で推奨されるシナリオ形式（前提・操作・期待結果）を用いた具体例を記載すべきである。
+  - id: F016
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 15
+    anchor: "- 主な内容: 機能・非機能・障害・移行などの受け入れ条件"
+    message: Notations for acceptance criteria are inconsistent between '受入条件' and '受け入れ条件' across sections.
+    message_ja: Notations for acceptance criteria are inconsistent between '受入条件' and '受け入れ条件' across sections.
+  - id: F017
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      The document lacks specific exit criteria, reviewer assignments, and prerequisites required to transition status
+      from draft to ready.
+    message_ja: ドキュメントには、ステータスを下書きから準備完了へ移行するために必要な具体的な終了基準、レビュアーの割り当て、および前提条件が不足しています。
+  - id: F018
+    severity: minor
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# [システム受入条件](../rulebooks/sac-rulebook.md) サンプル"
+    message: Operational information regarding maintenance, ownership, and update triggers for the sample is not provided.
+    message_ja: サンプルのメンテナンス、所有権、および更新のトリガーに関する運用情報が提供されていません。
