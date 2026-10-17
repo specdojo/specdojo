@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f6bcbcade3a44849bcfe0a2aba06498f
+  ts: "2026-10-17T09:23:54Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 統合の直後に dist が古いままになる事象が 2 回続き、原因を特定した（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 記帳の衝突を解いた統合のあとに dist が作り直されない
+    - field: description
+      from: ""
+      to: exec の統合で登録簿の記帳の衝突を解くと、runner は git commit --no-verify で merge を完了させる。post-merge の hook（build-if-stale）は git merge が完了したときにしか動かないため、この経路では dist が作り直されず、以後の runner が古いコードで動く。2026-10-17 の PJR-BZ9J と PJR-X8Y9 で起きた
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
