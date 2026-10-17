@@ -29,3 +29,32 @@
     - field: registered
       from: ""
       to: "2026-10-17"
+- v: 1
+  id: reg_b5eb65768e314c5389b10eb70640b12e
+  ts: "2026-10-17T09:24:34Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f6bcbcade3a44849bcfe0a2aba06498f
+- v: 1
+  id: reg_9cb25d63270b4f2eb9878e7ab1cd00bf
+  ts: "2026-10-17T09:24:40Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: git worktree failed: fatal: a branch named 'exec/prj-0001-PJR-MX4F' already exists (args: add /workspaces/specdojo-workspace/worktree… -b exec/prj-0001-PJR-MX4F)"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: git worktree failed: fatal: a branch named 'exec/prj-0001-PJR-MX4F' already exists (args: add /workspaces/specdojo-workspace/worktree… -b exec/prj-0001-PJR-MX4F)"
+  previous_event_id: reg_b5eb65768e314c5389b10eb70640b12e
