@@ -2,7 +2,7 @@
 id: cdsd-planning-grade-criteria
 document: cdsd-planning
 path: docs/ja/product/010-business-specs/020-data-model/cdsd-planning.md
-graded_at: "2026-10-16T16:26:41.102Z"
+graded_at: "2026-10-17T16:29:59.594Z"
 graded_by: agy-expert-executor
 content_hash: 465645a27f2f91f437f68825eea853917093aa68ab32e62fc2c271fd80e8c020
 summary:
@@ -17,8 +17,8 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Data stores for project configuration, operations configuration, deliverables catalog, and schedule strategy are
-      omitted as TODO and lack descriptions of business roles, contents, and granularity.
+      Data stores for project configuration, deliverables catalog, and schedule strategy are marked as TODO and missing
+      required descriptions.
   - id: DC-002
     text: データストア構成を設計の基礎として参照できること
     roles:
@@ -26,15 +26,12 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      Architecture design cannot reference the complete data store structure because project configuration, operations
-      configuration, deliverables catalog, and schedule strategy lack technical constraints, schemas, and sources of
-      truth.
+      Missing data stores, schemas, external dependencies, and generation/verification policies prevent using it as an
+      architectural design baseline.
   - id: DC-003
     text: データ検証・整合性確認の対象が識別できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: >-
-      Validation targets, required fields, acceptable values, and commands for consistency checks are not defined in a
-      verifiable manner.
+    reason: Validation targets, verification commands, and pass/fail criteria are not specified for the data stores.
