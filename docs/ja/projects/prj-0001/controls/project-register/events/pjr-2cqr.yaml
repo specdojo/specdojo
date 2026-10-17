@@ -42,3 +42,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_445fe3427d9f4f59b04a2d3e266d8e3d
+- v: 1
+  id: reg_612698faaff84e2ca847fe1f68961e0d
+  ts: "2026-10-17T23:59:31Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-ts"
+  previous_event_id: reg_c8ac917a0a2f4d92b3522a4c12d12862

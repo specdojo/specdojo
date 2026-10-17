@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-bhmh-pinned-agent-rate-limit-policy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-17T23:11:40Z"
   due_on: null
+  completed_at: "2026-10-17T23:56:18Z"
+  conclusion: agent を指定した実行で、上限のときの扱いを --on-rate-limit stop|wait|fallback と exec-defaults の rate_limit_policy.pinned で選べるようにした。wait は解ける時刻まで待って同じ agent で再開し、fallback は --fallback-executor-by・--fallback-reporter-by の agent へ切り替える。既定は従来どおり stop
 ---
 
 # PJR-BHMH agent を指定した実行で、上限のときに待つか代わりの agent へ切り替えるかを選べるようにする

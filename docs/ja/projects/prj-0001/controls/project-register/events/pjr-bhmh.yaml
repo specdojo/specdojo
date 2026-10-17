@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8d1a3fa5ff4a4afc9c996c65e34795a1
+- v: 1
+  id: reg_a6aa3f69c2ea4788bf149ebd615daa92
+  ts: "2026-10-17T23:56:18Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に、--on-rate-limit wait を付けた exec run --register（PJR-JSEY、6295ce464）が統合まで通った（2026-10-18）。初回は型エラーと並行実行の負荷による統合テストの時間切れで止まり、--resume-from executor で直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: agent を指定した実行で、上限のときの扱いを --on-rate-limit stop|wait|fallback と exec-defaults の rate_limit_policy.pinned で選べるようにした。wait は解ける時刻まで待って同じ agent で再開し、fallback は --fallback-executor-by・--fallback-reporter-by の agent へ切り替える。既定は従来どおり stop
+  previous_event_id: reg_224b7d6dca3f4a83ab8651ddbfbb38d7
