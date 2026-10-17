@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5e4eeb0c82224519bfdb69dc90098fe7
+  ts: "2026-10-17T11:27:05Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の指摘（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README・LP・init のガイドの内容を揃え、README に specdojo.org へのリンクを加える
+    - field: description
+      from: ""
+      to: README、ランディングページ（specdojo-lp、specdojo.org）、specdojo init のガイドの導入の手順と説明が食い違ってきている。内容を突き合わせて揃え、README から specdojo.org へリンクする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
