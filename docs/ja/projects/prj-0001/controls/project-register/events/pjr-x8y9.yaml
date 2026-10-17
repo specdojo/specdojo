@@ -42,3 +42,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_ae089aaf649f4af481a20fe3aa898d4b
+- v: 1
+  id: reg_40257031cb684e1e9fcf6390a52b8b04
+  ts: "2026-10-17T09:07:39Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_09c8f8faaeab4115a7593b6788d72b42
