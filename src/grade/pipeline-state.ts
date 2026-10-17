@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { basename, dirname, extname, isAbsolute, join, resolve } from "node:path";
-import { listFilesRecursive } from "../exec/shared.js";
+import { listFilesRecursive } from "../shared/fs.js";
 import {
   isRecord,
   parseMarkdown,

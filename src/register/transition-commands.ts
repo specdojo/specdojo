@@ -1,5 +1,5 @@
 import type { Command } from "commander";
-import { inlineCodeAnglePlaceholders } from "../exec/shared.js";
+import { inlineCodeAnglePlaceholders } from "../shared/text.js";
 import { nowUtcTimestamp } from "./date.js";
 import { CELL_NONE, type PjrItem } from "./item.js";
 import type { RegisterCommandDependencies } from "./command-types.js";

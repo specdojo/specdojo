@@ -7,12 +7,12 @@ import { load } from "../shared/yaml.js";
 import { collectResolvedDeliverables, type ResolvedDeliverable } from "../catalog/build.js";
 import { resolveBasePath } from "../catalog/paths.js";
 import type { DctDoc, DctKind } from "../catalog/types.js";
-import { readYaml } from "../exec/shared.js";
+import { readYaml } from "../shared/fs.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { validateGradedMarkdown } from "../grade/grade.js";
 import { readGradeResultForDocument, validateGradeResult } from "../grade/result.js";
 import { KATA_MISSING, loadRulebookRefs, resolveKataRefs, type KataRefs } from "../kata/kata.js";
-import type { Approach } from "../exec/types.js";
+import type { Approach } from "../shared/agent-types.js";
 
 export type KataKindKey = keyof KataRefs;
 export const KATA_KINDS: readonly KataKindKey[] = ["rulebook", "recipe", "sample", "template"];

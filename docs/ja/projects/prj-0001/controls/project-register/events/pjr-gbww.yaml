@@ -90,3 +90,19 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_aea7b1f187e24f849907b6194fcd67f0
+- v: 1
+  id: reg_49f14d33f95e4560a91243c32c2f2560
+  ts: "2026-10-17T11:28:56Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_efa2715a70894604890708b4be5f9c8f

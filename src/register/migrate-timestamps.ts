@@ -25,7 +25,7 @@ import {
   registerDateFromTimestamp,
   timestampFromDateInTimeZone,
 } from "./date.js";
-import { gitResult } from "../exec/worktree.js";
+import { gitResult } from "../shared/git.js";
 
 // ================================
 // Types & Constants

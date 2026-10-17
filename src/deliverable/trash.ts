@@ -15,7 +15,7 @@ import { load } from "../shared/yaml.js";
 import { isDctCatalogFileName, type DctDoc, type DctSection } from "../catalog/types.js";
 import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import { gitOutput } from "../exec/worktree.js";
+import { gitOutput } from "../shared/git.js";
 
 export type TrashPlan = {
   localId: string;

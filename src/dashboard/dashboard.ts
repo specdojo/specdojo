@@ -2,7 +2,8 @@ import { mkdirSync, existsSync, readFileSync, writeFileSync, readdirSync } from 
 import { join } from "node:path";
 import type { Command } from "commander";
 import type { ExecEventV1, StateSnapshot } from "../exec/types.js";
-import { readJson, toArtifactPath } from "../exec/shared.js";
+import { toArtifactPath } from "../shared/artifact-path.js";
+import { readJson } from "../shared/fs.js";
 import { readAllEventFiles } from "../exec/events.js";
 import {
   getProjectExecutionPath,

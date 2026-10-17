@@ -9,7 +9,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
-import { inlineCodeAnglePlaceholders } from "../exec/shared.js";
+import { inlineCodeAnglePlaceholders } from "../shared/text.js";
 import { appendRegisterEvent, registerEventFilePath, type RegisterEventV1 } from "./events.js";
 import {
   REGISTER_TIMESTAMP_RE,

@@ -14,7 +14,7 @@ import {
   updateSpecdojoFields,
   VALID_STATUSES,
 } from "./item.js";
-import { isUtcIsoSeconds, nowUtcIsoSeconds } from "../exec/shared.js";
+import { isUtcIsoSeconds, nowUtcIsoSeconds } from "../shared/time.js";
 
 export const REGISTER_EVENTS_DIRNAME = "events";
 export const REGISTER_EVENTS_SCHEMA_MODELINE =

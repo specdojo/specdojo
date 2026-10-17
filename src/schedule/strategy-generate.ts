@@ -21,7 +21,7 @@ import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import { diffPlanText } from "../catalog/plan.js";
 import type { DctKind } from "../catalog/types.js";
-import { readYaml } from "../exec/shared.js";
+import { readYaml } from "../shared/fs.js";
 import { buildScheduleTrack } from "./build.js";
 import {
   collectApproachFacts,
