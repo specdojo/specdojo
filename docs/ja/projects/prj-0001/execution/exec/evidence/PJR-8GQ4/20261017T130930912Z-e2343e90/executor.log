@@ -1,0 +1,12 @@
+実装を完了しました。
+
+- 親ディレクトリ名を `/workspaces/<親名>` に自動反映
+- `devcontainer scaffold` と `init --devcontainer` に `--workspace-name` を追加
+- 不正な親名を理由付きで拒否
+- 単体テスト、CLIリファレンス、運用ガイド、CHANGELOG、個票を更新
+- result と本体の `.devcontainer/devcontainer.json` は未変更
+- unit test、typecheck、lint などは指示どおり親 runner の検証に委ねています
+
+<specdojo_executor_evidence>
+{"final_message":"devcontainer scaffold の作業パスをホストの親ディレクトリ名に追従させ、明示的な上書き、入力検証、init からの引き渡し、テストと文書更新を実装した。","validations":[{"command":"npx prettier --check src/devcontainer/scaffold.ts src/devcontainer/command.ts src/commands/init.ts templates/devcontainer/devcontainer.json tests/src/devcontainer/scaffold.test.ts tests/src/commands/init.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/remote-host-development-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-8gq4-devcontainer-workspace-dir-fixed.md","status":"passed","summary":"変更した全ファイルが Prettier の書式に適合した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューを正常に再生成した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"全 catalog が OK。既存文書の欠落に関する警告のみだった。"},{"command":"node --import tsx src/specdojo.ts devcontainer scaffold --help | rg -n -- '--workspace-name|Usage:'","status":"passed","summary":"devcontainer scaffold のヘルプに --workspace-name が表示された。"},{"command":"node --import tsx src/specdojo.ts init --help | rg -n -- '--workspace-name|Usage:'","status":"passed","summary":"init のヘルプに --workspace-name が表示された。"},{"command":"git diff --check","status":"passed","summary":"空白エラーや競合マーカーはなかった。"}]}
+</specdojo_executor_evidence>

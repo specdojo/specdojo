@@ -313,4 +313,28 @@ describe("specdojo init", () => {
       rmSync(repo, { recursive: true, force: true });
     }
   });
+
+  it("passes --workspace-name to Dev Container scaffolding", async () => {
+    const repo = createRepo("specdojo-init-devcontainer-");
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runInit({
+        yes: true,
+        provider: "codex",
+        devcontainer: true,
+        workspaceName: "stable-workspace",
+      });
+
+      const devcontainer = JSON.parse(
+        readFileSync(join(repo, ".devcontainer/devcontainer.json"), "utf8"),
+      ) as { workspaceMount: string; workspaceFolder: string };
+      expect(devcontainer.workspaceMount).toContain("target=/workspaces/stable-workspace,");
+      expect(devcontainer.workspaceFolder).toBe(
+        "/workspaces/stable-workspace/${localWorkspaceFolderBasename}",
+      );
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
 });

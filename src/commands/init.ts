@@ -46,6 +46,7 @@ export type InitOptions = {
   exec?: boolean;
   catalog?: string;
   devcontainer?: boolean;
+  workspaceName?: string;
   dryRun?: boolean;
 };
 
@@ -626,6 +627,7 @@ export async function runInit(
     await runDevcontainerScaffold({
       packageRoot,
       repoRoot,
+      workspaceName: options.workspaceName,
       providers: answers.providers,
       editors: [],
       ollama: answers.providers.includes("opencode"),
@@ -671,6 +673,10 @@ export function registerInitCommand(program: Command): void {
     .option("--exec", "Configure executor and reporter agents", false)
     .option("--catalog <size>", "Create a deliverables catalog (small|medium|large)")
     .option("--devcontainer", "Create a Dev Container for the selected providers", false)
+    .option(
+      "--workspace-name <name>",
+      "Override the Dev Container workspace parent name used under /workspaces",
+    )
     .option("--dry-run", "Show planned files and changes without writing", false)
     .action(async (options: InitOptions) => {
       try {
