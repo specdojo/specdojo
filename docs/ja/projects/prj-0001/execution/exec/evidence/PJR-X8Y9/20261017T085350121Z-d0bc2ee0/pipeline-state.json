@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-X8Y9",
   "run_id": "20261017T085350121Z-d0bc2ee0",
-  "updated_at": "2026-10-17T09:16:23.711Z",
+  "updated_at": "2026-10-17T09:18:38.664Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-x8y9-20261017T085350Z-a651-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "claude-reporter",
       "attempts": 1,
       "started_at": "2026-10-17T09:16:23.711Z",
-      "completed_at": null,
+      "completed_at": "2026-10-17T09:18:38.664Z",
       "artifact_ref": null
     }
   },

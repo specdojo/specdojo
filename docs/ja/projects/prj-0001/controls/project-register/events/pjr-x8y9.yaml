@@ -74,3 +74,16 @@
       from: "agent exited with non-zero code: parent validation failed: test-unit"
       to: "-"
   previous_event_id: reg_40257031cb684e1e9fcf6390a52b8b04
+- v: 1
+  id: reg_70bab002504c44f6bf2881e0a6ec29ff
+  ts: "2026-10-17T09:18:38Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_67641b01950c43e2bc049525de638629
