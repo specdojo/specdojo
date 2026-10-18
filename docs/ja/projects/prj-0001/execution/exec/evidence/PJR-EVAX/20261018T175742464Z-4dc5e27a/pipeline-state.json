@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-EVAX",
+  "run_id": "20261018T175742464Z-4dc5e27a",
+  "updated_at": "2026-10-18T18:11:30.456Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-10-18T17:58:49.470Z",
+      "completed_at": "2026-10-18T18:02:26.450Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EVAX/20261018T175742464Z-4dc5e27a/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-18T18:06:14.572Z",
+      "completed_at": "2026-10-18T18:06:49.060Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-evax-20261018T175742Z-4289-result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-18T18:11:20.859Z",
+      "completed_at": "2026-10-18T18:11:30.456Z",
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-evax-20261018T175742Z-4289-result.md:33:54 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: \"r *\"]"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-evax-20261018T175742Z-4289-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-evax-20261018T175742Z-4289-result.md"
+  }
+}
