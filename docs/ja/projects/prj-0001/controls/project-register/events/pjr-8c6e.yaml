@@ -35,3 +35,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-WJE6"]'
+- v: 1
+  id: reg_2ab33956ab154eb48054e33900d2a3db
+  ts: "2026-10-18T15:45:22Z"
+  action: start
+  actor: gemma-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_268d8657f24c46ca8a64d64b845abd8f
