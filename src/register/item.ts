@@ -179,8 +179,14 @@ export function ticketRefCell(filename: string): string {
 }
 
 // 表セルへ埋め込むために1行化し、列区切りの `|` をエスケープする。
-function toCell(text: string): string {
-  return text.replace(/\r?\n/g, " ").replace(/\s+/g, " ").replace(/\|/g, "\\|").trim();
+// すでにエスケープ済みの `\|` は再エスケープせず、複数回の呼び出しに対して冪等にする。
+export function toCell(text: string): string {
+  if (typeof text !== "string") return "";
+  return text
+    .replace(/\r?\n/g, " ")
+    .replace(/\s+/g, " ")
+    .replace(/(?<!\\)((\\\\)*)\|/g, "$1\\|")
+    .trim();
 }
 
 // H1（`# PJR-XXXX タイトル`）からタイトルを導出する。表示 ID の接頭辞は取り除く。
