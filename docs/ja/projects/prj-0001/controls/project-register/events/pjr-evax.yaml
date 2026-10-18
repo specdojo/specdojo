@@ -174,3 +174,32 @@
       from: in-progress
       to: review
   previous_event_id: reg_fbf9731eaa304cd98979b476adc4f362
+- v: 1
+  id: reg_0b59866de6b54889a16fbd69e320acfa
+  ts: "2026-10-18T17:57:43Z"
+  action: start
+  actor: flash-high-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_ab0dce6a2e4d40358491fa1fb8e1708f
+- v: 1
+  id: reg_8ca24ddc351e432392e49dd963cb2419
+  ts: "2026-10-18T18:07:02Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-evax-20261018T175742Z-4289-result.md:33:54 error MD037/no-space-in-emp…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-evax-20261018T175742Z-4289-result.md:33:54 error MD037/no-space-in-emp…"
+  previous_event_id: reg_0b59866de6b54889a16fbd69e320acfa

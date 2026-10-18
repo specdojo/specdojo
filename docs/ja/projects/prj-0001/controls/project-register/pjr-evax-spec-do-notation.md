@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   owner: BA
   registered_at: "2026-10-12T07:13:04Z"
   due_on: "2026-10-31"
+  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-evax-20261018T175742Z-4289-result.md:33:54 error MD037/no-space-in-emp…"
 ---
 
 # PJR-EVAX README と全体概要ガイドの冒頭を「Spec道（仕様道）の道場」に揃える
