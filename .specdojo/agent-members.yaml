@@ -294,6 +294,30 @@ members:
       OpenCode CLI と Ollama の gemma4 26B（MoE）を使用する pipeline executor（edit）。範囲の
       はっきりした小さな修正に使えるかを exec trial で試す（2026-10-18）。モデル・権限は
       .opencode/agents/gemma26-executor.md で定義。
+  - nickname: gemma26-128k-executor
+    disabled: false
+    # 試行中（2026-10-18）。自動選択に選ばれないよう優先度を最も低くし、--executor-by で明示して使う。
+    priority: 9
+    display_name: Gemma 26B 128k Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    focus:
+      - task-execution
+      - document-creation
+      - verification
+    capabilities:
+      - document_authoring
+    scheduler_strategy: critical-first
+    note: >-
+      OpenCode CLI と Ollama の gemma4 26B（MoE、文脈 128k）を使用する pipeline executor（edit）。文脈の
+      大きさで結果が変わるかを gemma26-executor（64k）と exec trial で比べる（2026-10-18）。モデル・権限は
+      .opencode/agents/gemma26-128k-executor.md で定義。
   - nickname: gemma26-reporter
     disabled: false
     priority: 4
