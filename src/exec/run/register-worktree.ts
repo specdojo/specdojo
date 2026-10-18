@@ -545,6 +545,10 @@ export async function runSingleRegisterItemWorktree(
     const { planPath } = await generateRegisterPlan({
       executionPath,
       projectId,
+      ...(context.catalogPath ? { catalogPath: context.catalogPath } : {}),
+      ...(context.rolesPath ? { rolesPath: context.rolesPath } : {}),
+      ...(context.viewpointsPath ? { viewpointsPath: context.viewpointsPath } : {}),
+      ...(context.projectContext ? { projectContext: context.projectContext } : {}),
       registerPaths,
       item,
       stem,
@@ -560,6 +564,8 @@ export async function runSingleRegisterItemWorktree(
       agent: actor,
       startedAt: new Date().toISOString(),
       stem,
+      ...(item.approach ? { approach: item.approach } : {}),
+      ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
     });
     const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 

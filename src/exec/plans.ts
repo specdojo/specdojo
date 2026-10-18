@@ -18,7 +18,11 @@ export {
   type FinalizeResultSections,
   type ResolvedDeliverable,
 } from "./plans-core.js";
-export { generateDeliverablePlan, generateSinglePlan } from "./plans-generation.js";
+export {
+  generateDeliverablePlan,
+  generateRegisterApproachPlan,
+  generateSinglePlan,
+} from "./plans-generation.js";
 export {
   archivePlan,
   loadPlan,
