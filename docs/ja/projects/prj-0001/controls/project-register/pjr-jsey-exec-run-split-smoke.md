@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
@@ -55,6 +55,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 2026-10-18 18:45 | PJR-TSP6   | claude-expert-executor |
 | 2026-10-18 19:06 | PJR-E025   | claude-expert-executor |
 | 2026-10-18 20:09 | PJR-NJ6J   | claude-expert-executor |
+| 2026-10-18 21:58 | PJR-6EF8   | claude-expert-executor |
 
 ## 5. 関連ドキュメント
 
