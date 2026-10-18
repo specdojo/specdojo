@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-18T14:51:17Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
   derived_from:
     - PJR-Z104
 ---
@@ -54,7 +54,10 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `src/exec/reporter.ts` に、検査コマンドと変更ファイル種別の対応を一元管理する表を追加した。共通規約の検査表を正本とし、`validate:schema:file` は YAML、Prettier は規約記載の拡張子、markdownlint は Markdown の変更がある場合だけ、script または依存 package の存在によって `not_applicable` を退ける。
+- 対象種別の変更がない場合は理由付きの `not_applicable` を受理し、対象種別の変更がある場合は従来どおり誤申告を拒否する単体テストを追加した。`typecheck` は変更ファイルに関係なく従来の script ベースの判定を保つテストも追加した。
+- executor prompt と exec 設定ガイドに変更ファイル種別の適用条件を反映し、未公開版 `0.4.1` の CHANGELOG に修正内容を記録した。
+- runner コードの統合後に実施する `exec run --register` の実動作確認は、後続項目 PJR-JSEY で行う。
 
 ## 5. 関連ドキュメント
 
