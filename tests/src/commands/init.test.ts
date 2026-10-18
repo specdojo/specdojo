@@ -27,7 +27,7 @@ function createRepo(prefix: string): string {
 }
 
 describe("specdojo init", () => {
-  it("collects the interactive choices in the documented order", async () => {
+  it("collects the interactive choices in the documented order without prompting for catalog", async () => {
     const answers = [
       "prj-1234",
       "Example Project",
@@ -36,7 +36,6 @@ describe("specdojo init", () => {
       "Alice",
       "claude,codex",
       "yes",
-      "small",
       "no",
     ];
     const prompts: string[] = [];
@@ -59,10 +58,41 @@ describe("specdojo init", () => {
       displayName: "Alice",
       providers: ["claude", "codex"],
       exec: true,
+      catalog: undefined,
+      devcontainer: false,
+    });
+    expect(prompts).toHaveLength(8);
+    expect(prompts.some((prompt) => prompt.includes("Deliverables catalog"))).toBe(false);
+    expect(closed).toBe(true);
+  });
+
+  it("preserves --catalog option in interactive mode without prompting", async () => {
+    const answers = ["prj-1234", "Example Project", "yes", "alice", "Alice", "codex", "no", "no"];
+    const prompts: string[] = [];
+    let closed = false;
+    const prompter: InitPrompter = {
+      async question(prompt) {
+        prompts.push(prompt);
+        return answers.shift() ?? "";
+      },
+      close() {
+        closed = true;
+      },
+    };
+
+    await expect(collectInitAnswers({ catalog: "small" }, prompter)).resolves.toEqual({
+      projectId: "prj-1234",
+      projectName: "Example Project",
+      register: true,
+      nickname: "alice",
+      displayName: "Alice",
+      providers: ["codex"],
+      exec: false,
       catalog: "small",
       devcontainer: false,
     });
-    expect(prompts).toHaveLength(9);
+    expect(prompts).toHaveLength(8);
+    expect(prompts.some((prompt) => prompt.includes("Deliverables catalog"))).toBe(false);
     expect(closed).toBe(true);
   });
 
@@ -80,8 +110,6 @@ describe("specdojo init", () => {
       "none",
       "yes",
       "codex",
-      "huge",
-      "small",
       "later",
       "no",
     ];
@@ -110,16 +138,18 @@ describe("specdojo init", () => {
       displayName: "Alice",
       providers: ["codex"],
       exec: true,
-      catalog: "small",
+      catalog: undefined,
       devcontainer: false,
     });
     expect(prompts.filter((prompt) => prompt.startsWith("Project ID"))).toHaveLength(2);
     expect(prompts.filter((prompt) => prompt.startsWith("Project name"))).toHaveLength(1);
     expect(prompts.filter((prompt) => prompt.startsWith("Orchestrator providers"))).toHaveLength(3);
     expect(prompts.filter((prompt) => prompt.startsWith("Delegate work"))).toHaveLength(1);
+    expect(prompts.filter((prompt) => prompt.startsWith("Create a Dev Container"))).toHaveLength(2);
+    expect(prompts.some((prompt) => prompt.includes("Deliverables catalog"))).toBe(false);
     expect(errors.join("")).toContain("Available: claude, codex, opencode, antigravity, copilot");
     expect(errors.join("")).toContain("--exec requires at least one --provider");
-    expect(errors.join("")).toContain("Invalid catalog size: huge");
+    expect(errors.join("")).toContain("yes/no で答えてください: later");
     expect(closed).toBe(true);
   });
 
@@ -335,6 +365,70 @@ describe("specdojo init", () => {
       );
     } finally {
       rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("creates a deliverables catalog when --catalog is passed, and guides later addition when omitted", async () => {
+    const repoWithCatalog = createRepo("specdojo-init-catalog-");
+    const outputWithCatalog: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      outputWithCatalog.push(String(chunk));
+      return true;
+    });
+    try {
+      process.chdir(repoWithCatalog);
+      await runInit({
+        yes: true,
+        project: "prj-1234",
+        name: "Example Project",
+        provider: "codex",
+        catalog: "small",
+      });
+
+      const config = JSON.parse(
+        readFileSync(join(repoWithCatalog, ".specdojo/specdojo.config.json"), "utf8"),
+      ) as SpecDojoConfig;
+      expect(config.projects["prj-1234"].catalog_path).toBe("010-deliverables-catalog");
+      expect(
+        existsSync(
+          join(
+            repoWithCatalog,
+            "docs/ja/projects/prj-1234/010-deliverables-catalog/dct-index.yaml",
+          ),
+        ),
+      ).toBe(true);
+      expect(outputWithCatalog.join("")).not.toContain("When deliverables are ready");
+    } finally {
+      rmSync(repoWithCatalog, { recursive: true, force: true });
+    }
+
+    const repoWithoutCatalog = createRepo("specdojo-init-nocatalog-");
+    const outputWithoutCatalog: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      outputWithoutCatalog.push(String(chunk));
+      return true;
+    });
+    try {
+      process.chdir(repoWithoutCatalog);
+      await runInit({
+        yes: true,
+        project: "prj-1234",
+        name: "Example Project",
+        provider: "codex",
+      });
+
+      const config = JSON.parse(
+        readFileSync(join(repoWithoutCatalog, ".specdojo/specdojo.config.json"), "utf8"),
+      ) as SpecDojoConfig;
+      expect(config.projects["prj-1234"].catalog_path).toBeUndefined();
+      expect(
+        existsSync(join(repoWithoutCatalog, "docs/ja/projects/prj-1234/010-deliverables-catalog")),
+      ).toBe(false);
+      expect(outputWithoutCatalog.join("")).toContain(
+        "When deliverables are ready, configure catalog_path in .specdojo/specdojo.config.json and run npx specdojo catalog scaffold",
+      );
+    } finally {
+      rmSync(repoWithoutCatalog, { recursive: true, force: true });
     }
   });
 });

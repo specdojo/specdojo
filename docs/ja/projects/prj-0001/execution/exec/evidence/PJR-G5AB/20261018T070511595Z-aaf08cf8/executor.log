@@ -1,0 +1,25 @@
+PJR-G5AB「init の対話からカタログの質問をなくす」の対応を完了しました。
+
+### 実施内容の概要
+
+1. **`specdojo init` 対話処理の改修 ([`src/commands/init.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5AB/src/commands/init.ts))**
+   - 対話式の初期設定から成果物カタログのプロンプト（`Deliverables catalog (none|small|medium|large)`）を除去し、対話の入力ではカタログを作成しないように変更しました。
+   - CLI オプション `--catalog <size>` が明示された場合は、対話・非対話（`--yes` 含む）を問わず従来どおり指定サイズのカタログを生成します。
+   - 初期化完了時の案内（Next steps）末尾に、カタログ未作成時の後続手順として `catalog_path` の設定と `npx specdojo catalog scaffold` 実行を案内するメッセージ（参照先: [`quick-start-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5AB/docs/ja/specdojo/guides/quick-start-guide.md)）を追加しました。
+
+2. **ドキュメントの更新**
+   - [`quick-start-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5AB/docs/ja/specdojo/guides/quick-start-guide.md): 対話の例からカタログの質問行を除去し、非対話例から `--catalog small` を外し、後から足す手順への案内を追加しました。
+   - [`command-reference.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5AB/docs/ja/specdojo/references/command-reference.md): 対話ではカタログを聞かないこと、`--catalog` は明示時のみ生成することに合わせて説明を改定しました。
+   - LP（`specdojo-lp` の「初期設定する」）の説明と矛盾がないことを確認しました（LP 側は変更なし）。
+
+3. **単体テストの更新・拡充 ([`tests/src/commands/init.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5AB/tests/src/commands/init.test.ts))**
+   - 対話処理でカタログのプロンプトが出現しないこと、`--catalog` オプションを渡した場合は対話モードでもカタログ設定が保持されることを検証するテストに改定しました。
+   - `runInit` で `--catalog small` を渡したときに正しくカタログファイルが生成され、未指定時にはカタログが作られず Next steps に後付け案内が出力されることを検証するテストを追加しました。
+
+4. **CHANGELOG および個票の更新**
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5AB/CHANGELOG.md) の `## [0.4.0] - 未定` 節に変更内容を記録しました。
+   - 個票 [`pjr-g5ab-init-without-catalog-prompt.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G5AB/docs/ja/projects/prj-0001/controls/project-register/pjr-g5ab-init-without-catalog-prompt.md) の作業内容テーブルと対応結果セクションを更新しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-G5AB: init の対話から成果物カタログの質問を除去し、--catalog 指定時のみ作成するように改修しました。ドキュメント、CHANGELOG、単体テスト、個票の対応結果を更新し、Prettier 整形および catalog validate を実施しました。","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-g5ab-init-without-catalog-prompt.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/references/command-reference.md src/commands/init.ts tests/src/commands/init.test.ts","status":"passed","summary":"Formatted modified Markdown and TypeScript files"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"Validated deliverables catalog for prj-0001 (OK: dct-index.yaml)"}]}
+</specdojo_executor_evidence>

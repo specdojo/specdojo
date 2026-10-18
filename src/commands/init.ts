@@ -208,7 +208,6 @@ export async function collectInitAnswers(
     const displayNameDefault = options.displayName?.trim() || DEFAULTS.displayName;
     const providerDefault = options.provider?.trim() || DEFAULTS.providers.join(",");
     const execDefault = !!options.exec;
-    const catalogDefault = options.catalog?.trim() || "none";
     const devcontainerDefault = !!options.devcontainer;
     const providerPrompt = `Orchestrator providers (${PROVIDERS.join(", ")}) [${providerDefault}]: `;
     const projectId = await promptUntilValid(
@@ -250,11 +249,7 @@ export async function collectInitAnswers(
         validateExecProviders(parseProviders(answer.trim() || providerDefault), true),
       );
     }
-    const catalog = await promptUntilValid(
-      prompter,
-      `Deliverables catalog (none|small|medium|large) [${catalogDefault}]: `,
-      (answer) => parseCatalog(answer.trim() || catalogDefault),
-    );
+    const catalog = parseCatalog(options.catalog);
     const devcontainer = await promptUntilValid(
       prompter,
       `Create a Dev Container? [${devcontainerDefault ? "Y/n" : "y/N"}]: `,
@@ -653,7 +648,10 @@ export async function runInit(
       (execAgents
         ? `  2. To run an item without the orchestrator: npx specdojo exec run --register <id> --executor-by ${execAgents.executor} --reporter-by ${execAgents.reporter}\n`
         : "") +
-      `  ${execAgents ? "3" : "2"}. Review and commit the files created by specdojo init.\n`,
+      `  ${execAgents ? "3" : "2"}. Review and commit the files created by specdojo init.\n` +
+      (answers.catalog
+        ? ""
+        : "When deliverables are ready, configure catalog_path in .specdojo/specdojo.config.json and run npx specdojo catalog scaffold (see docs/ja/specdojo/guides/quick-start-guide.md).\n"),
   );
 }
 

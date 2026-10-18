@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T06:20:11Z"
@@ -36,11 +36,26 @@ specdojo:
 
 | No  | 作業                                                | 担当 | 状態 | メモ |
 | --- | --------------------------------------------------- | ---- | ---- | ---- |
-| 1   | init の対話からカタログの質問をなくし、案内を改める | DEV  | open | -    |
+| 1   | init の対話からカタログの質問をなくし、案内を改める | DEV  | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- **実施内容**:
+  - `src/commands/init.ts` の対話処理から成果物カタログの質問を除去し、`options.catalog`（`--catalog <size>` 指定）のみからカタログ規模を判定・作成するように変更。
+  - 初期化完了時の案内（Next steps）末尾に、カタログ未作成時の後続手順として `catalog_path` の設定と `npx specdojo catalog scaffold` 実行を案内するメッセージ（参照先: `docs/ja/specdojo/guides/quick-start-guide.md`）を追加。
+  - `quick-start-guide.md` および `command-reference.md` の記述・例からカタログ質問・指定を除去・更新し、カタログ後付け手順の案内を配置。
+  - LP（`../specdojo-lp` の「初期設定する」）の説明と矛盾がないことを確認。
+  - `tests/src/commands/init.test.ts` を更新し、対話でカタログを聞かないこと、`--catalog small` 指定時に正しくカタログが生成されること、案内メッセージの分岐を検証する単体テストを追加。
+  - `CHANGELOG.md` の `0.4.0` 節に本変更を記録。
+- **成果物**:
+  - `src/commands/init.ts`
+  - `tests/src/commands/init.test.ts`
+  - `docs/ja/specdojo/guides/quick-start-guide.md`
+  - `docs/ja/specdojo/references/command-reference.md`
+  - `CHANGELOG.md`
+  - `docs/ja/projects/prj-0001/controls/project-register/pjr-g5ab-init-without-catalog-prompt.md`
+- **残課題**:
+  - なし
 
 ## 5. 関連ドキュメント
 
