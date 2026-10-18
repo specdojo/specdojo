@@ -27,6 +27,7 @@ specdojo:
   - PJR-G5AB（init の対話からカタログの質問をなくす。2026-10-18 に追加）
   - PJR-NJ6J（`--on-rate-limit wait` が codex の usage limit で待たずに止まる。2026-10-18 に追加）
   - PJR-CCXN（devcontainer の scaffold で常時稼働ホストへの接続のサンプルを作る。2026-10-18 に追加）
+  - PJR-Z104（plan の要点に検査の扱いがなく、新しいリポジトリの最初の実行が止まる。2026-10-18 に追加）
 - 範囲を広げる場合は、利用者の承認を得て、この個票の範囲に書き足す。
 - CHANGELOG の `## [0.4.0] - 未定` の節で、0.3.1 の後に統合した利用者に見える変更の記載漏れを補う。少なくとも PJR-2CQR（実行中の routine の表示）と PJR-VGNG（Job Run の部分成功）を載せ、PJR-MX4F・PJR-YFBW を載せるかを確かめる。
 - 公開日を記入し、develop の `npm run check` が通る。
