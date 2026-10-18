@@ -232,3 +232,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_04268c7ac7b74934b756a34fd21237a8
+- v: 1
+  id: reg_89bc2ccec43b4e08885c6345da360e4e
+  ts: "2026-10-18T18:12:20Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（gemma-executor 2 回・qwen-executor・agy-expert-executor、gemma26-reporter）の差分を 4 か所で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: README・ドキュメントサイトのトップ・全体概要ガイド・技のガイドの 4 か所を「Spec道（仕様道）の道場」にそろえた。CHANGELOG の過去の記載と package.json の英語の説明は変えていない。gemma（2 回）と qwen は README.md を編集する権限がなく（opencode の executor の edit は docs・src・tests だけ）、README は agy-expert-executor で直した
+  previous_event_id: reg_86b70d72ed5a417fadbe29e24071c898

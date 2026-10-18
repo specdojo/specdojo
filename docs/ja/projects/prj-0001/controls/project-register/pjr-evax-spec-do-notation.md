@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-evax-spec-do-notation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-10-12T07:13:04Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-18T18:12:20Z"
+  conclusion: README・ドキュメントサイトのトップ・全体概要ガイド・技のガイドの 4 か所を「Spec道（仕様道）の道場」にそろえた。CHANGELOG の過去の記載と package.json の英語の説明は変えていない。gemma（2 回）と qwen は README.md を編集する権限がなく（opencode の executor の edit は docs・src・tests だけ）、README は agy-expert-executor で直した
 ---
 
 # PJR-EVAX README と全体概要ガイドの冒頭を「Spec道（仕様道）の道場」に揃える
