@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: BA
   registered_at: "2026-10-12T08:53:52Z"
   due_on: "2026-10-31"
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run lint:md, npm run lint:fm, npm run lint:ts, npm run typecheck, npm run test:unit, npm run test:integration, npm run valid…"
 ---
 
 # PJR-WJE6 ブランチワークフローガイドにプロダクトリポジトリの節を加える

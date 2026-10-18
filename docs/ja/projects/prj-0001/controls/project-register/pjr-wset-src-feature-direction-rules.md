@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:45:28Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
 ---
 
 # PJR-WSET 循環のなくなった機能の組に依存の向きの規則を足す
@@ -37,11 +38,23 @@ specdojo:
 
 | No  | 作業                                                 | 担当 | 状態 | メモ |
 | --- | ---------------------------------------------------- | ---- | ---- | ---- |
-| 1   | 循環のなくなった組の依存の向きを ESLint の規則に足す | DEV  | open | -    |
+| 1   | 循環のなくなった組の依存の向きを ESLint の規則に足す | DEV  | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[prj-0001:pjr-qqky-src-feature-cycles|PJR-QQKY]] で循環が解消した 6 組について、`eslint.config.js` に `no-restricted-imports` の規則を `error` で追加した。
+  - `src/register/**/*.ts`: `src/exec` を import しない
+  - `src/schedule/**/*.ts`: `src/exec` を import しない
+  - `src/job/**/*.ts`: `src/exec` を import しない
+  - `src/grade/**/*.ts`: `src/exec` を import しない
+  - `src/review/**/*.ts`: `src/grade` を import しない
+  - `src/docs/**/*.ts`: `src/catalog` を import しない
+- 既存コード（`src/**/*.ts`）に対して上記規則を適用し、違反が 0 件であることを確認した。一時的な不正 import のテストにより、各規則が正しく `error` を報告すること、および `src/commands/` と `src/specdojo.ts` への既存の import 禁止規則が各機能で上書きされずに維持されていることを確認した。
+- 循環が残る 2 機能間の組は存在せず、PJR-QQKY の 6 組すべてに規則を追加した（間接的な 3 ノード以上の循環 `schedule` → `dashboard` → `exec` → `schedule` などは本件の対象外）。
+- `src/shared/` に置くものの範囲を見直した。単一機能からしか参照されていないモジュール（`catalog-paths.ts`、`template-resolution.ts`、`schedule-paths.ts`、`random.ts`、`yaml-schema-modeline.ts`、`specdojo-gitignore.ts`）や、機能固有の処理（`catalog-render.ts`、`schedule-index.ts`）を別の項目で各機能へ戻す/再整理する候補として整理した。
+- `.github/instructions/typescript.instructions.md` の「モジュールと import」に、足した 6 組の依存方向の規則を反映した。
+- 変更前後で全 123 コマンド・サブコマンドの `--help` 出力を取得・比較し、完全一致（SHA-256: `e59209a7a94d02ef219c1596c0b447d4ce655c8fa98e5c388360153e596054b4`）することを確認した。
+- 残課題はない。型検査・lint・テスト等の親検証は runner に委ねる。
 
 ## 5. 関連ドキュメント
 
