@@ -58,3 +58,19 @@
       from: "-"
       to: rate limit reached
   previous_event_id: reg_8791ca999d7a42849d2c7baa757e4dee
+- v: 1
+  id: reg_4db3277d08ca42b58b0c980d38ef60c1
+  ts: "2026-10-18T10:23:39Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_f0bdb5bb3a4842f5805b918917925043
