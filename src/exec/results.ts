@@ -24,6 +24,7 @@ export type RenderEditReporterOptions = {
   lineStats?: Map<string, { additions: number; deletions: number }>;
   worktreeDir?: string;
   maxIndividualChangedFiles?: number;
+  approach?: Approach;
 };
 
 // ---------------------------------------------------------------------------
@@ -188,6 +189,18 @@ async function supersedePriorResults(
   return supersededPaths;
 }
 
+const APPROACH_SECTION_WITH_APPROACH = [
+  "## 4. 進め方と実践の型の適用",
+  "",
+  "_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。",
+].join("\n");
+
+const APPROACH_SECTION_WITHOUT_APPROACH = [
+  "## 4. 進め方",
+  "",
+  "_TODO_: どう進めたか、根拠にした文書や規約を記入する。",
+].join("\n");
+
 export async function scaffoldResult(opts: {
   executionPath: string;
   taskId: string;
@@ -242,7 +255,12 @@ export async function scaffoldResult(opts: {
     ...(opts.targets && opts.targets.length > 0 ? { targets: opts.targets } : {}),
   };
 
-  const values: Record<string, string> = { _FRONTMATTER_: serializeFrontmatter(meta) };
+  const values: Record<string, string> = {
+    _FRONTMATTER_: serializeFrontmatter(meta),
+    _APPROACH_SECTION_: approach
+      ? APPROACH_SECTION_WITH_APPROACH
+      : APPROACH_SECTION_WITHOUT_APPROACH,
+  };
   // Finalize results pre-expand the confirmation record (done_criteria checklist and
   // ready-promotion targets) so every finalize is verified against the same items.
   // When the caller cannot resolve them, leave _TODO_ markers for manual fill-in.
@@ -250,7 +268,10 @@ export async function scaffoldResult(opts: {
     values._DONE_CRITERIA_CHECKLIST_ = opts.finalizeSections?.doneCriteriaChecklist ?? "_TODO_";
     values._FINALIZE_TARGETS_CHECKLIST_ = opts.finalizeSections?.targetsChecklist ?? "_TODO_";
   }
-  const content = expandTemplate(template, values);
+  let content = expandTemplate(template, values);
+  if (!approach && content.includes("## 4. 進め方と実践の型の適用")) {
+    content = content.replace(APPROACH_SECTION_WITH_APPROACH, APPROACH_SECTION_WITHOUT_APPROACH);
+  }
 
   writeFileSync(resultPath, content, "utf8");
   await formatMarkdownFile(resultPath);
@@ -717,7 +738,7 @@ export function renderEditReporterBody(
       "なし",
     ),
     "",
-    "## 4. 進め方と実践の型の適用",
+    options?.approach ? "## 4. 進め方と実践の型の適用" : "## 4. 進め方",
     "",
     reporterInlineText(output.approach),
   ].join("\n");
@@ -775,8 +796,15 @@ export async function renderReporterResult(
   const frontmatter = content.match(/^---\r?\n[\s\S]*?\r?\n---/)?.[0];
   if (!frontmatter) throw new Error(`Result frontmatter not found: ${resultPath}`);
 
+  const approach =
+    options?.approach ??
+    (typeof parsed.data.approach === "string" && parsed.data.approach.trim().length > 0
+      ? (parsed.data.approach as Approach)
+      : undefined);
+
   const resolvedOptions: RenderEditReporterOptions = {
     ...options,
+    ...(approach ? { approach } : {}),
     worktreeDir: options?.worktreeDir ?? findGitRoot(dirname(resultPath)) ?? undefined,
   };
 
