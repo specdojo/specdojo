@@ -199,6 +199,8 @@ describe("extractBlockReason", () => {
     expect(prompt).toContain("`not_applicable`");
     expect(prompt).toContain("non-empty `reason`");
     expect(prompt).toContain("rejects the claim when it can confirm the check applies");
+    expect(prompt).toContain("`npm run validate:schema:file` requires a changed `*.yaml`");
+    expect(prompt).toContain("markdownlint requires a changed `*.md` file");
     expect(prompt).toContain("judged by that repository's package.json");
     expect(prompt).toContain("sets `catalog_path`");
     expect(prompt).toContain("outside `docs/ja/projects/`, is a valid reason");

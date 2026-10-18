@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-18T14:51:17Z"
-  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
   derived_from:
     - PJR-Z104
 ---
