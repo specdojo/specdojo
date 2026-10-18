@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_133bcbbc84ba40ba903ed370faee644c
+  ts: "2026-10-18T00:40:06Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-3DY1 の決定のフォローアップ（2026-10-18）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の実行のあとに review の agent が判定し、todo と issue を自動で close する
+    - field: description
+      from: ""
+      to: 段階 A。統合の後に review の agent が個票の完了条件・result・差分・検証の結果を照らして verdict を出し、complete なら close、incomplete なら waiting に戻す。runner 自身のコードを変えた項目の動作確認の扱いも決める。 PJR-3DY1 の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"

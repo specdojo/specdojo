@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T12:17:15Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-md"
 ---
 
 # PJR-H06F exec run --register で approach の plan の作り方を使う

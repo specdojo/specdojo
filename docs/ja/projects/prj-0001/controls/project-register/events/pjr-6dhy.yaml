@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_7e3c32221c7d4357a0627805e4d90017
+  ts: "2026-10-18T00:40:14Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-3DY1 の決定のフォローアップ（2026-10-18）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 夜の orchestrator が承認済みの todo の並びを流しきる仕組みを作る
+    - field: description
+      from: ""
+      to: 段階 B。人が完了条件を承認した個票に印を付け、夜の orchestrator が決まった権限と手順の中で順に流し、見つけた問題は derived_from を付けて承認待ちとして起票し、朝に結果をまとめる。 PJR-3DY1 の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
