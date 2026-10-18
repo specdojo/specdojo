@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wje6-product-repo-branch-guide
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-10-12T08:53:52Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-18T15:13:12Z"
+  conclusion: "branch-workflow-guide に「10. プロダクトリポジトリの統合先を指定する」を加え、統合先の指定、GitHub flow と git flow での選び方、merge の方式ごとの Refs: と SHA の残り方、trace key での追跡を書いた。GitHub flow の例の誤りと、登録簿への参照などの 4 点は PJR-8C6E で直す"
 ---
 
 # PJR-WJE6 ブランチワークフローガイドにプロダクトリポジトリの節を加える

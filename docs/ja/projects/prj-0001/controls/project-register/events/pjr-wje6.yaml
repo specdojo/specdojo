@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_40adc390ab414a3ca2362eb533cbc63b
+- v: 1
+  id: reg_91f82dfdbbc9457597647ead93e12992
+  ts: "2026-10-18T15:13:12Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（qwen-executor・gemma26-reporter）の差分と親検証を確認した。7AW0 の修正の後に再開して統合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: "branch-workflow-guide に「10. プロダクトリポジトリの統合先を指定する」を加え、統合先の指定、GitHub flow と git flow での選び方、merge の方式ごとの Refs: と SHA の残り方、trace key での追跡を書いた。GitHub flow の例の誤りと、登録簿への参照などの 4 点は PJR-8C6E で直す"
+  previous_event_id: reg_b37ffa2d8c194921866ec6b4fbd2ded7
