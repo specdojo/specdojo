@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: runner のコードの分割 5 件と、runner に関わる移動 2 件（PJR-MHHP・PJR-XP0J）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
+  completed_at: "2026-10-18T03:02:50Z"
+  conclusion: H06F・FXPH の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
 ---
 
 # PJR-JSEY exec-run.ts の分割後に runner の動作を確かめる
