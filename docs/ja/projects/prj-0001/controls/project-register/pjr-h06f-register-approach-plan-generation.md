@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T12:17:15Z"
   due_on: null
-  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-h06f.yaml 13ms (unchanged); FAIL  /integration/ tests/src/exec/pipeline-e2e.integra…"
 ---
 
 # PJR-H06F exec run --register で approach の plan の作り方を使う
