@@ -16,6 +16,7 @@ import {
   readResultFrontmatterSnapshot,
   renderReporterResult,
   scaffoldResult,
+  stripLeadingListMarker,
   updateResultStatus,
 } from "../results.js";
 import { formatMarkdownFile } from "../format.js";
@@ -394,7 +395,7 @@ async function fillIncompleteJobReviewResult(resultPath: string, reason: string)
       /_TODO_: 変更内容[^\n]*/,
       `- runner が review を完了できなかったため統合不可と判断した。`,
     )
-    .replace(/_TODO_: 未充足事項[^\n]*/, `- ${safeReason}`)
+    .replace(/_TODO_: 未充足事項[^\n]*/, `- ${stripLeadingListMarker(safeReason) || "理由なし"}`)
     .replace(/_TODO_: `approach`[^\n]*/, "Job Run の出力は変更していない。")
     .replace(/- verdict: _TODO_（[^\n]*）/, "- verdict: incomplete");
   writeFileSync(resultPath, content, "utf8");

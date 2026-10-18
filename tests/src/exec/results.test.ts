@@ -1067,6 +1067,71 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(isResultUnfilled(resultPath, "review")).toBe(false);
   });
 
+  it("drops self-numbered prefixes from review rationale so the result passes markdownlint", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "T-TEST-doc-020",
+      mode: "review",
+      projectId: "prj-0001",
+      planRef: "exec/plans/T-TEST-doc-020-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const output = {
+      schema_version: 1 as const,
+      mode: "review" as const,
+      grade_check: "評価結果は最新で、grade は pass だった。",
+      rationale: [
+        "1. 完了条件の 1 つ目を満たす。",
+        "2. 完了条件の 2 つ目を満たす。",
+        "3) 1.5 倍の余裕を残している。",
+      ],
+      improvements: ["- 2. 次回の見直しで扱う。"],
+      approach: "fully-guided で求めた作成が行われたことを確認した。",
+      verdict: "complete" as const,
+    };
+
+    await renderReporterResult(resultPath, output, reporterEvidence([]));
+    const content = readFileSync(resultPath, "utf8");
+
+    expect(content).toContain(
+      "- 完了条件の 1 つ目を満たす。\n- 完了条件の 2 つ目を満たす。\n- 1.5 倍の余裕を残している。",
+    );
+    expect(content).toContain("## 3. 未充足事項・改善指示\n\n- 次回の見直しで扱う。");
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("drops self-numbered prefixes from edit summary and handoff so the result passes markdownlint", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+    const output = {
+      schema_version: 1 as const,
+      mode: "edit" as const,
+      summary: ["1. 成果物を更新した。", "2) 表を整えた。"],
+      changed_files: [{ path: "docs/test.md", summary: "記述を追加した。" }],
+      handoff: ["3. 次の版で見直す。"],
+      approach: "rulebook に沿って進めた。",
+    };
+
+    await renderReporterResult(
+      resultPath,
+      output,
+      reporterEvidence([{ path: "docs/test.md", status: "M" }]),
+    );
+    const content = readFileSync(resultPath, "utf8");
+
+    expect(content).toContain("## 1. 実施内容\n\n- 成果物を更新した。\n- 表を整えた。");
+    expect(content).toContain("## 3. 申し送り\n\n- 次の版で見直す。");
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
   it.each([
     ["必須項目の欠落", "  task_id: prj-overview\n", ""],
     ["必須項目の空値", "  project_id: prj-0001", '  project_id: ""'],

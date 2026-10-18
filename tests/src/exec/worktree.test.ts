@@ -470,6 +470,34 @@ describe("summarizeGitHookFailure", () => {
     expect(summary).toContain("Tests  1 failed | 2038 passed (2039)");
   });
 
+  it("reports the step marked as failed in the lefthook summary, not the first step header", () => {
+    const output = [
+      "╭──────────────────────────────────────────╮",
+      "│ 🥊 lefthook  v2.1.15   hook:  pre-commit │",
+      "╰──────────────────────────────────────────╯",
+      "│  typecheck (skip) no matching staged files",
+      "┃  format ❯ ",
+      "docs/ja/projects/prj-0001/controls/project-register/events/pjr-jsey.yaml 12ms (unchanged)",
+      "",
+      "┃  markdown ❯ ",
+      "docs/ja/projects/prj-0001/controls/project-register/pjr-jsey.md 46ms (unchanged)",
+      "docs/ja/projects/prj-0001/execution/exec/results/pjr-jsey-review-result.md:21:3 error MD029/ol-prefix Ordered list item prefix [Expected: 1; Actual: 2; Style: 1/1/1]",
+      "",
+      "exit status 1",
+      "┃  register-build ❯ ",
+      "Generated: docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md",
+      "  ────────────────────────────────────",
+      "summary: (done in 5.13 seconds)",
+      "✔️ format (0.29 seconds)",
+      "✔️ register-build (4.15 seconds)",
+      "🥊 markdown (1.04 seconds)",
+    ].join("\n");
+
+    expect(summarizeGitHookFailure(output)).toBe(
+      "markdown: docs/ja/projects/prj-0001/execution/exec/results/pjr-jsey-review-result.md:21:3 error MD029/ol-prefix Ordered list item prefix [Expected: 1; Actual: 2; Style: 1/1/1]",
+    );
+  });
+
   it("persists complete redacted hook output in the run log", () => {
     const dir = mkdtempSync(join(tmpdir(), "specdojo-git-failure-log-"));
     try {

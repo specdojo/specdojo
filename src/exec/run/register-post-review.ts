@@ -6,7 +6,7 @@ import { formatMarkdownFile } from "../../shared/markdown-format.js";
 import { expandTemplate } from "../../shared/text.js";
 import type { MemberRoster, ProjectMember } from "../../shared/specdojo-config.js";
 import { execTemplatePath } from "../plans.js";
-import { scaffoldResult, updateResultStatus } from "../results.js";
+import { scaffoldResult, stripLeadingListMarker, updateResultStatus } from "../results.js";
 import type { ExecEvidence } from "../evidence.js";
 import { readPipelineState } from "../pipeline-state.js";
 import { sanitizeRegisterConclusion, type RegisterItemTransition } from "../register.js";
@@ -271,7 +271,7 @@ async function fillFailedReviewResult(resultPath: string, reason: string): Promi
   content = content
     .replace(/_TODO_: 評価結果サイドカー[^\n]*/u, `統合後 review を完了できなかった: ${safeReason}`)
     .replace(/_TODO_: 変更内容[^\n]*/u, "- runner が統合後 review を完了できなかった。")
-    .replace(/_TODO_: 未充足事項[^\n]*/u, `- ${safeReason}`)
+    .replace(/_TODO_: 未充足事項[^\n]*/u, `- ${stripLeadingListMarker(safeReason) || "理由なし"}`)
     .replace(/_TODO_: `approach`[^\n]*/u, "統合済みの出力は変更していない。")
     .replace(/- verdict: _TODO_（[^\n]*）/u, "- verdict: incomplete");
   writeFileSync(resultPath, content, "utf8");
@@ -314,6 +314,52 @@ function changedPathsBetween(repoRoot: string, baseCommit: string, outputCommit:
     .split("\n")
     .map((path) => path.trim())
     .filter(Boolean);
+}
+
+// post-review の記帳（個票・イベント・review の plan と result）の commit が hook で失敗すると、
+// 記帳は作業ツリーに残ったまま次の項目へ進む。人が確かめて手で commit できるよう、失敗した
+// hook の名前と最初のエラーの行（commitRegisterState の要約）、残ったファイル、hook の全出力の
+// 置き場所を runner のログへ出す。
+export function postReviewCommitFailureLines(params: {
+  itemId: string;
+  message: string;
+  leftFiles: readonly string[];
+  failureLogPath: string;
+}): string[] {
+  const summary = params.message.replace(/^git commit failed:\s*/u, "");
+  // summarizeGitHookFailure は失敗した step を `<step>: <最初のエラーの行>` の形で先頭に置く。
+  // git 自身の `fatal:` / `error:` は hook 名ではないため、hook 名として扱わない。
+  const match = summary.match(/^([\w.-]+): (.*)$/su);
+  const isHookName = match !== null && !/^(?:fatal|error|warning|hint)$/iu.test(match[1]!);
+  const hook = isHookName ? match[1]! : "unknown";
+  const firstError = isHookName ? match[2]! : summary;
+  return [
+    `Error: post-review bookkeeping commit failed for ${params.itemId}`,
+    `  failed hook: ${hook}`,
+    `  first error: ${firstError || "unknown"}`,
+    `  uncommitted bookkeeping files: ${params.leftFiles.length > 0 ? params.leftFiles.join(", ") : "none"}`,
+    `  full hook output: ${params.failureLogPath}`,
+  ];
+}
+
+function reportPostReviewCommitFailure(params: {
+  repoRoot: string;
+  itemId: string;
+  error: unknown;
+  preexisting: readonly string[];
+  failureLogPath: string;
+}): void {
+  const message = params.error instanceof Error ? params.error.message : String(params.error);
+  const leftFiles = worktreeStatusPaths(params.repoRoot)
+    .filter((path) => !params.preexisting.includes(path))
+    .sort();
+  const lines = postReviewCommitFailureLines({
+    itemId: params.itemId,
+    message,
+    leftFiles,
+    failureLogPath: repoRelative(params.repoRoot, params.failureLogPath),
+  });
+  process.stderr.write(`${lines.join("\n")}\n`);
 }
 
 export async function runRegisterPostReview(params: {
@@ -499,13 +545,26 @@ export async function runRegisterPostReview(params: {
       );
     })
     .map((path) => resolve(context.repoRoot, path));
-  commitRegisterState(
-    context.repoRoot,
-    registerPaths,
-    `exec(register ${item.id}): post-review ${verdict}`,
-    params.ticketPath,
-    managed,
-  );
+  const commitFailureLogPath = join(dirname(reviewStatePath), "post-review-commit.log");
+  try {
+    commitRegisterState(
+      context.repoRoot,
+      registerPaths,
+      `exec(register ${item.id}): post-review ${verdict}`,
+      params.ticketPath,
+      managed,
+      commitFailureLogPath,
+    );
+  } catch (error) {
+    reportPostReviewCommitFailure({
+      repoRoot: context.repoRoot,
+      itemId: item.id,
+      error,
+      preexisting,
+      failureLogPath: commitFailureLogPath,
+    });
+    throw error;
+  }
   const commit = gitOutput(context.repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
   const introduced = worktreeStatusPaths(context.repoRoot).filter(
     (path) => !preexisting.includes(path),

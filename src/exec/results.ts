@@ -412,9 +412,25 @@ function reporterInlineText(value: string): string {
     .trim();
 }
 
+// reporter や runner の文を `- ` の箇条書きに描くとき、文が自前のリスト記号（`1.`・`1)`・
+// `-`・`*`・`+`）で始まると `- 1. ...` が入れ子のリストとして解釈され、markdownlint の
+// MD029 などに当たって pre-commit hook で記帳の commit が失敗する。箇条書きの記号は runner が
+// 付けるため、先頭の記号は外す（番号の意味は箇条書きの順序で保たれる）。
+export function stripLeadingListMarker(text: string): string {
+  let current = text.trim();
+  for (;;) {
+    const next = current.replace(/^(?:\d{1,9}[.)]|[-*+])(?:\s+|$)/u, "").trim();
+    if (next === current) return current;
+    current = next;
+  }
+}
+
 function reporterBulletList(values: string[], empty: string): string {
   if (values.length === 0) return `- ${empty}`;
-  return values.map((value) => `- ${reporterInlineText(value)}`).join("\n");
+  return values
+    .map((value) => stripLeadingListMarker(reporterInlineText(value)))
+    .map((text) => `- ${text || empty}`)
+    .join("\n");
 }
 
 function findGitRoot(startDir: string): string | null {
