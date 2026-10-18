@@ -8,7 +8,12 @@ import {
   type ExecDefaultsConfig,
   type RateLimitDetection,
 } from "../agent-config.js";
-import { normalizeAgentLimit, type AgentLimitKind, type AgentLimitSignal } from "../limit.js";
+import {
+  decidePinnedWait,
+  normalizeAgentLimit,
+  type AgentLimitKind,
+  type AgentLimitSignal,
+} from "../limit.js";
 import { replaceDocIndexRefs } from "../../docs/doc-index.js";
 import { loadPlan, parsePlanTaskIdentity } from "../plans.js";
 import type { ReadyTaskView, TaskMode } from "../types.js";
@@ -695,15 +700,14 @@ export async function runWithRetry(
       return { ...fallbackResult, attempts, rateLimitEvents: recoveryEvents };
     }
 
-    if (pinned.action === "wait" && firstPass.limit?.resume_at) {
-      const now = pinned.now?.() ?? new Date();
-      const resumeAt = new Date(firstPass.limit.resume_at);
-      const waitMilliseconds = resumeAt.getTime() - now.getTime();
-      if (
-        Number.isFinite(waitMilliseconds) &&
-        waitMilliseconds >= 0 &&
-        waitMilliseconds <= pinned.maxWaitSeconds * 1000
-      ) {
+    if (pinned.action === "wait") {
+      const decision = decidePinnedWait(
+        firstPass.limit,
+        pinned.now?.() ?? new Date(),
+        pinned.maxWaitSeconds,
+      );
+      if (decision.action === "wait") {
+        const { resumeAt, waitMilliseconds } = decision;
         process.stdout.write(
           `Rate limit detected for pinned agent ${primary?.actor ?? "-"}. ` +
             `Waiting until ${resumeAt.toISOString()} before resuming the same stage.\n`,
@@ -720,9 +724,7 @@ export async function runWithRetry(
         const resumed = await runPass(candidates.slice(0, 1));
         return { ...resumed, attempts, rateLimitEvents: recoveryEvents };
       }
-      process.stdout.write(
-        `Pinned-agent wait skipped: resume time is invalid or exceeds ${pinned.maxWaitSeconds}s.\n`,
-      );
+      process.stdout.write(`${decision.message}\n`);
     }
     return { ...firstPass, attempts, rateLimitEvents: recoveryEvents };
   }

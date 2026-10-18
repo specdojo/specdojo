@@ -32,6 +32,7 @@ SpecDojo の利用者に影響する変更を記録します。
 - `register build` が生成する一覧（`pjr-index.md` と派生ビュー）で、個票のタイトル・説明・結論などのセルに含まれるパイプ文字（`|`）と改行をエスケープするようにしました。セル内のパイプ文字で表の列がずれ、markdownlint（MD056）で失敗する問題を解消します（PJR-FXPH）。
 - register の plan テンプレート（`xep-register-template`・`xep-register-investigate-template`）の対象項目からサイズが大きくパスも古かった登録簿一覧（`pjr-index.md`）を外し、進め方の最初を個票のみを読む指示に改めました。文脈長の小さい agent が一覧を読んで文脈を消費し停止する問題を防ぎます（PJR-SJ0G）。
 - `routine run` の実行中に、`routine list` などが前回の結果と理由をそのまま表示していた問題を修正しました。開始時に `last_result` を `running` にし、終了時に今回の結果で上書きします（PJR-2CQR）。
+- `exec run --on-rate-limit wait` で、codex の usage limit（`try again at 11:17 PM`）の解除まで待たずに止まっていた問題を修正しました。agent の出力の全体（codex が表示した設定ファイルなどの内容を含む）から最初に見つかった時刻を使っていたため、設定ファイルの例の `resets 4:10am (UTC)` を解除の時刻と読んでいました。解除の時刻は出力の末尾の行から読みます。agy の `Resets in 4h36m50s` のような相対の形も読みます。待機を飛ばすときのログは、解除の時刻を読めない場合（元の出力の行を表示）、過ぎている場合、上限を超える場合で分けました（PJR-NJ6J）。
 
 ### 文書
 
