@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T22:18:44Z"
   due_on: null
+  completed_at: "2026-10-18T09:53:01Z"
+  conclusion: 本リポジトリの名簿を実体 39・別名 18 の 2 段へ移し、今の名前をすべて別名として残した。exec-defaults の起動のコマンドを役割の定義と {model} で組み立てる形にした。0ZAS に従い thinking を有効にした executor・gemma26 の executor・oMLX の定義を無効にした。Job 8 件・routine 9 件の検証が通り、Job と routine の名前は別名で正しい起動のコマンドになる
 ---
 
 # PJR-8MPY 本リポジトリの agent の名簿を 2 段構成へ移す
