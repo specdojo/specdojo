@@ -973,3 +973,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_0d106a8870ee4cb2832cb78facbedf63
+- v: 1
+  id: reg_7dd5fc64213b4d55ae2e42376d230c10
+  ts: "2026-10-18T15:27:49Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 完了条件 1: 個票の履歴への追記について、`2026-10-19 00:20` のエントリが `PJR-T46Y` に対し追加されていることを確認した。エントリの `actor` は `sonnet-executor` となっており、これは `evidence.json` の `stage.actor…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+  previous_event_id: reg_ff3722b66b5041c18a678c0958f4ece1
