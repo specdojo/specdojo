@@ -340,7 +340,40 @@ git push origin --delete feature/branch-policy
 
 レビュー中または共同作業中の branch は無理に改名せず、完了後に新しい命名へ切り替える方が安全です。
 
-## 10. 作業前後のチェックリスト
+## 10. プロダクトリポジトリの統合先を指定する
+
+別リポジトリ構成では、SpecDojo はプロダクトリポジトリにブランチ戦略を求めません。求めるのは、プロダクト側のルール（GitHub flow・git flow など）で決めた統合先を `repos[].integration_branch` に指定することだけで、ブランチ名に project ID を入れる必要はありません。`main` への取り込み方と merge の方式は、プロダクト側のルールに任せます（[[prj-0001:pjr-zdvq-product-repo-branch-strategy]]）。
+
+### 10.1. GitHub flow と git flow での `integration_branch` の選び方
+
+| プロダクト側の運用 | `repos[].integration_branch` の指定例 | 解説                                                                                                                       |
+| ------------------ | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| GitHub flow        | トピックのブランチ名（例: `main`）    | トピックのブランチから統合先へ統合し、最終的に `main` へは PR で取り込む。トピックごとに書き換える場合もある               |
+| git flow           | `develop`                             | feature を `develop` に統合し、`develop` から `main` へ release する。既存の `project/<id>/develop` の仕組みと同じ型で動く |
+
+GitHub flow では、トピックごとまたは run ごとの `integration_branch` を指定できればよい（これは派生項目として起票中）。現状は 1 リポジトリ 1 統合先のため、運用に合わせて書き換えます。
+
+### 10.2. merge の方式ごとの `Refs:` の残り方
+
+プロダクト側の exec branch 上の commit と merge commit には trace key `Refs: <project-id>:<item-id>` が付きます。merge の方式ごとに、この `Refs:` と記録した SHA の残り方が次のとおりです。
+
+| merge の方式 | `Refs:`（プロダクト → プロジェクト）                                                                     | 記録した SHA（プロジェクト → プロダクト）                 |
+| ------------ | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| merge commit | 残る                                                                                                     | 統合先の祖先として残る                                    |
+| rebase merge | exec branch 上の commit の `Refs:` は残る。runner の merge commit は直線化で落ちる                       | SHA が変わると先祖ではなくなる                            |
+| squash merge | GitHub の設定次第。「Pull request title」だけでは消え、「Pull request title and commit details」なら残る | 統合先の祖先ではなくなる。GitHub では PR の参照から辿れる |
+
+squash merge を使う場合は、squash の commit メッセージに `Refs:` の行を残す設定（GitHub で「Pull request title and commit details」を選ぶなど）にします。`Refs: <project-id>:<item-id>` が消えると追跡が切れるためです。
+
+### 10.3. 追跡を trace key で行う
+
+追跡は SHA ではなく trace key（`Refs: <project-id>:<item-id>`）を主にします。`git log --grep` で辿れます。
+
+```bash
+git log --grep "Refs: prj-0001:PJR-WJE6" --oneline
+```
+
+## 11. 作業前後のチェックリスト
 
 | 時点                 | 確認内容                                                             |
 | -------------------- | -------------------------------------------------------------------- |
