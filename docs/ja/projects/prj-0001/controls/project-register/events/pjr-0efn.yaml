@@ -35,3 +35,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-T46Y"]'
+- v: 1
+  id: reg_45f2d0896da045ae9537b79b569abcb4
+  ts: "2026-10-18T16:34:20Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_483babdabc124490803aa6db9c0b6d08
+- v: 1
+  id: reg_eafb2c1a6fd847fd9be3a694b22003cd
+  ts: "2026-10-18T16:34:22Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-0efn-post-review-result-markdown-lint.md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-0efn-post-review-result-markdown-lint.md"
+  previous_event_id: reg_45f2d0896da045ae9537b79b569abcb4

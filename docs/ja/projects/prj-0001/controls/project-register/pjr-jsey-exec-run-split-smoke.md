@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
+  block_reason: "checkpoint failed: Checkpoint commit failed (exec(register PJR-JSEY): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0001/controls/project-register/events…"
   conclusion: 6EF8 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
 ---
 

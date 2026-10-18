@@ -1063,3 +1063,32 @@
       from: "2026-10-19"
       to: "-"
   previous_event_id: reg_ef8f71bc4fdb45269118f75417796a6f
+- v: 1
+  id: reg_4c66aa4ccdcf47a5a83766c2221ee3fa
+  ts: "2026-10-18T16:32:22Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0760e64e59044a9f8f038578da70d8e9
+- v: 1
+  id: reg_61df28f61dd24daebcbb9d4572d7ac4e
+  ts: "2026-10-18T16:33:50Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Checkpoint commit failed (exec(register PJR-JSEY): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0001/controls/project-register/events…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Checkpoint commit failed (exec(register PJR-JSEY): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0001/controls/project-register/events…"
+  previous_event_id: reg_4c66aa4ccdcf47a5a83766c2221ee3fa

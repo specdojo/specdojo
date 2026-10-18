@@ -35,3 +35,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-6DHY"]'
+- v: 1
+  id: reg_5d144fd0b4e94d97abe33325fc39bce7
+  ts: "2026-10-18T16:41:09Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b6535859ebd34d1a9829106b91a58d20
+- v: 1
+  id: reg_d56b6b32af6f42afa8723e3fce9fa2ff
+  ts: "2026-10-18T16:42:08Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Checkpoint commit failed (exec(register PJR-283N): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0001/controls/project-register/events…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Checkpoint commit failed (exec(register PJR-283N): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0001/controls/project-register/events…"
+  previous_event_id: reg_5d144fd0b4e94d97abe33325fc39bce7
