@@ -29,3 +29,16 @@
     - field: registered
       from: ""
       to: "2026-10-18"
+- v: 1
+  id: reg_c2db6d20b03841808f2d8a43142704ab
+  ts: "2026-10-18T01:04:05Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_00b983ff62ea43f5ae91f1b279e38c86
