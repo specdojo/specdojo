@@ -1,0 +1,30 @@
+プロジェクト登録簿の項目 PJR-CCXN「devcontainer の scaffold で常時稼働ホストへの接続のサンプルを作る」に対応しました。
+
+### 実施内容
+
+1. **接続用サンプルスクリプト・SSH 設定サンプルの作成**:
+   - `templates/devcontainer/remote-host/specdojo-tmux.sh.sample` を追加しました。常時稼働ホスト上で devcontainer が停止していれば `devcontainer up` で起動し、コンテナ内の tmux セッション（既定: `specdojo`）へ直接接続します。冒頭コメントに前提ツール（Docker、`@devcontainers/cli`、tmux）と起動コマンドを記載し、ホスト名・パス・ユーザー名はプレースホルダーにしました。
+   - `templates/devcontainer/remote-host/ssh-config.sample` を追加しました。接続元端末の `~/.ssh/config` へ写して使うホスト通常接続 alias と、`RemoteCommand`・`RequestTTY force` を持つ tmux 接続専用 alias（`Host <host>-tmux`）を定義しています。
+
+2. **devcontainer scaffold の拡張**:
+   - [`src/devcontainer/scaffold.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CCXN/src/devcontainer/scaffold.ts):
+     - `devcontainer.json` の `appPort` および `forwardPorts` を抽出する [`extractPublishedPorts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CCXN/src/devcontainer/scaffold.ts#L48-L72) と、公開ポートに応じた `LocalForward` 行（未指定時は設定例コメント）を含む設定を生成する [`generateSshConfigSample`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CCXN/src/devcontainer/scaffold.ts#L74-L108) を実装しました。
+     - `.devcontainer/remote-host/` 配下に `specdojo-tmux.sh.sample` と `ssh-config.sample` を書き出し、dry-run 表示と完了後の案内（サンプルの置き場所とホスト・接続元へのコピー先）を追加しました。
+   - [`src/commands/init.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CCXN/src/commands/init.ts):
+     - スクリプトがコンテナ内の tmux を前提とするため、`specdojo init --devcontainer` 実行時に `tmux: true` を渡してコンテナ内 tmux を自動で導入するようにしました。
+
+3. **単体テスト**:
+   - [`tests/src/devcontainer/scaffold.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CCXN/tests/src/devcontainer/scaffold.test.ts):
+     - 公開ポートの抽出処理、公開ポート有無による `ssh-config.sample` の中身の差異、`--force` なしで既存サンプルを上書きしないこと、`--force` で上書きされること、dry-run 表示と Next steps 案内を検証するテストを追加・更新しました。
+   - [`tests/src/commands/init.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CCXN/tests/src/commands/init.test.ts):
+     - `init --devcontainer` で tmux feature が有効化され、`.devcontainer/remote-host/` の 2 つのサンプルが作成されることを検証するアサーションを追加しました。
+
+4. **ドキュメント・登録簿**:
+   - [`docs/ja/specdojo/guides/remote-host-development-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CCXN/docs/ja/specdojo/guides/remote-host-development-guide.md): 「2.1. Dev Container を生成する」節に、2 つのサンプルの使い方と、`devcontainer.json` で公開ポートを追加した際に `~/.ssh/config` にも `LocalForward` を追加する旨を記載しました。
+   - [`docs/ja/specdojo/references/command-reference.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CCXN/docs/ja/specdojo/references/command-reference.md): `devcontainer scaffold` の説明に remote-host サンプル生成を追記しました。
+   - [CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CCXN/CHANGELOG.md): `## [0.4.0] - 未定` の追加機能節に本機能の変更を記載しました。
+   - 個票 [`pjr-ccxn-devcontainer-remote-host-samples.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CCXN/docs/ja/projects/prj-0001/controls/project-register/pjr-ccxn-devcontainer-remote-host-samples.md): 作業内容（done）と対応結果セクションを記入しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-CCXN に対応し、devcontainer scaffold で .devcontainer/remote-host/ 配下に常時稼働ホスト接続用スクリプトと SSH 設定サンプルを生成するようにしました。","validations":[{"command":"tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog validation passed"},{"command":"npx prettier --check src/devcontainer/scaffold.ts src/commands/init.ts tests/src/devcontainer/scaffold.test.ts tests/src/commands/init.test.ts docs/ja/specdojo/guides/remote-host-development-guide.md docs/ja/specdojo/references/command-reference.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-ccxn-devcontainer-remote-host-samples.md","status":"passed","summary":"prettier formatting check passed"}]}
+</specdojo_executor_evidence>

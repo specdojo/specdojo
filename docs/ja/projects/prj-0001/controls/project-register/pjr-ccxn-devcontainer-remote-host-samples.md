@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T10:46:30Z"
@@ -39,11 +39,16 @@ devcontainer scaffold（init --devcontainer を含む）で、常時稼働ホス
 
 | No  | 作業                                                  | 担当 | 状態 | メモ         |
 | --- | ----------------------------------------------------- | ---- | ---- | ------------ |
-| 1   | scaffold で接続のサンプルを作り、案内とガイドを改める | DEV  | open | 0.4.0 の範囲 |
+| 1   | scaffold で接続のサンプルを作り、案内とガイドを改める | DEV  | done | 0.4.0 の範囲 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 解決内容: `devcontainer scaffold`（`init --devcontainer` を含む）で、`.devcontainer/remote-host/` に `specdojo-tmux.sh.sample` と `ssh-config.sample` を生成するようにした。既にある場合は `--force` のときだけ上書きする。
+- 接続用スクリプト（`specdojo-tmux.sh.sample`）: 常時稼働ホスト上で devcontainer の起動（`devcontainer up`）と tmux セッション（`specdojo`）への直接接続（`docker exec`）を行う。前提ツール（Docker、`@devcontainers/cli`、tmux）と起動コマンドを冒頭コメントに記載し、ホスト名・パス・ユーザー名は仮の値（プレースホルダー）とした。
+- SSH 設定サンプル（`ssh-config.sample`）: 接続元の `~/.ssh/config` に写すホスト alias、tmux 接続用 alias（`RemoteCommand` / `RequestTTY force`）、`devcontainer.json` の公開ポート（`appPort`・`forwardPorts`）ごとの `LocalForward` を含む。公開ポートがない場合は書き方の例をコメントで示した。
+- `init --devcontainer` の tmux: 接続スクリプトがコンテナ内の tmux を前提とするため、`init --devcontainer` で `tmux: true` としてコンテナ内 tmux を自動で導入するように実装した。
+- 案内とガイド: scaffold 完了時の Next steps でサンプルの置き場所とコピー先を示し、[[specdojo:remote-host-development-guide]]・`docs/ja/specdojo/references/command-reference.md`・CHANGELOG にサンプルの使い方と `LocalForward` の追加手順を記載した。
+- 単体テスト: 公開ポートの抽出、公開ポート有無に応じた `ssh-config.sample` の内容、`--force` なしでの上書き防止、`--force` での上書き、dry-run 表示、および `init --devcontainer` での tmux 有効化を単体テストで検証した。
 
 ## 5. 関連ドキュメント
 

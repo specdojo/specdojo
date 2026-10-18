@@ -662,7 +662,7 @@ export async function runInit(
       editors: [],
       ollama: answers.providers.includes("opencode"),
       cron: false,
-      tmux: false,
+      tmux: true,
       force: false,
       dryRun,
     });

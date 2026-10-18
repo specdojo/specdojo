@@ -391,11 +391,23 @@ describe("specdojo init", () => {
 
       const devcontainer = JSON.parse(
         readFileSync(join(repo, ".devcontainer/devcontainer.json"), "utf8"),
-      ) as { workspaceMount: string; workspaceFolder: string };
+      ) as {
+        workspaceMount: string;
+        workspaceFolder: string;
+        features?: Record<string, { packages?: string }>;
+      };
       expect(devcontainer.workspaceMount).toContain("target=/workspaces/stable-workspace,");
       expect(devcontainer.workspaceFolder).toBe(
         "/workspaces/stable-workspace/${localWorkspaceFolderBasename}",
       );
+      expect(
+        devcontainer.features?.["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"]
+          ?.packages,
+      ).toContain("tmux");
+      expect(existsSync(join(repo, ".devcontainer/remote-host/specdojo-tmux.sh.sample"))).toBe(
+        true,
+      );
+      expect(existsSync(join(repo, ".devcontainer/remote-host/ssh-config.sample"))).toBe(true);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

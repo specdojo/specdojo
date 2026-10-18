@@ -35,3 +35,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-8GQ4"]'
+- v: 1
+  id: reg_d5e7561234904ff1ab60fe5ddd94e91f
+  ts: "2026-10-18T10:56:01Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e5dced13fd4148af84a88f4b371c3117
+- v: 1
+  id: reg_4607dddeede741ca9dae63b8570bbf87
+  ts: "2026-10-18T11:21:32Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d5e7561234904ff1ab60fe5ddd94e91f

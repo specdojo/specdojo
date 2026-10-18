@@ -72,6 +72,13 @@ npx specdojo devcontainer scaffold --provider claude,codex --editor emacs
 
 生成される `.devcontainer/emacs/init.el` は、`~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/emacs/init.el` のいずれも無い場合だけコピーされます。空の `~/.emacs.d` があればその中の `init.el` へ、なければ `~/.config/emacs/init.el` へ配置し、配置先を出力します。初回作成前の既定値は生成されたテンプレートで変更でき、作成後は出力されたコピー先を編集します。dotfiles が設定を配置していれば上書きされません。
 
+scaffold は、常時稼働ホストへの接続と tmux セッションの維持に使えるサンプルを `.devcontainer/remote-host/` に生成します。
+
+- `specdojo-tmux.sh.sample`: 常時稼働ホストの `~/bin/specdojo-tmux.sh` などへコピーし、実行権限（`chmod +x`）を付与して使います。devcontainer が停止していれば `devcontainer up` で起動し、コンテナ内の tmux セッション（`specdojo`）へ接続します。ホスト名や作業パスはプレースホルダーになっているため、ホストの環境に合わせて調整してください。
+- `ssh-config.sample`: 接続元端末の `~/.ssh/config` へ追加して使います。ホストへの通常接続エイリアスと、`RemoteCommand` と `RequestTTY force` で `specdojo-tmux.sh` を直接呼び出すエイリアス（`Host <host>-tmux`）を含みます。
+
+`devcontainer.json` の `appPort` や `forwardPorts` で開発サーバなどの公開ポートを設定している場合は、接続用エイリアスに `LocalForward` の行が含まれます。開発サーバのポートを増やしたときは、`~/.ssh/config` の tmux 接続用エイリアスにも `LocalForward <ポート> 127.0.0.1:<ポート>` を追加してください。
+
 ## 3. 構成例
 
 ```text

@@ -31,6 +31,81 @@ function repositoryVolumePrefix(repoRoot: string): string {
   return safeName || "project";
 }
 
+function extractPortNumber(value: unknown): number | undefined {
+  if (typeof value === "number") {
+    return Number.isInteger(value) && value > 0 && value <= 65535 ? value : undefined;
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    const withoutProto = trimmed.replace(/\/(tcp|udp)$/, "");
+    const parts = withoutProto.split(":");
+    const portStr = parts.length === 3 ? parts[1] : parts[0];
+    const parsed = parseInt(portStr, 10);
+    return !isNaN(parsed) && parsed > 0 && parsed <= 65535 ? parsed : undefined;
+  }
+  return undefined;
+}
+
+export function extractPublishedPorts(devcontainer: Record<string, unknown>): number[] {
+  const ports: number[] = [];
+
+  const addPort = (val: unknown) => {
+    const port = extractPortNumber(val);
+    if (port !== undefined && !ports.includes(port)) {
+      ports.push(port);
+    }
+  };
+
+  const appPort = devcontainer.appPort;
+  if (Array.isArray(appPort)) {
+    for (const p of appPort) addPort(p);
+  } else if (appPort !== undefined) {
+    addPort(appPort);
+  }
+
+  const forwardPorts = devcontainer.forwardPorts;
+  if (Array.isArray(forwardPorts)) {
+    for (const p of forwardPorts) addPort(p);
+  } else if (forwardPorts !== undefined) {
+    addPort(forwardPorts);
+  }
+
+  return ports;
+}
+
+export function generateSshConfigSample(ports: number[]): string {
+  const lines: string[] = [
+    "# 接続元端末の ~/.ssh/config 用設定サンプル",
+    "# <host> や <user> などのプレースホルダーは実際の接続先環境に合わせて変更してください。",
+    "",
+    "# 常時稼働ホストへの通常接続用",
+    "Host <host>",
+    "  HostName <host>",
+    "  User <user>",
+    "",
+    "# devcontainer 内の tmux セッションへ直接入る接続用",
+    "Host <host>-tmux",
+    "  HostName <host>",
+    "  User <user>",
+    "  RequestTTY force",
+    "  RemoteCommand ~/bin/specdojo-tmux.sh",
+  ];
+
+  if (ports.length > 0) {
+    for (const port of ports) {
+      lines.push(`  LocalForward ${port} 127.0.0.1:${port}`);
+    }
+  } else {
+    lines.push(
+      "  # devcontainer.json の公開ポート（appPort / forwardPorts）に合わせて LocalForward を追加してください。",
+      "  # 例: LocalForward 5173 127.0.0.1:5173",
+    );
+  }
+
+  lines.push("");
+  return lines.join("\n");
+}
+
 export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptions): Promise<void> {
   const {
     packageRoot,
@@ -211,12 +286,21 @@ fi`);
     );
   }
 
+  const specdojoTmuxTemplatePath = path.join(templateDir, "remote-host", "specdojo-tmux.sh.sample");
+  const specdojoTmuxScript = await readFile(specdojoTmuxTemplatePath, "utf8");
+  const publishedPorts = extractPublishedPorts(devcontainer);
+  const sshConfigScript = generateSshConfigSample(publishedPorts);
+
   if (dryRun) {
     process.stdout.write(`[dry-run] would write: .devcontainer/devcontainer.json\n`);
     process.stdout.write(`[dry-run] would write: .devcontainer/post-create.sh\n`);
     if (emacsInitTemplate !== undefined) {
       process.stdout.write(`[dry-run] would write: .devcontainer/emacs/init.el\n`);
     }
+    process.stdout.write(
+      `[dry-run] would write: .devcontainer/remote-host/specdojo-tmux.sh.sample\n`,
+    );
+    process.stdout.write(`[dry-run] would write: .devcontainer/remote-host/ssh-config.sample\n`);
     return;
   }
 
@@ -231,16 +315,23 @@ fi`);
     await mkdir(path.join(devcontainerDir, "emacs"), { recursive: true });
     await writeFile(path.join(devcontainerDir, "emacs", "init.el"), emacsInitTemplate, "utf8");
   }
+  const remoteHostDir = path.join(devcontainerDir, "remote-host");
+  await mkdir(remoteHostDir, { recursive: true });
+  await writeFile(path.join(remoteHostDir, "specdojo-tmux.sh.sample"), specdojoTmuxScript, "utf8");
+  await writeFile(path.join(remoteHostDir, "ssh-config.sample"), sshConfigScript, "utf8");
 
   process.stdout.write(`Written: .devcontainer/devcontainer.json\n`);
   process.stdout.write(`Written: .devcontainer/post-create.sh\n`);
   if (emacsInitTemplate !== undefined) {
     process.stdout.write(`Written: .devcontainer/emacs/init.el\n`);
   }
+  process.stdout.write(`Written: .devcontainer/remote-host/specdojo-tmux.sh.sample\n`);
+  process.stdout.write(`Written: .devcontainer/remote-host/ssh-config.sample\n`);
 
   process.stdout.write(
     "Next steps:\n" +
       "  1. Commit the scaffolded files.\n" +
-      "  2. Open this directory in a Dev Container (VS Code or compatible editor).\n",
+      "  2. Open this directory in a Dev Container (VS Code or compatible editor).\n" +
+      "  3. Remote host: copy .devcontainer/remote-host/specdojo-tmux.sh.sample to the host (e.g. ~/bin/) and merge ssh-config.sample into ~/.ssh/config on your client.\n",
   );
 }
