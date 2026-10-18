@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wset-src-feature-direction-rules
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:45:28Z"
   due_on: null
+  completed_at: "2026-10-18T15:46:57Z"
+  conclusion: 循環がなくなった 6 組（register・schedule・job・grade は exec を、review は grade を、docs は catalog を import しない）の依存の向きを ESLint の no-restricted-imports に error で加え、今のコードの違反が 0 件であることと、規則が効くことを確かめた。shared に置くものを見直し、1 機能からしか使われない 6 モジュールと機能固有の 2 モジュールを戻す候補にした。--help の出力は全 123 コマンドで一致した。3 機能以上をまたぐ循環は対象外として残った
 ---
 
 # PJR-WSET 循環のなくなった機能の組に依存の向きの規則を足す

@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e61d00cd6f2042fa926c8b4e11982c83
+- v: 1
+  id: reg_b98d7ecf8c414b7b9b737e7f41d81d53
+  ts: "2026-10-18T15:46:57Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分・親検証と、対応結果の shared の見直しと --help の比較を確認した。8WBN の修正の後に再開して統合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: 循環がなくなった 6 組（register・schedule・job・grade は exec を、review は grade を、docs は catalog を import しない）の依存の向きを ESLint の no-restricted-imports に error で加え、今のコードの違反が 0 件であることと、規則が効くことを確かめた。shared に置くものを見直し、1 機能からしか使われない 6 モジュールと機能固有の 2 モジュールを戻す候補にした。--help の出力は全 123 コマンドで一致した。3 機能以上をまたぐ循環は対象外として残った
+  previous_event_id: reg_ad50c2b202d64ad8a69f2f6e231e661e
