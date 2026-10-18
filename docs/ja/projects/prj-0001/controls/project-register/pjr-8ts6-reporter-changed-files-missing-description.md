@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-8ts6-reporter-changed-files-missing-description
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:22:08Z"
   due_on: null
+  completed_at: "2026-10-18T04:34:27Z"
+  conclusion: reporter が説明を返さなかった変更ファイルに、git から分かる変更の種類と行数を書くようにした。50 件を超えるとディレクトリごとの件数にまとめる。reporter の指示と雛形も見直した。空の catch と略した変数名、本リポジトリの .claude/agents/claude-reporter.md への指示の反映は残っている
 ---
 
 # PJR-8TS6 result の変更ファイルの説明が「reporter の説明がないため」で埋まる
