@@ -412,7 +412,38 @@ specdojo exec resume \
 
 executor と reporter が成功した後の commit・merge・worktree 撤去で止まった場合、`exec resume --task <task-id>` は agent を起動せず、`pipeline-state.json` の `integrate` 段から統合だけを再開します。前回の merge が完了している場合は exec branch を再 merge せず、runner が残した lifecycle 差分を確認したうえで worktree 撤去と `exec complete` だけを行います。通常実行の成功時は `integrate.status=succeeded`、失敗時は `failed` と block event の `pipeline_state_ref` が残ります。
 
-### 2.7. register実行の再開
+### 2.7. register統合後のreviewと自動close
+
+register の worktree 実行では、`--post-review` を付けると、成果を統合した後に読み取り専用の review pipeline を実行できます。review executor の既定は `claude-expert-review-executor` で、`--review-by` により変更できます。reporter は `stage_role: reporter` の候補から選び、edit pipeline で `--reporter-by` を指定している場合は同じ reporter を使います。
+
+```bash
+specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --post-review
+```
+
+毎回有効にする場合は `.specdojo/exec-defaults.yaml` に設定します。既定は `false` です。post-review は統合後の差分を対象にするため、in-place 実行では利用できません。
+
+```yaml
+run:
+  register_execution: worktree
+  register_post_review: true
+```
+
+review executor は、個票の完了条件、edit plan/result、executor evidence の検証結果、統合 commit の差分を照合します。成果物や個票を変更すると runner が `incomplete` として扱います。runner は verdict と個票の種類から次の遷移を行い、review executor を actor、review result の判断根拠を reason として register event に残します。
+
+| 個票の種類   | verdict                                     | 遷移                                 |
+| ------------ | ------------------------------------------- | ------------------------------------ |
+| todo / issue | `complete` / `complete-with-findings`       | `done` へ close                      |
+| todo / issue | `incomplete`                                | `waiting`                            |
+| その他       | `complete` / `complete-with-findings`       | `review` のまま（自動 close しない） |
+| すべて       | `incomplete`、review 失敗、未対応の verdict | `waiting`                            |
+
+SpecDojo package 自身の `src/`・`tools/`・`package.json`・lock file を変更した項目は、統合済みでも実行中の親プロセスが新しい runner コードを読み直せません。この場合、verdict が完了でも自動 close せず `review` に残します。新しいプロセスで実際の `exec run` を smoke test し、人が close してください。
+
+### 2.8. register実行の再開
 
 複数の register 項目を worktree で並列実行するときは、`--executor-by` に `PJR-ID=nickname` をカンマ区切りで渡すと、項目ごとに executor を固定できます。従来の `--executor-by <nickname>` は引き続き全項目への共通指定です。項目別指定は起動対象をすべて指定する必要があり、起動対象外の ID や指定漏れがあると、状態遷移や worktree 作成の前にエラーになります。`--dry-run` では各項目について解決した executor とコマンドを確認できます。
 

@@ -1,5 +1,5 @@
 import { type Command } from "commander";
-import { loadExecDefaultsConfig } from "../agent-config.js";
+import { loadExecDefaultsConfig, resolveRegisterPostReview } from "../agent-config.js";
 import { resolveProjectPaths } from "../project.js";
 import { isRegisterFailureMode } from "../register.js";
 import {
@@ -56,6 +56,10 @@ export function registerRunCommand(exec: Command): void {
     "--register-commit",
     "With in-place --register: commit each successful item's changes as a separate commit (default: leave changes in the working tree). Ignored in worktree mode, which always commits",
     false,
+  );
+  rcmd.option(
+    "--post-review",
+    "After integrating a register worktree, run a read-only completion review and automatically close eligible todo/issue items",
   );
   rcmd.option(
     "--on-failure <mode>",
@@ -131,7 +135,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--review-by <nickname>",
-    "agent-members.yaml nickname for review-mode tasks in --auto batch runs",
+    "agent-members.yaml nickname for review-mode tasks in --auto batch runs or register post-review",
   );
   rcmd.option(
     "--executor-by <nickname>",
@@ -225,6 +229,14 @@ export function registerRunCommand(exec: Command): void {
           executionPath,
         );
         opts.worktree = resolveRegisterWorktree(opts, execDefaults);
+        opts.postReview = opts.postReview || resolveRegisterPostReview(execDefaults);
+      }
+      if (opts.postReview && !(hasRegister && opts.worktree)) {
+        process.stdout.write(
+          "--post-review (or run.register_post_review) requires --register in worktree mode.\n",
+        );
+        process.exitCode = 1;
+        return;
       }
       if (hasRegister && !opts.worktree && parseParallel(opts.parallel) !== 1) {
         process.stdout.write(

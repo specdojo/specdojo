@@ -854,3 +854,19 @@
       from: NJ6J の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
       to: 6EF8 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
   previous_event_id: reg_9bd0fa41915d4941968bfff357e74663
+- v: 1
+  id: reg_a8a1de2c9c424b9691392e2ba1fc2b09
+  ts: "2026-10-18T15:03:18Z"
+  action: reopen
+  actor: claude-orchestrator
+  from_status: done
+  to_status: open
+  reason: T46Y の統合後の runner と review の段の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-18"
+      to: "-"
+  previous_event_id: reg_148d113ecd4b4ff3a558b8f220285ff6

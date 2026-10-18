@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8517af97ccd645ad8403ab454145a9e6
+  ts: "2026-10-18T14:51:17Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 変更の種類で決まる検査の not_applicable を runner が script の有無だけで退ける
+    - field: description
+      from: ""
+      to: 2026-10-18 23:50 に PJR-WSET を agy-expert-executor で流したところ、agy は npm run validate:schema:file を「YAML の成果物を変えていない」として not_applicable と報告した（規約の「YAML 成果物を編集した場合」に従った判断）。runner は script が package.json にあるため当てはまると判定して退け、親検証 7 件が通っていたのに executor validation failed or not run で waiting にした。規約の検査の多くは変更したファイルの種類で当てはまるかが決まるが、runner は script の有無しか見ていない
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Z104"]'

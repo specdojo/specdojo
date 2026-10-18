@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d7e36f6f51c54f2994401d1ac4bf4f30
+  ts: "2026-10-18T14:58:36Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合後の review の判定のテストを補う
+    - field: description
+      from: ""
+      to: T46Y の完了条件のうち、verdict が complete・complete-with-findings のときに close すること、decision・question を close しないことを確かめる単体テストが入っていない（tests/src/exec/register-post-review.test.ts には incomplete と runner のコードを変えた項目の 2 件だけがある）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T46Y"]'

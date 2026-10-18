@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-18T00:40:06Z"
@@ -35,13 +35,18 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                   | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------------ | ---- | ---- | ---- |
-| 1   | 統合の後の review の agent による自動の close を加える | DEV  | open | -    |
+| No  | 作業                                                   | 担当 | 状態 | メモ                                                   |
+| --- | ------------------------------------------------------ | ---- | ---- | ------------------------------------------------------ |
+| 1   | 統合の後の review の agent による自動の close を加える | DEV  | done | `--post-review` と `run.register_post_review` で有効化 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- register の worktree 統合後に、個票、edit plan/result、executor evidence、統合差分を照合する読み取り専用 review pipeline を追加した。既定の review executor は `claude-expert-review-executor` で、`--review-by` により変更できる。
+- `--post-review` または `exec-defaults.yaml` の `run.register_post_review: true` で有効にする。既定は無効であり、統合差分を確定できない in-place 実行では利用できない。
+- verdict が `complete` / `complete-with-findings` の todo・issue は review executor を actor として close し、`incomplete` または review 失敗は理由を event に残して `waiting` へ戻す。decision・question・risk・change-request は完了 verdict でも `review` に残す。
+- review executor がファイルを変更した場合は `incomplete` として扱う。post-review の plan/result/evidence と状態遷移は専用 commit にまとめる。
+- runner 自身のコードを変更した項目は、実行中の親プロセスが統合後のコードを読み直せないため自動 close せず、人が新しいプロセスで smoke test を行って close する方式を採った。
+- disposition の単体テストで `complete`、`complete-with-findings`、`incomplete`、decision を close しない場合、および runner 実装変更を人の close に残す場合を確認する。
 
 ## 5. 関連ドキュメント
 

@@ -107,6 +107,14 @@ $defs:
           Default execution location for `exec run --register`. `--worktree` and `--in-place`
           override this value. When omitted, the historical `in-place` behavior is retained for
           compatibility with existing repositories.
+      register_post_review:
+        type: boolean
+        default: false
+        description: >
+          Whether `exec run --register` performs a read-only completion review after worktree
+          integration and automatically closes eligible todo/issue items. `--post-review` enables
+          the same behavior for one run. This option requires worktree execution and is disabled
+          when omitted.
       max_concurrent_runs:
         type: integer
         minimum: 1

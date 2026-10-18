@@ -29,3 +29,32 @@
     - field: registered
       from: ""
       to: "2026-10-17"
+- v: 1
+  id: reg_508bfb45cf4144c68173c4e5b75525e7
+  ts: "2026-10-18T14:29:39Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5f9c11ce7b6f42f6bbdacc54af82a7ef
+- v: 1
+  id: reg_0082cfb7bcfb4acc9dfe0f21f5cfc44a
+  ts: "2026-10-18T14:50:25Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
+  previous_event_id: reg_508bfb45cf4144c68173c4e5b75525e7

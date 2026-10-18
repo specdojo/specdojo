@@ -153,7 +153,7 @@ export function requireRunnableRegisterItem(item: PjrItem): RegisterTaskCategory
 // ---------------------------------------------------------------------------
 
 export type RegisterItemOutcome = "success" | "failure" | "skipped";
-export type RegisterItemTransition = "review" | "waiting" | "none";
+export type RegisterItemTransition = "review" | "waiting" | "done" | "none";
 
 // ID別の実行結果。commit は
 // "committed <sha>" / "no-changes" / "incomplete" / "off" / "skipped"。

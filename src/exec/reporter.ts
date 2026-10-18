@@ -280,9 +280,10 @@ export function deriveReporterFacts(
     commands.add(command);
     target.set(repo, commands);
   };
-  // sandbox で実行できない検証を executor が not_run（親 runner へ委譲）と記録し、runner が
-  // 同じリポジトリで同じコマンドを実行して通した場合は満たされたものとして扱う。executor の
-  // failed は runner の結果で打ち消さない（PJR-2GZE）。
+  // sandbox で実行できない検証を executor が not_run（親 runner へ委譲）または
+  // not_applicable と記録し、runner が同じリポジトリで同じコマンドを実行して通した場合は、
+  // 親検証の結果を正として満たされたものと扱う。executor の failed は runner の結果で
+  // 打ち消さない（PJR-2GZE、PJR-7AW0）。
   for (const validation of evidence.validations) {
     if (validation.status !== "passed") continue;
     if (validation.source === "runner") {
@@ -306,21 +307,35 @@ export function deriveReporterFacts(
   // `npm run check` のような合成コマンドを executor が not_run（親 runner へ委譲）とした場合は、
   // 対象リポジトリの package.json の script を展開し、構成する各コマンドが同じリポジトリの
   // 親検証か executor 自身の検証で通っていれば満たされたものとして扱う（PJR-SDWF）。
-  const isDelegatedValidationSatisfied = (command: string): boolean => {
+  const validationCommandAndRepo = (
+    command: string,
+  ): { command: string; repo: string; scripts: Readonly<Record<string, string>> } => {
     const manifest = commandManifest(
       normalizeValidationCommand(command),
       applicabilityOptions,
       specdojoConfig,
     );
-    const repo = manifest.repoName ?? PARENT_VALIDATION_PROJECT_REPO;
-    const runnerPassedCommands = runnerPassedCommandsByRepo.get(repo) ?? new Set<string>();
-    if (runnerPassedCommands.has(manifest.command)) return true;
-    const passedCommands = passedCommandsByRepo.get(repo) ?? new Set<string>();
-    const components = compositeComponents(manifest.command, manifest.scripts);
+    return {
+      command: manifest.command,
+      repo: manifest.repoName ?? PARENT_VALIDATION_PROJECT_REPO,
+      scripts: manifest.scripts,
+    };
+  };
+  const isPassedParentValidation = (command: string): boolean => {
+    const target = validationCommandAndRepo(command);
+    return (runnerPassedCommandsByRepo.get(target.repo) ?? new Set<string>()).has(target.command);
+  };
+  const isDelegatedValidationSatisfied = (command: string): boolean => {
+    const target = validationCommandAndRepo(command);
+    if ((runnerPassedCommandsByRepo.get(target.repo) ?? new Set<string>()).has(target.command)) {
+      return true;
+    }
+    const passedCommands = passedCommandsByRepo.get(target.repo) ?? new Set<string>();
+    const components = compositeComponents(target.command, target.scripts);
     return (
       components !== undefined &&
       components.every((component) =>
-        isComponentSatisfied(component, passedCommands, manifest.scripts),
+        isComponentSatisfied(component, passedCommands, target.scripts),
       )
     );
   };
@@ -341,6 +356,12 @@ export function deriveReporterFacts(
     if (
       (validation.status === "not_run" || validation.status === "not_applicable") &&
       runnerOwnedValidationReason(validation.command) !== undefined
+    ) {
+      return false;
+    }
+    if (
+      (validation.status === "not_run" || validation.status === "not_applicable") &&
+      isPassedParentValidation(validation.command)
     ) {
       return false;
     }
