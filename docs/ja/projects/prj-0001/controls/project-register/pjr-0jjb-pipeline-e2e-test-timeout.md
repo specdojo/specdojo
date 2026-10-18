@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-18T02:21:23Z"
   due_on: null
+  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0JJB/20261018T055452458Z-72ceb123/evidence.json 57ms (unchanged); FAIL  /integration/ tests/…"
 ---
 
 # PJR-0JJB pipeline-e2e の統合テストが負荷で 20 秒の上限を超えて親の検証を落とす
