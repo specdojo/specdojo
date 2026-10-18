@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T22:18:53Z"
   due_on: null
+  block_reason: rate limit reached
 ---
 
 # PJR-8TGQ 配布する agent の雛形を 2 段構成へ改める
