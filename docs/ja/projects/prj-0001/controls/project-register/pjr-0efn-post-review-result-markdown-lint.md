@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-18T16:04:14Z"
-  block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
   derived_from:
     - PJR-T46Y
 ---
