@@ -45,6 +45,13 @@ function limitKind(output: string): AgentLimitKind {
   return "rate_limit";
 }
 
+function outputLines(output: string): string[] {
+  return output
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
 function diagnosticLine(output: string, kind: AgentLimitKind): string {
   const patterns: Record<AgentLimitKind, RegExp> = {
     rate_limit: /rate limit|too many requests|\b429\b|retry.after/i,
@@ -54,12 +61,12 @@ function diagnosticLine(output: string, kind: AgentLimitKind): string {
     timeout: /timeout|timed out/i,
     oom: /out of memory|\boom\b/i,
   };
-  const lines = output
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
+  const lines = outputLines(output);
+  // The provider prints its limit notice at the end; earlier matches can be transcript echoes.
   const matched =
-    lines.find((line) => patterns[kind].test(line)) ?? lines.at(-1) ?? "limit reached";
+    [...lines].reverse().find((line) => patterns[kind].test(line)) ??
+    lines.at(-1) ??
+    "limit reached";
   return matched.length > RAW_MESSAGE_MAX_LENGTH
     ? `${matched.slice(0, RAW_MESSAGE_MAX_LENGTH)}…`
     : matched;
@@ -133,8 +140,24 @@ function parseProviderReset(output: string, observedAt: Date): Date | undefined 
     if (!Number.isNaN(parsed.getTime()) && parsed > observedAt) return parsed;
   }
 
+  // Antigravity reports a relative reset such as "Resets in 4h36m50s".
+  const relative = output.match(/\bresets?\s+in\s+(\d+\s*[dhms](?:\s*\d+\s*[dhms])*)\b/i);
+  if (relative) {
+    const unitMilliseconds: Record<string, number> = {
+      d: 86_400_000,
+      h: 3_600_000,
+      m: 60_000,
+      s: 1000,
+    };
+    let totalMilliseconds = 0;
+    for (const part of relative[1].matchAll(/(\d+)\s*([dhms])/gi)) {
+      totalMilliseconds += Number.parseInt(part[1], 10) * unitMilliseconds[part[2].toLowerCase()];
+    }
+    if (totalMilliseconds > 0) return new Date(observedAt.getTime() + totalMilliseconds);
+  }
+
   const timeOnly = output.match(
-    /(?:resets?(?:\s+at)?|(?:retry|try)\s+again\s+at)\s+(\d{1,2}):(\d{2})\s*(am|pm)?(?:\s*\(([^)]+)\)|\s+(UTC|GMT|JST|(?:UTC|GMT)?[+-]\d{1,2}(?::?\d{2})?))?/i,
+    /(?:\bresets?(?:\s+at)?|\b(?:retry|try)\s+again\s+at)\s+(\d{1,2}):(\d{2})\s*(am|pm)?(?:\s*\(([^)]+)\)|\s+(UTC|GMT|JST|(?:UTC|GMT)?[+-]\d{1,2}(?::?\d{2})?))?/i,
   );
   if (!timeOnly) return undefined;
   // Provider CLIs commonly omit the timezone for a reset shown in the operator's local time
@@ -152,6 +175,28 @@ function parseProviderReset(output: string, observedAt: Date): Date | undefined 
   return nextTimeOfDayUtc(observedAt, hour, minute, offset);
 }
 
+const RESUME_HINT_PATTERN = /reset|retry|try\s+again/i;
+
+// The agent output is the whole transcript: codex exec echoes the prompt and every command output
+// before the limit notice. A first match over the whole text can therefore pick an echoed example
+// such as "resets 4:10am (UTC)" from a config file. Read the resume time per line, starting from
+// the last line, so the provider's own notice at the end wins over earlier echoes.
+function parseResumeTime(
+  output: string,
+  observedAt: Date,
+): { retryAfter?: Date; providerReset?: Date } {
+  const lines = outputLines(output);
+  for (let index = lines.length - 1; index >= 0; index--) {
+    const line = lines[index];
+    if (!RESUME_HINT_PATTERN.test(line)) continue;
+    const retryAfter = parseRetryAfter(line, observedAt);
+    if (retryAfter) return { retryAfter };
+    const providerReset = parseProviderReset(line, observedAt);
+    if (providerReset) return { providerReset };
+  }
+  return {};
+}
+
 export function normalizeAgentLimit(input: {
   output: string;
   provider?: AgentProvider;
@@ -160,8 +205,10 @@ export function normalizeAgentLimit(input: {
 }): AgentLimitSignal {
   const observedAt = input.observedAt ?? new Date();
   const kind = limitKind(input.output);
-  const parsedRetryAfter = parseRetryAfter(input.output, observedAt);
-  const parsedProviderReset = parseProviderReset(input.output, observedAt);
+  const { retryAfter: parsedRetryAfter, providerReset: parsedProviderReset } = parseResumeTime(
+    input.output,
+    observedAt,
+  );
   // A quota/usage limit is normally not safe to auto-resume, but an explicit future retry/reset
   // supplied by the provider is authoritative. Vague text such as "resets tomorrow" remains
   // non-retryable and does not pick up a configured cooldown.
@@ -202,6 +249,51 @@ export function normalizeAgentLimit(input: {
     ...(resumeAt ? { resume_at: resumeAt.toISOString() } : {}),
     ...(resumeSource ? { resume_source: resumeSource } : {}),
   };
+}
+
+export type PinnedWaitDecision =
+  | { action: "wait"; resumeAt: Date; waitMilliseconds: number }
+  | { action: "skip"; reason: "unreadable" | "past" | "exceeds"; message: string };
+
+// Decide whether a pinned agent waits for its limit reset. Each skip reason has its own message so
+// the run log tells an unreadable reset time apart from one that is too far away.
+export function decidePinnedWait(
+  limit: AgentLimitSignal | undefined,
+  now: Date,
+  maxWaitSeconds: number,
+): PinnedWaitDecision {
+  const limitLine = limit?.raw_message ?? "-";
+  const resumeAt = limit?.resume_at ? new Date(limit.resume_at) : undefined;
+  if (!resumeAt || Number.isNaN(resumeAt.getTime())) {
+    return {
+      action: "skip",
+      reason: "unreadable",
+      message:
+        "Pinned-agent wait skipped: resume time could not be read from the agent output. " +
+        `Limit line: ${limitLine}`,
+    };
+  }
+  const source = limit?.resume_source ?? "unknown";
+  const waitMilliseconds = resumeAt.getTime() - now.getTime();
+  if (waitMilliseconds < 0) {
+    return {
+      action: "skip",
+      reason: "past",
+      message:
+        `Pinned-agent wait skipped: resume time ${resumeAt.toISOString()} (${source}) ` +
+        `has already passed. Limit line: ${limitLine}`,
+    };
+  }
+  if (waitMilliseconds > maxWaitSeconds * 1000) {
+    return {
+      action: "skip",
+      reason: "exceeds",
+      message:
+        `Pinned-agent wait skipped: resume time ${resumeAt.toISOString()} (${source}) is ` +
+        `${Math.ceil(waitMilliseconds / 1000)}s away and exceeds the limit of ${maxWaitSeconds}s.`,
+    };
+  }
+  return { action: "wait", resumeAt, waitMilliseconds };
 }
 
 function metaString(meta: Record<string, unknown> | undefined, key: string): string | undefined {
