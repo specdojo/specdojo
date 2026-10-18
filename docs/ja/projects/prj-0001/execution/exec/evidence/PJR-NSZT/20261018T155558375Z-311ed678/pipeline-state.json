@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-NSZT",
   "run_id": "20261018T155558375Z-311ed678",
-  "updated_at": "2026-10-18T16:05:33.854Z",
+  "updated_at": "2026-10-18T16:09:05.225Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-nszt-20261018T155558Z-f02a-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-high-executor",
       "attempts": 1,
       "started_at": "2026-10-18T16:05:33.854Z",
-      "completed_at": null,
+      "completed_at": "2026-10-18T16:09:05.225Z",
       "artifact_ref": null
     }
   },
