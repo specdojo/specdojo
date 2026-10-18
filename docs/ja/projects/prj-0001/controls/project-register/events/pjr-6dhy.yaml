@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ed892c19f2054e2c9784738157926465
+- v: 1
+  id: reg_3f7c210934e140a7ae3a38a0c68bd27c
+  ts: "2026-10-18T17:53:19Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証と、統合後の JSEY を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: "register update --autopilot approved で承認の印を付け、orchestrator night が印のある open の todo・issue だけを worktree・post-review・並行の wave で流すようにした。件数・並行数・連続失敗の停止・rate limit の切り替えを設定でき、承認の範囲外の失敗は derived_from 付きで起票し、朝の報告にまとめる。2 時の routine は enabled: false のまま加えた。雛形の空行の不具合は PJR-283N で直した"
+  previous_event_id: reg_15a4b299e18a40778f00e31ec6b2438c

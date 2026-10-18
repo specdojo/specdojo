@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6dhy-night-orchestrator-approved-queue
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T00:40:14Z"
   due_on: null
+  completed_at: "2026-10-18T17:53:19Z"
+  conclusion: "register update --autopilot approved で承認の印を付け、orchestrator night が印のある open の todo・issue だけを worktree・post-review・並行の wave で流すようにした。件数・並行数・連続失敗の停止・rate limit の切り替えを設定でき、承認の範囲外の失敗は derived_from 付きで起票し、朝の報告にまとめる。2 時の routine は enabled: false のまま加えた。雛形の空行の不具合は PJR-283N で直した"
 ---
 
 # PJR-6DHY 夜の orchestrator が承認済みの todo の並びを流しきる仕組みを作る
