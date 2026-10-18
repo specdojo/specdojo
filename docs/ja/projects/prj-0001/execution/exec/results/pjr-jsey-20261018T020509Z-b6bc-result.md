@@ -4,28 +4,30 @@ specdojo:
   type: exec-result
   task_id: PJR-JSEY
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-jsey-20261018T020509Z-b6bc-plan.md
   started_at: "2026-10-18T02:05:09.828Z"
+  completed_at: "2026-10-18T02:19:09.232Z"
   agent: agy-expert-executor
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` の対応結果テーブルに、`agy-expert-executor` による動作確認の結果を追記しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+個票 `pjr-jsey-exec-run-split-smoke.md` に基づき、`exec run --register` の実行による runner の動作確認（統合テスト工程を含む）を実施し、その結果を個票の対応結果テーブルに追記しました。

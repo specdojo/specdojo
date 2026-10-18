@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
   conclusion: runner のコードの分割 5 件と、runner に関わる移動 2 件（PJR-MHHP・PJR-XP0J）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
 ---
 
@@ -50,6 +51,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 2026-10-17 20:47 | PJR-GBWW   | codex-expert-executor |
 | 2026-10-17 21:04 | PJR-CY80   | codex-expert-executor |
 | 2026-10-18 08:51 | PJR-BHMH   | codex-expert-executor |
+| 2026-10-18 11:09 | PJR-H06F   | agy-expert-executor   |
 
 ## 5. 関連ドキュメント
 
