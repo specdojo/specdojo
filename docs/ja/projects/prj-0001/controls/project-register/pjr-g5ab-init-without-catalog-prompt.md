@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-g5ab-init-without-catalog-prompt
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T06:20:11Z"
+  completed_at: "2026-10-18T07:21:49Z"
+  conclusion: 対話式の init から成果物カタログの質問を除き、--catalog を指定したときだけ作るようにした。最後の案内で後から catalog scaffold で足せることを示し、quick start ガイドとコマンドリファレンスを合わせた。案内が参照する quick-start-guide のパスは利用者のリポジトリにはない（node_modules/specdojo の中）ため、URL にするかは後で決める
 ---
 
 # PJR-G5AB init の対話からカタログの質問をなくす
