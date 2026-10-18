@@ -11,6 +11,7 @@ import {
   defaultWorktreeBase,
   projectGitignoreLayout,
   specdojoRootDir,
+  type AgentAlias,
   type ProjectMember,
   type SpecDojoConfig,
   type SpecDojoProjectConfig,
@@ -391,6 +392,29 @@ function selectParentValidations(repoRoot: string, configured: unknown): string[
 
 type ExecAgentNames = { executor: string; reporter: string };
 
+// 別名は向き先の実体が選ばれた provider に含まれる場合だけ残す。別名どうしの連鎖も辿る。
+function selectAliases(aliases: AgentAlias[], memberNicknames: Set<string>): AgentAlias[] {
+  const targets = new Map(aliases.map((alias) => [alias.nickname, alias.alias_of] as const));
+  const resolvesToSelected = (nickname: string): boolean => {
+    const seen = new Set<string>();
+    let current = nickname;
+    while (!seen.has(current)) {
+      seen.add(current);
+      const target = targets.get(current);
+      if (!target) return false;
+      if (memberNicknames.has(target)) return true;
+      current = target;
+    }
+    return false;
+  };
+  return aliases.filter((alias) => resolvesToSelected(alias.nickname));
+}
+
+// 次の手順の案内には、利用者が見慣れた別名を優先して示す（実体の名前でも同じ member が動く）。
+function preferredAgentName(member: ProjectMember, aliases: AgentAlias[]): string {
+  return aliases.find((alias) => alias.alias_of === member.nickname)?.nickname ?? member.nickname;
+}
+
 function writeExecConfiguration(
   repoRoot: string,
   packageRoot: string,
@@ -400,6 +424,7 @@ function writeExecConfiguration(
   const memberTemplate = loadInitTemplate(packageRoot, "init-agent-members.yaml") as {
     version: number;
     members: ProjectMember[];
+    aliases?: AgentAlias[];
   };
   const defaultsTemplate = loadInitTemplate(packageRoot, "init-exec-defaults.yaml") as {
     providers: Record<string, unknown>;
@@ -408,6 +433,10 @@ function writeExecConfiguration(
   const selected = new Set(providers);
   const members = memberTemplate.members.filter(
     (member) => member.provider && selected.has(member.provider as InitProvider),
+  );
+  const aliases = selectAliases(
+    memberTemplate.aliases ?? [],
+    new Set(members.map((member) => member.nickname)),
   );
   const providerDefaults = Object.fromEntries(
     Object.entries(defaultsTemplate.providers).filter(([provider]) =>
@@ -433,7 +462,10 @@ function writeExecConfiguration(
   writeNewFile(
     repoRoot,
     ".specdojo/agent-members.yaml",
-    dump({ version: 1, members }, { lineWidth: 120, noRefs: true }),
+    dump(
+      { version: 1, members, ...(aliases.length > 0 ? { aliases } : {}) },
+      { lineWidth: 120, noRefs: true },
+    ),
     dryRun,
   );
   writeNewFile(
@@ -455,7 +487,10 @@ function writeExecConfiguration(
   if (!executor || !reporter) {
     throw new Error("init-agent-members.yaml must define an edit executor and reporter");
   }
-  return { executor: executor.nickname, reporter: reporter.nickname };
+  return {
+    executor: preferredAgentName(executor, aliases),
+    reporter: preferredAgentName(reporter, aliases),
+  };
 }
 
 function scaffoldRegister(

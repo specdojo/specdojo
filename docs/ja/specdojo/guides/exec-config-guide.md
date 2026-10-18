@@ -291,12 +291,13 @@ providers:
   codex:
     command_template: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model {model} -c model_reasoning_effort="{effort}"'
     command_params:
-      by_proficiency:
-        normal: { model: gpt-5.4-mini, effort: medium }
-        expert: { model: gpt-5.5, effort: high }
+      by_proficiency: # model は実体の member の model を使い、effort だけを切り替える
+        normal: { effort: medium }
+        expert: { effort: high }
 
   antigravity:
     command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
+    # model を持たない従来の 1 段の member だけが、次の model を使う
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
@@ -469,7 +470,7 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 
 | provider    | 配布内容                                                                                                                                              | 配置先                                 |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| claude      | `agents/*.md`、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                                                 | `.claude/agents/`、`.specdojo/claude/` |
+| claude      | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                        | `.claude/agents/`、`.specdojo/claude/` |
 | codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）                                                                                               | `.codex/agents/`                       |
 | opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                             | `.opencode/agents/`                    |
 | copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
@@ -506,6 +507,34 @@ specdojo config scaffold --provider claude
 - `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねます。scaffold は `.specdojo/specdojo.config.json` のパス設定に基づく書き換えを行いません（テンプレートを事実上の推奨レイアウト前提で配布します）。
 - 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。repository 内へのコピーは provider 名からディレクトリを解決します。ユーザーディレクトリ設定も扱う provider だけは、グローバル設定原本と配置先を実装の許可リストへ明示します。
 
+### 7.2. agent の名簿の 2 段構成と移行
+
+`specdojo init --exec` と `config scaffold` が配布する agent の名簿と定義は、実体と別名の 2 段構成です（0.4.0 から）。実体は model の系統と役割で名付け、provider・`model`・役割を持ちます。従来の名前は `aliases` で実体を指す別名として残します。claude と opencode の agent の定義は役割（executor・review executor・reporter）ごとの 1 ファイルで `model` を持たず、`command_params.by_mode` で mode から定義を選び、model は実体の `model` を `--model {model}` で渡します。
+
+| provider    | init が生成する実体                                               | 別名（従来の名前）                                                   | model の書き場所                                     |
+| ----------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------- |
+| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`    | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                           |
+| codex       | `terra-executor`・`terra-review-executor`・`terra-reporter`       | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（effort は `by_proficiency`）         |
+| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`       | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み） |
+| antigravity | `flash-executor`・`flash-review-executor`・`flash-reporter`       | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                  |
+| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter` | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                 |
+
+init は選んだ provider の実体だけを名簿へ書き、別名は向き先の実体が選ばれたものだけを残します。次の手順の案内（`--executor-by` / `--reporter-by`）には別名を示します。antigravity の `agent-members-snippet.yaml` は実体を `disabled: true` で配布するため、別名は末尾にコメントの例として置きます。別名は無効な member を指せないので、向き先の実体を有効にしたものだけを `aliases` へ写します。
+
+既存の利用者の 1 段の名簿（`aliases` も `model` も持たない member と、`--agent {nickname}` の `command_template`）は、変更しなくてもそのまま動きます。
+
+- `aliases` は省略でき、`model` を持たない member は従来どおり `command_params`（`by_proficiency` など）の `model` で起動します。member の `model` がある場合だけ、そちらが優先されます。
+- init は既存の `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml` を上書きしません。scaffold も、`--force` を指定しない限り既存の agent の定義を上書きしません。
+- 注意点は、`--force` で claude / opencode の定義を役割ごとの定義（`model` を持たない）に置き換えた場合です。従来の `--agent {nickname}` のままだと model が渡らず、provider の既定の model で起動します。置き換える場合は、次の手順で 2 段へ移します。
+
+1 段から 2 段へ移す手順は次のとおりです。`.specdojo/` は agent が書き換えられない保護設定のため、人間（または orchestrator の承認を経た操作）が行います。
+
+1. member ごとに、使っている model の系統と役割から実体の名前を決め（`claude-expert-executor` が opus なら `opus-executor`）、`nickname` を実体の名前へ変え、`model`（版を含む ID）を加えます。同じ系統を既定でない provider から使う場合は `agy-opus-executor` のように provider 名を前に付けます。
+2. 従来の名前を、トップレベルの `aliases` に `nickname` と `alias_of`（実体の名前）の組で加えます。Job・routine・`sch-strategy`・文書・スクリプトにある名前は、別名として解決されるため変えなくて構いません。
+3. `.specdojo/exec-defaults.yaml` の `command_params.by_proficiency` などにある `model` を外し、member の `model` を正とします。codex の reasoning effort のように model 以外の値は残します。
+4. claude と opencode は、`templates/<provider>/agents/` の役割ごとの定義を `config scaffold --provider <name> --force` で配置し（手を加えた定義がある場合は差分を確認してから）、`command_template` を `--agent {agent} --model {model}` と `command_params.by_mode` の形へ改めます。model ごとに複製していた定義ファイル（`claude-expert-review-executor.md` など）は、別名から参照されなくなったら削除します。
+5. `npx specdojo exec run --register <id> --executor-by <alias> --reporter-by <alias> --dry-run` などで、別名から実体が選ばれ、起動のコマンドに `--model` の値が入ることを確かめてから、変更をコミットします。event と result の actor には実体の名前が記録されます。
+
 ## 8. agent 権限とプロンプトインジェクション対策
 
 exec の plan は done_criteria と成果物本文から生成され、agent は無人で実行されます。成果物やレビュー対象文書に埋め込まれた指示（プロンプトインジェクション）によって、agent がタスク外のファイル書き換え・情報持ち出しを行うリスクを前提に、権限を設計します。
@@ -537,8 +566,8 @@ providers:
     command_template: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model {model} -c model_reasoning_effort="{effort}"'
     command_params:
       by_proficiency:
-        normal: { model: gpt-5.4-mini, effort: medium }
-        expert: { model: gpt-5.5, effort: high }
+        normal: { effort: medium }
+        expert: { effort: high }
 ```
 
 - `--sandbox workspace-write`: 書き込みを worktree（cwd 配下）と一時ディレクトリに限定します。`danger-full-access` は claude の bypassPermissions に相当するため使いません。

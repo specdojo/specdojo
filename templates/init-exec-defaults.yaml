@@ -32,9 +32,17 @@ rate_limit_policy:
       backoff_multiplier: 3
       max_wait_seconds: 600
     on_exhausted: block
+# command_template expands member attributes. {model} is the concrete member's model, and
+# {nickname} is the concrete member's name even when an alias was requested (PJR-ZM1K).
+# The claude and opencode role definitions are one file per role, selected by mode.
 providers:
   claude:
-    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
+    command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"
+    command_params:
+      by_mode:
+        edit: { agent: claude-executor }
+        review: { agent: claude-review-executor }
+        report: { agent: claude-reporter }
     rate_limit_detection:
       stderr_patterns: [rate limit, "429", overloaded, session limit]
   codex:
@@ -42,14 +50,21 @@ providers:
       codex exec --ephemeral --sandbox workspace-write -c approval_policy="never"
       -c sandbox_workspace_write.network_access=false --model {model}
       -c model_reasoning_effort="{effort}"
+    # The model comes from the concrete member. The reasoning effort follows proficiency.
     command_params:
       by_proficiency:
-        normal: { model: gpt-5.6-terra, effort: medium }
-        expert: { model: gpt-5.6-sol, effort: high }
+        normal: { effort: medium }
+        expert: { effort: high }
     rate_limit_detection:
       stderr_patterns: [rate limit, "429", session limit, weekly limit, usage limit]
   opencode:
-    command_template: "opencode run --agent {nickname}"
+    # The model ID depends on the provider name in opencode.json. Adjust the members' model.
+    command_template: "opencode run --agent {agent} --model {model}"
+    command_params:
+      by_mode:
+        edit: { agent: opencode-executor }
+        review: { agent: opencode-review-executor }
+        report: { agent: opencode-reporter }
     max_concurrency: 1
     rate_limit_detection:
       exit_codes: []
@@ -57,11 +72,8 @@ providers:
   antigravity:
     # 使える model の ID は `agy models` で確かめる。Gemini の Pro 系は提供されなくなったため、
     # expert は Flash の high とする（2026-10-15、agy 1.3.5 で確認）。
+    # model の ID は実体の member の model に書く（PJR-ZM1K）。
     command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
-    command_params:
-      by_proficiency:
-        normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.8-flash-high }
     rate_limit_detection:
       stderr_patterns: [rate limit, "429", quota, RESOURCE_EXHAUSTED]
   copilot:

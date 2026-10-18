@@ -1,7 +1,6 @@
 ---
 description: SpecDojo pipeline の reporter。渡された evidence だけから指定スキーマの構造化結果を返す。
 mode: primary
-model: ollama-local/gemma4:31b-mlx-work-64k
 temperature: 0.1
 permission:
   read: deny

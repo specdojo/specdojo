@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T22:18:53Z"
   due_on: null
-  block_reason: rate limit reached
 ---
 
 # PJR-8TGQ 配布する agent の雛形を 2 段構成へ改める
@@ -39,7 +38,14 @@ config scaffold・init などが生成する agent の名簿と定義の雛形�
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容:
+  - `templates/init-agent-members.yaml` を実体（`sonnet-*`・`terra-*`・`gemma-*`・`flash-*`、`model` を持つ）と別名（`claude-*`・`codex-*`・`opencode-*`・`agy-*`）の 2 段にした。copilot は `--model auto` で系統がないため実体のみとした。
+  - `templates/init-exec-defaults.yaml` の claude・opencode を `--agent {agent} --model {model}` と `command_params.by_mode` にし、codex・antigravity の `command_params` から `model` を外した。
+  - `src/commands/init.ts` で、選んだ provider の実体を指す別名だけを名簿へ書き、次の手順の案内には別名を示すようにした。
+  - claude・opencode の役割ごとの定義の雛形から `model:` を外し、`claude-expert-review-executor.md` を配布物から削除した。antigravity の名簿のスニペットを実体 8 件と別名の例（コメント）にした。
+  - 各 provider の README、[[specdojo:exec-config-guide]] の「agent の名簿の 2 段構成と移行」、CHANGELOG の `## [0.4.0] - 未定` に、2 段構成・1 段の名簿の互換・移行の手順を書いた。
+  - `tests/src/commands/init-agent-roster.integration.test.ts` で、空のリポジトリの `init --yes` と `config scaffold` が生成する名簿とスニペットが schema と別名の検証を通ることを確かめた。
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 

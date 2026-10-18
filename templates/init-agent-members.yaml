@@ -1,14 +1,24 @@
 # yaml-language-server: $schema=../docs/specdojo/schemas/v1/agent-members.schema.yaml
 # Agent definitions used by `specdojo init --exec`.
-# The init command selects only the members whose provider was requested.
+# The init command selects only the members whose provider was requested, and only the
+# aliases whose target member was selected.
+#
+# The roster has two levels (PJR-ZM1K):
+#   members : concrete agents named after the model family (sonnet-executor, terra-executor, ...).
+#             Each member carries the provider, model, and role. The model version is written
+#             only in `model`, so replacing a model touches one place.
+#   aliases : the earlier names (claude-executor, codex-executor, ...). Each alias points at a
+#             concrete member, so Jobs, routines, documents, and user settings keep working.
+# Events and results record the concrete member name, so the model that actually ran is kept.
 version: 1
 members:
-  - nickname: claude-executor
-    display_name: Claude Executor
+  - nickname: sonnet-executor
+    display_name: Claude Sonnet Executor
     email: null
     roles: []
     type: agent
     provider: claude
+    model: sonnet
     mode: edit
     stage_role: executor
     capabilities: [web_search]
@@ -16,12 +26,13 @@ members:
     priority: 2
     persona: task-executor
     scheduler_strategy: critical-first
-  - nickname: claude-review-executor
-    display_name: Claude Review Executor
+  - nickname: sonnet-review-executor
+    display_name: Claude Sonnet Review Executor
     email: null
     roles: []
     type: agent
     provider: claude
+    model: sonnet
     mode: review
     stage_role: executor
     capabilities: [web_search]
@@ -29,12 +40,13 @@ members:
     priority: 2
     persona: multi-viewpoint-reviewer
     scheduler_strategy: fifo
-  - nickname: claude-reporter
-    display_name: Claude Reporter
+  - nickname: sonnet-reporter
+    display_name: Claude Sonnet Reporter
     email: null
     roles: []
     type: agent
     provider: claude
+    model: sonnet
     mode: report
     stage_role: reporter
     capabilities: []
@@ -43,12 +55,13 @@ members:
     persona: execution-reporter
     scheduler_strategy: fifo
 
-  - nickname: codex-executor
-    display_name: Codex Executor
+  - nickname: terra-executor
+    display_name: Codex Terra Executor
     email: null
     roles: []
     type: agent
     provider: codex
+    model: gpt-5.6-terra
     mode: edit
     stage_role: executor
     capabilities: [web_search]
@@ -56,12 +69,13 @@ members:
     priority: 1
     persona: task-executor
     scheduler_strategy: critical-first
-  - nickname: codex-review-executor
-    display_name: Codex Review Executor
+  - nickname: terra-review-executor
+    display_name: Codex Terra Review Executor
     email: null
     roles: []
     type: agent
     provider: codex
+    model: gpt-5.6-terra
     mode: review
     stage_role: executor
     capabilities: [web_search]
@@ -69,12 +83,13 @@ members:
     priority: 1
     persona: multi-viewpoint-reviewer
     scheduler_strategy: fifo
-  - nickname: codex-reporter
-    display_name: Codex Reporter
+  - nickname: terra-reporter
+    display_name: Codex Terra Reporter
     email: null
     roles: []
     type: agent
     provider: codex
+    model: gpt-5.6-terra
     stage_role: reporter
     capabilities: []
     proficiency: normal
@@ -82,12 +97,13 @@ members:
     persona: execution-reporter
     scheduler_strategy: fifo
 
-  - nickname: opencode-executor
-    display_name: OpenCode Executor
+  - nickname: gemma-executor
+    display_name: OpenCode Gemma Executor
     email: null
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: edit
     stage_role: executor
     capabilities: [web_search]
@@ -95,12 +111,13 @@ members:
     priority: 3
     persona: task-executor
     scheduler_strategy: critical-first
-  - nickname: opencode-review-executor
-    display_name: OpenCode Review Executor
+  - nickname: gemma-review-executor
+    display_name: OpenCode Gemma Review Executor
     email: null
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: review
     stage_role: executor
     capabilities: [web_search]
@@ -108,12 +125,14 @@ members:
     priority: 3
     persona: multi-viewpoint-reviewer
     scheduler_strategy: fifo
-  - nickname: opencode-reporter
-    display_name: OpenCode Reporter
+  - nickname: gemma-reporter
+    display_name: OpenCode Gemma Reporter
     email: null
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:31b-mlx-work-64k
+    mode: report
     stage_role: reporter
     capabilities: []
     proficiency: normal
@@ -121,12 +140,13 @@ members:
     persona: execution-reporter
     scheduler_strategy: fifo
 
-  - nickname: agy-executor
-    display_name: Antigravity Executor
+  - nickname: flash-executor
+    display_name: Antigravity Flash Executor
     email: null
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-medium
     mode: edit
     stage_role: executor
     capabilities: [web_search]
@@ -134,12 +154,13 @@ members:
     priority: 4
     persona: task-executor
     scheduler_strategy: critical-first
-  - nickname: agy-review-executor
-    display_name: Antigravity Review Executor
+  - nickname: flash-review-executor
+    display_name: Antigravity Flash Review Executor
     email: null
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-medium
     mode: review
     stage_role: executor
     capabilities: [web_search]
@@ -147,12 +168,13 @@ members:
     priority: 4
     persona: multi-viewpoint-reviewer
     scheduler_strategy: fifo
-  - nickname: agy-reporter
-    display_name: Antigravity Reporter
+  - nickname: flash-reporter
+    display_name: Antigravity Flash Reporter
     email: null
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-medium
     stage_role: reporter
     capabilities: []
     proficiency: normal
@@ -160,6 +182,8 @@ members:
     persona: execution-reporter
     scheduler_strategy: fifo
 
+  # Copilot selects its model automatically (--model auto), so its members have no model
+  # family to name. They stay as concrete members under the earlier names and need no alias.
   - nickname: copilot-executor
     display_name: Copilot Executor
     email: null
@@ -198,3 +222,29 @@ members:
     priority: 5
     persona: execution-reporter
     scheduler_strategy: fifo
+
+aliases:
+  - nickname: claude-executor
+    alias_of: sonnet-executor
+  - nickname: claude-review-executor
+    alias_of: sonnet-review-executor
+  - nickname: claude-reporter
+    alias_of: sonnet-reporter
+  - nickname: codex-executor
+    alias_of: terra-executor
+  - nickname: codex-review-executor
+    alias_of: terra-review-executor
+  - nickname: codex-reporter
+    alias_of: terra-reporter
+  - nickname: opencode-executor
+    alias_of: gemma-executor
+  - nickname: opencode-review-executor
+    alias_of: gemma-review-executor
+  - nickname: opencode-reporter
+    alias_of: gemma-reporter
+  - nickname: agy-executor
+    alias_of: flash-executor
+  - nickname: agy-review-executor
+    alias_of: flash-review-executor
+  - nickname: agy-reporter
+    alias_of: flash-reporter

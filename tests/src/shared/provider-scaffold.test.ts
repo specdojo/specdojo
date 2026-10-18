@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { load } from "js-yaml";
 import {
   applyProviderScaffoldPlan,
   buildProviderScaffoldPlan,
@@ -119,10 +120,32 @@ describe("specdojoPackageRootDir", () => {
       ]),
     );
     expect(execDefaults).not.toContain("--dangerously-skip-permissions");
-    expect(execDefaults).toContain("expert: { model: gemini-3.8-flash-high }");
-    expect(execDefaults).toContain("agy-claude-executor: { model: claude-sonnet-5-5-medium }");
-    expect(execDefaults).toContain("agy-claude-expert-executor: { model: claude-opus-5-5-high }");
+    expect(execDefaults).toContain("--model {model}");
     expect(execDefaults).not.toMatch(/gemini-3\.1-pro|claude-sonnet-4-6|claude-opus-4-6/);
+  });
+
+  it("ships Antigravity members that carry currently provided models by model family", async () => {
+    const packageRoot = specdojoPackageRootDir();
+    const snippet = load(
+      await readFile(
+        path.join(packageRoot, "templates", "antigravity", "agent-members-snippet.yaml"),
+        "utf8",
+      ),
+    ) as { members: Array<{ nickname: string; model?: string }> };
+
+    // model の ID は実体の model の 1 か所に書き、実体の名前は model の系統で付ける（PJR-ZM1K）。
+    expect(
+      Object.fromEntries(snippet.members.map((member) => [member.nickname, member.model])),
+    ).toEqual({
+      "flash-executor": "gemini-3.8-flash-medium",
+      "flash-high-executor": "gemini-3.8-flash-high",
+      "flash-high-review-executor": "gemini-3.8-flash-high",
+      "flash-reporter": "gemini-3.8-flash-medium",
+      "agy-sonnet-executor": "claude-sonnet-5-5-medium",
+      "agy-opus-executor": "claude-opus-5-5-high",
+      "agy-opus-review-executor": "claude-opus-5-5-high",
+      "agy-gpt-oss-executor": "gpt-oss-120b-medium",
+    });
   });
 });
 
