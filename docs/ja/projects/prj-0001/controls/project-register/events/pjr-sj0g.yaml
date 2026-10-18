@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_fdda3ed0a48f41bfb4e1571a0f8bd85c
+  ts: "2026-10-18T05:54:52Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ce88e3a5a5554ba1942a4f2c7385638a
