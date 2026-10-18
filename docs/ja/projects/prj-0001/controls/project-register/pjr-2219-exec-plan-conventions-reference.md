@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-2219-exec-plan-conventions-reference
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T12:17:43Z"
   due_on: null
+  completed_at: "2026-10-18T08:12:10Z"
+  conclusion: plan の本文には、共通の規約の断片の印で囲んだ要点と、詳細の参照パス・作業前に読む指示だけを載せるようにした。要点は詳細から機械的に取り出し、原本は断片の 1 か所。印のない断片は全文を載せる。参照先は利用者のリポジトリでは node_modules/specdojo の中で、worktree の npm ci で読める
 ---
 
 # PJR-2219 plan の共通の規約を参照にする

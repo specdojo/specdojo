@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b071b1448d924658a99cecdee2066d64
+- v: 1
+  id: reg_97a281a7e98742488d968cb7ad6c8180
+  ts: "2026-10-18T08:12:10Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor・gemma26-reporter）の差分・テスト・親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: plan の本文には、共通の規約の断片の印で囲んだ要点と、詳細の参照パス・作業前に読む指示だけを載せるようにした。要点は詳細から機械的に取り出し、原本は断片の 1 か所。印のない断片は全文を載せる。参照先は利用者のリポジトリでは node_modules/specdojo の中で、worktree の npm ci で読める
+  previous_event_id: reg_987a78cfbbc74eeb837d8527a377792e
