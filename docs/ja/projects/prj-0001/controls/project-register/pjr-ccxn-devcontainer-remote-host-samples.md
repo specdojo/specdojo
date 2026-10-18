@@ -23,13 +23,23 @@ devcontainer scaffold（init --devcontainer を含む）で、常時稼働ホス
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `devcontainer scaffold`（`init --devcontainer` を含む）で、`.devcontainer/remote-host/` に次の 2 つのサンプルを作る。既にある場合は `--force` のときだけ上書きする。
+  - `specdojo-tmux.sh.sample`: 常時稼働ホストで使う。devcontainer が止まっていれば起動し、container の中で `tmux new-session -A -s <名前>` へ入る。起動に使うコマンド（`devcontainer` CLI か docker か）と、前提のツールを冒頭のコメントに書く。
+  - `ssh-config.sample`: 接続元の端末の `~/.ssh/config` に写す。ホストの alias、tmux へ直接入る alias（`RemoteCommand` と `RequestTTY`）、`devcontainer.json` の公開ポート（`appPort`・`forwardPorts`）ごとの `LocalForward` の行を含む。公開ポートがない場合は、書き方の例をコメントで示す。
+- ホスト名・ユーザー・パスは仮の値（`<host>` など）にし、実在の値や秘密を書かない。
+- 接続用のスクリプトは container の中の tmux を前提にするため、`init --devcontainer` で tmux を入れるか（今は入れない）を決めて実装し、理由を result に書く。
+- scaffold の最後の案内に、2 つのサンプルの置き場所とコピー先を 1〜2 行で示す。
+- [[specdojo:remote-host-development-guide]] の Dev Container を生成する節に、2 つのサンプルの使い方と、公開ポートを増やしたときは `LocalForward` も足すことを書く。
+- 単体テストで、公開ポートがある場合とない場合の `ssh-config.sample` の中身と、既にあるサンプルを `--force` なしで上書きしないことを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG は、未公開の版の節に書く。0.4.0 の範囲には含めないため、0.4.0 の公開の後に流す場合は次の版の節を作って書く。公開済みの版の節は変えない。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                  | 担当 | 状態 | メモ       |
+| --- | ----------------------------------------------------- | ---- | ---- | ---------- |
+| 1   | scaffold で接続のサンプルを作り、案内とガイドを改める | DEV  | open | 0.4.0 の後 |
 
 ## 4. 対応結果
 
@@ -37,4 +47,6 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-8gq4-devcontainer-workspace-dir-fixed]]（元の項目）
+- [[specdojo:remote-host-development-guide]]（影響先）
+- [[prj-0001:tsd-home-mac-dev-server]]（自宅の Mac 向けの接続の例）
