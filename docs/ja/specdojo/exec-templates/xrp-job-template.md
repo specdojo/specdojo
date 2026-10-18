@@ -30,15 +30,17 @@ _ANALYSIS_DESCRIPTION_
 1. `_BASE_COMMIT_.._OUTPUT_COMMIT_` の差分が当該 Job Run の出力だけで構成されている。
 2. Job Run の状態、command evidence、result の記述が相互に整合している。
 3. score・verdict・finding・失敗文書がある場合は、その変化と理由を確認している。
-4. Run が失敗している場合は `incomplete` とし、再開または人手対応に必要な理由を残している。
-5. reviewer は Job Run の出力を修正せず、review result だけに判断を記録している。
+4. Run が `partial` の場合は、完了分を統合でき、失敗分が次の Run で再試行できる記録を持つときだけ `complete-with-findings` とし、失敗した対象と理由を finding に残している。
+5. Run が `failed` の場合、または `partial` でも完了分がない、失敗分を再試行できない、未開始の対象がある場合は `incomplete` とし、再開または人手対応に必要な理由を残している。
+6. reviewer は Job Run の出力を修正せず、review result だけに判断を記録している。
 
 ## 4. 判断手順
 
 1. `git diff --stat _BASE_COMMIT_.._OUTPUT_COMMIT_` と `git diff --name-status _BASE_COMMIT_.._OUTPUT_COMMIT_` で出力範囲を確認する。
 2. Job Run の plan・result・evidence・Run JSON と、Job が更新した成果物を照合する。
-3. 完了条件を満たす場合は `complete`、軽微な finding を残して統合可能なら `complete-with-findings` とする。
-4. 失敗、対象外変更、根拠不足がある場合は `incomplete` とし、改善指示と waiting の理由を明記する。
+3. `succeeded` で完了条件を満たす場合は `complete`、軽微な finding を残して統合可能なら `complete-with-findings` とする。
+4. `partial` で完了分を統合可能かつ失敗分を次の Run へ回せる場合は `complete-with-findings` とする。`partial` に `complete` は使わない。
+5. 失敗、未完了、対象外変更、根拠不足がある場合は `incomplete` とし、改善指示と waiting の理由を明記する。
 
 ## 5. 完了手順
 

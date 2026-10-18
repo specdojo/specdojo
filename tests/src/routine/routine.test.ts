@@ -275,9 +275,10 @@ describe("parseRoutineDoc", () => {
 });
 
 describe("aggregateRoutineActionResults", () => {
-  it("failure、skipped、success の優先順で全体結果を返す", () => {
+  it("failure、partial、skipped、success の優先順で全体結果を返す", () => {
     expect(aggregateRoutineActionResults(["success", "success"])).toBe("success");
     expect(aggregateRoutineActionResults(["success", "skipped"])).toBe("skipped");
+    expect(aggregateRoutineActionResults(["success", "partial", "skipped"])).toBe("partial");
     expect(aggregateRoutineActionResults(["skipped", "failure", "success"])).toBe("failure");
   });
 });
@@ -420,6 +421,12 @@ describe("formatRoutineLastRun", () => {
   it("skipped を failure と区別して表示する", () => {
     expect(formatRoutineLastRun({ last_run: "2026-08-07T03:17:09Z", last_result: "skipped" })).toBe(
       "2026-08-07T03:17:09Z (skipped)",
+    );
+  });
+
+  it("partial を success と区別して表示する", () => {
+    expect(formatRoutineLastRun({ last_run: "2026-10-18T01:00:00Z", last_result: "partial" })).toBe(
+      "2026-10-18T01:00:00Z (partial)",
     );
   });
 

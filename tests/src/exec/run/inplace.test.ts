@@ -524,6 +524,83 @@ describe("exec run (in-place, default)", () => {
     }
   });
 
+  it("runs the analysis reporter and records partial for its configured exit code", async () => {
+    const { repo, executionPath } = setupRepository();
+    const reporterOutput = JSON.stringify({
+      schema_version: 1,
+      mode: "edit",
+      summary: ["完了分と再試行対象を確認した。"],
+      changed_files: [],
+      handoff: ["失敗した対象は次の Run で再試行する。"],
+      approach: "部分成功の command evidence を確認した。",
+    });
+    const reporterOutputBase64 = Buffer.from(reporterOutput, "utf8").toString("base64");
+    configurePipeline(
+      repo,
+      `node -e "const fs=require('node:fs');const prompt=fs.readFileSync(0,'utf8');` +
+        `fs.writeFileSync('partial-reporter-prompt.txt',prompt);` +
+        `fs.writeSync(1,Buffer.from('${reporterOutputBase64}','base64'))"`,
+    );
+    writeFileSync(
+      join(repo, "jobs", "job-command-partial.yaml"),
+      [
+        "id: job-command-partial",
+        "name: Command partial",
+        "task:",
+        "  mode: command",
+        "  partial_exit_code: 2",
+        "  command: |",
+        "    printf 'one passed, one failed\\n'",
+        "    exit 2",
+        "  analysis:",
+        "    agent: pipeline-reporter",
+        "    description: command evidence から完了分と失敗分を報告する。",
+        "run:",
+        '  idempotency_key: "{{job_id}}"',
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    vi.spyOn(execWorktree, "gitOutput").mockReturnValue("");
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runExec(["run", "--project", "test", "--job", "job-command-partial"]);
+
+      const prompt = readFileSync(join(repo, "partial-reporter-prompt.txt"), "utf8");
+      expect(prompt).toContain('"exit_code": 2');
+      expect(prompt).toContain('"stdout": "one passed, one failed\\n"');
+      const runFile = readdirSync(join(executionPath, "jobs", "runs"))[0];
+      const run = JSON.parse(
+        readFileSync(join(executionPath, "jobs", "runs", runFile), "utf8"),
+      ) as {
+        run_id: string;
+        state: string;
+        attempts: Array<{ exit_code: number; evidence_ref: string }>;
+      };
+      expect(run.state).toBe("partial");
+      expect(run.attempts[0].exit_code).toBe(2);
+      const evidence = JSON.parse(
+        readFileSync(join(repo, run.attempts[0].evidence_ref), "utf8"),
+      ) as {
+        stage: { status: string; exit_code: number };
+        validations: Array<{ status: string; summary: string }>;
+        command: { exit_code: number };
+      };
+      expect(evidence.stage).toMatchObject({ status: "succeeded", exit_code: 0 });
+      expect(evidence.validations[0]).toMatchObject({
+        status: "passed",
+        summary: "exit 2 (accepted)",
+      });
+      expect(evidence.command.exit_code).toBe(2);
+      expect(process.exitCode).toBeUndefined();
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("runs only analysis reporter after a successful command that starts a nested process", async () => {
     const { repo, executionPath } = setupRepository();
     const reporterOutput = JSON.stringify({

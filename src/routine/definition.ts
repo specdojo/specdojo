@@ -61,7 +61,7 @@ export type RoutinePaths = {
   runsPath: string;
 };
 
-export type RoutineExecutionResult = "success" | "failure" | "skipped";
+export type RoutineExecutionResult = "success" | "partial" | "failure" | "skipped";
 
 export type RoutineStateResult = RoutineExecutionResult | "running";
 

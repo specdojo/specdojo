@@ -29,6 +29,7 @@ function makeFixture(): {
   fixtureDirectories.push(root);
   const rulebooks = join(root, "docs/ja/specdojo/rulebooks");
   const target = join(rulebooks, "fixture-rulebook.md");
+  const secondTarget = join(rulebooks, "fixture-second-rulebook.md");
   const stateFile = join(root, "fake-apply-count.txt");
   const resultFile = join(root, "fake-grade-result.json");
   const pipelineStateFile = join(root, "fake-pipeline-state.json");
@@ -51,6 +52,7 @@ function makeFixture(): {
     );
   }
   writeFileSync(target, markdown("specdojo:fixture-rulebook", "rulebook"));
+  writeFileSync(secondTarget, markdown("specdojo:fixture-second-rulebook", "rulebook"));
   writeFileSync(
     fakeSpecdojo,
     `#!/usr/bin/env node
@@ -161,6 +163,7 @@ if (args[0] === "grade" && args[1] === "apply") {
   const countPath = process.env.FAKE_STATE_FILE;
   const count = existsSync(countPath) ? Number(readFileSync(countPath, "utf8")) + 1 : 1;
   writeFileSync(countPath, String(count));
+  if (process.env.FAKE_APPLY_FAIL_PATH === value("--path")) process.exit(1);
   const failFrom = Number(process.env.FAKE_APPLY_FAIL_FROM ?? 0);
   if (failFrom > 0 && count >= failFrom) process.exit(1);
   const failOnly = Number(process.env.FAKE_APPLY_FAIL_ONLY ?? 0);
@@ -538,7 +541,7 @@ describe("grade per-document pipeline", () => {
     expect(invocations).toContain("grade apply --target deliverable");
   });
 
-  it("exits with 1 and reports how to resume when a stage failure leaves a document incomplete", () => {
+  it("exits with 1 when every selected document fails", () => {
     const fixture = makeFixture();
 
     const result = runPipeline(fixture, { FAKE_APPLY_FAIL_FROM: "2" }, [], "fixture-incomplete");
@@ -547,12 +550,32 @@ describe("grade per-document pipeline", () => {
     expect(result.stdout).toContain("grade pipeline complete: selected=1 processed=1");
     expect(result.stdout).toContain("incomplete=1");
     expect(result.stderr).toContain(
-      "grade pipeline incomplete: incomplete=1 run_id=fixture-incomplete; rerun with --run-id fixture-incomplete",
+      "grade pipeline incomplete: completed=0 incomplete=1 run_id=fixture-incomplete",
     );
     expect(result.stderr).toContain(
       "grade pipeline incomplete document: docs/ja/specdojo/rulebooks/fixture-rulebook.md failed_stage=2",
     );
     expect(result.stderr).not.toContain("grade pipeline aborted:");
+  });
+
+  it("exits with 2 when completed and failed documents are mixed", () => {
+    const fixture = makeFixture();
+
+    const result = runPipeline(
+      fixture,
+      { FAKE_APPLY_FAIL_PATH: "docs/ja/specdojo/rulebooks/fixture-second-rulebook.md" },
+      ["--stages", "1", "--path", "docs/ja/specdojo/rulebooks/fixture-second-rulebook.md"],
+      "fixture-partial",
+    );
+
+    expect(result.status, result.stderr).toBe(2);
+    expect(result.stdout).toContain("selected=2 processed=2 completed_now=1 incomplete=1");
+    expect(result.stderr).toContain(
+      "grade pipeline partial: completed=1 incomplete=1 run_id=fixture-partial",
+    );
+    expect(result.stderr).toContain(
+      "grade pipeline incomplete document: docs/ja/specdojo/rulebooks/fixture-second-rulebook.md failed_stage=1",
+    );
   });
 
   it("exits with 0 when no document is left incomplete", () => {

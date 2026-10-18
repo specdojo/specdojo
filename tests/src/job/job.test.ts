@@ -371,6 +371,42 @@ describe("Job Definition", () => {
     });
   });
 
+  it("accepts one explicit partial exit code on a command Job", () => {
+    const parsed = parseJobDefinition(
+      {
+        id: "job-grade",
+        name: "Grade",
+        task: {
+          mode: "command",
+          command: "tools/grade/run.sh",
+          partial_exit_code: 2,
+        },
+        run: { idempotency_key: "{{job_id}}" },
+      },
+      "job-grade.yaml",
+    );
+
+    expect(parsed.errors).toEqual([]);
+    expect(parsed.job?.task).toMatchObject({ partial_exit_code: 2 });
+  });
+
+  it("rejects zero as a partial exit code", () => {
+    const parsed = parseJobDefinition(
+      {
+        id: "job-grade",
+        name: "Grade",
+        task: { mode: "command", command: "tools/grade/run.sh", partial_exit_code: 0 },
+        run: { idempotency_key: "{{job_id}}" },
+      },
+      "job-grade.yaml",
+    );
+
+    expect(parsed.job).toBeUndefined();
+    expect(parsed.errors).toContain(
+      "job-grade.yaml: task.partial_exit_code must be an exit code from 1 to 255",
+    );
+  });
+
   it("parses an empty-output precondition on a command Job", () => {
     const parsed = parseJobDefinition(
       {
@@ -453,7 +489,7 @@ describe("Job Definition", () => {
 
     expect(parsed.job).toBeUndefined();
     expect(parsed.errors).toContain(
-      "job-edit.yaml: task.command, task.precondition, and task.analysis are only allowed in command mode",
+      "job-edit.yaml: task.command, task.precondition, task.partial_exit_code, and task.analysis are only allowed in command mode",
     );
   });
 
@@ -804,6 +840,30 @@ describe("Job Run lifecycle", () => {
       });
       expect(retry.record.run_id).toBe(first.record.run_id);
       expect(retry.record.attempts).toHaveLength(2);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("treats a partial Run as terminal without advancing its checkpoint", async () => {
+    const repo = setupRepo();
+    try {
+      const first = await materializeJobRun({
+        projectId: "test",
+        jobId: "job-translate",
+        inputs: ["to_revision=partial"],
+      });
+      completeJobRun({ projectId: "test", runPath: first.runPath, status: "partial" });
+
+      expect(jobCheckpoint(resolveJobPaths("test"), "job-translate")).toEqual({});
+      const duplicate = await materializeJobRun({
+        projectId: "test",
+        jobId: "job-translate",
+        inputs: ["to_revision=partial"],
+      });
+      expect(duplicate.duplicateComplete).toBe(true);
+      expect(duplicate.record.state).toBe("partial");
     } finally {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });

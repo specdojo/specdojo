@@ -1,0 +1,731 @@
+Reading prompt from stdin...
+OpenAI Codex v0.162.1
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a14c5b-626a-7783-94cd-2d169633cbf0
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-vgng-20261018t000631z-16fe
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-VGNG
+  name: "一部の文書が失敗した Job Run が完了分も含めて統合されない"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: DEV
+---
+
+# Edit Plan: PJR-VGNG 一部の文書が失敗した Job Run が完了分も含めて統合されない
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-VGNG「一部の文書が失敗した Job Run が完了分も含めて統合されない」に対応する。
+
+grade の Job Run で一部の文書の評価が失敗すると Job Run 全体が failed になり、review が incomplete と判定して、評価できた文書の結果も統合されない。完了した文書の結果を統合し、失敗した文書は次の Run へ回すことを review の判定で選べるようにする
+
+## 2. 対象項目
+
+- `id`: PJR-VGNG
+- `type`: issue
+- `priority`: medium
+- `owner`: DEV
+- `due`: _TODO_
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-vgng-20261018T000631Z-16fe-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+### grade result から展開された finding
+
+- なし
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 作業用のファイル（編集用スクリプト、検証用の一時データなど）はリポジトリの外（一時ディレクトリ）または worktree の `tmp/` 配下に置き、終了前に削除する。使い捨てのファイルを最上位に作らない。`tmp/` 配下のファイルは commit の対象から除外される。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- 検査を実行する前に、リポジトリの `package.json`、`.specdojo/specdojo.config.json`、hook 設定を読み、下表の適用条件を確認する。条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する。`not_run` は適用される検査を実行しなかった場合だけに使う。誤って `not_run` と記録しても、npm script・依存 package の不在、または SpecDojo サブコマンドの設定上の非適用を runner が機械的に確定できる場合は適用外として扱われるが、この救済を前提に記録を省略しない。
+- 依存パッケージの有無は、対象リポジトリの `package.json` の `dependencies` / `devDependencies` と、リポジトリに固定された package manager の設定を基準に判断する。`npx` が未導入パッケージをネットワークから一時取得できることは、導入済みとはみなさない。設定ファイルがない、壊れているなどの理由で適用条件を確定できない検査は実行せず、validations に `not_applicable` として理由と次の確認事項を記録する。
+- Markdown 成果物を編集した場合、Prettier が導入されているときだけ `npx prettier --write <対象ファイル>` で整形する。`markdownlint-cli` または `markdownlint` が導入されているときだけ `npx markdownlint <対象ファイル>` を実行し、`markdownlint-cli2` を採用するリポジトリでは、そのリポジトリで定めた CLI2 のコマンドを実行する。適用した検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）のうち、現在のリポジトリに設定され、上記の適用条件を満たすものを先回りで実行する。適用した検査の失敗はすべて修正してから完了する。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当し、かつ適用条件を満たす行の検査を実行する。該当行がない場合や適用条件を満たさない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は、適用条件を満たす設定側のコマンドに合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx specdojo <subcommand>`、`npx tsx src/specdojo.ts <subcommand>` など）で実行する。ただし、sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する。
+
+| 変更したファイル                                                                                       | 適用条件                                                                            | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | 対応するローカル依存が `package.json` にある                                        | `npx prettier --write <対象ファイル>`、導入済み実装に対応する markdownlint コマンド                                                   |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | Prettier が `package.json` にある                                                   | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `package.json` に `typecheck` script がある                                         | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `test:unit`、それ以外は `test` script が `package.json` にある | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | 対象 project に `project_register_path` が設定されている                            | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | 対象 project に `schedule_path` が設定されている                                    | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | リポジトリで定められた起動方法により SpecDojo CLI を実行できる                      | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+Do not create disposable or scratch files at the repository root; place them in `tmp/` within
+the worktree or outside the repository. Files under `tmp/` are excluded from commits.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+
+
+Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
+Use validation status `not_applicable` when the repository does not meet a check's applicability
+conditions, and include a non-empty `reason`. The runner carries it into the result without
+blocking completion, but rejects the claim when it can confirm the check applies:
+- `npm run <script>` / `npm test`: the script exists in package.json.
+- `npx <package>`: the package is in package.json dependencies or devDependencies.
+- A command that targets a declared product repository (a `<repo>:<path>` argument or
+  `--prefix <repo>`) is judged by that repository's package.json, not the project repository's.
+- `specdojo catalog validate`: the run's target project (or `--project <id>`) sets `catalog_path`
+  and your changes reach `docs/ja/projects/`. A project without `catalog_path`, or changes
+  outside `docs/ja/projects/`, is a valid reason; state it in `reason`.
+
+Do not run or report `specdojo index build`. It writes `.specdojo/doc-index.json`, which the
+agent may not write, and the runner regenerates the index while preparing the worktree and before
+integration.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]}
+</specdojo_executor_evidence>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+まず登録簿・個票と関連設計を確認し、部分失敗時の review 判定が実装されている箇所とテストを特定します。親 runner が担当する検証コマンドは実行せず、重複しない検証だけ行います。
+exec
+/bin/bash -lc "pwd && rg --files -g 'AGENTS.md' -g 'package.json' -g '.specdojo/specdojo.config.json' -g 'lefthook.yml' -g 'lefthook.yaml' -g 'docs/ja/projects/prj-0001/controls/project-register/pjr-index.md' -g 'docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md' -g '"'!**/.env'"' -g '"'!secrets/**'"' | sort" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG
+ succeeded in 57ms:
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG
+AGENTS.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md
+lefthook.yml
+package.json
+packages/docs-lint/package.json
+packages/docs-site/package.json
+packages/vscode-specdojo/package.json
+
+exec
+/bin/bash -lc "sed -n '1,220p' AGENTS.md && sed -n '1,260p' docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md && rg -n -C 3 'PJR-VGNG|部分|Job Run|incomplete|failed' docs/ja/projects/prj-0001/controls/project-register/pjr-index.md && sed -n '1,240p' package.json && sed -n '1,240p' lefthook.yml && if [ -f .specdojo/specdojo.config.json ]; then sed -n '1,240p' .specdojo/specdojo.config.json; fi" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG
+ exited 2 in 0ms:
+# Agent Instructions
+
+## Language
+
+- 回答は原則として日本語で行う。
+
+## Project Policy
+
+- 変更前に関連する設計書を確認する。
+- タスクに関係しない変更を行わない。
+
+## Safety
+
+- 認証情報、秘密鍵、`.env`、`secrets/` を読み込まない。
+- 破壊的変更や `git push` を行わない。
+---
+specdojo:
+  id: prj-0001:pjr-vgng-job-run-partial-failure-integration
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: issue
+  item_status: in-progress
+  priority: medium
+  owner: DEV
+  registered_at: "2026-10-12T21:56:35Z"
+---
+
+# PJR-VGNG 一部の文書が失敗した Job Run が完了分も含めて統合されない
+
+## 1. 課題内容
+
+grade の Job Run で一部の文書の評価が失敗すると Job Run 全体が failed になり、review が incomplete と判定して、評価できた文書の結果も統合されない。完了した文書の結果を統合し、失敗した文書は次の Run へ回すことを review の判定で選べるようにする
+
+## 2. 影響範囲
+
+| 観点         | 影響                                                                                                                                                                                                                              |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| スコープ     | grade の Job（`docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml`・`job-grade-kata.yaml`）の command と review の観点、`tools/grade/run-per-document.sh` の終了コード、Job Run の状態（`src/job/`）、routine の統合の判定 |
+| スケジュール | 急がないが、定期評価の成果を無駄にしないため早めに直す                                                                                                                                                                            |
+| コスト       | 1 件でも評価が失敗すると、評価できた文書の結果も統合されず、次の Run で評価し直すか人が手で統合する（2026-10-12 の kata の Run は 15 件中 3 件の失敗で人が統合した）                                                              |
+| 品質         | 定期評価の結果が、一部の失敗で丸ごと捨てられる                                                                                                                                                                                    |
+| 関係者       | 定期実行の grade の運用                                                                                                                                                                                                           |
+
+## 3. 対応方針
+
+| 項目     | 内容                                                                                                                                                                                                               |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 原因     | `run-per-document.sh` は 1 件でも段が失敗すると 0 以外で終わり、Job の command がその終了コードで失敗する。Job Run の状態が `failed` になり、review は完了条件に従って `incomplete` と判定し、routine は統合しない |
+| 対応策   | 評価できた文書と失敗した文書を分けて扱う。少なくとも 1 件の評価ができ、失敗した文書が評価の状態（再試行の回数）に記録されている場合は、評価できた分を統合できる結果として扱い、失敗した文書は次の Run で評価し直す |
+| 依存事項 | なし                                                                                                                                                                                                               |
+| 完了条件 | 下記の完了条件を満たす                                                                                                                                                                                             |
+
+### 3.1. 完了条件
+
+- grade の Job Run で、一部の文書の評価が失敗し、残りの文書の評価ができた場合に、評価できた文書の結果が review を経て統合される。失敗した文書は評価の状態に記録され、次の Run で評価し直される（既存の連続失敗の上限 `max_failures` に従う）。
+- 終了コード 75（上限）や中断で未完了の段がある場合と、すべての文書の評価が失敗した場合は、従来どおり統合しない（`waiting`）。
+- 一部の失敗を表す状態を、Job Run の状態に加えるか（例: `partial`）、`succeeded` の中で失敗の件数を記録するかを決めて実装し、理由を result に書く。routine の記録（`last_result`）と `routine list` の表示でも、一部の失敗が分かるようにする。
+- grade の Job の review の観点（command の `analysis` と review の完了条件）を、一部の失敗のときに `complete-with-findings` と判定し、失敗した文書と理由を指摘として残す形に改める。成果物と kata の 2 つの Job を揃える。
+- routine の運用ガイド（[[specdojo:routine-operation-guide]]）に、一部の失敗の扱いを書く。
+- 統合テストか単体テストで、一部の失敗・全部の失敗・未完了の 3 通りを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG に記載する場合は、未公開の版の節（`## [0.4.0] - 未定`）に書く。公開済みの版の節は変えない。
+
+## 4. 対応結果
+
+_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+
+## 5. 関連ドキュメント
+
+- [[specdojo:routine-operation-guide]]: routine と grade の運用。
+- [[prj-0001:pjr-vqza-routine-commit-after-run]]: routine の worktree での実行と review。
+rg: docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: IO error for operation on docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: No such file or directory (os error 2)
+
+exec
+/bin/bash -lc "rg --files docs/ja/projects/prj-0001 | rg 'pjr-index\\.md"'$|routine-operation-guide|job-grade-(deliverable|kata)'"\\.yaml"'$'"' && sed -n '1,260p' package.json && sed -n '1,260p' lefthook.yml && if [ -f .specdojo/specdojo.config.json ]; then sed -n '1,260p' .specdojo/specdojo.config.json; else echo 'NO_SPEC_CONFIG'; fi" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG
+ succeeded in 31ms:
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml
+docs/ja/projects/prj-0001/controls/project-register/pjr-0007-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0036-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0xxz-pjr-index.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0058-pjr-index.md
+{
+  "name": "specdojo",
+  "version": "0.3.1",
+  "description": "A dojo for Spec-Dō, the way of specification: decide with a register, write specs and designs with kata, and keep sharpening them with AI.",
+  "license": "MIT",
+  "author": "naoji3x",
+  "private": false,
+  "type": "module",
+  "bin": {
+    "specdojo": "dist/specdojo.js"
+  },
+  "files": [
+    "dist",
+    "docs/ja/specdojo",
+    "!docs/ja/specdojo/**/generated/**",
+    "docs/specdojo",
+    "!docs/specdojo/**/generated/**",
+    "templates",
+    ".github/agents/specdojo-orchestrator.md",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specdojo/specdojo.git"
+  },
+  "homepage": "https://github.com/specdojo/specdojo#readme",
+  "bugs": {
+    "url": "https://github.com/specdojo/specdojo/issues"
+  },
+  "keywords": [
+    "specdojo",
+    "cli",
+    "specification",
+    "project-management",
+    "workflow"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepare": "node tools/install-lefthook.mjs",
+    "pre-commit": "lefthook run pre-commit",
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"",
+    "build:if-stale": "node tools/build-if-stale.mjs",
+    "test": "vitest run",
+    "test:unit": "vitest run --config vitest.unit.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:watch": "vitest",
+    "test:e2e": "npm run build && tsx tools/e2e/exec-run-e2e.ts",
+    "dev": "tsx src/specdojo.ts",
+    "start": "node dist/specdojo.js",
+    "prepack": "npm run build",
+    "specdojo:build": "npm run build",
+    "vscode:install": "npm --prefix packages/vscode-specdojo ci",
+    "update:agents": "node tools/update-agent-clis.mjs",
+    "vscode:build": "npm --prefix packages/vscode-specdojo run compile",
+    "vscode:package": "npm --prefix packages/vscode-specdojo run package",
+    "exec:watch-claude-log": "tools/exec/watch-claude-log.sh",
+    "worktree:sync": "tools/worktree/sync.sh",
+    "orch:sonnet": "claude --agent specdojo-orchestrator --model sonnet",
+    "orch:sonnet:work": "tools/worktree/open-agent-worktree.sh claude-work claude --agent specdojo-orchestrator --model sonnet",
+    "orch:opus": "claude --agent specdojo-orchestrator --model opus",
+    "orch:opus:work": "tools/worktree/open-agent-worktree.sh claude-work claude --agent specdojo-orchestrator --model opus",
+    "orch:terra": "codex -m gpt-5.6-terra \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:terra:work": "tools/worktree/open-agent-worktree.sh codex-work codex -m gpt-5.6-terra \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:sol": "codex -m gpt-5.6-sol \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:sol:work": "tools/worktree/open-agent-worktree.sh codex-work codex -m gpt-5.6-sol \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:copilot": "copilot --agent specdojo-orchestrator",
+    "orch:copilot:work": "tools/worktree/open-agent-worktree.sh copilot-work copilot --agent specdojo-orchestrator",
+    "orch:agy": "agy --add-dir \"$(pwd)\" --model gemini-3.8-flash-high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:agy:work": "tools/worktree/open-agent-worktree.sh agy-work agy --add-dir \"$(pwd)\" --model gemini-3.8-flash-high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:qwen": "opencode --agent qwen-orchestrator",
+    "orch:qwen:work": "tools/worktree/open-agent-worktree.sh qwen-work opencode --agent qwen-orchestrator",
+    "orch:gemma": "opencode --agent gemma-orchestrator",
+    "orch:gemma:work": "tools/worktree/open-agent-worktree.sh gemma-work opencode --agent gemma-orchestrator",
+    "code:red": "tools/vscode/open-worktree-workspace.sh red",
+    "code:blue": "tools/vscode/open-worktree-workspace.sh blue",
+    "code:green": "tools/vscode/open-worktree-workspace.sh green",
+    "typecheck": "tsc -b --noEmit",
+    "lint:ts": "eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'",
+    "lint:ts:fix": "eslint --fix 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'",
+    "lint:orchestrator-sync": "node tools/validate-orchestrator-sync.mjs",
+    "orchestrator:sync": "node tools/generate-orchestrator-wrappers.mjs",
+    "lint:md": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'",
+    "lint:md:fix": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint --fix '**/*.md'",
+    "format": "prettier --write '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
+    "format:check": "prettier --check '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
+    "docs:generate": "node --import tsx src/specdojo.ts build",
+    "docs:dev": "npm run docs:generate && npm --prefix packages/docs-site run docs:dev",
+    "docs:build:mermaid": "npm --prefix packages/docs-site run docs:build:mermaid",
+    "docs:rebuild:mermaid": "rm -f public/mermaid/*.svg && npm run docs:build:mermaid",
+    "docs:build": "npm run docs:generate && npm --prefix packages/docs-site run docs:build",
+    "lint:fm": "node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail",
+    "validate:schema:job-run": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --schema docs/specdojo/schemas/v1/job-run.schema.yaml --data \"docs/ja/**/execution/jobs/runs/*.json\" --allow-empty",
+    "validate:schema:grade-pipeline": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --schema docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml --data \"docs/ja/**/execution/grade/pipeline/*.json\" --allow-empty",
+    "validate:schema:file": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema",
+    "validate:schema": "npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary",
+    "validate:schema:rulebook-enums": "node packages/docs-lint/bin/specdojo-docs-lint.js rulebook-schema-enums",
+    "validate:schema:glossary": "node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references",
+    "validate:catalog": "tsx src/specdojo.ts catalog validate",
+    "validate:history-links": "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
+    "check": "npm run typecheck && npm run lint:ts && npm run lint:md && npm run lint:fm && npm run validate:schema && npm run validate:catalog && npm run validate:history-links && npm test",
+    "dc:ps": "docker ps --format \"table {{.Names}}\\t{{.Image}}\\t{{.Status}}\"",
+    "dc:name": "bash -lc 'docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"'",
+    "dc:bash": "bash -lc 'name=$(docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"); [ -n \"$name\" ] && docker exec -it --detach-keys=\"ctrl-]\" -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -u node \"$name\" bash -lc \"cd /workspaces/specdojo-workspace/specdojo && exec bash\" || echo \"matching container not found\"'",
+    "vscode:ps": "bash .devcontainer/kill-stale-vscode.sh --list",
+    "vscode:kill-stale": "bash .devcontainer/kill-stale-vscode.sh",
+    "specdojo:exec:opencode": "specdojo exec run --auto --loop --parallel 1 --edit-by opencode-edit-agent --review-by opencode-review-agent > logs/exec-opencode.stdout.log 2> logs/exec-opencode.stderr.log",
+    "specdojo:exec:auto": "specdojo exec run --auto --loop --parallel 1 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "specdojo:exec:auto2": "specdojo exec run --auto --loop --parallel 2 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "specdojo:exec:auto3": "specdojo exec run --auto --loop --parallel 3 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "validate:schema:yaml": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+    "commander": "^15.0.0",
+    "dotenv": "^18.0.4",
+    "js-yaml": "^5.4.3",
+    "prettier": "^3.8.4",
+    "remark-parse": "^11.0.0",
+    "unified": "^11.0.5"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "@types/node": "^25.9.2",
+    "@typescript-eslint/eslint-plugin": "^8.61.0",
+    "@typescript-eslint/parser": "^8.61.0",
+    "ajv-cli": "^5.0.0",
+    "ajv-formats": "^3.0.1",
+    "cloc": "^2.6.0-cloc",
+    "eslint-config-prettier": "^10.1.8",
+    "gray-matter": "^4.0.3",
+    "lefthook": "^2.1.9",
+    "markdownlint-cli": "^0.49.1",
+    "remark": "^15.0.1",
+    "remark-cli": "^12.0.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-lint": "^10.0.1",
+    "remark-mdx": "^3.1.1",
+    "remark-stringify": "^11.0.0",
+    "tinyglobby": "^0.2.17",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.0",
+    "vitest": "^4.1.8"
+  }
+}
+# Git hooks for development workflow
+pre-commit:
+  piped: false
+  parallel: true
+  commands:
+    # docs-build（vitepress build）は rendering pages 時にメモリを大量消費し、
+    # 環境によっては OOM (exit 137) で commit がブロックされるため pre-commit から外す。
+    # フルビルドの検証は CI 側で実行する想定。
+    # 整形は prettier に一本化する。
+    # md 以外（ts/js/json/yaml）は prettier で整形する。
+    format:
+      glob: "*.{ts,js,mjs,cjs,json,yaml,yml}"
+      run: npx prettier --write {staged_files}
+      stage_fixed: true
+
+    # md は prettier で整形してから markdownlint でルール検査する。
+    # 別コマンドかつ parallel:true だと「整形前の内容を検査して誤ブロック」する
+    # 競合が起きるため、整形→検査を 1 コマンドに連結して順序を保証する。
+    markdown:
+      glob: "*.md"
+      run: npx prettier --write {staged_files} && node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint {staged_files}
+      stage_fixed: true
+
+    # SSOT の変更をラッパーと配布テンプレートへ反映する。検査ではなく生成にしているのは、
+    # parallel:true で format（prettier）と同時に走るため、検査だけだと「整形前の本文で
+    # 比較して通り、整形後の SSOT との差分が commit へ入る」順序事故が起きるからである。
+    # 生成は冪等で、prettier が整形しない .toml 側のずれもここで吸収する。
+    orchestrator-sync:
+      glob: "{.agents/specdojo-orchestrator.agent.md,.claude/agents/specdojo-orchestrator.md,.github/agents/specdojo-orchestrator.md,.codex/agents/specdojo-orchestrator.toml,.opencode/agents/gemma-orchestrator.md,.opencode/agents/qwen-orchestrator.md,templates/*/agents/specdojo-orchestrator.*,templates/antigravity/orchestrator.md}"
+      run: npm run orchestrator:sync
+      stage_fixed: true
+
+    # tsc -b は staged 単位で実行できないため、プロジェクト全体を型チェックする。
+    # tsconfig.build.json（src）だけでなく tests / tools も参照経由で対象になる。
+    typecheck:
+      glob: "{src/**,tests/**,scripts/**,tools/**,packages/docs-lint/**,tsconfig*.json}"
+      run: npm run typecheck
+
+    test:
+      glob: "{src/**,tests/**,docs/ja/specdojo/templates/**,docs/ja/specdojo/exec-templates/**,vitest.config.*}"
+      run: npm test
+
+    # *-build 系は generated/ 配下を出力するが、generated/ は gitignore 済みの生成物
+    # （VitePress build 前段の docs:generate で再生成する）。ここでは再生成のみ行い、
+    # commit には含めない（stage_fixed しない）。ローカル作業ツリーを最新化しつつ、
+    # 入力変更でビルドが壊れていないことの確認も兼ねる。
+    register-build:
+      glob: "docs/**/project-register/*.md"
+      run: npx tsx src/specdojo.ts register build
+
+    catalog-build:
+      glob: "docs/**/dct-*.yaml"
+      run: npx tsx src/specdojo.ts catalog build
+
+    catalog-validate:
+      glob: "docs/ja/projects/**"
+      run: node --import tsx tools/catalog-validate-if-configured.mjs
+
+    exec-refresh:
+      glob: "docs/**/sch-*.yaml"
+      run: npx tsx src/specdojo.ts exec refresh
+
+    index-build:
+      glob: "docs/**"
+      # doc-index.json も gitignore 済みの生成物。再生成のみ行い commit に含めない。
+      run: npx tsx src/specdojo.ts index build
+
+commit-msg:
+  commands:
+    commitlint:
+      run: npx commitlint --edit $1
+
+# Git が pre-push の標準入力へ渡す remote ref を検査する。リモート名にかかわらず
+# refs/heads/main への更新だけを拒否し、develop / feature / exec は妨げない。
+pre-push:
+  commands:
+    protect-main:
+      run: node tools/protect-main-push.mjs
+      use_stdin: true
+
+# specdojo の bin は dist/specdojo.js を指すため、merge / checkout で src が更新された
+# あとに再ビルドしないと、CLI が古い挙動のまま動く（PJR-CMYX）。src が dist より新しい
+# 場合だけ再ビルドし、それ以外は何もしない。失敗しても hook を止めない best-effort。
+post-merge:
+  commands:
+    build-if-stale:
+      run: node tools/build-if-stale.mjs
+
+post-checkout:
+  commands:
+    build-if-stale:
+      run: node tools/build-if-stale.mjs
+{
+  "version": 1,
+  "current_project": "prj-0001",
+  "projects": {
+    "prj-0001": {
+      "base_path": "docs/ja/projects/prj-0001",
+      "catalog_path": "010-deliverables-catalog",
+      "schedule_path": "schedule",
+      "execution_path": "execution",
+      "members_path": "030-project-management/pm-members.yaml",
+      "roles_path": "030-project-management/pm-roles.yaml",
+      "viewpoints_path": "030-project-management/pm-review-viewpoints.yaml",
+      "project_register_path": "controls/project-register",
+      "routines_path": "routines",
+      "jobs_path": "jobs",
+      "project_context": ["prj-overview"],
+      "run": {
+        "register_date_timezone": "Asia/Tokyo",
+        "exec_defaults": ".specdojo/exec-defaults.yaml"
+      }
+    }
+  }
+}
+
+exec
+/bin/bash -lc "rg -n -C 3 'PJR-VGNG|pjr-vgng' docs/ja/projects/prj-0001/controls/project-register && rg -n -C 4 'partial|complete-with-findings|incomplete|last_result|max_failures|run-per-document' src tests tools docs/ja/specdojo docs/ja/projects/prj-0001/jobs docs/ja/projects/prj-0001/routines -g '"'!**/generated/**'"' -g '"'!**/.env'"' -g '"'!secrets/**'"'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG
+ succeeded in 181ms:
+docs/ja/projects/prj-0001/controls/project-register/pjr-p8tk-release-stabilization-criteria.md-145-### 4.3. 残課題
+docs/ja/projects/prj-0001/controls/project-register/pjr-p8tk-release-stabilization-criteria.md-146-
+docs/ja/projects/prj-0001/controls/project-register/pjr-p8tk-release-stabilization-criteria.md-147-- CHANGELOG の既知の問題に記載したもの（docs-site・docs-lint の上流待ちの脆弱性、PJR-PV5B など）。
+docs/ja/projects/prj-0001/controls/project-register/pjr-p8tk-release-stabilization-criteria.md:148:- 公開後に対応する登録簿の項目: PJR-RY4C、PJR-VGNG、PJR-NMSH、PJR-TATP、PJR-G85C、PJR-1DKD。
+docs/ja/projects/prj-0001/controls/project-register/pjr-p8tk-release-stabilization-criteria.md-149-- pre-commit の hook（`parallel: true`）で、整形したファイルの再 stage と別の検証の git 操作が `index.lock` でぶつかり、commit が一時的に失敗することがある（2026-10-14 に 2 回。再試行で通る）。未起票。
+docs/ja/projects/prj-0001/controls/project-register/pjr-p8tk-release-stabilization-criteria.md-150-- prj-0002 の HEPK（LP と導入の文書）は、0.3.0 の公開を前提に進める。
+docs/ja/projects/prj-0001/controls/project-register/pjr-p8tk-release-stabilization-criteria.md-151-
+--
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md-42-
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md-43-## 4. 対応結果
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md-44-
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md:45:- 2026-10-15、利用者の承認を得て、orchestrator が `feature/prj-0001/agy-model-ids` で `.specdojo/exec-defaults.yaml` の 4 か所を置き換え、develop へ統合した（c3394b157、merge d9b8f2b6d）。c3394b157 の commit メッセージの `Refs:` は誤って PJR-VGNG と書いたが、本件の対応である。
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md-46-- 置き換えた 3 つの model（`gemini-3.8-flash-high`・`claude-sonnet-5-5-medium`・`claude-opus-5-5-high`）は、agy から起動して応答が返ることを確かめた。
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md-47-- 2026-10-16 01:00 の成果物の grade（JBR-grade-deliverable-14d97cad9f51）は `succeeded`、review の verdict は `complete-with-findings` で、6 文書の評価結果が統合された（2493a349f）。`invalid model selection` は 0 件だった。
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md-48-
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md-49-## 5. 関連ドキュメント
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md-50-
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md-51-- [[prj-0001:pjr-x60a-agy-model-ids-in-templates]]: 配布物の同じ ID の修正（0.3.1）。
+docs/ja/projects/prj-0001/controls/project-register/pjr-nmsh-agy-model-not-recognized.md:52:- [[prj-0001:pjr-vgng-job-run-partial-failure-integration]]: 一部の文書の失敗で Run 全体が統合されない件（別件）。
+--
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-1----
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-2-specdojo:
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md:3:  id: prj-0001:pjr-vgng-job-run-partial-failure-integration
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-4-  type: project
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-5-  status: draft
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-6-  rulebook: specdojo:pjr-rulebook
+--
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-13-  registered_at: "2026-10-12T21:56:35Z"
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-14----
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-15-
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md:16:# PJR-VGNG 一部の文書が失敗した Job Run が完了分も含めて統合されない
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-17-
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-18-## 1. 課題内容
+docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md-19-
+--
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x60a.yaml-6-  actor: claude-orchestrator
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x60a.yaml-7-  from_status: null
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x60a.yaml-8-  to_status: open
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x60a.yaml:9:  reason: PJR-VGNG の対応で本リポジトリの設定を直した際に、配布物にも同じ ID が残ることを見つけた。利用者の判断で 0.3.1 で直す（2026-10-15）
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x60a.yaml-10-  changes:
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x60a.yaml-11-    - field: status
+docs/ja/projects/prj-0001/controls/project-register/events/pjr-x60a.yaml-12-      from: ""
+docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml-17-    unreviewed: "true"
+docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml-18-    # PJR-Z47X 以降、changed_only は観点の comparison_sources で宣言した突き合わせ先の変更も検出する。
+docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml-19-    changed_only: "true"
+docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml-20-    ungraded: "true"
+docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml:21:    incomplete: "true"
+docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml-22-    # PJR-BVPS: 旧 rubric（grade-rubric-v1 など）の結果を、limit の範囲で夜間に少しずつ評価し直す。
+docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml-23-    # 評価者は Job 定義で指定した agy-expert-executor とする（2026-09-30 に codex から変更）。
+docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml-24-    rubric_outdated: "true"
+docs/ja/projects/prj-0001/routines/rtn-grade-deliverable-recheck.yaml-25-policy:
+--
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-18-    default: false
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-19-  unreviewed:
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-20-    type: boolean
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-21-    default: false
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml:22:  # 経過措置（PJR-N03W）: changed_only・ungraded・incomplete は、review の中で grade を実行する
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-23-  # PJR-KCMH の完了まで残す。KCMH の完了後に、この 3 入力と対応する routine の入力を外す。
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-24-  changed_only:
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-25-    type: boolean
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-26-    default: false
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-27-  ungraded:
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-28-    type: boolean
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-29-    default: false
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml:30:  incomplete:
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-31-    type: boolean
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-32-    default: false
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-33-  # 保存済みの結果が現在の grade_rubric と異なる版（または版の記録なし）で付けられた成果物を選ぶ
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-34-  # （PJR-BVPS）。rubric を改めたとき、旧版の結果を limit の範囲で少しずつ評価し直す。
+--
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-40-  owner: ARC
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-41-  precondition:
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-42-    command: |
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-43-      selection=$(
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml:44:        if [ "{{inputs.dependency_changed}}" = "false" ] && [ "{{inputs.rulebook_changed}}" = "false" ] && [ "{{inputs.unreviewed}}" = "false" ] && [ "{{inputs.changed_only}}" = "false" ] && [ "{{inputs.ungraded}}" = "false" ] && [ "{{inputs.incomplete}}" = "false" ] && [ "{{inputs.rubric_outdated}}" = "false" ]; then
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-45-          {{specdojo}} grade list --target deliverable --project {{project_id}}
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-46-        else
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-47-          if [ "{{inputs.dependency_changed}}" = "true" ]; then
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-48-            {{specdojo}} grade list --target deliverable --project {{project_id}} --dependency-changed || exit $?
+--
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-58-          fi
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-59-          if [ "{{inputs.ungraded}}" = "true" ]; then
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-60-            {{specdojo}} grade list --target deliverable --project {{project_id}} --ungraded || exit $?
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-61-          fi
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml:62:          if [ "{{inputs.incomplete}}" = "true" ]; then
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml:63:            {{specdojo}} grade list --target deliverable --project {{project_id}} --incomplete || exit $?
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-64-            # 上限到達成果物は処理対象外だが、report-only Job を起動するため precondition に含める。
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-65-            {{specdojo}} grade state --target deliverable --project {{project_id}} --exhausted || exit $?
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-66-          fi
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-67-          if [ "{{inputs.rubric_outdated}}" = "true" ]; then
+--
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-77-      '
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-78-    skip_when: empty-output
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-79-  command: |
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-80-    npm run build
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml:81:    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --stage-1-executor agy-expert-executor --target deliverable --limit {{inputs.limit}} --dependency-changed={{inputs.dependency_changed}} --rulebook-changed={{inputs.rulebook_changed}} --unreviewed={{inputs.unreviewed}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}} --rubric-outdated={{inputs.rubric_outdated}}; then
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-82-      cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-83-    else
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-84-      grade_status=$?
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-85-      printf 'grade pipeline failed: run_id=%s exit_code=%s\n' '{{job_run_id}}' "$grade_status" >&2
+--
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-111-    agent:
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-112-      executor: claude-expert-review-executor
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-113-      reporter: claude-reporter
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml-114-run:
+docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml:115:  idempotency_key: "{{job_id}}:command-v7:{{scheduled_at}}:{{inputs.limit}}:{{inputs.dependency_changed}}:{{inputs.rulebook_changed}}:{{inputs.unreviewed}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}:{{inputs.rubric_outdated}}"
+--
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-22-    default: false
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-23-  unreviewed:
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-24-    type: boolean
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-25-    default: false
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml:26:  # 経過措置（PJR-N03W）: changed_only・ungraded・incomplete は、review の中で grade を実行する
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-27-  # PJR-KCMH の完了まで残す。KCMH の完了後に、この 3 入力と対応する routine の入力を外す。
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-28-  changed_only:
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-29-    type: boolean
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-30-    default: false
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-31-  ungraded:
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-32-    type: boolean
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-33-    default: false
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml:34:  incomplete:
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-35-    type: boolean
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-36-    default: false
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-37-  # 保存済みの結果が現在の grade_rubric と異なる版（または版の記録なし）で付けられた文書を選ぶ
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-38-  # （PJR-BVPS）。rubric を改めたとき、旧版の結果を limit の範囲で少しずつ評価し直す。
+--
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-44-  owner: ARC
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-45-  precondition:
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-46-    command: |
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-47-      selection=$(
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml:48:        if [ "{{inputs.dependency_changed}}" = "false" ] && [ "{{inputs.rulebook_changed}}" = "false" ] && [ "{{inputs.unreviewed}}" = "false" ] && [ "{{inputs.changed_only}}" = "false" ] && [ "{{inputs.ungraded}}" = "false" ] && [ "{{inputs.incomplete}}" = "false" ] && [ "{{inputs.rubric_outdated}}" = "false" ]; then
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-49-          {{specdojo}} grade list --target kata --project {{project_id}}
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-50-        else
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-51-          if [ "{{inputs.dependency_changed}}" = "true" ]; then
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-52-            {{specdojo}} grade list --target kata --project {{project_id}} --dependency-changed || exit $?
+--
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-62-          fi
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-63-          if [ "{{inputs.ungraded}}" = "true" ]; then
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-64-            {{specdojo}} grade list --target kata --project {{project_id}} --ungraded || exit $?
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-65-          fi
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml:66:          if [ "{{inputs.incomplete}}" = "true" ]; then
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml:67:            {{specdojo}} grade list --target kata --project {{project_id}} --incomplete || exit $?
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-68-            # 上限到達文書は処理対象外だが、report-only Job を起動するため precondition に含める。
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-69-            {{specdojo}} grade state --target kata --project {{project_id}} --exhausted || exit $?
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-70-          fi
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-71-          if [ "{{inputs.rubric_outdated}}" = "true" ]; then
+--
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-83-      '
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-84-    skip_when: empty-output
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-85-  command: |
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-86-    npm run build
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml:87:    if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --stage-1-executor agy-expert-executor --kind {{inputs.kind}} --limit {{inputs.limit}} --dependency-changed={{inputs.dependency_changed}} --rulebook-changed={{inputs.rulebook_changed}} --unreviewed={{inputs.unreviewed}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}} --rubric-outdated={{inputs.rubric_outdated}}; then
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-88-      cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-89-    else
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-90-      grade_status=$?
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-91-      printf 'grade pipeline failed: run_id=%s exit_code=%s\n' '{{job_run_id}}' "$grade_status" >&2
+--
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-121-      executor: claude-expert-review-executor
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-122-      reporter: claude-reporter
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-123-run:
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml-124-  # scheduled_at は routine の論理実行枠を表す。同じ枠の再試行は同じ Run、次の枠は別 Run にする。
+docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml:125:  idempotency_key: "{{job_id}}:command-v8:{{scheduled_at}}:{{inputs.kind}}:{{inputs.limit}}:{{inputs.dependency_changed}}:{{inputs.rulebook_changed}}:{{inputs.unreviewed}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}:{{inputs.rubric_outdated}}"
+--
+docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml-20-    # PJR-Z47X 以降、changed_only は観点の comparison_sources で宣言した突き合わせ先の変更も検出する。
+docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml-21-    # 現在の宣言では kata に適用される観点は突き合わせ先を持たないため、kata の選択は変わらない。
+docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml-22-    changed_only: "true"
+docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml-23-    ungraded: "true"
+docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml:24:    incomplete: "true"
+docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml-25-    # PJR-BVPS: 旧 rubric（grade-rubric-v1 など）の結果を、limit の範囲で夜間に少しずつ評価し直す。
+docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml-26-    # 評価者は Job 定義で指定した agy-expert-executor とする（2026-09-30 に codex から変更）。
+docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml-27-    rubric_outdated: "true"
+docs/ja/projects/prj-0001/routines/rtn-grade-recheck.yaml-28-policy:
+--
+tests/src/commands/agent.test.ts-162-    });
+tests/src/commands/agent.test.ts-163-  });
+tests/src/commands/agent.test.ts-164-
+tests/src/commands/agent.test.ts-165-  it("saves stdout and returns the dedicated rate-limit exit code", async () => {
+tests/src/commands/agent.test.ts:166:    const command = "node -e \"process.stdout.write('partial response');process.exit(29)\"";
+tests/src/commands/agent.test.ts-167-    const stderr: string[] = [];
+tests/src/commands/agent.test.ts-168-    vi.spyOn(process.stderr, "write").mockImplementation((chunk: string | Uint8Array) => {
+tests/src/commands/agent.test.ts-169-      stderr.push(String(chunk));
+tests/src/commands/agent.test.ts-170-      return true;
+--
+tests/src/commands/agent.test.ts-182-        "plan.md",
+tests/src/commands/agent.test.ts-183-        "--by",
+tests/src/commands/agent.test.ts-184-        "selected-agent",
+tests/src/commands/agent.test.ts-185-        "--out",
+tests/src/commands/agent.test.ts:186:        "outputs/partial.txt",
+tests/src/commands/agent.test.ts-187-      ]);
+tests/src/commands/age

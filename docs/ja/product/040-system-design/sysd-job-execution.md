@@ -92,7 +92,7 @@ Runには少なくとも次を記録する。
 - `run_id`、`job_id`、`idempotency_key`
 - 起動元、`scheduled_at`、生成時刻
 - 解決済み入力と解決済みtask
-- `running` / `succeeded` / `failed` / `noop`の状態
+- `running` / `succeeded` / `partial` / `failed` / `noop`の状態
 - attempt、plan/result/evidence参照、コマンド終了コード、対象commit
 - 実行前checkpointと、成功時に確定する次checkpoint
 
@@ -149,7 +149,7 @@ task:
       reporter: claude-reporter
 ```
 
-決定論的な処理は`task.mode: command`とし、入力を展開する`task.command`を必須にする。対象選択を伴う処理では任意の`task.precondition`をRun保存前に実行し、空出力または指定終了コードならJob Runと付随成果物を作らずskipする。runnerはmaterialize済みコマンドをPOSIX環境では`/bin/sh -eu`で直接実行し、コマンド、終了コード、標準出力、標準エラーをevidenceへ記録する。stdout / stderr はredact・上限付きログへの参照と、その参照先と同じbounded内容をevidence本体へ保持する。終了コードが0以外なら、その値からRunを直接`failed`と判定しagentは起動しない。結果の解釈が必要な場合だけ`task.analysis.agent`と`task.analysis.description`を指定し、成功時のcommand evidence本体をreporterへ渡す。これによりreporterは作業ツリーや参照先ログを追加で読むことなく出力を解釈できる。analysisを省略した場合はrunnerがresultを確定する。同じprojectの`specdojo exec`を子プロセスで呼ぶcommandでは、親runnerのproject実行lock tokenとowner tokenの一致を検証してlockを継承し、自己デッドロックを避けながら排他範囲を維持する。
+決定論的な処理は`task.mode: command`とし、入力を展開する`task.command`を必須にする。対象選択を伴う処理では任意の`task.precondition`をRun保存前に実行し、空出力または指定終了コードならJob Runと付随成果物を作らずskipする。runnerはmaterialize済みコマンドをPOSIX環境では`/bin/sh -eu`で直接実行し、コマンド、終了コード、標準出力、標準エラーをevidenceへ記録する。stdout / stderr はredact・上限付きログへの参照と、その参照先と同じbounded内容をevidence本体へ保持する。終了コード0は`succeeded`、`task.partial_exit_code`に明示した非0は`partial`、それ以外の非0は`failed`とする。`partial`は完了分と失敗分が混在し、reviewで統合可否を判断できる場合だけ使う。結果の解釈が必要な場合だけ`task.analysis.agent`と`task.analysis.description`を指定し、`succeeded`または`partial`のcommand evidence本体をreporterへ渡す。これによりreporterは作業ツリーや参照先ログを追加で読むことなく出力を解釈できる。analysisを省略した場合はrunnerがresultを確定する。同じprojectの`specdojo exec`を子プロセスで呼ぶcommandでは、親runnerのproject実行lock tokenとowner tokenの一致を検証してlockを継承し、自己デッドロックを避けながら排他範囲を維持する。
 
 テンプレート式で参照できる値は、`job_id`、`project_id`、現在のrunnerと同じCLI entryを表す`specdojo`、検証済み`inputs`、トリガーが渡した`scheduled_at`、読み取り専用の前回成功checkpointに限定する。Job Run IDの確定後に解決するtaskとcheckpointでは、これらに加えて`job_run_id`を参照できる。`run.idempotency_key`から`job_run_id`を参照すると循環するため許可しない。任意コード実行や環境変数の無制限な展開は許可しない。入力の`enum`はscalar値またはlistの各要素へ、integerの`minimum` / `maximum`は値域へ適用し、既定値と実行時入力を同じ規則で検証する。入れ子条件は検証可能なflat入力へ分解する。
 
@@ -174,12 +174,12 @@ specdojo routine run --project <project-id> --due
 5. 初回の command Job に precondition があれば実行する。skip 条件を満たした場合は Run を保存せず起動元へ `skipped` を返す。
 6. skip でなければ解決済みtaskをJob Runへ保存する。
 7. `edit` / `review`は既存exec基盤でagentを実行する。`command`はrunnerが解決済みコマンドを直接実行してevidenceを保存する。Job が `task.review` を宣言した場合（互換として routine action が `commit: true` の場合も）は、ここまでを Job Run 専用 worktree で行う。
-8. commandが成功し`task.analysis`があれば、evidenceをreporter agentへ渡す。失敗時またはanalysisなしではagentを起動しない。
+8. commandが`succeeded`または`partial`で`task.analysis`があれば、evidenceをreporter agentへ渡す。`failed`またはanalysisなしではagentを起動しない。
 9. agent結果またはコマンド終了コードをRunへ反映する。
 10. `succeeded`または設計上成功とみなす`noop`の場合だけcheckpointを原子的に更新する。
 11. worktree で実行した Run は、Job が作った差分だけを `chore(routine): …` で exec ブランチへ commit する。本文には Job Run ID と Run の状態を含める。
 12. runner は `mode: review` の plan/result を作り、上記の解決順で決めた review executor と reporter で出力 commit を読み取り専用レビューする。review executor が出力を変更した場合は `changed-during-review` とする。
-13. Run が `succeeded` かつ verdict が `complete` / `complete-with-findings` の場合だけ、runner が現在の統合先へ `--no-ff` で merge し、worktree と branch を撤去する。それ以外は review result と Job Run JSON に理由を残し、worktree を保持する。
+13. Run が `succeeded` かつ verdict が `complete` / `complete-with-findings`、または Run が `partial` かつ verdict が `complete-with-findings` の場合だけ、runner が現在の統合先へ `--no-ff` で merge し、worktree と branch を撤去する。それ以外は review result と Job Run JSON に理由を残し、worktree を保持する。
 
 routineから起動する場合は、routineのactionにJobを指定する。
 
@@ -200,7 +200,7 @@ policy:
   overlap: skip
 ```
 
-出力に LLM の判断を含み統合前レビューが必要な Job は、routine ではなく Job の `task.review` で宣言する。routine action の `commit` は互換として読むが、新たには推奨しない。`commit: true` は宣言のない Job を同じ流れで実行させ、Job が `task.review` を宣言している場合は `commit` の有無や値によらず Job を優先する。precondition が skip した場合は空の exec branch を残さず撤去する。routine の `last_result` は、統合まで完了した Run を `success`、waiting になった Run を `failure` として記録し、`last_reason` と `routine-runs.jsonl` の `reason` に待機理由を残す。
+出力に LLM の判断を含み統合前レビューが必要な Job は、routine ではなく Job の `task.review` で宣言する。routine action の `commit` は互換として読むが、新たには推奨しない。`commit: true` は宣言のない Job を同じ流れで実行させ、Job が `task.review` を宣言している場合は `commit` の有無や値によらず Job を優先する。precondition が skip した場合は空の exec branch を残さず撤去する。routine の `last_result` は、統合まで完了した `succeeded` Run を `success`、統合まで完了した `partial` Run を `partial`、waiting になった Run を `failure` として記録し、`last_reason` と `routine-runs.jsonl` の `reason` に待機理由を残す。
 
 現行routineの`interval`は「前回実行からの経過時間」であり、毎週金曜日などの暦上の予定を表せない。Job連携時には`cron`と`timezone`を追加し、既存`interval`を後方互換として維持する。
 
@@ -320,7 +320,7 @@ Runの状態変更とattemptは上書きだけで失われない履歴として�
 - Job Runはin-place実行と、統合前 review を伴う worktree 実行に対応する。worktree 実行は Job の `task.review`、`exec run --job --worktree`、または routine action の `commit: true`（互換）で選ばれる。worktree 内で Job を実行する子プロセスは環境変数 `SPECDOJO_JOB_REVIEW_WORKTREE_CHILD` で識別し、`task.review` による worktree 実行へ再入しない。
 - `exec run --job --dry-run` は worktree 実行の場合、review executor / reporter の nickname と解決元（`--review-by` / `--reporter-by`、`task.review.agent.*`、`auto`）を表示する。
 - `task.agent`でexecutorとreporterを指名したJob Runは、register項目と同じexecutor/reporter pipelineで実行し、evidenceとpipeline stateを`exec/evidence/<taskId>/<runId>/`へ記録する。reporterだけが失敗したRunの`--resume`はregister経路のみが対応し、Jobでは次のattemptとして再実行する。
-- `task.mode: command`はrunnerがin-placeで直接実行する。`task.analysis`を持つ場合だけ成功後にreporterを起動し、redact・上限付きstdout/stderrを含むevidence本体を渡す。commandまたはanalysisの失敗はRun全体をfailedにする。
+- `task.mode: command`はrunnerがin-placeで直接実行する。`task.analysis`を持つ場合だけ`succeeded`または`partial`のcommand後にreporterを起動し、redact・上限付きstdout/stderrを含むevidence本体を渡す。`partial`は`task.partial_exit_code`を明示したJobだけが使え、analysisの失敗はRun全体を`failed`にする。
 - cronは5フィールド形式を扱い、数値、`*`、リスト、範囲、stepを受け付ける。
 - `missed_run`は`latest`と`all`、`overlap`は`skip`に対応する。
 - agentが変更不要と判断して正常終了したRunは現在`succeeded`として記録する。`noop`はデータモデルとcheckpoint規則に予約しているが、agent resultからの自動分類は未対応である。

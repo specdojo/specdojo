@@ -337,7 +337,7 @@ export async function generateJobPlan(
           "```",
           "",
           commandTask.analysis
-            ? "コマンドが成功した場合だけ、上記の判断を reporter agent が evidence に基づいて行う。"
+            ? "コマンドが成功または設定済みの部分成功になった場合、上記の判断を reporter agent が evidence に基づいて行う。"
             : "コマンドの終了コードから Run の成否を直接決定する。",
         ].join("\n")
       : "",
@@ -490,7 +490,7 @@ export async function materializeJobRun(opts: {
     if (record.idempotency_key !== idempotencyKey || record.job_id !== definition.id) {
       throw new Error(`Job Run identity collision: ${runId}`);
     }
-    if (record.state === "succeeded" || record.state === "noop") {
+    if (record.state === "succeeded" || record.state === "partial" || record.state === "noop") {
       return {
         definition,
         record,
@@ -558,7 +558,7 @@ export async function materializeJobRun(opts: {
 export function completeJobRun(opts: {
   projectId?: string;
   runPath: string;
-  status: "succeeded" | "failed" | "noop";
+  status: "succeeded" | "partial" | "failed" | "noop";
   reason?: string;
   evidenceRef?: string;
   exitCode?: number | null;
