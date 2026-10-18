@@ -8,6 +8,7 @@ import { globSync } from "tinyglobby";
 import { buildValidator, formatErrors } from "../../helpers/schema.js";
 import { specdojoRootDir } from "../../../src/shared/specdojo-config.js";
 import { flattenTemplateFrontmatter } from "../../../src/docs/template-frontmatter.js";
+import { parseTableCells } from "../../../src/register/core.js";
 import {
   type RegisterAddFields,
   PJR_ID_RE,
@@ -791,6 +792,41 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
         // 文末の句点はコードスパンの外へ残す。
         expect(view.content).toContain("`<phase>`.");
       }
+    });
+  });
+
+  it("結論やタイトルに `|` や改行を含む個票から生成した一覧の列数が正しく MD056 を満たす", () => {
+    withRegisterDir((paths, dir) => {
+      const ticketPath = join(dir, "pjr-ab12-topic.md");
+      const originalContent = buildTicket("PJR-AB12", "タイトルに | を含む", [
+        "item_status: done",
+        "priority: high",
+        "owner: DEV",
+        'registered_at: "2026-08-01T12:00:00Z"',
+        'completed_at: "2026-08-02T12:00:00Z"',
+        'conclusion: "stop|wait|fallback で\\n処理する"',
+      ]).replace("個票本文の説明。", "説明文の 1 行目。\n説明文の 2 行目 | 補足。");
+      writeFileSync(ticketPath, originalContent, "utf8");
+
+      const views = generateDerivedViewFiles(paths, "register");
+      for (const view of views) {
+        // markdownlint の MD056（表の列数不整合）エラーが無いこと
+        const errors = markdownlintErrors(view.content) as Array<{ ruleNames: string[] }>;
+        const md056Errors = errors.filter((err) => err.ruleNames.includes("MD056"));
+        expect(md056Errors).toEqual([]);
+      }
+
+      const indexContent = findView(views, "pjr-index.md");
+      const rows = indexContent.split("\n").filter((line) => line.startsWith("| PJR-"));
+      expect(rows).toHaveLength(1);
+      const cells = parseTableCells(rows[0]);
+      expect(cells).toHaveLength(12);
+      expect(cells[2]).toBe("タイトルに \\| を含む");
+      expect(cells[3]).toBe("説明文の 1 行目。 説明文の 2 行目 \\| 補足。");
+      expect(cells[10]).toBe("stop\\|wait\\|fallback で 処理する");
+
+      // 個票の本文や frontmatter は変更されていないこと（表示時のみエスケープ）
+      expect(readFileSync(ticketPath, "utf8")).toBe(originalContent);
     });
   });
 

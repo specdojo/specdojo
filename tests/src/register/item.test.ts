@@ -14,6 +14,7 @@ import {
   setRegisterItemDescription,
   setRegisterItemTitle,
   titleFromBody,
+  toCell,
   toDisplayItem,
   validateRegisterItemDocs,
   type PjrItem,
@@ -93,6 +94,29 @@ describe("titleFromBody / descriptionFromBody — 一覧列の導出", () => {
     );
 
     expect(descriptionFromBody(body)).toBe("_TODO_");
+  });
+});
+
+describe("toCell — 表セルのエスケープと正規化", () => {
+  it("未エスケープの `|` をエスケープする", () => {
+    expect(toCell("stop|wait|fallback")).toBe("stop\\|wait\\|fallback");
+  });
+
+  it("すでにエスケープ済みの `\\|` は二重エスケープしない（冪等性）", () => {
+    expect(toCell("stop\\|wait\\|fallback")).toBe("stop\\|wait\\|fallback");
+    expect(toCell(toCell("stop|wait|fallback"))).toBe("stop\\|wait\\|fallback");
+  });
+
+  it("改行を空白に変換し、連続する空白を1つにまとめ、前後をトリムする", () => {
+    expect(toCell("  line 1 \r\n line 2   |   line 3  \n")).toBe("line 1 line 2 \\| line 3");
+  });
+
+  it("リンクの表示形式 `[[id|title]]` のパイプをエスケープする", () => {
+    expect(toCell("[[prj-0001:pjr-bhmh|PJR-BHMH]]")).toBe("[[prj-0001:pjr-bhmh\\|PJR-BHMH]]");
+  });
+
+  it("文字列以外が渡された場合は空文字を返す", () => {
+    expect(toCell(undefined as unknown as string)).toBe("");
   });
 });
 
