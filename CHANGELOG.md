@@ -12,6 +12,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - `validate:schema:file`・Prettier・markdownlint の `not_applicable` を、script や依存 package の有無だけでなく executor が変更したファイルの種類も含めて判定するようにしました。対象種類の変更がない run は適用外として受理し、対象変更がある run の誤申告は従来どおり拒否します（PJR-8WBN）。
 - executor が親検証と同じコマンドを `not_applicable` または `not_run` と報告しても、同じリポジトリで親 runner が実行した結果を正とするようにしました。親検証が成功している run が executor の重複報告によって `waiting` で止まる問題を解消し、親検証でない誤った `not_applicable` は従来どおり拒否します（PJR-7AW0）。
+- exec の雛形を展開するときに、2 行以上続く空行を 1 行にまとめるようにしました。夜間の承認の印（autopilot）がない個票の register の plan では制約の段落が空に展開されて空行が重なり、plan を commit する hook の markdownlint（MD012）で `exec run --register` が止まっていました。agent の Job の plan や保守系の plan など、ほかの雛形で段落が空に展開される場合も同じくまとめます（PJR-283N）。
 
 ## [0.4.0] - 2026-10-18
 

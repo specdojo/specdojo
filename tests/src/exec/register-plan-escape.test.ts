@@ -349,6 +349,37 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     expect(await readFile(unapprovedOutPath, "utf8")).not.toContain("### 夜間 autopilot の制約");
   });
 
+  it("autopilot の承認の有無によらず、plan に空行が 2 行以上続かない", async () => {
+    // 実リポジトリの plan は .prettierignore で整形対象外のため、Prettier が空行をまとめない
+    // 条件をそろえる。
+    await writeFile(path.join(dir, ".prettierignore"), "*.md\n", "utf8");
+    const outputs: string[] = [];
+    for (const [stem, item] of [
+      ["xep-pjr-blank-approved", makeItem({ autopilot: "approved" })],
+      ["xep-pjr-blank-unapproved", makeItem()],
+    ] as const) {
+      const outPath = path.join(dir, `${stem}.md`);
+      await generateRegisterPlan({
+        executionPath: path.join(dir, "execution"),
+        projectId: "prj-test",
+        registerPaths: makeRegisterPaths(),
+        item,
+        stem,
+        outPath,
+      });
+      outputs.push(await readFile(outPath, "utf8"));
+    }
+
+    for (const content of outputs) {
+      expect(content).not.toMatch(/\n{3,}/);
+      const results = lint({ strings: { doc: content }, config: loadMarkdownlintConfig() });
+      const md012 = (results.doc ?? []).filter((issue) =>
+        (issue.ruleNames ?? []).includes("MD012"),
+      );
+      expect(md012).toEqual([]);
+    }
+  });
+
   it("approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる", async () => {
     const referencePath = "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md";
     const plainOutPath = path.join(dir, "plan-plain.md");

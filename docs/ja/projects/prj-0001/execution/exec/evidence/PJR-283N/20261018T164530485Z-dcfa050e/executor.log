@@ -1,0 +1,30 @@
+空行が重なる問題を、register の plan だけでなく全 exec 雛形で直しました。ただし `npm run typecheck`・`npm run lint:ts`・`npm run test:unit` はまだ通しで実行していません。個票の完了条件では作業を終える前に実行することになっていますが、今回の指示では親 runner が実行するので sandbox 内では実行しない決まりのためです。その結果が出るまでは、完了とは言えません。
+
+**どう直したか**
+- 2026-10-19 01:44 の hotfix（`56a94c560`）では、空行をまとめる処理が register の plan だけに入っていました。これを、全雛形が通る `expandTemplate`（`src/shared/text.ts`）へ移しました。展開した後に、2 行以上続く空行を 1 行にまとめます。`src/exec/register.ts` の個別の処理は外しました。
+- 雛形の置き方を変える方法は採りませんでした。空に展開されうる placeholder が多いためです。また plan は `.prettierignore` で整形の対象外なので、Prettier では空行がまとまりません。展開の 1 か所でまとめれば、今後足す雛形でも同じ事故を防げます。
+
+**ほかの雛形の確認**
+- register の plan 以外にも、空に展開されて空行が重なる箇所がありました。
+  - agent の Job の plan：`xep-job-template.md` の `_JOB_EXECUTION_`。
+  - 保守系の plan：`_PROJECT_CONTEXT_`（保守系では必ず空になります）。
+- どちらも `expandTemplate` を通るので、同じ修正で直ります。
+
+**追加したテスト**
+- `tests/src/exec/register-plan-escape.test.ts`：夜間の承認の印がある個票とない個票の両方で、生成した plan に空行が 2 行以上続かず、MD012 も出ないことを確かめます。
+  - 最初のテストは、修正を外しても通ってしまいました。一時ディレクトリの plan は Prettier が整形して空行をまとめるためです。そこで本番に合わせて `.prettierignore` を置き、plan を整形の対象外にしました。
+- `tests/src/exec/shared.test.ts`：空の placeholder の前後で空行がまとまることを確かめます。
+- 同じファイルで、全 exec 雛形について、単独行の placeholder をすべて空にしても空行が重ならないことも確かめます。雛形を足すと、自動で検査の対象になります。
+- 修正を一時的に外して実行し、3 件とも失敗することを確かめてから戻しました。修正を外すと 25 個の雛形で空行が重なりました。
+
+**そのほかの変更**
+- `CHANGELOG.md` の未公開の節 `## [0.4.1] - 未定` の「不具合修正」に 1 項目を追加しました。
+- 個票の「対応結果」の節を実施内容で書き換えました。ステータス項目は変えていません。
+
+`docs/ja/projects/prj-0001/controls/project-register/events/pjr-283n.yaml` の変更と evidence ディレクトリは、私ではなく runner の変更です。
+
+実行時の動作の確認は統合の後に残っています。runner のコードを変えたので、個票の完了条件どおり `exec run --register` を 1 回流して確かめる必要があります（PJR-JSEY）。
+
+<specdojo_executor_evidence>
+{"final_message":"空行をまとめる処理を、register の plan だけの hotfix から全 exec 雛形が通る `expandTemplate` へ移した。register の plan（夜間の承認の印の有無の両方）と全雛形について、空行が重ならないことを確かめる単体テストを追加し、修正を外すと失敗することを確認した。CHANGELOG の 0.4.1（未定）と個票の対応結果を更新した。","validations":[{"command":"npx vitest run tests/src/exec/shared.test.ts tests/src/exec/register-plan-escape.test.ts","status":"passed","summary":"49 tests passed; 修正を一時的に外すと新しく追加した 3 件が失敗することも確認した"},{"command":"npx prettier --check src/shared/text.ts src/exec/register.ts tests/src/exec/shared.test.ts tests/src/exec/register-plan-escape.test.ts CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-283n-register-plan-blank-lines-autopilot.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-283n-register-plan-blank-lines-autopilot.md","status":"passed","summary":"変更した Markdown で markdownlint のエラーなし"},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"OK（based_on の参照先が見つからない WARN は既存のもので、今回の変更とは関係しない）"},{"command":"specdojo exec run --register (PJR-JSEY での動作確認)","status":"requires_human","summary":"runner のコードを変えたため、統合の後に exec run --register を 1 回流して、記帳の commit が MD012 で止まらないことを確かめる"}]}
+</specdojo_executor_evidence>
