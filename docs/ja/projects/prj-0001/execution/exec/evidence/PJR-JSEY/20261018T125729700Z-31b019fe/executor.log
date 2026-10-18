@@ -1,0 +1,9 @@
+個票の「対応結果」の表に1行追記しました。内容は 2026-10-18 21:58 JST、対象の分割は PJR-6EF8、agent は `claude-expert-executor` です。
+
+最新の統合は、git log で最後に統合された項目が PJR-6EF8 だったことから判断しました。`pjr-index.md` は worktree に無く、登録簿の状態は確認していません。
+
+変更したのはこの個票だけです。検証コマンドは、親 runner が実行するため、このエージェントでは実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果表に PJR-6EF8 の行を追記した（本個票のみ変更）。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する許可リスト検証のため、executor では実行していない"}]}
+</specdojo_executor_evidence>
