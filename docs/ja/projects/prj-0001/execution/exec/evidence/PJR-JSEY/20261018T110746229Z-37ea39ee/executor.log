@@ -1,0 +1,10 @@
+個票の「対応結果」の表に、2026-10-18 20:09、PJR-NJ6J、`claude-expert-executor` の 1 行を追記しました。
+
+- **対象の分割:** `git log` で、PJR-NJ6J が最後に統合された分割項目だと確認しました。PJR-NJ6J は完了条件の対象一覧に入っています。
+- **変更範囲:** 変更したのは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。
+- **親の検証:** lint-ts、lint-fm、lint-md、typecheck、test-unit、test-integration、validate-schema は、runner が終了後に実行します。私は実行していません。
+- **登録簿の確認:** `pjr-index.md` は、このパスでは見つかりませんでした。そのため PJR-NJ6J が `review` か `done` かは、登録簿では確認していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に PJR-NJ6J の行（2026-10-18 20:09 / claude-expert-executor）を追記した。変更は個票 1 ファイルのみ。","validations":[]}
+</specdojo_executor_evidence>
