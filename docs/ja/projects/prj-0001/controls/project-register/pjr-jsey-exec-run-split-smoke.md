@@ -52,6 +52,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 2026-10-18 08:51 | PJR-BHMH   | codex-expert-executor  |
 | 2026-10-18 11:09 | PJR-H06F   | agy-expert-executor    |
 | 2026-10-18 17:12 | PJR-YK1C   | claude-expert-executor |
+| 2026-10-18 18:45 | PJR-TSP6   | claude-expert-executor |
 
 ## 5. 関連ドキュメント
 
