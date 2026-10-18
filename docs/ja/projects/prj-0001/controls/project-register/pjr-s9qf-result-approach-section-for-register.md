@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T12:18:01Z"
@@ -36,11 +36,14 @@ approach のない実行（register の todo など）の result では、見出
 
 | No  | 作業                                                      | 担当 | 状態 | メモ |
 | --- | --------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | approach のない実行の result の見出しと記入の指示を改める | DEV  | open | -    |
+| 1   | approach のない実行の result の見出しと記入の指示を改める | DEV  | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- edit result テンプレート `docs/ja/specdojo/exec-templates/xer-template.md` の第4章を `_APPROACH_SECTION_` プレースホルダへ変更した。
+- `src/exec/results.ts` の `scaffoldResult` において、`approach` のある実行では「4. 進め方と実践の型の適用」と実践の型適用に関する記入指示を展開し、`approach` のない実行では見出しを「4. 進め方」、記入指示を「_TODO_: どう進めたか、根拠にした文書や規約を記入する。」を展開するようにした（古いテンプレートへのフォールバック置換も保持）。
+- `renderReporterResult` および `renderEditReporterBody` においても、`approach` の有無に応じて第4章の見出しを「## 4. 進め方と実践の型の適用」または「## 4. 進め方」へ切り替えるようにした。
+- 単体テスト `tests/src/exec/results.test.ts` に、`scaffoldResult` と `renderReporterResult` それぞれで `approach` の有無に応じた見出しおよび指示内容の生成を検証するテストケースを追加した。
 
 ## 5. 関連ドキュメント
 
