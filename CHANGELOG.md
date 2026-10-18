@@ -4,6 +4,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [0.4.1] - 未定
 
+### 追加機能
+
+- 親 runner の検証（`pipeline.parent_validations`）の固定許可リストに `build`（`npm run build`）と `format-check`（`npm run format:check`）を追加しました。別リポジトリ構成などでプロダクトリポジトリのビルドと整形の検証を親 runner に委譲できます（PJR-NS8Y）。
+
 ### 不具合修正
 
 - `validate:schema:file`・Prettier・markdownlint の `not_applicable` を、script や依存 package の有無だけでなく executor が変更したファイルの種類も含めて判定するようにしました。対象種類の変更がない run は適用外として受理し、対象変更がある run の誤申告は従来どおり拒否します（PJR-8WBN）。

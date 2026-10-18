@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: medium
   owner: BA
   registered_at: "2026-10-12T07:13:04Z"
   due_on: "2026-10-31"
+  block_reason: "integrate failed: git restore failed: fatal: Unable to create '/workspaces/specdojo-workspace/specdojo/.git/index.lock': ファイルが存在します. (args: --source=HEAD --staged --worktree -- 1 path)"
 ---
 
 # PJR-EVAX README と全体概要ガイドの冒頭を「Spec道（仕様道）の道場」に揃える

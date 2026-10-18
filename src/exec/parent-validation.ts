@@ -17,7 +17,9 @@ export type ParentValidationId =
   | "test-integration"
   | "lint-ts"
   | "lint-fm"
-  | "lint-md";
+  | "lint-md"
+  | "build"
+  | "format-check";
 
 export type ParentValidationDefinition = {
   id: ParentValidationId;
@@ -101,6 +103,20 @@ const PARENT_VALIDATION_REGISTRY: Record<ParentValidationId, ParentValidationDef
     command: process.platform === "win32" ? "npm.cmd" : "npm",
     args: ["run", "lint:md"],
     displayCommand: "npm run lint:md",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  build: {
+    id: "build",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "build"],
+    displayCommand: "npm run build",
+    timeoutMs: 10 * 60 * 1_000,
+  },
+  "format-check": {
+    id: "format-check",
+    command: process.platform === "win32" ? "npm.cmd" : "npm",
+    args: ["run", "format:check"],
+    displayCommand: "npm run format:check",
     timeoutMs: 10 * 60 * 1_000,
   },
 };
