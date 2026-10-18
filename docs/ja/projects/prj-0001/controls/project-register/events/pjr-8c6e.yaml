@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2ab33956ab154eb48054e33900d2a3db
+- v: 1
+  id: reg_f2355727b36c4a8c874d4385c88ad6ad
+  ts: "2026-10-18T16:05:04Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（gemma-executor・gemma26-reporter）の差分と親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: branch-workflow-guide の 10 の節で、GitHub flow の例を feature/`<topic>` に直し、内部の事情（派生項目として起票中）と登録簿への参照を消し、git log の例を仮の値にした。ほかの記述は変えていない
+  previous_event_id: reg_11d23cc9eb83490581437298f415989f

@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T15:12:21Z"
+  completed_at: "2026-10-18T16:05:04Z"
+  conclusion: branch-workflow-guide の 10 の節で、GitHub flow の例を feature/`<topic>` に直し、内部の事情（派生項目として起票中）と登録簿への参照を消し、git log の例を仮の値にした。ほかの記述は変えていない
   derived_from:
     - PJR-WJE6
 ---
