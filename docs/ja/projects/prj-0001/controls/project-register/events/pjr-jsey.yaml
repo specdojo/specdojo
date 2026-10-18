@@ -1108,3 +1108,16 @@
       from: "checkpoint failed: Checkpoint commit failed (exec(register PJR-JSEY): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0001/controls/project-register/events…"
       to: "-"
   previous_event_id: reg_61df28f61dd24daebcbb9d4572d7ac4e
+- v: 1
+  id: reg_860d16a58b9b42da935a94f49a37a702
+  ts: "2026-10-18T17:51:43Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a92d0d8a982c4fd487ddf75f04557b97
