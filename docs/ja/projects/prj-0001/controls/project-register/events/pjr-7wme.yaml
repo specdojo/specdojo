@@ -74,3 +74,16 @@
       from: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
       to: "-"
   previous_event_id: reg_d1afd3d5dc054dd7b205744b57abe8fc
+- v: 1
+  id: reg_8f350e93308d4c3fa401bfcf18120421
+  ts: "2026-10-18T06:41:10Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_780e3cdb7e0347d7aaca1bfd6f26f102
