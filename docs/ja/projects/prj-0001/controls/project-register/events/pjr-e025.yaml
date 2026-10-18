@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2a2590a8c57e441cb0b1d585a9d19e22
+- v: 1
+  id: reg_ccc97b254e424e17bf54183db123edbd
+  ts: "2026-10-18T10:12:24Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex で単体テストの失敗、codex でやり直し、gemma26-reporter）の差分・親検証を確認し、import の残りを数え、JSEY で runner を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 4 組の循環（register→exec/worktree-ops・slot-lock、job→exec/plans、grade→exec/schedule-index、exec→grade/result）を、ロック・git・plan の雛形・schedule の索引・grade の result の型などを src/shared へ移してほどいた。register・job・grade から exec、exec から grade への import はなくなった。result に組ごとの判断と --help の一致の記録がないため、orchestrator が import を数えて確かめ、統合後の runner で JSEY を流した。schedule-index など機能に属するものを shared に置いた是非は PJR-WSET で見直す
+  previous_event_id: reg_1548895fdf7541eaa27f73c7ca2292a9

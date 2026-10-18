@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-e025-src-remaining-cycles
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:45:12Z"
   due_on: null
+  completed_at: "2026-10-18T10:12:24Z"
+  conclusion: 4 組の循環（register→exec/worktree-ops・slot-lock、job→exec/plans、grade→exec/schedule-index、exec→grade/result）を、ロック・git・plan の雛形・schedule の索引・grade の result の型などを src/shared へ移してほどいた。register・job・grade から exec、exec から grade への import はなくなった。result に組ごとの判断と --help の一致の記録がないため、orchestrator が import を数えて確かめ、統合後の runner で JSEY を流した。schedule-index など機能に属するものを shared に置いた是非は PJR-WSET で見直す
 ---
 
 # PJR-E025 汎用の部品の移動の後に残る循環をほどく
