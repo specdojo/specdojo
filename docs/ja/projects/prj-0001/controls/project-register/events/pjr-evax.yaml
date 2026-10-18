@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_adc647c809654e02a02ecf8f484f3cb4
+  ts: "2026-10-18T16:11:25Z"
+  action: start
+  actor: gemma-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_af7e2790a9d144088676e8227723ad3a
