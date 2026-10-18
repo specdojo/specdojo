@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
+  block_reason: "post-run review verdict incomplete: `git diff` による差分確認の結果、`docs/ja/projects/prj-0001/controls/project-register/` 配下の個票において `item_status` が `open` から `review` へ更新され、`PJR-T46Y` 行（agent: `claude-expert-e…"
   conclusion: 6EF8 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
 ---
 

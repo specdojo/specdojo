@@ -896,3 +896,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_b29ec0ed77b14e2282be6efd514e6ebb
+- v: 1
+  id: reg_c72918de099a4b4b9c04a0e75518f40f
+  ts: "2026-10-18T15:17:45Z"
+  action: wait
+  actor: opus-review-executor
+  from_status: review
+  to_status: waiting
+  reason: "post-run review verdict incomplete: `git diff` による差分確認の結果、`docs/ja/projects/prj-0001/controls/project-register/` 配下の個票において `item_status` が `open` から `review` へ更新され、`PJR-T46Y` 行（agent: `claude-expert-e…"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "post-run review verdict incomplete: `git diff` による差分確認の結果、`docs/ja/projects/prj-0001/controls/project-register/` 配下の個票において `item_status` が `open` から `review` へ更新され、`PJR-T46Y` 行（agent: `claude-expert-e…"
+  previous_event_id: reg_7c72e86fb94545a394a2fe013585ad50
