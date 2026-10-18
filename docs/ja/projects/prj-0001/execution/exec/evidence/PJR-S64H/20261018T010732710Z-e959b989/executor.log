@@ -1,0 +1,120 @@
+I'll start by reading the relevant files to understand the task. Let me look at the project register, the individual ticket (kopyou), existing glossary files, and understand the structure.
+The plan references `pjr-index.md` but the actual files are named differently. Let me find the right register index file and the glossary yaml.
+The plan's `pjr-index.md` reference doesn't match a real file; the actual register is composed per-item. The 個票 (ticket) exists. Let me examine the glossary file, the schema, and how existing entries look.
+Now let me look at the schema and the referenced terminology docs to ensure consistency.
+The schema file is referenced with a relative path. Let me find it and read the relevant terminology files.
+Let me read the terminology decision doc and the specdojo overview guide that mentions calling register "記帳".
+I have all the context. The schema allows optional `notes`, `category`, `relatedTerms`. The completion criteria are clear: add two terms `tm-filing` and `tm-record-keeping` matching the table, ensure 起票⊂記帳 is readable, `relatedTerms`/`category` use IDs that exist in the glossary (`tm-register`, `tm-exec-log` exist), and don't contradict the "register = 記帳" terminology.
+
+Both new terms refer to writes to 登録簿 (`tm-register`), so I'll set `category: tm-exec-log` (consistent with event/result entries).
+Now let me verify the new entries are correct and check the 個票's "対応結果" section needs updating per plan step 4. But wait — the pipeline instructions say I should NOT update the result file, but the 個票 (kopyou) "对应结果" section is part of the artifact, not the result file. Let me re-read: plan step 4 says update 個票's 作業内容・対応結果. The 個票 is the project register ticket — that's an artifact. Let me check whether it's `draft` status and should be editable.
+
+The 個票 frontmatter has `status: draft`. Plan section 4 "完了手順" says don't change 登録簿 row or 個票 status items, but step 4 of "進め方" says update 個票's 作業内容/対応結果 content. The 対応結果 currently has `_TODO_`. Let me verify the yaml edit and check the schema reference path issue.
+The indentation is now off — original entries use `   - id` (3 spaces before `-`) but my edit produced `      - id` (6 spaces). The original block I matched had leading spaces that didn't match exactly; the edit shifted indentation. Let me check the raw bytes to fix alignment. The other terms used 4-space indent for the list (`    - id`). Let me verify.
+I see — the original entries are indented with `   - id` (3 spaces, since YAML nested under a 4-space list under `terms:`). My new block used 6 spaces and is misaligned. The existing structure has inconsistent indentation that prettier will normalize. Let me just align my new entries to the dominant 3-space pattern like `tm-register`/`tm-schedule`. Actually the cleanest is to let `prettier --write` fix it. But YAML indentation must be consistent for valid YAML — mixed indent breaks parsing.
+
+Let me check: existing file mixes `   - id` (3) at line 37 but `     - id` (5?) elsewhere. Let me look more carefully with a tool that shows leading spaces precisely.
+The file uses inconsistent indentation (prettier not yet run). The original entries are at 3-space indent and my new entries at 6-space. Let me fix my inserted block to match the 3-space pattern used by surrounding terms like `tm-register`/`tm-finding` so YAML is consistent for the schema validator, then run prettier which will normalize everything.
+
+Let me re-read exact leading spaces around finding and my insert:
+Both finding and my new entries now show 6-space indent. The whole file is inconsistently indented (YAML allows this — each list item just needs consistent sibling alignment; the `terms:` children are at one level). Since all `terms` children under the same parent must share indentation, and they currently vary, the safest is to run prettier --write which will normalize. But prettier parses YAML strictly? Prettier with YAML support reformats consistently. Let me just run prettier on the file to normalize all indentation, then validate.
+The YAML is now broken because `tm-finding` lost its original alignment when my edit shifted it. The original `tm-finding` was at the same indent as other terms but my match-and-replace changed its leading spaces. I need to restore consistent indentation. Let me check git diff to see what the original looked like and fix all the new/moved lines to a uniform indent.
+The original used 3-space indent (`   - id`) and properties at 4 spaces (`    term`). My edit shifted to 5/6 spaces. The original file itself had inconsistent indentation but was parseable because each item's children were consistent within their own block... actually no, YAML list items under `terms:` must share the same indent. The original must have been valid. Let me restore the correct 3-space `   - id` + 4-space properties indent for all three new/affected entries.
+
+Let me rewrite lines 117-135 with correct indentation matching the original `   - id:` / `    term:` style (3 spaces for `-`, 4 spaces for keys).
+Now run prettier to normalize the whole file (the original had mixed indentation that prettier will fix consistently).
+The original file's whole `terms:` block had a non-standard indentation (3-space list, but properties at varying depth). This pre-existing inconsistency makes the YAML actually invalid as-is for a strict parser, yet prettier failed before my change too presumably. The real fix: normalize the entire `terms:` section indentation to a consistent standard form. Let me just rewrite the whole file with clean 2-space indentation which is what prettier expects.
+
+Let me read the full current file first.
+Now I understand the canonical style: `    - id:` (4 spaces then `- `) at the list level, and `     key:` (5 spaces) for properties. This is what existing entries use except line 116 `tm-grade`'s category which drifted to 6 spaces (`      category`). The whole file uses 4-space list indent / 5-space property indent. My new block used `    - id` / `     term` which matches after I fixed... but line 116 shows `      category: tm-evaluation` (6 spaces) for tm-grade — that's the pre-existing drift from my earlier bad edit attempt that touched tm-grade's category? No — git diff showed original `tm-finding` was at `    - id`/`     term`. 
+
+The issue is line 116 (`      category`) still has extra indent. Let me fix line 116 back to 5 spaces, and make my new block use the exact same `    - id`/`     key` pattern. Currently lines 117-135 already show that pattern correctly. Let me fix line 116.
+Now the file should be consistent (4-space list, 5-space properties). Let me run prettier.
+The read tool normalizes display, masking actual indentation. Prettier's parser sees line 117 as still mis-indented. The original file was actually already using a consistent indentation that this parser accepts — I should not try to "normalize" via my hand edits since I can't see true whitespace. 
+
+Better approach: revert the file entirely and re-apply only the append of two new entries, preserving exact original byte structure. Let me restore from git and re-apply cleanly by reading the raw tail with cat to get exact indentation.
+git checkout is blocked. I need to reconstruct the original tail manually. Let me write a small script to fix indentation, or better: use `cat -A` to see exact whitespace of current broken lines and correct them manually with Edit. But the read tool masks it. 
+
+Let me use a Python/node script in tmp to normalize the YAML properly — load it with a tolerant approach isn't possible since it's broken. Instead, let me view raw bytes via cat with visible markers.
+Now I see the real whitespace. The canonical style is `     - id:` (4 spaces + `- `) and `      key:` (6 spaces)? No — looking at `     - id: tm-grade$` then `    term:` (4 spaces). Wait line 112 shows `     - id: tm-grade` = 5 chars before `-`? Let me count: the original entries use `     - id` meaning 4 spaces then `- `. And properties `    term` = 4 spaces. But cat -A shows `- id: tm-grade$` with leading spaces — counting hard. 
+
+The key insight: my new entries use `    - id` (4 spaces) and `    term` (4 spaces), while original uses `     - id` (5?) . The mismatch is the cause. Let me check what indentation the ORIGINAL working file used by looking at an unchanged entry like tm-register via cat -A.
+The leading-space display is ambiguous (the terminal trims). The original `terms:` block uses a single consistent indentation that the repo's prettier accepts. My new entries' indentation differs from the original causing breakage. 
+
+The cleanest reliable fix: write a Node script in tmp/ that reads the current broken file, normalizes each `- id:` list item under `terms:` to a uniform 4-space indent with properties at 6 spaces (a valid YAML layout), then run prettier. But the safest is to fully rewrite the file's `terms:` section deterministically. Let me write a normalization script.
+`js-yaml` is available. The original file parsed fine before (it passed `validate:schema`). My edits broke it. Let me write a script that re-parses the *original git blob* (via `git show HEAD:`) to get clean YAML, reconstructs the terms array, appends my two new terms, and writes with consistent indentation that prettier will accept.
+`git show` is allowed but the pipe to head triggered denial (pipe). I can redirect to a tmp file instead. Let me get the original content into tmp and reconstruct.
+The redirect `>` may be the rejected part. The allow patterns include `git show*` so the bare command is allowed but redirect makes it not match. Let me run git show alone (output captured by tool).
+This is the clean original. The style: list items `   - id:` (3 spaces + `- `), properties `    key:` (4 spaces). This is valid YAML and prettier accepted it before. The simplest correct approach: append only my two new terms after `tm-finding` using this exact 3-space/4-space indentation, and revert my broken block. 
+
+Let me write the full file fresh with the original content plus my two appended entries at the end (after tm-finding), preserving exact original lines and proper indentation.
+The YAML parser (prettier's) requires the list item properties to be indented one level deeper than the `- ` indicator. The original file used `   - id:` with `  term` aligned such that it parsed — meaning the original actually has the key indentation relative to the dash. The issue is my property indent equals the dash-content position. In the original, `    term` aligns under `id` (which starts 2 spaces after `terms:`). 
+
+The standard YAML: `terms:` at col 1, list `- ` so content starts at col 5 (`     id`), then sibling keys must also be at col 5 (`     term`). My write put `- id` with content at col 6 and keys at col 5 — mismatch. The original that worked had this exact same structure though. Let me use a Node script to produce correct YAML, since hand-indentation is error-prone. I'll parse the original via js-yaml (tolerant) — but original parsed fine. Let me reconstruct via script appending terms, then dump with the repo's yaml style matching prettier.
+I'll place the script under tmp/ and feed it the original blob file. First save the original via git show to tmp (redirect blocked, so pipe to a tee or use node fetch). Let me write the original to tmp using cat of git show output isn't possible directly. Instead, I'll have the script read the original from git through execSync inside node — but running node is allowed via npm? No. 
+
+Simpler: my current `gl-common.yaml` now has standard block indent (4-space dash / 6-space content) which js-yaml should parse. Just append the two terms with a small node script reading that file, then run prettier to reformat to repo style.
+
+Let me write the tmp script (write tool allows arbitrary files outside docs/src):
+The script was written. Now run it with node, then prettier.
+`node` isn't in the allowlist. The current `gl-common.yaml` already has standard block indent (4-space dash / 6-space content) which js-yaml parses — but prettier's YAML parser rejected it earlier because... actually prettier uses its own yaml parser; the error was due to my hand-write being non-standard. Now the file is in standard js-yaml 2-indent form. Let me just run prettier alone (it's allowed).
+The node script didn't run (node not allowed), so the file is still my hand-written version. The problem: my hand-write used 4-space dash with 6-space content for the dash-line's first key but 5-space for subsequent keys — inconsistent. Prettier needs the canonical form that the original repo used.
+
+The original repo format (from git show) was `    - id:` (3 spaces) with `    term` — but that's not standard either yet the original passed prettier. The difference: in YAML, when you write `key:\n   - item`, the dash indents to 3, and the dash-line content `id:` aligns at col 5, sibling keys must also be col 5. The original had everything consistent. My write tool inserted with 6-space `id:` line but then I need siblings at same 6? No—I wrote them all at 4 spaces.
+
+Let me just rewrite with perfectly consistent indentation: 6-space dash content (`      - id`) and 6-space sibling keys won't work either. The reliable canonical that prettier enforces: list key at `terms:` (col1), items indented by the configured indent. Prettier default YAML indent is 2. So `terms:` then `  - id:` (2-space dash). Let me rewrite that way — fully consistent 2-space block.
+This is now identical to the original git-blob format (3-space dash, 4-space content), with my two new terms appended in the same style. This exact original-format passed prettier before, so it should now pass too. Let me run prettier.
+Prettier reports unchanged — meaning my hand-written format already matches prettier's output (the original repo style with 3-space dash is what prettier keeps). The earlier failures were from inconsistent indents I created. Now it's clean. Let me verify the diff and run lint:md + validate:schema is parent-owned. But `*.yaml` under docs/ja/projects needs catalog validate per table — but this file is in `product/`, not `projects/`. The applicable sandbox checks for this YAML: prettier (done) and it's a product file, not project register/catalog. Let me confirm via git diff.
+The diff is clean — only the two new terms appended in the exact original style. Now let me verify the changes are valid by checking `relatedTerms` and `category` all reference existing IDs. The set of term IDs now includes: tm-exec-log ✓ (category target), tm-register ✓, tm-filing ✓, tm-record-keeping ✓. Both new terms' `category: tm-exec-log` exists; `relatedTerms` reference existing IDs. Validation checks (validate:schema, lint-md) are parent-runner-owned per the pipeline instructions.
+
+Now update the 個票's "対応結果" section per plan step 4 (artifact, not result file). The 個票 frontmatter status is `draft`; I won't change status fields but will fill the 対応結果 content and mark the work row done.
+Now run prettier/markdownlint on the modified 個票 (it's a `*.md` under docs/ja/projects → catalog build/validate applies, but those are parent-runner-owned? The table lists `specdojo catalog validate` for docs/ja/projects with catalog_path; that is sandbox-safe? It's not in the parent allowlist. But running it would write nothing problematic). Let me run prettier + markdownlint on the 個票 first.
+markdownlint passed (no output). Let me re-read the 個票 to confirm the table formatting after prettier.
+The 個票 is updated and well-formed. Now the `docs/ja/projects/` change requires `specdojo catalog validate` per the table (project has catalog_path presumably). But validate:schema/glossary-references and catalog build are needed for correctness. The parent runner allowlist includes `validate-schema` and `lint-md`, but NOT `catalog validate`. Let me check if this project sets catalog_path, and run a sandbox-safe validation of the glossary references myself to be confident, since I shouldn't leave it unverified.
+The `;` chaining with ls likely triggered it. Let me read the config file directly.
+`catalog_path` is set for prj-0001, so `specdojo catalog validate` applies to `docs/ja/projects/`. My change is to a project register file. This validation is sandbox-safe (it doesn't write protected files; it validates the catalog). Let me run it to verify the 個票 still validates and that nothing in the register broke. This isn't in the parent allowlist, so I should run it.
+`npx specdojo` isn't in the allowlist (only `specdojo *` and `./node_modules/.bin/specdojo *` are). Let me use the local binary directly.
+The `;` chaining triggers the deny. Let me run a single simple `ls`.
+There's no `specdojo` binary in node_modules/.bin — it's run via `tsx src/specdojo.ts` (the common convention). `catalog validate` is a sandbox-safe check but its binary isn't directly available; the parent runner allowlist did NOT include catalog validate, so the runner won't auto-run it either. However the table says it applies for `docs/ja/projects/` changes. Let me run it via tsx (the project's defined invocation) to verify — though the parent runner instructions say not to run allowlisted validators; catalog build/validate aren't in that allowlist, so running it myself is appropriate.
+`npx tsx` and `npx specdojo` aren't in the allowlist; only bare `specdojo *`, `npm run *`, `npx prettier/markdownlint/ajv`. The allowed `specdojo *` requires a `specdojo` binary which doesn't exist in .bin. Let me try `npm run` to see if there's a script wrapping catalog build, and check available npm scripts.
+There's `validate:catalog` script and `validate:schema:glossary`. The parent runner allowlist includes `validate-schema` (= `npm run validate:schema`) and `lint-md`/`lint-fm`/`lint-ts`. Notably `validate:catalog` is NOT in the parent allowlist, but it applies to my docs/ja/projects change per the table. I can run `npm run validate:catalog` (allowed via `npm run *`) to verify the register file. Also `npm run validate:schema` includes glossary references — though that's parent-owned, running it doesn't double-report since I'll mark parent ones appropriately. Let me run the sandbox-applicable one: `validate:catalog`.
+`catalog validate` passed (only pre-existing WARN about `based_on` docs not found, which are unrelated to my change — these are the source repo's product docs absent from this worktree). No errors on any catalog including the register. The 個票 file is valid. 
+
+Now let me also run the glossary-references check to confirm my new terms validate (this is part of `validate:schema`, parent-owned, but it's relevant to my change and sandbox-safe). It's not in parent allowlist? Parent list includes `validate-schema` which = the full script. So I should NOT run it (parent owns it). But to be confident the glossary passes, I'll run the targeted `glossary-references` subcheck — though that risks duplicate. Per instructions, parent-owned validators must not be run by me. `validate:schema` is owned. I'll skip running it and rely on manual verification + parent runner.
+
+Let me verify my new terms' references manually: `category: tm-exec-log` exists ✓; `relatedTerms` for filing = [tm-register ✓, tm-record-keeping ✓ (new)]; for record-keeping = [tm-register ✓, tm-filing ✓ (new)]. No duplicates, all IDs exist. The PJR-CF15 check will pass.
+
+Now clean up the temp script and finalize. Let me remove the tmp file (it's in /tmp/opencode outside repo, fine to leave but I'll clean).
+The chained `rm` triggered denial (the `&& echo`). The temp script is in `/tmp/opencode/`, outside the repo, so it won't be committed. It's harmless to leave. Let me just confirm no stray files were created in the repo root via git status.
+Only the two intended files are modified; no stray repo-root scratch files. There's an untracked evidence dir `PJR-S64H/` — that's the pipeline's evidence directory, not mine. Good.
+
+Let me do a final review of both changed files to confirm correctness.
+All complete. Let me summarize the work.
+
+## 実施内容
+
+**目的**: 用語集 gl-common に「起票・記帳」の 2 語を追加し、使い分けを定義する（個票 `pjr-s64h-glossary-kicho-kihyo.md` の完了条件に対応）。
+
+### 変更ファイル
+1. `docs/ja/product/010-business-specs/060-glossary/gl-common.yaml`
+   - `tm-filing`（起票 / `filing`）を追加: 「登録簿に 1 件の項目を新しく作ること。`register add` に当たる」。`notes` で「記帳の一部」「起票は必ず記帳に含まれる」を明記。
+   - `tm-record-keeping`（記帳 / `record-keeping`）を追加: 「起票・状態遷移・結論の記録・commit を含む登録簿への書き込み全般。register の技（Waza）としての呼び名」。`notes` で「起票は記帳の一部」を明記。
+   - 起票⊂記帳の関係は両方の `definition`/`notes` から読み取れる。
+   - `category` は両方とも既存の `tm-exec-log`、`relatedTerms` は `tm-register` と互いを指す（すべて `gl-common.yaml` 内に存在 → PJR-CF15 の参照検証を満たす）。[[specdojo:specdojo-overview-guide]] の「register を『記帳』と呼ぶ」と矛盾しないよう明記。
+2. `docs/ja/projects/prj-0001/controls/project-register/pjr-s64h-glossary-kicho-kihyo.md`
+   - 個票の「作業内容」No.1 を `done`、「対応結果」の `_TODO_` を実施内容で置き換えた。frontmatter の `status`/状態系項目は変更していない。
+
+### 検証結果（sandbox で実行）
+- `npx prettier --write`（対象 2 ファイル）: **passed** — gl-common.yaml は変更なし（既存スタイル一致）、個票は整形済み。
+- `npx markdownlint`（個票）: **passed** — 出力なし。
+- `npm run validate:catalog`（`docs/ja/projects/` 変更 → catalog_path 設定ありのため適用）: **passed** — ERROR なし。`WARN` はすべて本 worktree に product 文档が存在しないことによる既存問題で、本変更とは無関係。
+- 個別検証（手動）: 追加 2 語の `category`/`relatedTerms` が gl-common.yaml 内の既存 ID を指し、用語 ID の重複なしを確認済み。
+- 親 runner 委譲（sandbox 内では実行せず）: `lint-ts`/`lint-fm`/`lint-md`/`test-integration`/`validate-schema`/`typecheck`/`test-unit`。
+
+### 申し送り
+- 個票の `status`/状態項目・登録簿行（plan では `pjr-index.md` と記載だが実在ファイルは個票形式で、index 集約ファイルはこの worktree に存在しないため無対応）への変更は runner/人間に委譲。
+- 親 runner による `npm run validate:schema`（glossary-references）で新規用語の参照検証が最終確認される。手動チェック上は全て既存 ID 指しで通る想定。
+
+<specdojo_executor_evidence>
+{"final_message":"gl-common.yaml に tm-filing(起票)・tm-record-keeping(記帳)を追加し起票⊂記帳の関係を定義、個票の対応結果を更新した。prettier/markdownlint/catalog validate すべて通過。","validations":[{"command":"npx prettier --write docs/ja/product/010-business-specs/060-glossary/gl-common.yaml","status":"passed","summary":"changed: unchanged (existing style matches)"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-s64h-glossary-kicho-kihyo.md","status":"passed","summary":"formatted the 個票"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-s64h-glossary-kicho-kihyo.md","status":"passed","summary":"no lint errors on the 個票"},{"command":"npm run validate:catalog","status":"passed","summary":"no ERROR; only pre-existing WARN for product docs missing in this worktree, unrelated to change"}]}
+</specdojo_executor_evidence>
