@@ -1,7 +1,6 @@
 ---
-description: Gemma を使う SpecDojo pipeline executor。文書成果物の編集と検証だけを行う。
+description: SpecDojo pipeline executor。成果物の編集と検証だけを行う。
 mode: primary
-model: ollama-local/gemma4:31b-mlx-work-64k
 reasoningEffort: none
 temperature: 0.2
 permission:

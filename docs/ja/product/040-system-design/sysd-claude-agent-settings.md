@@ -20,7 +20,7 @@ Claude Code は Anthropic API 経由でクラウドモデルを使用する。�
 
 - **Anthropic API 使用**: `ANTHROPIC_API_KEY` または `claude auth login` で認証する。
 - **用途別モデル分担**: 標準作業（edit/review）を `sonnet`、複雑な設計判断・詳細分析を `opus` で分担する。
-- **エージェント定義は `.claude/agents/*.md`**: YAML frontmatter でモデル・ツール・権限モードを設定し、本文には最小限の実行契約を記述する。タスク固有の指示は edit / review plan を正本とする。
+- **エージェント定義は `.claude/agents/*.md`**: YAML frontmatter で役割ごとのツールを設定し、本文には最小限の実行契約を記述する。モデルは member の `model` を起動時の `--model` へ渡し、タスク固有の指示は edit / review plan を正本とする。
 - **非対話モード（print mode）**: `claude -p --agent <name>` で TUI を起動せず、タスクプロンプトを渡して応答後に終了する。自動化・CI 用途の標準方式。
 - **制限情報は print mode の結果で扱う**: JSON / stream-json 出力、認証 status、予算上限は利用できるが、provider quota の残量や reset 時刻を返す専用 status API は前提にしない。
 - **プロジェクト共通ルールは `CLAUDE.md`**: セッション開始時に自動読み込みされる。エージェント固有の指示は `.claude/agents/` に分離する。
@@ -33,7 +33,7 @@ Claude Code は Anthropic API 経由でクラウドモデルを使用する。�
 
 ```text
 specdojo exec run
-   → providers.claude の command template から解決した claude -p --agent <name> を起動
+   → providers.claude の command template から解決した claude -p --agent <role> --model <model> を起動
    → plan を標準入力で渡す
    → Claude Code agent が成果物または result を編集
    → Claude CLI の終了状態を共通フローへ返す
@@ -57,11 +57,9 @@ repo-root/
 │  ├─ rules/
 │  │  └─ *.md                         # パス別ルール（既存）
 │  └─ agents/
-│     ├─ claude-executor.md               # sonnet pipeline executor（edit）定義
-│     ├─ claude-expert-executor.md        # opus pipeline executor（edit）定義
-│     ├─ claude-review-executor.md        # sonnet pipeline executor（review）定義
-│     ├─ claude-expert-review-executor.md # opus pipeline executor（review）定義
-│     └─ claude-reporter.md               # sonnet pipeline reporter定義
+│     ├─ claude-executor.md        # pipeline executor（edit）定義
+│     ├─ claude-review-executor.md # pipeline executor（review）定義
+│     └─ claude-reporter.md        # pipeline reporter 定義
 ```
 
 SpecDojo の project management 配下と worktree の共通構成は親設計を参照する。
@@ -86,7 +84,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 ### 5.2. モデル選択
 
-エージェント定義ファイルの `model` フィールドにエイリアスまたはフルモデル ID を指定する。
+モデルのエイリアスまたはフルモデル ID は `.specdojo/agent-members.yaml` の実体 member の `model` に指定し、起動時に `--model` で渡す。agent 定義はモデルを持たないため、同じ役割の定義を Sonnet と Opus で共有できる。
 
 | エイリアス | モデル例                    | 用途                                     |
 | ---------- | --------------------------- | ---------------------------------------- |
@@ -108,7 +106,7 @@ export ANTHROPIC_API_KEY=sk-ant-...
 
 - **`CLAUDE.md`（リポジトリルート）**: Language・Project Policy・Safetyなど、SpecDojo ツール自体の開発作業を含むあらゆる作業に共通するルールのみを記述する。100行以内を目安にする。
 - **SpecDojo exec ワークフロー固有の指示**: `claim` 手順、exec plan・result ファイルの参照・記入手順など、SpecDojo exec タスク実行時にのみ必要な指示は `CLAUDE.md` に含めない。`.claude/rules/*.md` に `paths` frontmatter（例: `docs/ja/projects/**`）でスコープを限定したルールファイルとして分離し、対象ディレクトリ配下を扱う場合にのみ読み込まれるようにする。`.claude/rules/markdown.md` の構成（パス限定 + 参照リンクのみの薄いラッパー）を踏襲する。
-- **エージェント固有の指示**: モデル・ツール・権限と最小実行契約は `.claude/agents/*.md` に置く。対象成果物、owner 観点、result の記入方法、検証、終了条件は edit / review plan に置き、重複記載しない。
+- **エージェント固有の指示**: 役割ごとのツールと最小実行契約は `.claude/agents/*.md` に置く。モデルは agent member に置き、対象成果物、owner 観点、result の記入方法、検証、終了条件は edit / review plan に置いて重複記載しない。
 
 こうすることで、SpecDojo ツール自体のソースコード実装（`src/`、`tests/` 等）のように exec ワークフローと無関係な作業でも、不要なワークフロー指示が常に読み込まれる事態を避けられる。
 
@@ -127,41 +125,39 @@ export ANTHROPIC_API_KEY=sk-ant-...
 | `name`           | ○    | 一意の識別子（英小文字・ハイフンのみ）。`--agent` フラグで参照する                                                                                     |
 | `description`    | ○    | Claude が自動委譲を判断するための説明文                                                                                                                |
 | `tools`          | -    | 使用可能なツールのリスト（省略時は全ツールを継承）                                                                                                     |
-| `model`          | -    | `sonnet` / `opus` / `haiku` またはフルモデル ID。省略時は親セッションを継承                                                                            |
+| `model`          | -    | pipeline の役割定義では指定しない。agent member の `model` を CLI の `--model` で渡す                                                                  |
 | `permissionMode` | -    | `default` / `acceptEdits` / `auto` / `bypassPermissions` / `plan`。自動実行では `bypassPermissions` を使用（`settings.json` の deny リストが安全境界） |
 | `maxTurns`       | -    | エージェントの最大ターン数                                                                                                                             |
 
 member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy 構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化 result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings` プロファイルで権限を分離する。
 
-### 8.2. `claude-executor.md` / `claude-expert-executor.md`
+### 8.2. `claude-executor.md`
 
-sonnet（`claude-executor`）または opus（`claude-expert-executor`）モデルを使用する pipeline executor（edit）。executor plan を読んで対象成果物の編集と検証だけを行い、result は更新しない。`.specdojo/claude/settings.edit.json` はリポジトリ全体への Edit を許可し、agent の権限や親 runner・hook・CI の実行内容を変更できる保護対象を deny する。runner も終了後に同じ保護対象への書き込みを検査する。
+モデルに依存しない pipeline executor（edit）。executor plan を読んで対象成果物の編集と検証だけを行い、result は更新しない。`.specdojo/claude/settings.edit.json` はリポジトリ全体への Edit を許可し、agent の権限や親 runner・hook・CI の実行内容を変更できる保護対象を deny する。runner も終了後に同じ保護対象への書き込みを検査する。
 
-実際のファイル: `.claude/agents/claude-executor.md`、`.claude/agents/claude-expert-executor.md`
+実際のファイル: `.claude/agents/claude-executor.md`
 
-### 8.3. `claude-review-executor.md` / `claude-expert-review-executor.md`
+### 8.3. `claude-review-executor.md`
 
-sonnet（`claude-review-executor`）または opus（`claude-expert-review-executor`）モデルを使用する pipeline executor（review）。review plan の各観点に従って成果物をレビューするが、成果物・result のいずれにも書き込まない（`tools` に Edit/Write を含まない）。レビュー結果は evidence として reporter へ引き継ぐ。
+モデルに依存しない pipeline executor（review）。review plan の各観点に従って成果物をレビューするが、成果物・result のいずれにも書き込まない（`tools` に Edit/Write を含まない）。レビュー結果は evidence として reporter へ引き継ぐ。
 
 `.specdojo/claude/settings.review.json` で起動する。設定上は result 配下への Edit を許可するが、review executor 自体の tools に Edit/Write を含めないためファイルは変更しない。
 
-実際のファイル: `.claude/agents/claude-review-executor.md`、`.claude/agents/claude-expert-review-executor.md`
+実際のファイル: `.claude/agents/claude-review-executor.md`
 
 ### 8.4. `claude-reporter.md`
 
-sonnet モデルを使用する pipeline reporter。渡された evidence だけから指定スキーマの構造化結果を返す。`tools: Read, Glob, Grep` のみでファイルへは一切書き込まない（result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。`.specdojo/claude/settings.report.json` で起動し、Edit/Write と `git add` / `git commit` を明示的に deny する。
+モデルに依存しない pipeline reporter。渡された evidence だけから指定スキーマの構造化結果を返す。`tools: Read, Glob, Grep` のみでファイルへは一切書き込まない（result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。`.specdojo/claude/settings.report.json` で起動し、Edit/Write と `git add` / `git commit` を明示的に deny する。
 
 実際のファイル: `.claude/agents/claude-reporter.md`
 
 ### 8.5. エージェント一覧
 
-| ファイル名                         | `name`                          | モデル   | tools（主要）                                  | stage_role | 用途                                         |
-| ---------------------------------- | ------------------------------- | -------- | ---------------------------------------------- | ---------- | -------------------------------------------- |
-| `claude-executor.md`               | `claude-executor`               | `sonnet` | Read, Edit, Write, Bash, WebSearch/Fetch       | executor   | 標準的な文書作成・実装（edit）               |
-| `claude-expert-executor.md`        | `claude-expert-executor`        | `opus`   | Read, Edit, Write, Bash, WebSearch/Fetch       | executor   | 複雑な設計判断・詳細分析が必要な作成（edit） |
-| `claude-review-executor.md`        | `claude-review-executor`        | `sonnet` | Read, Bash, WebSearch/Fetch（Edit/Write なし） | executor   | done_criteria の多観点レビュー（review）     |
-| `claude-expert-review-executor.md` | `claude-expert-review-executor` | `opus`   | Read, Bash, WebSearch/Fetch（Edit/Write なし） | executor   | 高品質な多観点レビュー（review）             |
-| `claude-reporter.md`               | `claude-reporter`               | `sonnet` | Read, Glob, Grep（Edit/Write なし）            | reporter   | evidence からの構造化 result 生成            |
+| ファイル名                  | `name`                   | モデル指定 | tools（主要）                                  | stage_role | 用途                               |
+| --------------------------- | ------------------------ | ---------- | ---------------------------------------------- | ---------- | ---------------------------------- |
+| `claude-executor.md`        | `claude-executor`        | CLI        | Read, Edit, Write, Bash, WebSearch/Fetch       | executor   | 文書作成・実装（edit）             |
+| `claude-review-executor.md` | `claude-review-executor` | CLI        | Read, Bash, WebSearch/Fetch（Edit/Write なし） | executor   | done_criteria のレビュー（review） |
+| `claude-reporter.md`        | `claude-reporter`        | CLI        | Read, Glob, Grep（Edit/Write なし）            | reporter   | evidence からの構造化 result 生成  |
 
 ## 9. エージェント割り当て設定
 
@@ -174,14 +170,20 @@ sonnet モデルを使用する pipeline reporter。渡された evidence だけ
 ```yaml
 providers:
   claude:
-    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
+    command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"
+    command_params:
+      by_mode:
+        edit: { agent: claude-executor }
+        review: { agent: claude-review-executor }
+        report: { agent: claude-reporter }
 ```
 
-- `{nickname}` は member の nickname に展開され、`.claude/agents/<nickname>.md` の agent 定義を選択する。member の nickname と agent 定義のファイル名を一致させる。
+- `{agent}` は `command_params.by_mode` から役割別の agent 定義を選ぶ。モデル系統を含む member の nickname と agent 定義のファイル名は一致させない。
+- `{model}` は実体 member の `model` に展開され、同じ役割ファイルを使う member 間でモデルだけを切り替える。
 - `{mode}` は member の `mode` に展開され、edit / review / report 別の permission 設定 `.specdojo/claude/settings.<mode>.json` を選択する。executor（edit）は `mode: edit`、executor（review）は `mode: review`、reporter は `mode: report` を持つ。
 - edit 用設定は文書成果物の `docs/**`、実装成果物の `src/**`、自動テストの `tests/**` への Edit / Write を許可する。review 用設定は result 配下だけを許可する。report 用設定は Edit/Write と `git add` / `git commit` を deny する。
 - reporter の候補選定と `--reporter-by` の検証は `stage_role: reporter` で行う。`mode: report` は `{mode}` の展開にだけ使い、edit/review task との適格性判定には使わない。
-- モデルは agent 定義ファイルの `model` フィールドで指定するため、テンプレートにモデル名を含めない（normal は `sonnet`、expert は `opus`）。
+- agent 定義ファイルにはモデルを書かない。モデルは実体 member の `model` を `--model {model}` で渡す。
 
 `-p`（print mode）と `--agent <name>` を組み合わせることで、`.claude/agents/<name>.md` に定義されたシステムプロンプト・ツール・モデルを使って確認ダイアログなしの自動実行を実現する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。
 

@@ -1,7 +1,7 @@
 ---
-description: oMLX の Qwen3.6 35B-A3B（thinking あり）を使う SpecDojo pipeline executor。ornith-expert-executor と同じ出力形式の規則と判定例を持ち、grade の判定は英語で出力する（PJR-ZSJQ の評価用）。
+description: grade など厳密な出力形式を求める SpecDojo pipeline executor。出力形式の規則と判定例を持ち、grade の判定は英語で出力する。
 mode: primary
-model: omlx/qwen3.6-35b-a3b
+temperature: 0.3
 permission:
   read: { "*": allow, "*.env": deny, "*.env.*": deny, "secrets/**": deny, "**/secrets/**": deny }
   glob: allow
