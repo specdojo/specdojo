@@ -35,3 +35,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-8GQ4"]'
+- v: 1
+  id: reg_d5e7561234904ff1ab60fe5ddd94e91f
+  ts: "2026-10-18T10:56:01Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e5dced13fd4148af84a88f4b371c3117
