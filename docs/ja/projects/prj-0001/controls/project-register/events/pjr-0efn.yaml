@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_483babdabc124490803aa6db9c0b6d08
+  ts: "2026-10-18T16:04:14Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合後の review の result が markdownlint で落ち、close の記帳が commit されない
+    - field: description
+      from: ""
+      to: "2026-10-19 01:01 の PJR-JSEY の --post-review で、review の agent が判断の根拠に自分で番号（1. 2. 3.）を付け、runner がそれを箇条書き（- ）として result に描いたため、- 1. の形が入れ子の番号付きリストとして markdownlint の MD029 に当たった。pre-commit の hook で post-review の記帳の commit が失敗し、close の記帳（個票・イベント・review の plan と result）が作業ツリーに残った。runner は失敗を git commit failed: format: の 1 行目だけで報告した"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-19"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T46Y"]'
