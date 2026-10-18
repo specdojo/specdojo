@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-EVAX
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-evax-20261018T161000Z-dbbd-plan.md
   started_at: "2026-10-18T16:11:22.587Z"
-  completed_at: "2026-10-18T16:31:21.261Z"
+  completed_at: "2026-10-18T16:48:12.384Z"
   agent: gemma-executor
-  block_reason: "integrate failed: git restore failed: fatal: Unable to create '/workspaces/specdojo-workspace/specdojo/.git/index.lock': ファイルが存在します. (args: --source=HEAD --staged --worktree -- 1 path)"
 ---
 
 # Edit Result
