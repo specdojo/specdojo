@@ -8,12 +8,30 @@ import {
 } from "../../../src/exec/run/register-post-review.js";
 
 describe("register post-review disposition", () => {
-  it.each(["complete", "complete-with-findings"])("%s は todo を自動 close する", (verdict) => {
-    expect(registerPostReviewDisposition({ itemType: "todo", verdict })).toMatchObject({
-      transition: "done",
-      outcome: "success",
-    });
-  });
+  it.each(["todo", "issue"])(
+    "verdict が complete のとき %s を close する判定になる",
+    (itemType) => {
+      expect(registerPostReviewDisposition({ itemType, verdict: "complete" })).toMatchObject({
+        transition: "done",
+        outcome: "success",
+      });
+    },
+  );
+
+  it.each(["todo", "issue"])(
+    "verdict が complete-with-findings のとき %s を close する判定になり、指摘が close の理由に残る",
+    (itemType) => {
+      const disposition = registerPostReviewDisposition({
+        itemType,
+        verdict: "complete-with-findings",
+      });
+      expect(disposition).toMatchObject({
+        transition: "done",
+        outcome: "success",
+      });
+      expect(disposition.explanation).toContain("complete-with-findings");
+    },
+  );
 
   it("incomplete は waiting に戻す", () => {
     expect(
@@ -21,12 +39,33 @@ describe("register post-review disposition", () => {
     ).toMatchObject({ transition: "waiting", outcome: "failure" });
   });
 
-  it.each(["decision", "question"])("%s は complete でも close しない", (itemType) => {
-    expect(registerPostReviewDisposition({ itemType, verdict: "complete" })).toMatchObject({
-      transition: "review",
-      outcome: "success",
-    });
-  });
+  it.each(["decision", "question"])(
+    "%s は verdict にかかわらず close しない判定になる",
+    (itemType) => {
+      for (const verdict of ["complete", "complete-with-findings"]) {
+        const disposition = registerPostReviewDisposition({ itemType, verdict });
+        expect(disposition).toMatchObject({
+          transition: "review",
+          outcome: "success",
+        });
+        expect(disposition.transition).not.toBe("done");
+      }
+
+      const incomplete = registerPostReviewDisposition({ itemType, verdict: "incomplete" });
+      expect(incomplete).toMatchObject({
+        transition: "waiting",
+        outcome: "failure",
+      });
+      expect(incomplete.transition).not.toBe("done");
+
+      const undefinedVerdict = registerPostReviewDisposition({ itemType, verdict: undefined });
+      expect(undefinedVerdict).toMatchObject({
+        transition: "waiting",
+        outcome: "failure",
+      });
+      expect(undefinedVerdict.transition).not.toBe("done");
+    },
+  );
 
   it("実行中の SpecDojo 実装を変えた todo は人の close に残す", () => {
     expect(

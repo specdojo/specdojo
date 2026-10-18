@@ -1,0 +1,17 @@
+PJR-NSZT「統合後の review の判定のテストを補う」の完了条件に従い、以下の対応を実施しました。
+
+### 実施内容
+
+1. **単体テストの拡充** ([`tests/src/exec/register-post-review.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NSZT/tests/src/exec/register-post-review.test.ts)):
+   - verdict が `complete` のとき、`todo` と `issue` を自動 close する判定（`transition: "done"`, `outcome: "success"`）になる単体テストを追加しました。
+   - verdict が `complete-with-findings` のとき、`todo` と `issue` を自動 close する判定になり、指摘が close の理由（`explanation`）に残ることを確認する単体テストを追加しました。
+   - `decision` と `question` について、verdict（`complete`, `complete-with-findings`, `incomplete`, `undefined`）にかかわらず `transition: "done"` にならず close しない判定になる単体テストを追加しました。
+   - 本番コードは変更していません。
+
+2. **個票の更新** ([`docs/ja/projects/prj-0001/controls/project-register/pjr-nszt-post-review-verdict-tests.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NSZT/docs/ja/projects/prj-0001/controls/project-register/pjr-nszt-post-review-verdict-tests.md)):
+   - 作業内容テーブルの No 1（判定のテストを補う）の状態を `done` に更新しました。
+   - 対応結果セクションに実施内容・成果物・残課題（なし）を記録しました（ステータス項目は規約に従い据え置いています）。
+
+<specdojo_executor_evidence>
+{"final_message":"tests/src/exec/register-post-review.test.ts に complete / complete-with-findings での todo / issue 自動 close 判定（指摘が explanation に残ることの確認を含む）および decision / question が verdict にかかわらず close しない判定の単体テストを追加し、個票を更新しました。","validations":[]}
+</specdojo_executor_evidence>
