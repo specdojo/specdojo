@@ -161,3 +161,16 @@
       from: review
       to: in-progress
   previous_event_id: reg_86b2be42b75e44f89020208a289503e7
+- v: 1
+  id: reg_ab0dce6a2e4d40358491fa1fb8e1708f
+  ts: "2026-10-18T17:56:31Z"
+  action: review
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fbf9731eaa304cd98979b476adc4f362
