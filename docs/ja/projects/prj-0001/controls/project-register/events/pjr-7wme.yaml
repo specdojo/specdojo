@@ -87,3 +87,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_780e3cdb7e0347d7aaca1bfd6f26f102
+- v: 1
+  id: reg_901c140d1330469392ed3c0762c0b5ae
+  ts: "2026-10-18T06:43:53Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・claude-reporter）の差分・親検証と、register add --from の dry-run を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 個票の frontmatter に derived_from を加え、register add・update の --from（繰り返し可）で指定できるようにした。存在しない項目は理由を出して止める。派生先は generated/pjr-derived-items.md と history で辿れる。CHANGELOG への記載は PJR-HZW3 で補う
+  previous_event_id: reg_8f350e93308d4c3fa401bfcf18120421

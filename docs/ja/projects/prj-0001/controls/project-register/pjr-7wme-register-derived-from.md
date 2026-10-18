@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-7wme-register-derived-from
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T00:38:49Z"
   due_on: null
+  completed_at: "2026-10-18T06:43:53Z"
+  conclusion: 個票の frontmatter に derived_from を加え、register add・update の --from（繰り返し可）で指定できるようにした。存在しない項目は理由を出して止める。派生先は generated/pjr-derived-items.md と history で辿れる。CHANGELOG への記載は PJR-HZW3 で補う
 ---
 
 # PJR-7WME 個票に起票の元になった項目（`derived_from`）を記録できるようにする
