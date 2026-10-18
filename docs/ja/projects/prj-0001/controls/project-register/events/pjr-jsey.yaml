@@ -1243,3 +1243,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_c3e586cfa94f483da1237c0f356a77a9
+- v: 1
+  id: reg_b72c227e83404e999a06dc88591b5e53
+  ts: "2026-10-18T18:47:44Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 完了条件 1: 対応結果の表に、統合直前の分割項目である `PJR-0EFN` の実行結果（2026-10-19 03:41 / sonnet-executor）が正しく追記されていることを確認しました。 完了条件 2: `git diff` の結果、変更された 7 ファイルは本個票、events 内の…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+  previous_event_id: reg_3532335a10df4fbfbfd69afd92f75d57
