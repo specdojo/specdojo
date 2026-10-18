@@ -1217,3 +1217,16 @@
       from: "2026-10-19"
       to: "-"
   previous_event_id: reg_33892611754b493f9286a2950e2f0605
+- v: 1
+  id: reg_c3e586cfa94f483da1237c0f356a77a9
+  ts: "2026-10-18T18:40:00Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_49707f80d7bb49d199f721c36d55582a
