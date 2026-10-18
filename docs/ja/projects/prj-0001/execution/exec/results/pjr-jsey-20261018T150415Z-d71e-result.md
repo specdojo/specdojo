@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-JSEY
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-jsey-20261018T150415Z-d71e-plan.md
   started_at: "2026-10-18T15:05:04.057Z"
+  completed_at: "2026-10-18T15:14:09.069Z"
   agent: sonnet-executor
 ---
 
@@ -16,16 +17,16 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` の対応結果表に、`PJR-T46Y` の行を追記しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方
 
-_TODO_: どう進めたか、根拠にした文書や規約を記入する。
+個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` を確認し、対応結果表に `PJR-T46Y` の項目を追記することで、分割後の runner の動作確認（smoke test）を完了させました。
