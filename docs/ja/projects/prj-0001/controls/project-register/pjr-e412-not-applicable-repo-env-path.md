@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-e412-not-applicable-repo-env-path
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T06:06:37Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-18T17:53:34Z"
+  conclusion: $`SPECDOJO_REPO_<NAME>` と ${`SPECDOJO_REPO_<NAME>`} の両方の書き方を、not_applicable の判定でそのプロダクトリポジトリのコマンドとして扱うようにした。長い別の環境変数名と取り違えない。テストとガイドも合わせた
 ---
 
 # PJR-E412 SPECDOJO_REPO_* で指定したプロダクトリポジトリのコマンドを not_applicable の判定が認識しない
