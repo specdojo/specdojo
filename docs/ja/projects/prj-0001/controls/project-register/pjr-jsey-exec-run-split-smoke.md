@@ -57,6 +57,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 2026-10-18 20:09 | PJR-NJ6J   | claude-expert-executor |
 | 2026-10-18 21:58 | PJR-6EF8   | claude-expert-executor |
 | 2026-10-19 00:08 | PJR-T46Y   | sonnet-executor        |
+| 2026-10-19 00:20 | PJR-T46Y   | sonnet-executor        |
 
 ## 5. 関連ドキュメント
 
