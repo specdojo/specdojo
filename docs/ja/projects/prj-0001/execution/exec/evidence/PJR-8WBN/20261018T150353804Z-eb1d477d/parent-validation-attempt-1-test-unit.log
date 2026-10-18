@@ -1,0 +1,80 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8WBN
+
+ ❯ tests/src/exec/reporter.test.ts (95 tests | 1 failed) 76ms
+       × blocks npx prettier --write specdojo-lp:src/pages/index.astro when the product repository provides the tool 5ms
+Updated ticket status → ready: /tmp/specdojo-ticket-w77IAP/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-LQolYO/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-pV7Riy/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-zew8nX/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-QnoazG/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-Id7DGr/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-uWhO1s/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-uWhO1s/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-uWhO1s/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-uWhO1s/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-7z3yUn/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-01n5rx/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-18T15:18:40.182Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-18T15:17:40.460Z.
+fallback complete
+
+ Test Files  1 failed | 134 passed (135)
+      Tests  1 failed | 2185 passed (2186)
+   Start at  00:16:51
+   Duration  57.24s (transform 3.60s, setup 834ms, import 29.17s, tests 59.60s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/reporter.test.ts > reporter structured output > not_applicable for product repository commands > blocks npx prettier --write specdojo-lp:src/pages/index.astro when the product repository provides the tool
+AssertionError: expected { outcome: 'complete', …(2) } to match object { outcome: 'blocked', …(1) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "block_reason": "executor validation failed or not run: npx prettier --write specdojo-lp:src/pages/index.astro",
+-   "outcome": "blocked",
++   "block_reason": "",
++   "outcome": "complete",
+  }
+
+ ❯ tests/src/exec/reporter.test.ts:1016:9
+    1014|           },
+    1015|         }),
+    1016|       ).toMatchObject({
+       |         ^
+    1017|         outcome: "blocked",
+    1018|         block_reason: `executor validation failed or not run: ${comman…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
