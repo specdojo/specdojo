@@ -23,6 +23,7 @@ SpecDojo の利用者に影響する変更を記録します。
 ### 文書
 
 - README の始め方を、ランディングページ（<https://specdojo.org/>）と同じ `npx specdojo init` の手順と `<アプリ>-workspace/<アプリ>-specdojo` の構成に揃え、specdojo.org へのリンクを加えました（PJR-Y79W）。
+- exec 運用ガイドに、登録簿（register）の todo から approach を使って成果物や kata（実践の型）を作成・修正する手順を追加しました。個票での approach と target の指定方法、kata 保守の approach の選び方、plan 生成内容、組み合わせ検証、および `exec run --deliverable` との違いと推奨経路を記載しました（PJR-4Z6N）。
 
 ### 内部の変更
 
