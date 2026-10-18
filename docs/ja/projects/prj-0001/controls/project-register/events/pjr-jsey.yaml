@@ -1031,3 +1031,19 @@
       from: in-progress
       to: review
   previous_event_id: reg_16b3a0d882e249e6a9505fa2694b2865
+- v: 1
+  id: reg_ef8f71bc4fdb45269118f75417796a6f
+  ts: "2026-10-18T16:00:59Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 1. 登録項目の対応結果の確認: `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` において、対応結果表に `2026-10-19 00:39 / PJR-8WBN / sonne…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+  previous_event_id: reg_b24dc10b036a45d6a30d657d91a57573
