@@ -20,7 +20,7 @@
 # capabilities はツールアクセス（web_search 等）のみを表す。
 #
 # 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template
-# を member 属性（nickname / mode / proficiency）で展開して解決するため、member には
+# を member 属性（nickname / model / mode / proficiency）で展開して解決するため、member には
 # 書かない。command はテンプレートを持たない構成（provider: custom 等）専用の上書き。
 # priority は、stage_role・proficiency・必須 capabilities が一致した候補間で昇順に評価する。
 #   normal                  : Qwen -> Gemma -> Codex -> Claude
@@ -45,6 +45,7 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -59,8 +60,8 @@ members:
       - code_generation
     scheduler_strategy: critical-first
     note: >-
-      OpenCode CLI と Ollama の Qwen を使用する pipeline executor（edit）。モデル・権限は
-      .opencode/agents/qwen-executor.md で定義。
+      OpenCode CLI と Ollama の Qwen を使用する pipeline executor（edit）。権限は
+      .opencode/agents/opencode-executor.md で定義。
   - nickname: qwen-review-executor
     disabled: false
     priority: 1
@@ -69,6 +70,7 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
     mode: review
     stage_role: executor
     proficiency: normal
@@ -82,8 +84,8 @@ members:
       - code_generation
     scheduler_strategy: fifo
     note: >-
-      OpenCode CLI と Ollama の Qwen を使用する pipeline executor（review）。モデル・権限は
-      .opencode/agents/qwen-review-executor.md で定義。
+      OpenCode CLI と Ollama の Qwen を使用する pipeline executor（review）。権限は
+      .opencode/agents/opencode-review-executor.md で定義。
   - nickname: qwen-reporter
     disabled: false
     priority: 2
@@ -92,6 +94,8 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
+    mode: report
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -103,7 +107,7 @@ members:
     scheduler_strategy: fifo
     note: >-
       OpenCode CLI と Ollama の Qwen を使用する pipeline reporter。権限とプロンプトは
-      .opencode/agents/qwen-reporter.md で定義。
+      .opencode/agents/opencode-reporter.md で定義。
   - nickname: gemma-executor
     disabled: false
     priority: 2
@@ -112,6 +116,7 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -125,8 +130,8 @@ members:
       - document_authoring
     scheduler_strategy: critical-first
     note: >-
-      OpenCode CLI と Ollama の Gemma を使用する pipeline executor（edit）。モデル・権限は
-      .opencode/agents/gemma-executor.md で定義。
+      OpenCode CLI と Ollama の Gemma を使用する pipeline executor（edit）。権限は
+      .opencode/agents/opencode-executor.md で定義。
   - nickname: gemma-review-executor
     disabled: false
     priority: 2
@@ -135,6 +140,7 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: review
     stage_role: executor
     proficiency: normal
@@ -148,8 +154,8 @@ members:
       - document_authoring
     scheduler_strategy: fifo
     note: >-
-      OpenCode CLI と Ollama の Gemma を使用する pipeline executor（review）。モデル・権限は
-      .opencode/agents/gemma-review-executor.md で定義。
+      OpenCode CLI と Ollama の Gemma を使用する pipeline executor（review）。権限は
+      .opencode/agents/opencode-review-executor.md で定義。
   - nickname: gemma-reporter
     disabled: false
     priority: 1
@@ -158,6 +164,8 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:31b-mlx-work-64k
+    mode: report
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -169,15 +177,16 @@ members:
     scheduler_strategy: fifo
     note: >-
       OpenCode CLI と Ollama の Gemma を使用する pipeline reporter。権限とプロンプトは
-      .opencode/agents/gemma-reporter.md で定義。
+      .opencode/agents/opencode-reporter.md で定義。
   - nickname: qwen-expert-executor
-    disabled: false
+    disabled: true
     priority: 1
     display_name: Qwen Expert Executor
     email: null
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
     mode: edit
     stage_role: executor
     proficiency: expert
@@ -192,16 +201,17 @@ members:
       - code_generation
     scheduler_strategy: critical-first
     note: >-
-      thinking を有効化した Qwen を使用する expert executor。モデル・権限は .opencode/agents/qwen-expert-executor.md
+      thinking を有効化した Qwen を使用する expert executor。権限は .opencode/agents/opencode-expert-executor.md
       で定義。
   - nickname: qwen-expert-review-executor
-    disabled: false
+    disabled: true
     priority: 1
     display_name: Qwen Expert Review Executor
     email: null
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
     mode: review
     stage_role: executor
     proficiency: expert
@@ -216,16 +226,17 @@ members:
       - code_generation
     scheduler_strategy: fifo
     note: >-
-      thinking を有効化した Qwen を使用する expert review executor。モデル・権限は
-      .opencode/agents/qwen-expert-review-executor.md で定義。
+      thinking を有効化した Qwen を使用する expert review executor。権限は
+      .opencode/agents/opencode-expert-review-executor.md で定義。
   - nickname: gemma-expert-executor
-    disabled: false
+    disabled: true
     priority: 2
     display_name: Gemma Expert Executor
     email: null
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: edit
     stage_role: executor
     proficiency: expert
@@ -240,16 +251,17 @@ members:
       - document_authoring
     scheduler_strategy: critical-first
     note: >-
-      thinking を有効化した Gemma を使用する expert executor。モデル・権限は .opencode/agents/gemma-expert-executor.md
+      thinking を有効化した Gemma を使用する expert executor。権限は .opencode/agents/opencode-expert-executor.md
       で定義。
   - nickname: gemma-expert-review-executor
-    disabled: false
+    disabled: true
     priority: 2
     display_name: Gemma Expert Review Executor
     email: null
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: review
     stage_role: executor
     proficiency: expert
@@ -264,14 +276,14 @@ members:
       - document_authoring
     scheduler_strategy: fifo
     note: >-
-      thinking を有効化した Gemma を使用する expert review executor。モデル・権限は
-      .opencode/agents/gemma-expert-review-executor.md で定義。
+      thinking を有効化した Gemma を使用する expert review executor。権限は
+      .opencode/agents/opencode-expert-review-executor.md で定義。
 
   # gemma4 26B（MoE）の reporter。PJR-WJPX の計測で、gemma4 31B と同じく判定は甘いが約3倍速く、
   # 日本語に中国語の字体が混ざらなかった。reporter の文章要約（PJR-GBEV）に使う。gemma-reporter と
   # しばらく併用して実際の exec で様子を見るため、priority は最も低くし by-name で使う。
   - nickname: gemma26-executor
-    disabled: false
+    disabled: true
     # 試行中（2026-10-18）。自動選択に選ばれないよう優先度を最も低くし、--executor-by で明示して使う。
     priority: 9
     display_name: Gemma 26B Executor
@@ -279,6 +291,7 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:26b-mlx-work-64k
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -292,10 +305,10 @@ members:
     scheduler_strategy: critical-first
     note: >-
       OpenCode CLI と Ollama の gemma4 26B（MoE）を使用する pipeline executor（edit）。範囲の
-      はっきりした小さな修正に使えるかを exec trial で試す（2026-10-18）。モデル・権限は
-      .opencode/agents/gemma26-executor.md で定義。
+      はっきりした小さな修正に使えるかを exec trial で試す（2026-10-18）。権限は
+      .opencode/agents/opencode-executor.md で定義。
   - nickname: gemma26-128k-executor
-    disabled: false
+    disabled: true
     # 試行中（2026-10-18）。自動選択に選ばれないよう優先度を最も低くし、--executor-by で明示して使う。
     priority: 9
     display_name: Gemma 26B 128k Executor
@@ -303,6 +316,7 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:26b-mlx-work-128k
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -316,8 +330,8 @@ members:
     scheduler_strategy: critical-first
     note: >-
       OpenCode CLI と Ollama の gemma4 26B（MoE、文脈 128k）を使用する pipeline executor（edit）。文脈の
-      大きさで結果が変わるかを gemma26-executor（64k）と exec trial で比べる（2026-10-18）。モデル・権限は
-      .opencode/agents/gemma26-128k-executor.md で定義。
+      大きさで結果が変わるかを gemma26-executor（64k）と exec trial で比べる（2026-10-18）。権限は
+      .opencode/agents/opencode-executor.md で定義。
   - nickname: gemma26-reporter
     disabled: false
     priority: 4
@@ -326,6 +340,8 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:26b-mlx-work-64k
+    mode: report
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -337,7 +353,7 @@ members:
     scheduler_strategy: fifo
     note: >-
       OpenCode CLI と Ollama の gemma4 26B（MoE）を使用する pipeline reporter。実行結果の日本語要約を担う。grade finding
-      の表示用翻訳は gemma26-translator が担う。権限とプロンプトは .opencode/agents/gemma26-reporter.md で定義。
+      の表示用翻訳は gemma26-translator が担う。権限とプロンプトは .opencode/agents/opencode-reporter.md で定義。
   - nickname: gemma26-translator
     disabled: false
     priority: 4
@@ -346,6 +362,7 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: ollama-local/gemma4:26b-mlx-work-64k
     proficiency: normal
     focus:
       - translation
@@ -366,13 +383,14 @@ members:
   #
 
   - nickname: ornith-executor
-    disabled: false
+    disabled: true
     priority: 4
     display_name: Ornith Executor
     email: null
     roles: []
     type: agent
     provider: opencode
+    model: omlx/ornith-1.5-35b
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -386,8 +404,8 @@ members:
       - document_authoring
     scheduler_strategy: critical-first
     note: >-
-      OpenCode CLI と oMLX の Ornith を使用する pipeline executor（edit）。モデル・権限は
-      .opencode/agents/ornith-executor.md で定義。
+      OpenCode CLI と oMLX の Ornith を使用する pipeline executor（edit）。権限は
+      .opencode/agents/opencode-executor.md で定義。
   - nickname: ornith-expert-executor
     disabled: true
     priority: 4
@@ -396,6 +414,7 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: omlx/ornith-1.5-35b
     mode: edit
     stage_role: executor
     proficiency: expert
@@ -413,15 +432,17 @@ members:
       oMLX の Ornith（thinking なし）を使用する expert executor。grade など厳密な出力形式を求める作業向けに、出力形式の規則と判定例を持ち、grade
       の判定は英語で出力する（日本語での出力より判定が厳しく、中国語の字体が混ざらない）。finding の精度が grade
       に使える水準に届かないため無効にした（PJR-VQB5、2026-10-07）。モデル・サンプリング・権限は
-      .opencode/agents/ornith-expert-executor.md と opencode.json で定義。
+      .opencode/agents/opencode-executor.md と opencode.json で定義。
   - nickname: ornith-reporter
-    disabled: false
+    disabled: true
     priority: 4
     display_name: Ornith Reporter
     email: null
     roles: []
     type: agent
     provider: opencode
+    model: omlx/ornith-1.5-35b
+    mode: report
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -433,7 +454,7 @@ members:
     scheduler_strategy: fifo
     note: >-
       OpenCode CLI と oMLX の Ornith を使用する pipeline reporter。権限とプロンプトは
-      .opencode/agents/ornith-reporter.md で定義。
+      .opencode/agents/opencode-reporter.md で定義。
   - nickname: qwen36-expert-executor
     disabled: true
     priority: 4
@@ -442,6 +463,7 @@ members:
     roles: []
     type: agent
     provider: opencode
+    model: omlx/qwen3.6-35b-a3b
     mode: edit
     stage_role: executor
     proficiency: expert
@@ -459,13 +481,13 @@ members:
       oMLX の Qwen3.6 35B-A3B（thinking あり）を使用する expert executor。ornith-expert-executor
       と同じ出力形式の規則と判定例を持ち、grade の判定は英語で出力する。grade の評価（PJR-ZSJQ）用。評価の結果、grade には使わないため無効にした（判定が
       thinking ON では甘く、OFF では書式が崩れ、oMLX のメモリの保護に拒否されやすい）。モデル・サンプリング・権限は
-      .opencode/agents/qwen36-expert-executor.md と opencode.json で定義。
+      .opencode/agents/opencode-executor.md と opencode.json で定義。
 
   #
   # claude code members
   #
 
-  - nickname: claude-executor
+  - nickname: sonnet-executor
     disabled: false
     priority: 3
     display_name: Claude Executor
@@ -473,6 +495,7 @@ members:
     roles: []
     type: agent
     provider: claude
+    model: sonnet
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -486,9 +509,9 @@ members:
       - web_search
     scheduler_strategy: critical-first
     note: >-
-      Claude Code CLI を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。モデル・ツールは
+      Claude Code CLI を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。ツールは
       .claude/agents/claude-executor.md、権限は .specdojo/claude/settings.edit.json（成果物への Edit を許可）で定義。
-  - nickname: claude-expert-executor
+  - nickname: opus-executor
     disabled: false
     priority: 2
     display_name: Claude Expert Executor
@@ -496,6 +519,7 @@ members:
     roles: []
     type: agent
     provider: claude
+    model: opus
     mode: edit
     stage_role: executor
     proficiency: expert
@@ -512,9 +536,9 @@ members:
     scheduler_strategy: critical-first
     note: >-
       Claude Code CLI を使用する高性能 pipeline executor（edit）。複雑な分析・アーキテクチャ判断を伴う成果物の編集と検証だけを担当し、result
-      は更新しない。モデル・ツールは .claude/agents/claude-expert-executor.md、権限は
+      は更新しない。ツールは .claude/agents/claude-executor.md、権限は
       .specdojo/claude/settings.edit.json で定義。
-  - nickname: claude-review-executor
+  - nickname: sonnet-review-executor
     disabled: false
     priority: 3
     display_name: Claude Review Executor
@@ -522,6 +546,7 @@ members:
     roles: []
     type: agent
     provider: claude
+    model: sonnet
     mode: review
     stage_role: executor
     proficiency: normal
@@ -536,9 +561,9 @@ members:
     note: >-
       Claude Code CLI を使用する pipeline executor（review）。done_criteria の roles
       フィールドを参照し全観点でレビューを行うが、result も含めファイルへは一切書き込まない（読み取り専用）。調査結果は evidence として reporter
-      へ引き継ぐ。モデル・ツールは .claude/agents/claude-review-executor.md、権限は
+      へ引き継ぐ。ツールは .claude/agents/claude-review-executor.md、権限は
       .specdojo/claude/settings.review.json（成果物への Edit を禁止し、result への Edit のみ許可）で定義。
-  - nickname: claude-expert-review-executor
+  - nickname: opus-review-executor
     disabled: false
     priority: 2
     display_name: Claude Expert Review Executor
@@ -546,6 +571,7 @@ members:
     roles: []
     type: agent
     provider: claude
+    model: opus
     mode: review
     stage_role: executor
     proficiency: expert
@@ -560,9 +586,9 @@ members:
     scheduler_strategy: fifo
     note: >-
       Claude Code CLI を使用する高性能 pipeline executor（review）。複雑な多観点レビューを支援するが、result
-      も含めファイルへは一切書き込まない（読み取り専用）。モデル・ツールは .claude/agents/claude-expert-review-executor.md、権限は
+      も含めファイルへは一切書き込まない（読み取り専用）。ツールは .claude/agents/claude-review-executor.md、権限は
       .specdojo/claude/settings.review.json で定義。
-  - nickname: claude-reporter
+  - nickname: sonnet-reporter
     disabled: false
     priority: 3
     display_name: Claude Reporter
@@ -570,6 +596,7 @@ members:
     roles: []
     type: agent
     provider: claude
+    model: sonnet
     mode: report
     stage_role: reporter
     proficiency: normal
@@ -583,14 +610,14 @@ members:
       Claude Code CLI を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence
       から指定スキーマの構造化結果だけを返す（result への反映は runner が行う）。edit/review どちらの executor の後段にも使う。mode は
       command_template の {mode} を reporter 専用 profile に解決するための report とし、権限は Edit/Write と git
-      add/commit を deny する .specdojo/claude/settings.report.json で定義する。モデル・ツールは
+      add/commit を deny する .specdojo/claude/settings.report.json で定義する。ツールは
       .claude/agents/claude-reporter.md で定義。
 
   #
   # codex members
   #
 
-  - nickname: codex-executor
+  - nickname: terra-executor
     disabled: false
     priority: 2
     display_name: Codex Executor
@@ -598,6 +625,8 @@ members:
     roles: []
     type: agent
     provider: codex
+    model: gpt-5.6-terra
+    effort: medium
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -611,10 +640,10 @@ members:
       - web_search
     scheduler_strategy: critical-first
     note: >-
-      Codex CLI を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。モデル・reasoning
+      Codex CLI を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result は更新しない。最終判断は行わない。reasoning
       effort・sandboxはexec-defaultsのcommand template（proficiency normal相当）で指定し、タスク固有の手順はedit
       planを正本とする。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
-  - nickname: codex-expert-executor
+  - nickname: sol-executor
     disabled: false
     priority: 1
     display_name: Codex Expert Executor
@@ -622,6 +651,8 @@ members:
     roles: []
     type: agent
     provider: codex
+    model: gpt-5.6-sol
+    effort: high
     mode: edit
     stage_role: executor
     proficiency: expert
@@ -638,9 +669,9 @@ members:
     scheduler_strategy: critical-first
     note: >-
       Codex CLI を使用する expert pipeline executor（edit）。複雑な分析・設計判断を伴う成果物編集と検証だけを担当し、result
-      は更新しない。モデル・reasoning effort・sandboxはexec-defaultsのcommand
+      は更新しない。reasoning effort・sandboxはexec-defaultsのcommand
       templateで指定する。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
-  - nickname: codex-review-executor
+  - nickname: terra-review-executor
     disabled: false
     priority: 2
     display_name: Codex Review Executor
@@ -648,6 +679,8 @@ members:
     roles: []
     type: agent
     provider: codex
+    model: gpt-5.6-terra
+    effort: medium
     mode: review
     stage_role: executor
     proficiency: normal
@@ -664,7 +697,7 @@ members:
       のいずれも変更しない（読み取り専用）。sandbox は provider 共通の workspace-write のまま変わらないため、成果物・result を変更しない境界は plan
       の指示と specdojo CLI の commit
       許可リストで作る。最終判断は行わない。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
-  - nickname: codex-expert-review-executor
+  - nickname: sol-review-executor
     disabled: false
     priority: 1
     display_name: Codex Expert Review Executor
@@ -672,6 +705,8 @@ members:
     roles: []
     type: agent
     provider: codex
+    model: gpt-5.6-sol
+    effort: high
     mode: review
     stage_role: executor
     proficiency: expert
@@ -688,7 +723,7 @@ members:
       Codex CLI を使用する高性能 pipeline executor（review）。複雑な多観点レビューを支援するが、成果物・result
       のいずれも変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit
       許可リストで作る。最終判断は行わない。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
-  - nickname: codex-reporter
+  - nickname: terra-reporter
     disabled: false
     priority: 2
     display_name: Codex Reporter
@@ -696,6 +731,8 @@ members:
     roles: []
     type: agent
     provider: codex
+    model: gpt-5.6-terra
+    effort: medium
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -706,7 +743,7 @@ members:
     scheduler_strategy: fifo
     note: >-
       Codex CLI を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡されたevidenceから指定スキーマの構造化結果だけを返す（result
-      への反映は runner が行う）。edit/review どちらの executor の後段にも使う。モデル・reasoning effortはexec-defaultsのcommand
+      への反映は runner が行う）。edit/review どちらの executor の後段にも使う。reasoning effortはexec-defaultsのcommand
       template（proficiency normal相当）で指定する。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
 
   #
@@ -718,7 +755,7 @@ members:
   # agy は --agent による定義ファイルの選択を持たないため、役割は plan の共通規約で与える。
   #
 
-  - nickname: agy-executor
+  - nickname: flash-executor
     disabled: false
     priority: 4
     display_name: Antigravity Executor
@@ -726,6 +763,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-medium
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -740,9 +778,9 @@ members:
     scheduler_strategy: critical-first
     note: >-
       Antigravity CLI（agy）を使用する pipeline executor（edit）。成果物の編集と検証だけを担当し、result
-      は更新しない。最終判断は行わない。モデル・effort は exec-defaults の command template（proficiency normal
+      は更新しない。最終判断は行わない。effort は exec-defaults の command template（proficiency normal
       相当）で指定し、タスク固有の手順は edit plan を正本とする。
-  - nickname: agy-expert-executor
+  - nickname: flash-high-executor
     disabled: false
     priority: 3
     display_name: Antigravity Expert Executor
@@ -750,6 +788,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-high
     mode: edit
     stage_role: executor
     proficiency: expert
@@ -766,8 +805,8 @@ members:
     scheduler_strategy: critical-first
     note: >-
       Antigravity CLI（agy）を使用する高性能 pipeline executor（edit）。複雑な分析・設計判断を伴う成果物の編集と検証だけを担当し、result
-      は更新しない。最終判断は行わない。モデル・effort は exec-defaults の command template（proficiency expert 相当）で指定する。
-  - nickname: agy-expert-review-executor
+      は更新しない。最終判断は行わない。effort は exec-defaults の command template（proficiency expert 相当）で指定する。
+  - nickname: flash-high-review-executor
     disabled: false
     priority: 3
     display_name: Antigravity Expert Review Executor
@@ -775,6 +814,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-high
     mode: review
     stage_role: executor
     proficiency: expert
@@ -790,7 +830,7 @@ members:
     note: >-
       Antigravity CLI（agy）を使用する高性能 pipeline executor（review）。複雑な多観点レビューを支援するが、成果物・result
       のいずれも変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit 許可リストで作る。最終判断は行わない。
-  - nickname: agy-reporter
+  - nickname: flash-reporter
     disabled: false
     priority: 4
     display_name: Antigravity Reporter
@@ -798,6 +838,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-medium
     stage_role: reporter
     proficiency: normal
     persona: execution-reporter
@@ -809,7 +850,7 @@ members:
     note: >-
       Antigravity CLI（agy）を使用する pipeline reporter。ファイルや外部情報へアクセスせず、渡された evidence
       から指定スキーマの構造化結果だけを返す（result への反映は runner が行う）。edit / review どちらの executor の後段にも使う。
-  - nickname: agy-claude-executor
+  - nickname: agy-sonnet-executor
     disabled: false
     priority: 4
     display_name: Antigravity Claude Executor
@@ -817,6 +858,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
+    model: claude-sonnet-5-5-medium
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -830,9 +872,9 @@ members:
       - web_search
     scheduler_strategy: critical-first
     note: >-
-      Antigravity CLI 経由の Claude Sonnet を使用する pipeline executor（edit）。`command_params.by_nickname`
+      Antigravity CLI 経由の Claude Sonnet を使用する pipeline executor（edit）。member の `model`
       でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result は更新しない。
-  - nickname: agy-claude-expert-executor
+  - nickname: agy-opus-executor
     disabled: false
     priority: 4
     display_name: Antigravity Claude Expert Executor
@@ -840,6 +882,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
+    model: claude-opus-5-5-high
     mode: edit
     stage_role: executor
     proficiency: expert
@@ -856,9 +899,9 @@ members:
     scheduler_strategy: critical-first
     note: >-
       Antigravity CLI 経由の Claude Opus Thinking を使用する expert pipeline
-      executor（edit）。`command_params.by_nickname` でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result
+      executor（edit）。member の `model` でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result
       は更新しない。
-  - nickname: agy-claude-expert-review-executor
+  - nickname: agy-opus-review-executor
     disabled: false
     priority: 4
     display_name: Antigravity Claude Expert Review Executor
@@ -866,6 +909,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
+    model: claude-opus-5-5-high
     mode: review
     stage_role: executor
     proficiency: expert
@@ -880,8 +924,8 @@ members:
     scheduler_strategy: fifo
     note: >-
       Antigravity CLI 経由の Claude Opus Thinking を使用する expert pipeline
-      executor（review）。`command_params.by_nickname` でモデルを選び、by-name 指定で利用する。成果物・result のいずれも変更しない。
-  - nickname: agy-gpt-executor
+      executor（review）。member の `model` でモデルを選び、by-name 指定で利用する。成果物・result のいずれも変更しない。
+  - nickname: agy-gpt-oss-executor
     disabled: false
     priority: 4
     display_name: Antigravity GPT Executor
@@ -889,6 +933,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
+    model: gpt-oss-120b-medium
     mode: edit
     stage_role: executor
     proficiency: normal
@@ -902,7 +947,7 @@ members:
       - web_search
     scheduler_strategy: critical-first
     note: >-
-      Antigravity CLI 経由の GPT OSS 120B を使用する pipeline executor（edit）。`command_params.by_nickname`
+      Antigravity CLI 経由の GPT OSS 120B を使用する pipeline executor（edit）。member の `model`
       でモデルを選び、by-name 指定で利用する。成果物の編集と検証だけを担当し、result は更新しない。
 
   #
@@ -974,3 +1019,43 @@ members:
       GitHub Copilot CLI を使用する pipeline reporter。evidence から構造化結果を返すだけで、result への反映は runner
       が行う。edit/review どちらの executor の後段にも使う。権限設計は specdojo:exec-config-guide の「agent
       権限とプロンプトインジェクション対策」を正とする。
+
+# 別名（PJR-ZM1K・PJR-8MPY）。今の名前を実体へ向ける。Job・routine・文書・利用者の設定は別名のまま動く。
+# イベントと result の actor には実体の名前を記録する（PJR-YK1C）。
+aliases:
+  - nickname: claude-executor
+    alias_of: sonnet-executor
+  - nickname: claude-expert-executor
+    alias_of: opus-executor
+  - nickname: claude-review-executor
+    alias_of: sonnet-review-executor
+  - nickname: claude-expert-review-executor
+    alias_of: opus-review-executor
+  - nickname: claude-reporter
+    alias_of: sonnet-reporter
+  - nickname: codex-executor
+    alias_of: terra-executor
+  - nickname: codex-expert-executor
+    alias_of: sol-executor
+  - nickname: codex-review-executor
+    alias_of: terra-review-executor
+  - nickname: codex-expert-review-executor
+    alias_of: sol-review-executor
+  - nickname: codex-reporter
+    alias_of: terra-reporter
+  - nickname: agy-executor
+    alias_of: flash-executor
+  - nickname: agy-expert-executor
+    alias_of: flash-high-executor
+  - nickname: agy-expert-review-executor
+    alias_of: flash-high-review-executor
+  - nickname: agy-reporter
+    alias_of: flash-reporter
+  - nickname: agy-claude-executor
+    alias_of: agy-sonnet-executor
+  - nickname: agy-claude-expert-executor
+    alias_of: agy-opus-executor
+  - nickname: agy-claude-expert-review-executor
+    alias_of: agy-opus-review-executor
+  - nickname: agy-gpt-executor
+    alias_of: agy-gpt-oss-executor

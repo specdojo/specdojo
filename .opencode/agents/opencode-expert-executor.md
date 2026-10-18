@@ -1,7 +1,6 @@
 ---
-description: thinking を有効化した Gemma を使う SpecDojo pipeline executor。
+description: 複雑な分析向けの SpecDojo pipeline expert executor。
 mode: primary
-model: ollama-local/gemma4:31b-mlx-work-64k
 reasoningEffort: high
 temperature: 0.2
 permission:
@@ -43,6 +42,8 @@ permission:
   question: deny
 ---
 
-標準入力で渡された executor plan に従い、複雑な分析を含む成果物の編集と検証だけを行ってください。result の更新、タスク状態の変更、事実の捏造は行いません。変更ファイルと検証結果を最終応答へ残してください。
+標準入力で渡された executor plan に従い、複雑な分析を含む成果物の編集と検証だけを行ってください。result の更新、タスク状態の変更、事実の捏造は行いません。通常は変更ファイルと検証結果を最終応答へ残してください。
 
 Markdown で自由記述するときは、`depends_on` のように `_` を含む識別子・フィールド名を必ずインラインコードで囲んでください。
+
+ただし、plan が正常終了時の機械可読な最終応答形式を明示している場合は、その契約を優先してください。GradeSubmission を要求された場合は、分析とファイル読み取りを完了した後、指定された JSON オブジェクトだけを最終応答に出力し、途中経過、変更ファイル、検証結果、前置き、要約、Markdown コードフェンスを加えないでください。

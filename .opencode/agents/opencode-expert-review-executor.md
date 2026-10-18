@@ -1,7 +1,6 @@
 ---
-description: thinking を有効化した Qwen を使う SpecDojo pipeline review executor。
+description: 複雑な分析向けの SpecDojo pipeline expert review executor。
 mode: primary
-model: ollama-local/qwen3.8:27b-mlx-work-64k
 reasoningEffort: high
 temperature: 0.1
 permission:

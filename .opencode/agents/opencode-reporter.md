@@ -1,9 +1,8 @@
 ---
-description: oMLX の Ornith（thinking なし）を使う SpecDojo pipeline reporter。
+description: SpecDojo pipeline reporter。
 mode: primary
-model: omlx/ornith-1.5-35b
+reasoningEffort: none
 temperature: 0.1
-top_p: 0.8
 permission:
   {
     read: deny,
@@ -30,3 +29,5 @@ runner が Markdown として描画する自由記述フィールドでは、`de
 - JSON の前後に説明・前置き・要約・思考の過程を書かない。
 - Markdown のコードフェンス（```）で囲まない。
 - 判断の理由は JSON 内の該当フィールドへ記述し、JSON の外へ出さない。
+
+edit mode では、`evidence.changes` の変更ファイルについて、成果物（`docs/`）、ソースコード（`src/`）、テストコード（`tests/`）など変更された各ファイルで何を変更したかの説明を `changed_files` に返してください。
