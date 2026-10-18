@@ -77,3 +77,16 @@
       from: "integrate failed: git restore failed: fatal: Unable to create '/workspaces/specdojo-workspace/specdojo/.git/index.lock': ファイルが存在します. (args: --source=HEAD --staged --worktree -- 1 path)"
       to: "-"
   previous_event_id: reg_1577cfb30fa044eebf39e61934cc93bc
+- v: 1
+  id: reg_22f71da96030409da4a724c0389bebf4
+  ts: "2026-10-18T16:40:43Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fa78e47395ff4ed0b1aa2c7afdc22a55
