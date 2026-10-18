@@ -64,3 +64,19 @@
       from: "-"
       to: "checkpoint failed: Checkpoint commit failed (exec(register PJR-283N): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0001/controls/project-register/events…"
   previous_event_id: reg_5d144fd0b4e94d97abe33325fc39bce7
+- v: 1
+  id: reg_c52bc71e52244ff4bf3867cc72f84bec
+  ts: "2026-10-18T16:45:57Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Checkpoint commit failed (exec(register PJR-283N): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0001/controls/project-register/events…"
+      to: "-"
+  previous_event_id: reg_d56b6b32af6f42afa8723e3fce9fa2ff

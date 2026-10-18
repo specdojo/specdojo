@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-18T16:40:17Z"
-  block_reason: "checkpoint failed: Checkpoint commit failed (exec(register PJR-283N): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0001/controls/project-register/events…"
   derived_from:
     - PJR-6DHY
 ---
