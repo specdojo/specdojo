@@ -10,6 +10,10 @@ SpecDojo の利用者に影響する変更を記録します。
 - 指名した agent が rate limit になったとき、`--on-rate-limit wait|fallback|stop` と executor / reporter 別の fallback 指定で、同じ agent の再開待ちまたは代替 agent への切替を選べるようにしました。`exec-defaults.yaml` の `rate_limit_policy.pinned` でも既定を設定でき、従来互換の既定は `stop` です（PJR-BHMH）。
 - `register add` / `update` に `--approach` と繰り返し指定できる `--target` を追加しました。個票で進め方と対象文書を宣言でき、成果物はカタログ、kata は文書索引で解決します。解決できない対象、成果物と kata の種別違い、`approach` と複数対象の組み合わせは書き込み前に拒否します（PJR-ZJXQ）。
 
+### 変更
+
+- 対話式の `specdojo init` から成果物カタログの質問を除き、`--catalog <size>` を明示した場合にだけ作成するように変更しました。導入直後の混乱を防ぎ、成果物が定まってから `catalog scaffold` で追加できるようにします。初期化の最後の案内でも `catalog scaffold` と `catalog_path` の設定手順を示します（PJR-G5AB）。
+
 ### 不具合修正
 
 - `devcontainer scaffold` が親ディレクトリを常に `/workspaces/specdojo-workspace` としていた問題を修正し、ホスト側の親名を反映するようにしました。`--workspace-name` で明示的に固定でき、`specdojo init --devcontainer` からも指定できます。既に生成済みの `.devcontainer/` は、`--force` で作り直すまで従来のままです（PJR-8GQ4）。

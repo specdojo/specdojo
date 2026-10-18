@@ -67,7 +67,6 @@ Your nickname [owner]: owner
 Your display name [Project Owner]: 店主
 Orchestrator providers (...) [codex]: claude        <- 使う AI ツールを 1 つ選ぶ
 Delegate work to agents (exec)? [y/N]:              <- Enter（実戦は後で設定する）
-Deliverables catalog (none|small|medium|large) [none]:  <- Enter（カタログは使わない）
 Create a Dev Container? [y/N]:                      <- Enter
 ```
 
@@ -75,7 +74,7 @@ Create a Dev Container? [y/N]:                      <- Enter
 `claud` と入力すると、利用可能な provider の一覧に続いて provider の質問だけが再表示されます。
 それまでに答えた project や名簿の内容を入力し直す必要はありません。
 
-登録簿は `docs/ja/projects/prj-0001/controls/project-register/` に作られます。オーケストレーターで進める場合は、終了時に表示される `npm run orch:<provider>` で起動します。
+登録簿は `docs/ja/projects/prj-0001/controls/project-register/` に作られます。オーケストレーターで進める場合は、終了時に表示される `npm run orch:<provider>` で起動します。成果物カタログは対話では作られません。成果物の構成が定まったら、[[#41-成果物カタログを作成する|成果物カタログを作成する]] に従って `catalog_path` を設定し、`catalog scaffold` で追加してください。
 
 ### 1.2. 迷っていることを起票する（question）
 
@@ -225,7 +224,8 @@ npx specdojo init
 ```
 
 `specdojo init` は、project ID と名前、人の nickname と表示名、利用する agent provider、
-exec・成果物カタログ・Dev Container の要否を順に質問します。選択に応じて設定、登録簿、人と
+exec・Dev Container の要否を順に質問します。成果物カタログは対話では質問せず、`--catalog <size>` を
+明示した場合にだけ初期化時に作成します。選択に応じて設定、登録簿、人と
 agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`、exec の起動設定を
 作成します。exec の親検証は、対応する npm script が `package.json` にあるものだけを設定し、
 該当する script がなければ省略します。既存ファイルは上書きせず、作成内容は `--dry-run` で
@@ -243,13 +243,12 @@ npx specdojo init --yes \
   --display-name "Project Owner" \
   --provider claude,codex \
   --exec \
-  --catalog small \
   --devcontainer \
   --dry-run
 ```
 
 初期化後は、表示された `npm run orch:<provider>` でオーケストレーターを起動し、最初の 1 件を
-起票します。オーケストレーターを使わない場合は、同じ案内に表示される
+起票します。成果物カタログが必要になった場合は、`.specdojo/specdojo.config.json` に `catalog_path` を設定して `specdojo catalog scaffold` で追加します（詳細は [[#41-成果物カタログを作成する|成果物カタログを作成する]] を参照）。オーケストレーターを使わない場合は、同じ案内に表示される
 `exec run --register <id> --executor-by <executor> --reporter-by <reporter>` で実行できます。
 作成された設定と文書は内容を確認して commit してください。
 
