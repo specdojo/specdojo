@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-4z6n-register-approach-guide
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T12:17:29Z"
   due_on: null
+  completed_at: "2026-10-18T07:21:40Z"
+  conclusion: exec-operation-guide に、register の todo から approach で成果物と kata を作る・直す手順の節を加えた。approach と target の指定、kata の approach の選び方、組み合わせの誤りのエラー、exec run --deliverable との違いを書き、register-operation-guide から参照した
 ---
 
 # PJR-4Z6N register から approach で実行する手順をガイドに書く
