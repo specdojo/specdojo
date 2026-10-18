@@ -7,19 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-18T00:38:49Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
 ---
 
-# PJR-7WME 個票に起票の元になった項目（derived_from）を記録できるようにする
+# PJR-7WME 個票に起票の元になった項目（`derived_from`）を記録できるようにする
 
 ## 1. 概要
 
-個票の frontmatter に derived_from（元になった項目の ID の一覧。project をまたぐ場合は prj-0001:PJR-XXXX）を加え、register add --from で指定できるようにする。元の項目の側から派生先の一覧を辿れるようにし、decision の追跡先も同じ関係で表す
+個票の frontmatter に `derived_from`（元になった項目の ID の一覧。project をまたぐ場合は `prj-0001:PJR-XXXX`）を加え、`register add --from` で指定できるようにする。元の項目の側から派生先の一覧を辿れるようにし、decision の追跡先も同じ関係で表す。
 
 ## 2. 完了条件
 
@@ -40,16 +39,20 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                          | 担当 | 状態 | メモ             |
-| --- | --------------------------------------------- | ---- | ---- | ---------------- |
-| 1   | schema に `derived_from` を加える             | DEV  | open | -                |
-| 2   | `register add`・`update` に `--from` を加える | DEV  | open | 存在の確認       |
-| 3   | `register build` で派生先を辿れるようにする   | DEV  | open | 出す場所を決める |
-| 4   | 規則とコマンドリファレンスを更新する          | DEV  | open | -                |
+| No  | 作業                                          | 担当 | 状態 | メモ                      |
+| --- | --------------------------------------------- | ---- | ---- | ------------------------- |
+| 1   | schema に `derived_from` を加える             | DEV  | done | 配列・書式を定義          |
+| 2   | `register add`・`update` に `--from` を加える | DEV  | done | 存在と自己参照を検証      |
+| 3   | `register build` で派生先を辿れるようにする   | DEV  | done | 専用生成ビューに出力      |
+| 4   | 規則とコマンドリファレンスを更新する          | DEV  | done | 履歴・decision 運用も記載 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 個票 Frontmatter と event schema に `derived_from` を追加し、同一 project の `PJR-XXXX` と別 project の `<project-id>:PJR-XXXX` を保持できるようにした。
+- `register add --from` と `register update --from` を複数指定に対応させ、自己参照、設定済み project 内の不存在、書式不正を更新前に拒否するようにした。`register update --from -` で削除できる。
+- 個票本文を変更せず、`register build` が `generated/pjr-derived-items.md` を生成して元項目から派生先を逆引きできるようにした。人が書く本文を生成処理で変更せず、複数個票・複数 project の関係を一か所で確認できるため、個票への追記ではなく専用の生成一覧を選んだ。設定済みの別 project の個票も走査対象とする。
+- `derived_from` の変更を event と `register history` に含め、並行更新時の event merge でも復元できるようにした。
+- rulebook、コマンドリファレンス、CHANGELOG、関連テストを更新した。既存個票や decision 本文の追跡先は変更していない。
 
 ## 5. 関連ドキュメント
 

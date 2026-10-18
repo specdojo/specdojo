@@ -7,8 +7,9 @@ description: >
 
   The frontmatter is the single source of truth for the structured fields of one
   register item: classification (item_type), processing status (item_status),
-  priority, owner, dates, block reason and conclusion. The register list (pjr-index) is a derived
-  view generated from these files, so the same field is never stored in two places.
+  priority, owner, dates, block reason, conclusion and derivation sources. The register list
+  (pjr-index) is a derived view generated from these files, so the same field is never stored in
+  two places.
 
   Conventions:
   - Undecided values are expressed by omitting the key. Table placeholders such as
@@ -156,6 +157,19 @@ properties:
               rejection. Omit the key while it is undetermined; the details stay in
               the body (list column: 結論).
 
+          derived_from:
+            type: array
+            items:
+              oneOf:
+                - $ref: "#/$defs/LocalRegisterItemRef"
+                - $ref: "#/$defs/QualifiedRegisterItemRef"
+            minItems: 1
+            uniqueItems: true
+            description: >
+              Register items from which this item was derived. Use PJR-XXXX for an item in the
+              same project and <project-id>:PJR-XXXX for an item in another project. Omit the key
+              when the item was not derived from another register item.
+
           approach:
             $ref: "#/$defs/Approach"
             description: >
@@ -254,3 +268,13 @@ $defs:
       Storing the instant instead of a calendar day keeps the record independent of
       the display timezone. Write it as a quoted YAML string, because an unquoted
       date-time is loaded as a timestamp value instead of a string.
+
+  LocalRegisterItemRef:
+    type: string
+    pattern: "^PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$"
+    description: "Display id of a register item in the same project."
+
+  QualifiedRegisterItemRef:
+    type: string
+    pattern: "^[a-z][a-z0-9-]*:PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4}$"
+    description: "Project-qualified display id of a register item in another project."

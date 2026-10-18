@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { basename, dirname, join } from "node:path";
+import { basename, dirname, join, relative, sep } from "node:path";
 import {
   extractTableHeading,
   formatTableRow,
@@ -14,6 +14,7 @@ import {
   compareRegisterItemIds,
   loadRegisterItemDocs,
   ticketRefCell,
+  toCell,
   toDisplayItem,
   VALID_PRIORITIES,
   VALID_STATUSES,
@@ -22,6 +23,7 @@ import {
 } from "./item.js";
 import { flattenTemplateFrontmatter } from "../docs/template-frontmatter.js";
 import { resolveSpecdojoTemplatePath } from "../docs/template-resolution.js";
+import { collectDerivedRegisterRelations } from "./derivation.js";
 
 // ================================
 // Derived View Generation
@@ -194,6 +196,49 @@ function generateViewsByOwnerFile(
   });
 }
 
+function markdownLink(label: string, fromDirectory: string, targetPath: string): string {
+  const path = relative(fromDirectory, targetPath).split(sep).join("/");
+  const href = path.startsWith(".") ? path : `./${path}`;
+  return `[${toCell(label)}](${href})`;
+}
+
+function generateDerivedItemsFile(
+  paths: RegisterPaths,
+  items: readonly RegisterItemView[],
+): string {
+  const sourceDocs = new Map(
+    items.flatMap((view) => (view.ticketPath ? [[view.id, view.ticketPath] as const] : [])),
+  );
+  const rows = collectDerivedRegisterRelations(paths, items).map((relation) => {
+    const sourcePath = sourceDocs.get(relation.sourceId);
+    const sourceCell = sourcePath
+      ? markdownLink(relation.sourceId, paths.generatedPath, sourcePath)
+      : relation.sourceId;
+    const derivedLabel =
+      relation.derivedProjectId === paths.projectId
+        ? relation.derivedItem.id
+        : `${relation.derivedProjectId}:${relation.derivedItem.id}`;
+    const derivedCell = markdownLink(derivedLabel, paths.generatedPath, relation.derivedTicketPath);
+    return `| ${[
+      sourceCell,
+      derivedCell,
+      relation.derivedItem.type,
+      relation.derivedItem.status,
+      relation.derivedItem.title,
+    ]
+      .map(toCell)
+      .join(" | ")} |`;
+  });
+  const table = [
+    "<!-- prettier-ignore -->",
+    "| 元の項目 | 派生先 | 分類 | ステータス | タイトル |",
+    "| --- | --- | --- | --- | --- |",
+    ...rows,
+  ].join("\n");
+  const template = loadViewTemplate("pjr-derived-items-template.md", paths.projectId);
+  return injectViewSlots(template, { "derived-items": table });
+}
+
 function generateTypeFilterView(
   items: PjrDisplayItem[],
   type: string,
@@ -216,9 +261,8 @@ export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope
   // 項目の値は個票 frontmatter（正本）から集める。列見出しは template から採用するため、
   // 生成処理は作業ツリーの pjr-index.md を入力にしない。
   // 「登録日」「完了日」は保存された日時をプロジェクトの登録日タイムゾーンへ変換して導出する。
-  const items = loadRegisterItems(paths).map((view) =>
-    toDisplayItem(view.item, paths.registerDateTimeZone),
-  );
+  const itemViews = loadRegisterItems(paths);
+  const items = itemViews.map((view) => toDisplayItem(view.item, paths.registerDateTimeZone));
   const heading = extractTableHeading(loadViewTemplate(REGISTER_INDEX_TEMPLATE, paths.projectId));
 
   // 個票セルのリンクは project-register/ 起点の `./` 表記で作られる。
@@ -250,6 +294,10 @@ export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope
       {
         path: join(paths.generatedPath, "pjr-views-by-owner.md"),
         content: generateViewsByOwnerFile(viewItems, paths.projectId, heading),
+      },
+      {
+        path: join(paths.generatedPath, "pjr-derived-items.md"),
+        content: generateDerivedItemsFile(paths, itemViews),
       },
     );
   }

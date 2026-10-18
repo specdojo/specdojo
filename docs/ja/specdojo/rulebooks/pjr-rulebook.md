@@ -22,7 +22,7 @@ Project Register Documentation Rules
 ## 1. 全体方針
 
 - TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘の全登録項目は、それぞれ 1 件の個票を持つ。
-- 個票 Frontmatter の現在値は、分類、処理状態、優先度、担当、日付、結論の唯一の正本である。
+- 個票 Frontmatter の現在値は、分類、処理状態、優先度、担当、日付、結論、起票元の唯一の正本である。
 - `events/pjr-XXXX.yaml` は、起票・状態遷移・更新を追う監査履歴の正本である。現在値の再計算には使わず、個票の現在値との整合を検証する。
 - 個票の H1 と本文は、それぞれタイトルと説明・根拠・経緯・対応内容の正本である。
 - `generated/pjr-index.md` とすべての派生ビューは個票から `register build` で生成し、直接編集しない。
@@ -48,7 +48,7 @@ Project Register Documentation Rules
 - 個票は `docs/ja/projects/<project-id>/controls/project-register/` 直下に置く。
 - 項目別イベントログは同ディレクトリの `events/` 配下に置き、個票 1 件につき 1 ファイルとする。
 - 登録項目一覧は `docs/ja/projects/<project-id>/controls/project-register/generated/pjr-index.md` に生成する。
-- 状態別・優先度別・担当者別の補助一覧は同じ `generated/` 配下に生成する。
+- 状態別・優先度別・担当者別の補助一覧と、元の項目から派生先を辿る一覧は同じ `generated/` 配下に生成する。
 - controls 全体の type 別管理ビューは `controls/generated/` に生成する。生成物の別名コピーは作らない。
 
 ## 3. 推奨 Frontmatter 項目
@@ -71,6 +71,7 @@ Project Register Documentation Rules
 | `completed_at`  | 完了・却下・決定日時                         | 条件 |
 | `block_reason`  | `waiting` へ遷移した直近の理由               | 任意 |
 | `conclusion`    | 終端時の結論要約                             | 任意 |
+| `derived_from`  | 起票の元になった登録項目 ID の配列           | 任意 |
 | `approach`      | 対象を作成・修正するときの進め方             | 任意 |
 | `targets`       | 変更対象文書の doc id リスト                 | 任意 |
 
@@ -78,6 +79,7 @@ Project Register Documentation Rules
 - `item_type`、`item_status`、`priority` の値は schema の enum だけを使用する。
 - `block_reason` は `waiting` 中の直近の待機・失敗理由、`conclusion` は終端時の結論として用途を分ける。`register wait --reason` は前者だけを更新し、`waiting` 以外へ遷移すると現在値から削除する。削除前の理由は項目別イベントログの変更前の値に残す。
 - Frontmatter の構造化フィールドを本文や生成一覧へ手作業で複製しない。
+- `derived_from` は同じ project の元項目を `PJR-XXXX`、別 project の元項目を `<project-id>:PJR-XXXX` で記録する。自己参照や存在しない項目は使用しない。別 project が設定にない場合は書式だけを検証し、設定された後に存在確認できるよう project 修飾を維持する。
 
 ### 3.1. 日時と日付の使い分け
 
@@ -110,13 +112,14 @@ Project Register Documentation Rules
 
 ### 4.2. 生成一覧と派生ビュー
 
-| 生成物                               | 内容                | 編集可否 |
-| ------------------------------------ | ------------------- | -------- |
-| `generated/pjr-index.md`             | 全個票の一覧        | 不可     |
-| `generated/pjr-views-by-status.md`   | 状態別の補助一覧    | 不可     |
-| `generated/pjr-views-by-priority.md` | 優先度別の補助一覧  | 不可     |
-| `generated/pjr-views-by-owner.md`    | 担当者別の補助一覧  | 不可     |
-| `controls/generated/pm-*.md`         | type 別の管理ビュー | 不可     |
+| 生成物                               | 内容                 | 編集可否 |
+| ------------------------------------ | -------------------- | -------- |
+| `generated/pjr-index.md`             | 全個票の一覧         | 不可     |
+| `generated/pjr-views-by-status.md`   | 状態別の補助一覧     | 不可     |
+| `generated/pjr-views-by-priority.md` | 優先度別の補助一覧   | 不可     |
+| `generated/pjr-views-by-owner.md`    | 担当者別の補助一覧   | 不可     |
+| `generated/pjr-derived-items.md`     | 元項目と派生先の一覧 | 不可     |
+| `controls/generated/pm-*.md`         | type 別の管理ビュー  | 不可     |
 
 - 一覧の標準列は ID、ステータス、タイトル、説明、分類、優先度、担当、登録日、期限、完了日、結論、個票とする。
 - タイトルは個票の H1、説明は個票本文、その他の列は個票 Frontmatter から生成する。
@@ -132,14 +135,15 @@ Project Register Documentation Rules
 - 対応・判断内容には、実施または採択した範囲と、明示的に対象外とした範囲を記載する。
 - 結果・結論には、完了を判定した根拠と後続対応を記載する。
 - 関連ドキュメントには、判断根拠、変更対象、影響先、追跡先のうち該当する文書を記載する。
+- 実行中に問題や後続作業を見つけて別の登録項目を起票するときは、起票元を `derived_from` に必ず記録する。decision から todo を起票する場合も同じ関係を使い、decision 本文へ追跡先を重複記載しない。既存本文の追跡先は移行のために書き換えない。
 - 本項目の実施において確実に変更する対象文書が分かっている場合は、その文書 ID を Frontmatter の `targets` 配列へ宣言する。宣言した `targets` は agent 実行時の変更網羅検証（target coverage）に用いられる。未知の場合や対象を固定しない場合は宣言を省略する。
 - `approach` を宣言する場合、`targets` は 1 件だけ必須とする。`fully-guided`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`cross-deliverable-dedup`・`finalize`・`bootstrap-finalize` の対象は成果物カタログにある成果物の doc id とし、まだ文書がない成果物もカタログで解決する。`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` の対象は、名前に対応する種別の kata の doc id とし、文書索引で解決する。対応する正本で解決できない ID や、`approach` と種別が合わない対象は使用しない。
 
 ### 5.2. 構造化フィールドと生成
 
 - 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 type で個票を省略しない。
-- 担当・期限・結論・topic・`approach`・`targets` などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。`register add` と `register update` では `--approach` と繰り返し指定できる `--target` を使う。`approach` または対象を削除するときは、それぞれ `--approach -`、`--target -` を指定する。待機理由は `register wait --reason` で記録し、誤った現在値を手動補正するときは `register update --block-reason -` で削除する。
-- `register build` は個票を読み取り、一覧・派生ビューを再生成する。一覧を編集して個票へ反映する経路はない。
+- 担当・期限・結論・topic・`derived_from`・`approach`・`targets` などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。`register add` と `register update` では、起票元に繰り返し指定できる `--from`、進め方に `--approach`、対象に繰り返し指定できる `--target` を使う。起票元、`approach`、対象を削除するときは、それぞれ `--from -`、`--approach -`、`--target -` を指定する。待機理由は `register wait --reason` で記録し、誤った現在値を手動補正するときは `register update --block-reason -` で削除する。
+- `register build` は個票を読み取り、一覧・派生ビューを再生成する。`generated/pjr-derived-items.md` では `derived_from` を逆引きし、元の項目から派生先を辿れるようにする。一覧を編集して個票へ反映する経路はない。
 - `register add`、状態遷移、`register update`、`register renumber` は現在値を個票へ、イベントを対応する項目別ログへ記録する。`--by` で actor、`--reason` で理由を明示でき、省略時もコマンドが既定値を記録する。
 - 同じ現在値へ同じ操作を再実行した場合は、新しいイベントを追加しない。イベント ID と直前イベント参照を保ったまま再実行し、既存イベントの置換や削除で重複を解消しない。
 - ID の変更は `register renumber` で行い、個票のファイル名・Frontmatter・参照と生成ビューを整合させる。

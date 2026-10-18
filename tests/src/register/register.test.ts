@@ -745,6 +745,7 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
         join(paths.generatedPath, "pjr-views-by-status.md"),
         join(paths.generatedPath, "pjr-views-by-priority.md"),
         join(paths.generatedPath, "pjr-views-by-owner.md"),
+        join(paths.generatedPath, "pjr-derived-items.md"),
       ]);
       expect(existsSync(paths.pjrIndexPath)).toBe(false);
     });
@@ -764,6 +765,27 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
     });
   });
 
+  it("derived_from から元の項目を起点に派生先を辿れるビューを生成する", () => {
+    withRegisterDir((paths, dir) => {
+      writeTwoTickets(dir);
+      const derivedPath = join(dir, "pjr-zz99-topic.md");
+      writeFileSync(
+        derivedPath,
+        readFileSync(derivedPath, "utf8").replace(
+          "  item_status: open",
+          "  item_status: open\n  derived_from:\n    - PJR-AB12",
+        ),
+        "utf8",
+      );
+
+      const content = findView(generateDerivedViewFiles(paths, "register"), "pjr-derived-items.md");
+
+      expect(content).toContain(
+        "| [PJR-AB12](../pjr-ab12-topic.md) | [PJR-ZZ99](../pjr-zz99-topic.md) | todo | open | 後の項目 |",
+      );
+    });
+  });
+
   it("全表セルの山括弧をコード化し、既存コードスパンを二重化しない", () => {
     withRegisterDir((paths, dir) => {
       writeFileSync(
@@ -779,7 +801,8 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
       );
 
       const views = generateDerivedViewFiles(paths, "register");
-      for (const view of views) {
+      // 派生関係ビューは `derived_from` のある項目だけを載せるため、この個票は現れない。
+      for (const view of views.filter((view) => !view.path.endsWith("pjr-derived-items.md"))) {
         expect(view.content).toContain("`prefix-<term>-suffix`");
         expect(view.content).toContain("`Array<string>`");
         expect(view.content).toContain("`role-<name>`");
@@ -1013,6 +1036,17 @@ describe("planRenumber / renumberPjrItem — 再採番の一括更新", () => {
         ["targets:", "  - prj-0001:pjr-0137-register-id-uniqueness", ""].join("\n"),
         "utf8",
       );
+      const dependentPath = join(paths.projectRegisterPath, "pjr-ab12-dependent-item.md");
+      writeFileSync(
+        dependentPath,
+        ticketBody("PJR-AB12")
+          .replace(
+            "  id: prj-0001:pjr-0137-register-id-uniqueness",
+            "  id: prj-0001:pjr-ab12-dependent-item\n  derived_from:\n    - PJR-0137",
+          )
+          .replace("pjr-indexの重複ID検知と再採番", "派生項目"),
+        "utf8",
+      );
 
       const plan = planRenumber(paths, "PJR-0137", "PJR-0140");
 
@@ -1033,6 +1067,8 @@ describe("planRenumber / renumberPjrItem — 再採番の一括更新", () => {
 
       const planWrite = plan.writes.find((w) => w.path === planPath);
       expect(planWrite?.content).toContain("- prj-0001:pjr-0140-register-id-uniqueness");
+      const dependentWrite = plan.writes.find((w) => w.path === dependentPath);
+      expect(dependentWrite?.content).toContain("  derived_from:\n    - PJR-0140");
     });
   });
 

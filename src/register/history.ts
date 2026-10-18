@@ -2,7 +2,8 @@
 // 未移行の期間だけ Git 差分を読み、event の開始時刻より前の legacy 履歴として統合する。
 //
 // 比較対象は生成される登録項目一覧の列（ステータス・タイトル・説明・分類・優先度・担当・
-// 登録日・期限・完了日・結論）に、待機時のブロック理由と approach / targets を加える。
+// 登録日・期限・完了日・結論）に、待機時のブロック理由と approach / targets /
+// derived_from を加える。
 // 一覧に表示しない構造化フィールドも、個票の更新履歴として監査できるよう比較対象にする。
 
 import { existsSync, readdirSync, readFileSync } from "node:fs";

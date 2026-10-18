@@ -17,6 +17,8 @@ import { parseSpecdojoDocument } from "../docs/frontmatter-namespace.js";
 import {
   applyRegisterItemFields,
   PJR_ID_RE,
+  readRegisterItemContent,
+  readSpecdojoFields,
   registerItemFieldsFromItem,
   REMOVE_REGISTER_ITEM_FIELD,
   setRegisterItemDescription,
@@ -104,6 +106,38 @@ export function renumberReferences(
 ): { content: string; changed: boolean } {
   if (!content.includes(fromDocId)) return { content, changed: false };
   return { content: content.split(fromDocId).join(toDocId), changed: true };
+}
+
+// `derived_from` は文書 ID ではなく表示 ID を保持するため、通常の wikilink / targets の
+// 置換とは分けて frontmatter の配列だけを更新する。同一 project の短縮形と、別 project
+// から参照する project 修飾形の両方を対象にする。
+function renumberDerivedFromReferences(
+  content: string,
+  filename: string,
+  sourceProjectId: string,
+  fromId: string,
+  toId: string,
+): { content: string; changed: boolean } {
+  const parsed = readRegisterItemContent(content, filename);
+  if (!parsed?.item.derivedFrom) return { content, changed: false };
+  const docId = readSpecdojoFields(content).id;
+  const referencingProjectId =
+    typeof docId === "string" && docId.includes(":") ? docId.split(":", 1)[0] : undefined;
+  let changed = false;
+  const derivedFrom = parsed.item.derivedFrom.map((ref) => {
+    if (referencingProjectId === sourceProjectId && ref === fromId) {
+      changed = true;
+      return toId;
+    }
+    if (ref === `${sourceProjectId}:${fromId}`) {
+      changed = true;
+      return `${sourceProjectId}:${toId}`;
+    }
+    return ref;
+  });
+  return changed
+    ? { content: applyRegisterItemFields(content, { derived_from: derivedFrom }), changed }
+    : { content, changed };
 }
 
 export type RenumberPlan = {
@@ -329,7 +363,7 @@ export function planRenumber(paths: RegisterPaths, fromId: string, toId: string)
     writes.push({ path: paths.pjrIndexPath, content: newIndexContent });
   }
 
-  // 参照リンク・targets の付け替え（doc id を持つ個票がある場合のみ）。
+  // 参照リンク・targets・derived_from の付け替え（doc id を持つ個票がある場合のみ）。
   if (fromDocId && toDocId) {
     const root = specdojoRootDir();
     const referenceFiles = findMarkdownReferenceFiles(root);
@@ -338,8 +372,17 @@ export function planRenumber(paths: RegisterPaths, fromId: string, toId: string)
       if (absPath === paths.pjrIndexPath) continue;
       if (ticketRename && absPath === ticketRename.from) continue;
       const content = readFileSync(absPath, "utf8");
-      const { content: replaced, changed } = renumberReferences(content, fromDocId, toDocId);
-      if (changed) writes.push({ path: absPath, content: replaced });
+      const docReferenceUpdate = renumberReferences(content, fromDocId, toDocId);
+      const derivedFromUpdate = renumberDerivedFromReferences(
+        docReferenceUpdate.content,
+        basename(absPath),
+        paths.projectId,
+        fromId,
+        toId,
+      );
+      if (docReferenceUpdate.changed || derivedFromUpdate.changed) {
+        writes.push({ path: absPath, content: derivedFromUpdate.content });
+      }
     }
   }
 

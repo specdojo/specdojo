@@ -1,0 +1,132 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7WME
+
+Updated ticket status → ready: /tmp/specdojo-ticket-ROWZpa/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Va1Sfc/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-UFrAX1/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-0hMhNl/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-C4vpJH/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-MOH3fn/pjr-0001-topic.md
+ ❯ tests/src/register/register.test.ts (62 tests | 1 failed) 940ms
+     × 全表セルの山括弧をコード化し、既存コードスパンを二重化しない 15ms
+before
+  
+  
+docs/selected.md
+ ❯ tests/src/commands/init.test.ts (10 tests | 1 failed) 535ms
+     × does not write in dry-run mode and reports existing files as skipped 16ms
+ ❯ tests/src/exec/register-plan-escape.test.ts (17 tests | 1 failed) 5756ms
+     × kata maintenance approach は指定した kata id を直接の編集対象にする 5252ms
+Would move 1 agent member(s) from /tmp/specdojo-members-zDxNKT/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-zDxNKT/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-zDxNKT/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-zDxNKT/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-Pww1SB/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-vgnQtK/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-18T06:08:26.912Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-18T06:07:27.202Z.
+fallback complete
+
+ Test Files  3 failed | 131 passed (134)
+      Tests  3 failed | 2119 passed (2122)
+   Start at  15:06:27
+   Duration  66.64s (transform 3.93s, setup 706ms, import 29.61s, tests 79.49s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > does not write in dry-run mode and reports existing files as skipped
+Error: Invalid .specdojo/specdojo.config.json: expected { version: 1, projects: { ... } }
+ ❯ loadConfig src/shared/specdojo-config.ts:656:11
+    654|
+    655|   if (!parsed || parsed.version !== 1 || typeof parsed.projects !== "o…
+    656|     throw new Error(
+       |           ^
+    657|       `Invalid .specdojo/specdojo.config.json: expected { version: 1, …
+    658|     );
+ ❯ configuredRegisterDirectories src/register/derivation.ts:116:22
+ ❯ collectDerivedRegisterRelations src/register/derivation.ts:139:25
+ ❯ generateDerivedItemsFile src/register/views.ts:209:16
+ ❯ generateDerivedViewFiles src/register/views.ts:298:18
+ ❯ scaffoldRegister src/commands/init.ts:485:22
+ ❯ runInit src/commands/init.ts:611:3
+ ❯ tests/src/commands/init.test.ts:240:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > kata maintenance approach は指定した kata id を直接の編集対象にする
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/exec/register-plan-escape.test.ts:287:3
+    285|   });
+    286|
+    287|   it("kata maintenance approach は指定した kata id を直接の編集対象にする", async () =…
+       |   ^
+    288|     const outPath = path.join(dir, "plan-with-kata-approach.md");
+    289|     const catalogPath = await writeCatalog();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/src/register/register.test.ts > generateDerivedViewFiles — 個票を入力とする生成ビュー > 全表セルの山括弧をコード化し、既存コードスパンを二重化しない
+AssertionError: expected '---\nspecdojo:\n  id: prj-0001:pjr-de…' to contain '`prefix-<term>-suffix`'
+
+- Expected
++ Received
+
+- `prefix-<term>-suffix`
++ ---
++ specdojo:
++   id: prj-0001:pjr-derived-items
++   type: project
++   status: ready
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - prj-0001:pjr-index
++ ---
++
++ # 登録項目の派生関係
++
++ > このファイルは個票の `derived_from` から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。
++
++ ## 1. 元の項目から派生先を辿る
++
++ <!-- prettier-ignore -->
++ | 元の項目 | 派生先 | 分類 | ステータス | タイトル |
++ | --- | --- | --- | --- | --- |
++
+
+ ❯ tests/src/register/register.test.ts:805:30
+    803|       const views = generateDerivedViewFiles(paths, "register");
+    804|       for (const view of views) {
+    805|         expect(view.content).toContain("`prefix-<term>-suffix`");
+       |                              ^
+    806|         expect(view.content).toContain("`Array<string>`");
+    807|         expect(view.content).toContain("`role-<name>`");
+ ❯ withRegisterDir tests/src/register/register.test.ts:701:7
+ ❯ tests/src/register/register.test.ts:790:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+

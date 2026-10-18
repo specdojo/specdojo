@@ -403,6 +403,92 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("add は繰り返し指定した --from を derived_from と event に記録する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      for (const id of ["PJR-CD34", "PJR-EF56"]) {
+        writeFileSync(
+          join(registerDir, `${id.toLowerCase()}-source.md`),
+          buildTicket(id, [
+            "item_status: open",
+            "priority: medium",
+            'registered_at: "2026-08-01T12:00:00Z"',
+          ]),
+          "utf8",
+        );
+      }
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "派生作業",
+        "--topic",
+        "derived-work",
+        "--id",
+        "PJR-AB12",
+        "--from",
+        "PJR-CD34",
+        "--from",
+        "PJR-EF56",
+      ]);
+
+      const ticket = readFileSync(join(registerDir, "pjr-ab12-derived-work.md"), "utf8");
+      expect(ticket).toContain("  derived_from:\n    - PJR-CD34\n    - PJR-EF56");
+      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toContainEqual({
+        field: "derived_from",
+        from: "",
+        to: '["PJR-CD34","PJR-EF56"]',
+      });
+    });
+  });
+
+  it("add は存在しない --from と自己参照を拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "存在しない元項目",
+        "--topic",
+        "missing-source",
+        "--id",
+        "PJR-AB12",
+        "--from",
+        "PJR-CD34",
+      ]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+        "Derived-from item not found: PJR-CD34",
+      );
+      expect(existsSync(join(registerDir, "pjr-ab12-missing-source.md"))).toBe(false);
+
+      process.exitCode = undefined;
+      stderr.mockClear();
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "自己参照",
+        "--topic",
+        "self-source",
+        "--id",
+        "PJR-AB12",
+        "--from",
+        "PJR-AB12",
+      ]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+        "Item PJR-AB12 cannot derive from itself",
+      );
+    });
+  });
+
   it("add は approach と target の不一致をファイル作成前に拒否する", async () => {
     await withRepo(async ({ root, registerDir }) => {
       writeApproachTargets(root);
@@ -983,6 +1069,34 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       const removed = readFileSync(ticketPath, "utf8");
       expect(removed).not.toContain("  approach:");
       expect(removed).not.toContain("  targets:");
+    });
+  });
+
+  it("update は derived_from を変更・削除できる", async () => {
+    await withRepo(async ({ registerDir }) => {
+      for (const id of ["PJR-AB12", "PJR-CD34", "PJR-EF56"]) {
+        const fields = [
+          "item_status: open",
+          "priority: high",
+          'registered_at: "2026-08-01T12:00:00Z"',
+          ...(id === "PJR-AB12" ? ["derived_from:", "  - PJR-CD34"] : []),
+        ];
+        const filename = `${id.toLowerCase()}-topic.md`;
+        const ticket = buildTicket(id, fields);
+        writeFileSync(join(registerDir, filename), ticket, "utf8");
+        writeInitialEvent(registerDir, id, filename, ticket);
+      }
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--from", "PJR-EF56"]);
+      const changed = readFileSync(join(registerDir, "pjr-ab12-topic.md"), "utf8");
+      expect(changed).toContain("  derived_from:\n    - PJR-EF56");
+      expect(changed).not.toContain("PJR-CD34");
+
+      await runRegister(["update", "--id", "PJR-AB12", "--from", "-"]);
+      expect(readFileSync(join(registerDir, "pjr-ab12-topic.md"), "utf8")).not.toContain(
+        "derived_from:",
+      );
     });
   });
 
