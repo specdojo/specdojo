@@ -394,6 +394,26 @@ function invokedScriptNameOf(command: string): string | undefined {
   return /^npm run ([A-Za-z0-9:_.-]+)(?:\s|$)/u.exec(command)?.[1];
 }
 
+// `npm init` が入れる仮の test script（`echo "Error: no test specified" && exit 1`）。引用符の
+// 有無・種類と空白の違いを許す。中身が常に失敗する仮置きなので、適用条件では script がないものとみなす。
+const NPM_INIT_PLACEHOLDER_TEST_PATTERN =
+  /^echo\s+(["']?)Error:\s*no\s+test\s+specified\1\s*&&\s*exit\s+1\s*;?$/iu;
+
+function isNpmInitPlaceholderTestScript(body: string): boolean {
+  return NPM_INIT_PLACEHOLDER_TEST_PATTERN.test(body.trim());
+}
+
+// 適用条件の判定で script があるとみなすか。`test` の仮の script は executor と runner の判断を
+// そろえるため、ないものとして扱う（PJR-6EF8）。
+function hasApplicableScript(
+  scripts: Readonly<Record<string, string>>,
+  scriptName: string,
+): boolean {
+  const body = scripts[scriptName];
+  if (body === undefined) return false;
+  return !(scriptName === "test" && isNpmInitPlaceholderTestScript(body));
+}
+
 function npxPackageNameOf(command: string): string | undefined {
   return /^npx\s+((?:@[A-Za-z0-9_.-]+\/)?[A-Za-z0-9_.-]+)(?:\s|$)/u.exec(command)?.[1];
 }
@@ -509,8 +529,10 @@ export function mechanicallyNotApplicableReason(
   const packageJson =
     manifest.repoName === undefined ? "package.json" : `${manifest.repoName} の package.json`;
   const scriptName = invokedScriptNameOf(manifest.command);
-  if (scriptName !== undefined && manifest.scripts[scriptName] === undefined) {
-    return `${packageJson} に npm script '${scriptName}' がない`;
+  if (scriptName !== undefined && !hasApplicableScript(manifest.scripts, scriptName)) {
+    return manifest.scripts[scriptName] === undefined
+      ? `${packageJson} に npm script '${scriptName}' がない`
+      : `${packageJson} の npm script '${scriptName}' は npm init の仮の script である`;
   }
   const packageName = npxPackageNameOf(manifest.command);
   if (packageName !== undefined && !manifest.dependencies.has(packageName)) {
@@ -537,7 +559,7 @@ function isValidNotApplicableValidation(
   if (specdojo.recognized) return specdojo.applicable !== true;
   const manifest = commandManifest(normalized, options, config);
   const scriptName = invokedScriptNameOf(manifest.command);
-  if (scriptName !== undefined && manifest.scripts[scriptName] !== undefined) return false;
+  if (scriptName !== undefined && hasApplicableScript(manifest.scripts, scriptName)) return false;
   const packageName = npxPackageNameOf(manifest.command);
   return packageName === undefined || !manifest.dependencies.has(packageName);
 }

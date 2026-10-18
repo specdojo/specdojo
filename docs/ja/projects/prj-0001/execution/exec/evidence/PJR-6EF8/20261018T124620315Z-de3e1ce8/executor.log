@@ -1,0 +1,23 @@
+`npm init` が入れる仮の `test` script を、runner が「script なし」とみなすように直しました。これで executor が `npm test` を `not_applicable` と報告しても退けられません。ただし、追加した単体テストをまだ一度も実行していません。単体・統合テストと `typecheck` / `lint:ts` / `lint:md` は、このあと親 runner が実行します。`npm init -y` で作ったリポジトリで最初の実行が `review` まで進むかも未確認です。
+
+**変更内容**
+- `src/exec/reporter.ts`: `test` の script が仮の script（`echo "Error: no test specified" && exit 1` と、引用符や空白だけが違う変種）なら、script がないものとして扱います。`not_applicable` の主張を確かめる処理と、runner が機械的に適用外と決める処理の両方に入れました。仮の扱いは `test` だけで、本物の test script があれば今までどおり退けます。
+- `src/exec/run/agent.ts`: executor への指示にも同じ扱いを書き、executor と runner の判断をそろえました。
+- `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md`: 検査の表の `npm test` の行と本文に、仮の script は「script なし」とみなすことを書きました。
+- `tests/src/exec/reporter.test.ts`: 仮の script とその変種なら受け付ける、本物の script なら退ける、`test` 以外の script 名では中身が仮の文言でも「script あり」とみなす、を確かめるテストを加えました。
+- `CHANGELOG.md`: `## [0.4.0] - 未定` の「不具合修正」に追記しました。
+- 個票: 「4. 対応結果」を書きました。ステータスの項目は変えていません。
+- `specdojo init` は変えていないので、利用者の `package.json` を書き換えることはありません。
+
+**確認したこと**
+- 変更したファイルに `npx prettier` をかけ、整形済みであることを確かめました。
+- `npx markdownlint` は、変更した Markdown 3 件でエラーなしでした。
+- `catalog validate --project prj-0001` は ERROR なしで、WARN は既にある `based_on` の参照先が見つからないものだけでした。
+
+**残っている確認（人が行う）**
+- `npm init -y` で作った空のリポジトリで、tarball を使い `exec run --register --worktree` の最初の実行が `review` まで進むかは、orchestrator による確認が必要です。
+- runner のコードを変えたので、統合した後に `exec run --register` を 1 回流して動作を確かめてください（PJR-JSEY）。
+
+<specdojo_executor_evidence>
+{"final_message":"Updated the runner applicability check in src/exec/reporter.ts so the placeholder test script written by npm init counts as absent; a real test script is still rejected. Added the same rule to the executor instructions (src/exec/run/agent.ts) and the common conventions check table, added unit tests, a CHANGELOG 0.4.0 entry, and the ticket result section. The new unit tests have not been run yet; they run in the parent-runner validations.","validations":[{"command":"npx prettier --write docs/ja/specdojo/exec-templates/xep-common-conventions-template.md src/exec/reporter.ts src/exec/run/agent.ts tests/src/exec/reporter.test.ts","status":"passed","summary":"Formatted; only the conventions template changed"},{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-6ef8-npm-init-placeholder-test-script.md CHANGELOG.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-6ef8-npm-init-placeholder-test-script.md docs/ja/specdojo/exec-templates/xep-common-conventions-template.md CHANGELOG.md","status":"passed","summary":"No errors"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"All dct files OK; only existing based_on WARN messages, no errors"},{"command":"npm init -y repository: exec run --register --worktree reaches review using the 0.4.0 tarball","status":"requires_human","summary":"Needs a real agent CLI and the tarball; orchestrator must confirm the first run reaches review"},{"command":"exec run --register after integration (PJR-JSEY)","status":"requires_human","summary":"Runner code changed; run exec run --register once after integration to confirm behavior"}]}
+</specdojo_executor_evidence>
