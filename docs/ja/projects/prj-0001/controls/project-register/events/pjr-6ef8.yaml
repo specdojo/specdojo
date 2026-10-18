@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_31f08d9d86e14b77ad659c22cd5cf82f
+  ts: "2026-10-18T12:45:39Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: npm init の仮の test script があると not_applicable が退けられて最初の実行が止まる
+    - field: description
+      from: ""
+      to: 'npm init -y は package.json に test の仮の script（echo "Error: no test specified" && exit 1）を入れる。LP の手順どおりに作ったリポジトリで 0.4.0 の tarball を試すと、executor は npm test を not_applicable と報告したが、runner は test の script があるため当てはまると判定して退け、executor validation failed or not run: npm test で waiting にした（2026-10-18）。LP の手順で導入した利用者は全員がここで止まる'
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Z104"]'
