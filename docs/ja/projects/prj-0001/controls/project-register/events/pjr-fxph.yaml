@@ -42,3 +42,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_00b983ff62ea43f5ae91f1b279e38c86
+- v: 1
+  id: reg_0d3d855c988248aabf55f3f5c291c9a7
+  ts: "2026-10-18T01:30:40Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_c2db6d20b03841808f2d8a43142704ab
