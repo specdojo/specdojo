@@ -55,7 +55,9 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容: `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` の要点（`plan-essentials` の間）に、検査の扱いの規則を 3 項目で加えた（`package.json`・`.specdojo/specdojo.config.json`・hook 設定を読み、詳細の検査表の適用条件で実行する検査を決める／当てはまらない検査は `not_applicable` と理由を記録し、当てはまる検査が 1 つもない場合も同じ／`not_run` は実行できたのに実行しなかった検査だけに使い、runner は失敗と扱う）。詳細側の同じ規則は要点を参照する一文に改め、原本を要点の 1 か所にした。検査の一覧の表は詳細に残した。
+- 確認結果: `tests/src/exec/plans.test.ts` に、生成した edit plan の本文へ検査の扱いの規則が入ることを確かめる検査を加えた。親の検証（`typecheck`・`lint-ts`・`test-unit` ほか）は runner が実行する。空のリポジトリで `exec run --register --worktree` の最初の実行が `review` まで進むことの確認は、orchestrator が tarball で行う（executor の sandbox では行えない）。
+- 再発防止策: 要点に残す規則を単体テストで固定し、要点から検査の扱いが抜けると単体テストが失敗するようにした。CHANGELOG の 0.4.0 の節に、2219 の記載へ続けて追記した。
 
 ## 5. 関連ドキュメント
 

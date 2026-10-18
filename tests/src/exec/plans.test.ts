@@ -415,6 +415,14 @@ describe("plan generation (edit done_criteria goals)", () => {
       expect(editPlan).toContain(
         "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
       );
+      // 検査の扱い（適用条件の判定・not_applicable と理由・not_run の限定）は要点として本文に残す（PJR-Z104）。
+      expect(editPlan).toContain("hook 設定（`lefthook.yml` など）を読み");
+      expect(editPlan).toContain("検査表の適用条件で、実行する検査を決める");
+      expect(editPlan).toContain("`not_applicable` と非適用の理由を `reason` へ記録する");
+      expect(editPlan).toContain("適用される検査が 1 つもない場合も同じ");
+      expect(editPlan).toContain(
+        "`not_run` は、適用される検査を実行できたのに実行しなかった場合だけに使う",
+      );
       // 詳細（test の実行回数・親検証・検査表）は本文へ差し込まない。
       expect(editPlan).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
       expect(editPlan).not.toContain(
