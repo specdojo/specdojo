@@ -1,0 +1,7 @@
+agent alias の実体解決、`{model}` 展開、actor の実体名統一を実装しました。個票・ガイド・CHANGELOG・単体テストも更新済みです。result は pipeline 指示どおり編集していません。
+
+catalog 検証と整形は成功しました。統合後の実 agent smoke は PJR-JSEY 手順へ申し送ります。
+
+<specdojo_executor_evidence>
+{"final_message":"agent alias を全実行経路で実体へ解決し、実体の model 展開と event・pipeline state・result actor の実体名統一を実装した。指定 alias は永続化せず、名簿を対応関係の正本とした。個票、ガイド、CHANGELOG、単体テストも更新済み。","validations":[{"command":"npx prettier --write <変更した Markdown・TypeScript ファイル>","status":"passed","summary":"変更した20ファイルの整形が完了した"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"全カタログが検証成功。既存の未作成成果物に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"PJR-JSEY post-integration exec run --register smoke","status":"requires_human","summary":"統合後の runner と実 agent CLI・利用枠が必要なため、PJR-JSEY 手順で確認が必要"}]}
+</specdojo_executor_evidence>

@@ -19,6 +19,7 @@ import { gitEnvironment, gitResult, worktreeNameFromTaskId } from "./worktree.js
 import {
   getProjectSchedulePath,
   loadConfig,
+  resolveAgentMember,
   specdojoRootDir,
   type MemberRoster,
   type ProjectMember,
@@ -359,9 +360,7 @@ export function resolveMember(
   nickname: string,
   stageRole: "executor" | "reporter",
 ): ProjectMember {
-  const member = roster?.members.find(
-    (candidate) => candidate.type === "agent" && candidate.nickname === nickname,
-  );
+  const member = resolveAgentMember(roster, nickname);
   if (!member) throw new Error(`Agent nickname not found in agent-members.yaml: ${nickname}`);
   if (member.disabled) throw new Error(`Agent is disabled in agent-members.yaml: ${nickname}`);
   if (

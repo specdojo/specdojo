@@ -28,6 +28,7 @@ import {
   getProjectSchedulePath,
   getProjectViewpointsPath,
   loadConfig,
+  resolveAgentMember,
   specdojoRootDir,
   type MemberRoster,
   type SpecDojoProjectConfig,
@@ -67,6 +68,8 @@ export function resolveGradeActor(actor: string, roster: MemberRoster | null): s
   const normalized = actor.trim();
   if (!normalized) throw new Error("--by must be a non-empty agent-members.yaml nickname");
   if (!roster) throw new Error("members_path is required for grade apply --by");
+  const resolvedAgent = resolveAgentMember(roster, normalized);
+  if (resolvedAgent) return resolvedAgent.nickname;
   assertValidActor(normalized, roster);
   if (roster.members.filter((member) => member.nickname === normalized).length !== 1) {
     throw new Error(`Duplicate actor nickname in members_path: ${normalized}`);

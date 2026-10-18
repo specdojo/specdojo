@@ -41,7 +41,7 @@ import {
   withProductRepoPrompt,
   withProductWorktrees,
 } from "./task-repos.js";
-import type { AgentProvider } from "../shared/specdojo-config.js";
+import { resolveAgentMember, type AgentProvider } from "../shared/specdojo-config.js";
 import {
   buildTaskPhaseMap,
   loadPrompt,
@@ -212,14 +212,13 @@ function resolveAgent(
   if ((task.execution ?? "agent") === "human" && !opts.by) {
     throw new Error(`Task requires human execution. Use --by <nickname> to override: ${taskId}`);
   }
-  const member = roster?.members.find(
-    (item) =>
-      item.nickname === nickname &&
-      item.type === "agent" &&
-      hasMemberCommandSource(execDefaults, item),
-  );
+  const resolvedMember = resolveAgentMember(roster, nickname);
+  const member =
+    resolvedMember && hasMemberCommandSource(execDefaults, resolvedMember)
+      ? resolvedMember
+      : undefined;
   const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
-  if (!command) {
+  if (!member || !command) {
     throw new Error(`Agent command not found for actor: ${nickname}`);
   }
 
@@ -235,14 +234,14 @@ function resolveAgent(
       undefined,
       execDefaults,
     );
-    if (!candidates.some((candidate) => candidate.nickname === nickname)) {
+    if (!candidates.some((candidate) => candidate.nickname === member.nickname)) {
       throw new Error(`Claim actor does not satisfy task agent requirements: ${nickname}`);
     }
   }
 
   const prompt = loadPrompt(context.executionPath, taskId);
   if (!prompt) throw new Error(`Plan not found for task: ${taskId}`);
-  return { actor: nickname, command, provider: member?.provider, prompt };
+  return { actor: member.nickname, command, provider: member.provider, prompt };
 }
 
 function printWorktree(worktree: ExecWorktree): void {

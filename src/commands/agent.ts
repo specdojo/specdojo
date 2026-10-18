@@ -13,6 +13,7 @@ import { resolveProjectPaths } from "../exec/project.js";
 import { executeAgent, loadRosterForExecutionPath, type AgentExecution } from "../exec/run/run.js";
 import { gitEnvironment } from "../shared/git-environment.js";
 import {
+  resolveAgentMember as resolveRosterAgentMember,
   specdojoRootDir,
   type MemberRoster,
   type ProjectMember,
@@ -26,16 +27,16 @@ export function resolveAgentMember(
   roster: MemberRoster | null,
   nickname: string,
 ): { member: ProjectMember } | { error: string } {
-  const members = roster?.members.filter((candidate) => {
+  const directMembers = roster?.members.filter((candidate) => {
     return candidate.type === "agent" && candidate.nickname === nickname;
   });
-  if (!members || members.length === 0) {
-    return { error: `--by agent nickname not found in agent-members.yaml: ${nickname}` };
-  }
-  if (members.length !== 1) {
+  if (directMembers && directMembers.length > 1) {
     return { error: `--by agent nickname is not unique in agent-members.yaml: ${nickname}` };
   }
-  const [member] = members;
+  const member = resolveRosterAgentMember(roster, nickname);
+  if (!member) {
+    return { error: `--by agent nickname not found in agent-members.yaml: ${nickname}` };
+  }
   if (member.disabled) {
     return { error: `--by agent is disabled in agent-members.yaml: ${nickname}` };
   }

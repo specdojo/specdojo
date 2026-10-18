@@ -127,6 +127,26 @@ describe("buildScheduleTrack agent assignments", () => {
     }
   });
 
+  it("accepts an alias whose concrete member has the required stage role", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-agent-alias-"));
+    try {
+      const roster = {
+        ...pipelineRoster,
+        aliases: [{ nickname: "legacy-executor", alias_of: "pinned-executor" }],
+      };
+
+      const result = buildScheduleTrack(writeAgentStrategy(dir, "legacy-executor"), dir, roster);
+
+      expect(result.errors).toEqual([]);
+      expect(result.tasks[0].agent).toEqual({
+        executor: "legacy-executor",
+        reporter: "pinned-reporter",
+      });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
   it("rejects unknown nicknames and stage-role mismatches", () => {
     const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-agent-invalid-"));
     try {

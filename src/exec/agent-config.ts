@@ -74,8 +74,9 @@ export type CommandParams = {
 // command_template / command_params have no global counterpart.
 export type ProviderOverride = {
   // Non-interactive launch command template for this provider's agents. Built-in
-  // placeholders {nickname}, {mode}, {proficiency} expand to the member's attributes;
-  // additional placeholders come from command_params.
+  // placeholders {nickname}, {model}, {mode}, {proficiency} expand to the member's attributes;
+  // model falls back to command_params for legacy members; other additional placeholders come
+  // from command_params.
   command_template?: string;
   command_params?: CommandParams;
   rate_limit_detection?: RateLimitDetection;
@@ -113,7 +114,7 @@ export type ExecDefaultsConfig = {
 
 type CommandMemberAttributes = Pick<
   ProjectMember,
-  "nickname" | "provider" | "mode" | "proficiency" | "command"
+  "nickname" | "provider" | "model" | "mode" | "proficiency" | "command"
 >;
 
 const PLACEHOLDER_PATTERN = /\{([a-z][a-z0-9_]*)\}/g;
@@ -178,6 +179,9 @@ function buildCommandVariables(
   for (const [key, value] of Object.entries(byMode ?? {})) variables.set(key, value);
   for (const [key, value] of Object.entries(byProficiency ?? {})) variables.set(key, value);
   for (const [key, value] of Object.entries(byNickname ?? {})) variables.set(key, value);
+  // A concrete member's model is the source of truth. Legacy members without model keep using
+  // command_params, so existing one-level rosters and templates remain compatible.
+  if (member.model) variables.set("model", member.model);
   return variables;
 }
 

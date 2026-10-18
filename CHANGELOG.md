@@ -6,6 +6,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- agent 名簿の alias を `--by`・`--executor-by`・`--reporter-by`・fallback の指定、Schedule / Job / routine の指名で実体へ解決し、実体の `model` を provider の `command_template` の `{model}` へ渡すようにしました。event と result の actor には実体名を記録します（PJR-YK1C）。
 - 登録項目の起票元を個票 Frontmatter の `derived_from` に記録できるようにし、`register add` / `update` の繰り返し指定可能な `--from`、元項目から派生先を辿る生成ビュー、`register history` の変更履歴に対応しました。decision から起票した todo の追跡にも同じ関係を使えます（PJR-7WME）。
 - 指名した agent が rate limit になったとき、`--on-rate-limit wait|fallback|stop` と executor / reporter 別の fallback 指定で、同じ agent の再開待ちまたは代替 agent への切替を選べるようにしました。`exec-defaults.yaml` の `rate_limit_policy.pinned` でも既定を設定でき、従来互換の既定は `stop` です（PJR-BHMH）。
 - `register add` / `update` に `--approach` と繰り返し指定できる `--target` を追加しました。個票で進め方と対象文書を宣言でき、成果物はカタログ、kata は文書索引で解決します。解決できない対象、成果物と kata の種別違い、`approach` と複数対象の組み合わせは書き込み前に拒否します（PJR-ZJXQ）。

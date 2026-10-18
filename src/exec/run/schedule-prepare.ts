@@ -190,7 +190,7 @@ export async function prepareSingleTask(
         ]
       : [];
   let actor = actorOverride ?? "auto-agent";
-  if (!actorOverride && overrideResolution.kind === "command" && overrideResolution.actor) {
+  if (overrideResolution.kind === "command" && overrideResolution.actor && !skipClaim) {
     actor = overrideResolution.actor;
   }
 

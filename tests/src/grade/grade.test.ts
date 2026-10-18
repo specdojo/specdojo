@@ -440,9 +440,11 @@ describe("grade submission", () => {
           type: "agent",
         },
       ],
+      aliases: [{ nickname: "legacy-codex", alias_of: "codex-executor" }],
     };
 
     expect(resolveGradeActor(" codex-executor ", roster)).toBe("codex-executor");
+    expect(resolveGradeActor("legacy-codex", roster)).toBe("codex-executor");
     expect(() => resolveGradeActor("/root", roster)).toThrow('Unknown actor: "/root"');
     expect(() => resolveGradeActor("codex-executor", null)).toThrow(
       "members_path is required for grade apply --by",

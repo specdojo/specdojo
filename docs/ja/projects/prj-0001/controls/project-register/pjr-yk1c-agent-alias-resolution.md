@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T22:18:27Z"
   due_on: null
-  block_reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:01.439Z"
 ---
 
 # PJR-YK1C agent の別名の解決と記録を実装する
@@ -45,6 +44,7 @@ specdojo:
 - agent 名簿の alias 連鎖を実体 member へ解決する共通処理を追加し、`--by`・`--executor-by`・`--reporter-by`・`--fallback-executor-by`・`--fallback-reporter-by`、Schedule / Job / routine の指名、単体 agent 実行、trial、grade の名前解決へ適用した。実体名の直接指定と自動選択は従来どおり動く。
 - 実体の `model` を provider の `command_template` の `{model}` へ展開するようにした。実体に `model` がある場合は従来の `command_params` より優先し、`model` のない member は既存の `command_params` を引き続き使う。`{model}` のないテンプレートには影響しない。
 - command・event・pipeline state・result に渡す actor は実体の `nickname` に統一した。指定された alias は actor の別フィールドへ保存しない。actor は claim / resume / complete の所有権判定に使う正規 identity であり二重表現を避ける必要があること、alias と実体の対応は agent 名簿が正本であることが理由である。
+- Schedule の strategy に書いた `agent` の指名を `schedule build` で検証するときも alias を実体へ解決して `stage_role` を確かめるようにし、既存の別名による指名がそのまま通るようにした。`exec worktree` の claim 済み actor の要件照合も実体名で行う。
 - 単体テストへ、alias 連鎖、実体の直接指定、`{model}` の展開、`--by` と executor / reporter 指定での実体 actor の記録を追加した。実 agent CLI を起動する `exec run --register` の smoke test は、統合後に PJR-JSEY の手順で確認する。
 
 ## 5. 関連ドキュメント

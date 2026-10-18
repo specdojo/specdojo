@@ -5,7 +5,11 @@ import {
   type ExecDefaultsConfig,
   type ProviderConcurrencyGate,
 } from "../agent-config.js";
-import { type MemberRoster, type ProjectMember } from "../../shared/specdojo-config.js";
+import {
+  resolveAgentMember,
+  type MemberRoster,
+  type ProjectMember,
+} from "../../shared/specdojo-config.js";
 import { buildInPlaceStem } from "../plans.js";
 import {
   generateRegisterPlan,
@@ -66,10 +70,10 @@ export function resolveRegisterCommand(
         "Specify --by <nickname>, or --executor-by <nickname> --reporter-by <nickname>.",
     );
   }
-  const member = roster?.members.find((m) => m.nickname === by && m.type === "agent");
+  const member = resolveAgentMember(roster, by);
   const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
-  if (!command) throw new Error(`Agent command not found for actor: ${by}`);
-  return { command, actor: by };
+  if (!member || !command) throw new Error(`Agent command not found for actor: ${by}`);
+  return { command, actor: member.nickname };
 }
 
 // --register を executor/reporter パイプラインで実行するかを判定する。--executor-by /
