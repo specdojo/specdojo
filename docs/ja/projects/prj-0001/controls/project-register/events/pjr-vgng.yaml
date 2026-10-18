@@ -154,3 +154,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b689b686a1dc450aa4a1b871fbb32fa9
+- v: 1
+  id: reg_52f99486e08941cbb28e24f900a61381
+  ts: "2026-10-18T04:43:24Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分と親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: Job Run の状態に partial を加え、Job 定義の partial_exit_code（grade は 2）に一致した終了を部分成功として review・統合するようにした。partial の review は complete-with-findings だけを受け入れ、全件失敗・上限・中断は従来どおり waiting にする。実際の定期実行での確認は次の grade の Run で行う
+  previous_event_id: reg_51672c15dd8a42ef971412290f34872b

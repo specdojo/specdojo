@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-vgng-job-run-partial-failure-integration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T21:56:35Z"
+  completed_at: "2026-10-18T04:43:24Z"
+  conclusion: Job Run の状態に partial を加え、Job 定義の partial_exit_code（grade は 2）に一致した終了を部分成功として review・統合するようにした。partial の review は complete-with-findings だけを受け入れ、全件失敗・上限・中断は従来どおり waiting にする。実際の定期実行での確認は次の grade の Run で行う
 ---
 
 # PJR-VGNG 一部の文書が失敗した Job Run が完了分も含めて統合されない
