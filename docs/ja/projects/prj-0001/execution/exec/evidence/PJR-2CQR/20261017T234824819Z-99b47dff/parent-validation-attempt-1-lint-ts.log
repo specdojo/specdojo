@@ -1,0 +1,92 @@
+parent validation: lint-ts
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 lint:ts
+> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'
+
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/catalog/catalog.ts
+  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function
+  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/commands.ts
+  91:8  warning  Function 'registerExecCommands' has too many lines (575). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/agent-pipeline.ts
+  256:8  warning  Async function 'runAgentPipeline' has too many lines (204). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/agent.ts
+  530:8  warning  Async function 'runWithRetry' has too many lines (233). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/in-place.ts
+  259:8  warning  Async function 'runInPlaceMode' has too many lines (467). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/job.ts
+   87:1  warning  Async function 'runCommandJobMode' has too many lines (220). Maximum allowed is 200   max-lines-per-function
+  516:1  warning  Async function 'runJobWorktreeMode' has too many lines (281). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/lifecycle-commands.ts
+  394:8  warning  Async function 'runResumeMode' has too many lines (238). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/register-command.ts
+   21:8   warning  Function 'registerRunCommand' has too many lines (348). Maximum allowed is 200  max-lines-per-function
+  158:37  warning  Async arrow function has too many lines (212). Maximum allowed is 200           max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/register-core.ts
+  372:8  warning  Async function 'runSingleRegisterItem' has too many lines (222). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/register-mode.ts
+  49:8  warning  Async function 'runRegisterMode' has too many lines (202). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/register-resume.ts
+  228:8  warning  Async function 'resumeSingleRegisterItemWorktree' has too many lines (298). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/register-worktree.ts
+  125:8  warning  Async function 'finalizeRegisterWorktreeRun' has too many lines (306). Maximum allowed is 200    max-lines-per-function
+  474:8  warning  Async function 'runSingleRegisterItemWorktree' has too many lines (244). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/schedule-prepare.ts
+  131:8  warning  Async function 'prepareSingleTask' has too many lines (336). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/run/schedule-task.ts
+   75:8   warning  Async function 'runPreparedTask' has too many lines (678). Maximum allowed is 200  max-lines-per-function
+  497:49  warning  Async arrow function has too many lines (266). Maximum allowed is 200              max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/schedule/gantt-chart-render.ts
+  51:8  warning  Function 'buildGanttChartSvg' has too many lines (429). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/exec/strategy.ts
+  183:8  warning  Function 'buildPhaseModeIndex' has too many lines (210). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/grade/command-apply.ts
+  59:8  warning  Function 'registerGradeApplyCommands' has too many lines (304). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/grade/plan.ts
+  218:1  warning  Function 'renderGradePlanWithEmbedding' has too many lines (210). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/job/definition.ts
+  454:8  warning  Function 'parseJobDefinition' has too many lines (328). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/register/maintenance-commands.ts
+  14:8  warning  Function 'registerMaintenanceCommands' has too many lines (220). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/register/transition-commands.ts
+  7:8  warning  Function 'registerTransitionCommands' has too many lines (269). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/routine/routine.ts
+  39:8  error  'RoutineStateResult' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/schedule/build.ts
+  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function
+
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/schedule/strategy-generate-document.ts
+  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function
+
+✖ 29 problems (1 error, 28 warnings)
+
+
+
+--- stderr ---

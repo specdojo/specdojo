@@ -63,9 +63,11 @@ export type RoutinePaths = {
 
 export type RoutineExecutionResult = "success" | "failure" | "skipped";
 
+export type RoutineStateResult = RoutineExecutionResult | "running";
+
 export type RoutineStateEntry = {
   last_run: string;
-  last_result?: RoutineExecutionResult;
+  last_result?: RoutineStateResult;
   last_reason?: string;
   last_scheduled_for?: string;
   last_action_results?: RoutineActionResult[];

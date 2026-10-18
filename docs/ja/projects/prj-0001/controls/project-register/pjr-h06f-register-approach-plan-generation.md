@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-h06f-register-approach-plan-generation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T12:17:15Z"
   due_on: null
-  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-h06f.yaml 13ms (unchanged); FAIL  /integration/ tests/src/exec/pipeline-e2e.integra…"
+  completed_at: "2026-10-18T03:03:08Z"
+  conclusion: 個票に approach があれば schedule と同じ plan の作り方（approach のテンプレート・kata・DCT の完了条件）を使うようにした。plan の内容は一時 worktree で、runner の動作は JSEY で確かめた
 ---
 
 # PJR-H06F exec run --register で approach の plan の作り方を使う

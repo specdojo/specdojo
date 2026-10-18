@@ -1,0 +1,14 @@
+成果物カタログの検証（`node --import tsx src/specdojo.ts catalog validate`）を実行しています。完了を待ちます。
+個票 [pjr-jsey-exec-run-split-smoke.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JSEY/docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md) の「対応結果」セクションに、最も新しく統合された分割項目 `PJR-H06F` の動作確認結果を 1 行追記しました。
+
+### 追記内容
+
+```markdown
+| 2026-10-18 11:09 | PJR-H06F   | agy-expert-executor   |
+```
+
+本個票以外のファイルは変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果テーブルに PJR-H06F（agy-expert-executor による動作確認）の記録を追記しました。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"Formatted markdown file successfully (unchanged)"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"Catalog validation passed (OK: dct-index.yaml)"}]}
+</specdojo_executor_evidence>

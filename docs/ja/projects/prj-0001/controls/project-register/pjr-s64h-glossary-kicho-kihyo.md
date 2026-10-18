@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-s64h-glossary-kicho-kihyo
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-10-12T06:48:15Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-18T01:38:11Z"
+  conclusion: 用語集 gl-common に tm-filing（起票）と tm-record-keeping（記帳）を加え、起票が記帳の一部であることと、register の技としての呼び名が記帳であることを notes に書いた
 ---
 
 # PJR-S64H 用語集 gl-common に記帳と起票を加える
@@ -36,13 +38,18 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                     | 担当 | 状態 | メモ |
-| --- | ---------------------------------------- | ---- | ---- | ---- |
-| 1   | 2 語を `gl-common.yaml` に加えて検証する | BA   | open | -    |
+| No  | 作業                                     | 担当 | 状態 | メモ                                                               |
+| --- | ---------------------------------------- | ---- | ---- | ------------------------------------------------------------------ |
+| 1   | 2 語を `gl-common.yaml` に加えて検証する | BA   | done | `tm-filing`（起票）と `tm-record-keeping`（記帳）の 2 語を追加済み |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `docs/ja/product/010-business-specs/060-glossary/gl-common.yaml` に `tm-filing`（起票 / `filing`）と `tm-record-keeping`（記帳 / `record-keeping`）の 2 語を追加した。
+- `tm-filing` は「登録簿に 1 件の項目を新しく作ること。`register add` に当たる」と定義し、`notes` で「記帳の一部」であることを明記。`tm-record-keeping` は「起票・状態遷移・結論の記録・commit を含む登録簿への書き込み全般」と定義し、「register の技（Waza）としての呼び名でもある」と明記した。
+- 起票が記帳の一部であることは、両方の `definition` に加えて `notes`（`tm-filing`: 「起票は必ず記帳に含まれる」、`tm-record-keeping`: 「起票は記帳の一部」）から読み取れる。
+- [[specdojo:specdojo-overview-guide]] の『register を「記帳」と呼びます』と矛盾しないよう、`tm-record-keeping` の `notes` にその文言の一致を明記した。
+- `category` は両方とも `tm-exec-log`（実行記録）に指定し、`relatedTerms` は `tm-register` と互い。これらは `gl-common.yaml` 内の既存 ID を指すため、PJR-CF15 の relatedTerms・category 検証（`validate:schema` の `glossary-references`）の対象を満たす。
+- `npx prettier --write` は変更なし（既存スタイルと一致）を通せた。
 
 ## 5. 関連ドキュメント
 

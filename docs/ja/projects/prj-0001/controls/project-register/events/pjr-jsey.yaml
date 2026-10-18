@@ -472,3 +472,80 @@
       from: in-progress
       to: review
   previous_event_id: reg_7132258e7a654e088a458279756036b1
+- v: 1
+  id: reg_5abb9323fb304c27bab722a392a39666
+  ts: "2026-10-18T02:05:15Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_3f79ebd21330492ab40e5c659a99bf65
+- v: 1
+  id: reg_6e5f1524c618406897b66f28c594f555
+  ts: "2026-10-18T02:19:16Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_5abb9323fb304c27bab722a392a39666
+- v: 1
+  id: reg_466529256d104e5b9fef1d29962657f8
+  ts: "2026-10-18T02:56:47Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_6e5f1524c618406897b66f28c594f555
+- v: 1
+  id: reg_34aaa08c56b848d8882b4d30ca7ff19d
+  ts: "2026-10-18T03:01:50Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_466529256d104e5b9fef1d29962657f8
+- v: 1
+  id: reg_2e3bf24f42a54b089a4537f8b55e61a1
+  ts: "2026-10-18T03:02:50Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の結果を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: runner のコードの分割 5 件と、runner に関わる移動 2 件（PJR-MHHP・PJR-XP0J）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
+      to: H06F・FXPH の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
+  previous_event_id: reg_34aaa08c56b848d8882b4d30ca7ff19d

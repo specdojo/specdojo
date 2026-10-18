@@ -90,3 +90,51 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-unit"
   previous_event_id: reg_f4c67b15b6ce4492b24afc9a606d38f3
+- v: 1
+  id: reg_40006db2bc7f4a04a22e22ac4c78c94e
+  ts: "2026-10-18T01:48:52Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_53b9c1c85f9546fb96d134eafe8e6800
+- v: 1
+  id: reg_f50404ec74094bcd830003ab4be16c9c
+  ts: "2026-10-18T01:59:11Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_40006db2bc7f4a04a22e22ac4c78c94e
+- v: 1
+  id: reg_8aeff67af1154c9fb3d32b81998e5679
+  ts: "2026-10-18T02:26:41Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に変更と routine list の表示を確かめた（2026-10-18）。agy-expert-executor と gemma26-reporter で実行し、初回は未使用の import、2 回目はテストの時間切れで止まり、順の再開で統合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: routine run が開始時に last_result を running にし、前回の結果と理由を表示しないようにした。終了時に今回の結果で上書きする。運用ガイドの状態の説明も直した
+  previous_event_id: reg_f50404ec74094bcd830003ab4be16c9c

@@ -29,3 +29,112 @@
     - field: registered
       from: ""
       to: "2026-10-18"
+- v: 1
+  id: reg_c2db6d20b03841808f2d8a43142704ab
+  ts: "2026-10-18T01:04:05Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_00b983ff62ea43f5ae91f1b279e38c86
+- v: 1
+  id: reg_0d3d855c988248aabf55f3f5c291c9a7
+  ts: "2026-10-18T01:30:40Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_c2db6d20b03841808f2d8a43142704ab
+- v: 1
+  id: reg_7c00d6c2a2c04a1fbdf3aef416ed1ce7
+  ts: "2026-10-18T02:01:23Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_0d3d855c988248aabf55f3f5c291c9a7
+- v: 1
+  id: reg_219b655402734ee596cac05ed9840387
+  ts: "2026-10-18T02:14:04Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_7c00d6c2a2c04a1fbdf3aef416ed1ce7
+- v: 1
+  id: reg_a43ba1e85c8c492dab81a2aaa809bad7
+  ts: "2026-10-18T02:48:13Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_219b655402734ee596cac05ed9840387
+- v: 1
+  id: reg_ed361764c6e84d03958860d2271b3c74
+  ts: "2026-10-18T02:55:29Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a43ba1e85c8c492dab81a2aaa809bad7
+- v: 1
+  id: reg_3eb7f5c170a24036811196ed1b0b987e
+  ts: "2026-10-18T02:57:56Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の結果を差分と親検証で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: register build が表のセルの | をエスケープし、エスケープ済みのものは二重にしないよう直した。テストを加え、親検証は通過した
+  previous_event_id: reg_ed361764c6e84d03958860d2271b3c74
