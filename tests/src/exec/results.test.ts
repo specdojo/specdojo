@@ -526,6 +526,25 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(body).toContain("## 4. 進め方と実践の型の適用");
   });
 
+  it("approach のない実行は第4章の見出しを「進め方」とし、記入指示を変える", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "PJR-0138",
+      mode: "edit",
+      projectId: "prj-0001",
+      origin: "register",
+      planRef: "exec/plans/pjr-0138-plan.md",
+      agent: "codex-edit-agent",
+      startedAt: "2026-07-25T00:00:00.000Z",
+    });
+
+    const body = readFileSync(resultPath, "utf8");
+    expect(body).toContain("# Edit Result");
+    expect(body).toContain("## 4. 進め方");
+    expect(body).toContain("_TODO_: どう進めたか、根拠にした文書や規約を記入する。");
+    expect(body).not.toContain("進め方と実践の型の適用");
+  });
+
   it("treats a freshly scaffolded edit result as unfilled", async () => {
     const { resultPath } = await scaffoldResult({
       executionPath,
@@ -589,9 +608,39 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(second).toBe(first);
     expect(readResultFrontmatterSnapshot(resultPath)).toEqual(scaffoldFrontmatter);
     expect(first).toContain("`docs/test.md`: 記述を追加した。");
+    expect(first).toContain("## 4. 進め方\n\nplan と evidence の範囲だけを根拠にした。");
+    expect(first).not.toContain("進め方と実践の型の適用");
     expect(first).not.toContain("_TODO_");
     expect(isResultUnfilled(resultPath, "edit", scaffoldFrontmatter)).toBe(false);
     expect(markdownlintErrors(first)).toEqual([]);
+  });
+
+  it("renderReporterResult は approach のある実行で第4章の見出しを「進め方と実践の型の適用」にする", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+      approach: "fully-guided",
+    });
+    const output = {
+      schema_version: 1 as const,
+      mode: "edit" as const,
+      summary: ["成果物を更新した。"],
+      changed_files: [{ path: "docs/test.md", summary: "記述を追加した。" }],
+      handoff: [],
+      approach: "rulebook と recipe に沿って進めた。",
+    };
+    const evidence = reporterEvidence([{ path: "docs/test.md", status: "M" }]);
+
+    await renderReporterResult(resultPath, output, evidence);
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain(
+      "## 4. 進め方と実践の型の適用\n\nrulebook と recipe に沿って進めた。",
+    );
   });
 
   it("matches descriptions by path and tolerates missing, extra, and reordered entries", async () => {
