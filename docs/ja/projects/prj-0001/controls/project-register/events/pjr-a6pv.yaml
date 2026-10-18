@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1ee4e5f50c814a2fa7e47aabc659f1cf
+  ts: "2026-10-18T18:07:57Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: result に書く検査の理由の文で * などがエスケープされず、統合の前に止まる
+    - field: description
+      from: ""
+      to: 2026-10-19 03:07 の PJR-EVAX で、executor が validate:schema:file の not_applicable の理由に「No *.yaml or *.yml files were changed」と書き、runner がそれをそのまま result に描いたため、*.yaml or * が強調と読まれて markdownlint の MD037 に当たり、統合の前の記法の検査で止まった。8WBN・Z104 の後は executor が not_applicable の理由を書くことが増えたため起きやすい
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-19"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-8WBN"]'
