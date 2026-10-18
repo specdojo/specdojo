@@ -526,9 +526,9 @@ export async function generateRegisterPlan(opts: {
     _AUTOPILOT_CONSTRAINTS_: registerAutopilotConstraints(item),
   };
 
-  // 空に展開される段落（夜間の承認の印がない個票の _AUTOPILOT_CONSTRAINTS_ など）で空行が重なると、
-  // plan を commit する hook の markdownlint（MD012）で run が止まるため、空行を 1 行にまとめる（PJR-283N）。
-  const body = expandTemplate(template, values).replace(/\n{3,}/g, "\n\n");
+  // 空に展開される段落（夜間の承認の印がない個票の _AUTOPILOT_CONSTRAINTS_ など）で重なる空行は
+  // expandTemplate がまとめる（PJR-283N）。
+  const body = expandTemplate(template, values);
   // register 項目は対象成果物の schema を特定できないため、schema 検査の項目は落とす。
   const content = injectCommonConventions(body, MISSING, new Map<string, string>());
 
