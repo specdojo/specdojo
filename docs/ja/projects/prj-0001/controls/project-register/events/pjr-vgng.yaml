@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_147bd7fcd406430daf4253a3ee6e11e7
+- v: 1
+  id: reg_9fb1459effcd4838b352d6b62b4a604c
+  ts: "2026-10-18T00:18:33Z"
+  action: wait
+  actor: agy-claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T00:13:39.709Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T00:13:39.709Z"
+  previous_event_id: reg_465af9bc141b40c297969416eb6bc37a

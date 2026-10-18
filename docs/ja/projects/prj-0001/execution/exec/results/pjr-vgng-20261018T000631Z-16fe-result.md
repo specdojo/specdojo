@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-VGNG
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-vgng-20261018T000631Z-16fe-plan.md
   started_at: "2026-10-18T00:09:01.241Z"
+  completed_at: "2026-10-18T00:18:30.034Z"
   agent: agy-claude-expert-executor
+  block_reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T00:13:39.709Z"
 ---
 
 # Edit Result
