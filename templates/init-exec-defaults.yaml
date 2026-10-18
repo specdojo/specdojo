@@ -12,6 +12,8 @@ pipeline:
     - test-unit
 run:
   register_execution: worktree
+  # Opt in after the team is ready for review-agent verdicts to close todo/issue items.
+  register_post_review: false
 rate_limit_detection:
   exit_codes: []
   stderr_patterns: [rate limit, "429"]

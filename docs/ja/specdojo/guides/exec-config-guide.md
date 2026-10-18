@@ -261,6 +261,8 @@ pipeline:
 
 `run.register_execution` は、`exec run --register` の既定の実行場所です。`worktree` または `in-place` を指定します。省略時は既存リポジトリとの互換性のため `in-place` です。CLI の `--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。
 
+`run.register_post_review` は、register の worktree 統合後に読み取り専用 review pipeline を実行し、todo / issue を verdict に応じて自動 close または `waiting` へ遷移するかを指定する boolean です。既定は `false` です。CLI の `--post-review` でもその run だけ有効にできます。review executor の既定は `claude-expert-review-executor` で、`--review-by` が優先されます。詳しい判定と、runner 自身を変更した項目を自動 close しない規則は [exec運用ガイド](exec-operation-guide.md) を参照してください。
+
 `run.max_concurrent_runs` は、同じ project で同時に動かせる `exec run` プロセスの数の上限です。最初の run と、register の worktree 実行へ `--join` で合流する run の合計で数えます。正の整数だけを指定でき、省略時や不正な値の場合は `4` です。`1` を指定すると `--join` は無効になります。現在の使用数は `exec slots --project <project-id>` で確認できます。
 
 `pipeline.parent_validation_concurrency` は、1 つの `exec run` プロセスの中で親検証を同時に実行できる項目数の上限です。正の整数だけを指定でき、省略時は `1` です。`--parallel` で複数項目を並行実行しても、親検証は項目単位で 1 本ずつ直列に実行されます。vitest は検証ごとに複数の worker を起動するため、検証が重なるとコンテナの負荷で成果物と無関係なタイムアウトが起きます。これを防ぐための既定値です（PJR-3HHW）。制限の対象は親検証だけで、executor と reporter は `--parallel` のとおり並行に動きます。空きを待つ項目は `Waiting for parent validation slot: <項目> (<検証 ID>); running: <実行中の項目>` をログへ出力し、枠を得たときに `Parent validation slot acquired: <項目>` を出力します。

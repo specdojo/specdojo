@@ -94,6 +94,7 @@ export type RunOpts = {
   scheduledAt?: string;
   jobTrigger?: string;
   registerCommit?: boolean;
+  postReview?: boolean;
   onFailure?: string;
   resume?: boolean;
   resumeFrom?: string;
