@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: BA
   registered_at: "2026-10-12T08:53:52Z"
   due_on: "2026-10-31"
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run lint:md, npm run lint:fm, npm run lint:ts, npm run typecheck, npm run test:unit, npm run test:integration, npm run valid…"
 ---
 
 # PJR-WJE6 ブランチワークフローガイドにプロダクトリポジトリの節を加える
@@ -34,11 +35,14 @@ PJR-ZDVQ の決定にもとづき、プロダクトリポジトリにはブラ�
 
 | No  | 作業                           | 担当 | 状態 | メモ |
 | --- | ------------------------------ | ---- | ---- | ---- |
-| 1   | プロダクトリポジトリの節を書く | BA   | open | -    |
+| 1   | プロダクトリポジトリの節を書く | BA   | done | [[specdojo:branch-workflow-guide]] の `## 10. プロダクトリポジトリの統合先を指定する` を追加 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:branch-workflow-guide]] に `## 10. プロダクトリポジトリの統合先を指定する` を追加。既存の `## 10. 作業前後のチェックリスト` は `## 11.` に順延した。
+- 節の内容: SpecDojo はプロダクトリポジトリにブランチ戦略を求めず、プロダクト側のルールで決めた統合先を `repos[].integration_branch` に指定すること。ブランチ名に project ID を入れる必要はないこと。GitHub flow（トピックのブランチを統合先にし、`main` へは PR で取り込む）と git flow（`develop` を統合先にする）での選び方の例を、`integration_branch` の指定例として示した。merge の方式（merge commit・rebase merge・squash merge）ごとの `Refs:` と SHA の残り方を表で示し、squash merge では `Refs:` を残す設定にすることを明記した。追跡は trace key（`Refs: <project-id>:<item-id>`）を主にし、`git log --grep` で辿れることを示した。
+- 既存の節（プロジェクトリポジトリの `develop` から `main` への統合）と矛盾しない。プロジェクトリポジトリ向けの手順はそのまま維持し、プロダクトリポジトリの節は別セクションとして加えた。
+- 未完成: むしろ完了。残課題なし。
 
 ## 5. 関連ドキュメント
 

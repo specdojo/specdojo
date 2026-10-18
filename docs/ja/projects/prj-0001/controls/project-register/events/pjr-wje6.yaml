@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_8bf99d8e4e2b478eaabbec731160389a
+- v: 1
+  id: reg_125310dae8564655b133b25ffcc476df
+  ts: "2026-10-18T14:45:11Z"
+  action: wait
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run lint:md, npm run lint:fm, npm run lint:ts, npm run typecheck, npm run test:unit, npm run test:integration, npm run valid…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run lint:md, npm run lint:fm, npm run lint:ts, npm run typecheck, npm run test:unit, npm run test:integration, npm run valid…"
+  previous_event_id: reg_946f0b6ebc0f4e8a8c6425f0a77904ba
