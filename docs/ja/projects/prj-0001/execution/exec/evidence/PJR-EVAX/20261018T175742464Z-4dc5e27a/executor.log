@@ -1,0 +1,20 @@
+Please wait while background tasks complete.
+Please wait while background task completes.
+背景タスク（`npm run format:check`）の完了を待機しています。
+`npm run format:check` の完了を待機しています。
+プロジェクト登録簿の項目 **PJR-EVAX**（「README と全体概要ガイドの冒頭を「Spec道（仕様道）の道場」に揃える」）に対応しました。
+
+### 実施内容
+1. **表記の統一**:
+   - [README.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAX/README.md#L3) の冒頭を「Spec道（仕様道）の道場」へ改めました。
+   - [docs/ja/index.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAX/docs/ja/index.md#L3)、[`specdojo-overview-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAX/docs/ja/specdojo/guides/specdojo-overview-guide.md#L35)、[`waza-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAX/docs/ja/specdojo/guides/waza-guide.md#L46) は既に「Spec道（仕様道）の道場」に更新されていることを確認しました。
+2. **CHANGELOG の追記**:
+   - [CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAX/CHANGELOG.md#L17-L21) の `[0.4.1]` 配下に「### 文書」セクションを追加し、表記統一を追記しました（0.3.0 の過去履歴は変更していません）。
+3. **個票の更新**:
+   - 個票 [`pjr-evax-spec-do-notation.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAX/docs/ja/projects/prj-0001/controls/project-register/pjr-evax-spec-do-notation.md#L38-L47) の作業内容を作業完了（`done`）とし、対応結果を記載しました。
+4. **検証の実施**:
+   - 変更した Markdown ファイルに対する Prettier チェック、およびカタログ検証（`catalog validate`）を実行して正常終了を確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-EVAX の完了条件に基づき、README.md の冒頭を「Spec道（仕様道）の道場」に更新し、他の 3 文書（docs/ja/index.md、specdojo-overview-guide.md、waza-guide.md）の表記を確認しました。CHANGELOG.md に変更内容を追記し、個票の作業内容および対応結果を更新しました。","validations":[{"command":"npx prettier --check README.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-evax-spec-do-notation.md","status":"passed","summary":"Prettier check passed for modified markdown files."},{"command":"npx tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"Catalog validation passed for prj-0001."},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"Schema file validation not applicable.","reason":"No *.yaml or *.yml files were changed in this task."}]}
+</specdojo_executor_evidence>

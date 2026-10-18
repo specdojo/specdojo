@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: BA
   registered_at: "2026-10-12T07:13:04Z"
   due_on: "2026-10-31"
-  block_reason: "integrate failed: project: Result Markdown notation violation before commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-evax-20261018T175742Z-4289-result.md:33:54 error MD037/no-space-in-emp…"
 ---
 
 # PJR-EVAX README と全体概要ガイドの冒頭を「Spec道（仕様道）の道場」に揃える
@@ -36,11 +35,14 @@ LP の Hero の小見出しを「Spec道（仕様道）の道場」とした。R
 
 | No  | 作業                                     | 担当 | 状態 | メモ |
 | --- | ---------------------------------------- | ---- | ---- | ---- |
-| 1   | 4 か所の表記を改め、CHANGELOG に追記する | BA   | open | -    |
+| 1   | 4 か所の表記を改め、CHANGELOG に追記する | BA   | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `README.md`、`docs/ja/index.md`、`docs/ja/specdojo/guides/specdojo-overview-guide.md`、`docs/ja/specdojo/guides/waza-guide.md` の 4 か所の表記が「Spec道（仕様道）の道場」に揃っていることを確認・更新した。
+- `CHANGELOG.md` の [0.4.1] に表記を改めた旨を追記した。0.3.0 の過去の記載は履歴のため変更していない。
+- `package.json` の英語の説明（`A dojo for Spec-Dō`）は変更していない。
+- 残課題はない。
 
 ## 5. 関連ドキュメント
 
