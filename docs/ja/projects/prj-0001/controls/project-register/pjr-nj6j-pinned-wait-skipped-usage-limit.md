@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-nj6j-pinned-wait-skipped-usage-limit
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T10:24:49Z"
+  completed_at: "2026-10-18T11:15:40Z"
+  conclusion: 解除の時刻を出力の全体の最初の一致で読んでいたため、codex が作業中に表示した exec-defaults.yaml のコメントの例（resets 4:10am (UTC)）を本物の通知（try again at 11:17 PM）より先に拾っていた。末尾の行から読むようにし、agy の Resets in 4h36m50s の形も読むようにした。待機を飛ばすときのログを、読み取れない・過ぎている・上限を超えるに分けた。統合後の runner で JSEY が通った
   derived_from:
     - PJR-BHMH
 ---

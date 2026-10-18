@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4a35ca3461f2476da44fe621f58196f0
+- v: 1
+  id: reg_98b74d08c0f14c25a524533979f3f649
+  ts: "2026-10-18T11:15:40Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor・gemma26-reporter）の差分・テスト・親検証を確認し、JSEY で runner を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 解除の時刻を出力の全体の最初の一致で読んでいたため、codex が作業中に表示した exec-defaults.yaml のコメントの例（resets 4:10am (UTC)）を本物の通知（try again at 11:17 PM）より先に拾っていた。末尾の行から読むようにし、agy の Resets in 4h36m50s の形も読むようにした。待機を飛ばすときのログを、読み取れない・過ぎている・上限を超えるに分けた。統合後の runner で JSEY が通った
+  previous_event_id: reg_5ba9a19908f9438daed51533ab474092
