@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-10-18T08:17:56Z"
   conclusion: YK1C・2219 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過、新しい plan の参照の形も確認）
 ---
 
