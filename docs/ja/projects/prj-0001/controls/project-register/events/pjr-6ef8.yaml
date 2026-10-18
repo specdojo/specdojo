@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_05ae6b765e274783b626913bd8a4f104
+- v: 1
+  id: reg_cef9791fe5b34e938341a7927254de41
+  ts: "2026-10-18T13:04:38Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor・gemma26-reporter）の差分・テスト・親検証と、JSEY・tarball での導入の確認を行った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: runner が npm test の not_applicable を確かめるとき、npm init の仮の test script（引用符・空白の違いを含む）は script がないものとみなすようにし、共通の規約の検査の表にも同じ扱いを書いた。本物の script は今までどおり退ける。npm init -y で作った空のリポジトリで、0.4.0 の tarball の最初の実行が close まで通った
+  previous_event_id: reg_c86632cac1d5497685c6c3a15a821283

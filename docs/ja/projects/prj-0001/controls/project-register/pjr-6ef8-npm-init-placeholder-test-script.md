@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-6ef8-npm-init-placeholder-test-script
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T12:45:37Z"
+  completed_at: "2026-10-18T13:04:38Z"
+  conclusion: runner が npm test の not_applicable を確かめるとき、npm init の仮の test script（引用符・空白の違いを含む）は script がないものとみなすようにし、共通の規約の検査の表にも同じ扱いを書いた。本物の script は今までどおり退ける。npm init -y で作った空のリポジトリで、0.4.0 の tarball の最初の実行が close まで通った
   derived_from:
     - PJR-Z104
 ---
