@@ -1,0 +1,89 @@
+---
+specdojo:
+  id: prj-0001:pjr-3dy1-night-orchestrator-autopilot
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: decision
+  item_status: decided
+  priority: high
+  owner: ARC
+  registered_at: "2026-10-18T00:38:57Z"
+  due_on: null
+  completed_at: "2026-10-18T00:40:23Z"
+  conclusion: 承認済みの todo の並びを夜の間に実行・確認・close まで自動で進める（段階 B）。実行のあとの review の agent と自動の close（段階 A）から入れ、夜の orchestrator は印のある個票だけを流し、見つけた問題は derived_from を付けて承認待ちとして起票する
+---
+
+# PJR-3DY1 夜の間に承認済みの todo を実行・確認・close まで自動で進める方針を決める
+
+## 1. 背景
+
+register の todo の実行では、orchestrator が次の 7 つを行っている。夜の間は orchestrator の確認と close で作業が止まる（2026-10-17 の夜は、上限で止まった実行の再開も止まった）。
+
+| 段  | 内容                                                                                    |
+| --- | --------------------------------------------------------------------------------------- |
+| 1   | 次に何をするかを決める（順番、並行にできるか、agent の割り振り）                        |
+| 2   | 完了条件を書く                                                                          |
+| 3   | 実行する（上限と停止の扱いを含む）                                                      |
+| 4   | 結果を確かめる（完了条件との照合、`--help` の比較、dist の鮮度、runner の動作確認など） |
+| 5   | 見つけた問題を起票する                                                                  |
+| 6   | 推奨を出して利用者の承認を得る                                                          |
+| 7   | close する                                                                              |
+
+利用者から、実行のあとの review を別の agent に任せ、さらに orchestrator の一連の作業を自動化する提案があった（2026-10-18）。上限の扱いは [[prj-0001:pjr-bhmh-pinned-agent-rate-limit-policy]] で選べるようになった。
+
+## 2. 検討した選択肢
+
+| 選択肢 | 人がすること                                                           | 自動で進むこと                                                               | 危険                                       |
+| ------ | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------ |
+| A      | 完了条件の承認と、朝の結果の確認                                       | 3・4・7（実行のあとの review の agent と自動の close）                       | 小さい                                     |
+| B      | 昼に、夜に流してよい todo の並びと完了条件を承認する。朝にまとめて見る | 1・3・4・5・7。見つけた問題は承認待ちとして起票するだけで、実行しない        | 中くらい                                   |
+| C      | 方針だけを決める                                                       | 1〜7 のすべて。完了条件も agent が書き、規則の範囲内で自分で承認して実行する | 大きい。範囲がずれても朝まで誰も気づかない |
+
+## 3. 決定内容
+
+選択肢 B を採り、A → B の順に段階的に入れる（2026-10-18、利用者が承認）。
+
+1. 段階 A: register の実行の統合の後に、review の agent（例: `claude-expert-review-executor`）が、個票の完了条件・result・差分・検証の結果を照らして verdict を出す。読み取り専用とし、確かめるためのコマンドは流してよい。verdict が `complete`・`complete-with-findings` なら runner が close し、`incomplete` なら `waiting` に戻す。actor は review の agent とし、verdict の理由をイベントに残す。
+2. 自動で close するのは todo と issue だけとする。decision・question は自動で決めない。
+3. runner 自身のコードを変えた項目は、統合の後に runner が実際の `exec run` で動作を確かめる段を加えるか、その種類の項目は人の close に残す。どちらにするかは段階 A の実装で決める。
+4. 段階 B: 夜に流してよい個票には、人が完了条件を承認したときに印（例: frontmatter の `autopilot: approved`）を付ける。夜の orchestrator は、印のある個票だけを、決まった権限と手順の中で順に（並行にできるものは並行に）流す。
+5. 夜の orchestrator がしてはいけないこと: decision の決定、保護された設定の変更、公開・tag・push、公開済みの CHANGELOG の節の変更、印のない todo の実行、完了条件の範囲を広げること。必要になったら承認待ちとして起票して次へ進む。
+6. 夜の orchestrator が問題を見つけて起票するときは、[[prj-0001:pjr-7wme-register-derived-from]] の `derived_from` で元の項目を必ず記録する。
+7. 安全のための上限を設ける: 1 晩で流す件数、失敗が続いたら止める条件、上限のときの扱い（agy の opus は codex へ切り替えるなど）。
+8. 朝の報告: 夜の結果（close したもの、`waiting` に戻したもの、新しく起票した承認待ち）を 1 つの文書にまとめる。
+9. 進める順番: PJR-7WME（derived_from）→ 段階 A → 段階 B。
+
+## 4. 採択理由
+
+- 人の判断を「何をどこまでやるか」の承認に集中し、「やって確かめて閉じる」作業を夜の間に止めずに進められる。
+- 結果を見て初めて分かる問題（例: PJR-ZJXQ で、未作成の成果物を対象にできなかった）は、承認待ちの起票として朝に並ぶため、範囲が勝手に広がらない。
+- 段階的に入れることで、review の agent の判定の質を確かめてから、夜の orchestrator に任せる範囲を広げられる。
+
+## 5. 承認
+
+| 項目     | 内容                                                                                                      |
+| -------- | --------------------------------------------------------------------------------------------------------- |
+| 決定者   | 利用者（PO）                                                                                              |
+| 決定日   | 2026-10-18                                                                                                |
+| 承認方式 | orchestrator との会話で、段階 B を A → B の順で入れる提案と推奨の点を「この内容でお願いします」として承認 |
+| 証跡     | orchestrator との会話（2026-10-18）                                                                       |
+
+- 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
+- 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
+
+## 6. 影響範囲とフォローアップ
+
+| 項目       | 内容                                                                                                                                         |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| 影響範囲   | register の実行の最後の段（`src/exec/run/`）、個票の frontmatter、夜の orchestrator の agent と手順、routine、オーケストレーターの運用ガイド |
+| 必要な対応 | 段階 A と段階 B の todo を起票する。前提の PJR-7WME を先に行う                                                                               |
+| 追跡先     | PJR-7WME（derived_from、前提）、PJR-T46Y（段階 A: review の agent と自動の close）、PJR-6DHY（段階 B: 夜の orchestrator）                    |
+
+## 7. 関連ドキュメント
+
+- [[prj-0001:pjr-7wme-register-derived-from]]: 前提の項目。
+- [[prj-0001:pjr-bhmh-pinned-agent-rate-limit-policy]]: 上限の扱い。
+- [[prj-0001:pjr-vqza-routine-commit-after-run]]: Job Run の review の仕組み（段階 A の手本）。

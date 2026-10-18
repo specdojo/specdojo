@@ -106,3 +106,16 @@
       from: "-"
       to: agent を指定した実行で、上限のときの扱いを --on-rate-limit stop|wait|fallback と exec-defaults の rate_limit_policy.pinned で選べるようにした。wait は解ける時刻まで待って同じ agent で再開し、fallback は --fallback-executor-by・--fallback-reporter-by の agent へ切り替える。既定は従来どおり stop
   previous_event_id: reg_224b7d6dca3f4a83ab8651ddbfbb38d7
+- v: 1
+  id: reg_21049b1697bc45418da8dfa5d8bd47ca
+  ts: "2026-10-18T00:41:29Z"
+  action: update
+  actor: claude-orchestrator
+  from_status: done
+  to_status: done
+  reason: 結論の文の | が登録簿の一覧の表の列を壊し、並行の run の lint-md を失敗させたため、区切りを・に改める（2026-10-18）
+  changes:
+    - field: conclusion
+      from: agent を指定した実行で、上限のときの扱いを --on-rate-limit stop|wait|fallback と exec-defaults の rate_limit_policy.pinned で選べるようにした。wait は解ける時刻まで待って同じ agent で再開し、fallback は --fallback-executor-by・--fallback-reporter-by の agent へ切り替える。既定は従来どおり stop
+      to: agent を指定した実行で、上限のときの扱いを --on-rate-limit（stop・wait・fallback）と exec-defaults の rate_limit_policy.pinned で選べるようにした。wait は解ける時刻まで待って同じ agent で再開し、fallback は --fallback-executor-by・--fallback-reporter-by の agent へ切り替える。既定は従来どおり stop
+  previous_event_id: reg_a6aa3f69c2ea4788bf149ebd615daa92

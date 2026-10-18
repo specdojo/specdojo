@@ -16,6 +16,8 @@ import {
   loadRoutines,
   parseIntervalMs,
   parseRoutineDoc,
+  recordRoutineCompletion,
+  recordRoutineStart,
   routineActionKindLabel,
   type RoutineDoc,
 } from "../../../src/routine/routine.js";
@@ -419,6 +421,90 @@ describe("formatRoutineLastRun", () => {
     expect(formatRoutineLastRun({ last_run: "2026-08-07T03:17:09Z", last_result: "skipped" })).toBe(
       "2026-08-07T03:17:09Z (skipped)",
     );
+  });
+
+  it("running（実行中）を前回の結果と区別して表示する", () => {
+    expect(formatRoutineLastRun({ last_run: "2026-10-15T21:00:03Z", last_result: "running" })).toBe(
+      "2026-10-15T21:00:03Z (running)",
+    );
+  });
+
+  it("last_result が無い場合は日時のみ表示する", () => {
+    expect(formatRoutineLastRun({ last_run: "2026-10-15T21:00:03Z" })).toBe("2026-10-15T21:00:03Z");
+  });
+
+  it("未実行または entry が undefined の場合はハイフンを表示する", () => {
+    expect(formatRoutineLastRun(undefined)).toBe("-");
+    expect(formatRoutineLastRun({ last_run: "" })).toBe("-");
+  });
+});
+
+describe("recordRoutineStart and recordRoutineCompletion", () => {
+  it("開始時に last_run を更新し last_result を running にし前回の理由と段別結果を消去する", () => {
+    const prev = {
+      last_run: "2026-10-14T21:00:00Z",
+      last_result: "failure" as const,
+      last_reason: "previous failure reason",
+      last_action_results: [{ index: 1, kind: "job" as const, result: "failure" as const }],
+    };
+
+    const started = recordRoutineStart(prev, "2026-10-15T21:00:00Z");
+    expect(started).toEqual({
+      last_run: "2026-10-15T21:00:00Z",
+      last_result: "running",
+    });
+    expect(started.last_reason).toBeUndefined();
+    expect(started.last_action_results).toBeUndefined();
+  });
+
+  it("trigger のある routine は開始時に last_scheduled_for も更新する", () => {
+    const prev = {
+      last_run: "2026-10-14T21:00:00Z",
+      last_result: "success" as const,
+      last_scheduled_for: "2026-10-14T21:00:00.000Z",
+    };
+
+    const started = recordRoutineStart(prev, "2026-10-15T21:00:00Z", "2026-10-15T21:00:00.000Z");
+    expect(started).toEqual({
+      last_run: "2026-10-15T21:00:00Z",
+      last_result: "running",
+      last_scheduled_for: "2026-10-15T21:00:00.000Z",
+    });
+  });
+
+  it("終了時に last_result を完了結果に更新し、理由と段別結果を適切に記録・消去する", () => {
+    const running = {
+      last_run: "2026-10-15T21:00:00Z",
+      last_result: "running" as const,
+    };
+
+    const succeeded = recordRoutineCompletion(running, "success");
+    expect(succeeded).toEqual({
+      last_run: "2026-10-15T21:00:00Z",
+      last_result: "success",
+    });
+    expect(succeeded.last_reason).toBeUndefined();
+    expect(succeeded.last_action_results).toBeUndefined();
+
+    const failed = recordRoutineCompletion(running, "failure", "command exited with 1", [
+      { index: 1, kind: "job", result: "failure" },
+    ]);
+    expect(failed).toEqual({
+      last_run: "2026-10-15T21:00:00Z",
+      last_result: "failure",
+      last_reason: "command exited with 1",
+      last_action_results: [{ index: 1, kind: "job", result: "failure" }],
+    });
+  });
+
+  it("異常終了で running のまま残っても次回 due 判定は時刻のみに基づいて正常に動作する", () => {
+    const now = new Date("2026-10-16T12:00:00Z");
+    const doc = makeRoutine({ interval: "1d" });
+
+    // interval 未経過: due でない
+    expect(isRoutineDue(doc, "2026-10-16T00:00:00Z", now)).toBe(false);
+    // interval 経過後: due である（last_result が running であっても isRoutineDue は last_run のみを参照）
+    expect(isRoutineDue(doc, "2026-10-15T11:00:00Z", now)).toBe(true);
   });
 });
 

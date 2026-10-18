@@ -242,7 +242,7 @@ specdojo routine run --project <project-id> --due --dry-run
 [routine] skipped rtn-daily-register-sweep: job action skipped
 ```
 
-`routine-state.json` の `last_result` は `success`、`failure`、`skipped` のいずれかです。`skipped` は project busy または Job precondition の skip を表し、failure 件数や終了コードへ加算されません。`routine list` では最終実行時刻の後ろに `(skipped)` と表示されます。
+`routine-state.json` の `last_result` は、実行開始時に `running` が記録され、実行完了時に `success`、`failure`、`skipped` のいずれかへ更新されます。実行中は前回の結果や理由を残さず、`routine list` の最終実行の欄には `(running)` と表示されます（例: `2026-10-15T21:00:03Z (running)`）。実行プロセスの異常終了などにより `running` の表示が残った場合でも、次回の due 判定は `last_run` の時刻（cron の場合は `last_scheduled_for`）に基づいて判定されるため、次回の実行機会には影響しません。`skipped` は project busy または Job precondition の skip を表し、failure 件数や終了コードへ加算されません。`routine list` では最終実行時刻の後ろに `(skipped)` と表示されます。
 
 ### 2.1. devcontainerでのcron設定
 

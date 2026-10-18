@@ -65,6 +65,7 @@ export type {
   RoutineRunHistoryEntry,
   RoutineSpecdojoAction,
   RoutineStateEntry,
+  RoutineStateResult,
 } from "./definition.js";
 
 // ================================
@@ -87,6 +88,40 @@ function readRoutineState(statePath: string): RoutineStateFile {
 function writeRoutineState(paths: RoutinePaths, state: RoutineStateFile): void {
   ensureDir(paths.generatedPath);
   writeJson(paths.statePath, state);
+}
+
+export function recordRoutineStart(
+  current: RoutineStateEntry | undefined,
+  startedAt: string,
+  scheduledAt?: string,
+): RoutineStateEntry {
+  const next: RoutineStateEntry = {
+    ...current,
+    last_run: startedAt,
+    last_result: "running",
+    ...(scheduledAt ? { last_scheduled_for: scheduledAt } : {}),
+  };
+  delete next.last_reason;
+  delete next.last_action_results;
+  return next;
+}
+
+export function recordRoutineCompletion(
+  current: RoutineStateEntry | undefined,
+  result: RoutineExecutionResult,
+  reason?: string,
+  actionResults?: RoutineActionResult[],
+): RoutineStateEntry {
+  const next: RoutineStateEntry = {
+    ...current,
+    last_run: current?.last_run ?? nowUtcIsoSeconds(),
+    last_result: result,
+    ...(reason ? { last_reason: reason } : {}),
+    ...(actionResults ? { last_action_results: actionResults } : {}),
+  };
+  if (!reason) delete next.last_reason;
+  if (!actionResults) delete next.last_action_results;
+  return next;
 }
 
 export function appendRoutineRunHistory(runsPath: string, entry: RoutineRunHistoryEntry): void {
@@ -563,12 +598,13 @@ export function registerRoutineCommands(program: Command): void {
         const startedAt = nowUtcIsoSeconds();
         // 実行の試行自体を last_run として先に記録する。失敗した routine が次の
         // 発火まで再試行されない代わりに、失敗が高頻度で連続発火することを防ぐ。
+        // また、実行中は last_result を "running" とし、前回の結果や理由が表示されるのを防ぐ。
         if (!dryRun) {
-          state.routines[entry.doc.id] = {
-            ...state.routines[entry.doc.id],
-            last_run: startedAt,
-            ...(entry.doc.trigger ? { last_scheduled_for: scheduledAt.toISOString() } : {}),
-          };
+          state.routines[entry.doc.id] = recordRoutineStart(
+            state.routines[entry.doc.id],
+            startedAt,
+            entry.doc.trigger ? scheduledAt.toISOString() : undefined,
+          );
           writeRoutineState(paths, state);
         }
 
@@ -581,12 +617,12 @@ export function registerRoutineCommands(program: Command): void {
         }
 
         if (!dryRun) {
-          state.routines[entry.doc.id] = {
-            ...state.routines[entry.doc.id],
-            last_result: result,
-            ...(execution.reason ? { last_reason: execution.reason } : { last_reason: undefined }),
-            last_action_results: execution.actionResults,
-          };
+          state.routines[entry.doc.id] = recordRoutineCompletion(
+            state.routines[entry.doc.id],
+            result,
+            execution.reason,
+            execution.actionResults,
+          );
           writeRoutineState(paths, state);
           appendRoutineRunHistory(paths.runsPath, {
             version: 1,
