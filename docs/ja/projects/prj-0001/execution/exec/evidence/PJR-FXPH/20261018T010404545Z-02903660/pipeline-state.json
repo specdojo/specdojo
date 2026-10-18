@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-FXPH",
   "run_id": "20261018T010404545Z-02903660",
-  "updated_at": "2026-10-18T02:52:54.902Z",
+  "updated_at": "2026-10-18T02:55:29.519Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-fxph-20261018T010404Z-f014-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma26-reporter",
       "attempts": 1,
       "started_at": "2026-10-18T02:52:54.902Z",
-      "completed_at": null,
+      "completed_at": "2026-10-18T02:55:29.519Z",
       "artifact_ref": null
     }
   },

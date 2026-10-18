@@ -106,3 +106,16 @@
       from: "agent exited with non-zero code: parent validation failed: test-unit"
       to: "-"
   previous_event_id: reg_219b655402734ee596cac05ed9840387
+- v: 1
+  id: reg_ed361764c6e84d03958860d2271b3c74
+  ts: "2026-10-18T02:55:29Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a43ba1e85c8c492dab81a2aaa809bad7
