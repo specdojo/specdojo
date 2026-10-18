@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:22:08Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
 ---
 
 # PJR-8TS6 result の変更ファイルの説明が「reporter の説明がないため」で埋まる
