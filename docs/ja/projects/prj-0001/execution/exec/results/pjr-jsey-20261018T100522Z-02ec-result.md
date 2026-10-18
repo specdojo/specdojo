@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-JSEY
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-jsey-20261018T100522Z-02ec-plan.md
   started_at: "2026-10-18T10:05:22.661Z"
+  completed_at: "2026-10-18T10:11:03.843Z"
   agent: sonnet-executor
 ---
 
@@ -16,16 +17,16 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- 個票 `pjr-jsey-exec-run-split-smoke.md` の対応結果セクションに、`PJR-E025` の実行結果に関する行を追記しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- なし
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- タスクは完了しています。
 
 ## 4. 進め方
 
-_TODO_: どう進めたか、根拠にした文書や規約を記入する。
+個票 `pjr-jsey-exec-run-split-smoke.md` を確認し、指示に従って `PJR-E025` の実行実績を対応結果に追記しました。
