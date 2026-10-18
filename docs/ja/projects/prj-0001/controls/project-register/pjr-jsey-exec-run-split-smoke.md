@@ -35,22 +35,23 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 
 ## 4. 対応結果
 
-| 日時（JST）      | 対象の分割 | agent                 |
-| ---------------- | ---------- | --------------------- |
-| 2026-10-15 00:12 | PJR-3W2N   | codex-expert-executor |
-| 2026-10-15 00:35 | PJR-2JFM   | codex-expert-executor |
-| 2026-10-15 02:44 | PJR-GBPX   | codex-expert-executor |
-| 2026-10-15 19:37 | PJR-13M6   | codex-expert-executor |
-| 2026-10-15 20:00 | PJR-NA04   | codex-expert-executor |
-| 2026-10-17 16:04 | PJR-MHHP   | codex-expert-executor |
-| 2026-10-17 17:07 | PJR-XP0J   | codex-expert-executor |
-| 2026-10-17 17:49 | PJR-BZ9J   | codex-expert-executor |
-| 2026-10-17 18:58 | PJR-MX4F   | codex-expert-executor |
-| 2026-10-17 19:47 | PJR-DT3Q   | codex-expert-executor |
-| 2026-10-17 20:47 | PJR-GBWW   | codex-expert-executor |
-| 2026-10-17 21:04 | PJR-CY80   | codex-expert-executor |
-| 2026-10-18 08:51 | PJR-BHMH   | codex-expert-executor |
-| 2026-10-18 11:09 | PJR-H06F   | agy-expert-executor   |
+| 日時（JST）      | 対象の分割 | agent                  |
+| ---------------- | ---------- | ---------------------- |
+| 2026-10-15 00:12 | PJR-3W2N   | codex-expert-executor  |
+| 2026-10-15 00:35 | PJR-2JFM   | codex-expert-executor  |
+| 2026-10-15 02:44 | PJR-GBPX   | codex-expert-executor  |
+| 2026-10-15 19:37 | PJR-13M6   | codex-expert-executor  |
+| 2026-10-15 20:00 | PJR-NA04   | codex-expert-executor  |
+| 2026-10-17 16:04 | PJR-MHHP   | codex-expert-executor  |
+| 2026-10-17 17:07 | PJR-XP0J   | codex-expert-executor  |
+| 2026-10-17 17:49 | PJR-BZ9J   | codex-expert-executor  |
+| 2026-10-17 18:58 | PJR-MX4F   | codex-expert-executor  |
+| 2026-10-17 19:47 | PJR-DT3Q   | codex-expert-executor  |
+| 2026-10-17 20:47 | PJR-GBWW   | codex-expert-executor  |
+| 2026-10-17 21:04 | PJR-CY80   | codex-expert-executor  |
+| 2026-10-18 08:51 | PJR-BHMH   | codex-expert-executor  |
+| 2026-10-18 11:09 | PJR-H06F   | agy-expert-executor    |
+| 2026-10-18 17:12 | PJR-YK1C   | claude-expert-executor |
 
 ## 5. 関連ドキュメント
 
