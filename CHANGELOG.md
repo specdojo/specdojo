@@ -10,6 +10,9 @@ SpecDojo の利用者に影響する変更を記録します。
 - 登録項目の起票元を個票 Frontmatter の `derived_from` に記録できるようにし、`register add` / `update` の繰り返し指定可能な `--from`、元項目から派生先を辿る生成ビュー、`register history` の変更履歴に対応しました。decision から起票した todo の追跡にも同じ関係を使えます（PJR-7WME）。
 - 指名した agent が rate limit になったとき、`--on-rate-limit wait|fallback|stop` と executor / reporter 別の fallback 指定で、同じ agent の再開待ちまたは代替 agent への切替を選べるようにしました。`exec-defaults.yaml` の `rate_limit_policy.pinned` でも既定を設定でき、従来互換の既定は `stop` です（PJR-BHMH）。
 - `register add` / `update` に `--approach` と繰り返し指定できる `--target` を追加しました。個票で進め方と対象文書を宣言でき、成果物はカタログ、kata は文書索引で解決します。解決できない対象、成果物と kata の種別違い、`approach` と複数対象の組み合わせは書き込み前に拒否します（PJR-ZJXQ）。
+- `exec run --register` は、個票に `approach` があれば、schedule のタスクと同じ plan の作り方（approach のテンプレート、kata の参照、DCT の `done_criteria`）を使うようにしました。個票の完了条件は追加の条件として plan に載り、owner には個票の `owner` を使います（PJR-H06F）。
+- agent 名簿（`agent-members.yaml`）に、実体の `model`・`effort` と、実体を指す別名（`aliases`・`alias_of`）を書けるようにしました。別名の循環、存在しない実体や無効な実体を指す別名は、名簿の読み込み時にファイルと名前を示してエラーにします。今の 1 段の名簿もそのまま使えます（PJR-EANK）。
+- Job Run で、Job 定義の `partial_exit_code` に一致する終了を部分成功（`partial`）として記録し、review の判定が `complete-with-findings` なら評価できた分を統合するようにしました。grade の Job は、一部の文書の評価が失敗したときに 2 で終わります。全件の失敗・上限・中断は従来どおり `waiting` で止まります。`routine list` にも `partial` が表示されます（PJR-VGNG）。
 
 ### 変更
 
@@ -26,11 +29,13 @@ SpecDojo の利用者に影響する変更を記録します。
 - exec の result で、reporter が変更ファイルごとの説明を返さなかった場合に、定型文（「reporter の説明がないため、変更差分を参照。」）の代わりに Git の変更情報（追加・変更・削除・名前の変更、行数）を記録するようにしました。変更ファイルが 50 件を超える場合は、ディレクトリごとに集約して記録します（PJR-8TS6）。
 - `register build` が生成する一覧（`pjr-index.md` と派生ビュー）で、個票のタイトル・説明・結論などのセルに含まれるパイプ文字（`|`）と改行をエスケープするようにしました。セル内のパイプ文字で表の列がずれ、markdownlint（MD056）で失敗する問題を解消します（PJR-FXPH）。
 - register の plan テンプレート（`xep-register-template`・`xep-register-investigate-template`）の対象項目からサイズが大きくパスも古かった登録簿一覧（`pjr-index.md`）を外し、進め方の最初を個票のみを読む指示に改めました。文脈長の小さい agent が一覧を読んで文脈を消費し停止する問題を防ぎます（PJR-SJ0G）。
+- `routine run` の実行中に、`routine list` などが前回の結果と理由をそのまま表示していた問題を修正しました。開始時に `last_result` を `running` にし、終了時に今回の結果で上書きします（PJR-2CQR）。
 
 ### 文書
 
 - README の始め方を、ランディングページ（<https://specdojo.org/>）と同じ `npx specdojo init` の手順と `<アプリ>-workspace/<アプリ>-specdojo` の構成に揃え、specdojo.org へのリンクを加えました（PJR-Y79W）。
 - exec 運用ガイドに、登録簿（register）の todo から approach を使って成果物や kata（実践の型）を作成・修正する手順を追加しました。個票での approach と target の指定方法、kata 保守の approach の選び方、plan 生成内容、組み合わせ検証、および `exec run --deliverable` との違いと推奨経路を記載しました（PJR-4Z6N）。
+- オーケストレーター運用ガイドに、Claude Code などの plan モードの plan と register の使い分けと、plan の下書きを decision と todo へ書き写す流れを加えました（PJR-YFBW）。
 
 ### 内部の変更
 
