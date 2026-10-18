@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-sj0g-register-plan-index-input
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T02:56:23Z"
+  completed_at: "2026-10-18T06:49:30Z"
+  conclusion: register の plan の 2 つの雛形から一覧のパスを外し、進め方の最初を個票を読むことにして一覧は読まないと明記した。生成した plan に一覧のパスが含まれないことを単体テストで確かめた。CHANGELOG への記載は PJR-HZW3 で補う
 ---
 
 # PJR-SJ0G register の plan が大きい一覧を読ませ、一覧のパスも誤っている
