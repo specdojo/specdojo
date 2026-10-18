@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-18T12:45:37Z"
@@ -55,7 +55,11 @@ npm init -y は package.json に test の仮の script（echo "Error: no test sp
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容: `src/exec/reporter.ts` に、`test` の script が `npm init` の仮の script（`echo "Error: no test specified" && exit 1` と、引用符の有無・種類や空白だけが違う変種）かを判定する処理を加え、`not_applicable` の主張の確認と機械的な非適用の判定で、仮の script を script がないものとみなすようにした。仮の扱いは `test` の script だけに限り、本物の test script がある場合は従来どおり `not_applicable` を退ける。
+- 検査の表: 共通の規約（`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md`）の検査の表の `npm test` の行の適用条件と本文に同じ扱いを書き、executor への pipeline の指示（`src/exec/run/agent.ts`）にも書き加えて、executor と runner の判断をそろえた。
+- `specdojo init` は変更しておらず、利用者の `package.json` を書き換えない。
+- 確認結果: `tests/src/exec/reporter.test.ts` に、仮の script の変種で受け付けること、本物の script で退けること、他の script 名では仮の中身でも script があるとみなすことの単体テストを加えた。npm init -y で作ったリポジトリで最初の実行が `review` まで進むかは、tarball による人の確認（orchestrator）に残す。
+- CHANGELOG の `## [0.4.0] - 未定` の不具合修正に記載した。
 
 ## 5. 関連ドキュメント
 

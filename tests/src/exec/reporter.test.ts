@@ -9,6 +9,7 @@ import {
   buildReporterPrompt,
   deriveReporterFacts,
   evidenceForReporter,
+  mechanicallyNotApplicableReason,
   parseReporterOutput,
   reporterOutputSchemaForMode,
   runReporterWithFormatRetry,
@@ -1018,6 +1019,79 @@ describe("reporter structured output", () => {
     ).toMatchObject({
       outcome: "blocked",
       block_reason: `executor validation failed or not run: ${validation.command}`,
+    });
+  });
+
+  describe("npm init placeholder test script", () => {
+    it.each([
+      'echo "Error: no test specified" && exit 1',
+      "echo 'Error: no test specified' && exit 1",
+      "echo Error: no test specified && exit 1",
+      '  echo  "Error: no test specified"&&exit 1  ',
+    ])("accepts npm test as not_applicable when the test script is %j", (body) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm test",
+          status: "not_applicable",
+          summary: "適用外",
+          reason: "test script は npm init の仮の script である",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: { test: body },
+          packageDependencies: new Set<string>(),
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    });
+
+    it("treats npm test as mechanically not applicable for the placeholder test script", () => {
+      expect(
+        mechanicallyNotApplicableReason("npm test", {
+          packageScripts: { test: 'echo "Error: no test specified" && exit 1' },
+          packageDependencies: new Set<string>(),
+          specdojoConfig: null,
+        }),
+      ).toBe("package.json の npm script 'test' は npm init の仮の script である");
+    });
+
+    it.each([
+      'echo "Error: no test specified" && exit 1 || vitest run',
+      'echo "Running tests" && vitest run',
+    ])("blocks npm test as not_applicable when the test script is real: %j", (body) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm test",
+          status: "not_applicable",
+          summary: "適用外",
+          reason: "test script は npm init の仮の script である",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: { test: body },
+          packageDependencies: new Set<string>(),
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason: "executor validation failed or not run: npm test",
+      });
+    });
+
+    it("keeps a placeholder body under another script name as present", () => {
+      expect(
+        mechanicallyNotApplicableReason("npm run lint", {
+          packageScripts: { lint: 'echo "Error: no test specified" && exit 1' },
+          packageDependencies: new Set<string>(),
+          specdojoConfig: null,
+        }),
+      ).toBeUndefined();
     });
   });
 

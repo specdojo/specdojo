@@ -35,6 +35,8 @@ SpecDojo の利用者に影響する変更を記録します。
 - `routine run` の実行中に、`routine list` などが前回の結果と理由をそのまま表示していた問題を修正しました。開始時に `last_result` を `running` にし、終了時に今回の結果で上書きします（PJR-2CQR）。
 - `exec run --on-rate-limit wait` で、codex の usage limit（`try again at 11:17 PM`）の解除まで待たずに止まっていた問題を修正しました。agent の出力の全体（codex が表示した設定ファイルなどの内容を含む）から最初に見つかった時刻を使っていたため、設定ファイルの例の `resets 4:10am (UTC)` を解除の時刻と読んでいました。解除の時刻は出力の末尾の行から読みます。agy の `Resets in 4h36m50s` のような相対の形も読みます。待機を飛ばすときのログは、解除の時刻を読めない場合（元の出力の行を表示）、過ぎている場合、上限を超える場合で分けました（PJR-NJ6J）。
 
+- `npm init` が `package.json` に入れる仮の `test` script（`echo "Error: no test specified" && exit 1`）があるリポジトリで、executor が `npm test` を `not_applicable` と報告しても runner が退け、最初の実行が `waiting` で止まっていた問題を修正しました。仮の `test` script（引用符や空白だけが違う変種を含む）は script がないものとみなし、共通の規約の検査の表にも同じ扱いを書きました。本物の test script がある場合は従来どおり退けます。`specdojo init` は利用者の `package.json` を書き換えません（PJR-6EF8）。
+
 ### 文書
 
 - README の始め方を、ランディングページ（<https://specdojo.org/>）と同じ `npx specdojo init` の手順と `<アプリ>-workspace/<アプリ>-specdojo` の構成に揃え、specdojo.org へのリンクを加えました（PJR-Y79W）。

@@ -35,3 +35,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-Z104"]'
+- v: 1
+  id: reg_05ae6b765e274783b626913bd8a4f104
+  ts: "2026-10-18T12:46:21Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_31f08d9d86e14b77ad659c22cd5cf82f
+- v: 1
+  id: reg_c86632cac1d5497685c6c3a15a821283
+  ts: "2026-10-18T12:55:57Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_05ae6b765e274783b626913bd8a4f104
