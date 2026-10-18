@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: BA
   registered_at: "2026-10-12T08:53:52Z"
   due_on: "2026-10-31"
-  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run lint:md, npm run lint:fm, npm run lint:ts, npm run typecheck, npm run test:unit, npm run test:integration, npm run valid…"
 ---
 
 # PJR-WJE6 ブランチワークフローガイドにプロダクトリポジトリの節を加える
@@ -33,8 +32,8 @@ PJR-ZDVQ の決定にもとづき、プロダクトリポジトリにはブラ�
 
 ## 3. 作業内容
 
-| No  | 作業                           | 担当 | 状態 | メモ |
-| --- | ------------------------------ | ---- | ---- | ---- |
+| No  | 作業                           | 担当 | 状態 | メモ                                                                                         |
+| --- | ------------------------------ | ---- | ---- | -------------------------------------------------------------------------------------------- |
 | 1   | プロダクトリポジトリの節を書く | BA   | done | [[specdojo:branch-workflow-guide]] の `## 10. プロダクトリポジトリの統合先を指定する` を追加 |
 
 ## 4. 対応結果
