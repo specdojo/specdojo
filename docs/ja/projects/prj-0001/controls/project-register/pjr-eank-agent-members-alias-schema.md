@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-eank-agent-members-alias-schema
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T22:18:18Z"
   due_on: null
+  completed_at: "2026-10-18T07:21:26Z"
+  conclusion: agent-members の schema に実体の model・effort と、実体を指す別名（aliases、alias_of）を加えた。名簿の読み込みで別名の循環・存在しない実体・無効な実体を指す別名を、名簿のファイルと名前を含めてエラーにする。今の 1 段の名簿もそのまま読める。名前の解決は PJR-YK1C で行う
 ---
 
 # PJR-EANK agent の名簿の schema に実体の model と別名を加える

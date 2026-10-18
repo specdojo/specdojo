@@ -55,3 +55,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_038dfadfaf1d4dc5b534915a50f30351
+- v: 1
+  id: reg_6a760b5164c64de2bc17135ff2ed0c2c
+  ts: "2026-10-18T07:21:26Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: agent-members の schema に実体の model・effort と、実体を指す別名（aliases、alias_of）を加えた。名簿の読み込みで別名の循環・存在しない実体・無効な実体を指す別名を、名簿のファイルと名前を含めてエラーにする。今の 1 段の名簿もそのまま読める。名前の解決は PJR-YK1C で行う
+  previous_event_id: reg_0b2767d5cf664fe2827a8ba95669ae78
