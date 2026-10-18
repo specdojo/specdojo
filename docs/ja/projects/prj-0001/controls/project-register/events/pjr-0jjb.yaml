@@ -58,3 +58,32 @@
       from: "-"
       to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0JJB/20261018T055452458Z-72ceb123/evidence.json 57ms (unchanged); FAIL  /integration/ tests/…"
   previous_event_id: reg_7fbab4aff1f24e45930c833b0630f03f
+- v: 1
+  id: reg_b0f38083f7064dfda82a5fd50f69814b
+  ts: "2026-10-18T06:23:14Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0JJB/20261018T055452458Z-72ceb123/evidence.json 57ms (unchanged); FAIL  /integration/ tests/…"
+      to: "-"
+  previous_event_id: reg_3c50b247e55d4ef790a49eedff0c69fa
+- v: 1
+  id: reg_8fe035d921f04bf5acbd1e0fc8a9d8a2
+  ts: "2026-10-18T06:29:57Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b0f38083f7064dfda82a5fd50f69814b
