@@ -25,6 +25,7 @@ import {
   PJR_ID_RE,
   registerItemFieldsFromItem,
   setRegisterItemDescription,
+  toCell,
   VALID_PRIORITIES,
   VALID_STATUSES,
   VALID_TYPES,
@@ -335,6 +336,7 @@ export function generatePjrId(
 
 export function formatTableRow(item: PjrDisplayItem): string {
   // frontmatter・本文由来を問わず、表へ展開する全セルを同じ規則で無害化する。
+  // 列区切りの `|` と改行をエスケープし、山括弧プレースホルダをインラインコード化する。
   // 既存コードスパンは変換処理が保持するため、再生成しても二重に囲まれない。
   const cells = [
     item.id,
@@ -349,7 +351,9 @@ export function formatTableRow(item: PjrDisplayItem): string {
     item.completed,
     item.conclusion,
     item.ticket,
-  ].map(inlineCodeAnglePlaceholders);
+  ]
+    .map(toCell)
+    .map(inlineCodeAnglePlaceholders);
   return `| ${cells.join(" | ")} |`;
 }
 
