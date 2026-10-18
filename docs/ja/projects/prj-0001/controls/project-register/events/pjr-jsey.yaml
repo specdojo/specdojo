@@ -565,3 +565,16 @@
       from: "2026-10-18"
       to: "-"
   previous_event_id: reg_2e3bf24f42a54b089a4537f8b55e61a1
+- v: 1
+  id: reg_07df282570f6423e915af53af0f8e601
+  ts: "2026-10-18T08:11:02Z"
+  action: start
+  actor: claude-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7d480ffed8874692aba3dbb6724be5b2
