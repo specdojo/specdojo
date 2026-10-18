@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-0efn-post-review-result-markdown-lint
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T16:04:14Z"
+  completed_at: "2026-10-18T18:48:12Z"
+  conclusion: result の箇条書きに描く reporter の文の先頭の番号や記号（1.・1)・-・*・+）を外すようにした。commit の失敗の要約が、成功した最初の段（format）ではなく失敗の印の付いた段と最初のエラーの行を報告するようにし、post-review の記帳の commit が失敗したときは残ったファイルと hook の全出力のログを残す。統合後に JSEY を --post-review で流し、review の agent の close の記帳が commit まで通った
   derived_from:
     - PJR-T46Y
 ---
