@@ -1182,3 +1182,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7fc8a11b7b2c45b487374485c6c19627
+- v: 1
+  id: reg_33892611754b493f9286a2950e2f0605
+  ts: "2026-10-18T18:19:39Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-executor の別名・gemma26-reporter）の結果を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: 6DHY・E412・NS8Y・283N の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過、plan の commit も通過）
+      to: G90K の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
+  previous_event_id: reg_20f6376631594bf4bc5f3f8e44a184cc
