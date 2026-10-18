@@ -1,0 +1,3 @@
+<specdojo_executor_evidence>
+{"final_message":"README、ドキュメントサイトトップ、全体概要ガイド、遂行の技活用ガイドの 4 か所の表記を「Spec道（仕様道）の道場」に揃え、CHANGELOG へ追記しました。","validations":[{"command":"npm run lint:md","status":"passed","summary":"markdownlint passed"}]}
+</specdojo_executor_evidence>
