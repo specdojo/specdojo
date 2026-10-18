@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { runDevcontainerScaffold } from "../../../src/devcontainer/scaffold.js";
+import {
+  extractPublishedPorts,
+  generateSshConfigSample,
+  runDevcontainerScaffold,
+} from "../../../src/devcontainer/scaffold.js";
 import * as fs from "node:fs";
 import * as fsPromises from "node:fs/promises";
 import { spawnSync } from "node:child_process";
@@ -59,6 +63,9 @@ describe("runDevcontainerScaffold", () => {
       if (file.endsWith("init.el")) {
         return Promise.resolve(";;; bundled Emacs defaults");
       }
+      if (file.endsWith("specdojo-tmux.sh.sample")) {
+        return Promise.resolve("#!/usr/bin/env bash\necho sample");
+      }
       return Promise.resolve("");
     });
   });
@@ -97,7 +104,7 @@ describe("runDevcontainerScaffold", () => {
       dryRun: false,
     });
 
-    expect(writeFileMock).toHaveBeenCalledTimes(2);
+    expect(writeFileMock).toHaveBeenCalledTimes(4);
   });
 
   it("should only report planned files in dry-run mode", async () => {
@@ -119,6 +126,14 @@ describe("runDevcontainerScaffold", () => {
     expect(stdoutWrite).toHaveBeenCalledWith(
       expect.stringContaining("[dry-run] would write: .devcontainer/post-create.sh"),
     );
+    expect(stdoutWrite).toHaveBeenCalledWith(
+      expect.stringContaining(
+        "[dry-run] would write: .devcontainer/remote-host/specdojo-tmux.sh.sample",
+      ),
+    );
+    expect(stdoutWrite).toHaveBeenCalledWith(
+      expect.stringContaining("[dry-run] would write: .devcontainer/remote-host/ssh-config.sample"),
+    );
     expect(writeFileMock).not.toHaveBeenCalled();
   });
 
@@ -135,7 +150,7 @@ describe("runDevcontainerScaffold", () => {
       dryRun: false,
     });
 
-    expect(writeFileMock).toHaveBeenCalledTimes(2);
+    expect(writeFileMock).toHaveBeenCalledTimes(4);
     const jsonCall = findWriteCall("devcontainer.json");
     const json = JSON.parse(String(jsonCall[1]));
     expect(json.workspaceMount).toBe(
@@ -170,6 +185,9 @@ describe("runDevcontainerScaffold", () => {
         return Promise.resolve(devcontainerTemplate);
       }
       if (file.endsWith("post-create.sh")) return Promise.resolve(postCreateTemplate);
+      if (file.endsWith("specdojo-tmux.sh.sample")) {
+        return Promise.resolve("#!/usr/bin/env bash\necho sample");
+      }
       return Promise.resolve("");
     });
 
@@ -299,7 +317,7 @@ describe("runDevcontainerScaffold", () => {
       dryRun: false,
     });
 
-    expect(writeFileMock).toHaveBeenCalledTimes(3);
+    expect(writeFileMock).toHaveBeenCalledTimes(5);
     const jsonCall = findWriteCall("devcontainer.json");
     const json = JSON.parse(String(jsonCall[1]));
     const aptPackages =
@@ -527,5 +545,169 @@ describe("runDevcontainerScaffold", () => {
       }),
     ).rejects.toThrow("Invalid workspace name");
     expect(writeFileMock).not.toHaveBeenCalled();
+  });
+
+  describe("remote-host sample generation", () => {
+    it("extracts published ports from appPort and forwardPorts", () => {
+      expect(
+        extractPublishedPorts({
+          appPort: [5173, "5174:5174", "127.0.0.1:5175:5175"],
+          forwardPorts: [4321, 5173],
+        }),
+      ).toEqual([5173, 5174, 5175, 4321]);
+
+      expect(extractPublishedPorts({ appPort: 3000 })).toEqual([3000]);
+      expect(extractPublishedPorts({})).toEqual([]);
+    });
+
+    it("generates ssh-config.sample with LocalForward when ports are present", () => {
+      const config = generateSshConfigSample([5173, 5174]);
+      expect(config).toContain("Host <host>");
+      expect(config).toContain("Host <host>-tmux");
+      expect(config).toContain("RequestTTY force");
+      expect(config).toContain("RemoteCommand ~/bin/specdojo-tmux.sh");
+      expect(config).toContain("LocalForward 5173 127.0.0.1:5173");
+      expect(config).toContain("LocalForward 5174 127.0.0.1:5174");
+    });
+
+    it("generates ssh-config.sample with example comment when no ports are present", () => {
+      const config = generateSshConfigSample([]);
+      expect(config).toContain("Host <host>");
+      expect(config).toContain("Host <host>-tmux");
+      expect(config).toContain("RequestTTY force");
+      expect(config).toContain("RemoteCommand ~/bin/specdojo-tmux.sh");
+      expect(config).toContain("# 例: LocalForward 5173 127.0.0.1:5173");
+      expect(config).not.toMatch(/^\s*LocalForward/m);
+    });
+
+    it("writes remote-host samples including published ports from devcontainer.json", async () => {
+      readFileMock.mockImplementation(async (p) => {
+        const file = String(p);
+        if (file.endsWith("devcontainer.json")) {
+          return Promise.resolve(
+            JSON.stringify({
+              appPort: [5173, 5174],
+              forwardPorts: [4321],
+              workspaceMount:
+                "source=${localWorkspaceFolder}/..,target=/workspaces/__SPECDOJO_WORKSPACE_NAME__,type=bind,consistency=cached",
+              workspaceFolder:
+                "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
+              mounts: [],
+            }),
+          );
+        }
+        if (file.endsWith("post-create.sh")) return Promise.resolve("npm install");
+        if (file.endsWith("specdojo-tmux.sh.sample")) {
+          return Promise.resolve("#!/usr/bin/env bash\necho sample tmux");
+        }
+        return Promise.resolve("");
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const tmuxCall = findWriteCall("specdojo-tmux.sh.sample");
+      expect(String(tmuxCall[0])).toBe(
+        path.join(repoRoot, ".devcontainer", "remote-host", "specdojo-tmux.sh.sample"),
+      );
+      expect(String(tmuxCall[1])).toContain("echo sample tmux");
+
+      const sshCall = findWriteCall("ssh-config.sample");
+      expect(String(sshCall[0])).toBe(
+        path.join(repoRoot, ".devcontainer", "remote-host", "ssh-config.sample"),
+      );
+      const sshContent = String(sshCall[1]);
+      expect(sshContent).toContain("LocalForward 5173 127.0.0.1:5173");
+      expect(sshContent).toContain("LocalForward 5174 127.0.0.1:5174");
+      expect(sshContent).toContain("LocalForward 4321 127.0.0.1:4321");
+
+      expect(stdoutWrite).toHaveBeenCalledWith(
+        expect.stringContaining("Written: .devcontainer/remote-host/specdojo-tmux.sh.sample"),
+      );
+      expect(stdoutWrite).toHaveBeenCalledWith(
+        expect.stringContaining("Written: .devcontainer/remote-host/ssh-config.sample"),
+      );
+      expect(stdoutWrite).toHaveBeenCalledWith(
+        expect.stringContaining(
+          "Remote host: copy .devcontainer/remote-host/specdojo-tmux.sh.sample",
+        ),
+      );
+    });
+
+    it("writes remote-host samples with comment example when no ports are configured", async () => {
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const sshCall = findWriteCall("ssh-config.sample");
+      const sshContent = String(sshCall[1]);
+      expect(sshContent).toContain("# 例: LocalForward 5173 127.0.0.1:5173");
+      expect(sshContent).not.toMatch(/^\s*LocalForward \d+/m);
+    });
+
+    it("does not overwrite existing samples when force is false", async () => {
+      existsSyncMock.mockImplementation((p) => {
+        const file = String(p);
+        if (file.includes(".devcontainer")) return true;
+        if (file.includes("templates")) return true;
+        return false;
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      expect(stdoutWrite).toHaveBeenCalledWith(expect.stringContaining("Skipped (already exists)"));
+      expect(writeFileMock).not.toHaveBeenCalled();
+    });
+
+    it("overwrites existing samples when force is true", async () => {
+      existsSyncMock.mockImplementation((p) => {
+        const file = String(p);
+        if (file.includes(".devcontainer")) return true;
+        if (file.includes("templates")) return true;
+        return false;
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: true,
+        dryRun: false,
+      });
+
+      expect(findWriteCall("specdojo-tmux.sh.sample")).toBeDefined();
+      expect(findWriteCall("ssh-config.sample")).toBeDefined();
+    });
   });
 });

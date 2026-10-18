@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+#
+# specdojo-tmux.sh.sample
+#
+# 常時稼働ホスト上で devcontainer 内の tmux セッションへ入るためのスクリプトです。
+# ホスト側の ~/bin/specdojo-tmux.sh などへコピーし、実行権限（chmod +x）を付与して使用してください。
+#
+# 前提ツール:
+#   - Docker (Docker Desktop または Docker Engine): コンテナの実行環境
+#   - Dev Container CLI (@devcontainers/cli): コンテナの起動に使用 (npm install -g @devcontainers/cli)
+#   - tmux: コンテナ内にインストールされている必要があります
+#
+# 起動コマンド:
+#   - コンテナ起動: devcontainer up --workspace-folder "$workspace_dir"
+#   - セッション接続: docker exec -it ... tmux new-session -A -s <名前>
+#
+set -euo pipefail
+
+# コンテナ内とホスト側の作業ディレクトリ（実際の環境に合わせて設定してください）
+container_workspace_dir="/workspaces/<workspace-name>/<repo-name>"
+workspace_dir="${HOME}/<path-to-workspace>/<repo-name>"
+
+# セッション名（必要に応じて変更してください）
+session_name="specdojo"
+
+# SSH 経由（RemoteCommand）で node や devcontainer が見つからない場合は、
+# node と devcontainer が置かれているディレクトリを PATH に追加してください。
+# 例: export PATH="/opt/homebrew/bin:$PATH"
+
+find_container() {
+  local id
+  id="$(docker ps -q --filter "label=devcontainer.local_folder=$workspace_dir" | head -n 1)"
+  if [ -n "$id" ]; then
+    echo "$id"
+    return
+  fi
+  docker ps --format '{{.Names}}\t{{.Image}}' | awk '$2 ~ /^vsc-/ {print $1; exit}'
+}
+
+if [ ! -f "$workspace_dir/.devcontainer/devcontainer.json" ]; then
+  echo "devcontainer.json was not found: $workspace_dir" >&2
+  echo "Set workspace_dir to the repository path on the host." >&2
+  exit 1
+fi
+
+if ! command -v devcontainer >/dev/null 2>&1; then
+  echo "Dev Container CLI is not installed. Run: npm install -g @devcontainers/cli" >&2
+  exit 1
+fi
+
+if ! docker info >/dev/null 2>&1; then
+  echo "Docker is not running on the host." >&2
+  exit 1
+fi
+
+container_name="$(find_container)"
+
+if [ -z "$container_name" ]; then
+  echo "Starting devcontainer..." >&2
+  devcontainer up --workspace-folder "$workspace_dir"
+  container_name="$(find_container)"
+fi
+
+if [ -z "$container_name" ]; then
+  echo "The devcontainer did not start." >&2
+  exit 1
+fi
+
+exec docker exec -it --detach-keys="ctrl-]" -w "$container_workspace_dir" "$container_name" tmux new-session -A -s "$session_name"

@@ -907,7 +907,7 @@ Claude Code、Codex、Antigravity、GitHub Copilot には exec と同じ追加�
 | ----------------------- | ------------------------------------------- |
 | `devcontainer scaffold` | `.devcontainer/` の設定ファイル群を生成する |
 
-`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。provider は `antigravity`、`claude`、`codex`、`opencode` を指定できます。`--editor emacs` を指定した場合は Emacs 用の `emacs/init.el` も生成します。Dev Container は任意の実行環境であり、既存の Node.js 環境を置き換える必須手順ではありません。
+`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。あわせて、常時稼働ホストへの接続と tmux セッション維持のためのサンプルスクリプト（`.devcontainer/remote-host/specdojo-tmux.sh.sample`）と接続元 SSH 設定サンプル（`.devcontainer/remote-host/ssh-config.sample`）も生成します。provider は `antigravity`、`claude`、`codex`、`opencode` を指定できます。`--editor emacs` を指定した場合は Emacs 用の `emacs/init.el` も生成します。Dev Container は任意の実行環境であり、既存の Node.js 環境を置き換える必須手順ではありません。
 
 主要オプション:
 
