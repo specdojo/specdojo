@@ -13,4 +13,6 @@ model: sonnet
 
 runner が Markdown として描画する自由記述フィールドでは、`depends_on` のように `_` を含む識別子・フィールド名を必ずインラインコードで囲んでください。
 
+edit mode では、`evidence.changes` の変更ファイルについて、成果物（`docs/`）、ソースコード（`src/`）、テストコード（`tests/`）など変更された各ファイルで何を変更したかの説明を `changed_files` に返してください。
+
 agent 自身で claim / complete / block を実行しないでください。
