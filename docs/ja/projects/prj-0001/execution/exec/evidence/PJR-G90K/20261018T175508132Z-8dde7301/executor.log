@@ -1,0 +1,21 @@
+PJR-G90K の対応は済みました。並行の run と統合が重なったときに、`index.lock` の取り合いで待たずに失敗することが起きにくくなります。検証は、変更した2つのテストファイルを vitest で流し（43件すべて成功）、prettier の整形と `validate:history-links` を通しただけです。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` などの検証は、手順書どおり実行せず親 runner に任せています。
+
+**変更内容（`src/shared/git.ts`）**
+- `index.lock` の取り合いのやり直しを、合計約0.75秒（50〜250 ms × 5回）から 1.5 秒間隔で最大10回に広げました。RY4C の dubious ownership と同じ `runGitWithTransientRetry` の中で処理し、仕組みは1か所のままです。
+- 日本語など翻訳された git のメッセージも拾うようにしました。引用符で囲まれた `index.lock` のパスと「別の git プロセス」を手がかりにしています。
+- やり直すたびに `gitResult` が警告を出します（通知の理由は `index.lock contention`）。
+- 上限に達した場合は今までどおり失敗を返し、`formatGitCommandFailure` が `index.lock is still held (lock: <path>)` をエラー原因の先頭に付けます。ロックのファイルは消しません。
+
+**要確認の点**
+- 日本語の判定は推測にもとづいています。git の日本語訳の正確な文言を確認できなかったためです。テストの日本語メッセージも私が想定して作った文面で、実際の git の出力ではありません。
+- 判定が少し広めです。引用符付きで `index.lock` のパスを含むメッセージなら、どれも取り合いとして扱います。
+- 個票の完了条件にある、統合後に `exec run --register` を1回流す動作確認（PJR-JSEY）はまだです。統合の後に行う必要があります。
+
+**その他の変更**
+- `tests/src/shared/git.test.ts` を新しく作りました。英語・日本語の判定、パスの取り出し、数回の失敗の後に成功する場合、上限10回で失敗する場合、失敗メッセージのパス、を確かめます。待ち時間は差し替えているので、テストは遅くなりません。
+- `CHANGELOG.md` の `## [0.4.1] - 未定` の不具合修正に1件追記しました。
+- 個票 `pjr-g90k-integrate-index-lock-retry.md` の「対応結果」を、解決内容・検出・失敗の報告・確認結果・再発防止策の表で埋めました。ステータスと result は変えていません。
+
+<specdojo_executor_evidence>
+{"final_message":"Widened the index.lock retry in runGitWithTransientRetry (src/shared/git.ts) from 5 short retries totaling about 0.75s to 10 retries 1.5s apart, with a warning on each retry. Detection now also covers translated messages (quoted index.lock path, 別の git プロセス); the Japanese wording is assumed, not confirmed against git. The lock path is added to the front of the final failure message and the lock file is never removed. Added tests/src/shared/git.test.ts and updated CHANGELOG 0.4.1 and the PJR-G90K ticket's 対応結果. The post-integration exec run --register check (PJR-JSEY) has not been done yet.","validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/shared/git.test.ts tests/src/exec/worktree.test.ts","status":"passed","summary":"2 files, 43 tests passed"},{"command":"npx prettier --write src/shared/git.ts tests/src/shared/git.test.ts CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-g90k-integrate-index-lock-retry.md","status":"passed","summary":"formatted; only the ticket table was re-aligned"},{"command":"npm run -s validate:history-links","status":"passed","summary":"no Markdown link violations reported"},{"command":"specdojo exec run --register (post-integration smoke run, PJR-JSEY)","status":"requires_human","summary":"Run once after integration to confirm runner behavior; needs a real agent CLI and quota"}]}
+</specdojo_executor_evidence>
