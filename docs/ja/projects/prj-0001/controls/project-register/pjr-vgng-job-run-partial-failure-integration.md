@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T21:56:35Z"
+  block_reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T00:13:39.709Z"
 ---
 
 # PJR-VGNG 一部の文書が失敗した Job Run が完了分も含めて統合されない
