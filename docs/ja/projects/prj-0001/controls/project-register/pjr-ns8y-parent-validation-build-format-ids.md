@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ns8y-parent-validation-build-format-ids
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T06:06:51Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-18T17:53:53Z"
+  conclusion: 親検証の許可リストに build（npm run build）と format-check（npm run format:check）を加え、プロダクトリポジトリへ割り当てられるようにした。schema・init・ガイド・リファレンスを合わせ、テストを加えた
 ---
 
 # PJR-NS8Y parent_validations の許可リストにプロダクトリポジトリ向けの build と format の ID がない
