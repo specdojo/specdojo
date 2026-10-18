@@ -34,13 +34,21 @@ plan の本文には異常終了の条件と共通の規約の要点だけを残
 
 ## 3. 作業内容
 
-| No  | 作業                            | 担当 | 状態 | メモ |
-| --- | ------------------------------- | ---- | ---- | ---- |
-| 1   | plan の共通の規約を参照へ改める | DEV  | open | -    |
+| No  | 作業                            | 担当 | 状態 | メモ                    |
+| --- | ------------------------------- | ---- | ---- | ----------------------- |
+| 1   | plan の共通の規約を参照へ改める | DEV  | open | 実施済み（review 待ち） |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容:
+  - 共通の規約の断片 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を詳細の原本とし、失敗に直結する要点（result の記入、プレースホルダを残さない、リンク記法と表内エスケープ、未作成文書の仮置き、`_` を含む識別子のインラインコード化、`status` を `ready` にしない、相対パス指定、YAML の schema）を `plan-essentials` マーカーの間に集めた。
+  - `injectCommonConventions`（`src/exec/plans-core.ts`）は、見出し・詳細の参照パスと作業前に読む指示・要点だけを plan に載せる。review plan では従来どおり review の判断手順も載せる。マーカーの無い断片は従来どおり全文を載せる。
+  - schedule・register・job の plan はすべて同じ関数を通るため、同じ参照の書き方になる。
+- 判断:
+  - 要点は詳細から機械的に取り出す方式を採った。要点の断片を別に持つと、同じ規則が 2 か所に分かれ、詳細を読む agent が要点を見落とすため。
+  - 参照パスは `specdojoReferencePath` で利用者リポジトリからの相対パスにする（npm で導入した場合は `node_modules/specdojo/...`）。worktree の準備で `npm ci` を実行するため、worktree の中から読める。runner が worktree に置く処理は追加していない。ただし、`package-lock.json` を追跡していないリポジトリでは worktree に依存が入らないため、参照先が読めない。
+- 成果物: `src/exec/plans-core.ts`、`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md`、`tests/src/exec/plans.test.ts`、`tests/src/exec/register-plan-escape.test.ts`、`CHANGELOG.md`。
+- 残課題: `package-lock.json` を追跡していないリポジトリで参照先を worktree に置くかは、必要になった時点で判断する。既存の plan（履歴）は書き換えていない。
 
 ## 5. 関連ドキュメント
 

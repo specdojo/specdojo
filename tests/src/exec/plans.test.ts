@@ -8,7 +8,10 @@ import {
   applicableReviewCriteria,
   buildInPlaceStem,
   deliverableDocId,
+  execTemplatePath,
   finalizeResultSectionsForDeliverable,
+  injectCommonConventions,
+  MISSING,
   generateSinglePlan,
   ownerRoleFields,
   parsePlanTaskIdentity,
@@ -407,14 +410,18 @@ describe("plan generation (edit done_criteria goals)", () => {
       expect(editPlan).not.toContain("review の判断手順");
       expect(editPlan).not.toContain("review-only:");
       expect(editPlan).not.toContain("自己レビューは初回を含めて最大3回まで行う");
-      // 共通記法規約（リンク記法）が全 plan へ注入される。見出し文言ではなく安定した本文で検証。
+      // 共通規約は要点（リンク記法など）だけを本文に残し、詳細は参照パスで読ませる（PJR-2219）。
       expect(editPlan).toContain("`[[id|title]]` 形式");
-      // unit test の対象限定・全件を連続実行しない規約も全 plan へ注入される。
-      expect(editPlan).toContain("全件を1回だけ実行して対象限定の実行を省く");
-      // 親検証に設定されたコマンドを executor が sandbox 内で実行しない規約も注入される。
       expect(editPlan).toContain(
+        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+      );
+      // 詳細（test の実行回数・親検証・検査表）は本文へ差し込まない。
+      expect(editPlan).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
+      expect(editPlan).not.toContain(
         "executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない",
       );
+      expect(editPlan).not.toContain("| 変更したファイル");
+      expect(editPlan).not.toContain("plan-essentials:");
       // 配置制御: テンプレートの _COMMON_CONVENTIONS_ 位置（末尾・異常終了の条件の後）に入る。
       expect(editPlan.indexOf("`[[id|title]]` 形式")).toBeGreaterThan(
         editPlan.indexOf("異常終了の条件"),
@@ -433,8 +440,12 @@ describe("plan generation (edit done_criteria goals)", () => {
       );
       expect(maintenancePlan).not.toContain("viewpoints_ref:");
       expect(maintenancePlan).not.toContain("全 role 観点による自己レビュー");
-      // approach 違い（recipe-maintenance）の plan にも同じ共通規約が注入される。
+      // approach 違い（recipe-maintenance）の plan にも同じ参照と要点が注入される。
       expect(maintenancePlan).toContain("`[[id|title]]` 形式");
+      expect(maintenancePlan).toContain(
+        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+      );
+      expect(maintenancePlan).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
       expect(maintenancePlan).not.toContain("### プロジェクトコンテキスト");
       expect(maintenancePlan).not.toContain("_PROJECT_CONTEXT_");
     } finally {
@@ -586,6 +597,49 @@ describe("review plan templates", () => {
       expect(source).not.toContain("owner 以外のロール");
     },
   );
+});
+
+describe("injectCommonConventions", () => {
+  const fragmentPath = execTemplatePath("xep-common-conventions-template.md");
+
+  it("要点マーカーの間だけを参照パスとともに本文へ載せ、schema の行を解決する", () => {
+    const cache = new Map<string, string>([
+      [
+        fragmentPath,
+        [
+          "## 共通: 記法・成果物規約",
+          "",
+          "<!-- plan-essentials:start -->",
+          "",
+          "- essential rule",
+          "- schema `_SCHEMA_REF_` に従う",
+          "",
+          "<!-- plan-essentials:end -->",
+          "",
+          "- detail rule",
+          "",
+        ].join("\n"),
+      ],
+    ]);
+
+    const actual = injectCommonConventions("# Plan\n", "docs/schema.yaml", cache);
+
+    expect(actual).toContain("## 共通: 記法・成果物規約");
+    expect(actual).toContain(
+      "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+    );
+    expect(actual).toContain("- essential rule\n- schema `docs/schema.yaml` に従う");
+    expect(actual).not.toContain("detail rule");
+    expect(actual).not.toContain("plan-essentials:");
+  });
+
+  it("要点マーカーのない断片は従来どおり全文を載せる", () => {
+    const cache = new Map<string, string>([[fragmentPath, "## Common\n\n- detail rule\n"]]);
+
+    const actual = injectCommonConventions("# Plan\n", MISSING, cache);
+
+    expect(actual).toBe("# Plan\n\n## Common\n\n- detail rule\n");
+  });
 });
 
 describe("review-only block of the common conventions", () => {
@@ -754,9 +808,13 @@ describe("generateSinglePlan", () => {
         },
       });
 
+      // 条件付きの検査案内は詳細側にあり、plan はその詳細を参照させる（PJR-2219）。
       const plan = readFileSync(outPath, "utf8");
-      expect(plan).toContain("対象 project に `catalog_path` が設定されている");
-      expect(plan).toContain(
+      const referencePath = "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md";
+      expect(plan).toContain(`共通の規約の詳細 \`${referencePath}\` を読み`);
+      const detail = readFileSync(referencePath, "utf8");
+      expect(detail).toContain("対象 project に `catalog_path` が設定されている");
+      expect(detail).toContain(
         "条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する",
       );
     } finally {
@@ -1128,6 +1186,15 @@ describe("generateSinglePlan", () => {
       // review 専用の判断手順は review plan にだけ残り、区切りのマーカー行は出力しない。
       expect(plan).toContain("### review の判断手順");
       expect(plan).not.toContain("review-only:");
+      // review plan も同じ参照と要点を載せ、詳細の本文は差し込まない（PJR-2219）。
+      expect(plan).toContain(
+        "共通の規約の詳細 `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md` を読み",
+      );
+      expect(plan).toContain("`[[id|title]]` 形式");
+      expect(plan).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
+      expect(plan.indexOf("`[[id|title]]` 形式")).toBeLessThan(
+        plan.indexOf("### review の判断手順"),
+      );
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

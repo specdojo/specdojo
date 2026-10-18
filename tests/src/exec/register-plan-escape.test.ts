@@ -325,6 +325,38 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     expect(content).toContain("register-specific criterion is satisfied");
   });
 
+  it("approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる", async () => {
+    const referencePath = "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md";
+    const plainOutPath = path.join(dir, "plan-plain.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths: makeRegisterPaths(),
+      item: makeItem(),
+      stem: "xep-pjr-plain",
+      outPath: plainOutPath,
+    });
+    const approachOutPath = path.join(dir, "plan-approach.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      catalogPath: await writeCatalog(),
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({ approach: "fully-guided", targets: ["prj-test:overview"] }),
+      stem: "xep-pjr-approach",
+      outPath: approachOutPath,
+    });
+
+    for (const outPath of [plainOutPath, approachOutPath]) {
+      const content = await readFile(outPath, "utf8");
+      expect(content, outPath).toContain(`共通の規約の詳細 \`${referencePath}\` を読み`);
+      expect(content, outPath).toContain("`[[id|title]]` 形式");
+      expect(content, outPath).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
+      expect(content, outPath).not.toContain("| 変更したファイル");
+      expect(content, outPath).not.toContain("plan-essentials:");
+    }
+  });
+
   it("kata maintenance approach は指定した kata id を直接の編集対象にする", async () => {
     const outPath = path.join(dir, "plan-with-kata-approach.md");
     await writeKataFixture();
