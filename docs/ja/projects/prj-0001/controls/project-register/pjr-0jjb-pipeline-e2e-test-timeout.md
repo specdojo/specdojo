@@ -55,6 +55,7 @@ tests/src/exec/pipeline-e2e.integration.test.ts の再開のテストは 1 件�
 - `tests/src/exec/register-plan-escape.test.ts` の kata maintenance approach は、実リポジトリの `specdojo:pjr-rulebook` を解決していた。一時ディレクトリに rulebook と必要な plan template を配置し、`SPECDOJO_PACKAGE_ROOT` と作業ディレクトリを fixture へ固定することで、解決と生成を一時ディレクトリ内で完結させた。
 - 他の統合テストを棚卸した結果、全体上限 30 秒より短い個別上限は、本件で削除した `pipeline-e2e.integration.test.ts` の 4 件以外にはなかった。
 - 変更前の実測は pipeline-e2e 16 件が約 36 秒、kata maintenance approach が約 1.4 秒だった。変更後の実測と lint・型検査・test の最終結果は、executor と重複実行しないため親 runner の evidence で確定する。
+- 統合の後に orchestrator が単独で実測した（2026-10-18）。pipeline-e2e の 16 件は約 25 秒、`register-plan-escape.test.ts` の 17 件は約 1.3 秒で、どちらも変更前より短い。
 
 ## 5. 関連ドキュメント
 
