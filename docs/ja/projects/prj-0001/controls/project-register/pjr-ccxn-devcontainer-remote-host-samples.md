@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ccxn-devcontainer-remote-host-samples
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T10:46:30Z"
+  completed_at: "2026-10-18T11:50:57Z"
+  conclusion: devcontainer scaffold が .devcontainer/remote-host/ に、devcontainer を起動して tmux へ入る specdojo-tmux.sh.sample と、alias・RemoteCommand・公開ポートの LocalForward を含む ssh-config.sample を作り、最後の案内で置き場所を示すようにした。init --devcontainer は tmux を入れる。ガイドとコマンドリファレンスも合わせた。スクリプトのパスは仮の値のままで、container が見つからないときは vsc- で始まる最初の container を使うため、複数あると取り違えるおそれがある
   derived_from:
     - PJR-8GQ4
 ---

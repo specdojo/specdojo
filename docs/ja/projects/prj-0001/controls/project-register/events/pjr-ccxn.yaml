@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d5e7561234904ff1ab60fe5ddd94e91f
+- v: 1
+  id: reg_38c32e555e504a9ca7e61e13402db725
+  ts: "2026-10-18T11:50:57Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分・親検証と、空のリポジトリでの scaffold の結果を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: devcontainer scaffold が .devcontainer/remote-host/ に、devcontainer を起動して tmux へ入る specdojo-tmux.sh.sample と、alias・RemoteCommand・公開ポートの LocalForward を含む ssh-config.sample を作り、最後の案内で置き場所を示すようにした。init --devcontainer は tmux を入れる。ガイドとコマンドリファレンスも合わせた。スクリプトのパスは仮の値のままで、container が見つからないときは vsc- で始まる最初の container を使うため、複数あると取り違えるおそれがある
+  previous_event_id: reg_4607dddeede741ca9dae63b8570bbf87
