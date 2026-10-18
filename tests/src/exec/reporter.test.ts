@@ -344,25 +344,33 @@ describe("reporter structured output", () => {
     });
   });
 
-  it("accepts an executor validation delegated as not_run when the runner passed the same command", () => {
-    const input = evidence();
-    input.validations = [
-      {
-        source: "executor",
-        command: "npm run test:unit",
-        status: "not_run",
-        summary: "delegated to the parent runner",
-      },
-      {
-        id: "test-unit",
-        source: "runner",
-        command: "npm run test:unit",
-        status: "passed",
-        summary: "exit 0",
-      },
-    ];
-    expect(deriveReporterFacts(input)).toMatchObject({ outcome: "complete", block_reason: "" });
-  });
+  it.each(["not_run", "not_applicable"] as const)(
+    "accepts an executor validation recorded as %s when the runner passed the same command",
+    (status) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm run test:unit",
+          status,
+          summary: "delegated to the parent runner",
+          ...(status === "not_applicable" ? { reason: "parent runner runs" } : {}),
+        },
+        {
+          id: "test-unit",
+          source: "runner",
+          command: "npm run test:unit",
+          status: "passed",
+          summary: "exit 0",
+        },
+      ];
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: { "test:unit": "vitest run" },
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    },
+  );
 
   it("still blocks an edit-mode not_run validation that the runner did not run", () => {
     const input = evidence();
@@ -377,6 +385,35 @@ describe("reporter structured output", () => {
       },
     ];
     expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npm run lint:md",
+    });
+  });
+
+  it("still rejects not_applicable for a non-parent validation with an existing script", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npm run lint:md",
+        status: "not_applicable",
+        summary: "delegated",
+        reason: "parent runner runs",
+      },
+      {
+        id: "test-unit",
+        source: "runner",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+    expect(
+      deriveReporterFacts(input, {
+        mode: "edit",
+        packageScripts: { "lint:md": "markdownlint docs" },
+      }),
+    ).toMatchObject({
       outcome: "blocked",
       block_reason: "executor validation failed or not run: npm run lint:md",
     });
