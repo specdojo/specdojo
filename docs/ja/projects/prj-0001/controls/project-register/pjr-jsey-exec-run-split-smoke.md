@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: YK1C・2219 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過、新しい plan の参照の形も確認）
+  completed_at: "2026-10-18T09:51:03Z"
+  conclusion: TSP6・8MPY の統合後の runner で、別名 claude-executor が sonnet-executor に解決して起動し、reporter は opencode の役割の定義（opencode-reporter）と gemma26 の model で起動した。actor には実体の名前が記録され、親検証 7 件が通った
 ---
 
 # PJR-JSEY exec-run.ts の分割後に runner の動作を確かめる
