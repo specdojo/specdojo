@@ -22,13 +22,29 @@ specdojo:
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+2026-10-18 時点で、個票の frontmatter（`docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`）には、ほかの項目との関係を表す欄がない（`part_of` は属する一覧を表す）。起票の元になった項目は、起票の理由の文や「関連ドキュメント」の欄に人が手で書いている。[[prj-0001:pjr-3dy1-night-orchestrator-autopilot]] の夜の orchestrator が、実行中に見つけた問題を起票するための前提として、元の項目を機械的に辿れるようにする（利用者の指摘）。
+
+条件:
+
+- 個票の frontmatter の schema に `derived_from` を加える。値は、元になった項目の ID の配列とする。同じ project の項目は `PJR-XXXX`、ほかの project の項目は `prj-0002:PJR-XXXX` の形で書ける。
+- `register add --from <ID>` と `register update --from <ID>` で指定できる。複数を指定できる。存在しない項目や、自分自身を指す場合は理由を出して止める。ほかの project の項目は、その project が設定にあれば存在を確かめ、なければ書式だけを確かめる。
+- `register build` で、元の項目から派生先（その項目を `derived_from` に持つ項目）を辿れるようにする。個票の生成部分か、生成する一覧（`generated/`）のどちらに出すかを決めて実装し、理由を result に書く。個票の本文（人が書く部分）は書き換えない。
+- decision から起票した todo を `derived_from` で表すことで、decision の「追跡先」を手で書かなくても辿れるようにする。既存の decision の「追跡先」の欄は書き換えない。
+- `register history` など、項目の経緯を見る既存のコマンドで、`derived_from` と派生先が見えるようにするかを決め、見えるようにする場合は実装する。
+- register の個票の規則（`docs/ja/specdojo/rulebooks/pjr-rulebook.md`）と、`docs/ja/specdojo/references/command-reference.md` の `register add`・`register update` に、`derived_from` と `--from` を書く。規則には、実行中に見つけた問題を起票するときは `derived_from` を付けることを書く。
+- 既存の個票には、さかのぼって `derived_from` を入れない。
+- CHANGELOG に記載する場合は、未公開の版の節（`## [0.4.0] - 未定`）に書く。公開済みの版の節は変えない。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                          | 担当 | 状態 | メモ             |
+| --- | --------------------------------------------- | ---- | ---- | ---------------- |
+| 1   | schema に `derived_from` を加える             | DEV  | open | -                |
+| 2   | `register add`・`update` に `--from` を加える | DEV  | open | 存在の確認       |
+| 3   | `register build` で派生先を辿れるようにする   | DEV  | open | 出す場所を決める |
+| 4   | 規則とコマンドリファレンスを更新する          | DEV  | open | -                |
 
 ## 4. 対応結果
 
@@ -36,4 +52,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-3dy1-night-orchestrator-autopilot]]: この項目を前提にする夜の自動化。
