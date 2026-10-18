@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d5209842dd534bdeb9753d66ee935df6
+  ts: "2026-10-18T00:38:50Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の指摘（2026-10-18）。実行中に見つけた問題の起票や decision からの todo を、元の項目から機械的に辿れるようにするため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 個票に起票の元になった項目（derived_from）を記録できるようにする
+    - field: description
+      from: ""
+      to: 個票の frontmatter に derived_from（元になった項目の ID の一覧。project をまたぐ場合は prj-0001:PJR-XXXX）を加え、register add --from で指定できるようにする。元の項目の側から派生先の一覧を辿れるようにし、decision の追跡先も同じ関係で表す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
