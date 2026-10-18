@@ -1,0 +1,12 @@
+PJR-E412 の修正はできています。プロダクトリポジトリを `$SPECDOJO_REPO_<NAME>` で指すコマンドの `not_applicable` を、そのリポジトリの `package.json` で判定するようになりました。修正は作業開始時点で前回の試行分としてすでに作業ツリーにあり、今回は内容を確認して個票の整形を直しただけです。手元で実行した検査は Prettier の整形チェックだけで、通っています。単体テストを含むほかの検査は親 runner がこのあと実行するため、テストが通ることはまだ確かめていません。
+
+変更したファイル:
+
+- **`src/exec/reporter.ts`**: `productRepoCommand` が、宣言済みリポジトリ名から作った `$SPECDOJO_REPO_<NAME>` と `${SPECDOJO_REPO_<NAME>}` の参照を認識するようにしました。判定の順番は `--prefix`、環境変数、`<repo>:<path>` です。`$NAME` の形では変数名の直後の文字も確認し、名前が長い別の環境変数に誤って一致しないようにしています。変数名は `./task-repos.js` の `repoEnvironmentVariableName` を使って作ります。`task-repos.ts` は `reporter` を import していないため、循環依存は増えません。
+- **`tests/src/exec/reporter.test.ts`**: プロダクトリポジトリに道具がない場合は `not_applicable` を受け入れ、ある場合は止める、という既存の 2 つのテストに、2 つの環境変数の形を加えました。
+- **`docs/ja/specdojo/guides/exec-config-guide.md`**: 判定仕様の 2 か所に、環境変数でプロダクトリポジトリを指定する形を追記しました。
+- **個票 `pjr-e412-not-applicable-repo-env-path.md`**: 対応策を確定し、対応結果を記入しました。今回は Prettier で表の整形を直しています。登録簿上の状態（`item_status`）は変えていません。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-E412: productRepoCommand now treats commands that reference `$SPECDOJO_REPO_<NAME>` or `${SPECDOJO_REPO_<NAME>}` as targeting that product repository, so `not_applicable` is judged against its package.json. The fix was already in the working tree from an earlier attempt; this run reviewed it and reformatted the ticket with Prettier. Unit tests for both forms were added in tests/src/exec/reporter.test.ts but have not been run here; the parent runner runs them. Also updated: src/exec/reporter.ts, docs/ja/specdojo/guides/exec-config-guide.md and the ticket's response sections.","validations":[{"command":"npx prettier --check src/exec/reporter.ts tests/src/exec/reporter.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-e412-not-applicable-repo-env-path.md","status":"passed","summary":"All 4 changed files pass the Prettier check after the ticket was reformatted with --write"}]}
+</specdojo_executor_evidence>
