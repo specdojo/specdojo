@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-3dy1-night-orchestrator-autopilot
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   owner: ARC
   registered_at: "2026-10-18T00:38:57Z"
   due_on: null
+  completed_at: "2026-10-18T00:40:23Z"
+  conclusion: 承認済みの todo の並びを夜の間に実行・確認・close まで自動で進める（段階 B）。実行のあとの review の agent と自動の close（段階 A）から入れ、夜の orchestrator は印のある個票だけを流し、見つけた問題は derived_from を付けて承認待ちとして起票する
 ---
 
 # PJR-3DY1 夜の間に承認済みの todo を実行・確認・close まで自動で進める方針を決める
