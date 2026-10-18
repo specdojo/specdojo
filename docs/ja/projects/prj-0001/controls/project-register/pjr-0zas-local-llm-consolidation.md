@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-0zas-local-llm-consolidation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T06:26:51Z"
+  completed_at: "2026-10-18T06:30:42Z"
+  conclusion: ローカル LLM の基盤を Ollama にし、reporter は gemma26-reporter、小さな修正の executor は plan で決まった作業に gemma-executor（31B）、内容を組み立てる作業に qwen-executor を使う。thinking on の executor・gemma26 の executor・使っていない定義は無効にし、名簿の変更は PJR-8MPY で行う
 ---
 
 # PJR-0ZAS ローカル LLM を Ollama と gemma・qwen の役割の分担に整理する

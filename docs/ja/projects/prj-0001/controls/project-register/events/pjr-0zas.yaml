@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_94c9720cc9144edabeebf5455a1ffb06
+  ts: "2026-10-18T06:30:42Z"
+  action: close
+  actor: PO
+  from_status: open
+  to_status: decided
+  reason: orchestrator との会話で、試行の結果に基づく整理の案を推奨のとおり承認した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: ローカル LLM の基盤を Ollama にし、reporter は gemma26-reporter、小さな修正の executor は plan で決まった作業に gemma-executor（31B）、内容を組み立てる作業に qwen-executor を使う。thinking on の executor・gemma26 の executor・使っていない定義は無効にし、名簿の変更は PJR-8MPY で行う
+  previous_event_id: reg_3bf028994a2c4de09fe49e774d903ec8
