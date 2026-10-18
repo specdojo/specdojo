@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d7fc7a841c7342df9385c22c8b18e5c8
+  ts: "2026-10-18T16:42:24Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合の git 操作が index.lock の一時的な取り合いで待たずに失敗する
+    - field: description
+      from: ""
+      to: "2026-10-19 01:32 と 01:41 に、PJR-EVAX の統合が git restore failed: Unable to create .git/index.lock で失敗した。並行の run の統合や記帳と同じ時刻に重なったためで、ロックはすぐに外れる一時的なものだった。runner の統合の git 操作は index.lock を待たずに失敗し、run を waiting にする。並行の run が多い夜間の自動実行では起こりやすい"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-19"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-RY4C"]'
