@@ -15,6 +15,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - 対話式の `specdojo init` から成果物カタログの質問を除き、`--catalog <size>` を明示した場合にだけ作成するように変更しました。導入直後の混乱を防ぎ、成果物が定まってから `catalog scaffold` で追加できるようにします。初期化の最後の案内でも `catalog scaffold` と `catalog_path` の設定手順を示します（PJR-G5AB）。
 - approach のない実行（register の todo・issue など）の result で、第 4 章の見出しを「4. 進め方」にし、記入の指示をどう進めたか・根拠にした文書や規約に改めました。approach のある実行（schedule のタスク、approach を持つ個票）は「4. 進め方と実践の型の適用」のままです（PJR-S9QF）。
+- exec の plan で、共通の規約（記法・成果物規約）の全文を本文に差し込むのをやめ、守らないと失敗に直結する要点だけを残すようにしました。詳細は plan に記したパス（npm で導入した場合は `node_modules/specdojo/docs/ja/specdojo/exec-templates/xep-common-conventions-template.md`）を作業前に読むよう指示します。要点は同じファイルの `plan-essentials` マーカーの間から取り出します。既存の plan は書き換えません（PJR-2219）。
 
 ### 不具合修正
 

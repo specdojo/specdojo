@@ -19,7 +19,11 @@ import {
   gradeResultPathForDocument,
   readGradeResultForDocument,
 } from "../grade/result.js";
-import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "../docs/template-resolution.js";
+import {
+  resolveSpecdojoPath,
+  resolveSpecdojoPathIfExists,
+  specdojoReferencePath,
+} from "../docs/template-resolution.js";
 import { renderReviewGradeSummary, reviewGradeFreshness } from "../review/grade.js";
 import type { ReviewGradeOutcome, ReviewGradeTarget } from "../review/grade.js";
 
@@ -283,10 +287,10 @@ export function frontmatter(meta: ExecPlanMeta): string {
 // Template-based generation (edit-plan / review-plan テンプレートの展開)
 // ---------------------------------------------------------------------------
 
-// Shared conventions (link notation など) appended to every generated plan. The plan is the
-// only context guaranteed to reach the executing agent regardless of tool (it is piped via
-// stdin), so cross-tool rules must travel with the plan rather than tool-specific instruction
-// files. Kept as a single fragment to avoid duplicating the rule across every plan template.
+// Shared conventions (link notation など) referenced from every generated plan. The fragment is
+// the single source of both the detail and the essentials: the plan body carries only the
+// essentials block (rules whose violation fails the task) plus the path of the fragment, which
+// the agent reads from its working tree before starting (PJR-WA3R / PJR-2219).
 const COMMON_CONVENTIONS_TEMPLATE = "xep-common-conventions-template.md";
 
 export function execTemplatesDir(): string {
@@ -348,6 +352,49 @@ const COMMON_CONVENTIONS_PLACEHOLDER = "_COMMON_CONVENTIONS_";
 const REVIEW_ONLY_START = "<!-- review-only:start -->";
 const REVIEW_ONLY_END = "<!-- review-only:end -->";
 
+// Lines delimiting the essentials block of the conventions fragment. Only this block is copied
+// into the plan body; the rest of the fragment is read by the agent through the referenced path.
+const PLAN_ESSENTIALS_START = "<!-- plan-essentials:start -->";
+const PLAN_ESSENTIALS_END = "<!-- plan-essentials:end -->";
+const DEFAULT_CONVENTIONS_HEADING = "## 共通: 記法・成果物規約";
+
+// Returns the lines strictly between the start and end marker lines, or null when the pair is
+// absent so callers can fall back to the whole fragment.
+function extractMarkedBlock(text: string, start: string, end: string): string | null {
+  const lines = text.split("\n");
+  const startIndex = lines.findIndex((line) => line.trim() === start);
+  if (startIndex < 0) return null;
+  const endOffset = lines.slice(startIndex + 1).findIndex((line) => line.trim() === end);
+  if (endOffset < 0) return null;
+  return lines
+    .slice(startIndex + 1, startIndex + 1 + endOffset)
+    .join("\n")
+    .trim();
+}
+
+function conventionsReferenceSentence(referencePath: string): string {
+  return (
+    `作業を始める前に、共通の規約の詳細 \`${referencePath}\` を読み、その内容に従う。` +
+    "次の箇条書きは、そのうち守らないと失敗に直結する要点である。"
+  );
+}
+
+// Builds the plan-side conventions: heading, reference to the full fragment, essentials, and (for
+// review plans) the review-only block. Fragments without the essentials markers (older or minimal
+// fragments) are injected whole so the rules are never silently dropped.
+function planConventionsText(fragment: string, referencePath: string, isReview: boolean): string {
+  const essentials = extractMarkedBlock(fragment, PLAN_ESSENTIALS_START, PLAN_ESSENTIALS_END);
+  if (essentials === null) return selectReviewOnlyBlock(fragment, isReview);
+  const heading =
+    fragment.split("\n").find((line) => line.startsWith("## ")) ?? DEFAULT_CONVENTIONS_HEADING;
+  const sections = [heading, conventionsReferenceSentence(referencePath), essentials];
+  if (isReview) {
+    const reviewOnly = extractMarkedBlock(fragment, REVIEW_ONLY_START, REVIEW_ONLY_END);
+    if (reviewOnly) sections.push(reviewOnly);
+  }
+  return sections.join("\n\n");
+}
+
 function selectReviewOnlyBlock(conventions: string, isReview: boolean): string {
   const kept: string[] = [];
   let inside = false;
@@ -373,10 +420,12 @@ function selectReviewOnlyBlock(conventions: string, isReview: boolean): string {
 // filling the result), so the generator resolves it deterministically and bakes it in here.
 const SCHEMA_REF_PLACEHOLDER = "_SCHEMA_REF_";
 
-// Injects the shared conventions fragment into a built plan body so every generated plan carries
-// the same rules (e.g. link notation) in its own text, independent of the executing tool. A
-// template controls placement via the COMMON_CONVENTIONS_PLACEHOLDER marker; templates without the
-// marker get the block appended so the rules are never silently dropped.
+// Injects the shared conventions into a built plan body so every generated plan carries the same
+// reference and essentials (e.g. link notation) in its own text, independent of the executing
+// tool. The reference path is repository-relative (node_modules/specdojo/... when SpecDojo is an
+// installed dependency), which the worktree also provides because worktree preparation runs
+// npm ci. A template controls placement via the COMMON_CONVENTIONS_PLACEHOLDER marker; templates
+// without the marker get the block appended so the rules are never silently dropped.
 // schemaRef is the resolved schema path: when MISSING (non-yaml deliverable or no schema), the
 // schema-validation bullet is dropped so the plan never asks for a check it cannot specify.
 // mode selects whether the review-only block (review の判断手順) is kept; it defaults to edit so
@@ -387,8 +436,10 @@ export function injectCommonConventions(
   cache: Map<string, string>,
   mode: TaskMode = "edit",
 ): string {
-  let conventions = selectReviewOnlyBlock(
-    readTemplate(execTemplatePath(COMMON_CONVENTIONS_TEMPLATE), cache),
+  const fragmentPath = execTemplatePath(COMMON_CONVENTIONS_TEMPLATE);
+  let conventions = planConventionsText(
+    readTemplate(fragmentPath, cache),
+    specdojoReferencePath(fragmentPath),
     mode === "review",
   );
   conventions =
