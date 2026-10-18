@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-8tgq-agent-members-templates-update
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T22:18:53Z"
   due_on: null
+  completed_at: "2026-10-18T10:48:28Z"
+  conclusion: init --exec と config scaffold が配布する名簿と定義の雛形を、実体（sonnet・terra・gemma・flash の系統と役割）と今の名前の別名の 2 段構成に改め、起動のコマンドを --agent {agent} --model {model} にした。既存の 1 段の名簿はそのまま動き、移行の手順を exec-config-guide に書いた。空のリポジトリで init --yes --exec を流し、別名から起動のコマンドが組み立てられることを確かめた。opencode の既定の model は本リポジトリの Ollama の名前（gemma4:31b-mlx-work-64k）のままで、利用者の環境に合わせて書き換える必要がある
 ---
 
 # PJR-8TGQ 配布する agent の雛形を 2 段構成へ改める
