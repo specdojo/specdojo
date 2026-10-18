@@ -903,6 +903,16 @@ provider CLI の実行中、起動元は `SIGINT` と `SIGQUIT` を無視して�
 
 Claude Code、Codex、Antigravity、GitHub Copilot には exec と同じ追加ルート引数を渡します。OpenCode は、起動時の `OPENCODE_CONFIG_CONTENT` に選択 agent の `permission.external_directory` を注入し、全外部ディレクトリを拒否したうえで宣言済みのリポジトリだけを許可します。外部パスへ既存の `permission.edit` が一致しないため、同じ宣言済みルートの編集許可も注入します。既存の inline config の他項目は保持します。未宣言のリポジトリは、どの provider でも許可対象になりません。
 
+`orchestrator night` は `autopilot: approved` の付いた `open` todo・issue だけを夜間 queue として実行します。
+
+```bash
+specdojo orchestrator night --project prj-0001 \
+  --max-items 10 --parallel 2 --max-consecutive-failures 2 \
+  --on-rate-limit fallback --fallback-executor-by codex-executor
+```
+
+各 wave は worktree と post-review を必須にし、成功は close、未完了は `waiting` にします。`--max-items` は一晩の件数、`--parallel` は wave の同時数、`--max-consecutive-failures` は次の wave を止める閾値です。`--on-rate-limit fallback` では fallback executor の指定が必須です。失敗を含む朝報告を保存できた場合は部分成功を表す終了コード 2、コマンド自体の異常は 1 を返します。
+
 ## 16. devcontainer
 
 `devcontainer` は、利用リポジトリの `.devcontainer/` 環境を構築するためのサブコマンドです。VS Code Dev Container などで、オーケストレーターを起動するための分離されたコンテナ環境を生成します。

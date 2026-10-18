@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/routine.schema.yaml
+# 有効化は保護設定を扱える人が、時刻・上限・fallback agent を確認した後に行う。
+id: rtn-night-approved-register
+name: 承認済み登録項目の夜間実行
+description: 毎晩 2 時に、人が autopilot を承認した open todo・issue を実行して朝報告を作る。
+enabled: false
+trigger:
+  cron: "0 2 * * *"
+  timezone: Asia/Tokyo
+action:
+  kind: job
+  job: job-night-approved-register
+  inputs:
+    max_items: "10"
+    parallel: "2"
+    max_consecutive_failures: "2"
+    on_rate_limit: fallback
+    fallback_executor: codex-executor
+policy:
+  missed_run: latest
+  overlap: skip

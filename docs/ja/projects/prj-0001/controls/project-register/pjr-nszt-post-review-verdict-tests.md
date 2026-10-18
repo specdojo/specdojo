@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-nszt-post-review-verdict-tests
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T14:58:36Z"
+  completed_at: "2026-10-18T16:12:50Z"
+  conclusion: register-post-review のテストに、complete と complete-with-findings で todo・issue を close する判定（指摘が理由に残ること）と、decision・question は verdict にかかわらず close しない判定を加えた。本番のコードは変えていない
   derived_from:
     - PJR-T46Y
 ---

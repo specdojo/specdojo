@@ -217,6 +217,20 @@ describe("readRegisterItemContent — 個票からの一覧行の導出", () => 
 
     expect(parsed?.item.derivedFrom).toEqual(["PJR-CD34", "prj-0002:PJR-EF56"]);
   });
+
+  it("個票の autopilot 承認を読み取る", () => {
+    const approved = readRegisterItemContent(
+      buildItemFile([...MIGRATED_FIELDS, "autopilot: approved"]),
+      "pjr-ab12-inventory-seed.md",
+    );
+    const unapproved = readRegisterItemContent(
+      buildItemFile(MIGRATED_FIELDS),
+      "pjr-ab12-inventory-seed.md",
+    );
+
+    expect(approved?.item.autopilot).toBe("approved");
+    expect(unapproved?.item.autopilot).toBeUndefined();
+  });
 });
 
 describe("toDisplayItem — 保存した日時から一覧の暦日を導出する", () => {
@@ -413,6 +427,25 @@ describe("register-item-frontmatter schema — enum 検証", () => {
       false,
     );
     expect(validator({ specdojo: { ...base, derived_from: ["pjr-cd34"] } })).toBe(false);
+  });
+
+  it("autopilot は approved だけを受け付ける", () => {
+    const validator = buildValidator(
+      "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+    );
+    const base = {
+      id: "prj-0001:pjr-ab12-inventory-seed",
+      type: "project",
+      status: "draft",
+      rulebook: "specdojo:pjr-rulebook",
+      part_of: ["prj-0001:pjr-index"],
+      item_type: "todo",
+      item_status: "open",
+      priority: "medium",
+    };
+
+    expect(validator({ specdojo: { ...base, autopilot: "approved" } })).toBe(true);
+    expect(validator({ specdojo: { ...base, autopilot: "pending" } })).toBe(false);
   });
 
   it("不正な item_status と priority を拒否する", () => {

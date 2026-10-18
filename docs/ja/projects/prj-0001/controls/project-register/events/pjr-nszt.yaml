@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9923fb83588947d0a5d684f94c832797
+- v: 1
+  id: reg_9ea1f6972c5d4c0bad215c6441a4d2cc
+  ts: "2026-10-18T16:12:50Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分と親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: register-post-review のテストに、complete と complete-with-findings で todo・issue を close する判定（指摘が理由に残ること）と、decision・question は verdict にかかわらず close しない判定を加えた。本番のコードは変えていない
+  previous_event_id: reg_33bc07cb5114498ea476f5c53836df37
