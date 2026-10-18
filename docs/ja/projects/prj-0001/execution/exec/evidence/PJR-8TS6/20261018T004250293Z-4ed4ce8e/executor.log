@@ -1,0 +1,22 @@
+I have launched the check and will wait for it to complete.
+検証コマンドを実行中です。完了を待機しています。
+プロジェクト登録簿の項目 **PJR-8TS6**「result の変更ファイルの説明が「reporter の説明がないため」で埋まる」に関する前回の失敗要因の解消と対応の完了を確認しました。
+
+### 実施した修正および確認内容
+
+1. **Git 環境変数隔離テストへの準拠**:
+   - [`src/exec/results.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/src/exec/results.ts) の `collectGitLineStats` 関数内での `git diff` 起動において、環境変数隔離のための `gitEnvironment()` をインポートして `env: gitEnvironment()` を指定しました。これにより、[`tests/src/shared/git-environment-isolation.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/tests/src/shared/git-environment-isolation.test.ts) の検証ルールを満たしました。
+
+2. **reporter プロンプト文言テストの追従**:
+   - [`src/exec/reporter.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/src/exec/reporter.ts) で更新されたプロンプト指示（runner による Git 変更メタデータのフォールバック付与）に合わせ、[`tests/src/exec/reporter.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/tests/src/exec/reporter.test.ts) の期待文言を更新しました。
+
+3. **Markdownlint（MD056）の解消確認**:
+   - 前回発生していた登録簿生成ファイルでのテーブル列数不整合（MD056）は、親ブランチの統合（PJR-BHMH の結論内パイプ文字エスケープ修正）によって解消されていることを確認しました。
+
+4. **個票および成果物の確認**:
+   - 個票 [`docs/ja/projects/prj-0001/controls/project-register/pjr-8ts6-reporter-changed-files-missing-description.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/docs/ja/projects/prj-0001/controls/project-register/pjr-8ts6-reporter-changed-files-missing-description.md) の対応結果記述を最新の対応内容で更新しました。
+   - `npm run validate:catalog` および `npm run validate:history-links` を実行し、いずれも正常に通過することを確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-8TS6 の対応および前回失敗（gitEnvironment 隔離、reporter プロンプト検証）の解消を完了しました。`src/exec/results.ts` での環境変数隔離指定、`tests/src/exec/reporter.test.ts` の期待値追従、個票の更新、およびカタログ・履歴リンク検証を実施しました。","validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml"},{"command":"npm run validate:history-links","status":"passed","summary":"All history links valid"}],"target_coverage":[{"target":"CHANGELOG.md","status":"changed","path":"CHANGELOG.md"},{"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-8ts6-reporter-changed-files-missing-description.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-8ts6-reporter-changed-files-missing-description.md"},{"target":"docs/ja/specdojo/exec-templates/xep-common-conventions-template.md","status":"changed","path":"docs/ja/specdojo/exec-templates/xep-common-conventions-template.md"},{"target":"docs/ja/specdojo/guides/exec-config-guide.md","status":"changed","path":"docs/ja/specdojo/guides/exec-config-guide.md"},{"target":"src/exec/reporter.ts","status":"changed","path":"src/exec/reporter.ts"},{"target":"src/exec/results.ts","status":"changed","path":"src/exec/results.ts"},{"target":"templates/claude/agents/claude-reporter.md","status":"changed","path":"templates/claude/agents/claude-reporter.md"},{"target":"templates/opencode/agents/opencode-reporter.md","status":"changed","path":"templates/opencode/agents/opencode-reporter.md"},{"target":"tests/src/exec/pipeline-e2e.integration.test.ts","status":"changed","path":"tests/src/exec/pipeline-e2e.integration.test.ts"},{"target":"tests/src/exec/results.test.ts","status":"changed","path":"tests/src/exec/results.test.ts"},{"target":"tests/src/exec/reporter.test.ts","status":"changed","path":"tests/src/exec/reporter.test.ts"}]}
+</specdojo_executor_evidence>

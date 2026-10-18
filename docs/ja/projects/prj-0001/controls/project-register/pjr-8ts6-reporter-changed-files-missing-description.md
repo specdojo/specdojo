@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-8ts6-reporter-changed-files-missing-description
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:22:08Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  completed_at: "2026-10-18T04:34:27Z"
+  conclusion: reporter が説明を返さなかった変更ファイルに、git から分かる変更の種類と行数を書くようにした。50 件を超えるとディレクトリごとの件数にまとめる。reporter の指示と雛形も見直した。空の catch と略した変数名、本リポジトリの .claude/agents/claude-reporter.md への指示の反映は残っている
 ---
 
 # PJR-8TS6 result の変更ファイルの説明が「reporter の説明がないため」で埋まる
@@ -61,7 +62,7 @@ reporter が変更ファイルごとの説明を返さないと、runner が res
   - ガイド `docs/ja/specdojo/guides/exec-config-guide.md` および `CHANGELOG.md`（`[0.4.0] - 未定`）に本機能の仕様と挙動を追記した。
   - 並行して動く PJR-H06F との競合を回避するため、plan 生成コード（`src/exec/plans*.ts`・`src/exec/register.ts`）は変更せず、雛形（`templates/` および `docs/ja/specdojo/exec-templates/`）と runner / reporter の処理のみで対応した。
 - 確認結果:
-  - `tests/src/exec/results.test.ts` に、Git 情報を用いたフォールバック表示（行数差分あり・なし）、50 件超のディレクトリ集約、閾値境界（50 件・51 件）の単体テストを追加し、44 件全件が成功することを確認した。
+  - `tests/src/exec/results.test.ts` に、Git 情報を用いたフォールバック表示（行数差分あり・なし）、50 件超のディレクトリ集約、閾値境界（50 件・51 件）の単体テストを追加し、`tests/src/exec/reporter.test.ts` のプロンプト文言検証および `tests/src/shared/git-environment-isolation.test.ts` の環境変数隔離ルールへの準拠を含めて確認した。
   - `tests/src/exec/pipeline-e2e.integration.test.ts` の期待値を更新し、結合テスト 16 件全件が成功することを確認した。
   - `npm run typecheck`、`npm run lint:ts`、`npm run test:unit` を実行し、すべて正常に通過することを確認した。
 - 再発防止策:

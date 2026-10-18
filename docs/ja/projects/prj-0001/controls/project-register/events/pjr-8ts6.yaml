@@ -90,3 +90,51 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-unit"
   previous_event_id: reg_d44d7fc9f3594e468e7f17fb3f17c8b5
+- v: 1
+  id: reg_cd508318f45842c9b83a246ed4636d4b
+  ts: "2026-10-18T04:17:04Z"
+  action: start
+  actor: agy-claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_e19b647535b341758c36349ec6094c05
+- v: 1
+  id: reg_65b14c275e8f4c18ba56d7be4f2cb7da
+  ts: "2026-10-18T04:32:15Z"
+  action: review
+  actor: agy-claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T04:17:14.060Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cd508318f45842c9b83a246ed4636d4b
+- v: 1
+  id: reg_75814dab02a44662b901e90654e7a211
+  ts: "2026-10-18T04:34:27Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-claude-expert-executor・gemma26-reporter）の差分と親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: reporter が説明を返さなかった変更ファイルに、git から分かる変更の種類と行数を書くようにした。50 件を超えるとディレクトリごとの件数にまとめる。reporter の指示と雛形も見直した。空の catch と略した変数名、本リポジトリの .claude/agents/claude-reporter.md への指示の反映は残っている
+  previous_event_id: reg_65b14c275e8f4c18ba56d7be4f2cb7da

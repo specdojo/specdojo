@@ -1,0 +1,21 @@
+プロジェクト登録簿の項目 **PJR-8TS6**「result の変更ファイルの説明が「reporter の説明がないため」で埋まる」の対応を完了しました。
+
+### 実施内容の概要
+
+1. **フォールバック説明の Git メタデータ化**:
+   - [`src/exec/results.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/src/exec/results.ts) において、reporter が説明を返さなかったファイルに対する従来の固定定型文（`reporter の説明がないため、変更差分を参照。`）を廃止しました。
+   - runner 側で Git の操作種別（追加・変更・削除・名前の変更）および変更行数差分（`+X / -Y 行`）を取得し、機械的な説明（例: `名前の変更（src/exec-run.ts から）、+12 / -3 行`、`追加、+2 / -0 行`）を生成する処理を実装しました。
+2. **大量変更ファイル時のディレクトリ集約**:
+   - 変更ファイル数が 50 件（`MAX_INDIVIDUAL_CHANGED_FILES`）を超える場合、reporter が説明したファイルは個別に維持しつつ、説明のないファイルをディレクトリ単位（件数・操作内訳・行数差分・`ほか X 件`）に集約して描画するようにしました。
+3. **reporter 向け指示およびテンプレート・規約の更新**:
+   - [`src/exec/reporter.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/src/exec/reporter.ts)、[`templates/claude/agents/claude-reporter.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/templates/claude/agents/claude-reporter.md)、[`templates/opencode/agents/opencode-reporter.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/templates/opencode/agents/opencode-reporter.md)、および [`docs/ja/specdojo/exec-templates/xep-common-conventions-template.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/docs/ja/specdojo/exec-templates/xep-common-conventions-template.md) を更新し、edit モードで成果物（`docs/`）、ソースコード（`src/`）、テストコード（`tests/`）の全変更ファイルに対して具体的な説明を返すよう指示を明確化しました。
+   - 並行タスク PJR-H06F との競合を防ぐため、plan 生成コード（`src/exec/plans*.ts`・`src/exec/register.ts`）は変更していません。
+4. **ガイドおよび CHANGELOG の更新**:
+   - [`docs/ja/specdojo/guides/exec-config-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/docs/ja/specdojo/guides/exec-config-guide.md) と [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/CHANGELOG.md)（`[0.4.0] - 未定`）に機能内容を追記しました。
+5. **テストの追加・更新と個票の記録**:
+   - [`tests/src/exec/results.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/tests/src/exec/results.test.ts) に単体テストを追加し、[`tests/src/exec/pipeline-e2e.integration.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/tests/src/exec/pipeline-e2e.integration.test.ts) の期待値を更新しました。
+   - 個票 [`docs/ja/projects/prj-0001/controls/project-register/pjr-8ts6-reporter-changed-files-missing-description.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6/docs/ja/projects/prj-0001/controls/project-register/pjr-8ts6-reporter-changed-files-missing-description.md) の「4. 対応結果」を更新しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-8TS6 の対応を完了しました。reporter 未記述時の Git メタデータによる変更説明フォールバック、50 件超のディレクトリ集約、reporter プロンプト・テンプレートの明確化、ガイド・CHANGELOG・個票の更新、および単体・結合テストの追加・修正を実施しました。","validations":[{"command":"npm run validate:catalog","status":"passed","summary":"OK: dct-index.yaml"},{"command":"npm run validate:history-links","status":"passed","summary":"All history links valid"}]}
+</specdojo_executor_evidence>

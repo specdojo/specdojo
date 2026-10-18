@@ -1,5 +1,6 @@
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { execFileSync } from "node:child_process";
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { dirname, join, resolve, sep } from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "../docs/frontmatter-namespace.js";
 import { expandTemplate, stripTerminalControlSequences } from "./shared.js";
@@ -15,8 +16,15 @@ import {
 import type { ExecEvidence } from "./evidence.js";
 import { resolveSpecdojoPath, resolveSpecdojoPathIfExists } from "../docs/template-resolution.js";
 import { dump } from "../shared/yaml.js";
+import { gitEnvironment } from "../shared/git-environment.js";
 
-const MISSING_CHANGED_FILE_SUMMARY = "reporter の説明がないため、変更差分を参照。";
+export const MAX_INDIVIDUAL_CHANGED_FILES = 50;
+
+export type RenderEditReporterOptions = {
+  lineStats?: Map<string, { additions: number; deletions: number }>;
+  worktreeDir?: string;
+  maxIndividualChangedFiles?: number;
+};
 
 // ---------------------------------------------------------------------------
 // Frontmatter helpers
@@ -388,26 +396,255 @@ function reporterBulletList(values: string[], empty: string): string {
   return values.map((value) => `- ${reporterInlineText(value)}`).join("\n");
 }
 
-function renderEditReporterBody(
+function findGitRoot(startDir: string): string | null {
+  try {
+    let current = resolve(startDir);
+    while (true) {
+      if (existsSync(join(current, ".git"))) {
+        return current;
+      }
+      const parent = dirname(current);
+      if (parent === current) return null;
+      current = parent;
+    }
+  } catch {
+    return null;
+  }
+}
+
+function collectGitLineStats(
+  worktreeDir: string,
+  files: readonly { path: string; status: string }[],
+): Map<string, { additions: number; deletions: number }> {
+  const stats = new Map<string, { additions: number; deletions: number }>();
+  try {
+    const raw = execFileSync("git", ["diff", "--numstat", "-z", "HEAD", "--"], {
+      cwd: worktreeDir,
+      env: gitEnvironment(),
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    const parts = raw.split("\0");
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      if (!part) continue;
+      const match = part.match(/^(\d+|-)\t(\d+|-)\t(.*)$/);
+      if (match) {
+        const adds = match[1] === "-" ? 0 : parseInt(match[1]!, 10);
+        const dels = match[2] === "-" ? 0 : parseInt(match[2]!, 10);
+        let p = match[3]!;
+        if (!p && i + 2 < parts.length) {
+          const oldPath = parts[++i]!;
+          const newPath = parts[++i]!;
+          p = newPath;
+          stats.set(newPath, { additions: adds, deletions: dels });
+          stats.set(`${oldPath} -> ${newPath}`, { additions: adds, deletions: dels });
+          continue;
+        }
+        stats.set(p, { additions: adds, deletions: dels });
+      }
+    }
+  } catch {
+    // git diff failed or worktree is not a git repository
+  }
+
+  for (const file of files) {
+    const targetPath = file.path.includes(" -> ") ? file.path.split(" -> ")[1]! : file.path;
+    if (!stats.has(targetPath) && !stats.has(file.path)) {
+      if (file.status === "??" || file.status.includes("A")) {
+        try {
+          const fullPath = join(worktreeDir, targetPath);
+          if (existsSync(fullPath)) {
+            const stat = statSync(fullPath);
+            if (stat.isFile()) {
+              const fileContent = readFileSync(fullPath, "utf8");
+              const lines = fileContent.length === 0 ? 0 : fileContent.split("\n").length;
+              const entry = { additions: lines, deletions: 0 };
+              stats.set(targetPath, entry);
+              if (file.path !== targetPath) {
+                stats.set(file.path, entry);
+              }
+            }
+          }
+        } catch {
+          // ignore unreadable files
+        }
+      }
+    }
+  }
+
+  return stats;
+}
+
+function formatMissingSummary(
+  file: { path: string; status: string },
+  stats?: { additions: number; deletions: number },
+): string {
+  const isRename = file.status.includes("R") || file.path.includes(" -> ");
+  const isAdd = file.status === "??" || file.status.includes("A");
+  const isDelete = file.status.includes("D");
+
+  let action: string;
+  if (isRename) {
+    const oldPath = file.path.includes(" -> ") ? file.path.split(" -> ")[0]! : undefined;
+    action = oldPath ? `名前の変更（${reporterInlineText(oldPath)} から）` : "名前の変更";
+  } else if (isAdd) {
+    action = "追加";
+  } else if (isDelete) {
+    action = "削除";
+  } else {
+    action = "変更";
+  }
+
+  if (stats !== undefined) {
+    return `${action}、+${stats.additions} / -${stats.deletions} 行`;
+  }
+  return action;
+}
+
+function getFileDirectory(filePath: string): string {
+  let cleanPath = filePath;
+  let repoPrefix = "";
+  if (filePath.includes(":")) {
+    const colonIdx = filePath.indexOf(":");
+    repoPrefix = filePath.slice(0, colonIdx + 1);
+    cleanPath = filePath.slice(colonIdx + 1);
+  }
+  const dir = dirname(cleanPath).split(sep).join("/");
+  if (dir === "." || dir === "") {
+    return repoPrefix ? `${repoPrefix}./` : "./";
+  }
+  return repoPrefix ? `${repoPrefix}${dir}/` : `${dir}/`;
+}
+
+export function renderEditReporterBody(
   output: Extract<ReporterOutput, { mode: "edit" }>,
   evidence: ExecEvidence,
+  options?: RenderEditReporterOptions,
 ): string {
   const facts = deriveReporterFacts(evidence);
+  const lineStats =
+    options?.lineStats ??
+    (options?.worktreeDir
+      ? collectGitLineStats(options.worktreeDir, facts.changed_files)
+      : undefined);
   const summariesByPath = new Map<string, string>();
   for (const file of output.changed_files) {
     // The evidence path list remains authoritative. Ignore invented paths and keep the first
     // description when a reporter repeats a path so rendering stays deterministic.
     if (!summariesByPath.has(file.path)) summariesByPath.set(file.path, file.summary);
   }
-  const changedFiles =
-    facts.changed_files.length === 0
-      ? "- なし"
-      : facts.changed_files
-          .map(
-            (file) =>
-              `- \`${reporterInlineText(file.path).replace(/`/g, "'")}\`: ${reporterInlineText(summariesByPath.get(file.path) ?? MISSING_CHANGED_FILE_SUMMARY)}`,
-          )
-          .join("\n");
+
+  const maxIndividual = options?.maxIndividualChangedFiles ?? MAX_INDIVIDUAL_CHANGED_FILES;
+  let changedFiles: string;
+
+  if (facts.changed_files.length === 0) {
+    changedFiles = "- なし";
+  } else if (facts.changed_files.length <= maxIndividual) {
+    changedFiles = facts.changed_files
+      .map((file) => {
+        const displayPath = file.path.includes(" -> ") ? file.path.split(" -> ")[1]! : file.path;
+        const reporterSummary = summariesByPath.get(displayPath) ?? summariesByPath.get(file.path);
+        const summary =
+          reporterSummary !== undefined && reporterSummary.trim().length > 0
+            ? reporterSummary
+            : formatMissingSummary(file, lineStats?.get(displayPath) ?? lineStats?.get(file.path));
+        return `- \`${reporterInlineText(displayPath).replace(/`/g, "'")}\`: ${reporterInlineText(summary)}`;
+      })
+      .join("\n");
+  } else {
+    // Over threshold: list described files individually, and group undescribed files by directory.
+    const describedFiles: Array<{
+      displayPath: string;
+      summary: string;
+    }> = [];
+    const undescribedFiles: Array<{
+      displayPath: string;
+      file: (typeof facts.changed_files)[number];
+    }> = [];
+    const describedCountByDir = new Map<string, number>();
+
+    for (const file of facts.changed_files) {
+      const displayPath = file.path.includes(" -> ") ? file.path.split(" -> ")[1]! : file.path;
+      const reporterSummary = summariesByPath.get(displayPath) ?? summariesByPath.get(file.path);
+      if (reporterSummary !== undefined && reporterSummary.trim().length > 0) {
+        describedFiles.push({ displayPath, summary: reporterSummary });
+        const dir = getFileDirectory(displayPath);
+        describedCountByDir.set(dir, (describedCountByDir.get(dir) ?? 0) + 1);
+      } else {
+        undescribedFiles.push({ displayPath, file });
+      }
+    }
+
+    const lines: string[] = [];
+    for (const entry of describedFiles) {
+      lines.push(
+        `- \`${reporterInlineText(entry.displayPath).replace(/`/g, "'")}\`: ${reporterInlineText(entry.summary)}`,
+      );
+    }
+
+    type DirGroup = {
+      count: number;
+      operations: Map<string, number>;
+      additions: number;
+      deletions: number;
+      hasLineStats: boolean;
+    };
+    const dirGroups = new Map<string, DirGroup>();
+
+    for (const entry of undescribedFiles) {
+      const dir = getFileDirectory(entry.displayPath);
+      let group = dirGroups.get(dir);
+      if (!group) {
+        group = {
+          count: 0,
+          operations: new Map<string, number>(),
+          additions: 0,
+          deletions: 0,
+          hasLineStats: false,
+        };
+        dirGroups.set(dir, group);
+      }
+      group.count++;
+
+      const isRename = entry.file.status.includes("R") || entry.file.path.includes(" -> ");
+      const isAdd = entry.file.status === "??" || entry.file.status.includes("A");
+      const isDelete = entry.file.status.includes("D");
+      const op = isRename ? "名前の変更" : isAdd ? "追加" : isDelete ? "削除" : "変更";
+      group.operations.set(op, (group.operations.get(op) ?? 0) + 1);
+
+      const stats = lineStats?.get(entry.displayPath) ?? lineStats?.get(entry.file.path);
+      if (stats !== undefined) {
+        group.additions += stats.additions;
+        group.deletions += stats.deletions;
+        group.hasLineStats = true;
+      }
+    }
+
+    const sortedDirs = [...dirGroups.keys()].sort((a, b) => a.localeCompare(b));
+    const operationOrder = ["変更", "追加", "削除", "名前の変更"];
+
+    for (const dir of sortedDirs) {
+      const group = dirGroups.get(dir)!;
+      const describedInDir = describedCountByDir.get(dir) ?? 0;
+      const countText = describedInDir > 0 ? `ほか ${group.count} 件` : `${group.count} 件`;
+
+      const sortedOps = [...group.operations.keys()].sort((a, b) => {
+        const idxA = operationOrder.indexOf(a);
+        const idxB = operationOrder.indexOf(b);
+        return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+      });
+      const opParts = sortedOps.map((op) => `${op} ${group.operations.get(op)} 件`);
+      const lineStatsPart = group.hasLineStats
+        ? `、+${group.additions} / -${group.deletions} 行`
+        : "";
+      lines.push(
+        `- \`${reporterInlineText(dir)}\`: ${countText}（${opParts.join("、")}${lineStatsPart}）`,
+      );
+    }
+
+    changedFiles = lines.length === 0 ? "- なし" : lines.join("\n");
+  }
   const unchangedTargetNotes = (evidence?.target_coverage ?? [])
     .filter((entry) => entry.status === "unchanged")
     .map((entry) => {
@@ -527,6 +764,7 @@ export async function renderReporterResult(
   resultPath: string,
   output: ReporterOutput,
   evidence: ExecEvidence,
+  options?: RenderEditReporterOptions,
 ): Promise<void> {
   if (!existsSync(resultPath)) throw new Error(`Result not found: ${resultPath}`);
   const content = readFileSync(resultPath, "utf8");
@@ -536,9 +774,15 @@ export async function renderReporterResult(
   }
   const frontmatter = content.match(/^---\r?\n[\s\S]*?\r?\n---/)?.[0];
   if (!frontmatter) throw new Error(`Result frontmatter not found: ${resultPath}`);
+
+  const resolvedOptions: RenderEditReporterOptions = {
+    ...options,
+    worktreeDir: options?.worktreeDir ?? findGitRoot(dirname(resultPath)) ?? undefined,
+  };
+
   const body =
     output.mode === "edit"
-      ? renderEditReporterBody(output, evidence)
+      ? renderEditReporterBody(output, evidence, resolvedOptions)
       : renderReviewReporterBody(output, evidence);
   writeFileSync(resultPath, frontmatterWithBody(frontmatter, body), "utf8");
   await formatMarkdownFile(resultPath);

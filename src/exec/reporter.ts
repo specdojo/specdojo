@@ -813,11 +813,12 @@ misread it as emphasis.
 The plan below was written as generic instructions for a single agent that both edits the
 deliverable and records its own result. In this pipeline, those two responsibilities are split:
 the executor already completed the deliverable edit and intentionally left the result file
-untouched because the runner writes it from your prose and machine facts. For edit mode, identify
-each changed_files summary with the exact path from its evidence.changes entry. The runner matches
-descriptions by path: order does not matter, missing descriptions use a default message, and paths
-absent from evidence are discarded. Do not include statuses. An empty changes list requires an
-empty changed_files list. Validation entries with source="runner" were executed by the parent
+untouched because the runner writes it from your prose and machine facts. For edit mode, explain
+what was changed in each file in changed_files, especially deliverables (docs/), source files (src/),
+and test files (tests/). Identify each changed_files summary with the exact path from its evidence.changes
+entry. The runner matches descriptions by path: order does not matter, missing descriptions are filled
+with Git change metadata by the runner, and paths absent from evidence are discarded. Do not include
+statuses. An empty changes list requires an empty changed_files list. Validation entries with source="runner" were executed by the parent
 process and remain authoritative machine facts. Do not turn them into outcome or block_reason
 fields. When runner_context is present, it contains additional authoritative facts: do not ask for
 a command in mechanically_not_applicable to be run, because the runner already determined that it
