@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_efe991f846df4a4c9feb3f78ed0a91d2
+- v: 1
+  id: reg_1eb422108d17499a86313da49e220f52
+  ts: "2026-10-18T18:19:52Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証と、統合後の JSEY を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: 既存のやり直しの仕組み（runGitWithTransientRetry）で、index.lock の取り合いを 1.5 秒おきに最大 10 回やり直すようにした。翻訳されたメッセージも見分け、上限に達したらロックのパスを添えて失敗を報告する。ロックのファイルは消さない。統合後の JSEY が通った
+  previous_event_id: reg_361970fd399d476ea33df4fc4fee9293

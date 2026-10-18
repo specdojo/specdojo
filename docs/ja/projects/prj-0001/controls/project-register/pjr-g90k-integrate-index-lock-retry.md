@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-g90k-integrate-index-lock-retry
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T16:42:24Z"
+  completed_at: "2026-10-18T18:19:52Z"
+  conclusion: 既存のやり直しの仕組み（runGitWithTransientRetry）で、index.lock の取り合いを 1.5 秒おきに最大 10 回やり直すようにした。翻訳されたメッセージも見分け、上限に達したらロックのパスを添えて失敗を報告する。ロックのファイルは消さない。統合後の JSEY が通った
   derived_from:
     - PJR-RY4C
 ---
