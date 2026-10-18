@@ -35,3 +35,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-RY4C"]'
+- v: 1
+  id: reg_efe991f846df4a4c9feb3f78ed0a91d2
+  ts: "2026-10-18T17:55:09Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d7fc7a841c7342df9385c22c8b18e5c8
