@@ -49,4 +49,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 - [[prj-0001:pjr-8gq4-devcontainer-workspace-dir-fixed]]（元の項目）
 - [[specdojo:remote-host-development-guide]]（影響先）
-- [[prj-0001:tsd-home-mac-dev-server]]（自宅の Mac 向けの接続の例）
+- [[tsd-home-mac-dev-server]]（自宅の Mac 向けの接続の例）
