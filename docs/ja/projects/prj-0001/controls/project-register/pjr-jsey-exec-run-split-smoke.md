@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  block_reason: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md"
   conclusion: 6EF8 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
 ---
 
@@ -58,6 +57,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 2026-10-18 20:09 | PJR-NJ6J   | claude-expert-executor |
 | 2026-10-18 21:58 | PJR-6EF8   | claude-expert-executor |
 | 2026-10-19 00:08 | PJR-T46Y   | sonnet-executor        |
+| 2026-10-19 00:20 | PJR-T46Y   | sonnet-executor        |
 
 ## 5. 関連ドキュメント
 

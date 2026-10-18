@@ -1,0 +1,9 @@
+個票の「対応結果」の表に 1 行追記しました(2026-10-19 00:20、PJR-T46Y、sonnet-executor)。変更したのは個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。
+
+対象の分割は、表に最後に載っていた PJR-T46Y のままにしました。`git log` を見ても、それより新しく統合された分割は確認できなかったためです。ただし、各項目の状態を登録簿で個別に確かめてはいません。
+
+親の検証 7 件は親 runner が実行するため、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に 1 行追記した(2026-10-19 00:20 / PJR-T46Y / sonnet-executor)。変更は個票のみ。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検証のため executor では実行していない"}]}
+</specdojo_executor_evidence>

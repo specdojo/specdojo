@@ -944,3 +944,32 @@
       from: "-"
       to: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md"
   previous_event_id: reg_ac6a009434e54180820bfea7122bde6b
+- v: 1
+  id: reg_0d106a8870ee4cb2832cb78facbedf63
+  ts: "2026-10-18T15:19:48Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md"
+      to: "-"
+  previous_event_id: reg_3d802041b40e465b90f705f1917ebdb6
+- v: 1
+  id: reg_ff3722b66b5041c18a678c0958f4ece1
+  ts: "2026-10-18T15:24:59Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0d106a8870ee4cb2832cb78facbedf63
