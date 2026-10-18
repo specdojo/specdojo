@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:45:12Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-E025 汎用の部品の移動の後に残る循環をほどく
@@ -49,6 +48,7 @@ register から exec/worktree-ops・exec/slot-lock、job から exec/plans、gra
 - `job` → `exec/plans` は、Job と exec が共用する plan テンプレート解決・共通規約注入を `src/shared/plan-templates.ts`、Markdown 整形を `src/shared/markdown-format.ts`、同梱リソース解決を `src/shared/template-resolution.ts` へ移した。既存の exec・docs API は再 export で維持した。
 - `grade` → `exec/schedule-index` は、schedule YAML の読み取りと index 構築を `src/shared/schedule-index.ts`、schedule パス処理を `src/shared/schedule-paths.ts` へ移した。grade・dashboard・exec が同じ実装を shared から使う構成にした。
 - `exec` → `grade/result` は、grade result の読取・件数集計を既存の `src/shared/grade-result.ts` へ移し、exec は shared を直接参照するようにした。grade 固有の書込・翻訳・検証は `src/grade/result.ts` に残した。
+- grade result の正本移動に合わせ、`tests/src/exec/plans-grade-findings.test.ts` のモック先も shared へ変更した。これにより、単体テストがモックを迂回して実設定を読む回帰を解消した。
 - `src/` の相対 import を機能ディレクトリ単位で集計し、`register` → `exec`、`job` → `exec`、`grade` → `exec`、`exec` → `grade` がいずれも 0 件であることを確認した。shared から機能ディレクトリへの import も 0 件である。
 - 変更前の Git HEAD と変更後をそれぞれ build し、ルートから全サブコマンドまで 123 件の `--help` 出力が完全一致することを確認した。`npm run build` も成功した。親 runner が実行する lint・型検査・単体／統合テスト・schema 検証は executor では重複実行していない。
 - runner が使うロック・Git 操作を移したため、統合後の実動作確認は [[prj-0001:pjr-jsey-exec-run-split-smoke|PJR-JSEY exec-run.ts の分割後に runner の動作を確かめる]] の手順で `exec run --register` を 1 回流す。

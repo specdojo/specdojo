@@ -1,0 +1,7 @@
+対象4組の循環依存を解消し、個票へ判断理由と検証結果を記録しました。既存 API は再 export で維持しています。executor 指示に従い result は編集していません。
+
+変更後は対象機能間の直接依存が0件となり、全123コマンドの `--help` が変更前と完全一致しました。統合後の実 runner 確認のみ引き継ぎます。
+
+<specdojo_executor_evidence>
+{"final_message":"対象4組の循環依存を shared への移動と依存方向の変更で解消し、個票を更新した。","validations":[{"command":"npm run build","status":"passed","summary":"TypeScript のビルドが成功した。"},{"command":"! rg -n 'from .*exec/' src/register src/job src/grade --glob '*.ts' && ! rg -n 'from .*grade/' src/exec --glob '*.ts' && ! rg -n 'from .*\\.\\./' src/shared --glob '*.ts'","status":"passed","summary":"対象機能間の直接 import と shared から機能側への import は0件だった。"},{"command":"cmp tmp/pjr-e025-help-before-clean.txt tmp/pjr-e025-help-after-final.txt","status":"passed","summary":"変更前後の全123コマンド／サブコマンドの help 出力が完全一致した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証が成功した。未作成成果物に関する既存の警告のみ出力された。"},{"command":"npx prettier --check 'src/**/*.ts' docs/ja/projects/prj-0001/controls/project-register/pjr-e025-src-remaining-cycles.md","status":"passed","summary":"対象ソースと個票が Prettier 形式に適合した。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはなかった。"},{"command":"specdojo exec run --register <next-register-item>","status":"requires_human","summary":"runner コードを移動したため、統合後に実 agent CLI を使う register run を1回完走させる。"}]}
+</specdojo_executor_evidence>

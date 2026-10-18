@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { load } from "./yaml.js";
 import { getProjectExecutionPath, loadConfig, specdojoRootDir } from "./specdojo-config.js";
@@ -147,4 +147,21 @@ export function parseGradeResult(content: string, path: string): GradeResult {
 
 export function gradeFindingDisplayMessage(finding: StoredGradeFinding): string {
   return finding.message_ja?.trim() || finding.message;
+}
+
+export function readGradeResult(path: string): GradeResult | undefined {
+  if (!existsSync(path)) return undefined;
+  return parseGradeResult(readFileSync(path, "utf8"), path);
+}
+
+export function readGradeResultForDocument(opts: {
+  documentPath: string;
+  project?: string;
+  rootDir?: string;
+}): GradeResult | undefined {
+  return readGradeResult(gradeResultPathForDocument(opts));
+}
+
+export function gradeFindingCount(result: GradeResult): number {
+  return SEVERITIES.reduce((sum, severity) => sum + result.finding_counts[severity], 0);
 }

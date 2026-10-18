@@ -1,13 +1,6 @@
 import { spawnSync } from "node:child_process";
-import {
-  appendFileSync,
-  existsSync,
-  lstatSync,
-  mkdirSync,
-  readFileSync,
-  writeFileSync,
-} from "node:fs";
-import { join, relative, resolve, sep } from "node:path";
+import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { load } from "../shared/yaml.js";
 import {
   deliverableDocPath,
@@ -25,6 +18,17 @@ import {
 import { recordProtectedConfigBlockAcrossRepos } from "./protection-handoff.js";
 import { assertNoPendingProductChanges, productIntegrationTarget } from "./task-repos.js";
 import { specdojoPackageRootDir } from "../shared/package-paths.js";
+import {
+  repoRelative,
+  stageCommitTargets,
+  worktreeStatusPaths as statusPaths,
+} from "../shared/git.js";
+export {
+  repoRelative,
+  selectStageablePaths,
+  stageCommitTargets,
+  worktreeStatusPaths,
+} from "../shared/git.js";
 import {
   appendGitFailureLog,
   appendGitResultFailureLog,
@@ -50,38 +54,10 @@ export type WorktreeOpsContext = {
   catalogPath?: string;
 };
 
-export function repoRelative(repoRoot: string, path: string): string {
-  const value = relative(repoRoot, path);
-  if (!value || value === ".." || value.startsWith(`..${sep}`)) {
-    throw new Error(`Path is outside repository root: ${path}`);
-  }
-  return value.split(sep).join("/");
-}
-
 export function currentBranch(repoRoot: string): string {
   const branch = gitOutput(repoRoot, ["branch", "--show-current"]).trim();
   if (!branch) throw new Error("Detached HEAD is not supported for exec worktree commands.");
   return branch;
-}
-
-function statusPaths(repoRoot: string): string[] {
-  const output = gitOutput(repoRoot, ["status", "--porcelain=v1", "-z", "--untracked-files=all"]);
-  const records = output.split("\0").filter(Boolean);
-  const paths: string[] = [];
-  for (let index = 0; index < records.length; index++) {
-    const record = records[index];
-    if (record.length < 4) continue;
-    const status = record.slice(0, 2);
-    paths.push(record.slice(3));
-    if ((status.includes("R") || status.includes("C")) && records[index + 1]) {
-      paths.push(records[++index]);
-    }
-  }
-  return paths;
-}
-
-export function worktreeStatusPaths(repoRoot: string): string[] {
-  return statusPaths(repoRoot);
 }
 
 export function taskPaths(
@@ -529,26 +505,6 @@ export function commitTargetPaths(
 // パスはそのどちらにも存在しないため、`-A` を付けても「pathspec did not match any files」で
 // fatal になる。このようなパスは追加で stage する内容が無いので、add の対象から除外する。
 // commit / commit --amend の pathspec は HEAD も照合するため、対象から外さずに削除を記録できる。
-export function selectStageablePaths(repoRoot: string, paths: readonly string[]): string[] {
-  if (paths.length === 0) return [];
-  const indexed = new Set(
-    zeroSeparatedPaths(repoRoot, ["ls-files", "--full-name", "-z", "--", ...paths]),
-  );
-  // 作業ツリー側の存在確認は lstat で行う。git は symlink 自体を追跡するため、リンク先が
-  // 無い symlink も add の対象になる（existsSync はリンク先を辿るため false になる）。
-  const existsInWorktree = (path: string): boolean =>
-    lstatSync(resolve(repoRoot, path), { throwIfNoEntry: false }) !== undefined;
-  return paths.filter((path) => indexed.has(path) || existsInWorktree(path));
-}
-
-// commit 対象を stage する。stage できる対象が無い場合（staged 済みの削除だけが残る場合）は
-// git add を実行しない。commit 対象の限定は呼び出し側の paths が担うため、範囲は変わらない。
-export function stageCommitTargets(repoRoot: string, paths: readonly string[]): void {
-  const stageable = selectStageablePaths(repoRoot, paths);
-  if (stageable.length === 0) return;
-  gitOutput(repoRoot, ["add", "-A", "--", ...stageable]);
-}
-
 // runner が stage した対象だけを index から戻す。利用者や別処理が stage 済みの無関係な
 // パスは保持し、commit / hook の失敗を後続の exec run へ持ち越さない。
 export function unstageCommitTargets(repoRoot: string, paths: readonly string[]): void {

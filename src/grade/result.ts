@@ -20,6 +20,9 @@ import {
   gradeResultPathForDocument,
   parseGradeResult,
   gradeFindingDisplayMessage,
+  readGradeResult,
+  readGradeResultForDocument,
+  gradeFindingCount,
 } from "../shared/grade-result.js";
 
 export type {
@@ -41,22 +44,12 @@ export {
   gradeResultPathForDocument,
   parseGradeResult,
   gradeFindingDisplayMessage,
+  readGradeResult,
+  readGradeResultForDocument,
+  gradeFindingCount,
 };
 
 const GRADE_RESULT_SCHEMA = "docs/specdojo/schemas/v1/grade-result.schema.yaml";
-
-export function readGradeResult(path: string): GradeResult | undefined {
-  if (!existsSync(path)) return undefined;
-  return parseGradeResult(readFileSync(path, "utf8"), path);
-}
-
-export function readGradeResultForDocument(opts: {
-  documentPath: string;
-  project?: string;
-  rootDir?: string;
-}): GradeResult | undefined {
-  return readGradeResult(gradeResultPathForDocument(opts));
-}
 
 export function renderGradeResult(result: GradeResult, path: string): string {
   const schemaRef = relative(dirname(path), resolveSpecdojoPath(GRADE_RESULT_SCHEMA))
@@ -77,10 +70,6 @@ export function writeGradeResult(path: string, result: GradeResult, dryRun = fal
     writeFileSync(path, rendered, "utf8");
   }
   return true;
-}
-
-export function gradeFindingCount(result: GradeResult): number {
-  return SEVERITIES.reduce((sum, severity) => sum + result.finding_counts[severity], 0);
 }
 
 function isJapaneseFindingMessage(message: string): boolean {

@@ -1,5 +1,6 @@
 import { join } from "node:path";
 import { ensureDir } from "../shared.js";
+import { registerLifecyclePoolPath } from "../../register/lifecycle-lock.js";
 import {
   delay,
   formatLockOwner,
@@ -164,7 +165,7 @@ export function releaseExecRunLock(handle: ExecRunLockHandle): void {
 // Serializes the register lifecycle steps that write the root worktree (start transition,
 // checkpoint, merge, wait commit, view rebuild) across every exec run of the project.
 export function execLifecyclePoolPath(executionPath: string): string {
-  return join(execLocksDir(executionPath), "exec-lifecycle");
+  return registerLifecyclePoolPath(executionPath);
 }
 
 export type ExecLockUsageEntry = {

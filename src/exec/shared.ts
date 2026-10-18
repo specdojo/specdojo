@@ -1,7 +1,3 @@
-import { randomBytes } from "node:crypto";
-import { basename, relative } from "node:path";
-import { toPortablePath } from "../shared/artifact-path.js";
-
 export { toArtifactPath, toPortablePath } from "../shared/artifact-path.js";
 export { ensureDir, listFilesRecursive, readJson, readYaml, writeJson } from "../shared/fs.js";
 export {
@@ -19,6 +15,8 @@ export {
   normalizeDateOnly,
   nowUtcIsoSeconds,
 } from "../shared/time.js";
+export { randomHex } from "../shared/random.js";
+export { isSchYamlFilename, toScheduleFilePath } from "../shared/schedule-paths.js";
 
 export function tsForFilenameUtc(ts: string): string {
   return ts.replace(/[-:]/g, "").replace("T", "T");
@@ -37,10 +35,6 @@ export function safeSlug(s: string): string {
     .replace(/\s+/g, "-")
     .replace(/[^A-Za-z0-9._-]/g, "_")
     .slice(0, 80);
-}
-
-export function randomHex(bytes: number): string {
-  return randomBytes(bytes).toString("hex");
 }
 
 export function requireNonEmpty(name: string, v: unknown): string {
@@ -83,17 +77,8 @@ export function isStringArray(value: unknown): value is string[] {
   return Array.isArray(value) && value.every((item) => typeof item === "string");
 }
 
-export function isSchYamlFilename(path: string): boolean {
-  const name = basename(path);
-  return /^sch-.*\.(yaml|yml)$/.test(name);
-}
-
 export function sleepMs(ms: number): void {
   const sab = new SharedArrayBuffer(4);
   const int32 = new Int32Array(sab);
   Atomics.wait(int32, 0, 0, ms);
-}
-
-export function toScheduleFilePath(schedulePath: string, filePath: string): string {
-  return toPortablePath(relative(schedulePath, filePath) || ".");
 }

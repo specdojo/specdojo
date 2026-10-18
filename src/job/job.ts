@@ -4,10 +4,10 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import type { Command } from "commander";
 import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
-import { formatMarkdownFile } from "../exec/format.js";
-import { execTemplatePath, injectCommonConventions, MISSING } from "../exec/plans.js";
 import { listFilesRecursive, writeJson } from "../shared/fs.js";
 import { gitEnvironment } from "../shared/git.js";
+import { formatMarkdownFile } from "../shared/markdown-format.js";
+import { execTemplatePath, injectCommonConventions, MISSING } from "../shared/plan-templates.js";
 import { expandTemplate } from "../shared/text.js";
 import {
   isJobAgentTask,

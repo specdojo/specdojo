@@ -15,6 +15,7 @@ export type {
   SchedulerStrategy,
   TaskMode,
 } from "../shared/agent-types.js";
+export type { ScheduleCalendar, ScheduleIndex, ScheduleNode } from "../shared/schedule-index.js";
 
 export type AgentPipelineStage = {
   stage_role: AgentStageRole;
@@ -77,45 +78,6 @@ export type CurrentState = {
 export type StateSnapshot = {
   schedule_path: string;
   tasks: Record<string, CurrentState>;
-};
-
-export type ScheduleNode = {
-  id: string;
-  local_id?: string;
-  target_local_ids?: string[];
-  phase_suffix?: string;
-  phase_set?: string;
-  phase_id?: string;
-  cycle?: number;
-  iteration?: number;
-  artifact_name?: string;
-  name?: string;
-  owner?: string;
-  depends_on: string[];
-  duration_days: number;
-  kind: "task" | "milestone" | "gate";
-  schedule_file: string;
-  tags?: string[];
-  description?: string;
-  agent?: AgentAssignment;
-};
-
-export type ScheduleCalendar = {
-  timezone: string;
-  workdays: Set<number>;
-  holidays: Set<string>;
-  work_hours_per_day: number;
-};
-
-export type ScheduleIndex = {
-  nodes: Map<string, ScheduleNode>;
-  files: string[];
-  start_date: string | null;
-  calendar: ScheduleCalendar;
-  section_labels: Record<string, string>;
-  // schedule_file（生パス）ごとの明示 start_date。track/milestones が
-  // settings.start_date を持つ場合のみ格納する。CPM の es 下限に使う。
-  file_start_dates: Map<string, string>;
 };
 
 export type CpmNode = {

@@ -1,12 +1,16 @@
 import { type Command } from "commander";
 import { existsSync, readFileSync } from "node:fs";
 import { relative, sep } from "node:path";
-import { execLifecyclePoolPath } from "../exec/run/lock.js";
-import { CrossProcessMutex } from "../exec/slot-lock.js";
-import { gitOutput, gitResult } from "../shared/git.js";
+import { CrossProcessMutex } from "../shared/cross-process-lock.js";
+import {
+  gitOutput,
+  gitResult,
+  repoRelative,
+  stageCommitTargets,
+  worktreeStatusPaths,
+} from "../shared/git.js";
 import { inlineCodeAnglePlaceholders } from "../shared/text.js";
 import type { Approach } from "../shared/agent-types.js";
-import { repoRelative, stageCommitTargets, worktreeStatusPaths } from "../exec/worktree-ops.js";
 import {
   atomicWriteFile,
   buildRegisterItemContent,
@@ -74,6 +78,7 @@ import {
   writeDerivedViews,
 } from "./views.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { registerLifecyclePoolPath } from "./lifecycle-lock.js";
 
 export {
   PJR_ID_ALPHABET,
@@ -350,7 +355,7 @@ async function runRegisterMutation(
       throw new Error(`Execution path is not configured for project ${paths.projectId}`);
     }
     const mutex = new CrossProcessMutex(
-      execLifecyclePoolPath(paths.executionPath),
+      registerLifecyclePoolPath(paths.executionPath),
       {
         actor: registerEventActor(opts),
         label: `register ${command}`,
