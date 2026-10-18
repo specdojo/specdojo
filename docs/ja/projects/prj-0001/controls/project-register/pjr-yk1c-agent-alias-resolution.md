@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-yk1c-agent-alias-resolution
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T22:18:27Z"
   due_on: null
+  completed_at: "2026-10-18T08:18:07Z"
+  conclusion: --executor-by などの指定と自動選択で、別名を実体へ解決するようにした（無効な実体は使わない）。実体の model を command_template の {model} で渡し、model のない今の名簿は command_params のまま動く。イベントと result の actor には実体の名前を記録する。統合後の runner で JSEY が通った
 ---
 
 # PJR-YK1C agent の別名の解決と記録を実装する

@@ -119,3 +119,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e9a32ebdb8834813addefb54028a6efa
+- v: 1
+  id: reg_ccac3884a0284d8482cb8d937e240b8c
+  ts: "2026-10-18T08:18:07Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor で型検査の失敗、claude-expert-executor でやり直し、gemma26-reporter）の差分・親検証と JSEY の動作確認を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: --executor-by などの指定と自動選択で、別名を実体へ解決するようにした（無効な実体は使わない）。実体の model を command_template の {model} で渡し、model のない今の名簿は command_params のまま動く。イベントと result の actor には実体の名前を記録する。統合後の runner で JSEY が通った
+  previous_event_id: reg_d31e9da161fd49de9755455b4e6f287a
