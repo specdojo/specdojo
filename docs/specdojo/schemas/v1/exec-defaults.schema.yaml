@@ -51,7 +51,18 @@ properties:
 $defs:
   ParentValidationId:
     type: string
-    enum: [validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md]
+    enum:
+      [
+        validate-schema,
+        typecheck,
+        test-unit,
+        test-integration,
+        lint-ts,
+        lint-fm,
+        lint-md,
+        build,
+        format-check,
+      ]
 
   PipelineDefaults:
     type: object

@@ -114,9 +114,28 @@ describe("parent validation allowlist", () => {
     ]);
   });
 
-  it("lists the lint IDs among the allowed IDs when rejecting an unknown ID", () => {
+  it("resolves the build and format-check IDs to fixed npm scripts", () => {
+    const definitions = resolveParentValidationDefinitions(["build", "format-check"]);
+
+    expect(definitions).toEqual([
+      expect.objectContaining({
+        id: "build",
+        command: expect.stringMatching(/^npm(?:\.cmd)?$/),
+        args: ["run", "build"],
+        displayCommand: "npm run build",
+      }),
+      expect.objectContaining({
+        id: "format-check",
+        command: expect.stringMatching(/^npm(?:\.cmd)?$/),
+        args: ["run", "format:check"],
+        displayCommand: "npm run format:check",
+      }),
+    ]);
+  });
+
+  it("lists the allowed IDs when rejecting an unknown ID", () => {
     expect(() => resolveParentValidationDefinitions(["lint"])).toThrow(
-      /allowed: validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md/,
+      /allowed: validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md, build, format-check/,
     );
   });
 
@@ -311,6 +330,34 @@ describe("parent validation repository assignment", () => {
 
     expect(product).toBe(project);
     expect(product.args).toEqual(["run", "test:unit"]);
+  });
+
+  it("resolves build and format-check assigned to a product repository", () => {
+    const assignments = resolveParentValidationAssignments([
+      { id: "build", repo: "app1" },
+      { id: "format-check", repo: "app1" },
+    ]);
+
+    expect(assignments).toEqual([
+      {
+        definition: expect.objectContaining({
+          id: "build",
+          args: ["run", "build"],
+          displayCommand: "npm run build",
+        }),
+        repo: "app1",
+        label: "app1:build",
+      },
+      {
+        definition: expect.objectContaining({
+          id: "format-check",
+          args: ["run", "format:check"],
+          displayCommand: "npm run format:check",
+        }),
+        repo: "app1",
+        label: "app1:format-check",
+      },
+    ]);
   });
 
   it("rejects malformed entries, unknown IDs and duplicate (id, repo) pairs", () => {

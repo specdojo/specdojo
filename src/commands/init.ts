@@ -34,6 +34,8 @@ const PARENT_VALIDATION_SCRIPTS = {
   "validate-schema": "validate:schema",
   typecheck: "typecheck",
   "test-unit": "test:unit",
+  build: "build",
+  "format-check": "format:check",
 } as const;
 
 export type InitOptions = {
