@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-7aw0-parent-validation-not-applicable-rejected
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T14:46:06Z"
+  completed_at: "2026-10-18T15:28:40Z"
+  conclusion: 親検証に設定された検査について executor が not_run か not_applicable と報告しても、親 runner が流して通した場合は run を失敗にせず、親 runner の結果を正とするようにした。executor の failed は打ち消さない。共通の規約の要点にも書いた。qwen-executor の WJE6 が、この修正の後の再開で通った
   derived_from:
     - PJR-Z104
 ---
@@ -53,7 +55,10 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `src/exec/reporter.ts` で、executor の `not_run` / `not_applicable` と、同じリポジトリ・同じコマンドで成功した親検証を照合し、親検証の結果を正とするようにした。
+- 親検証が成功した `not_run` / `not_applicable` は完了扱いとなり、親検証でない検査の誤った `not_applicable` は従来どおり拒否する単体テストを追加した。
+- 共通規約と exec 設定ガイドに、親検証は executor evidence の validations へ含めなくてよく、含まれても親 runner の結果を正とする規則を明記した。
+- 未公開版 `0.4.1` の CHANGELOG に修正内容を記録した。
 
 ## 5. 関連ドキュメント
 

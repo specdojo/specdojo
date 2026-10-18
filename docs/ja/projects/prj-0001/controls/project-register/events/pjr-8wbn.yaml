@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8517af97ccd645ad8403ab454145a9e6
+  ts: "2026-10-18T14:51:17Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 変更の種類で決まる検査の not_applicable を runner が script の有無だけで退ける
+    - field: description
+      from: ""
+      to: 2026-10-18 23:50 に PJR-WSET を agy-expert-executor で流したところ、agy は npm run validate:schema:file を「YAML の成果物を変えていない」として not_applicable と報告した（規約の「YAML 成果物を編集した場合」に従った判断）。runner は script が package.json にあるため当てはまると判定して退け、親検証 7 件が通っていたのに executor validation failed or not run で waiting にした。規約の検査の多くは変更したファイルの種類で当てはまるかが決まるが、runner は script の有無しか見ていない
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Z104"]'
+- v: 1
+  id: reg_55649dedde2740eeb4fe473130dcdd96
+  ts: "2026-10-18T15:03:55Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8517af97ccd645ad8403ab454145a9e6
+- v: 1
+  id: reg_b5d0040b73054b12853a54a71eb97e59
+  ts: "2026-10-18T15:18:31Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  previous_event_id: reg_55649dedde2740eeb4fe473130dcdd96
+- v: 1
+  id: reg_355e150d278a49cba8066412646ba5b0
+  ts: "2026-10-18T15:20:48Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+      to: "-"
+  previous_event_id: reg_b5d0040b73054b12853a54a71eb97e59
+- v: 1
+  id: reg_e196b416735f4c5eb62727d5499875ca
+  ts: "2026-10-18T15:28:59Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
+  previous_event_id: reg_355e150d278a49cba8066412646ba5b0
+- v: 1
+  id: reg_d50cbc116cf24c62bbc45691d33e2def
+  ts: "2026-10-18T15:30:15Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
+      to: "-"
+  previous_event_id: reg_e196b416735f4c5eb62727d5499875ca
+- v: 1
+  id: reg_ee1e2d8a8e2342d18772f4c7ada5e320
+  ts: "2026-10-18T15:35:31Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d50cbc116cf24c62bbc45691d33e2def

@@ -35,3 +35,48 @@
     - field: derived_from
       from: ""
       to: '["PJR-Z104"]'
+- v: 1
+  id: reg_5667c3823ab046fca97a42aa2326722f
+  ts: "2026-10-18T14:47:39Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_32559a5aa48247a0943f81b3d46c3a59
+- v: 1
+  id: reg_e3421f68915e4c5fb04b0b6278722ce6
+  ts: "2026-10-18T15:02:36Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5667c3823ab046fca97a42aa2326722f
+- v: 1
+  id: reg_6dc36fe7b09540949d0d427821e56c30
+  ts: "2026-10-18T15:28:40Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証と、WJE6 の再開・JSEY を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: 親検証に設定された検査について executor が not_run か not_applicable と報告しても、親 runner が流して通した場合は run を失敗にせず、親 runner の結果を正とするようにした。executor の failed は打ち消さない。共通の規約の要点にも書いた。qwen-executor の WJE6 が、この修正の後の再開で通った
+  previous_event_id: reg_e3421f68915e4c5fb04b0b6278722ce6

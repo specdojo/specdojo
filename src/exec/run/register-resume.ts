@@ -138,6 +138,7 @@ export function resolveRegisterResumeExecutor(
 // 済みなら review を維持して cleanup だけを再試行する（失敗時も worktree は保持する）。
 export async function resumeRegisterIntegration(params: {
   context: RegisterRunContext;
+  opts: RunOpts;
   registerPaths: RegisterPaths;
   item: PjrItem;
   ticketPath: string | null;
@@ -199,6 +200,7 @@ export async function resumeRegisterIntegration(params: {
   const finalize = async (): Promise<RegisterItemSummary> =>
     finalizeRegisterWorktreeRun({
       context: params.context,
+      opts: params.opts,
       registerPaths: params.registerPaths,
       item,
       ticketPath: params.ticketPath,
@@ -391,6 +393,7 @@ export async function resumeSingleRegisterItemWorktree(
     }
     return resumeRegisterIntegration({
       context,
+      opts,
       registerPaths,
       item,
       ticketPath,
@@ -476,6 +479,7 @@ export async function resumeSingleRegisterItemWorktree(
     const finalize = async (): Promise<RegisterItemSummary> =>
       finalizeRegisterWorktreeRun({
         context,
+        opts,
         registerPaths,
         item,
         ticketPath,
@@ -548,6 +552,7 @@ export async function resumeSingleRegisterItemWorktree(
   const finalize = async (): Promise<RegisterItemSummary> =>
     finalizeRegisterWorktreeRun({
       context,
+      opts,
       registerPaths,
       item,
       ticketPath,

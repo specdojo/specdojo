@@ -344,25 +344,33 @@ describe("reporter structured output", () => {
     });
   });
 
-  it("accepts an executor validation delegated as not_run when the runner passed the same command", () => {
-    const input = evidence();
-    input.validations = [
-      {
-        source: "executor",
-        command: "npm run test:unit",
-        status: "not_run",
-        summary: "delegated to the parent runner",
-      },
-      {
-        id: "test-unit",
-        source: "runner",
-        command: "npm run test:unit",
-        status: "passed",
-        summary: "exit 0",
-      },
-    ];
-    expect(deriveReporterFacts(input)).toMatchObject({ outcome: "complete", block_reason: "" });
-  });
+  it.each(["not_run", "not_applicable"] as const)(
+    "accepts an executor validation recorded as %s when the runner passed the same command",
+    (status) => {
+      const input = evidence();
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm run test:unit",
+          status,
+          summary: "delegated to the parent runner",
+          ...(status === "not_applicable" ? { reason: "parent runner runs" } : {}),
+        },
+        {
+          id: "test-unit",
+          source: "runner",
+          command: "npm run test:unit",
+          status: "passed",
+          summary: "exit 0",
+        },
+      ];
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: { "test:unit": "vitest run" },
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    },
+  );
 
   it("still blocks an edit-mode not_run validation that the runner did not run", () => {
     const input = evidence();
@@ -379,6 +387,188 @@ describe("reporter structured output", () => {
     expect(deriveReporterFacts(input, { mode: "edit" })).toMatchObject({
       outcome: "blocked",
       block_reason: "executor validation failed or not run: npm run lint:md",
+    });
+  });
+
+  it("still rejects not_applicable for a non-parent validation with an existing script", () => {
+    const input = evidence();
+    input.validations = [
+      {
+        source: "executor",
+        command: "npm run lint:md",
+        status: "not_applicable",
+        summary: "delegated",
+        reason: "parent runner runs",
+      },
+      {
+        id: "test-unit",
+        source: "runner",
+        command: "npm run test:unit",
+        status: "passed",
+        summary: "exit 0",
+      },
+    ];
+    expect(
+      deriveReporterFacts(input, {
+        mode: "edit",
+        packageScripts: { "lint:md": "markdownlint docs" },
+      }),
+    ).toMatchObject({
+      outcome: "blocked",
+      block_reason: "executor validation failed or not run: npm run lint:md",
+    });
+  });
+
+  describe("not_applicable for checks scoped by changed file type", () => {
+    it("accepts validate:schema:file when no YAML file changed", () => {
+      const input = evidence();
+      input.changes = [{ path: "docs/test.md", status: "M" }];
+      input.validations = [
+        {
+          source: "executor",
+          command:
+            "npm run validate:schema:file -- --schema docs/schema.yaml --data docs/data.yaml",
+          status: "not_applicable",
+          summary: "YAML 成果物を変更していない",
+          reason: "YAML 成果物を変更していない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: { "validate:schema:file": "yaml-schema" },
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    });
+
+    it("rejects validate:schema:file when a YAML file changed", () => {
+      const input = evidence();
+      input.changes = [{ path: "docs/data.yaml", status: "M" }];
+      input.validations = [
+        {
+          source: "executor",
+          command:
+            "npm run validate:schema:file -- --schema docs/schema.yaml --data docs/data.yaml",
+          status: "not_applicable",
+          summary: "YAML 成果物を変更していない",
+          reason: "YAML 成果物を変更していない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: { "validate:schema:file": "yaml-schema" },
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason:
+          "executor validation failed or not run: npm run validate:schema:file -- --schema docs/schema.yaml --data docs/data.yaml",
+      });
+    });
+
+    it("accepts validate:schema:file when its script is absent even if YAML changed", () => {
+      const input = evidence();
+      input.changes = [{ path: "docs/data.yaml", status: "M" }];
+      input.validations = [
+        {
+          source: "executor",
+          command:
+            "npm run validate:schema:file -- --schema docs/schema.yaml --data docs/data.yaml",
+          status: "not_applicable",
+          summary: "schema 検査の script がない",
+          reason: "package.json に validate:schema:file script がない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: {},
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    });
+
+    it.each<{
+      command: string;
+      changes: ExecEvidence["changes"];
+      packageScripts: Readonly<Record<string, string>>;
+      packageDependencies: ReadonlySet<string>;
+    }>([
+      {
+        command: "npx prettier --write assets/logo.svg",
+        changes: [{ path: "assets/logo.svg", status: "M" }],
+        packageScripts: {},
+        packageDependencies: new Set(["prettier"]),
+      },
+      {
+        command: "npm run lint:md",
+        changes: [{ path: "src/exec/reporter.ts", status: "M" }],
+        packageScripts: { "lint:md": "markdownlint docs" },
+        packageDependencies: new Set<string>(),
+      },
+    ])("accepts $command when no matching file type changed", (validation) => {
+      const input = evidence();
+      input.changes = validation.changes;
+      input.validations = [
+        {
+          source: "executor",
+          command: validation.command,
+          status: "not_applicable",
+          summary: "対象ファイルを変更していない",
+          reason: "対象ファイルを変更していない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: validation.packageScripts,
+          packageDependencies: validation.packageDependencies,
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
+    });
+
+    it("checks both sides of a rename for a matching file type", () => {
+      const input = evidence();
+      input.changes = [{ path: "docs/old.md -> docs/new.yaml", status: "R" }];
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm run validate:schema:file -- --schema docs/schema.yaml --data docs/new.yaml",
+          status: "not_applicable",
+          summary: "YAML 成果物を変更していない",
+          reason: "YAML 成果物を変更していない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: { "validate:schema:file": "yaml-schema" },
+        }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason:
+          "executor validation failed or not run: npm run validate:schema:file -- --schema docs/schema.yaml --data docs/new.yaml",
+      });
+    });
+
+    it("keeps typecheck script-based when no TypeScript file changed", () => {
+      const input = evidence();
+      input.changes = [{ path: "assets/logo.svg", status: "M" }];
+      input.validations = [
+        {
+          source: "executor",
+          command: "npm run typecheck",
+          status: "not_applicable",
+          summary: "TypeScript を変更していない",
+          reason: "TypeScript を変更していない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, { packageScripts: { typecheck: "tsc --noEmit" } }),
+      ).toMatchObject({
+        outcome: "blocked",
+        block_reason: "executor validation failed or not run: npm run typecheck",
+      });
     });
   });
 
@@ -817,12 +1007,13 @@ describe("reporter structured output", () => {
     };
 
     it.each([
-      "npx prettier --write specdojo-lp:src/pages/index.astro",
-      "npx --prefix specdojo-lp prettier --write src/pages/index.astro",
+      "npx prettier --write specdojo-lp:src/pages/index.ts",
+      "npx --prefix specdojo-lp prettier --write src/pages/index.ts",
       "npm --prefix specdojo-lp run build",
       "npm --prefix ../specdojo-lp/ run build",
     ])("accepts %s when the product repository lacks the tool", (command) => {
       const input = evidence();
+      input.changes = [{ path: "specdojo-lp:src/pages/index.ts", status: "M" }];
       input.validations = [
         {
           source: "executor",
@@ -846,10 +1037,11 @@ describe("reporter structured output", () => {
     });
 
     it.each([
-      "npx prettier --write specdojo-lp:src/pages/index.astro",
+      "npx prettier --write specdojo-lp:src/pages/index.ts",
       "npm --prefix specdojo-lp run build",
     ])("blocks %s when the product repository provides the tool", (command) => {
       const input = evidence();
+      input.changes = [{ path: "specdojo-lp:src/pages/index.ts", status: "M" }];
       input.validations = [
         {
           source: "executor",
@@ -877,6 +1069,35 @@ describe("reporter structured output", () => {
         outcome: "blocked",
         block_reason: `executor validation failed or not run: ${command}`,
       });
+    });
+
+    it("does not apply a product repository Prettier check to project repository changes", () => {
+      const input = evidence();
+      input.changes = [{ path: "src/exec/reporter.ts", status: "M" }];
+      input.validations = [
+        {
+          source: "executor",
+          command: "npx prettier --write specdojo-lp:src/pages/index.ts",
+          status: "not_applicable",
+          summary: "プロダクトリポジトリに対象変更がない",
+          reason: "specdojo-lp に Prettier 対象の変更がない",
+        },
+      ];
+
+      expect(
+        deriveReporterFacts(input, {
+          packageScripts: {},
+          packageDependencies: new Set(["prettier"]),
+          projectId: "prj-0002",
+          specdojoConfig: productConfig,
+          productPackageManifests: {
+            "specdojo-lp": {
+              scripts: {},
+              dependencies: new Set(["prettier"]),
+            },
+          },
+        }),
+      ).toMatchObject({ outcome: "complete", block_reason: "" });
     });
 
     it("still blocks a project repository command whose tool the project repository provides", () => {

@@ -93,6 +93,9 @@ export type ExecDefaultsConfig = {
     // Default execution location for register items. Omitted keeps the historical in-place
     // behavior so existing repositories do not start creating worktrees after an upgrade.
     register_execution?: "in-place" | "worktree";
+    // Run a read-only completion review after a register worktree has been integrated. Disabled by
+    // default because it can invoke additional agents and automatically close todo/issue items.
+    register_post_review?: boolean;
     // Maximum number of `exec run` processes that may run at once for one project, counting the
     // primary run and every `--join` run (default 4). 1 disables `--join`.
     max_concurrent_runs?: number;
@@ -324,6 +327,7 @@ export function providerSlotPoolPath(lockRoot: string, provider: AgentProvider):
 
 export const DEFAULT_MAX_CONCURRENT_RUNS = 4;
 export const DEFAULT_REGISTER_EXECUTION = "in-place" as const;
+export const DEFAULT_REGISTER_POST_REVIEW = false;
 
 export type RegisterExecution = "in-place" | "worktree";
 
@@ -335,6 +339,17 @@ export function resolveRegisterExecution(config: ExecDefaultsConfig): RegisterEx
   if (raw !== "in-place" && raw !== "worktree") {
     throw new Error(
       `run.register_execution in exec-defaults must be "in-place" or "worktree": ${String(raw)}`,
+    );
+  }
+  return raw;
+}
+
+export function resolveRegisterPostReview(config: ExecDefaultsConfig): boolean {
+  const raw = config.run?.register_post_review;
+  if (raw === undefined) return DEFAULT_REGISTER_POST_REVIEW;
+  if (typeof raw !== "boolean") {
+    throw new Error(
+      `run.register_post_review in exec-defaults must be true or false: ${String(raw)}`,
     );
   }
   return raw;

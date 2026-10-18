@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_268d8657f24c46ca8a64d64b845abd8f
+  ts: "2026-10-18T15:12:21Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ブランチ運用ガイドのプロダクトリポジトリの節の誤りを直す
+    - field: description
+      from: ""
+      to: WJE6 で足した branch-workflow-guide の「10. プロダクトリポジトリの統合先を指定する」に、GitHub flow の統合先の例が main になっている誤り、プロジェクトの内部の事情（派生項目として起票中）と登録簿の項目への参照、実在の項目 ID を使った git log の例が残っている。配布するガイドなので、利用者の環境で意味が通る形に直す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-19"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-WJE6"]'

@@ -1,0 +1,16 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.0 typecheck
+> tsc -b --noEmit
+
+tests/src/exec/reporter.test.ts(497,11): error TS2322: Type '{ "lint:md"?: undefined; } | { "lint:md": string; }' is not assignable to type 'Readonly<Record<string, string>> | undefined'.
+  Type '{ "lint:md"?: undefined; }' is not assignable to type 'Readonly<Record<string, string>>'.
+    Property '"lint:md"' is incompatible with index signature.
+      Type 'undefined' is not assignable to type 'string'.
+
+
+--- stderr ---

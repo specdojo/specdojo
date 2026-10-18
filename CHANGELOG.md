@@ -2,6 +2,13 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [0.4.1] - 未定
+
+### 不具合修正
+
+- `validate:schema:file`・Prettier・markdownlint の `not_applicable` を、script や依存 package の有無だけでなく executor が変更したファイルの種類も含めて判定するようにしました。対象種類の変更がない run は適用外として受理し、対象変更がある run の誤申告は従来どおり拒否します（PJR-8WBN）。
+- executor が親検証と同じコマンドを `not_applicable` または `not_run` と報告しても、同じリポジトリで親 runner が実行した結果を正とするようにしました。親検証が成功している run が executor の重複報告によって `waiting` で止まる問題を解消し、親検証でない誤った `not_applicable` は従来どおり拒否します（PJR-7AW0）。
+
 ## [0.4.0] - 2026-10-18
 
 同梱パッケージは `@specdojo/docs-lint` 0.2.1 を同時に公開します。docs-lint は 0.2.0 以降の変更（js-yaml の 5.4.3 への更新。引用符なしの日付と merge key は 4 系と同じ規則で読み込みます。PJR-RCVS）を含みます。`@specdojo/docs-site` は、この版では公開しません。

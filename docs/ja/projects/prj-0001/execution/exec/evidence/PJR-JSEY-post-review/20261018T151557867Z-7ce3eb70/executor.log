@@ -1,0 +1,26 @@
+判定は **incomplete** です。実行時刻・対象の分割・親の検証・統合は条件を満たしています。ただし、追記した行の agent の nickname が、実際に実行した agent と一致していません。
+
+**完了条件ごとの照合**
+
+1. **対応結果の表への 1 行追記**
+   - 日時: 追記は `2026-10-19 00:08`。evidence の executor の実行時刻は 2026-10-18T15:07Z（JST 00:07）なので、ほぼ一致します。
+   - 対象の分割 `PJR-T46Y`: 一致します。統合前 commit から辿る履歴で、T46Y の統合（`0b1d61129`）は列挙された分割の項目のうち最も新しいものです。後に続くのは `e3441c1f4`（JSEY の reopen）と分割対象外の項目だけです。
+   - agent: 不一致です。表には `claude-expert-executor` と書かれていますが、`.specdojo/agent-members.yaml` ではこれは `opus-executor` の別名です。実際に実行したのは `sonnet-executor` です（evidence の `stage.actor`、pipeline-state、edit result の `agent`、events がすべて同じ）。`sonnet-executor` の別名は `claude-executor` です。executor.log にも nickname を確かめた形跡はなく、前の行の値を書き写したものとみられます。完了条件が求める「実行した agent の nickname」の記録が誤っています。
+2. **本個票以外は変更しない**: 満たしています。成果物として変わったのは個票だけで、表に 1 行追加と `item_status` の open→review です。ほかの変更は runner が管理するファイル（events の `pjr-jsey.yaml` への start・review イベント、evidence 3 件、edit plan、edit result）だけで、対象外の変更は入っていません。
+3. **親の検証と統合**: 満たしています。lint-ts（0 errors, 30 warnings）、lint-fm、lint-md、typecheck、test-unit、test-integration、validate-schema の 7 件がすべて passed です。pipeline-state では executor・reporter・integrate がすべて succeeded です。
+
+**評価結果の確認**: この review では grade を使っていません。edit の検証結果は executor evidence で確認しました。
+
+**軽微な finding**
+
+- edit result の「変更ファイル」が「なし」になっています。evidence の `changes` では個票 1 件が M なので食い違っています。
+- 個票の frontmatter の `conclusion` が前回の 6EF8 の内容のままです。close のときに更新が必要です。
+- executor の `npm run lint:md` は `not_run` です。親 runner の lint-md が passed なので、完了の妨げにはなりません。
+
+**未解消事項**: 個票の該当行の agent を `sonnet-executor`（またはその別名 `claude-executor`）に直す必要があります。この直しが済めば complete と判断できます。
+
+**確認できなかった範囲**: 親検証を自分で再実行してはおらず、evidence の記録を根拠にしています。統合の時系列は git の commit 順で確認し、`pjr-index.md` 上の状態は見ていません。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict: incomplete。PJR-T46Y の行の日時（00:08、実行は JST 00:07）と対象の分割（統合 0b1d61129 が列挙された分割の中で最新）は正しい。ただし agent が claude-expert-executor（opus-executor の別名）と記録されており、実際の executor は sonnet-executor（evidence の stage.actor、pipeline-state、edit result、events で一致。別名は claude-executor）のため、完了条件『実行した agent の nickname』を満たしていない。対象外の変更なし：個票（表 1 行と item_status）と runner が管理するファイル（events、evidence、plan、result）のみ。親検証 7 件（lint-ts、lint-fm、lint-md、typecheck、test-unit、test-integration、validate-schema）は passed、executor・reporter・integrate は succeeded。軽微な finding：edit result の『変更ファイル: なし』が evidence の changes（個票 M）と食い違う、個票 frontmatter の conclusion が 6EF8 の記述のまま、executor の lint:md は not_run（親の lint-md は passed）。確認できなかった範囲：親検証は再実行しておらず evidence の記録に依拠した。統合の時系列は git log の commit 順で確認し、pjr-index.md は見ていない。","validations":[{"command":"git diff --stat ad386c926b2b9e7f47f2891d57f7f10d98fd559a..82170d2bf7c11ecac44d6e0482a310e8ee7660b7","status":"passed","summary":"7 files changed, 276 insertions(+), 1 deletion(-)"},{"command":"git diff --name-status ad386c926b2b9e7f47f2891d57f7f10d98fd559a..82170d2bf7c11ecac44d6e0482a310e8ee7660b7","status":"passed","summary":"M は events の pjr-jsey.yaml と個票、A は evidence 3 件・edit plan・edit result で、対象外の変更なし"},{"command":"git diff ad386c926b2b9e7f47f2891d57f7f10d98fd559a..82170d2bf7c11ecac44d6e0482a310e8ee7660b7 -- docs/ja/projects/prj-0001/controls/project-register/","status":"passed","summary":"個票は item_status の open→review と表の PJR-T46Y 行（agent は claude-expert-executor）の追加。events は start と review の 2 件で actor は sonnet-executor"},{"command":"git log --oneline -40 ad386c926","status":"passed","summary":"PJR-T46Y の統合 0b1d61129 が、列挙された分割の項目のうち最新の統合であることを確認"}]}
+</specdojo_executor_evidence>

@@ -854,3 +854,154 @@
       from: NJ6J の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
       to: 6EF8 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
   previous_event_id: reg_9bd0fa41915d4941968bfff357e74663
+- v: 1
+  id: reg_a8a1de2c9c424b9691392e2ba1fc2b09
+  ts: "2026-10-18T15:03:18Z"
+  action: reopen
+  actor: claude-orchestrator
+  from_status: done
+  to_status: open
+  reason: T46Y の統合後の runner と review の段の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-18"
+      to: "-"
+  previous_event_id: reg_148d113ecd4b4ff3a558b8f220285ff6
+- v: 1
+  id: reg_b29ec0ed77b14e2282be6efd514e6ebb
+  ts: "2026-10-18T15:05:07Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_a8a1de2c9c424b9691392e2ba1fc2b09
+- v: 1
+  id: reg_7c72e86fb94545a394a2fe013585ad50
+  ts: "2026-10-18T15:14:55Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b29ec0ed77b14e2282be6efd514e6ebb
+- v: 1
+  id: reg_c72918de099a4b4b9c04a0e75518f40f
+  ts: "2026-10-18T15:17:45Z"
+  action: wait
+  actor: opus-review-executor
+  from_status: review
+  to_status: waiting
+  reason: "post-run review verdict incomplete: `git diff` による差分確認の結果、`docs/ja/projects/prj-0001/controls/project-register/` 配下の個票において `item_status` が `open` から `review` へ更新され、`PJR-T46Y` 行（agent: `claude-expert-e…"
+  changes:
+    - field: status
+      from: review
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "post-run review verdict incomplete: `git diff` による差分確認の結果、`docs/ja/projects/prj-0001/controls/project-register/` 配下の個票において `item_status` が `open` から `review` へ更新され、`PJR-T46Y` 行（agent: `claude-expert-e…"
+  previous_event_id: reg_7c72e86fb94545a394a2fe013585ad50
+- v: 1
+  id: reg_ac6a009434e54180820bfea7122bde6b
+  ts: "2026-10-18T15:19:04Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "post-run review verdict incomplete: `git diff` による差分確認の結果、`docs/ja/projects/prj-0001/controls/project-register/` 配下の個票において `item_status` が `open` から `review` へ更新され、`PJR-T46Y` 行（agent: `claude-expert-e…"
+      to: "-"
+  previous_event_id: reg_c72918de099a4b4b9c04a0e75518f40f
+- v: 1
+  id: reg_3d802041b40e465b90f705f1917ebdb6
+  ts: "2026-10-18T15:19:05Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md"
+  previous_event_id: reg_ac6a009434e54180820bfea7122bde6b
+- v: 1
+  id: reg_0d106a8870ee4cb2832cb78facbedf63
+  ts: "2026-10-18T15:19:48Z"
+  action: start
+  actor: sonnet-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md"
+      to: "-"
+  previous_event_id: reg_3d802041b40e465b90f705f1917ebdb6
+- v: 1
+  id: reg_ff3722b66b5041c18a678c0958f4ece1
+  ts: "2026-10-18T15:24:59Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0d106a8870ee4cb2832cb78facbedf63
+- v: 1
+  id: reg_7dd5fc64213b4d55ae2e42376d230c10
+  ts: "2026-10-18T15:27:49Z"
+  action: close
+  actor: opus-review-executor
+  from_status: review
+  to_status: done
+  reason: "post-run review verdict complete-with-findings: 完了条件 1: 個票の履歴への追記について、`2026-10-19 00:20` のエントリが `PJR-T46Y` に対し追加されていることを確認した。エントリの `actor` は `sonnet-executor` となっており、これは `evidence.json` の `stage.actor…"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+  previous_event_id: reg_ff3722b66b5041c18a678c0958f4ece1
+- v: 1
+  id: reg_e919b27f3b46468baf83b20ac574ac53
+  ts: "2026-10-18T15:37:26Z"
+  action: reopen
+  actor: claude-orchestrator
+  from_status: done
+  to_status: open
+  reason: 8WBN の統合後の runner の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-19"
+      to: "-"
+  previous_event_id: reg_7dd5fc64213b4d55ae2e42376d230c10
