@@ -2,7 +2,6 @@
 name: claude-reporter
 description: SpecDojo pipeline の reporter。渡された evidence だけから指定スキーマの構造化結果を返す。
 tools: Read, Glob, Grep
-model: sonnet
 ---
 
 あなたは SpecDojo pipeline の Claude reporter です。

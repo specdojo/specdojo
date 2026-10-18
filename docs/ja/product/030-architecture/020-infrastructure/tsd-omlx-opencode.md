@@ -140,15 +140,18 @@ Qwen3.6 固有の値は次のとおり。
 | `top_k` / `min_p`                         | 20 / 0    | precise coding tasks 向けの公式推奨値                                |
 | `presence_penalty` / `repetition_penalty` | 0.0 / 1.0 | coding での言語混在や、正当な字句の繰り返しへのペナルティを避ける    |
 
-Qwen3.6 は、用途別の agent をまだ定義していないため、`temperature` と `top_p` もモデルの `options` に書く。agent の frontmatter とモデルの `options` の両方に `temperature` がある場合にどちらが優先されるかは確認していない。Qwen3.6 の agent を追加するときは、Ornith と同じく `temperature` と `top_p` を agent 側へ移し、モデルの `options` からは外す。
+Qwen3.6 の `temperature` と `top_p` はモデルの `options` に置く。agent 定義はモデル名ではなく役割ごとに共用するため、モデル固有の値を `.opencode/agents/*.md` へ置かない。
 
-Ornith の `temperature` と `top_p` は、用途ごとに `.opencode/agents/ornith-*.md` の frontmatter で指定する。opencode は agent の値をリクエストで送る。
+OpenCode agent の `temperature` は役割ごとの frontmatter で指定し、どのモデルでも同じ役割の値を使う。opencode は agent の値をリクエストで送る。
 
-| agent                    | `temperature` | `top_p` | 方針                                                                                                                                                                                                                     |
-| ------------------------ | ------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ornith-executor`        | 0.7           | 0.8     | Qwen 系が thinking なしで推奨する値                                                                                                                                                                                      |
-| `ornith-expert-executor` | 0.3           | 0.8     | grade など厳密な出力形式を求める作業向けに、確率の低い候補を選びにくくする。grade の判定（根拠と finding）は英語で出力する。英語では日本語より判定が厳しくなり、中国語の字体が混ざらなかった（2026-10-04、検証通過 5/6） |
-| `ornith-reporter`        | 0.1           | 0.8     | 渡された内容を構造化結果へ写すだけのため、ほぼ決定的にする                                                                                                                                                               |
+| agent role                        | `temperature` | 方針                                                                                                                                                                                                                     |
+| --------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `opencode-executor`               | 0.2           | 通常の編集・検証向け                                                                                                                                                                                                     |
+| `opencode-expert-executor`        | 0.2           | thinking を伴う複雑な編集・検証向け                                                                                                                                                                                      |
+| `opencode-grade-executor`         | 0.3           | grade など厳密な出力形式を求める作業向けに、確率の低い候補を選びにくくする。grade の判定（根拠と finding）は英語で出力する。英語では日本語より判定が厳しくなり、中国語の字体が混ざらなかった（2026-10-04、検証通過 5/6） |
+| `opencode-review-executor`        | 0.1           | 多観点 review 向け                                                                                                                                                                                                       |
+| `opencode-expert-review-executor` | 0.1           | thinking を伴う多観点 review 向け                                                                                                                                                                                        |
+| `opencode-reporter`               | 0.1           | 渡された内容を構造化結果へ写すだけのため、ほぼ決定的にする                                                                                                                                                               |
 
 opencode の `reasoningEffort` は、oMLX では thinking の切り替えに使われない。thinking を agent ごとに変える場合は、agent の frontmatter に `chat_template_kwargs` を書く。agent の値は `opencode.json` の値より優先される。
 

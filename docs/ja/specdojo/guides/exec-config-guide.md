@@ -281,7 +281,12 @@ provider ごとに挙動が異なる設定は `providers.<provider>` に置き�
 ```yaml
 providers:
   claude:
-    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
+    command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"
+    command_params:
+      by_mode:
+        edit: { agent: claude-executor }
+        review: { agent: claude-review-executor }
+        report: { agent: claude-reporter }
 
   codex:
     command_template: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model {model} -c model_reasoning_effort="{effort}"'
@@ -301,6 +306,8 @@ providers:
 ```
 
 `by_nickname` は、同じ provider の一部 member だけモデルなどを差し替える用途です。層をまたぐ同名変数は意図的な上書きとして許可されます。一方、`nickname`、`mode`、`proficiency` は組み込み変数なので、どの `command_params` 層でも再定義できません。
+
+Claude Code と OpenCode は、member の identity と `--agent` で選ぶ役割定義を分けます。実体 member の `model` は `{model}` へ、`command_params` の `agent` は `{agent}` へ展開し、同じ役割ファイルを複数モデルで共有します。edit / review / report は `by_mode`、expert や grade のように mode だけで一意に決まらない役割は `by_proficiency` または `by_nickname` で `agent` を上書きします。
 
 `max_concurrency` は、同一ホストの単一モデルを共有する provider（例: ローカル Ollama の `opencode`）が複数同時起動でメモリ競合・モデルロード待ちにより不安定になるのを防ぐために使います。グローバルな `--parallel` を下げずに、その provider だけを直列化できます。register の並列 pipeline では executor と reporter の各 stage が個別に枠を取得するため、別 provider の executor を並列化しつつ、同一 provider の reporter だけを直列化できます。
 
@@ -368,7 +375,12 @@ members:
 providers:
   opencode:
     max_concurrency: 1
-    command_template: "opencode run --agent {nickname}"
+    command_template: "opencode run --agent {agent} --model {model}"
+    command_params:
+      by_mode:
+        edit: { agent: opencode-executor }
+        review: { agent: opencode-review-executor }
+        report: { agent: opencode-reporter }
 ```
 
 ### 6.2. クラウド executor とローカル reporter の混在構成

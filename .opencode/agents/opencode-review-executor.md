@@ -1,7 +1,6 @@
 ---
-description: Gemma を使う SpecDojo pipeline review executor。
+description: SpecDojo pipeline review executor。
 mode: primary
-model: ollama-local/gemma4:31b-mlx-work-64k
 reasoningEffort: none
 temperature: 0.1
 permission:
