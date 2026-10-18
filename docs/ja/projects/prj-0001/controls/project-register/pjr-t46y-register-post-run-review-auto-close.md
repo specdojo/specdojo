@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-t46y-register-post-run-review-auto-close
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T00:40:06Z"
   due_on: null
+  completed_at: "2026-10-18T15:28:25Z"
+  conclusion: exec run --register の統合の後に、review の agent（既定は claude-expert-review-executor）が完了条件・result・差分・検証の結果を照らして verdict を出す段を加えた。既定では動かさず、--post-review か register_post_review で有効にする。complete・complete-with-findings なら close、incomplete なら waiting に戻し、runner のコードを変えた項目は人の close に残す。JSEY を --post-review で流し、incomplete で waiting に戻る場合と complete-with-findings で close される場合の両方を確かめた。complete と decision のテストは PJR-NSZT で補う
 ---
 
 # PJR-T46Y register の実行のあとに review の agent が判定し、todo と issue を自動で close する

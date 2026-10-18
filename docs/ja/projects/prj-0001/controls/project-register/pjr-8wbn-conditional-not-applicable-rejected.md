@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-18T14:51:17Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
   derived_from:
     - PJR-Z104
 ---
