@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_adc647c809654e02a02ecf8f484f3cb4
+  ts: "2026-10-18T16:11:25Z"
+  action: start
+  actor: gemma-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_af7e2790a9d144088676e8227723ad3a
+- v: 1
+  id: reg_1577cfb30fa044eebf39e61934cc93bc
+  ts: "2026-10-18T16:32:03Z"
+  action: wait
+  actor: gemma-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git restore failed: fatal: Unable to create '/workspaces/specdojo-workspace/specdojo/.git/index.lock': ファイルが存在します. (args: --source=HEAD --staged --worktree -- 1 path)"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git restore failed: fatal: Unable to create '/workspaces/specdojo-workspace/specdojo/.git/index.lock': ファイルが存在します. (args: --source=HEAD --staged --worktree -- 1 path)"
+  previous_event_id: reg_adc647c809654e02a02ecf8f484f3cb4
