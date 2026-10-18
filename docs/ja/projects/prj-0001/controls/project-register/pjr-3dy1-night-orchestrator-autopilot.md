@@ -80,7 +80,7 @@ register の todo の実行では、orchestrator が次の 7 つを行ってい�
 | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | 影響範囲   | register の実行の最後の段（`src/exec/run/`）、個票の frontmatter、夜の orchestrator の agent と手順、routine、オーケストレーターの運用ガイド |
 | 必要な対応 | 段階 A と段階 B の todo を起票する。前提の PJR-7WME を先に行う                                                                               |
-| 追跡先     | PJR-7WME（derived_from）。段階 A・B の todo は起票の後に記入する                                                                             |
+| 追跡先     | PJR-7WME（derived_from、前提）、PJR-T46Y（段階 A: review の agent と自動の close）、PJR-6DHY（段階 B: 夜の orchestrator）                    |
 
 ## 7. 関連ドキュメント
 
