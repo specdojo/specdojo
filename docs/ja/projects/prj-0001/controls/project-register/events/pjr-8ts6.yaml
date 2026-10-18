@@ -58,3 +58,35 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
   previous_event_id: reg_abbc27216321416a865461c314ee4c37
+- v: 1
+  id: reg_d44d7fc9f3594e468e7f17fb3f17c8b5
+  ts: "2026-10-18T00:42:48Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
+      to: "-"
+  previous_event_id: reg_151502a83b5f41d6b14e89bce7e9c6a0
+- v: 1
+  id: reg_e19b647535b341758c36349ec6094c05
+  ts: "2026-10-18T00:55:45Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_d44d7fc9f3594e468e7f17fb3f17c8b5

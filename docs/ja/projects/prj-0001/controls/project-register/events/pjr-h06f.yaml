@@ -90,3 +90,32 @@
       from: "-"
       to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-h06f.yaml 13ms (unchanged); FAIL  /integration/ tests/src/exec/pipeline-e2e.integra…"
   previous_event_id: reg_59a8df03452f4cc69f780ba9cb5fe47e
+- v: 1
+  id: reg_6c8faa6021f04daa9aca93b51cbc2814
+  ts: "2026-10-18T01:38:03Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-h06f.yaml 13ms (unchanged); FAIL  /integration/ tests/src/exec/pipeline-e2e.integra…"
+      to: "-"
+  previous_event_id: reg_2b03d47d65f24a0cb5945aaea4cd4b8c
+- v: 1
+  id: reg_32f68609fcf84ea9982c2bd2b8038457
+  ts: "2026-10-18T01:47:29Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6c8faa6021f04daa9aca93b51cbc2814

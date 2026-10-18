@@ -1,10 +1,10 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { DEFAULT_PROJECT_CONTEXT } from "../shared/specdojo-config.js";
-import { resolveDeliverableSchemaRef, resolveKataRefs } from "../kata/kata.js";
+import { resolveDeliverableSchemaRef, resolveKataRefs, type KataRefs } from "../kata/kata.js";
 import { formatMarkdownFile } from "./format.js";
 import { expandTemplate } from "./shared.js";
-import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from "./types.js";
+import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode, TaskOrigin } from "./types.js";
 import type { CriteriaItem } from "../catalog/types.js";
 import type { ReviewViewpoint } from "../review/types.js";
 import type { RoleDefinition } from "./role-types.js";
@@ -59,10 +59,18 @@ function buildEditPlanMarkdown(
   resultRef: string,
   stem: string,
   crossDeliverables: Map<string, DeliverableInfo> = new Map(),
+  planOverrides?: {
+    origin?: TaskOrigin;
+    targets?: readonly string[];
+    refs?: KataRefs;
+    additionalConditions?: string;
+  },
 ): string {
   const cpm = task.cpm;
   const onCriticalPath = cpm !== undefined && cpm.slack === 0;
-  const targets = targetDocIdsForTask(projectId, task, deliverable, crossDeliverables);
+  const targets = planOverrides?.targets
+    ? [...planOverrides.targets]
+    : targetDocIdsForTask(projectId, task, deliverable, crossDeliverables);
 
   const meta: ExecPlanMeta = {
     id: execDocId(projectId, "xep", stem),
@@ -73,6 +81,7 @@ function buildEditPlanMarkdown(
     mode: "edit",
     status: "ready",
     project_id: projectId,
+    ...(planOverrides?.origin ? { origin: planOverrides.origin } : {}),
     ...(task.owner ? { owner: task.owner } : {}),
     ...(onCriticalPath ? { on_critical_path: true as const } : {}),
     ...(task.approach ? { approach: task.approach } : {}),
@@ -81,7 +90,9 @@ function buildEditPlanMarkdown(
 
   const criteria: CriteriaItem[] = deliverable?.deliverable.done_criteria ?? [];
   const ownerRole = ownerRoleFields(task.owner, roleMap, vpMap, deliverable?.deliverable.rulebook);
-  const refs = resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
+  const refs =
+    planOverrides?.refs ??
+    resolveKataRefs(deliverable?.deliverable.rulebook, deliverable?.deliverable.kind);
   const values: Record<string, string> = {
     _FRONTMATTER_: frontmatter(meta),
     _TASK_ID_: task.id,
@@ -122,7 +133,19 @@ function buildEditPlanMarkdown(
       catalogPath,
     ),
   };
-  return expandTemplate(template, values);
+  const body = expandTemplate(template, values);
+  if (!planOverrides?.additionalConditions) return body;
+  const section = [
+    "## 個票の追加完了条件",
+    "",
+    "成果物カタログの `done_criteria` に加え、登録簿の個票が定める次の条件も満たす。",
+    "",
+    planOverrides.additionalConditions.trim(),
+    "",
+  ].join("\n");
+  return body.includes("_COMMON_CONVENTIONS_")
+    ? body.replace("_COMMON_CONVENTIONS_", `${section}\n_COMMON_CONVENTIONS_`)
+    : `${body.trimEnd()}\n\n${section}`;
 }
 
 // review plan は成果物を再評価しない。grade の評価結果（サイドカー）の位置と完了条件を示し、
@@ -217,7 +240,15 @@ type PlanGenContext = {
 async function writeTaskPlan(
   ctx: PlanGenContext,
   task: PlanTask,
-  override?: { deliverable?: DeliverableInfo | null; outPath?: string; stem?: string },
+  override?: {
+    deliverable?: DeliverableInfo | null;
+    outPath?: string;
+    stem?: string;
+    origin?: TaskOrigin;
+    targets?: readonly string[];
+    refs?: KataRefs;
+    additionalConditions?: string;
+  },
 ): Promise<string> {
   const mode: TaskMode = task.mode ?? "edit";
   const localId = task.local_id;
@@ -279,6 +310,7 @@ async function writeTaskPlan(
           resultRef,
           stem,
           crossDeliverables,
+          override,
         );
   const schemaRef = resolveDeliverableSchemaRef(deliverable?.resolvedPath);
   const content = injectCommonConventions(body, schemaRef, ctx.templateCache, mode);
@@ -353,6 +385,51 @@ export async function generateDeliverablePlan(opts: {
     deliverable: opts.target.info,
     ...(opts.outPath ? { outPath: opts.outPath } : {}),
     ...(opts.stem ? { stem: opts.stem } : {}),
+  });
+}
+
+// Register items with an approach use the same template and catalog/kata resolution as
+// schedule tasks, while keeping register identity and target coverage in the plan metadata.
+export async function generateRegisterApproachPlan(opts: {
+  executionPath: string;
+  projectId: string;
+  catalogPath: string;
+  rolesPath?: string;
+  viewpointsPath?: string;
+  projectContext?: readonly string[];
+  taskId: string;
+  title: string;
+  description: string;
+  owner?: string;
+  approach: Approach;
+  targets: readonly string[];
+  deliverable?: DeliverableInfo | null;
+  refs?: KataRefs;
+  additionalConditions: string;
+  outPath?: string;
+  stem: string;
+}): Promise<string> {
+  const ctx = newPlanGenContext(opts);
+  const task: PlanTask = {
+    id: opts.taskId,
+    name: opts.title,
+    description: opts.description,
+    mode: "edit",
+    approach: opts.approach,
+    ...(opts.deliverable ? { local_id: opts.deliverable.deliverable.local_id } : {}),
+    ...(opts.owner ? { owner: opts.owner } : {}),
+    schedule_file: "",
+    fifo_rank: 0,
+    critical_first_rank: 0,
+  };
+  return await writeTaskPlan(ctx, task, {
+    deliverable: opts.deliverable ?? null,
+    origin: "register",
+    targets: opts.targets,
+    ...(opts.refs ? { refs: opts.refs } : {}),
+    additionalConditions: opts.additionalConditions,
+    ...(opts.outPath ? { outPath: opts.outPath } : {}),
+    stem: opts.stem,
   });
 }
 

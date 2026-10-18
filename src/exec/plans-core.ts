@@ -133,6 +133,79 @@ export function loadCatalogDocs(catalogPath: string): DctDoc[] {
   return docs;
 }
 
+function resolvedDeliverablesInCatalog(catalogPath: string): ResolvedDeliverable[] {
+  const deliverables: ResolvedDeliverable[] = [];
+  const visit = (sections: DctSection[], parentBase: string, domain: string): void => {
+    for (const section of sections) {
+      const sectionBase = resolveBasePath(parentBase, section.base_path);
+      for (const item of section.deliverables ?? []) {
+        deliverables.push({
+          domain,
+          localId: item.local_id,
+          slug: item.local_id,
+          info: {
+            deliverable: item,
+            resolvedPath: resolveDeliverablePath(sectionBase, item.path),
+          },
+        });
+      }
+      visit(section.groups ?? [], sectionBase, domain);
+    }
+  };
+  for (const doc of loadCatalogDocs(catalogPath)) {
+    visit(doc.groups, resolveBasePath("", doc.base_path), doc.domain);
+  }
+  return deliverables;
+}
+
+// Register targets use document IDs rather than schedule local_ids. Resolve the document ID
+// back to its catalog entry so register-originated approach plans can share schedule rendering.
+export function resolveDeliverableByDocId(
+  catalogPath: string,
+  projectId: string,
+  targetId: string,
+): ResolvedDeliverable {
+  const matches = resolvedDeliverablesInCatalog(catalogPath).filter((target) => {
+    const docId = deliverableDocId(
+      projectId,
+      target.info.deliverable.local_id,
+      target.info.resolvedPath,
+    );
+    return (
+      targetId === docId ||
+      targetId === target.localId ||
+      targetId === qualifiedDocId(projectId, target.localId)
+    );
+  });
+  if (matches.length === 0) {
+    throw new Error(`catalog deliverable target not found for document id: ${targetId}`);
+  }
+  if (matches.length > 1) {
+    throw new Error(
+      `ambiguous catalog deliverable target for document id ${targetId}: ${matches
+        .map((match) => match.localId)
+        .join(", ")}`,
+    );
+  }
+  return matches[0];
+}
+
+// A kata may be declared by zero, one, or several deliverables. Only a unique declaration is
+// used as the maintenance plan's evidence context; otherwise the explicitly targeted kata remains
+// executable without selecting an arbitrary deliverable.
+export function findUniqueDeliverableForKataTarget(
+  catalogPath: string,
+  targetId: string,
+  kind: keyof KataRefs,
+): DeliverableInfo | null {
+  const matches = resolvedDeliverablesInCatalog(catalogPath).filter((target) => {
+    const refs = resolveKataRefs(target.info.deliverable.rulebook, target.info.deliverable.kind);
+    const refPath = refs[kind];
+    return refPath !== MISSING && refDocIdFromPath(refPath) === targetId;
+  });
+  return matches.length === 1 ? matches[0].info : null;
+}
+
 // Resolve a `--deliverable` identifier (a bare `local_id`) to a catalog deliverable.
 // `local_id` is unique project-wide (catalog validate warns otherwise); an ambiguous
 // match is an error rather than a silent first match.

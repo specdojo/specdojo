@@ -296,6 +296,10 @@ export function registerExecCommands(program: Command): void {
         const generated = await generateRegisterPlan({
           executionPath,
           projectId,
+          ...(catalogPath ? { catalogPath } : {}),
+          ...(rolesPath ? { rolesPath } : {}),
+          ...(viewpointsPath ? { viewpointsPath } : {}),
+          ...(projectContext ? { projectContext } : {}),
           registerPaths,
           item,
           stem,
