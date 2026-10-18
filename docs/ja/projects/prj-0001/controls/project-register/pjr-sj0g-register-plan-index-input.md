@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T02:56:23Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-SJ0G register の plan が大きい一覧を読ませ、一覧のパスも誤っている
@@ -50,7 +51,15 @@ register の todo の plan（xep-register-template・xep-register-investigate-te
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容:
+  - `docs/ja/specdojo/exec-templates/xep-register-template.md` および `docs/ja/specdojo/exec-templates/xep-register-investigate-template.md` の「2. 対象項目」から登録簿一覧のパス（`- \`登録簿\`: \`_PJR_INDEX_PATH_\``）を削除しました。
+  - 両テンプレートの「3. 進め方」の冒頭を個票のみを読み、一覧は大きいため読まないことを明記する記述（「1. 個票（存在する場合）を読み、目的・完了条件・制約を把握する。登録簿の一覧は大きいため読まない。」および「1. 個票（存在する場合）を読み、問い・リスク内容・判断に必要な条件を把握する。登録簿の一覧は大きいため読まない。」）に改訂しました。
+  - 「登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない」指示は完了手順に維持しています。
+  - `src/exec/register.ts` の `generateRegisterPlan` から不要になった `_PJR_INDEX_PATH_` の定義を削除しました。
+- 確認結果:
+  - `tests/src/exec/register-plan-escape.test.ts` に単体テストを追加し、生成された plan に一覧のパスが含まれないこと、および進め方の指示文言が正しく反映されていることを確認しました。
+- 再発防止策:
+  - register 由来の plan テンプレートでは巨大になりうる一覧ファイルを agent の読み込み対象から外し、個票のみを作業基準とするテストケースを維持します。
 
 ## 5. 関連ドキュメント
 
