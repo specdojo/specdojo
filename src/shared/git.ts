@@ -310,22 +310,36 @@ export function summarizeGitHookFailure(output: string): string {
     .filter(Boolean);
   if (lines.length === 0) return "unknown hook failure";
 
-  let step = "";
-  let stepIndex = -1;
+  const stepHeaders: Array<{ step: string; index: number }> = [];
   for (const [index, line] of lines.entries()) {
     const match = line.match(/^(.+?)\s*[❯▶]\s*$/u);
-    if (!match) continue;
-    step = match[1]!.trim();
-    stepIndex = index;
-    break;
+    if (match) stepHeaders.push({ step: match[1]!.trim(), index });
   }
+  // parallel: true の lefthook は成功した step の出力も並べるため、最初の step 見出しが
+  // 失敗した step とは限らない。末尾の summary で失敗印（🥊 など）が付いた step を優先する。
+  const failedSteps = lines
+    .map((line) => line.match(/^(?:🥊|✗|✘|✕|❌)️?\s*([^\s(]+)/u)?.[1])
+    .filter((name): name is string => name !== undefined && name !== "lefthook");
+  const selected =
+    stepHeaders.find((header) => failedSteps.includes(header.step)) ?? stepHeaders[0];
+  const step = selected?.step ?? failedSteps[0] ?? "";
+  const stepIndex = selected?.index ?? -1;
+  const sectionEnd =
+    selected === undefined
+      ? lines.length
+      : (stepHeaders.find((header) => header.index > selected.index)?.index ?? lines.length);
 
   const isDecoration = (line: string): boolean =>
     /^(?:hook output|summary:|exit status\b|failed steps?:|skip(?:ped)?\b)/i.test(line) ||
     /^[✓✔✗✘✕❯▶]+$/u.test(line);
-  const errorLine = lines
-    .slice(stepIndex >= 0 ? stepIndex + 1 : 0)
-    .find((line) => line !== step && !isDecoration(line) && !/[❯▶]\s*$/u.test(line));
+  const isCandidate = (line: string): boolean =>
+    line !== step && !isDecoration(line) && !/[❯▶]\s*$/u.test(line);
+  const sectionLines = lines.slice(stepIndex + 1, sectionEnd).filter(isCandidate);
+  // 整形ツールが出す "(unchanged)" などの進捗行より、error を含む行を最初のエラーとして選ぶ。
+  const errorLine =
+    sectionLines.find((line) => /\berror\b/i.test(line)) ??
+    sectionLines[0] ??
+    lines.slice(stepIndex + 1).find(isCandidate);
 
   const primary =
     step && errorLine

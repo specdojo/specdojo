@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   changesModifyRunningSpecDojo,
+  postReviewCommitFailureLines,
   registerPostReviewDisposition,
 } from "../../../src/exec/run/register-post-review.js";
 
@@ -98,5 +99,40 @@ describe("changesModifyRunningSpecDojo", () => {
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
+  });
+});
+
+describe("postReviewCommitFailureLines", () => {
+  it("names the failed hook, its first error, and the files left in the working tree", () => {
+    const lines = postReviewCommitFailureLines({
+      itemId: "PJR-JSEY",
+      message:
+        "git commit failed: markdown: docs/result.md:21:3 error MD029/ol-prefix Ordered list item prefix",
+      leftFiles: ["docs/events/pjr-jsey.yaml", "docs/pjr-jsey.md"],
+      failureLogPath: "docs/evidence/PJR-JSEY-post-review/run/post-review-commit.log",
+    });
+
+    expect(lines).toEqual([
+      "Error: post-review bookkeeping commit failed for PJR-JSEY",
+      "  failed hook: markdown",
+      "  first error: docs/result.md:21:3 error MD029/ol-prefix Ordered list item prefix",
+      "  uncommitted bookkeeping files: docs/events/pjr-jsey.yaml, docs/pjr-jsey.md",
+      "  full hook output: docs/evidence/PJR-JSEY-post-review/run/post-review-commit.log",
+    ]);
+  });
+
+  it("does not treat a git fatal message as a hook name", () => {
+    const lines = postReviewCommitFailureLines({
+      itemId: "PJR-JSEY",
+      message: "git commit failed: fatal: unable to write new index file",
+      leftFiles: [],
+      failureLogPath: "post-review-commit.log",
+    });
+
+    expect(lines.slice(1, 4)).toEqual([
+      "  failed hook: unknown",
+      "  first error: fatal: unable to write new index file",
+      "  uncommitted bookkeeping files: none",
+    ]);
   });
 });

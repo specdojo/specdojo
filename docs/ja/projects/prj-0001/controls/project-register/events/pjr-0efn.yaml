@@ -96,3 +96,32 @@
       from: "-"
       to: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
   previous_event_id: reg_52f602d82ffc43b2afa4a55acd2f027a
+- v: 1
+  id: reg_fc5c6bb944174e6aa2711dec91e5815d
+  ts: "2026-10-18T18:21:07Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
+      to: "-"
+  previous_event_id: reg_a2f8c2052ea841679abf8ad5bca11ce7
+- v: 1
+  id: reg_ce7d96fa6e4d4c70af185ef436ff7069
+  ts: "2026-10-18T18:38:06Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sol-executor -> opus-executor at 2026-10-18T18:22:10.648Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fc5c6bb944174e6aa2711dec91e5815d

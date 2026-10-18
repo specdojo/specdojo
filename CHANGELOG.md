@@ -14,6 +14,8 @@ SpecDojo の利用者に影響する変更を記録します。
 - executor が親検証と同じコマンドを `not_applicable` または `not_run` と報告しても、同じリポジトリで親 runner が実行した結果を正とするようにしました。親検証が成功している run が executor の重複報告によって `waiting` で止まる問題を解消し、親検証でない誤った `not_applicable` は従来どおり拒否します（PJR-7AW0）。
 - exec の雛形を展開するときに、2 行以上続く空行を 1 行にまとめるようにしました。夜間の承認の印（autopilot）がない個票の register の plan では制約の段落が空に展開されて空行が重なり、plan を commit する hook の markdownlint（MD012）で `exec run --register` が止まっていました。agent の Job の plan や保守系の plan など、ほかの雛形で段落が空に展開される場合も同じくまとめます（PJR-283N）。
 - runner の git の操作が `.git/index.lock` の取り合い（`Unable to create '...index.lock': File exists`、日本語のメッセージを含む）で失敗した場合のやり直しを、合計 0.75 秒ほどから 1.5 秒間隔で最大 10 回へ広げ、やり直すたびに警告を出すようにしました。並行の run の統合や記帳と重なっただけで統合が止まり run が `waiting` になる問題を減らします。上限に達した場合は従来どおり失敗として報告し、残っていたロックのファイルのパスをメッセージの先頭に含めます。ロックのファイルは消しません（PJR-G90K）。
+- result（edit・review・post-review）で reporter が返した文を箇条書きに描くとき、文の先頭の `1.`・`1)`・`-` などのリスト記号を外すようにしました。review の agent が判断の根拠に自分で番号を付けると `- 1. ...` が入れ子の番号付きリストになり、post-review の記帳の commit が hook の markdownlint（MD029）で失敗して、close の記帳が作業ツリーに残っていました（PJR-0EFN）。
+- commit の失敗を hook の出力から要約するとき、最初に出力された step ではなく、lefthook の summary で失敗の印が付いた step と、その出力のうち error を含む最初の行を報告するようにしました。post-review の記帳の commit が失敗したときは、失敗した hook の名前・最初のエラーの行・作業ツリーに残った記帳のファイル・hook の全出力のログ（`post-review-commit.log`）を runner のログに出します（PJR-0EFN）。
 
 ### 文書
 
