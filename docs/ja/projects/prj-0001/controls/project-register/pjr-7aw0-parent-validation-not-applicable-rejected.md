@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-7aw0-parent-validation-not-applicable-rejected
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T14:46:06Z"
+  completed_at: "2026-10-18T15:28:40Z"
+  conclusion: 親検証に設定された検査について executor が not_run か not_applicable と報告しても、親 runner が流して通した場合は run を失敗にせず、親 runner の結果を正とするようにした。executor の failed は打ち消さない。共通の規約の要点にも書いた。qwen-executor の WJE6 が、この修正の後の再開で通った
   derived_from:
     - PJR-Z104
 ---
