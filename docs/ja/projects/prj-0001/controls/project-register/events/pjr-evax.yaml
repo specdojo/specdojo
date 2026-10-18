@@ -122,3 +122,29 @@
       from: in-progress
       to: review
   previous_event_id: reg_ee62102ae1c34f42988c22a9de42949e
+- v: 1
+  id: reg_78459d973c8a421aa41308be822d400c
+  ts: "2026-10-18T16:50:39Z"
+  action: start
+  actor: gemma-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_c3382d7c3ef0492d818663372cd54f4d
+- v: 1
+  id: reg_86b2be42b75e44f89020208a289503e7
+  ts: "2026-10-18T17:34:45Z"
+  action: review
+  actor: gemma-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_78459d973c8a421aa41308be822d400c
