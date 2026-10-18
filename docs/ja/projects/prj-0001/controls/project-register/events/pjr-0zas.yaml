@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3bf028994a2c4de09fe49e774d903ec8
+  ts: "2026-10-18T06:26:51Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ローカル LLM を Ollama と gemma・qwen の役割の分担に整理する
+    - field: description
+      from: ""
+      to: ローカル LLM の基盤を Ollama にし、reporter は gemma26、小さな修正の executor は作業の種類で gemma-executor（31B）と qwen-executor を使い分ける。thinking on の executor、gemma26 の executor、使っていない定義は無効にする
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
