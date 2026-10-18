@@ -1,0 +1,19 @@
+プロジェクト登録簿の項目 PJR-WJE6「ブランチワークフローガイドにプロダクトリポジトリの節を加える」に対応し、関連ドキュメントの更新と検証を完了しました。
+
+### 実施内容
+
+1. [[specdojo:branch-workflow-guide|ブランチワークフローガイド]] の更新:
+   - 「10. プロダクトリポジトリのブランチを運用する」を新設し、従来のチェックリストを「11. 作業前後のチェックリスト」へ更新しました。
+   - SpecDojo はプロダクトリポジトリにブランチ戦略を求めず、プロダクト側のルールで決めた統合先を `repos[].integration_branch` に指定すること、およびブランチ名に project ID を含める必要がないことを明記しました。
+   - git flow（`develop` を統合先にする）および GitHub flow（トピックブランチを統合先にし、`main` へは PR で取り込む）での `integration_branch` の選び方の例を示しました。
+   - merge の方式（merge commit・rebase merge・squash merge）ごとの `Refs:` trailer とコミット SHA の残り方を表で示し、squash merge では `Refs:` を残す設定（GitHub で「Pull request title and commit details」を選択するなど）にすることを明記しました。
+   - プロダクトリポジトリにおける変更追跡は trace key（`Refs: <project-id>:<item-id>`）を主とし、`git log --grep` で辿る手順を示しました。
+   - プロジェクトリポジトリ固有の昇格規約（`develop` から `main` への統合で merge commit を必須とし squash / rebase を禁止するルール）とプロダクトリポジトリ側のルールを明確に区別し、矛盾しない構成としました。
+2. [[prj-0001:pjr-wje6-product-repo-branch-guide|個票]] の更新:
+   - 作業内容テーブルの No 1 を完了（`done`）とし、対応結果セクションに実施内容・成果物・残課題を記載しました。
+3. 検証の実施:
+   - 対象 Markdown ファイルに対して Prettier 整形と `specdojo catalog validate` を実行し、正常にパスすることを確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-WJE6: ブランチワークフローガイドにプロダクトリポジトリのブランチ運用節を追加し、個票の対応結果を更新しました。","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md","status":"passed","summary":"2 files formatted"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog validation succeeded (OK: dct-index.yaml)"}]}
+</specdojo_executor_evidence>

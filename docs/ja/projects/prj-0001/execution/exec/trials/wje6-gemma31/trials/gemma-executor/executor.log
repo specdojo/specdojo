@@ -1,0 +1,98 @@
+<specdojo_executor_evidence>
+{"final_message":"ブランチワークフローガイドにプロダクトリポジトリの運用に関する節を追記し、個票を更新した。","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/branch-workflow-guide.md","status":"passed","summary":"Formatting applied successfully.","reason":""},{"command":"npx markdownlint docs/ja/specdojo/guides/branch-workflow-guide.md","status":"passed","summary":"No lint errors found.","reason":""}]}
+</specdojo_executor_evidence>
+
+[0m
+> gemma-executor · gemma4:31b-mlx-work-64k
+[0m
+[0m# [0mTodos
+[•] 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md` を読み、目的・完了条件を把握する
+[ ] ブランチワークフローガイドの対象ファイルを確認し、プロダクトリポジトリに関する節を追加・編集する
+[ ] 個票の作業内容・対応結果セクションを更新する
+[ ] 共通規約に従い、整形・静的検査を実行する
+[0m
+[0m→ [0mRead docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md
+[0m✱ [0mGlob "**/branch-workflow-guide.md"[90m 1 match[0m
+[0m→ [0mRead docs/ja/specdojo/guides/branch-workflow-guide.md
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -339,10 +339,35 @@
+ ```
+ 
+ レビュー中または共同作業中の branch は無理に改名せず、完了後に新しい命名へ切り替える方が安全です。
+ 
+-## 10. 作業前後のチェックリスト
++## 10. プロダクトリポジトリでの運用
+ 
++SpecDojo はプロダクトリポジトリ（プロジェクトリポジトリ以外の成果物を管理するリポジトリ）に対して特定のブランチ戦略を求めません。プロダクト側のルールで決定した統合先ブランチを、`.specdojo.json` の `repos[].integration_branch` に指定してください。ブランチ名に project ID を含める必要はありません。
++
++**統合先ブランチの選び方の例**
++
++| ブランチ戦略 | 統合先 (`integration_branch`) の選び方 | 例 |
++| :--- | :--- | :--- |
++| GitHub flow | トピックブランチを統合先にし、`main` へは PR で取り込む（短期的な変更の場合） | `feature/new-api` |
++| git flow | 開発統合用ブランチを統合先にする | `develop` |
++| 単一ブランチ | 直接 `main` 等を指定する | `main` |
++
++**merge 方式と追跡情報の残り方**
++
++統合時の merge 方式により、commit メッセージに含まれる `Refs:` (trace key) の残り方が異なります。
++
++| merge 方式 | `Refs:` と SHA の残り方 | 推奨設定・注意点 |
++| :--- | :--- | :--- |
++| merge commit (`--no-ff`) | 各 commit の `Refs:` がそのまま残り、統合を示す merge commit が作られる | 推奨。履歴が完全に保持される |
++| rebase merge | commit が直線的に並び、各 commit の `Refs:` がそのまま残る | 履歴は綺麗になるが、統合のまとまりが見えにくい |
++| squash merge | 複数の commit が 1 つにまとめられ、元の SHA は失われる | **`Refs:` を含める設定を必須とする**。個別の commit 履歴は失われるため、統合 commit に `Refs: <project-id>:<item-id>` を集約して記載する |
++
++追跡は主に trace key (`Refs: <project-id>:<item-id>`) で行い、`git log --grep` で対象 project ID や item ID を検索することで変更履歴を辿れるようにしてください。
++
++## 11. 作業前後のチェックリスト
++
++
+ | 時点                 | 確認内容                                                             |
+ | -------------------- | -------------------------------------------------------------------- |
+ | 分岐前               | 対象 project ID、現在ブランチ、未commit変更、分岐元の同期状態        |
+ | worktree作成後       | branch 名、worktree パス、ベース commit                              |
+
+[0m
+[0m← [0mEdit docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md
+@@ -33,13 +33,15 @@
+ ## 3. 作業内容
+ 
+ | No  | 作業                           | 担当 | 状態 | メモ |
+ | --- | ------------------------------ | ---- | ---- | ---- |
+-| 1   | プロダクトリポジトリの節を書く | BA   | open | -    |
++| 1   | プロダクトリポジトリの節を書く | BA   | completed | `docs/ja/specdojo/guides/branch-workflow-guide.md` へ追記。 |
+ 
+ ## 4. 対応結果
+ 
+-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
++- 実施内容: ブランチワークフローガイドにプロダクトリポジトリでの運用に関する節を新設し、統合先ブランチの指定方法、戦略別の選び方、merge 方式ごとの追跡情報の残り方について記述した。
++- 成果物: `docs/ja/specdojo/guides/branch-workflow-guide.md`
++- 残課題: なし
+ 
+ ## 5. 関連ドキュメント
+ 
+ - [[prj-0001:pjr-zdvq-product-repo-branch-strategy]]: 派生元の決定。
+
+[0m
+[0m$ [0mnpx prettier --write docs/ja/specdojo/guides/branch-workflow-guide.md
+docs/ja/specdojo/guides/branch-workflow-guide.md 81ms
+[0m
+[0m$ [0mnpx markdownlint docs/ja/specdojo/guides/branch-workflow-guide.md
+(no output)
+[0m
+[0m# [0mTodos
+[✓] 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md` を読み、目的・完了条件を把握する
+[✓] ブランチワークフローガイドの対象ファイルを確認し、プロダクトリポジトリに関する節を追加・編集する
+[✓] 個票の作業内容・対応結果セクションを更新する
+[✓] 共通規約に従い、整形・静的検査を実行する
+[0m

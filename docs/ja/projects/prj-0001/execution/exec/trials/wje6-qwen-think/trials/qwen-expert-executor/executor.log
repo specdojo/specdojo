@@ -1,0 +1,701 @@
+I'll start by understanding the task structure and reading the relevant files. Let me explore the workspace first.
+Let me read the target file (`branch-workflow-guide`) and related documents referenced in the completion conditions.
+Let me use the proper tools for finding files.
+Let me read the config reference and check the markdownlint config and lint scripts.
+Now let me check for any in-text references to section numbers that renumbering might affect, and look at the related standard doc plus lint scripts.
+Let me search within just the target file for self-references, and look at the related git-branching-standard doc and the package.json lint scripts.
+No self-references by section number exist in the target file. Let me inspect the lint config/setup so I can validate just the changed file, and check prettier config for table formatting.
+No self-references by number exist within the target file itself. But I should check whether *other* documents link into `branch-workflow-guide.md` via section anchors (which renumbering could break). Let me search broadly and also check the git-branching-standard for product-repo context.
+I have a good understanding now. Let me do a final check for any cross-references to this guide's section numbers in other docs, and verify the `Refs:` / trace-key terminology used elsewhere so my new content stays consistent.
+I now have enough understanding. Key findings:
+- No document references `branch-workflow-guide.md` via **numbered anchors**; cross-references use section titles (`承認方式を使い分ける`, etc.). So renumbering is safe if I keep titles stable.
+- The `Refs: <project-id>:<item-id>` trace key, `integration_branch`, and the three merge methods' behavior are already documented in `docs-structure-guide` and `pjr-zdvq`. My guide section must be consistent with PJR-ZDVQ's decision table.
+
+Let me create a todo list and start editing. First I'll insert the new section after §4 (specdojo exec) and before the `main` update section, then renumber.
+I have all the context needed. The cross-doc references to this guide use section **titles** (not numeric anchors), and no in-file references cite section numbers — so renumbering is safe as long as titles stay stable. Let me renumber existing top-level headings 5–10 → 6–11 bottom-up first.
+One edit failed due to a typo in my input (non-Japanese character). Let me verify the actual subheading text and fix 7.2 → 8.2.
+The grep searched globally. Let me check the subheading state in my target file directly.
+The 8.1 edit succeeded but the 8.2 (from 7.2) failed due to my input typo. Let me read that region to get the exact current heading text.
+Now I see line 290 has the correct text `### 7.2. 独立した承認者がいない期間を扱う`. My earlier edit failed because of a typo. Let me fix 7.2 → 8.2 now.
+Let me use the exact characters from line 290.
+All renumbering is done. Let me verify the full heading sequence now.
+The heading sequence now has §5 free (1,2,3,4, then 6–11). Before inserting, let me check how markdown links/lint are configured so I pick a link style that passes lint and matches the file's own convention.
+I have the lint config. Let me check the content schema and md-content rules so my new section passes lint, and find how guides cross-reference register items (if at all).
+Let me check how existing guide docs reference register items (to choose a link style that passes lint), using the Grep tool with a targeted path.
+I have enough context. Now let me insert the new section 5 between §4 (ends at `--task <task-id>` merge block) and §6 (`## 6. mainの更新を取り込む`). For cross-document references I'll use the wiki-link form `[[specdojo:...]]` — which is the documented link convention and which `docs-structure-guide.md` (a sibling guide) already uses for register items.
+My edit truncated mid-sentence and dropped the `## 6.` heading line. Let me inspect the current state around there.
+I see — the edit truncated mid-sentence at line 198 and dropped the `## 6.` heading. Let me fix both: complete the 5.2 subsection (with the merge-method table consistent with PJR-ZDVQ) and restore the `## 6.` heading that was consumed.
+Now let me replace the truncated 5.2 content (line 198) and restore the `## 6.` heading that was consumed.
+I notice a few typos I introduced in that edit (`proダクト側`, `落ちく`, `正体`). Let me read back the inserted section and correct them.
+The content and structure are correct, but I introduced several typos. Rather than fix each individually (and risk more errors), let me rewrite the entire §5 block cleanly with correct Japanese, then run prettier which will normalize table padding and spacing. Let me replace the whole section.
+I introduced a typo in the last bullet (`祖先ではならないため`). Let me read back and fix it.
+Line 208 has the typo `祖先ではならないため`. Let me fix it.
+Let me verify the full heading sequence and scan for any remaining typos in the new section.
+The heading sequence is now contiguous (1→11, with 5 and 5.1/5.2 properly nested). Let me verify §5 content has no remaining typos.
+The section content is clean now — no more typos, tables well-formed, all four completion conditions covered:
+1. §5 states SpecDojo doesn't impose a branch strategy on product repos; `repos[].integration_branch` specified by product-side rules; branch names need no project ID
+2. §5.1 table shows GitHub flow vs git flow selection
+3. §5.2 table shows `Refs:`/SHA behavior per merge method, with squash-merge instruction to keep `Refs:`
+4. §5.2 emphasizes trace key (`Refs: <project-id>:<item-id>`) and `git log --grep`
+
+Let me update the todo and run prettier formatting.
+Prettier formatted the file. Per the pipeline instructions, `lint-md` (`npm run lint:md`) is an allowlisted parent-run validation that I must not duplicate — the runner runs it authoritatively and appends results to evidence. Prettier formatting (the sandbox-safe step) is complete. Let me verify prettier didn't disturb the tables and check for trailing-whitespace issues in my new section.
+Prettier reformatted the tables cleanly (full-width-aware column padding) with no trailing-space issues. The new §5 content and renumbering are in place and consistent. 
+
+Per the pipeline instructions, `lint-md` (`npm run lint:md`) is an allowlisted parent-run validation that the runner executes authoritatively — I must not run it or report a duplicate. Prettier formatting (the sandbox-safe step) is complete. Let me do a final coherence check of the full heading structure and section 5.
+The heading structure is now contiguous and coherent (1→11 with 5.1/5.2 and 8.1/8.2 nested correctly). Prettier formatted cleanly with full-width-aware table padding, no trailing-space issues.
+
+Now let me update the ticket's working-note fields (作業内容 状態 / 対応結果), which are per-ticket content records the plan's "進め方" asks to fill for a completed edit task. I will NOT touch any frontmatter status field or the register index (lifecycle state, owned by runner/human).
+I need to decide about the ticket file. The pipeline/trial instructions are explicit and repeated: "do not create or update the result file" and "do not update task lifecycle state," and "Any plan instruction that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or runner stage and does not apply here." The 個票's `対応結果`/`作業内容` status fields are result-writing / lifecycle content, so per the trial I will NOT modify the 個票 (nor its frontmatter `item_status`, nor `pjr-index.md`, nor the exec result file). Those belong to the later reporter/runner.
+
+The substantive deliverable is the guide edit, which is complete. Let me do a final coherence check of the guide's top (intro blocks required by the content schema) and confirm no other file was disturbed.
+The intro blocks required by the content schema (対象読者/この文書で分かること/次に読む文書 after the English name) are intact, and the frontmatter (`status: ready`, `based_on`) was not touched. Let me confirm only the guide file changed.
+Only `docs/ja/specdojo/guides/branch-workflow-guide.md` is modified — exactly the substantive deliverable. 
+
+Summary of decisions for this executor stage:
+- **Edited:** added section 5 (`プロダクトリポジトリの統合先と取り込み方`) to the guide with §5.1 (GitHub flow / git flow `integration_branch` examples) and §5.2 (per-method `Refs:`/SHA table + squash-trace-key instruction), consistent with PJR-ZDVQ's decision; renumbered existing §§6–11 so headings stay contiguous. No cross-document link or in-file reference uses numeric anchors for this guide, so renumbering is safe.
+- **Not edited:** the 個票 (`pjr-wje6-…`) result/lifecycle fields and the exec result file — per the explicit pipeline + trial carve-outs ("do not create or update the result file"; "any plan instruction that assigns result writing or lifecycle transitions belongs to the later reporter/runner stage"), I left those to the reporter/runner. No frontmatter `status`/`based_on` was changed (still `ready`).
+- **Validation:** ran `npx prettier --write` (the sandbox-safe step for the changed `*.md`) — formatted cleanly with full-width-aware table padding, no trailing-space issues. `lint-md` / `lint-fm` / `validate-schema` are on the parent-run allowlist, so the executor must not run or duplicate them; the runner appends authoritative results.
+作業は完了しました。以下、執行結果です。
+
+**実施内容:** `docs/ja/specdojo/guides/branch-workflow-guide.md` へ、JР-ZDVQ の決定にもとづくプロダクトリポジトリの節（§5「プロダクトリポジトリの統合先と取り込み方」）を追加しました。
+- §5.1: `repos[].integration_branch` をプロダクト側の運用で決めた統合先へ指定し、ブランチ名に project ID を含めないこと、GitHub flow と git flow の選び方例（表）。
+- §5.2: merge commit / rebase merge / squash merge ごとの `Refs:` と SHA の残り方（表）と、squash merge で `Refs:` を残す設定（「Pull request title and commit details」）・`git log --grep` での trace key 追跡。
+- 既存節を 6〜11 へ番号付けし直し、見出しが連続する形に保ちました（他文書・本文とも数値アンカー参照は無いため安全）。
+
+**判断:** executor/reporter pipeline の「result ファイルを作り/更新しない」「タスク状態（個票の対応結果・作業内容状態、`item_status`、`pjr-index.md`、exec result）は runner と人間が行う」指示に従い、個票と result は編集していません。frontmatter の `status: ready` / `based_on` も据え置きです。
+
+**検証:** 変更した `*.md` の sandbox 安全な整形として `npx prettier --write` を対象ファイルで実行し、全角考慮の表整形・末尾空白なしを確認しました。`lint-md`/`lint-fm`/`validate:schema` は親 runner 側の許可リスト検証のため executor では実行せず（runner が権威的に追記）、重複報告もしていません。`git status --porcelain` で変更は当該 1 ファイルのみに留まっています。
+
+<specdojo_executor_evidence>
+{"final_message":"branch-workflow-guide.md にプロダクトリポジトリの節（§5、GitHub flow/git flow の integration_branch 選び方と merge 方式ごとの Refs:/SHA の残り方）を追加し、既存節を 6-11 へ再编号。個票/result/state は runner・人間が担当するため編集せず。prettier 整形を通過。","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/branch-workflow-guide.md","status":"passed","summary":"変更 *.md の sandbox 安全な整形を実施。全角考慮の表整形・末尾空白なしを確認、ファイルは1件。"},{"command":"npm run lint:md","status":"not_run","summary":"親 runner の許可リスト検証として扱ったため executor では実行せず（runner が権威的に追記）。重複報告を避けた。"}]}
+</specdojo_executor_evidence>
+
+[0m
+> qwen-expert-executor · qwen3.8:27b-mlx-work-64k
+[0m
+[0m→ [0mRead docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md
+[0m
+[0m$ [0mls -la
+合計 468
+drwxr-xr-x  49 node node   1568 10月 18 14:10 .
+drwxr-xr-x  22 node node    704 10月 18 14:10 ..
+drwxr-xr-x   5 node node    160 10月 18 14:10 .agents
+drwxr-xr-x   6 node node    192 10月 18 14:10 .claude
+drwxr-xr-x   4 node node    128 10月 18 14:10 .codex
+drwxr-xr-x  12 node node    384 10月 18 14:10 .devcontainer
+-rw-r--r--   1 node node    369 10月 18 14:10 .editorconfig
+-rw-r--r--   1 node node     90 10月 18 14:10 .git
+drwxr-xr-x   7 node node    224 10月 18 14:10 .github
+-rw-r--r--   1 node node   2422 10月 18 14:10 .gitignore
+-rw-r--r--   1 node node    396 10月 18 14:10 .markdownlint.yaml
+-rw-r--r--   1 node node     20 10月 18 14:10 .markdownlintignore
+drwxr-xr-x   8 node node    256 10月 18 14:26 .opencode
+-rw-r--r--   1 node node    533 10月 18 14:10 .prettierignore
+-rw-r--r--   1 node node    432 10月 18 14:10 .prettierrc.yaml
+-rw-r--r--   1 node node      0 10月 18 14:10 .remarkignore
+-rw-r--r--   1 node node   3111 10月 18 14:10 .remarkrc.yaml
+drwxr-xr-x   8 node node    256 10月 18 14:11 .specdojo
+drwxr-xr-x   7 node node    224 10月 18 14:10 .vscode
+-rw-r--r--   1 node node    395 10月 18 14:10 .yamllint.yaml
+-rw-r--r--   1 node node    348 10月 18 14:10 AGENTS.md
+-rw-r--r--   1 node node  33926 10月 18 14:10 CHANGELOG.md
+-rw-r--r--   1 node node    348 10月 18 14:10 CLAUDE.md
+-rw-r--r--   1 node node  10366 10月 18 14:10 CONTRIBUTING.md
+-rw-r--r--   1 node node   1088 10月 18 14:10 LICENSE
+-rw-r--r--   1 node node  17784 10月 18 14:10 README.md
+-rw-r--r--   1 node node    888 10月 18 14:10 commitlint.config.cjs
+drwxr-xr-x   6 node node    192 10月 18 14:10 docs
+-rw-r--r--   1 node node   3596 10月 18 14:10 eslint.config.js
+-rw-r--r--   1 node node   4414 10月 18 14:10 lefthook.yml
+drwxr-xr-x   3 node node     96 10月 18 14:10 logs
+drwxr-xr-x 366 node node  11712 10月 18 14:10 node_modules
+-rw-r--r--   1 node node   1984 10月 18 14:10 opencode.json
+drwxr-xr-x   3 node node     96 10月 18 14:10 ops
+-rw-r--r--   1 node node 298297 10月 18 14:10 package-lock.json
+-rw-r--r--   1 node node   9109 10月 18 14:10 package.json
+drwxr-xr-x   5 node node    160 10月 18 14:10 packages
+drwxr-xr-x  18 node node    576 10月 18 14:10 src
+drwxr-xr-x  10 node node    320 10月 18 14:10 templates
+drwxr-xr-x  11 node node    352 10月 18 14:10 tests
+drwxr-xr-x  15 node node    480 10月 18 14:10 tools
+-rw-r--r--   1 node node    222 10月 18 14:10 tsconfig.base.json
+-rw-r--r--   1 node node    336 10月 18 14:10 tsconfig.build.json
+-rw-r--r--   1 node node    280 10月 18 14:10 tsconfig.json
+-rw-r--r--   1 node node    236 10月 18 14:10 tsconfig.test.json
+-rw-r--r--   1 node node    407 10月 18 14:10 vitest.config.ts
+-rw-r--r--   1 node node    499 10月 18 14:10 vitest.integration.config.ts
+-rw-r--r--   1 node node    518 10月 18 14:10 vitest.unit.config.ts
+drwxr-xr-x   6 node node    192 10月 18 14:10 vscode-workspaces
+[0m
+[0m✗ [0mfind docs -iname "*branch-workflow*" 2>/dev/null; echo "---zdqv---"; find docs -iname "*pjr-zdvq*" 2>/dev/null; echo "---specdojo-config---"; find docs -iname "*specdojo-config-reference*" 2>/dev/null failed
+[91m[1mError: [0mThe user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{"permission":"*","action":"allow","pattern":"*"},{"permission":"bash","pattern":"*","action":"deny"},{"permission":"bash","pattern":"git status*","action":"allow"},{"permission":"bash","pattern":"git diff*","action":"allow"},{"permission":"bash","pattern":"git log*","action":"allow"},{"permission":"bash","pattern":"git show*","action":"allow"},{"permission":"bash","pattern":"npm run *","action":"allow"},{"permission":"bash","pattern":"npm test*","action":"allow"},{"permission":"bash","pattern":"npx prettier*","action":"allow"},{"permission":"bash","pattern":"npx markdownlint*","action":"allow"},{"permission":"bash","pattern":"npx ajv*","action":"allow"},{"permission":"bash","pattern":"specdojo *","action":"allow"},{"permission":"bash","pattern":"./node_modules/.bin/specdojo *","action":"allow"},{"permission":"bash","pattern":"cat *","action":"allow"},{"permission":"bash","pattern":"ls *","action":"allow"},{"permission":"bash","pattern":"grep *","action":"allow"},{"permission":"bash","pattern":"sed -n *","action":"allow"}]
+[0m✱ [0mGlob "docs/**/*branch-workflow*"[90m 1 match[0m
+[0m✱ [0mGlob "docs/**/*pjr-zdvq*"[90m 2 matches[0m
+[0m✱ [0mGlob "docs/**/*specdojo-config-reference*"[90m 1 match[0m
+[0m→ [0mRead docs/ja/specdojo/guides/branch-workflow-guide.md
+[0m→ [0mRead docs/ja/projects/prj-0001/controls/project-register/pjr-zdvq-product-repo-branch-strategy.md
+[0m→ [0mRead docs/ja/specdojo/references/specdojo-config-reference.md
+[0m→ [0mRead .markdownlint.yaml
+[0m→ [0mRead lefthook.yml
+[0m✱ [0mGrep "[0-9]+\.[0-9]|節|## [0-9]"[90m in docs/ja/specdojo/guides/branch-workflow-guide.md · 100 matches[0m
+[0m
+[0m$ [0msed -n '1,40p' package.json
+{
+  "name": "specdojo",
+  "version": "0.3.1",
+  "description": "A dojo for Spec-Dō, the way of specification: decide with a register, write specs and designs with kata, and keep sharpening them with AI.",
+  "license": "MIT",
+  "author": "naoji3x",
+  "private": false,
+  "type": "module",
+  "bin": {
+    "specdojo": "dist/specdojo.js"
+  },
+  "files": [
+    "dist",
+    "docs/ja/specdojo",
+    "!docs/ja/specdojo/**/generated/**",
+    "docs/specdojo",
+    "!docs/specdojo/**/generated/**",
+    "templates",
+    ".github/agents/specdojo-orchestrator.md",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/specdojo/specdojo.git"
+  },
+  "homepage": "https://github.com/specdojo/specdojo#readme",
+  "bugs": {
+    "url": "https://github.com/specdojo/specdojo/issues"
+  },
+  "keywords": [
+    "specdojo",
+    "cli",
+    "specification",
+    "project-management",
+    "workflow"
+  ],
+  "publishConfig": {
+    "access": "public"
+[0m
+[0m✱ [0mGrep "(節|章|§|前述|後述|上の|下の一覧).{0,20}([0-9]+\.) |本ガイドの?.{0,10}[0-9]+\.[0-9]"[90m in docs/ja/specdojo/guides/branch-workflow-guide.md · 0 matches[0m
+[0m
+[0m$ [0msed -n '40,120p' package.json
+"access": "public"
+  },
+  "scripts": {
+    "prepare": "node tools/install-lefthook.mjs",
+    "pre-commit": "lefthook run pre-commit",
+    "build": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"",
+    "build:if-stale": "node tools/build-if-stale.mjs",
+    "test": "vitest run",
+    "test:unit": "vitest run --config vitest.unit.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:watch": "vitest",
+    "test:e2e": "npm run build && tsx tools/e2e/exec-run-e2e.ts",
+    "dev": "tsx src/specdojo.ts",
+    "start": "node dist/specdojo.js",
+    "prepack": "npm run build",
+    "specdojo:build": "npm run build",
+    "vscode:install": "npm --prefix packages/vscode-specdojo ci",
+    "update:agents": "node tools/update-agent-clis.mjs",
+    "vscode:build": "npm --prefix packages/vscode-specdojo run compile",
+    "vscode:package": "npm --prefix packages/vscode-specdojo run package",
+    "exec:watch-claude-log": "tools/exec/watch-claude-log.sh",
+    "worktree:sync": "tools/worktree/sync.sh",
+    "orch:sonnet": "claude --agent specdojo-orchestrator --model sonnet",
+    "orch:sonnet:work": "tools/worktree/open-agent-worktree.sh claude-work claude --agent specdojo-orchestrator --model sonnet",
+    "orch:opus": "claude --agent specdojo-orchestrator --model opus",
+    "orch:opus:work": "tools/worktree/open-agent-worktree.sh claude-work claude --agent specdojo-orchestrator --model opus",
+    "orch:terra": "codex -m gpt-5.6-terra \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:terra:work": "tools/worktree/open-agent-worktree.sh codex-work codex -m gpt-5.6-terra \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:sol": "codex -m gpt-5.6-sol \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:sol:work": "tools/worktree/open-agent-worktree.sh codex-work codex -m gpt-5.6-sol \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:copilot": "copilot --agent specdojo-orchestrator",
+    "orch:copilot:work": "tools/worktree/open-agent-worktree.sh copilot-work copilot --agent specdojo-orchestrator",
+    "orch:agy": "agy --add-dir \"$(pwd)\" --model gemini-3.8-flash-high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:agy:work": "tools/worktree/open-agent-worktree.sh agy-work agy --add-dir \"$(pwd)\" --model gemini-3.8-flash-high -i \"$(cat .agents/specdojo-orchestrator.agent.md)\"",
+    "orch:qwen": "opencode --agent qwen-orchestrator",
+    "orch:qwen:work": "tools/worktree/open-agent-worktree.sh qwen-work opencode --agent qwen-orchestrator",
+    "orch:gemma": "opencode --agent gemma-orchestrator",
+    "orch:gemma:work": "tools/worktree/open-agent-worktree.sh gemma-work opencode --agent gemma-orchestrator",
+    "code:red": "tools/vscode/open-worktree-workspace.sh red",
+    "code:blue": "tools/vscode/open-worktree-workspace.sh blue",
+    "code:green": "tools/vscode/open-worktree-workspace.sh green",
+    "typecheck": "tsc -b --noEmit",
+    "lint:ts": "eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'",
+    "lint:ts:fix": "eslint --fix 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'",
+    "lint:orchestrator-sync": "node tools/validate-orchestrator-sync.mjs",
+    "orchestrator:sync": "node tools/generate-orchestrator-wrappers.mjs",
+    "lint:md": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'",
+    "lint:md:fix": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint --fix '**/*.md'",
+    "format": "prettier --write '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
+    "format:check": "prettier --check '**/*.{ts,js,mjs,cjs,json,yaml,yml,md}'",
+    "docs:generate": "node --import tsx src/specdojo.ts build",
+    "docs:dev": "npm run docs:generate && npm --prefix packages/docs-site run docs:dev",
+    "docs:build:mermaid": "npm --prefix packages/docs-site run docs:build:mermaid",
+    "docs:rebuild:mermaid": "rm -f public/mermaid/*.svg && npm run docs:build:mermaid",
+    "docs:build": "npm run docs:generate && npm --prefix packages/docs-site run docs:build",
+    "lint:fm": "node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail",
+    "validate:schema:job-run": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --schema docs/specdojo/schemas/v1/job-run.schema.yaml --data \"docs/ja/**/execution/jobs/runs/*.json\" --allow-empty",
+    "validate:schema:grade-pipeline": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --schema docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml --data \"docs/ja/**/execution/grade/pipeline/*.json\" --allow-empty",
+    "validate:schema:file": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema",
+    "validate:schema": "npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary",
+    "validate:schema:rulebook-enums": "node packages/docs-lint/bin/specdojo-docs-lint.js rulebook-schema-enums",
+    "validate:schema:glossary": "node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references",
+    "validate:catalog": "tsx src/specdojo.ts catalog validate",
+    "validate:history-links": "node packages/docs-lint/bin/specdojo-docs-lint.js history-links",
+    "check": "npm run typecheck && npm run lint:ts && npm run lint:md && npm run lint:fm && npm run validate:schema && npm run validate:catalog && npm run validate:history-links && npm test",
+    "dc:ps": "docker ps --format \"table {{.Names}}\\t{{.Image}}\\t{{.Status}}\"",
+    "dc:name": "bash -lc 'docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"'",
+    "dc:bash": "bash -lc 'name=$(docker ps --format \"{{.Names}}\\t{{.Image}}\" | awk \"\\$2 ~ /^vsc-specdojo/ {print \\$1; exit}\"); [ -n \"$name\" ] && docker exec -it --detach-keys=\"ctrl-]\" -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 -u node \"$name\" bash -lc \"cd /workspaces/specdojo-workspace/specdojo && exec bash\" || echo \"matching container not found\"'",
+    "vscode:ps": "bash .devcontainer/kill-stale-vscode.sh --list",
+    "vscode:kill-stale": "bash .devcontainer/kill-stale-vscode.sh",
+    "specdojo:exec:opencode": "specdojo exec run --auto --loop --parallel 1 --edit-by opencode-edit-agent --review-by opencode-review-agent > logs/exec-opencode.stdout.log 2> logs/exec-opencode.stderr.log",
+    "specdojo:exec:auto": "specdojo exec run --auto --loop --parallel 1 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "specdojo:exec:auto2": "specdojo exec run --auto --loop --parallel 2 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "specdojo:exec:auto3": "specdojo exec run --auto --loop --parallel 3 > logs/exec-auto.stdout.log 2> logs/exec-auto.stderr.log",
+    "validate:schema:yaml": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "ajv": "^8.20.0",
+[0m
+[0m✱ [0mGlob "docs/**/*git-branching-standard*"[90m 1 match[0m
+[0m→ [0mRead .prettierrc.yaml
+[0m
+[0m$ [0msed -n '1,40p' docs/ja/specdojo/standards/git-branching-standard.md
+---
+specdojo:
+  id: specdojo:git-branching-standard
+  type: standard
+  status: draft
+---
+
+# Git ブランチ運用標準
+
+Git Branching Standard
+
+SpecDojo Unit を管理するリポジトリで、プロジェクト単位の変更と task 単位の自動実行を安全に統合するためのブランチ構成、命名、統合方向、保護条件を定義します。具体的な操作は [branch-workflow-guide.md](../guides/branch-workflow-guide.md) を参照してください。
+
+## 1. 目的・適用範囲
+
+- 一つのリポジトリで `prj-xxxx` 単位のプロジェクトを管理し、プロジェクトごとに feature 作業または SpecDojo exec を実行する場合に適用します。
+- `main`、プロジェクト統合ブランチ、feature ブランチ、exec ブランチの責務と統合方向を規定します。
+- Git worktree を使わない作業にも命名と統合方向を適用し、worktree を使う場合はベースブランチの解決条件を追加で適用します。
+
+## 2. 基本方針
+
+- `main` はリポジトリ全体で共有する安定した統合点とし、プロジェクト進行中の未統合変更を直接蓄積しません。
+- 各プロジェクトは `project/<project-id>/develop` を中核の統合ブランチとし、そのプロジェクトの feature と exec の分岐元・統合先を一つにします。
+- 人が管理する feature、SpecDojo が管理する exec、対話型 agent の常設 worktree を名前空間とライフサイクルで分離します。
+- 統合方向を固定し、task ブランチから `main` へ直接変更が流入する経路を作りません。
+
+## 3. ブランチの種類と命名
+
+| 種類             | 命名パターン                   | 必須 | 分岐元                     | 統合先                     | 管理主体         |
+| ---------------- | ------------------------------ | ---- | -------------------------- | -------------------------- | ---------------- |
+| 安定統合         | `main`                         | ○    | -                          | -                          | リポジトリ管理者 |
+| プロジェクト統合 | `project/<project-id>/develop` | ○    | `main`                     | `main`                     | プロジェクト     |
+| feature          | `feature/<project-id>/<topic>` | ○    | 対象 project の `develop`  | 対象 project の `develop`  | 人               |
+| exec             | `exec/<project-id>-<task-id>`  | ○    | 実行時の project `develop` | 実行時の project `develop` | SpecDojo CLI     |
+
+- `<project-id>` は対象プロジェクトの ID と一致させます。
+- `<topic>` は英小文字、数字、ハイフンを使い、変更の目的を識別できる名前にします。
+- `<task-id>` は対象 schedule task の ID から機械的に導出します。
+- 既存の `feature/<topic>` は進行中の作業が完了するまで使用できます。新規作成する feature には project ID を含めます。
+[0m
+[0m→ [0mRead packages/docs-lint/bin/specdojo-docs-lint.js
+[0m
+[0m$ [0msed -n '40,160p' docs/ja/specdojo/standards/git-branching-standard.md
+### 3.1. 対話型 agent の常設 worktree
+
+対話型オーケストレーターを隔離して起動する常設 worktree は、ブランチを `worktree/<name>`、配置を `../worktrees/<name>` とします。`<name>` は `claude-work`、`codex-work`、`copilot-work`、`qwen-work`、`gemma-work` のいずれかです。
+
+- `worktree/` は常設の agent 作業ブランチを表す名前空間です。task ごとに作成・削除する `exec/` と区別し、`git branch --list "worktree/*"` で一括列挙できるようにします。
+- 起動スクリプトは、既存 worktree の実際のブランチが `worktree/<name>` と一致することを確認します。不一致の場合は agent を起動せず、先に未コミット変更と独自 commit を確認して移行します。
+- Claude Code の `--worktree` は、ブランチを `worktree-<name>`、配置を `.claude/worktrees/<name>` に固定して他の agent と揃えられないため使用しません。全 agent で `git worktree add` を使用します。
+
+## 4. 分岐・統合の規範
+
+標準の変更経路は次のとおりです。
+
+```text
+main
+└─ project/<project-id>/develop
+   ├─ feature/<project-id>/<topic>
+   └─ exec/<project-id>-<task-id>
+```
+
+| 操作                                     | 判定基準                                                                  |
+| ---------------------------------------- | ------------------------------------------------------------------------- |
+| project `develop` の作成                 | `main` の確認済み commit から分岐している                                 |
+| feature / exec の作成                    | 対象 project の `develop` の commit から分岐している                      |
+| feature / exec の統合                    | 対象 project の `develop` に統合し、別 project や `main` へ直接統合しない |
+| project `develop` の `main` への統合     | 必要な検証とレビューが成功し、変更範囲と未解決事項を確認している          |
+| `main` の project `develop` への取り込み | 共有中の `develop` の履歴を書き換えず、merge で取り込んでいる             |
+
+- `exec worktree merge` は実行した現在ブランチを統合先とするため、実行前に対象 project の `develop` であることを確認します。
+- feature または exec の統合後も project の完了判断までは `develop` を保持します。
+- project `develop` から `main` への統合は Pull Request または同等のレビュー可能な変更単位で行います。
+
+### 4.1. developへ入る3層の変更経路
+
+project `develop` へ入る変更は、変更の作成主体と事前レビューの要否により次の3層へ分けます。
+
+| 層  | 変更の種類                                                    | 作業ブランチ                   | `develop` への統合方法                                      |
+| --- | ------------------------------------------------------------- | ------------------------------ | ----------------------------------------------------------- |
+| 1   | SpecDojo exec が task 単位で自動実行する変更                  | `exec/<project-id>-<task-id>`  | 統合専用 actor が `--no-ff` で merge し、保護を bypass する |
+| 2   | 人または対話型 agent が内容を書いた実装、設定、規範・設計文書 | `feature/<project-id>/<topic>` | Pull Request で差分の承認を得てから merge する              |
+| 3   | register の起票・close・状態遷移と、それに伴う生成物の再構築  | project `develop`              | 統合専用 actor による直接 commit を許容する                 |
+
+層2と層3の境界は、変更内容に事前レビューの価値があるかで判断します。実装、設定、本文、判断内容のようにレビューで誤りを発見できる変更は、コマンドで生成・記録した場合でも層2です。層3は、既に決まった実行事実を register へ記帳するだけで、内容の判断を伴わない変更に限定します。記帳と内容変更が同じ作業に含まれる場合は、全体を層2として扱います。
+
+層3を例外にできるのは、register ID が連番ではなく乱数で採番され、index と view の生成物が `.gitignore` で Git 管理対象外になっており、Git 管理する実体が項目単位の個票と event に分かれているためです。これらの前提が成立しない register や、同じ正本ファイルを複数人が更新する記帳には例外を適用せず、層2として扱います。
+
+exec に流す `todo` の個票と実行に必要な記帳は、実行前に project `develop` へ統合済みでなければなりません。`exec run --worktree` は project `develop` の commit を起点に worktree を作るため、feature にだけ存在する `todo` は実行対象にしません。
+
+### 4.2. 運用規模ごとの必須条件
+
+3層の分類、feature と exec の分岐元・統合先、および exec 対象を事前に `develop` へ入れる制約は、運用規模にかかわらず適用します。運用基盤に関する条件は次のように区別します。
+
+| 条件                                                | 単独運用                                                                                                                                        | 複数人・複数 actor 運用                                                                        |
+| --------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| 層2の統合レビュー                                   | 作成者と独立した承認者が参加していない期間は、ローカルの差分確認と `--no-ff` merge を Pull Request の代替にできる。リモートの有無では判断しない | Pull Request を必須とし、作成者以外が参加できるレビュー単位を `develop` へ入る前に作る         |
+| project `develop` の branch protection              | 省略できる                                                                                                                                      | 必須。人の直接 push、force-push、削除を禁止する                                                |
+| 統合専用 actor                                      | 作業者と分離できない場合は省略できる                                                                                                            | 必須。exec の merge と層3の直接 commit だけに bypass を許可し、人の層2変更には使わない         |
+| feature を切る前の project `develop` のリモート反映 | リモートや Pull Request を使わない場合は省略できる                                                                                              | 必須。ローカル先端を push し、リモートの `develop` と一致することを確認してから feature を切る |
+
+単独運用から複数人・複数 actor 運用へ移る前に、統合専用 actor と branch protection を準備します。準備できない猶予期間は単独運用の条件を複数人運用へ流用せず、対象、理由、期間、復帰条件を project register に記録します。
+
+### 4.3. developからmainへの昇格方式
+
+project `develop` から `main` への昇格は、`develop` の先端を第2 parent とする merge commit を必ず作ります。ローカルで再現する場合は `git merge --no-ff`、Pull Request では merge commit を作る方式を選びます。squash merge と rebase merge は使用しません。
+
+この方式で「まとめる」対象は物理的な commit 数ではなく、`main` の first-parent 履歴です。`develop` の細かな commit は監査と `register history` のために DAG へ保持し、プロダクト変更を追うときは次の表示を正規の履歴とします。
+
+```bash
+git log --first-parent --oneline main
+```
+
+昇格 merge commit の subject は昇格した変更範囲を要約し、Pull Request から検証結果、承認、未解決事項を追跡できるようにします。通常の `git log` では `develop` の詳細 commit も表示されます。first-parent 表示で1昇格を1行に集約しながら、次の性質を維持することが採用理由です。
+
+- 昇格済みの `develop` commit がすべて `main` の祖先となり、次回の昇格で再び未マージ扱いになりません。
+- `main` の更新を共有中の `develop` へ通常の merge で取り込めます。fast-forward できる場合も履歴を書き換えません。
+- push 済み commit の ID と到達可能性を保ち、Git 履歴へフォールバックする監査情報を失いません。
+
+昇格後は、昇格対象だった `develop` の先端が `main` の祖先であることを `git merge-base --is-ancestor` で確認します。squash merge、一時ブランチでの rebase / cherry-pick、特定 commit の除外は元の `develop` との祖先関係を記録しないため、昇格の集約方式として使用しません。
+
+#### 適用範囲（本方式が有効になる時点）
+
+本方式は、**本規約の適用後に行う昇格から有効になります**。それ以前に作られた `main` の first-parent 履歴は集約されません。
+
+`develop` を第2 parent とする merge commit を `main` 上で作らず、`main` 上へ取り込む merge を `develop` 側で実行して `main` を fast-forward した場合、`main` の first-parent 系列は `develop` の詳細 commit を辿ります。過去にこの形で昇格した区間では、`git log --first-parent main` に exec / register の遷移 commit がそのまま現れます。
+
+既存の first-parent 系列を集約するには push 済み履歴の書き換えが必要であり、本規約は書き換えを禁止します。したがって過去区間はそのまま残します。読み手は、集約された first-parent 表示が得られるのは本規約適用後の区間である、と理解して利用します。
+
+昇格を行う担当者は、merge の向きが逆にならないよう次を確認します。`main` を checkout した状態で `develop` を merge する、または Pull Request の base を `main`、head を `develop` として merge commit を作る方式を選びます。
+
+## 5. 同期・履歴・保護
+
+- `main` と共有中の project `develop` では force-push と履歴を書き換える rebase を禁止します。
+- 公開済みで他の作業者が参照する feature では、合意なく force-push または rebase を行いません。
+- `main` の更新は project `develop` へ定期的に mergeし、長期間の乖離を避けます。
+- feature worktree は対象 project の `develop` を明示的なベースとして同期します。
+- 複数プロジェクトを並行する場合、main worktree の現在ブランチによるベース自動判定だけに依存せず、対象 project の `develop` を指定します。
+- `main` には branch protection を設定し、直接 push を禁止し、Pull Request と最低 1 名の承認、必須 CI の成功を merge 条件にします。
+- GitHub のリポジトリ設定では merge commit だけを許可し、squash merge と rebase merge を無効にします。これは Pull Request 画面で誤った昇格方式を選べないようにするサーバ側の設定です。
+- 複数人・複数 actor 運用の `project/<project-id>/develop` には branch protection を設定します。人または対話型 agent が内容を書いた feature は Pull Request を必須とし、exec の merge と register の記帳だけは統合専用 actor による bypass を許可します（承認ゲートの適用範囲は `承認ゲートと PR 強制条件` を参照）。
+- 承認者は `CODEOWNERS` で宣言し、branch protection の "Require review from Code Owners" で強制します。`main` はリポジトリ管理者、各 project の承認対象は当該 project の承認権限者（PO / CCB）を owner に割り当てます。
+
+### 5.1. mainへの直接pushを防ぐ防護柵
+
+Lefthook の `pre-push` は、Git が標準入力へ渡す各更新の remote ref を検査し、リモート名にかかわらず `refs/heads/main` への更新を拒否します。`project/<project-id>/develop`、feature、exec など他の remote ref への push は妨げません。拒否時は base を `main`、head を project `develop` とする Pull Request を作り、merge commit で昇格するよう案内します。
+
+このフックはローカルの誤操作を早期に止める防護柵であり、アクセス制御の境界ではありません。`--no-verify` で迂回でき、Lefthook を導入していない環境では実行されません。実際の境界は GitHub の branch protection であり、`main` への Pull Request、承認、必須 CI をサーバ側で強制します。
+
+実際に push せず判定を確認するには、Git の `pre-push` 入力と同じ4フィールドをスクリプトへ渡します。最初のコマンドは終了コード1で拒否メッセージを表示し、2つ目は終了コード0になります。
+
+```bash
+printf '%s\n' 'refs/heads/local LOCAL refs/heads/main REMOTE' \
+  | node tools/protect-main-push.mjs
+printf '%s\n' 'refs/heads/local LOCAL refs/heads/project/prj-0001/develop REMOTE' \
+  | node tools/protect-main-push.mjs
+```
+
+## 6. ブランチの完了・削除
+
+| ブランチ          | 削除できる条件                                                        | 保持する条件                                   |
+| ----------------- | --------------------------------------------------------------------- | ---------------------------------------------- |
+| feature           | 変更が project `develop` に統合され、未退避の作業がない               | レビュー中、競合解消中、未統合 commit がある   |
+[0m
+[0m✱ [0mGrep "branch-workflow-guide\.md#[0-9]"[90m in docs · 0 matches[0m
+[0m✱ [0mGrep "branch-workflow-guide"[90m in docs · 64 matches[0m
+[0m✱ [0mGrep "Refs:|trace key|integration_branch"[90m in docs · 100 matches[0m
+[0m
+[0m# [0mTodos
+[•] branch-workflow-guide.md にプロダクトリポジトリの節を追加（決定PJР-ZDVQ準拠）
+[ ] 既存節の番号付けを差し替え（5-10 → 6-11）
+[ ] prettier 整形と lint:md を対象ファイルで実行し通過させる
+[0m
+[0m→ [0mRead docs/ja/specdojo/guides/branch-workflow-guide.md[90m [offset=148, limit=40][0m
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -339,9 +339,9 @@
+ ```
+ 
+ レビュー中または共同作業中の branch は無理に改名せず、完了後に新しい命名へ切り替える方が安全です。
+ 
+-## 10. 作業前後のチェックリスト
++## 11. 作業前後のチェックリスト
+ 
+ | 時点                 | 確認内容                                                             |
+ | -------------------- | -------------------------------------------------------------------- |
+ | 分岐前               | 対象 project ID、現在ブランチ、未commit変更、分岐元の同期状態        |
+
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -314,9 +314,9 @@
+ export SPECDOJO_WORKTREE_BASE_BRANCH=project/prj-0001/develop
+ npm run worktree:sync
+ ```
+ 
+-## 9. 既存featureブランチを移行する
++## 10. 既存featureブランチを移行する
+ 
+ 未公開または単独作業中の `feature/<topic>` は、project ID を含む名前へ変更できます。
+ 
+ ```bash
+
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -292,9 +292,9 @@
+ PR の作成者と独立した Code Owner がいない場合、PR 強制 3 ケースは「承認待ち」とし、作成者自身の approve、管理者権限、または bypass を承認として記録しません。独立した承認者が参加して approve するまで merge と承認対象チケットの close を保留します。
+ 
+ 緊急対応で管理者 bypass による merge が不可避な場合は、承認済みとは扱わず、例外として対象、理由、実施者、期間、PR URL、merge SHA、復帰条件を project register に記録します。独立した承認者が参加した後に差分を遡及レビューし、その結果を同じ登録項目へ追記します。
+ 
+-## 8. 複数projectを並行する
++## 9. 複数projectを並行する
+ 
+ `worktree:sync` は既定で main worktree が checkout しているブランチをベースにします。複数 project の worktree が同時に存在する場合は、対象 project の `develop` を毎回明示します。
+ 
+ ```bash
+
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -240,9 +240,9 @@
+ ```
+ 
+ 同期直後の最後のコマンドは出力なしになります。その後の出力は次回昇格の新しい commit だけであり、過去の昇格済み commit は再表示されません。project 完了後に `develop` を削除する場合は、祖先確認と未退避作業の確認を終えてから行います。
+ 
+-## 7. 承認方式を使い分ける
++## 8. 承認方式を使い分ける
+ 
+ 登録項目の承認は、既定で commit（register の状態遷移とチケット個票の承認節）で残し、PR 承認は強制する 3 ケースに限定します。判定条件は [Git ブランチ運用標準](../standards/git-branching-standard.md) の `承認ゲートと PR 強制条件`、type 別の承認フローは [登録簿運用ガイド](register-operation-guide.md) の `承認フローと承認者` を参照します。
+ 
+ この承認方式は register 項目の正式な承認証跡を選ぶものです。人または対話型 agent が内容を書いた変更を feature Pull Request で事前レビューする経路とは別に判定します。PR 強制3ケース以外でも内容変更は feature Pull Request で統合し、register 項目の正式承認は commit とチケット個票へ残します。
+
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -266,9 +266,9 @@
+ ```
+ 
+ merge 後は、承認者・承認日・承認対象・証跡（PR URL・merge SHA）をチケット個票の承認節へ書き戻します。`main` と `project/<project-id>/develop` の承認者は `CODEOWNERS` と branch protection で強制します。
+ 
+-### 7.1. CODEOWNERS と branch protection を設定する
++### 8.1. CODEOWNERS と branch protection を設定する
+ 
+ `CODEOWNERS` は PR の base branch にあるファイルが評価されます。保護ルールを有効にする前に、`.github/CODEOWNERS` を `main` と保護対象の `project/<project-id>/develop` へ反映し、指定した user または team にリポジトリへの明示的な write 権限があることを確認します。
+ 
+ リポジトリ管理者は GitHub の `Settings` → `Branches` で、次の branch protection rule を設定します。ruleset を使う場合も、同等の条件を設定します。
+
+[0m
+[0m✗ [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md failed
+[91m[1mError: [0mCould not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -194,9 +194,9 @@
+ ```bash
+ npm run worktree:sync -- --base project/prj-0001/develop
+ ```
+ 
+-## 6. project developをmainへ統合する
++## 7. project developをmainへ統合する
+ 
+ project の変更が受入可能になったら、次の順序で `main` への統合を準備します。
+ 
+ 1. project `develop` に未統合の feature / exec がないか確認します。
+
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -175,9 +175,9 @@
+   --project prj-0001 \
+   --task <task-id>
+ ```
+ 
+-## 5. mainの更新を取り込む
++## 6. mainの更新を取り込む
+ 
+ project の作業期間中は、`main` の更新を project `develop` へ定期的に取り込みます。
+ 
+ ```bash
+
+[0m
+[0m✱ [0mGrep "### [0-9]\.[0-9]|## [0-9]+\."[90m in docs/ja/specdojo/guides/branch-workflow-guide.md · 100 matches[0m
+[0m→ [0mRead docs/ja/specdojo/guides/branch-workflow-guide.md[90m [limit=45, offset=243][0m
+[0m→ [0mRead docs/ja/specdojo/guides/branch-workflow-guide.md[90m [limit=25, offset=288][0m
+[0m✗ [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md failed
+[91m[1mError: [0mCould not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -286,9 +286,9 @@
+ 2. 未承認、作成者自身の操作、古い承認、未成功の必須 CI の各状態では `main` へ merge できない。
+ 3. PR 強制ケースの差分を base にした `project/<project-id>/develop` 向け PR で、Code Owner の承認なしに merge できない。
+ 4. 統合専用 actor による通常の `exec → develop` だけが bypass でき、人の変更は bypass できない。
+ 
+-### 7.2. 独立した承認者がいない期間を扱う
++### 8.2. 独立した承認者がいない期間を扱う
+ 
+ PR の作成者と独立した Code Owner がいない場合、PR 強制 3 ケースは「承認待ち」とし、作成者自身の approve、管理者権限、または bypass を承認として記録しません。独立した承認者が参加して approve するまで merge と承認対象チケットの close を保留します。
+ 
+ 緊急対応で管理者 bypass による merge が不可避な場合は、承認済みとは扱わず、例外として対象、理由、実施者、期間、PR URL、merge SHA、復帰条件を project register に記録します。独立した承認者が参加した後に差分を遡及レビューし、その結果を同じ登録項目へ追記します。
+
+[0m
+[0m$ [0mgrep -nE '^#{2,3} [0-9]+\.' docs/ja/specdojo/guides/branch-workflow-guide.md
+28:## 1. 前提と全体像
+55:## 2. project developを準備する
+77:## 3. featureブランチで作業する
+79:### 3.1. 通常の作業ツリーで開始する
+104:### 3.2. feature用worktreeを作る
+129:### 3.3. Pull Requestの差分表示が更新されない場合
+149:## 4. SpecDojo execを実行する
+179:## 6. mainの更新を取り込む
+198:## 7. project developをmainへ統合する
+244:## 8. 承認方式を使い分ける
+270:### 8.1. CODEOWNERS と branch protection を設定する
+290:### 8.2. 独立した承認者がいない期間を扱う
+296:## 9. 複数projectを並行する
+318:## 10. 既存featureブランチを移行する
+343:## 11. 作業前後のチェックリスト
+[0m
+[0m→ [0mRead .remarkrc.yaml
+[0m✗ [0mgrep -rln '\[\[specdojo:\|prj-0001:\]\]' docs/ja/specdojo/guides/ 2>/dev/null; echo "---count of [[ in guides---"; grep -rc '\[\[' docs/ja/specdojo/guides/*.md 2>/dev/null | grep -v ':0' | head -30 failed
+[91m[1mError: [0mThe user has specified a rule which prevents you from using this specific tool call. Here are some of the relevant rules [{"permission":"*","action":"allow","pattern":"*"},{"permission":"bash","pattern":"*","action":"deny"},{"permission":"bash","pattern":"git status*","action":"allow"},{"permission":"bash","pattern":"git diff*","action":"allow"},{"permission":"bash","pattern":"git log*","action":"allow"},{"permission":"bash","pattern":"git show*","action":"allow"},{"permission":"bash","pattern":"npm run *","action":"allow"},{"permission":"bash","pattern":"npm test*","action":"allow"},{"permission":"bash","pattern":"npx prettier*","action":"allow"},{"permission":"bash","pattern":"npx markdownlint*","action":"allow"},{"permission":"bash","pattern":"npx ajv*","action":"allow"},{"permission":"bash","pattern":"specdojo *","action":"allow"},{"permission":"bash","pattern":"./node_modules/.bin/specdojo *","action":"allow"},{"permission":"bash","pattern":"cat *","action":"allow"},{"permission":"bash","pattern":"ls *","action":"allow"},{"permission":"bash","pattern":"grep *","action":"allow"},{"permission":"bash","pattern":"sed -n *","action":"allow"}]
+[0m→ [0mRead docs/ja/specdojo/schemas/v1/guide-content.schema.yaml
+[0m→ [0mRead packages/docs-lint/src/remark-md-content.cjs
+[0m✱ [0mGrep "\[\[prj-0001:"[90m in docs/ja/specdojo/guides · 1 match[0m
+[0m✱ [0mGrep "PJR-ZDVQ|PJR-XXXX|PJR-XXXXX"[90m in docs/ja/specdojo/guides · 27 matches[0m
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -175,10 +175,29 @@
+   --project prj-0001 \
+   --task <task-id>
+ ```
+ 
+-## 6. mainの更新を取り込む
++## 5. プロダクトリポジトリの統合先と取り込み方
+ 
++`.specdojo/specdojo.config.json` の project へ `repos` を宣言した構成（既定の別リポジトリ）では、SpecDojo はプロダクトリポジトリにブランチ戦略を求めません（[[prj-0001:pjr-zdvq-product-repo-branch-strategy]]）。求めるのは、プロダクト側のルール（GitHub flow・git flow など）で決めた統合先だけを `repos[].integration_branch` に指定することです。この節は 4 節の project 側 `develop` と区別するため、以後 `<name>` をプロダクトリポジトリ名、`<repo>` をその worktree（環境変数 `SPECDOJO_REPO_<NAME>`）と読み替えます。
++
++### 5.1. integration_branchの選び方
++
++統合先はプロダクト側の運用で決めたブランチであり、ブランチ名に project ID を含める必要はありません（`main` やプロダクトのトピックブランチそのものが適しています）。GitHub flow と git flow で選び方は次のとおりです。
++
++| プロダクト側の運用    | `integration_branch` への設定例                                              | 補足                                                          |
++| ------------------- | ------------------------------------------------------------------------ | --------------------------------------------------------- |
++| GitHub flow         | トピックブランチ（例: `feature/<topic>`）を統合先にして `main` へは PR で取り込む | トピックごとに完了時に `integration_branch` を書き換える手間がある |
++| git flow            | `develop` を統合先にする                                             | プロジェクト側の `develop` と同型で、今の仕組みのまま合           |
++
++- 1 つの project が複数のプロダクトリポジトリを宣言する場合は、リポジトリごとにそれぞれの運用に合わせ `integration_branch` を別々に指定します。
++- run ごとに統合先を明示したい運用（例: `--integration-branch <repo>=<branch>`）は現時点では備えていません（[[prj-0001:pjr-xrab-exec-integration-branch-override]]）。統合先が頻繁に変わる構成では、この待機機能に先立ち `integration_branch` を run ごとに書き換えます。
++- プロダクト側を merge せず exec branch を残してプロダクト側で PR を作る方式は、現時点では選択できません（[[prj-0001:pjr-exh2-product-repo-branch-only-integration]]）。既定では runner がローカルで統合先へ merge commit を作ります。
++
++### 5.2. mergeの方式ごとの`Refs:`の残り方
++
++プロダクト側の実行単位は exec branch の commit への `Refs: <project-id>:<item-id>` です（runner が各 commit のメッセ
++
+ project の作業期間中は、`main` の更新を project `develop` へ定期的に取り込みます。
+ 
+ ```bash
+ git fetch origin
+
+[0m
+[0m→ [0mRead docs/ja/specdojo/guides/branch-workflow-guide.md[90m [limit=40, offset=176][0m
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -194,9 +194,9 @@
+ - プロダクト側を merge せず exec branch を残してプロダクト側で PR を作る方式は、現時点では選択できません（[[prj-0001:pjr-exh2-product-repo-branch-only-integration]]）。既定では runner がローカルで統合先へ merge commit を作ります。
+ 
+ ### 5.2. mergeの方式ごとの`Refs:`の残り方
+ 
+-プロダクト側の実行単位は exec branch の commit への `Refs: <project-id>:<item-id>` です（runner が各 commit のメッセ
++プロダクト側の実行単位は exec branch の commit に付けた `Refs: <project-id>:<item-id>` です（runner が各 commit のメッセ
+ 
+ project の作業期間中は、`main` の更新を project `develop` へ定期的に取り込みます。
+ 
+ ```bash
+
+[0m
+[0m→ [0mRead docs/ja/specdojo/guides/branch-workflow-guide.md[90m [limit=12, offset=195][0m
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-qwen-think-qwen-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -194,10 +194,22 @@
+ - プロダクト側を merge せず exec branch を残してプロダクト側で PR を作る方式は、現時点では選択できません（[[prj-0001:pjr-exh2-product-repo-branch-only-integration]]）。既定では runner がローカルで統合先へ merge commit を作ります。
+ 
+ ### 5.2. mergeの方式ごとの`Refs:`の残り方
+ 
+-プロダクト側の実行単位は exec branch の commit に付けた `Refs: <project-id>:<item-id>` です（runner が各 commit のメッセ
++追跡は SHA ではなく trace key（`Refs: <project-id>:<item-id>`）を主にするため、proダクト側の merge commit と exec branch の commit にはこの `Refs:` を付けます。統合先へ取り込む merge の方式はプロダクト側で選びますが、方式ごとに `Refs:` と記録した SHA の残り方が異なるため、次を確認します。詳細は [[specdojo:docs-structure-guide]] の「複数リポジトリの worktree と統合順序」を参照してください。
+ 
++| merge の方式  | `Refs:`（プロダクト → プロジェクト）                                                                      | 記録した SHA（プロジェクト → プロダクト）                   |
++| ------------- | -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------

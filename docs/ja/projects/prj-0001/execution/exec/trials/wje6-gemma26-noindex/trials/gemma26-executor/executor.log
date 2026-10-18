@@ -1,0 +1,10 @@
+[0m
+> gemma26-executor · gemma4:26b-mlx-work-64k
+[0m
+[0m# [0mTodos
+[•] 個票を読み、目的・完了条件・制約を把握する
+[ ] 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する
+[ ] 個票の作業内容・対応結果セクションを更新する
+[ ] 整形・静的検査を実行する
+[0m
+[0m→ [0mRead docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md
