@@ -58,3 +58,35 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: typecheck"
   previous_event_id: reg_36b93c4d7c394c03a3a10534d905b2e2
+- v: 1
+  id: reg_dd3f072aba8f472f8acd2655ab25a6f7
+  ts: "2026-10-18T07:42:08Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: typecheck"
+      to: "-"
+  previous_event_id: reg_3b66dd52b19e4c2c82eec17dcbd5d5ad
+- v: 1
+  id: reg_2ca9c9122f504187b3dba19acfee5ac6
+  ts: "2026-10-18T07:51:39Z"
+  action: wait
+  actor: agy-claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:01.439Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:01.439Z"
+  previous_event_id: reg_dd3f072aba8f472f8acd2655ab25a6f7

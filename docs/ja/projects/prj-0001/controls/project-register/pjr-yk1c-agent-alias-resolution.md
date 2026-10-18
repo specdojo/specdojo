@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-14T22:18:27Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: typecheck"
+  block_reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:01.439Z"
 ---
 
 # PJR-YK1C agent の別名の解決と記録を実装する
