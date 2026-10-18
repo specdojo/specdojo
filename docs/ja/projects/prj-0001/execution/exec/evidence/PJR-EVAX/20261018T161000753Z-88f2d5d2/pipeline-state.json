@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-EVAX",
   "run_id": "20261018T161000753Z-88f2d5d2",
-  "updated_at": "2026-10-18T16:40:43.704Z",
+  "updated_at": "2026-10-18T16:48:12.421Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-evax-20261018T161000Z-dbbd-result.md"
     },
     "integrate": {
-      "status": "succeeded",
+      "status": "running",
       "actor": "gemma26-reporter",
-      "attempts": 2,
-      "started_at": "2026-10-18T16:40:31.772Z",
-      "completed_at": "2026-10-18T16:40:43.704Z",
+      "attempts": 3,
+      "started_at": "2026-10-18T16:48:12.421Z",
+      "completed_at": null,
       "artifact_ref": null
     }
   },
