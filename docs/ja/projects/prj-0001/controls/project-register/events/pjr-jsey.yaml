@@ -713,3 +713,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_36a8495114ca4942a521bf368d0918af
+- v: 1
+  id: reg_e73f2e00cd13472d9f4243b33fa87acd
+  ts: "2026-10-18T10:12:09Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-executor の別名・gemma26-reporter）の結果を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: TSP6・8MPY の統合後の runner で、別名 claude-executor が sonnet-executor に解決して起動し、reporter は opencode の役割の定義（opencode-reporter）と gemma26 の model で起動した。actor には実体の名前が記録され、親検証 7 件が通った
+      to: E025 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
+  previous_event_id: reg_ffc81c188b20475da72c9a3865844d63
