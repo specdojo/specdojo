@@ -46,7 +46,7 @@ properties:
     type: string
     format: date-time
   state:
-    enum: [running, succeeded, failed, noop]
+    enum: [running, succeeded, partial, failed, noop]
   inputs:
     type: object
   task:
@@ -78,7 +78,7 @@ properties:
           type: string
           format: date-time
         status:
-          enum: [running, succeeded, failed, noop]
+          enum: [running, succeeded, partial, failed, noop]
         result_ref:
           type: string
         evidence_ref:

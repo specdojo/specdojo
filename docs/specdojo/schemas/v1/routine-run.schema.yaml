@@ -27,7 +27,7 @@ properties:
     type: string
     format: date-time
   result:
-    enum: [success, failure, skipped]
+    enum: [success, partial, failure, skipped]
   job_run_ids:
     type: array
     uniqueItems: true

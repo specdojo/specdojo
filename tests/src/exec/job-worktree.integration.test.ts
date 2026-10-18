@@ -61,6 +61,7 @@ function setupFixture(
   options: {
     declareReview?: boolean;
     failCommand?: boolean;
+    partialCommand?: boolean;
     omitReporter?: boolean;
     reviewValidationStatus?: "not_run" | "failed";
   } = {},
@@ -171,10 +172,12 @@ function setupFixture(
       "description: Create one deterministic output.",
       "task:",
       "  mode: command",
+      ...(options.partialCommand ? ["  partial_exit_code: 2"] : []),
       "  command: |",
       "    mkdir -p output",
       "    git rev-parse HEAD > output/run.txt",
       ...(options.failCommand ? ["    exit 1"] : []),
+      ...(options.partialCommand ? ["    exit 2"] : []),
       "  paths: [output]",
       ...(options.declareReview
         ? [
@@ -277,6 +280,34 @@ describe("Job Run worktree integration", () => {
     },
     120_000,
   );
+
+  it("merges a partial Run only with complete-with-findings", () => {
+    const fixture = setupFixture("complete-with-findings", { partialCommand: true });
+    const result = runJob(fixture.repo, fixture.worktrees);
+
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+    expect(String(result.stdout)).toContain("[routine-job] merged");
+    expect(String(result.stdout)).toContain("state=partial");
+    const runFile = git(fixture.repo, "ls-files", "execution/jobs/runs")
+      .split("\n")
+      .find((path) => path.endsWith(".json"));
+    expect(runFile).toBeDefined();
+    expect(JSON.parse(readFileSync(join(fixture.repo, runFile!), "utf8"))).toMatchObject({
+      state: "partial",
+      review: { verdict: "complete-with-findings" },
+    });
+  }, 120_000);
+
+  it("keeps a partial Run waiting when review returns complete", () => {
+    const fixture = setupFixture("complete", { partialCommand: true });
+    const result = runJob(fixture.repo, fixture.worktrees);
+
+    expect(result.status).toBe(1);
+    expect(`${result.stdout}\n${result.stderr}`).toContain("[routine-job] waiting");
+    expect(`${result.stdout}\n${result.stderr}`).toContain(
+      "review verdict complete is not accepted for Job Run state partial",
+    );
+  }, 120_000);
 
   it("keeps the worktree waiting when verdict is incomplete despite review not_run", () => {
     const fixture = setupFixture("incomplete", { reviewValidationStatus: "not_run" });

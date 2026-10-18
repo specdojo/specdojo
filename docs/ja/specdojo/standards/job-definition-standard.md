@@ -68,9 +68,10 @@ Job Definition Standard
 - 既存 Job Run の retry は保存済みの対象と再開状態を維持するため precondition を再実行しない。`--dry-run` は precondition を実行せず、解決済みコマンドと skip 条件を表示する。
 - command から対象プロジェクトを指定するときは template 値 `{{project_id}}` を使い、同じ CLI を子プロセスで呼ぶときは `{{specdojo}}` を使う。`specdojo` という PATH 上の別 checkout を直接呼ばない。
 - script が中断再開用の ID を要求するときは `{{job_run_id}}` を渡す。期間などの `inputs` から再開キーを組み立てない。
-- runner は POSIX 環境では `/bin/sh -eu` でコマンドを実行し、終了コードが0以外なら agent を起動せず Run を失敗にする。
+- runner は POSIX 環境では `/bin/sh -eu` でコマンドを実行する。終了コード0は`succeeded`、`task.partial_exit_code`に明示した非0は`partial`、それ以外の非0は`failed`とする。
+- `task.partial_exit_code`は1〜255の単一値とし、完了した処理と再試行可能な失敗が同じ Run に混在してreviewへ委ねる必要がある command Jobだけが指定する。command 内の前処理などが偶然同じ終了コードを返さないように正規化し、汎用的なエラー終了を部分成功へ読み替えてはならない。
 - runner はコマンド、終了コード、標準出力、標準エラーを bounded・redacted evidence として保存する。stdout / stderr は監査用ログへの参照に加え、analysis reporter が追加のファイル読取なしで判断できるよう evidence 本体にも同じ bounded 内容を含める。
-- `task.analysis` は任意である。省略時は終了コードだけで成否を確定し、指定時はコマンド成功後に evidence を reporter agent へ渡す。
+- `task.analysis` は任意である。省略時は終了コードだけで状態を確定し、指定時は`succeeded`または`partial`のコマンド後に evidence を reporter agent へ渡す。
 - analysis の根拠にする生成ファイルは command が stdout へ出力する。reporter は evidence 本体に埋め込まれた bounded stdout / stderr だけを読み、参照先ログや作業ツリーのファイルを追加で検査しない。
 
 ### 3.4. 責務境界と粒度
@@ -102,22 +103,23 @@ Job Definition Standard
 
 ## 4. 値制約・判定基準
 
-| 項目                   | 必須 | 判定基準                                                                        |
-| ---------------------- | ---- | ------------------------------------------------------------------------------- |
-| `id`                   | ○    | `job-<slug>` 形式で、ファイル名の拡張子を除いた部分と一致する                   |
-| `task.mode`            | ○    | `edit` / `review` / `command`                                                   |
-| `task.description`     | 条件 | `edit` / `review` で必須。決定論的手順の列挙を含まない                          |
-| `task.command`         | 条件 | `command` で必須。入力展開後も非空                                              |
-| `task.precondition`    | 任意 | `command` と `empty-output` または 0〜255 の終了コードを指定                    |
-| `task.analysis`        | 任意 | command 結果の判断が必要な場合だけ agent と description を指定                  |
-| `task.targets` `paths` | 条件 | `edit` / `review` はいずれか必須。`command` では任意                            |
-| `task.agent.executor`  | 任意 | `.specdojo/agent-members.yaml` の nickname 書式（`^[a-z0-9][a-z0-9_-]{0,62}$`） |
-| `task.agent.reporter`  | 任意 | 同上。executor が result を書かない構成では必須                                 |
-| `task.review`          | 任意 | mapping。存在すれば統合前 review の宣言。`agent` 以外のキーを持たない           |
-| `task.review.agent`    | 任意 | `executor` 必須・`reporter` 任意。書式は `task.agent` と同じ nickname 書式      |
-| `inputs.*.enum`        | 任意 | scalar の値または list の各要素に対する非空の許容値集合                         |
-| `minimum` / `maximum`  | 任意 | integer input だけに指定でき、`minimum <= maximum`                              |
-| `run.idempotency_key`  | ○    | 空文字へ解決されず、同じ論理実行を一意に判別できる                              |
+| 項目                     | 必須 | 判定基準                                                                        |
+| ------------------------ | ---- | ------------------------------------------------------------------------------- |
+| `id`                     | ○    | `job-<slug>` 形式で、ファイル名の拡張子を除いた部分と一致する                   |
+| `task.mode`              | ○    | `edit` / `review` / `command`                                                   |
+| `task.description`       | 条件 | `edit` / `review` で必須。決定論的手順の列挙を含まない                          |
+| `task.command`           | 条件 | `command` で必須。入力展開後も非空                                              |
+| `task.partial_exit_code` | 任意 | `command` だけで使用する1〜255の終了コード。明示した値だけを`partial`とする     |
+| `task.precondition`      | 任意 | `command` と `empty-output` または 0〜255 の終了コードを指定                    |
+| `task.analysis`          | 任意 | command 結果の判断が必要な場合だけ agent と description を指定                  |
+| `task.targets` `paths`   | 条件 | `edit` / `review` はいずれか必須。`command` では任意                            |
+| `task.agent.executor`    | 任意 | `.specdojo/agent-members.yaml` の nickname 書式（`^[a-z0-9][a-z0-9_-]{0,62}$`） |
+| `task.agent.reporter`    | 任意 | 同上。executor が result を書かない構成では必須                                 |
+| `task.review`            | 任意 | mapping。存在すれば統合前 review の宣言。`agent` 以外のキーを持たない           |
+| `task.review.agent`      | 任意 | `executor` 必須・`reporter` 任意。書式は `task.agent` と同じ nickname 書式      |
+| `inputs.*.enum`          | 任意 | scalar の値または list の各要素に対する非空の許容値集合                         |
+| `minimum` / `maximum`    | 任意 | integer input だけに指定でき、`minimum <= maximum`                              |
+| `run.idempotency_key`    | ○    | 空文字へ解決されず、同じ論理実行を一意に判別できる                              |
 
 ## 5. 記述例
 

@@ -69,6 +69,8 @@ export type JobCommandTaskDefinition = {
   owner?: string;
   precondition?: JobPreconditionDefinition;
   command: string;
+  /** A non-zero command exit code that records a reviewable partial Run instead of a failure. */
+  partial_exit_code?: number;
   analysis?: JobCommandAnalysisDefinition;
   targets?: string[];
   paths?: string[];
@@ -90,13 +92,13 @@ export type JobDefinition = {
   };
 };
 
-export type JobRunState = "running" | "succeeded" | "failed" | "noop";
+export type JobRunState = "running" | "succeeded" | "partial" | "failed" | "noop";
 
 export type JobRunAttempt = {
   attempt: number;
   started_at: string;
   completed_at?: string;
-  status: "running" | "succeeded" | "failed" | "noop";
+  status: JobRunState;
   result_ref?: string;
   evidence_ref?: string;
   exit_code?: number | null;
@@ -319,7 +321,13 @@ export function jobRunUsesReviewedIntegration(
 }
 
 function isJobRunState(value: unknown): value is JobRunState {
-  return value === "running" || value === "succeeded" || value === "failed" || value === "noop";
+  return (
+    value === "running" ||
+    value === "succeeded" ||
+    value === "partial" ||
+    value === "failed" ||
+    value === "noop"
+  );
 }
 
 function isJobTaskDefinition(value: unknown): value is JobTaskDefinition {
@@ -335,6 +343,10 @@ function isJobTaskDefinition(value: unknown): value is JobTaskDefinition {
   if (value.mode === "command") {
     return (
       typeof value.command === "string" &&
+      (value.partial_exit_code === undefined ||
+        (Number.isSafeInteger(value.partial_exit_code) &&
+          Number(value.partial_exit_code) >= 1 &&
+          Number(value.partial_exit_code) <= 255)) &&
       (value.precondition === undefined ||
         (isRecord(value.precondition) &&
           typeof value.precondition.command === "string" &&
@@ -608,6 +620,15 @@ export function parseJobDefinition(
     if (mode === "command") {
       const command = typeof value.task.command === "string" ? value.task.command.trim() : "";
       if (!command) errors.push("task.command is required for command mode");
+      const partialExitCode = value.task.partial_exit_code;
+      if (
+        partialExitCode !== undefined &&
+        (!Number.isSafeInteger(partialExitCode) ||
+          Number(partialExitCode) < 1 ||
+          Number(partialExitCode) > 255)
+      ) {
+        errors.push("task.partial_exit_code must be an exit code from 1 to 255");
+      }
       let precondition: JobPreconditionDefinition | undefined;
       if (value.task.precondition !== undefined) {
         if (!isRecord(value.task.precondition)) {
@@ -689,6 +710,9 @@ export function parseJobDefinition(
           mode: "command",
           ...(precondition ? { precondition } : {}),
           command,
+          ...(Number.isSafeInteger(partialExitCode)
+            ? { partial_exit_code: Number(partialExitCode) }
+            : {}),
           ...(analysis ? { analysis } : {}),
           ...common,
         };
@@ -710,10 +734,11 @@ export function parseJobDefinition(
       if (
         value.task.analysis !== undefined ||
         value.task.command !== undefined ||
-        value.task.precondition !== undefined
+        value.task.precondition !== undefined ||
+        value.task.partial_exit_code !== undefined
       ) {
         errors.push(
-          "task.command, task.precondition, and task.analysis are only allowed in command mode",
+          "task.command, task.precondition, task.partial_exit_code, and task.analysis are only allowed in command mode",
         );
       }
       if (value.task.capabilities !== undefined && !validStringList(value.task.capabilities)) {

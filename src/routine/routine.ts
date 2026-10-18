@@ -213,6 +213,9 @@ function spawnSelf(args: string[]): RoutineExecutionResult {
       .at(-1);
   }
   if (result.status === ROUTINE_BUSY_SKIP_EXIT_CODE) return "skipped";
+  if (result.status === 0 && marker?.match(/\bstate=([^\s]+)/)?.[1] === "partial") {
+    return "partial";
+  }
   return result.status === 0 ? "success" : "failure";
 }
 
@@ -277,6 +280,7 @@ export function aggregateRoutineActionResults(
   results: RoutineExecutionResult[],
 ): RoutineExecutionResult {
   if (results.includes("failure")) return "failure";
+  if (results.includes("partial")) return "partial";
   if (results.includes("skipped")) return "skipped";
   return "success";
 }
@@ -366,7 +370,7 @@ function findJobRunId(
 }
 
 // action が配列なら、前段の結果にかかわらず先頭から全段を順次実行する。
-// 段別結果を返し、全体結果は failure > skipped > success の順に集約する。
+// 段別結果を返し、全体結果は failure > partial > skipped > success の順に集約する。
 function executeRoutine(
   routine: LoadedRoutine,
   projectId: string,
@@ -592,6 +596,7 @@ export function registerRoutineCommands(program: Command): void {
       }
 
       let failed = 0;
+      let partial = 0;
       let skipped = 0;
       for (const selectedRun of selected) {
         const { entry, scheduledAt } = selectedRun;
@@ -611,6 +616,7 @@ export function registerRoutineCommands(program: Command): void {
         const execution = executeRoutine(entry, paths.projectId, dryRun, scheduledAt);
         const { result } = execution;
         if (result === "failure") failed++;
+        if (result === "partial") partial++;
         if (result === "skipped") {
           skipped++;
           process.stdout.write(`[routine] skipped ${entry.doc.id}: job action skipped\n`);
@@ -638,7 +644,7 @@ export function registerRoutineCommands(program: Command): void {
       }
 
       process.stdout.write(
-        `[routine] ${selected.length} routine(s) processed, ${skipped} skipped, ${failed} failed\n`,
+        `[routine] ${selected.length} routine(s) processed, ${partial} partial, ${skipped} skipped, ${failed} failed\n`,
       );
       if (failed > 0) process.exitCode = 1;
     } catch (error) {

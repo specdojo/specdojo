@@ -83,7 +83,7 @@ export function readRoutineRunHistory(historyPath: string): RoutineRunHistoryEnt
         typeof value.scheduled_for === "string" &&
         typeof value.started_at === "string" &&
         typeof value.completed_at === "string" &&
-        ["success", "failure", "skipped"].includes(value.result) &&
+        ["success", "partial", "failure", "skipped"].includes(value.result) &&
         Array.isArray(value.job_run_ids)
       ) {
         entries.push(value);
@@ -230,11 +230,12 @@ export function collapseFrequentRoutineRows(
       b.scheduledFor.localeCompare(a.scheduledFor),
     )[0];
     const failures = executed.filter((row) => row.result === "failure").length;
+    const partials = executed.filter((row) => row.result === "partial").length;
     collapsed.push({
       ...latest,
       runCount: executed.length > 0 ? executed.length : group.length,
       jobRunIds: [],
-      result: failures > 0 ? "failure" : latest.result,
+      result: failures > 0 ? "failure" : partials > 0 ? "partial" : latest.result,
     });
   }
   return collapsed;

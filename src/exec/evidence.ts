@@ -96,6 +96,8 @@ export type RecordCommandEvidenceInput = {
   stdoutTruncated?: boolean;
   stderrTruncated?: boolean;
   error?: string;
+  /** A configured non-zero outcome accepted by the Job runner (for example, partial success). */
+  accepted?: boolean;
 };
 
 export type RecordExecutorEvidenceInput = {
@@ -643,11 +645,12 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
   writeFileSync(stderrPath, boundedStderr.content, "utf8");
   const stdoutRef = repoRelative(input.worktreePath, stdoutPath);
   const stderrRef = repoRelative(input.worktreePath, stderrPath);
-  const succeeded = input.exitCode === 0 && !input.error;
+  const succeeded = !input.error && (input.exitCode === 0 || input.accepted === true);
+  const acceptedNonzero = succeeded && input.exitCode !== 0;
   const safeCommand = boundedText(input.command, 16_000);
   const summary = input.error
     ? `spawn failed: ${boundedText(input.error, MAX_VALIDATION_SUMMARY_LENGTH)}`
-    : `exit ${input.exitCode ?? "unknown"}`;
+    : `exit ${input.exitCode ?? "unknown"}${acceptedNonzero ? " (accepted)" : ""}`;
   const evidence: ExecEvidence = {
     schema_version: 1,
     task_id: input.taskId,
@@ -658,7 +661,9 @@ export function recordCommandEvidence(input: RecordCommandEvidenceInput): {
       status: succeeded ? "succeeded" : "failed",
       started_at: input.startedAt,
       completed_at: input.completedAt,
-      exit_code: input.exitCode,
+      // The stage exit code represents whether the executor pipeline may continue. The actual
+      // command exit code remains authoritative in command.exit_code below.
+      exit_code: succeeded ? 0 : input.exitCode,
       attempts: 1,
     },
     changes,

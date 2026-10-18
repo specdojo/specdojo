@@ -468,6 +468,24 @@ describe("daily briefing", () => {
     });
   });
 
+  it("集約した routine に部分成功があれば partial を表示する", () => {
+    const history = ["05:00", "06:00", "07:00"].map((time, index) => ({
+      version: 1 as const,
+      routine_id: "rtn-grade-recheck",
+      scheduled_for: `2026-09-19T${time}:00.000Z`,
+      started_at: `2026-09-19T${time}:01Z`,
+      completed_at: `2026-09-19T${time}:02Z`,
+      result: index === 1 ? ("partial" as const) : ("success" as const),
+      job_run_ids: [],
+    }));
+
+    expect(
+      collapseFrequentRoutineRows(
+        buildDailyRoutineRows([], history, new Date("2026-09-19T08:30:00Z")),
+      )[0]?.result,
+    ).toBe("partial");
+  });
+
   it("formatZonedDateTime は指定タイムゾーンの月日と時分だけを返す", () => {
     expect(formatZonedDateTime("2026-09-18T20:00:00.000Z", "Asia/Tokyo")).toBe("09-19 05:00");
     expect(formatZonedDateTime("not-a-date", "Asia/Tokyo")).toBe("not-a-date");
