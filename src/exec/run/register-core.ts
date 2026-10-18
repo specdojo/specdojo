@@ -285,6 +285,8 @@ export type RegisterRunContext = {
   execDefaults: ExecDefaultsConfig;
   providerConcurrencyGate: ProviderConcurrencyGate;
   registerCommit: boolean;
+  // Worktree integration後の完了 review と todo/issue の自動 close を有効にする。
+  postReview: boolean;
   // worktree モードでは成果物を worktree に隔離し、状態遷移は root で直列化する。
   worktree: boolean;
   worktreeBase: string;

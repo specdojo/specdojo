@@ -13,6 +13,7 @@ import {
   resolveMaxConcurrentRuns,
   resolvePinnedRateLimitPolicy,
   resolveRegisterExecution,
+  resolveRegisterPostReview,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
   type ExecDefaultsConfig,
@@ -401,5 +402,18 @@ describe("resolveRegisterExecution", () => {
   it("未知の値を設定エラーにする", () => {
     const config = { run: { register_execution: "temporary" } } as unknown as ExecDefaultsConfig;
     expect(() => resolveRegisterExecution(config)).toThrow(/run\.register_execution/);
+  });
+});
+
+describe("resolveRegisterPostReview", () => {
+  it("既定では無効で、boolean の明示値を使う", () => {
+    expect(resolveRegisterPostReview({})).toBe(false);
+    expect(resolveRegisterPostReview({ run: { register_post_review: true } })).toBe(true);
+    expect(resolveRegisterPostReview({ run: { register_post_review: false } })).toBe(false);
+  });
+
+  it("boolean 以外を設定エラーにする", () => {
+    const config = { run: { register_post_review: "yes" } } as unknown as ExecDefaultsConfig;
+    expect(() => resolveRegisterPostReview(config)).toThrow(/run\.register_post_review/);
   });
 });

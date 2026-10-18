@@ -40,6 +40,7 @@ import {
 } from "./register-core.js";
 import { runSingleRegisterItemWorktree } from "./register-worktree.js";
 import { resumeSingleRegisterItemWorktree } from "./register-resume.js";
+import { resolveRegisterPostReviewAgents } from "./register-post-review.js";
 
 // register 項目の実行（複数ID）。in-place モードは指定順に1件ずつ直列実行し、各IDが plan/result
 // 生成・start・agent実行・review/waiting 遷移まで完結してから次へ進む。worktree モードは成果物を
@@ -109,6 +110,9 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
     executionPath,
   );
   const useWorktree = !!opts.worktree;
+  const postReviewAgents = opts.postReview
+    ? resolveRegisterPostReviewAgents(roster, opts, execDefaults)
+    : undefined;
   const parallel = parseParallel(opts.parallel);
   const worktreeBase = resolveWorktreeBase(
     repoRoot,
@@ -176,12 +180,20 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
       process.stdout.write(
         `[dry-run]   plan: ${join(executionPath, "exec", "plans", `${stem}-plan.md`)}\n`,
       );
+      if (postReviewAgents) {
+        process.stdout.write(
+          `[dry-run]   post-review executor: ${postReviewAgents.executor.actor}\n`,
+        );
+        process.stdout.write(
+          `[dry-run]   post-review reporter: ${postReviewAgents.reporterCandidates[0]?.actor}\n`,
+        );
+      }
     }
     process.stdout.write(
       `[dry-run] cwd: ${useWorktree ? `${worktreeBase}/<worktree>` : repoRoot}\n`,
     );
     process.stdout.write(
-      `[dry-run] transitions: start (in-progress) → review on success / waiting on failure\n`,
+      `[dry-run] transitions: start (in-progress) → review on success / waiting on failure${postReviewAgents ? "; after integration, post-review closes eligible todo/issue items or returns incomplete items to waiting" : ""}\n`,
     );
     return;
   }
@@ -201,6 +213,7 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
     // ロックディレクトリの枠で統制する。
     providerConcurrencyGate: new ProviderConcurrencyGate(execDefaults, execLocksDir(executionPath)),
     registerCommit: !!opts.registerCommit,
+    postReview: !!opts.postReview,
     worktree: useWorktree,
     worktreeBase,
   };
