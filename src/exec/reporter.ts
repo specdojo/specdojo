@@ -469,6 +469,86 @@ export function runnerOwnedValidationReason(command: string): string | undefined
 
 const PROJECT_DOCUMENTS_ROOT = "docs/ja/projects/";
 
+type ChangeScopedValidation = {
+  /** Human-readable form of the path condition, used in runner-derived reasons. */
+  pathCondition: string;
+  matchesCommand: (command: string) => boolean;
+  matchesPath: (path: string) => boolean;
+};
+
+const hasExtension =
+  (extensions: readonly string[]) =>
+  (path: string): boolean => {
+    const normalized = path.toLowerCase();
+    return extensions.some((extension) => normalized.endsWith(extension));
+  };
+
+// The command-to-change mapping is kept in one place and mirrors the change-type rows in
+// xep-common-conventions-template.md. Checks such as typecheck intentionally remain outside this
+// table: PJR-8WBN requires their existing script-based applicability to stay unchanged.
+const CHANGE_SCOPED_VALIDATIONS: readonly ChangeScopedValidation[] = [
+  {
+    pathCondition: "YAML ファイル（*.yaml / *.yml）",
+    matchesCommand: (command) => /^npm run validate:schema:file(?:\s|$)/u.test(command),
+    matchesPath: hasExtension([".yaml", ".yml"]),
+  },
+  {
+    pathCondition: "Prettier 対象ファイル（*.md / *.ts / *.js / *.json / *.yaml / *.yml）",
+    matchesCommand: (command) => /^(?:npx\s+)?prettier(?:\s|$)/u.test(command),
+    matchesPath: hasExtension([".md", ".ts", ".js", ".json", ".yaml", ".yml"]),
+  },
+  {
+    pathCondition: "Markdown ファイル（*.md）",
+    matchesCommand: (command) =>
+      /^npm run lint:md(?:\s|$)/u.test(command) ||
+      /^(?:npx\s+)?(?:markdownlint|markdownlint-cli2)(?:\s|$)/u.test(command) ||
+      /^node\s+\S*specdojo-docs-lint\.js\s+markdownlint(?:\s|$)/u.test(command),
+    matchesPath: hasExtension([".md"]),
+  },
+];
+
+function changedPathSides(path: string): string[] {
+  return path.split(" -> ").map((side) => side.replaceAll("\\", "/").replace(/^\.\//u, ""));
+}
+
+function changePathsForCommand(
+  changedPaths: readonly string[],
+  repoName: string | undefined,
+  config: SpecDojoConfig | null,
+  projectId: string | undefined,
+): string[] {
+  const repoNames = declaredRepos(config, projectId).map((repo) => repo.name);
+  return changedPaths.flatMap(changedPathSides).flatMap((path) => {
+    if (repoName !== undefined) {
+      const prefix = `${repoName}:`;
+      return path.startsWith(prefix) ? [path.slice(prefix.length)] : [];
+    }
+    return repoNames.some((name) => path.startsWith(`${name}:`)) ? [] : [path];
+  });
+}
+
+function changeScopedValidationApplicability(
+  command: string,
+  changedPaths: readonly string[] | undefined,
+  repoName: string | undefined,
+  config: SpecDojoConfig | null,
+  projectId: string | undefined,
+): { recognized: boolean; applicable?: boolean; reason?: string } {
+  const validation = CHANGE_SCOPED_VALIDATIONS.find(({ matchesCommand }) =>
+    matchesCommand(command),
+  );
+  if (!validation) return { recognized: false };
+  if (changedPaths === undefined) return { recognized: true };
+  const relevantPaths = changePathsForCommand(changedPaths, repoName, config, projectId);
+  return relevantPaths.some(validation.matchesPath)
+    ? { recognized: true, applicable: true }
+    : {
+        recognized: true,
+        applicable: false,
+        reason: `変更に ${validation.pathCondition} がない`,
+      };
+}
+
 function changesReachProjectDocuments(changedPaths: readonly string[]): boolean {
   return changedPaths
     .flatMap((path) => path.split(" -> "))
@@ -547,6 +627,14 @@ export function mechanicallyNotApplicableReason(
   }
 
   const manifest = commandManifest(normalized, options, config);
+  const changeScoped = changeScopedValidationApplicability(
+    manifest.command,
+    options.changedPaths,
+    manifest.repoName,
+    config,
+    options.projectId,
+  );
+  if (changeScoped.applicable === false) return changeScoped.reason;
   const packageJson =
     manifest.repoName === undefined ? "package.json" : `${manifest.repoName} の package.json`;
   const scriptName = invokedScriptNameOf(manifest.command);
@@ -579,10 +667,19 @@ function isValidNotApplicableValidation(
   );
   if (specdojo.recognized) return specdojo.applicable !== true;
   const manifest = commandManifest(normalized, options, config);
+  const changeScoped = changeScopedValidationApplicability(
+    manifest.command,
+    options.changedPaths,
+    manifest.repoName,
+    config,
+    options.projectId,
+  );
+  if (changeScoped.applicable === false) return true;
   const scriptName = invokedScriptNameOf(manifest.command);
   if (scriptName !== undefined && hasApplicableScript(manifest.scripts, scriptName)) return false;
   const packageName = npxPackageNameOf(manifest.command);
-  return packageName === undefined || !manifest.dependencies.has(packageName);
+  if (packageName !== undefined) return !manifest.dependencies.has(packageName);
+  return true;
 }
 
 type CommandManifest = PackageManifestFacts & {

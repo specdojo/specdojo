@@ -1,0 +1,12 @@
+変更種別に応じた `not_applicable` 判定を実装しました。
+
+- YAML、Prettier、markdownlint の対象ファイル対応を一元化
+- 対象変更の有無を検証する単体テストを追加
+- `typecheck` の既存判定を維持
+- 個票、ガイド、CHANGELOG、executor prompt を更新
+- catalog 検証と register build は成功
+- 親検証7件は runner の実行に委ねます
+
+<specdojo_executor_evidence>
+{"final_message":"変更ファイル種別を考慮して `not_applicable` を判定する実装・テスト・文書更新を完了した。","validations":[{"command":"npx prettier --write src/exec/reporter.ts src/exec/run/agent.ts tests/src/exec/reporter.test.ts tests/src/exec/run/run.test.ts docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-8wbn-conditional-not-applicable-rejected.md CHANGELOG.md","status":"passed","summary":"対象7ファイルを整形した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"catalog 検証は exit 0。既存文書不在に関する警告のみ。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"project register の派生ビュー生成に成功した。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーなし。"}]}
+</specdojo_executor_evidence>

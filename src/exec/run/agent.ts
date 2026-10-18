@@ -226,9 +226,14 @@ and does not block pipeline completion.
 Use validation status \`not_applicable\` when the repository does not meet a check's applicability
 conditions, and include a non-empty \`reason\`. The runner carries it into the result without
 blocking completion, but rejects the claim when it can confirm the check applies:
-- \`npm run <script>\` / \`npm test\`: the script exists in package.json. The placeholder \`test\`
-  script that \`npm init\` writes (\`echo "Error: no test specified" && exit 1\`) counts as absent.
-- \`npx <package>\`: the package is in package.json dependencies or devDependencies.
+- \`npm run <script>\` / \`npm test\`: the script exists in package.json and any change-type
+  condition below is met. The placeholder \`test\` script that \`npm init\` writes
+  (\`echo "Error: no test specified" && exit 1\`) counts as absent.
+- \`npx <package>\`: the package is in package.json dependencies or devDependencies and any
+  change-type condition below is met.
+- \`npm run validate:schema:file\` requires a changed \`*.yaml\` or \`*.yml\` file; Prettier
+  requires a changed \`*.md\`, \`*.ts\`, \`*.js\`, \`*.json\`, \`*.yaml\`, or \`*.yml\` file;
+  markdownlint requires a changed \`*.md\` file.
 - A command that targets a declared product repository (a \`<repo>:<path>\` argument or
   \`--prefix <repo>\`) is judged by that repository's package.json, not the project repository's.
 - \`specdojo catalog validate\`: the run's target project (or \`--project <id>\`) sets \`catalog_path\`
