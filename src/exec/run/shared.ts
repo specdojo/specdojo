@@ -18,6 +18,7 @@ import { listFilesRecursive, readYaml } from "../shared.js";
 import {
   getProjectSchedulePath,
   loadConfig,
+  resolveAgentMember,
   specdojoRootDir,
   type AgentProvider,
   type MemberRoster,
@@ -261,7 +262,7 @@ export function resolveAgentOverride(
   if (!nickname) return { kind: "none" };
 
   const flag = agentNicknameOverride ? "--by" : mode === "review" ? "--review-by" : "--edit-by";
-  const member = roster?.members.find((m) => m.type === "agent" && m.nickname === nickname);
+  const member = resolveAgentMember(roster, nickname);
   if (member && stageRole !== undefined && member.stage_role !== stageRole) {
     return {
       kind: "error",

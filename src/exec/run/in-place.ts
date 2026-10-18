@@ -10,6 +10,7 @@ import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js
 import { randomHex } from "../shared.js";
 import {
   specdojoRootDir,
+  resolveAgentMember,
   type AgentProvider,
   type MemberRoster,
 } from "../../shared/specdojo-config.js";
@@ -107,16 +108,16 @@ export function resolveInPlaceCommand(
       : (opts.by ?? pinnedExecutor(task))
   )?.trim();
   if (by) {
-    const member = roster?.members.find((m) => m.nickname === by && m.type === "agent");
+    const member = resolveAgentMember(roster, by);
     if (task?.agent_pipeline && member?.stage_role !== "executor") {
       throw new Error(`Agent must have stage_role: executor for this pipeline stage: ${by}`);
     }
     const command = member ? resolveMemberCommand(execDefaults, member) : undefined;
-    if (!command) throw new Error(`Agent command not found for actor: ${by}`);
+    if (!member || !command) throw new Error(`Agent command not found for actor: ${by}`);
     return {
       command,
-      actor: by,
-      ...(member?.provider ? { provider: member.provider } : {}),
+      actor: member.nickname,
+      ...(member.provider ? { provider: member.provider } : {}),
     };
   }
 
@@ -177,7 +178,7 @@ export function resolveInPlaceAgentPipeline(
   }
   const by = opts.by?.trim();
   if (!by) return undefined;
-  const member = roster?.members.find((m) => m.type === "agent" && m.nickname === by);
+  const member = resolveAgentMember(roster, by);
   if (member?.stage_role === "executor") {
     throw new Error(
       `--by ${by} is a pipeline executor agent (stage_role: executor) and does not write the result. ` +

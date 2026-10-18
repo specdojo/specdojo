@@ -92,6 +92,20 @@ describe("resolveMemberCommand", () => {
     expect(expert).toBe('codex exec --model gpt-5.5 -c model_reasoning_effort="high"');
   });
 
+  it("uses the concrete member model as the {model} source of truth", () => {
+    const actual = resolveMemberCommand(
+      codexTemplateConfig,
+      buildMember({
+        nickname: "sol-executor",
+        provider: "codex",
+        model: "gpt-5.6-sol",
+        proficiency: "expert",
+      }),
+    );
+
+    expect(actual).toBe('codex exec --model gpt-5.6-sol -c model_reasoning_effort="high"');
+  });
+
   it("expands by_mode variables for the member's mode", () => {
     const config: ExecDefaultsConfig = {
       providers: {

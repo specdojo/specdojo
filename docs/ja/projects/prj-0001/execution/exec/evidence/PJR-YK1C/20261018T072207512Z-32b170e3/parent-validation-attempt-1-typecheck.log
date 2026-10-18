@@ -1,0 +1,20 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 typecheck
+> tsc -b --noEmit
+
+src/exec/run/in-place.ts(119,14): error TS18048: 'member' is possibly 'undefined'.
+src/exec/run/register-core.ts(76,28): error TS18048: 'member' is possibly 'undefined'.
+src/exec/worktree-command.ts(244,19): error TS18048: 'member' is possibly 'undefined'.
+src/exec/worktree-command.ts(244,55): error TS18048: 'member' is possibly 'undefined'.
+src/exec/run/in-place.ts(119,14): error TS18048: 'member' is possibly 'undefined'.
+src/exec/run/register-core.ts(76,28): error TS18048: 'member' is possibly 'undefined'.
+src/exec/worktree-command.ts(244,19): error TS18048: 'member' is possibly 'undefined'.
+src/exec/worktree-command.ts(244,55): error TS18048: 'member' is possibly 'undefined'.
+
+
+--- stderr ---

@@ -643,6 +643,19 @@ describe("resolveAgentOverride", () => {
     });
   });
 
+  it("resolves an alias to the concrete member and returns the concrete actor", () => {
+    const aliased: MemberRoster = {
+      ...members,
+      aliases: [{ nickname: "legacy-edit", alias_of: "opencode-edit" }],
+    };
+
+    expect(resolveAgentOverride("edit", "legacy-edit", {}, aliased)).toEqual({
+      kind: "command",
+      command: "opencode run --agent edit",
+      actor: "opencode-edit",
+    });
+  });
+
   it("returns none when the mode has no override", () => {
     const actual = resolveAgentOverride("review", undefined, { edit: "opencode-edit" }, members);
 

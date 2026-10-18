@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { qualifyTaskId, randomHex } from "../shared.js";
-import { type AgentProvider } from "../../shared/specdojo-config.js";
+import { resolveAgentMember, type AgentProvider } from "../../shared/specdojo-config.js";
 import { buildInPlaceStem } from "../plans.js";
 import {
   generateRegisterPlan,
@@ -500,9 +500,7 @@ export async function runSingleRegisterItemWorktree(
         ...resolveRegisterCommand(item, context.roster, opts, context.execDefaults),
         provider: undefined as AgentProvider | undefined,
       };
-  const resolvedProvider =
-    provider ??
-    context.roster?.members.find((m) => m.nickname === actor && m.type === "agent")?.provider;
+  const resolvedProvider = provider ?? resolveAgentMember(context.roster, actor)?.provider;
   const stem = buildInPlaceStem(pjrId.toLowerCase());
   const worktreeTaskId = qualifyTaskId(projectId, item.id);
   const pipelineRunId = pipelineAgents

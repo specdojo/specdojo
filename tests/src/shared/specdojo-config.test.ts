@@ -13,6 +13,7 @@ import {
   getProjectSchedulePath,
   loadMemberRoster,
   migrateAgentMembers,
+  resolveAgentMember,
 } from "../../../src/shared/specdojo-config.js";
 import type { MemberRoster, SpecDojoProjectConfig } from "../../../src/shared/specdojo-config.js";
 
@@ -362,5 +363,46 @@ describe("split human and agent member registries", () => {
     ) as { members: unknown[] };
     expect(humans.members).toHaveLength(1);
     expect(agents.members).toHaveLength(1);
+  });
+});
+
+describe("resolveAgentMember", () => {
+  const concrete = {
+    nickname: "sol-executor",
+    display_name: "Sol Executor",
+    email: null,
+    roles: [],
+    type: "agent" as const,
+    provider: "codex" as const,
+  };
+  const roster: MemberRoster = {
+    version: 1,
+    members: [concrete],
+    aliases: [
+      { nickname: "codex-expert-executor", alias_of: "current-expert" },
+      { nickname: "current-expert", alias_of: "sol-executor" },
+    ],
+  };
+
+  it("resolves concrete names and alias chains to the concrete member", () => {
+    expect(resolveAgentMember(roster, "sol-executor")?.nickname).toBe("sol-executor");
+    expect(resolveAgentMember(roster, "codex-expert-executor")?.nickname).toBe("sol-executor");
+  });
+
+  it("returns undefined for an unknown name or malformed alias cycle", () => {
+    expect(resolveAgentMember(roster, "unknown")).toBeUndefined();
+    expect(
+      resolveAgentMember(
+        {
+          version: 1,
+          members: [concrete],
+          aliases: [
+            { nickname: "old-a", alias_of: "old-b" },
+            { nickname: "old-b", alias_of: "old-a" },
+          ],
+        },
+        "old-a",
+      ),
+    ).toBeUndefined();
   });
 });

@@ -176,6 +176,39 @@ export type MemberRoster = {
   aliases?: AgentAlias[];
 };
 
+// Resolve either a concrete agent nickname or a backward-compatible alias to the concrete
+// member. Alias validity is checked while loading the roster, but keep the traversal guarded so
+// callers and tests that construct a roster directly cannot loop forever on malformed input.
+export function resolveAgentMember(
+  roster: MemberRoster | null,
+  nickname: string,
+): ProjectMember | undefined {
+  if (!roster) return undefined;
+
+  const members = new Map(
+    roster.members
+      .filter((member) => member.type === "agent")
+      .map((member) => [member.nickname, member] as const),
+  );
+  const direct = members.get(nickname);
+  if (direct) return direct;
+
+  const aliases = new Map(
+    (roster.aliases ?? []).map((alias) => [alias.nickname, alias.alias_of] as const),
+  );
+  const seen = new Set<string>();
+  let current = nickname;
+  while (!seen.has(current)) {
+    seen.add(current);
+    const target = aliases.get(current);
+    if (!target) return undefined;
+    const member = members.get(target);
+    if (member) return member.disabled ? undefined : member;
+    current = target;
+  }
+  return undefined;
+}
+
 export type SpecDojoConfig = {
   version: 1;
   current_project?: string;

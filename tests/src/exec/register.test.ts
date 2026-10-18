@@ -195,6 +195,18 @@ describe("resolveRegisterCommand", () => {
     });
   });
 
+  it("--by の alias を解決し、実体の nickname を actor にする", () => {
+    const roster: MemberRoster = {
+      ...makeRoster([makeAgent({ nickname: "sol-executor", command: "run-sol" })]),
+      aliases: [{ nickname: "codex-expert-executor", alias_of: "sol-executor" }],
+    };
+
+    expect(resolveRegisterCommand(makeItem(), roster, { by: "codex-expert-executor" })).toEqual({
+      command: "run-sol",
+      actor: "sol-executor",
+    });
+  });
+
   it("--by が agent として解決できない場合はエラーを投げる", () => {
     const roster = makeRoster([makeAgent({ nickname: "agent-1" })]);
 
@@ -295,6 +307,54 @@ describe("resolveRegisterPipelineCommand", () => {
     expect(actual).toEqual({
       executor: { command: "run-exec-1", actor: "exec-1", provider: "codex" },
       reporterCandidates: [{ command: "run-report-1", actor: "report-1", provider: "codex" }],
+    });
+  });
+
+  it("--executor-by / --reporter-by の alias を実体へ解決して actor に記録する", () => {
+    const roster: MemberRoster = {
+      ...makeRoster([
+        makeAgent({
+          nickname: "sol-executor",
+          stage_role: "executor",
+          provider: "codex",
+          model: "gpt-5.6-sol",
+          command: undefined,
+        }),
+        makeAgent({
+          nickname: "sonnet-reporter",
+          stage_role: "reporter",
+          provider: "claude",
+          command: "run-sonnet-reporter",
+        }),
+      ]),
+      aliases: [
+        { nickname: "codex-expert-executor", alias_of: "sol-executor" },
+        { nickname: "claude-reporter", alias_of: "sonnet-reporter" },
+      ],
+    };
+
+    expect(
+      resolveRegisterPipelineCommand(
+        roster,
+        {
+          executorBy: "codex-expert-executor",
+          reporterBy: "claude-reporter",
+        },
+        { providers: { codex: { command_template: "codex exec --model {model}" } } },
+      ),
+    ).toEqual({
+      executor: {
+        command: "codex exec --model gpt-5.6-sol",
+        actor: "sol-executor",
+        provider: "codex",
+      },
+      reporterCandidates: [
+        {
+          command: "run-sonnet-reporter",
+          actor: "sonnet-reporter",
+          provider: "claude",
+        },
+      ],
     });
   });
 

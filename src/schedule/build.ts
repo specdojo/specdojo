@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 import { readYaml } from "../shared/fs.js";
 import type { DctDoc, DctSection } from "../catalog/types.js";
 import type { AgentAssignment } from "../shared/agent-types.js";
-import type { MemberRoster } from "../shared/specdojo-config.js";
+import { resolveAgentMember, type MemberRoster } from "../shared/specdojo-config.js";
 import {
   expandPhaseSetSelection,
   normalizePhaseSetSelection,
@@ -330,13 +330,15 @@ function validateAgentAssignment(
     const members = roster.members.filter(
       (member) => member.type === "agent" && member.nickname === nickname,
     );
-    if (members.length !== 1) {
+    // A backward-compatible alias resolves to its concrete member; validate that member's role.
+    const resolved = members.length === 0 ? resolveAgentMember(roster, nickname) : undefined;
+    if (members.length > 1 || (members.length === 0 && !resolved)) {
       errors.push(
         `${label}.agent.${stageRole}: nickname '${nickname}' was not found uniquely in agent-members.yaml`,
       );
       continue;
     }
-    if (members[0].stage_role !== stageRole) {
+    if ((members[0] ?? resolved)?.stage_role !== stageRole) {
       errors.push(
         `${label}.agent.${stageRole}: nickname '${nickname}' must have stage_role: ${stageRole}`,
       );

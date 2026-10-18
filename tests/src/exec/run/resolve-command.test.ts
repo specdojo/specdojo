@@ -61,6 +61,7 @@ function buildRoster(): MemberRoster {
         mode: "edit",
       },
     ],
+    aliases: [{ nickname: "legacy-edit", alias_of: "opencode-edit-agent" }],
   };
 }
 
@@ -93,6 +94,17 @@ describe("resolveInPlaceCommand actor derivation", () => {
 
     expect(result.command).toBe("opencode run --agent opencode-edit-agent");
     expect(result.actor).toBe("opencode-edit-agent");
+  });
+
+  it("resolves --by aliases and records the concrete actor", () => {
+    const result = resolveInPlaceCommand(buildTask({ agent_pipeline: undefined }), buildRoster(), {
+      by: "legacy-edit",
+    } as RunOpts);
+
+    expect(result).toEqual({
+      command: "opencode run --agent opencode-edit-agent",
+      actor: "opencode-edit-agent",
+    });
   });
 
   it("uses the nickname pinned by the task when --by is omitted", () => {

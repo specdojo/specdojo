@@ -1,0 +1,530 @@
+Reading prompt from stdin...
+OpenAI Codex v0.162.1
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YK1C
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a14dfe-1d05-7763-a152-bd400789e209
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-yk1c-20261018t072207z-525a
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-YK1C
+  name: "agent の別名の解決と記録を実装する"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: DEV
+---
+
+# Edit Plan: PJR-YK1C agent の別名の解決と記録を実装する
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-YK1C「agent の別名の解決と記録を実装する」に対応する。
+
+--executor-by などの指定と自動選択で別名を実体へ解決し、model を `command_template` の {model} で CLI へ渡す。イベントと result の actor には実体の名前を記録する。 PJR-ZM1K の決定に基づく（Y8P9 の完了後、0.4.0）
+
+## 2. 対象項目
+
+- `id`: PJR-YK1C
+- `type`: todo
+- `priority`: medium
+- `owner`: DEV
+- `due`: -
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-yk1c-20261018T072207Z-525a-result.md`
+
+## 3. 進め方
+
+1. 個票（存在する場合）を読み、目的・完了条件・制約を把握する。登録簿の一覧は大きいため読まない。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+### grade result から展開された finding
+
+- なし
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result の変更ファイル欄には、変更したファイル（成果物・ソース・テストなど）ごとの実施内容を具体的に記入する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 作業用のファイル（編集用スクリプト、検証用の一時データなど）はリポジトリの外（一時ディレクトリ）または worktree の `tmp/` 配下に置き、終了前に削除する。使い捨てのファイルを最上位に作らない。`tmp/` 配下のファイルは commit の対象から除外される。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- 検査を実行する前に、リポジトリの `package.json`、`.specdojo/specdojo.config.json`、hook 設定を読み、下表の適用条件を確認する。条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する。`not_run` は適用される検査を実行しなかった場合だけに使う。誤って `not_run` と記録しても、npm script・依存 package の不在、または SpecDojo サブコマンドの設定上の非適用を runner が機械的に確定できる場合は適用外として扱われるが、この救済を前提に記録を省略しない。
+- 依存パッケージの有無は、対象リポジトリの `package.json` の `dependencies` / `devDependencies` と、リポジトリに固定された package manager の設定を基準に判断する。`npx` が未導入パッケージをネットワークから一時取得できることは、導入済みとはみなさない。設定ファイルがない、壊れているなどの理由で適用条件を確定できない検査は実行せず、validations に `not_applicable` として理由と次の確認事項を記録する。
+- Markdown 成果物を編集した場合、Prettier が導入されているときだけ `npx prettier --write <対象ファイル>` で整形する。`markdownlint-cli` または `markdownlint` が導入されているときだけ `npx markdownlint <対象ファイル>` を実行し、`markdownlint-cli2` を採用するリポジトリでは、そのリポジトリで定めた CLI2 のコマンドを実行する。適用した検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）のうち、現在のリポジトリに設定され、上記の適用条件を満たすものを先回りで実行する。適用した検査の失敗はすべて修正してから完了する。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当し、かつ適用条件を満たす行の検査を実行する。該当行がない場合や適用条件を満たさない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は、適用条件を満たす設定側のコマンドに合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx specdojo <subcommand>`、`npx tsx src/specdojo.ts <subcommand>` など）で実行する。ただし、sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する。
+
+| 変更したファイル                                                                                       | 適用条件                                                                            | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | 対応するローカル依存が `package.json` にある                                        | `npx prettier --write <対象ファイル>`、導入済み実装に対応する markdownlint コマンド                                                   |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | Prettier が `package.json` にある                                                   | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `package.json` に `typecheck` script がある                                         | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `test:unit`、それ以外は `test` script が `package.json` にある | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | 対象 project に `project_register_path` が設定されている                            | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | 対象 project に `schedule_path` が設定されている                                    | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | リポジトリで定められた起動方法により SpecDojo CLI を実行できる                      | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+Do not create disposable or scratch files at the repository root; place them in `tmp/` within
+the worktree or outside the repository. Files under `tmp/` are excluded from commits.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+This executor invocation resumes an interrupted attempt. Existing worktree changes may represent
+only a partial implementation; they are not proof that the plan is complete. Re-read the entire
+plan before reporting success. The plan declares no `targets` and no first-attempt change lower bound was recorded.
+Omit `target_coverage` and state in `final_message` which artifacts you verified and which
+remain unverified.
+
+
+
+A changed target must use status `changed`, provide its
+repository-relative `path`, and actually be present in the cumulative worktree diff. A target
+that legitimately needs no change must use status `unchanged` and provide a concrete `reason`;
+the runner will preserve that reason in the result. If you cannot account for every target, exit
+non-zero instead of claiming completion.
+
+Changes already present when this resumed invocation started:
+- `CHANGELOG.md`
+- `docs/ja/projects/prj-0001/controls/project-register/events/pjr-yk1c.yaml`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md`
+- `docs/ja/specdojo/guides/exec-config-guide.md`
+- `src/commands/agent.ts`
+- `src/exec/agent-config.ts`
+- `src/exec/run/in-place.ts`
+- `src/exec/run/register-core.ts`
+- `src/exec/run/register-worktree.ts`
+- `src/exec/run/schedule-prepare.ts`
+- `src/exec/run/shared.ts`
+- `src/exec/trial-core.ts`
+- `src/exec/worktree-command.ts`
+- `src/grade/targets.ts`
+- `src/shared/specdojo-config.ts`
+- `tests/src/exec/agent-config-command.test.ts`
+- `tests/src/exec/register.test.ts`
+- `tests/src/exec/run/resolve-command.test.ts`
+- `tests/src/exec/run/run.test.ts`
+- `tests/src/grade/grade.test.ts`
+- `tests/src/shared/specdojo-config.test.ts`
+- `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YK1C/20261018T072207512Z-32b170e3/evidence.json`
+- `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YK1C/20261018T072207512Z-32b170e3/executor.log`
+- `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YK1C/20261018T072207512Z-32b170e3/parent-validation-attempt-1-typecheck.log`
+- `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YK1C/20261018T072207512Z-32b170e3/pipeline-state.json`
+- `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YK1C/20261018T074211088Z-1838ed3f/pipeline-state.json`
+- `docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YK1C/20261018T074936462Z-fce3d727/pipeline-state.json`
+
+
+
+Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
+Use validation status `not_applicable` when the repository does not meet a check's applicability
+conditions, and include a non-empty `reason`. The runner carries it into the result without
+blocking completion, but rejects the claim when it can confirm the check applies:
+- `npm run <script>` / `npm test`: the script exists in package.json.
+- `npx <package>`: the package is in package.json dependencies or devDependencies.
+- A command that targets a declared product repository (a `<repo>:<path>` argument or
+  `--prefix <repo>`) is judged by that repository's package.json, not the project repository's.
+- `specdojo catalog validate`: the run's target project (or `--project <id>`) sets `catalog_path`
+  and your changes reach `docs/ja/projects/`. A project without `catalog_path`, or changes
+  outside `docs/ja/projects/`, is a valid reason; state it in `reason`.
+
+Do not run or report `specdojo index build`. It writes `.specdojo/doc-index.json`, which the
+agent may not write, and the runner regenerates the index while preparing the worktree and before
+integration.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}],"target_coverage":[{"target":"exact declared target id or lower-bound path","status":"changed|unchanged","path":"repo-relative path for changed targets","reason":"required when unchanged"}]}
+</specdojo_executor_evidence>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+中断済みの実装を引き継ぎ、まず個票・関連設計・現在の差分・前回失敗した検証ログを照合します。親 runner が担当する検証コマンドは実行せず、必要な修正と sandbox 内で許可された検証だけを行います。
+exec
+/bin/bash -lc "pwd && git status --short && git diff --stat && sed -n '1,260p' docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md && rg -n \"PJR-ZM1K|Y8P9|agent alias|別名|command_template|executor-by|reviewer-by|reporter-by\" docs/ja/specdojo docs/ja/projects/prj-0001 src tests package.json .specdojo/specdojo.config.json lefthook.yml 2>/dev/null" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YK1C
+ succeeded in 6782ms:
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YK1C
+ M CHANGELOG.md
+ M docs/ja/projects/prj-0001/controls/project-register/events/pjr-yk1c.yaml
+ M docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md
+ M docs/ja/specdojo/guides/exec-config-guide.md
+ M src/commands/agent.ts
+ M src/exec/agent-config.ts
+ M src/exec/run/in-place.ts
+ M src/exec/run/register-core.ts
+ M src/exec/run/register-worktree.ts
+ M src/exec/run/schedule-prepare.ts
+ M src/exec/run/shared.ts
+ M src/exec/trial-core.ts
+ M src/exec/worktree-command.ts
+ M src/grade/targets.ts
+ M src/shared/specdojo-config.ts
+ M tests/src/exec/agent-config-command.test.ts
+ M tests/src/exec/register.test.ts
+ M tests/src/exec/run/resolve-command.test.ts
+ M tests/src/exec/run/run.test.ts
+ M tests/src/grade/grade.test.ts
+ M tests/src/shared/specdojo-config.test.ts
+?? docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YK1C/
+ CHANGELOG.md                                       |  1 +
+ .../controls/project-register/events/pjr-yk1c.yaml | 16 ++++++
+ .../pjr-yk1c-agent-alias-resolution.md             |  3 +-
+ docs/ja/specdojo/guides/exec-config-guide.md       |  6 ++-
+ src/commands/agent.ts                              | 13 ++---
+ src/exec/agent-config.ts                           | 10 ++--
+ src/exec/run/in-place.ts                           | 11 ++--
+ src/exec/run/register-core.ts                      | 12 +++--
+ src/exec/run/register-worktree.ts                  |  6 +--
+ src/exec/run/schedule-prepare.ts                   |  2 +-
+ src/exec/run/shared.ts                             |  3 +-
+ src/exec/trial-core.ts                             |  5 +-
+ src/exec/worktree-command.ts                       | 17 +++---
+ src/grade/targets.ts                               |  3 ++
+ src/shared/specdojo-config.ts                      | 33 ++++++++++++
+ tests/src/exec/agent-config-command.test.ts        | 14 +++++
+ tests/src/exec/register.test.ts                    | 60 ++++++++++++++++++++++
+ tests/src/exec/run/resolve-command.test.ts         | 12 +++++
+ tests/src/exec/run/run.test.ts                     | 13 +++++
+ tests/src/grade/grade.test.ts                      |  2 +
+ tests/src/shared/specdojo-config.test.ts           | 42 +++++++++++++++
+ 21 files changed, 244 insertions(+), 40 deletions(-)
+---
+specdojo:
+  id: prj-0001:pjr-yk1c-agent-alias-resolution
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: in-progress
+  priority: medium
+  owner: DEV
+  registered_at: "2026-10-14T22:18:27Z"
+  due_on: null
+---
+
+# PJR-YK1C agent の別名の解決と記録を実装する
+
+## 1. 概要
+
+--executor-by などの指定と自動選択で別名を実体へ解決し、model を command_template の {model} で CLI へ渡す。イベントと result の actor には実体の名前を記録する。 PJR-ZM1K の決定に基づく（Y8P9 の完了後、0.4.0）
+
+## 2. 完了条件
+
+- PJR-EANK の完了後に行う。
+- `--executor-by`・`--reporter-by`・`--fallback-executor-by` などの指定と自動選択で、別名を実体へ解決する。実体の名前を直接指定しても動く。
+- 実体の `model` を、command_template の `{model}` で CLI へ渡す。`{model}` を持たない command_template と、model を持たない実体は今のまま動く。
+- イベントと result の actor には、別名ではなく実体の名前を記録する。指定した別名も分かるように記録するかを決めて実装し、理由を result に書く。
+- Job・routine の定義で使っている今の名前（別名）が、そのまま動く。
+- 単体テストで、別名の解決、実体の直接の指定、`{model}` の展開、actor の記録を確かめる。
+- runner のコードを変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG に記載する場合は、未公開の版の節（`## [0.4.0] - 未定`）に書く。公開済みの版の節は変えない。
+
+## 3. 作業内容
+
+| No  | 作業                               | 担当 | 状態 | メモ                                               |
+| --- | ---------------------------------- | ---- | ---- | -------------------------------------------------- |
+| 1   | agent の別名の解決と記録を実装する | DEV  | done | 実体への共通解決、model 展開、actor の正規化を実装 |
+
+## 4. 対応結果
+
+- agent 名簿の alias 連鎖を実体 member へ解決する共通処理を追加し、`--by`・`--executor-by`・`--reporter-by`・`--fallback-executor-by`・`--fallback-reporter-by`、Schedule / Job / routine の指名、単体 agent 実行、trial、grade の名前解決へ適用した。実体名の直接指定と自動選択は従来どおり動く。
+- 実体の `model` を provider の `command_template` の `{model}` へ展開するようにした。実体に `model` がある場合は従来の `command_params` より優先し、`model` のない member は既存の `command_params` を引き続き使う。`{model}` のないテンプレートには影響しない。
+- command・event・pipeline state・result に渡す actor は実体の `nickname` に統一した。指定された alias は actor の別フィールドへ保存しない。actor は claim / resume / complete の所有権判定に使う正規 identity であり二重表現を避ける必要があること、alias と実体の対応は agent 名簿が正本であることが理由である。
+- 単体テストへ、alias 連鎖、実体の直接指定、`{model}` の展開、`--by` と executor / reporter 指定での実体 actor の記録を追加した。実 agent CLI を起動する `exec run --register` の smoke test は、統合後に PJR-JSEY の手順で確認する。
+
+## 5. 関連ドキュメント
+
+- [[prj-0001:pjr-zm1k-agent-members-model-alias]]（決定）
+src/commands/init.ts:649:        ? `  2. To run an item without the orchestrator: npx specdojo exec run --register <id> --executor-by ${execAgents.executor} --reporter-by ${execAgents.reporter}\n`
+tests/src/commands/init.test.ts:217:        "npx specdojo exec run --register <id> --executor-by codex-executor --reporter-by codex-reporter",
+docs/ja/specdojo/standards/template-authoring-standard.md:65:| `{lower_snake}` | 実行のたびに展開され、ファイルには記法のまま残る   | `.specdojo/exec-defaults.yaml` の `command_template`（[exec設定ガイド](../guides/exec-config-guide.md) を参照） |
+tests/src/exec/register-resume.test.ts:614:  it("--reporter-by を最優先で解決する", () => {
+tests/src/exec/register-resume.test.ts:633:  it("--reporter-by 省略時は pipeline-state に記録された reporter actor を使う", () => {
+tests/src/exec/register-resume.test.ts:644:  it("reporter を特定できない場合は --reporter-by の指定を促す", () => {
+tests/src/exec/register-resume.test.ts:649:      message: "reporter agent is unknown for this run; specify --reporter-by <nickname>",
+tests/src/exec/register-resume.test.ts:662:    expect(actual.message).toMatch(/--reporter-by agent must have stage_role: reporter/);
+tests/src/exec/register-resume.test.ts:667:  it("--executor-by 省略時は pipeline-state に記録された executor actor を使う", () => {
+src/shared/specdojo-config.ts:594:        `Invalid agent alias '${alias.nickname}' in ${path}: name conflicts with a member`,
+src/shared/specdojo-config.ts:598:      throw new Error(`Invalid agent alias '${alias.nickname}' in ${path}: duplicate alias name`);
+src/shared/specdojo-config.ts:609:      throw new Error(`Invalid agent alias '${nickname}' in ${path}: alias cycle ${cycle}`);
+src/shared/specdojo-config.ts:618:          `Invalid agent alias '${nickname}' in ${path}: alias_of '${target}' resolves to a disabled member`,
+src/shared/specdojo-config.ts:626:        `Invalid agent alias '${nickname}' in ${path}: alias_of '${target}' does not resolve to a member`,
+tests/src/exec/pipeline-e2e.integration.test.ts:49:// テスト用の agent 実装。provider の command_template から nickname / model / effort を
+tests/src/exec/pipeline-e2e.integration.test.ts:274:      `    command_template: "${base} --model {model}"`,
+tests/src/exec/pipeline-e2e.integration.test.ts:280:      `    command_template: "${base} --model {model} --effort {effort}"`,
+tests/src/exec/pipeline-e2e.integration.test.ts:311:      `    command_template: "${base} --model {model}"`,
+tests/src/exec/pipeline-e2e.integration.test.ts:721:    // provider の command_template がメンバー属性で展開される。
+tests/src/exec/pipeline-e2e.integration.test.ts:1023:      "--executor-by",
+src/routine/routine.ts:263: * passes --review-by / --reporter-by, so an agent without a Job nomination is auto selected.
+docs/ja/specdojo/standards/job-definition-standard.md:59:- `exec run --by` は単一 agent 実行としての単発の差し替え、`--executor-by` / `--reporter-by` は段ごとの差し替えとして、いずれも Job の指名より優先する。
+docs/ja/specdojo/standards/job-definition-standard.md:60:- command Job で判断が必要な場合は `task.analysis.agent` に `stage_role: reporter` の nickname を指定する。`--reporter-by` で差し替えられるが、runner 実行を `--by` / `--executor-by` で agent に置き換えることはできない。
+docs/ja/specdojo/standards/job-definition-standard.md:90:- review agent の解決順は、`exec run` の `--review-by` / `--reporter-by` → `task.review.agent` → 自動選択とする。review タスクは能力要件を持たないため、自動選択では利用者の意図した agent にならない場合がある。review の品質を固定したい Job は指名する。
+docs/ja/specdojo/standards/job-definition-standard.md:91:- `task.review.agent` は Job Run 自体の agent（`task.agent` / `task.analysis.agent`）とは独立している。`--reporter-by` は従来どおり Run の reporter と review の reporter の両方を差し替える。
+docs/ja/specdojo/standards/job-definition-standard.md:167:- agent の指名を変更した場合は `specdojo exec run --job <job-id> --dry-run` で、解決された nickname とコマンドを確認する。`task.review` を宣言した Job では、同じ dry-run が review executor / reporter の nickname と解決元（`--review-by` / `--reporter-by`・`task.review.agent.*`・`auto`）を表示する。
+src/shared/provider-scaffold.ts:411:        `  2. Define providers.${provider}.command_template in .specdojo/exec-defaults.yaml (see templates/${provider}/README.md).\n` +
+src/exec/run/register-core.ts:70:        "Specify --by <nickname>, or --executor-by <nickname> --reporter-by <nickname>.",
+src/exec/run/register-core.ts:79:// --register を executor/reporter パイプラインで実行するかを判定する。--executor-by /
+src/exec/run/register-core.ts:80:// --reporter-by の指定があれば pipeline、どちらも無く --by も無い場合も stage_role からの
+src/exec/run/register-core.ts:95:// `--executor-by` keeps its original single-nickname form and additionally accepts a complete
+src/exec/run/register-core.ts:105:  if (!value) throw new Error("--executor-by must not be empty.");
+src/exec/run/register-core.ts:113:        `Invalid --executor-by item assignment: ${entry}. Use PJR-ID=nickname separated by commas.`,
+src/exec/run/register-core.ts:119:      throw new Error(`Invalid --executor-by item assignment for ${id}: nickname is empty.`);
+src/exec/run/register-core.ts:122:      throw new Error(`Duplicate --executor-by item assignment: ${id}.`);
+src/exec/run/register-core.ts:131:      `--executor-by item assignments include IDs outside the register execution target: ${outsideTarget.join(", ")}.`,
+src/exec/run/register-core.ts:137:      `--executor-by item assignments must cover every selected register item; missing: ${missing.join(", ")}.`,
+src/exec/run/register-core.ts:153:// --executor-by / --reporter-by は両方そろえて明示する。どちらも無い場合は stage_role:
+src/exec/run/register-core.ts:168:    throw new Error("--register pipeline execution requires both --executor-by and --reporter-by.");
+src/exec/run/register-core.ts:179:    throw new Error(executorResolution.message.replace(/^--by/, "--executor-by"));
+src/exec/run/register-core.ts:182:    throw new Error(`--executor-by agent not found in agent-members.yaml: ${opts.executorBy}`);
+src/exec/run/register-core.ts:193:    throw new Error(reporterResolution.message.replace(/^--by/, "--reporter-by"));
+src/exec/run/register-core.ts:196:    throw new Error(`--reporter-by agent not found in agent-members.yaml: ${opts.reporterBy}`);
+src/exec/run/register-core.ts:214:// --executor-by / --reporter-by も --by も無い --register 実行の agent を stage_role から選ぶ。
+src/exec/run/register-core.ts:255:        "Specify --executor-by <nickname> --reporter-by <nickname>, or --by <nickname>.",
+tests/src/shared/specdojo-config.test.ts:230:      /Invalid agent alias 'old-a' in .*agent-members\.yaml: alias cycle/,
+tests/src/shared/specdojo-config.test.ts:243:      /Invalid agent alias 'missing-alias' in .*agent-members\.yaml:.*missing-member/,
+tests/src/shared/specdojo-config.test.ts:256:      /Invalid agent alias 'disabled-alias' in .*agent-members\.yaml:.*disabled/,
+tests/src/exec/agent-config-command.test.ts:26:      command_template:
+tests/src/exec/agent-config-command.test.ts:35:      command_template: 'codex exec --model {model} -c model_reasoning_effort="{effort}"',
+tests/src/exec/agent-config-command.test.ts:113:          command_template: 'copilot -p --agent {nickname} --allow-tool "{allow_tools}"',
+tests/src/exec/agent-config-command.test.ts:136:          command_template: "claude -p --agent {nickname} --settings {settings}",
+tests/src/exec/agent-config-command.test.ts:179:      /\{model\}.*providers\.codex\.command_template.*codex-edit-agent/,
+tests/src/exec/agent-config-command.test.ts:187:          command_template: "codex exec --model {model} --effort {effort}",
+tests/src/exec/agent-config-command.test.ts:225:          command_template: "claude -p --agent {nickname}",
+tests/src/exec/agent-config-command.test.ts:242:          command_template: "claude -p --agent {nickname}",
+tests/src/exec/agent-config-command.test.ts:263:  it("accepts a member whose provider declares a command_template", () => {
+tests/src/job/job.test.ts:144:  it("prefers --review-by / --reporter-by over the Job nomination", () => {
+src/exec/run/register-resume.ts:61:// reporter 再開に使う agent を解決する。--reporter-by を優先し、省略時は再開対象 run の
+src/exec/run/register-resume.ts:75:      message: "reporter agent is unknown for this run; specify --reporter-by <nickname>",
+src/exec/run/register-resume.ts:80:    return { kind: "error", message: resolution.message.replace(/^--by/, "--reporter-by") };
+src/exec/run/register-resume.ts:99:// --executor-by を優先し、省略時は pipeline-state に記録された actor を引き継ぐ。
+src/exec/run/register-resume.ts:112:      message: "executor agent is unknown for this run; specify --executor-by <nickname>",
+src/exec/run/register-resume.ts:117:    return { kind: "error", message: resolution.message.replace(/^--by/, "--executor-by") };
+src/exec/run/register-resume.ts:380:    // reporter（無ければ executor）を引き継ぎ、--reporter-by で明示指定もできる。
+src/exec/run/register-resume.ts:389:        `the actor of run ${target.runId} is unknown; specify --reporter-by <nickname>`,
+tests/src/exec/register.test.ts:231:  it("--executor-by と --reporter-by が両方揃うと true を返す", () => {
+tests/src/exec/register.test.ts:286:  it("--executor-by / --reporter-by の nickname から executor と reporter の候補を解決する", () => {
+tests/src/exec/register.test.ts:313:  it("--executor-by / --reporter-by の alias を実体へ解決して actor に記録する", () => {
+tests/src/exec/register.test.ts:343:        { providers: { codex: { command_template: "codex exec --model {model}" } } },
+tests/src/exec/register.test.ts:361:  it("--reporter-by の report profile を Claude settings に展開する", () => {
+tests/src/exec/register.test.ts:379:            command_template:
+tests/src/exec/register.test.ts:400:      /requires both --executor-by and --reporter-by/,
+tests/src/exec/register.test.ts:412:    ).toThrow(/--executor-by agent must have stage_role: executor/);
+tests/src/exec/register.test.ts:420:    ).toThrow(/--reporter-by agent nickname not found/);
+tests/src/exec/register.test.ts:484:      /No agent found for --register pipeline stage \(stage_role: executor \(mode: edit\), stage_role: reporter\)\. Specify --executor-by/,
+tests/src/exec/run/resolve-command.test.ts:192:  it("uses --executor-by for a pipeline task and rejects it for a legacy task", () => {
+tests/src/exec/run/resolve-command.test.ts:211:  it("uses a schedule-pinned executor before auto selection and lets --executor-by override it", () => {
+tests/src/exec/run/resolve-command.test.ts:259:    // The synthesized pipeline lets the in-place command resolver accept --executor-by.
+tests/src/exec/run/resolve-command.test.ts:267:  it("opts in to the pipeline when only --reporter-by is given", () => {
+tests/src/exec/run/resolve-command.test.ts:284:  it("rejects a pipeline executor passed to --by and points to --executor-by / --reporter-by", () => {
+tests/src/exec/run/resolve-command.test.ts:288:      /--by executor is a pipeline executor agent \(stage_role: executor\).*--plan with --executor-by executor --reporter-by <reporter>/,
+tests/src/exec/run/resolve-command.test.ts:301:      /stage_role: reporter.*--deliverable with --executor-by <executor> --reporter-by reporter/,
+tests/src/exec/run/resolve-command.test.ts:319:    ).toThrow(/--by cannot be combined with --executor-by \/ --reporter-by/);
+src/exec/run/lifecycle-commands.ts:237:    if (opts.executorBy) autoArgs.push("--executor-by", opts.executorBy);
+src/exec/run/lifecycle-commands.ts:238:    if (opts.reporterBy) autoArgs.push("--reporter-by", opts.reporterBy);
+src/exec/run/lifecycle-commands.ts:284:    "--executor-by <nickname>",
+src/exec/run/lifecycle-commands.ts:288:    "--reporter-by <nickname>",
+src/exec/run/lifecycle-commands.ts:677:  cmd.option("--executor-by <nickname>", "agent-members.yaml executor nickname for pipeline tasks");
+src/exec/run/lifecycle-commands.ts:678:  cmd.option("--reporter-by <nickname>", "agent-members.yaml reporter nickname for pipeline tasks");
+src/exec/run/lifecycle-commands.ts:683:  cmd.option("--fallback-executor-by <nickname>", "Fallback executor after a rate limit");
+src/exec/run/lifecycle-commands.ts:684:  cmd.option("--fallback-reporter-by <nickname>", "Fallback reporter after a rate limit");
+src/exec/run/lifecycle-commands.ts:701:        process.stdout.write("Specify either --by or --executor-by, not both.\n");
+tests/src/exec/run/run.test.ts:357:  it("selects a member without a command when its provider declares a command_template", () => {
+tests/src/exec/run/run.test.ts:359:      providers: { claude: { command_template: "claude -p --agent {nickname}" } },
+tests/src/exec/run/run.test.ts:704:          command_template: "claude -p --agent {nickname} --settings settings.{mode}.json",
+tests/src/exec/run/run.test.ts:730:      providers: { codex: { command_template: "codex exec --model {model}" } },
+src/exec/run/job.ts:100:      "--by and --executor-by are not available for command Jobs; the runner executes command.",
+src/exec/run/job.ts:104:    throw new Error("--reporter-by requires task.analysis on a command Job.");
+src/exec/run/job.ts:343:  if (opts.reporterBy) args.push("--reporter-by", opts.reporterBy);
+src/exec/run/job.ts:431:  cliFlag: "--review-by" | "--reporter-by",
+src/exec/run/job.ts:448:  // Resolution order: --review-by / --reporter-by, then the Job's task.review.agent, then
+src/exec/run/job.ts:502:        /^--reporter-by/,
+src/exec/run/job.ts:503:        jobReviewAgentSourceLabel(nominations.reporter, "--reporter-by"),
+src/exec/run/job.ts:532:  cliFlag: "--review-by" | "--reporter-by",
+src/exec/run/job.ts:598:        `[dry-run] review reporter: ${describeJobReviewAgent(agents.reporterCandidates[0]?.actor, nominations.reporter, "--reporter-by")}\n`,
+tests/src/exec/register-resume.integration.test.ts:318:          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
+tests/src/exec/register-resume.integration.test.ts:352:    "--executor-by",
+tests/src/exec/register-resume.integration.test.ts:354:    "--reporter-by",
+tests/src/exec/register-resume.integration.test.ts:373:    "--executor-by",
+tests/src/exec/register-resume.integration.test.ts:375:    "--reporter-by",
+tests/src/exec/register-resume.integration.test.ts:505:            `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
+tests/src/exec/register-resume.integration.test.ts:848:          "--executor-by",
+tests/src/exec/register-resume.integration.test.ts:850:          "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:25:// register 項目は agent_pipeline を持たないため、--executor-by / --reporter-by の明示指定だけで
+tests/src/exec/register-pipeline-e2e.integration.test.ts:637:          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
+tests/src/exec/register-pipeline-e2e.integration.test.ts:639:          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname} --settings .specdojo/claude/settings.{mode}.json"`,
+tests/src/exec/register-pipeline-e2e.integration.test.ts:641:          `    command_template: "node ${join(root, "fake-agent.mjs")} --nickname {nickname}"`,
+tests/src/exec/register-pipeline-e2e.integration.test.ts:697:    "resolves per-item --executor-by assignments in dry-run and rejects assignments outside the target",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:720:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:722:          "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:744:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:746:          "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:752:          "--executor-by item assignments include IDs outside the register execution target: PJR-CD34.",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:760:    "resolves --executor-by/--reporter-by, runs both stages, and transitions the item to review",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:773:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:775:          "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:839:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:841:          "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:925:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:927:          "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:983:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:985:          "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1027:    "rejects --register with only one of --executor-by/--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1046:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1051:          "--register pipeline execution requires both --executor-by and --reporter-by.",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1104:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1106:          "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1207:            "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1209:            "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1284:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1286:          "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1359:              "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1361:              "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1458:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1460:          "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1528:            "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1530:            "--reporter-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1661:          "--executor-by",
+tests/src/exec/register-pipeline-e2e.integration.test.ts:1663:          "--reporter-by",
+tests/src/exec/run/inplace.test.ts:708:        "--executor-by",
+tests/src/exec/run/inplace.test.ts:710:        "--reporter-by",
+tests/src/exec/run/inplace.test.ts:790:        "--executor-by",
+tests/src/exec/run/inplace.test.ts:792:        "--reporter-by",
+src/exec/run/shared.ts:221:    const flag = stageRole === "executor" ? "--fallback-executor-by" : "--fallback-reporter-by";
+src/exec/run/shared.ts:482:      // Runnable agents need a command source: a provider command_template or an
+src/exec/run/register-command.ts:137:    "--executor-by <nickname>",
+src/exec/run/register-command.ts:141:    "--reporter-by <nickname>",
+src/exec/run/register-command.ts:149:    "--fallback-executor-by <nickname>",
+src/exec/run/register-command.ts:153:    "--fallback-reporter-by <nickname>",
+src/exec/run/register-command.ts:310:        process.stdout.write("Specify either --by or --executor-by, not both.\n");
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-glossary.yaml:21:          - text: 業務上の主要用語の定義・別名・分類が正確に記述されていること
+src/exec/run/register-mode.ts:94:  // --executor-by / --reporter-by は両方揃って初めて pipeline モードになる。片方だけの指定は
+src/exec/run/register-mode.ts:103:    throw new Error("--register pipeline execution requires both --executor-by and --reporter-by.");
+src/exec/agent-config.ts:60:// Placeholder name -> value pairs inserted into command_template as-is.
+src/exec/agent-config.ts:63:// Extra command_template variables resolved by member attributes. Lower-priority layers are
+src/exec/agent-config.ts:74:// command_template / command_params have no global counterpart.
+src/exec/agent-config.ts:80:  command_template?: string;
+src/exec/agent-config.ts:111:// A member's launch command comes from its provider's command_template expanded with
+src/exec/agent-config.ts:125:// command_template interpolation and shell execution.
+src/exec/agent-config.ts:129:// command_template. Used to filter selectable agents without expanding the template.
+src/exec/agent-config.ts:136:  return Boolean(config.providers?.[member.provider]?.command_template);
+src/exec/agent-config.ts:149:        `nickname is expanded into command_template and executed with shell: true; ` +
+src/exec/agent-config.ts:189:// member has neither a command override nor a provider command_template (such a member is
+src/exec/agent-config.ts:200:  const template = provider ? config.providers?.[provider]?.command_template : undefined;
+src/exec/agent-config.ts:215:      `Cannot resolve ${[...new Set(unresolved)].join(", ")} in providers.${provider}.command_template for member ${member.nickname} (mode: ${member.mode ?? "-"}, proficiency: ${member.proficiency ?? "-"})`,
+src/exec/run/in-place.ts:101:    throw new Error("--executor-by / --reporter-by require an agent_pipeline task.");
+src/exec/run/in-place.ts:150:// --executor-by / --reporter-by nicknames (or stage_role-based auto selection) decide the agents.
+src/exec/run/in-place.ts:156:// the executor/reporter pipeline. --executor-by / --reporter-by opt in to the pipeline. A --by
+src/exec/run/in-place.ts:170:      throw new Error("--by cannot be combined with --executor-by / --reporter-by.");
+src/exec/run/in-place.ts:185:        `Run ${flag} with --executor-by ${by} --reporter-by <reporter> instead.`,
+src/exec/run/in-place.ts:191:        `Run ${flag} with --executor-by <executor> --reporter-by ${by} instead.`,
+src/exec/run/in-place.ts:341:  // executor/reporter pipeline via --executor-by / --reporter-by, and reject a pipeline stage
+src/job/definition.ts:282: * (`--review-by` / `--reporter-by`), then the Job's task.review.agent, then auto selection
+src/exec/run/agent.ts:384:      throw new Error(resolution.message.replace(/^--by/, "--reporter-by"));
+src/exec/run/agent.ts:399:  // one, e.g. to resolve a provider command_template placeholder) only affects command
+src/exec/run/schedule-prepare.ts:160:    process.stdout.write("  --executor-by / --reporter-by require an agent_pipeline task.\n");
+src/exec/run/schedule-prepare.ts:265:        `  No agent with a resolvable command for mode: ${mode} (check providers.<provider>.command_template in exec-defaults.yaml)\n`,
+src/exec/trial-commands.ts:288:    if (opts.reporterBy) throw new Error("--pair cannot be combined with --reporter-by.");
+src/exec/trial-commands.ts:655:    .option("--reporter-by <nickname>", "Shared reporter agent used to assess structured output")
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml:80:            purpose: exec コマンド入口から到達するrate limit検出・retry/fallback方針、command_template解決の共通規則、worktree分離のライフサイクル規則、append-onlyイベント・reopenの遷移規則
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml:112:            purpose: exec コマンド入口から到達するmember選択・起動コマンド解決（command_template/command_params）の共通規則、3層（SpecDojo CLI／agent／exec run）の責務分担、非対話実行・worktree割当の制御
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml:142:            purpose: exec コマンド入口から到達するproviders.claudeのcommand_template解決規則
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml:157:            purpose: exec コマンド入口から到達するproviders.codexのcommand_template解決規則
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml:173:            purpose: exec コマンド入口から到達するproviders.opencodeのcommand_template解決規則
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml:188:            purpose: exec コマンド入口から到達するproviders.copilotのcommand_template解決規則
+docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml:202:            purpose: providers.antigravityのcommand_templateとcommand_params解決規則
+docs/ja/specdojo/references/deliverables-reference.md:262:| [用語集](../rulebooks/gl-rulebook.md) | Glossary | `gl-<domain>` | 用語の意味を統一的に定義する | 用語、定義、別名、分類、関連用語 など |
+docs/ja/specdojo/references/specdojo-config-reference.md:154:agent の起動コマンドには、provider ごとにプロダクト worktree への書き込み許可を runner が付け足します。`exec-defaults.yaml` の `command_template` を変える必要はありません。
+docs/ja/specdojo/references/command-reference.md:78:オーケストレーターを使わない `--executor-by` / `--reporter-by` の実行例、作成ファイルの commit を
+docs/ja/specdojo/references/command-reference.md:459:| `--executor-by <nickname>`      | executor 段の agent。register では `PJR-ID=nickname,...` による項目別指定も可能                          | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
+docs/ja/specdojo/references/command-reference.md:460:| `--reporter-by <nickname>`      | executor/reporter パイプラインの reporter 段に使う agent nickname                                        | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
+docs/ja/specdojo/references/command-reference.md:462:| `--fallback-executor-by <name>` | `fallback` 時に executor 段を1回だけ引き継ぐ agent                                                       | `run` / `resume`                                                                |
+docs/ja/specdojo/references/command-reference.md:463:| `--fallback-reporter-by <name>` | `fallback` 時に reporter 段を1回だけ引き継ぐ agent                                                       | `run` / `resume`                                                                |
+docs/ja/specdojo/references/command-reference.md:466:`--plan` と `--deliverable` も Schedule のパイプライン宣言を持たないため、`--executor-by` / `--reporter-by` の少なくとも一方を指定したときだけ executor/reporter 2段階で実行します。指定しなかった段は `stage_role` による自動選択で決まります。`--plan` では reporter が scaffold 済みの result を記入するため、frontmatter に `task_id` を持つ plan が必要です。`--by` との併用はエラーです。`--by` に `stage_role` を持つ pipeline 用 agent を指定すると、result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否します。
+docs/ja/specdojo/references/command-reference.md:472:Schedule タスクの `agent_pipeline`（`sch-strategy-<track>.yaml` の phase 設定）と同じ executor/reporter 2段階（`stage_role: executor` が成果物を編集・検証し、`stage_role: reporter` が evidence から result を描画する）は、`--register` の既定の実行方式です。register 項目は Schedule のような per-item のパイプライン宣言を持たないため、owner・role からの agent 選択は行いません。`--executor-by <nickname>` と `--reporter-by <nickname>` を **両方セットで** 指定すると、その agent で実行します。`--by` と `--executor-by` / `--reporter-by` をいずれも指定しない場合は、`stage_role: executor`（`mode: edit` または `mode` 未指定）と `stage_role: reporter` の agent から `priority` 順に自動で選びます。`stage_role` を持たない agent（翻訳専用など）は自動選択の候補に入りません。どちらかの段に該当する agent がいない場合は、`--executor-by` / `--reporter-by` の指定を求めるエラーで実行前に止まります。複数項目では `--executor-by PJR-0001=exec-a,PJR-0002=exec-b` のような項目別指定も使用できます。項目別指定は選択した全項目を含む必要があり、対象外 ID と指定漏れは実行前にエラーになります。片方だけの指定もエラーになります。
+docs/ja/specdojo/references/command-reference.md:516:specdojo exec run --project prj-0001 --register PJR-0012 --executor-by claude-expert-executor --reporter-by claude-reporter --worktree
+docs/ja/specdojo/references/command-reference.md:519:specdojo exec run --project prj-0001 --register PJR-0012 PJR-0013 --executor-by PJR-0012=codex-expert-executor,PJR-0013=claude-expert-executor --reporter-by gemma-reporter --worktree --parallel 2 --dry-run
+docs/ja/specdojo/references/command-reference.md:539:`--by` を指定した場合は、従来どおり単一 agent が成果物編集と result 記入を1回の実行で完結します。`--by` を指定しない場合（`--executor-by` と `--reporter-by` を両方指定した場合、またはどちらも指定せず `stage_role` から自動選択した場合）は、`stage_role: executor` の agent が成果物を編集・検証し、その evidence（実行ログの要約・検証結果）を渡された `stage_role: reporter` の agent が result 本文を描画する2段階実行に切り替わります。`stage_role` が一致しない nickname を指定するとエラーになります。
+docs/ja/specdojo/references/command-reference.md:561:  --reporter-by reporter-a \
+docs/ja/specdojo/references/command-reference.md:578:`--agent`と任意の`--reporter-by`を使うと、reporterなしまたは全trial共通reporterの従来方式になります。`--pair <executor>=<reporter>...`は2組以上を指定し、executorとreporterを一組として比較します。`--pair`は`--agent` / `--reporter-by`と併用できません。比較記録の`reporter_mode`には`none` / `shared` / `paired`のいずれかを保存します。各reporterについて構造化出力の成否、形式試行回数、形式再試行回数、`evidence_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`の失敗分類も保存します。`evidence_blocked` は reporter の申告ではなく、executor evidence から runner が機械判定した blocked を表します。
+docs/ja/specdojo/references/command-reference.md:821:委譲先のagentは`task.agent.executor`（および必要なら`task.agent.reporter`）にnicknameで指名します。両方を指名したRunはexecutor→reporterの2段で実行し、resultはreporterが書きます。`--by`は単一agent実行としての差し替え、`--executor-by` / `--reporter-by`は段ごとの差し替えとして、いずれも指名より優先します。`job validate`はnicknameの書式だけを検査するため、実在確認は`--dry-run`で行います。責務境界と記述規約は [Job定義標準](../standards/job-definition-standard.md) を参照します。
+docs/ja/specdojo/references/command-reference.md:823:`task.mode: command`では、materialize済みの`task.command`をrunnerが直接実行します。終了コード、標準出力、標準エラーはcommand evidenceへ記録され、終了コードが0以外ならagentを起動せずRunをfailedにします。stdout / stderr はredact・64 KiB上限付きログへの参照と同じbounded内容がevidence本体にも入り、判断が必要なJobでは成功時に`task.analysis.agent`へ渡されます。analysis reporterは参照先ログや作業ツリーを追加で読まず、このevidence本体から判断します。commandのrunner実行を`--by` / `--executor-by`でagent実行へ差し替えることはできません。analysis agentだけは`--reporter-by`で差し替えられます。
+docs/ja/projects/prj-0001/030-project-management/pm-members.yaml:48:    起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template から解決し、member の
+docs/ja/projects/prj-0001/controls/project-register/pjr-p8tk-release-stabilization-criteria.md:104:- 基準 3: develop から `npm pack` した tarball（specdojo 0.3.0）を新しいリポジトリへ入れ、利用者と同じ手順で確かめた。`config init`（`.gitignore` に `node_modules/` が入る）→ `config scaffold --provider claude`（`orch:opus`・`orch:sonnet` が追加される）→ `exec-defaults.yaml` の `command_template` と `agent-members.yaml`（claude の 3 名）を案内どおり用意 → `register scaffold` → `register add`（todo）→ `exec run --register --worktree`（agent を指定せず `claude-executor` と `claude-reporter` が自動で選ばれた）→ 統合して `review` → `register close` まで通った。grade は v0.3.0 では部品のみ・試験的のため対象外とした。利用者のリポジトリに markdownlint が無い場合、result の commit 前の lint は飛ばされる（`result-markdownlint: markdownlint-cli not found; skipped`）。
+docs/ja/projects/prj-0001/controls/project-register/pjr-adz6-register-run-non-pipeline-agent-fallback.md:22:exec run --register を --executor-by/--reporter-by なしで起動すると、owner の role で agent が見つからない場合に stage_role を持たない翻訳専用の agent（gemma26-translator）が選ばれる
+docs/ja/projects/prj-0001/controls/project-register/pjr-adz6-register-run-non-pipeline-agent-fallback.md:28:| スコープ     | `exec run --register` を `--by`・`--executor-by`・`--reporter-by` なしで起動した場合の agent 選択 |
+docs/ja/projects/prj-0001/controls/project-register/pjr-adz6-register-run-non-pipeline-agent-fallback.md:39:| 対応策   | 推奨案は (b)。pipeline の指定がない場合も、`stage_role: executor` と `stage_role: reporter` の agent から自動で選んで 2 段階で実行する。該当する agent がいない場合は `--executor-by` / `--reporter-by` を求めるエラーにする。代替案 (a) は、自動選択をやめて常にエラーにする。          |
+docs/ja/projects/prj-0001/controls/project-register/pjr-adz6-register-run-non-pipeline-agent-fallback.md:47:- 解決内容: `src/exec-run.ts` の `isRegisterPipelineRequested` は、`--by` を指定しない場合に常に pipeline 実行を選ぶ。`resolveRegisterPipelineCommand` は、`--executor-by` / `--reporter-by` がどちらも無い場合に `stage_role: executor`（`mode: edit` または未指定）と `stage_role: reporter` の agent から `priority` 順に自動で選ぶ。該当する agent がいない段がある場合は、明示指定を求めるエラーにする。`resolveRegisterCommand` は `--by` 指定時の単一 agent 実行だけを扱い、owner・role・汎用候補からの自動選択を廃止した。
+docs/ja/projects/prj-0001/controls/project-register/pjr-adz6-register-run-non-pipeline

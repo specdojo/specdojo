@@ -93,7 +93,7 @@ pipeline では `agent_pipeline.stages` を `executor`、`reporter` の順に定
 
 ## 3. エージェントの定義
 
-`.specdojo/agent-members.yaml` の member には `type: agent` と `provider`・`capabilities`・`proficiency`・`priority` を定義します。特定のモデルを表す実体には `model` と、provider が対応する場合は `effort` も定義できます。起動コマンドは通常 member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。
+`.specdojo/agent-members.yaml` の member には `type: agent` と `provider`・`capabilities`・`proficiency`・`priority` を定義します。特定のモデルを表す実体には `model` と、provider が対応する場合は `effort` も定義できます。起動コマンドは通常 member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{model}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。
 
 ```yaml
 members:
@@ -142,6 +142,8 @@ aliases:
 ```
 
 alias の連鎖は使用できますが、循環してはならず、終端は存在する有効な member でなければなりません。`loadMemberRoster` はこの整合性を読み込み時に検証します。`aliases` のない従来形式も引き続き有効です。
+
+`--by`・`--executor-by`・`--reporter-by`・`--fallback-executor-by`・`--fallback-reporter-by` の指定、Schedule / Job / routine の `agent` には、実体名と alias のどちらも使用できます。alias は command を組み立てる前に実体へ解決され、`{nickname}` と `{model}` には実体の値が入ります。自動選択は初めから実体を候補にします。event・pipeline state・result の actor には、実際に動いた model を追跡できるよう実体名だけを記録します。指定された alias は actor の別フィールドには保存せず、対応関係は agent 名簿を正本とします。
 
 pipeline 専用 agent には `stage_role: executor` または `stage_role: reporter` を指定します。`stage_role` を省略した既存 agent は従来の単一 agent フロー専用です。自動選択では、従来タスクから stage role 付き agent を除外し、pipeline stage から stage role 未指定 agent と異なる stage role の agent を除外します。これにより既存 agent 定義を変更せず、新しい pipeline agent を追加できます。
 
@@ -267,7 +269,7 @@ pipeline:
 
 provider ごとに挙動が異なる設定は `providers.<provider>` に置きます。各キーは対応するグローバル値を完全に置き換え、未指定のキーはグローバル値にフォールバックします。`<provider>` は `pm-members[].provider` に対応します。指定できるキーは次のとおりです。
 
-- `command_template`: その provider の agent を起動するコマンドテンプレート。`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数を member 属性で展開します。グローバル既定は持ちません。
+- `command_template`: その provider の agent を起動するコマンドテンプレート。`{nickname}`・`{model}`・`{mode}`・`{proficiency}` と `command_params` の変数を member 属性で展開します。`model` のない従来 member は、これまでどおり `command_params` の `model` を使用できます。グローバル既定は持ちません。
 - `command_params`: テンプレートの追加変数表。`by_mode.<mode>`、`by_proficiency.<proficiency>`、`by_nickname.<nickname>` に変数名と値の組を置きます。同じ変数は `by_nickname`、`by_proficiency`、`by_mode` の順で優先します。
 - `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先します）。
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
