@@ -11,7 +11,7 @@ specdojo:
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T21:56:35Z"
-  block_reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T00:13:39.709Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-VGNG 一部の文書が失敗した Job Run が完了分も含めて統合されない
@@ -53,7 +53,11 @@ grade の Job Run で一部の文書の評価が失敗すると Job Run 全体�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- Job Run に `partial` を追加し、command Job が `partial_exit_code` に明示した終了コードだけを部分成功として扱うようにした。grade の2つの Job は終了コード2を指定する。汎用の非0終了を `succeeded` に読み替えず、完了分と失敗分が混在する事実を Run JSON、attempt、routine の `last_result`、`routine list` に残すため、`succeeded` の付帯情報ではなく独立状態を選んだ。
+- `tools/grade/run-per-document.sh` は、全件完了を0、完了文書と失敗文書の混在を2、全件失敗を1、rate limitを75で返す。失敗した文書の pipeline state と連続失敗回数は従来どおり保持し、次の Run の `--incomplete` で再試行する。
+- review は、`partial` で完了文書が1件以上あり、失敗文書と失敗段が再試行可能な状態で記録され、未開始文書がない場合に限り `complete-with-findings` を選べる。`partial` に `complete` は使わず、`failed`、rate limit、中断、全件失敗は `incomplete` のまま統合しない。
+- `partial` と `complete-with-findings` の組み合わせだけを runner が統合し、routine は `last_result: partial` と履歴へ記録する。複数 action の集約は `failure`、`partial`、`skipped`、`success` の優先順とした。
+- 部分失敗、全件失敗、rate limitによる未完了、`partial`のreview受入条件、checkpointを進めない終端状態、routine表示のテストを追加した。Job Run、Job Definition、routine履歴のschemaと関連する設計・標準・運用ガイドも同じ語彙へ更新した。
 
 ## 5. 関連ドキュメント
 
