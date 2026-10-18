@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-18T00:43:51Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-FXPH register build が表のセルの | をエスケープせず一覧の表が壊れる
@@ -52,7 +52,15 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容:
+  - `src/register/item.ts` の `toCell` を export し、エスケープ済みの `\|` を二重エスケープしない冪等な正規表現（`/(?<!\\)((\\\\)*)\|/g`）に改修した。
+  - `src/register/core.ts` の `formatTableRow` で、一覧の表へ展開する全 12 セル（ID、ステータス、タイトル、説明、分類、優先度、担当、登録日、期限、完了日、結論、個票）に `toCell` を適用し、改行の空白化および `|` のエスケープを共通処理として通すようにした。
+  - 個票の frontmatter や本文などの正本データは変更せず、一覧・派生ビューのテーブル行を出力する表示時のみエスケープされるようにした。
+- 確認結果:
+  - `tests/src/register/item.test.ts` に `toCell` の単体テストを追加し、未エスケープの `|` が `\|` になること、すでにエスケープされた `\|` が二重エスケープされないこと、改行・空白が正規化されること、`[[id|title]]` 形式のリンクが保護されることを確認した。
+  - `tests/src/register/register.test.ts` に単体テストを追加し、結論に `stop|wait|fallback` などの `|` や改行を含む個票から生成された一覧が 12 列を正しく維持し、markdownlint の MD056 でエラーにならないこと、個票ファイルが書き換わらないことを確認した。
+- 再発防止策:
+  - 一覧本体（`pjr-index.md`）および派生ビュー（`pjr-views-*`、`pm-*`）のすべてのテーブル行生成が `formatTableRow` を通るアーキテクチャとし、全セルに共通のセル正規化処理（`toCell`）が強制されるように集約した。
 
 ## 5. 関連ドキュメント
 
