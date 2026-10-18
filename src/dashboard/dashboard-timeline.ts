@@ -1,5 +1,5 @@
 import { addWorkingDaysToDate } from "../exec/schedule/calendar.js";
-import { buildScheduleIndex, defaultScheduleCalendar } from "../exec/schedule/index.js";
+import { buildScheduleIndex, defaultScheduleCalendar } from "../shared/schedule-index.js";
 import type { ScheduleCalendar } from "../exec/types.js";
 import { buildTimelineWaves, type TimelineIndex } from "./timeline-build.js";
 

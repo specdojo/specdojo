@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { appendFileSync, lstatSync, mkdirSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve, sep } from "node:path";
 import { gitEnvironment } from "./git-environment.js";
 import { redactSensitiveText, stripTerminalControlSequences } from "./text.js";
 
@@ -377,4 +377,46 @@ export function gitOutput(
     );
   }
   return typeof result.stdout === "string" ? result.stdout : "";
+}
+
+export function repoRelative(repoRoot: string, path: string): string {
+  const value = relative(repoRoot, path);
+  if (!value || value === ".." || value.startsWith(`..${sep}`)) {
+    throw new Error(`Path is outside repository root: ${path}`);
+  }
+  return value.split(sep).join("/");
+}
+
+export function worktreeStatusPaths(repoRoot: string): string[] {
+  const output = gitOutput(repoRoot, ["status", "--porcelain=v1", "-z", "--untracked-files=all"]);
+  const records = output.split("\0").filter(Boolean);
+  const paths: string[] = [];
+  for (let index = 0; index < records.length; index++) {
+    const record = records[index];
+    if (record.length < 4) continue;
+    const status = record.slice(0, 2);
+    paths.push(record.slice(3));
+    if ((status.includes("R") || status.includes("C")) && records[index + 1]) {
+      paths.push(records[++index]);
+    }
+  }
+  return paths;
+}
+
+export function selectStageablePaths(repoRoot: string, paths: readonly string[]): string[] {
+  if (paths.length === 0) return [];
+  const indexed = new Set(
+    gitOutput(repoRoot, ["ls-files", "--full-name", "-z", "--", ...paths])
+      .split("\0")
+      .filter(Boolean),
+  );
+  const existsInWorktree = (path: string): boolean =>
+    lstatSync(resolve(repoRoot, path), { throwIfNoEntry: false }) !== undefined;
+  return paths.filter((path) => indexed.has(path) || existsInWorktree(path));
+}
+
+export function stageCommitTargets(repoRoot: string, paths: readonly string[]): void {
+  const stageable = selectStageablePaths(repoRoot, paths);
+  if (stageable.length === 0) return;
+  gitOutput(repoRoot, ["add", "-A", "--", ...stageable]);
 }

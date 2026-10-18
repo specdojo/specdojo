@@ -8,6 +8,14 @@ import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
 import { isDctPlanFileName } from "../catalog/plan.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "../shared/practice-id.js";
+import { MISSING } from "../shared/plan-templates.js";
+export {
+  MISSING,
+  execTemplatePath,
+  execTemplatesDir,
+  injectCommonConventions,
+  loadPlanTemplate,
+} from "../shared/plan-templates.js";
 import { resolveViewpointsDoc, viewpointAppliesToDocument } from "../review/plan.js";
 import { listFilesRecursive, nowUtcIsoSeconds, randomHex, tsForFilenameUtc } from "./shared.js";
 import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from "./types.js";
@@ -18,12 +26,7 @@ import {
   gradeFindingDisplayMessage,
   gradeResultPathForDocument,
   readGradeResultForDocument,
-} from "../grade/result.js";
-import {
-  resolveSpecdojoPath,
-  resolveSpecdojoPathIfExists,
-  specdojoReferencePath,
-} from "../docs/template-resolution.js";
+} from "../shared/grade-result.js";
 import { renderReviewGradeSummary, reviewGradeFreshness } from "../review/grade.js";
 import type { ReviewGradeOutcome, ReviewGradeTarget } from "../review/grade.js";
 
@@ -36,8 +39,6 @@ export type DeliverableInfo = {
   deliverable: DctDeliverableItem;
   resolvedPath: string;
 };
-
-export const MISSING = "_MISSING_";
 
 export function execDocId(projectId: string, prefix: "xep" | "xrp", localBase: string): string {
   const localId = `${prefix}-${localBase.toLowerCase()}`;
@@ -284,177 +285,6 @@ export function frontmatter(meta: ExecPlanMeta): string {
 }
 
 // ---------------------------------------------------------------------------
-// Template-based generation (edit-plan / review-plan テンプレートの展開)
-// ---------------------------------------------------------------------------
-
-// Shared conventions (link notation など) referenced from every generated plan. The fragment is
-// the single source of both the detail and the essentials: the plan body carries only the
-// essentials block (rules whose violation fails the task) plus the path of the fragment, which
-// the agent reads from its working tree before starting (PJR-WA3R / PJR-2219).
-const COMMON_CONVENTIONS_TEMPLATE = "xep-common-conventions-template.md";
-
-export function execTemplatesDir(): string {
-  return resolveSpecdojoPath("docs/ja/specdojo/exec-templates");
-}
-
-export function execTemplatePath(fileName: string): string {
-  return resolveSpecdojoPath(`docs/ja/specdojo/exec-templates/${fileName}`);
-}
-
-function templatePrefix(mode: TaskMode): string {
-  return mode === "review" ? "xrp" : "xep";
-}
-
-function standardTemplateFileName(mode: TaskMode): string {
-  return `${templatePrefix(mode)}-template.md`;
-}
-
-function approachTemplateFileName(mode: TaskMode, approach: Approach): string {
-  return `${templatePrefix(mode)}-${approach}-template.md`;
-}
-
-// Selects <prefix>-<approach>-template.md when it exists, falling back
-// to the standard <prefix>-template.md. Any missing variant falls through to the
-// next candidate so a plan is always produced.
-function resolvePlanTemplatePath(mode: TaskMode, approach: Approach | undefined): string {
-  if (approach) {
-    const candidatePath = resolveSpecdojoPathIfExists(
-      `docs/ja/specdojo/exec-templates/${approachTemplateFileName(mode, approach)}`,
-    );
-    if (candidatePath) return candidatePath;
-  }
-  return execTemplatePath(standardTemplateFileName(mode));
-}
-
-function readTemplate(templatePath: string, cache: Map<string, string>): string {
-  const cached = cache.get(templatePath);
-  if (cached !== undefined) return cached;
-  if (!existsSync(templatePath)) {
-    throw new Error(`Template not found: ${templatePath}`);
-  }
-  const content = readFileSync(templatePath, "utf8");
-  cache.set(templatePath, content);
-  return content;
-}
-
-export function loadPlanTemplate(
-  mode: TaskMode,
-  approach: Approach | undefined,
-  cache: Map<string, string>,
-): string {
-  return readTemplate(resolvePlanTemplatePath(mode, approach), cache);
-}
-
-// Marker a plan template places to control where the shared conventions fragment lands.
-const COMMON_CONVENTIONS_PLACEHOLDER = "_COMMON_CONVENTIONS_";
-// Lines delimiting the review-only block of the conventions fragment (review の判断手順). The
-// block is kept, without the marker lines, in review plans and dropped from every other plan.
-const REVIEW_ONLY_START = "<!-- review-only:start -->";
-const REVIEW_ONLY_END = "<!-- review-only:end -->";
-
-// Lines delimiting the essentials block of the conventions fragment. Only this block is copied
-// into the plan body; the rest of the fragment is read by the agent through the referenced path.
-const PLAN_ESSENTIALS_START = "<!-- plan-essentials:start -->";
-const PLAN_ESSENTIALS_END = "<!-- plan-essentials:end -->";
-const DEFAULT_CONVENTIONS_HEADING = "## 共通: 記法・成果物規約";
-
-// Returns the lines strictly between the start and end marker lines, or null when the pair is
-// absent so callers can fall back to the whole fragment.
-function extractMarkedBlock(text: string, start: string, end: string): string | null {
-  const lines = text.split("\n");
-  const startIndex = lines.findIndex((line) => line.trim() === start);
-  if (startIndex < 0) return null;
-  const endOffset = lines.slice(startIndex + 1).findIndex((line) => line.trim() === end);
-  if (endOffset < 0) return null;
-  return lines
-    .slice(startIndex + 1, startIndex + 1 + endOffset)
-    .join("\n")
-    .trim();
-}
-
-function conventionsReferenceSentence(referencePath: string): string {
-  return (
-    `作業を始める前に、共通の規約の詳細 \`${referencePath}\` を読み、その内容に従う。` +
-    "次の箇条書きは、そのうち守らないと失敗に直結する要点である。"
-  );
-}
-
-// Builds the plan-side conventions: heading, reference to the full fragment, essentials, and (for
-// review plans) the review-only block. Fragments without the essentials markers (older or minimal
-// fragments) are injected whole so the rules are never silently dropped.
-function planConventionsText(fragment: string, referencePath: string, isReview: boolean): string {
-  const essentials = extractMarkedBlock(fragment, PLAN_ESSENTIALS_START, PLAN_ESSENTIALS_END);
-  if (essentials === null) return selectReviewOnlyBlock(fragment, isReview);
-  const heading =
-    fragment.split("\n").find((line) => line.startsWith("## ")) ?? DEFAULT_CONVENTIONS_HEADING;
-  const sections = [heading, conventionsReferenceSentence(referencePath), essentials];
-  if (isReview) {
-    const reviewOnly = extractMarkedBlock(fragment, REVIEW_ONLY_START, REVIEW_ONLY_END);
-    if (reviewOnly) sections.push(reviewOnly);
-  }
-  return sections.join("\n\n");
-}
-
-function selectReviewOnlyBlock(conventions: string, isReview: boolean): string {
-  const kept: string[] = [];
-  let inside = false;
-  for (const line of conventions.split("\n")) {
-    const marker = line.trim();
-    if (marker === REVIEW_ONLY_START) {
-      inside = true;
-      continue;
-    }
-    if (marker === REVIEW_ONLY_END) {
-      inside = false;
-      continue;
-    }
-    if (!inside || isReview) kept.push(line);
-  }
-  return kept
-    .join("\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trimEnd();
-}
-// Placeholder in the conventions fragment for the resolved schema path. The agent cannot derive
-// the schema path on its own (it would have to hunt for it and risks burning its turn before
-// filling the result), so the generator resolves it deterministically and bakes it in here.
-const SCHEMA_REF_PLACEHOLDER = "_SCHEMA_REF_";
-
-// Injects the shared conventions into a built plan body so every generated plan carries the same
-// reference and essentials (e.g. link notation) in its own text, independent of the executing
-// tool. The reference path is repository-relative (node_modules/specdojo/... when SpecDojo is an
-// installed dependency), which the worktree also provides because worktree preparation runs
-// npm ci. A template controls placement via the COMMON_CONVENTIONS_PLACEHOLDER marker; templates
-// without the marker get the block appended so the rules are never silently dropped.
-// schemaRef is the resolved schema path: when MISSING (non-yaml deliverable or no schema), the
-// schema-validation bullet is dropped so the plan never asks for a check it cannot specify.
-// mode selects whether the review-only block (review の判断手順) is kept; it defaults to edit so
-// register / job plans never carry review instructions.
-export function injectCommonConventions(
-  body: string,
-  schemaRef: string,
-  cache: Map<string, string>,
-  mode: TaskMode = "edit",
-): string {
-  const fragmentPath = execTemplatePath(COMMON_CONVENTIONS_TEMPLATE);
-  let conventions = planConventionsText(
-    readTemplate(fragmentPath, cache),
-    specdojoReferencePath(fragmentPath),
-    mode === "review",
-  );
-  conventions =
-    schemaRef === MISSING
-      ? conventions
-          .split("\n")
-          .filter((line) => !line.includes(SCHEMA_REF_PLACEHOLDER))
-          .join("\n")
-      : conventions.split(SCHEMA_REF_PLACEHOLDER).join(schemaRef);
-  if (body.includes(COMMON_CONVENTIONS_PLACEHOLDER)) {
-    return body.split(COMMON_CONVENTIONS_PLACEHOLDER).join(conventions);
-  }
-  return `${body.trimEnd()}\n\n${conventions}\n`;
-}
-
 export function phaseDescriptionText(task: PlanTask): string {
   if (task.description) return task.description.trimEnd();
   return task.name ?? task.id;
