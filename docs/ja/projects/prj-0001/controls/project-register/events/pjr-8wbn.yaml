@@ -48,3 +48,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_8517af97ccd645ad8403ab454145a9e6
+- v: 1
+  id: reg_b5d0040b73054b12853a54a71eb97e59
+  ts: "2026-10-18T15:18:31Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  previous_event_id: reg_55649dedde2740eeb4fe473130dcdd96
