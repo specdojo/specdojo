@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T22:18:36Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.claude/agents/claude-executor.md, .claude/agents/claude-expert-ex…"
+  completed_at: "2026-10-18T09:52:48Z"
+  conclusion: claude と opencode の agent の定義を、model ごとの複製から役割ごとの 1 ファイルにまとめ、model は --model {model} で渡すようにした。名簿の移行と同時でないと起動できないため、PJR-8MPY と 1 つの変更にして develop へ入れた。統合後に claude・opencode・codex の起動を JSEY と E025 の実行で確かめた
 ---
 
 # PJR-TSP6 agent の定義を役割ごとの 1 ファイルにまとめる
