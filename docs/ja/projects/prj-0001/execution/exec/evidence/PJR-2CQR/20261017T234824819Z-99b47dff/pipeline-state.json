@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-2CQR",
+  "run_id": "20261017T234824819Z-99b47dff",
+  "updated_at": "2026-10-17T23:59:28.018Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "agy-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-10-17T23:49:23.133Z",
+      "completed_at": "2026-10-17T23:54:28.453Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-2CQR/20261017T234824819Z-99b47dff/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-17T23:58:33.200Z",
+      "completed_at": "2026-10-17T23:59:28.018Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-2cqr-20261017T234824Z-16b1-result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-2cqr-20261017T234824Z-16b1-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-2cqr-20261017T234824Z-16b1-result.md"
+  }
+}
