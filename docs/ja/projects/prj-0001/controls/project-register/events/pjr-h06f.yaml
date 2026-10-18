@@ -119,3 +119,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6c8faa6021f04daa9aca93b51cbc2814
+- v: 1
+  id: reg_ea16815854a24c0aafee5363b61a0809
+  ts: "2026-10-18T03:03:08Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・claude-reporter）の結果を差分・plan の生成・JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 個票に approach があれば schedule と同じ plan の作り方（approach のテンプレート・kata・DCT の完了条件）を使うようにした。plan の内容は一時 worktree で、runner の動作は JSEY で確かめた
+  previous_event_id: reg_32f68609fcf84ea9982c2bd2b8038457
