@@ -23,13 +23,20 @@ T46Y の完了条件のうち、verdict が complete・complete-with-findings �
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `tests/src/exec/register-post-review.test.ts` に、次の単体テストを加える。
+  - verdict が `complete` のとき、todo と issue を close する判定になる。
+  - verdict が `complete-with-findings` のとき、todo と issue を close する判定になり、指摘が close の理由に残る。
+  - decision と question は、verdict にかかわらず close しない判定になる（`exec run --register` が対象にしない種類でも、判定の関数としてそう振る舞うことを確かめる）。
+- 本番のコードは変えない。テストを書くために変える必要がある場合は、理由を result に書き、変更を最小にする。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG には記載しない（テストだけの変更のため）。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業               | 担当 | 状態 | メモ |
+| --- | ------------------ | ---- | ---- | ---- |
+| 1   | 判定のテストを補う | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -37,4 +44,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-t46y-register-post-run-review-auto-close]]（元の項目）
