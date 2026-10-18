@@ -93,7 +93,7 @@ pipeline では `agent_pipeline.stages` を `executor`、`reporter` の順に定
 
 ## 3. エージェントの定義
 
-`.specdojo/agent-members.yaml` の member には `type: agent` と `provider`・`capabilities`・`proficiency`・`priority` を定義します。起動コマンドは通常 member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。
+`.specdojo/agent-members.yaml` の member には `type: agent` と `provider`・`capabilities`・`proficiency`・`priority` を定義します。特定のモデルを表す実体には `model` と、provider が対応する場合は `effort` も定義できます。起動コマンドは通常 member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。
 
 ```yaml
 members:
@@ -117,6 +117,31 @@ members:
     proficiency: expert
     priority: 10
 ```
+
+モデルを持つ実体の `nickname` は、モデルの版を含めず、モデルの系統と役割で付けます（例: `opus-executor`・`sol-review-executor`）。版は `model` に記録します。同じモデル系統を既定でない provider から使う場合は、`agy-opus-executor` のように provider 名を前に付けます。従来名など実体を指す名前はトップレベルの `aliases` に置き、`alias_of` で実体または別の alias を指します。
+
+```yaml
+members:
+  - nickname: sol-executor
+    display_name: Sol Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-5.6-sol
+    effort: high
+    mode: edit
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: expert
+    priority: 10
+
+aliases:
+  - nickname: codex-expert-executor
+    alias_of: sol-executor
+```
+
+alias の連鎖は使用できますが、循環してはならず、終端は存在する有効な member でなければなりません。`loadMemberRoster` はこの整合性を読み込み時に検証します。`aliases` のない従来形式も引き続き有効です。
 
 pipeline 専用 agent には `stage_role: executor` または `stage_role: reporter` を指定します。`stage_role` を省略した既存 agent は従来の単一 agent フロー専用です。自動選択では、従来タスクから stage role 付き agent を除外し、pipeline stage から stage role 未指定 agent と異なる stage role の agent を除外します。これにより既存 agent 定義を変更せず、新しい pipeline agent を追加できます。
 

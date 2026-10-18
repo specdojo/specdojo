@@ -149,6 +149,8 @@ export type ProjectMember = {
   roles: string[];
   type: "human" | "agent";
   provider?: AgentProvider; // agent only: runtime CLI that executes the command
+  model?: string; // agent only: provider model identifier, including its version
+  effort?: string; // agent only: provider-specific reasoning effort
   persona?: string;
   focus?: string[];
   capabilities?: string[]; // agent only: tool access (e.g. web_search)
@@ -162,10 +164,16 @@ export type ProjectMember = {
   note?: string;
 };
 
+export type AgentAlias = {
+  nickname: string;
+  alias_of: string;
+};
+
 export type MemberRoster = {
   version: number;
   project_id?: string;
   members: ProjectMember[];
+  aliases?: AgentAlias[];
 };
 
 export type SpecDojoConfig = {
@@ -181,6 +189,7 @@ export const DEFAULT_AGENT_MEMBERS_PATH = ".specdojo/agent-members.yaml";
 type AgentMemberRoster = {
   version: number;
   members: ProjectMember[];
+  aliases?: AgentAlias[];
 };
 
 export type ConfigLoadResult = {
@@ -502,6 +511,7 @@ export function loadMemberRoster(
       );
     }
     validateMemberFile("agent-members.schema.yaml", agentFullPath, agentRoster);
+    validateAgentAliases(agentFullPath, agentRoster);
   }
 
   if (!humanRoster && !agentRoster) return null;
@@ -520,10 +530,74 @@ export function loadMemberRoster(
     }
     seen.set(member.nickname, source);
   }
+  for (const alias of agentRoster?.aliases ?? []) {
+    const previousSource = seen.get(alias.nickname);
+    if (previousSource) {
+      throw new Error(
+        `Duplicate member or alias nickname '${alias.nickname}' across ${previousSource} and ${agentFullPath}`,
+      );
+    }
+  }
 
   const members = membersWithSources.map(({ member }) => member);
-  if (humanRoster) return { ...humanRoster, members };
-  return { version: agentRoster?.version ?? 1, members };
+  const aliases = agentRoster?.aliases;
+  if (humanRoster) return { ...humanRoster, members, ...(aliases ? { aliases } : {}) };
+  return { version: agentRoster?.version ?? 1, members, ...(aliases ? { aliases } : {}) };
+}
+
+function validateAgentAliases(path: string, roster: AgentMemberRoster): void {
+  const members = new Map<string, ProjectMember>();
+  for (const member of roster.members) {
+    if (members.has(member.nickname)) {
+      throw new Error(`Invalid agent members file: ${path}: duplicate member '${member.nickname}'`);
+    }
+    members.set(member.nickname, member);
+  }
+
+  const aliases = new Map<string, string>();
+  for (const alias of roster.aliases ?? []) {
+    if (members.has(alias.nickname)) {
+      throw new Error(
+        `Invalid agent alias '${alias.nickname}' in ${path}: name conflicts with a member`,
+      );
+    }
+    if (aliases.has(alias.nickname)) {
+      throw new Error(`Invalid agent alias '${alias.nickname}' in ${path}: duplicate alias name`);
+    }
+    aliases.set(alias.nickname, alias.alias_of);
+  }
+
+  const resolved = new Set<string>();
+  const resolveAlias = (nickname: string, chain: string[]): void => {
+    if (resolved.has(nickname)) return;
+    const cycleStart = chain.indexOf(nickname);
+    if (cycleStart >= 0) {
+      const cycle = [...chain.slice(cycleStart), nickname].join(" -> ");
+      throw new Error(`Invalid agent alias '${nickname}' in ${path}: alias cycle ${cycle}`);
+    }
+
+    const target = aliases.get(nickname);
+    if (!target) return;
+    const member = members.get(target);
+    if (member) {
+      if (member.disabled) {
+        throw new Error(
+          `Invalid agent alias '${nickname}' in ${path}: alias_of '${target}' resolves to a disabled member`,
+        );
+      }
+      resolved.add(nickname);
+      return;
+    }
+    if (!aliases.has(target)) {
+      throw new Error(
+        `Invalid agent alias '${nickname}' in ${path}: alias_of '${target}' does not resolve to a member`,
+      );
+    }
+    resolveAlias(target, [...chain, nickname]);
+    resolved.add(nickname);
+  };
+
+  for (const nickname of aliases.keys()) resolveAlias(nickname, []);
 }
 
 const Ajv2020 = Ajv2020Module.default;
@@ -853,9 +927,13 @@ export function migrateAgentMembers(options: {
   if (existsSync(agentPath)) {
     existingAgents = readYamlFile(agentPath) as AgentMemberRoster;
     validateMemberFile("agent-members.schema.yaml", agentPath, existingAgents);
+    validateAgentAliases(agentPath, existingAgents);
   }
 
-  const agentNicknames = new Set(existingAgents.members.map((member) => member.nickname));
+  const agentNicknames = new Set([
+    ...existingAgents.members.map((member) => member.nickname),
+    ...(existingAgents.aliases ?? []).map((alias) => alias.nickname),
+  ]);
   const moved: ProjectMember[] = [];
   const updates: Array<{ path: string; roster: MemberRoster; count: number }> = [];
   for (const [projectId, project] of projectEntries) {
@@ -879,7 +957,9 @@ export function migrateAgentMembers(options: {
     }
     for (const agent of agents) {
       if (agentNicknames.has(agent.nickname)) {
-        throw new Error(`Duplicate agent nickname '${agent.nickname}' while migrating ${path}`);
+        throw new Error(
+          `Duplicate agent member or alias nickname '${agent.nickname}' while migrating ${path}`,
+        );
       }
       agentNicknames.add(agent.nickname);
       moved.push(agent);
@@ -890,10 +970,12 @@ export function migrateAgentMembers(options: {
   }
 
   const mergedAgents = {
+    ...existingAgents,
     version: existingAgents.version || 1,
     members: [...existingAgents.members, ...moved],
   } satisfies AgentMemberRoster;
   validateMemberFile("agent-members.schema.yaml", agentPath, mergedAgents);
+  validateAgentAliases(agentPath, mergedAgents);
   for (const update of updates) {
     for (const human of update.roster.members) {
       if (agentNicknames.has(human.nickname)) {

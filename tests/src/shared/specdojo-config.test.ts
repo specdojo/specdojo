@@ -175,7 +175,38 @@ const agentMember = `
     stage_role: executor
 `;
 
+const modelAgentMember = `
+  - nickname: sol-executor
+    display_name: Sol Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-5.6-sol
+    effort: high
+    capabilities: [exec]
+    proficiency: expert
+    priority: 1
+    mode: edit
+    stage_role: executor
+`;
+
 describe("split human and agent member registries", () => {
+  it("loads concrete model members and validated aliases without resolving them", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    write(
+      join(root, ".specdojo", "agent-members.yaml"),
+      `version: 1\nmembers:${modelAgentMember}aliases:\n  - nickname: codex-expert-executor\n    alias_of: sol-executor\n`,
+    );
+
+    const roster = loadMemberRoster(root, {});
+
+    expect(roster?.members.map((member) => member.nickname)).toEqual(["sol-executor"]);
+    expect(roster?.aliases).toEqual([
+      { nickname: "codex-expert-executor", alias_of: "sol-executor" },
+    ]);
+  });
+
   it("loads the repository agent registry when the project has no human roster", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
     write(join(root, ".specdojo", "agent-members.yaml"), `version: 1\nmembers:${agentMember}`);
@@ -184,6 +215,45 @@ describe("split human and agent member registries", () => {
 
     expect(roster?.members.map((member) => member.nickname)).toEqual(["codex-executor"]);
     expect(roster?.project_id).toBeUndefined();
+  });
+
+  it("rejects an alias cycle and reports the roster file and alias name", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    const path = join(root, ".specdojo", "agent-members.yaml");
+    write(
+      path,
+      `version: 1\nmembers:${modelAgentMember}aliases:\n  - nickname: old-a\n    alias_of: old-b\n  - nickname: old-b\n    alias_of: old-a\n`,
+    );
+
+    expect(() => loadMemberRoster(root, {})).toThrow(
+      /Invalid agent alias 'old-a' in .*agent-members\.yaml: alias cycle/,
+    );
+  });
+
+  it("rejects an alias whose target does not exist", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    const path = join(root, ".specdojo", "agent-members.yaml");
+    write(
+      path,
+      `version: 1\nmembers:${modelAgentMember}aliases:\n  - nickname: missing-alias\n    alias_of: missing-member\n`,
+    );
+
+    expect(() => loadMemberRoster(root, {})).toThrow(
+      /Invalid agent alias 'missing-alias' in .*agent-members\.yaml:.*missing-member/,
+    );
+  });
+
+  it("rejects an alias that resolves to a disabled member", () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-members-"));
+    const path = join(root, ".specdojo", "agent-members.yaml");
+    write(
+      path,
+      `version: 1\nmembers:${modelAgentMember.replace("    display_name", "    disabled: true\n    display_name")}aliases:\n  - nickname: disabled-alias\n    alias_of: sol-executor\n`,
+    );
+
+    expect(() => loadMemberRoster(root, {})).toThrow(
+      /Invalid agent alias 'disabled-alias' in .*agent-members\.yaml:.*disabled/,
+    );
   });
 
   it("loads a configured agent registry path when the project has no human roster", () => {

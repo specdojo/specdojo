@@ -1,0 +1,15 @@
+実装を完了しました。
+
+- schema に `model`・`effort`・`aliases`（`nickname` / `alias_of`）を追加
+- alias の循環、存在しない実体、無効な実体を読み込み時に検出
+- 従来の一段形式との互換性を維持
+- schema・読み込み処理のテストと命名ガイドを更新
+- 個票の作業内容・対応結果を更新
+- result ファイルは executor stage の指示どおり未編集
+- register build、catalog validate、整形、差分検査は成功
+
+親 runner が typecheck・lint・unit/integration test・schema 検証を実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"agent-members のモデル実体・alias schema、読み込み時の循環／不在／無効実体検証、テスト、ガイド、個票を更新した。","validations":[{"command":"npx prettier --write docs/specdojo/schemas/v1/agent-members.schema.yaml src/shared/specdojo-config.ts tests/docs/specdojo/schemas/pm-members-schema.test.ts tests/src/shared/specdojo-config.test.ts docs/ja/specdojo/guides/exec-config-guide.md","status":"passed","summary":"変更した schema、TypeScript、テスト、ガイドを整形した。"},{"command":"npx prettier --write src/shared/specdojo-config.ts docs/ja/projects/prj-0001/controls/project-register/pjr-eank-agent-members-alias-schema.md","status":"passed","summary":"追加変更した実装と個票を整形した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"tsx CLI の sandbox IPC 制約を回避する規定の起動方法で project register 生成に成功した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検証は終了コード 0。既存の未作成文書に関する warning のみだった。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはなかった。"}]}
+</specdojo_executor_evidence>
