@@ -74,3 +74,16 @@
       from: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:07.444Z"
       to: "-"
   previous_event_id: reg_8befa93a1de745bb80e947dbe5546a7b
+- v: 1
+  id: reg_987a78cfbbc74eeb837d8527a377792e
+  ts: "2026-10-18T08:09:16Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b071b1448d924658a99cecdee2066d64
