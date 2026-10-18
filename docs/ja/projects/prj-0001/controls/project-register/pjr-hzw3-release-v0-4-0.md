@@ -25,6 +25,7 @@ specdojo:
   - agent の名簿の 2 段構成: PJR-EANK・PJR-YK1C・PJR-TSP6・PJR-8MPY・PJR-8TGQ（[[prj-0001:pjr-zm1k-agent-members-model-alias]]）
   - PJR-7WME（derived_from）・PJR-SJ0G（plan の一覧の参照）・PJR-4Z6N（approach の手順のガイド）・PJR-0JJB（統合テストの時間切れ）
   - PJR-G5AB（init の対話からカタログの質問をなくす。2026-10-18 に追加）
+  - PJR-NJ6J（`--on-rate-limit wait` が codex の usage limit で待たずに止まる。2026-10-18 に追加）
 - 範囲を広げる場合は、利用者の承認を得て、この個票の範囲に書き足す。
 - CHANGELOG の `## [0.4.0] - 未定` の節で、0.3.1 の後に統合した利用者に見える変更の記載漏れを補う。少なくとも PJR-2CQR（実行中の routine の表示）と PJR-VGNG（Job Run の部分成功）を載せ、PJR-MX4F・PJR-YFBW を載せるかを確かめる。
 - 公開日を記入し、develop の `npm run check` が通る。
