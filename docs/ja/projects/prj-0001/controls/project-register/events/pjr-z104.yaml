@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_21a41d1254a1490c98450aca510bb8ff
+- v: 1
+  id: reg_bb77825a1aad45c88cd0e255abde37c3
+  ts: "2026-10-18T13:04:52Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor・gemma26-reporter）の差分・テスト・親検証と、tarball での導入の確認を行った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 共通の規約の要点に検査の扱い（適用条件で流す検査を決め、当てはまらない検査は not_applicable と理由、not_run は流せたのに流さなかった検査に限る）を移し、詳細側は要点を参照する形にした。6EF8 とあわせて、npm init -y で作った空のリポジトリで 0.4.0 の tarball の最初の実行が close まで通った
+  previous_event_id: reg_9e7fd92394f74bd183b032d9611d6ae2

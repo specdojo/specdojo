@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-z104-plan-essentials-validation-rule
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T12:23:00Z"
+  completed_at: "2026-10-18T13:04:52Z"
+  conclusion: 共通の規約の要点に検査の扱い（適用条件で流す検査を決め、当てはまらない検査は not_applicable と理由、not_run は流せたのに流さなかった検査に限る）を移し、詳細側は要点を参照する形にした。6EF8 とあわせて、npm init -y で作った空のリポジトリで 0.4.0 の tarball の最初の実行が close まで通った
   derived_from:
     - PJR-2219
 ---
