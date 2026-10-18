@@ -294,6 +294,14 @@ checkpoint:
 
 変更検知はroutineによる定期pollingだけでなく、main更新後のCIから同じJobを起動できる。トリガーが異なっても、同じrevision範囲と対象言語ならidempotency keyは一致する。
 
+### 6.3. 承認済み登録項目の夜間実行
+
+夜間実行は Job `job-night-approved-register` から決定論的な `orchestrator night` を呼ぶ。対象選択の正本は個票 frontmatter の `autopilot: approved` であり、`open` の todo・issue 以外を選ばない。選択後は wave ごとに `exec run --register --worktree --post-review` へ委譲し、個々の実装・review・close は既存 exec 基盤を再利用する。
+
+一晩の件数、wave の並列数、連続失敗で停止する閾値、rate limit 時の stop / fallback は Job input とする。停止判定は完了した wave の ID 順の結果で行うため、同じ wave に入った項目は完走し、次の wave から止める。承認範囲外の操作を要求する失敗は、元項目を `derived_from` に持つ承認待ち issue として分離する。close、`waiting`、新しい承認待ちは 1 件の朝報告にまとめる。
+
+Job 自体は `task.review` を宣言し、個別項目の統合に加えて朝報告と派生 issue を外側の Job review でも確認してから統合する。routine は時刻だけを担当し、保護された `enabled` の変更は人が行う。
+
 ## 7. 保存領域と監査
 
 プロジェクト直下へ次の領域を配置する。

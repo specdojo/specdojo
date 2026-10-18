@@ -39,6 +39,8 @@ export type PjrItem = {
   // この項目を起票する元になった register 項目。project 内は PJR-XXXX、project 間は
   // <project-id>:PJR-XXXX で保持し、派生先ビューと監査履歴へ展開する。
   derivedFrom?: string[];
+  // 人が完了条件を確認し、夜間 orchestrator の実行対象として承認した印。
+  autopilot?: "approved";
 };
 
 // 一覧ビュー1行分の表示値。日時は暦日へ変換済みで、テーブル生成と履歴の比較に使う。
@@ -104,6 +106,7 @@ export type RegisterItemFieldUpdates = {
   approach?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   targets?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   derived_from?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
+  autopilot?: "approved" | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
 
 // 日時へ移行する前の個票が持っていた日付フィールド。移行処理だけが読み書きする。
@@ -149,6 +152,7 @@ const SPECDOJO_KEY_ORDER = [
   "block_reason",
   "conclusion",
   "derived_from",
+  "autopilot",
   "approach",
   "targets",
 ];
@@ -267,6 +271,7 @@ export function readRegisterItemContent(
         (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
       )
     : undefined;
+  const autopilot = fields.autopilot === "approved" ? "approved" : undefined;
 
   const item: PjrItem = {
     id,
@@ -288,6 +293,7 @@ export function readRegisterItemContent(
     ...(approach ? { approach } : {}),
     ...(targets && targets.length > 0 ? { targets } : {}),
     ...(derivedFrom && derivedFrom.length > 0 ? { derivedFrom } : {}),
+    ...(autopilot ? { autopilot } : {}),
   };
 
   return {
@@ -421,6 +427,7 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
     ...(item.approach ? { approach: item.approach } : {}),
     ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
     ...(item.derivedFrom && item.derivedFrom.length > 0 ? { derived_from: item.derivedFrom } : {}),
+    ...(item.autopilot ? { autopilot: item.autopilot } : {}),
   };
 }
 

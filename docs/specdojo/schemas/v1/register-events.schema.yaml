@@ -58,6 +58,7 @@ $defs:
           - approach
           - targets
           - derived_from
+          - autopilot
       from:
         type: string
       to:

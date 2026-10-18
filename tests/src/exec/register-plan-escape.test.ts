@@ -325,6 +325,30 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     expect(content).toContain("register-specific criterion is satisfied");
   });
 
+  it("autopilot 承認済みの項目だけ plan に夜間実行の制約を載せる", async () => {
+    const approvedOutPath = path.join(dir, "plan-approved.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({ autopilot: "approved" }),
+      stem: "xep-pjr-approved",
+      outPath: approvedOutPath,
+    });
+    const unapprovedOutPath = path.join(dir, "plan-unapproved.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths: makeRegisterPaths(),
+      item: makeItem(),
+      stem: "xep-pjr-unapproved",
+      outPath: unapprovedOutPath,
+    });
+
+    expect(await readFile(approvedOutPath, "utf8")).toContain("### 夜間 autopilot の制約");
+    expect(await readFile(unapprovedOutPath, "utf8")).not.toContain("### 夜間 autopilot の制約");
+  });
+
   it("approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる", async () => {
     const referencePath = "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md";
     const plainOutPath = path.join(dir, "plan-plain.md");

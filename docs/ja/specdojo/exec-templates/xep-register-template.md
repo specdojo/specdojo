@@ -32,6 +32,8 @@ _GRADE_FINDINGS_
 
 plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
 
+_AUTOPILOT_CONSTRAINTS_
+
 ## 4. 完了手順
 
 1. 「進め方」に従って対応を完了する。

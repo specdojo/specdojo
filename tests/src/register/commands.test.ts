@@ -720,6 +720,59 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("update --autopilot は夜間承認を event 付きで設定・解除する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: open",
+          "priority: high",
+          "owner: ARC",
+          'registered_at: "2026-08-01T12:00:00Z"',
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--autopilot",
+        "approved",
+        "--by",
+        "po",
+        "--reason",
+        "completion conditions approved",
+      ]);
+      expect(readFileSync(ticketPath, "utf8")).toContain("  autopilot: approved");
+      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toContainEqual({
+        field: "autopilot",
+        from: "-",
+        to: "approved",
+      });
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--autopilot",
+        "-",
+        "--by",
+        "po",
+        "--reason",
+        "approval revoked",
+      ]);
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("  autopilot:");
+      expect(readEvents(registerDir, "PJR-AB12")[1].changes).toContainEqual({
+        field: "autopilot",
+        from: "approved",
+        to: "-",
+      });
+    });
+  });
+
   it.each([
     { command: "close", expectedStatus: "done", expectedDocumentStatus: "ready" },
     { command: "reject", expectedStatus: "rejected", expectedDocumentStatus: "deprecated" },
