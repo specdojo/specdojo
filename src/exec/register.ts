@@ -501,7 +501,6 @@ export async function generateRegisterPlan(opts: {
     _PJR_PRIORITY_: item.priority,
     _PJR_OWNER_: item.owner,
     _PJR_DUE_: item.due,
-    _PJR_INDEX_PATH_: repoRelativePath(opts.registerPaths.pjrIndexPath),
     _PJR_TICKET_REF_: ticketPath ? `\`${repoRelativePath(ticketPath)}\`` : "-",
     _RESULT_REF_: resultRef,
     _GRADE_FINDINGS_: ticketPath ? registerGradeFindingsText(opts.projectId, ticketPath) : "- なし",

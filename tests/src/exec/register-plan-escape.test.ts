@@ -395,4 +395,49 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     // name が元のタイトルと完全に一致するか確認
     expect(parsed.specdojo.name).toBe(titleWithSpecialChars);
   });
+
+  it("edit / investigate plan の対象項目に一覧のパスを含めず、進め方で一覧を読まないことを明示し、ステータス変更禁止の指示は維持する", async () => {
+    const registerPaths = makeRegisterPaths();
+    const indexPathRelative = path.relative(process.cwd(), registerPaths.pjrIndexPath);
+
+    // 1. edit カテゴリ (todo)
+    const editOutPath = path.join(dir, "plan-edit.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths,
+      item: makeItem({ type: "todo" }),
+      stem: "xep-pjr-edit",
+      outPath: editOutPath,
+    });
+    const editContent = await readFile(editOutPath, "utf8");
+    expect(editContent).not.toContain(indexPathRelative);
+    expect(editContent).not.toMatch(/- `登録簿`:/);
+    expect(editContent).toContain(
+      "1. 個票（存在する場合）を読み、目的・完了条件・制約を把握する。登録簿の一覧は大きいため読まない。",
+    );
+    expect(editContent).toContain(
+      "登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。",
+    );
+
+    // 2. investigate カテゴリ (question)
+    const investigateOutPath = path.join(dir, "plan-investigate.md");
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      registerPaths,
+      item: makeItem({ type: "question" }),
+      stem: "xep-pjr-investigate",
+      outPath: investigateOutPath,
+    });
+    const investigateContent = await readFile(investigateOutPath, "utf8");
+    expect(investigateContent).not.toContain(indexPathRelative);
+    expect(investigateContent).not.toMatch(/- `登録簿`:/);
+    expect(investigateContent).toContain(
+      "1. 個票（存在する場合）を読み、問い・リスク内容・判断に必要な条件を把握する。登録簿の一覧は大きいため読まない。",
+    );
+    expect(investigateContent).toContain(
+      "登録簿（`pjr-index.md`）の行と個票のステータス項目・結論列は変更しない。",
+    );
+  });
 });
