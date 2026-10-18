@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-8TS6",
   "run_id": "20261018T041706320Z-85b3354a",
-  "updated_at": "2026-10-18T04:28:11.201Z",
+  "updated_at": "2026-10-18T04:32:16.392Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -29,11 +29,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-8ts6-20261018T000515Z-ecdc-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "agy-claude-expert-executor",
       "attempts": 1,
       "started_at": "2026-10-18T04:28:11.201Z",
-      "completed_at": null,
+      "completed_at": "2026-10-18T04:32:16.392Z",
       "artifact_ref": null
     }
   },
