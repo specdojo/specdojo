@@ -60,6 +60,19 @@ const agent = {
   ],
 };
 
+const agentWithAlias = {
+  version: 1,
+  members: [
+    {
+      ...agent.members[0],
+      nickname: "sol-executor",
+      model: "gpt-5.6-sol",
+      effort: "high",
+    },
+  ],
+  aliases: [{ nickname: "codex-executor", alias_of: "sol-executor" }],
+};
+
 describe("member registry schemas", () => {
   const validateHumans = compileSchema("pm-members.schema.yaml");
   const validateAgents = compileSchema("agent-members.schema.yaml");
@@ -67,6 +80,18 @@ describe("member registry schemas", () => {
   it("accepts human and agent registries in their respective schemas", () => {
     expect(validateHumans(human), JSON.stringify(validateHumans.errors)).toBe(true);
     expect(validateAgents(agent), JSON.stringify(validateAgents.errors)).toBe(true);
+  });
+
+  it("accepts a concrete model member and its alias", () => {
+    expect(validateAgents(agentWithAlias), JSON.stringify(validateAgents.errors)).toBe(true);
+  });
+
+  it("rejects an alias with an invalid nickname", () => {
+    const invalid = {
+      ...agentWithAlias,
+      aliases: [{ nickname: "codex executor", alias_of: "sol-executor" }],
+    };
+    expect(validateAgents(invalid)).toBe(false);
   });
 
   it("rejects agents in pm-members.yaml", () => {

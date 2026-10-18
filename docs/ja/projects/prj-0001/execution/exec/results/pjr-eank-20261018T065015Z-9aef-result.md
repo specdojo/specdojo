@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-EANK
   mode: edit
-  status: in_progress
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-eank-20261018T065015Z-9aef-plan.md
   started_at: "2026-10-18T06:50:15.982Z"
+  completed_at: "2026-10-18T06:59:26.267Z"
   agent: codex-expert-executor
 ---
 
@@ -16,16 +17,21 @@ specdojo:
 
 ## 1. 実施内容
 
-_TODO_: 実施した内容の要約を記入する。
+- agent-members の schema に実体の `provider`、`model`、`effort` および別名（`alias`）の定義を追加し、実体の循環・不在・無効を検証する仕組みを導入しました。
+- Schema、実装、テスト、および関連するガイドと個票を更新しました。
 
 ## 2. 変更ファイル
 
-_TODO_: 変更したファイルのパスを記入する。
+- `docs/ja/specdojo/guides/exec-config-guide.md`: `exec-config-guide.md` を更新し、schema の変更に関する情報を反映しました。
+- `docs/specdojo/schemas/v1/agent-members.schema.yaml`: agent-members の schema に `provider`、`model`、`effort` 、および `alias` を追加しました。
+- `src/shared/specdojo-config.ts`: agent-members の新しい schema 定義を読み込むための実装を更新しました。
+- `tests/docs/specdojo/schemas/pm-members-schema.test.ts`: 新しい agent-members の schema を検証するためのテストを追加しました。
+- `tests/src/shared/specdojo-config.test.ts`: config 読み込みに関するテストを更新しました。
 
 ## 3. 申し送り
 
-_TODO_: 後続タスクへの申し送り事項を記入する（なければ削除）。
+- なし
 
 ## 4. 進め方と実践の型の適用
 
-_TODO_: `approach` に従ってどう進めたか、その進め方の中で実践の型（rulebook / recipe / sample / template）をどう適用したかを記入する（`fully-guided` で rulebook / recipe / sample / template をどう使い分けたか、`recipe-guided` で recipe のみを基準にした内容、`freeform` で実践の型より優先した実例やプロジェクト文脈、`retrofit` で実際に参照した実装パス・抽出した現在動作・反映/新設判断・未反映の乖離・未確認範囲、`rulebook-maintenance` などの maintenance 系で見直した実践の型とその根拠、など）。実践の型を基準にしなかった場合は、その判断と代わりに根拠にした内容も記入する。複数文書間に矛盾があり rulebook を正として判断した箇所、参照範囲から外れていた文書とその代わりに根拠にした内容があれば、あわせて記録する。
+1. `docs/specdojo/schemas/v1/agent-members.schema.yaml` を編集し、実体を示す `provider`, `model`, `effort` と、実体を指す `alias` の定義を追加しました。 2. `src/shared/specdojo-config.ts` を更新し、新しい schema 構造に対応させました。 3. `tests/docs/specdojo/schemas/pm-members-schema.test.ts` に schema の正当性を検証するテストを追加しました。 4. 関連するガイド (`docs/ja/specdojo/guides/exec-config-guide.md`) を更新しました。 5. 個票 (`docs/ja/projects/prj-0001/controls/project-register/pjr-eank-agent-members-alias-schema.md`) を整形しました。

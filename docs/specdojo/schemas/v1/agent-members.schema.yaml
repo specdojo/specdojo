@@ -13,7 +13,18 @@ properties:
     items:
       $ref: "#/$defs/AgentMember"
     uniqueItems: true
+  aliases:
+    type: array
+    description: >
+      Backward-compatible names that refer to concrete members. alias_of may refer to
+      another alias, but every chain must terminate at an enabled member.
+    items:
+      $ref: "#/$defs/AgentAlias"
+    uniqueItems: true
 $defs:
+  AgentNickname:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
   RoleLabel:
     type: string
     pattern: "^[A-Z]{2,4}$"
@@ -23,8 +34,7 @@ $defs:
     required: [nickname, display_name, roles, type, provider, capabilities, proficiency, priority]
     properties:
       nickname:
-        type: string
-        pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+        $ref: "#/$defs/AgentNickname"
       display_name:
         type: string
         minLength: 1
@@ -42,6 +52,14 @@ $defs:
         const: agent
       provider:
         enum: [opencode, claude, codex, copilot, antigravity, custom]
+      model:
+        type: string
+        minLength: 1
+        description: "Provider model identifier, including its version when applicable."
+      effort:
+        type: string
+        minLength: 1
+        description: "Provider-specific reasoning effort passed when the provider supports it."
       persona:
         type: string
         minLength: 1
@@ -74,3 +92,12 @@ $defs:
         enum: [critical-first, dependency-first, fifo, manual]
       note:
         type: string
+  AgentAlias:
+    type: object
+    additionalProperties: false
+    required: [nickname, alias_of]
+    properties:
+      nickname:
+        $ref: "#/$defs/AgentNickname"
+      alias_of:
+        $ref: "#/$defs/AgentNickname"
