@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-17T12:18:01Z"
   due_on: null
+  completed_at: "2026-10-18T07:42:38Z"
+  conclusion: approach のない実行の result の第 4 章を「4. 進め方」にし、どう進めたかと根拠にした文書・規約を書く指示に変えた。approach のある実行は今の見出しのまま。eject した古い雛形でも見出しを差し替える。本件自身の result は修正前の runner が作ったため旧い見出しのまま
 ---
 
 # PJR-S9QF approach のない result の第 4 章を「進め方」に改める
