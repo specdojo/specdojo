@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_946f0b6ebc0f4e8a8c6425f0a77904ba
+  ts: "2026-10-18T14:30:57Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8bf99d8e4e2b478eaabbec731160389a
