@@ -24,6 +24,7 @@ import {
 import { registerCreateCommands, registerUpdateCommand } from "./create-commands.js";
 import type { RegisterCommandDependencies } from "./command-types.js";
 import { normalizeRegisterTimestamp } from "./date.js";
+import { validateDerivedFromDocs } from "./derivation.js";
 import {
   appendRegisterEvent,
   deterministicRegisterEventId,
@@ -153,6 +154,7 @@ export type RegisterAddFields = {
   conclusion: string;
   approach?: Approach;
   targets?: string[];
+  derivedFrom?: string[];
 };
 
 // 作成する個票ファイル名と割り当て ID を算出する純粋関数。I/O を持たず、
@@ -252,13 +254,18 @@ function defaultRegisterCommitMessage(command: string, result: RegisterMutationR
 
 function rebuildRegisterViews(paths: RegisterPaths): void {
   const validation = validateRegisterItemDocs(paths.projectRegisterPath);
+  const derivationErrors = validateDerivedFromDocs(paths);
   const eventErrors = validateRegisterEventDocs(
     paths.projectRegisterPath,
     paths.registerDateTimeZone,
   );
-  if (validation.errors.length > 0 || eventErrors.length > 0) {
+  if (validation.errors.length > 0 || derivationErrors.length > 0 || eventErrors.length > 0) {
     throw new Error(
-      `Invalid register item files:\n${[...validation.errors, ...eventErrors].join("\n")}`,
+      `Invalid register item files:\n${[
+        ...validation.errors,
+        ...derivationErrors,
+        ...eventErrors,
+      ].join("\n")}`,
     );
   }
   writeDerivedViews(paths, "all");

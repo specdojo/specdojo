@@ -522,6 +522,7 @@ export function buildRegisterItemContent(opts: {
       ticket: "-",
       ...(opts.fields.approach ? { approach: opts.fields.approach } : {}),
       ...(opts.fields.targets ? { targets: opts.fields.targets } : {}),
+      ...(opts.fields.derivedFrom ? { derivedFrom: opts.fields.derivedFrom } : {}),
     }),
   );
 }

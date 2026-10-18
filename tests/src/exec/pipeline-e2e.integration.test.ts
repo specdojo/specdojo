@@ -1049,8 +1049,6 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     fixture = undefined;
   });
 
-  // Spawns real git worktree + child-process commands; needs more than the 5s default
-  // when the full suite runs in parallel under load.
   // rate limit で止まった executor を --task 経路で resume し、plan の対象を網羅するかを
   // 確かめる。rate limit の block イベントへ pipeline_state_ref が書かれないと resume できない
   // （PJR-TDB0 で修正）。
@@ -1120,7 +1118,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     expect(evidence.target_coverage).toEqual([
       { target: "test:doc", status: "changed", path: "docs/test/doc.md", reason: "" },
     ]);
-  }, 20_000);
+  });
 
   it("resumes the reporter from persisted evidence instead of rerunning the executor", async () => {
     fixture = setupPipelineRepository();
@@ -1195,7 +1193,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     // 同一秒に書かれるイベントはファイル名順が確定しないため、種別の集合で確認する。
     const eventTypes = readTaskEvents(fixture, "T-TEST-doc-010").map((event) => event.type);
     expect(eventTypes.sort()).toEqual(["block", "claim", "complete", "unblock"]);
-  }, 20_000);
+  });
 
   it("aborts a hook-rejected merge commit and resumes only integration", async () => {
     fixture = setupPipelineRepository();
@@ -1423,7 +1421,7 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
     expect(readFileSync(join(fixture.repo, retainedFailureLog?.path ?? ""), "utf8")).toContain(
       "integration validation fail",
     );
-  }, 20_000);
+  });
 
   it("keeps blocking when parent validation still fails after reporter resume", async () => {
     fixture = setupPipelineRepository();
@@ -1474,5 +1472,5 @@ describe("executor / reporter pipeline resume E2E (worktree)", () => {
       "parent validation failed: test-integration",
     );
     expect(readResult(fixture, "T-TEST-doc-010")).toContain("status: in_progress");
-  }, 20_000);
+  });
 });

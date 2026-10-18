@@ -1,7 +1,8 @@
 // 統合 merge で登録簿の記帳ファイルが競合したときの解決処理。イベントファイルは追記型の記録なので、
 // 両側のイベントの和集合（同一 id は 1 件）を時刻順に並べ、`previous_event_id` の連鎖を張り直す。
 // 個票は exec branch 側を基準にし、統合先だけにあるイベントが変えたフィールドのうち、frontmatter の
-// 単純な値へ写せるもの（type / priority / owner / due / approach / targets）だけを再構築する。
+// 単純な値へ写せるもの（type / priority / owner / due / approach / targets /
+// derived_from）だけを再構築する。
 
 import {
   readRegisterEventsFromContent,
@@ -181,6 +182,17 @@ function fieldUpdateFromChange(change: RegisterEventChange): RegisterItemFieldUp
         const parsed = JSON.parse(value) as unknown;
         return Array.isArray(parsed) && parsed.every((target) => typeof target === "string")
           ? { targets: parsed }
+          : undefined;
+      } catch {
+        return undefined;
+      }
+    }
+    case "derived_from": {
+      if (isUnset) return { derived_from: REMOVE_REGISTER_ITEM_FIELD };
+      try {
+        const parsed = JSON.parse(value) as unknown;
+        return Array.isArray(parsed) && parsed.every((ref) => typeof ref === "string")
+          ? { derived_from: parsed }
           : undefined;
       } catch {
         return undefined;

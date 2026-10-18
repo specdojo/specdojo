@@ -21,13 +21,22 @@ specdojo:
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 対話式の `specdojo init` で、成果物カタログの質問（`Deliverables catalog (none|small|medium|large)`）を出さない。対話の答えではカタログを作らない。
+- `--catalog <size>` を指定した場合は、対話の有無にかかわらず今と同じくカタログを作る（`--yes` との組み合わせを含む）。
+- `init` の最後の案内に、成果物が定まったら `catalog scaffold` で足せることと、そのとき `catalog_path` の設定が要ることを、参照先とあわせて 1〜2 行で示す。
+- [[specdojo:quick-start-guide]] の対話の例からカタログの質問の行を除き、対話を省く例から `--catalog small` を外す。後から足す手順への案内を置く。
+- [[specdojo:command-reference]] の `--catalog` の説明を、対話では聞かないことに合わせる。
+- LP（`../specdojo-lp` の「初期設定する」）の説明と矛盾しないことを確かめ、result に書く。LP は変更しない。
+- 単体テストで、対話でカタログを聞かないことと、`--catalog small` で今と同じファイルが作られることを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [0.4.0] - 未定` の節に書く。公開済みの版の節は変えない。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                | 担当 | 状態 | メモ |
+| --- | --------------------------------------------------- | ---- | ---- | ---- |
+| 1   | init の対話からカタログの質問をなくし、案内を改める | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -35,4 +44,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:quick-start-guide]]（影響先）
+- [[prj-0001:pjr-hzw3-release-v0-4-0]]（0.4.0 の範囲）

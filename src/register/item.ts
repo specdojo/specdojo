@@ -36,6 +36,9 @@ export type PjrItem = {
   // 個票が宣言する対象文書の doc id リスト。plan frontmatter の targets へ転記され、
   // target coverage 検証に使われる。宣言がない項目は undefined（検証 skip）。
   targets?: string[];
+  // この項目を起票する元になった register 項目。project 内は PJR-XXXX、project 間は
+  // <project-id>:PJR-XXXX で保持し、派生先ビューと監査履歴へ展開する。
+  derivedFrom?: string[];
 };
 
 // 一覧ビュー1行分の表示値。日時は暦日へ変換済みで、テーブル生成と履歴の比較に使う。
@@ -100,6 +103,7 @@ export type RegisterItemFieldUpdates = {
   conclusion?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   approach?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   targets?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
+  derived_from?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
 
 // 日時へ移行する前の個票が持っていた日付フィールド。移行処理だけが読み書きする。
@@ -144,6 +148,7 @@ const SPECDOJO_KEY_ORDER = [
   "completed_at",
   "block_reason",
   "conclusion",
+  "derived_from",
   "approach",
   "targets",
 ];
@@ -257,6 +262,11 @@ export function readRegisterItemContent(
       )
     : undefined;
   const approach = asString(fields.approach) as Approach | undefined;
+  const derivedFrom = Array.isArray(fields.derived_from)
+    ? fields.derived_from.filter(
+        (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
+      )
+    : undefined;
 
   const item: PjrItem = {
     id,
@@ -277,6 +287,7 @@ export function readRegisterItemContent(
     ticket: ticketRefCell(filename),
     ...(approach ? { approach } : {}),
     ...(targets && targets.length > 0 ? { targets } : {}),
+    ...(derivedFrom && derivedFrom.length > 0 ? { derivedFrom } : {}),
   };
 
   return {
@@ -409,6 +420,7 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
       : inlineCodeAnglePlaceholders(item.conclusion.trim()),
     ...(item.approach ? { approach: item.approach } : {}),
     ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
+    ...(item.derivedFrom && item.derivedFrom.length > 0 ? { derived_from: item.derivedFrom } : {}),
   };
 }
 

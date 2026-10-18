@@ -2,17 +2,18 @@
 specdojo:
   id: prj-0001:pjr-0jjb-pipeline-e2e-test-timeout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T02:21:23Z"
   due_on: null
-  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-0JJB/20261018T055452458Z-72ceb123/evidence.json 57ms (unchanged); FAIL  /integration/ tests/…"
+  completed_at: "2026-10-18T06:32:11Z"
+  conclusion: pipeline-e2e のテストの中の 20 秒の上限 4 件を外して全体の上限 30 秒に従わせ、kata の approach のテストを一時ディレクトリの中で完結させた。単独の時間は pipeline-e2e が約 36 秒から約 25 秒、register-plan-escape が約 1.3 秒になった。並行の run が多いと全体の上限も超えるため、並行は少数に抑える
 ---
 
 # PJR-0JJB pipeline-e2e の統合テストが負荷で 20 秒の上限を超えて親の検証を落とす
@@ -52,7 +53,11 @@ tests/src/exec/pipeline-e2e.integration.test.ts の再開のテストは 1 件�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `tests/src/exec/pipeline-e2e.integration.test.ts` の再開系 4 テストから個別の 20 秒上限を外し、`vitest.integration.config.ts` の全体上限 30 秒に従うようにした。
+- `tests/src/exec/register-plan-escape.test.ts` の kata maintenance approach は、実リポジトリの `specdojo:pjr-rulebook` を解決していた。一時ディレクトリに rulebook と必要な plan template を配置し、`SPECDOJO_PACKAGE_ROOT` と作業ディレクトリを fixture へ固定することで、解決と生成を一時ディレクトリ内で完結させた。
+- 他の統合テストを棚卸した結果、全体上限 30 秒より短い個別上限は、本件で削除した `pipeline-e2e.integration.test.ts` の 4 件以外にはなかった。
+- 変更前の実測は pipeline-e2e 16 件が約 36 秒、kata maintenance approach が約 1.4 秒だった。変更後の実測と lint・型検査・test の最終結果は、executor と重複実行しないため親 runner の evidence で確定する。
+- 統合の後に orchestrator が単独で実測した（2026-10-18）。pipeline-e2e の 16 件は約 25 秒、`register-plan-escape.test.ts` の 17 件は約 1.3 秒で、どちらも変更前より短い。
 
 ## 5. 関連ドキュメント
 

@@ -373,6 +373,8 @@ specdojo schedule strategy generate \
 
 `register update --topic <slug>` は個票のファイル名と Frontmatter の文書 ID を同時に変更し、`docs/ja` 配下の旧文書 ID 参照を更新してから生成ビューを再生成します。変更は `action: update` の event に文書 ID の変更として記録されます。形式は英小文字・数字・単一ハイフン区切りに限り、変更先ファイルが存在する場合は書き込み前に停止します。
 
+`register add --from <ID>` は、起票の元になった登録項目を個票 Frontmatter の `derived_from` へ記録します。`--from` は複数回指定でき、同じ project の項目は `PJR-XXXX`、別 project の項目は `<project-id>:PJR-XXXX` を使います。自己参照と存在しない項目は書き込み前に拒否します。別 project が設定にあれば存在も確認し、未設定なら書式だけを確認します。`register update --from <ID>` は一覧を置換し、`--from -` で削除します。`register build` は `generated/pjr-derived-items.md` を生成し、元の項目から派生先を逆引きできるようにします。decision から todo を起票するときも、この関係を追跡先として使います。
+
 `register add --approach <approach> --target <doc-id>` は、個票 Frontmatter に進め方と対象を書きます。`approach` を指定すると対象は 1 件だけ必須です。成果物を作成・修正する進め方は成果物カタログにある文書を、`rulebook-maintenance` などの保守の進め方は名前に対応する kata 種別を対象にします。文書索引で解決できない ID、対象種別の不一致、複数対象との組み合わせは書き込み前に拒否します。`approach` を指定しない `--target` は複数回指定でき、従来どおり変更網羅検証の対象宣言として使えます。`register update` でも同じ検証を行います。
 
 記帳系コマンドの `--commit` は、register の worktree 実行と同じ project の `register lifecycle` 枠を取得してから、記帳、`register build` 相当の検証・派生ビュー再生成、pathspec を限定した commit を行います。commit 対象はコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの変更を含めません。対象個票・event・参照文書に開始前の未 commit 変更がある場合は、既存差分との混在を避けるため記帳前に停止します。既定件名は `docs(register PJR-XXXX): <command> <title>` で、`-m` / `--message` により上書きできます。`--dry-run --commit` は変更予定だけを表示し、枠の取得と commit は行いません。
@@ -381,7 +383,7 @@ specdojo schedule strategy generate \
 
 `register migrate` は旧形式の登録簿データを現行形式へ移す一度限りの移行コマンドです。追跡対象だった `pjr-index.md` の表を個票 Frontmatter へ移し、旧日時を UTC へ変換し、個票内の `register_events` を `events/pjr-XXXX.yaml` へ分離します。イベントがまだない項目は、利用可能な Git 履歴を項目別イベントファイルへ変換します。event ID は commit・項目 ID・変更内容から決定的に生成するため、再実行で重複しません。
 
-`register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason` です。
+`register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`derived_from` です。
 
 各書き込みコマンドは現在値を個票へ、event を項目別イベントファイルへ反映します。同じ現在値になる操作の再実行では event を追加しません。`register build` は個票とイベントファイルの対応、event の schema、ID 一意性、時刻順、直前イベント参照、状態連鎖、最新 event と現在値の一致を検証します。
 

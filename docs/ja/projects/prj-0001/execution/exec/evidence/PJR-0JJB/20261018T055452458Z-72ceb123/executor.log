@@ -1,0 +1,11 @@
+対応を完了しました。
+
+- `pipeline-e2e` の個別 20 秒タイムアウト 4 件を削除。
+- kata テストを一時ディレクトリ内で完結する fixture に変更。
+- 個票の対応結果とタイムアウト棚卸し結果を更新。
+- result・登録簿ステータスは変更していません。
+- test、lint、型検査は指示どおり親 runner に委ねます。
+
+<specdojo_executor_evidence>
+{"final_message":"個別20秒タイムアウト4件を削除し、kataテストを一時ディレクトリ内で完結させ、PJR-0JJB個票へ対応結果と棚卸し結果を記録した。変更前はpipeline-e2e 16件が約36秒、kata maintenance approachが約1.4秒。変更後の実測と親検証はrunner evidenceで確定する。","validations":[{"command":"npx prettier --write tests/src/exec/pipeline-e2e.integration.test.ts tests/src/exec/register-plan-escape.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-0jjb-pipeline-e2e-test-timeout.md","status":"passed","summary":"変更したTypeScriptおよびMarkdownの整形を確認した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿派生ファイルを正常に再生成し、追加差分がないことを確認した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog検証は終了コード0。既存の未作成成果物に関するwarningのみだった。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーがないことを確認した。"}]}
+</specdojo_executor_evidence>
