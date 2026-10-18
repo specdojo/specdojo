@@ -774,3 +774,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_23ed095875d245339d221c005dede1a1
+- v: 1
+  id: reg_bf9202a59ce9455398e1c7872ed7dcab
+  ts: "2026-10-18T11:15:18Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-executor の別名・gemma26-reporter）の結果を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: E025 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
+      to: NJ6J の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
+  previous_event_id: reg_6b6050c033294204bde6b8bdca6386a0
