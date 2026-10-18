@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c52bc71e52244ff4bf3867cc72f84bec
+- v: 1
+  id: reg_2b9b0d1390ce42829c9f48976387982f
+  ts: "2026-10-18T17:54:10Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証と、統合後の JSEY を確認した。最初の修正は run が始められなかったため orchestrator が feature/prj-0001/register-plan-blank-lines-hotfix で入れた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: orchestrator の最小の修正（register の plan の空行をまとめる）を、全雛形が通る expandTemplate へ移し、2 行以上続く空行を 1 行にまとめるようにした。Job・保守系の approach などの雛形でも空に展開される箇所があり、まとめて直った。印のある個票とない個票の plan に MD012 が出ないことをテストで確かめた。統合後の JSEY で plan の commit が通った
+  previous_event_id: reg_3b2b4f442ff04b4787c0a7b98648c502

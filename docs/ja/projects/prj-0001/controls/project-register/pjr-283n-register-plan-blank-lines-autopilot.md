@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-283n-register-plan-blank-lines-autopilot
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T16:40:17Z"
+  completed_at: "2026-10-18T17:54:10Z"
+  conclusion: orchestrator の最小の修正（register の plan の空行をまとめる）を、全雛形が通る expandTemplate へ移し、2 行以上続く空行を 1 行にまとめるようにした。Job・保守系の approach などの雛形でも空に展開される箇所があり、まとめて直った。印のある個票とない個票の plan に MD012 が出ないことをテストで確かめた。統合後の JSEY で plan の commit が通った
   derived_from:
     - PJR-6DHY
 ---
