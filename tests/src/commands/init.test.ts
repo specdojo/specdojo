@@ -5,7 +5,11 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { load } from "js-yaml";
 import { collectInitAnswers, runInit, type InitPrompter } from "../../../src/commands/init.js";
 import { loadExecDefaultsConfig, resolveMemberCommand } from "../../../src/exec/agent-config.js";
-import { loadMemberRoster, type SpecDojoConfig } from "../../../src/shared/specdojo-config.js";
+import {
+  loadMemberRoster,
+  resolveAgentMember,
+  type SpecDojoConfig,
+} from "../../../src/shared/specdojo-config.js";
 
 const originalCwd = process.cwd();
 
@@ -196,17 +200,21 @@ describe("specdojo init", () => {
       ).toBe(true);
 
       const roster = loadMemberRoster(repo, config.projects["prj-1234"]);
-      const executor = roster?.members.find((member) => member.nickname === "codex-executor");
-      const reporter = roster?.members.find((member) => member.nickname === "codex-reporter");
-      expect(executor?.stage_role).toBe("executor");
-      expect(reporter?.stage_role).toBe("reporter");
+      const executor = resolveAgentMember(roster, "codex-executor");
+      const reporter = resolveAgentMember(roster, "codex-reporter");
+      expect(executor).toMatchObject({
+        nickname: "terra-executor",
+        model: "gpt-5.6-terra",
+        stage_role: "executor",
+      });
+      expect(reporter).toMatchObject({ nickname: "terra-reporter", stage_role: "reporter" });
 
       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
       expect(defaults.pipeline?.parent_validations).toBeUndefined();
       expect(output.join("")).toContain(
         "Omitted pipeline.parent_validations: no supported npm scripts were found in package.json.",
       );
-      expect(resolveMemberCommand(defaults, executor!)).toContain("codex exec");
+      expect(resolveMemberCommand(defaults, executor!)).toContain("--model gpt-5.6-terra");
       expect(resolveMemberCommand(defaults, reporter!)).toContain("codex exec");
 
       const packageJson = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
@@ -290,9 +298,31 @@ describe("specdojo init", () => {
 
       const roster = load(readFileSync(join(repo, ".specdojo/agent-members.yaml"), "utf8")) as {
         members: Array<{ provider: string }>;
+        aliases: Array<{ nickname: string; alias_of: string }>;
       };
       expect(new Set(roster.members.map((member) => member.provider))).toEqual(
         new Set(["claude", "opencode", "copilot"]),
+      );
+      // 選ばなかった provider（codex・antigravity）の実体を指す別名は書かない。
+      expect(roster.aliases).toEqual([
+        { nickname: "claude-executor", alias_of: "sonnet-executor" },
+        { nickname: "claude-review-executor", alias_of: "sonnet-review-executor" },
+        { nickname: "claude-reporter", alias_of: "sonnet-reporter" },
+        { nickname: "opencode-executor", alias_of: "gemma-executor" },
+        { nickname: "opencode-review-executor", alias_of: "gemma-review-executor" },
+        { nickname: "opencode-reporter", alias_of: "gemma-reporter" },
+      ]);
+      const loaded = loadMemberRoster(repo, {});
+      const execDefaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
+      expect(
+        resolveMemberCommand(execDefaults, resolveAgentMember(loaded, "claude-reporter")!),
+      ).toBe(
+        "claude -p --verbose --agent claude-reporter --model sonnet --settings .specdojo/claude/settings.report.json",
+      );
+      expect(
+        resolveMemberCommand(execDefaults, resolveAgentMember(loaded, "opencode-review-executor")!),
+      ).toBe(
+        "opencode run --agent opencode-review-executor --model ollama-local/gemma4:31b-mlx-work-64k",
       );
       const defaults = load(readFileSync(join(repo, ".specdojo/exec-defaults.yaml"), "utf8")) as {
         providers: Record<string, unknown>;
@@ -304,22 +334,25 @@ describe("specdojo init", () => {
     }
   });
 
-  it("generates an Antigravity expert that uses a currently provided model", async () => {
+  it("generates Antigravity members that carry a currently provided model", async () => {
     const repo = createRepo("specdojo-init-antigravity-");
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     try {
       process.chdir(repo);
       await runInit({ yes: true, provider: "antigravity", exec: true });
 
-      const defaults = load(readFileSync(join(repo, ".specdojo/exec-defaults.yaml"), "utf8")) as {
-        providers: {
-          antigravity: {
-            command_params: { by_proficiency: { expert: { model: string } } };
-          };
-        };
-      };
-      expect(defaults.providers.antigravity.command_params.by_proficiency.expert.model).toBe(
-        "gemini-3.8-flash-high",
+      const roster = loadMemberRoster(repo, {});
+      const executor = resolveAgentMember(roster, "agy-executor");
+      expect(executor).toMatchObject({
+        nickname: "flash-executor",
+        model: "gemini-3.8-flash-medium",
+      });
+      const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
+      expect(resolveMemberCommand(defaults, executor!)).toContain(
+        "--model gemini-3.8-flash-medium",
+      );
+      expect(roster?.members.map((member) => member.model).join(" ")).not.toMatch(
+        /gemini-3\.1-pro/,
       );
     } finally {
       rmSync(repo, { recursive: true, force: true });

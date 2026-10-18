@@ -1,0 +1,28 @@
+PJR-8TGQ の作業を終えました。`init` と `config scaffold` が配布する agent の名簿と定義を、実体と別名の 2 段構成に改めました。ガイド・CHANGELOG・統合テストも更新済みです。対象のテストと検査はすべて通りましたが、許可リストの検証（`npm run typecheck` など）は指示どおり親 runner に任せ、ここでは実行していません。
+
+**runner への申し送り**：`templates/claude/agents/claude-expert-review-executor.md` を `git rm` で消したため、削除が index にステージされた状態です。ステージを外す `git restore --staged` は承認が必要で実行できませんでした。削除自体は意図どおりで、git の操作はそれ以外していません。
+
+**主な変更**
+- **名簿の雛形**（`templates/init-agent-members.yaml`）：
+  - 実体は model の系統で名付け、`model` を持たせました（`sonnet-*`・`terra-*`・`gemma-*`・`flash-*`）。
+  - 今の名前（`claude-*`・`codex-*`・`opencode-*`・`agy-*`）は `aliases` の別名として残しました。
+  - copilot は `--model auto` で model を自動選択するため、系統で名付けられません。今の名前のまま実体として残し、別名はありません。
+- **起動コマンドの雛形**（`templates/init-exec-defaults.yaml`）：claude と opencode は `--agent {agent} --model {model}` と `command_params.by_mode` で組み立てます。codex と antigravity の `command_params` からは `model` を外しました（codex の effort は残しています）。
+- **`src/commands/init.ts`**：選んだ provider の実体を指す別名だけを名簿に書きます。最後の案内の `--executor-by` には今までどおり別名を表示します。
+- **定義ファイル**：claude と opencode の役割ごとの定義の雛形から `model:` を外しました。model ごとの複製だった `claude-expert-review-executor.md` は配布物から削除しました。
+- **antigravity のスニペット**：実体 8 件にしました。実体は `disabled: true` で配布するため、別名は末尾にコメントの例として置いています（別名は無効な member を指せないため）。
+- **文書**：
+  - 各 provider の README を 2 段構成に合わせて直しました。
+  - exec 設定ガイドに「agent の名簿の 2 段構成と移行」の節を追加しました。今の 1 段の名簿がそのまま動くことと、2 段へ移す 5 つの手順を書いています。
+  - CHANGELOG は `## [0.4.0] - 未定` の「変更」に 2 項目を足しただけで、公開済みの版の節は変えていません。
+- **テスト**：既存の単体テストを新しい名前に合わせて直しました。統合テスト `tests/src/commands/init-agent-roster.integration.test.ts` を新しく作りました。空のリポジトリで実際の CLI から `init --yes` と `config scaffold` を動かし、次の点を確かめます。
+  - 名簿とスニペットが schema と別名の検証を通る。
+  - すべての別名が `model` を持つ実体に解決され、起動コマンドに `--model` が入る。
+  - コメントの別名の例も、実体を有効にすれば検証を通る。
+- **個票**：「4. 対応結果」に実施内容を書きました。状態の項目は変えていません。
+
+**既存の利用者への影響**：今の 1 段の名簿は変えなくても動きます。`init` は既存の名簿を上書きせず、`scaffold` も `--force` なしでは既存の定義を上書きしないためです。ただし `--force` で役割ごとの定義に置き換え、`--agent {nickname}` のままにすると model が渡らず、provider の既定の model で起動します。この点はガイドと README に書きました。
+
+<specdojo_executor_evidence>
+{"final_message":"Changed the agent roster and definition templates that init and config scaffold distribute to a two-level structure: concrete members named by model family that carry `model`, plus aliases that keep the earlier names. Updated init so it writes only aliases whose target provider was selected. Claude and opencode role definitions use one file per role without `model`; the expert review template was deleted (staged deletion left in the index because unstaging needed approval). Updated provider READMEs, exec-config-guide (new section on the two-level roster and migration), CHANGELOG 0.4.0, the ticket's result section, unit tests, and a new integration test.","validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/commands/init.test.ts tests/src/shared/provider-scaffold.test.ts tests/src/shared/specdojo-config.test.ts tests/src/shared/specdojo-config-command.test.ts","status":"passed","summary":"4 files, 72 tests passed (re-run of init and provider-scaffold after formatting: 37 passed)"},{"command":"npx vitest run --config vitest.integration.config.ts tests/src/commands/init-agent-roster.integration.test.ts","status":"passed","summary":"2 tests passed: init --yes plus config scaffold produce schema-valid rosters and snippets, and every alias resolves to a concrete member with --model"},{"command":"npx tsc --noEmit -p tsconfig.test.json","status":"passed","summary":"No type errors"},{"command":"npx eslint src/commands/init.ts tests/src/commands/init.test.ts tests/src/commands/init-agent-roster.integration.test.ts tests/src/shared/provider-scaffold.test.ts","status":"passed","summary":"No ESLint errors"},{"command":"npx prettier --check (changed ts/yaml/md files)","status":"passed","summary":"All changed files formatted after prettier --write on 4 files"},{"command":"npx markdownlint-cli2 (exec-config-guide, provider READMEs, CHANGELOG, ticket)","status":"passed","summary":"0 issues"},{"command":"npm run -s validate:history-links","status":"passed","summary":"No Markdown-link violations in history files"}]}
+</specdojo_executor_evidence>

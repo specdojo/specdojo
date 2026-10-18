@@ -18,6 +18,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - 対話式の `specdojo init` から成果物カタログの質問を除き、`--catalog <size>` を明示した場合にだけ作成するように変更しました。導入直後の混乱を防ぎ、成果物が定まってから `catalog scaffold` で追加できるようにします。初期化の最後の案内でも `catalog scaffold` と `catalog_path` の設定手順を示します（PJR-G5AB）。
 - approach のない実行（register の todo・issue など）の result で、第 4 章の見出しを「4. 進め方」にし、記入の指示をどう進めたか・根拠にした文書や規約に改めました。approach のある実行（schedule のタスク、approach を持つ個票）は「4. 進め方と実践の型の適用」のままです（PJR-S9QF）。
+- `specdojo init --exec` と `config scaffold` が配布する agent の名簿と定義を、実体と別名の 2 段構成に改めました。実体は model の系統と役割で名付け（`sonnet-executor`・`terra-executor`・`gemma-executor`・`flash-executor` など）、`model` を持ちます。従来の名前（`claude-executor`・`codex-executor`・`opencode-executor`・`agy-executor` など）は `aliases` の別名として残し、init は選んだ provider の別名だけを書きます。claude と opencode の agent の定義は役割ごとの 1 ファイルにまとめて `model` を外し、`command_template` は `--agent {agent} --model {model}` と `command_params.by_mode` で組み立てます（`claude-expert-review-executor.md` は配布しません）。codex と antigravity の `command_params` からも `model` を外しました（PJR-8TGQ）。
+- 既存の 1 段の名簿と `--agent {nickname}` の `command_template` は変更しなくても動きます。init は既存の名簿を上書きせず、scaffold も `--force` なしでは既存の定義を上書きしません。`--force` で役割ごとの定義に置き換える場合は、exec 設定ガイドの「agent の名簿の 2 段構成と移行」の手順（実体の名前と `model` を加える、従来の名前を `aliases` へ移す、`command_params` の `model` を外す、`command_template` を改める、`--dry-run` で確かめる）で 2 段へ移してください（PJR-8TGQ）。
 - exec の plan で、共通の規約（記法・成果物規約）の全文を本文に差し込むのをやめ、守らないと失敗に直結する要点だけを残すようにしました。詳細は plan に記したパス（npm で導入した場合は `node_modules/specdojo/docs/ja/specdojo/exec-templates/xep-common-conventions-template.md`）を作業前に読むよう指示します。要点は同じファイルの `plan-essentials` マーカーの間から取り出します。既存の plan は書き換えません（PJR-2219）。
 
 ### 不具合修正

@@ -1,7 +1,6 @@
 ---
 description: SpecDojo pipeline の executor（review）。成果物を多観点でレビューするだけで、成果物・result のいずれにも書き込まない。
 mode: primary
-model: ollama-local/gemma4:31b-mlx-work-64k
 temperature: 0.1
 permission:
   read:

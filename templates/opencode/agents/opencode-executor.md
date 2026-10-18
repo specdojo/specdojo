@@ -1,7 +1,6 @@
 ---
 description: SpecDojo pipeline の executor。成果物の編集と検証だけを行い、result は更新しない。
 mode: primary
-model: ollama-local/gemma4:31b-mlx-work-64k
 temperature: 0.2
 permission:
   read:

@@ -2,7 +2,6 @@
 name: claude-executor
 description: SpecDojo pipeline の executor。成果物の編集と検証だけを行い、result は更新しない。
 tools: Read, Edit, Write, Bash, Glob, Grep, WebSearch, WebFetch
-model: sonnet
 ---
 
 あなたは SpecDojo pipeline の Claude executor です。
