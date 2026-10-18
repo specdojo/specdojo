@@ -74,3 +74,16 @@
       from: rate limit reached
       to: "-"
   previous_event_id: reg_f0bdb5bb3a4842f5805b918917925043
+- v: 1
+  id: reg_372b148d00c54b8e8fe07d4376f928ab
+  ts: "2026-10-18T10:40:27Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4db3277d08ca42b58b0c980d38ef60c1
