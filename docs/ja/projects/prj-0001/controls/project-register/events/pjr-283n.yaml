@@ -80,3 +80,16 @@
       from: "checkpoint failed: Checkpoint commit failed (exec(register PJR-283N): start); staged changes rolled back (likely a failing git hook): format: docs/ja/projects/prj-0001/controls/project-register/events…"
       to: "-"
   previous_event_id: reg_d56b6b32af6f42afa8723e3fce9fa2ff
+- v: 1
+  id: reg_3b2b4f442ff04b4787c0a7b98648c502
+  ts: "2026-10-18T17:33:31Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sol-executor -> opus-executor at 2026-10-18T16:47:10.434Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c52bc71e52244ff4bf3867cc72f84bec
