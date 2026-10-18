@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-18T00:38:49Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
 ---
 
 # PJR-7WME 個票に起票の元になった項目（`derived_from`）を記録できるようにする

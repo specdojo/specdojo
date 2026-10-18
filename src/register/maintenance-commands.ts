@@ -10,6 +10,7 @@ import { registerEventFilePath, validateRegisterEventDocs } from "./events.js";
 import { validateRegisterItemDocs } from "./item.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import type { BuildScope, RegisterCommandDependencies } from "./command-types.js";
+import { validateDerivedFromDocs } from "./derivation.js";
 
 export function registerMaintenanceCommands(
   reg: Command,
@@ -132,13 +133,18 @@ export function registerMaintenanceCommands(
       }
 
       const validation = validateRegisterItemDocs(paths.projectRegisterPath);
+      const derivationErrors = validateDerivedFromDocs(paths);
       const eventErrors = validateRegisterEventDocs(
         paths.projectRegisterPath,
         paths.registerDateTimeZone,
       );
-      if (validation.errors.length > 0 || eventErrors.length > 0) {
+      if (validation.errors.length > 0 || derivationErrors.length > 0 || eventErrors.length > 0) {
         throw new Error(
-          `Invalid register item files:\n${[...validation.errors, ...eventErrors].join("\n")}`,
+          `Invalid register item files:\n${[
+            ...validation.errors,
+            ...derivationErrors,
+            ...eventErrors,
+          ].join("\n")}`,
         );
       }
 

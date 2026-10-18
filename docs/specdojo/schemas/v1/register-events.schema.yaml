@@ -57,6 +57,7 @@ $defs:
           - block_reason
           - approach
           - targets
+          - derived_from
       from:
         type: string
       to:

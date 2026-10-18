@@ -18,6 +18,7 @@ import {
 import { resolveSpecdojoTemplatePath } from "../docs/template-resolution.js";
 import type { RegisterAddFields, RegisterCommandDependencies } from "./command-types.js";
 import { validateRegisterApproachTargetsForProject } from "./approach.js";
+import { normalizeDerivedFrom, validateDerivedFrom } from "./derivation.js";
 
 function collectTarget(value: string, previous: string[] = []): string[] {
   return [...previous, value];
@@ -112,6 +113,11 @@ export function registerCreateCommands(
     "Target document id (repeatable; approach requires exactly one)",
     collectTarget,
   );
+  addCmd.option(
+    "--from <item-id>",
+    "Register item this item derives from (repeatable)",
+    collectTarget,
+  );
   addCmd.option("--id <id>", "Display ID (e.g., PJR-0061); auto-incremented if omitted");
   addCmd.option(
     "--topic <topic>",
@@ -169,6 +175,13 @@ export function registerCreateCommands(
         fields,
         topic,
       });
+      const derivedFrom = normalizeDerivedFrom(opts.from, { allowRemove: false });
+      validateDerivedFrom({
+        projectId: paths.projectId,
+        itemId: displayId,
+        derivedFrom,
+      });
+      if (derivedFrom !== undefined) fields.derivedFrom = derivedFrom;
 
       const ticketPath = join(paths.projectRegisterPath, ticketFilename);
       const content = buildRegisterItemContent({
@@ -264,6 +277,11 @@ export function registerUpdateCommand(
     collectTarget,
   );
   updateCmd.option(
+    "--from <item-id>",
+    "Replace source register item IDs (repeatable; use - to remove)",
+    collectTarget,
+  );
+  updateCmd.option(
     "--topic <topic>",
     "Update the topic slug in the ticket filename and document ID",
   );
@@ -287,11 +305,12 @@ export function registerUpdateCommand(
         "blockReason",
         "approach",
         "target",
+        "from",
         "topic",
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --block-reason, --approach, --target, --topic)",
+          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --block-reason, --approach, --target, --from, --topic)",
         );
       }
 
@@ -337,6 +356,15 @@ export function registerUpdateCommand(
             ? undefined
             : opts.approach.trim();
       const nextTargets = opts.target === undefined ? item.targets : normalizedTargets(opts.target);
+      const nextDerivedFrom =
+        opts.from === undefined
+          ? item.derivedFrom
+          : normalizeDerivedFrom(opts.from, { allowRemove: true });
+      validateDerivedFrom({
+        projectId: paths.projectId,
+        itemId: item.id,
+        derivedFrom: nextDerivedFrom,
+      });
       validateRegisterApproachTargetsForProject({
         projectId: paths.projectId,
         ...(nextApproach !== undefined ? { approach: nextApproach } : {}),
@@ -352,6 +380,11 @@ export function registerUpdateCommand(
         ...(opts.target !== undefined
           ? {
               targets: nextTargets ?? REMOVE_REGISTER_ITEM_FIELD,
+            }
+          : {}),
+        ...(opts.from !== undefined
+          ? {
+              derived_from: nextDerivedFrom ?? REMOVE_REGISTER_ITEM_FIELD,
             }
           : {}),
       };
@@ -372,6 +405,10 @@ export function registerUpdateCommand(
       if (opts.target !== undefined) {
         if (nextTargets === undefined) delete updated.targets;
         else updated.targets = nextTargets;
+      }
+      if (opts.from !== undefined) {
+        if (nextDerivedFrom === undefined) delete updated.derivedFrom;
+        else updated.derivedFrom = nextDerivedFrom;
       }
       const currentTopic = view.ticketFilename
         ? ticketTopicFromFilename(opts.id, view.ticketFilename)

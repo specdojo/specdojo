@@ -34,6 +34,7 @@ export type RegisterAddFields = {
   conclusion: string;
   approach?: Approach;
   targets?: string[];
+  derivedFrom?: string[];
 };
 
 export type BuildScope = "register" | "controls" | "all";
