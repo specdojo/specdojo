@@ -83,7 +83,7 @@ specdojo register add --project <project-id> --type todo \
   --title "在庫初期データの登録" --topic inventory-seed
 ```
 
-タイトルが日本語の場合は、内容を表す英語の `--topic` を小文字・ハイフン区切りで指定します。省略して `item` や日本語タイトル中の英単語だけが topic になった場合、`register add` は作成を続けたうえで警告します。警告後も、`register update --topic` で個票名と文書 ID を変更できます。
+タイトルが日本語の場合は、内容を表す英語の `--topic` を小文字・ハイフン区切りで指定します。省略して `item` や日本語タイトル中の英単語だけが topic になった場合、`register add` は作成を続けたうえで警告します。警告後も、`register update --topic` で個票名と文書 ID を変更できます。成果物や kata（実践の型）を作成・修正する todo では、`--approach <approach> --target <doc-id>` を指定して進め方と対象を宣言できます（詳細は [exec運用ガイド](exec-operation-guide.md) の「register の todo から approach で成果物・kata を作る・直す手順」を参照してください）。
 
 `--priority` は次の目安で付けます（省略時は `medium`）。
 
@@ -362,6 +362,7 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree
 
 - type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`decision` / `note` は実行対象外です。
 - 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しません。成功後は人が内容を確認して `register close` します。
+- todo 個票に `approach` と `targets` を指定した場合、成果物カタログの `done_criteria` や kata 参照を取り込んだ schedule と共通の plan が生成されます（詳細は [exec運用ガイド](exec-operation-guide.md) の「register の todo から approach で成果物・kata を作る・直す手順」を参照してください）。
 - 個票 Frontmatter の `targets` に宣言した変更対象文書は、plan 生成時に直近の自動評価（grade）結果があれば `_GRADE_FINDINGS_` として plan に展開されます。`targets` がない場合は finding を展開しません。「関連ドキュメント」は根拠や参考への導線であり、そこに wikilink があるだけでは解消対象になりません。表示は最大10文書・各20件までに制限され、超過分はサイドカーを参照するよう促します。サイドカーがない場合は「finding なし」と表示されます。
 - `--register` には複数の PJR-ID を空白区切り・カンマ区切り（またはその混在）で渡せます。指定順に1件ずつ実行し、各IDが plan/result 生成・開始・agent実行・状態遷移まで完結してから次へ進みます。重複したIDは最初の1件だけを実行します。
 - 全ID処理後にID別の成否・状態遷移・commit 結果を一覧表示します。いずれかが失敗した場合は終了コード 1 で終了します。
