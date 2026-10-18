@@ -1,0 +1,3 @@
+<specdojo_executor_evidence>
+{"final_message":"Fixed 4 points in section 10 of the branch workflow guide as per PJR-8C6E.","validations":[{"command":"npx prettier --check docs/ja/specdojo/guides/branch-workflow-guide.md","status":"passed","summary":"Formatting verified after fix"},{"command":"npm run lint:md","status":"passed","summary":"Markdown lint passed"}]}
+</specdojo_executor_evidence>
