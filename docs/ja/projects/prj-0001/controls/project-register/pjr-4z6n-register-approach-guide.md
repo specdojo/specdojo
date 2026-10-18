@@ -22,13 +22,22 @@ register の todo から approach を使って成果物と kata を作る・直�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- [[specdojo:exec-operation-guide]] に、register の todo から approach を使って成果物と kata を作る・直す手順の節がある。次を含む。
+  - 個票の frontmatter の `approach` と `targets`、`register add --approach <approach> --target <id>` での指定の仕方。
+  - 成果物（local_id）と kata（`specdojo:pjr-rulebook` などの id）の対象の書き方と、kata の approach（`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance`）の選び方。
+  - plan に DCT の `done_criteria` と個票の完了条件の両方が載ること、owner には個票の `owner` を使うこと。
+  - approach と対象の組み合わせが合わない場合は起票と実行の時点でエラーになること。
+  - `exec run --deliverable`（in-place）との違い（worktree・統合・review・登録簿の記帳）と、register の経路を勧めること。
+- 手順の例のコマンドが、実際の CLI の `--help` と一致する。
+- [[specdojo:register-operation-guide]] など、approach に触れる既存の文書と矛盾しない。必要なら参照を足す。
+- `npm run lint:md` が通る。親の検証が通る。
+- CHANGELOG に記載する場合は、未公開の版の節（`## [0.4.0] - 未定`）に書く。公開済みの版の節は変えない。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                              | 担当 | 状態 | メモ |
+| --- | ------------------------------------------------- | ---- | ---- | ---- |
+| 1   | exec のガイドに register の approach の手順を書く | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -36,4 +45,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-h72a-register-approach-execution]]（決定）
+- [[prj-0001:pjr-h06f-register-approach-plan-generation]]（実装）
