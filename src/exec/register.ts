@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, resolve } from "node:path";
 import {
   findRegisterItem,
   loadRegisterItems,
@@ -18,6 +18,14 @@ import {
   MISSING,
   registerGradeFindingsText,
 } from "./plans.js";
+import { generateRegisterApproachPlan } from "./plans-generation.js";
+import {
+  findUniqueDeliverableForKataTarget,
+  resolveDeliverableByDocId,
+  type DeliverableInfo,
+} from "./plans-core.js";
+import { collectDocIndexEntries } from "../docs/doc-index.js";
+import { resolveKataRefs, type KataRefs } from "../kata/kata.js";
 import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
 import {
   escapeMarkdownInline,
@@ -328,6 +336,13 @@ const REGISTER_PLAN_TEMPLATES: Record<RegisterTaskCategory, string> = {
   investigate: "xep-register-investigate-template.md",
 };
 
+const MAINTENANCE_TARGET_KIND = {
+  "rulebook-maintenance": "rulebook",
+  "recipe-maintenance": "recipe",
+  "sample-maintenance": "sample",
+  "template-maintenance": "template",
+} as const;
+
 // Canonical repo-root-relative path (POSIX separators, no leading slash); mirrors the
 // convention used by exec-plans for agent-consumed paths.
 function repoRelativePath(absPath: string): string {
@@ -364,9 +379,44 @@ function registerPlanFrontmatter(projectId: string, stem: string, item: PjrItem)
   return buildSpecdojoFrontmatter(inner);
 }
 
+function registerCompletionConditions(item: PjrItem, ticketPath: string | null): string {
+  if (ticketPath && existsSync(ticketPath)) {
+    const content = readFileSync(ticketPath, "utf8");
+    const body = content.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/, "");
+    const lines = body.split(/\r?\n/);
+    const heading = lines.findIndex((line) => /^##\s+(?:\d+\.\s*)?完了条件\s*$/.test(line));
+    if (heading >= 0) {
+      const endOffset = lines.slice(heading + 1).findIndex((line) => /^##\s+/.test(line));
+      const end = endOffset >= 0 ? heading + 1 + endOffset : lines.length;
+      const conditions = lines
+        .slice(heading + 1, end)
+        .join("\n")
+        .trim();
+      if (conditions) return conditions;
+    }
+  }
+  return item.description && item.description !== "_TODO_"
+    ? escapeMarkdownInline(item.description)
+    : "- 個票に明示的な完了条件がないため、タイトルと概要を追加条件として扱う。";
+}
+
+function indexedDocumentPath(targetId: string): string {
+  const repoRoot = specdojoRootDir();
+  const indexed = collectDocIndexEntries(join(repoRoot, "docs"), repoRoot)[targetId];
+  if (!indexed) {
+    throw new Error(`Target document id is not resolvable via the document index: ${targetId}`);
+  }
+  const withoutLine = indexed.replace(/:\d+$/, "");
+  return relative(repoRoot, resolve(repoRoot, withoutLine)).replace(/\\/g, "/");
+}
+
 export async function generateRegisterPlan(opts: {
   executionPath: string;
   projectId: string;
+  catalogPath?: string;
+  rolesPath?: string;
+  viewpointsPath?: string;
+  projectContext?: readonly string[];
   registerPaths: RegisterPaths;
   item: PjrItem;
   stem: string;
@@ -374,6 +424,56 @@ export async function generateRegisterPlan(opts: {
 }): Promise<{ planPath: string; category: RegisterTaskCategory }> {
   const { item } = opts;
   const category = requireRunnableRegisterItem(item);
+  const ticketPath = ticketPathFromItem(item, opts.registerPaths.projectRegisterPath);
+
+  if (item.approach) {
+    const [targetId] = item.targets ?? [];
+    if (!targetId || (item.targets?.length ?? 0) !== 1) {
+      throw new Error(`Register item ${item.id} approach requires exactly one target document id.`);
+    }
+    const maintenanceKind = MAINTENANCE_TARGET_KIND[
+      item.approach as keyof typeof MAINTENANCE_TARGET_KIND
+    ] as keyof KataRefs | undefined;
+    let deliverable: DeliverableInfo | null = null;
+    let refs: KataRefs | undefined;
+    if (maintenanceKind) {
+      deliverable = opts.catalogPath
+        ? findUniqueDeliverableForKataTarget(opts.catalogPath, targetId, maintenanceKind)
+        : null;
+      refs = deliverable
+        ? resolveKataRefs(deliverable.deliverable.rulebook, deliverable.deliverable.kind)
+        : { rulebook: MISSING, recipe: MISSING, sample: MISSING, template: MISSING };
+      refs = { ...refs, [maintenanceKind]: indexedDocumentPath(targetId) };
+    } else {
+      if (!opts.catalogPath) {
+        throw new Error(
+          `Register item ${item.id} approach requires catalog_path to resolve ${targetId}.`,
+        );
+      }
+      deliverable = resolveDeliverableByDocId(opts.catalogPath, opts.projectId, targetId).info;
+    }
+
+    const planPath = await generateRegisterApproachPlan({
+      executionPath: opts.executionPath,
+      projectId: opts.projectId,
+      catalogPath: opts.catalogPath ?? "",
+      ...(opts.rolesPath ? { rolesPath: opts.rolesPath } : {}),
+      ...(opts.viewpointsPath ? { viewpointsPath: opts.viewpointsPath } : {}),
+      ...(opts.projectContext ? { projectContext: opts.projectContext } : {}),
+      taskId: item.id,
+      title: item.title,
+      description: item.description,
+      ...(item.owner && item.owner !== "-" && item.owner !== "_TODO_" ? { owner: item.owner } : {}),
+      approach: item.approach,
+      targets: item.targets ?? [],
+      deliverable,
+      ...(refs ? { refs } : {}),
+      additionalConditions: registerCompletionConditions(item, ticketPath),
+      ...(opts.outPath ? { outPath: opts.outPath } : {}),
+      stem: opts.stem,
+    });
+    return { planPath, category };
+  }
 
   const templatePath = execTemplatePath(REGISTER_PLAN_TEMPLATES[category]);
   if (!existsSync(templatePath)) {
@@ -386,7 +486,6 @@ export async function generateRegisterPlan(opts: {
   const planPath = opts.outPath ?? join(plansDir, `${opts.stem}-plan.md`);
   const resultRef = `${repoRelativePath(opts.executionPath)}/exec/results/${opts.stem}-result.md`;
 
-  const ticketPath = ticketPathFromItem(item, opts.registerPaths.projectRegisterPath);
   const values: Record<string, string> = {
     _FRONTMATTER_: registerPlanFrontmatter(opts.projectId, opts.stem, item),
     _PJR_ID_: item.id,

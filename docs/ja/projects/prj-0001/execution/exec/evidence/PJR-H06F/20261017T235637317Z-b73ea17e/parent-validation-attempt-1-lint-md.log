@@ -1,0 +1,16 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md:358:382 error MD056/table-column-count Table column count [Expected: 12; Actual: 14; Too many cells, extra data will be missing]
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-owner.md:409:382 error MD056/table-column-count Table column count [Expected: 12; Actual: 14; Too many cells, extra data will be missing]
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-priority.md:22:382 error MD056/table-column-count Table column count [Expected: 12; Actual: 14; Too many cells, extra data will be missing]
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-status.md:130:382 error MD056/table-column-count Table column count [Expected: 12; Actual: 14; Too many cells, extra data will be missing]

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -122,6 +122,64 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     };
   }
 
+  async function writeCatalog(rulebook = "specdojo:pjr-rulebook"): Promise<string> {
+    const catalogPath = path.join(dir, "catalog");
+    await mkdir(catalogPath, { recursive: true });
+    await writeFile(
+      path.join(catalogPath, "dct-test.yaml"),
+      [
+        "id: dct-test",
+        "type: project",
+        "status: draft",
+        "project_id: prj-test",
+        "domain: test",
+        "base_path: docs/test",
+        "groups:",
+        "  - name: test",
+        "    deliverables:",
+        "      - local_id: overview",
+        "        name: Test Overview",
+        "        kind: work",
+        "        overview: Test deliverable overview.",
+        "        path: overview.md",
+        `        rulebook: ${rulebook}`,
+        "        done_criteria:",
+        "          - text: catalog criterion is satisfied",
+        "            roles: [ARC]",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    return catalogPath;
+  }
+
+  async function writeTicket(): Promise<string> {
+    const registerPath = makeRegisterPaths().projectRegisterPath;
+    await mkdir(registerPath, { recursive: true });
+    const filename = "pjr-test-approach.md";
+    await writeFile(
+      path.join(registerPath, filename),
+      [
+        "# PJR-TEST approach plan",
+        "",
+        "## 1. 概要",
+        "",
+        "Test overview.",
+        "",
+        "## 2. 完了条件",
+        "",
+        "- register-specific criterion is satisfied",
+        "",
+        "## 3. 作業内容",
+        "",
+        "- test",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    return `[pjr-test-approach](./${filename})`;
+  }
+
   it("アンダースコア入り識別子や _TODO_ を含む項目でも MD049/MD050 違反を出さない", async () => {
     const outPath = path.join(dir, "plan.md");
     await generateRegisterPlan({
@@ -196,15 +254,19 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     expect(content).toContain("origin: register");
   });
 
-  it("個票に approach があっても後続対応までは従来の register plan を生成する", async () => {
+  it("成果物 approach は schedule と同じテンプレートに DCT と個票の完了条件を載せる", async () => {
     const outPath = path.join(dir, "plan-with-item-approach.md");
+    const catalogPath = await writeCatalog();
+    const ticket = await writeTicket();
     await generateRegisterPlan({
       executionPath: path.join(dir, "execution"),
       projectId: "prj-test",
+      catalogPath,
       registerPaths: makeRegisterPaths(),
       item: makeItem({
         approach: "fully-guided",
-        targets: ["prj-test:cdfd-overview"],
+        targets: ["prj-test:overview"],
+        ticket,
       }),
       stem: "xep-pjr-test",
       outPath,
@@ -213,9 +275,40 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     const content = await readFile(outPath, "utf8");
 
     expect(content).toContain("origin: register");
-    expect(content).toContain("targets:\n    - prj-test:cdfd-overview");
-    expect(content).not.toContain("approach: fully-guided");
+    expect(content).toContain("approach: fully-guided");
+    expect(content).toContain("targets:\n    - prj-test:overview");
     expect(content).toContain("# Edit Plan: PJR-TEST");
+    expect(content).toContain("Test Overview");
+    expect(content).toContain("catalog criterion is satisfied");
+    expect(content).toContain("## 個票の追加完了条件");
+    expect(content).toContain("register-specific criterion is satisfied");
+  });
+
+  it("kata maintenance approach は指定した kata id を直接の編集対象にする", async () => {
+    const outPath = path.join(dir, "plan-with-kata-approach.md");
+    const catalogPath = await writeCatalog();
+    const ticket = await writeTicket();
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      catalogPath,
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({
+        approach: "rulebook-maintenance",
+        targets: ["specdojo:pjr-rulebook"],
+        ticket,
+      }),
+      stem: "xep-pjr-test",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+
+    expect(content).toContain("origin: register");
+    expect(content).toContain("approach: rulebook-maintenance");
+    expect(content).toContain("targets:\n    - specdojo:pjr-rulebook");
+    expect(content).toContain("docs/ja/specdojo/rulebooks/pjr-rulebook.md");
+    expect(content).toContain("register-specific criterion is satisfied");
   });
 
   it("個票が targets を宣言していなければ plan frontmatter に targets が含まれない", async () => {

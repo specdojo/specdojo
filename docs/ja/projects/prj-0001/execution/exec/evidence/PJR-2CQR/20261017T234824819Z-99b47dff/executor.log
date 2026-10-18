@@ -1,0 +1,18 @@
+プロジェクト登録簿項目 PJR-2CQR「実行中の routine が前回の結果のまま表示される」の対応を完了しました。
+
+### 実施内容
+
+1. **実行中状態の導入**:
+   - [`RoutineStateEntry`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/routine/definition.ts#L67-L74) の `last_result` に `"running"` を許容する [`RoutineStateResult`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/routine/definition.ts#L65) 型を追加しました。
+   - `routine run` の開始時に状態を更新する [`recordRoutineStart`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/routine/routine.ts#L94-L107) を実装し、`last_run` の更新とともに `last_result` を `"running"` に設定し、前回の `last_reason` および `last_action_results` を消去するようにしました。
+   - 実行終了時に今回の実行結果（`success` / `failure` / `skipped`）および理由・段別結果を更新する [`recordRoutineCompletion`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/routine/routine.ts#L109-L125) を実装しました。
+2. **運用ガイド・設計の更新**:
+   - [`routine-operation-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/docs/ja/specdojo/guides/routine-operation-guide.md#L242-L246) に、実行開始時に `running` が記録され `routine list` で `(running)` と表示されること、および異常終了により `running` が残った場合でも時刻に基づく次回の due 判定には影響しない仕様を明記しました。
+3. **個票の更新**:
+   - 個票 [`pjr-2cqr-routine-state-running-shows-previous-result.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/docs/ja/projects/prj-0001/controls/project-register/pjr-2cqr-routine-state-running-shows-previous-result.md#L52-L71) の「4. 対応結果」セクションに解決内容、確認結果、再発防止策を記載しました。
+4. **単体テストの追加**:
+   - [`routine.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/tests/src/routine/routine.test.ts#L425-L508) に、`formatRoutineLastRun` による `running` 表示、`recordRoutineStart` / `recordRoutineCompletion` による状態遷移、および異常終了で `running` が残った場合の due 判定のテストを追加しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-2CQR: `routine run` 開始時の `last_result: running` 記録と前回の結果クリア、終了時の結果反映、運用ガイドおよび個票の更新、単体テストの追加を完了しました。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-2cqr-routine-state-running-shows-previous-result.md docs/ja/specdojo/guides/routine-operation-guide.md src/routine/definition.ts src/routine/routine.ts tests/src/routine/routine.test.ts","status":"passed","summary":"変更した Markdown および TypeScript ファイルを Prettier で正常に整形しました。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"成果物カタログ検証（catalog validate）が正常に合格しました。"}]}
+</specdojo_executor_evidence>
