@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-14T22:18:36Z"
   due_on: null
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=.claude/agents/claude-executor.md, .claude/agents/claude-expert-ex…"
 ---
 
 # PJR-TSP6 agent の定義を役割ごとの 1 ファイルにまとめる
