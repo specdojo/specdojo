@@ -20,6 +20,7 @@ import {
   reporterOutputSchemaForMode,
   type ReporterOutput,
 } from "./reporter-output.js";
+import { repoEnvironmentVariableName } from "./task-repos.js";
 
 export {
   REPORTER_OUTPUT_SCHEMA,
@@ -713,8 +714,25 @@ function declaredRepos(
 }
 
 /**
- * Identifies a command that targets a declared product repository, either through
- * `--prefix <repo>` (the repository name or its configured path) or a `<repo>:<path>` argument.
+ * True when a command references a shell variable without mistaking a longer variable name for
+ * the requested one. Both `$NAME` and `${NAME}` forms are recognized.
+ */
+function referencesShellVariable(command: string, variable: string): boolean {
+  if (command.includes("${" + variable + "}")) return true;
+  const reference = `$${variable}`;
+  let offset = command.indexOf(reference);
+  while (offset >= 0) {
+    const next = command[offset + reference.length];
+    if (next === undefined || !/[A-Za-z0-9_]/u.test(next)) return true;
+    offset = command.indexOf(reference, offset + reference.length);
+  }
+  return false;
+}
+
+/**
+ * Identifies a command that targets a declared product repository through `--prefix <repo>` (the
+ * repository name or its configured path), `$SPECDOJO_REPO_<NAME>` / its braced form, or a
+ * `<repo>:<path>` argument.
  */
 function productRepoCommand(
   command: string,
@@ -732,6 +750,10 @@ function productRepoCommand(
       command: normalizeValidationCommand(command.replace(PREFIX_OPTION_PATTERN, " ")),
     };
   }
+  const environmentRepo = repos.find((candidate) =>
+    referencesShellVariable(command, repoEnvironmentVariableName(candidate.name)),
+  );
+  if (environmentRepo) return { repo: environmentRepo, command };
   const tokens = command.split(" ");
   const repo = repos.find((candidate) =>
     tokens.some((token) => token.startsWith(`${candidate.name}:`)),

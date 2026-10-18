@@ -1011,6 +1011,8 @@ describe("reporter structured output", () => {
       "npx --prefix specdojo-lp prettier --write src/pages/index.ts",
       "npm --prefix specdojo-lp run build",
       "npm --prefix ../specdojo-lp/ run build",
+      'npx prettier --write "$SPECDOJO_REPO_SPECDOJO_LP/src/pages/index.ts"',
+      'npx prettier --write "${SPECDOJO_REPO_SPECDOJO_LP}/src/pages/index.ts"',
     ])("accepts %s when the product repository lacks the tool", (command) => {
       const input = evidence();
       input.changes = [{ path: "specdojo-lp:src/pages/index.ts", status: "M" }];
@@ -1039,6 +1041,8 @@ describe("reporter structured output", () => {
     it.each([
       "npx prettier --write specdojo-lp:src/pages/index.ts",
       "npm --prefix specdojo-lp run build",
+      'npx prettier --write "$SPECDOJO_REPO_SPECDOJO_LP/src/pages/index.ts"',
+      'npx prettier --write "${SPECDOJO_REPO_SPECDOJO_LP}/src/pages/index.ts"',
     ])("blocks %s when the product repository provides the tool", (command) => {
       const input = evidence();
       input.changes = [{ path: "specdojo-lp:src/pages/index.ts", status: "M" }];

@@ -35,13 +35,15 @@ runner は agent に `SPECDOJO_REPO_<NAME>` でプロダクトリポジトリの
 | 項目     | 内容                                                                                                                                                                                                                                                                                                                 |
 | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 原因     | runner は agent に `SPECDOJO_REPO_<NAME>`（`src/exec-task-repos.ts`）でプロダクトリポジトリの worktree の場所を渡す。`not_applicable` の判定（`src/exec-reporter.ts` の `productRepoCommand`）は `--prefix <repo>` と `<repo>:<path>` だけを認識し、環境変数の形はプロジェクトリポジトリの `package.json` で判定する |
-| 対応策   | _UNDECIDED_: 候補は (1) `productRepoCommand` が `$SPECDOJO_REPO_<NAME>` / `${SPECDOJO_REPO_<NAME>}` を含むコマンドを該当リポジトリとして判定する、(2) executor への指示で `<repo>:<path>` か `--prefix <repo>` の形で記録させる。(1) は agent の書き方に依存しない                                                   |
+| 対応策   | `productRepoCommand` が `$SPECDOJO_REPO_<NAME>` / `${SPECDOJO_REPO_<NAME>}` を含むコマンドを該当リポジトリとして判定する。agent のコマンド表記を既存の `<repo>:<path>` / `--prefix <repo>` だけに制限せず、runner が渡す環境変数をそのまま使えるようにする                                                           |
 | 依存事項 | なし                                                                                                                                                                                                                                                                                                                 |
 | 完了条件 | `$SPECDOJO_REPO_<NAME>` でプロダクトリポジトリを指すコマンドの `not_applicable` が、そのリポジトリの `package.json` で判定される。単体テストで確認する                                                                                                                                                               |
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `src/exec/reporter.ts` の `productRepoCommand` が、宣言済みリポジトリ名から導出した `$SPECDOJO_REPO_<NAME>` と `${SPECDOJO_REPO_<NAME>}` の参照を認識するようにした。非 braced 形式は変数名の後続文字も確認し、より長い環境変数名との誤一致を避ける。
+- プロジェクトリポジトリとプロダクトリポジトリで Prettier の導入状態を逆にした単体テストへ両形式を追加し、対象のプロダクトリポジトリの `package.json` で `not_applicable` を受理・拒否することを固定した。
+- `docs/ja/specdojo/guides/exec-config-guide.md` の判定仕様へ、環境変数によるプロダクトリポジトリ指定を追記した。
 
 ## 5. 関連ドキュメント
 
