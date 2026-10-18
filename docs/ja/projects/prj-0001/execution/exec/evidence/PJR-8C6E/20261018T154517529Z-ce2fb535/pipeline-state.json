@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-8C6E",
   "run_id": "20261018T154517529Z-ce2fb535",
-  "updated_at": "2026-10-18T16:01:09.865Z",
+  "updated_at": "2026-10-18T16:01:25.831Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-8c6e-20261018T154517Z-7859-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma-executor",
       "attempts": 1,
       "started_at": "2026-10-18T16:01:09.865Z",
-      "completed_at": null,
+      "completed_at": "2026-10-18T16:01:25.831Z",
       "artifact_ref": null
     }
   },

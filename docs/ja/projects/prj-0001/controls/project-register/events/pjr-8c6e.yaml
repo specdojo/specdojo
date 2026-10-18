@@ -48,3 +48,16 @@
       from: open
       to: in-progress
   previous_event_id: reg_268d8657f24c46ca8a64d64b845abd8f
+- v: 1
+  id: reg_11d23cc9eb83490581437298f415989f
+  ts: "2026-10-18T16:01:25Z"
+  action: review
+  actor: gemma-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2ab33956ab154eb48054e33900d2a3db
