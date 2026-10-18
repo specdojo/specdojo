@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-0jjb-pipeline-e2e-test-timeout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T02:21:23Z"
   due_on: null
+  completed_at: "2026-10-18T06:32:11Z"
+  conclusion: pipeline-e2e のテストの中の 20 秒の上限 4 件を外して全体の上限 30 秒に従わせ、kata の approach のテストを一時ディレクトリの中で完結させた。単独の時間は pipeline-e2e が約 36 秒から約 25 秒、register-plan-escape が約 1.3 秒になった。並行の run が多いと全体の上限も超えるため、並行は少数に抑える
 ---
 
 # PJR-0JJB pipeline-e2e の統合テストが負荷で 20 秒の上限を超えて親の検証を落とす
