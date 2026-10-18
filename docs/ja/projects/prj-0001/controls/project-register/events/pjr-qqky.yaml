@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_db06e614572f490896aa435c355b9d2f
+  ts: "2026-10-17T08:39:39Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-X8Y9 の調査で循環が 6 組見つかり、利用者が decision として扱うことを承認した（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: src の機能どうしの循環する依存をほどく方針を決める
+    - field: description
+      from: ""
+      to: src の移動の後に見つかった機能どうしの循環 6 組（exec と register・schedule・grade・job、grade と review、catalog と docs）をほどく方針を決める。exec の汎用の部品を shared へ移す範囲、ほどいた後に依存の向きの規則を足すか、進める順番を含む
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_ea9e5e94412e45749ef5366597fdb7bb
+  ts: "2026-10-17T08:45:37Z"
+  action: close
+  actor: naoji3x
+  from_status: open
+  to_status: decided
+  reason: 利用者が orchestrator との会話で推奨案を承認した（2026-10-17）
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: exec の汎用の部品のうち他の機能が使う部分を src/shared へ移し、残る循環を 1 件ずつ直し、循環がなくなった組から依存の向きの規則を足す
+  previous_event_id: reg_db06e614572f490896aa435c355b9d2f

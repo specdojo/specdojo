@@ -119,3 +119,17 @@ terms:
     englishName: finding
     definition: 評価によって発見された改善点や問題点（評価結果の構成要素）。
     category: tm-evaluation
+  - id: tm-filing
+    term: 起票
+    englishName: filing
+    definition: 登録簿に 1 件の項目を新しく作ること。`register add` に当たる。記帳の 1 つの具体例（記帳の一部）であり、状態遷移や結論の記録ではない。
+    notes: 記帳（tm-record-keeping）の 1 要素。起票は必ず記帳に含まれる。register の技（Waza）としての呼び名は記帳である。
+    category: tm-exec-log
+    relatedTerms: [tm-register, tm-record-keeping]
+  - id: tm-record-keeping
+    term: 記帳
+    englishName: record-keeping
+    definition: 登録簿へ書き込むこと全般。起票、状態遷移、結論の記録、commit を含む。register の技（Waza）としての呼び名でもある。
+    notes: 起票（tm-filing）は記帳の一部である。[[specdojo:specdojo-overview-guide]] の『register を「記帳」と呼びます』に一致する。
+    category: tm-exec-log
+    relatedTerms: [tm-register, tm-filing]

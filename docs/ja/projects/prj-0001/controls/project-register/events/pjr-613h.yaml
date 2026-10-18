@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_aa5a179cedc14ad9a4bd02c08d837059
+  ts: "2026-10-17T09:13:21Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-X8Y9 の親の検証（test-unit）で、変更と関係なく失敗した（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ENOBUFS のテストが負荷によって失敗する
+    - field: description
+      from: ""
+      to: tests/src/exec/worktree.test.ts の reports ENOBUFS のテストは、子プロセスに 64 KB を書かせて maxBuffer 1 KB で止められることを確かめる。負荷が高いと子プロセスが止められる前に書き終えて終了コード 0 になり、status が null でなくなって失敗する
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_69965dec6e654da58aa74ec2c4470dfe
+  ts: "2026-10-17T10:03:20Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_aa5a179cedc14ad9a4bd02c08d837059
+- v: 1
+  id: reg_69b43d8cc7624676857cf100deaacae8
+  ts: "2026-10-17T10:13:50Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_69965dec6e654da58aa74ec2c4470dfe
+- v: 1
+  id: reg_e5736c360e2947518192318872a06021
+  ts: "2026-10-17T10:26:57Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に、そのテストを 20 回続けて流してすべて通り、子プロセスが残らないことを確かめた（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: ENOBUFS のテストの子プロセスが止められるまで書き続けるようにし、確かめる中心を result.error の ENOBUFS にした。src の動作は変えていない
+  previous_event_id: reg_69b43d8cc7624676857cf100deaacae8

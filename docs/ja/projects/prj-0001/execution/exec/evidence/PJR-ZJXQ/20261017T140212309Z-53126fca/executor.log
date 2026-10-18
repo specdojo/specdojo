@@ -1,0 +1,14 @@
+実装を完了しました。
+
+- 個票 schema に `approach` と単一 `targets` 制約を追加。
+- `register add/update --approach --target` を実装。複数 `--target`、更新時の削除にも対応。
+- 文書索引、DCT、kata 種別の組み合わせを保存前に検証。
+- event 履歴、競合統合、規則、コマンドリファレンス、CHANGELOG、個票を更新。
+- register plan は後続タスクまで従来方式を維持する回帰テストを追加。
+- 指示どおり result ファイルは編集していません。
+
+主な実装は [approach.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZJXQ/src/register/approach.ts) と [create-commands.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZJXQ/src/register/create-commands.ts) です。親 runner 担当の test・typecheck・schema 検証は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の approach/targets、CLI指定、対象種別検証、履歴・文書・回帰テストを実装した。resultは未編集。","validations":[{"command":"npx prettier --write <変更対象ファイル>","status":"passed","summary":"変更したTypeScript・YAML・Markdownを整形"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿と派生ビューの生成に成功"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"全カタログ検証に成功。既存の未作成成果物に関する警告のみ"},{"command":"node --import tsx -e \"import {validateRegisterApproachTargetsForProject as v} from './src/register/approach.ts'; v({projectId:'prj-0001',approach:'fully-guided',targets:['cdfd-overview']}); v({projectId:'prj-0001',approach:'rulebook-maintenance',targets:['specdojo:pjr-rulebook']}); console.log('approach validation smoke: ok');\"","status":"passed","summary":"成果物とrulebookの実データを使った組み合わせ検証に成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { gitEnvironment } from "../../src/git-environment.js";
+import { gitEnvironment } from "../../src/shared/git-environment.js";
 
 const scriptPath = path.resolve("tools/src-move-codemod.mjs");
 const fixtures: string[] = [];
@@ -41,6 +41,7 @@ function createFixture(): { root: string; repo: string; mappingPath: string } {
     ].join("\n"),
   );
   writeFixtureFile(repo, "src/beta.ts", "export const beta = 2;\n");
+  writeFixtureFile(repo, "src/legacy.ts", "export const legacy = 3;\n");
   writeFixtureFile(repo, "src/shared.ts", "export const shared = 1;\n");
   writeFixtureFile(
     repo,
@@ -61,8 +62,18 @@ function createFixture(): { root: string; repo: string; mappingPath: string } {
   );
   writeFixtureFile(
     repo,
+    "tests/src/alpha-behavior.test.ts",
+    'import { alpha } from "../../src/alpha.js";\nvoid alpha;\n',
+  );
+  writeFixtureFile(
+    repo,
     "tests/src/beta.integration.test.ts",
     'import { beta } from "../../src/beta.js";\nvoid beta;\n',
+  );
+  writeFixtureFile(
+    repo,
+    "tests/legacy.test.ts",
+    'import { legacy } from "../src/legacy.js";\nvoid legacy;\n',
   );
   writeFixtureFile(
     repo,
@@ -70,6 +81,17 @@ function createFixture(): { root: string; repo: string; mappingPath: string } {
     'import { alpha } from "../src/alpha.js";\nvoid alpha;\n',
   );
   writeFixtureFile(repo, "docs/guide.md", "See `src/alpha.ts` and `dist/alpha.js`.\n");
+  writeFixtureFile(
+    repo,
+    "docs/ja/projects/example/controls/project-register/history.md",
+    "Historical `src/alpha.ts` and `dist/alpha.js`.\n",
+  );
+  writeFixtureFile(
+    repo,
+    "docs/ja/projects/example/execution/results/result.md",
+    "Execution record `src/alpha.ts` and `dist/alpha.js`.\n",
+  );
+  writeFixtureFile(repo, "logs/previous.log", "Logged `src/alpha.ts` and `dist/alpha.js`.\n");
   git(repo, "add", ".");
   git(repo, "commit", "-m", "fixture");
 
@@ -78,6 +100,9 @@ function createFixture(): { root: string; repo: string; mappingPath: string } {
     `${JSON.stringify({
       "src/alpha.ts": "src/feature/alpha.ts",
       "src/beta.ts": "src/feature/renamed.ts",
+      "src/legacy.ts": "src/feature/legacy.ts",
+      "tests/src/alpha.test.ts": "tests/src/feature/alpha.test.ts",
+      "tests/src/alpha-behavior.test.ts": "tests/src/feature/alpha-behavior.test.ts",
     })}\n`,
     "utf8",
   );
@@ -105,10 +130,17 @@ describe("tools/src-move-codemod.mjs", () => {
     expect(dryRunOutput).toContain("DRY RUN: no files will be changed");
     expect(dryRunOutput).toContain("MOVE src/alpha.ts -> src/feature/alpha.ts");
     expect(dryRunOutput).toContain(
+      "MOVE tests/src/alpha-behavior.test.ts -> tests/src/feature/alpha-behavior.test.ts",
+    );
+    expect(dryRunOutput).toContain(
       "MOVE tests/src/beta.integration.test.ts -> tests/src/feature/renamed.integration.test.ts",
     );
+    expect(dryRunOutput).toContain("MOVE tests/legacy.test.ts -> tests/src/feature/legacy.test.ts");
     expect(dryRunOutput).toContain("DETECT path-construction src/feature/alpha.ts:2");
     expect(dryRunOutput).toContain("DETECT literal-path docs/guide.md:1");
+    expect(dryRunOutput).not.toContain("controls/project-register/history.md");
+    expect(dryRunOutput).not.toContain("execution/results/result.md");
+    expect(dryRunOutput).not.toContain("logs/previous.log");
     expect(git(repo, "status", "--short")).toBe("");
 
     const output = runCodemod(repo, mappingPath);
@@ -133,8 +165,14 @@ describe("tools/src-move-codemod.mjs", () => {
       'from "../../../src/feature/alpha.js"',
     );
     expect(
+      readFileSync(path.join(repo, "tests/src/feature/alpha-behavior.test.ts"), "utf8"),
+    ).toContain('from "../../../src/feature/alpha.js"');
+    expect(
       readFileSync(path.join(repo, "tests/src/feature/renamed.integration.test.ts"), "utf8"),
     ).toContain('from "../../../src/feature/renamed.js"');
+    expect(readFileSync(path.join(repo, "tests/src/feature/legacy.test.ts"), "utf8")).toContain(
+      'from "../../../src/feature/legacy.js"',
+    );
     expect(readFileSync(path.join(repo, "tools/check.ts"), "utf8")).toContain(
       'from "../src/feature/alpha.js"',
     );

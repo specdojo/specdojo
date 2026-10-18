@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { gitEnvironment } from "../../src/exec-worktree.js";
+import { gitEnvironment } from "../../src/exec/worktree.js";
 
 const scriptPath = path.resolve("tools/worktree/open-agent-worktree.sh");
 const fixtures: string[] = [];

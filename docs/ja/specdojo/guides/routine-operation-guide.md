@@ -69,9 +69,9 @@ review agent は、`exec run` の `--review-by` / `--reporter-by`、Job の `tas
 
 action の `commit: true` は互換として残しています。`task.review` を宣言していない Job でも `commit: true` なら同じ流れで実行しますが、新しい routine では推奨しません。Job が `task.review` を宣言している場合は Job を優先し、`commit` を省略しても、`false` を指定しても review を経て統合します。
 
-統合前 review を宣言した Job は本体の checkout では実行せず、`exec/<project-id>-<run-id>` の worktree で実行します。runner は Job Run の plan・result・evidence・Run JSON と Job が更新した成果物だけを `chore(routine): …` の commit にし、commit 本文へ Job Run ID と `succeeded` / `failed` を記録します。本体 checkout にある利用者の未 commit 変更は commit 対象に入りません。
+統合前 review を宣言した Job は本体の checkout では実行せず、`exec/<project-id>-<run-id>` の worktree で実行します。runner は Job Run の plan・result・evidence・Run JSON と Job が更新した成果物だけを `chore(routine): …` の commit にし、commit 本文へ Job Run ID と `succeeded` / `partial` / `failed` を記録します。本体 checkout にある利用者の未 commit 変更は commit 対象に入りません。
 
-出力 commit の後、runner は `mode: review` の plan/result を作ります。review executor は score・verdict・finding・失敗文書と Job の完了条件を照合しますが、Job Run 出力は修正しません。Run が `succeeded` で verdict が `complete` または `complete-with-findings` の場合だけ、runner は現在の統合先へ `--no-ff` で merge し、worktree と exec branch を撤去します。Run が失敗した場合、review が未完了の場合、またはそれ以外の verdict の場合は統合せず、worktree を保持して routine の `last_result: failure`、`last_reason`、review result、Job Run JSON に理由を残します。
+出力 commit の後、runner は `mode: review` の plan/result を作ります。review executor は score・verdict・finding・失敗文書と Job の完了条件を照合しますが、Job Run 出力は修正しません。Run が `succeeded` で verdict が `complete` または `complete-with-findings` の場合に加え、Run が `partial` で verdict が `complete-with-findings` の場合も、runner は現在の統合先へ `--no-ff` で merge し、worktree と exec branch を撤去します。`partial`を統合した routine は`last_result: partial`と記録し、`routine list`でも部分成功を表示します。Run が失敗した場合、review が未完了の場合、またはそれ以外の verdict の場合は統合せず、worktree を保持して routine の `last_result: failure`、`last_reason`、review result、Job Run JSON に理由を残します。
 
 #### waiting Run の確認・統合・破棄
 
@@ -123,7 +123,7 @@ action:
       mode: strict
 ```
 
-配列は先頭から1段ずつ同期的に実行し、前段が完了してから次段を起動します。途中の段が `failure` または `skipped` でも、失敗分を後段で拾う運用を可能にするため、残りの段を続行します。全体結果は `failure`、`skipped`、`success` の優先順で集約します。つまり、1段でも失敗すれば `failure`、失敗がなく1段でも skip なら `skipped`、全段成功時だけ `success` です。段間の待機と失敗時中断の切り替えは提供しません。
+配列は先頭から1段ずつ同期的に実行し、前段が完了してから次段を起動します。途中の段が `failure`、`partial`、`skipped` でも、失敗分を後段で拾う運用を可能にするため、残りの段を続行します。全体結果は `failure`、`partial`、`skipped`、`success` の優先順で集約します。つまり、1段でも失敗すれば `failure`、失敗がなく1段でも部分成功なら `partial`、そのどちらもなく1段でも skip なら `skipped`、全段成功時だけ `success` です。段間の待機と失敗時中断の切り替えは提供しません。
 
 配列 action の実行後は、通常の `last_result` に加えて段ごとの `index`（1始まり）、`kind`、`result` を `last_action_results` へ記録します。単一オブジェクトの action では `last_action_results` を記録せず、既存の状態形式を維持します。
 
@@ -190,7 +190,7 @@ Job runnerは、この入口をmaterialize済みの引数で1回起動し、コ�
 
 scriptの`--run-id`にはJob Run IDを渡すため、rate limitや中断後に同じJob Runをretryすると完了済みの処理を飛ばして再開します。通常の agent / apply 失敗は `<execution_path>/grade/pipeline/` に完了段、失敗段、本文ハッシュ、連続失敗回数を保存します。次の日次実行枠でも本文ハッシュが同じなら失敗段から再開し、本文が変われば古い到達状況を使わず1段目から評価します。保存済み state の `stage_total` が現在の構成と異なる場合は、古い grade の日時にかかわらず完了扱いへ移行せず、state を削除して1段目から再評価します。rate limit は失敗回数に数えません。既定で同じ段が3回連続失敗すると再試行から外し、結果の `retry_exhausted` 行で人手対応を報告します。`period`は対象期間の表示だけに使い、実行や再開の同一性には使いません。
 
-Job Definition は script を `if` の条件として起動し、非0の終了コードを保存してそのまま Job runner へ返します。これにより、後続の `results.tsv` 表示が rate limit や中断の終了コードを0へ上書きしません。script が正常終了した場合だけ `grade pipeline complete:` と `results.tsv` が command evidence に揃い、analysis reporter が起動します。
+Job Definition は script を `if` の条件として起動し、終了コードを保存してそのまま Job runner へ返します。script は全件完了を0、完了文書と失敗文書の混在を2、全件失敗を1、rate limitを75で返します。grade Jobは`partial_exit_code: 2`を宣言するため、2だけが`partial`になりanalysis reporterとreviewへ進みます。Jobは0と2のどちらでも`results.tsv`をcommand evidenceへ出力します。reviewは、`passed`が1件以上あり、`failed`の文書と失敗段がpipeline stateへ記録され次回の`--incomplete`で再試行できる場合だけ`complete-with-findings`を選べます。全件失敗、rate limit、中断、未開始文書があるRunは統合せず`waiting`にします。
 
 ## 2. due判定と実行
 
@@ -242,7 +242,7 @@ specdojo routine run --project <project-id> --due --dry-run
 [routine] skipped rtn-daily-register-sweep: job action skipped
 ```
 
-`routine-state.json` の `last_result` は `success`、`failure`、`skipped` のいずれかです。`skipped` は project busy または Job precondition の skip を表し、failure 件数や終了コードへ加算されません。`routine list` では最終実行時刻の後ろに `(skipped)` と表示されます。
+`routine-state.json` の `last_result` は、実行開始時に `running` が記録され、実行完了時に `success`、`partial`、`failure`、`skipped` のいずれかへ更新されます。実行中は前回の結果や理由を残さず、`routine list` の最終実行の欄には `(running)` と表示されます（例: `2026-10-15T21:00:03Z (running)`）。実行プロセスの異常終了などにより `running` の表示が残った場合でも、次回の due 判定は `last_run` の時刻（cron の場合は `last_scheduled_for`）に基づいて判定されるため、次回の実行機会には影響しません。`partial` は完了分の統合と失敗分の再試行待ちが混在する状態であり、`routine list` では `(partial)` と表示されます。`skipped` は project busy または Job precondition の skip を表し、failure 件数や終了コードへ加算されません。`routine list` では最終実行時刻の後ろに `(skipped)` と表示されます。
 
 ### 2.1. devcontainerでのcron設定
 

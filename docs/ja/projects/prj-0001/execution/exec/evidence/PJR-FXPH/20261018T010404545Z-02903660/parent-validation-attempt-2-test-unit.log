@@ -1,0 +1,69 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-FXPH
+
+Updated ticket status → ready: /tmp/specdojo-ticket-qbf9Dj/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-qKUKPA/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-1M7QNE/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-DU7sK8/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-yvQKAL/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-kD39AG/pjr-0001-topic.md
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-18T02:07:27.251Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-18T02:06:28.443Z.
+fallback complete
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+ ❯ tests/src/exec/register-plan-escape.test.ts (17 tests | 1 failed) 7761ms
+     × kata maintenance approach は指定した kata id を直接の編集対象にする 7328ms
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-gm9ryP/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-gm9ryP/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-gm9ryP/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-gm9ryP/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-gE76FE/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-ih25C2/outputs/partial.txt
+
+ Test Files  1 failed | 133 passed (134)
+      Tests  1 failed | 2103 passed (2104)
+   Start at  11:05:45
+   Duration  79.84s (transform 4.64s, setup 858ms, import 38.65s, tests 87.61s, environment 9ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+problem
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > kata maintenance approach は指定した kata id を直接の編集対象にする
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/exec/register-plan-escape.test.ts:287:3
+    285|   });
+    286|
+    287|   it("kata maintenance approach は指定した kata id を直接の編集対象にする", async () =…
+       |   ^
+    288|     const outPath = path.join(dir, "plan-with-kata-approach.md");
+    289|     const catalogPath = await writeCatalog();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

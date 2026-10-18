@@ -1,0 +1,15 @@
+実装を完了しました。
+
+- 指名 agent 向けに `stop` / `wait` / `fallback` を追加
+- CLI と `rate_limit_policy.pinned` に対応
+- reset／retry-after／cooldown と既定8時間上限を実装
+- evidence・pipeline state・result・登録簿イベントに再開履歴を記録
+- schedule 自動選択の既存 fallback は維持
+- 単体テスト、schema、ガイド、コマンドリファレンス、CHANGELOG、個票を更新
+- result ファイルは pipeline 指示どおり編集していません
+
+親 runner が lint・型検査・unit/integration・schema 検証を実行します。統合後の実 agent による確認は orchestrator の作業として個票に残しています。
+
+<specdojo_executor_evidence>
+{"final_message":"指名 agent の rate limit に対する wait/fallback/stop、CLI・exec-defaults 設定、監査記録、テスト、schema、文書を実装した。","validations":[{"command":"git diff --name-only | xargs npx prettier --write","status":"passed","summary":"変更対象を Prettier で整形した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"catalog 検証は成功。既存の未作成文書に関する警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"},{"command":"node --import tsx -e \"Promise.all([import('./src/exec/run/agent.ts'),import('./src/exec/run/register-command.ts'),import('./src/exec/run/lifecycle-commands.ts'),import('./src/exec/run/schedule-task.ts'),import('./src/exec/results.ts'),import('./src/exec/limit.ts')]).then(()=>console.log('module imports: ok'))\"","status":"passed","summary":"変更した主要モジュールを正常に読み込めた。"},{"command":"specdojo exec run --register <PJR-ID> --executor-by <agent> --reporter-by <agent> --worktree","status":"requires_human","summary":"統合後に orchestrator が実 agent を1回起動し、統合完了まで確認する。"}]}
+</specdojo_executor_evidence>

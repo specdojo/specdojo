@@ -29,3 +29,48 @@
     - field: registered
       from: ""
       to: "2026-10-16"
+- v: 1
+  id: reg_a4484765e28f401f91b7fa26045ff1c3
+  ts: "2026-10-16T14:16:45Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c56e40cf424d4d6bb05cbea2bc6764fd
+- v: 1
+  id: reg_ec0334771a92409196db3e5f6457c6b0
+  ts: "2026-10-16T14:29:23Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a4484765e28f401f91b7fa26045ff1c3
+- v: 1
+  id: reg_440f5b0fccb74cbca2041bfcc8397b29
+  ts: "2026-10-16T14:31:19Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に、rename の認識・git log --follow・dist の出力先・移す前の 0.3.1 との --help（5 コマンド）・dashboard build を確かめた（2026-10-16）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-16"
+    - field: conclusion
+      from: "-"
+      to: codemod で dashboard と timeline の 7 ファイルとテスト 2 件を src/dashboard・tests/src/dashboard へ移し、検出の一覧から履歴のファイルを除くよう codemod を直した。git は 9 件を rename と認識し、dist の古い出力は残らず、--help は移す前の 0.3.1 と一致した
+  previous_event_id: reg_ec0334771a92409196db3e5f6457c6b0

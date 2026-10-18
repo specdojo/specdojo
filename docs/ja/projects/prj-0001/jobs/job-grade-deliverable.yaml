@@ -38,6 +38,9 @@ inputs:
 task:
   mode: command
   owner: ARC
+  # run-per-document.sh は、完了した成果物と失敗した成果物が混在すると 2 を返す。
+  # runner はこの値だけを review 可能な partial とし、それ以外の非0は failed にする。
+  partial_exit_code: 2
   precondition:
     command: |
       selection=$(
@@ -77,12 +80,23 @@ task:
       '
     skip_when: empty-output
   command: |
-    npm run build
+    if npm run build; then
+      :
+    else
+      build_status=$?
+      printf 'grade prerequisite build failed: exit_code=%s\n' "$build_status" >&2
+      exit 1
+    fi
     if tools/grade/run-per-document.sh --run-id {{job_run_id}} --stages 1 --stage-1-executor agy-expert-executor --target deliverable --limit {{inputs.limit}} --dependency-changed={{inputs.dependency_changed}} --rulebook-changed={{inputs.rulebook_changed}} --unreviewed={{inputs.unreviewed}} --changed-only={{inputs.changed_only}} --ungraded={{inputs.ungraded}} --incomplete={{inputs.incomplete}} --rubric-outdated={{inputs.rubric_outdated}}; then
       cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
     else
       grade_status=$?
-      printf 'grade pipeline failed: run_id=%s exit_code=%s\n' '{{job_run_id}}' "$grade_status" >&2
+      cat logs/grade/runs/per-document/{{job_run_id}}/results.tsv
+      if [ "$grade_status" -eq 2 ]; then
+        printf 'grade pipeline partial: run_id=%s exit_code=%s\n' '{{job_run_id}}' "$grade_status" >&2
+      else
+        printf 'grade pipeline failed: run_id=%s exit_code=%s\n' '{{job_run_id}}' "$grade_status" >&2
+      fi
       exit "$grade_status"
     fi
   analysis:
@@ -95,6 +109,8 @@ task:
         `--run-id` で再開できる状態かを確認する。
       - `failed` の段があるか。ある場合は agent 側の失敗、`grade apply` による executor の
         marker の機械変換の拒否、done_criteria の過不足のいずれかへ切り分ける。
+      - Run が `partial` の場合は、`passed` の成果物が1件以上あり、各 `failed` の成果物と
+        失敗段が pipeline state に記録されて次の Run の `--incomplete` で選択できるかを確認する。
       - `retry_exhausted` の成果物があるか。ある場合は失敗段と連続失敗回数を示し、人手での
         原因解消または state の再開判断を促す。
       - agy 単段の verdict と score に、評価設定の見直しを要する偏りがあるか。
@@ -112,4 +128,4 @@ task:
       executor: claude-expert-review-executor
       reporter: claude-reporter
 run:
-  idempotency_key: "{{job_id}}:command-v7:{{scheduled_at}}:{{inputs.limit}}:{{inputs.dependency_changed}}:{{inputs.rulebook_changed}}:{{inputs.unreviewed}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}:{{inputs.rubric_outdated}}"
+  idempotency_key: "{{job_id}}:command-v8:{{scheduled_at}}:{{inputs.limit}}:{{inputs.dependency_changed}}:{{inputs.rulebook_changed}}:{{inputs.unreviewed}}:{{inputs.changed_only}}:{{inputs.ungraded}}:{{inputs.incomplete}}:{{inputs.rubric_outdated}}"

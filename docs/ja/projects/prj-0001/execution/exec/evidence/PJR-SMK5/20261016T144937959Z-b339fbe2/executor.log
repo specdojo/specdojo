@@ -1,0 +1,14 @@
+対応完了しました。
+
+- ソース19件・テスト13件を `src/catalog/`、`src/schedule/` 以下へ移動
+- codemod を明示的なテスト移動へ対応
+- import、動的 import、基準パス、設計書、カタログ参照を更新
+- ヘルプ14件・生成物65件は移動前後で差分なし
+- `dist/` の旧出力は残存なし
+- 個票を更新済み。result ファイルは executor 指示に従い未編集
+- `catalog validate` の既存 `based_on` 警告以外に問題なし
+- 親 runner 対象の lint・typecheck・test・schema 検証は実行していません
+
+<specdojo_executor_evidence>
+{"final_message":"schedule と catalog のソース19件・テスト13件を機能別ディレクトリへ移動し、参照・設計書・個票を更新した。ヘルプ14件と生成物65件は前後一致し、旧 dist 出力も残っていない。","validations":[{"command":"npm run build","status":"passed","summary":"TypeScript build が成功し、dist/catalog と dist/schedule に新配置の19ファイルを生成した"},{"command":"diff -ru tmp/pjr-smk5-before/help tmp/pjr-smk5-after/help","status":"passed","summary":"catalog・schedule と各サブコマンドのヘルプ14件に差分なし"},{"command":"node dist/specdojo.js build --scope catalog --project prj-0001","status":"passed","summary":"移動前後とも catalog 生成に成功した"},{"command":"node dist/specdojo.js build --scope exec --project prj-0001","status":"passed","summary":"移動前後とも schedule を入力とする exec refresh に成功した"},{"command":"diff -ru tmp/pjr-smk5-before/generated tmp/pjr-smk5-after/generated","status":"passed","summary":"catalog・schedule・execution の生成物65件に差分なし"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"エラーなし。未作成文書に関する既存の based_on 警告のみ"},{"command":"node --check tools/src-move-codemod.mjs && node --check tools/catalog-validate-if-configured.mjs","status":"passed","summary":"変更した JavaScript ツールの構文検査に成功した"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

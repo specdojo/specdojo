@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_218e4495fa0349189c8d5a5c43521986
+  ts: "2026-10-17T11:14:31Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-GBWW の実行が checkpoint で原因不明のまま止まった。利用者の判断で起票（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: checkpoint の確認の git の失敗が原因を残さない
+    - field: description
+      from: ""
+      to: src/exec/worktree-ops-lifecycle.ts は checkpoint の前に git diff --cached --quiet で変更を確かめ、終了コードが 0 と 1 以外なら Failed to inspect execution checkpoint changes. とだけ出す。git の終了コードと stderr を記録しないため、2026-10-17 の PJR-GBWW で止まった原因を特定できなかった
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_57aff0d6188f4388b88fc78e7d7638a9
+  ts: "2026-10-17T11:51:55Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_218e4495fa0349189c8d5a5c43521986
+- v: 1
+  id: reg_e060a2da1c814e68ad85ef3158f62901
+  ts: "2026-10-17T12:02:10Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_57aff0d6188f4388b88fc78e7d7638a9
+- v: 1
+  id: reg_f78c0a80e496468db815fbecd4048eca
+  ts: "2026-10-17T12:09:54Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に、修正後の runner で exec run --register（PJR-JSEY、bde36e3c0）が統合まで通った（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: checkpoint の確認の git の失敗で、終了コード・stdout・stderr を失敗のログに残し、エラーのメッセージに原因の要約を含めるようにした。src/exec の同じように原因を残さない箇所も直した
+  previous_event_id: reg_e060a2da1c814e68ad85ef3158f62901

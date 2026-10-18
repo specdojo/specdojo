@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8d3a282f65084180b79e820e8a570245
+  ts: "2026-10-17T12:18:01Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の指摘（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: approach のない result の第 4 章を「進め方」に改める
+    - field: description
+      from: ""
+      to: approach のない実行（register の todo など）の result では、見出しを「4. 進め方」にし、記入の指示をどう進めたか・根拠にした文書や規約に変える。approach のある実行は今のまま
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_ccc68ea5d039474e8f4484f5ca3cd87f
+  ts: "2026-10-18T07:23:14Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8d3a282f65084180b79e820e8a570245
+- v: 1
+  id: reg_56c1ff9faf134fb382516e2f148e37a2
+  ts: "2026-10-18T07:41:16Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ccc68ea5d039474e8f4484f5ca3cd87f
+- v: 1
+  id: reg_3600374f7f73415fa25adfb09d757efa
+  ts: "2026-10-18T07:42:38Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分・テスト・親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: approach のない実行の result の第 4 章を「4. 進め方」にし、どう進めたかと根拠にした文書・規約を書く指示に変えた。approach のある実行は今の見出しのまま。eject した古い雛形でも見出しを差し替える。本件自身の result は修正前の runner が作ったため旧い見出しのまま
+  previous_event_id: reg_56c1ff9faf134fb382516e2f148e37a2

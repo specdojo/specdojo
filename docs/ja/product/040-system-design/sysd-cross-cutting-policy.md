@@ -166,7 +166,7 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 - **Scope（適用範囲）**: executor / reporter、in-place / worktree / trial / 分割worktree command、親runner検証、および3つのVitest実行設定。shell scriptとnpm scriptの直接Git起動はVitestの静的検査対象外とし、hookからテストを起動する境界ではVitest setupを防御点とする。
 - **Enforcement（検証）**: 共通のrepository固有環境変数一覧と`gitEnvironment()`による除去、Vitest setup、TypeScript ASTによるGit起動環境の静的検査、executor promptのGit操作禁止契約、agent worktreeのHEAD・local config比較、fixture commit後もlocal identityが未設定であること、およびrunner遷移commitの除外と危険な継承環境・Git状態変更の回帰テスト。
 - **Exception（例外）**: なし。agentが必要とするrepositoryはcwdからGit自身に再解決させる。
-- **References（参照）**: `src/git-environment.ts`、`src/exec-agent-git-state.ts`、[[prj-0001:pjr-a99j-agent-git-isolation-breach|PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した]]、[[prj-0001:pjr-76ag-test-git-env-leak-repo-corruption|PJR-76AG テストがgitフック配下でGIT_DIRを引き継ぎ実リポジトリを破壊する事故が3度目の再発をした]]、[[prj-0001:pjr-44cw-git-state-guard-false-positive|PJR-44CW git状態の検知がrunner自身の操作を誤検知して実行を止める]]。
+- **References（参照）**: `src/shared/git-environment.ts`、`src/exec/agent-git-state.ts`、[[prj-0001:pjr-a99j-agent-git-isolation-breach|PJR-A99J agentのgit操作が実リポジトリを破壊する事象が再発した]]、[[prj-0001:pjr-76ag-test-git-env-leak-repo-corruption|PJR-76AG テストがgitフック配下でGIT_DIRを引き継ぎ実リポジトリを破壊する事故が3度目の再発をした]]、[[prj-0001:pjr-44cw-git-state-guard-false-positive|PJR-44CW git状態の検知がrunner自身の操作を誤検知して実行を止める]]。
 
 ### scp-SEC-001: agent権限制約
 
@@ -184,7 +184,7 @@ SpecDojo CLI、agent、実行runner、Git worktreeへ横断的に適用する責
 - **Scope（適用範囲）**: provider を問わない agent executor / reporter の in-place・worktree・register 実行。
 - **Enforcement（検証）**: CLI の固定パス定義を用い、agent 起動前後の差分を親検証前に検査する。worktree 統合時は未 commit 差分と exec branch 上の commit 済み差分を再検査し、違反パスを標準エラーへ出力して block する。
 - **Exception（例外）**: agent 向け解除設定は設けない。必要な変更は result の申し送りへ記録し、人間または対話型 orchestrator が agent 実行外で内容を確認して適用する。
-- **References（参照）**: [[prj-0001:pjr-3s8q-agent-writable-config-scope|PJR-3S8Q 実行コマンドを定義する設定ファイルは agent の書き込み範囲に含めない]]、`src/exec-agent-protected-config.ts`、`src/exec-worktree-ops.ts`。
+- **References（参照）**: [[prj-0001:pjr-3s8q-agent-writable-config-scope|PJR-3S8Q 実行コマンドを定義する設定ファイルは agent の書き込み範囲に含めない]]、`src/exec/agent-protected-config.ts`、`src/exec/worktree-ops.ts`。
 
 ## 4. 例外（DECリンク）
 

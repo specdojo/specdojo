@@ -1,0 +1,26 @@
+PJR-Z104 の対応として、plan に必ず載る要点へ検査の扱いの規則を加えました。typecheck・lint・単体テストはまだ実行していません。この stage の指示に従い、親 runner の実行に任せています。空のリポジトリでの実地確認も未了です。
+
+**変更したファイル**
+
+- `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md`
+  - `plan-essentials` の間（plan の本文に転記される要点）に、次の 3 項目を加えました。
+    - `package.json`・`.specdojo/specdojo.config.json`・hook 設定を読み、詳細側にある検査表の適用条件で、実行する検査を決める。
+    - 当てはまらない検査は実行せず、`not_applicable` と理由を記録する。当てはまる検査が 1 つもない場合も同じとする。
+    - `not_run` は、実行できたのに実行しなかった検査にだけ使う。runner は `not_run` を検証失敗として扱う。
+  - 詳細側にあった同じ規則は「要点に記した規則に従う」という一文に改め、規則の記述を要点の 1 か所だけにしました。検査の一覧の表は詳細側に残しています。
+- `tests/src/exec/plans.test.ts`: 生成した edit plan の本文に、上の規則の文言が入っていることを確かめる確認を加えました。
+- `CHANGELOG.md`: `## [0.4.0] - 未定` の節で、PJR-2219 の記載の後に今回の変更を追記しました。公開済みの版の節は変えていません。
+- 個票 `pjr-z104-plan-essentials-validation-rule.md`: 「対応結果」の節を今回の実施内容で埋めました。
+
+変更した 4 ファイルは `npx prettier --write` で整形しました（差分なし）。
+
+`git status` では `events/pjr-z104.yaml` も変更済みで、`evidence/PJR-Z104/` も追跡外として出ています。どちらも私は編集していません。
+
+**残っている確認**
+
+- 親 runner の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）の結果はまだ出ていません。
+- npm script も Markdown の lint もない空のリポジトリで、`exec run --register --worktree` の最初の実行が `review` まで進むことは、orchestrator が tarball で確かめる必要があります。sandbox からは実際の agent CLI を起動できないため、`requires_human` として引き継ぎます。
+
+<specdojo_executor_evidence>
+{"final_message":"Added the validation-handling rules (decide checks by reading package.json and hook settings against the applicability table in the details; record non-applicable checks as `not_applicable` with a reason; use `not_run` only for applicable checks that were skipped) to the `plan-essentials` block of xep-common-conventions-template.md. The duplicate rule in the details now points to the essentials. Added assertions to tests/src/exec/plans.test.ts, appended a CHANGELOG 0.4.0 entry, and filled the ticket's result section. Parent validations have not run yet.","validations":[{"command":"npx prettier --write docs/ja/specdojo/exec-templates/xep-common-conventions-template.md CHANGELOG.md tests/src/exec/plans.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-z104-plan-essentials-validation-rule.md","status":"passed","summary":"All 4 files formatted; no changes needed"},{"command":"specdojo exec run --register --worktree (first run in an empty repository from the 0.4.0 tarball)","status":"requires_human","summary":"Orchestrator must confirm that the first run reaches review in a repository with no npm scripts and no Markdown lint; the sandbox cannot launch a real agent CLI"}]}
+</specdojo_executor_evidence>

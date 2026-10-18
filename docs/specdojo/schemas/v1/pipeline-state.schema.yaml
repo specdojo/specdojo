@@ -57,6 +57,8 @@ $defs:
         format: date-time
       artifact_ref:
         type: [string, "null"]
+      rate_limit_events:
+        $ref: "#/$defs/rateLimitEvents"
       # Keys are repository names (`project` for the project repository) in integration order.
       repos:
         type: object
@@ -102,3 +104,27 @@ $defs:
         format: date-time
       artifact_ref:
         type: [string, "null"]
+      rate_limit_events:
+        $ref: "#/$defs/rateLimitEvents"
+  rateLimitEvents:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [action, from_actor, to_actor, resumed_at]
+      properties:
+        action:
+          type: string
+          enum: [wait, fallback]
+        from_actor:
+          type: string
+          minLength: 1
+        to_actor:
+          type: string
+          minLength: 1
+        resumed_at:
+          type: string
+          format: date-time
+        resume_at:
+          type: string
+          format: date-time

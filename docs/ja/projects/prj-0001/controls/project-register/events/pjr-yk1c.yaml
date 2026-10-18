@@ -16,7 +16,7 @@
       to: agent の別名の解決と記録を実装する
     - field: description
       from: ""
-      to: "--executor-by などの指定と自動選択で別名を実体へ解決し、model を command_template の {model} で CLI へ渡す。イベントと result の actor には実体の名前を記録する。 PJR-ZM1K の決定に基づく（Y8P9 の完了後、0.4.0）"
+      to: --executor-by などの指定と自動選択で別名を実体へ解決し、model を command_template の {model} で CLI へ渡す。イベントと result の actor には実体の名前を記録する。 PJR-ZM1K の決定に基づく（Y8P9 の完了後、0.4.0）
     - field: type
       from: ""
       to: todo
@@ -29,3 +29,112 @@
     - field: registered
       from: ""
       to: "2026-10-15"
+- v: 1
+  id: reg_36b93c4d7c394c03a3a10534d905b2e2
+  ts: "2026-10-18T07:22:08Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2c3372fbc5784ee990084b4bfdb6ca51
+- v: 1
+  id: reg_3b66dd52b19e4c2c82eec17dcbd5d5ad
+  ts: "2026-10-18T07:32:53Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: typecheck"
+  previous_event_id: reg_36b93c4d7c394c03a3a10534d905b2e2
+- v: 1
+  id: reg_dd3f072aba8f472f8acd2655ab25a6f7
+  ts: "2026-10-18T07:42:08Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: typecheck"
+      to: "-"
+  previous_event_id: reg_3b66dd52b19e4c2c82eec17dcbd5d5ad
+- v: 1
+  id: reg_2ca9c9122f504187b3dba19acfee5ac6
+  ts: "2026-10-18T07:51:39Z"
+  action: wait
+  actor: agy-claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:01.439Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:01.439Z"
+  previous_event_id: reg_dd3f072aba8f472f8acd2655ab25a6f7
+- v: 1
+  id: reg_e9a32ebdb8834813addefb54028a6efa
+  ts: "2026-10-18T07:54:25Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:01.439Z"
+      to: "-"
+  previous_event_id: reg_2ca9c9122f504187b3dba19acfee5ac6
+- v: 1
+  id: reg_d31e9da161fd49de9755455b4e6f287a
+  ts: "2026-10-18T08:05:45Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e9a32ebdb8834813addefb54028a6efa
+- v: 1
+  id: reg_ccac3884a0284d8482cb8d937e240b8c
+  ts: "2026-10-18T08:18:07Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor で型検査の失敗、claude-expert-executor でやり直し、gemma26-reporter）の差分・親検証と JSEY の動作確認を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: --executor-by などの指定と自動選択で、別名を実体へ解決するようにした（無効な実体は使わない）。実体の model を command_template の {model} で渡し、model のない今の名簿は command_params のまま動く。イベントと result の actor には実体の名前を記録する。統合後の runner で JSEY が通った
+  previous_event_id: reg_d31e9da161fd49de9755455b4e6f287a

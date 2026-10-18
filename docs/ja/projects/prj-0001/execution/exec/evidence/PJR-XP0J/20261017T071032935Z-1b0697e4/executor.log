@@ -1,0 +1,13 @@
+実装を完了しました。
+
+- 実装 74 件・テスト 66 件を `src/exec/`・`tests/src/exec/` へ移動
+- 相対 import 756 か所を codemod で更新
+- 全 123 コマンドの help が移動前後で完全一致
+- build 成功、旧 `dist/exec*.js` は残存なし
+- 現行設計書・カタログ・パス依存テストを更新
+- 個票を更新し、result は executor 指示どおり未編集
+- 追加分割は現時点では見送り。`run` 18 件、`schedule` 11 件を将来の候補としました
+
+<specdojo_executor_evidence>
+{"final_message":"exec 実装74件とテスト66件を src/exec・tests/src/exec へ移し、import・パス参照・設計書・個票を更新した。全123コマンドの help は一致し、build と catalog validate も成功した。","validations":[{"command":"npm run build","status":"passed","summary":"ビルド成功。dist/exec に74件を生成し、dist直下に旧exec出力は残っていない"},{"command":"diff -ru tmp/exec-help-before-final tmp/exec-help-after-final","status":"passed","summary":"トップレベルを含む全123コマンドの help に差分なし"},{"command":"node tools/build-if-stale.mjs","status":"passed","summary":"hook入口が正常終了"},{"command":"{ git diff --name-only --diff-filter=M -z; find src/exec tests/src/exec -maxdepth 1 -type f -name '*.ts' -print0; } | sort -zu | xargs -0 npx prettier --write","status":"passed","summary":"変更対象のTypeScript・Markdown・YAMLを整形"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"27 catalogが成功。既存の未作成文書に関する警告166件のみ"},{"command":"git diff --cached --check","status":"passed","summary":"一時indexへ全移動先を含めた差分検査に成功"},{"command":"post-integration orchestrator smoke check: exec run --register","status":"requires_human","summary":"統合後にorchestratorが別のregister項目を1回実行し、統合完了まで確認するclose条件"}]}
+</specdojo_executor_evidence>

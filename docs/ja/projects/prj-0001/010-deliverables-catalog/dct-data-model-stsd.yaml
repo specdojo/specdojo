@@ -25,7 +25,7 @@ groups:
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/register.ts
+            path: src/register/register.ts
             purpose: 登録項目個票のstatusフィールドの許容値・状態遷移規則
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
@@ -54,7 +54,7 @@ groups:
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するタスク状態（ready/doing/blocked/done等）をevent列から再構成する規則
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
@@ -82,7 +82,7 @@ groups:
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/deliverable.ts
+            path: src/deliverable/deliverable.ts
             purpose: 成果物のspecdojo.status（draft/ready/deprecated）の許容値・状態遷移規則
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
@@ -110,7 +110,7 @@ groups:
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: routine実行結果（last_result＝success/failure/skipped）の許容値・判定・更新規則
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること
@@ -138,7 +138,7 @@ groups:
         rulebook: specdojo:stsd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/job.ts
+            path: src/job/job.ts
             purpose: Job Runのattempt状態（pending/succeeded/failed等）の許容値・判定・状態遷移規則
         done_criteria:
           - text: ステータス名・意味・成立条件と、遷移・イベント・条件が業務観点で正確に定義されていること

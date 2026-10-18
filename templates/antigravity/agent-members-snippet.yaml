@@ -3,59 +3,155 @@
 # project ごとの pm-members.yaml は人間専用なので、agent は記載しない。
 # 起動コマンドは member には書かず、.specdojo/exec-defaults.yaml の
 # providers.antigravity.command_template で定義する（exec-defaults-snippet.yaml を参照）。
-# モデルの差し替えは command_params.by_nickname で行う。
-# 既定では disabled にしてある。使う member だけ disabled を外す。
+#
+# 名簿は実体と別名の 2 段で書く（PJR-ZM1K）。
+#   members : model の系統で名付けた実体。provider・model・役割を持ち、model の ID（推論強度を含む）は
+#             実体の model の 1 か所に書く。Claude Code など既定の provider と同じ系統の model は、
+#             agy- を前に付けて区別する（agy-opus-executor など）。
+#   aliases : 従来の名前（agy-executor など）。実体を指すだけで、Job・routine・利用者の設定はそのまま動く。
+#
+# 既定では members を disabled にしてある。使う member だけ disabled を外す。
+# 別名は有効な member を指す必要があるため、下の aliases の例は、向き先の member の disabled を
+# 外したものだけを .specdojo/agent-members.yaml の aliases へ写す。
 
 version: 1
 members:
-  - nickname: agy-executor
+  - nickname: flash-executor
     disabled: true
     priority: 4
-    display_name: Antigravity Executor
+    display_name: Antigravity Flash Executor
     email: null
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-medium
     mode: edit
+    stage_role: executor
     proficiency: normal
     persona: task-executor
     capabilities: []
 
-  - nickname: agy-expert-executor
+  - nickname: flash-high-executor
     disabled: true
     priority: 3
-    display_name: Antigravity Expert Executor
+    display_name: Antigravity Flash High Executor
     email: null
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-high
     mode: edit
+    stage_role: executor
     proficiency: expert
     persona: task-executor
     capabilities: []
 
-  - nickname: agy-expert-review-executor
+  - nickname: flash-high-review-executor
     disabled: true
     priority: 3
-    display_name: Antigravity Expert Review Executor
+    display_name: Antigravity Flash High Review Executor
     email: null
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-high
     mode: review
+    stage_role: executor
     proficiency: expert
-    persona: reviewer
+    persona: multi-viewpoint-reviewer
     capabilities: []
 
-  - nickname: agy-reporter
+  - nickname: flash-reporter
     disabled: true
     priority: 4
-    display_name: Antigravity Reporter
+    display_name: Antigravity Flash Reporter
     email: null
     roles: []
     type: agent
     provider: antigravity
+    model: gemini-3.8-flash-medium
     mode: report
+    stage_role: reporter
     proficiency: normal
-    persona: reporter
+    persona: execution-reporter
     capabilities: []
+
+  # Gemini 以外の Antigravity 提供 model。自動選択では選ばれにくい priority にし、by-name で使う。
+  - nickname: agy-sonnet-executor
+    disabled: true
+    priority: 5
+    display_name: Antigravity Claude Sonnet Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    model: claude-sonnet-5-5-medium
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    capabilities: []
+
+  - nickname: agy-opus-executor
+    disabled: true
+    priority: 5
+    display_name: Antigravity Claude Opus Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    model: claude-opus-5-5-high
+    mode: edit
+    stage_role: executor
+    proficiency: expert
+    persona: task-executor
+    capabilities: []
+
+  - nickname: agy-opus-review-executor
+    disabled: true
+    priority: 5
+    display_name: Antigravity Claude Opus Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    model: claude-opus-5-5-high
+    mode: review
+    stage_role: executor
+    proficiency: expert
+    persona: multi-viewpoint-reviewer
+    capabilities: []
+
+  - nickname: agy-gpt-oss-executor
+    disabled: true
+    priority: 5
+    display_name: Antigravity GPT OSS Executor
+    email: null
+    roles: []
+    type: agent
+    provider: antigravity
+    model: gpt-oss-120b-medium
+    mode: edit
+    stage_role: executor
+    proficiency: normal
+    persona: task-executor
+    capabilities: []
+
+# 別名の例（従来の名前 -> 実体）。向き先の member を有効にしたものだけを写す。
+# aliases:
+#   - nickname: agy-executor
+#     alias_of: flash-executor
+#   - nickname: agy-expert-executor
+#     alias_of: flash-high-executor
+#   - nickname: agy-expert-review-executor
+#     alias_of: flash-high-review-executor
+#   - nickname: agy-reporter
+#     alias_of: flash-reporter
+#   - nickname: agy-claude-executor
+#     alias_of: agy-sonnet-executor
+#   - nickname: agy-claude-expert-executor
+#     alias_of: agy-opus-executor
+#   - nickname: agy-claude-expert-review-executor
+#     alias_of: agy-opus-review-executor
+#   - nickname: agy-gpt-executor
+#     alias_of: agy-gpt-oss-executor

@@ -1,0 +1,57 @@
+レビューが終わりました。判定は `complete-with-findings` を提案します。Job Run 自体は正常に完了しており、統合可能です。ただし、Job Run result の分析は Job 固有の確認事項を一部満たしていません。成果物と result は変更していません。
+
+## 評価結果の確認
+
+- **鮮度**: 最終の鮮度確認として次の4コマンドを実行しました。どの出力にも、今回評価した10文書は含まれていません。
+  - `grade list --target deliverable --project prj-0001 --changed-only`
+  - `grade list --target deliverable --project prj-0001 --dependency-changed`
+  - `grade list --target deliverable --project prj-0001 --incomplete`（出力なし）
+  - `grade state --exhausted`（出力なし）
+- **未評価の残り**: `--changed-only` では別の16文書（`sysd-*`、`tsd-home-mac-*`、`pm-raci.md` など）が残っています。`limit=10` による次回以降の分で、今回の run の失敗ではありません。
+- **評価の変化**: サイドカー10件の `verdict` と `score` は前回からすべて変わっていません。
+  - 変わったのは `graded_at`、`source_hashes.catalog-entry`、done_criteria の `reason` の文言、一部 finding の `message_ja` の訳文です。`cdfd-plan` は F003 と F004 の並び順も入れ替わっています。
+  - `content_hash` は全件同じです。今回の再評価は本文の変更ではなく、カタログ項目の hash の変化で選ばれたと判断しました。
+
+## 判断根拠
+
+- **差分の範囲**: `593bc6c..df74c29` の27ファイルは次のものだけで、範囲外の変更は混ざっていません。
+  - Job Run の evidence、plan、result、Run JSON
+  - 10文書分の `grade/criteria/*-done-criteria.yaml` と `grade/results/*.yaml`
+- **記録どうしの整合**: 互いに一致しています。
+  - Run JSON は `state: succeeded`、attempt 1 は `exit_code: 0` です。
+  - `pipeline-state.json` は executor と reporter がともに `succeeded` です。
+  - stdout の集計は `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0` です。
+  - `results.tsv` は10行すべて `status=passed` で、`consecutive_failures` は空です。
+  - 終了コード75や中断で残った段、`failed`、`retry_exhausted` はありません。
+- **verdict と score の分布**: `pass` が1件（`cdfd-uc-deliverable` 100点）、`needs-work` が9件で、点数は65〜98点に分かれています。全件が同じ判定や同じ点数に偏ってはいないため、評価設定を見直すべき偏りはないと判断しました。
+- **未充足の done_criteria と確認担当ロール**:
+
+| 成果物 | 未充足の項目（担当ロール） |
+| --- | --- |
+| `cdfd-action` | DC-001（BA）、DC-003（PO） |
+| `cdfd-check` | DC-001（BA） |
+| `cdfd-do` | DC-002（ARC） |
+| `cdfd-onboarding` | DC-001（BA） |
+| `cdfd-plan` | DC-001（BA） |
+| `cdsd-execution` | DC-001（BA）、DC-002（ARC）、DC-003（QE） |
+| `cdsd-planning` | DC-001（BA）、DC-002（ARC）、DC-003（QE） |
+
+- 全項目が充足している成果物は `cdfd-orchestrator`、`cdfd-uc-deliverable`、`cdfd-uc-register` の3件です。このうち `cdfd-orchestrator` と `cdfd-uc-register` は、done_criteria を満たしたまま finding によって `needs-work` になっています。
+
+## 未充足事項・改善指示（finding）
+
+1. **担当ロールの未特定**: Job 固有の確認事項「未充足の done_criteria がある成果物と、その確認担当ロールを特定する」に、Job Run result が答えていません。result は「`needs-work` の成果物 = 未充足」と書いていますが、上の2件があるため正しくありません。上の表の内容を補って申し送ってください。
+2. **変更内容の書き方**: result の変更ファイル欄が「評価基準を更新しました」となっています。実際には score と verdict は変わっておらず、変わったのは日時、hash、文言だけです。この点を明記するよう、reporter の改善を検討してください。
+3. **review plan の誤記**: review plan の Job Run result のパスが `_RUN../worktrees/...-review-result.md` という崩れた値で、review result と同じパスを指しています。Job Run result の実体は `exec/results/JBR-grade-deliverable-17efae05afea-result.md` です。
+
+どれも Job の実行そのものの完了は妨げないため、`complete-with-findings` としました。
+
+## 確認できなかった範囲
+
+- `logs/grade/runs/per-document/.../results.tsv` の実ファイルは見ていません。stdout に出力された内容で確認しました。
+- 各 finding の内容が妥当かどうかは、再評価しない方針のため確かめていません。
+- `command.stderr.log` は空ファイルでした（追加0行）。
+
+<specdojo_executor_evidence>
+{"final_message":"Job Run JBR-grade-deliverable-17efae05afea のレビュー結果。判定案は complete-with-findings。差分 593bc6c..df74c29 の27ファイルは Job Run の evidence/plan/result/Run JSON と10文書分の grade criteria/results だけで、範囲外の変更はない。Run JSON（succeeded, exit_code 0）、pipeline-state（executor/reporter succeeded）、stdout（selected=10 processed=10 incomplete=0 exhausted=0、results.tsv 全10行 passed）は互いに一致する。rate limit・中断・failed・`retry_exhausted` はない。score/verdict は10件とも前回から変わらず、`content_hash` も同じ。変わったのは `graded_at`、`catalog-entry` の hash、done_criteria の reason と一部の `message_ja` の文言、cdfd-plan の F003/F004 の並び順。verdict は pass 1件、needs-work 9件で、点数は65〜98点に分かれており、評価設定を見直すべき偏りはない。鮮度確認（`--changed-only` / `--dependency-changed` / `--incomplete` / `grade state --exhausted`）の出力に対象10文書は含まれず、評価結果は最新。別の16文書は limit による次回以降の分として残る。未充足の done_criteria と担当ロール: cdfd-action DC-001(BA)・DC-003(PO)、cdfd-check DC-001(BA)、cdfd-do DC-002(ARC)、cdfd-onboarding DC-001(BA)、cdfd-plan DC-001(BA)、cdsd-execution DC-001(BA)・DC-002(ARC)・DC-003(QE)、cdsd-planning DC-001(BA)・DC-002(ARC)・DC-003(QE)。cdfd-orchestrator と cdfd-uc-register は done_criteria を満たしたまま finding で needs-work。finding: (1) Job Run result が成果物ごとの未充足 done_criteria と担当ロールを特定しておらず、『needs-work = 未充足』という不正確な記述がある。(2) 変更ファイル欄が『評価基準を更新』となっており、score/verdict が変わっていない事実を示していない。(3) review plan の Job Run result のパスが崩れた値（_RUN..）で、review result と同じパスを指す。確認できなかった範囲: logs 配下の results.tsv の実ファイル（stdout の内容で代用）、finding の内容の妥当性（再評価しない方針）。","validations":[{"command":"git diff --stat / --name-status 593bc6c52c70cdade4d099297b3134e54a58fc4c..df74c29098723937107394ecb2c2efe74b7ef833","status":"passed","summary":"27ファイルとも Job Run の出力で、範囲外の変更はない"},{"command":"node --import tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"対象10文書は含まれない（別の16文書が未評価で残る）"},{"command":"node --import tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"対象10文書は含まれない"},{"command":"node --import tsx src/specdojo.ts grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"出力なし"},{"command":"node --import tsx src/specdojo.ts grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力なし（上限到達の成果物はない）"}]}
+</specdojo_executor_evidence>

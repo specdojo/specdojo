@@ -3,29 +3,75 @@ version: 1
 document: specdojo:prj-issues-and-approach-sample
 path: docs/ja/specdojo/samples/prj-issues-and-approach-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 96
-graded_at: "2026-09-05T23:05:19.877Z"
-graded_by: codex-expert-executor
+score: 98
+graded_at: "2026-10-17T20:18:28.675Z"
+graded_by: agy-expert-executor
 content_hash: beba19946b24b3afda6879d457f26b0cc4234236c9fccd12811b904aaad781ba
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -56,5 +111,6 @@ findings:
     severity: minor
     rule: vp-qe-kata-conformance
     line: 54
-    message: 次の検討事項（ToDo）の項目に、Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルが付与されていない。
     anchor: "| 初期リリースに含める最小機能を確定する | 記録継続に必要な範囲を実行可能にする | 店主代表   |"
+    message: 次の検討事項（ToDo）の項目に、Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルが付与されていない。
+    message_ja: 次の検討事項（ToDo）の項目に、Recipe で指定された `_TODO_:` または `_UNDECIDED` ラベルが付与されていない。

@@ -1,0 +1,14 @@
+実装を完了しました。
+
+- `approach` ありの register 項目を schedule と共通の plan テンプレートで生成
+- DCT の `done_criteria` と個票の完了条件を併記
+- kata ID を直接対象とする maintenance plan に対応
+- `exec plan --register`、in-place、worktree の全経路で `approach`・`targets` を引き継ぎ
+- approach なし・成果物・kata のテストケースを追加
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-H06F/docs/ja/projects/prj-0001/controls/project-register/pjr-h06f-register-approach-plan-generation.md)の作業結果も更新
+
+整形、register build、catalog validate、生成処理のスモーク確認は成功しています。統合後の実 agent による `exec run --register` は orchestrator の close 条件として残しています。result は pipeline 指示に従い編集していません。
+
+<specdojo_executor_evidence>
+{"final_message":"register の approach 対応 plan 生成、kata maintenance 対応、実行経路へのメタデータ引き継ぎ、回帰テスト追加を完了","validations":[{"command":"npx prettier --write src/exec/plans-generation.ts src/exec/plans-core.ts src/exec/plans.ts src/exec/register.ts src/exec/run/register-core.ts src/exec/run/register-mode.ts src/exec/run/register-worktree.ts src/exec/commands.ts tests/src/exec/register-plan-escape.test.ts","status":"passed","summary":"変更した TypeScript とテストを整形"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-h06f-register-approach-plan-generation.md","status":"passed","summary":"更新した個票を整形"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"tsx CLI の IPC 制約を指定の fallback で回避し、登録簿ビューを正常生成"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"全 catalog が OK。既存の未作成成果物に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"npx specdojo exec run --register <PJR-ID>","status":"requires_human","summary":"統合後に orchestrator が実 agent CLI を使って1件実行し、統合まで確認する close 条件"}]}
+</specdojo_executor_evidence>

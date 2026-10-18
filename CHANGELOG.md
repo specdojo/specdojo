@@ -2,6 +2,53 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [0.4.0] - 2026-10-18
+
+同梱パッケージは `@specdojo/docs-lint` 0.2.1 を同時に公開します。docs-lint は 0.2.0 以降の変更（js-yaml の 5.4.3 への更新。引用符なしの日付と merge key は 4 系と同じ規則で読み込みます。PJR-RCVS）を含みます。`@specdojo/docs-site` は、この版では公開しません。
+
+### 追加機能
+
+- devcontainer の scaffold（`specdojo init --devcontainer` を含む）で、常時稼働ホスト接続用のサンプルスクリプト（`specdojo-tmux.sh.sample`）と接続元 SSH 設定サンプル（`ssh-config.sample`）を `.devcontainer/remote-host/` に生成するようにしました。`devcontainer.json` に設定された公開ポート（`appPort`・`forwardPorts`）に応じた `LocalForward` も含め、scaffold 完了時に置き場所とコピー先を案内します。`init --devcontainer` ではスクリプトの前提となるコンテナ内 tmux も自動で有効化します（PJR-CCXN）。
+- agent 名簿の alias を `--by`・`--executor-by`・`--reporter-by`・fallback の指定、Schedule / Job / routine の指名で実体へ解決し、実体の `model` を provider の `command_template` の `{model}` へ渡すようにしました。event と result の actor には実体名を記録します（PJR-YK1C）。
+- 登録項目の起票元を個票 Frontmatter の `derived_from` に記録できるようにし、`register add` / `update` の繰り返し指定可能な `--from`、元項目から派生先を辿る生成ビュー、`register history` の変更履歴に対応しました。decision から起票した todo の追跡にも同じ関係を使えます（PJR-7WME）。
+- 指名した agent が rate limit になったとき、`--on-rate-limit wait|fallback|stop` と executor / reporter 別の fallback 指定で、同じ agent の再開待ちまたは代替 agent への切替を選べるようにしました。`exec-defaults.yaml` の `rate_limit_policy.pinned` でも既定を設定でき、従来互換の既定は `stop` です（PJR-BHMH）。
+- `register add` / `update` に `--approach` と繰り返し指定できる `--target` を追加しました。個票で進め方と対象文書を宣言でき、成果物はカタログ、kata は文書索引で解決します。解決できない対象、成果物と kata の種別違い、`approach` と複数対象の組み合わせは書き込み前に拒否します（PJR-ZJXQ）。
+- `exec run --register` は、個票に `approach` があれば、schedule のタスクと同じ plan の作り方（approach のテンプレート、kata の参照、DCT の `done_criteria`）を使うようにしました。個票の完了条件は追加の条件として plan に載り、owner には個票の `owner` を使います（PJR-H06F）。
+- agent 名簿（`agent-members.yaml`）に、実体の `model`・`effort` と、実体を指す別名（`aliases`・`alias_of`）を書けるようにしました。別名の循環、存在しない実体や無効な実体を指す別名は、名簿の読み込み時にファイルと名前を示してエラーにします。今の 1 段の名簿もそのまま使えます（PJR-EANK）。
+- Job Run で、Job 定義の `partial_exit_code` に一致する終了を部分成功（`partial`）として記録し、review の判定が `complete-with-findings` なら評価できた分を統合するようにしました。grade の Job は、一部の文書の評価が失敗したときに 2 で終わります。全件の失敗・上限・中断は従来どおり `waiting` で止まります。`routine list` にも `partial` が表示されます（PJR-VGNG）。
+
+### 変更
+
+- 対話式の `specdojo init` から成果物カタログの質問を除き、`--catalog <size>` を明示した場合にだけ作成するように変更しました。導入直後の混乱を防ぎ、成果物が定まってから `catalog scaffold` で追加できるようにします。初期化の最後の案内でも `catalog scaffold` と `catalog_path` の設定手順を示します（PJR-G5AB）。
+- approach のない実行（register の todo・issue など）の result で、第 4 章の見出しを「4. 進め方」にし、記入の指示をどう進めたか・根拠にした文書や規約に改めました。approach のある実行（schedule のタスク、approach を持つ個票）は「4. 進め方と実践の型の適用」のままです（PJR-S9QF）。
+- `specdojo init --exec` と `config scaffold` が配布する agent の名簿と定義を、実体と別名の 2 段構成に改めました。実体は model の系統と役割で名付け（`sonnet-executor`・`terra-executor`・`gemma-executor`・`flash-executor` など）、`model` を持ちます。従来の名前（`claude-executor`・`codex-executor`・`opencode-executor`・`agy-executor` など）は `aliases` の別名として残し、init は選んだ provider の別名だけを書きます。claude と opencode の agent の定義は役割ごとの 1 ファイルにまとめて `model` を外し、`command_template` は `--agent {agent} --model {model}` と `command_params.by_mode` で組み立てます（`claude-expert-review-executor.md` は配布しません）。codex と antigravity の `command_params` からも `model` を外しました（PJR-8TGQ）。
+- 既存の 1 段の名簿と `--agent {nickname}` の `command_template` は変更しなくても動きます。init は既存の名簿を上書きせず、scaffold も `--force` なしでは既存の定義を上書きしません。`--force` で役割ごとの定義に置き換える場合は、exec 設定ガイドの「agent の名簿の 2 段構成と移行」の手順（実体の名前と `model` を加える、従来の名前を `aliases` へ移す、`command_params` の `model` を外す、`command_template` を改める、`--dry-run` で確かめる）で 2 段へ移してください（PJR-8TGQ）。
+- exec の plan で、共通の規約（記法・成果物規約）の全文を本文に差し込むのをやめ、守らないと失敗に直結する要点だけを残すようにしました。詳細は plan に記したパス（npm で導入した場合は `node_modules/specdojo/docs/ja/specdojo/exec-templates/xep-common-conventions-template.md`）を作業前に読むよう指示します。要点は同じファイルの `plan-essentials` マーカーの間から取り出します。既存の plan は書き換えません（PJR-2219）。要点には検査の扱い（`package.json` と hook の設定を読んで適用条件から実行する検査を決める、当てはまらない検査は `not_applicable` と理由を報告する、`not_run` は実行できたのに実行しなかった検査だけに使う）も含めます。npm script も Markdown の lint もない新しいリポジトリで、executor が詳細を読まずに `not_run` と報告し、最初の実行が止まる問題を防ぎます（PJR-Z104）。
+
+### 不具合修正
+
+- `devcontainer scaffold` が親ディレクトリを常に `/workspaces/specdojo-workspace` としていた問題を修正し、ホスト側の親名を反映するようにしました。`--workspace-name` で明示的に固定でき、`specdojo init --devcontainer` からも指定できます。既に生成済みの `.devcontainer/` は、`--force` で作り直すまで従来のままです（PJR-8GQ4）。
+- 対話式の `specdojo init` で provider などの入力を誤ると、最初から入力し直しになっていた問題を修正しました。答えを質問ごとに確かめ、誤りがあればその質問だけを聞き直します。非対話（`--yes` や引数での指定）では、従来どおり誤りの理由を出して終えます。Claude Code を選んだときの最後の案内も、`npm run orch:opus` に揃えました（PJR-B3XQ）。
+- exec の worktree を作るときに、git が一時的なエラー（dubious ownership など）を返しても実際には作成できていた場合、再試行が「branch がすでにある」で失敗していた問題を修正しました。再試行の前に目的の状態を確かめます（PJR-DT3Q）。
+- exec の checkpoint の確認で git が失敗したときに、原因が記録されなかった問題を修正しました。終了コードと stderr を失敗のログとエラーのメッセージに含めます（PJR-CY80）。
+- exec の result で、reporter が変更ファイルごとの説明を返さなかった場合に、定型文（「reporter の説明がないため、変更差分を参照。」）の代わりに Git の変更情報（追加・変更・削除・名前の変更、行数）を記録するようにしました。変更ファイルが 50 件を超える場合は、ディレクトリごとに集約して記録します（PJR-8TS6）。
+- `register build` が生成する一覧（`pjr-index.md` と派生ビュー）で、個票のタイトル・説明・結論などのセルに含まれるパイプ文字（`|`）と改行をエスケープするようにしました。セル内のパイプ文字で表の列がずれ、markdownlint（MD056）で失敗する問題を解消します（PJR-FXPH）。
+- register の plan テンプレート（`xep-register-template`・`xep-register-investigate-template`）の対象項目からサイズが大きくパスも古かった登録簿一覧（`pjr-index.md`）を外し、進め方の最初を個票のみを読む指示に改めました。文脈長の小さい agent が一覧を読んで文脈を消費し停止する問題を防ぎます（PJR-SJ0G）。
+- `routine run` の実行中に、`routine list` などが前回の結果と理由をそのまま表示していた問題を修正しました。開始時に `last_result` を `running` にし、終了時に今回の結果で上書きします（PJR-2CQR）。
+- `exec run --on-rate-limit wait` で、codex の usage limit（`try again at 11:17 PM`）の解除まで待たずに止まっていた問題を修正しました。agent の出力の全体（codex が表示した設定ファイルなどの内容を含む）から最初に見つかった時刻を使っていたため、設定ファイルの例の `resets 4:10am (UTC)` を解除の時刻と読んでいました。解除の時刻は出力の末尾の行から読みます。agy の `Resets in 4h36m50s` のような相対の形も読みます。待機を飛ばすときのログは、解除の時刻を読めない場合（元の出力の行を表示）、過ぎている場合、上限を超える場合で分けました（PJR-NJ6J）。
+
+- `npm init` が `package.json` に入れる仮の `test` script（`echo "Error: no test specified" && exit 1`）があるリポジトリで、executor が `npm test` を `not_applicable` と報告しても runner が退け、最初の実行が `waiting` で止まっていた問題を修正しました。仮の `test` script（引用符や空白だけが違う変種を含む）は script がないものとみなし、共通の規約の検査の表にも同じ扱いを書きました。本物の test script がある場合は従来どおり退けます。`specdojo init` は利用者の `package.json` を書き換えません（PJR-6EF8）。
+
+### 文書
+
+- README の始め方を、ランディングページ（<https://specdojo.org/>）と同じ `npx specdojo init` の手順と `<アプリ>-workspace/<アプリ>-specdojo` の構成に揃え、specdojo.org へのリンクを加えました（PJR-Y79W）。
+- exec 運用ガイドに、登録簿（register）の todo から approach を使って成果物や kata（実践の型）を作成・修正する手順を追加しました。個票での approach と target の指定方法、kata 保守の approach の選び方、plan 生成内容、組み合わせ検証、および `exec run --deliverable` との違いと推奨経路を記載しました（PJR-4Z6N）。
+- オーケストレーター運用ガイドに、Claude Code などの plan モードの plan と register の使い分けと、plan の下書きを decision と todo へ書き写す流れを加えました（PJR-YFBW）。
+
+### 内部の変更
+
+- `src/` を機能ごとのサブディレクトリ（`exec/`・`register/`・`grade/`・`shared/` など）へ分け、機能の間の依存の向きを ESLint で検査するようにしました。CLI の動作と出力は変わりません（PJR-V23P・PJR-X8Y9 ほか）。
+
 ## [0.3.1] - 2026-10-16
 
 同梱パッケージの `@specdojo/docs-lint` と `@specdojo/docs-site` は、この版では公開しません（docs-lint の js-yaml の更新は次の docs-lint の版で公開します）。

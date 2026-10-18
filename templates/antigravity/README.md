@@ -57,4 +57,8 @@ agy --add-dir "$(pwd)" --model gemini-3.8-flash-high -i "$(cat .specdojo/antigra
 
 ## executor / reporter として使う
 
-`exec-defaults-snippet.yaml` を `.specdojo/exec-defaults.yaml` の `providers` へ、`agent-members-snippet.yaml` の member 定義をリポジトリ共通の `.specdojo/agent-members.yaml` の `members` へ写します。agent は project ごとの `pm-members.yaml` へ書きません。使えるモデル ID は `agy models` で確認します。モデル ID は推論強度を含むため、`--effort` を併用すると起動に失敗します。headless 実行に必要な command は上記のグローバル permission で許可し、`--dangerously-skip-permissions` は使いません。
+`exec-defaults-snippet.yaml` を `.specdojo/exec-defaults.yaml` の `providers` へ、`agent-members-snippet.yaml` の member 定義をリポジトリ共通の `.specdojo/agent-members.yaml` の `members` へ写します。agent は project ごとの `pm-members.yaml` へ書きません。
+
+名簿は実体と別名の 2 段で書きます。実体（`flash-executor`・`agy-opus-executor` など）は model の系統で名付け、model の ID を `model` に持ちます。従来の名前（`agy-executor`・`agy-claude-executor` など）は `aliases` で実体を指す別名にします。スニペット末尾の `aliases` の例は、向き先の member を有効にしたものだけを写します（別名は無効な member を指せません）。
+
+使えるモデル ID は `agy models` で確認します。モデル ID は推論強度を含むため、`--effort` を併用すると起動に失敗します。headless 実行に必要な command は上記のグローバル permission で許可し、`--dangerously-skip-permissions` は使いません。

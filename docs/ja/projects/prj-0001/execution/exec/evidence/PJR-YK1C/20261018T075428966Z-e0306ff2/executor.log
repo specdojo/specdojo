@@ -1,0 +1,24 @@
+中断前の実装を見直し、alias が実体へ解決されていなかった 2 か所を直しました。ただし、型検査・lint・単体テストはまだ実行していません（親 runner が実行する分）。追加したテストもまだ一度も走らせていません。
+
+**今回直したこと**
+- `src/schedule/build.ts`：strategy の `agent` に別名を書くと、`schedule build` の検証で「見つからない」エラーになっていました。別名を実体へ解決してから `stage_role` を確かめるようにし、既存の別名による指名がそのまま通るようにしました。
+- `src/exec/worktree-command.ts`：claim 済み actor が条件を満たすかの照合で、別名のまま候補と比べていました。実体名で比べるように直しました。
+- `tests/src/schedule/build.test.ts`：別名の実体が executor の役割を持つ場合に、エラーなく通るテストを追加しました。
+- 個票 `pjr-yk1c-agent-alias-resolution.md`：「対応結果」に上の 2 点を追記しました。
+
+**前回の変更の確認**
+次は差分を読んで、要件どおりであることを確かめました。
+- 別名を実体へ解決する共通処理を、`--by`・`--executor-by`・`--reporter-by`・fallback 指定と、Job・routine・grade の名前解決に適用している。
+- `{model}` を実体の `model` で展開する。`model` のない従来の member は今までどおり `command_params` の値を使う。
+- イベントと result の actor には実体名だけを記録し、指定した別名は残さない。理由は個票に書いてあり、actor は所有権の判定に使うので二重に持たないため、別名と実体の対応は agent 名簿を正本とするため、の 2 点。
+- CHANGELOG（`## [0.4.0] - 未定` の節）とガイドへの追記。
+
+**確認できていないこと**
+- trial では、別名で指定した場合に内部の結果をその別名のまま扱います。起動するコマンドは実体から解決されるので動作には影響しませんが、記録上どう表示されるかは確かめていません。
+- 完了条件にある統合後の `exec run --register` の実行は、実際の agent CLI を起動するため、この環境ではできません。統合後に PJR-JSEY の手順で 1 回流して確かめる必要があります。
+
+自分で実行した検査は、変更した Markdown と TS の prettier 整形、Markdown 3 ファイルの markdownlint、`catalog validate` で、いずれもエラーはありませんでした（`catalog validate` は `based_on` に関する WARN が出ましたが、今回の変更とは関係ありません）。
+
+<specdojo_executor_evidence>
+{"final_message":"前回中断した実装（別名を実体へ解決する共通処理、`{model}` の展開、actor の実体名への統一、CHANGELOG・ガイド・個票の更新）を差分で確認し、別名に対応していなかった 2 か所を直した。1 つ目の `src/schedule/build.ts` では、strategy の `agent` の検証で別名を実体へ解決してから `stage_role` を確かめる。2 つ目の `src/exec/worktree-command.ts` では、claim 済み actor の候補照合を実体名で行う。`tests/src/schedule/build.test.ts` に別名の指名が通るテストを追加し、個票の対応結果に追記した。typecheck・lint・単体テストは親 runner が実行するため未実行で、追加テストもまだ走らせていない。確認できていないのは 2 点。1 つ目は trial-commands で別名指定時に内部の扱いが別名のまま残る点で、コマンドは実体から解決される。2 つ目は統合後の `exec run --register` での実動作確認で、PJR-JSEY の手順で人が行う必要がある。","validations":[{"command":"npx prettier --write src/schedule/build.ts src/exec/worktree-command.ts tests/src/schedule/build.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md docs/ja/specdojo/guides/exec-config-guide.md CHANGELOG.md","status":"passed","summary":"整形済み（変更なし）"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md docs/ja/specdojo/guides/exec-config-guide.md CHANGELOG.md","status":"passed","summary":"エラーなし"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全 dct が OK、ERROR 0 件（既存の based_on WARN のみ）"},{"command":"specdojo exec run --register (PJR-JSEY smoke)","status":"requires_human","summary":"統合後に実 agent CLI を起動して、別名の解決と actor の記録を 1 回確かめる"}]}
+</specdojo_executor_evidence>

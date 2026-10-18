@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_dabd5eb168b9408b9f14da39be259684
+  ts: "2026-10-18T10:24:50Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: --on-rate-limit wait が codex の usage limit で待たずに止まる
+    - field: description
+      from: ""
+      to: "2026-10-18 19:04 に PJR-8TGQ を --on-rate-limit wait と codex-expert-executor で流したところ、codex が「try again at 11:17 PM」の usage limit を返し、runner は Pinned-agent wait skipped: resume time is invalid or exceeds 28800s を出して待たずに waiting で止まった。解除までは約 4 時間で、待てる上限（28,800 秒）より短い。src/exec/limit.ts の解除時刻の読み取りはこの形に対応しているように見えるため、どこで解除時刻が失われるかを調べて直す"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-BHMH"]'
+- v: 1
+  id: reg_4a35ca3461f2476da44fe621f58196f0
+  ts: "2026-10-18T10:48:50Z"
+  action: start
+  actor: opus-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_dabd5eb168b9408b9f14da39be259684
+- v: 1
+  id: reg_5ba9a19908f9438daed51533ab474092
+  ts: "2026-10-18T11:05:39Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4a35ca3461f2476da44fe621f58196f0
+- v: 1
+  id: reg_98b74d08c0f14c25a524533979f3f649
+  ts: "2026-10-18T11:15:40Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor・gemma26-reporter）の差分・テスト・親検証を確認し、JSEY で runner を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 解除の時刻を出力の全体の最初の一致で読んでいたため、codex が作業中に表示した exec-defaults.yaml のコメントの例（resets 4:10am (UTC)）を本物の通知（try again at 11:17 PM）より先に拾っていた。末尾の行から読むようにし、agy の Resets in 4h36m50s の形も読むようにした。待機を飛ばすときのログを、読み取れない・過ぎている・上限を超えるに分けた。統合後の runner で JSEY が通った
+  previous_event_id: reg_5ba9a19908f9438daed51533ab474092

@@ -20,6 +20,9 @@
         },
         "gemma4:26b-mlx-work-64k": {
           "name": "Gemma 4 26B-MLX MoE Work (64k)"
+        },
+        "gemma4:26b-mlx-work-128k": {
+          "name": "Gemma 4 26B-MLX MoE Work (128k)"
         }
       }
     },

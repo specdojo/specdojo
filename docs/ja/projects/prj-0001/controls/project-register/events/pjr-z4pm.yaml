@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d681ce7715774f7fbef1d94d0a880b07
+  ts: "2026-10-17T08:45:20Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: review と grade、docs と catalog の循環をほどく
+    - field: description
+      from: ""
+      to: review から grade/result と、docs から catalog/build の 1 件ずつの依存を直す。 PJR-QQKY の決定に基づく。動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_7ed641bd29564e38b3aa54cb27efc68a
+  ts: "2026-10-17T23:23:59Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d681ce7715774f7fbef1d94d0a880b07
+- v: 1
+  id: reg_d1d8721880234375bb4ba09cdd5be6ef
+  ts: "2026-10-17T23:44:11Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7ed641bd29564e38b3aa54cb27efc68a
+- v: 1
+  id: reg_65674b0b2d7d420f9b45244b55d6237e
+  ts: "2026-10-17T23:48:12Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に残る循環を数え、grade・yaml-pages・catalog の 18 コマンドの --help が移す前の 0.3.1 と一致することを確かめた（2026-10-18）。機能に属する処理が shared に移った点は PJR-WSET で線引きを見直す
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: review/grade.ts が使う grade の結果を src/shared/grade-result.ts、yaml-pages が使うカタログの描画とパスを src/shared/catalog-render.ts・catalog-paths.ts へ移し、grade と review、catalog と docs の循環をほどいた。残る循環は exec と grade・register・job の 3 組
+  previous_event_id: reg_d1d8721880234375bb4ba09cdd5be6ef

@@ -29,3 +29,80 @@
     - field: registered
       from: ""
       to: "2026-10-15"
+- v: 1
+  id: reg_8791ca999d7a42849d2c7baa757e4dee
+  ts: "2026-10-18T09:53:21Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_115d8eee1b0141839aa76702ab55b11b
+- v: 1
+  id: reg_f0bdb5bb3a4842f5805b918917925043
+  ts: "2026-10-18T10:03:45Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_8791ca999d7a42849d2c7baa757e4dee
+- v: 1
+  id: reg_4db3277d08ca42b58b0c980d38ef60c1
+  ts: "2026-10-18T10:23:39Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_f0bdb5bb3a4842f5805b918917925043
+- v: 1
+  id: reg_372b148d00c54b8e8fe07d4376f928ab
+  ts: "2026-10-18T10:40:27Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4db3277d08ca42b58b0c980d38ef60c1
+- v: 1
+  id: reg_bccab994d87443da9f350b1a6d386d31
+  ts: "2026-10-18T10:48:28Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor・gemma26-reporter）の差分・親検証と、空のリポジトリでの init の結果を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: init --exec と config scaffold が配布する名簿と定義の雛形を、実体（sonnet・terra・gemma・flash の系統と役割）と今の名前の別名の 2 段構成に改め、起動のコマンドを --agent {agent} --model {model} にした。既存の 1 段の名簿はそのまま動き、移行の手順を exec-config-guide に書いた。空のリポジトリで init --yes --exec を流し、別名から起動のコマンドが組み立てられることを確かめた。opencode の既定の model は本リポジトリの Ollama の名前（gemma4:31b-mlx-work-64k）のままで、利用者の環境に合わせて書き換える必要がある
+  previous_event_id: reg_372b148d00c54b8e8fe07d4376f928ab

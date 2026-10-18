@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-W9RK",
+  "run_id": "20261016T141645074Z-fc7a0ef5",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-16T14:17:42.921Z",
+    "completed_at": "2026-10-16T14:22:37.240Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-w9rk-src-move-dashboard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard-exec-records.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/dashboard-routines.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/dashboard-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/dashboard-timeline.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/dashboard.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/schedule-strategy-generate-scope.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/timeline-build.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/timeline.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/dashboard.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/timeline-build.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/tools/src-move-codemod.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/src-move-codemod.mjs",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard-timeline.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/exec-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/timeline-build.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/timeline.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/dashboard/timeline-build.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-w9rk-src-move-dashboard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard-exec-records.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/dashboard-routines.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/dashboard-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/dashboard-timeline.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/dashboard.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/schedule-strategy-generate-scope.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/timeline-build.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/timeline.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/dashboard.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/timeline-build.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/tools/src-move-codemod.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/src-move-codemod.mjs",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard-timeline.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/exec-records.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/timeline-build.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/dashboard/timeline.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/dashboard/timeline-build.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 25,
+    "summary": "docs/ja/product/040-system-design/sysd-index.md    |   2 +-\n .../010-deliverables-catalog/dct-data-flow.yaml    |   2 +-\n .../pjr-w9rk-src-move-dashboard.md                 |  13 +-\n src/dashboard-exec-records.ts                      | 120 ---\n src/dashboard-routines.ts                          | 338 ---------\n src/dashboard-shared.ts                            |  17 -\n src/dashboard-timeline.ts                          | 227 ------\n src/dashboard.ts                                   | 817 ---------------------\n src/schedule-strategy-generate-scope.ts            |   2 +-\n src/specdojo.ts                                    |   4 +-\n src/timeline-build.ts                              | 438 -----------\n src/timeline.ts                                    | 147 ----\n tests/src/dashboard.test.ts                        | 606 ---------------\n tests/src/timeline-build.test.ts                   | 355 ---------\n tests/tools/src-move-codemod.integration.test.ts   |  14 +\n tools/src-move-codemod.mjs                         |  17 +-\n 16 files changed, 43 insertions(+), 3076 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node tools/src-move-codemod.mjs --dry-run tmp/pjr-w9rk-moves.tsv",
+      "status": "passed",
+      "summary": "対応表どおりの9ファイル移動、import書き換え、履歴除外を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/src-move-codemod.mjs tmp/pjr-w9rk-moves.tsv",
+      "status": "passed",
+      "summary": "一時Git indexを使用し、pipeline管理のindexを変更せずに移動とimport書き換えを適用した。"
+    },
+    {
+      "source": "executor",
+      "command": "cmp -s tmp/pjr-w9rk-help-before/dashboard.txt tmp/pjr-w9rk-help-after/dashboard.txt && cmp -s tmp/pjr-w9rk-help-before/dashboard-build.txt tmp/pjr-w9rk-help-after/dashboard-build.txt && cmp -s tmp/pjr-w9rk-help-before/timeline.txt tmp/pjr-w9rk-help-after/timeline.txt",
+      "status": "passed",
+      "summary": "dashboard、dashboard build、timeline のhelp出力が移動前後で一致した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write tools/src-move-codemod.mjs tests/tools/src-move-codemod.integration.test.ts src/dashboard/dashboard.ts src/dashboard/exec-records.ts src/dashboard/routines.ts src/dashboard/shared.ts src/dashboard/dashboard-timeline.ts src/dashboard/timeline.ts src/dashboard/timeline-build.ts src/schedule-strategy-generate-scope.ts src/specdojo.ts tests/src/dashboard/dashboard.test.ts tests/src/dashboard/timeline-build.test.ts docs/ja/product/040-system-design/sysd-index.md docs/ja/projects…",
+      "status": "passed",
+      "summary": "変更対象を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿生成に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build",
+      "status": "passed",
+      "summary": "カタログ生成に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検証に成功した。既存の参照先未配置に関する警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "ビルドに成功し、新しいdist/dashboard出力を確認した。旧dashboard・timeline出力は残っていない。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーはない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W9RK/src/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspa\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W9RK/src/schedule-build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W9RK/src/schedule-strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W9RK\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-7u30Xi/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-SliYW4/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-Vw\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W9RK/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W9RK/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-W9RK\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-5UVgnU/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Q1dzOB/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-49DYC4/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Pc8LfP/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  49.11s (transform 3.37s, setup 681ms, import 24.16s, tests 52.49s, environment 8ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "dashboard と timeline の src/dashboard への移動、codemod 改修、文書更新、個票更新を完了した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-W9RK/20261016T141645074Z-fc7a0ef5/executor.log",
+      "bytes": 3029,
+      "truncated": false
+    }
+  ]
+}

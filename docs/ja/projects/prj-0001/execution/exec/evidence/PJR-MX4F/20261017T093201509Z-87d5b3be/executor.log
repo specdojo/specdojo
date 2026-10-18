@@ -1,0 +1,11 @@
+実装を完了しました。
+
+- 統合成功後、lock 解放前に `build-if-stale` を明示実行します。[worktree-ops-merge.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MX4F/src/exec/worktree-ops-merge.ts:30)
+- 記帳衝突の解消経路を統合テストで検証します。[worktree-ops.integration.test.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MX4F/tests/src/exec/worktree-ops.integration.test.ts:570)
+- 個票の対応結果を更新しました。[pjr-mx4f-integrate-conflict-commit-skips-dist-rebuild.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MX4F/docs/ja/projects/prj-0001/controls/project-register/pjr-mx4f-integrate-conflict-commit-skips-dist-rebuild.md:52)
+
+親 runner が担当する lint・typecheck・test・schema 検証は重複実行していません。実運用での `exec run --register` 確認は統合後の close 条件です。
+
+<specdojo_executor_evidence>
+{"final_message":"統合成功後に既存の build-if-stale を明示実行し、記帳衝突解消経路の統合テストと個票を更新した","validations":[{"command":"npx prettier --write src/exec/worktree-ops-merge.ts tests/src/exec/worktree-ops.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-mx4f-integrate-conflict-commit-skips-dist-rebuild.md","status":"passed","summary":"変更した TypeScript・テスト・Markdown を整形した"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の派生ビューを正常に生成した"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"終了コード0。既存の未配置文書に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"specdojo exec run --register","status":"requires_human","summary":"変更統合後に orchestrator から1回統合まで流す close 条件"}]}
+</specdojo_executor_evidence>

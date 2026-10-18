@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-YK1C",
+  "run_id": "20261018T074936462Z-fce3d727",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "rate_limited",
+    "started_at": "2026-10-18T07:49:36.462Z",
+    "completed_at": "2026-10-18T07:51:16.751Z",
+    "exit_code": 1,
+    "attempts": 2
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-yk1c.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/in-place.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/agent-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/resolve-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 21,
+    "summary": "CHANGELOG.md                                       |  1 +\n .../controls/project-register/events/pjr-yk1c.yaml | 16 ++++++\n .../pjr-yk1c-agent-alias-resolution.md             |  3 +-\n docs/ja/specdojo/guides/exec-config-guide.md       |  6 ++-\n src/commands/agent.ts                              | 13 ++---\n src/exec/agent-config.ts                           | 10 ++--\n src/exec/run/in-place.ts                           | 11 ++--\n src/exec/run/register-core.ts                      | 12 +++--\n src/exec/run/register-worktree.ts                  |  6 +--\n src/exec/run/schedule-prepare.ts                   |  2 +-\n src/exec/run/shared.ts                             |  3 +-\n src/exec/trial-core.ts                             |  5 +-\n src/exec/worktree-command.ts                       | 17 +++---\n src/grade/targets.ts                               |  3 ++\n src/shared/specdojo-config.ts                      | 33 ++++++++++++\n tests/src/exec/agent-config-command.test.ts        | 14 +++++\n tests/src/exec/register.test.ts                    | 60 ++++++++++++++++++++++\n tests/src/exec/run/resolve-command.test.ts         | 12 +++++\n tests/src/exec/run/run.test.ts                     | 13 +++++\n tests/src/grade/grade.test.ts                      |  2 +\n tests/src/shared/specdojo-config.test.ts           | 42 +++++++++++++++\n 21 files changed, 244 insertions(+), 40 deletions(-)"
+  },
+  "validations": [],
+  "rate_limit_events": [
+    {
+      "action": "fallback",
+      "from_actor": "agy-claude-expert-executor",
+      "to_actor": "codex-expert-executor",
+      "resumed_at": "2026-10-18T07:51:01.439Z"
+    }
+  ],
+  "final_message": "",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YK1C/20261018T074936462Z-fce3d727/executor.log",
+      "bytes": 65536,
+      "truncated": true
+    }
+  ]
+}

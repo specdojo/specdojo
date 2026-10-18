@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-2cqr-routine-state-running-shows-previous-result
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-15T21:39:09Z"
   due_on: null
+  completed_at: "2026-10-18T02:26:41Z"
+  conclusion: routine run が開始時に last_result を running にし、前回の結果と理由を表示しないようにした。終了時に今回の結果で上書きする。運用ガイドの状態の説明も直した
 ---
 
 # PJR-2CQR 実行中の routine が前回の結果のまま表示される
@@ -51,7 +53,22 @@ routine run は開始時に routine-state.json の last_run だけを更新し�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 4.1. 解決内容
+
+- `src/routine/routine.ts` の `routine run` 開始時に `last_run` とともに `last_result: "running"` を記録し、前回の `last_reason` および `last_action_results` を消去するように状態更新ヘルパー `recordRoutineStart` を導入した。
+- 実行終了時には完了結果（`success`・`failure`・`skipped`）で `last_result` を更新し、理由があれば `last_reason`、段別結果があれば `last_action_results` を記録する `recordRoutineCompletion` を導入した。
+- `src/routine/definition.ts` の `RoutineStateEntry` において `last_result` の型に `"running"` を許容する `RoutineStateResult` を定義した。
+- `docs/ja/specdojo/guides/routine-operation-guide.md` に実行開始時に `running` が記録され、`routine list` に `(running)` と表示される旨、および異常終了で `running` が残った場合でも時刻ベースの次回 due 判定には影響しない仕様を明記した。
+
+### 4.2. 確認結果
+
+- `formatRoutineLastRun` により `last_result: "running"` のエントリが `2026-10-15T21:00:03Z (running)` の形式で表示されることを確認した。
+- 開始時（前回の失敗結果や理由が消去され `running` に遷移）と終了時（今回の結果へ更新）の状態遷移を検証する単体テストを追加した。
+- プロセス異常終了により `running` が残った場合でも、interval による routine は `last_run` の時刻差分により、cron による routine は `last_scheduled_for` と発火時刻により、次回 due 判定が正常に行われることを単体テストおよびロジック検証で確認した。
+
+### 4.3. 再発防止策
+
+- 状態更新処理を `recordRoutineStart` / `recordRoutineCompletion` に純粋関数として切り出し、前回の実行結果（`last_result`、`last_reason`、`last_action_results`）が残存しないことを単体テストで保証した。
 
 ## 5. 関連ドキュメント
 

@@ -8,21 +8,25 @@
  *
  * JSON accepts either an object whose keys are old paths and values are new paths,
  * or an array of { "from": "src/old.ts", "to": "src/new/old.ts" } objects.
+ * Source mappings stay under `src/`; tests whose names do not match a source can
+ * be mapped explicitly within `tests/`.
  * TSV uses one `old-path<TAB>new-path` pair per line; blank lines and lines whose
  * first non-space character is `#` are ignored. Paths are repository-relative. If
  * the mapping is inside the repository, commit it first; otherwise keep it outside
  * the repository so the clean-worktree precondition remains true.
  *
  * The command refuses a dirty worktree. It uses `git mv` for each mapped source and
- * for matching `.test.ts` / `.integration.test.ts` files under `tests/src`, then
- * rewrites relative TypeScript import/export, import(), require(), and vi/jest mock
- * specifiers in src, tests, tools, and scripts. A dry run prints the same plan but
- * makes no changes.
+ * for matching `.test.ts` / `.integration.test.ts` files under `tests/src` (or the
+ * legacy `tests/` root). Explicit test mappings take precedence over inferred test
+ * moves. The command then rewrites relative TypeScript import/export, import(),
+ * require(), and vi/jest mock specifiers in src, tests, tools, and scripts. A dry
+ * run prints the same plan but makes no changes.
  *
  * `import.meta.url`, `import.meta.dirname`, `__dirname`, and literal `dist/...` or
  * `src/...ts` references are reported only. Review those findings manually. After
  * a real move, run `npm run build`; this repository's build script removes `dist`
- * before rebuilding, so obsolete compiled files cannot remain.
+ * before rebuilding, so obsolete compiled files cannot remain. Historical records
+ * under project-register, execution, and logs are excluded from detection reports.
  */
 
 import { spawnSync } from "node:child_process";
@@ -141,8 +145,13 @@ function loadMappings(mappingPath) {
   const sources = new Set();
   const destinations = new Set();
   for (const mapping of mappings) {
-    if (!mapping.from.startsWith("src/") || !mapping.to.startsWith("src/")) {
-      throw new Error(`source mappings must stay under src/: ${mapping.from} -> ${mapping.to}`);
+    const mappingRoot = mapping.from.startsWith("src/")
+      ? "src/"
+      : mapping.from.startsWith("tests/")
+        ? "tests/"
+        : undefined;
+    if (!mappingRoot || !mapping.to.startsWith(mappingRoot)) {
+      throw new Error(`mappings must stay within src/ or tests/: ${mapping.from} -> ${mapping.to}`);
     }
     if (!TYPESCRIPT_EXTENSIONS.includes(path.posix.extname(mapping.from))) {
       throw new Error(`source mapping must name a TypeScript file: ${mapping.from}`);
@@ -171,16 +180,35 @@ function testPathFor(sourcePath, suffix) {
   return `tests/${stem}${suffix}`;
 }
 
+function legacyTestPathFor(sourcePath, suffix) {
+  const extension = path.posix.extname(sourcePath);
+  const stem = sourcePath.slice("src/".length, -extension.length);
+  return `tests/${stem}${suffix}`;
+}
+
 function buildMoves(repoRoot, mappings, trackedFiles) {
   const tracked = new Set(trackedFiles);
+  const explicitlyMapped = new Set(mappings.map((mapping) => mapping.from));
   const moves = [];
   for (const mapping of mappings) {
     if (!tracked.has(mapping.from))
       throw new Error(`mapped source is not tracked: ${mapping.from}`);
     moves.push(mapping);
+    if (!mapping.from.startsWith("src/")) continue;
     for (const suffix of [".test.ts", ".integration.test.ts"]) {
-      const from = testPathFor(mapping.from, suffix);
-      if (tracked.has(from)) moves.push({ from, to: testPathFor(mapping.to, suffix) });
+      const candidates = [
+        testPathFor(mapping.from, suffix),
+        legacyTestPathFor(mapping.from, suffix),
+      ].filter((candidate) => tracked.has(candidate));
+      if (candidates.length > 1) {
+        throw new Error(
+          `multiple matching tests exist for ${mapping.from}: ${candidates.join(", ")}`,
+        );
+      }
+      const from = candidates[0];
+      if (from && !explicitlyMapped.has(from)) {
+        moves.push({ from, to: testPathFor(mapping.to, suffix) });
+      }
     }
   }
 
@@ -369,6 +397,14 @@ function isSensitivePath(filePath) {
   );
 }
 
+function isDetectionHistoryPath(filePath) {
+  return (
+    filePath.startsWith("logs/") ||
+    /^docs\/ja\/projects\/[^/]+\/controls\/project-register\//u.test(filePath) ||
+    /^docs\/ja\/projects\/[^/]+\/execution\//u.test(filePath)
+  );
+}
+
 function pathConstructionLines(source, filePath) {
   const sourceFile = ts.createSourceFile(
     filePath,
@@ -401,7 +437,11 @@ function collectDetections(repoRoot, trackedFiles, moves) {
   );
   const findings = [];
   for (const filePath of trackedFiles) {
-    if (isSensitivePath(filePath) || !DETECTION_EXTENSIONS.has(path.posix.extname(filePath)))
+    if (
+      isSensitivePath(filePath) ||
+      isDetectionHistoryPath(filePath) ||
+      !DETECTION_EXTENSIONS.has(path.posix.extname(filePath))
+    )
       continue;
     const absolutePath = path.join(repoRoot, filePath);
     if (!existsSync(absolutePath) || !statSync(absolutePath).isFile()) continue;

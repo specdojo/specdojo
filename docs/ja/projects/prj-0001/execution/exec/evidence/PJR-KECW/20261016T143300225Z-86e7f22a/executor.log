@@ -1,0 +1,7 @@
+指定の移動を完了しました。実装 21 ファイル・テスト 13 ファイルを機能別ディレクトリへ移し、import、設計書、ガイド、カタログ、個票を更新しました。result ファイルと登録簿ステータスは変更していません。
+
+`--help` 23 件は移動前後で一致し、ビルド後に旧 `dist/` 出力が残っていないことも確認済みです。残りの包括検証は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"小機能のソース21件とテスト13件を機能別ディレクトリへ移し、関連import・文書・カタログ・個票を更新した。ヘルプ出力23件は一致し、旧dist出力の残存もない。","validations":[{"command":"npm run build","status":"passed","summary":"TypeScriptビルドが成功し、新しい7個のdistサブディレクトリを生成した。旧出力21件は残存していない。"},{"command":"diff -ru /tmp/pjr-kecw-375b/help-before /tmp/pjr-kecw-375b/help-after","status":"passed","summary":"job・routine・kata・devcontainer・index・yaml-pagesと各サブコマンド、合計23件のヘルプ出力に差分なし。"},{"command":"node --import tsx src/specdojo.ts catalog build","status":"passed","summary":"更新した成果物カタログから生成文書を正常に再生成した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログがOK。既存の未作成文書に関する`based_on`警告のみで、移動によるエラーなし。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"個票更新後のプロジェクト登録簿生成が成功した。"},{"command":"node --import tsx src/docs/viewpoint-document-kinds-check.ts","status":"passed","summary":"107件のrulebookに対する観点判断がすべて網羅されている。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"},{"command":"npx prettier --write <changed TypeScript, YAML, and Markdown files>","status":"passed","summary":"変更対象をPrettierで整形した。"}]}
+</specdojo_executor_evidence>

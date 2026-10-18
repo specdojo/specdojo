@@ -1,0 +1,1614 @@
+import {
+  chmodSync,
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  utimesSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { afterEach, describe, expect, it } from "vitest";
+import {
+  findExecWorktree,
+  gitOutput,
+  gitResult,
+  type ExecWorktree,
+} from "../../../src/exec/worktree.js";
+import {
+  abortMerge,
+  checkpointAndEnsureWorktree,
+  commitWorktreeChanges,
+  deliverableStatus,
+  discardStaleExecWorktree,
+  isExecBranchMergedIntoCurrent,
+  mergeWorktreeIntoCurrent,
+  listOrphanedExecBranches,
+  pruneOrphanedExecBranches,
+  releaseRootWorkingCopies,
+  removeWorktree,
+  selectStageablePaths,
+  worktreeStatusPaths,
+  WorktreeRemovedBranchDeletionError,
+  type WorktreeOpsContext,
+} from "../../../src/exec/worktree-ops.js";
+import {
+  readRegisterEventsFromContent,
+  serializeRegisterEvents,
+  validateRegisterEventLog,
+  type RegisterEventV1,
+} from "../../../src/register/events.js";
+import { readSpecdojoFields } from "../../../src/register/item.js";
+
+const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
+const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
+
+function git(cwd: string, ...args: string[]): string {
+  return gitOutput(cwd, args).trim();
+}
+
+type Fixture = {
+  repo: string;
+  worktreeBase: string;
+  schedulePath: string;
+  executionPath: string;
+  context: WorktreeOpsContext;
+};
+
+const fixtures: Fixture[] = [];
+
+function writeFile(path: string, content: string): void {
+  mkdirSync(dirname(path), { recursive: true });
+  writeFileSync(path, content, "utf8");
+}
+
+function setupRepository(): Fixture {
+  const repo = mkdtempSync(join(tmpdir(), "specdojo-worktree-ops-repo-"));
+  const worktreeBase = mkdtempSync(join(tmpdir(), "specdojo-worktree-ops-base-"));
+  const schedulePath = join(repo, "schedule");
+  const executionPath = join(repo, "execution");
+  mkdirSync(schedulePath, { recursive: true });
+  mkdirSync(join(executionPath, "exec", "events"), { recursive: true });
+  mkdirSync(join(executionPath, "exec", "plans"), { recursive: true });
+  mkdirSync(join(executionPath, "exec", "results"), { recursive: true });
+
+  writeFileSync(join(repo, "README.md"), "# test\n", "utf8");
+  git(repo, "init");
+  git(repo, "add", "README.md");
+  git(repo, "commit", "-m", "initial");
+
+  // The scheduler lock used by merge resolves the execution root from these env vars.
+  process.env.SPECDOJO_SCHEDULE_PATH = schedulePath;
+  process.env.SPECDOJO_EXECUTION_PATH = executionPath;
+  delete process.env.SPECDOJO_PROJECT;
+
+  const fixture: Fixture = {
+    repo,
+    worktreeBase,
+    schedulePath,
+    executionPath,
+    context: { repoRoot: repo, schedulePath, executionPath },
+  };
+  fixtures.push(fixture);
+  return fixture;
+}
+
+// CLI 生成 plan と同じ specdojo 名前空間 frontmatter を持つ plan 本文を組み立てる。
+// commit 許可リストは HEAD 側 plan のこの frontmatter（mode / approach / targets）から導出される。
+function planWithIdentity(
+  taskId: string,
+  opts: {
+    mode: "edit" | "review";
+    approach?: string;
+    targets?: string[];
+    origin?: "schedule" | "register";
+  },
+): string {
+  const lines = [
+    "---",
+    "specdojo:",
+    `  id: xep-${taskId.toLowerCase()}`,
+    "  type: exec-plan",
+    "  rulebook: exec-plan-rulebook",
+    `  task_id: ${taskId}`,
+    `  mode: ${opts.mode}`,
+    "  status: doing",
+    "  project_id: prj-0001",
+  ];
+  if (opts.origin) lines.push(`  origin: ${opts.origin}`);
+  if (opts.approach) lines.push(`  approach: ${opts.approach}`);
+  if (opts.targets && opts.targets.length > 0) {
+    lines.push("  targets:");
+    for (const target of opts.targets) lines.push(`    - ${target}`);
+  }
+  lines.push("---", "", `# Plan ${taskId}`, "");
+  return lines.join("\n");
+}
+
+function humanResultWithIdentity(
+  taskId: string,
+  opts: { mode: "edit" | "review"; approach?: string; targets?: string[] },
+): string {
+  const lines = [
+    "---",
+    "specdojo:",
+    `  id: xer-${taskId.toLowerCase()}`,
+    "  type: exec-result",
+    `  task_id: ${taskId}`,
+    `  mode: ${opts.mode}`,
+    "  status: in_progress",
+    "  project_id: prj-0001",
+    '  started_at: "2026-06-13T00:00:00.000Z"',
+    "  agent: human-actor",
+    "  execution: human",
+  ];
+  if (opts.approach) lines.push(`  approach: ${opts.approach}`);
+  if (opts.targets && opts.targets.length > 0) {
+    lines.push("  targets:");
+    for (const target of opts.targets) lines.push(`    - ${target}`);
+  }
+  lines.push("---", "", `# Result ${taskId}`, "");
+  return lines.join("\n");
+}
+
+// Scaffold the execution-management files a claimed task starts with: plan, result, claim event.
+function scaffoldTask(
+  fixture: Fixture,
+  taskId: string,
+  planContent?: string,
+  resultContent?: string,
+): { planPath: string; resultPath: string; claimEventPath: string } {
+  const planPath = join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`);
+  const resultPath = join(fixture.executionPath, "exec", "results", `${taskId}-result.md`);
+  const claimEventPath = join(
+    fixture.executionPath,
+    "exec",
+    "events",
+    `20260613T000000Z_agent_${taskId}_claim.json`,
+  );
+  writeFile(planPath, planContent ?? `# Plan ${taskId}\n`);
+  writeFile(resultPath, resultContent ?? `# Result ${taskId}\n\nstatus: in_progress\n`);
+  writeFile(
+    claimEventPath,
+    JSON.stringify({
+      v: 1,
+      ts: "2026-06-13T00:00:00Z",
+      type: "claim",
+      task_id: taskId,
+      by: "edit-agent",
+    }) + "\n",
+  );
+  return { planPath, resultPath, claimEventPath };
+}
+
+function prepare(
+  fixture: Fixture,
+  taskId: string,
+  worktreeTaskId: string = taskId,
+  planContent?: string,
+  resultContent?: string,
+  failureLogPath?: string,
+): ExecWorktree {
+  const { planPath, resultPath, claimEventPath } = scaffoldTask(
+    fixture,
+    taskId,
+    planContent,
+    resultContent,
+  );
+  return checkpointAndEnsureWorktree({
+    context: fixture.context,
+    worktreeTaskId,
+    base: fixture.worktreeBase,
+    checkpointPaths: [planPath, resultPath, claimEventPath],
+    commitMessage: `exec(${taskId}): prepare execution`,
+    failureLogPath,
+  });
+}
+
+// The checkpoint commit lives on the exec branch; the root keeps its own uncommitted copies of the
+// scaffolded files until the merge releases them, exactly as the runner does.
+function mergeIntoRoot(
+  fixture: Fixture,
+  worktree: ExecWorktree,
+  taskId: string,
+  options: { message?: string; failureLogPath?: string } = {},
+): void {
+  mergeWorktreeIntoCurrent({
+    context: fixture.context,
+    worktree,
+    taskId,
+    message: options.message,
+    failureLogPath: options.failureLogPath,
+    releaseRootPaths: [
+      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
+    ],
+  });
+}
+
+afterEach(() => {
+  while (fixtures.length > 0) {
+    const fixture = fixtures.pop()!;
+    const registered = git(fixture.repo, "worktree", "list", "--porcelain");
+    for (const line of registered.split("\n")) {
+      if (!line.startsWith("worktree ")) continue;
+      const path = line.slice("worktree ".length);
+      if (path !== fixture.repo) {
+        try {
+          git(fixture.repo, "worktree", "remove", "--force", path);
+        } catch {
+          // best effort cleanup
+        }
+      }
+    }
+    rmSync(fixture.repo, { recursive: true, force: true });
+    rmSync(fixture.worktreeBase, { recursive: true, force: true });
+  }
+  for (const [key, value] of Object.entries(originalEnv)) {
+    if (value === undefined) delete process.env[key];
+    else process.env[key] = value;
+  }
+});
+
+describe("exec worktree ops", () => {
+  it("allows unrelated staged root changes and preserves them while checkpointing", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    writeFile(join(fixture.repo, "README.md"), "staged by user\n");
+    git(fixture.repo, "add", "README.md");
+
+    const worktree = prepare(fixture, taskId);
+
+    expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("README.md");
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+  });
+
+  it("rejects a staged root change that overlaps a checkpoint path", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const paths = scaffoldTask(fixture, taskId);
+    git(fixture.repo, "add", `execution/exec/plans/${taskId}-plan.md`);
+
+    expect(() =>
+      checkpointAndEnsureWorktree({
+        context: fixture.context,
+        worktreeTaskId: taskId,
+        base: fixture.worktreeBase,
+        checkpointPaths: [paths.planPath, paths.resultPath, paths.claimEventPath],
+        commitMessage: `exec(${taskId}): prepare execution`,
+      }),
+    ).toThrow(/Root index has staged checkpoint changes/);
+    expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
+  });
+
+  it("unstages checkpoint paths after commit failure without changing the root index", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    writeFile(join(fixture.repo, "README.md"), "staged by user\n");
+    git(fixture.repo, "add", "README.md");
+    const hookPath = join(fixture.repo, ".git", "hooks", "pre-commit");
+    writeFile(
+      hookPath,
+      [
+        "#!/bin/sh",
+        "printf 'api_key=raw-checkpoint-secret\\n' >&2",
+        "printf 'FAIL  tests/src/doc-index.test.ts > project register references\\n' >&2",
+        "printf 'Test Files  1 failed | 120 passed (121)\\n' >&2",
+        "exit 1",
+        "",
+      ].join("\n"),
+    );
+    chmodSync(hookPath, 0o755);
+    const failureLogPath = join(fixture.repo, "execution", "exec", "evidence", "checkpoint.log");
+
+    expect(() => prepare(fixture, taskId, taskId, undefined, undefined, failureLogPath)).toThrow(
+      /Checkpoint commit failed.*FAIL  tests\/src\/doc-index\.test\.ts/s,
+    );
+
+    expect(git(fixture.repo, "diff", "--cached", "--name-only")).toBe("README.md");
+    const worktree = findExecWorktree(fixture.repo, taskId);
+    expect(worktree).not.toBeNull();
+    expect(git(worktree!.path, "diff", "--cached", "--name-only")).toBe("");
+    expect(worktreeStatusPaths(worktree!.path)).toEqual(
+      expect.arrayContaining([
+        `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`,
+        `execution/exec/plans/${taskId}-plan.md`,
+        `execution/exec/results/${taskId}-result.md`,
+      ]),
+    );
+    const failureLog = readFileSync(failureLogPath, "utf8");
+    expect(failureLog).toContain("api_key=[REDACTED]");
+    expect(failureLog).toContain("Test Files  1 failed | 120 passed (121)");
+    expect(failureLog).not.toContain("raw-checkpoint-secret");
+  });
+
+  it("checkpoints, commits, and merges a task so its deliverable lands on root", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+
+    const worktree = prepare(fixture, taskId);
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe("initial");
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+
+    // Agent edits a deliverable and updates its result inside the worktree.
+    writeFile(join(worktree.path, "docs", "a.md"), "v1 from task 010\n");
+    writeFile(
+      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      `# Result ${taskId}\n\nstatus: complete\n`,
+    );
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    expect(committed.committed).toBe(true);
+    expect(committed.targets).toContain("docs/a.md");
+    expect(committed.targets).toContain(`execution/exec/results/${taskId}-result.md`);
+
+    mergeIntoRoot(fixture, worktree, taskId);
+    expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("v1 from task 010\n");
+    expect(
+      readFileSync(
+        join(fixture.repo, "execution", "exec", "results", `${taskId}-result.md`),
+        "utf8",
+      ),
+    ).toContain("status: complete");
+  });
+
+  it("previews a merge without treating releasable checkpoint copies as overlap", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    const releaseRootPaths = [
+      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
+    ];
+
+    expect(() =>
+      mergeWorktreeIntoCurrent({
+        context: fixture.context,
+        worktree,
+        taskId,
+        releaseRootPaths,
+        dryRun: true,
+      }),
+    ).not.toThrow();
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe("initial");
+    for (const path of releaseRootPaths) expect(existsSync(path)).toBe(true);
+  });
+
+  it("restores files already released when releasing a later path fails", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    prepare(fixture, taskId);
+    const planPath = join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`);
+    const invalidDirectory = join(fixture.executionPath, "exec", "results");
+    const planBefore = readFileSync(planPath, "utf8");
+
+    expect(() =>
+      releaseRootWorkingCopies(fixture.repo, [
+        `execution/exec/plans/${taskId}-plan.md`,
+        "execution/exec/results",
+      ]),
+    ).toThrow();
+    expect(readFileSync(planPath, "utf8")).toBe(planBefore);
+    expect(existsSync(invalidDirectory)).toBe(true);
+  });
+
+  it("discards a stale worktree/branch left by a prior lifecycle so a fresh claim checkpoints cleanly", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+
+    // Prior lifecycle: the task was prepared on its exec branch but never merged.
+    const stale = prepare(fixture, taskId);
+    expect(findExecWorktree(fixture.repo, taskId)).not.toBeNull();
+
+    // Fresh claim rewrites the root scaffold as untracked files.
+    scaffoldTask(fixture, taskId);
+
+    const discarded = discardStaleExecWorktree({
+      context: fixture.context,
+      worktreeTaskId: taskId,
+    });
+
+    expect(discarded).toBe(stale.branch);
+    expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
+    expect(() =>
+      git(fixture.repo, "rev-parse", "--verify", `refs/heads/${stale.branch}`),
+    ).toThrow();
+
+    // Re-preparing creates a fresh worktree and commits the scaffold only on its exec branch.
+    const worktree = prepare(fixture, taskId);
+    expect(worktree.created).toBe(true);
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s")).toBe("initial");
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+  });
+
+  it("returns null when no stale worktree or branch exists for the task", () => {
+    const fixture = setupRepository();
+
+    expect(
+      discardStaleExecWorktree({ context: fixture.context, worktreeTaskId: "T-T-doc-999" }),
+    ).toBeNull();
+  });
+
+  it("makes a merged task deliverable visible to the next task worktree", () => {
+    const fixture = setupRepository();
+
+    // Task 010: edit a shared deliverable, then commit + merge + remove.
+    const wt1 = prepare(fixture, "T-T-doc-010");
+    writeFile(join(wt1.path, "docs", "shared.md"), "produced by task 010\n");
+    commitWorktreeChanges({ context: fixture.context, worktree: wt1, taskId: "T-T-doc-010" });
+    mergeIntoRoot(fixture, wt1, "T-T-doc-010");
+    removeWorktree({
+      context: fixture.context,
+      worktree: wt1,
+      taskId: "T-T-doc-010",
+      deleteBranch: true,
+    });
+
+    // Task 020 branches from the updated root HEAD and must see task 010's deliverable.
+    const wt2 = prepare(fixture, "T-T-doc-020");
+    expect(readFileSync(join(wt2.path, "docs", "shared.md"), "utf8")).toBe(
+      "produced by task 010\n",
+    );
+  });
+
+  it("aborts a conflicting merge so the tree is not left mid-merge", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+
+    // Root and the exec branch both add the same deliverable with different content: an add/add
+    // conflict that git cannot auto-resolve.
+    writeFile(join(fixture.repo, "docs", "conflict.md"), "root version\n");
+    git(fixture.repo, "add", "docs/conflict.md");
+    git(fixture.repo, "commit", "-m", "root edits conflict.md");
+
+    writeFile(join(worktree.path, "docs", "conflict.md"), "branch version\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(() => mergeIntoRoot(fixture, worktree, taskId)).toThrow();
+
+    // The failed merge must be rolled back: no merge in progress, the deliverable untouched, and
+    // the root's own uncommitted copies of the checkpoint files put back (nothing else dirty).
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(git(fixture.repo, "status", "--porcelain", "-uall").split("\n").sort()).toEqual([
+      `?? execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`,
+      `?? execution/exec/plans/${taskId}-plan.md`,
+      `?? execution/exec/results/${taskId}-result.md`,
+    ]);
+    expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("root version\n");
+  });
+
+  it("aborts a merge commit rejected by a hook and records the full integration output", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    const hookPath = join(fixture.repo, ".git", "hooks", "pre-commit");
+    writeFileSync(
+      hookPath,
+      [
+        "#!/bin/sh",
+        // 自動 merge の pre-merge-commit 時点では MERGE_HEAD が未作成のため、merge 直前に置く
+        // マーカーファイルで統合 commit だけを落とす（task commit は通す）。
+        `if [ -f '${join(fixture.repo, ".git", "reject-merge")}' ]; then`,
+        "  printf '\\033[31m╭── hook output ──╮\\033[0m\\n' >&2",
+        "  printf '┃ typecheck ❯\\n' >&2",
+        "  printf '┃ src/a.ts(1,1): error TS2322: intentional merge failure\\n' >&2",
+        "  printf '┃ api_key=raw-hook-secret\\n' >&2",
+        "  printf '┃ FAIL  tests/src/doc-index.test.ts > project register references\\n' >&2",
+        "  printf '┃ Test Files  1 failed | 120 passed (121)\\n' >&2",
+        "  printf '╰─────────────────╯\\n' >&2",
+        "  exit 1",
+        "fi",
+        "exit 0",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    chmodSync(hookPath, 0o755);
+    const preMergeHookPath = join(fixture.repo, ".git", "hooks", "pre-merge-commit");
+    writeFileSync(
+      preMergeHookPath,
+      '#!/bin/sh\nexec "$(git rev-parse --git-path hooks/pre-commit)"\n',
+      "utf8",
+    );
+    chmodSync(preMergeHookPath, 0o755);
+    const failureLogPath = join(worktree.path, "execution", "exec", "evidence", "integrate.log");
+    writeFileSync(join(fixture.repo, ".git", "reject-merge"), "reject\n", "utf8");
+
+    expect(() =>
+      mergeIntoRoot(fixture, worktree, taskId, {
+        message: `exec(${taskId}): merge hook failure`,
+        failureLogPath,
+      }),
+    ).toThrow(
+      "git merge failed: typecheck: src/a.ts(1,1): error TS2322: intentional merge failure",
+    );
+
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(findExecWorktree(fixture.repo, taskId)).not.toBeNull();
+    expect(git(fixture.repo, "show-ref", "--verify", `refs/heads/${worktree.branch}`)).not.toBe("");
+    const failureLog = readFileSync(failureLogPath, "utf8");
+    expect(failureLog).toContain("\u001b[31m╭── hook output ──╮\u001b[0m");
+    expect(failureLog).toContain("src/a.ts(1,1): error TS2322: intentional merge failure");
+    expect(failureLog).toContain("api_key=[REDACTED]");
+    expect(failureLog).toContain("FAIL  tests/src/doc-index.test.ts");
+    expect(failureLog).not.toContain("raw-hook-secret");
+    expect(failureLog).toContain("--- merge --abort ---\nexit: 0");
+  });
+
+  it("completes a resumed merge whose conflicts are only the item's own bookkeeping after two waits", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    const targetBranch = git(fixture.repo, "rev-parse", "--abbrev-ref", "HEAD");
+    const resultRel = `execution/exec/results/${taskId}-result.md`;
+    const eventRel = `execution/exec/events/20260613T000000Z_agent_${taskId}_claim.json`;
+    const bookkeepingPaths = [
+      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      join(fixture.repo, resultRel),
+      join(fixture.repo, eventRel),
+    ];
+    const commitAtRoot = (label: string): void => {
+      writeFile(join(fixture.repo, resultRel), `# Result ${taskId}\n\nstatus: ${label}\n`);
+      writeFile(join(fixture.repo, eventRel), `{"type":"${label}"}\n`);
+      git(fixture.repo, "add", "--", resultRel, eventRel);
+      git(fixture.repo, "commit", "-m", `exec(register ${taskId}): ${label}`);
+    };
+
+    // First wait: the wait commit lands on root and the exec branch is synced with the root side.
+    commitAtRoot("wait-1");
+    gitResult(worktree.path, ["merge", "--no-commit", "--no-ff", targetBranch]);
+    git(worktree.path, "checkout", "--theirs", "--", resultRel, eventRel);
+    git(worktree.path, "add", "--", resultRel, eventRel);
+    git(worktree.path, "commit", "--no-verify", "-m", `merge ${targetBranch} after wait`);
+
+    // Second wait: root records another wait while the exec branch keeps its own bookkeeping.
+    commitAtRoot("wait-2");
+
+    // Resume: the exec branch finishes the task and records the review bookkeeping.
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable after resume\n");
+    writeFile(join(worktree.path, resultRel), `# Result ${taskId}\n\nstatus: complete\n`);
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    writeFile(
+      join(worktree.path, "tools", "build-if-stale.mjs"),
+      [
+        'import { writeFileSync } from "node:fs";',
+        'writeFileSync(new URL("../.git/build-if-stale-called", import.meta.url), "called\\n");',
+        "",
+      ].join("\n"),
+    );
+    writeFile(
+      join(worktree.path, "package.json"),
+      `${JSON.stringify({ name: "specdojo", bin: { specdojo: "dist/specdojo.js" } }, null, 2)}\n`,
+    );
+    writeFile(join(worktree.path, eventRel), `{"type":"review"}\n`);
+    git(worktree.path, "add", "--", eventRel, "package.json", "tools/build-if-stale.mjs");
+    git(worktree.path, "commit", "-m", `exec(register ${taskId}): review`);
+
+    mergeWorktreeIntoCurrent({
+      context: fixture.context,
+      worktree,
+      taskId,
+      message: `exec(register ${taskId}): resumed integration`,
+      releaseRootPaths: bookkeepingPaths,
+      resolveConflictsWithBranchPaths: bookkeepingPaths,
+    });
+
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(git(fixture.repo, "log", "-1", "--pretty=%s%n%P").split("\n")).toEqual([
+      `exec(register ${taskId}): resumed integration`,
+      expect.stringMatching(/^\S+ \S+$/),
+    ]);
+    expect(readFileSync(join(fixture.repo, resultRel), "utf8")).toContain("status: complete");
+    expect(readFileSync(join(fixture.repo, eventRel), "utf8")).toBe(`{"type":"review"}\n`);
+    expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe(
+      "deliverable after resume\n",
+    );
+    expect(readFileSync(join(fixture.repo, ".git", "build-if-stale-called"), "utf8")).toBe(
+      "called\n",
+    );
+    expect(git(fixture.repo, "status", "--porcelain", "-uall")).toBe("");
+  });
+
+  it("keeps register events appended on the merge target while the item was waiting", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const registerRel = "docs/prj/controls/project-register";
+    const ticketRel = `${registerRel}/pjr-0abc-sample.md`;
+    const eventRel = `${registerRel}/events/pjr-0abc.yaml`;
+    const ticket = (status: string, due: string): string =>
+      [
+        "---",
+        "specdojo:",
+        "  id: prj-0001:pjr-0abc-sample",
+        "  type: project",
+        "  status: draft",
+        "  item_type: todo",
+        `  item_status: ${status}`,
+        "  priority: medium",
+        "  owner: DEV",
+        '  registered_at: "2026-09-28T01:00:00Z"',
+        `  due_on: "${due}"`,
+        "---",
+        "",
+        "# PJR-0ABC Sample",
+        "",
+      ].join("\n");
+    const events: RegisterEventV1[] = [];
+    const appendEvent = (
+      index: number,
+      action: RegisterEventV1["action"],
+      fromStatus: string | null,
+      toStatus: string,
+      changes: RegisterEventV1["changes"],
+      previous: RegisterEventV1[],
+    ): RegisterEventV1[] => {
+      const last = previous.at(-1);
+      const next: RegisterEventV1 = {
+        v: 1,
+        id: `reg_${index.toString(16).padStart(32, "0")}`,
+        ts: `2026-09-28T0${index}:00:00Z`,
+        action,
+        actor: "tester",
+        from_status: fromStatus,
+        to_status: toStatus,
+        reason: action,
+        changes,
+        ...(last ? { previous_event_id: last.id } : {}),
+      };
+      return [...previous, next];
+    };
+    events.push(
+      ...appendEvent(1, "add", null, "waiting", [{ field: "status", from: "", to: "waiting" }], []),
+    );
+    writeFile(join(fixture.repo, ticketRel), ticket("waiting", "2026-10-01"));
+    writeFile(join(fixture.repo, eventRel), serializeRegisterEvents(events));
+    git(fixture.repo, "add", "--", ticketRel, eventRel);
+    git(fixture.repo, "commit", "-m", "register item waiting");
+    const worktree = prepare(fixture, taskId);
+    const bookkeepingPaths = [join(fixture.repo, ticketRel), join(fixture.repo, eventRel)];
+    // `prepare` leaves root-side replicas of the plan, result, and claim event. The production
+    // integration releases them before merging, so the test passes them the same way.
+    const rootReplicaPaths = [
+      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
+      join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
+    ];
+
+    // While waiting, the user updates the due date on the merge target (`register update`).
+    const rootEvents = appendEvent(
+      2,
+      "update",
+      "waiting",
+      "waiting",
+      [{ field: "due", from: "2026-10-01", to: "2026-10-15" }],
+      events,
+    );
+    writeFile(join(fixture.repo, ticketRel), ticket("waiting", "2026-10-15"));
+    writeFile(join(fixture.repo, eventRel), serializeRegisterEvents(rootEvents));
+    git(fixture.repo, "add", "--", ticketRel, eventRel);
+    git(fixture.repo, "commit", "-m", "register update due");
+
+    // The resumed exec branch records start and review without the merge-target update.
+    const branchEvents = appendEvent(
+      4,
+      "review",
+      "in-progress",
+      "review",
+      [{ field: "status", from: "in-progress", to: "review" }],
+      appendEvent(
+        3,
+        "start",
+        "waiting",
+        "in-progress",
+        [{ field: "status", from: "waiting", to: "in-progress" }],
+        events,
+      ),
+    );
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable after resume\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    writeFile(join(worktree.path, ticketRel), ticket("review", "2026-10-01"));
+    writeFile(join(worktree.path, eventRel), serializeRegisterEvents(branchEvents));
+    git(worktree.path, "add", "--", ticketRel, eventRel);
+    git(worktree.path, "commit", "-m", `exec(register ${taskId}): review`);
+
+    mergeWorktreeIntoCurrent({
+      context: fixture.context,
+      worktree,
+      taskId,
+      message: `exec(register ${taskId}): resumed integration`,
+      releaseRootPaths: rootReplicaPaths,
+      resolveConflictsWithBranchPaths: bookkeepingPaths,
+    });
+
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    const mergedEvents = readFileSync(join(fixture.repo, eventRel), "utf8");
+    const mergedTicket = readFileSync(join(fixture.repo, ticketRel), "utf8");
+    expect(
+      readRegisterEventsFromContent(mergedEvents, eventRel).map((item) => [item.id, item.action]),
+    ).toEqual([
+      [`reg_${"1".padStart(32, "0")}`, "add"],
+      [`reg_${"2".padStart(32, "0")}`, "update"],
+      [`reg_${"3".padStart(32, "0")}`, "start"],
+      [`reg_${"4".padStart(32, "0")}`, "review"],
+    ]);
+    expect(
+      validateRegisterEventLog(
+        mergedTicket,
+        mergedEvents,
+        "pjr-0abc-sample.md",
+        "pjr-0abc.yaml",
+        "UTC",
+      ),
+    ).toEqual([]);
+    expect(readSpecdojoFields(mergedTicket)).toMatchObject({
+      item_status: "review",
+      due_on: "2026-10-15",
+    });
+    expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe(
+      "deliverable after resume\n",
+    );
+    expect(git(fixture.repo, "status", "--porcelain", "-uall", "--", registerRel)).toBe("");
+  });
+
+  it("aborts a resumed merge when a conflict falls outside the item's own bookkeeping", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    const resultRel = `execution/exec/results/${taskId}-result.md`;
+    const bookkeepingPaths = [
+      join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
+      join(fixture.repo, resultRel),
+      join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
+    ];
+
+    writeFile(join(fixture.repo, resultRel), `# Result ${taskId}\n\nstatus: waiting\n`);
+    writeFile(join(fixture.repo, "docs", "conflict.md"), "root version\n");
+    git(fixture.repo, "add", "--", resultRel, "docs/conflict.md");
+    git(fixture.repo, "commit", "-m", "root wait with a deliverable edit");
+
+    writeFile(join(worktree.path, resultRel), `# Result ${taskId}\n\nstatus: complete\n`);
+    writeFile(join(worktree.path, "docs", "conflict.md"), "branch version\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(() =>
+      mergeWorktreeIntoCurrent({
+        context: fixture.context,
+        worktree,
+        taskId,
+        releaseRootPaths: bookkeepingPaths,
+        resolveConflictsWithBranchPaths: bookkeepingPaths,
+      }),
+    ).toThrow(/git merge failed/);
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("root version\n");
+    expect(readFileSync(join(fixture.repo, resultRel), "utf8")).toContain("status: waiting");
+  });
+
+  it("aborts a merge even when a merged file only drifted in stat", () => {
+    const fixture = setupRepository();
+    const targetBranch = git(fixture.repo, "rev-parse", "--abbrev-ref", "HEAD");
+    writeFile(join(fixture.repo, "docs", "conflict.md"), "base\n");
+    git(fixture.repo, "add", "docs/conflict.md");
+    git(fixture.repo, "commit", "-m", "add conflict.md");
+    git(fixture.repo, "checkout", "-b", "side");
+    writeFile(join(fixture.repo, "docs", "conflict.md"), "side\n");
+    writeFile(join(fixture.repo, "docs", "template.md"), "same content\n");
+    git(fixture.repo, "add", "docs");
+    git(fixture.repo, "commit", "-m", "side edits");
+    git(fixture.repo, "checkout", targetBranch);
+    writeFile(join(fixture.repo, "docs", "conflict.md"), "target\n");
+    git(fixture.repo, "commit", "-am", "target edits");
+    expect(gitResult(fixture.repo, ["merge", "--no-ff", "--no-edit", "side"]).status).not.toBe(0);
+
+    // Another process touches the cleanly merged file: the content is unchanged but the cached
+    // stat no longer matches.
+    const past = new Date("2001-01-01T00:00:00Z");
+    utimesSync(join(fixture.repo, "docs", "template.md"), past, past);
+
+    expect(abortMerge(fixture.repo).status).toBe(0);
+    expect(() => git(fixture.repo, "rev-parse", "--verify", "MERGE_HEAD")).toThrow();
+    expect(existsSync(join(fixture.repo, "docs", "template.md"))).toBe(false);
+    expect(readFileSync(join(fixture.repo, "docs", "conflict.md"), "utf8")).toBe("target\n");
+  });
+
+  it("excludes plans, events, and generated files from the task commit", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+
+    // Simulate an agent that also touches a plan and a generated file (must not be committed).
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
+    writeFile(
+      join(worktree.path, "execution", "exec", "plans", `${taskId}-plan.md`),
+      "# Plan edited\n",
+    );
+    writeFile(join(worktree.path, "execution", "generated", "state.json"), "{}\n");
+    writeFile(
+      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      `# Result ${taskId}\n\nstatus: complete\n`,
+    );
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    expect(committed.targets).toEqual(
+      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+    );
+    expect(committed.targets).not.toContain(`execution/exec/plans/${taskId}-plan.md`);
+    expect(committed.targets).not.toContain("execution/generated/state.json");
+
+    // Excluded files remain uncommitted in the worktree.
+    const stillDirty = git(worktree.path, "status", "--porcelain");
+    expect(stillDirty).toContain(`execution/exec/plans/${taskId}-plan.md`);
+    expect(stillDirty).toContain("execution/generated/");
+  });
+
+  it("namespaces the branch and worktree by project while keeping the bare task id for the checkpoint", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktreeTaskId = `prj-0001:${taskId}`;
+
+    const worktree = prepare(fixture, taskId, worktreeTaskId);
+
+    // Branch and worktree name are project-qualified (`:` normalized to `-`).
+    expect(worktree.branch).toBe("exec/prj-0001-T-T-doc-010");
+    expect(worktree.name).toBe("prj-0001-T-T-doc-010");
+
+    // The checkpoint commit and lookup keep the bare task id.
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+    expect(findExecWorktree(fixture.repo, worktreeTaskId)).toEqual({ ...worktree, created: false });
+    expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
+  });
+
+  it("removes a merged worktree and deletes its exec branch", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    mergeIntoRoot(fixture, worktree, taskId);
+
+    removeWorktree({ context: fixture.context, worktree, taskId, deleteBranch: true });
+
+    expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
+    expect(() =>
+      git(fixture.repo, "show-ref", "--verify", `refs/heads/${worktree.branch}`),
+    ).toThrow();
+  });
+
+  it("reports that the worktree is gone when safe branch deletion fails", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    writeFile(join(worktree.path, "docs", "unmerged.md"), "unmerged work\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(() =>
+      removeWorktree({
+        context: fixture.context,
+        worktree,
+        taskId,
+        force: true,
+        deleteBranch: true,
+      }),
+    ).toThrow(WorktreeRemovedBranchDeletionError);
+    expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
+    expect(() =>
+      git(fixture.repo, "show-ref", "--verify", `refs/heads/${worktree.branch}`),
+    ).not.toThrow();
+  });
+
+  it("prunes only merged project exec branches that no worktree uses", () => {
+    const fixture = setupRepository();
+    const active = prepare(fixture, "T-T-doc-010", "prj-0001:T-T-doc-010");
+    const merged = "exec/prj-0001-PJR-MERGED";
+    const unmerged = "exec/prj-0001-PJR-UNMERGED";
+    const otherProject = "exec/prj-0002-PJR-MERGED";
+    git(fixture.repo, "branch", merged);
+    git(fixture.repo, "branch", otherProject);
+    const unmergedCommit = git(
+      fixture.repo,
+      "commit-tree",
+      "HEAD^{tree}",
+      "-p",
+      "HEAD",
+      "-m",
+      "unmerged residue",
+    );
+    git(fixture.repo, "branch", unmerged, unmergedCommit);
+
+    expect(listOrphanedExecBranches({ repoRoot: fixture.repo, projectId: "prj-0001" })).toEqual([
+      { branch: merged, mergedIntoCurrent: true },
+      { branch: unmerged, mergedIntoCurrent: false },
+    ]);
+
+    const inspected = pruneOrphanedExecBranches({
+      repoRoot: fixture.repo,
+      projectId: "prj-0001",
+      dryRun: true,
+    });
+    expect(inspected).toHaveLength(2);
+    expect(() => git(fixture.repo, "show-ref", "--verify", `refs/heads/${merged}`)).not.toThrow();
+
+    pruneOrphanedExecBranches({ repoRoot: fixture.repo, projectId: "prj-0001" });
+
+    expect(() => git(fixture.repo, "show-ref", "--verify", `refs/heads/${merged}`)).toThrow();
+    expect(() => git(fixture.repo, "show-ref", "--verify", `refs/heads/${unmerged}`)).not.toThrow();
+    expect(() =>
+      git(fixture.repo, "show-ref", "--verify", `refs/heads/${otherProject}`),
+    ).not.toThrow();
+    expect(findExecWorktree(fixture.repo, "prj-0001:T-T-doc-010")).toEqual({
+      ...active,
+      created: false,
+    });
+  });
+
+  it('blocks committing when an agent promotes a new deliverable to "ready"', () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+
+    // Agent creates a deliverable already promoted to ready (ready is a human-only gate).
+    writeFile(join(worktree.path, "docs", "d.yaml"), "id: d\ntype: spec\nstatus: ready\n");
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /promotion to "ready" is human-only.*docs\/d\.yaml/,
+    );
+
+    // Nothing was committed: the worktree HEAD is still the prepare checkpoint.
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+  });
+
+  it("blocks committing with a notation reason when the result violates markdownlint", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
+    // The reporter wrote an unwrapped `depends_on` next to `_TODO_`; this is what
+    // `prettier --write` turns it into, and markdownlint MD049 rejects it (PJR-19HX).
+    writeFile(
+      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      `# Result ${taskId}\n\n- depends*on を根拠とし、判断不能箇所があれば \\_TODO*/_ASSUMPTION_ を残す。\n`,
+    );
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /^Result Markdown notation violation before commit: .*MD049/,
+    );
+
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+  });
+
+  it('blocks committing when an agent flips an existing deliverable from draft to "ready"', () => {
+    const fixture = setupRepository();
+    // A draft deliverable exists at root before the task runs.
+    writeFile(join(fixture.repo, "docs", "d.yaml"), "id: d\ntype: spec\nstatus: draft\n");
+    git(fixture.repo, "add", "docs/d.yaml");
+    git(fixture.repo, "commit", "-m", "add draft deliverable");
+
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    writeFile(join(worktree.path, "docs", "d.yaml"), "id: d\ntype: spec\nstatus: ready\n");
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /promotion to "ready" is human-only/,
+    );
+  });
+
+  it("allows committing deliverable edits that keep the status unpromoted", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+
+    writeFile(
+      join(worktree.path, "docs", "d.yaml"),
+      "id: d\ntype: spec\nstatus: draft\nbody: edited\n",
+    );
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    expect(committed.committed).toBe(true);
+    expect(committed.targets).toContain("docs/d.yaml");
+  });
+
+  it("commits only the result for a review task, leaving deliverable tampering uncommitted", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-030";
+    const worktree = prepare(fixture, taskId, taskId, planWithIdentity(taskId, { mode: "review" }));
+
+    // A prompt-injected review agent tampers with a deliverable alongside its result.
+    writeFile(join(worktree.path, "docs", "tampered.md"), "injected change\n");
+    writeFile(
+      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      `# Result ${taskId}\n\nstatus: complete\n`,
+    );
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.committed).toBe(true);
+    expect(committed.targets).toEqual([`execution/exec/results/${taskId}-result.md`]);
+    expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("docs/tampered.md");
+  });
+
+  it("commits only the plan targets for an edit task and merges past out-of-scope residue", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+
+    // The doc index committed at HEAD maps the target doc id to its path.
+    writeFile(
+      join(fixture.repo, ".specdojo", "doc-index.json"),
+      JSON.stringify({ version: 1, entries: { "prj-0001:doc-a": "docs/a.md" } }) + "\n",
+    );
+    git(fixture.repo, "add", ".specdojo/doc-index.json");
+    git(fixture.repo, "commit", "-m", "add doc index");
+
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", targets: ["prj-0001:doc-a"] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "target deliverable\n");
+    writeFile(join(worktree.path, "src", "sneaky.ts"), "// injected\n");
+    writeFile(
+      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      `# Result ${taskId}\n\nstatus: complete\n`,
+    );
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.targets).toEqual(
+      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+    );
+    expect(committed.targets).not.toContain("src/sneaky.ts");
+
+    // The out-of-scope file stays in the worktree and must not block the merge.
+    mergeIntoRoot(fixture, worktree, taskId);
+    expect(readFileSync(join(fixture.repo, "docs", "a.md"), "utf8")).toBe("target deliverable\n");
+    expect(existsSync(join(fixture.repo, "src", "sneaky.ts"))).toBe(false);
+    expect(git(worktree.path, "status", "--porcelain", "-uall")).toContain("src/sneaky.ts");
+  });
+
+  it("commits only the result targets for an execution: human edit task", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-140";
+
+    writeFile(
+      join(fixture.repo, ".specdojo", "doc-index.json"),
+      JSON.stringify({ version: 1, entries: { "prj-0001:doc-a": "docs/a.md" } }) + "\n",
+    );
+    git(fixture.repo, "add", ".specdojo/doc-index.json");
+    git(fixture.repo, "commit", "-m", "add doc index");
+
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", targets: ["prj-0001:stale"] }),
+      humanResultWithIdentity(taskId, {
+        mode: "edit",
+        approach: "finalize",
+        targets: ["prj-0001:doc-a"],
+      }),
+    );
+
+    writeFile(
+      join(worktree.path, "docs", "a.md"),
+      "---\nspecdojo:\n  id: prj-0001:doc-a\n  status: ready\n---\n\n# Human target\n",
+    );
+    writeFile(join(worktree.path, "docs", "stale.md"), "stale plan target\n");
+    writeFile(join(worktree.path, "src", "unrelated.ts"), "// unrelated\n");
+    writeFile(
+      join(worktree.path, "execution", "exec", "results", `${taskId}-result.md`),
+      humanResultWithIdentity(taskId, {
+        mode: "edit",
+        approach: "finalize",
+        targets: ["prj-0001:doc-a"],
+      }).replace("status: in_progress", "status: complete"),
+    );
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.targets).toEqual(
+      expect.arrayContaining(["docs/a.md", `execution/exec/results/${taskId}-result.md`]),
+    );
+    expect(committed.targets).not.toContain("docs/stale.md");
+    expect(committed.targets).not.toContain("src/unrelated.ts");
+  });
+
+  it("allows reference-material directories for a bootstrap-approach edit task", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, {
+        mode: "edit",
+        approach: "bootstrap",
+        targets: ["prj-0001:doc-a"],
+      }),
+    );
+
+    writeFile(
+      join(worktree.path, "docs", "ja", "specdojo", "rulebooks", "new-rulebook.md"),
+      "# rulebook\n",
+    );
+    writeFile(join(worktree.path, "docs", "unrelated.md"), "not a target\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.targets).toContain("docs/ja/specdojo/rulebooks/new-rulebook.md");
+    expect(committed.targets).not.toContain("docs/unrelated.md");
+  });
+
+  it("keeps retrofit implementation evidence outside commit scope", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    writeFile(join(fixture.repo, "docs", "a.md"), "before retrofit\n");
+    writeFile(
+      join(fixture.repo, ".specdojo", "doc-index.json"),
+      JSON.stringify({ version: 1, entries: { "prj-0001:doc-a": "docs/a.md" } }) + "\n",
+    );
+    git(fixture.repo, "add", "docs/a.md", ".specdojo/doc-index.json");
+    git(fixture.repo, "commit", "-m", "add retrofit target");
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, {
+        mode: "edit",
+        approach: "retrofit",
+        targets: ["prj-0001:doc-a"],
+      }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "retrofit document update\n");
+    writeFile(join(worktree.path, "src", "evidence.ts"), "// must remain read-only\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.targets).toContain("docs/a.md");
+    expect(committed.targets).not.toContain("src/evidence.ts");
+  });
+
+  it("fails a schedule-originated edit task whose plan declares no targets", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", targets: [] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "# edited by agent\n");
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /no targets in plan\/result frontmatter for edit task T-T-doc-010/,
+    );
+  });
+
+  it("falls back to the exclusion list for a register-originated task without targets", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0137";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    // 登録簿項目は対象成果物を宣言できないため、許可リストではなく除外リストで判定する。
+    writeFile(join(worktree.path, "docs", "a.md"), "# edited by agent\n");
+    writeFile(join(worktree.path, "src", "unrelated.ts"), "// touched by agent\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    // 許可リスト方式なら src/unrelated.ts は範囲外になるため、フォールバックの確認になる。
+    expect(committed.targets).toEqual(expect.arrayContaining(["docs/a.md", "src/unrelated.ts"]));
+  });
+
+  it("leaves agent scratch files outside known deliverable directories uncommitted for a register task", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0142";
+    writeFile(join(fixture.repo, "custom", "kept.md"), "# tracked custom dir\n");
+    git(fixture.repo, "add", "custom/kept.md");
+    git(fixture.repo, "commit", "-m", "add custom dir");
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "# deliverable\n");
+    writeFile(join(worktree.path, "custom", "added.md"), "# new file in tracked dir\n");
+    writeFile(join(worktree.path, "modify.py"), "print('scratch')\n");
+    writeFile(join(worktree.path, "scratch", "patch.js"), "// scratch\n");
+    // 一時ファイルが status: ready を含んでも、tmp/ 配下は commit 対象外なので ready 昇格とはみなさない。
+    writeFile(join(worktree.path, "tmp", "test-schema.yaml"), "id: tmp\nstatus: ready\n");
+    const scopeLogPath = join(
+      worktree.path,
+      "execution",
+      "exec",
+      "evidence",
+      taskId,
+      "run-1",
+      "integrate.log",
+    );
+
+    const committed = commitWorktreeChanges({
+      context: fixture.context,
+      worktree,
+      taskId,
+      scopeLogPath,
+    });
+
+    expect(committed.committed).toBe(true);
+    expect([...committed.targets].sort()).toEqual([
+      "custom/added.md",
+      "docs/a.md",
+      `execution/exec/evidence/${taskId}/run-1/integrate.log`,
+      // 最上位に追加したファイルを result の申し送りへ記録するため、result も commit 対象になる。
+      `execution/exec/results/${taskId}-result.md`,
+      "modify.py",
+    ]);
+    const log = readFileSync(scopeLogPath, "utf8");
+    expect(log).toContain("commit-scope: skipped non-target changes (left in worktree):");
+    expect(log).toContain("  scratch/patch.js");
+    expect(log).toContain("最上位に追加したファイル:");
+    expect(log).toContain("  modify.py");
+    expect(git(worktree.path, "show", "--name-only", "--pretty=format:", "HEAD")).toContain(
+      "modify.py",
+    );
+    expect(git(worktree.path, "show", "--name-only", "--pretty=format:", "HEAD")).not.toContain(
+      "test-schema.yaml",
+    );
+    expect(git(worktree.path, "status", "--porcelain", "-uall").split("\n").sort()).toEqual([
+      "?? scratch/patch.js",
+      "?? tmp/test-schema.yaml",
+    ]);
+
+    mergeIntoRoot(fixture, worktree, taskId);
+    expect(existsSync(join(fixture.repo, "docs", "a.md"))).toBe(true);
+    expect(existsSync(join(fixture.repo, "modify.py"))).toBe(true);
+    expect(existsSync(join(fixture.repo, "scratch", "patch.js"))).toBe(false);
+  });
+
+  it("commits edits to tracked root files and resolved targets for a register task", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0143";
+    writeFile(
+      join(fixture.repo, ".specdojo", "doc-index.json"),
+      JSON.stringify({ entries: { "prj-0001:root-note": "ROOT-NOTE.md:1" } }) + "\n",
+    );
+    git(fixture.repo, "add", ".specdojo/doc-index.json");
+    git(fixture.repo, "commit", "-m", "add doc index");
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, {
+        mode: "edit",
+        origin: "register",
+        targets: ["prj-0001:root-note"],
+      }),
+    );
+
+    writeFile(join(worktree.path, "README.md"), "# edited tracked root file\n");
+    writeFile(join(worktree.path, "ROOT-NOTE.md"), "# declared target\n");
+    writeFile(join(worktree.path, "tmp", "patch.js"), "// scratch\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    // ROOT-NOTE.md は最上位の新規ファイルとして result の申し送りへ記録されるため、result も commit 対象になる。
+    expect([...committed.targets].sort()).toEqual([
+      "README.md",
+      "ROOT-NOTE.md",
+      `execution/exec/results/${taskId}-result.md`,
+    ]);
+  });
+
+  it('still blocks a register task that promotes a committable deliverable to "ready"', () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0144";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "d.yaml"), "id: d\nstatus: ready\n");
+    writeFile(join(worktree.path, "tmp", "test-schema.yaml"), "id: tmp\nstatus: ready\n");
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /promotion to "ready" is human-only.*: docs\/d\.yaml$/,
+    );
+  });
+
+  it("blocks protected config changes even for a register-originated exclusion-list task", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0138";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "# legitimate deliverable\n");
+    writeFile(join(worktree.path, "package.json"), '{"scripts":{"test":"injected"}}\n');
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /agent-config-write: protected configuration changes detected; paths=package\.json/,
+    );
+    expect(git(worktree.path, "log", "-1", "--pretty=%s")).toBe(
+      `exec(${taskId}): prepare execution`,
+    );
+  });
+
+  it("does not block a regenerated gitignored doc index before commit", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0138-GENERATED";
+    writeFile(join(fixture.repo, ".gitignore"), ".specdojo/doc-index.json\n");
+    writeFile(join(fixture.repo, ".specdojo", "doc-index.json"), '{"entries":[]}\n');
+    git(fixture.repo, "add", ".gitignore");
+    git(fixture.repo, "add", "--force", ".specdojo/doc-index.json");
+    git(fixture.repo, "commit", "-m", "add generated index fixture");
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    writeFile(join(worktree.path, "docs", "a.md"), "# legitimate deliverable\n");
+    writeFile(join(worktree.path, ".specdojo", "doc-index.json"), '{"regenerated":true}\n');
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.committed).toBe(true);
+    expect(committed.targets).toContain("docs/a.md");
+    expect(committed.targets).not.toContain(".specdojo/doc-index.json");
+  });
+
+  it("blocks protected config changes already committed by an agent", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0139";
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    writeFile(
+      join(worktree.path, ".specdojo", "exec-defaults.yaml"),
+      "providers:\n  injected: {}\n",
+    );
+    git(worktree.path, "add", ".specdojo/exec-defaults.yaml");
+    git(worktree.path, "commit", "-m", "agent bypasses runner commit scope");
+
+    expect(() => commitWorktreeChanges({ context: fixture.context, worktree, taskId })).toThrow(
+      /paths=\.specdojo\/exec-defaults\.yaml/,
+    );
+  });
+
+  it("resolves a target absent from the doc index via the catalog's declared path", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+
+    // A brand-new deliverable is not in any doc index yet; the catalog declares its path.
+    const catalogPath = join(fixture.repo, "catalog");
+    writeFile(
+      join(catalogPath, "dct-test.yaml"),
+      [
+        "groups:",
+        "  - id: g",
+        "    base_path: docs",
+        "    deliverables:",
+        "      - local_id: doc-new",
+        "        path: new.md",
+        "",
+      ].join("\n"),
+    );
+    const context = { ...fixture.context, catalogPath };
+
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", targets: ["prj-0001:doc-new"] }),
+    );
+    writeFile(join(worktree.path, "docs", "new.md"), "new deliverable\n");
+
+    const committed = commitWorktreeChanges({ context, worktree, taskId });
+
+    expect(committed.targets).toContain("docs/new.md");
+  });
+
+  it("removes a merged worktree even when only regenerated bookkeeping is dirty", () => {
+    const fixture = setupRepository();
+    const taskId = "T-T-doc-010";
+    const worktree = prepare(fixture, taskId);
+    writeFile(join(worktree.path, "docs", "a.md"), "deliverable\n");
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+    mergeIntoRoot(fixture, worktree, taskId);
+
+    // A regenerated, non-commit-target file (e.g. doc-index) left dirty in the worktree must not
+    // block removal: git would refuse without --force, but the tool forces past it automatically.
+    writeFile(join(worktree.path, ".specdojo", "doc-index.json"), '{"regenerated":true}\n');
+
+    removeWorktree({ context: fixture.context, worktree, taskId, deleteBranch: true });
+
+    expect(findExecWorktree(fixture.repo, taskId)).toBeNull();
+  });
+
+  it("commits a deletion alongside an addition and an edit", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0140";
+    writeFile(join(fixture.repo, "docs", "removed.yaml"), "id: removed\nstatus: draft\n");
+    writeFile(join(fixture.repo, "docs", "kept.yaml"), "id: kept\nstatus: draft\n");
+    git(fixture.repo, "add", "docs/removed.yaml", "docs/kept.yaml");
+    git(fixture.repo, "commit", "-m", "add deliverables");
+
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    // 統合（3つの成果物を1つへ）のように、削除・変更・追加が同時に起きる変更。
+    rmSync(join(worktree.path, "docs", "removed.yaml"));
+    writeFile(join(worktree.path, "docs", "kept.yaml"), "id: kept\nstatus: draft\nbody: merged\n");
+    writeFile(join(worktree.path, "docs", "added.yaml"), "id: added\nstatus: draft\n");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.committed).toBe(true);
+    expect(committed.targets).toEqual(
+      expect.arrayContaining(["docs/added.yaml", "docs/kept.yaml", "docs/removed.yaml"]),
+    );
+    expect(git(worktree.path, "status", "--porcelain", "-uall")).toBe("");
+    expect(() => git(worktree.path, "cat-file", "-e", "HEAD:docs/removed.yaml")).toThrow();
+    expect(git(worktree.path, "show", "HEAD:docs/added.yaml")).toContain("id: added");
+  });
+
+  it("commits a deletion that a previously failed attempt already staged", () => {
+    const fixture = setupRepository();
+    const taskId = "PJR-0141";
+    writeFile(join(fixture.repo, "docs", "removed.yaml"), "id: removed\nstatus: draft\n");
+    git(fixture.repo, "add", "docs/removed.yaml");
+    git(fixture.repo, "commit", "-m", "add deliverable");
+
+    const worktree = prepare(
+      fixture,
+      taskId,
+      taskId,
+      planWithIdentity(taskId, { mode: "edit", origin: "register", targets: [] }),
+    );
+
+    // commit 前に中断した統合の残骸: 削除だけが index に入っている。このパスは作業ツリー
+    // にも index にも無いため、`git add -A -- <path>` は pathspec 不一致で fatal になる。
+    rmSync(join(worktree.path, "docs", "removed.yaml"));
+    git(worktree.path, "add", "-A", "--", "docs/removed.yaml");
+    expect(git(worktree.path, "status", "--porcelain")).toBe("D  docs/removed.yaml");
+
+    const committed = commitWorktreeChanges({ context: fixture.context, worktree, taskId });
+
+    expect(committed.committed).toBe(true);
+    expect(committed.targets).toEqual(["docs/removed.yaml"]);
+    expect(git(worktree.path, "status", "--porcelain")).toBe("");
+    expect(() => git(worktree.path, "cat-file", "-e", "HEAD:docs/removed.yaml")).toThrow();
+
+    mergeIntoRoot(fixture, worktree, taskId);
+    expect(existsSync(join(fixture.repo, "docs", "removed.yaml"))).toBe(false);
+  });
+});
+
+describe("isExecBranchMergedIntoCurrent", () => {
+  it("統合 commit が失敗して先端が checkpoint のままの exec ブランチは merge 済みとみなさない", () => {
+    const fixture = setupRepository();
+    git(fixture.repo, "branch", "exec/test-T-DOC-010");
+    const worktree: ExecWorktree = {
+      path: join(fixture.worktreeBase, "test-T-DOC-010"),
+      branch: "exec/test-T-DOC-010",
+      name: "test-T-DOC-010",
+      created: false,
+    };
+
+    expect(isExecBranchMergedIntoCurrent({ context: fixture.context, worktree })).toBe(false);
+  });
+
+  it("--no-ff で merge 済みの exec ブランチは merge 済みとみなす", () => {
+    const fixture = setupRepository();
+    git(fixture.repo, "checkout", "-b", "exec/test-T-DOC-010");
+    writeFile(join(fixture.repo, "docs", "doc.md"), "task change\n");
+    git(fixture.repo, "add", "docs/doc.md");
+    git(fixture.repo, "commit", "-m", "exec(T-DOC-010): apply task changes");
+    git(fixture.repo, "checkout", "-");
+    git(fixture.repo, "merge", "--no-ff", "--no-edit", "exec/test-T-DOC-010");
+    const worktree: ExecWorktree = {
+      path: join(fixture.worktreeBase, "test-T-DOC-010"),
+      branch: "exec/test-T-DOC-010",
+      name: "test-T-DOC-010",
+      created: false,
+    };
+
+    expect(isExecBranchMergedIntoCurrent({ context: fixture.context, worktree })).toBe(true);
+  });
+});
+
+describe("selectStageablePaths", () => {
+  it("keeps tracked, modified, and untracked paths but drops already-staged deletions", () => {
+    const fixture = setupRepository();
+    writeFile(join(fixture.repo, "docs", "tracked.md"), "tracked\n");
+    writeFile(join(fixture.repo, "docs", "removed.md"), "removed\n");
+    writeFile(join(fixture.repo, "docs", "unstaged-removal.md"), "unstaged removal\n");
+    git(fixture.repo, "add", "docs/tracked.md", "docs/removed.md", "docs/unstaged-removal.md");
+    git(fixture.repo, "commit", "-m", "add docs");
+
+    rmSync(join(fixture.repo, "docs", "removed.md"));
+    git(fixture.repo, "add", "-A", "--", "docs/removed.md");
+    rmSync(join(fixture.repo, "docs", "unstaged-removal.md"));
+    writeFile(join(fixture.repo, "docs", "tracked.md"), "tracked v2\n");
+    writeFile(join(fixture.repo, "docs", "untracked.md"), "untracked\n");
+
+    expect(
+      selectStageablePaths(fixture.repo, [
+        "docs/removed.md",
+        "docs/tracked.md",
+        "docs/unstaged-removal.md",
+        "docs/untracked.md",
+      ]),
+    ).toEqual(["docs/tracked.md", "docs/unstaged-removal.md", "docs/untracked.md"]);
+  });
+
+  it("returns an empty list for no paths", () => {
+    const fixture = setupRepository();
+
+    expect(selectStageablePaths(fixture.repo, [])).toEqual([]);
+  });
+});
+
+describe("deliverableStatus", () => {
+  it("reads status from markdown frontmatter", () => {
+    expect(
+      deliverableStatus("---\nspecdojo:\n  id: d\n  status: ready\n---\n\n# Title\n", "docs/d.md"),
+    ).toBe("ready");
+  });
+
+  it("reads top-level status from yaml deliverables", () => {
+    expect(deliverableStatus("id: d\nstatus: draft\n", "docs/d.yaml")).toBe("draft");
+  });
+
+  it("reads top-level status from json deliverables", () => {
+    expect(deliverableStatus('{"id":"d","status":"ready"}', "docs/d.json")).toBe("ready");
+  });
+
+  it("returns undefined when status is absent or content is unparsable", () => {
+    expect(deliverableStatus("# Title only\n", "docs/d.md")).toBeUndefined();
+    expect(deliverableStatus("id: d\n", "docs/d.yaml")).toBeUndefined();
+  });
+});

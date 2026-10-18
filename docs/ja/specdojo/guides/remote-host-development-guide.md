@@ -60,7 +60,9 @@ npx specdojo devcontainer scaffold --provider claude,codex
 
 既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。Ollama 接続、コンテナ内の cron、コンテナ内の tmux が必要な場合だけ `--ollama`、`--cron`、`--tmux` を追加します。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、`--tmux` は不要です。
 
-生成する `devcontainer.json` は、利用リポジトリ単体ではなく、その親ディレクトリを `/workspaces/specdojo-workspace` へマウントします。別リポジトリ構成では `repos` の参照先（例: `../app1`）と `worktree_base`（例: `../app1-specdojo-worktrees`）が利用リポジトリの外にあるためです。これらの Git リポジトリと worktree は `safe.directory` の対象になります。一方、同じ親ディレクトリに置いたその他のファイルもコンテナから見えるため、秘密情報などコンテナへ公開しないファイルは別の場所へ置いてください。
+生成する `devcontainer.json` は、利用リポジトリ単体ではなく、その親ディレクトリをホスト側と同じ名前の `/workspaces/<親名>` へマウントします。例えば `app1-workspace/app1-specdojo` の作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成では `repos` の参照先（例: `../app1`）と `worktree_base`（例: `../app1-specdojo-worktrees`）が利用リポジトリの外にあるためです。これらの Git リポジトリと worktree は `safe.directory` の対象になります。一方、同じ親ディレクトリに置いたその他のファイルもコンテナから見えるため、秘密情報などコンテナへ公開しないファイルは別の場所へ置いてください。
+
+親名に空白や `/` などがある場合は scaffold が停止するため、`--workspace-name <name>` で英数字・`.`・`_`・`-` だけの名前を指定します。また、コンテナ内で作成した Git worktree は絶対パスを記録します。ホスト側の親ディレクトリ名を変えて `.devcontainer/` を作り直す場合は、`--workspace-name` に以前の名前を指定し、コンテナ内のパスを維持してください。
 
 端末版 Emacs と TypeScript・Markdown・YAML・Bash の LSP 環境を追加する場合は `--editor emacs` を指定します。
 
@@ -69,6 +71,13 @@ npx specdojo devcontainer scaffold --provider claude,codex --editor emacs
 ```
 
 生成される `.devcontainer/emacs/init.el` は、`~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/emacs/init.el` のいずれも無い場合だけコピーされます。空の `~/.emacs.d` があればその中の `init.el` へ、なければ `~/.config/emacs/init.el` へ配置し、配置先を出力します。初回作成前の既定値は生成されたテンプレートで変更でき、作成後は出力されたコピー先を編集します。dotfiles が設定を配置していれば上書きされません。
+
+scaffold は、常時稼働ホストへの接続と tmux セッションの維持に使えるサンプルを `.devcontainer/remote-host/` に生成します。
+
+- `specdojo-tmux.sh.sample`: 常時稼働ホストの `~/bin/specdojo-tmux.sh` などへコピーし、実行権限（`chmod +x`）を付与して使います。devcontainer が停止していれば `devcontainer up` で起動し、コンテナ内の tmux セッション（`specdojo`）へ接続します。ホスト名や作業パスはプレースホルダーになっているため、ホストの環境に合わせて調整してください。
+- `ssh-config.sample`: 接続元端末の `~/.ssh/config` へ追加して使います。ホストへの通常接続エイリアスと、`RemoteCommand` と `RequestTTY force` で `specdojo-tmux.sh` を直接呼び出すエイリアス（`Host <host>-tmux`）を含みます。
+
+`devcontainer.json` の `appPort` や `forwardPorts` で開発サーバなどの公開ポートを設定している場合は、接続用エイリアスに `LocalForward` の行が含まれます。開発サーバのポートを増やしたときは、`~/.ssh/config` の tmux 接続用エイリアスにも `LocalForward <ポート> 127.0.0.1:<ポート>` を追加してください。
 
 ## 3. 構成例
 

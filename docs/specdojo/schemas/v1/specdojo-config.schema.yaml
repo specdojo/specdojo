@@ -1,7 +1,7 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 title: SpecDojo Config (.specdojo/specdojo.config.json)
 description: >-
-  Shape of .specdojo/specdojo.config.json. The CLI (src/specdojo-config.ts loadConfig) is the
+  Shape of .specdojo/specdojo.config.json. The CLI (src/shared/specdojo-config.ts loadConfig) is the
   authority for checks that a schema cannot express: repository names that collide with a
   project id and repository paths that do not exist.
 type: object

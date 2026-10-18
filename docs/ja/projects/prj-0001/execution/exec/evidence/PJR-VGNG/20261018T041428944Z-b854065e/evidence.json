@@ -1,0 +1,382 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-VGNG",
+  "run_id": "20261018T041428944Z-b854065e",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-18T04:14:28.944Z",
+    "completed_at": "2026-10-18T04:18:47.914Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-vgng.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-job-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/job-run.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/job.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/routine-run.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/job-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/inplace.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job/job.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/routine/routine.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/grade-per-document.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/grade/run-per-document.sh",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/inplace.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 24,
+    "summary": ".../040-system-design/sysd-job-execution.md        | 12 ++---\n .../controls/project-register/events/pjr-vgng.yaml | 16 ++++++\n ...pjr-vgng-job-run-partial-failure-integration.md |  3 +-\n .../prj-0001/jobs/job-grade-deliverable.yaml       | 22 ++++++--\n docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml | 22 ++++++--\n .../ja/specdojo/exec-templates/xrp-job-template.md | 10 ++--\n docs/ja/specdojo/guides/routine-operation-guide.md | 10 ++--\n .../specdojo/standards/job-definition-standard.md  | 38 ++++++-------\n docs/specdojo/schemas/v1/job-run.schema.yaml       |  4 +-\n docs/specdojo/schemas/v1/job.schema.yaml           |  7 +++\n docs/specdojo/schemas/v1/routine-run.schema.yaml   |  2 +-\n src/dashboard/routines.ts                          |  5 +-\n src/exec/run/job.ts                                | 58 ++++++++++++++------\n src/job/definition.ts                              | 35 ++++++++++--\n src/job/job.ts                                     |  6 +--\n src/routine/definition.ts                          |  2 +-\n src/routine/routine.ts                             | 10 +++-\n tests/src/dashboard/dashboard.test.ts              | 18 +++++++\n tests/src/exec/job-worktree.integration.test.ts    | 31 +++++++++++\n tests/src/exec/run/inplace.test.ts                 | 60 +++++++++++++++++++++\n tests/src/job/job.test.ts                          | 62 +++++++++++++++++++++-\n tests/src/routine/routine.test.ts                  |  9 +++-\n tests/tools/grade-per-document.test.ts             | 27 +++++++++-\n tools/grade/run-per-document.sh                    | 22 ++++++--\n 24 files changed, 409 insertions(+), 82 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/projects/prj-0001/controls/project-register/events/pjr-vgng.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/specdojo/exec-templates/xrp-job-template.md docs/ja/specdojo/guides/routine-operation-guide.md docs/ja/specdojo/standards/job-defini…",
+      "status": "passed",
+      "summary": "変更した Markdown・YAML・TypeScript を整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "passed",
+      "summary": "終了コード衝突対策の追加後も整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "bash -n tools/grade/run-per-document.sh && node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "シェル構文と catalog 検証が成功。catalog は既存の参照先欠落警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビューを正常に再生成。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --job job-grade-deliverable --project prj-0001 --scheduled-at 2026-10-18T00:00:00Z --input period=2026-10-18 --dry-run && node --import tsx src/specdojo.ts exec run --job job-grade-kata --project prj-0001 --scheduled-at 2026-10-18T00:00:00Z --input period=2026-10-18 --dry-run",
+      "status": "passed",
+      "summary": "両 grade Job の定義・入力展開・review agent 解決が成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG/src/schedule/build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 28 problems (0 errors, 28 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-D4OvJS/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-q1g6LM/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-2u\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-ddmu1U/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8EawKs/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-54wp9h/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-jQ0iLy/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\ns equality\n\nExpected: \"partial\"\nReceived: \"failed\"\n\n ❯ tests/src/exec/run/inplace.test.ts:578:25\n    576|         readFileSync(join(executionPath, \"jobs\", \"runs\", runFile), \"ut…\n    577|       ) as { run_id: string; state: string; attempts: Array<{ exit_cod…\n    578|       expect(run.state).toBe(\"partial\");\n       |                         ^\n    579|       expect(run.attempts[0].exit_code).toBe(2);\n    580|       expect(process.exitCode).toBeUndefined();\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "changed",
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-vgng-job-run-partial-failure-integration.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-deliverable.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/jobs/job-grade-kata.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/exec-templates/xrp-job-template.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/exec-templates/xrp-job-template.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/standards/job-definition-standard.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/job-run.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/job-run.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/job.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/job.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/routine-run.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/routine-run.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "src/dashboard/routines.ts",
+      "status": "changed",
+      "path": "src/dashboard/routines.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/run/job.ts",
+      "status": "changed",
+      "path": "src/exec/run/job.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/job/definition.ts",
+      "status": "changed",
+      "path": "src/job/definition.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/job/job.ts",
+      "status": "changed",
+      "path": "src/job/job.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/routine/definition.ts",
+      "status": "changed",
+      "path": "src/routine/definition.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/routine/routine.ts",
+      "status": "changed",
+      "path": "src/routine/routine.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/dashboard/dashboard.test.ts",
+      "status": "changed",
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/exec/job-worktree.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/job-worktree.integration.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/job/job.test.ts",
+      "status": "changed",
+      "path": "tests/src/job/job.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/routine/routine.test.ts",
+      "status": "changed",
+      "path": "tests/src/routine/routine.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/tools/grade-per-document.test.ts",
+      "status": "changed",
+      "path": "tests/tools/grade-per-document.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tools/grade/run-per-document.sh",
+      "status": "changed",
+      "path": "tools/grade/run-per-document.sh",
+      "reason": ""
+    }
+  ],
+  "final_message": "部分失敗を `partial` として記録し、`complete-with-findings` の場合のみ完了分を統合する実装・文書・テストを完成しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-VGNG/20261018T041428944Z-b854065e/executor.log",
+      "bytes": 5325,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-VGNG/20261018T041428944Z-b854065e/parent-validation-attempt-1-test-unit.log",
+      "bytes": 3272,
+      "truncated": false
+    }
+  ]
+}

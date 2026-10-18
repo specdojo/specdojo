@@ -1,0 +1,72 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-VGNG
+
+Updated ticket status → ready: /tmp/specdojo-ticket-ddmu1U/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-8EawKs/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-54wp9h/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-jQ0iLy/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-6VNeqU/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-ExnG6r/pjr-0001-topic.md
+ ❯ tests/src/exec/run/inplace.test.ts (18 tests | 1 failed) 796ms
+     × runs the analysis reporter and records partial for its configured exit code 73ms
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-PrlGya/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-PrlGya/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-PrlGya/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-PrlGya/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-lVwbgZ/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-b3G7oT/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-18T04:23:45.868Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-18T04:22:46.084Z.
+fallback complete
+
+ Test Files  1 failed | 133 passed (134)
+      Tests  1 failed | 2110 passed (2111)
+   Start at  13:22:07
+   Duration  44.71s (transform 2.64s, setup 568ms, import 20.40s, tests 51.22s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/run/inplace.test.ts > exec run (in-place, default) > runs the analysis reporter and records partial for its configured exit code
+AssertionError: expected 'failed' to be 'partial' // Object.is equality
+
+Expected: "partial"
+Received: "failed"
+
+ ❯ tests/src/exec/run/inplace.test.ts:578:25
+    576|         readFileSync(join(executionPath, "jobs", "runs", runFile), "ut…
+    577|       ) as { run_id: string; state: string; attempts: Array<{ exit_cod…
+    578|       expect(run.state).toBe("partial");
+       |                         ^
+    579|       expect(run.attempts[0].exit_code).toBe(2);
+    580|       expect(process.exitCode).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3bf028994a2c4de09fe49e774d903ec8
+  ts: "2026-10-18T06:26:51Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ローカル LLM を Ollama と gemma・qwen の役割の分担に整理する
+    - field: description
+      from: ""
+      to: ローカル LLM の基盤を Ollama にし、reporter は gemma26、小さな修正の executor は作業の種類で gemma-executor（31B）と qwen-executor を使い分ける。thinking on の executor、gemma26 の executor、使っていない定義は無効にする
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_94c9720cc9144edabeebf5455a1ffb06
+  ts: "2026-10-18T06:30:42Z"
+  action: close
+  actor: PO
+  from_status: open
+  to_status: decided
+  reason: orchestrator との会話で、試行の結果に基づく整理の案を推奨のとおり承認した
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: ローカル LLM の基盤を Ollama にし、reporter は gemma26-reporter、小さな修正の executor は plan で決まった作業に gemma-executor（31B）、内容を組み立てる作業に qwen-executor を使う。thinking on の executor・gemma26 の executor・使っていない定義は無効にし、名簿の変更は PJR-8MPY で行う
+  previous_event_id: reg_3bf028994a2c4de09fe49e774d903ec8

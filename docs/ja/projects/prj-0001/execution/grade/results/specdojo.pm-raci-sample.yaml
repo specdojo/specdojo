@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-raci-sample
 path: docs/ja/specdojo/samples/pm-raci-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 98
-graded_at: "2026-09-05T20:49:23.750Z"
-graded_by: gemma-expert-executor
-content_hash: ed4bc499d2c44481bbf277ebf699ed65220826e5c30daa91dc0ee5040a2fbdea
+score: 97
+graded_at: "2026-10-17T20:04:25.576Z"
+graded_by: agy-expert-executor
+content_hash: e1d69bdb1e8d79e642a20af6e93f964104132bebfc25c8137e32956d2efe60ba
 categories:
-  consistency:
-    score: 88
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
     score: 100
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -56,11 +111,13 @@ findings:
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 40
-    message: Schedule・実行主体との対応において、RACI と Schedule owner が不一致となった場合にどちらを正本として更新するかの方針が不足している。
     anchor: "- 成果物を統合・分割した場合も、各作業の `A` が不明にならないようにする。"
+    message: Schedule・実行主体との対応において、RACI と Schedule owner が不一致となった場合にどちらを正本として更新するかの方針が不足している。
+    message_ja: Schedule・実行主体との対応において、RACI と Schedule owner が不一致となった場合にどちらを正本として更新するかの方針が不足している。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 45
-    message: 見直し条件において、更新トリガーのみが記載されており、ルールブックで例示されている「確認すること（確認内容）」の記述が不足している。
     anchor: 採用 Role code、成果物区分、Schedule の owner、主要判断、兼務の継続可能性が変わった場合に見直す。
+    message: 見直し条件において、更新トリガーのみが記載されており、ルールブックで例示されている「確認すること（確認内容）」の記述が不足している。
+    message_ja: 見直し条件において、更新トリガーのみが記載されており、ルールブックで例示されている「確認すること（確認内容）」の記述が不足している。

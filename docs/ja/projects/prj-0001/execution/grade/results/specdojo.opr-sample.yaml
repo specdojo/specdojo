@@ -3,31 +3,77 @@ version: 1
 document: specdojo:opr-sample
 path: docs/ja/specdojo/samples/opr-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 61
-graded_at: "2026-09-05T17:13:21.775Z"
-graded_by: gemma-expert-executor
+score: 53
+graded_at: "2026-10-16T20:24:46.153Z"
+graded_by: agy-expert-executor
 content_hash: 715cf0814ea7b03345e2be87e8f510af4c8e0af530abd2e1e9e4414130c4b203
 categories:
-  consistency:
-    score: 25
+  purpose:
+    score: 50
+  operations:
+    score: 69
+  planning:
+    score: 42
+  business:
+    score: 50
+  architecture:
+    score: 83
   usability:
     score: 75
-  architecture:
-    score: 100
+  implementation:
+    score: 50
   quality:
     score: 50
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 1
+    score: 25
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
     level: 2
     score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
     level: 3
     score: 75
@@ -38,9 +84,18 @@ viewpoints:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,43 +103,200 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 1
-  major: 4
-  minor: 1
+  major: 19
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: Frontmatter の `type` が `project` となっており、`opr-rulebook` の定義（operations）と矛盾している。
-    anchor: ""
+    rule: vp-po-purpose-alignment
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: >-
+      The document declares the target system as a candy store sales management system, but fails to define actual
+      operational procedures aligned with project goals, scope, and priorities.
+    message_ja: ドキュメントでは対象システムを菓子店販売管理システムと宣言していますが、プロジェクトの目標、スコープ、優先順位に沿った実際の運用手順が定義されていません。
   - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      The open issues section only contains a trivial placeholder without specifying actionable decision points, scope
+      of impact, or criteria for PO approval or escalation.
+    message_ja: 未解決事項のセクションには、実行可能な意思決定ポイント、影響範囲、またはPOの承認やエスカレーションの基準が指定されていない、些細なプレースホルダーしか含まれていません。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: >-
+      While the document contains no private information, human approval and publication accountability responsibilities
+      are only mentioned as an abstract item without defining accountable roles.
+    message_ja: ドキュメントにプライベートな情報は含まれていませんが、人の承認および公開に関する責任が、責任ある役割を定義しない抽象的な項目としてのみ言及されています。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Operational tasks, execution sequences, estimated durations, and completion conditions are completely omitted,
+      preventing any work breakdown or scheduling.
+    message_ja: 運用タスク、実行シーケンス、推定所要時間、および完了条件が完全に省略されており、作業分解やスケジューリングを行うことができません。
+  - id: F005
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: Responsible role codes and execution triggers or deadlines are not defined for any operational procedure.
+    message_ja: いかなる運用手順についても、担当者の役割コードや実行のトリガー、または期限が定義されていません。
+  - id: F006
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Operational risks, dependencies on subsequent deliverables or upstream systems, and project risk candidates are
+      not identified.
+    message_ja: 運用のリスク、後続の成果物やアップストリームシステムへの依存関係、およびプロジェクトのリスク候補が特定されていません。
+  - id: F007
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Items to be transferred to project registers (risks, issues, change requests) and reporting destinations with
+      designated role codes are not separated or defined.
+    message_ja: プロジェクトのレジスター（リスク、課題、変更要求）に転記される項目と、指定された役割コードを持つ報告先が区別または定義されていません。
+  - id: F008
+    severity: major
+    rule: vp-ba-business-value
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: >-
+      Business challenges, consequences of inaction, and specific expected business value or success criteria for the
+      confectionery store operations are not defined.
+    message_ja: 菓子店の運営におけるビジネス上の課題、何もしなかった場合の結果、および具体的な期待されるビジネス価値や成功基準が定義されていません。
+  - id: F009
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      Operational requirements, acceptance criteria, and explicit in-scope and out-of-scope boundaries are entirely
+      missing from a user and operator perspective.
+    message_ja: ユーザーおよびオペレーターの視点から、運用要件、受け入れ基準、および明確なインスコープとアウトオブスコープの境界が完全に欠落しています。
+  - id: F010
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      Specific stakeholders, operators, reviewers, and agreement targets for the operational procedures are not
+      identified.
+    message_ja: 運用手順における特定のステークホルダー、オペレーター、レビュアー、および合意の対象が特定されていません。
+  - id: F011
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      Technical constraints, architectural prerequisites, external dependencies, and configuration decisions are not
+      specified.
+    message_ja: 技術的な制約、アーキテクチャの前提条件、外部依存関係、および構成に関する決定事項が指定されていません。
+  - id: F012
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      Section 3 ('記述内容') and Section 4 ('最小記述例') duplicate the same high-level summary list of operational topics and
+      can be consolidated without losing any decision information.
+    message_ja: セクション3 ('記述内容') とセクション4 ('最小記述例') は、運用トピックのハイレベルな要約リストを重複して記載しており、決定事項の情報を失うことなく統合できます。
+  - id: F013
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      Implementation and execution details such as operational commands, input parameters, configuration files, and
+      completion conditions are missing.
+    message_ja: 運用コマンド、入力パラメータ、設定ファイル、および完了条件などの実装および実行の詳細が欠落しています。
+  - id: F014
+    severity: major
+    rule: vp-dev-change-impact
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Impact of operational changes on existing system components, data schemas, and procedure compatibility is not
+      evaluated or identified.
+    message_ja: 運用変更が既存のシステムコンポーネント、データスキーマ、および手順の互換性に与える影響が評価または特定されていません。
+  - id: F015
+    severity: major
+    rule: vp-dev-testability
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Verification commands, expected results, target log files, and error handling steps following operational
+      procedures are entirely absent.
+    message_ja: 運用手順の後の検証コマンド、期待される結果、対象のログファイル、およびエラーハンドリングの手順が完全に欠落しています。
+  - id: F016
     severity: minor
     rule: vp-qe-verifiability
     line: 1
+    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
     message: 手順の具体例が記述されておらず、判定条件や完了条件の具体的な記述水準（verifiability）を提示できていない。
-    anchor: ""
-  - id: F003
+    message_ja: 手順の具体例が記述されておらず、判定条件や完了条件の具体的な記述水準（verifiability）を提示できていない。
+  - id: F017
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
     message: "`opr-rulebook` で定義されている必須章（概要〜関連文書導線）がすべて欠落しており、運用手順書の構成として不成立である。"
-    anchor: ""
-  - id: F004
+    message_ja: "`opr-rulebook` で定義されている必須章（概要〜関連文書導線）がすべて欠落しており、運用手順書の構成として不成立である。"
+  - id: F018
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
     message: Frontmatter の必須項目 `title` が不足している。
-    anchor: ""
-  - id: F005
+    message_ja: Frontmatter の必須項目 `title` が不足している。
+  - id: F019
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
+    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
+    message: Frontmatter の `type` が `project` となっており、`opr-rulebook` の定義（operations）と矛盾している。
+    message_ja: Frontmatter の `type` が `project` となっており、`opr-rulebook` の定義（operations）と矛盾している。
+  - id: F020
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
     message: 成果物の完成例ではなく「記述すべき内容のリスト」となっており、OPR のサンプルとしての責務（完成例の提示）を果たしていない。
-    anchor: ""
-  - id: F006
+    message_ja: 成果物の完成例ではなく「記述すべき内容のリスト」となっており、OPR のサンプルとしての責務（完成例の提示）を果たしていない。
+  - id: F021
     severity: major
     rule: vp-ux-readability
     line: 1
+    anchor: "# [運用手順](../rulebooks/opr-rulebook.md) サンプル"
     message: 具体的な記述例ではなくメタ記述（項目リスト）となっているため、執筆時の具体水準を把握するためのリファレンスとして不十分である。
-    anchor: ""
+    message_ja: 具体的な記述例ではなくメタ記述（項目リスト）となっているため、執筆時の具体水準を把握するためのリファレンスとして不十分である。
+  - id: F022
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Criteria and prerequisites for advancing the document status from draft to ready, including specific approvers and
+      pre-release verification checks, are not defined.
+    message_ja: 特定の承認者やリリース前の検証チェックを含む、ドキュメントのステータスをドラフトからレディに進めるための基準と前提条件が定義されていません。
+  - id: F023
+    severity: major
+    rule: vp-ops-operability
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Actionable operational procedures for routine maintenance, incident response, change management, and inquiry
+      handling are completely missing.
+    message_ja: 日常的なメンテナンス、インシデント対応、変更管理、および問い合わせ対応のための実行可能な運用手順が完全に欠落しています。

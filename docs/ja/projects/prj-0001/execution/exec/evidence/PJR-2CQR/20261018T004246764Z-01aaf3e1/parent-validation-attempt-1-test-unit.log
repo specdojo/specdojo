@@ -1,0 +1,84 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR
+
+Updated ticket status → ready: /tmp/specdojo-ticket-wVzGkv/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-HvawwM/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-2UVs2o/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-mB74wa/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-Mq9jUN/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-3kir2f/pjr-0001-topic.md
+ ❯ tests/src/catalog/plan-command.test.ts (10 tests | 1 failed) 11739ms
+     × validate は保存済み plan を検証する 8305ms
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+ ❯ tests/src/exec/worktree-ops.test.ts (5 tests | 1 failed) 12366ms
+     × prettier が強調へ書き換えた再現文（PJR-19HX）を MD049 として block する 11288ms
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-18T00:51:53.242Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-18T00:50:53.728Z.
+fallback complete
+before
+  
+  
+docs/selected.md
+Wrote agent stdout: /tmp/specdojo-agent-command-gsxVEG/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-J2BbO4/outputs/partial.txt
+Would move 1 agent member(s) from /tmp/specdojo-members-Hh9lX8/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-Hh9lX8/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-Hh9lX8/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-Hh9lX8/.specdojo/agent-members.yaml
+
+ Test Files  2 failed | 132 passed (134)
+      Tests  2 failed | 2095 passed (2097)
+   Start at  09:50:14
+   Duration  62.47s (transform 2.98s, setup 608ms, import 26.06s, tests 76.10s, environment 9ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+problem
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/catalog/plan-command.test.ts > catalog plan CLI > validate は保存済み plan を検証する
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/catalog/plan-command.test.ts:290:3
+    288|   });
+    289|
+    290|   it("validate は保存済み plan を検証する", async () => {
+       |   ^
+    291|     await withRepo(async ({ root }) => {
+    292|       writeDataFlowCatalog(root);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/src/exec/worktree-ops.test.ts > assertResultMarkdownlint > prettier が強調へ書き換えた再現文（PJR-19HX）を MD049 として block する
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/exec/worktree-ops.test.ts:43:3
+     41|   });
+     42|
+     43|   it("prettier が強調へ書き換えた再現文（PJR-19HX）を MD049 として block する", () => {
+       |   ^
+     44|     // `depends_on` を囲まずに `_TODO_` と同居させた文を prettier --write に通した実出力。
+     45|     const target = fixture(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

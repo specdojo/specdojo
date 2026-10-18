@@ -1,0 +1,91 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-E025
+
+Updated ticket status → ready: /tmp/specdojo-ticket-nKDuCW/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-4WHS6A/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-wGj2j3/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-oOPsRH/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-Jat0z7/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-VU22Fh/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-9jdBi8/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-9jdBi8/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-9jdBi8/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-9jdBi8/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-OiuwLe/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-J6bUET/outputs/partial.txt
+ ❯ tests/src/exec/plans-grade-findings.test.ts (3 tests | 2 failed) 9ms
+     × 展開の有無・上限・サイドカー未存在の扱いを検証する 6ms
+     × 文書数の上限 1ms
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-18T09:36:19.016Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-18T09:35:19.233Z.
+fallback complete
+
+ Test Files  1 failed | 133 passed (134)
+      Tests  2 failed | 2142 passed (2144)
+   Start at  18:34:41
+   Duration  44.77s (transform 2.68s, setup 578ms, import 20.57s, tests 49.96s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/plans-grade-findings.test.ts > registerGradeFindingsText > 展開の有無・上限・サイドカー未存在の扱いを検証する
+SyntaxError: Unexpected end of JSON input
+ ❯ loadConfig src/shared/specdojo-config.ts:760:23
+    758|
+    759|   const raw = readFileSync(configPath, "utf8");
+    760|   const parsed = JSON.parse(raw) as SpecDojoConfig;
+       |                       ^
+    761|
+    762|   if (!parsed || parsed.version !== 1 || typeof parsed.projects !== "o…
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:78:22
+ ❯ gradeResultPathForDocument src/shared/grade-result.ts:109:5
+ ❯ readGradeResultForDocument src/shared/grade-result.ts:162:26
+ ❯ Module.registerGradeFindingsText src/exec/plans-storage.ts:138:20
+ ❯ tests/src/exec/plans-grade-findings.test.ts:102:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/src/exec/plans-grade-findings.test.ts > registerGradeFindingsText > 文書数の上限
+SyntaxError: No number after minus sign in JSON at position 1 (line 1 column 2)
+ ❯ loadConfig src/shared/specdojo-config.ts:760:23
+    758|
+    759|   const raw = readFileSync(configPath, "utf8");
+    760|   const parsed = JSON.parse(raw) as SpecDojoConfig;
+       |                       ^
+    761|
+    762|   if (!parsed || parsed.version !== 1 || typeof parsed.projects !== "o…
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:78:22
+ ❯ gradeResultPathForDocument src/shared/grade-result.ts:109:5
+ ❯ readGradeResultForDocument src/shared/grade-result.ts:162:26
+ ❯ Module.registerGradeFindingsText src/exec/plans-storage.ts:138:20
+ ❯ tests/src/exec/plans-grade-findings.test.ts:137:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

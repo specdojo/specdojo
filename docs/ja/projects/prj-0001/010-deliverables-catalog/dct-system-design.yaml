@@ -76,7 +76,7 @@ groups:
         note: PJR-ZP0Bで新設。旧sysd-agent-settings.mdの規範をscp-<カテゴリ>-<連番>形式へ再構成済み
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するrate limit検出・retry/fallback方針、command_template解決の共通規則、worktree分離のライフサイクル規則、append-onlyイベント・reopenの遷移規則
         done_criteria:
           - text: 横断ルールが実装上の制約として確認できること
@@ -105,10 +105,10 @@ groups:
         note: 既存文書のretrofit。横断ルールと運用手順を移設し、5providerとorchestrator設計へのhubへ縮小済み
         evidence_refs:
           - kind: implementation
-            path: src/specdojo-config.ts
+            path: src/shared/specdojo-config.ts
             purpose: AgentProvider（opencode/claude/codex/copilot/antigravity/custom）の型定義
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するmember選択・起動コマンド解決（command_template/command_params）の共通規則、3層（SpecDojo CLI／agent／exec run）の責務分担、非対話実行・worktree割当の制御
         done_criteria: &sysd-term-done-criteria
           - text: 設計トピックの採用理由・制約が業務要件と整合していること
@@ -138,7 +138,7 @@ groups:
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するproviders.claudeのcommand_template解決規則
         done_criteria: *sysd-term-done-criteria
 
@@ -153,7 +153,7 @@ groups:
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するproviders.codexのcommand_template解決規則
         done_criteria: *sysd-term-done-criteria
 
@@ -169,7 +169,7 @@ groups:
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するproviders.opencodeのcommand_template解決規則
         done_criteria: *sysd-term-done-criteria
 
@@ -184,7 +184,7 @@ groups:
         note: 既存文書のretrofit。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation
-            path: src/exec.ts
+            path: src/exec/exec.ts
             purpose: exec コマンド入口から到達するproviders.copilotのcommand_template解決規則
         done_criteria: *sysd-term-done-criteria
 
@@ -198,10 +198,10 @@ groups:
         rulebook: specdojo:sysd-rulebook
         evidence_refs:
           - kind: implementation
-            path: src/exec-agent-config.ts
+            path: src/exec/agent-config.ts
             purpose: providers.antigravityのcommand_templateとcommand_params解決規則
           - kind: implementation
-            path: src/exec-agent-protected-config.ts
+            path: src/exec/agent-protected-config.ts
             purpose: agent指示ディレクトリとroot指示ファイルの固定保護規則
         done_criteria: *sysd-term-done-criteria
 
@@ -233,9 +233,9 @@ groups:
         note: 既存文書のretrofit（現状status=ready）。rulebook参照をspecdojo:sysd-rulebook（PJR-ZP0Bで新設）へ更新する
         evidence_refs:
           - kind: implementation
-            path: src/job.ts
+            path: src/job/job.ts
             purpose: Job Definition／Job Runの概念モデル・生成・実行フロー
           - kind: implementation
-            path: src/routine.ts
+            path: src/routine/routine.ts
             purpose: action.kind＝jobによるJob Run起動の委譲規則
         done_criteria: *sysd-term-done-criteria

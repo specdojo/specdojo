@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5f9c11ce7b6f42f6bbdacc54af82a7ef
+  ts: "2026-10-17T08:45:29Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 循環のなくなった機能の組に依存の向きの規則を足す
+    - field: description
+      from: ""
+      to: 循環がなくなった機能の組（register は exec を import しない、など）の依存の向きを ESLint の規則として error で足す。 PJR-QQKY の決定に基づく。動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"

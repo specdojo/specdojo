@@ -1,0 +1,7 @@
+PJR-JSEY の対応結果に、最新の分割項目 PJR-MHHP の動作確認記録を追記しました。result・ステータスは変更していません。
+
+登録簿生成、カタログ検証、整形、差分検査は成功しています。カタログ検証には既存の文書欠落警告のみあります。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果に 2026-10-17 16:04 JST、PJR-MHHP、codex-expert-executor の記録を追記した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown は整形済みで変更なし。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビュー生成に成功。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログの検証に成功。既存の文書欠落警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

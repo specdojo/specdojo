@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_19d127b165c8409893b5814f924b234d
+  ts: "2026-10-17T14:39:32Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者との議論（2026-10-17）で、register の運用の方が体系的であることを確かめた
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターの運用ガイドに plan モードと register の使い分けを書く
+    - field: description
+      from: ""
+      to: Claude Code などの plan モードの plan（会話の中の下書き、既定で約 30 日で消える）と、register（ID・種類・状態の遷移・exec の plan と result への接続・decision の承認の記録）の違いと使い分けを、オーケストレーターの運用ガイドに書く。plan モードは下書きとし、残す判断は decision、作業の範囲は todo の完了条件へ書き写す流れを示す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_97e71acb26c2490a930fec987feae5d7
+  ts: "2026-10-17T23:22:58Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_19d127b165c8409893b5814f924b234d
+- v: 1
+  id: reg_3be4106b4a774d1fb8672f0a3f83b73d
+  ts: "2026-10-17T23:31:17Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_97e71acb26c2490a930fec987feae5d7
+- v: 1
+  id: reg_6f89b89f22c4414e96d6cd7a15886974
+  ts: "2026-10-17T23:37:47Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に節の内容を確かめた（2026-10-18）。agy-expert-executor と gemma26-reporter で、BHMH と --join で並行に実行した。表の観点の列の太字が多い点は軽い改善点として残る
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: オーケストレーターの運用ガイドに「plan モードと register の使い分け」の節を加え、識別・種類・状態・実行とのつながり・承認の記録・履歴・一覧の観点の対比と、plan モードの下書きから decision と todo へ書き写す運用の流れを書いた
+  previous_event_id: reg_3be4106b4a774d1fb8672f0a3f83b73d

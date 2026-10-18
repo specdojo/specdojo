@@ -636,6 +636,7 @@ current_stage=
 visited_documents=0
 processed=0
 completed=0
+completed_documents=0
 incomplete_documents=0
 incomplete_records=()
 pipeline_finished=false
@@ -1131,6 +1132,7 @@ for document in "${selected_paths[@]}"; do
 
   if [[ -f "$complete_file" ]]; then
     printf 'resume skip document=%s status=complete\n' "$document"
+    completed_documents=$((completed_documents + 1))
     continue
   fi
   processed=$((processed + 1))
@@ -1188,6 +1190,7 @@ for document in "${selected_paths[@]}"; do
     record_pipeline_stage "$document" 1 complete
     printf '%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" >"$complete_file"
     completed=$((completed + 1))
+    completed_documents=$((completed_documents + 1))
     printf 'document complete: %s\n' "$document"
     continue
   fi
@@ -1255,6 +1258,7 @@ for document in "${selected_paths[@]}"; do
   record_pipeline_stage "$document" 3 complete
   printf '%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" >"$complete_file"
   completed=$((completed + 1))
+  completed_documents=$((completed_documents + 1))
   printf 'document complete: %s\n' "$document"
 done
 
@@ -1270,13 +1274,21 @@ printf 'grade pipeline complete: selected=%s processed=%s completed_now=%s incom
 pipeline_finished=true
 
 # 最後まで走りきっても段の失敗で未完了の文書が残った場合は、呼び出し元（routine など）が
-# 検知できるよう終了コード 1 で終える。pipeline_finished=true を立てた後なので、
-# EXIT trap は打ち切り（aborted）として扱わず、この終了コードをそのまま返す。
+# 全件失敗と部分成功を区別できるよう、完了した文書があれば 2、なければ 1 で終える。
+# pipeline_finished=true を立てた後なので、EXIT trap は打ち切り（aborted）として扱わず、
+# この終了コードをそのまま返す。終了コード 2 を部分成功として扱うかは Job Definition が明示する。
 if ((incomplete_documents > 0)); then
-  printf 'grade pipeline incomplete: incomplete=%s run_id=%s; rerun with --run-id %s to retry the failed stages, or start a new run with --incomplete\n' \
-    "$incomplete_documents" "$run_id" "$run_id" >&2
+  if ((completed_documents > 0)); then
+    completion_kind=partial
+    completion_exit=2
+  else
+    completion_kind=incomplete
+    completion_exit=1
+  fi
+  printf 'grade pipeline %s: completed=%s incomplete=%s run_id=%s; start a new run with --incomplete to retry the failed stages\n' \
+    "$completion_kind" "$completed_documents" "$incomplete_documents" "$run_id" >&2
   for record in "${incomplete_records[@]}"; do
     printf 'grade pipeline incomplete document: %s\n' "$record" >&2
   done
-  exit 1
+  exit "$completion_exit"
 fi

@@ -1,0 +1,11 @@
+個票の「対応結果」の表に1行追記しました。内容は 2026-10-18 18:45 JST、対象の分割 PJR-TSP6、agent は `claude-expert-executor` です。変更したファイルはこの個票だけです。
+
+lint などの検証は実行していません。親の runner が実行します。
+
+次の2点は私の判断で、確認はできていません。
+- 対象は PJR-TSP6 にしました。完了条件の一覧のうち、`git log` で PJR-YK1C より後に動きがあるのが PJR-TSP6 だったからです。TSP6 の統合状態そのものは確かめていません。登録簿の `pjr-index.md` は、このパスには見つかりませんでした。
+- nickname は、直近の行（PJR-YK1C）と同じ `claude-expert-executor` にしました。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に 2026-10-18 18:45 / PJR-TSP6 / claude-expert-executor の1行を追記した。変更は個票のみ。","validations":[{"command":"git log --oneline -15","status":"passed","summary":"最新の分割項目が PJR-TSP6 であることを確認"}]}
+</specdojo_executor_evidence>

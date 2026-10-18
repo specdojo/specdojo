@@ -1,0 +1,84 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SJ0G
+
+ ❯ tests/src/register/commands.test.ts (51 tests | 1 failed) 14242ms
+     × add は approach と target の不一致をファイル作成前に拒否する 9572ms
+ ❯ tests/src/exec/register-plan-escape.test.ts (18 tests | 1 failed) 16651ms
+     × kata maintenance approach は指定した kata id を直接の編集対象にする 15975ms
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-18T06:20:59.655Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-18T06:20:00.309Z.
+fallback complete
+Updated ticket status → ready: /tmp/specdojo-ticket-kVlG9L/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-4AOHcj/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-TO5g1O/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-OPAGCj/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-W9iIME/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-GcG2Ro/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-zruQR3/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-zruQR3/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-zruQR3/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-zruQR3/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-jYO9MC/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-a0HDST/outputs/partial.txt
+
+ Test Files  2 failed | 132 passed (134)
+      Tests  2 failed | 2114 passed (2116)
+   Start at  15:19:13
+   Duration  79.18s (transform 4.15s, setup 726ms, import 35.31s, tests 96.05s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+rate limit; retry-after: 60 seconds
+reporter failedrate limit
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+problem
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > kata maintenance approach は指定した kata id を直接の編集対象にする
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/exec/register-plan-escape.test.ts:287:3
+    285|   });
+    286|
+    287|   it("kata maintenance approach は指定した kata id を直接の編集対象にする", async () =…
+       |   ^
+    288|     const outPath = path.join(dir, "plan-with-kata-approach.md");
+    289|     const catalogPath = await writeCatalog();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/src/register/commands.test.ts > register CLI — 個票 frontmatter への読み書き > add は approach と target の不一致をファイル作成前に拒否する
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/register/commands.test.ts:406:3
+    404|   });
+    405|
+    406|   it("add は approach と target の不一致をファイル作成前に拒否する", async () => {
+       |   ^
+    407|     await withRepo(async ({ root, registerDir }) => {
+    408|       writeApproachTargets(root);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

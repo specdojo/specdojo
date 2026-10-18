@@ -3,44 +3,99 @@ version: 1
 document: specdojo:opr-monitoring-sample
 path: docs/ja/specdojo/samples/opr-monitoring-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 70
-graded_at: "2026-09-05T16:49:07.103Z"
-graded_by: gemma-expert-executor
+score: 75
+graded_at: "2026-10-16T20:21:12.948Z"
+graded_by: agy-expert-executor
 content_hash: a5e181f141fbbf211260b27422d71a975e26bc9b540d82a72ce3c14b7c11ef57
 categories:
-  consistency:
-    score: 38
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 88
+  planning:
+    score: 92
+  business:
     score: 83
   architecture:
-    score: 100
+    score: 92
+  usability:
+    score: 83
+  implementation:
+    score: 75
   quality:
-    score: 63
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
+    score: 58
+  consistency:
     score: 50
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
-  vp-qe-kata-conformance:
     level: 2
     score: 50
+  vp-qe-kata-conformance:
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,42 +104,127 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 4
-  minor: 2
+  minor: 11
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
-    anchor: ""
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
+    message: >-
+      The alert procedure table lacks assigned roles (e.g., Ops on-call) and execution deadlines or time limits for each
+      response stage.
+    message_ja: アラート手順の表に、割り当てられた役割（例：Ops on-call）や、各対応フェーズの実行期限または制限時間が不足しています。
+  - id: F002
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
+    message: Target systems, environments, and out-of-scope boundaries are not defined for the alert response procedure.
+    message_ja: アラート対応手順における対象となるシステム、環境、および適用範囲外の境界が定義されていません。
   - id: F003
     severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: Frontmatter の必須項目 `title` が不足している。
-    anchor: ""
-  - id: F002
+    rule: vp-ba-stakeholder-clarity
+    line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
+    message: >-
+      Responsible stakeholders, such as the operator handling alerts and the approver for service throttling or
+      countermeasure agreements, are not identified.
+    message_ja: アラートを扱うオペレーターや、サービスのスロットリングまたは対策の合意を行う承認者など、責任を持つステークホルダーが特定されていません。
+  - id: F004
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
+    message: Technical tooling, monitoring platforms, notification channels, and operational constraints are not specified.
+    message_ja: 技術的なツール、監視プラットフォーム、通知チャネル、および運用上の制約が明記されていません。
+  - id: F005
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
+    message: >-
+      Concrete inputs, parameters, or mechanisms for mitigation actions (e.g., throttling methods) and threshold
+      adjustment criteria are missing.
+    message_ja: 緩和策（例：スロットリング方法）の具体的な入力、パラメータ、またはメカニズム、および閾値調整の基準が不足しています。
+  - id: F006
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
+    message: >-
+      The impact of alert threshold changes or temporary service throttling on other monitoring components or
+      operational workflows is not identified.
+    message_ja: アラートの閾値変更や一時的なサービスのスロットリングが、他の監視コンポーネントや運用ワークフローに与える影響が特定されていません。
+  - id: F007
+    severity: minor
+    rule: vp-dev-testability
+    line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
+    message: >-
+      Verification steps or test commands to confirm that threshold adjustments or mitigation actions took effect are
+      missing.
+    message_ja: 閾値の調整や緩和策が適用されたことを確認するための検証手順やテストコマンドが不足しています。
+  - id: F008
     severity: minor
     rule: vp-qe-verifiability
     line: 17
+    anchor: ""
     message: 完了条件「影響拡大が止まる」などの記述が抽象的であり、判定基準として不十分である。
-    anchor: "| 誤検知   | 根拠を記録し閾値/抑止を提案      | 再発防止（閾値調整）   | 設定変更記録 |"
-  - id: F004
+    message_ja: 完了条件「影響拡大が止まる」などの記述が抽象的であり、判定基準として不十分である。
+  - id: F009
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# 運用手順: 監視・アラート対応 サンプル"
+    message: Frontmatter の必須項目 `title` が不足している。
+    message_ja: Frontmatter の必須項目 `title` が不足している。
+  - id: F010
     severity: major
     rule: vp-qe-omissions-consistency
     line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
     message: "`opr-rulebook` で定義されている必須章（2, 3, 4, 6, 7, 8, 9, 10, 11, 12）がすべて省略されており、理由の記載もないためルールに違反している。"
-    anchor: "| 段階     | 手順                             | 完了条件               | 証跡         |"
-  - id: F005
+    message_ja: "`opr-rulebook` で定義されている必須章（2, 3, 4, 6, 7, 8, 9, 10, 11, 12）がすべて省略されており、理由の記載もないためルールに違反している。"
+  - id: F011
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 運用手順: 監視・アラート対応 サンプル"
+    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
+    message_ja: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
+  - id: F012
     severity: major
     rule: vp-qe-kata-conformance
     line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
     message: "見出し番号が `opr-rulebook` および `opr-template.md` で定義された固定順序に従っておらず、## 2 となっている（正しくは ## 5）。"
-    anchor: "| 段階     | 手順                             | 完了条件               | 証跡         |"
-  - id: F006
+    message_ja: "見出し番号が `opr-rulebook` および `opr-template.md` で定義された固定順序に従っておらず、## 2 となっている（正しくは ## 5）。"
+  - id: F013
     severity: major
     rule: vp-ux-readability
     line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
     message: 必須構成を大幅に省略しており、`opr-＜term＞` 文書を作成するための完成形サンプルとして不十分である。
-    anchor: "| 段階     | 手順                             | 完了条件               | 証跡         |"
+    message_ja: 必須構成を大幅に省略しており、`opr-＜term＞` 文書を作成するための完成形サンプルとして不十分である。
+  - id: F014
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 運用手順: 監視・アラート対応 サンプル"
+    message: >-
+      As a draft deliverable, prerequisites, unresolved issues, or criteria to move from draft to ready status are not
+      stated.
+    message_ja: ドラフトとしての成果物において、前提条件、未解決の問題、またはドラフトから準備完了の状態へ移行するための基準が記載されていません。
+  - id: F015
+    severity: minor
+    rule: vp-ops-operability
+    line: 12
+    anchor: "| -------- | -------------------------------- | ---------------------- | ------------ |"
+    message: >-
+      Escalation paths to incident management (opr-incident) and handover rules when an alert escalates to P1/P2 are not
+      provided.
+    message_ja: >-
+      Escalation paths to incident management (opr-incident) and handover rules when an alert escalates to P1/P2 are not
+      provided.

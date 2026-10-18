@@ -1,0 +1,44 @@
+**判定案: `complete-with-findings`**（統合可能。評価された文書に品質 finding が残っている）
+
+この Job Run は成功し、記録どうしの食い違いはありませんでした。15文書すべてが評価され、完了しなかった文書はありません。成果物と Job Run の出力は変更していません。
+
+**差分の範囲**
+- `293c7f3..a73aed4` は22ファイルです。内訳は evidence 4件、plan、result、Run JSON、grade sidecar 15件の更新です。
+- `docs/ja/specdojo/` 配下の評価対象の文書そのものは変わっておらず、関係のない変更も含まれていません。
+- evidence の changes に plan・result・evidence 自身が載っていないのは、runner が後から追加したためと見られます。
+
+**記録どうしの整合**
+- Run JSON（state `succeeded`、attempt 1、`exit_code` 0）、evidence（`job-command` が exit 0、stderr は空）、pipeline-state（executor・reporter とも succeeded）は一致しています。
+- stdout の最終行は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` です。
+- `results.tsv` の15行はすべて status が `passed` で、`consecutive_failures` 列は空でした。
+- `results.tsv` の verdict・score は、15件の sidecar の `verdict`・`score` とすべて一致しました。`graded_by` はすべて `agy-expert-executor` です。
+
+**Job 固有の確認事項**
+- **rate limit（終了コード75）や中断:** ありません。同じ `--run-id` での再開は不要です。
+- **`failed` の段:** ありません。
+- **`retry_exhausted` の文書:** ありません。`grade state --exhausted` の出力も空でした。
+- **verdict と score の分布:**
+  - pass 1件: `pm-change-request-log` 95
+  - needs-work 11件: 67〜94
+  - fail 3件: `opr-change` 44、`opr-sample` 53、`opr-support` 58
+- score が低い文書は opr 系に集中しています。fail 3件と、needs-work の下位（`opr-batch` 67、`opr-incident` 70）がすべて opr 系です。文書側の課題なのか、評価設定の偏りなのかは判断していません。
+- finding の件数は、`results.tsv` の列（2〜23件）だけを確認しました。
+
+**評価結果の鮮度**
+- `--changed-only`（記録直前に再実行）が出力したのは `pm-raci-sample.md` だけで、今回の15件は含まれていません。
+- `--incomplete` と `--dependency-changed` の出力は空でした。
+- `pm-raci-sample.md` は今回の選択の外です。上限15件のため選ばれなかった残りと見られ、次回の Job で扱われる見込みです。
+
+**finding が完了を妨げない理由と改善指示**
+- fail 3件と needs-work 11件は文書の品質に関する評価結果で、Job の目的（評価の起動と異常の有無の確認）の達成は妨げません。fail の3文書は、edit タスクで改善するかを判断してください。
+- reporter の result は、実施内容の中で verdict 分布の箇条書きが1行に潰れています。記録の形の問題で、軽微です。
+
+**確認できなかった範囲**
+- sidecar 内の finding の内容と件数は、`results.tsv` の findings 列と突き合わせていません。
+- `results.tsv` の実ファイル（`logs/grade/...`）は直接読んでいません。stdout に出力された内容で確認しています。
+- `--rulebook-changed`、`--unreviewed`、`--ungraded`、`--rubric-outdated` での鮮度確認は実行していません。
+- 評価の内容の妥当性は再評価していません（review では行わない規約です）。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict案: complete-with-findings。差分 293c7f3..a73aed4 は Job Run の出力だけで構成（evidence 4件、plan、result、Run JSON、grade sidecar 15件）。Run state=succeeded・exit 0・stderr は空で、stdout は selected=15 processed=15 incomplete=0 exhausted=0。results.tsv 15行はすべて passed、failed と retry_exhausted はなし。sidecar 15件の verdict/score は results.tsv と一致。分布は pass 1 / needs-work 11 / fail 3。fail は opr-change 44、opr-sample 53、opr-support 58 で、低スコアは opr 系に集中（文書側か評価設定側かは未判断）。鮮度: --changed-only の出力は選択外の pm-raci-sample.md だけ、--incomplete・--dependency-changed・grade state --exhausted の出力は空。改善指示: fail の opr 系3文書の改善要否を判断する。reporter の result で verdict 分布の箇条書きが1行に潰れている（軽微）。確認できなかった範囲: sidecar 内の finding の内容と件数、logs/grade の results.tsv 実ファイル、--rulebook-changed/--unreviewed/--ungraded/--rubric-outdated での鮮度確認。","validations":[{"command":"git diff --name-status 293c7f3546252a526a0424d511680fec076991c7..a73aed4135192834981d12547668a6a128fa91ba","status":"passed","summary":"22ファイル。すべて Job Run の出力で、評価対象の文書や関係のないファイルの変更はなし"},{"command":"npx specdojo grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"出力は選択外の pm-raci-sample.md だけで、今回の15件は最新（記録直前に再実行しても同じ）"},{"command":"npx specdojo grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力なし"},{"command":"npx specdojo grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"出力なし"},{"command":"npx specdojo grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし（retry_exhausted の文書なし）"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f6bcbcade3a44849bcfe0a2aba06498f
+  ts: "2026-10-17T09:23:54Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 統合の直後に dist が古いままになる事象が 2 回続き、原因を特定した（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 記帳の衝突を解いた統合のあとに dist が作り直されない
+    - field: description
+      from: ""
+      to: exec の統合で登録簿の記帳の衝突を解くと、runner は git commit --no-verify で merge を完了させる。post-merge の hook（build-if-stale）は git merge が完了したときにしか動かないため、この経路では dist が作り直されず、以後の runner が古いコードで動く。2026-10-17 の PJR-BZ9J と PJR-X8Y9 で起きた
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_b5eb65768e314c5389b10eb70640b12e
+  ts: "2026-10-17T09:24:34Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f6bcbcade3a44849bcfe0a2aba06498f
+- v: 1
+  id: reg_9cb25d63270b4f2eb9878e7ab1cd00bf
+  ts: "2026-10-17T09:24:40Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "checkpoint failed: git worktree failed: fatal: a branch named 'exec/prj-0001-PJR-MX4F' already exists (args: add /workspaces/specdojo-workspace/worktree… -b exec/prj-0001-PJR-MX4F)"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "checkpoint failed: git worktree failed: fatal: a branch named 'exec/prj-0001-PJR-MX4F' already exists (args: add /workspaces/specdojo-workspace/worktree… -b exec/prj-0001-PJR-MX4F)"
+  previous_event_id: reg_b5eb65768e314c5389b10eb70640b12e
+- v: 1
+  id: reg_84fc2745da74421abcaf82f24ef1914f
+  ts: "2026-10-17T09:32:02Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "checkpoint failed: git worktree failed: fatal: a branch named 'exec/prj-0001-PJR-MX4F' already exists (args: add /workspaces/specdojo-workspace/worktree… -b exec/prj-0001-PJR-MX4F)"
+      to: "-"
+  previous_event_id: reg_9cb25d63270b4f2eb9878e7ab1cd00bf
+- v: 1
+  id: reg_c1ebea7ec1034c3ba9902c7022dda53b
+  ts: "2026-10-17T09:42:14Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_84fc2745da74421abcaf82f24ef1914f
+- v: 1
+  id: reg_e5aa7f64fa7c4d97ada50eaee75a225a
+  ts: "2026-10-17T10:03:08Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、修正後の runner で exec run --register（PJR-JSEY、aa9795516）が統合まで通った（2026-10-17）。本件自身の統合は修正前の runner で行われたため、dist は手で作り直した。衝突を解く経路の実地の確認は次に起きたときに行う
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: 統合の完了後に、衝突の有無によらず runner が tools/build-if-stale.mjs を起動して dist の鮮度を判定するようにした。dist を bin とする開発のリポジトリだけを対象とし、失敗しても統合を失敗させない。記帳の衝突を解く統合の後に起動されることを統合テストで確かめた
+  previous_event_id: reg_c1ebea7ec1034c3ba9902c7022dda53b

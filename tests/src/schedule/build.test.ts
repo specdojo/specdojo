@@ -1,0 +1,817 @@
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { dump } from "js-yaml";
+import { describe, expect, it } from "vitest";
+import { buildInitialStateFromStrategy } from "../../../src/exec/schedule/initial.js";
+import { buildScheduleIndex } from "../../../src/exec/schedule/index.js";
+import { buildScheduleTrack } from "../../../src/schedule/build.js";
+import { createScheduleTrackDocument } from "../../../src/schedule/schedule.js";
+import type { MemberRoster } from "../../../src/shared/specdojo-config.js";
+
+function writeCatalog(dir: string): void {
+  writeFileSync(
+    join(dir, "catalog.yaml"),
+    dump({
+      groups: [
+        {
+          name: "sample",
+          deliverables: [
+            {
+              local_id: "doc",
+              name: "Document",
+              kind: "work",
+              path: "doc.md",
+              depends_on: [],
+            },
+          ],
+        },
+      ],
+    }),
+    "utf8",
+  );
+}
+
+function writeTrack(dir: string, tasks: unknown[], track = "test"): void {
+  writeFileSync(
+    join(dir, `sch-track-${track}.yaml`),
+    dump({
+      kind: "track",
+      id: `prj-test:sch-track-${track}`,
+      type: "project",
+      status: "draft",
+      version: 1,
+      project_id: "prj-test",
+      track,
+      settings: {},
+      tasks,
+    }),
+    "utf8",
+  );
+}
+
+const pipelineRoster: MemberRoster = {
+  version: 1,
+  project_id: "prj-test",
+  members: [
+    {
+      nickname: "pinned-executor",
+      display_name: "Pinned Executor",
+      email: null,
+      roles: [],
+      type: "agent",
+      stage_role: "executor",
+    },
+    {
+      nickname: "pinned-reporter",
+      display_name: "Pinned Reporter",
+      email: null,
+      roles: [],
+      type: "agent",
+      stage_role: "reporter",
+    },
+  ],
+};
+
+describe("buildScheduleTrack agent assignments", () => {
+  function writeAgentStrategy(dir: string, executor = "pinned-executor"): string {
+    writeCatalog(dir);
+    const strategyPath = join(dir, "sch-strategy-test.yaml");
+    writeFileSync(
+      strategyPath,
+      dump({
+        kind: "strategy",
+        id: "prj-test:sch-strategy-test",
+        type: "project",
+        status: "draft",
+        track: "test",
+        scope: {
+          catalogs: [{ id: "prj-test:catalog", path: "/catalog.yaml" }],
+          include_kinds: ["work"],
+        },
+        phase_sets: {
+          review: [
+            {
+              id: "review",
+              name: "Review",
+              task_suffix: "090",
+              duration_days: 1,
+              agent: { executor, reporter: "pinned-reporter" },
+            },
+          ],
+        },
+        default_phase_sets: ["review"],
+        owner_rules: [{ local_ids: ["doc"], owner: "ARC" }],
+      }),
+      "utf8",
+    );
+    return strategyPath;
+  }
+
+  it("validates stage roles and carries by-name assignments into generated tracks", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-agent-"));
+    try {
+      const result = buildScheduleTrack(writeAgentStrategy(dir), dir, pipelineRoster);
+
+      expect(result.errors).toEqual([]);
+      expect(result.tasks[0].agent).toEqual({
+        executor: "pinned-executor",
+        reporter: "pinned-reporter",
+      });
+      writeTrack(dir, result.tasks);
+      expect(buildScheduleIndex(dir).nodes.get("T-TEST-doc-090")?.agent).toEqual(
+        result.tasks[0].agent,
+      );
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("accepts an alias whose concrete member has the required stage role", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-agent-alias-"));
+    try {
+      const roster = {
+        ...pipelineRoster,
+        aliases: [{ nickname: "legacy-executor", alias_of: "pinned-executor" }],
+      };
+
+      const result = buildScheduleTrack(writeAgentStrategy(dir, "legacy-executor"), dir, roster);
+
+      expect(result.errors).toEqual([]);
+      expect(result.tasks[0].agent).toEqual({
+        executor: "legacy-executor",
+        reporter: "pinned-reporter",
+      });
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("rejects unknown nicknames and stage-role mismatches", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-agent-invalid-"));
+    try {
+      const unknown = buildScheduleTrack(writeAgentStrategy(dir, "missing"), dir, pipelineRoster);
+      expect(unknown.errors.join("\n")).toContain("nickname 'missing'");
+
+      const wrongRole = buildScheduleTrack(
+        writeAgentStrategy(dir, "pinned-reporter"),
+        dir,
+        pipelineRoster,
+      );
+      expect(wrongRole.errors.join("\n")).toContain("must have stage_role: executor");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+function writeScopedStrategy(
+  dir: string,
+  track: string,
+  localIds?: string[],
+  ruleLocalIds: string[] = localIds ?? ["a", "b"],
+): string {
+  const strategyPath = join(dir, `sch-strategy-${track}.yaml`);
+  writeFileSync(
+    strategyPath,
+    dump({
+      kind: "strategy",
+      id: `prj-test:sch-strategy-${track}`,
+      type: "project",
+      status: "draft",
+      track,
+      scope: {
+        catalogs: [
+          {
+            id: "prj-test:catalog",
+            path: "/catalog.yaml",
+            ...(localIds ? { local_ids: localIds } : {}),
+          },
+        ],
+        include_kinds: ["work"],
+      },
+      approach_rules: [{ local_ids: ruleLocalIds, intent: "author-deliverable" }],
+      phase_sets: {
+        first: [{ id: "draft", name: "Draft", task_suffix: "010", duration_days: 1 }],
+      },
+      default_phase_sets: ["first"],
+      owner_rules: [{ local_ids: ruleLocalIds, owner: "BA" }],
+    }),
+    "utf8",
+  );
+  return strategyPath;
+}
+
+describe("buildScheduleTrack deliverable scope", () => {
+  function writeTwoDeliverableCatalog(dir: string): void {
+    writeFileSync(
+      join(dir, "catalog.yaml"),
+      dump({
+        groups: [
+          {
+            name: "sample",
+            deliverables: [
+              { local_id: "a", name: "A", kind: "work", path: "a.md", depends_on: [] },
+              { local_id: "b", name: "B", kind: "work", path: "b.md", depends_on: [] },
+            ],
+          },
+        ],
+      }),
+      "utf8",
+    );
+  }
+
+  it("local_ids を省略すると従来どおりカタログ内の全成果物を生成する", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-all-deliverables-"));
+    try {
+      writeTwoDeliverableCatalog(dir);
+      const result = buildScheduleTrack(writeScopedStrategy(dir, "all"), dir);
+
+      expect(result.errors).toEqual([]);
+      expect(result.tasks.map((task) => task.local_id).sort()).toEqual(["a", "b"]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("catalog ごとの local_ids で選択した成果物だけを生成する", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-selected-deliverables-"));
+    try {
+      writeTwoDeliverableCatalog(dir);
+      const result = buildScheduleTrack(writeScopedStrategy(dir, "selected", ["a"]), dir);
+
+      expect(result.errors).toEqual([]);
+      expect(result.tasks.map((task) => task.local_id)).toEqual(["a"]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("存在しない local_id と選択範囲外の rule をエラーにする", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-invalid-deliverable-"));
+    try {
+      writeTwoDeliverableCatalog(dir);
+      const unknown = buildScheduleTrack(writeScopedStrategy(dir, "unknown", ["missing"]), dir);
+      expect(unknown.errors.join("\n")).toContain(
+        "local_id 'missing' was not found in the catalog",
+      );
+
+      const outside = buildScheduleTrack(
+        writeScopedStrategy(dir, "outside", ["a"], ["a", "b"]),
+        dir,
+      );
+      expect(outside.errors.join("\n")).toContain(
+        "owner_rules: local_id 'b' is not in the selected scope",
+      );
+      expect(outside.errors.join("\n")).toContain(
+        "approach_rules: local_id 'b' is not in the selected scope",
+      );
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("同じ成果物を複数 track で選択しても task ID と表示状態を track ごとに分ける", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-shared-deliverable-"));
+    try {
+      writeTwoDeliverableCatalog(dir);
+      const first = buildScheduleTrack(writeScopedStrategy(dir, "first", ["a"]), dir);
+      const second = buildScheduleTrack(writeScopedStrategy(dir, "second", ["a"]), dir);
+      expect(first.errors).toEqual([]);
+      expect(second.errors).toEqual([]);
+
+      writeTrack(dir, first.tasks, "first");
+      writeTrack(dir, second.tasks, "second");
+      const schedule = buildScheduleIndex(dir);
+      expect(schedule.nodes.has("T-FIRST-a-010")).toBe(true);
+      expect(schedule.nodes.has("T-SECOND-a-010")).toBe(true);
+      expect(schedule.nodes.get("T-FIRST-a-010")?.schedule_file).toContain("sch-track-first.yaml");
+      expect(schedule.nodes.get("T-SECOND-a-010")?.schedule_file).toContain(
+        "sch-track-second.yaml",
+      );
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("buildScheduleTrack phase set repetition", () => {
+  it("generates one cross-deliverable task after a gate and blocks scoped refine tasks", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-cross-deliverable-"));
+    try {
+      writeFileSync(
+        join(dir, "catalog.yaml"),
+        dump({
+          groups: [
+            {
+              name: "sample",
+              deliverables: [
+                { local_id: "a", name: "A", kind: "work", path: "a.md", depends_on: [] },
+                { local_id: "b", name: "B", kind: "work", path: "b.md", depends_on: [] },
+              ],
+            },
+          ],
+        }),
+        "utf8",
+      );
+      const strategyPath = join(dir, "sch-strategy-test.yaml");
+      writeFileSync(
+        strategyPath,
+        dump({
+          kind: "strategy",
+          id: "prj-test:sch-strategy-test",
+          type: "project",
+          status: "draft",
+          track: "test",
+          scope: {
+            catalogs: [{ id: "prj-test:catalog", path: "/catalog.yaml" }],
+            include_kinds: ["work"],
+          },
+          phase_sets: {
+            bootstrap: [
+              { id: "bootstrap", name: "Bootstrap", task_suffix: "010", duration_days: 1 },
+            ],
+            refine: [{ id: "refine", name: "Refine", task_suffix: "070", duration_days: 1 }],
+          },
+          default_phase_sets: ["bootstrap", "refine"],
+          owner_rules: [{ local_ids: ["a", "b"], owner: "BA" }],
+          phase_gates: [
+            {
+              id: "G-TEST-bootstrap",
+              name: "Bootstrap complete",
+              after_phase_sets: ["bootstrap"],
+              owner: "PM",
+              scope: { local_ids: ["a", "b"] },
+            },
+          ],
+          cross_deliverable_passes: [
+            {
+              id: "group-dedup",
+              name: "Group dedup",
+              artifact_name: "Group",
+              task_suffix: "060",
+              duration_days: 0.5,
+              owner: "ARC",
+              after_gate: "G-TEST-bootstrap",
+              before_phase_set: "refine",
+              approach: "cross-deliverable-dedup",
+              scope: { local_ids: ["a", "b"] },
+            },
+          ],
+        }),
+        "utf8",
+      );
+
+      const result = buildScheduleTrack(strategyPath, dir);
+
+      expect(result.errors).toEqual([]);
+      const crossTasks = result.tasks.filter((task) => task.tags?.includes("cross-deliverable"));
+      expect(crossTasks).toHaveLength(1);
+      expect(crossTasks[0]).toMatchObject({
+        id: "T-TEST-group-dedup-060",
+        target_local_ids: ["a", "b"],
+        depends_on: ["G-TEST-bootstrap"],
+        owner: "ARC",
+        artifact_name: "Group",
+      });
+      for (const localId of ["a", "b"]) {
+        expect(
+          result.tasks.find((task) => task.local_id === localId && task.phase_set === "refine")
+            ?.depends_on,
+        ).toContain("T-TEST-group-dedup-060");
+      }
+
+      // artifact_name は target_local_ids のみのタスク（単一 local_id を持たない）
+      // でも、buildScheduleIndex が読み戻した ScheduleNode に反映される。
+      writeTrack(dir, result.tasks);
+      const schedule = buildScheduleIndex(dir);
+      expect(schedule.nodes.get("T-TEST-group-dedup-060")?.artifact_name).toBe("Group");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps catalog dependencies inside the earliest shared phase gate", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-gate-dependency-"));
+    try {
+      writeFileSync(
+        join(dir, "catalog.yaml"),
+        dump({
+          groups: [
+            {
+              name: "sample",
+              deliverables: [
+                { local_id: "a", name: "A", kind: "work", path: "a.md", depends_on: [] },
+                { local_id: "b", name: "B", kind: "work", path: "b.md", depends_on: ["a"] },
+              ],
+            },
+          ],
+        }),
+        "utf8",
+      );
+      const strategyPath = join(dir, "sch-strategy-test.yaml");
+      writeFileSync(
+        strategyPath,
+        dump({
+          kind: "strategy",
+          id: "prj-test:sch-strategy-test",
+          type: "project",
+          status: "draft",
+          track: "test",
+          scope: {
+            catalogs: [{ id: "prj-test:catalog", path: "/catalog.yaml" }],
+            include_kinds: ["work"],
+          },
+          phase_sets: {
+            first: [{ id: "draft", name: "Draft", task_suffix: "010", duration_days: 1 }],
+            align: [{ id: "align", name: "Align", task_suffix: "020", duration_days: 1 }],
+            review: [{ id: "review", name: "Review", task_suffix: "030", duration_days: 1 }],
+          },
+          default_phase_sets: ["first", "align", "review"],
+          owner_rules: [{ local_ids: ["a", "b"], owner: "BA" }],
+          phase_gates: [
+            {
+              id: "G-TEST-first",
+              name: "First complete",
+              after_phase_sets: ["first"],
+              owner: "BA",
+              scope: { local_ids: ["a", "b"] },
+            },
+            {
+              id: "G-TEST-align",
+              name: "Align complete",
+              after_phase_sets: ["align"],
+              owner: "BA",
+              scope: { local_ids: ["a", "b"] },
+            },
+          ],
+        }),
+        "utf8",
+      );
+
+      const result = buildScheduleTrack(strategyPath, dir);
+
+      expect(result.errors).toEqual([]);
+      const bFirst = result.tasks.find(
+        (task) => task.local_id === "b" && task.phase_suffix === "010",
+      );
+      expect(bFirst?.depends_on).toEqual(["T-TEST-a-010"]);
+      expect(
+        result.tasks.find((task) => task.local_id === "a" && task.phase_suffix === "020")
+          ?.depends_on,
+      ).toContain("G-TEST-first");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("expands cycles and iterations and creates a gate for each cycle", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-repeat-"));
+    try {
+      writeCatalog(dir);
+      const strategyPath = join(dir, "sch-strategy-test.yaml");
+      writeFileSync(
+        strategyPath,
+        dump({
+          kind: "strategy",
+          id: "prj-test:sch-strategy-test",
+          type: "project",
+          status: "draft",
+          track: "test",
+          scope: {
+            catalogs: [{ id: "prj-test:catalog", path: "/catalog.yaml" }],
+            include_kinds: ["work"],
+          },
+          phase_sets: {
+            first: [{ id: "draft", name: "Draft", task_suffix: "010", duration_days: 1 }],
+            final: [{ id: "finalize", name: "Finalize", task_suffix: "020", duration_days: 1 }],
+            review: [{ id: "review", name: "Review", task_suffix: "030", duration_days: 1 }],
+          },
+          default_phase_sets: {
+            cycles: 2,
+            sequence: [
+              { phase_set: "first", iterations: 2 },
+              { phase_set: "final" },
+              { phase_set: "review" },
+            ],
+          },
+          owner_rules: [{ local_ids: ["doc"], owner: "BA" }],
+          phase_gates: [
+            {
+              id: "G-TEST-first",
+              name: "First complete",
+              after_phase_sets: ["first"],
+              owner: "BA",
+              scope: { local_ids: ["doc"] },
+            },
+            {
+              id: "G-TEST-final",
+              name: "Final complete",
+              after_phase_sets: ["final"],
+              owner: "BA",
+              scope: { local_ids: ["doc"] },
+            },
+          ],
+        }),
+        "utf8",
+      );
+
+      const result = buildScheduleTrack(strategyPath, dir);
+      expect(result.errors).toEqual([]);
+      expect(result.tasks).toHaveLength(8);
+      expect(result.tasks.map((task) => [task.phase_suffix, task.cycle, task.iteration])).toEqual([
+        ["010", 1, 1],
+        ["010", 1, 2],
+        ["020", 1, undefined],
+        ["030", 1, undefined],
+        ["010", 2, 1],
+        ["010", 2, 2],
+        ["020", 2, undefined],
+        ["030", 2, undefined],
+      ]);
+      expect(result.tasks[1].depends_on).toEqual(["T-TEST-doc-010-C01-I01"]);
+      expect(result.tasks[2].depends_on).toEqual(["T-TEST-doc-010-C01-I02", "G-TEST-first-C01"]);
+      expect(result.tasks[3].depends_on).toEqual(["T-TEST-doc-020-C01", "G-TEST-final-C01"]);
+      expect(result.tasks[4].depends_on).toEqual(["T-TEST-doc-030-C01"]);
+      expect(result.tasks[6].depends_on).toEqual(["T-TEST-doc-010-C02-I02", "G-TEST-first-C02"]);
+      expect(result.tasks[7].depends_on).toEqual(["T-TEST-doc-020-C02", "G-TEST-final-C02"]);
+      expect(result.milestones.map((milestone) => milestone.id)).toEqual([
+        "G-TEST-first-C01",
+        "G-TEST-first-C02",
+        "G-TEST-final-C01",
+        "G-TEST-final-C02",
+      ]);
+
+      writeTrack(dir, result.tasks);
+      const schedule = buildScheduleIndex(dir);
+      expect(schedule.nodes.get("T-TEST-doc-010-C01-I02")).toMatchObject({
+        phase_suffix: "010",
+        phase_set: "first",
+        phase_id: "draft",
+        cycle: 1,
+        iteration: 2,
+      });
+      expect(schedule.nodes.has("T-TEST-doc-030-C02")).toBe(true);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps existing task IDs for the array shorthand", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-compatible-"));
+    try {
+      writeCatalog(dir);
+      const strategyPath = join(dir, "sch-strategy-test.yaml");
+      writeFileSync(
+        strategyPath,
+        dump({
+          kind: "strategy",
+          id: "prj-test:sch-strategy-test",
+          type: "project",
+          status: "draft",
+          track: "test",
+          scope: {
+            catalogs: [{ id: "prj-test:catalog", path: "/catalog.yaml" }],
+            include_kinds: ["work"],
+          },
+          phase_sets: {
+            first: [{ id: "draft", name: "Draft", task_suffix: "010", duration_days: 1 }],
+            final: [{ id: "finalize", name: "Finalize", task_suffix: "020", duration_days: 1 }],
+          },
+          default_phase_sets: ["first", "final"],
+          owner_rules: [{ local_ids: ["doc"], owner: "BA" }],
+        }),
+        "utf8",
+      );
+
+      const result = buildScheduleTrack(strategyPath, dir);
+      expect(result.errors).toEqual([]);
+      expect(result.tasks.every((task) => task.cycle === undefined)).toBe(true);
+      expect(result.tasks.every((task) => task.iteration === undefined)).toBe(true);
+      writeTrack(dir, result.tasks);
+      const schedule = buildScheduleIndex(dir);
+      expect(schedule.nodes.has("T-TEST-doc-010")).toBe(true);
+      expect(schedule.nodes.has("T-TEST-doc-020")).toBe(true);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("applies completed_through to an exact cycle and iteration", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-initial-repeat-"));
+    try {
+      writeCatalog(dir);
+      const strategyPath = join(dir, "sch-strategy-test.yaml");
+      writeFileSync(
+        strategyPath,
+        dump({
+          kind: "strategy",
+          id: "prj-test:sch-strategy-test",
+          type: "project",
+          status: "draft",
+          track: "test",
+          scope: {
+            catalogs: [{ id: "prj-test:catalog", path: "/catalog.yaml" }],
+            include_kinds: ["work"],
+          },
+          phase_sets: {
+            first: [{ id: "draft", name: "Draft", task_suffix: "010", duration_days: 1 }],
+            final: [{ id: "finalize", name: "Finalize", task_suffix: "020", duration_days: 1 }],
+          },
+          default_phase_sets: {
+            cycles: 2,
+            sequence: [{ phase_set: "first", iterations: 2 }, { phase_set: "final" }],
+          },
+          owner_rules: [{ local_ids: ["doc"], owner: "BA" }],
+          initial_state: {
+            completed_deliverables: [
+              {
+                local_id: "doc",
+                completed_through: {
+                  phase_set: "first",
+                  phase: "draft",
+                  cycle: 1,
+                  iteration: 2,
+                },
+                completed_on: "2026-01-01",
+                by: "tester",
+              },
+            ],
+          },
+        }),
+        "utf8",
+      );
+
+      const result = buildScheduleTrack(strategyPath, dir);
+      expect(result.errors).toEqual([]);
+      expect(result.tasks).toHaveLength(6);
+      writeTrack(dir, result.tasks);
+      const schedule = buildScheduleIndex(dir);
+      const initial = buildInitialStateFromStrategy(dir, schedule);
+      expect(Object.keys(initial).sort()).toEqual([
+        "T-TEST-doc-010-C01-I01",
+        "T-TEST-doc-010-C01-I02",
+      ]);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("buildScheduleTrack status propagation", () => {
+  function writeStrategy(dir: string, status: string | undefined): string {
+    const strategyPath = join(dir, "sch-strategy-test.yaml");
+    const doc: Record<string, unknown> = {
+      kind: "strategy",
+      id: "prj-test:sch-strategy-test",
+      type: "project",
+      track: "test",
+      scope: {
+        catalogs: [{ id: "prj-test:catalog", path: "/catalog.yaml" }],
+        include_kinds: ["work"],
+      },
+      phase_sets: {
+        first: [{ id: "draft", name: "Draft", task_suffix: "010", duration_days: 1 }],
+      },
+      default_phase_sets: ["first"],
+      owner_rules: [{ local_ids: ["doc"], owner: "BA" }],
+    };
+    if (status !== undefined) doc.status = status;
+    writeFileSync(strategyPath, dump(doc), "utf8");
+    return strategyPath;
+  }
+
+  it("carries the strategy status into the build result", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-status-"));
+    try {
+      writeCatalog(dir);
+      const strategyPath = writeStrategy(dir, "ready");
+
+      const result = buildScheduleTrack(strategyPath, dir);
+
+      expect(result.errors).toEqual([]);
+      expect(result.status).toBe("ready");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("falls back to draft when the strategy omits status", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-status-default-"));
+    try {
+      writeCatalog(dir);
+      const strategyPath = writeStrategy(dir, undefined);
+
+      const result = buildScheduleTrack(strategyPath, dir);
+
+      expect(result.errors).toEqual([]);
+      expect(result.status).toBe("draft");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("schedule track metadata", () => {
+  it("uses the metadata required by specdojo:sch-rulebook", () => {
+    const outDoc = createScheduleTrackDocument({
+      projectId: "prj-test",
+      track: "launch",
+      status: "ready",
+      startDate: null,
+      tasks: [],
+    });
+
+    expect(outDoc).toMatchObject({
+      title: "スケジュールトラック（launch）",
+      rulebook: "specdojo:sch-rulebook",
+    });
+  });
+});
+
+describe("buildScheduleIndex start_date precedence", () => {
+  function writeDefaults(dir: string, defaultStartDate: string): void {
+    writeFileSync(
+      join(dir, "sch-defaults.yaml"),
+      dump({
+        kind: "defaults",
+        id: "prj-test:sch-defaults",
+        type: "project",
+        status: "ready",
+        version: 1,
+        calendar: { timezone: "Asia/Tokyo", work_hours_per_day: 8 },
+        settings: { default_start_date: defaultStartDate },
+      }),
+      "utf8",
+    );
+  }
+
+  function writeTrackWithStartDate(dir: string, startDate: string | null): void {
+    writeFileSync(
+      join(dir, "sch-track-test.yaml"),
+      dump({
+        kind: "track",
+        id: "prj-test:sch-track-test",
+        type: "project",
+        status: "ready",
+        version: 1,
+        project_id: "prj-test",
+        track: "test",
+        settings: startDate !== null ? { start_date: startDate } : {},
+        tasks: [
+          { id: "T-TEST-doc-010", name: "Doc", duration_days: 1, depends_on: [], owner: "BA" },
+        ],
+      }),
+      "utf8",
+    );
+  }
+
+  it("prefers the track's explicit start_date over an earlier default_start_date", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-startdate-"));
+    try {
+      writeDefaults(dir, "2026-05-24");
+      writeTrackWithStartDate(dir, "2026-06-15");
+
+      const schedule = buildScheduleIndex(dir);
+
+      expect(schedule.start_date).toBe("2026-06-15");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("falls back to default_start_date when no track specifies start_date", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-startdate-fallback-"));
+    try {
+      writeDefaults(dir, "2026-05-24");
+      writeTrackWithStartDate(dir, null);
+
+      const schedule = buildScheduleIndex(dir);
+
+      expect(schedule.start_date).toBe("2026-05-24");
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("ignores schedule-like YAML files in nested subdirectories", () => {
+    const dir = mkdtempSync(join(tmpdir(), "specdojo-schedule-nested-ignore-"));
+    try {
+      writeTrackWithStartDate(dir, null);
+      const nestedDir = join(dir, "archive");
+      mkdirSync(nestedDir);
+      writeFileSync(
+        join(nestedDir, "sch-track-archived.yaml"),
+        dump({ kind: "track", track: "archived", tasks: [] }),
+        "utf8",
+      );
+
+      const schedule = buildScheduleIndex(dir);
+
+      expect(schedule.files).toEqual([join(dir, "sch-track-test.yaml")]);
+      expect(schedule.nodes.has("T-TEST-doc-010")).toBe(true);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+});

@@ -1,0 +1,13 @@
+対応完了しました。
+
+- README、Quick Start、ユースケースガイドを LP の導入・実行手順に統一
+- README に [specdojo.org](https://specdojo.org/) を追加
+- `@specdojo/docs-lint` を任意手順へ移動
+- 個票の作業内容・対応結果を更新
+- result ファイルは reporter 管轄のため未編集
+
+親 runner 管轄の lint・テストは実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"README・Quick Start・ユースケースガイドをLPの手順に揃え、specdojo.orgへのリンクと個票の対応結果を追加した。","validations":[{"command":"npx prettier --write README.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/guides/use-case-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-y79w-readme-lp-init-guide-alignment.md","status":"passed","summary":"変更したMarkdown 4件を整形済み。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿と派生ビューを正常に再生成。npx tsxのsandbox IPC制約を指定済みのfallbackで回避した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"カタログ検証は終了コード0。未配置の参照文書に関する既存範囲の警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

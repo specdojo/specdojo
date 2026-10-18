@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-YK1C",
+  "run_id": "20261018T075428966Z-e0306ff2",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-18T07:54:28.966Z",
+    "completed_at": "2026-10-18T07:56:19.705Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-yk1c.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/in-place.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/agent-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/resolve-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/build.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/build.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/build.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 23,
+    "summary": "CHANGELOG.md                                       |  1 +\n .../controls/project-register/events/pjr-yk1c.yaml | 16 ++++++\n .../pjr-yk1c-agent-alias-resolution.md             |  4 +-\n docs/ja/specdojo/guides/exec-config-guide.md       |  6 ++-\n src/commands/agent.ts                              | 13 ++---\n src/exec/agent-config.ts                           | 10 ++--\n src/exec/run/in-place.ts                           | 11 ++--\n src/exec/run/register-core.ts                      | 12 +++--\n src/exec/run/register-worktree.ts                  |  6 +--\n src/exec/run/schedule-prepare.ts                   |  2 +-\n src/exec/run/shared.ts                             |  3 +-\n src/exec/trial-core.ts                             |  5 +-\n src/exec/worktree-command.ts                       | 19 ++++---\n src/grade/targets.ts                               |  3 ++\n src/schedule/build.ts                              |  8 +--\n src/shared/specdojo-config.ts                      | 33 ++++++++++++\n tests/src/exec/agent-config-command.test.ts        | 14 +++++\n tests/src/exec/register.test.ts                    | 60 ++++++++++++++++++++++\n tests/src/exec/run/resolve-command.test.ts         | 12 +++++\n tests/src/exec/run/run.test.ts                     | 13 +++++\n tests/src/grade/grade.test.ts                      |  2 +\n tests/src/schedule/build.test.ts                   | 20 ++++++++\n tests/src/shared/specdojo-config.test.ts           | 42 +++++++++++++++\n 23 files changed, 271 insertions(+), 44 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/schedule/build.ts src/exec/worktree-command.ts tests/src/schedule/build.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md docs/ja/specdojo/guides/exec-config-guide.md CHANGELOG.md",
+      "status": "passed",
+      "summary": "整形済み（変更なし）"
+    },
+    {
+      "source": "executor",
+      "command": "npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-yk1c-agent-alias-resolution.md docs/ja/specdojo/guides/exec-config-guide.md CHANGELOG.md",
+      "status": "passed",
+      "summary": "エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "全 dct が OK、ERROR 0 件（既存の based_on WARN のみ）"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec run --register (PJR-JSEY smoke)",
+      "status": "requires_human",
+      "summary": "統合後に実 agent CLI を起動して、別名の解決と actor の記録を 1 回確かめる"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YK1C/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YK1C/src/schedule/build.ts\n  349:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YK1C/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 29 problems (0 errors, 29 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YK1C\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-nag0sA/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-BFv7gn/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YK1C/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YK1C/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-YK1C\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-nVh23l/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3Z4IA1/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-d5XDmr/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-UYTqZc/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n22.78s, tests 50.39s, environment 7ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nproblem"
+    }
+  ],
+  "final_message": "前回中断した実装（別名を実体へ解決する共通処理、`{model}` の展開、actor の実体名への統一、CHANGELOG・ガイド・個票の更新）を差分で確認し、別名に対応していなかった 2 か所を直した。1 つ目の `src/schedule/build.ts` では、strategy の `agent` の検証で別名を実体へ解決してから `stage_role` を確かめる。2 つ目の `src/exec/worktree-command.ts` では、claim 済み actor の候補照合を実体名で行う。`tests/src/schedule/build.test.ts` に別名の指名が通るテストを追加し、個票の対応結果に追記した。typecheck・lint・単体テストは親 runner が実行するため未実行で、追加テストもまだ走らせていない。確認できていないのは 2 点。1 つ目は trial-commands で別名指定時に内部の扱いが別名のまま残る点で、コマンドは実体から解決される。2 つ目は統合後の `exec run --register` での実動作確認で、PJR-JSEY の手順で人が行う必要がある。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-YK1C/20261018T075428966Z-e0306ff2/executor.log",
+      "bytes": 4840,
+      "truncated": false
+    }
+  ]
+}

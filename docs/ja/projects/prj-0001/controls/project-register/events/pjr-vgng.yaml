@@ -32,3 +32,144 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_465af9bc141b40c297969416eb6bc37a
+  ts: "2026-10-18T00:04:57Z"
+  action: start
+  actor: agy-claude-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_147bd7fcd406430daf4253a3ee6e11e7
+- v: 1
+  id: reg_9fb1459effcd4838b352d6b62b4a604c
+  ts: "2026-10-18T00:18:33Z"
+  action: wait
+  actor: agy-claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T00:13:39.709Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T00:13:39.709Z"
+  previous_event_id: reg_465af9bc141b40c297969416eb6bc37a
+- v: 1
+  id: reg_68bb6e9b1fed44fb9c9f1182114cae77
+  ts: "2026-10-18T04:14:26Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T00:13:39.709Z"
+      to: "-"
+  previous_event_id: reg_9fb1459effcd4838b352d6b62b4a604c
+- v: 1
+  id: reg_31f0e16ab35547e7b748873383bf6e34
+  ts: "2026-10-18T04:24:37Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_68bb6e9b1fed44fb9c9f1182114cae77
+- v: 1
+  id: reg_8f5955c3f6d54aea84a6309e66785b4b
+  ts: "2026-10-18T04:25:40Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_31f0e16ab35547e7b748873383bf6e34
+- v: 1
+  id: reg_c718991905504b3b87afb8835db6ab02
+  ts: "2026-10-18T04:34:57Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_8f5955c3f6d54aea84a6309e66785b4b
+- v: 1
+  id: reg_b689b686a1dc450aa4a1b871fbb32fa9
+  ts: "2026-10-18T04:35:49Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_c718991905504b3b87afb8835db6ab02
+- v: 1
+  id: reg_51672c15dd8a42ef971412290f34872b
+  ts: "2026-10-18T04:42:15Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b689b686a1dc450aa4a1b871fbb32fa9
+- v: 1
+  id: reg_52f99486e08941cbb28e24f900a61381
+  ts: "2026-10-18T04:43:24Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分と親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: Job Run の状態に partial を加え、Job 定義の partial_exit_code（grade は 2）に一致した終了を部分成功として review・統合するようにした。partial の review は complete-with-findings だけを受け入れ、全件失敗・上限・中断は従来どおり waiting にする。実際の定期実行での確認は次の grade の Run で行う
+  previous_event_id: reg_51672c15dd8a42ef971412290f34872b

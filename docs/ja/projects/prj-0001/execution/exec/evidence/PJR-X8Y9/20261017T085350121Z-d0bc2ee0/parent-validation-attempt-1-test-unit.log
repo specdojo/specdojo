@@ -1,0 +1,69 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-X8Y9
+
+Updated ticket status → ready: /tmp/specdojo-ticket-XxaZhK/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Sv2EUW/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-LtR4O8/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-X6WV5F/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-HIWYEw/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-cYwvcG/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+ ❯ tests/src/exec/worktree.test.ts (35 tests | 1 failed) 37ms
+     × reports ENOBUFS and the signal when the output exceeds maxBuffer 19ms
+Would move 1 agent member(s) from /tmp/specdojo-members-KkegfN/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-KkegfN/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-KkegfN/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-KkegfN/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-H7Cj84/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-K6DTd5/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 130 passed (131)
+      Tests  1 failed | 2055 passed (2056)
+   Start at  18:06:47
+   Duration  38.45s (transform 2.52s, setup 512ms, import 18.22s, tests 40.70s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/worktree.test.ts > describeGitProcessFailure > reports ENOBUFS and the signal when the output exceeds maxBuffer
+AssertionError: expected +0 to be null
+
+- Expected:
+null
+
++ Received:
+0
+
+ ❯ tests/src/exec/worktree.test.ts:373:27
+    371|     const actual = describeGitProcessFailure(result);
+    372|
+    373|     expect(result.status).toBeNull();
+       |                           ^
+    374|     expect(actual).toContain("output exceeded maxBuffer (ENOBUFS)");
+    375|     expect(actual).toContain(`terminated by signal ${result.signal}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

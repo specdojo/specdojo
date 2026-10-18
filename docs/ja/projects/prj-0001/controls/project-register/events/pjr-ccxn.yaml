@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e5dced13fd4148af84a88f4b371c3117
+  ts: "2026-10-18T10:46:31Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer の scaffold で常時稼働ホストへの接続のサンプルを作る
+    - field: description
+      from: ""
+      to: devcontainer scaffold（init --devcontainer を含む）で、常時稼働ホストで devcontainer を起動して tmux へ入る接続用のスクリプトと、接続元の ssh の config（alias と devcontainer の公開ポートの LocalForward）のサンプルを .devcontainer/remote-host/ に作り、最後の案内で置き場所とコピー先を示す。今は自宅の Mac 向けの設計書にしかなく、利用者に届いていない（2026-10-18、ポートの転送の不足で開発サーバへつながらなかった件を受けて）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-8GQ4"]'
+- v: 1
+  id: reg_d5e7561234904ff1ab60fe5ddd94e91f
+  ts: "2026-10-18T10:56:01Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e5dced13fd4148af84a88f4b371c3117
+- v: 1
+  id: reg_4607dddeede741ca9dae63b8570bbf87
+  ts: "2026-10-18T11:21:32Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d5e7561234904ff1ab60fe5ddd94e91f
+- v: 1
+  id: reg_38c32e555e504a9ca7e61e13402db725
+  ts: "2026-10-18T11:50:57Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分・親検証と、空のリポジトリでの scaffold の結果を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: devcontainer scaffold が .devcontainer/remote-host/ に、devcontainer を起動して tmux へ入る specdojo-tmux.sh.sample と、alias・RemoteCommand・公開ポートの LocalForward を含む ssh-config.sample を作り、最後の案内で置き場所を示すようにした。init --devcontainer は tmux を入れる。ガイドとコマンドリファレンスも合わせた。スクリプトのパスは仮の値のままで、container が見つからないときは vsc- で始まる最初の container を使うため、複数あると取り違えるおそれがある
+  previous_event_id: reg_4607dddeede741ca9dae63b8570bbf87

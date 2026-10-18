@@ -6,11 +6,11 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 78
-graded_at: "2026-10-07T16:13:41.368Z"
+graded_at: "2026-10-17T16:18:12.195Z"
 graded_by: agy-expert-executor
 content_hash: fa438c52a36eaa9e43b88df336f876264351918d14ece7b3bb8f46aaea8a30ba
 source_hashes:
-  catalog-entry: 36f4797979f3eed2de0b8cbeb67b385e5553a89a36868f31b11b91fc45521657
+  catalog-entry: 6f353e2dab5baaf6162e7feb69112405b4aa78c93158daac32ea349992ab7162
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   dependency:cdfd-overview: 9b8b4b2f64e2ef5c6ce0069204a94780e3ae43bc1b7d68004a654308d80abd7a
@@ -141,17 +141,17 @@ findings:
   - id: F003
     severity: major
     rule: vp-ba-requirements-completeness
-    line: 40
-    anchor: "- **データストア**: Kata / kata、登録簿 / register、成果物カタログ / catalog"
-    message: 全プロセスについて業務目的を達成したかを yes / no で確認する完了条件がなく、利用者が各プロセスの受入可否を確認できません。
-    message_ja: 全プロセスについて業務目的を達成したかを yes / no で確認する完了条件がなく、利用者が各プロセスの受入可否を確認できません。
-  - id: F004
-    severity: major
-    rule: vp-ba-requirements-completeness
     line: 23
     anchor: ""
     message: 全体概要が Plan の主要出力として定める「Orchestrator への計画要求への応答」が終了条件および各領域の主要出力に含まれず、どのプロセスが生成するかも詳細化されていません。
     message_ja: 全体概要が Plan の主要出力として定める「Orchestrator への計画要求への応答」が終了条件および各領域の主要出力に含まれず、どのプロセスが生成するかも詳細化されていません。
+  - id: F004
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 40
+    anchor: "- **データストア**: Kata / kata、登録簿 / register、成果物カタログ / catalog"
+    message: 全プロセスについて業務目的を達成したかを yes / no で確認する完了条件がなく、利用者が各プロセスの受入可否を確認できません。
+    message_ja: 全プロセスについて業務目的を達成したかを yes / no で確認する完了条件がなく、利用者が各プロセスの受入可否を確認できません。
   - id: F005
     severity: major
     rule: vp-arc-cross-document-consistency
@@ -222,10 +222,6 @@ findings:
     anchor: "- **システム境界**: Plan グループが各正本を定義または更新し、Orchestrator、Do、Check、Action との受け渡しまでを扱う。他グループの内部処理は扱わない。"
     message: 文書は draft で、必須の完了条件列と停止範囲列が欠落し、業務境界・主要例外・委譲境界の承認者および承認記録も特定できないため, 指摘解消と人間による承認を ready 化の前提として明示してください。
     message_ja: 文書は draft で、必須の完了条件列と停止範囲列が欠落し、業務境界・主要例外・委譲境界の承認者および承認記録も特定できないため, 指摘解消と人間による承認を ready 化の前提として明示してください。
-level_corrections:
-  - viewpoint: vp-ba-requirements-completeness
-    original_level: 2
-    corrected_level: 1
 done_criteria:
   satisfied: 3
   total: 4
