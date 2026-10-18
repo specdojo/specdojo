@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: low
   owner: DEV
   registered_at: "2026-10-15T21:39:09Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-2CQR 実行中の routine が前回の結果のまま表示される

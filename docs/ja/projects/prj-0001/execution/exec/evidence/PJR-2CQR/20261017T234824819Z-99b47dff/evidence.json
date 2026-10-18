@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-2CQR",
+  "run_id": "20261017T234824819Z-99b47dff",
+  "stage": {
+    "role": "executor",
+    "actor": "agy-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-17T23:49:23.133Z",
+    "completed_at": "2026-10-17T23:54:27.792Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-2cqr-routine-state-running-shows-previous-result.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/routine/routine.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-2cqr-routine-state-running-shows-previous-result.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/routine-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/routine/routine.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 5,
+    "summary": "...-routine-state-running-shows-previous-result.md | 17 ++++-\n docs/ja/specdojo/guides/routine-operation-guide.md |  2 +-\n src/routine/definition.ts                          |  4 +-\n src/routine/routine.ts                             | 59 ++++++++++++---\n tests/src/routine/routine.test.ts                  | 86 ++++++++++++++++++++++\n 5 files changed, 154 insertions(+), 14 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-2cqr-routine-state-running-shows-previous-result.md docs/ja/specdojo/guides/routine-operation-guide.md src/routine/definition.ts src/routine/routine.ts tests/src/routine/routine.test.ts",
+      "status": "passed",
+      "summary": "変更した Markdown および TypeScript ファイルを Prettier で正常に整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "成果物カタログ検証（catalog validate）が正常に合格しました。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nt-eslint/no-unused-vars\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/schedule/build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 29 problems (1 error, 28 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-iPX4bS/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-hcsyxV/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2CQR\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-piTwTk/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-H4ejui/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-7hyCcO/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-RE05sd/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n20.23s, tests 51.91s, environment 7ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit"
+    }
+  ],
+  "final_message": "PJR-2CQR: `routine run` 開始時の `last_result: running` 記録と前回の結果クリア、終了時の結果反映、運用ガイドおよび個票の更新、単体テストの追加を完了しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-2CQR/20261017T234824819Z-99b47dff/executor.log",
+      "bytes": 3333,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-2CQR/20261017T234824819Z-99b47dff/parent-validation-attempt-1-lint-ts.log",
+      "bytes": 6049,
+      "truncated": false
+    }
+  ]
+}
