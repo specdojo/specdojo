@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d50cbc116cf24c62bbc45691d33e2def
+- v: 1
+  id: reg_6f593374213d4cb2848ff5722eb79ca9
+  ts: "2026-10-18T16:05:20Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・親検証と、統合後の JSEY を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: 規約の検査の表のうち、変更したファイルの種類で当てはまるかが決まる検査（validate:schema:file・Prettier・markdownlint など）は、該当する変更がなければ not_applicable を受け付けるようにした。修正前の runner はこの修正そのものの run を退けたため、8WBN の worktree で作った dist で reporter と統合を流した（親検証 7 件は修正前の runner で通っていた）。統合後の runner で JSEY が --post-review で通った
+  previous_event_id: reg_ee1e2d8a8e2342d18772f4c7ada5e320

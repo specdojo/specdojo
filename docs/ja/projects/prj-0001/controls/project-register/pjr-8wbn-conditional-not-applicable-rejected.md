@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-8wbn-conditional-not-applicable-rejected
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T14:51:17Z"
+  completed_at: "2026-10-18T16:05:20Z"
+  conclusion: 規約の検査の表のうち、変更したファイルの種類で当てはまるかが決まる検査（validate:schema:file・Prettier・markdownlint など）は、該当する変更がなければ not_applicable を受け付けるようにした。修正前の runner はこの修正そのものの run を退けたため、8WBN の worktree で作った dist で reporter と統合を流した（親検証 7 件は修正前の runner で通っていた）。統合後の runner で JSEY が --post-review で通った
   derived_from:
     - PJR-Z104
 ---
