@@ -549,3 +549,19 @@
       from: runner のコードの分割 5 件と、runner に関わる移動 2 件（PJR-MHHP・PJR-XP0J）の統合ごとに、分割後の runner で executor・親の検証・reporter・統合まで通ることを確かめた
       to: H06F・FXPH の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
   previous_event_id: reg_34aaa08c56b848d8882b4d30ca7ff19d
+- v: 1
+  id: reg_7d480ffed8874692aba3dbb6724be5b2
+  ts: "2026-10-18T08:10:43Z"
+  action: reopen
+  actor: claude-orchestrator
+  from_status: done
+  to_status: open
+  reason: YK1C の統合後の runner の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-18"
+      to: "-"
+  previous_event_id: reg_2e3bf24f42a54b089a4537f8b55e61a1
