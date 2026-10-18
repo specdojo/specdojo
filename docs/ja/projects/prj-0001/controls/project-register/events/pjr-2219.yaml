@@ -29,3 +29,32 @@
     - field: registered
       from: ""
       to: "2026-10-17"
+- v: 1
+  id: reg_d5f194bd7391470897ae13f29db4cb2d
+  ts: "2026-10-18T07:42:59Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_82571dbc11bf46e68e896c888fd3b548
+- v: 1
+  id: reg_8befa93a1de745bb80e947dbe5546a7b
+  ts: "2026-10-18T07:51:17Z"
+  action: wait
+  actor: agy-claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:07.444Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:07.444Z"
+  previous_event_id: reg_d5f194bd7391470897ae13f29db4cb2d
