@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6bbcd6989a7544efa6da4ee92313f499
+  ts: "2026-10-18T12:23:01Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: plan の要点に検査の扱いがなく、新しいリポジトリの最初の実行が止まる
+    - field: description
+      from: ""
+      to: 2219 で plan の共通の規約を参照へ改めた後、plan の本文に残す要点に検査の扱い（当てはまる検査を流し、当てはまらない検査は not_applicable と理由を報告する）が入っていない。0.4.0 の tarball を空のリポジトリへ入れて exec run --register --worktree を流すと、executor（sonnet-executor）は参照先を読まずに command none・not_run と報告し、runner は executor validation failed or not run で waiting にした（2026-10-18）。0.3.1 では同じ手順で通っていた
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2219"]'
