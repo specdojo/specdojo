@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T14:58:36Z"
@@ -36,11 +36,20 @@ T46Y の完了条件のうち、verdict が complete・complete-with-findings �
 
 | No  | 作業               | 担当 | 状態 | メモ |
 | --- | ------------------ | ---- | ---- | ---- |
-| 1   | 判定のテストを補う | DEV  | open | -    |
+| 1   | 判定のテストを補う | DEV  | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容:
+  - `tests/src/exec/register-post-review.test.ts` に、PJR-T46Y で不足していた `registerPostReviewDisposition` の単体テストを追加した。
+  - verdict が `complete` のとき、`todo` と `issue` を自動 close する判定（`transition: "done"`, `outcome: "success"`）になることを確認。
+  - verdict が `complete-with-findings` のとき、`todo` と `issue` を自動 close する判定になり、指摘が close の理由（`explanation`）に残ることを確認。
+  - `decision` と `question` は、verdict（`complete`, `complete-with-findings`, `incomplete`, `undefined`）にかかわらず close しない判定（`transition !== "done"`）になることを確認。
+  - 本番コードは変更していない。
+- 成果物:
+  - `tests/src/exec/register-post-review.test.ts`
+- 残課題:
+  - なし
 
 ## 5. 関連ドキュメント
 
