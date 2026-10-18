@@ -342,16 +342,16 @@ git push origin --delete feature/branch-policy
 
 ## 10. プロダクトリポジトリの統合先を指定する
 
-別リポジトリ構成では、SpecDojo はプロダクトリポジトリにブランチ戦略を求めません。求めるのは、プロダクト側のルール（GitHub flow・git flow など）で決めた統合先を `repos[].integration_branch` に指定することだけで、ブランチ名に project ID を入れる必要はありません。`main` への取り込み方と merge の方式は、プロダクト側のルールに任せます（[[prj-0001:pjr-zdvq-product-repo-branch-strategy]]）。
+別リポジトリ構成では、SpecDojo はプロダクトリポジトリにブランチ戦略を求めません。求めるのは、プロダクト側のルール（GitHub flow・git flow など）で決めた統合先を `repos[].integration_branch` に指定することだけで、ブランチ名に project ID を入れる必要はありません。`main` への取り込み方と merge の方式は、プロダクト側のルールに任せます。
 
 ### 10.1. GitHub flow と git flow での `integration_branch` の選び方
 
-| プロダクト側の運用 | `repos[].integration_branch` の指定例 | 解説                                                                                                                       |
-| ------------------ | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| GitHub flow        | トピックのブランチ名（例: `main`）    | トピックのブランチから統合先へ統合し、最終的に `main` へは PR で取り込む。トピックごとに書き換える場合もある               |
-| git flow           | `develop`                             | feature を `develop` に統合し、`develop` から `main` へ release する。既存の `project/<id>/develop` の仕組みと同じ型で動く |
+| プロダクト側の運用 | `repos[].integration_branch` の指定例         | 解説                                                                                                                       |
+| ------------------ | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| GitHub flow        | トピックのブランチ名（例: `feature/<topic>`） | トピックのブランチから統合先へ統合し、最終的に `main` へは PR で取り込む。トピックごとに書き換える場合もある               |
+| git flow           | `develop`                                     | feature を `develop` に統合し、`develop` から `main` へ release する。既存の `project/<id>/develop` の仕組みと同じ型で動く |
 
-GitHub flow では、トピックごとまたは run ごとの `integration_branch` を指定できればよい（これは派生項目として起票中）。現状は 1 リポジトリ 1 統合先のため、運用に合わせて書き換えます。
+GitHub flow では、トピックごとまたは run ごとの `integration_branch` を指定できればよい。現状は 1 リポジトリ 1 統合先のため、運用に合わせて書き換えます。
 
 ### 10.2. merge の方式ごとの `Refs:` の残り方
 
@@ -370,7 +370,7 @@ squash merge を使う場合は、squash の commit メッセージに `Refs:` �
 追跡は SHA ではなく trace key（`Refs: <project-id>:<item-id>`）を主にします。`git log --grep` で辿れます。
 
 ```bash
-git log --grep "Refs: prj-0001:PJR-WJE6" --oneline
+git log --grep "Refs: <project-id>:<item-id>" --oneline
 ```
 
 ## 11. 作業前後のチェックリスト
