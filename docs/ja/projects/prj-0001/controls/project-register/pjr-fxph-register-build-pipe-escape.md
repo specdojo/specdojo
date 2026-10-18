@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-fxph-register-build-pipe-escape
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T00:43:51Z"
   due_on: null
+  completed_at: "2026-10-18T02:57:56Z"
+  conclusion: register build が表のセルの | をエスケープし、エスケープ済みのものは二重にしないよう直した。テストを加え、親検証は通過した
 ---
 
 # PJR-FXPH register build が表のセルの | をエスケープせず一覧の表が壊れる
