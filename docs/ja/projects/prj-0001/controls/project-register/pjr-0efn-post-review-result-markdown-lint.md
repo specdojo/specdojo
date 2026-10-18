@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-18T16:04:14Z"
-  block_reason: "checkpoint failed: Root index has staged checkpoint changes; commit or unstage them first: docs/ja/projects/prj-0001/controls/project-register/pjr-0efn-post-review-result-markdown-lint.md"
+  block_reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
   derived_from:
     - PJR-T46Y
 ---

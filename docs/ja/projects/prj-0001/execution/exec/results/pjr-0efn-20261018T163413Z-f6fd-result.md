@@ -4,11 +4,12 @@ specdojo:
   type: exec-result
   task_id: PJR-0EFN
   mode: edit
-  status: in_progress
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-0efn-20261018T163413Z-f6fd-plan.md
   started_at: "2026-10-18T16:34:19.437Z"
+  completed_at: "2026-10-18T16:47:05.087Z"
   agent: sol-executor
 ---
 
