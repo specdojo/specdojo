@@ -12,7 +12,7 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-17T12:17:15Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-md"
+  block_reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-h06f.yaml 13ms (unchanged); FAIL  /integration/ tests/src/exec/pipeline-e2e.integra…"
 ---
 
 # PJR-H06F exec run --register で approach の plan の作り方を使う
@@ -50,15 +50,19 @@ specdojo:
 
 | No  | 作業                                                    | 担当         | 状態 | メモ                          |
 | --- | ------------------------------------------------------- | ------------ | ---- | ----------------------------- |
-| 1   | approach の有無で plan の作り方を分ける                 | DEV          | open | approach なしは出力を変えない |
-| 2   | 成果物の approach の plan に、個票の完了条件を加える    | DEV          | open | DCT の done_criteria と両方   |
-| 3   | kata の approach の plan の作り方を決めて実装する       | DEV          | open | 理由を result に書く          |
-| 4   | `exec plan --register` でも同じ plan を作れるようにする | DEV          | open | -                             |
+| 1   | approach の有無で plan の作り方を分ける                 | DEV          | done | approach なしは出力を変えない |
+| 2   | 成果物の approach の plan に、個票の完了条件を加える    | DEV          | done | DCT の done_criteria と両方   |
+| 3   | kata の approach の plan の作り方を決めて実装する       | DEV          | done | 理由を result に書く          |
+| 4   | `exec plan --register` でも同じ plan を作れるようにする | DEV          | done | -                             |
 | 5   | 統合の後に `exec run --register` を 1 回流す            | orchestrator | open | close の条件                  |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 個票に `approach` がない場合は従来の register plan を生成し、ある場合は schedule と共通の approach テンプレート生成へ分岐するようにした。register 固有の `task_id`・`origin`・`owner`・`targets` は維持する。
+- 成果物 target は文書 ID から DCT の成果物を解決し、rulebook / recipe / sample / template と DCT の `done_criteria` を共通生成部から plan へ載せる。個票の「完了条件」は「個票の追加完了条件」として同じ plan へ追加する。
+- kata maintenance は個票で指定された kata の文書 ID を直接、対応する種別の編集対象パスへ解決する。DCT でその kata を宣言する成果物が一意なら根拠となる成果物として併記し、宣言がない、または複数成果物で共有される場合は任意の成果物を選ばず kata 単独の plan とする。
+- in-place / worktree の result scaffold にも個票の `approach` と `targets` を引き継ぐ。`exec plan --register` と両実行経路は同じ `generateRegisterPlan` を使用する。
+- 単体テストへ approach なし・成果物 approach・kata maintenance のケースを追加した。残る作業は、統合後に orchestrator が実際の `exec run --register` を 1 回流す No. 5 の close 条件である。
 
 ## 5. 関連ドキュメント
 
