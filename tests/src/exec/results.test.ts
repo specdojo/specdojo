@@ -625,10 +625,191 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     );
 
     const content = readFileSync(resultPath, "utf8");
-    expect(content).toContain("`docs/a.md`: reporter の説明がないため、変更差分を参照。");
+    expect(content).toContain("`docs/a.md`: 変更");
     expect(content).toContain("`docs/b.md`: B を更新した。");
     expect(content.indexOf("`docs/a.md`")).toBeLessThan(content.indexOf("`docs/b.md`"));
     expect(content).not.toContain("docs/not-in-evidence.md");
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("formats undescribed changed files using git operations and line stats", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+
+    const lineStats = new Map<string, { additions: number; deletions: number }>([
+      ["src/exec/run.ts", { additions: 12, deletions: 3 }],
+      ["src/exec-run.ts -> src/exec/run.ts", { additions: 12, deletions: 3 }],
+      ["docs/add.md", { additions: 10, deletions: 0 }],
+      ["docs/del.md", { additions: 0, deletions: 45 }],
+      ["src/mod.ts", { additions: 5, deletions: 2 }],
+    ]);
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["成果物を更新した。"],
+        changed_files: [{ path: "docs/described.md", summary: "説明済みの成果物。" }],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      reporterEvidence([
+        { path: "docs/described.md", status: "M" },
+        { path: "src/exec-run.ts -> src/exec/run.ts", status: "R" },
+        { path: "docs/add.md", status: "A" },
+        { path: "docs/del.md", status: "D" },
+        { path: "src/mod.ts", status: "M" },
+      ]),
+      { lineStats },
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain("`docs/described.md`: 説明済みの成果物。");
+    expect(content).toContain("`src/exec/run.ts`: 名前の変更（src/exec-run.ts から）、+12 / -3 行");
+    expect(content).toContain("`docs/add.md`: 追加、+10 / -0 行");
+    expect(content).toContain("`docs/del.md`: 削除、+0 / -45 行");
+    expect(content).toContain("`src/mod.ts`: 変更、+5 / -2 行");
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("formats undescribed changed files without line stats as fallback operations", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["成果物を更新した。"],
+        changed_files: [],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      reporterEvidence([
+        { path: "src/exec-run.ts -> src/exec/run.ts", status: "R" },
+        { path: "docs/add.md", status: "??" },
+        { path: "docs/del.md", status: "D" },
+        { path: "src/mod.ts", status: "M" },
+      ]),
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    expect(content).toContain("`src/exec/run.ts`: 名前の変更（src/exec-run.ts から）");
+    expect(content).toContain("`docs/add.md`: 追加");
+    expect(content).toContain("`docs/del.md`: 削除");
+    expect(content).toContain("`src/mod.ts`: 変更");
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("groups undescribed files by directory when changed files exceed 50", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+
+    // 55 files total: 2 described, 28 in src/exec/, 25 in tests/src/exec/
+    const changes: Array<{ path: string; status: string }> = [
+      { path: "src/exec/results.ts", status: "M" },
+      { path: "tests/src/exec/results.test.ts", status: "M" },
+    ];
+    const lineStats = new Map<string, { additions: number; deletions: number }>();
+
+    for (let i = 0; i < 28; i++) {
+      const p = `src/exec/file-${i}.ts`;
+      changes.push({ path: p, status: i < 5 ? "A" : "M" });
+      lineStats.set(p, { additions: 10, deletions: 2 });
+    }
+    for (let i = 0; i < 25; i++) {
+      const p = `tests/src/exec/test-${i}.test.ts`;
+      changes.push({ path: p, status: "M" });
+      lineStats.set(p, { additions: 4, deletions: 1 });
+    }
+
+    expect(changes.length).toBe(55);
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["成果物を更新した。"],
+        changed_files: [
+          { path: "src/exec/results.ts", summary: "結果描画を改善した。" },
+          { path: "tests/src/exec/results.test.ts", summary: "テストを追加した。" },
+        ],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      reporterEvidence(changes),
+      { lineStats },
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    // Described files are listed individually first
+    expect(content).toContain("`src/exec/results.ts`: 結果描画を改善した。");
+    expect(content).toContain("`tests/src/exec/results.test.ts`: テストを追加した。");
+
+    // Undescribed files are grouped by directory
+    expect(content).toContain("`src/exec/`: ほか 28 件（変更 23 件、追加 5 件、+280 / -56 行）");
+    expect(content).toContain("`tests/src/exec/`: ほか 25 件（変更 25 件、+100 / -25 行）");
+    expect(markdownlintErrors(content)).toEqual([]);
+  });
+
+  it("lists all files individually when changed files count is at or below threshold", async () => {
+    const { resultPath } = await scaffoldResult({
+      executionPath,
+      taskId: "prj-overview",
+      mode: "edit",
+      projectId: "prj-0001",
+      planRef: "exec/plans/prj-overview-plan.md",
+      agent: "pipeline-executor",
+      startedAt: "2026-08-10T07:00:00.000Z",
+    });
+
+    const changes = Array.from({ length: 50 }, (_, i) => ({
+      path: `src/feature/file-${i}.ts`,
+      status: "M",
+    }));
+
+    await renderReporterResult(
+      resultPath,
+      {
+        schema_version: 1,
+        mode: "edit",
+        summary: ["成果物を更新した。"],
+        changed_files: [],
+        handoff: [],
+        approach: "evidence を照合した。",
+      },
+      reporterEvidence(changes),
+    );
+
+    const content = readFileSync(resultPath, "utf8");
+    // Exactly 50 files: all listed individually, no directory grouping
+    expect(content).toContain("`src/feature/file-0.ts`: 変更");
+    expect(content).toContain("`src/feature/file-49.ts`: 変更");
+    expect(content).not.toContain("`src/feature/`: 50 件");
     expect(markdownlintErrors(content)).toEqual([]);
   });
 

@@ -195,11 +195,14 @@ describe("reporter structured output", () => {
       evidence: evidence(),
       mode: "edit",
     });
+    const normalizedPrompt = prompt.replace(/\s+/gu, " ");
 
-    expect(prompt).toContain("exact path from its evidence.changes entry");
-    expect(prompt).toContain("order does not matter");
-    expect(prompt).toContain("missing descriptions use a default message");
-    expect(prompt).toContain("paths\nabsent from evidence are discarded");
+    expect(normalizedPrompt).toContain("exact path from its evidence.changes entry");
+    expect(normalizedPrompt).toContain("order does not matter");
+    expect(normalizedPrompt).toContain(
+      "missing descriptions are filled with Git change metadata by the runner",
+    );
+    expect(normalizedPrompt).toContain("paths absent from evidence are discarded");
     expect(prompt).not.toContain('"outcome"');
     expect(prompt).not.toContain('"block_reason"');
   });

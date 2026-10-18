@@ -823,7 +823,7 @@ describe("executor / reporter pipeline E2E", () => {
     expect(changedFiles).toEqual([
       {
         path: "pipeline-artifact.md",
-        summary: "reporter の説明がないため、変更差分を参照。",
+        summary: "追加、+2 / -0 行",
       },
       { path: "pipeline-secondary.md", summary: "pipeline-secondary.md の説明。" },
       { path: "pipeline-tertiary.md", summary: "pipeline-tertiary.md の説明。" },
