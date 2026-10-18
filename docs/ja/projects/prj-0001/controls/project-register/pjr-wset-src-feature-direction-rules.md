@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: low
   owner: DEV
   registered_at: "2026-10-17T08:45:28Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
 ---
 
 # PJR-WSET 循環のなくなった機能の組に依存の向きの規則を足す

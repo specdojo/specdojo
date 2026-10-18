@@ -58,3 +58,19 @@
       from: "-"
       to: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
   previous_event_id: reg_508bfb45cf4144c68173c4e5b75525e7
+- v: 1
+  id: reg_e61d00cd6f2042fa926c8b4e11982c83
+  ts: "2026-10-18T15:39:03Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run validate:schema:file"
+      to: "-"
+  previous_event_id: reg_0082cfb7bcfb4acc9dfe0f21f5cfc44a
