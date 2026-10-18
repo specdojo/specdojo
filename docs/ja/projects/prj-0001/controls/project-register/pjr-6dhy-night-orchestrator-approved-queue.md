@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-18T00:40:14Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-6DHY 夜の orchestrator が承認済みの todo の並びを流しきる仕組みを作る

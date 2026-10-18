@@ -35,6 +35,7 @@ export const REGISTER_EVENT_FIELDS = [
   "approach",
   "targets",
   "derived_from",
+  "autopilot",
 ] as const;
 
 export type RegisterEventField = (typeof REGISTER_EVENT_FIELDS)[number];
@@ -121,6 +122,7 @@ export function registerEventFieldValues(
     approach: item.approach ?? CELL_NONE,
     targets: item.targets ? JSON.stringify(item.targets) : CELL_NONE,
     derived_from: item.derivedFrom ? JSON.stringify(item.derivedFrom) : CELL_NONE,
+    autopilot: item.autopilot ?? CELL_NONE,
   };
 }
 

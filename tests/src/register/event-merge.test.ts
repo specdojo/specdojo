@@ -147,6 +147,7 @@ describe("rebuildRegisterTicketFromEvents", () => {
       { field: "approach", from: "-", to: "fully-guided" },
       { field: "targets", from: "-", to: '["deliverable-doc"]' },
       { field: "derived_from", from: "-", to: '["PJR-AB12"]' },
+      { field: "autopilot", from: "-", to: "approved" },
       { field: "title", from: "Sample", to: "Renamed" },
     ]);
     const resume = event(5, "2026-09-28T05:00:00Z", "start", "waiting", "in-progress");
@@ -159,6 +160,7 @@ describe("rebuildRegisterTicketFromEvents", () => {
 
     expect(rebuilt.appliedFields).toEqual([
       "approach",
+      "autopilot",
       "derived_from",
       "due",
       "priority",
@@ -171,6 +173,7 @@ describe("rebuildRegisterTicketFromEvents", () => {
       approach: "fully-guided",
       targets: ["deliverable-doc"],
       derived_from: ["PJR-AB12"],
+      autopilot: "approved",
     });
     expect(rebuilt.content).toContain("# PJR-0ABC Sample");
   });

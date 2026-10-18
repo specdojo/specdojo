@@ -268,6 +268,10 @@ export function registerUpdateCommand(
   updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
   updateCmd.option("--block-reason <text>", "Update the waiting reason or use - to remove it");
   updateCmd.option(
+    "--autopilot <approval>",
+    "Night orchestrator approval: approved, or - to revoke",
+  );
+  updateCmd.option(
     "--approach <approach>",
     `Update execution approach (${APPROACHES.join(" | ")}; use - to remove)`,
   );
@@ -303,6 +307,7 @@ export function registerUpdateCommand(
         "due",
         "conclusion",
         "blockReason",
+        "autopilot",
         "approach",
         "target",
         "from",
@@ -310,7 +315,7 @@ export function registerUpdateCommand(
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --block-reason, --approach, --target, --from, --topic)",
+          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --from, --topic)",
         );
       }
 
@@ -348,6 +353,21 @@ export function registerUpdateCommand(
                 blockReason === "-"
                   ? REMOVE_REGISTER_ITEM_FIELD
                   : inlineCodeAnglePlaceholders(blockReason),
+            };
+      if (opts.autopilot !== undefined && !["approved", "-"].includes(opts.autopilot)) {
+        throw new Error('Invalid autopilot approval. Use "approved" or "-".');
+      }
+      if (opts.autopilot === "approved" && item.type !== "todo" && item.type !== "issue") {
+        throw new Error(
+          `Cannot approve ${item.id} for night autopilot: type is "${item.type}" (expected todo or issue).`,
+        );
+      }
+      const autopilotUpdates: RegisterItemFieldUpdates | undefined =
+        opts.autopilot === undefined
+          ? undefined
+          : {
+              autopilot:
+                opts.autopilot === "-" ? REMOVE_REGISTER_ITEM_FIELD : ("approved" as const),
             };
       const nextApproach =
         opts.approach === undefined
@@ -398,6 +418,10 @@ export function registerUpdateCommand(
         ...(opts.due !== undefined ? { due: opts.due } : {}),
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
+      if (opts.autopilot !== undefined) {
+        if (opts.autopilot === "-") delete updated.autopilot;
+        else updated.autopilot = "approved";
+      }
       if (opts.approach !== undefined) {
         if (nextApproach === undefined) delete updated.approach;
         else updated.approach = nextApproach as Approach;
@@ -426,8 +450,16 @@ export function registerUpdateCommand(
           topic,
           updated,
           dryRun: opts.dryRun,
-          ...(blockReasonUpdates || Object.keys(approachTargetUpdates).length > 0
-            ? { fieldUpdates: { ...blockReasonUpdates, ...approachTargetUpdates } }
+          ...(blockReasonUpdates ||
+          autopilotUpdates ||
+          Object.keys(approachTargetUpdates).length > 0
+            ? {
+                fieldUpdates: {
+                  ...blockReasonUpdates,
+                  ...autopilotUpdates,
+                  ...approachTargetUpdates,
+                },
+              }
             : {}),
           ...(opts.title !== undefined ? { title: opts.title } : {}),
           ...(opts.description !== undefined ? { description: opts.description } : {}),
@@ -445,8 +477,14 @@ export function registerUpdateCommand(
         action: "fields updated",
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
-        ...(blockReasonUpdates || Object.keys(approachTargetUpdates).length > 0
-          ? { fieldUpdates: { ...blockReasonUpdates, ...approachTargetUpdates } }
+        ...(blockReasonUpdates || autopilotUpdates || Object.keys(approachTargetUpdates).length > 0
+          ? {
+              fieldUpdates: {
+                ...blockReasonUpdates,
+                ...autopilotUpdates,
+                ...approachTargetUpdates,
+              },
+            }
           : {}),
         eventAction: "update",
         eventActor: registerEventActor(opts),

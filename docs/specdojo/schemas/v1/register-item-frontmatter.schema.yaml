@@ -170,6 +170,13 @@ properties:
               same project and <project-id>:PJR-XXXX for an item in another project. Omit the key
               when the item was not derived from another register item.
 
+          autopilot:
+            type: string
+            const: approved
+            description: >
+              Human approval that the item's stated completion conditions may be executed by the
+              night orchestrator. Omit the key to keep the item out of the approved queue.
+
           approach:
             $ref: "#/$defs/Approach"
             description: >

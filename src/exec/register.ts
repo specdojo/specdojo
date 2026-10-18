@@ -400,6 +400,20 @@ function registerCompletionConditions(item: PjrItem, ticketPath: string | null):
     : "- 個票に明示的な完了条件がないため、タイトルと概要を追加条件として扱う。";
 }
 
+function registerAutopilotConstraints(item: PjrItem): string {
+  if (item.autopilot !== "approved") return "";
+  return [
+    "### 夜間 autopilot の制約",
+    "",
+    "この個票は人が記載済みの完了条件だけを承認した。次の操作は行わない。必要になった場合は、理由を result の申し送りへ記録して異常終了する。",
+    "",
+    "- decision の決定、保護された設定の変更、公開・tag・push。",
+    "- 公開済み CHANGELOG 節の変更、未承認項目の実行、完了条件や変更範囲の拡張。",
+    "- 別の登録項目を自分で実行すること。見つけた別問題は夜間 orchestrator が承認待ちとして起票する。",
+    "",
+  ].join("\n");
+}
+
 function indexedDocumentPath(targetId: string): string {
   const repoRoot = specdojoRootDir();
   const indexed = collectDocIndexEntries(join(repoRoot, "docs"), repoRoot)[targetId];
@@ -468,7 +482,12 @@ export async function generateRegisterPlan(opts: {
       targets: item.targets ?? [],
       deliverable,
       ...(refs ? { refs } : {}),
-      additionalConditions: registerCompletionConditions(item, ticketPath),
+      additionalConditions: [
+        registerCompletionConditions(item, ticketPath),
+        registerAutopilotConstraints(item),
+      ]
+        .filter(Boolean)
+        .join("\n\n"),
       ...(opts.outPath ? { outPath: opts.outPath } : {}),
       stem: opts.stem,
     });
@@ -504,6 +523,7 @@ export async function generateRegisterPlan(opts: {
     _PJR_TICKET_REF_: ticketPath ? `\`${repoRelativePath(ticketPath)}\`` : "-",
     _RESULT_REF_: resultRef,
     _GRADE_FINDINGS_: ticketPath ? registerGradeFindingsText(opts.projectId, ticketPath) : "- なし",
+    _AUTOPILOT_CONSTRAINTS_: registerAutopilotConstraints(item),
   };
 
   const body = expandTemplate(template, values);

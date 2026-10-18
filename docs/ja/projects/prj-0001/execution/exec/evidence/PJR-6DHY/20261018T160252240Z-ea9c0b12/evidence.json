@@ -1,0 +1,332 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6DHY",
+  "run_id": "20261018T160252240Z-ea9c0b12",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-18T16:02:52.240Z",
+    "completed_at": "2026-10-18T16:07:25.636Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-6dhy.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6dhy-night-orchestrator-approved-queue.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-register-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-events.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/event-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/commands.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/event-merge.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/item.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/jobs/job-night-approved-register.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/routines/rtn-night-approved-register.yaml",
+      "status": "??"
+    },
+    {
+      "path": "src/commands/night-orchestrator.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/night-orchestrator.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "src/register/event-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/commands.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/event-merge.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 22,
+    "summary": ".../040-system-design/sysd-job-execution.md        |  8 ++++\n .../controls/project-register/events/pjr-6dhy.yaml | 16 +++++++\n .../pjr-6dhy-night-orchestrator-approved-queue.md  |  3 +-\n .../exec-templates/xep-register-template.md        |  2 +\n .../ja/specdojo/guides/register-operation-guide.md | 21 +++++++++\n docs/ja/specdojo/references/command-reference.md   | 10 ++++\n .../schemas/v1/register-events.schema.yaml         |  1 +\n .../v1/register-item-frontmatter.schema.yaml       |  7 +++\n src/commands/orchestrator.ts                       |  3 ++\n src/exec/register.ts                               | 22 ++++++++-\n src/register/create-commands.ts                    | 48 ++++++++++++++++++--\n src/register/event-merge.ts                        |  6 +++\n src/register/events.ts                             |  2 +\n src/register/item.ts                               |  7 +++\n tests/src/exec/register-plan-escape.test.ts        | 24 ++++++++++\n tests/src/register/commands.test.ts                | 53 ++++++++++++++++++++++\n tests/src/register/event-merge.test.ts             |  3 ++\n tests/src/register/item.test.ts                    | 33 ++++++++++++++\n 18 files changed, 261 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/product/040-system-design/sysd-job-execution.md docs/ja/projects/prj-0001/controls/project-register/pjr-6dhy-night-orchestrator-approved-queue.md docs/ja/specdojo/exec-templates/xep-register-template.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/specdojo/schemas/v1/register-events.schema.yaml docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml docs/ja/projects/prj-0001/jobs/job-night-approved-…",
+      "status": "passed",
+      "summary": "変更対象を整形した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "全 catalog が OK。既存の未作成文書に関する警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts orchestrator night --project prj-0001 --dry-run",
+      "status": "passed",
+      "summary": "夜間 queue の選択処理が正常起動し、未承認項目を選択しなかった。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec run --project prj-0001 --job job-night-approved-register --dry-run",
+      "status": "passed",
+      "summary": "Job の materialize、review agent 解決、worktree lifecycle を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6DHY/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6DHY/src/schedule/build.ts\n  349:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6DHY/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 30 problems (0 errors, 30 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6DHY\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-SPaK9n/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-lmNY48/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-ip\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6DHY/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6DHY/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6DHY\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-hHRqZp/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-jnxR57/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-FV6Jre/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Udzd7e/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n36.25s, tests 67.67s, environment 7ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nreporter failedrate limit; retry-after: 60 seconds\nrate limit\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "status": "changed",
+      "path": "docs/ja/product/040-system-design/sysd-job-execution.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-6dhy-night-orchestrator-approved-queue.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6dhy-night-orchestrator-approved-queue.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/exec-templates/xep-register-template.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/exec-templates/xep-register-template.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/register-events.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/register-events.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "src/commands/orchestrator.ts",
+      "status": "changed",
+      "path": "src/commands/orchestrator.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/exec/register.ts",
+      "status": "changed",
+      "path": "src/exec/register.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/create-commands.ts",
+      "status": "changed",
+      "path": "src/register/create-commands.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/event-merge.ts",
+      "status": "changed",
+      "path": "src/register/event-merge.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/events.ts",
+      "status": "changed",
+      "path": "src/register/events.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/register/item.ts",
+      "status": "changed",
+      "path": "src/register/item.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/register/commands.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/commands.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/register/item.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/item.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/jobs/job-night-approved-register.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/jobs/job-night-approved-register.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/routines/rtn-night-approved-register.yaml",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/routines/rtn-night-approved-register.yaml",
+      "reason": ""
+    },
+    {
+      "target": "src/commands/night-orchestrator.ts",
+      "status": "changed",
+      "path": "src/commands/night-orchestrator.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/commands/night-orchestrator.test.ts",
+      "status": "changed",
+      "path": "tests/src/commands/night-orchestrator.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "承認済み todo・issue の夜間実行、上限管理、派生 issue 起票、朝報告、定期 Job/routine を実装し、前回のイベント期待値不整合も修正した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-6DHY/20261018T160252240Z-ea9c0b12/executor.log",
+      "bytes": 4776,
+      "truncated": false
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import {
   type AgentProvider,
   type SpecDojoConfig,
 } from "../shared/specdojo-config.js";
+import { registerNightOrchestratorCommand } from "./night-orchestrator.js";
 
 export type OrchestratorProvider = Exclude<AgentProvider, "custom">;
 
@@ -255,6 +256,8 @@ export function registerOrchestratorCommands(program: Command): void {
   const orchestrator = program
     .command("orchestrator")
     .description("Launch an interactive orchestrator with declared repository access");
+
+  registerNightOrchestratorCommand(orchestrator);
 
   orchestrator
     .command("launch")

@@ -345,6 +345,8 @@ specdojo register history --project <project-id> --since 2026-08-01 --json
 
 ## 3. agent実行・定期実行との連携
 
+### 3.1. 通常の agent 実行
+
 登録項目は `exec run --register` で agent に実行させられます。
 
 ```bash
@@ -380,6 +382,25 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree
 実行前に、過去の register 実行が残した未 commit の plan/result を検出した場合は、現在のIDへ暗黙に混ぜず警告します。警告されたファイルを確認・整理してから再実行してください。
 
 実行フローの詳細は [exec運用ガイド](exec-operation-guide.md) を参照します。
+
+### 3.2. 完了条件を承認して夜間 queue に入れる
+
+人が個票の完了条件と変更範囲を確認した todo または issue だけ、次のコマンドで夜間実行を承認します。個票を手編集せず、event に承認者と理由を残します。
+
+```bash
+specdojo register update --project <project-id> --id PJR-0012 \
+  --autopilot approved --by <approver> --reason "完了条件と変更範囲を承認"
+
+# 承認を取り消す
+specdojo register update --project <project-id> --id PJR-0012 \
+  --autopilot - --by <approver> --reason "夜間 queue から除外"
+```
+
+`autopilot: approved` は「現在の個票に書かれた完了条件」の承認です。夜間 orchestrator は印のある `open` の todo・issue だけを ID 順に選びます。decision、印のない項目、`waiting` の項目は実行しません。完了条件を変更した場合は一度承認を取り消し、変更後の条件を再確認して承認します。
+
+夜間実行は `specdojo orchestrator night` が担います。worktree 隔離、post-review、自動 close / `waiting` への復帰を必須とし、件数、並列数、連続失敗停止、rate limit 時の fallback をオプションで制限します。承認範囲外の操作が必要になった失敗は、元項目を `derived_from` に持つ issue として起票します。結果は `execution/reports/night-orchestrator/` の朝報告 1 文書へ集約します。
+
+定期起動は Job `job-night-approved-register` と routine `rtn-night-approved-register` を使います。サンプル routine は保護された運用設定を勝手に有効化しないため `enabled: false` です。人が 2 時（Asia/Tokyo）、一晩 10 件、並列 2、連続失敗 2 件、fallback executor を確認してから有効化してください。
 
 ## 4. 例外対応と特殊な運用
 

@@ -198,6 +198,12 @@ function fieldUpdateFromChange(change: RegisterEventChange): RegisterItemFieldUp
         return undefined;
       }
     }
+    case "autopilot":
+      return isUnset
+        ? { autopilot: REMOVE_REGISTER_ITEM_FIELD }
+        : value === "approved"
+          ? { autopilot: "approved" }
+          : undefined;
     default:
       return undefined;
   }
