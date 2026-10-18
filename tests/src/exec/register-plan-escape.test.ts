@@ -16,6 +16,9 @@ import type { RegisterPaths } from "../../../src/register/register.js";
 const PROBLEMATIC_DESCRIPTION =
   "run.register_date_timezone を導入する。値が未設定の場合は _TODO_ とし、" +
   "既定は my_default_value を採用する（_ASSUMPTION_）。";
+const originalCwd = process.cwd();
+const originalPackageRoot = process.env.SPECDOJO_PACKAGE_ROOT;
+const specdojoSourceRoot = specdojoRootDir();
 
 function loadMarkdownlintConfig(): Record<string, unknown> {
   const configPath = path.join(specdojoRootDir(), ".markdownlint.yaml");
@@ -89,6 +92,9 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
   });
 
   afterEach(async () => {
+    process.chdir(originalCwd);
+    if (originalPackageRoot === undefined) delete process.env.SPECDOJO_PACKAGE_ROOT;
+    else process.env.SPECDOJO_PACKAGE_ROOT = originalPackageRoot;
     await rm(dir, { recursive: true, force: true });
   });
 
@@ -178,6 +184,41 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       "utf8",
     );
     return `[pjr-test-approach](./${filename})`;
+  }
+
+  async function writeKataFixture(): Promise<void> {
+    const templatesPath = path.join(dir, "docs", "ja", "specdojo", "exec-templates");
+    const rulebooksPath = path.join(dir, "docs", "ja", "specdojo", "rulebooks");
+    await mkdir(templatesPath, { recursive: true });
+    await mkdir(rulebooksPath, { recursive: true });
+    for (const filename of [
+      "xep-common-conventions-template.md",
+      "xep-rulebook-maintenance-template.md",
+    ]) {
+      await writeFile(
+        path.join(templatesPath, filename),
+        await readFile(
+          path.join(specdojoSourceRoot, "docs", "ja", "specdojo", "exec-templates", filename),
+          "utf8",
+        ),
+        "utf8",
+      );
+    }
+    await writeFile(
+      path.join(rulebooksPath, "test-rulebook.md"),
+      [
+        "---",
+        "specdojo:",
+        "  id: prj-test:test-rulebook",
+        "  type: rulebook",
+        "  status: draft",
+        "---",
+        "",
+        "# Test Rulebook",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
   }
 
   it("アンダースコア入り識別子や _TODO_ を含む項目でも MD049/MD050 違反を出さない", async () => {
@@ -286,8 +327,11 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
   it("kata maintenance approach は指定した kata id を直接の編集対象にする", async () => {
     const outPath = path.join(dir, "plan-with-kata-approach.md");
-    const catalogPath = await writeCatalog();
+    await writeKataFixture();
+    const catalogPath = await writeCatalog("prj-test:test-rulebook");
     const ticket = await writeTicket();
+    process.env.SPECDOJO_PACKAGE_ROOT = dir;
+    process.chdir(dir);
     await generateRegisterPlan({
       executionPath: path.join(dir, "execution"),
       projectId: "prj-test",
@@ -295,7 +339,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       registerPaths: makeRegisterPaths(),
       item: makeItem({
         approach: "rulebook-maintenance",
-        targets: ["specdojo:pjr-rulebook"],
+        targets: ["prj-test:test-rulebook"],
         ticket,
       }),
       stem: "xep-pjr-test",
@@ -306,8 +350,8 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
     expect(content).toContain("origin: register");
     expect(content).toContain("approach: rulebook-maintenance");
-    expect(content).toContain("targets:\n    - specdojo:pjr-rulebook");
-    expect(content).toContain("docs/ja/specdojo/rulebooks/pjr-rulebook.md");
+    expect(content).toContain("targets:\n    - prj-test:test-rulebook");
+    expect(content).toContain("docs/ja/specdojo/rulebooks/test-rulebook.md");
     expect(content).toContain("register-specific criterion is satisfied");
   });
 
