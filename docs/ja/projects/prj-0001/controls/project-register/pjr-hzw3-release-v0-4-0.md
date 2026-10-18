@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-18T05:54:03Z"
+  completed_at: "2026-10-18T13:47:40Z"
+  conclusion: "範囲の 14 件を close し、specdojo 0.4.0 と @specdojo/docs-lint 0.2.1 を 2026-10-18 に公開した（PR #16 の merge commit 445e611d0、npm run check を通した develop の d56af8fc8 と同じ内容）。公開の workflow と GitHub Pages の deploy は成功し、公開された 0.4.0 を空のリポジトリへ入れて init で 2 段構成の名簿と接続のサンプルが作られることを確かめた。tarball での導入の確認で、新しいリポジトリの最初の実行が止まる不具合 2 件（PJR-Z104・PJR-6EF8）を見つけて公開前に直した"
 ---
 
 # PJR-HZW3 v0.4.0 を公開する
