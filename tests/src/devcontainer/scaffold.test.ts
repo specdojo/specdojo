@@ -63,6 +63,9 @@ describe("runDevcontainerScaffold", () => {
       if (file.endsWith("init.el")) {
         return Promise.resolve(";;; bundled Emacs defaults");
       }
+      if (file.endsWith("vimrc")) {
+        return Promise.resolve("set number\n");
+      }
       if (file.endsWith("specdojo-tmux.sh.sample")) {
         return Promise.resolve("#!/usr/bin/env bash\necho sample");
       }
@@ -403,6 +406,119 @@ describe("runDevcontainerScaffold", () => {
     expect(initCall[1]).toBe(";;; bundled Emacs defaults");
   });
 
+  it("should combine the recommended preset with explicit options", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      preset: "recommended",
+      providers: ["codex"],
+      editors: ["emacs"],
+      ollama: false,
+      cron: true,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+    const aptPackages =
+      json.features["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"].packages;
+    expect(aptPackages.split(",").filter((item: string) => item === "emacs-nox")).toHaveLength(1);
+    expect(aptPackages).toContain("vim-nox");
+    expect(aptPackages).toContain("tmux");
+    expect(aptPackages).toContain("cron");
+    expect(json.customizations.vscode.extensions).toEqual(
+      expect.arrayContaining([
+        "mhutchie.git-graph",
+        "davidanson.vscode-markdownlint",
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode",
+        "unifiedjs.vscode-remark",
+        "yzhang.markdown-all-in-one",
+        "streetsidesoftware.code-spell-checker",
+        "editorconfig.editorconfig",
+        "usernamehw.errorlens",
+        "tamasfe.even-better-toml",
+        "openai.chatgpt",
+      ]),
+    );
+    expect(json.customizations.vscode.extensions).not.toContain("anthropic.claude-code");
+    expect(json.customizations.vscode.settings["[markdown]"]).toMatchObject({
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true,
+    });
+    expect(json.customizations.vscode.settings["[yaml]"]).toMatchObject({
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true,
+    });
+    expect(json.customizations.vscode.settings["yaml.schemas"]).toHaveProperty(
+      "./docs/specdojo/schemas/v1/exec-defaults.schema.yaml",
+      ".specdojo/exec-defaults.yaml",
+    );
+
+    expect(findWriteCall("vimrc")[1]).toBe("set number\n");
+    const script = String(findWriteCall("post-create.sh")[1]);
+    expect(script).toContain('[ ! -f "$HOME/.vimrc" ]');
+    expect(script).toContain('[ ! -f "$HOME/.vim/vimrc" ]');
+    expect(script).toContain('cp .devcontainer/vim/vimrc "$HOME/.vimrc"');
+
+    const extensions = JSON.parse(String(findWriteCall("extensions.json")[1]));
+    expect(extensions.recommendations).toEqual(json.customizations.vscode.extensions);
+  });
+
+  it("should preserve existing VS Code extension recommendations and add only missing ones", async () => {
+    existsSyncMock.mockImplementation((p) => {
+      const file = String(p);
+      if (file.endsWith(".vscode/extensions.json")) return true;
+      if (file.includes("/repo/.devcontainer")) return false;
+      return file.includes("templates");
+    });
+    const originalReadFile = readFileMock.getMockImplementation();
+    readFileMock.mockImplementation(async (p) => {
+      if (String(p).endsWith(".vscode/extensions.json")) {
+        return JSON.stringify({ recommendations: ["existing.extension", "mhutchie.git-graph"] });
+      }
+      return originalReadFile?.(p) ?? "";
+    });
+
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      preset: "recommended",
+      providers: [],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const extensions = JSON.parse(String(findWriteCall("extensions.json")[1]));
+    expect(extensions.recommendations[0]).toBe("existing.extension");
+    expect(
+      extensions.recommendations.filter((extension: string) => extension === "mhutchie.git-graph"),
+    ).toHaveLength(1);
+  });
+
+  it("should reject an unknown preset", async () => {
+    await expect(
+      runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        preset: "unknown",
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      }),
+    ).rejects.toThrow("Unknown Dev Container preset: unknown");
+    expect(writeFileMock).not.toHaveBeenCalled();
+  });
+
   it("should install the Emacs init where Emacs will load it without overwriting user config", async () => {
     await runDevcontainerScaffold({
       packageRoot,
@@ -486,6 +602,68 @@ describe("runDevcontainerScaffold", () => {
           expect(actualFs.existsSync(configInit)).toBe(false);
           expect(actualFs.existsSync(legacyInit)).toBe(false);
           expect(result.stdout).not.toContain("Installed Emacs init:");
+        }
+      }
+    } finally {
+      actualFs.rmSync(temporaryRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("should install the Vim config only when the user has no existing Vim config", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: [],
+      editors: ["vim"],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const script = String(findWriteCall("post-create.sh")[1]);
+    const actualFs = await vi.importActual<typeof fs>("node:fs");
+    const temporaryRoot = actualFs.mkdtempSync(path.join(os.tmpdir(), "specdojo-vim-home-"));
+    const fakeBin = path.join(temporaryRoot, "bin");
+    actualFs.mkdirSync(fakeBin);
+    actualFs.writeFileSync(path.join(fakeBin, "npm"), "#!/usr/bin/env bash\nexit 0\n", {
+      mode: 0o755,
+    });
+
+    const cases = [
+      { name: "empty", existingPath: undefined, expectInstalled: true },
+      { name: "vimrc", existingPath: ".vimrc", expectInstalled: false },
+      { name: "vim-directory", existingPath: ".vim/vimrc", expectInstalled: false },
+    ];
+
+    try {
+      for (const testCase of cases) {
+        const home = path.join(temporaryRoot, testCase.name);
+        const workspace = path.join(home, "workspace");
+        actualFs.mkdirSync(path.join(workspace, ".devcontainer", "vim"), { recursive: true });
+        actualFs.writeFileSync(path.join(workspace, ".devcontainer", "vim", "vimrc"), "bundled");
+        if (testCase.existingPath) {
+          const existingPath = path.join(home, testCase.existingPath);
+          actualFs.mkdirSync(path.dirname(existingPath), { recursive: true });
+          actualFs.writeFileSync(existingPath, "user config");
+        }
+
+        const result = spawnSync("bash", ["-c", script], {
+          cwd: workspace,
+          encoding: "utf8",
+          env: { ...process.env, HOME: home, PATH: `${fakeBin}:${process.env.PATH ?? ""}` },
+        });
+
+        expect(result.status, `${testCase.name}: ${result.stderr}`).toBe(0);
+        const vimrc = path.join(home, ".vimrc");
+        if (testCase.expectInstalled) {
+          expect(actualFs.readFileSync(vimrc, "utf8")).toBe("bundled");
+          expect(result.stdout).toContain(`Installed Vim config: ${vimrc}`);
+        } else if (testCase.existingPath === ".vimrc") {
+          expect(actualFs.readFileSync(vimrc, "utf8")).toBe("user config");
+        } else {
+          expect(actualFs.existsSync(vimrc)).toBe(false);
         }
       }
     } finally {

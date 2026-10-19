@@ -49,6 +49,7 @@ export type InitOptions = {
   exec?: boolean;
   catalog?: string;
   devcontainer?: boolean;
+  devcontainerPreset?: string;
   workspaceName?: string;
   dryRun?: boolean;
 };
@@ -63,6 +64,7 @@ export type InitAnswers = {
   exec: boolean;
   catalog?: ProjectSize;
   devcontainer: boolean;
+  devcontainerPreset?: "recommended";
 };
 
 export interface InitPrompter {
@@ -116,6 +118,13 @@ function parseCatalog(value: string | undefined): ProjectSize | undefined {
   throw new Error(`Invalid catalog size: ${value}. Must be small, medium, large, or none`);
 }
 
+function parseDevcontainerPreset(value: string | undefined): "recommended" | undefined {
+  const normalized = value?.trim().toLowerCase();
+  if (!normalized || normalized === "none" || normalized === "-") return undefined;
+  if (normalized === "recommended") return normalized;
+  throw new Error(`Invalid Dev Container preset: ${value}. Must be recommended or none`);
+}
+
 function validateProjectId(projectId: string): string {
   if (!/^prj-[0-9]{4,}$/.test(projectId)) {
     throw new Error(`Invalid project ID: ${projectId}. Expected prj-0001 style`);
@@ -153,6 +162,9 @@ function validateAnswers(answers: InitAnswers): InitAnswers {
   validateNickname(answers.nickname);
   validateDisplayName(answers.displayName);
   validateExecProviders(answers.providers, answers.exec);
+  if (answers.devcontainerPreset && !answers.devcontainer) {
+    throw new Error("--devcontainer-preset requires --devcontainer");
+  }
   return answers;
 }
 
@@ -176,6 +188,13 @@ export async function collectInitAnswers(
   prompter?: InitPrompter,
 ): Promise<InitAnswers> {
   if (!prompter) {
+    const devcontainer = !!options.devcontainer;
+    const explicitPreset = parseDevcontainerPreset(options.devcontainerPreset);
+    const devcontainerPreset = devcontainer
+      ? options.devcontainerPreset === undefined
+        ? "recommended"
+        : explicitPreset
+      : explicitPreset;
     const answers = validateAnswers({
       projectId: options.project?.trim() || DEFAULTS.projectId,
       projectName: options.name?.trim() || DEFAULTS.projectName,
@@ -185,7 +204,8 @@ export async function collectInitAnswers(
       providers: parseProviders(options.provider),
       exec: !!options.exec,
       catalog: parseCatalog(options.catalog),
-      devcontainer: !!options.devcontainer,
+      devcontainer,
+      ...(devcontainerPreset ? { devcontainerPreset } : {}),
     });
     for (const [label, used] of [
       ["project", !options.project],
@@ -197,6 +217,7 @@ export async function collectInitAnswers(
       ["exec=no", !options.exec],
       ["catalog=none", !options.catalog],
       ["devcontainer=no", !options.devcontainer],
+      ["devcontainer-preset=recommended", devcontainer && options.devcontainerPreset === undefined],
     ] as const) {
       if (used) process.stdout.write(`Using default: ${label}\n`);
     }
@@ -212,6 +233,7 @@ export async function collectInitAnswers(
     const providerDefault = options.provider?.trim() || DEFAULTS.providers.join(",");
     const execDefault = !!options.exec;
     const devcontainerDefault = !!options.devcontainer;
+    const explicitDevcontainerPreset = parseDevcontainerPreset(options.devcontainerPreset);
     const providerPrompt = `Orchestrator providers (${PROVIDERS.join(", ")}) [${providerDefault}]: `;
     const projectId = await promptUntilValid(
       prompter,
@@ -258,6 +280,14 @@ export async function collectInitAnswers(
       `Create a Dev Container? [${devcontainerDefault ? "Y/n" : "y/N"}]: `,
       (answer) => parseBoolean(answer, devcontainerDefault),
     );
+    const devcontainerPreset =
+      devcontainer && options.devcontainerPreset === undefined
+        ? await promptUntilValid(
+            prompter,
+            "Add the recommended Dev Container settings? [Y/n]: ",
+            (answer) => (parseBoolean(answer, true) ? "recommended" : undefined),
+          )
+        : explicitDevcontainerPreset;
     return validateAnswers({
       projectId,
       projectName,
@@ -268,6 +298,7 @@ export async function collectInitAnswers(
       exec,
       catalog,
       devcontainer,
+      ...(devcontainerPreset ? { devcontainerPreset } : {}),
     });
   } finally {
     prompter.close();
@@ -660,6 +691,7 @@ export async function runInit(
       packageRoot,
       repoRoot,
       workspaceName: options.workspaceName,
+      preset: answers.devcontainerPreset,
       providers: answers.providers,
       editors: [],
       ollama: answers.providers.includes("opencode"),
@@ -710,6 +742,10 @@ export function registerInitCommand(program: Command): void {
     .option("--exec", "Configure executor and reporter agents", false)
     .option("--catalog <size>", "Create a deliverables catalog (small|medium|large)")
     .option("--devcontainer", "Create a Dev Container for the selected providers", false)
+    .option(
+      "--devcontainer-preset <name>",
+      "Apply a Dev Container preset when creating it (recommended|none)",
+    )
     .option(
       "--workspace-name <name>",
       "Override the Dev Container workspace parent name used under /workspaces",

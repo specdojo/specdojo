@@ -100,6 +100,38 @@ describe("specdojo init", () => {
     expect(closed).toBe(true);
   });
 
+  it("asks for the recommended preset only after selecting a Dev Container", async () => {
+    const answers = ["", "", "", "", "", "", "", "yes", ""];
+    const prompts: string[] = [];
+    const prompter: InitPrompter = {
+      async question(prompt) {
+        prompts.push(prompt);
+        return answers.shift() ?? "";
+      },
+      close() {},
+    };
+
+    await expect(collectInitAnswers({}, prompter)).resolves.toMatchObject({
+      devcontainer: true,
+      devcontainerPreset: "recommended",
+    });
+    expect(prompts.at(-1)).toBe("Add the recommended Dev Container settings? [Y/n]: ");
+    expect(prompts).toHaveLength(9);
+  });
+
+  it("uses the recommended preset for --yes with --devcontainer and allows opting out", async () => {
+    await expect(collectInitAnswers({ yes: true, devcontainer: true })).resolves.toMatchObject({
+      devcontainer: true,
+      devcontainerPreset: "recommended",
+    });
+    await expect(
+      collectInitAnswers({ yes: true, devcontainer: true, devcontainerPreset: "none" }),
+    ).resolves.not.toHaveProperty("devcontainerPreset");
+    await expect(
+      collectInitAnswers({ yes: true, devcontainerPreset: "recommended" }),
+    ).rejects.toThrow("--devcontainer-preset requires --devcontainer");
+  });
+
   it("retries only an invalid interactive question and keeps earlier answers", async () => {
     const answers = [
       "project-1234",
@@ -425,6 +457,17 @@ describe("specdojo init", () => {
         devcontainer.features?.["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"]
           ?.packages,
       ).toContain("tmux");
+      expect(
+        devcontainer.features?.["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"]
+          ?.packages,
+      ).toContain("vim-nox");
+      expect(existsSync(join(repo, ".devcontainer/vim/vimrc"))).toBe(true);
+      expect(existsSync(join(repo, ".devcontainer/emacs/init.el"))).toBe(true);
+      const extensions = JSON.parse(
+        readFileSync(join(repo, ".vscode/extensions.json"), "utf8"),
+      ) as { recommendations: string[] };
+      expect(extensions.recommendations).toContain("openai.chatgpt");
+      expect(extensions.recommendations).toContain("davidanson.vscode-markdownlint");
       expect(existsSync(join(repo, ".devcontainer/remote-host/specdojo-tmux.sh.sample"))).toBe(
         true,
       );

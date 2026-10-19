@@ -38,13 +38,18 @@ devcontainer scaffold に --preset recommended を加え、emacs と vim（.vimr
 
 ## 3. 作業内容
 
-| No  | 作業                                        | 担当 | 状態 | メモ |
-| --- | ------------------------------------------- | ---- | ---- | ---- |
-| 1   | devcontainer の推奨の設定の preset を加える | DEV  | open | -    |
+| No  | 作業                                        | 担当 | 状態 | メモ                                          |
+| --- | ------------------------------------------- | ---- | ---- | --------------------------------------------- |
+| 1   | devcontainer の推奨の設定の preset を加える | DEV  | done | `--preset recommended` と init の選択肢を追加 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `devcontainer scaffold --preset recommended` を追加し、既存の `--editor`・`--tmux` と重複なく合成できるようにした。
+- preset で Emacs、Vim、tmux、文書作業向け VS Code 拡張、Markdown / YAML の保存時整形、主要な SpecDojo YAML schema の関連付けを生成する。Vim の雛形を新設し、Emacs と Vim は利用者の既存設定を上書きしない。
+- `.vscode/extensions.json` は既存の recommendation を保持して不足分を追加する。
+- `specdojo init` に `--devcontainer-preset recommended|none` を追加した。対話では Dev Container を選んだ場合だけ既定「はい」で質問し、`--yes --devcontainer` は `recommended` を使う。
+- コマンドリファレンス、常時稼働ホスト運用ガイド、クイックスタート、CHANGELOG、単体テストを更新した。
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 

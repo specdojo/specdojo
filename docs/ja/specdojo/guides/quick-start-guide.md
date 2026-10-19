@@ -224,7 +224,7 @@ npx specdojo init
 ```
 
 `specdojo init` は、project ID と名前、人の nickname と表示名、利用する agent provider、
-exec・Dev Container の要否を順に質問します。成果物カタログは対話では質問せず、`--catalog <size>` を
+exec・Dev Container の要否を順に質問し、Dev Container を選んだ場合だけ推奨 preset を入れるか（既定は「はい」）を続けて質問します。成果物カタログは対話では質問せず、`--catalog <size>` を
 明示した場合にだけ初期化時に作成します。選択に応じて設定、登録簿、人と
 agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`、exec の起動設定を
 作成します。exec の親検証は、対応する npm script が `package.json` にあるものだけを設定し、
