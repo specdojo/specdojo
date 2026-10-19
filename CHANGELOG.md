@@ -9,6 +9,8 @@ SpecDojo の利用者に影響する変更を記録します。
 - `devcontainer scaffold --preset recommended` を追加しました。端末版 Emacs と Vim、tmux、SpecDojo の文書作業向け VS Code 拡張・保存時整形・YAML schema 関連付けをまとめて設定し、同じ拡張を `.vscode/extensions.json` にも推薦します。個別の `--editor`・`--tmux` と併用でき、既存のエディタ設定は上書きしません。`specdojo init` では Dev Container を選んだ場合だけ推奨 preset の利用を質問し、`--yes --devcontainer` では利用します（PJR-EN6M）。
 
 - 親 runner の検証（`pipeline.parent_validations`）の固定許可リストに `build`（`npm run build`）と `format-check`（`npm run format:check`）を追加しました。別リポジトリ構成などでプロダクトリポジトリのビルドと整形の検証を親 runner に委譲できます（PJR-NS8Y）。
+- `exec run --register --post-review`（または `exec-defaults.yaml` の `register_post_review: true`）で、統合の後に review の agent が完了条件・result・差分・検証の結果を照らして判定するようにしました。`complete`・`complete-with-findings` なら todo と issue を close し、`incomplete` なら `waiting` に戻します。decision と question、SpecDojo 自身のコードを変えた項目は自動では close しません（PJR-T46Y）。
+- `register update --autopilot approved` で夜間に流してよい個票に印を付け、`specdojo orchestrator night` が印のある `open` の todo と issue だけを、worktree・統合後の review・並行で流すようにしました。1 晩の件数・並行数・連続した失敗での停止・rate limit のときの切り替えを指定でき、close したもの・`waiting` に戻したもの・新しく起票した承認待ちを朝の報告にまとめます（PJR-6DHY）。
 
 ### 変更
 
@@ -26,6 +28,7 @@ SpecDojo の利用者に影響する変更を記録します。
 - runner の git の操作が `.git/index.lock` の取り合い（`Unable to create '...index.lock': File exists`、日本語のメッセージを含む）で失敗した場合のやり直しを、合計 0.75 秒ほどから 1.5 秒間隔で最大 10 回へ広げ、やり直すたびに警告を出すようにしました。並行の run の統合や記帳と重なっただけで統合が止まり run が `waiting` になる問題を減らします。上限に達した場合は従来どおり失敗として報告し、残っていたロックのファイルのパスをメッセージの先頭に含めます。ロックのファイルは消しません（PJR-G90K）。
 - result（edit・review・post-review）で reporter が返した文を箇条書きに描くとき、文の先頭の `1.`・`1)`・`-` などのリスト記号を外すようにしました。review の agent が判断の根拠に自分で番号を付けると `- 1. ...` が入れ子の番号付きリストになり、post-review の記帳の commit が hook の markdownlint（MD029）で失敗して、close の記帳が作業ツリーに残っていました（PJR-0EFN）。
 - commit の失敗を hook の出力から要約するとき、最初に出力された step ではなく、lefthook の summary で失敗の印が付いた step と、その出力のうち error を含む最初の行を報告するようにしました。post-review の記帳の commit が失敗したときは、失敗した hook の名前・最初のエラーの行・作業ツリーに残った記帳のファイル・hook の全出力のログ（`post-review-commit.log`）を runner のログに出します（PJR-0EFN）。
+- `not_applicable` の判定で、プロダクトリポジトリを `$SPECDOJO_REPO_<NAME>`・`${SPECDOJO_REPO_<NAME>}` で指すコマンドを、そのリポジトリのコマンドとして扱うようにしました（PJR-E412）。
 
 ### 文書
 
