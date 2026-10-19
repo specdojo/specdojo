@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-en6m-devcontainer-recommended-preset
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-19T21:41:04Z"
+  completed_at: "2026-10-19T22:00:12Z"
+  conclusion: devcontainer scaffold に --preset recommended を加え、tmux・emacs-nox・vim-nox・ripgrep、emacs と vim の設定の雛形（既にある設定は上書きしない）、推奨の VS Code の拡張 10 個と選んだ provider の拡張、Markdown と YAML の保存時の整形と YAML の schema の紐づけ、.vscode/extensions.json の推奨の拡張をまとめて入れるようにした。init は --devcontainer-preset で選べ、devcontainer を選んだときの既定は recommended
   derived_from:
     - PJR-GHBP
 ---
