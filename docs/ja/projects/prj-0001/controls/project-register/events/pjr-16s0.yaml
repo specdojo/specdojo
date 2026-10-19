@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_14d78001b6594110b011a4234236303f
+- v: 1
+  id: reg_8fa61a8e95e9401dbab014e469dde385
+  ts: "2026-10-19T21:40:48Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・claude-reporter）の差分と親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: 配布する orch の script を orch:opus・orch:sonnet・orch:sol・orch:terra・orch:flash・orch:opencode・orch:copilot にし、codex と antigravity は model を指定した。既存の package.json は書き換えず、古い orch:codex・orch:agy からの移り方をガイドと CHANGELOG に書いた。executor が本リポジトリの package.json も改名したため worktree で戻し、本リポジトリの改名は利用者の承認を得て orchestrator が行った（99e73edda）。LP は prj-0002 の PJR-SGM6 で直す
+  previous_event_id: reg_52d961ae70234f77b52dc9f196d15235

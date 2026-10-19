@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-16s0-orch-scripts-model-family-names
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-19T21:17:49Z"
+  completed_at: "2026-10-19T21:40:48Z"
+  conclusion: 配布する orch の script を orch:opus・orch:sonnet・orch:sol・orch:terra・orch:flash・orch:opencode・orch:copilot にし、codex と antigravity は model を指定した。既存の package.json は書き換えず、古い orch:codex・orch:agy からの移り方をガイドと CHANGELOG に書いた。executor が本リポジトリの package.json も改名したため worktree で戻し、本リポジトリの改名は利用者の承認を得て orchestrator が行った（99e73edda）。LP は prj-0002 の PJR-SGM6 で直す
   derived_from:
     - PJR-ZM1K
 ---
