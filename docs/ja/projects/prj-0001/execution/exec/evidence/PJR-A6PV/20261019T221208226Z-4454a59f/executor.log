@@ -1,0 +1,14 @@
+result の自由記述を Markdown 安全化する処理を実装しました。
+
+- 生の `*.yaml`・`*.yml` はコードスパン化
+- 既存コードスパンは維持
+- markdownlint 回帰テストを追加
+- 個票の対応結果と CHANGELOG を更新
+- Prettier、catalog 検証、差分検査は成功
+- result ファイルは pipeline 指示どおり未編集
+
+型検査・lint・単体／統合テストは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"result の自由記述を Markdown として安全に描画する修正と回帰テスト、個票、CHANGELOG の更新を完了した。","validations":[{"command":"npx prettier --write src/exec/results.ts tests/src/exec/results.test.ts CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-a6pv-result-validation-reason-markdown-escape.md","status":"passed","summary":"変更した実装、テスト、文書の整形に成功した。"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-a6pv-result-validation-reason-markdown-escape.md","status":"passed","summary":"最終更新後の個票の整形に成功した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog 検証に成功した。既存文書の参照先欠落に関する警告のみだった。"},{"command":"git diff --check","status":"passed","summary":"変更差分に空白エラーはなかった。"}]}
+</specdojo_executor_evidence>
