@@ -170,9 +170,14 @@ providers:
       exit_codes: []
       stderr_patterns:
         - "timeout"
-        - "connection refused"
         - "out of memory"
         - "model is loading"
+    # Ollama が止まっているなど、つながらないときは指定した代わりの agent へ切り替える（PJR-DKD8）。
+    connection_error_detection:
+      stderr_patterns:
+        - "Cannot connect to API"
+        - "ECONNREFUSED"
+        - "connection refused"
     # 同一ホストの OpenCode provider を共有するため、別 member への try_next でも
     # モデル切替・メモリ不足は解消しないことがある。復旧は wait+backoff を優先する。
     rate_limit_policy:
