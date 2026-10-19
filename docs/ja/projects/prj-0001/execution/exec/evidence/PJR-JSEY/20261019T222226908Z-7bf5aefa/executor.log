@@ -1,0 +1,9 @@
+個票の対応結果の表に、実行日時 2026-10-20 07:23 JST、対象の分割 PJR-A6PV、agent `sonnet-executor` を 1 行追記しました。
+
+PJR-A6PV を選んだのは、git log で直近に統合された分割項目だったためです。`pjr-index.md` は指定のパスに無く、登録簿では状態を確認していません。
+
+表の列幅は手で合わせていないので、`lint:md` の整形で崩れる可能性があります。変更したのはこの個票だけです。plan が許可した検証は親 runner が実行します。そのためこの executor では何も実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果表に 2026-10-20 07:23 / PJR-A6PV / sonnet-executor の 1 行を追記した。変更は個票のみ。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検証のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>
