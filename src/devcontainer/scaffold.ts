@@ -287,7 +287,15 @@ fi`);
   }
 
   const specdojoTmuxTemplatePath = path.join(templateDir, "remote-host", "specdojo-tmux.sh.sample");
-  const specdojoTmuxScript = await readFile(specdojoTmuxTemplatePath, "utf8");
+  let specdojoTmuxScript = await readFile(specdojoTmuxTemplatePath, "utf8");
+  const remoteUser =
+    typeof devcontainer.remoteUser === "string" && devcontainer.remoteUser.trim()
+      ? devcontainer.remoteUser.trim()
+      : "node";
+  specdojoTmuxScript = specdojoTmuxScript.replace(
+    'container_user="node"',
+    `container_user="${remoteUser}"`,
+  );
   const publishedPorts = extractPublishedPorts(devcontainer);
   const sshConfigScript = generateSshConfigSample(publishedPorts);
 

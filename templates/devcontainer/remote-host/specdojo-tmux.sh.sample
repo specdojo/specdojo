@@ -14,11 +14,19 @@
 #   - コンテナ起動: devcontainer up --workspace-folder "$workspace_dir"
 #   - セッション接続: docker exec -it ... tmux new-session -A -s <名前>
 #
+# 利用者（ユーザー）の変更:
+#   - devcontainer.json の remoteUser（既定は node）に合わせて -u でコンテナに入ります。
+#   - remoteUser を変更した場合は、下記 container_user の値を変更してください。
+#
 set -euo pipefail
 
 # コンテナ内とホスト側の作業ディレクトリ（実際の環境に合わせて設定してください）
 container_workspace_dir="/workspaces/<workspace-name>/<repo-name>"
 workspace_dir="${HOME}/<path-to-workspace>/<repo-name>"
+
+# コンテナ内の実行ユーザー（devcontainer.json の remoteUser に合わせます。既定は node です）
+# remoteUser を変更した場合は、この値を変更してください。
+container_user="node"
 
 # セッション名（必要に応じて変更してください）
 session_name="specdojo"
@@ -66,4 +74,4 @@ if [ -z "$container_name" ]; then
   exit 1
 fi
 
-exec docker exec -it --detach-keys="ctrl-]" -w "$container_workspace_dir" "$container_name" tmux new-session -A -s "$session_name"
+exec docker exec -it --detach-keys="ctrl-]" -u "$container_user" -w "$container_workspace_dir" "$container_name" tmux new-session -A -s "$session_name"
