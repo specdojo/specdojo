@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T18:07:57Z"
@@ -52,7 +52,9 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- result の自由記述を 1 行へ正規化した後、既存の共通処理 `escapeMarkdownInline` を適用するようにした。`_`・`*` を含む ASCII トークンをコードスパンで囲むため、Prettier 後も Markdown の強調として解釈されず、文中の glob や識別子の意味を保てる。既存のコードスパンは同処理が保持するため二重に囲まない。
+- `not_applicable` の理由に生の `*.yaml`・`*.yml` と既存コードスパンの `*.md` を含めて result を描画する単体テストを追加し、glob がそれぞれコードスパンになり、既存コードスパンが変わらず、生成結果が markdownlint を通ることを確認対象にした。
+- `src/exec/results.ts`、`tests/src/exec/results.test.ts`、CHANGELOG の未公開版を更新した。変更ファイルの Prettier 整形と catalog 検証は成功した。型検査・lint・単体・統合テストは親 runner の検証に委ねる。統合後の `exec run --register` による実動確認は [[prj-0001:pjr-jsey-exec-run-split-smoke|PJR-JSEY]] で行う。
 
 ## 5. 関連ドキュメント
 
