@@ -27,6 +27,23 @@ specdojo:
 specdojo config scaffold --provider codex
 ```
 
+`package.json` がある場合は、モデルの系統で名付けた `orch:sol` と `orch:terra` も追加されます。モデルはそれぞれ `gpt-5.6-sol` と `gpt-5.6-terra` を明示して起動します。
+
+```json
+{
+  "scripts": {
+    "orch:sol": "specdojo orchestrator launch --provider codex -- -m gpt-5.6-sol \"$(cat .specdojo/codex/orchestrator.md)\"",
+    "orch:terra": "specdojo orchestrator launch --provider codex -- -m gpt-5.6-terra \"$(cat .specdojo/codex/orchestrator.md)\""
+  }
+}
+```
+
+```sh
+npm run orch:sol
+# または
+npm run orch:terra
+```
+
 コピー後に次を行います。
 
 1. `.specdojo/exec-defaults.yaml` の `providers.codex.command_template` に sandbox と権限を明示する。`--sandbox workspace-write` と `-c sandbox_workspace_write.network_access=false` を必ず含め、`danger-full-access` は使わない。member 側に `command` は書かない。

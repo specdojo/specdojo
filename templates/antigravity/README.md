@@ -50,7 +50,7 @@ agy --add-dir "$(pwd)" --model gemini-3.8-flash-high -i "$(cat .specdojo/antigra
 ```json
 {
   "scripts": {
-    "orch:agy": "agy --add-dir \"$(pwd)\" --model gemini-3.8-flash-high -i \"$(cat .specdojo/antigravity/orchestrator.md)\""
+    "orch:flash": "specdojo orchestrator launch --provider antigravity -- --add-dir \"$(pwd)\" --model gemini-3.8-flash-high -i \"$(cat .specdojo/antigravity/orchestrator.md)\""
   }
 }
 ```
