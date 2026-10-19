@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_415522462d944dcf846c8629111381e3
+  ts: "2026-10-19T22:11:28Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.4.1 を公開する
+    - field: description
+      from: ""
+      to: 0.4.0 の公開の後に統合した不具合の修正と追加機能（統合後の review と夜間の orchestrator、devcontainer の推奨の設定、orch の script の名前の統一など）と A6PV を範囲とし、CHANGELOG を見直して develop を main へ昇格し v0.4.1 を公開する（2026-10-20、利用者が推奨の流れを承認）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-HZW3"]'
