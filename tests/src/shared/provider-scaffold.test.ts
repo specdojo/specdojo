@@ -562,6 +562,96 @@ describe("runProviderScaffold", () => {
     }
   });
 
+  it.each([
+    {
+      provider: "codex",
+      scripts: {
+        "orch:sol":
+          'specdojo orchestrator launch --provider codex -- -m gpt-5.6-sol "$(cat .specdojo/codex/orchestrator.md)"',
+        "orch:terra":
+          'specdojo orchestrator launch --provider codex -- -m gpt-5.6-terra "$(cat .specdojo/codex/orchestrator.md)"',
+      },
+      legacy: "orch:codex",
+    },
+    {
+      provider: "antigravity",
+      scripts: {
+        "orch:flash":
+          'specdojo orchestrator launch --provider antigravity -- --add-dir "$(pwd)" --model gemini-3.8-flash-high -i "$(cat .specdojo/antigravity/orchestrator.md)"',
+      },
+      legacy: "orch:agy",
+    },
+    {
+      provider: "opencode",
+      scripts: {
+        "orch:opencode":
+          "specdojo orchestrator launch --provider opencode -- --agent specdojo-orchestrator",
+      },
+      legacy: undefined,
+    },
+  ])("adds model-family npm scripts for $provider", async ({ provider, scripts, legacy }) => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      const templateDir = path.join(packageRoot, "templates", provider);
+      await mkdir(templateDir, { recursive: true });
+      await writeFile(path.join(templateDir, "orchestrator.md"), "# orchestrator\n", "utf8");
+      await mkdir(repoRoot, { recursive: true });
+      await writeFile(
+        path.join(repoRoot, "package.json"),
+        JSON.stringify({ name: "test", scripts: {} }),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+      await runProviderScaffold(provider, {
+        packageRoot,
+        repoRoot,
+        force: false,
+        dryRun: false,
+      });
+
+      const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
+      expect(pkg.scripts).toMatchObject(scripts);
+      if (legacy) expect(pkg.scripts[legacy]).toBeUndefined();
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("keeps legacy scripts while adding their model-family replacements", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const packageRoot = path.join(dir, "pkg");
+      const repoRoot = path.join(dir, "repo");
+      const templateDir = path.join(packageRoot, "templates", "codex");
+      await mkdir(templateDir, { recursive: true });
+      await writeFile(path.join(templateDir, "orchestrator.md"), "# orchestrator\n", "utf8");
+      await mkdir(repoRoot, { recursive: true });
+      await writeFile(
+        path.join(repoRoot, "package.json"),
+        JSON.stringify({ name: "test", scripts: { "orch:codex": "custom codex" } }),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+      await runProviderScaffold("codex", {
+        packageRoot,
+        repoRoot,
+        force: true,
+        dryRun: false,
+      });
+
+      const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
+      expect(pkg.scripts["orch:codex"]).toBe("custom codex");
+      expect(pkg.scripts["orch:sol"]).toContain("-m gpt-5.6-sol");
+      expect(pkg.scripts["orch:terra"]).toContain("-m gpt-5.6-terra");
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
   it("does not overwrite existing npm scripts even with force", async () => {
     const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
     try {

@@ -96,3 +96,32 @@
       from: "-"
       to: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
   previous_event_id: reg_1e5a6f67e8604e15b8e38f9e2982fc4d
+- v: 1
+  id: reg_14d78001b6594110b011a4234236303f
+  ts: "2026-10-19T21:33:40Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
+      to: "-"
+  previous_event_id: reg_f5cc392c6df14c4aac7c074093c354a8
+- v: 1
+  id: reg_52d961ae70234f77b52dc9f196d15235
+  ts: "2026-10-19T21:36:58Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_14d78001b6594110b011a4234236303f

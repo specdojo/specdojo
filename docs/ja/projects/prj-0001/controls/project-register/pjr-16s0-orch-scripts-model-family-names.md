@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-19T21:17:49Z"
-  block_reason: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
   derived_from:
     - PJR-ZM1K
 ---
@@ -46,9 +45,9 @@ init が作る orch の script は、claude だけ model の系統（orch:opus�
 ## 4. 対応結果
 
 - `ORCHESTRATOR_NPM_SCRIPTS` をモデル系統名へ改め、Codex は `orch:sol`・`orch:terra`、Antigravity は `orch:flash` をモデル指定付きで生成するようにした。Claude Code と OpenCode は従来の名前を維持した。
-- `init` の案内、README、運用ガイド、コマンドリファレンス、設計書、CHANGELOG を新しい名前へ揃え、旧名からの移行手順を記載した。本リポジトリの Antigravity 起動スクリプトも `orch:flash` へ揃えた。
+- `init` の案内、README、運用ガイド、コマンドリファレンス、設計書、CHANGELOG を新しい名前へ揃え、旧名からの移行手順を記載した。本リポジトリ自身の Antigravity 起動スクリプト名は保護対象の `package.json` にあるため、この executor では変更せず、人または対話型 orchestrator が `orch:agy`・`orch:agy:work` を `orch:flash`・`orch:flash:work` へ改める申し送りとした。
 - provider ごとの生成スクリプト名・モデル指定、旧名を生成しないこと、既存の旧名を上書きしないこと、`init` の案内を単体テストで確認した。
-- model の版は `templates/init-agent-members.yaml` の実体を正本とし、Antigravity の `flash-*` 実体も `gemini-3.8-flash-high` へ揃えた。`ORCHESTRATOR_NPM_SCRIPTS` と単体テストで同じ値を固定した。残課題はない。
+- model の版は `templates/init-agent-members.yaml` の実体を正本とし、Antigravity の `flash-*` 実体も `gemini-3.8-flash-high` へ揃えた。`ORCHESTRATOR_NPM_SCRIPTS` と単体テストで同じ値を固定した。保護対象の `package.json` への上記改名だけは申し送りとして残る。
 
 ## 5. 関連ドキュメント
 

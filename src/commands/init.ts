@@ -674,9 +674,11 @@ export async function runInit(
   const script =
     firstProvider === "claude"
       ? "orch:opus"
-      : firstProvider === "antigravity"
-        ? "orch:agy"
-        : `orch:${firstProvider}`;
+      : firstProvider === "codex"
+        ? "orch:sol"
+        : firstProvider === "antigravity"
+          ? "orch:flash"
+          : `orch:${firstProvider}`;
   process.stdout.write(
     "Next steps:\n" +
       (firstProvider

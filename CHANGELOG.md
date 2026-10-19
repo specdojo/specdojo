@@ -8,6 +8,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - 親 runner の検証（`pipeline.parent_validations`）の固定許可リストに `build`（`npm run build`）と `format-check`（`npm run format:check`）を追加しました。別リポジトリ構成などでプロダクトリポジトリのビルドと整形の検証を親 runner に委譲できます（PJR-NS8Y）。
 
+### 変更
+
+- `specdojo init` と `config scaffold` が追加するオーケストレーター起動スクリプトをモデルの系統名へ揃えました。Codex は `orch:sol`（`gpt-5.6-sol`）と `orch:terra`（`gpt-5.6-terra`）、Antigravity は `orch:flash`（`gemini-3.8-flash-high`）を追加し、旧 `orch:codex`・`orch:agy` は作りません。既存の `package.json` のスクリプトは上書き・削除しないため、scaffold の再実行後に新しい名前で起動を確認してから旧スクリプトを手動で削除してください。Claude Code と、利用環境ごとにモデルが異なる OpenCode の名前は変わりません（PJR-16S0）。
+
 ### 不具合修正
 
 - `validate:schema:file`・Prettier・markdownlint の `not_applicable` を、script や依存 package の有無だけでなく executor が変更したファイルの種類も含めて判定するようにしました。対象種類の変更がない run は適用外として受理し、対象変更がある run の誤申告は従来どおり拒否します（PJR-8WBN）。

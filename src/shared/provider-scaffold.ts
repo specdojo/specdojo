@@ -17,12 +17,14 @@ export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = 
       "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet",
   },
   codex: {
-    "orch:codex":
-      'specdojo orchestrator launch --provider codex -- "$(cat .specdojo/codex/orchestrator.md)"',
+    "orch:sol":
+      'specdojo orchestrator launch --provider codex -- -m gpt-5.6-sol "$(cat .specdojo/codex/orchestrator.md)"',
+    "orch:terra":
+      'specdojo orchestrator launch --provider codex -- -m gpt-5.6-terra "$(cat .specdojo/codex/orchestrator.md)"',
   },
   antigravity: {
-    "orch:agy":
-      'specdojo orchestrator launch --provider antigravity -- --add-dir "$(pwd)" -i "$(cat .specdojo/antigravity/orchestrator.md)"',
+    "orch:flash":
+      'specdojo orchestrator launch --provider antigravity -- --add-dir "$(pwd)" --model gemini-3.8-flash-high -i "$(cat .specdojo/antigravity/orchestrator.md)"',
   },
   opencode: {
     "orch:opencode":

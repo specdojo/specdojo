@@ -220,7 +220,9 @@ describe("specdojo init", () => {
       const packageJson = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
         scripts: Record<string, string>;
       };
-      expect(packageJson.scripts["orch:codex"]).toContain("specdojo/codex/orchestrator.md");
+      expect(packageJson.scripts["orch:sol"]).toContain("-m gpt-5.6-sol");
+      expect(packageJson.scripts["orch:terra"]).toContain("-m gpt-5.6-terra");
+      expect(packageJson.scripts["orch:codex"]).toBeUndefined();
       expect(output.join("")).toContain(
         "npx specdojo exec run --register <id> --executor-by codex-executor --reporter-by codex-reporter",
       );
@@ -345,12 +347,10 @@ describe("specdojo init", () => {
       const executor = resolveAgentMember(roster, "agy-executor");
       expect(executor).toMatchObject({
         nickname: "flash-executor",
-        model: "gemini-3.8-flash-medium",
+        model: "gemini-3.8-flash-high",
       });
       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
-      expect(resolveMemberCommand(defaults, executor!)).toContain(
-        "--model gemini-3.8-flash-medium",
-      );
+      expect(resolveMemberCommand(defaults, executor!)).toContain("--model gemini-3.8-flash-high");
       expect(roster?.members.map((member) => member.model).join(" ")).not.toMatch(
         /gemini-3\.1-pro/,
       );
@@ -372,6 +372,27 @@ describe("specdojo init", () => {
 
       expect(output.join("")).toContain("Run npm run orch:opus");
       expect(output.join("")).not.toContain("Run npm run orch:sonnet");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it.each([
+    ["codex", "orch:sol", "orch:codex"],
+    ["antigravity", "orch:flash", "orch:agy"],
+  ])("recommends the model-family orchestrator for %s", async (provider, expected, legacy) => {
+    const repo = createRepo(`specdojo-init-${provider}-next-step-`);
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      output.push(String(chunk));
+      return true;
+    });
+    try {
+      process.chdir(repo);
+      await runInit({ yes: true, provider, dryRun: true });
+
+      expect(output.join("")).toContain(`Run npm run ${expected}`);
+      expect(output.join("")).not.toContain(`Run npm run ${legacy}`);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
