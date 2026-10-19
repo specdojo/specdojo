@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-19T21:41:24Z"
@@ -53,7 +53,11 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- provider ごとの `connection_error_detection` を追加し、終了コードと出力パターンによる検出を rate limit と共通の仕組みに寄せた。配布する OpenCode の初期設定では `Cannot connect to API`・`ECONNREFUSED`・`connection refused` を接続不能として設定した。
+- 接続不能時は `--on-rate-limit` の指定と独立して、`--fallback-executor-by` / `--fallback-reporter-by` または `rate_limit_policy.pinned` の対応する fallback agent へ1回だけ切り替える。fallback 未指定時は従来どおり agent の失敗として停止し、接続不能では同じ agent の再開待ちは行わない。
+- 切替イベントには `trigger: connection_error` を記録し、既存の pipeline state・executor evidence・result の経路で切替元・切替先・時刻・原因を残すようにした。
+- 単体テストへ、接続不能になった reporter が fallback reporter へ切り替わる場合と、fallback 未指定時に失敗のままとなる場合を追加した。共通検証は pipeline の親 runner が実行する。
+- このリポジトリで稼働中の `.specdojo/exec-defaults.yaml` は agent 書き換え禁止の保護設定であるため、統合後にホスト側で OpenCode の `connection_error_detection` を配布テンプレートと同じ値へ反映する。
 
 ## 5. 関連ドキュメント
 

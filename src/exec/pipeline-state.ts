@@ -142,6 +142,9 @@ function isStageState(value: unknown): value is PipelineStageState {
         const record = event as Record<string, unknown>;
         return (
           (record.action === "wait" || record.action === "fallback") &&
+          (record.trigger === undefined ||
+            record.trigger === "rate_limit" ||
+            record.trigger === "connection_error") &&
           typeof record.from_actor === "string" &&
           typeof record.to_actor === "string" &&
           typeof record.resumed_at === "string" &&

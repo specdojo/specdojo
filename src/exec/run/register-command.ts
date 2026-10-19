@@ -151,11 +151,11 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--fallback-executor-by <nickname>",
-    "Fallback executor used when --on-rate-limit fallback is selected",
+    "Fallback executor for a selected rate-limit fallback or configured connection error",
   );
   rcmd.option(
     "--fallback-reporter-by <nickname>",
-    "Fallback reporter used when --on-rate-limit fallback is selected",
+    "Fallback reporter for a selected rate-limit fallback or configured connection error",
   );
   rcmd.option("--dry-run", "Print resolved command without executing", false);
 

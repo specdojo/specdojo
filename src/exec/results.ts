@@ -726,7 +726,7 @@ export function renderEditReporterBody(
   const rateLimitRecoveryNotes = (evidence.rate_limit_events ?? []).map((event) =>
     event.action === "wait"
       ? `rate limit 後に ${event.resume_at ?? "再開可能時刻"} まで待ち、${event.to_actor} で ${event.resumed_at} に再開`
-      : `rate limit 後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
+      : `${event.trigger === "connection_error" ? "接続エラー" : "rate limit"}後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
   );
   return [
     "# Edit Result",
@@ -766,7 +766,7 @@ function renderReviewReporterBody(output: ReviewReporterOutput, evidence: ExecEv
   const rateLimitRecoveryNotes = (evidence.rate_limit_events ?? []).map((event) =>
     event.action === "wait"
       ? `rate limit 後に ${event.resume_at ?? "再開可能時刻"} まで待ち、${event.to_actor} で ${event.resumed_at} に再開`
-      : `rate limit 後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
+      : `${event.trigger === "connection_error" ? "接続エラー" : "rate limit"}後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
   );
   return [
     "# Review Result",
