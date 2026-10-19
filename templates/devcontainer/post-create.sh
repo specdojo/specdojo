@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Some installers place binaries under ~/.local/bin.
-if [ -d "${HOME}/.local/bin" ]; then
-  export PATH="${HOME}/.local/bin:${PATH}"
-fi
+# Docker creates named volume mount points as root when the image lacks them. Hand the mount
+# points and their parents back to the container user before git config and agent installers write into them.
+# Parents are chowned non-recursively, and mount points are chowned recursively.
+for parent in \
+  "${HOME}/.local" \
+  "${HOME}/.local/share" \
+  "${HOME}/.config"; do
+  if [ -d "$parent" ]; then
+    sudo chown "$(id -u):$(id -g)" "$parent"
+  fi
+done
 
-# Docker creates named volume mount points as root when the image lacks them. Hand them back to
-# the container user before git config and agent installers write into them.
 for dir in \
-  "${HOME}/.config" \
   "${HOME}/.config/git" \
   "${HOME}/.claude" \
   "${HOME}/.codex" \
@@ -21,6 +25,10 @@ for dir in \
     sudo chown -R "$(id -u):$(id -g)" "$dir"
   fi
 done
+
+# Some installers place binaries under ~/.local/bin. Ensure the directory exists and is on PATH.
+mkdir -p "${HOME}/.local/bin"
+export PATH="${HOME}/.local/bin:${PATH}"
 
 # Include the host ~/.gitconfig copied by Dev Containers at the top of the volume-backed global
 # config, so identity and other host settings take effect while container-specific settings written

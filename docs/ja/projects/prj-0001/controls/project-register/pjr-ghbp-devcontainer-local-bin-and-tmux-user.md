@@ -53,7 +53,15 @@ init の scaffold で作った devcontainer で、opencode の volume を ~/.loc
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容:
+  - `templates/devcontainer/post-create.sh` で、volume の mount 先の親ディレクトリ（`~/.local`・`~/.local/share`・`~/.config`）を非再帰でコンテナ利用者へ chown して所有者を戻し、mount 先（`~/.config/git`、`~/.local/share/opencode` など）は再帰的（`-R`）に chown するようにした。
+  - 親ディレクトリの所有者を戻した後、agent CLI のインストーラ実行前に `mkdir -p "${HOME}/.local/bin"` を実行して `PATH` に加えるようにした。これにより、Docker が親ディレクトリを root 所有で作成した場合でも Claude Code 等のインストーラが失敗しないようにした。
+  - `templates/devcontainer/remote-host/specdojo-tmux.sh.sample` の `docker exec` に `-u "$container_user"` を追加し、コンテナ既定の root ではなく `devcontainer.json` の `remoteUser`（既定は `node`）で tmux セッションに接続するようにした。冒頭コメントに `remoteUser` の変更方法を記載し、`src/devcontainer/scaffold.ts` で `devcontainer.json` の `remoteUser` に応じて `container_user` を置換・反映するようにした。
+- 確認結果:
+  - 単体テスト `tests/src/devcontainer/scaffold.test.ts` で、生成される `post-create.sh` に親ディレクトリの非再帰 chown・mount 先の再帰 chown・`~/.local/bin` の作成と `PATH` 追加がインストーラより前にあること、および `specdojo-tmux.sh.sample` に `-u` フラグ・`remoteUser` の反映・冒頭コメントでの変更方法の案内が含まれることを検証した。
+  - 実機環境での devcontainer 再構築と接続確認は executor sandbox では行えないため、`requires_human` として利用者に引き継ぐ。
+- 再発防止策:
+  - Docker volume mount が介在するテンプレートでは親ディレクトリのパーミッション・所有者状態を考慮し、scaffold の単体テストで生成されるスクリプトの所有権修復とユーザー指定オプションを検証する。
 
 ## 5. 関連ドキュメント
 

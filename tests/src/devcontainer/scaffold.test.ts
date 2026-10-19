@@ -213,6 +213,70 @@ describe("runDevcontainerScaffold", () => {
     expect(script).toContain('SAFE_DIRECTORY_SCOPE="${WORKSPACE_PARENT}/*"');
     expect(script).toContain('"$WORKSPACE_DIR" "$SAFE_DIRECTORY_SCOPE"');
     expect(script).toContain('git config --global --add safe.directory "$SAFE_DIRECTORY_SCOPE"');
+    expect(script).toContain('"${HOME}/.local"');
+    expect(script).toContain('"${HOME}/.local/share"');
+    expect(script).toContain('"${HOME}/.config"');
+    expect(script).toContain('sudo chown "$(id -u):$(id -g)" "$parent"');
+    expect(script).toContain('sudo chown -R "$(id -u):$(id -g)" "$dir"');
+    expect(script).toContain('mkdir -p "${HOME}/.local/bin"');
+    expect(script).toContain('export PATH="${HOME}/.local/bin:${PATH}"');
+  });
+
+  it("restores mount parent ownership non-recursively and creates ~/.local/bin before installers", async () => {
+    const actualFs = await vi.importActual<typeof fs>("node:fs");
+    const postCreateTemplate = actualFs.readFileSync(
+      path.join(process.cwd(), "templates/devcontainer/post-create.sh"),
+      "utf8",
+    );
+    readFileMock.mockImplementation(async (p) => {
+      const file = String(p);
+      if (file.endsWith("devcontainer.json")) {
+        return Promise.resolve(
+          JSON.stringify({
+            workspaceMount:
+              "source=${localWorkspaceFolder}/..,target=/workspaces/__SPECDOJO_WORKSPACE_NAME__,type=bind,consistency=cached",
+            workspaceFolder:
+              "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
+            features: {},
+            mounts: [],
+            containerEnv: {},
+            postCreateCommand: "bash .devcontainer/post-create.sh",
+          }),
+        );
+      }
+      if (file.endsWith("post-create.sh")) return Promise.resolve(postCreateTemplate);
+      if (file.endsWith("specdojo-tmux.sh.sample")) {
+        return Promise.resolve("#!/usr/bin/env bash\necho sample");
+      }
+      return Promise.resolve("");
+    });
+
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: ["claude"],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const script = String(findWriteCall("post-create.sh")[1]);
+    expect(script).toMatch(
+      /for parent in \\\s+"[^"]*\.local" \\\s+"[^"]*\.local\/share" \\\s+"[^"]*\.config"; do\s+if \[ -d "\$parent" \]; then\s+sudo chown "\$\(id -u\):\$\(id -g\)" "\$parent"/,
+    );
+    expect(script).toMatch(
+      /for dir in \\\s+"[^"]*\.config\/git"[\s\S]*sudo chown -R "\$\(id -u\):\$\(id -g\)" "\$dir"/,
+    );
+    expect(script).toContain('mkdir -p "${HOME}/.local/bin"');
+    expect(script).toContain('export PATH="${HOME}/.local/bin:${PATH}"');
+
+    const mkdirIndex = script.indexOf('mkdir -p "${HOME}/.local/bin"');
+    const installerIndex = script.indexOf("https://claude.ai/install.sh");
+    expect(mkdirIndex).toBeGreaterThan(-1);
+    expect(installerIndex).toBeGreaterThan(mkdirIndex);
   });
 
   it("should add tmux and cron features", async () => {
@@ -708,6 +772,54 @@ describe("runDevcontainerScaffold", () => {
 
       expect(findWriteCall("specdojo-tmux.sh.sample")).toBeDefined();
       expect(findWriteCall("ssh-config.sample")).toBeDefined();
+    });
+
+    it("generates specdojo-tmux.sh.sample with -u flag and reflects remoteUser from devcontainer.json", async () => {
+      const actualFs = await vi.importActual<typeof fs>("node:fs");
+      const tmuxTemplate = actualFs.readFileSync(
+        path.join(process.cwd(), "templates/devcontainer/remote-host/specdojo-tmux.sh.sample"),
+        "utf8",
+      );
+      readFileMock.mockImplementation(async (p) => {
+        const file = String(p);
+        if (file.endsWith("devcontainer.json")) {
+          return Promise.resolve(
+            JSON.stringify({
+              remoteUser: "developer",
+              workspaceMount:
+                "source=${localWorkspaceFolder}/..,target=/workspaces/__SPECDOJO_WORKSPACE_NAME__,type=bind,consistency=cached",
+              workspaceFolder:
+                "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
+              mounts: [],
+            }),
+          );
+        }
+        if (file.endsWith("post-create.sh")) return Promise.resolve("npm install");
+        if (file.endsWith("specdojo-tmux.sh.sample")) {
+          return Promise.resolve(tmuxTemplate);
+        }
+        return Promise.resolve("");
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const tmuxCall = findWriteCall("specdojo-tmux.sh.sample");
+      const tmuxContent = String(tmuxCall[1]);
+      expect(tmuxContent).toContain('docker exec -it --detach-keys="ctrl-]" -u "$container_user"');
+      expect(tmuxContent).toContain('container_user="developer"');
+      expect(tmuxContent).toContain(
+        "remoteUser を変更した場合は、下記 container_user の値を変更してください。",
+      );
     });
   });
 });
