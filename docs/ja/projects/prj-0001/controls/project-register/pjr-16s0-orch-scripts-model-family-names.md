@@ -23,13 +23,24 @@ init が作る orch の script は、claude だけ model の系統（orch:opus�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `src/shared/provider-scaffold.ts` の `ORCHESTRATOR_NPM_SCRIPTS` を、次の名前と model の指定に改める。claude（`orch:opus`・`orch:sonnet`）と opencode（`orch:opencode`）は今のまま。
+  - codex: `orch:sol`（`-m gpt-5.6-sol`）と `orch:terra`（`-m gpt-5.6-terra`）。`orch:codex` は作らない。
+  - antigravity: `orch:flash`（`--model gemini-3.8-flash-high`）。`orch:agy` は作らない。
+- model の版は、名簿の雛形（`templates/init-agent-members.yaml`）の実体の `model` と同じ値にし、どちらを正本にするかを result に書く。
+- `init` の最後の案内に出す script の名前を、新しい名前に合わせる。
+- 既存の利用者の `package.json` は書き換えない（`init` も `config scaffold` も、既にある script を上書きしない）。古い名前から新しい名前への移り方を、CHANGELOG と [[specdojo:orchestrator-operation-guide]] に書く。
+- 配布するガイド・テンプレートの README（`templates/codex/README.md`・`templates/antigravity/README.md` など）とコマンドリファレンスの `orch:codex`・`orch:agy` を、新しい名前に改める。
+- LP（`../specdojo-lp`）は変えない。LP の変更は prj-0002 の PJR-SGM6 で行う。
+- 単体テストで、provider ごとに作られる script の名前と model の指定を確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [0.4.1] - 未定` の節に書く。公開済みの版の節は変えない。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                   | 担当 | 状態 | メモ |
+| --- | -------------------------------------- | ---- | ---- | ---- |
+| 1   | 配布する orch の script の名前を改める | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -37,4 +48,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-zm1k-agent-members-model-alias]]（名付けの決定）
+- prj-0002 の PJR-SGM6（LP の記述の変更）
