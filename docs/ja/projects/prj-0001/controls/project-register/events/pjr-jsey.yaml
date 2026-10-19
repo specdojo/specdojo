@@ -1259,3 +1259,19 @@
       from: "-"
       to: "2026-10-19"
   previous_event_id: reg_3532335a10df4fbfbfd69afd92f75d57
+- v: 1
+  id: reg_d91aa033faea431eab6b01295192c75e
+  ts: "2026-10-19T22:01:19Z"
+  action: reopen
+  actor: claude-orchestrator
+  from_status: done
+  to_status: open
+  reason: DKD8 の統合後の runner の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-19"
+      to: "-"
+  previous_event_id: reg_b72c227e83404e999a06dc88591b5e53
