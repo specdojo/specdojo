@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-dkd8-reporter-fallback-on-connection-error
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-19T21:41:24Z"
+  completed_at: "2026-10-19T22:07:39Z"
+  conclusion: "provider ごとの connection_error_detection を加え、agent がつながらないエラーで失敗したとき、指定した代わりの executor・reporter へ 1 回だけ切り替えるようにした（--on-rate-limit とは独立）。イベントに trigger: connection_error を記録する。本リポジトリの exec-defaults.yaml にも opencode の検出を orchestrator が加えた（b60d459b2）。統合後の JSEY が通った"
   derived_from:
     - PJR-BHMH
 ---

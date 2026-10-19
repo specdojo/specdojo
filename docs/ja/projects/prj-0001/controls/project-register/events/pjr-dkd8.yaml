@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d991a4e9f3c54092bb6223cf3b063d50
+- v: 1
+  id: reg_ae93712914064cb88bec3850579c07cd
+  ts: "2026-10-19T22:07:39Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証と、統合後の JSEY を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: "provider ごとの connection_error_detection を加え、agent がつながらないエラーで失敗したとき、指定した代わりの executor・reporter へ 1 回だけ切り替えるようにした（--on-rate-limit とは独立）。イベントに trigger: connection_error を記録する。本リポジトリの exec-defaults.yaml にも opencode の検出を orchestrator が加えた（b60d459b2）。統合後の JSEY が通った"
+  previous_event_id: reg_951c47ddd7824071a9c8824f9c9eb2f7
