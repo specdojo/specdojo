@@ -48,3 +48,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_b43cd5e598024a81a9cb10be49407122
+- v: 1
+  id: reg_978ee8a5f38344fbb1345ee215b99c84
+  ts: "2026-10-19T21:25:58Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_2448b5d50d4b4ff0bd2115f6f8b86214
