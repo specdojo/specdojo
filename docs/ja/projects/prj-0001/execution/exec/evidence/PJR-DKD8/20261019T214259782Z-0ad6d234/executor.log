@@ -1,0 +1,14 @@
+接続不能時の reporter/executor fallback を実装しました。
+
+- `connection_error_detection` を provider 設定・スキーマ・初期テンプレートへ追加
+- `--on-rate-limit` と独立して指定 fallback agent へ1回切替
+- 切替原因を pipeline state・evidence・result に記録
+- fallback 有無の単体テストを追加
+- 個票・CHANGELOG・関連ガイドを更新
+- result ファイルは後段 reporter のため未編集
+
+カタログ検証と整形、差分検査は成功しています。統合後に保護対象の `.specdojo/exec-defaults.yaml` へ OpenCode の検出設定を反映し、実 agent での確認が必要です。
+
+<specdojo_executor_evidence>
+{"final_message":"接続不能を provider 別の `connection_error_detection` で検出し、指定された executor/reporter fallback へ切り替えて履歴を記録する実装・スキーマ・テスト・文書を更新しました。","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-dkd8-reporter-fallback-on-connection-error.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/specdojo/schemas/v1/exec-defaults.schema.yaml docs/specdojo/schemas/v1/exec-evidence.schema.yaml docs/specdojo/schemas/v1/pipeline-state.schema.yaml src/commands/night-orchestrator.ts src/exec/agent-config.ts src/exec/evidence.ts src/exec/pipeline-state.ts src/exec/results.ts src/exec/run/agent.ts src/exec/run/lifecycle-commands.ts src/exec/run/register-command.ts src/exec/run/shared.ts templates/init-exec-defaults.yaml tests/src/exec/agent-config.test.ts tests/src/exec/run/pinned-rate-limit.test.ts","status":"passed","summary":"変更したコード・スキーマ・Markdown・テンプレートを整形済み"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログが OK。既存の未配置文書に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"},{"command":"specdojo exec run --register <検証用PJR-ID> --fallback-reporter-by claude-reporter","status":"requires_human","summary":"統合後、OpenCode の `connection_error_detection` を保護設定へ反映し、ローカル LLM 停止状態で実 agent の fallback を1回確認する"}]}
+</specdojo_executor_evidence>

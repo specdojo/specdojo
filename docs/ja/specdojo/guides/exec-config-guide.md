@@ -211,6 +211,11 @@ rate_limit_detection:
     - "rate limit"
     - "429"
 
+# provider API へ接続できない場合の文言は provider ごとの設定を推奨
+connection_error_detection:
+  stderr_patterns:
+    - "ECONNREFUSED"
+
 rate_limit_policy:
   cooldown_seconds:
     rate_limit: 900
@@ -232,6 +237,8 @@ rate_limit_policy:
 ```
 
 `wait` の待機中は、同一 worktree と register / pipeline の状態を別 run から保護するため project の実行ロックを保持します。register worktree の `--join` 実行は共有枠の範囲で引き続き動作できます。wait / fallback の再開時刻と切替元・切替先は pipeline state と executor evidence に記録されます。
+
+`connection_error_detection` は、provider API やローカル LLM へ接続できない失敗を `rate_limit_detection` と同じ終了コード・出力パターンの仕組みで検出します。`--fallback-executor-by` / `--fallback-reporter-by` または `rate_limit_policy.pinned` の対応する fallback があれば、`--on-rate-limit` の値とは独立して代替 agent へ1回だけ切り替えます。fallback が無い場合は通常の agent 失敗として停止します。接続エラーでは同じ agent の `wait` は行いません。切替原因は pipeline state・executor evidence・result に記録されます。文言は provider ごとに異なるため、`providers.<provider>.connection_error_detection` へ置くことを推奨します。
 
 `test-integration` は組み込み許可リストで `npm run test:integration` へ解決されます。設定や executor evidence に command・引数を書くことはできません。未知 ID、重複 ID は agent 起動前の設定エラーになります。親 runner は `shell: false` の固定 argv で実行し、現時点で許可される ID は `validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md`、`build`、`format-check` の 9 つです。
 
@@ -276,6 +283,7 @@ provider ごとに挙動が異なる設定は `providers.<provider>` に置き�
 - `command_template`: その provider の agent を起動するコマンドテンプレート。`{nickname}`・`{model}`・`{mode}`・`{proficiency}` と `command_params` の変数を member 属性で展開します。`model` のない従来 member は、これまでどおり `command_params` の `model` を使用できます。グローバル既定は持ちません。
 - `command_params`: テンプレートの追加変数表。`by_mode.<mode>`、`by_proficiency.<proficiency>`、`by_nickname.<nickname>` に変数名と値の組を置きます。同じ変数は `by_nickname`、`by_proficiency`、`by_mode` の順で優先します。
 - `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先します）。
+- `connection_error_detection`: provider API やローカル LLM へ接続できない場合の検出シグナル（`stderr_patterns` を優先します）。
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
 - `rate_limit_policy.cooldown_seconds`: reset / retry-after が無い retryable signal にだけ使う明示的な延期秒数。未指定の kind は再開時刻を推定しません。
 - `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱います。register の worktree 実行では、`--join` で合流した run を跨いで数えます。

@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { basename, relative, resolve, sep } from "node:path";
 import {
+  resolveConnectionErrorDetection,
   resolveMemberCommand,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
@@ -68,6 +69,7 @@ import {
 } from "../task-repos.js";
 import { gitEnvironment, type ExecWorktree, type ProductWorktree } from "../worktree.js";
 import {
+  isConnectionError,
   isRateLimitError,
   resolveAgentOverride,
   selectCandidates,
@@ -577,6 +579,7 @@ export async function runWithRetry(
     stderr: string;
     limit?: AgentLimitSignal;
     protectionBlock?: true;
+    connectionError?: true;
     actor?: string;
   }> => {
     let lastStderr = "";
@@ -662,6 +665,23 @@ export async function runWithRetry(
       lastStdout = attempt.stdout;
       lastExitCode = attempt.exitCode;
       lastLimit = attempt.limit;
+      const connectionError =
+        attempt.result === "failure" &&
+        isConnectionError(
+          attempt.exitCode,
+          `${attempt.stdout}\n${attempt.stderr}`,
+          resolveConnectionErrorDetection(execDefaults, candidate.provider),
+        );
+      if (connectionError) {
+        return {
+          result: "failure",
+          exitCode: attempt.exitCode,
+          stdout: attempt.stdout,
+          stderr: attempt.stderr,
+          connectionError: true,
+          actor: candidate.actor,
+        };
+      }
       if (attempt.result !== "rate_limit")
         return {
           result: attempt.result,
@@ -683,6 +703,24 @@ export async function runWithRetry(
 
   const recoveryEvents: RateLimitRecoveryEvent[] = [];
   const firstPass = await runPass(pinned ? candidates.slice(0, 1) : candidates);
+  if (firstPass.connectionError && pinned?.fallbackCandidate) {
+    const primary = candidates[0];
+    const fallback = pinned.fallbackCandidate;
+    const resumedAt = (pinned.now?.() ?? new Date()).toISOString();
+    process.stdout.write(
+      `Connection error detected for pinned agent ${primary?.actor ?? "-"}. ` +
+        `Falling back to ${fallback.actor} at ${resumedAt}.\n`,
+    );
+    recoveryEvents.push({
+      action: "fallback",
+      trigger: "connection_error",
+      from_actor: primary?.actor ?? "unknown",
+      to_actor: fallback.actor,
+      resumed_at: resumedAt,
+    });
+    const fallbackResult = await runPass([fallback]);
+    return { ...fallbackResult, attempts, rateLimitEvents: recoveryEvents };
+  }
   if (firstPass.result !== "rate_limit") {
     return { ...firstPass, attempts, rateLimitEvents: recoveryEvents };
   }
@@ -698,6 +736,7 @@ export async function runWithRetry(
       );
       recoveryEvents.push({
         action: "fallback",
+        trigger: "rate_limit",
         from_actor: primary?.actor ?? "unknown",
         to_actor: fallback.actor,
         resumed_at: resumedAt,
@@ -722,6 +761,7 @@ export async function runWithRetry(
         const resumedAt = (pinned.now?.() ?? new Date()).toISOString();
         recoveryEvents.push({
           action: "wait",
+          trigger: "rate_limit",
           from_actor: primary?.actor ?? "unknown",
           to_actor: primary?.actor ?? "unknown",
           resume_at: resumeAt.toISOString(),

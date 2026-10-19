@@ -14,6 +14,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- ローカル LLM や provider API へ接続できず、`Cannot connect to API`・`ECONNREFUSED` などで指名した executor / reporter が失敗した場合に、`--fallback-executor-by` / `--fallback-reporter-by` で指定した agent へ切り替えるようにしました。接続不能の文言は provider ごとの `connection_error_detection` で設定し、`--on-rate-limit` の値とは独立して1回だけ fallback します。切替履歴は rate limit と同じく pipeline state・evidence・result に記録します（PJR-DKD8）。
 - devcontainer の scaffold で生成する `post-create.sh` で、volume のマウント先の親（`~/.local`・`~/.local/share`・`~/.config`）の所有者をコンテナの利用者へ戻し、`~/.local/bin` を作成して `PATH` に加えるようにしました。Docker が親ディレクトリを root 所有で作成した環境でも Claude Code などのインストーラが失敗しないようにします。また、常時稼働ホスト接続サンプル `specdojo-tmux.sh.sample` の `docker exec` に `-u` で利用者（`devcontainer.json` の `remoteUser`、既定は `node`）を渡し、コンテナの既定の root で入らないようにしました（PJR-GHBP）。
 
 - `validate:schema:file`・Prettier・markdownlint の `not_applicable` を、script や依存 package の有無だけでなく executor が変更したファイルの種類も含めて判定するようにしました。対象種類の変更がない run は適用外として受理し、対象変更がある run の誤申告は従来どおり拒否します（PJR-8WBN）。

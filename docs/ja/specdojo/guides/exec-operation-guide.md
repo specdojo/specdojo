@@ -362,6 +362,8 @@ track の再生成では、`exec validate` の警告と同じ鮮度判定を使�
 
 provider別の `max_concurrency` や agent 選択は [exec設定ガイド](exec-config-guide.md) を参照します。
 
+指名した executor / reporter が provider API やローカル LLM へ接続できず、`connection_error_detection` に一致した場合は、対応する fallback 指定があれば1回だけ切り替えます。この判定は `--on-rate-limit` とは独立しているため、rate limit を `stop` または `wait` にしていても接続不能時の fallback は働きます。fallback 未指定時は通常の失敗として停止します。
+
 ### 2.6. executor / reporter pipelineの実行と復旧
 
 `agent_pipeline` を持つ phase のタスクは、executor（成果物の編集と検証）と reporter（evidence から result を構成）の 2 stage で実行されます。実行コマンドは従来と同じで、stage の agent を固定したい場合だけ `--executor-by` / `--reporter-by` を足します。

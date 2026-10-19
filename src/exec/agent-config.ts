@@ -18,15 +18,21 @@ import {
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
-export type RateLimitDetection = {
+export type AgentErrorDetection = {
   exit_codes?: number[];
   stderr_patterns?: string[];
-  // When true (the default), stderr_patterns only count as a rate-limit signal if the
-  // agent process also exited non-zero. This avoids false positives where a successful
-  // run merely echoes a pattern phrase (e.g. an agent editing a file that contains the
-  // literal text "rate limit"). Set to false to match stderr patterns regardless of exit code.
+  // When true (the default), stderr_patterns only count as an error signal if the agent process
+  // also exited non-zero. This avoids false positives where a successful run merely echoes a
+  // configured phrase. Set to false to match patterns regardless of exit code.
   stderr_requires_nonzero_exit?: boolean;
 };
+
+export type RateLimitDetection = AgentErrorDetection;
+
+// Connection failures use the same provider-scoped, exit-code/pattern matching mechanism as
+// rate limits, but have a different recovery policy: a configured pinned fallback is tried once
+// without applying --on-rate-limit wait/stop semantics.
+export type ConnectionErrorDetection = AgentErrorDetection;
 
 export type RateLimitRetry = {
   max_attempts: number;
@@ -80,6 +86,7 @@ export type ProviderOverride = {
   command_template?: string;
   command_params?: CommandParams;
   rate_limit_detection?: RateLimitDetection;
+  connection_error_detection?: ConnectionErrorDetection;
   rate_limit_policy?: RateLimitPolicy;
   // Maximum number of this provider's agents allowed to run concurrently within a single
   // `exec run` round. Caps a provider that shares a constrained resource (e.g. opencode's
@@ -106,6 +113,7 @@ export type ExecDefaultsConfig = {
     parent_validation_concurrency?: number;
   };
   rate_limit_detection?: RateLimitDetection;
+  connection_error_detection?: ConnectionErrorDetection;
   rate_limit_policy?: RateLimitPolicy;
   providers?: Partial<Record<AgentProvider, ProviderOverride>>;
 };
@@ -231,6 +239,14 @@ export function resolveRateLimitDetection(
 ): RateLimitDetection | undefined {
   const override = provider ? config.providers?.[provider]?.rate_limit_detection : undefined;
   return override ?? config.rate_limit_detection;
+}
+
+export function resolveConnectionErrorDetection(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): ConnectionErrorDetection | undefined {
+  const override = provider ? config.providers?.[provider]?.connection_error_detection : undefined;
+  return override ?? config.connection_error_detection;
 }
 
 export function resolveRateLimitPolicy(

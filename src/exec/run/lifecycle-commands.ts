@@ -680,8 +680,14 @@ export function registerResumeCommand(exec: Command): void {
     "--on-rate-limit <action>",
     "Pinned-agent rate-limit action: stop|wait|fallback (overrides rate_limit_policy.pinned)",
   );
-  cmd.option("--fallback-executor-by <nickname>", "Fallback executor after a rate limit");
-  cmd.option("--fallback-reporter-by <nickname>", "Fallback reporter after a rate limit");
+  cmd.option(
+    "--fallback-executor-by <nickname>",
+    "Fallback executor after a rate limit or configured connection error",
+  );
+  cmd.option(
+    "--fallback-reporter-by <nickname>",
+    "Fallback reporter after a rate limit or configured connection error",
+  );
   cmd.option("--parallel <n>", "Number of tasks to resume in parallel", "1");
   cmd.option("--worktree-base <path>", "Override worktree base directory");
   cmd.option(

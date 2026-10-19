@@ -116,6 +116,9 @@ $defs:
         action:
           type: string
           enum: [wait, fallback]
+        trigger:
+          type: string
+          enum: [rate_limit, connection_error]
         from_actor:
           type: string
           minLength: 1

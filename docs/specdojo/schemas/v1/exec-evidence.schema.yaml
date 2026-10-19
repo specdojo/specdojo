@@ -177,7 +177,9 @@ properties:
           type: string
           maxLength: 1000
   rate_limit_events:
-    description: Runner-recorded wait/fallback history for a pinned executor.
+    description: >
+      Runner-recorded rate-limit wait/fallback and connection-error fallback history for a
+      pinned executor. The field name is retained for schema compatibility.
     type: array
     items:
       type: object
@@ -187,6 +189,9 @@ properties:
         action:
           type: string
           enum: [wait, fallback]
+        trigger:
+          type: string
+          enum: [rate_limit, connection_error]
         from_actor:
           type: string
           minLength: 1

@@ -212,7 +212,10 @@ export function registerNightOrchestratorCommand(orchestrator: Command): void {
     .option("--parallel <n>", "Maximum parallel item runs", "2")
     .option("--max-consecutive-failures <n>", "Stop after this many consecutive failures", "2")
     .option("--on-rate-limit <action>", "Pinned-agent action: stop|fallback", "stop")
-    .option("--fallback-executor-by <nickname>", "Fallback executor for rate limits")
+    .option(
+      "--fallback-executor-by <nickname>",
+      "Fallback executor for rate limits or configured connection errors",
+    )
     .option("--scheduled-at <dateTime>", "Scheduled occurrence time used in the report")
     .option("--dry-run", "Print the approved queue without executing", false)
     .action(async (opts) => {

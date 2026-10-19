@@ -9,6 +9,7 @@ import {
   loadExecDefaultsConfig,
   ProviderConcurrencyGate,
   providerSlotPoolPath,
+  resolveConnectionErrorDetection,
   resolveMaxConcurrency,
   resolveMaxConcurrentRuns,
   resolvePinnedRateLimitPolicy,
@@ -98,6 +99,9 @@ const globalPolicy: RateLimitPolicy = {
 };
 
 const config: ExecDefaultsConfig = {
+  connection_error_detection: {
+    stderr_patterns: ["ECONNREFUSED"],
+  },
   rate_limit_detection: {
     exit_codes: [1],
     stderr_patterns: ["rate limit", "429"],
@@ -111,6 +115,9 @@ const config: ExecDefaultsConfig = {
     },
     opencode: {
       max_concurrency: 1,
+      connection_error_detection: {
+        stderr_patterns: ["Cannot connect to API", "connection refused"],
+      },
       rate_limit_detection: {
         exit_codes: [],
         stderr_patterns: ["timeout", "out of memory"],
@@ -131,6 +138,21 @@ const config: ExecDefaultsConfig = {
     },
   },
 };
+
+describe("resolveConnectionErrorDetection", () => {
+  it("returns the provider override when present", () => {
+    expect(resolveConnectionErrorDetection(config, "opencode")?.stderr_patterns).toEqual([
+      "Cannot connect to API",
+      "connection refused",
+    ]);
+  });
+
+  it("falls back to the global detection", () => {
+    expect(resolveConnectionErrorDetection(config, "codex")).toBe(
+      config.connection_error_detection,
+    );
+  });
+});
 
 describe("resolveRateLimitDetection", () => {
   it("returns the provider override when present", () => {
