@@ -1,0 +1,17 @@
+個票の「対応結果」の表に、PJR-DKD8 の行を 1 行追記しました。他のファイルは変更していません。
+
+追記した行は次のとおりです。
+- **日時:** 2026-10-20 07:03(JST)
+- **対象の分割:** PJR-DKD8
+- **agent:** sonnet-executor
+
+PJR-DKD8 を選んだ理由は次のとおりです。
+- 完了条件で挙げられた項目のうち、最も新しく統合されたのが PJR-DKD8 です。
+- `git log` に `exec(register PJR-DKD8): review` があり、`review` 済みであることを確認しました。
+- 登録簿(`pjr-index.md`)はこの worktree に無く、読めませんでした。
+
+親の検証 7 件は親 runner が実行するため、私は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に PJR-DKD8 の行（2026-10-20 07:03 JST、sonnet-executor）を追記した。個票以外は変更していない。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検証のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>
