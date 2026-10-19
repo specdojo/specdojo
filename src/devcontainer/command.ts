@@ -8,6 +8,7 @@ export function registerDevcontainerCommands(program: Command): void {
 
   dc.command("scaffold")
     .description("Scaffold .devcontainer/ configuration for the repository")
+    .option("--preset <name>", "Apply a bundled preset (available: recommended)")
     .option(
       "--provider <names>",
       "Comma-separated list of agent providers to install (e.g. claude,codex,opencode,antigravity)",
@@ -15,7 +16,7 @@ export function registerDevcontainerCommands(program: Command): void {
     )
     .option(
       "--editor <names>",
-      "Comma-separated list of editors to install and configure (currently: emacs)",
+      "Comma-separated list of editors to install and configure (emacs,vim)",
       "",
     )
     .option("--ollama", "Add Ollama connection settings", false)
@@ -30,6 +31,7 @@ export function registerDevcontainerCommands(program: Command): void {
           packageRoot: specdojoPackageRootDir(),
           repoRoot: specdojoRootDir(),
           workspaceName: opts.workspaceName === undefined ? undefined : String(opts.workspaceName),
+          preset: opts.preset === undefined ? undefined : String(opts.preset),
           providers: opts.provider
             ? String(opts.provider)
                 .split(",")

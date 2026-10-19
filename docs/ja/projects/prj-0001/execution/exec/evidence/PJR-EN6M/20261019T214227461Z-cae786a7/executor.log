@@ -1,0 +1,14 @@
+実装を完了しました。
+
+- `--preset recommended`、Vim 雛形、VS Code 推奨拡張・設定を追加
+- `.vscode/extensions.json` は既存項目を保持してマージ
+- `init` の条件付き質問と `--devcontainer-preset` を追加
+- 単体テスト、ガイド、CHANGELOG、個票を更新
+- smoke test、整形、登録簿生成、catalog 検証、差分検査に成功
+- result ファイルは executor 指示どおり未編集です
+
+親 runner 指定の検査は、この後 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"devcontainer の recommended preset、init 連携、Vim 雛形、VS Code 推奨設定、テストと文書更新を完了した","validations":[{"command":"npx prettier --write src/devcontainer/scaffold.ts src/devcontainer/command.ts src/commands/init.ts tests/src/devcontainer/scaffold.test.ts tests/src/commands/init.test.ts docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/guides/remote-host-development-guide.md docs/ja/specdojo/guides/quick-start-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-en6m-devcontainer-recommended-preset.md","status":"passed","summary":"変更した TypeScript・テスト・Markdown を整形した"},{"command":"node --import tsx --input-type=module -e '<inline preset smoke test>'","status":"passed","summary":"preset の生成、既存 recommendation の保持、provider 拡張、生成シェルの構文を確認した"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビュー生成に成功した"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検証に成功した。既存の未作成文書に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはない"}]}
+</specdojo_executor_evidence>

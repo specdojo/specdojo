@@ -54,11 +54,13 @@ SpecDojo は自律実行を前提とします。次の 2 つが作業端末の�
 利用リポジトリに `.devcontainer/` がない場合は、指定した provider の CLI を含む最小構成を生成できます。まず dry-run で対象を確認します。
 
 ```bash
-npx specdojo devcontainer scaffold --provider claude,codex --dry-run
-npx specdojo devcontainer scaffold --provider claude,codex
+npx specdojo devcontainer scaffold --provider claude,codex --preset recommended --dry-run
+npx specdojo devcontainer scaffold --provider claude,codex --preset recommended
 ```
 
-既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。Ollama 接続、コンテナ内の cron、コンテナ内の tmux が必要な場合だけ `--ollama`、`--cron`、`--tmux` を追加します。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、`--tmux` は不要です。
+`recommended` preset は、端末版 Emacs と Vim（既存設定を上書きしない雛形）、tmux、SpecDojo の文書作業向け VS Code 拡張をまとめて追加します。拡張は Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML で、選択した provider の拡張もその provider の分だけ追加します。Markdown と YAML は保存時に Prettier で整形し、主要な SpecDojo YAML を `docs/specdojo/schemas/v1/` の schema へ関連付けます。同じ拡張は `.vscode/extensions.json` の recommendation にも追加されます。
+
+既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。preset を使わない場合、Ollama 接続、コンテナ内の cron、コンテナ内の tmux が必要なときだけ `--ollama`、`--cron`、`--tmux` を追加します。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、tmux を含めない個別指定も選べます。
 
 生成する `devcontainer.json` は、利用リポジトリ単体ではなく、その親ディレクトリをホスト側と同じ名前の `/workspaces/<親名>` へマウントします。例えば `app1-workspace/app1-specdojo` の作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成では `repos` の参照先（例: `../app1`）と `worktree_base`（例: `../app1-specdojo-worktrees`）が利用リポジトリの外にあるためです。これらの Git リポジトリと worktree は `safe.directory` の対象になります。一方、同じ親ディレクトリに置いたその他のファイルもコンテナから見えるため、秘密情報などコンテナへ公開しないファイルは別の場所へ置いてください。
 
