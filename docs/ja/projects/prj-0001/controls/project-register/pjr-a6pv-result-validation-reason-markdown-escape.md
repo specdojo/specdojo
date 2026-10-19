@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-a6pv-result-validation-reason-markdown-escape
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-18T18:07:57Z"
+  completed_at: "2026-10-19T22:28:11Z"
+  conclusion: result に描く自由記述の文に既存の escapeMarkdownInline を適用し、* や _ を含む語をコードの書式で囲むようにした。既にコードの書式の部分は変えない。統合後の JSEY が通った
   derived_from:
     - PJR-8WBN
 ---
