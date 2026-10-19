@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bc2ab908fda64cc7abc73ff9ccb5e064
+  ts: "2026-10-19T21:41:04Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer の scaffold に推奨の設定をまとめて入れる preset を加える
+    - field: description
+      from: ""
+      to: devcontainer scaffold に --preset recommended を加え、emacs と vim（.vimrc の雛形を新しく足す）、tmux、SpecDojo の文書の作業に効く VS Code の拡張（git graph・markdownlint・YAML・Prettier・remark・Markdown All in One・Code Spell Checker・EditorConfig・Error Lens・Even Better TOML）と設定（保存時の整形、YAML の schema の紐づけ）、.vscode/extensions.json の推奨の拡張をまとめて入れる。init の対話では devcontainer を選んだときだけ推奨の設定を入れるかを聞く（2026-10-20、利用者が推奨案を承認。0.4.1 の範囲）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-GHBP"]'
