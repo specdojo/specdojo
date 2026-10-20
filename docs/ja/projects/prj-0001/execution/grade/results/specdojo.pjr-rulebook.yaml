@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 82
-graded_at: "2026-10-17T20:03:03.180Z"
-graded_by: agy-expert-executor
-content_hash: d6766d375a3ef65bf0b59a5d80ab754d5a534fe92beaafb840b8ab667b9ab91b
+graded_at: "2026-10-20T20:17:01.473Z"
+graded_by: flash-high-executor
+content_hash: ea8e6b99da93ff6b21b6a161c08cc4bd41eb9c7c5b879bcaf2b0583534e30f94
 categories:
   purpose:
     score: 100
@@ -111,7 +111,7 @@ findings:
     severity: major
     rule: vp-qe-verifiability
     line: 106
-    anchor: "- 一覧の標準列は ID、ステータス、タイトル、説明、分類、優先度、担当、登録日、期限、完了日、結論、個票とする。"
+    anchor: "| `generated/pjr-views-by-owner.md`    | 担当者別の補助一覧   | 不可     |"
     message: >-
       `ready` 昇格と終端可否は「type 固有の必須節」を満たすことに依存する一方、各 `item_type` の必須節・必須記入欄を本文で列挙せず参照 ID のない「各 type 用テンプレート」に委ねているため、必須条件の
       pass / fail を決定できる定義または解決可能な参照を追加する必要がある。
@@ -133,7 +133,9 @@ findings:
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 83
-    anchor: ""
+    anchor: >-
+      - `register build` は個票とイベントファイルの 1 対 1 対応、イベント ID の一意性、時刻順、直前イベント参照、遷移前後状態の連鎖、最新イベントの状態と個票の `item_status`
+      の一致を検証する。不正なイベントを無視して一覧を生成しない。
     message: >-
       「起票と終端」を `registered_at` / `completed_at` に保存するとする記述は、`deferred` は終端だが `completed_at`
       を持たないとする後段の例外規則と整合しないため、`completed_at` の対象を完了・決定・却下に限定して記述する必要がある。

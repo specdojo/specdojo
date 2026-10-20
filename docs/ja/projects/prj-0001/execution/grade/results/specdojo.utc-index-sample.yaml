@@ -3,34 +3,77 @@ version: 1
 document: specdojo:utc-index-sample
 path: docs/ja/specdojo/samples/utc-index-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 63
-graded_at: "2026-09-06T05:04:17.291Z"
-graded_by: gemma-expert-executor
+score: 36
+graded_at: "2026-10-20T20:51:41.876Z"
+graded_by: flash-high-executor
 content_hash: 6ee60a091cc6f8b7e943ae14f496d7ec013c5d0506fd1a78bfbde10bb4d442d7
 categories:
-  consistency:
+  purpose:
     score: 25
-  usability:
-    score: 83
+  operations:
+    score: 69
+  planning:
+    score: 33
+  business:
+    score: 33
   architecture:
-    score: 100
-  quality:
+    score: 63
+  usability:
     score: 50
+  implementation:
+    score: 38
+  quality:
+    score: 25
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 1
+    score: 25
+  vp-po-decision-readiness:
+    level: 1
+    score: 25
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 1
+    score: 25
+  vp-pm-dependency-risk:
+    level: 1
+    score: 25
+  vp-pm-control-reporting:
     level: 2
     score: 50
+  vp-ba-business-value:
+    level: 1
+    score: 25
+  vp-ba-requirements-completeness:
+    level: 1
+    score: 25
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 1
+    score: 25
   vp-arc-conciseness:
-    level: 4
-    score: 100
-  vp-arc-single-responsibility:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
+    level: 1
+    score: 25
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 1
+    score: 25
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -38,9 +81,18 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
+    level: 1
+    score: 25
+  vp-ux-language-consistency:
     level: 2
     score: 50
-  vp-ux-language-consistency:
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,31 +100,202 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 2
-  major: 2
-  minor: 0
+  major: 19
+  minor: 2
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: Frontmatter の id と type が、ルールブックで定義された固定値 (utc-index, test) と不整合である。
-    anchor: ""
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、単体テストとして確認する観点・条件と分配を定義するための最小サンプルである。
+    message: >-
+      The document fails to align the sample content with project objectives and higher-level specifications like
+      `tsp-index`, lacking specific scope, purpose justification, and alignment with the target system.
+    message_ja: ドキュメントは、サンプル内容をプロジェクトの目的や `tsp-index` のような上位の仕様と一致させておらず、具体的なスコープ、目的の正当化、およびターゲットシステムとの整合性が不足しています。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Open issues and decision points lack specific decision-makers, preconditions, business impacts, and concrete next
+      actions required for PO evaluation.
+    message_ja: 未解決の事項や決定事項において、具体的な意思決定者、前提条件、ビジネスへの影響、およびPOによる評価に必要な具体的な次のアクションが不足しています。
   - id: F003
-    severity: blocker
-    rule: vp-qe-kata-conformance
+    severity: minor
+    rule: vp-po-publication-accountability
     line: 1
-    message: ルールブックで定義された必須の Frontmatter 設定および本文構成を遵守しておらず、種別としての責務を果たしていない。
-    anchor: ""
+    anchor: "# [単体テスト](../rulebooks/utc-index-rulebook.md) サンプル"
+    message: The sample does not define the approval accountability or target publication audience for the document.
+    message_ja: サンプルには、ドキュメントの承認責任やターゲットとなる公開対象が定義されていません。
   - id: F004
     severity: major
-    rule: vp-ux-readability
-    line: 3
-    message: 見出し名がルールブックで指定された標準名称（例：本ドキュメントの目的と適用対象）から逸脱している。
-    anchor: ""
-  - id: F002
+    rule: vp-pm-plan-feasibility
+    line: 15
+    anchor: "- 主な内容: 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通）"
+    message: >-
+      The document lists abstract topics without actionable task breakdowns, role codes, dependencies, or completion
+      criteria needed for planning and tracking.
+    message_ja: ドキュメントには抽象的なトピックがリストされていますが、計画や追跡に必要な実行可能なタスクの分解、ロールコード、依存関係、または完了基準がありません。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 11
+    anchor: "- 参照: `../rulebooks/utc-index-rulebook.md`"
+    message: >-
+      Dependencies on upstream deliverables (e.g., `tsp-index`) and downstream deliverables (`utc-＜term＞`), along with
+      associated schedule risks and unresolved issues, are not identified.
+    message_ja: 上流の成果物（例：`tsp-index`）や下流の成果物（`utc-＜term＞`）への依存関係、およびそれに伴うスケジュールのリスクや未解決の事項が特定されていません。
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Unresolved items and reporting candidates lack separation into risks, change requests, or decision records, and
+      lack designated reporting destinations or role codes.
+    message_ja: 未解決事項や報告候補が、リスク、変更要求、または決定事項に分類されておらず、指定された報告先やロールコードも不足しています。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The sample names the target system but completely omits the business problems, expected values, failure impacts,
+      and success criteria for the unit test catalog.
+    message_ja: サンプルにはターゲットシステムの名前が記載されていますが、ユニットテストカタログにおけるビジネス上の課題、期待される価値、失敗時の影響、および成功基準が完全に省略されています。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: "- 主な内容: 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通）"
+    message: >-
+      Essential requirements, including common scope, exclusions with rationales, acceptance criteria, and term
+      definitions, are entirely missing from the sample.
+    message_ja: 共通のスコープ、理由を伴う除外事項、受け入れ基準、および用語の定義を含む重要な要件が、サンプルから完全に欠落しています。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: >-
+      Stakeholders, reviewers, approvers, and operational users are not clearly identified beyond mentioning the word
+      '責任者'.
+    message_ja: ステークホルダー、レビュアー、承認者、および運用ユーザーが、「責任者」という言葉に触れている以外、明確に特定されていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 15
+    anchor: "- 主な内容: 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通）"
+    message: >-
+      Technical constraints, external dependencies, and architectural policies (e.g., DB isolation, external API
+      stubbing, clock control) required by the rulebook are omitted.
+    message_ja: ルールブックで求められている技術的な制約、外部依存関係、およびアーキテクチャポリシー（例：DBの分離、外部APIのスタブ化、クロック制御）が省略されています。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 24
+    anchor: "| 主な内容     | 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通） | 要点のみ記載                         |"
+    message: >-
+      The table in section 4 duplicates the exact text from section 3 without providing additional concrete sample data
+      or distinctive value.
+    message_ja: セクション4の表は、追加の具体的なサンプルデータや独自の価値を提供することなく、セクション3のテキストをそのまま重複させています。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 15
+    anchor: "- 主な内容: 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通）"
+    message: >-
+      The document lacks unit partitioning criteria, condition categorization rules, and common test case table schemas
+      needed for developers to implement tests and downstream catalogs.
+    message_ja: 開発者がテストや下流のカタログを実装するために必要な、ユニット分割基準、条件分類ルール、および共通のテストケース表スキーマが不足しています。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 11
+    anchor: "- 参照: `../rulebooks/utc-index-rulebook.md`"
+    message: Impact of changes on downstream catalogs (`utc-＜term＞`), test suites, and CI pipelines is not identified.
+    message_ja: 変更による下流のカタログ（`utc-＜term＞`）、テストスイート、およびCIパイプラインへの影響が特定されていません。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 5
+    anchor: 本書は、単体テストとして確認する観点・条件と分配を定義するための最小サンプルである。
+    message: Verification commands, lint checks, test execution steps, and expected outputs are completely missing.
+    message_ja: 検証コマンド、Lintチェック、テスト実行手順、および期待される出力が完全に欠落しています。
+  - id: F015
+    severity: major
+    rule: vp-qe-verifiability
+    line: 16
+    anchor: "- 必須観点: 対象、条件、判定基準、責任者"
+    message: >-
+      Acceptance criteria and pass/fail standards are mentioned only as abstract labels without verifiable conditions or
+      observation criteria.
+    message_ja: 受け入れ基準と合否判定基準が、検証可能な条件や観察基準のない抽象的なラベルとしてのみ記載されています。
+  - id: F016
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 7
+    anchor: "## 2. 入力情報"
     message: ルールブックで定義された必須構成（第 2 章〜第 8 章）がすべて欠落している。
-    anchor: ""
+    message_ja: ルールブックで定義された必須構成（第 2 章〜第 8 章）がすべて欠落している。
+  - id: F017
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [単体テスト](../rulebooks/utc-index-rulebook.md) サンプル"
+    message: ルールブックで定義された必須の Frontmatter 設定および本文構成を遵守しておらず、種別としての責務を果たしていない。
+    message_ja: ルールブックで定義された必須の Frontmatter 設定および本文構成を遵守しておらず、種別としての責務を果たしていない。
+  - id: F018
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [単体テスト](../rulebooks/utc-index-rulebook.md) サンプル"
+    message: Frontmatter の id と type が、ルールブックで定義された固定値 (utc-index, test) と不整合である。
+    message_ja: Frontmatter の id と type が、ルールブックで定義された固定値 (utc-index, test) と不整合である。
+  - id: F019
+    severity: major
+    rule: vp-ux-readability
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: 見出し名がルールブックで指定された標準名称（例：本ドキュメントの目的と適用対象）から逸脱している。
+    message_ja: 見出し名がルールブックで指定された標準名称（例：本ドキュメントの目的と適用対象）から逸脱している。
+  - id: F020
+    severity: major
+    rule: vp-ux-readability
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      The body consists of meta-placeholders that prevent readers from understanding the actual unit test policies and
+      key decisions for the target system.
+    message_ja: 本文がメタプレースホルダーで構成されているため、読者がターゲットシステムにおける実際のユニットテストポリシーや重要な決定事項を理解することを妨げています。
+  - id: F021
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 15
+    anchor: "- 主な内容: 対象単位、テスト範囲と対象外、境界（モック/スタブ方針）、TPC の観点・条件の分配、合格基準とエビデンス（共通）"
+    message: >-
+      Undefined acronyms such as 'TPC' are introduced without definition, and the document title deviates from the
+      standard catalog name '単体テストカタログ概要'.
+    message_ja: >-
+      Undefined acronyms such as 'TPC' are introduced without definition, and the document title deviates from the
+      standard catalog name '単体テストカタログ概要'.
+  - id: F022
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# [単体テスト](../rulebooks/utc-index-rulebook.md) サンプル"
+    message: >-
+      Ready criteria, release preconditions, and verification checklists necessary to transition from draft status are
+      completely absent.
+    message_ja: ドラフト状態から移行するために必要な準備完了基準、リリース前提条件、および検証チェックリストが完全に不足しています。
+  - id: F023
+    severity: major
+    rule: vp-ops-operability
+    line: 5
+    anchor: 本書は、単体テストとして確認する観点・条件と分配を定義するための最小サンプルである。
+    message: >-
+      Operational guidelines for continuous maintenance, change control procedures when updating tests, and support
+      contact/role information are not provided.
+    message_ja: 継続的なメンテナンスのための運用ガイドライン、テスト更新時の変更管理手順、およびサポートの連絡先やロール情報が提供されていません。
