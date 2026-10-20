@@ -77,3 +77,16 @@
       from: "rate limit reached; rate limit fallback: sol-executor -> opus-executor at 2026-10-20T13:47:01.303Z"
       to: "-"
   previous_event_id: reg_b5095d4345b44880aac8fd68d3156374
+- v: 1
+  id: reg_e0a0bf2a8f7d4db3890c5c629ca8795b
+  ts: "2026-10-20T21:27:50Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7af957a2e07446179eaa6757bad530b1
