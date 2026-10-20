@@ -1,6 +1,6 @@
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   createProviderCapacityTracker,
@@ -20,6 +20,7 @@ import {
   type ExecDefaultsConfig,
   type RateLimitPolicy,
 } from "../../../src/exec/agent-config.js";
+import { runParentValidations } from "../../../src/exec/parent-validation.js";
 
 describe("parent validation config", () => {
   it("loads allowlisted IDs and rejects unknown IDs", () => {
@@ -80,6 +81,81 @@ describe("parent validation config", () => {
       expect(() => loadExecDefaultsConfig(invalidPath)).toThrow(/\.repo must match/);
     } finally {
       rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("appends only the selected project's parent validations and records product evidence", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-project-parent-validation-"));
+    const originalCwd = process.cwd();
+    try {
+      const configDir = join(root, ".specdojo");
+      const defaultsPath = join(configDir, "exec-defaults.yaml");
+      const productPath = join(root, "specdojo-lp");
+      const project1Execution = join(root, "docs/prj-0001/execution");
+      const project2Execution = join(root, "docs/prj-0002/execution");
+      mkdirSync(configDir, { recursive: true });
+      mkdirSync(productPath, { recursive: true });
+      writeFileSync(defaultsPath, "pipeline:\n  parent_validations:\n    - test-unit\n", "utf8");
+      writeFileSync(
+        join(configDir, "specdojo.config.json"),
+        JSON.stringify({
+          version: 1,
+          current_project: "prj-0001",
+          projects: {
+            "prj-0001": {
+              base_path: "docs/prj-0001",
+              execution_path: "execution",
+              run: { exec_defaults: ".specdojo/exec-defaults.yaml" },
+            },
+            "prj-0002": {
+              base_path: "docs/prj-0002",
+              execution_path: "execution",
+              repos: [{ name: "specdojo-lp", path: "specdojo-lp" }],
+              run: {
+                exec_defaults: ".specdojo/exec-defaults.yaml",
+                parent_validations: [
+                  { id: "typecheck", repo: "specdojo-lp" },
+                  { id: "lint-ts", repo: "specdojo-lp" },
+                ],
+              },
+            },
+          },
+        }),
+        "utf8",
+      );
+      process.chdir(root);
+
+      expect(
+        loadExecDefaultsConfig(defaultsPath, project1Execution).pipeline?.parent_validations,
+      ).toEqual(["test-unit"]);
+      const project2Validations = loadExecDefaultsConfig(defaultsPath, project2Execution).pipeline
+        ?.parent_validations;
+      const expectedProject2Validations = [
+        "test-unit",
+        { id: "typecheck", repo: "specdojo-lp" },
+        { id: "lint-ts", repo: "specdojo-lp" },
+      ];
+      expect(project2Validations).toEqual(expectedProject2Validations);
+      expect(
+        loadExecDefaultsConfig(
+          defaultsPath,
+          join(root, "worktrees/PJR-TEST/project/docs/prj-0002/execution"),
+        ).pipeline?.parent_validations,
+      ).toEqual(expectedProject2Validations);
+
+      const evidence = await runParentValidations(
+        project2Validations,
+        { project: root, repos: { "specdojo-lp": productPath } },
+        async () => ({ exitCode: 0, stdout: "ok", stderr: "" }),
+      );
+      expect(evidence).toEqual([
+        expect.objectContaining({ id: "test-unit", source: "runner", repo: "project" }),
+        expect.objectContaining({ id: "typecheck", source: "runner", repo: "specdojo-lp" }),
+        expect.objectContaining({ id: "lint-ts", source: "runner", repo: "specdojo-lp" }),
+      ]);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(resolve(root), { recursive: true, force: true });
     }
   });
 });

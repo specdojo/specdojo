@@ -236,6 +236,30 @@ rate_limit_policy:
     on_exhausted: block
 ```
 
+複数 project が同じ `exec-defaults.yaml` を参照し、一部の project だけに親検証を足す場合は、`.specdojo/specdojo.config.json` の `projects.<id>.run.parent_validations` を使います。この配列は共有 defaults の `pipeline.parent_validations` を置き換えず、その後ろへ指定順に追加されます。
+
+```json
+{
+  "projects": {
+    "prj-0001": {
+      "run": { "exec_defaults": ".specdojo/exec-defaults.yaml" }
+    },
+    "prj-0002": {
+      "repos": [{ "name": "specdojo-lp", "path": "../specdojo-lp" }],
+      "run": {
+        "exec_defaults": ".specdojo/exec-defaults.yaml",
+        "parent_validations": [
+          { "id": "typecheck", "repo": "specdojo-lp" },
+          { "id": "lint-ts", "repo": "specdojo-lp" }
+        ]
+      }
+    }
+  }
+}
+```
+
+この例では共有 defaults の検証は両 project に適用され、`specdojo-lp` の 2 件は `prj-0002` の run だけに適用されます。`prj-0001` は `specdojo-lp` を `repos` に持たなくても影響を受けません。共有側と project 側に同じ ID・同じ `repo` の組を書くと、合成後の重複として agent 起動前にエラーになります。project 固有の検証も親 runner が固定 argv で実行し、evidence には `source: runner` と実行先の `repo` が記録されます。
+
 `wait` の待機中は、同一 worktree と register / pipeline の状態を別 run から保護するため project の実行ロックを保持します。register worktree の `--join` 実行は共有枠の範囲で引き続き動作できます。wait / fallback の再開時刻と切替元・切替先は pipeline state と executor evidence に記録されます。
 
 ### 5.1. register の難易度別振り分け

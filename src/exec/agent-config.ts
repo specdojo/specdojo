@@ -1,8 +1,10 @@
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { isAbsolute, join, resolve } from "node:path";
 import { listFilesRecursive, readYaml } from "./shared.js";
 import { acquirePoolSlot, releaseLock } from "./slot-lock.js";
 import {
+  getProjectExecutionPath,
+  loadConfig,
   specdojoRootDir,
   type AgentMode,
   type AgentProvider,
@@ -505,6 +507,40 @@ function loadLegacyRateLimitPolicy(executionPath?: string): RateLimitPolicy | un
   return undefined;
 }
 
+function projectParentValidations(executionPath?: string): ParentValidationEntry[] {
+  if (!executionPath) return [];
+
+  const { config } = loadConfig();
+  if (!config) return [];
+  const rootDir = specdojoRootDir();
+  const targetExecutionPath = resolve(executionPath);
+  const normalizedTarget = targetExecutionPath.replaceAll("\\", "/");
+
+  for (const [projectId, project] of Object.entries(config.projects)) {
+    const configuredExecutionPath = getProjectExecutionPath(project);
+    const resolvedExecutionPath = resolve(rootDir, configuredExecutionPath);
+    const normalizedConfigured = configuredExecutionPath.replaceAll("\\", "/");
+    // Job review loads defaults before changing cwd to its worktree. In that case loadConfig()
+    // resolves the main checkout while executionPath already points into the worktree; the
+    // repository-relative project path remains the same suffix in both locations.
+    const isProjectWorktreePath =
+      !isAbsolute(configuredExecutionPath) &&
+      normalizedTarget.endsWith(`/${normalizedConfigured.replace(/^\.\//, "")}`);
+    if (resolvedExecutionPath !== targetExecutionPath && !isProjectWorktreePath) continue;
+    const entries = (project.run as { parent_validations?: unknown } | undefined)
+      ?.parent_validations;
+    if (entries === undefined) return [];
+    if (!Array.isArray(entries)) {
+      throw new Error(
+        `Invalid .specdojo/specdojo.config.json: projects.${projectId}.run.parent_validations must be an array`,
+      );
+    }
+    return entries as ParentValidationEntry[];
+  }
+
+  return [];
+}
+
 export function loadExecDefaultsConfig(
   configPath?: string,
   executionPath?: string,
@@ -524,6 +560,20 @@ export function loadExecDefaultsConfig(
   if (!defaults.rate_limit_policy) {
     const legacyPolicy = loadLegacyRateLimitPolicy(executionPath);
     if (legacyPolicy) defaults.rate_limit_policy = legacyPolicy;
+  }
+
+  const additionalParentValidations = projectParentValidations(executionPath);
+  if (additionalParentValidations.length > 0) {
+    defaults = {
+      ...defaults,
+      pipeline: {
+        ...defaults.pipeline,
+        parent_validations: [
+          ...(defaults.pipeline?.parent_validations ?? []),
+          ...additionalParentValidations,
+        ],
+      },
+    };
   }
 
   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);
