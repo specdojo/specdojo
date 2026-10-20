@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_092e76a2b9c8458ebd22d9b465dd9015
+  ts: "2026-10-20T11:00:36Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 接続のスクリプトを ssh から動かすと Dev Container CLI が見つからない
+    - field: description
+      from: ""
+      to: specdojo-tmux.sh.sample を ssh の RemoteCommand で動かすと、ログインも対話もしないシェルで動くため、Mac の端末で読み込まれる Homebrew・nvm などの PATH の設定が入らず、「Dev Container CLI is not installed」で止まる（2026-10-20、利用者が報告）。サンプルは PATH の追加をコメントで書いているだけで、自宅の Mac 向けの設計書の helper にある node_bin_dir と /opt/homebrew/bin・/usr/local/bin の追加が引き継がれていない
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-GHBP"]'
