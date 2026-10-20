@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-5jrj-devcontainer-remote-env-local-bin
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-20T11:22:39Z"
+  completed_at: "2026-10-20T12:09:33Z"
+  conclusion: 生成する devcontainer.json の remoteEnv で /home/`<remoteUser>`/.local/bin を PATH の先頭に足すようにし、単体テストを加えた。ホストの E2E のスクリプトに、ログインシェルで command -v claude が ~/.local/bin/claude を返す確認を足し、ガイドに v0.4.0 の環境の直し方を書いた
   derived_from:
     - PJR-GHBP
 ---

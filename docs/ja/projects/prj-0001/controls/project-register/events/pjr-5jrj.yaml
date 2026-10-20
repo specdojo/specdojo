@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1a4f731e5aa240318681ab885ed0aaa3
+- v: 1
+  id: reg_b2b6ff1c743542088677020a30ce4eb5
+  ts: "2026-10-20T12:09:33Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分・親検証と、生成した devcontainer.json を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: 生成する devcontainer.json の remoteEnv で /home/`<remoteUser>`/.local/bin を PATH の先頭に足すようにし、単体テストを加えた。ホストの E2E のスクリプトに、ログインシェルで command -v claude が ~/.local/bin/claude を返す確認を足し、ガイドに v0.4.0 の環境の直し方を書いた
+  previous_event_id: reg_2f22c0e1614945ebb330f47188c531ee
