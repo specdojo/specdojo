@@ -283,6 +283,11 @@ function main(): void {
       ),
       checkInContainer(
         repo,
+        "Claude Code is reachable on PATH in login shell",
+        'test "$(command -v claude)" = "$HOME/.local/bin/claude" && command -v claude',
+      ),
+      checkInContainer(
+        repo,
         "Docker CLI is not installed in the development container",
         "! command -v docker >/dev/null 2>&1",
       ),

@@ -419,6 +419,26 @@ fi`);
     typeof devcontainer.remoteUser === "string" && devcontainer.remoteUser.trim()
       ? devcontainer.remoteUser.trim()
       : "node";
+  const userLocalBin = `/home/${remoteUser}/.local/bin`;
+  const existingRemoteEnv = objectValue(devcontainer.remoteEnv);
+  const existingPath =
+    typeof existingRemoteEnv.PATH === "string" ? existingRemoteEnv.PATH : undefined;
+  let remotePath: string;
+  if (existingPath) {
+    if (existingPath === "/home/node/.local/bin:${containerEnv:PATH}") {
+      remotePath = `${userLocalBin}:\${containerEnv:PATH}`;
+    } else {
+      const parts = existingPath.split(":");
+      remotePath = parts.includes(userLocalBin) ? existingPath : `${userLocalBin}:${existingPath}`;
+    }
+  } else {
+    remotePath = `${userLocalBin}:\${containerEnv:PATH}`;
+  }
+  devcontainer.remoteEnv = {
+    ...existingRemoteEnv,
+    PATH: remotePath,
+  };
+
   specdojoTmuxScript = specdojoTmuxScript.replace(
     'container_user="node"',
     `container_user="${remoteUser}"`,

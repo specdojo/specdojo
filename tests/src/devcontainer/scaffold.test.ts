@@ -169,6 +169,9 @@ describe("runDevcontainerScaffold", () => {
     expect(json.mounts).toContain(
       "source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume",
     );
+    expect(json.remoteEnv).toEqual({
+      PATH: "/home/node/.local/bin:${containerEnv:PATH}",
+    });
   });
 
   it("should mount the workspace parent and trust its repositories and worktrees", async () => {
@@ -787,6 +790,140 @@ describe("runDevcontainerScaffold", () => {
       }),
     ).rejects.toThrow("Invalid workspace name");
     expect(writeFileMock).not.toHaveBeenCalled();
+  });
+
+  describe("remoteEnv configuration", () => {
+    it("should prepend ~/.local/bin to PATH and preserve other remoteEnv variables", async () => {
+      readFileMock.mockImplementation(async (p) => {
+        const file = String(p);
+        if (file.endsWith("devcontainer.json")) {
+          return Promise.resolve(
+            JSON.stringify({
+              remoteUser: "testuser",
+              workspaceMount: "source=...,target=...",
+              workspaceFolder: "...",
+              features: {},
+              mounts: [],
+              containerEnv: {},
+              remoteEnv: {
+                CUSTOM_VAR: "custom_value",
+                ANOTHER_VAR: "another_value",
+              },
+            }),
+          );
+        }
+        if (file.endsWith("post-create.sh")) return Promise.resolve("npm install");
+        if (file.endsWith("specdojo-tmux.sh.sample")) {
+          return Promise.resolve("#!/usr/bin/env bash\necho sample");
+        }
+        return Promise.resolve("");
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+      expect(json.remoteEnv).toEqual({
+        CUSTOM_VAR: "custom_value",
+        ANOTHER_VAR: "another_value",
+        PATH: "/home/testuser/.local/bin:${containerEnv:PATH}",
+      });
+    });
+
+    it("should prepend ~/.local/bin when PATH is already in remoteEnv", async () => {
+      readFileMock.mockImplementation(async (p) => {
+        const file = String(p);
+        if (file.endsWith("devcontainer.json")) {
+          return Promise.resolve(
+            JSON.stringify({
+              remoteUser: "node",
+              workspaceMount: "source=...,target=...",
+              workspaceFolder: "...",
+              features: {},
+              mounts: [],
+              containerEnv: {},
+              remoteEnv: {
+                PATH: "/opt/custom/bin:${containerEnv:PATH}",
+              },
+            }),
+          );
+        }
+        if (file.endsWith("post-create.sh")) return Promise.resolve("npm install");
+        if (file.endsWith("specdojo-tmux.sh.sample")) {
+          return Promise.resolve("#!/usr/bin/env bash\necho sample");
+        }
+        return Promise.resolve("");
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+      expect(json.remoteEnv).toEqual({
+        PATH: "/home/node/.local/bin:/opt/custom/bin:${containerEnv:PATH}",
+      });
+    });
+
+    it("should not duplicate ~/.local/bin when it is already in PATH", async () => {
+      readFileMock.mockImplementation(async (p) => {
+        const file = String(p);
+        if (file.endsWith("devcontainer.json")) {
+          return Promise.resolve(
+            JSON.stringify({
+              remoteUser: "node",
+              workspaceMount: "source=...,target=...",
+              workspaceFolder: "...",
+              features: {},
+              mounts: [],
+              containerEnv: {},
+              remoteEnv: {
+                PATH: "/home/node/.local/bin:${containerEnv:PATH}",
+              },
+            }),
+          );
+        }
+        if (file.endsWith("post-create.sh")) return Promise.resolve("npm install");
+        if (file.endsWith("specdojo-tmux.sh.sample")) {
+          return Promise.resolve("#!/usr/bin/env bash\necho sample");
+        }
+        return Promise.resolve("");
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+      expect(json.remoteEnv).toEqual({
+        PATH: "/home/node/.local/bin:${containerEnv:PATH}",
+      });
+    });
   });
 
   describe("remote-host sample generation", () => {

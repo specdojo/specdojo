@@ -81,6 +81,8 @@ scaffold は、常時稼働ホストへの接続と tmux セッションの維�
 
 `devcontainer.json` の `appPort` や `forwardPorts` で開発サーバなどの公開ポートを設定している場合は、接続用エイリアスに `LocalForward` の行が含まれます。開発サーバのポートを増やしたときは、`~/.ssh/config` の tmux 接続用エイリアスにも `LocalForward <ポート> 127.0.0.1:<ポート>` を追加してください。
 
+生成される `devcontainer.json` は `remoteEnv` で `/home/node/.local/bin`（利用者が別の場合は `/home/<remoteUser>/.local/bin`）を `PATH` の先頭に追加するため、コンテナ作成後に開く端末や VS Code のターミナルでも `~/.local/bin` に入った Claude Code などの CLI がそのまま利用できます。
+
 ### 2.2. 生成した Dev Container をホストで実地確認する
 
 SpecDojo 本体の開発者は、Docker daemon と Dev Container CLI を利用できる Mac のホストで、次の E2E を実行できます。
@@ -200,6 +202,20 @@ ssh <ホスト名> 'command -v devcontainer'
 ```bash
 ssh <ホスト名> 'printf "PATH=%s\n" "$PATH"; command -v node || true; command -v devcontainer || true'
 ```
+
+### 6.3. コンテナ内の端末で ~/.local/bin の CLI が見つからない
+
+v0.4.0 などで生成した Dev Container 環境では、`devcontainer.json` に `remoteEnv` がないため、コンテナ作成後に開く端末や VS Code のターミナルで `~/.local/bin` が `PATH` に入らず、Claude Code などの CLI が見つからない場合があります。
+
+既存の環境を修正するには、`.devcontainer/devcontainer.json` に `remoteEnv` を追加（または既存の `remoteEnv` に `PATH` を追加）し、コンテナをリビルドしてください。
+
+```json
+  "remoteEnv": {
+    "PATH": "/home/node/.local/bin:${containerEnv:PATH}"
+  }
+```
+
+コンテナ内の利用者が `node` 以外の場合は、`/home/<remoteUser>/.local/bin` に合わせてください。
 
 ## 7. 運用上のセキュリティ
 
