@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-20T11:00:35Z"
@@ -52,7 +52,16 @@ specdojo-tmux.sh.sample を ssh の RemoteCommand で動かすと、ログイン
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容:
+  - `templates/devcontainer/remote-host/specdojo-tmux.sh.sample` に `node_bin_dir` 変数を設け、`/opt/homebrew/bin` および `/usr/local/bin` と合わせて既定で PATH の先頭に追加した。冒頭コメントに `dirname "$(command -v devcontainer)"` による確認方法と Homebrew・nvm・mise の例を追加した。
+  - `specdojo-tmux.sh.sample` で `devcontainer` および `docker` コマンドが見つからない場合に、その時点の PATH と置き場所の確かめ方（`dirname "$(command -v ...)"`）を表示するようにエラー案内を具体化した。
+  - `templates/devcontainer/remote-host/ssh-config.sample`、`src/devcontainer/scaffold.ts` の `generateSshConfigSample`、および [[specdojo:remote-host-development-guide]] に、`RemoteCommand` では端末の PATH 設定が読み込まれないことと、確かめ方（`ssh <host> 'command -v devcontainer'`）を記載した。
+  - 単体テスト `tests/src/devcontainer/scaffold.test.ts` に、生成サンプルに `node_bin_dir`・PATH 追加・エラー時の案内・ssh-config 案内コメントが含まれることを検証するテストを追加した。
+  - `CHANGELOG.md` の `0.4.1` に変更内容を追記した。
+- 確認結果:
+  - 単体テスト（`npm run test:unit`）、型検査（`npm run typecheck`）、lint（`npm run lint:ts`）がすべて合格することを確認した。
+- 再発防止策:
+  - 非対話 SSH（`RemoteCommand`）で動作するスクリプトや設定サンプルを提供する際は、環境変数（特に PATH）の引き継ぎ制約とトラブルシュート案内、テストケースをセットで設ける。
 
 ## 5. 関連ドキュメント
 

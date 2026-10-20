@@ -18,6 +18,17 @@
 #   - devcontainer.json の remoteUser（既定は node）に合わせて -u でコンテナに入ります。
 #   - remoteUser を変更した場合は、下記 container_user の値を変更してください。
 #
+# PATH の設定（SSH 経由での実行）:
+#   - ssh の RemoteCommand は非対話シェルで動くため、Mac の通常端末で読み込まれる
+#     ~/.zshrc などの PATH の設定が反映されません。
+#   - ホスト側の通常端末で node と devcontainer の配置場所を確認し、必要に応じて
+#     下記 node_bin_dir を設定してください:
+#       dirname "$(command -v devcontainer)"
+#   - Homebrew の例: node_bin_dir="/opt/homebrew/bin"
+#   - nvm の例:      node_bin_dir="$HOME/.nvm/versions/node/v22.0.0/bin"
+#   - mise の例:     node_bin_dir="$HOME/.local/share/mise/installs/node/24/bin"
+#   - node と Dev Container CLI は同じ node_bin_dir にあることを前提とします。
+#
 set -euo pipefail
 
 # コンテナ内とホスト側の作業ディレクトリ（実際の環境に合わせて設定してください）
@@ -31,9 +42,13 @@ container_user="node"
 # セッション名（必要に応じて変更してください）
 session_name="specdojo"
 
-# SSH 経由（RemoteCommand）で node や devcontainer が見つからない場合は、
-# node と devcontainer が置かれているディレクトリを PATH に追加してください。
-# 例: export PATH="/opt/homebrew/bin:$PATH"
+# Mac や Linux の通常端末で確認した実際のディレクトリへ置き換えてください。
+# Homebrew の例: node_bin_dir="/opt/homebrew/bin"
+# nvm の例: node_bin_dir="$HOME/.nvm/versions/node/v22.0.0/bin"
+# mise の例: node_bin_dir="$HOME/.local/share/mise/installs/node/24/bin"
+# node と Dev Container CLI は同じ node_bin_dir にあることを前提とします。
+node_bin_dir="/absolute/path/to/node/bin"
+export PATH="$node_bin_dir:/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 find_container() {
   local id
@@ -52,7 +67,17 @@ if [ ! -f "$workspace_dir/.devcontainer/devcontainer.json" ]; then
 fi
 
 if ! command -v devcontainer >/dev/null 2>&1; then
-  echo "Dev Container CLI is not installed. Run: npm install -g @devcontainers/cli" >&2
+  echo "Dev Container CLI is not installed or not in PATH." >&2
+  echo "Current PATH: $PATH" >&2
+  echo "Check the location on the host terminal with: dirname \"\$(command -v devcontainer)\"" >&2
+  echo "Install it with: npm install -g @devcontainers/cli" >&2
+  exit 1
+fi
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Docker command was not found in PATH." >&2
+  echo "Current PATH: $PATH" >&2
+  echo "Check the location on the host terminal with: dirname \"\$(command -v docker)\"" >&2
   exit 1
 fi
 
