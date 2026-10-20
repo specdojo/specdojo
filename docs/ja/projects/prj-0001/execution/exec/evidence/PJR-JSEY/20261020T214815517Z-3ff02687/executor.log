@@ -1,0 +1,11 @@
+個票の「対応結果」の表に1行を追記しました。変更したファイルは、この個票1つだけです。
+
+追記した行は、日時が 2026-10-21 06:50(JST)、対象の分割が PJR-HE9R、agent が `sonnet-executor` です。
+
+対象に PJR-HE9R を選んだ根拠は `git log` です。完了条件の一覧のうち、PJR-XRAB と PJR-HE9R は PJR-5HYP より後ろに並んでいます。このうち PJR-HE9R は、直近のコミット `f9b3b2bd9` で統合されています。PJR-XRAB の状態までは確認していません。`pjr-index.md` がこの worktree に無く、登録簿を引けなかったためです。
+
+親の検証は、runner が実行します。executor 側では実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票 pjr-jsey-exec-run-split-smoke.md の対応結果に 2026-10-21 06:50 / PJR-HE9R / sonnet-executor の 1 行を追記した。他のファイルは変更していない。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist の検証のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>
