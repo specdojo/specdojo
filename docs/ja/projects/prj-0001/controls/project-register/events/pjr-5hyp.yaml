@@ -35,3 +35,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-ZM1K"]'
+- v: 1
+  id: reg_2e2bfb0f5e0345e792873e091013f9a3
+  ts: "2026-10-20T12:42:53Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d5631d7c8a3b4f689da29074075090f3
