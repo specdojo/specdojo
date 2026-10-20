@@ -7,6 +7,7 @@ import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./agent-types.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./provider-scaffold.js";
+import { runWorkspaceScaffold } from "./workspace-scaffold.js";
 import {
   ensureGitignore,
   formatGitignoreReport,
@@ -946,10 +947,19 @@ export function registerConfigCommands(program: Command): void {
 
   cfg
     .command("scaffold")
-    .description("Scaffold agent/settings templates for a provider")
-    .requiredOption(
+    .description("Scaffold agent/settings templates for a provider or VS Code multi-root workspace")
+    .option(
       "--provider <name>",
       "Provider template to copy (antigravity|claude|codex|copilot|opencode)",
+    )
+    .option(
+      "--workspace",
+      "Generate VS Code multi-root workspace (<project-id>.code-workspace) from repos config",
+      false,
+    )
+    .option(
+      "--project <id>",
+      "Target project ID for workspace scaffolding (defaults to current_project)",
     )
     .option("--force", "Overwrite existing files", false)
     .option("--dry-run", "Show planned files without writing", false)
@@ -960,13 +970,29 @@ export function registerConfigCommands(program: Command): void {
     )
     .action(async (opts) => {
       try {
-        await runProviderScaffold(String(opts.provider), {
-          packageRoot: specdojoPackageRootDir(),
-          repoRoot: specdojoRootDir(),
-          force: !!opts.force,
-          dryRun: !!opts.dryRun,
-          global: !!opts.global,
-        });
+        if (!opts.provider && !opts.workspace) {
+          throw new Error("Specify --provider <name> or --workspace to scaffold.");
+        }
+        if (opts.global && !opts.provider) {
+          throw new Error("--global requires --provider antigravity");
+        }
+        if (opts.provider) {
+          await runProviderScaffold(String(opts.provider), {
+            packageRoot: specdojoPackageRootDir(),
+            repoRoot: specdojoRootDir(),
+            force: !!opts.force,
+            dryRun: !!opts.dryRun,
+            global: !!opts.global,
+          });
+        }
+        if (opts.workspace) {
+          await runWorkspaceScaffold({
+            repoRoot: specdojoRootDir(),
+            projectId: opts.project ? String(opts.project) : undefined,
+            force: !!opts.force,
+            dryRun: !!opts.dryRun,
+          });
+        }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         process.stderr.write(`${message}\n`);

@@ -169,6 +169,8 @@ agent 実行の前後で行う保護設定（`package.json`、CI 設定など）
 
 exec worktree の中で設定を読む場合（agent が worktree で `specdojo` を実行する場合など）、`path` の代わりに同じタスクの `<worktree_base>/<task-id>/<name>/` へ解決します。
 
+`repos` を宣言した project では、`specdojo config scaffold --workspace` を実行すると、リポジトリルートに VS Code のマルチルートワークスペース（`<project-id>.code-workspace`）を生成できます。ワークスペースの `folders` にはプロジェクトリポジトリ（`.`）と宣言した各プロダクトリポジトリ（`repos[].path`）が宣言順に並び、VS Code で 1 つのウィンドウから両リポジトリを同時に操作できます。既存のワークスペースファイルは `--force` を付けない限り上書きしません。
+
 設定の読み込み時に、次の誤りを対象（`projects.<project-id>.repos[<n>]`）と原因を示すエラーにします。誤りは全 project 分をまとめて表示します。
 
 - `name` が `[a-z0-9-]` 以外の文字を含む、または同じ project 内で重複している。
