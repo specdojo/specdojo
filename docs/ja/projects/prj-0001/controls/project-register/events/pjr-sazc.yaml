@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4c683f78130648ce9bf8f3d6c85bf30f
+- v: 1
+  id: reg_09582cbe3af34446a7de4db920cf4189
+  ts: "2026-10-20T23:04:20Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: executor の変更案を利用者（indie）の承認を得てオーケストレーターが package.json へ反映した。launch の引数を prj-0001 と prj-0002 で確かめ、npm run orch:opus が launch 経由で claude を起動することを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: 本リポジトリの orch:* と orch:*:work を orchestrator launch 経由にした。:work は open-agent-worktree.sh が本体の場所を launch へ渡し、worktree の中からも repos の path が本体の隣へ解ける。prj-0002 では LP と assets のリポジトリへの --add-dir と編集の許可が付く
+  previous_event_id: reg_3fa14bcf479a44719e472ac45da99e8b
