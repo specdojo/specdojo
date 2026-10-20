@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8047d4a0372b4cbea5524805f7dd04f2
+  ts: "2026-10-20T11:08:12Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer の scaffold が作るシェルスクリプトの動きを、docker なしでテストする
+    - field: description
+      from: ""
+      to: specdojo-tmux.sh.sample と post-create.sh を、偽物の docker・devcontainer・sudo・curl と組み合わせて実際に動かし、PATH の追加（ssh の RemoteCommand と同じ最小の PATH で）・docker exec の利用者と tmux の引数・~/.local の持ち主の戻し方と ~/.local/bin の作成・見つからないときの案内を確かめる統合テストを足す。生成したシェルスクリプトは bash -n と shellcheck でも確かめる（2026-10-20、利用者が承認。0.4.1 の範囲）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-EJ4F"]'
