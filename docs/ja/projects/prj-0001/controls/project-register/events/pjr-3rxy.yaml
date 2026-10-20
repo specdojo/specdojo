@@ -78,5 +78,5 @@
       to: "2026-10-20"
     - field: conclusion
       from: "-"
-      to: tools/e2e/devcontainer-host-e2e.ts を加え、ホストで init から devcontainer up・devcontainer exec の項目別の確認と片づけまでを流せるようにした。利用者がホストの Mac で流して PASS した（2026-10-20）。ホストの node_modules はコンテナの Linux 用のため tsx が動かず、node で直接動かす必要がある。使い方の表示とガイドの直しは PJR-0NQZ で行う
+      to: tools/e2e/devcontainer-host-e2e.ts を加え、ホストで init から devcontainer up・devcontainer exec の項目別の確認と片づけまでを流せるようにした。利用者がホストの Mac で流して PASS した（2026-10-20）。ホストの node_modules はコンテナの Linux 用のため tsx が動かず、node で直接動かす必要がある。使い方の表示とガイドの直しは PJR-2DA0 で行う
   previous_event_id: reg_0389ca9a547e45e8850eeb12d9730210
