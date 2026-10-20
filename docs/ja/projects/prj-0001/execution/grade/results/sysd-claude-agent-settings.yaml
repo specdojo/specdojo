@@ -5,41 +5,41 @@ path: docs/ja/product/040-system-design/sysd-claude-agent-settings.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 47
-graded_at: "2026-10-10T16:15:19.100Z"
-graded_by: agy-expert-executor
-content_hash: 656016bd0ef2d40684c65b13b89811990720553d1a7286a335eb777df5a443ab
+score: 59
+graded_at: "2026-10-20T16:24:55.570Z"
+graded_by: flash-high-executor
+content_hash: c3421e8fa99172c4556a348fbabff12fd78caa5ac5f03534b69f17bfd2c4b2f2
 source_hashes:
-  catalog-entry: 4ffa82df4e4abb6f78bb767b7c94cfae8af29a376a3e1de1177cf22ca8c6a136
+  catalog-entry: 96771efcf3e024d9fb20aeddf6f7dddd2f730c5d82b00edc8908ca1599996b17
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:sysd-agent-settings: fcdb84f4ffd29a2119ae5aab0a3195a97a33b2e7cdc70c794e5e61ad2dee48c9
+  dependency:sysd-agent-settings: af8e76f0c11605c8a3a4f3e7b64434c5c0fa3afe15f59bae5803433cc29fc0ca
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 25
+    score: 38
   operations:
-    score: 69
-  planning:
-    score: 42
-  business:
-    score: 25
-  consistency:
-    score: 25
-  architecture:
     score: 75
-  usability:
-    score: 63
-  implementation:
+  planning:
+    score: 58
+  business:
     score: 50
+  consistency:
+    score: 38
+  architecture:
+    score: 83
+  usability:
+    score: 69
+  implementation:
+    score: 63
   quality:
-    score: 44
+    score: 56
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-decision-readiness:
     level: 1
     score: 25
@@ -47,29 +47,29 @@ viewpoints:
     level: 3
     score: 75
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
     level: 3
     score: 75
   vp-pm-control-reporting:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 3
     score: 75
@@ -77,26 +77,26 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
     level: 3
     score: 75
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-done-criteria:
     level: 1
     score: 25
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-user-flow:
     level: 3
     score: 75
@@ -104,8 +104,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
     level: 3
     score: 75
@@ -143,9 +143,10 @@ findings:
     rule: vp-po-decision-readiness
     line: 122
     anchor: >-
-      | `maxTurns`       | -    |
-      エージェントの最大ターン数                                                                                                                            
-      |
+      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
+      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
+      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
+      プロファイルで権限を分離する。
     message: 自動実行で `bypassPermissions` を使用する方針と、176行目で同モードを禁止する方針が併存し、承認対象となる標準権限モードが一意でない。
     message_ja: 自動実行で `bypassPermissions` を使用する方針と、176行目で同モードを禁止する方針が併存し、承認対象となる標準権限モードが一意でない。
   - id: F004
@@ -174,9 +175,10 @@ findings:
     rule: vp-pm-control-reporting
     line: 122
     anchor: >-
-      | `maxTurns`       | -    |
-      エージェントの最大ターン数                                                                                                                            
-      |
+      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
+      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
+      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
+      プロファイルで権限を分離する。
     message: 無人実行の権限方針が矛盾しているにもかかわらず、未決事項、PJR 転記候補、解決担当、判断期限として管理されていない。
     message_ja: 無人実行の権限方針が矛盾しているにもかかわらず、未決事項、PJR 転記候補、解決担当、判断期限として管理されていない。
   - id: F008
@@ -216,9 +218,10 @@ findings:
     rule: vp-arc-cross-document-consistency
     line: 122
     anchor: >-
-      | `maxTurns`       | -    |
-      エージェントの最大ターン数                                                                                                                            
-      |
+      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
+      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
+      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
+      プロファイルで権限を分離する。
     message: >-
       `permissionMode` の説明は「自動実行では `bypassPermissions` を使用」と定める一方、176行目と `.claude/settings.json`
       は同モードを禁止しており、無人実行の安全境界を一意に実装できないため、採用モードと権限制御を実設定に合わせて統一する必要がある。
@@ -237,16 +240,17 @@ findings:
     rule: vp-arc-technical-constraints
     line: 122
     anchor: >-
-      | `maxTurns`       | -    |
-      エージェントの最大ターン数                                                                                                                            
-      |
+      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
+      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
+      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
+      プロファイルで権限を分離する。
     message: "`bypassPermissions` を自動実行の標準とする記述と禁止する記述が両立せず、mode 別 settings がどの権限モードで評価されるか確定できない。"
     message_ja: "`bypassPermissions` を自動実行の標準とする記述と禁止する記述が両立せず、mode 別 settings がどの権限モードで評価されるか確定できない。"
   - id: F015
     severity: minor
     rule: vp-arc-conciseness
     line: 181
-    anchor: "members:"
+    anchor: ""
     message: 5人分の `pm-members.yaml` 例は8.2〜8.5節とエージェント一覧のモデル・tools・用途・責務を再掲しているため、選択規則に必要な最小例へ縮約し、完全な定義は実ファイル参照へ委ねるべきである。
     message_ja: 5人分の `pm-members.yaml` 例は8.2〜8.5節とエージェント一覧のモデル・tools・用途・責務を再掲しているため、選択規則に必要な最小例へ縮約し、完全な定義は実ファイル参照へ委ねるべきである。
   - id: F016
@@ -254,9 +258,10 @@ findings:
     rule: vp-dev-implementation-readiness
     line: 122
     anchor: >-
-      | `maxTurns`       | -    |
-      エージェントの最大ターン数                                                                                                                            
-      |
+      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
+      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
+      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
+      プロファイルで権限を分離する。
     message: >-
       自動実行の `permissionMode` が `bypassPermissions`、禁止、`auto` の三通りに分かれており、実装者が command template と mode 別 settings
       の正しい組合せを確定できない。
@@ -289,9 +294,10 @@ findings:
     rule: vp-qe-done-criteria
     line: 122
     anchor: >-
-      | `maxTurns`       | -    |
-      エージェントの最大ターン数                                                                                                                            
-      |
+      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
+      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
+      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
+      プロファイルで権限を分離する。
     message: 無人実行で `bypassPermissions` を使用する記述と禁止する記述が両立しておらず、安全方針を承認できる一意な設計になっていない。
     message_ja: 無人実行で `bypassPermissions` を使用する記述と禁止する記述が両立しておらず、安全方針を承認できる一意な設計になっていない。
   - id: F021
@@ -317,9 +323,10 @@ findings:
     rule: vp-qe-omissions-consistency
     line: 122
     anchor: >-
-      | `maxTurns`       | -    |
-      エージェントの最大ターン数                                                                                                                            
-      |
+      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
+      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
+      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
+      プロファイルで権限を分離する。
     message: '`bypassPermissions` を自動実行で使用するとする記述が, 同文書176行目の禁止方針および実設定の `disableBypassPermissionsMode: "disable"` と矛盾している。'
     message_ja: '`bypassPermissions` を自動実行で使用するとする記述が, 同文書176行目の禁止方針および実設定の `disableBypassPermissionsMode: "disable"` と矛盾している。'
   - id: F024
@@ -333,7 +340,7 @@ findings:
     severity: minor
     rule: vp-ux-readability
     line: 64
-    anchor: ""
+    anchor: "| ----------------- | ---------------------------------------- | ---------------------------- |"
     message: 「2種類の認証方式」と説明している直後の表に3方式を列挙しており、長期 OAuth Token を独立方式と数えるか派生方式と扱うかを統一する必要がある。
     message_ja: 「2種類の認証方式」と説明している直後の表に3方式を列挙しており、長期 OAuth Token を独立方式と数えるか派生方式と扱うかを統一する必要がある。
   - id: F026
@@ -341,9 +348,10 @@ findings:
     rule: vp-ux-readability
     line: 122
     anchor: >-
-      | `maxTurns`       | -    |
-      エージェントの最大ターン数                                                                                                                            
-      |
+      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
+      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
+      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
+      プロファイルで権限を分離する。
     message: 自動実行では `bypassPermissions` を使用すると説明した後、176行目で同モードを禁止し、292行目では別の `auto` を使用しているため、標準の権限モードが判別できない。
     message_ja: 自動実行では `bypassPermissions` を使用すると説明した後、176行目で同モードを禁止し、292行目では別の `auto` を使用しているため、標準の権限モードが判別できない。
   - id: F027
@@ -357,7 +365,7 @@ findings:
     severity: minor
     rule: vp-ux-language-consistency
     line: 64
-    anchor: ""
+    anchor: "| ----------------- | ---------------------------------------- | ---------------------------- |"
     message: 認証方式を「2種類」と呼びながら表では Claude サブスク、Anthropic API Key、長期 OAuth Token の3行を並列に扱っているため、分類とラベルを一致させる必要がある。
     message_ja: 認証方式を「2種類」と呼びながら表では Claude サブスク、Anthropic API Key、長期 OAuth Token の3行を並列に扱っているため、分類とラベルを一致させる必要がある。
   - id: F029

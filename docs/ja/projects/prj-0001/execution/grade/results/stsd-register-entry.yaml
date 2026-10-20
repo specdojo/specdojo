@@ -6,11 +6,11 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 68
-graded_at: "2026-10-10T16:02:18.576Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-20T16:07:12.167Z"
+graded_by: flash-high-executor
 content_hash: 48c647b4efecd15bfe8dcfe583519d02eea22fa18c70c886d97ce88f85fcbb19
 source_hashes:
-  catalog-entry: 133b91568bb8db3322330fb2599ac417c0ff433677329ce8a77f1fa5395cc2c8
+  catalog-entry: 1ef0d247a997e83d8f6873af3595a7d9019157eeaaef65c4f50b39cd12893030
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
@@ -20,7 +20,7 @@ categories:
   purpose:
     score: 88
   operations:
-    score: 75
+    score: 69
   planning:
     score: 75
   business:
@@ -103,8 +103,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ops-operability:
     level: 2
     score: 50
@@ -119,7 +119,7 @@ viewpoints:
     score: 50
 finding_counts:
   blocker: 0
-  major: 15
+  major: 16
   minor: 8
   note: 0
 findings:
@@ -314,12 +314,21 @@ findings:
     message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
   - id: F022
     severity: major
+    rule: vp-ops-release-readiness
+    line: 124
+    anchor: >-
+      | _ASSUMPTION_: 再開は起票済みへ戻す遷移として定義した。再開時に対応中・待機中・審査待ちを直接指定する運用は、再開と後続遷移を同時に記録したものとして扱う   |
+      `T-15`〜`T-18`                 | ARC、PO | 本書のレビュー時            |
+    message: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+    message_ja: 未解決の _TODO_ / _ASSUMPTION_ が残っています。
+  - id: F023
+    severity: major
     rule: vp-ops-operability
     line: 45
     anchor: ""
     message: 待機理由は `block_reason`、再開条件は本文の所定箇所へ記録し、終端時の `conclusion` を待機操作で変更しない運用へ統一する必要がある。
     message_ja: 待機理由は `block_reason`、再開条件は本文の所定箇所へ記録し、終端時の `conclusion` を待機操作で変更しない運用へ統一する必要がある。
-  - id: F023
+  - id: F024
     severity: major
     rule: vp-qe-config-validity
     line: 124
