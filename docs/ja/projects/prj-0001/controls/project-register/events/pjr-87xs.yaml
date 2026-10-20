@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6268325f8b0f4caa905679c40056b668
+- v: 1
+  id: reg_69e766b0ff7f4b33a3c3ad2514382bfb
+  ts: "2026-10-20T13:51:15Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・親の検証・生成のコードを確かめた。CHANGELOG の衝突は両方の行を残して解いた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: config scaffold --workspace で repos の設定から `<project-id>.code-workspace` を作れるようにした。repos のない project はエラーにし、既存のファイルは --force がない限り上書きしない。prj-0002 の手作りのものと folders が同じになる
+  previous_event_id: reg_4b0a7e4e8dbc477681d486628a67b239
