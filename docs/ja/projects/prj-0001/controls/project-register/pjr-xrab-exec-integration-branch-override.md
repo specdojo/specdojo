@@ -27,6 +27,11 @@ integration_branch は project の設定に固定され、GitHub flow ではト�
 - 指定した統合先が result の trace（統合先ブランチと commit snapshot）に記録される。
 - [[specdojo:command-reference]] と [[specdojo:specdojo-config-reference]] に、指定の方法と優先順位が書かれている。
 - 単体テストで優先順位（run の指定 → 設定 → 現在のブランチ）を、統合テストで指定したブランチへ統合されることを確認している。
+- `_UNDECIDED_` の点は、設計の段階で executor が決め、決めた内容と理由を result と個票の対応結果に書く。決めた内容は既存の動きを変えない（指定しない利用者の動きは今のまま）ものにする。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- runner のコードを変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
+- CHANGELOG の `## [0.4.1] - 未定` の節に書く。公開済みの版の節は変えない（2026-10-20、利用者の承認で 0.4.1 の範囲に加えた）。
 
 ## 3. 作業内容
 

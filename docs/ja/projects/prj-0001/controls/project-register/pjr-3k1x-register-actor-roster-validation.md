@@ -49,7 +49,7 @@ register の --by に渡した値は、項目別のイベントの actor にそ�
 - 単体テストで、名簿にない `--by` を止めること、別名を実体で記録すること、予約の名前を受け付けることを確かめる。
 - 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
 - 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
-- CHANGELOG の未公開の版の節（0.4.1 の公開の後なので `## [0.4.2] - 未定` か `## [0.5.0] - 未定` を作る）に書く。公開済みの版の節は変えない。0.4.1 の公開の後に流す。
+- CHANGELOG の `## [0.4.1] - 未定` の節に書く。公開済みの版の節は変えない（2026-10-20、利用者の承認で 0.4.1 の範囲に加えた）。
 
 ## 4. 対応結果
 

@@ -29,6 +29,10 @@ specdojo:
 - prj-0002 で手で作った `prj-0002.code-workspace` と同じ内容が作られることを確認している。
 - [[specdojo:command-reference]] と、別リポジトリ構成を説明する文書に、作り方が書かれている。
 - 単体テストで、`repos` の宣言から作られる内容と、既存ファイルを上書きしないことを確認している。
+- `_UNDECIDED_` の点は、設計の段階で executor が決め、決めた内容と理由を result と個票の対応結果に書く。決めた内容は既存の動きを変えない（指定しない利用者の動きは今のまま）ものにする。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [0.4.1] - 未定` の節に書く。公開済みの版の節は変えない（2026-10-20、利用者の承認で 0.4.1 の範囲に加えた）。
 
 ## 3. 作業内容
 

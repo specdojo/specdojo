@@ -28,6 +28,11 @@ exec-defaults.yaml は project 間で共有され、プロダクトリポジト�
 - 足した検証が、その project の run の evidence に `source: runner` と `repo` 付きで記録される。
 - [[specdojo:exec-config-guide]] と [[specdojo:specdojo-config-reference]] に、指定の方法と、共有の `exec-defaults.yaml` との関係が書かれている。
 - 前提（2026-10-12）: `exec_defaults` は `projects.<id>.run` で project ごとに指定できるが、ファイルを引き継ぐ仕組みはない。`specdojo-lp` には prj-0002 の PJR-2CQC で `typecheck`・`lint:ts` の script を用意した。
+- `_UNDECIDED_` の点は、設計の段階で executor が決め、決めた内容と理由を result と個票の対応結果に書く。決めた内容は既存の動きを変えない（指定しない利用者の動きは今のまま）ものにする。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- runner のコードを変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
+- CHANGELOG の `## [0.4.1] - 未定` の節に書く。公開済みの版の節は変えない（2026-10-20、利用者の承認で 0.4.1 の範囲に加えた）。
 
 ## 3. 作業内容
 
