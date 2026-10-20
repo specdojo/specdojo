@@ -26,7 +26,7 @@ CLI は利用リポジトリへローカル導入されるため、`npx specdojo
   - exec に流す予定の `todo` は、実行前に対象 project の `develop` へ入れておく。worktree は commit から作られるため、feature ブランチにしかない個票は実行できない。
 - commit メッセージは subject を日本語で書き、conventional commit の type と scope を保つ。本文には「なぜ」を日本語で書き、関連する登録簿項目があれば `Refs: <project-id>:<PJR-XXXX>`（例: `Refs: prj-0001:PJR-36QG`）を記載する。項目ごとに 1 行とし、過去の commit の書式は書き換えない。
 - 登録簿項目の実行は既定で `exec run --register` を使う。自分で実装するのは、利用者が実装者として自分を指定した場合に限る。「着手してください」は実行経路の指示であり、自分が実装してよい根拠として扱わない。実装者が読み取れない場合は確認する。
-- 状態遷移の `--by` には、実際にその判断や作業をした主体を書く。利用者が決定・承認した記録は、役割の名前（`PO` など）ではなく人の名簿の nickname で残す。自分が確かめて close する記録は、オーケストレーターの名前を 1 つに決めて使い続ける。
+- 状態遷移の `--by` には、実際にその判断や作業をした主体を書く。利用者が決定・承認した記録は、役割の名前（`PO` など）ではなく人の名簿の nickname で残す。自分が確かめて close する記録や、自分で行った起票・記帳は `specdojo-orchestrator` で残す。`--by` は人と agent の名簿の nickname・alias と予約名（`SpecDojo`・`specdojo-orchestrator`・`night-orchestrator`）だけを受け付け、それ以外は記帳の前にエラーで止まる。
 - 自分が直接対応した項目は `start` を経ずに `close` してよい。実行していない主体を actor とする遷移を、記録の体裁を揃える目的で追加しない。終端イベントの `reason` に対応経路を記録し、実施内容と検証結果は個票の対応結果へ残す。
 - `specdojo.config.json` の project に `repos` で宣言されたプロダクトリポジトリは参照してよい。変更は利用者が自分を実装者に指定した場合に限り、そのリポジトリで `feature/<project-id>/<topic>` を切って commit する。`git push` は行わない。宣言していないリポジトリは参照も変更もしない。
 - 認証情報・秘密鍵・`.env`・`secrets/` を読み込まない。
