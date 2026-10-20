@@ -38,12 +38,31 @@ specdojo:
 
 | No  | 作業                           | 担当 | 状態 | メモ |
 | --- | ------------------------------ | ---- | ---- | ---- |
-| 1   | 作るコマンドと内容を設計する   | DEV  | open | -    |
-| 2   | 実装し、テストと文書を更新する | DEV  | open | -    |
+| 1   | 作るコマンドと内容を設計する   | DEV  | done | -    |
+| 2   | 実装し、テストと文書を更新する | DEV  | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容:
+  - `src/shared/workspace-scaffold.ts` にマルチルートワークスペース生成処理（`buildWorkspaceData`, `renderWorkspaceContent`, `runWorkspaceScaffold`）を実装した。
+  - `src/shared/specdojo-config.ts` の `config scaffold` コマンドに `--workspace` と `--project <id>` オプションを追加し、`repos` の宣言から `<project-id>.code-workspace` を作成可能にした。
+  - `_UNDECIDED_` 事項の決定と理由:
+    - コマンドの形式: `specdojo config scaffold --workspace` として既存の `config scaffold` に追加した。既存の `--force`、`--dry-run` と一貫した CLI 操作を提供し、`--provider` との併用も可能である。未指定時はエラーメッセージで `--provider` または `--workspace` の指定を案内し、既存のプロバイダ生成の挙動を損なわない。
+    - `repos` を持たない project の扱い: マルチルートワークスペースは別リポジトリ構成のためのものであるため、`repos` 未宣言の project ではファイルを作成せずエラー（原因と設定案内を表示）として終了する仕様とした。
+  - prj-0002 で手動作成された `prj-0002.code-workspace` の `folders` 構造（プロジェクトルート `.` および `repos` の各エントリ）と同一の内容が生成されることを確認した。
+  - 単体テスト `tests/src/shared/workspace-scaffold.test.ts` を作成し、データ構築・JSON 出力・ファイル書き込み・既存ファイル保護（`--force`）・dry-run・CLI オプション連携を検証した。
+  - 利用者向けドキュメント（[[specdojo:command-reference|CLIコマンドリファレンス]]、[[specdojo:specdojo-config-reference|specdojo.config.json リファレンス]]、[[specdojo:docs-structure-guide|ドキュメント構成ガイド]]）および `CHANGELOG.md` を更新した。
+- 成果物:
+  - `src/shared/workspace-scaffold.ts`
+  - `src/shared/specdojo-config.ts`
+  - `tests/src/shared/workspace-scaffold.test.ts`
+  - `docs/ja/specdojo/references/command-reference.md`
+  - `docs/ja/specdojo/references/specdojo-config-reference.md`
+  - `docs/ja/specdojo/guides/docs-structure-guide.md`
+  - `CHANGELOG.md`
+  - `docs/ja/projects/prj-0001/controls/project-register/pjr-87xs-code-workspace-scaffold.md`
+- 残課題:
+  - なし。すべての完了条件を満たしている。
 
 ## 5. 関連ドキュメント
 

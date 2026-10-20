@@ -375,6 +375,8 @@ app1-workspace/
 
 `.specdojo/specdojo.config.json` の project パスは `app1-specdojo/` を基準とします。`config init` はリポジトリのディレクトリ名から `run.worktree_base` を作るため、この例では `../app1-specdojo-worktrees` になります。SpecDojo CLI の実行、プロジェクト成果物の解決、doc index の生成、運用記録の検証は `app1-specdojo/` 側で行います。
 
+VS Code でプロジェクトリポジトリとプロダクトリポジトリを同時に開く場合は、`specdojo config scaffold --workspace` を実行して `<project-id>.code-workspace` を作成します。ワークスペースにはプロジェクトリポジトリ自身（`.`）と宣言した各プロダクトリポジトリ（`repos[].path`）が含まれ、worktree や隣接するリポジトリをシームレスに操作できます。
+
 ### 10.3. プロダクト文書の配置
 
 プロダクト文書は実装と同期して改訂するため、`app1/docs/ja/product/` に置きます。README、ソースコードから生成する API リファレンス、パッケージ利用者向けの手順など、コードと同じ revision で読む付属文書も `app1/` に置きます。

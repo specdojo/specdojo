@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- `specdojo config scaffold --workspace` で、`repos` の設定から VS Code のマルチルートワークスペース（`<project-id>.code-workspace`）を生成できるようにしました。プロジェクトリポジトリ自身と `repos` で宣言された各プロダクトリポジトリを `folders` に宣言順で並べ、別リポジトリ構成でも 1 つのウィンドウで開発できます。`--project` で対象 project を指定でき（省略時は `current_project`）、既存のワークスペースファイルは `--force` を指定しない限り上書きしません（PJR-87XS）。
+
 - `devcontainer scaffold --preset recommended` を追加しました。端末版 Emacs と Vim、tmux、SpecDojo の文書作業向け VS Code 拡張・保存時整形・YAML schema 関連付けをまとめて設定し、同じ拡張を `.vscode/extensions.json` にも推薦します。個別の `--editor`・`--tmux` と併用でき、既存のエディタ設定は上書きしません。`specdojo init` では Dev Container を選んだ場合だけ推奨 preset の利用を質問し、`--yes --devcontainer` では利用します（PJR-EN6M）。
 
 - 親 runner の検証（`pipeline.parent_validations`）の固定許可リストに `build`（`npm run build`）と `format-check`（`npm run format:check`）を追加しました。別リポジトリ構成などでプロダクトリポジトリのビルドと整形の検証を親 runner に委譲できます（PJR-NS8Y）。

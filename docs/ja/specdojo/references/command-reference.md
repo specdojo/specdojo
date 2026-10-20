@@ -43,7 +43,7 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 | `init`                   | project から agent 実行までを質問式で初期設定する       | `specdojo init`                             |
 | `config init`            | `specdojo.config.json` と `.gitignore` を個別に用意する | `specdojo config init`                      |
 | `config migrate-members` | agent 定義を保護設定へ移す                              | `specdojo config migrate-members --dry-run` |
-| `config scaffold`        | provider の agent・settings 設定を個別に配置する        | `specdojo config scaffold --provider codex` |
+| `config scaffold`        | provider や VS Code ワークスペースを個別に配置する      | `specdojo config scaffold --provider codex` |
 | `project list`           | 登録済み project を表示する                             | `specdojo project list`                     |
 
 `init` は対話できる端末で、project ID と名前、register、人の nickname と表示名、複数指定可能な
@@ -102,6 +102,14 @@ specdojo config scaffold --provider antigravity --global
 ```
 
 `--force` はリポジトリ内の scaffold ファイルだけを上書きし、グローバル設定の既存項目は上書きしません。従来の `exec scaffold --provider antigravity` でも同じ `--global` / `--dry-run` の挙動を利用できます。
+
+`config scaffold --workspace` は、`.specdojo/specdojo.config.json` の `repos` 宣言から VS Code のマルチルートワークスペース（`<project-id>.code-workspace`）をリポジトリルートに生成します。`folders` にはプロジェクトリポジトリ（`.`）と各プロダクトリポジトリ（`repos[].path`）を宣言順に並べ、別リポジトリ構成でも 1 つの VS Code ウィンドウでプロジェクトとプロダクトを同時に開けます。`--project <id>` で対象 project を指定でき、省略時は `current_project` を使います。既存のファイルは `--force` を指定しない限り上書きしません。`repos` が宣言されていない project ではエラーになります。`--dry-run` は書き込まず予定の内容だけを表示します。
+
+```bash
+specdojo config scaffold --workspace
+specdojo config scaffold --workspace --project prj-0002 --dry-run
+specdojo config scaffold --workspace --force
+```
 
 `config migrate-members` は、各 project の `pm-members.yaml` から `type: agent` の member を取り出し、トップレベルの `agent_members_path`（既定 `.specdojo/agent-members.yaml`）へ統合します。通常実行前に `--dry-run` で対象と件数を確認してください。`--project <id>` を指定すると 1 project だけを対象にします。
 
