@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ghbp-devcontainer-local-bin-and-tmux-user
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-19T21:17:36Z"
+  completed_at: "2026-10-20T12:25:23Z"
+  conclusion: "post-create.sh で ~/.local・~/.local/share の持ち主を戻して ~/.local/bin を作ってから CLI を入れ、specdojo-tmux.sh.sample の docker exec に -u node を付けた。利用者がホストの Mac で tools/e2e/devcontainer-host-e2e.ts を流し、本物の devcontainer で node の利用者・~/.local/bin の持ち主・Claude Code の導入が通った（2026-10-20、Dev Container host E2E: PASS）"
   derived_from:
     - PJR-CCXN
 ---

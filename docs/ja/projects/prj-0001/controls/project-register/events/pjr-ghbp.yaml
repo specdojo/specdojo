@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_acb354ddb5834c4aa95b05f44e1f16b2
+- v: 1
+  id: reg_46d163479e9c47cdbc748bf6e30fce9b
+  ts: "2026-10-20T12:25:23Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分・親検証と、利用者がホストで流した E2E の PASS を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: "post-create.sh で ~/.local・~/.local/share の持ち主を戻して ~/.local/bin を作ってから CLI を入れ、specdojo-tmux.sh.sample の docker exec に -u node を付けた。利用者がホストの Mac で tools/e2e/devcontainer-host-e2e.ts を流し、本物の devcontainer で node の利用者・~/.local/bin の持ち主・Claude Code の導入が通った（2026-10-20、Dev Container host E2E: PASS）"
+  previous_event_id: reg_194b429fcffd49549db8f237bac653dd
