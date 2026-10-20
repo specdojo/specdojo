@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-0m7w-devcontainer-script-behavior-tests
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-20T11:08:11Z"
+  completed_at: "2026-10-20T11:41:28Z"
+  conclusion: tests/src/devcontainer/scaffold.integration.test.ts に、生成した specdojo-tmux.sh と post-create.sh を偽物の docker・devcontainer・sudo・curl と組み合わせて動かす統合テストを加えた。ssh の RemoteCommand と同じ最小の PATH での CLI の見つけ方と docker exec の引数、見つからないときの案内、~/.local の持ち主の戻し方とインストーラより前の ~/.local/bin の作成、2 つのスクリプトの文法を確かめる。6 件が通った
   derived_from:
     - PJR-EJ4F
 ---
