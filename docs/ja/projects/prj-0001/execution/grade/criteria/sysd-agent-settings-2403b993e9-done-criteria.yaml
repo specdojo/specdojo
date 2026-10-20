@@ -2,12 +2,12 @@
 id: sysd-agent-settings-grade-criteria
 document: sysd-agent-settings
 path: docs/ja/product/040-system-design/sysd-agent-settings.md
-graded_at: "2026-10-10T16:09:09.018Z"
-graded_by: agy-expert-executor
-content_hash: fcdb84f4ffd29a2119ae5aab0a3195a97a33b2e7cdc70c794e5e61ad2dee48c9
+graded_at: "2026-10-20T16:20:11.711Z"
+graded_by: flash-high-executor
+content_hash: af8e76f0c11605c8a3a4f3e7b64434c5c0fa3afe15f59bae5803433cc29fc0ca
 summary:
-  satisfied: 0
-  unsatisfied: 5
+  satisfied: 2
+  unsatisfied: 3
   total: 5
 criteria:
   - id: DC-001
@@ -16,32 +16,34 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 設計トピックの採用理由・制約が業務要件と整合しているかの記述がない。
+    reason: Business requirements, acceptance criteria, and rationale for design topic adoption are not documented.
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: 設計方針の採用理由や代替案との比較がなく、承認の判断材料がない。
+    reason: >-
+      Rationale for combining execution models, alternative comparisons, impact scope, and open decisions are missing
+      for PO approval.
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: unsatisfied
-    reason: 技術的制約（環境要求や外部依存）が明確に記述されていない。
+    status: satisfied
   - id: DC-004
     text: テスト設計・検証観点の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: glob指定のみであり、具体的な制約ごとの検証先と合否条件が特定できない。
+    reason: >-
+      Test files, test cases, and pass/fail criteria corresponding to each design constraint cannot be identified from
+      the broad test glob.
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
-    status: unsatisfied
-    reason: 設定ファイルのスキーマや検証ルールなど、実装の基礎となる記述が不足している。
+    status: satisfied

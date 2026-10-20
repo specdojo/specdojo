@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T09:00:53Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-20T13:51:15Z"
+  conclusion: config scaffold --workspace で repos の設定から `<project-id>.code-workspace` を作れるようにした。repos のない project はエラーにし、既存のファイルは --force がない限り上書きしない。prj-0002 の手作りのものと folders が同じになる
 ---
 
 # PJR-87XS repos の設定から VS Code のマルチルートワークスペースを作れるようにする

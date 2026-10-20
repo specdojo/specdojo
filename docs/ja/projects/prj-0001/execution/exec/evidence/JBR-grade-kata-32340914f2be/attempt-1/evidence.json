@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-32340914f2be",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-20T20:01:00.750Z",
+    "completed_at": "2026-10-20T20:52:05.485Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sld-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stc-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-critical-flows-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-cross-cutting-policy-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.sysd-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.trc-requirements-to-specs-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.trc-requirements-to-tests-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsp-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.uis-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.utc-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-32340914f2be.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 16,
+    "summary": ".../grade/results/specdojo.pjr-rulebook.yaml       |  12 +-\n .../grade/results/specdojo.sld-sample.yaml         | 146 +++++++---\n .../grade/results/specdojo.stc-index-sample.yaml   | 134 ++++++---\n .../grade/results/specdojo.stc-sample.yaml         | 300 +++++++++++++++++----\n .../grade/results/specdojo.stsd-sample.yaml        |   6 +-\n .../specdojo.sysd-critical-flows-sample.yaml       | 295 +++++++++++++++++---\n .../specdojo.sysd-cross-cutting-policy-sample.yaml | 252 +++++++++++++++--\n .../grade/results/specdojo.sysd-index-sample.yaml  | 107 ++++++--\n .../specdojo.trc-requirements-to-specs-sample.yaml |  87 ++++--\n .../specdojo.trc-requirements-to-tests-sample.yaml | 114 +++++---\n .../grade/results/specdojo.tsd-index-sample.yaml   |  99 +++++--\n .../grade/results/specdojo.tsd-sample.yaml         | 284 ++++++++++++++++---\n .../grade/results/specdojo.tsp-index-sample.yaml   | 280 ++++++++++++++++---\n .../grade/results/specdojo.uis-sample.yaml         | 285 +++++++++++++++++---\n .../grade/results/specdojo.utc-index-sample.yaml   | 289 +++++++++++++++++---\n 15 files changed, 2241 insertions(+), 449 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-32340914f2be --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-32340914f2be/…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-32340914f2be --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-32340914f2be/results.tsv\nelse\n  grade_status=$?\n  cat logs/grade/runs/per-document/JBR-grade-kata-32340914f2be/results.tsv\n  if [ \"$grade_status\" -eq 2 ]; then\n    printf 'grade pipeline partial: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-32340914f2be' \"$grade_status\" >&2\n  else\n    printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-32340914f2be' \"$grade_status\" >&2\n  fi\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-32340914f2be/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-32340914f2be/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.4.1 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-32340914f2be project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-32340914f2be\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/specdojo/rulebooks/pjr-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/pjr-rulebook.md\ndocument start: docs/ja/specdojo/samples/sld-sample.md\ndocument complete: docs/ja/specdojo/samples/sld-sample.md\ndocument start: docs/ja/specdojo/samples/stc-index-sample.md\ndocument complete: docs/ja/specdojo/samples/stc-index-sample.md\ndocument start: docs/ja/specdojo/samples/stc-sample.md\ndocument complete: docs/ja/specdojo/samples/stc-sample.md\ndocument start: docs/ja/specdojo/samples/stsd-sample.md\ndocument complete: docs/ja/specdojo/samples/stsd-sample.md\ndocument start: docs/ja/specdojo/samples/sysd-critical-flows-sample.md\ndocument complete: docs/ja/specdojo/samples/sysd-critical-flows-sample.md\ndocument start: docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md\ndocument complete: docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md\ndocument start: docs/ja/specdojo/samples/sysd-index-sample.md\ndocument complete: docs/ja/specdojo/samples/sysd-index-sample.md\ndocument start: docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md\ndocument complete: docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md\ndocument start: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md\ndocument complete: docs/ja/specdojo/samples/trc-requirements-to-tests-sample.md\ndocument start: docs/ja/specdojo/samples/tsd-index-sample.md\ndocument complete: docs/ja/specdojo/samples/tsd-index-sample.md\ndocument start: docs/ja/specdojo/samples/tsd-sample.md\ndocument complete: docs/ja/specdojo/samples/tsd-sample.md\ndocument start: docs/ja/specdojo/samples/tsp-index-sample.md\ndocument complete: docs/ja/specdojo/samples/tsp-index-sample.md\ndocument start: docs/ja/specdojo/samples/uis-sample.md\ndocument complete: docs/ja/specdojo/samples/uis-sample.md\ndocument start: docs/ja/specdojo/samples/utc-index-sample.md\ndocument complete: docs/ja/specdojo/samples/utc-index-sample.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-32340914f2be/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-20T20:17:03Z\tdocs/ja/specdojo/rulebooks/pjr-rulebook.md\t1\tpassed\t953\tneeds-work\t82\t6\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:19:46Z\tdocs/ja/specdojo/samples/sld-sample.md\t1\tpassed\t161\tneeds-work\t75\t7\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:21:16Z\tdocs/ja/specdojo/samples/stc-index-sample.md\t1\tpassed\t88\tneeds-work\t81\t6\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:23:37Z\tdocs/ja/specdojo/samples/stc-sample.md\t1\tpassed\t139\tfail\t50\t24\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:25:22Z\tdocs/ja/specdojo/samples/stsd-sample.md\t1\tpassed\t104\tpass\t95\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:28:50Z\tdocs/ja/specdojo/samples/sysd-critical-flows-sample.md\t1\tpassed\t206\tfail\t48\t23\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:30:58Z\tdocs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md\t1\tpassed\t126\tfail\t50\t21\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:32:44Z\tdocs/ja/specdojo/samples/sysd-index-sample.md\t1\tpassed\t104\tfail\t79\t5\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:36:42Z\tdocs/ja/specdojo/samples/trc-requirements-to-specs-sample.md\t1\tpassed\t236\tneeds-work\t94\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:39:29Z\tdocs/ja/specdojo/samples/trc-requirements-to-tests-sample.md\t1\tpassed\t165\tneeds-work\t88\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:40:49Z\tdocs/ja/specdojo/samples/tsd-index-sample.md\t1\tpassed\t79\tneeds-work\t88\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:43:41Z\tdocs/ja/specdojo/samples/tsd-sample.md\t1\tpassed\t170\tfail\t26\t23\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:46:58Z\tdocs/ja/specdojo/samples/tsp-index-sample.md\t1\tpassed\t195\tfail\t40\t23\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:49:23Z\tdocs/ja/specdojo/samples/uis-sample.md\t1\tpassed\t143\tfail\t54\t24\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-20T20:52:04Z\tdocs/ja/specdojo/samples/utc-index-sample.md\t1\tpassed\t159\tfail\t36\t23\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-32340914f2be/attempt-1/command.stdout.log",
+      "bytes": 4757,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-32340914f2be/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

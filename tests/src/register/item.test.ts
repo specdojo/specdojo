@@ -374,6 +374,27 @@ describe("validateRegisterItemDocs — 個票正本の横断検証", () => {
 });
 
 describe("register-item-frontmatter schema — enum 検証", () => {
+  it("difficulty は hard・medium・easy だけを受け付ける", () => {
+    const validator = buildValidator(
+      "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+    );
+    const base = {
+      id: "prj-0001:pjr-ab12-inventory-seed",
+      type: "project",
+      status: "draft",
+      rulebook: "specdojo:pjr-rulebook",
+      part_of: ["prj-0001:pjr-index"],
+      item_type: "todo",
+      item_status: "open",
+      priority: "medium",
+    };
+
+    for (const difficulty of ["hard", "medium", "easy"]) {
+      expect(validator({ specdojo: { ...base, difficulty } })).toBe(true);
+    }
+    expect(validator({ specdojo: { ...base, difficulty: "extreme" } })).toBe(false);
+  });
+
   it("Approach 型の値と schema の enum が一致する", () => {
     const schema = load(
       readFileSync("docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml", "utf8"),

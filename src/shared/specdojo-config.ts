@@ -7,6 +7,7 @@ import Ajv2020Module from "ajv/dist/2020.js";
 import type { ValidateFunction } from "ajv";
 import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./agent-types.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./provider-scaffold.js";
+import { runWorkspaceScaffold } from "./workspace-scaffold.js";
 import {
   ensureGitignore,
   formatGitignoreReport,
@@ -176,6 +177,15 @@ export type MemberRoster = {
   aliases?: AgentAlias[];
 };
 
+// Register events also have a small set of product-owned actors that do not represent a
+// roster member. Keep this list closed: accepting arbitrary strings would make the audit log
+// impossible to trace back to either a person, an agent, or a known SpecDojo component.
+export const RESERVED_REGISTER_ACTORS = [
+  "SpecDojo",
+  "specdojo-orchestrator",
+  "night-orchestrator",
+] as const;
+
 // Resolve either a concrete agent nickname or a backward-compatible alias to the concrete
 // member. Alias validity is checked while loading the roster, but keep the traversal guarded so
 // callers and tests that construct a roster directly cannot loop forever on malformed input.
@@ -207,6 +217,36 @@ export function resolveAgentMember(
     current = target;
   }
   return undefined;
+}
+
+export function resolveRegisterActor(actor: string, roster: MemberRoster | null): string {
+  const normalized = actor.trim();
+  if (!normalized) {
+    throw new Error("Register event actor must not be empty");
+  }
+  if ((RESERVED_REGISTER_ACTORS as readonly string[]).includes(normalized)) return normalized;
+
+  const agent = resolveAgentMember(roster, normalized);
+  if (agent) return agent.nickname;
+
+  const humans =
+    roster?.members.filter((member) => member.type === "human" && member.nickname === normalized) ??
+    [];
+  if (humans.length === 1) return humans[0].nickname;
+  if (humans.length > 1) {
+    throw new Error(`Duplicate human actor nickname in members_path: ${normalized}`);
+  }
+
+  const rosterNames = [
+    ...(roster?.members.map((member) => member.nickname) ?? []),
+    ...(roster?.aliases?.map((alias) => alias.nickname) ?? []),
+  ];
+  const accepted = [...new Set([...rosterNames, ...RESERVED_REGISTER_ACTORS])].sort();
+  throw new Error(
+    `Unknown register actor: "${normalized}". Use a human nickname from members_path, ` +
+      `an agent nickname or alias from agent_members_path, or a reserved actor: ` +
+      accepted.join(", "),
+  );
 }
 
 export type SpecDojoConfig = {
@@ -907,10 +947,19 @@ export function registerConfigCommands(program: Command): void {
 
   cfg
     .command("scaffold")
-    .description("Scaffold agent/settings templates for a provider")
-    .requiredOption(
+    .description("Scaffold agent/settings templates for a provider or VS Code multi-root workspace")
+    .option(
       "--provider <name>",
       "Provider template to copy (antigravity|claude|codex|copilot|opencode)",
+    )
+    .option(
+      "--workspace",
+      "Generate VS Code multi-root workspace (<project-id>.code-workspace) from repos config",
+      false,
+    )
+    .option(
+      "--project <id>",
+      "Target project ID for workspace scaffolding (defaults to current_project)",
     )
     .option("--force", "Overwrite existing files", false)
     .option("--dry-run", "Show planned files without writing", false)
@@ -921,13 +970,29 @@ export function registerConfigCommands(program: Command): void {
     )
     .action(async (opts) => {
       try {
-        await runProviderScaffold(String(opts.provider), {
-          packageRoot: specdojoPackageRootDir(),
-          repoRoot: specdojoRootDir(),
-          force: !!opts.force,
-          dryRun: !!opts.dryRun,
-          global: !!opts.global,
-        });
+        if (!opts.provider && !opts.workspace) {
+          throw new Error("Specify --provider <name> or --workspace to scaffold.");
+        }
+        if (opts.global && !opts.provider) {
+          throw new Error("--global requires --provider antigravity");
+        }
+        if (opts.provider) {
+          await runProviderScaffold(String(opts.provider), {
+            packageRoot: specdojoPackageRootDir(),
+            repoRoot: specdojoRootDir(),
+            force: !!opts.force,
+            dryRun: !!opts.dryRun,
+            global: !!opts.global,
+          });
+        }
+        if (opts.workspace) {
+          await runWorkspaceScaffold({
+            repoRoot: specdojoRootDir(),
+            projectId: opts.project ? String(opts.project) : undefined,
+            force: !!opts.force,
+            dryRun: !!opts.dryRun,
+          });
+        }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         process.stderr.write(`${message}\n`);

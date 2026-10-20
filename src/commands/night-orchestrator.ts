@@ -211,7 +211,10 @@ export function registerNightOrchestratorCommand(orchestrator: Command): void {
     .option("--max-items <n>", "Maximum items in one night", "10")
     .option("--parallel <n>", "Maximum parallel item runs", "2")
     .option("--max-consecutive-failures <n>", "Stop after this many consecutive failures", "2")
-    .option("--on-rate-limit <action>", "Pinned-agent action: stop|fallback", "stop")
+    .option(
+      "--on-rate-limit <action>",
+      "Override the difficulty route's pinned-agent action: stop|wait|fallback",
+    )
     .option(
       "--fallback-executor-by <nickname>",
       "Fallback executor for rate limits or configured connection errors",
@@ -226,11 +229,11 @@ export function registerNightOrchestratorCommand(orchestrator: Command): void {
           opts.maxConsecutiveFailures,
           "--max-consecutive-failures",
         );
-        if (!["stop", "fallback"].includes(opts.onRateLimit)) {
-          throw new Error('--on-rate-limit must be "stop" or "fallback".');
-        }
-        if (opts.onRateLimit === "fallback" && !opts.fallbackExecutorBy) {
-          throw new Error("--on-rate-limit fallback requires --fallback-executor-by.");
+        if (
+          opts.onRateLimit !== undefined &&
+          !["stop", "wait", "fallback"].includes(opts.onRateLimit)
+        ) {
+          throw new Error('--on-rate-limit must be "stop", "wait", or "fallback".');
         }
         const resolved = resolveProjectPaths({ project: opts.project });
         const projectId = resolved.projectId ?? opts.project;
@@ -266,8 +269,7 @@ export function registerNightOrchestratorCommand(orchestrator: Command): void {
             String(parallel),
             "--on-failure",
             "continue",
-            "--on-rate-limit",
-            opts.onRateLimit,
+            ...(opts.onRateLimit ? ["--on-rate-limit", opts.onRateLimit] : []),
             ...(opts.fallbackExecutorBy ? ["--fallback-executor-by", opts.fallbackExecutorBy] : []),
           ]);
           const result = await runCaptured(command, args);

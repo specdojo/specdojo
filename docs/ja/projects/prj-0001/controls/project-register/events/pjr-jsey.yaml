@@ -1381,3 +1381,64 @@
       from: DKD8 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
       to: A6PV の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
   previous_event_id: reg_87a79ecfec9c41798aded28eac5befbb
+- v: 1
+  id: reg_8b3b7795045d4e75a792e1646e4be7dc
+  ts: "2026-10-20T13:23:02Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-5HYP の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-20"
+      to: "-"
+  previous_event_id: reg_a0d373f7ce1c4c5cbb1f947814506ad8
+- v: 1
+  id: reg_5e4d1cd0f7f547c19be81a4d82d147d3
+  ts: "2026-10-20T13:37:51Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8b3b7795045d4e75a792e1646e4be7dc
+- v: 1
+  id: reg_4124e8b11ef94d3eaa7f958219c74872
+  ts: "2026-10-20T13:45:43Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5e4d1cd0f7f547c19be81a4d82d147d3
+- v: 1
+  id: reg_f6044d2c63de49d58e47bf588fe8f199
+  ts: "2026-10-20T13:47:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが result・event・統合の commit を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: A6PV の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
+      to: PJR-5HYP の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
+  previous_event_id: reg_4124e8b11ef94d3eaa7f958219c74872

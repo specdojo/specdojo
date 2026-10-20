@@ -25,6 +25,8 @@ export type PjrItem = {
   description: string;
   type: string;
   priority: string;
+  // executor / reporter pipeline の振り分けに使う作業難易度。未指定なら従来の自動選択。
+  difficulty?: RegisterDifficulty;
   owner: string;
   registeredAt: string;
   due: string;
@@ -42,6 +44,8 @@ export type PjrItem = {
   // 人が完了条件を確認し、夜間 orchestrator の実行対象として承認した印。
   autopilot?: "approved";
 };
+
+export type RegisterDifficulty = "hard" | "medium" | "easy";
 
 // 一覧ビュー1行分の表示値。日時は暦日へ変換済みで、テーブル生成と履歴の比較に使う。
 export type PjrDisplayItem = Omit<PjrItem, "registeredAt" | "completedAt"> & {
@@ -71,6 +75,7 @@ export const VALID_TYPES = [
 ] as const;
 
 export const VALID_PRIORITIES = ["high", "medium", "low"] as const;
+export const VALID_DIFFICULTIES = ["hard", "medium", "easy"] as const;
 
 export const TERMINAL_STATUSES_SET = new Set(["done", "decided", "rejected", "deferred"]);
 
@@ -97,6 +102,7 @@ export type RegisterItemFieldUpdates = {
   item_type?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   item_status?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   priority?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  difficulty?: RegisterDifficulty | typeof REMOVE_REGISTER_ITEM_FIELD;
   owner?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   registered_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   due_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
@@ -145,6 +151,7 @@ const SPECDOJO_KEY_ORDER = [
   "item_type",
   "item_status",
   "priority",
+  "difficulty",
   "owner",
   "registered_at",
   "due_on",
@@ -272,6 +279,7 @@ export function readRegisterItemContent(
       )
     : undefined;
   const autopilot = fields.autopilot === "approved" ? "approved" : undefined;
+  const difficulty = asString(fields.difficulty) as RegisterDifficulty | undefined;
 
   const item: PjrItem = {
     id,
@@ -280,6 +288,7 @@ export function readRegisterItemContent(
     description: descriptionFromBody(body),
     type: asString(fields.item_type) ?? CELL_TODO,
     priority: asString(fields.priority) ?? "medium",
+    ...(difficulty ? { difficulty } : {}),
     owner: asString(fields.owner) ?? CELL_TODO,
     registeredAt: asString(fields.registered_at) ?? CELL_TODO,
     due:
@@ -412,6 +421,7 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
     item_type: item.type,
     item_status: item.status,
     priority: item.priority,
+    ...(item.difficulty ? { difficulty: item.difficulty } : {}),
     owner: isPlaceholderCell(item.owner) ? null : item.owner.trim(),
     registered_at: isPlaceholderCell(item.registeredAt) ? null : item.registeredAt.trim(),
     due_on:

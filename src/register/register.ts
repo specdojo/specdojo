@@ -50,10 +50,12 @@ import {
   toCell,
   validateRegisterItemDocs,
   VALID_PRIORITIES,
+  VALID_DIFFICULTIES,
   VALID_STATUSES,
   VALID_TYPES,
   type PjrDisplayItem,
   type PjrItem,
+  type RegisterDifficulty,
 } from "./item.js";
 import { registerMaintenanceCommands } from "./maintenance-commands.js";
 import { applyRegisterMigrationPlan, planRegisterMigration } from "./migration.js";
@@ -86,6 +88,7 @@ export {
   TERMINAL_STATUSES_SET,
   toCell,
   VALID_PRIORITIES,
+  VALID_DIFFICULTIES,
   VALID_STATUSES,
   VALID_TYPES,
   type PjrDisplayItem,
@@ -150,6 +153,7 @@ export type RegisterAddFields = {
   title: string;
   description: string;
   priority: string;
+  difficulty?: RegisterDifficulty;
   status: string;
   owner: string;
   // 起票・完了は UTC・RFC 3339・秒精度の日時。期限だけは暦日のまま扱う。

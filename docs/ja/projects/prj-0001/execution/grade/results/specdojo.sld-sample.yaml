@@ -3,88 +3,158 @@ version: 1
 document: specdojo:sld-sample
 path: docs/ja/specdojo/samples/sld-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 46
-graded_at: "2026-09-06T01:34:40.059Z"
-graded_by: gemma-expert-executor
+score: 75
+graded_at: "2026-10-20T20:19:21.604Z"
+graded_by: flash-high-executor
 content_hash: 414d6b2b95a809979d29973fe2f9c75769045bd2b46ab00265f7ad12942a5100
 categories:
-  consistency:
-    score: 25
-  usability:
-    score: 50
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 58
+  implementation:
+    score: 100
   quality:
-    score: 25
+    score: 58
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
-  vp-arc-conciseness:
+  vp-po-purpose-alignment:
     level: 4
     score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
+  vp-arc-conciseness:
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 6
-  minor: 0
+  minor: 1
   note: 0
 findings:
   - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 1
-    message: メタデータの id 形式および type (`project`) がルールブックの規定に準拠していない。
-    anchor: ""
-  - id: F006
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 1
-    message: ルールブックの「保管場所一覧」と名称が不一致であり、読み手を混乱させる。
-    anchor: ""
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 20
+    anchor: "| 項目         | 値                                                            | 備考                                 |"
+    message: >-
+      The items in the Section 4 table redundantly duplicate the descriptions in Section 3 without providing additional
+      concrete guidance.
+    message_ja: Section 4の表にある項目は、追加の具体的なガイダンスを提供することなく、Section 3の記述を冗長に重複させています。
   - id: F002
     severity: major
     rule: vp-qe-verifiability
     line: 18
+    anchor: "## 4. 最小記述例"
     message: ルールブックで必須とされる「保管場所一覧」の具体例が欠落しており、正しく記述できているか判定不能である。
-    anchor: ""
+    message_ja: ルールブックで必須とされる「保管場所一覧」の具体例が欠落しており、正しく記述できているか判定不能である。
   - id: F003
     severity: major
     rule: vp-qe-omissions-consistency
     line: 18
+    anchor: "## 4. 最小記述例"
     message: ルールブックに定義された標準列を持つ「保管場所一覧」表が欠落している。
-    anchor: ""
+    message_ja: ルールブックに定義された標準列を持つ「保管場所一覧」表が欠落している。
   - id: F004
     severity: major
     rule: vp-qe-kata-conformance
-    line: 18
-    message: 成果物の完成例ではなく、構成要素の説明に留まっており、sample としての責務を果たしていない。
-    anchor: ""
+    line: 1
+    anchor: "# [業務データ辞書 / 保管場所定義](../rulebooks/sld-rulebook.md) サンプル"
+    message: メタデータの id 形式および type (`project`) がルールブックの規定に準拠していない。
+    message_ja: メタデータの id 形式および type (`project`) がルールブックの規定に準拠していない。
   - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: 成果物の完成例ではなく、構成要素の説明に留まっており、sample としての責務を果たしていない。
+    message_ja: 成果物の完成例ではなく、構成要素の説明に留まっており、sample としての責務を果たしていない。
+  - id: F006
     severity: major
     rule: vp-ux-readability
     line: 18
+    anchor: "## 4. 最小記述例"
     message: 具体的かつ完全な一覧表の例がないため、読者が作成方法を正しく理解できない。
-    anchor: ""
+    message_ja: 具体的かつ完全な一覧表の例がないため、読者が作成方法を正しく理解できない。
+  - id: F007
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# [業務データ辞書 / 保管場所定義](../rulebooks/sld-rulebook.md) サンプル"
+    message: ルールブックの「保管場所一覧」と名称が不一致であり、読み手を混乱させる。
+    message_ja: ルールブックの「保管場所一覧」と名称が不一致であり、読み手を混乱させる。

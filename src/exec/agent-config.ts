@@ -95,6 +95,16 @@ export type ProviderOverride = {
   max_concurrency?: number;
 };
 
+export type RegisterDifficulty = "hard" | "medium" | "easy";
+
+export type DifficultyAgentRoute = {
+  executor_by: string;
+  reporter_by: string;
+  on_rate_limit: "stop" | "wait" | "fallback";
+  fallback_executor_by?: string;
+  fallback_reporter_by?: string;
+};
+
 export type ExecDefaultsConfig = {
   run?: {
     // Default execution location for register items. Omitted keeps the historical in-place
@@ -115,6 +125,9 @@ export type ExecDefaultsConfig = {
   rate_limit_detection?: RateLimitDetection;
   connection_error_detection?: ConnectionErrorDetection;
   rate_limit_policy?: RateLimitPolicy;
+  // Register pipeline selection by the difficulty declared on an item. CLI stage and recovery
+  // options override the matching route; an absent route preserves priority-based selection.
+  routing?: Partial<Record<RegisterDifficulty, DifficultyAgentRoute>>;
   providers?: Partial<Record<AgentProvider, ProviderOverride>>;
 };
 

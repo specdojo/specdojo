@@ -2,16 +2,17 @@
 specdojo:
   id: prj-0001:pjr-5hyp-agent-routing-by-difficulty
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-20T12:03:52Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration"
+  completed_at: "2026-10-20T13:47:42Z"
+  conclusion: 個票の difficulty と exec-defaults の routing で agent を振り分けるようにした。CLI の指定は表より優先し、difficulty や表がない場合は今の自動選択のまま。統合後の動作は PJR-JSEY で確認した
   derived_from:
     - PJR-ZM1K
 ---
@@ -43,11 +44,15 @@ exec-defaults.yaml に、難しさ（hard・medium・easy）ごとの executor�
 
 | No  | 作業                                          | 担当 | 状態 | メモ         |
 | --- | --------------------------------------------- | ---- | ---- | ------------ |
-| 1   | 作業の難しさで agent を振り分ける設定を加える | DEV  | open | 0.4.1 の範囲 |
+| 1   | 作業の難しさで agent を振り分ける設定を加える | DEV  | done | 0.4.1 の範囲 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 個票 Frontmatter の `difficulty`（`hard` / `medium` / `easy`）、`register add` / `register update --difficulty`、schema、rulebook、変更 event に対応した。
+- `exec-defaults.yaml` の `routing` schema と実装を追加し、`exec run --register` と夜間 orchestrator が同じ表を使用するようにした。CLI 指定を優先し、難易度または表がない場合は従来の `stage_role` / `priority` 自動選択へ戻す。
+- `specdojo init --exec` が選択した provider に合わせた表を生成するようにし、設定・運用ガイド、システム設計、CHANGELOG、単体テストを更新した。
+- 保護設定 `.specdojo/exec-defaults.yaml` への反映案は、`hard` を `sol-executor` / `gemma26-reporter` / `wait`（fallback は `opus-executor` / `sonnet-reporter`）、`medium` を `flash-high-executor` / `gemma26-reporter` / `fallback`（fallback は `sol-executor` / `sonnet-reporter`）、`easy` を `qwen-executor` / `gemma26-reporter` / `fallback`（fallback は `flash-high-executor` / `sonnet-reporter`）とする。`easy` は docs・src・tests の外を触らない作業に限る運用条件をガイドと個票で維持する。
+- 保護設定 `.specdojo/agent-members.yaml` 冒頭の古い順序コメントは、全難易度共通の順序ではなく `routing` が register の一次選択であり、`priority` は表がない場合と Schedule の候補順に使う旨へ改める。保護設定への実反映と、統合後の `exec run --register` smoke test（PJR-JSEY）は人または後続 runner が行う。
 
 ## 5. 関連ドキュメント
 

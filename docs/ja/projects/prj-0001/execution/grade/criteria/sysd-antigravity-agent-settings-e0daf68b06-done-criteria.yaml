@@ -2,9 +2,9 @@
 id: sysd-antigravity-agent-settings-grade-criteria
 document: sysd-antigravity-agent-settings
 path: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
-graded_at: "2026-10-15T16:09:18.903Z"
-graded_by: agy-expert-executor
-content_hash: f70cceb7908677d8824886c649847345207405839f6d5fa94216c59603126e68
+graded_at: "2026-10-20T16:22:39.674Z"
+graded_by: flash-high-executor
+content_hash: f99c416bb8e8084fb53c9544c828b02525ea2a5018329b8b91355ffe56be99fd
 summary:
   satisfied: 0
   unsatisfied: 5
@@ -16,9 +16,7 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: >-
-      The business requirements, expected benefits, and acceptance criteria for custom agent support and provider
-      fallback are missing.
+    reason: Missing business requirement alignment and acceptance criteria for custom agent support and provider adoption.
   - id: DC-002
     text: 設計方針を承認できること
     roles:
@@ -26,8 +24,8 @@ criteria:
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
     reason: >-
-      The design policy relies on an invalid technical premise regarding custom agent support and lacks decision
-      criteria for stage agent adoption.
+      Missing resolved design decisions, scope of impact, and safety boundaries for custom agents required for PO
+      approval.
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
@@ -35,8 +33,8 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      Technical constraints regarding CLI version compatibility, custom agent discovery, and dependency on PJR-ME20 are
-      not identified.
+      Missing technical constraints regarding CLI version compatibility and custom agent discovery/selection
+      specifications.
   - id: DC-004
     text: テスト設計・検証観点の参照として使えること
     roles:
@@ -44,14 +42,12 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Verification items lack pass/fail criteria, custom agent validation, and concrete evidence requirements for
-      pipeline integration.
+      Missing test verification criteria for custom agent selection and explicit pass/fail conditions for stage
+      integration.
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: >-
-      Implementation boundaries for custom agents, command templates, and affected configuration files are undecided due
-      to incorrect capability assumptions.
+    reason: Missing accurate implementation specifications for custom agent configuration and stage agent definitions.

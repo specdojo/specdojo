@@ -32,3 +32,48 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_7020edf01a5446a9aed559373d8603f7
+  ts: "2026-10-20T13:12:56Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d3f97e0932a941ffa123ef98c978e344
+- v: 1
+  id: reg_947f58835a4e42619c1cad9943dd37e4
+  ts: "2026-10-20T13:30:38Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7020edf01a5446a9aed559373d8603f7
+- v: 1
+  id: reg_352dc73359ce43d9935001270f6e7a7d
+  ts: "2026-10-20T13:51:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分を確かめ、未知の actor と Role code が記帳前に止まること、3K1X を入れた runner で PJR-87XS の記帳と統合が通ることを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: register の --by を人と agent の名簿と予約名（SpecDojo・specdojo-orchestrator・night-orchestrator）で確かめ、alias は実体名で記録する。名簿にない名前は記帳の前に止める。オーケストレーター本文の規則は PJR-C50G で書いた
+  previous_event_id: reg_947f58835a4e42619c1cad9943dd37e4
