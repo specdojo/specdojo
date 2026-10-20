@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ej4f-remote-tmux-sample-path
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-20T11:00:35Z"
+  completed_at: "2026-10-20T11:21:35Z"
+  conclusion: specdojo-tmux.sh.sample に node_bin_dir の変数を設け、/opt/homebrew/bin・/usr/local/bin と合わせて PATH の先頭に足すようにした。値の確かめ方と Homebrew・nvm・mise の例をコメントに書き、devcontainer や docker が見つからないときは PATH を表示する。生成したサンプルは bash -n と shellcheck を通った
   derived_from:
     - PJR-GHBP
 ---

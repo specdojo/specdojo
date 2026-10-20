@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ffb441bc3c0747bd88cb31d1150ae027
+- v: 1
+  id: reg_6429cafeec1543a78dff7ead1e218917
+  ts: "2026-10-20T11:21:35Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分・親検証と、生成したサンプルを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: specdojo-tmux.sh.sample に node_bin_dir の変数を設け、/opt/homebrew/bin・/usr/local/bin と合わせて PATH の先頭に足すようにした。値の確かめ方と Homebrew・nvm・mise の例をコメントに書き、devcontainer や docker が見つからないときは PATH を表示する。生成したサンプルは bash -n と shellcheck を通った
+  previous_event_id: reg_12b6b0696a304f1d88b4c121005dc754
