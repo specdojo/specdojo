@@ -67,12 +67,15 @@ Your nickname [owner]: owner
 Your display name [Project Owner]: 店主
 Orchestrator providers (...) [codex]: claude        <- 使う AI ツールを 1 つ選ぶ
 Delegate work to agents (exec)? [y/N]:              <- Enter（実戦は後で設定する）
-Create a Dev Container? [y/N]:                      <- Enter
+Create a Dev Container? [y/N]: y                    <- y（Dev Container を作る。使わない場合は Enter）
+Add the recommended Dev Container settings? [Y/n]:  <- Enter（推奨 preset を入れる）
 ```
 
 入力が不正な場合は理由が表示され、同じ質問だけがもう一度表示されます。たとえば provider に
 `claud` と入力すると、利用可能な provider の一覧に続いて provider の質問だけが再表示されます。
 それまでに答えた project や名簿の内容を入力し直す必要はありません。
+
+Dev Container を作る質問に `y`、推奨 preset に Enter（既定の「はい」）と答えると、tmux・Emacs・Vim・推奨の VS Code 拡張と設定・`.vscode/extensions.json` が入った環境が生成されます。作成したコンテナは、VS Code の「コンテナーで再度開く」または `devcontainer up` で開けます（詳しい説明は [[specdojo:remote-host-development-guide]] を参照）。Dev Container を使わずに手元の環境で進めたい場合は、Dev Container の質問に Enter または `n`（いいえ）と答えて先へ進めます。この 10 分の体験は記帳だけで進められるため、コンテナを開かずにそのままホスト環境で続けて構いません。
 
 登録簿は `docs/ja/projects/prj-0001/controls/project-register/` に作られます。オーケストレーターで進める場合は、終了時に表示される `npm run orch:<provider>` で起動します。成果物カタログは対話では作られません。成果物の構成が定まったら、[[#41-成果物カタログを作成する|成果物カタログを作成する]] に従って `catalog_path` を設定し、`catalog scaffold` で追加してください。
 
@@ -233,7 +236,7 @@ agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`�
 それまでの回答は保持します。非対話環境や `--yes` では再質問せず、不正な指定をエラーとして終了します。
 
 CI や標準入力が端末でない環境では質問しません。次のようにオプションだけで同じ初期設定を
-行えます。省略値は画面に表示されます。
+行えます。`--devcontainer` を指定した場合は既定で推奨 preset（tmux・Emacs・Vim・推奨の VS Code 拡張と設定）が入ります（preset を使わない場合は `--devcontainer-preset none` を指定します）。省略値は画面に表示されます。
 
 ```bash
 npx specdojo init --yes \
@@ -355,11 +358,11 @@ npx specdojo config scaffold --provider antigravity --global
 Dev Container は任意です。分離された環境が必要な場合だけ、既存の `.devcontainer/` がないことと生成内容を dry-run で確認してから作成します。
 
 ```bash
-npx specdojo devcontainer scaffold --provider <name> --dry-run
-npx specdojo devcontainer scaffold --provider <name>
+npx specdojo devcontainer scaffold --provider <name> --preset recommended --dry-run
+npx specdojo devcontainer scaffold --provider <name> --preset recommended
 ```
 
-Dev Container の `<name>` には `antigravity`、`claude`、`codex`、`opencode` を指定します。既存の `.devcontainer/` は通常実行では上書きされません。生成設定は provider の設定ディレクトリを名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。Ollama 接続、cron、tmux は必要な場合だけ `--ollama`、`--cron`、`--tmux` で追加します。
+Dev Container の `<name>` には `antigravity`、`claude`、`codex`、`opencode` を指定します。`--preset recommended` を指定すると、tmux・Emacs・Vim・推奨の VS Code 拡張と設定がまとめて設定されます。既存の `.devcontainer/` は通常実行では上書きされません。生成設定は provider の設定ディレクトリを名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。preset を使わない場合、Ollama 接続、cron、tmux は必要な場合だけ `--ollama`、`--cron`、`--tmux` で個別に足せます。詳しい説明は [[specdojo:remote-host-development-guide]] を参照してください。
 
 設定したプロジェクトを確認します。
 
