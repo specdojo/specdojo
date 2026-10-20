@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d5631d7c8a3b4f689da29074075090f3
+  ts: "2026-10-20T12:03:52Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 作業の難しさで agent を振り分ける設定を加える
+    - field: description
+      from: ""
+      to: exec-defaults.yaml に、難しさ（hard・medium・easy）ごとの executor・reporter・rate limit のときの扱い・代わりの agent を書く振り分けの表を加え、個票に difficulty を持たせる。exec run --register で agent を指定しないときと夜間の orchestrator は、この表で agent を選ぶ。今の自動選択は priority の小さい順で、普通の難しさに qwen-executor が選ばれるため、あわせて直す（2026-10-20、利用者が承認）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-ZM1K"]'
