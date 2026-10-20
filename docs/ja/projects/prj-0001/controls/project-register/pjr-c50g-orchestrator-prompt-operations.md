@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-20T12:03:24Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: test -w .agents/specdojo-orchestrator.agent.md && test -w .codex/agents/specdojo-orchestrator.toml // exit 1"
 ---
 
 # PJR-C50G オーケストレーターの本文に、実行の運び方・close の前の確かめ方・止まったときの対処を書く

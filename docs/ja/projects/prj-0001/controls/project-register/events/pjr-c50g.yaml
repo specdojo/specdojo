@@ -61,3 +61,35 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-integration"
   previous_event_id: reg_0229f355292c4caf9af0fba7d0f9d6d6
+- v: 1
+  id: reg_c185caca892e4bd4aacc4c1c182e07ab
+  ts: "2026-10-20T13:03:40Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_084b75110bf94781af34f97e46e30138
+- v: 1
+  id: reg_ae3134a43f9f47c5b8c59d1d496772e8
+  ts: "2026-10-20T13:09:52Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: test -w .agents/specdojo-orchestrator.agent.md && test -w .codex/agents/specdojo-orchestrator.toml // exit 1"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: test -w .agents/specdojo-orchestrator.agent.md && test -w .codex/agents/specdojo-orchestrator.toml // exit 1"
+  previous_event_id: reg_c185caca892e4bd4aacc4c1c182e07ab
