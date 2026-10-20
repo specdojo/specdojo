@@ -37,11 +37,16 @@ specdojo-tmux.sh.sample と post-create.sh を、偽物の docker・devcontainer
 
 | No  | 作業                                                | 担当 | 状態 | メモ |
 | --- | --------------------------------------------------- | ---- | ---- | ---- |
-| 1   | devcontainer のシェルスクリプトの動きのテストを足す | DEV  | open | -    |
+| 1   | devcontainer のシェルスクリプトの動きのテストを足す | DEV  | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tests/src/devcontainer/scaffold.integration.test.ts` を追加し、一時ディレクトリへ実際の scaffold 出力を生成して検証するようにした。
+- `specdojo-tmux.sh.sample` は偽の `docker`・`devcontainer` と ssh `RemoteCommand` 相当の最小 PATH で実行し、`node_bin_dir` による CLI の検出、停止中の devcontainer の起動、`docker exec` の `-u node`、作業ディレクトリ、`tmux new-session -A -s specdojo` の引数を確認する。各コマンドが見つからない場合は終了コード 1 と PATH・確認方法の案内も確認する。
+- `post-create.sh` は偽の `sudo`・`curl`・`npm`・`git` で実行し、`${HOME}/.local` と `${HOME}/.local/share` を非再帰で chown する呼び出し、`${HOME}/.local/bin` の作成、agent installer より先に同ディレクトリが存在することを確認する。
+- テスト中は実ネットワークと Docker daemon を使用せず、一時ディレクトリと偽コマンドは各テスト後に削除する。生成した両シェルスクリプトはテスト内で `bash -n` を実行し、shellcheck がある環境では shellcheck も実行する。
+- executor で一時生成した両スクリプトに対する `bash -n` と shellcheck、および変更ファイルの Prettier 整形が合格した。親 runner が型検査・lint・単体テスト・統合テスト・schema 検証を実行する。
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 

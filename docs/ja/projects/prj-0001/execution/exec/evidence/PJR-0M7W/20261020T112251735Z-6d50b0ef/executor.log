@@ -1,0 +1,10 @@
+実装完了です。
+
+- [scaffold.integration.test.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0M7W/tests/src/devcontainer/scaffold.integration.test.ts:1) を追加し、偽コマンドによる PATH、tmux、所有権修復、インストール順、エラー案内を検証します。
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0M7W/docs/ja/projects/prj-0001/controls/project-register/pjr-0m7w-devcontainer-script-behavior-tests.md:36) の作業内容・対応結果を更新しました。
+- 一時生成物の `bash -n`、shellcheck、Prettier、register build、catalog 検証は成功しています。
+- 親 runner 所管の integration test、型検査、lint、単体テスト等は重複実行していません。result・CHANGELOG・登録簿状態も未変更です。
+
+<specdojo_executor_evidence>
+{"final_message":"Docker・ネットワークを使わず scaffold 生成シェルの実動作を検証する integration test を追加し、個票の対応結果を更新した。","validations":[{"command":"npx prettier --write tests/src/devcontainer/scaffold.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-0m7w-devcontainer-script-behavior-tests.md","status":"passed","summary":"両変更ファイルを整形済み"},{"command":"bash -n templates/devcontainer/post-create.sh templates/devcontainer/remote-host/specdojo-tmux.sh.sample","status":"passed","summary":"シェル構文検査に合格"},{"command":"shellcheck templates/devcontainer/post-create.sh templates/devcontainer/remote-host/specdojo-tmux.sh.sample","status":"passed","summary":"shellcheck に合格"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成に成功"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検証に成功。既存の未作成文書と `based_on` に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"}]}
+</specdojo_executor_evidence>
