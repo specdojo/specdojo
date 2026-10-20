@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4544e5b4546f4be6b28d79eae4134ecc
+- v: 1
+  id: reg_236cd1d524214513a190276573e9b4f4
+  ts: "2026-10-20T12:25:35Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分と、利用者がホストで流した結果を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: tools/e2e/devcontainer-host-e2e.ts を加え、ホストで init から devcontainer up・devcontainer exec の項目別の確認と片づけまでを流せるようにした。利用者がホストの Mac で流して PASS した（2026-10-20）。ホストの node_modules はコンテナの Linux 用のため tsx が動かず、node で直接動かす必要がある。使い方の表示とガイドの直しは PJR-0NQZ で行う
+  previous_event_id: reg_0389ca9a547e45e8850eeb12d9730210

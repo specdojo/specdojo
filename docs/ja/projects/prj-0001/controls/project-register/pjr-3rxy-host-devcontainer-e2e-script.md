@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-3rxy-host-devcontainer-e2e-script
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-20T11:08:30Z"
+  completed_at: "2026-10-20T12:25:35Z"
+  conclusion: tools/e2e/devcontainer-host-e2e.ts を加え、ホストで init から devcontainer up・devcontainer exec の項目別の確認と片づけまでを流せるようにした。利用者がホストの Mac で流して PASS した（2026-10-20）。ホストの node_modules はコンテナの Linux 用のため tsx が動かず、node で直接動かす必要がある。使い方の表示とガイドの直しは PJR-0NQZ で行う
   derived_from:
     - PJR-GHBP
 ---
