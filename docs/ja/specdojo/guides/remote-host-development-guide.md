@@ -81,6 +81,28 @@ scaffold は、常時稼働ホストへの接続と tmux セッションの維�
 
 `devcontainer.json` の `appPort` や `forwardPorts` で開発サーバなどの公開ポートを設定している場合は、接続用エイリアスに `LocalForward` の行が含まれます。開発サーバのポートを増やしたときは、`~/.ssh/config` の tmux 接続用エイリアスにも `LocalForward <ポート> 127.0.0.1:<ポート>` を追加してください。
 
+### 2.2. 生成した Dev Container をホストで実地確認する
+
+SpecDojo 本体の開発者は、Docker daemon と Dev Container CLI を利用できる Mac のホストで、次の E2E を実行できます。
+
+```bash
+node --import tsx tools/e2e/devcontainer-host-e2e.ts
+```
+
+このスクリプトは、手元のソースを npm tarball にし、新しい一時リポジトリで `specdojo init --yes --provider claude --devcontainer` と `devcontainer up` を実行します。作成したコンテナでは、利用者、`~/.local/bin` の所有者、tmux、Vim、Emacs、Claude Code CLI の配置を項目ごとに検査します。また、agent にホストの権限を渡さない前提を守るため、開発用コンテナに Docker CLI がないことも検査します。
+
+通常は、検査の成否にかかわらず一時ディレクトリ、コンテナ、テスト用の名前付き volume、テストで新しく作られた container image を最後に削除します。失敗状態を調べる場合は `--keep` を付けて残し、表示された一時ディレクトリと Docker resource を調査後に手動で削除してください。
+
+```bash
+node --import tsx tools/e2e/devcontainer-host-e2e.ts --keep
+```
+
+Docker または Dev Container CLI を利用できない場合、スクリプトは確認コマンドと Dev Container CLI の導入方法を表示し、終了コード 1 で終了します。Dev Container CLI は次のコマンドで導入できます。
+
+```bash
+npm install --global @devcontainers/cli
+```
+
 ## 3. 構成例
 
 ```text
