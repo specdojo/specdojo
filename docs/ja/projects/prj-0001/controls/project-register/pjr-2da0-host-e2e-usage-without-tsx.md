@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-2da0-host-e2e-usage-without-tsx
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-20T12:26:01Z"
+  completed_at: "2026-10-20T12:51:53Z"
+  conclusion: devcontainer の E2E のスクリプトの冒頭のコメントと使い方の表示、ガイドの実行の方法を node tools/e2e/devcontainer-host-e2e.ts に改め、ホストとコンテナで node_modules を共有しているため tsx が使えないことを書いた。コンテナの中で --help が使い方を表示することを確かめた
   derived_from:
     - PJR-3RXY
 ---
