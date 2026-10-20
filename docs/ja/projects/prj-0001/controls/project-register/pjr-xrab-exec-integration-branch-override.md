@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-xrab-exec-integration-branch-override
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T08:54:03Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-20T21:55:02Z"
+  conclusion: exec run --register の worktree の実行に --integration-branch `<repo>`=`<branch>` を加え、run ごとにプロダクトリポジトリの統合先を指定できるようにした。優先順位は run の指定、repos の integration_branch、現在のブランチの順で、指定しない場合の動きは変わらない
 ---
 
 # PJR-XRAB exec run でプロダクトリポジトリの統合先を run ごとに指定できるようにする
