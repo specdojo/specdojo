@@ -300,14 +300,14 @@ export function defaultWorktreeBase(rootDir: string = specdojoRootDir()): string
   return `../${basename(resolve(rootDir))}-worktrees`;
 }
 
-export function loadEnv(): void {
+export function loadEnv(rootDir: string = specdojoRootDir()): void {
   // Load .env from the repository root if present.
   // Safe if missing.
-  dotenv.config({ path: resolve(specdojoRootDir(), ".env"), quiet: true });
+  dotenv.config({ path: resolve(rootDir, ".env"), quiet: true });
 }
 
-export function defaultConfigPath(): string {
-  return join(specdojoRootDir(), ".specdojo", "specdojo.config.json");
+export function defaultConfigPath(rootDir: string = specdojoRootDir()): string {
+  return join(resolve(rootDir), ".specdojo", "specdojo.config.json");
 }
 
 // Join a project document path with the project's base_path, returning a repo-root-relative path.
@@ -790,10 +790,10 @@ function isValidProjectConfig(project: unknown): project is SpecDojoProjectConfi
   return true;
 }
 
-export function loadConfig(): ConfigLoadResult {
-  loadEnv();
+export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoadResult {
+  loadEnv(configRootDir);
 
-  const configPath = defaultConfigPath();
+  const configPath = defaultConfigPath(configRootDir);
   if (!existsSync(configPath)) {
     return { configPath, config: null };
   }

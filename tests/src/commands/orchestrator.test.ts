@@ -215,6 +215,44 @@ describe("resolveOrchestratorLaunch", () => {
       rmSync(root, { recursive: true, force: true });
     }
   });
+
+  it("resolves configured repos from the main checkout while launching in an agent worktree", () => {
+    const fixtureRoot = mkdtempSync(join(tmpdir(), "specdojo-orchestrator-worktree-"));
+    const mainRoot = join(fixtureRoot, "repo");
+    const worktreeRoot = join(fixtureRoot, "worktrees", "codex-work");
+    const productRoot = join(fixtureRoot, "specdojo-lp");
+    const config = JSON.stringify({
+      version: 1,
+      current_project: "prj-0002",
+      projects: {
+        "prj-0002": { repos: [{ name: "specdojo-lp", path: "../specdojo-lp" }] },
+      },
+    });
+    try {
+      mkdirSync(join(mainRoot, ".specdojo"), { recursive: true });
+      mkdirSync(join(worktreeRoot, ".specdojo"), { recursive: true });
+      mkdirSync(productRoot);
+      writeFileSync(join(mainRoot, ".specdojo", "specdojo.config.json"), config);
+      writeFileSync(join(worktreeRoot, ".specdojo", "specdojo.config.json"), config);
+      process.chdir(worktreeRoot);
+
+      const launch = resolveOrchestratorLaunch({
+        provider: "codex",
+        providerArgs: ["prompt"],
+        env: {
+          PATH: "/bin",
+          SPECDOJO_ORCHESTRATOR_CONFIG_ROOT: mainRoot,
+        },
+      });
+
+      expect(launch.cwd).toBe(worktreeRoot);
+      expect(launch.args).toEqual(["prompt", "--add-dir", productRoot]);
+      expect(launch.env.SPECDOJO_ORCHESTRATOR_CONFIG_ROOT).toBeUndefined();
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(fixtureRoot, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("runOrchestratorLaunch", () => {
