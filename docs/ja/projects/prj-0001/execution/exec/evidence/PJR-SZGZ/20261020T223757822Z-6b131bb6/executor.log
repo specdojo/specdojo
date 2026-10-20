@@ -1,0 +1,20 @@
+タスク PJR-SZGZ（devcontainer に specdojo-lp 用の VS Code 拡張機能を加える）に対応し、以下の変更および検証を実施しました。
+
+### 実施内容
+
+1. **`.devcontainer/devcontainer.json` の更新**:
+   - `customizations.vscode.extensions` に `bradlc.vscode-tailwindcss`（Tailwind CSS IntelliSense）および `dbaeumer.vscode-eslint`（ESLint）を追加しました。
+   - `astro-build.astro-vscode`（Astro）および `esbenp.prettier-vscode`（Prettier）は既存設定に定義されていたため、重複しないよう維持しました。
+
+2. **個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-szgz-devcontainer-lp-extensions.md` の更新**:
+   - 作業内容テーブルの No 1（`devcontainer.json` に拡張機能を加える）を `done` に更新しました。
+   - 対応結果セクションに、実施内容・成果物・残課題（利用者の承認および実機での devcontainer 再構築・動作確認）を記載しました。
+   - frontmatter の `status`（`draft` のまま据え置き）および `item_status` は変更していません。
+
+3. **整形・検証の実行**:
+   - 変更したファイルに対して Prettier 整形を実施しました。
+   - `docs/ja/projects/` 配下の変更に伴う `specdojo catalog validate`（`node --import tsx tools/catalog-validate-if-configured.mjs`）を実行し、検証が通ることを確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":".devcontainer/devcontainer.json に specdojo-lp 用の VS Code 拡張機能（Tailwind CSS IntelliSense, ESLint）を追加し、個票の作業内容および対応結果を更新しました。Prettier 整形およびカタログ検証を完了しました。","validations":[{"command":"npx prettier --write .devcontainer/devcontainer.json docs/ja/projects/prj-0001/controls/project-register/pjr-szgz-devcontainer-lp-extensions.md","status":"passed","summary":"変更した JSON および Markdown ファイルを Prettier で整形"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"成果物カタログ検証に成功"},{"command":"Rebuild devcontainer and verify extensions in specdojo-lp","status":"requires_human","summary":"devcontainer の再構築および specdojo-lp での拡張機能動作確認（ホスト環境での実施が必要）"},{"command":"npm run validate:schema:file","reason":"YAML ファイルの変更がないため","status":"not_applicable"},{"command":"npx tsx src/specdojo.ts register build","reason":"`pjr-index.md` の変更がないため","status":"not_applicable"},{"command":"npx tsx src/specdojo.ts exec refresh","reason":"`sch-*.yaml` の変更がないため","status":"not_applicable"}]}
+</specdojo_executor_evidence>
