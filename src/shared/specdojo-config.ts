@@ -19,6 +19,8 @@ export type SpecDojoRunConfig = {
   exec_defaults?: string;
   /** @deprecated Use exec_defaults. */
   agent_config?: string;
+  /** Parent-runner validations appended to pipeline.parent_validations from exec_defaults. */
+  parent_validations?: Array<string | { id: string; repo: string }>;
   worktree_base?: string;
   /**
    * IANA time zone name used to compute the pjr-index registration date (登録日) and completion

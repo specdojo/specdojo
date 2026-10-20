@@ -93,12 +93,34 @@ SpecDojo Configuration Reference
 
 `projects.<project-id>.run` に指定します。これらのパスは `base_path` の影響を受けず、リポジトリルート基準です。
 
-| キー                     | 既定値         | 役割・利用箇所                                                                                                |
-| ------------------------ | -------------- | ------------------------------------------------------------------------------------------------------------- |
-| `exec_defaults`          | なし           | provider、権限、リトライなどを定義する exec defaults ファイルです。agent を起動する `exec run` が参照します。 |
-| `agent_config`           | なし           | `exec_defaults` の旧キーです。互換目的でのみ利用し、新しい設定では `exec_defaults` を使います。               |
-| `worktree_base`          | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。         |
-| `register_date_timezone` | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。        |
+| キー                     | 既定値         | 役割・利用箇所                                                                                                               |
+| ------------------------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `exec_defaults`          | なし           | provider、権限、リトライなどを定義する exec defaults ファイルです。agent を起動する `exec run` が参照します。                |
+| `agent_config`           | なし           | `exec_defaults` の旧キーです。互換目的でのみ利用し、新しい設定では `exec_defaults` を使います。                              |
+| `parent_validations`     | `[]`           | この project だけで追加する親 runner の検証です。`exec_defaults` の `pipeline.parent_validations` の後ろへ指定順に加えます。 |
+| `worktree_base`          | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。                        |
+| `register_date_timezone` | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。                       |
+
+`parent_validations` の要素は、共有 defaults と同じく検証 ID、または `{ "id": "<id>", "repo": "<repo>" }` です。共有 defaults を複製せず、プロダクトリポジトリを持つ project だけに検証を追加できます。たとえば `prj-0002` だけで `specdojo-lp` の型と lint を検査する設定は次のとおりです。
+
+```json
+{
+  "projects": {
+    "prj-0002": {
+      "repos": [{ "name": "specdojo-lp", "path": "../specdojo-lp" }],
+      "run": {
+        "exec_defaults": ".specdojo/exec-defaults.yaml",
+        "parent_validations": [
+          { "id": "typecheck", "repo": "specdojo-lp" },
+          { "id": "lint-ts", "repo": "specdojo-lp" }
+        ]
+      }
+    }
+  }
+}
+```
+
+有効な一覧は「共有 defaults の `pipeline.parent_validations` → project の `run.parent_validations`」の順です。同じ ID と実行先の組が両方にある場合は重複として agent 起動前にエラーになります。`run.parent_validations` を省略した project には共有 defaults だけが適用されるため、`repos` を持たない別 project はプロダクトリポジトリ向けの追加検証に影響されません。許可される ID と実行結果の記録は [[specdojo:exec-config-guide|exec設定ガイド]] を参照してください。
 
 `config init` は一般既定の `../worktrees` ではなく、実行したリポジトリのディレクトリ名から作る `../<リポジトリ名>-worktrees` を `worktree_base` へ明示します。例えば `app1-specdojo/` で実行した場合は `../app1-specdojo-worktrees` です。
 
