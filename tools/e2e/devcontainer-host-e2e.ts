@@ -5,8 +5,8 @@
  * Dev Container, and downloads the tools selected by the recommended preset.
  *
  * Usage:
- *   node --import tsx tools/e2e/devcontainer-host-e2e.ts
- *   node --import tsx tools/e2e/devcontainer-host-e2e.ts --keep
+ *   node tools/e2e/devcontainer-host-e2e.ts
+ *   node tools/e2e/devcontainer-host-e2e.ts --keep
  */
 import { spawnSync, type SpawnSyncReturns } from "node:child_process";
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -174,7 +174,7 @@ function removeDockerImages(ids: string[]): boolean {
 
 function usage(): void {
   process.stdout.write(
-    "Usage: node --import tsx tools/e2e/devcontainer-host-e2e.ts [--keep]\n" +
+    "Usage: node tools/e2e/devcontainer-host-e2e.ts [--keep]\n" +
       "  --keep  Preserve the temporary project and its Docker resources for inspection.\n",
   );
 }

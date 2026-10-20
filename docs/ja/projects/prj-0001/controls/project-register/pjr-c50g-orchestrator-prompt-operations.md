@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-20T12:03:24Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
 ---
 
 # PJR-C50G オーケストレーターの本文に、実行の運び方・close の前の確かめ方・止まったときの対処を書く

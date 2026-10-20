@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_0229f355292c4caf9af0fba7d0f9d6d6
+  ts: "2026-10-20T12:45:47Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_41fe28b6fa194c058d172fb26c113564
+- v: 1
+  id: reg_084b75110bf94781af34f97e46e30138
+  ts: "2026-10-20T12:58:37Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_0229f355292c4caf9af0fba7d0f9d6d6
