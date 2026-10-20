@@ -1,0 +1,20 @@
+プロジェクト登録簿の項目 **PJR-2DA0「ホストの devcontainer の E2E を tsx なしで動かす案内に直す」** の対応を完了しました。
+
+### 実施内容
+
+1. [tools/e2e/devcontainer-host-e2e.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2DA0/tools/e2e/devcontainer-host-e2e.ts) の更新:
+   - 冒頭コメントおよび `usage()` 関数で表示される案内を `node tools/e2e/devcontainer-host-e2e.ts`（および `--keep`）に修正しました。
+   - スクリプトが Node.js の標準ライブラリのみをインポートしており、型インポートが `import type` となっていることを確認・維持しました。
+2. [docs/ja/specdojo/guides/remote-host-development-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2DA0/docs/ja/specdojo/guides/remote-host-development-guide.md) の更新:
+   - 2.2 節の E2E 実行案内を `node tools/e2e/devcontainer-host-e2e.ts` に改めました。
+   - ホストとコンテナで `node_modules` を共有しているため `tsx` は利用できないこと、および Node 22.18 以上（型注釈を外して直接動かせるバージョン）が必要である旨を追記しました。
+3. [docs/ja/projects/prj-0001/controls/project-register/pjr-2da0-host-e2e-usage-without-tsx.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2DA0/docs/ja/projects/prj-0001/controls/project-register/pjr-2da0-host-e2e-usage-without-tsx.md) の更新:
+   - 作業内容を `done` に更新し、対応結果（解決内容・確認結果）を記入しました。
+4. 検証:
+   - `node tools/e2e/devcontainer-host-e2e.ts --help` がコンテナ内（Node 24 環境）で新しい使用方法を表示して正常終了することを確認しました。
+   - Prettier によるフォーマット確認と整形を実施しました。
+   - 親 runner による検証（lint-ts, lint-fm, lint-md, typecheck, test-unit, test-integration, validate-schema）に委譲します。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-2DA0 ホストの devcontainer の E2E を tsx なしで動かす案内に修正完了","validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-2da0-host-e2e-usage-without-tsx.md docs/ja/specdojo/guides/remote-host-development-guide.md tools/e2e/devcontainer-host-e2e.ts","status":"passed","summary":"Prettier code style check passed for all changed files"},{"command":"node tools/e2e/devcontainer-host-e2e.ts --help","status":"passed","summary":"Dev Container host E2E help output displays usage without tsx"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"Deliverables catalog validation passed"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No *.yaml or *.yml file changed"},{"command":"specdojo catalog build","status":"not_applicable","reason":"No dct-*.yaml file changed"},{"command":"specdojo register build","status":"not_applicable","reason":"pjr-index.md was not changed"},{"command":"specdojo exec refresh","status":"not_applicable","reason":"No sch-*.yaml file changed"},{"command":"node tools/e2e/devcontainer-host-e2e.ts","status":"requires_human","summary":"Host Docker daemon and Dev Container CLI required for devcontainer creation and verification"}]}
+</specdojo_executor_evidence>
