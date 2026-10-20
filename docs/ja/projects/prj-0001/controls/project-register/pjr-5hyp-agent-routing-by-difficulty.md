@@ -23,7 +23,7 @@ exec-defaults.yaml に、難しさ（hard・medium・easy）ごとの executor�
 
 ## 2. 完了条件
 
-- 0.4.1 の昇格の後に流す（0.5.0 の範囲）。
+- 0.4.1 の範囲とする（2026-10-20、利用者が承認）。
 - `exec-defaults.yaml` に振り分けの表（例: `routing`）を加える。難しさ（`hard`・`medium`・`easy`）ごとに、executor・reporter・rate limit のときの扱い（wait・fallback・stop）・代わりの executor と reporter を書ける。名前は別名でも実体でもよい。
 - 個票の frontmatter に `difficulty`（`hard`・`medium`・`easy`）を加え、`register add`・`register update` の `--difficulty` で指定できるようにする。schema と規則（[[specdojo:pjr-rulebook]]）に書く。
 - `exec run --register` で `--executor-by`・`--reporter-by` を指定しないとき、個票の `difficulty` に合う振り分けの表の agent を使う。`difficulty` がない個票や、表がない設定では今の自動選択を使う。指定したオプションは表より優先する。
@@ -36,13 +36,13 @@ exec-defaults.yaml に、難しさ（hard・medium・easy）ごとの executor�
 - 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
 - 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
 - runner のコードを変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
-- CHANGELOG の `## [0.5.0] - 未定` の節に書く。公開済みの版の節は変えない。
+- CHANGELOG の `## [0.4.1] - 未定` の節に書く。公開済みの版の節は変えない。
 
 ## 3. 作業内容
 
-| No  | 作業                                          | 担当 | 状態 | メモ                   |
-| --- | --------------------------------------------- | ---- | ---- | ---------------------- |
-| 1   | 作業の難しさで agent を振り分ける設定を加える | DEV  | open | 0.4.1 の昇格の後に流す |
+| No  | 作業                                          | 担当 | 状態 | メモ         |
+| --- | --------------------------------------------- | ---- | ---- | ------------ |
+| 1   | 作業の難しさで agent を振り分ける設定を加える | DEV  | open | 0.4.1 の範囲 |
 
 ## 4. 対応結果
 
