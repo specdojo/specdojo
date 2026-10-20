@@ -84,7 +84,9 @@ npm run orch:sonnet:work
 
 frontier モデルは Claude Code が `opus`、Codex が `gpt-5.6-sol` に対応します。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使います。
 
-worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
+worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、そこから `specdojo orchestrator launch` を起動します。無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
+
+固定 worktree から起動しても、project 設定と `repos[].path` は主 worktree を基準に解決します。provider の作業ディレクトリは固定 worktree のままです。この受け渡しに使う内部用の `SPECDOJO_ORCHESTRATOR_CONFIG_ROOT` は provider 起動前に除去されるため、対話中に実行する別の `specdojo` コマンドへは引き継がれません。
 
 ### 2.1. 利用リポジトリへ設定を配置する
 

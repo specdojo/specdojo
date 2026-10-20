@@ -53,6 +53,28 @@ describe("tools/worktree/open-agent-worktree.sh", () => {
     expect(git(worktree, "branch", "--show-current")).toBe("worktree/codex-work");
   });
 
+  it("passes the main checkout root to orchestrator launch while running inside the worktree", () => {
+    const { repo, worktree } = createFixture();
+
+    const output = execFileSync(
+      scriptPath,
+      [
+        "codex-work",
+        process.execPath,
+        "-e",
+        "process.stdout.write(JSON.stringify({cwd:process.cwd(),configRoot:process.env.SPECDOJO_ORCHESTRATOR_CONFIG_ROOT}))",
+      ],
+      {
+        cwd: repo,
+        env: gitEnvironment(),
+        encoding: "utf8",
+      },
+    );
+
+    const commandOutput = output.trim().split("\n").at(-1);
+    expect(JSON.parse(commandOutput ?? "")).toEqual({ cwd: worktree, configRoot: repo });
+  });
+
   it("refuses to start an agent when the existing worktree uses another branch", () => {
     const { repo, worktree } = createFixture();
     mkdirSync(path.dirname(worktree), { recursive: true });

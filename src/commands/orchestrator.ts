@@ -21,6 +21,8 @@ const ORCHESTRATOR_EXECUTABLES: Readonly<Record<OrchestratorProvider, string>> =
   opencode: "opencode",
 };
 
+const ORCHESTRATOR_CONFIG_ROOT_ENV = "SPECDOJO_ORCHESTRATOR_CONFIG_ROOT";
+
 export interface OrchestratorLaunch {
   command: string;
   args: string[];
@@ -180,17 +182,21 @@ export function resolveOrchestratorLaunch(options: {
 }): OrchestratorLaunch {
   const env = options.env ?? process.env;
   const rootDir = specdojoRootDir();
-  const { config, configPath } = loadConfig();
+  const configuredRoot = env[ORCHESTRATOR_CONFIG_ROOT_ENV]?.trim();
+  const configRootDir = configuredRoot ? resolve(rootDir, configuredRoot) : rootDir;
+  const { config, configPath } = loadConfig(configRootDir);
   if (!config) throw new Error(`No config found: ${configPath}`);
   const projectId = resolveOrchestratorProjectId(config, options.project, env);
-  const repos = resolveProductRepos(rootDir, config.projects[projectId]);
-  return buildOrchestratorLaunch({
+  const repos = resolveProductRepos(configRootDir, config.projects[projectId]);
+  const launch = buildOrchestratorLaunch({
     provider: options.provider,
     providerArgs: options.providerArgs,
     repoRoots: repos.map((repo) => repo.repoRoot),
     cwd: rootDir,
     env,
   });
+  delete launch.env[ORCHESTRATOR_CONFIG_ROOT_ENV];
+  return launch;
 }
 
 function parseProvider(value: string): OrchestratorProvider {

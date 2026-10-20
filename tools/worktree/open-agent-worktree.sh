@@ -54,4 +54,5 @@ else
 fi
 
 cd "$worktree_path"
+export SPECDOJO_ORCHESTRATOR_CONFIG_ROOT="$main_worktree"
 exec "$@"

@@ -4,42 +4,39 @@ specdojo:
   type: exec-result
   task_id: PJR-SAZC
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-sazc-20261020T223735Z-e2c0-plan.md
   started_at: "2026-10-20T22:37:35.426Z"
-  completed_at: "2026-10-20T22:48:44.489Z"
+  completed_at: "2026-10-20T22:57:23.443Z"
   agent: sol-executor
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- `orch:*` スクリプトを `orchestrator launch` 経由で実行できるようにするための、`orchestrator` コマンドの拡張、設定の更新、および関連するテストと文書の更新を行った。
-- 特に `:work` を含むスクリプトの扱いについて、`open-agent-worktree.sh` を通じて `orchestrator launch` を呼び出す仕組みを導入した。
-- 統合テストの失敗が確認されており、`tests/tools/open-agent-worktree.integration.test.ts` の出力解析部分に問題がある可能性がある。
+- 本リポジトリの `orch:*` スクリプトを `specdojo orchestrator launch` 経由で実行できるように変更し、固定 worktree からの起動（`orch:opus:work` 等）への対応を完了させた。
+- これにより、`--add-dir` オプション等を用いた外部プロダクトリポジトリの利用が適切に許可されるようになる。
+- また、中断原因となっていた integration test における JSON 解析エラー（worktree 関連の出力処理）を修正した。
 
 ## 2. 変更ファイル
 
-- `docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md`: オーケストレーターのエージェント設定に関する設計書を更新した。
-- `docs/ja/specdojo/guides/orchestrator-operation-guide.md`: オーケストレーターの操作ガイドを更新した。
-- `src/commands/orchestrator.ts`: `orchestrator` コマンドの実装を拡張し、ワークツリー起動のためのロジックを追加した。
-- `src/shared/specdojo-config.ts`: `specdojo` の設定に関連する型定義またはロジックを更新した。
+- `docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md`: Orchestrator エージェントの設定に関する設計書を更新した。
+- `docs/ja/specdojo/guides/orchestrator-operation-guide.md`: Orchestrator の運用ガイドを更新した。
+- `src/commands/orchestrator.ts`: `orchestrator` コマンドの実装を更新し、launch 経由の起動に関するロジックを変更した。
+- `src/shared/specdojo-config.ts`: `specdojo-config` の構成定義を更新した。
 - `tests/src/commands/orchestrator.test.ts`: `orchestrator` コマンドのユニットテストを更新した。
-- `tests/tools/open-agent-worktree.integration.test.ts`: ワークツリー起動の統合テストを更新した。
-- `tools/worktree/open-agent-worktree.sh`: ワークツリーを扱うためのヘルパースクリプトを更新した。
+- `tests/tools/open-agent-worktree.integration.test.ts`: integration test を更新し、worktree 関連の出力解析に関する修正を適用した。
+- `tools/worktree/open-agent-worktree.sh`: worktree 操作用のヘルパースクリプトを更新した。
 
 ## 3. 申し送り
 
-- `package.json` への `orch:opus` および `orch:opus:work` の設定反映と、それらの実行許可に関する確認が必要である。
-- 統合テスト `tests/tools/open-agent-worktree.integration.test.ts` が、`orchestrator launch` からの出力を `JSON.parse` できずに失敗している。出力が期待される JSON 形式でないか、あるいは `git` の出力が混入している可能性があるため、調査と修正が必要である。
-- 適用外の検証: `npm run validate:schema:file`（今回変更したのは TypeScript、shell、Markdown のみ。）
-- 人の確認が必要: `SPECDOJO_PROJECT=prj-0002 npm run orch:opus`（承認後に提案 JSON を `package.json` へ反映し、実 Claude CLI で `specdojo-lp` の追加許可を確認する必要がある。）
-- 人の確認が必要: `SPECDOJO_PROJECT=prj-0002 npm run orch:opus:work`（承認後の `package.json` 反映後、固定 worktree からの実 Claude CLI 起動と追加許可を確認する必要がある。）
+- `package.json` の一部変更（`orch:*` スクリプトの書き換え）については、直接書き換えず、個票に適用案を記録している。利用者はこの提案を確認し、手動で反映を行った上で、実環境での動作（`npm run orch:opus` 等）を確認する必要がある。
+- 人の確認が必要: `SPECDOJO_PROJECT=prj-0002 npm run orch:opus`（承認後に package.json の提案を反映し、実 Claude CLI の対話起動と追加リポジトリ許可を確認する必要がある。）
+- 人の確認が必要: `SPECDOJO_PROJECT=prj-0002 npm run orch:opus:work`（承認後に package.json の提案を反映し、固定 worktree からの実 Claude CLI 起動を確認する必要がある。）
 
 ## 4. 進め方
 
-まず `orchestrator` コマンドが `launch` サブコマンドを介して新しいワークツリーを開始できるように実装を追加し、それに関連する `specdojo-config.ts` を調整した。その後、`open-agent-worktree.sh` を通じて実際のワークツリー内で `orchestrator launch` が機能することを統合テストで検証する手順を踏んだ。最後に、関連する設計書と操作ガイドの更新を行った。
+まず、`specdojo orchestrator launch` を経由して起動する仕組みを整えるため、`src/commands/orchestrator.ts` および関連する設定ファイルを変更した。その後、固定 worktree からの起動をサポートするための `tools/worktree/open-agent-worktree.sh` の更新および、それに関連する統合テスト（`tests/tools/open-agent-worktree.integration.test.ts`）の修正を行った。テスト実行時に発生していた JSON 解析エラーの解消も含めて実施している。
