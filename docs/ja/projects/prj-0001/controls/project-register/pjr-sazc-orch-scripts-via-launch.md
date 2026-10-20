@@ -27,6 +27,10 @@ specdojo:
 - `:work` の付く script（`tools/worktree/open-agent-worktree.sh` でエージェント用の worktree を開いてから起動するもの）で、worktree の中から `repos[].path`（`../specdojo-lp`）を解いたときに設定の読み込みが失敗しないかを確かめ、扱いを決めている。
 - _UNDECIDED_: `:work` の付く script の扱い（launch 経由にして path の解き方を直す、launch 経由にしない、など）は、確かめた結果で決める。
 - `package.json` は保護された設定のため、変更は利用者の承認を得てから行う。
+- executor は `package.json` を変更しない（runner が保護された設定への書き込みを止める）。書き換える `orch:*` と `orch:*:work` の script の案を、そのまま貼れる JSON の形で result に書き、反映はオーケストレーターが利用者の承認を得て feature ブランチで行う（2026-10-21、利用者の承認）。
+- 起動の確かめ方: executor は agent を起動できないため、`orchestrator launch` が組み立てる引数を、単体テストまたは launch の実装を読んで確かめ、prj-0001 と prj-0002 で付く引数を result に書く。実際の起動の確認は、反映の後にオーケストレーターが行う。
+- `:work` の扱いは、`tools/worktree/open-agent-worktree.sh` と設定の読み込みを読み、worktree の中から `repos[].path` を解いたときの結果を確かめて決め、決めた内容と理由を result と個票の対応結果に書く。直すために `src/` や `tools/` の変更が要る場合は、この項目で直し、単体テストを足す。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す（`src/` や `tools/` を変えた場合）。
 - [[specdojo:orchestrator-operation-guide]] など、本リポジトリの起動方法を説明する箇所が実際の script と一致している。
 
 ## 3. 作業内容
