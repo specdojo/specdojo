@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-20T12:03:24Z"
-  block_reason: "agent exited with non-zero code: executor validation failed or not run: test -w .agents/specdojo-orchestrator.agent.md && test -w .codex/agents/specdojo-orchestrator.toml // exit 1"
+  completed_at: "2026-10-20T21:29:50Z"
+  conclusion: オーケストレーター本文に、承認の聞き方・実行の運び方・close の前の確かめ方・止まったときの対処・完了条件の書き方・agent の選び方と、--by で受け付ける名前を加え、10 か所の写しへ同期した
 ---
 
 # PJR-C50G オーケストレーターの本文に、実行の運び方・close の前の確かめ方・止まったときの対処を書く

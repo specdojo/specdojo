@@ -93,3 +93,25 @@
       from: "-"
       to: "agent exited with non-zero code: executor validation failed or not run: test -w .agents/specdojo-orchestrator.agent.md && test -w .codex/agents/specdojo-orchestrator.toml // exit 1"
   previous_event_id: reg_c185caca892e4bd4aacc4c1c182e07ab
+- v: 1
+  id: reg_8157fa6148984f6d9440ae09824fcaa5
+  ts: "2026-10-20T21:29:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: done
+  reason: 利用者が実装者にオーケストレーターを指定し、feature/prj-0001/orchestrator-prompt-operations で書いた。同期の検査と単体テストを通し、利用者の確認を得て develop へ取り込んだ
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: オーケストレーター本文に、承認の聞き方・実行の運び方・close の前の確かめ方・止まったときの対処・完了条件の書き方・agent の選び方と、--by で受け付ける名前を加え、10 か所の写しへ同期した
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: test -w .agents/specdojo-orchestrator.agent.md && test -w .codex/agents/specdojo-orchestrator.toml // exit 1"
+      to: "-"
+  previous_event_id: reg_ae3134a43f9f47c5b8c59d1d496772e8
