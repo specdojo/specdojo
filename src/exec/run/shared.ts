@@ -118,6 +118,8 @@ export type RunOpts = {
   due?: boolean;
   ifBusy?: string;
   join?: boolean;
+  /** Repeatable `<repo>=<branch>` product integration target overrides. */
+  integrationBranch?: string[];
   cycleRebuildStaleTracks?: boolean;
 };
 

@@ -14,7 +14,11 @@ import {
 import { type PjrItem, type RegisterPaths } from "../../register/register.js";
 import { readResultFrontmatterSnapshot, scaffoldResult, updateResultStatus } from "../results.js";
 import { findExecWorktree, gitOutput, type ExecWorktree } from "../worktree.js";
-import { configuredProductRepos, withProductRepoPrompt } from "../task-repos.js";
+import {
+  configuredProductRepos,
+  integrationBranchOverrideRecord,
+  withProductRepoPrompt,
+} from "../task-repos.js";
 import {
   checkpointAndEnsureWorktree,
   commitTargetPaths,
@@ -574,7 +578,9 @@ export async function runSingleRegisterItemWorktree(
     ? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`
     : undefined;
   // PJR-98G4: repos を宣言した project では、プロダクトの worktree も同じタスクの下に作る。
-  const products = configuredProductRepos(schedulePath);
+  // PJR-XRAB: --integration-branch は設定の integration_branch より優先する。
+  const products = configuredProductRepos(schedulePath, opts.integrationBranch);
+  const integrationBranchOverrides = integrationBranchOverrideRecord(opts.integrationBranch);
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
@@ -744,6 +750,7 @@ export async function runSingleRegisterItemWorktree(
       execDefaults: context.execDefaults,
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,
+      ...(integrationBranchOverrides ? { integrationBranchOverrides } : {}),
       runId: pipelineRunId,
       executorRateLimitOptions: opts.executorBy
         ? resolvePinnedRateLimitRunOptions(

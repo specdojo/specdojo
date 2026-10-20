@@ -7,19 +7,18 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T08:54:03Z"
   due_on: "2026-10-31"
-  block_reason: "rate limit reached; rate limit fallback: sol-executor -> opus-executor at 2026-10-20T13:47:01.303Z"
 ---
 
 # PJR-XRAB exec run でプロダクトリポジトリの統合先を run ごとに指定できるようにする
 
 ## 1. 概要
 
-integration_branch は project の設定に固定され、GitHub flow ではトピックが変わるたびに設定ファイルを書き換える必要がある。exec run に --integration-branch `<repo>`=`<branch>` のような指定を加え、run ごとに統合先を選べるようにする
+`integration_branch` は project の設定に固定され、GitHub flow ではトピックが変わるたびに設定ファイルを書き換える必要がある。`exec run` に `--integration-branch <repo>=<branch>` の指定を加え、run ごとに統合先を選べるようにする。
 
 ## 2. 完了条件
 
@@ -36,14 +35,19 @@ integration_branch は project の設定に固定され、GitHub flow ではト�
 
 ## 3. 作業内容
 
-| No  | 作業                           | 担当 | 状態 | メモ |
-| --- | ------------------------------ | ---- | ---- | ---- |
-| 1   | 指定の形と優先順位を設計する   | DEV  | open | -    |
-| 2   | 実装し、テストと文書を更新する | DEV  | open | -    |
+| No  | 作業                           | 担当 | 状態 | メモ                                                                              |
+| --- | ------------------------------ | ---- | ---- | --------------------------------------------------------------------------------- |
+| 1   | 指定の形と優先順位を設計する   | DEV  | done | 下記の設計で実装した。                                                            |
+| 2   | 実装し、テストと文書を更新する | DEV  | done | CLI、checkpoint、schema、単体・統合テスト、利用者向け文書、CHANGELOG を更新した。 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- register の worktree モードに、繰り返し可能な `--integration-branch <repo>=<branch>` を追加した。`<repo>` は `repos[].name`、`<branch>` はそのリポジトリに既存の有効なローカルブランチとし、リモートからの取得やブランチの自動作成は行わない。入力は register の状態変更前に検査する。
+- 優先順位は「run の指定 → `repos[].integration_branch` → 現在のブランチ」とした。オプションを使わない既存利用者の動作を変えないためである。
+- `--parallel` では選択した各 item run に同じ指定を適用する。`--resume` では開始時の明示指定だけを `pipeline-state.json` に保存して再利用し、再開時の省略を認める一方、途中での変更・追加は拒否する。開始点と統合先が run の途中で食い違うことを防ぐためである。
+- 指定したブランチは既存の複数リポジトリ trace の経路を通り、result に統合先ブランチと統合後の commit snapshot を記録する。
+- [[specdojo:command-reference]]、[[specdojo:specdojo-config-reference]]、[[specdojo:branch-workflow-guide]]、CHANGELOG、pipeline state schema、実装、単体・統合テストを更新した。
+- 残課題はない。runner コード変更後の実環境での `exec run --register` 確認は、親 runner が統合と検証を完了した後に PJR-JSEY として実施する。
 
 ## 5. 関連ドキュメント
 

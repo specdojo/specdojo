@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XRAB",
+  "run_id": "20261020T211251664Z-a5afeeb2",
+  "updated_at": "2026-10-20T21:24:20.623Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-10-20T21:12:51.664Z",
+      "completed_at": "2026-10-20T21:18:17.045Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XRAB/20261020T211251664Z-a5afeeb2/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-20T21:22:31.636Z",
+      "completed_at": "2026-10-20T21:23:57.538Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-xrab-20261020T134209Z-eeb9-result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-10-20T21:24:20.623Z",
+      "completed_at": null,
+      "artifact_ref": null
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-xrab-20261020T134209Z-eeb9-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-xrab-20261020T134209Z-eeb9-result.md"
+  }
+}

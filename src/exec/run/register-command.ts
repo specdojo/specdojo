@@ -2,6 +2,7 @@ import { type Command } from "commander";
 import { loadExecDefaultsConfig, resolveRegisterPostReview } from "../agent-config.js";
 import { resolveProjectPaths } from "../project.js";
 import { isRegisterFailureMode } from "../register.js";
+import { configuredProductRepos } from "../task-repos.js";
 import {
   EXCLUSIVE_EXEC_RUN,
   parseParallel,
@@ -98,6 +99,11 @@ export function registerRunCommand(exec: Command): void {
     "--archive-on-success",
     "Archive the generated plan to exec/plans/done/ after a successful in-place run",
     false,
+  );
+  rcmd.option(
+    "--integration-branch <repo=branch>",
+    "With register worktree mode: integrate the declared product repository <repo> into the local branch <branch> for this run (repeatable; overrides repos[].integration_branch; resume reuses the value recorded at the start)",
+    (value: string, previous: string[] = []) => [...previous, value],
   );
   rcmd.option("--parallel <n>", "Number of worktree instances to run in parallel", "1");
   rcmd.option("--worktree-base <path>", "Override worktree base directory");
@@ -244,6 +250,21 @@ export function registerRunCommand(exec: Command): void {
         );
         process.exitCode = 1;
         return;
+      }
+      const integrationBranches = opts.integrationBranch ?? [];
+      if (integrationBranches.length > 0) {
+        if (!(hasRegister && opts.worktree)) {
+          process.stdout.write(
+            "--integration-branch requires --register (or --register-filter) in worktree mode.\n",
+          );
+          process.exitCode = 1;
+          return;
+        }
+        // 形式・宣言済みリポジトリ・ローカルブランチの存在を、register の状態を変える前に確かめる。
+        configuredProductRepos(
+          resolveProjectPaths({ project: opts.project }).schedulePath,
+          integrationBranches,
+        );
       }
       if (opts.join && !(hasRegister && opts.worktree)) {
         process.stdout.write(

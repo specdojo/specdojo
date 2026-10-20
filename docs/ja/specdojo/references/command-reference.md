@@ -449,33 +449,34 @@ specdojo schedule strategy generate \
 
 主要オプション:
 
-| オプション                      | 用途                                                                                                     | 対象                                                                            |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `--task <task-id>`              | 対象タスクを指定する                                                                                     | 状態遷移系 / `run` / `plan`                                                     |
-| `--by <actor>`                  | 実行 actor / agent の nickname を指定する（手動ターゲットの agent 選択も兼ねる）                         | 状態遷移系 / `run` / `resume` / `worktree agent`                                |
-| `--edit-by <nickname>`          | `--auto` バッチで edit タスクに使う agent nickname                                                       | `run --auto` / `resume`                                                         |
-| `--review-by <nickname>`        | `--auto` の review タスク、または register の統合後 review に使う agent nickname                         | `run --auto` / `run --register --post-review` / `resume`                        |
-| `--strategy <name>`             | 選択戦略を切り替える（`critical-first` 既定 / `fifo`）                                                   | `scheduler` / `run --auto`                                                      |
-| `--auto` / `--loop`             | Ready タスクを自動選択する / Ready がなくなるまで繰り返す                                                | `run`                                                                           |
-| `--parallel <n>`                | 同時に走らせる agent 数の上限を指定する                                                                  | `run --auto` / register の worktree モード                                      |
-| `--worktree`                    | worktree に隔離して実行する                                                                              | `run --task` / `run --register`                                                 |
-| `--in-place`                    | register 項目を現在の作業ツリーで実行する（`run.register_execution` を上書き）                           | `run --register`                                                                |
-| `--track-state`                 | claim / complete の状態イベントを記録する                                                                | `run --task`                                                                    |
-| `--register <PJR-ID>`           | 登録簿の項目を実行する（空白・カンマ区切りで複数可。場所の既定は `run.register_execution`）              | `run` / `plan`                                                                  |
-| `--register-filter`             | 登録簿項目を type / priority / status / limit の条件で決定論的に選ぶ                                     | `run`                                                                           |
-| `--register-commit`             | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる（worktree モードでは常に commit のため無視） | `run --register`                                                                |
-| `--post-review`                 | worktree 統合後に完了 review を行い、todo / issue を verdict に応じて close または waiting にする        | `run --register --worktree`                                                     |
-| `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）                                              | `run --register`                                                                |
-| `--resume`                      | run が止まった段（executor / reporter / 統合）を既存 worktree と checkpoint で再開する                   | register の worktree モード                                                     |
-| `--resume-from executor`        | reporter 段から再開可能な run を、既存成果を保持したまま executor 段から再開する                         | register の worktree モード（`--resume` と併用）                                |
-| `--force-restart`               | 再開可能な run の成果があっても、worktree を破棄して項目全体を再実行する                                 | register の worktree モード                                                     |
-| `--join`                        | 実行中の register worktree 実行の終了を待たずに合流して並行実行する（上限は `run.max_concurrent_runs`）  | register の worktree モード                                                     |
-| `--executor-by <nickname>`      | executor 段の agent。register では `PJR-ID=nickname,...` による項目別指定も可能                          | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
-| `--reporter-by <nickname>`      | executor/reporter パイプラインの reporter 段に使う agent nickname                                        | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
-| `--on-rate-limit <action>`      | 指名した agent の上限時の扱い。`stop` / `wait` / `fallback`                                              | `run` / `resume`                                                                |
-| `--fallback-executor-by <name>` | rate limit の `fallback` または接続不能時に executor 段を1回だけ引き継ぐ agent                           | `run` / `resume`                                                                |
-| `--fallback-reporter-by <name>` | rate limit の `fallback` または接続不能時に reporter 段を1回だけ引き継ぐ agent                           | `run` / `resume`                                                                |
-| `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                                                           | `resume`                                                                        |
+| オプション                             | 用途                                                                                                     | 対象                                                                            |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `--task <task-id>`                     | 対象タスクを指定する                                                                                     | 状態遷移系 / `run` / `plan`                                                     |
+| `--by <actor>`                         | 実行 actor / agent の nickname を指定する（手動ターゲットの agent 選択も兼ねる）                         | 状態遷移系 / `run` / `resume` / `worktree agent`                                |
+| `--edit-by <nickname>`                 | `--auto` バッチで edit タスクに使う agent nickname                                                       | `run --auto` / `resume`                                                         |
+| `--review-by <nickname>`               | `--auto` の review タスク、または register の統合後 review に使う agent nickname                         | `run --auto` / `run --register --post-review` / `resume`                        |
+| `--strategy <name>`                    | 選択戦略を切り替える（`critical-first` 既定 / `fifo`）                                                   | `scheduler` / `run --auto`                                                      |
+| `--auto` / `--loop`                    | Ready タスクを自動選択する / Ready がなくなるまで繰り返す                                                | `run`                                                                           |
+| `--parallel <n>`                       | 同時に走らせる agent 数の上限を指定する                                                                  | `run --auto` / register の worktree モード                                      |
+| `--worktree`                           | worktree に隔離して実行する                                                                              | `run --task` / `run --register`                                                 |
+| `--in-place`                           | register 項目を現在の作業ツリーで実行する（`run.register_execution` を上書き）                           | `run --register`                                                                |
+| `--track-state`                        | claim / complete の状態イベントを記録する                                                                | `run --task`                                                                    |
+| `--register <PJR-ID>`                  | 登録簿の項目を実行する（空白・カンマ区切りで複数可。場所の既定は `run.register_execution`）              | `run` / `plan`                                                                  |
+| `--register-filter`                    | 登録簿項目を type / priority / status / limit の条件で決定論的に選ぶ                                     | `run`                                                                           |
+| `--register-commit`                    | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる（worktree モードでは常に commit のため無視） | `run --register`                                                                |
+| `--post-review`                        | worktree 統合後に完了 review を行い、todo / issue を verdict に応じて close または waiting にする        | `run --register --worktree`                                                     |
+| `--on-failure <stop\|continue>`        | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）                                              | `run --register`                                                                |
+| `--integration-branch <repo>=<branch>` | run ごとのプロダクトリポジトリの統合先（繰り返し可）を指定する                                           | register の worktree モード                                                     |
+| `--resume`                             | run が止まった段（executor / reporter / 統合）を既存 worktree と checkpoint で再開する                   | register の worktree モード                                                     |
+| `--resume-from executor`               | reporter 段から再開可能な run を、既存成果を保持したまま executor 段から再開する                         | register の worktree モード（`--resume` と併用）                                |
+| `--force-restart`                      | 再開可能な run の成果があっても、worktree を破棄して項目全体を再実行する                                 | register の worktree モード                                                     |
+| `--join`                               | 実行中の register worktree 実行の終了を待たずに合流して並行実行する（上限は `run.max_concurrent_runs`）  | register の worktree モード                                                     |
+| `--executor-by <nickname>`             | executor 段の agent。register では `PJR-ID=nickname,...` による項目別指定も可能                          | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
+| `--reporter-by <nickname>`             | executor/reporter パイプラインの reporter 段に使う agent nickname                                        | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
+| `--on-rate-limit <action>`             | 指名した agent の上限時の扱い。`stop` / `wait` / `fallback`                                              | `run` / `resume`                                                                |
+| `--fallback-executor-by <name>`        | rate limit の `fallback` または接続不能時に executor 段を1回だけ引き継ぐ agent                           | `run` / `resume`                                                                |
+| `--fallback-reporter-by <name>`        | rate limit の `fallback` または接続不能時に reporter 段を1回だけ引き継ぐ agent                           | `run` / `resume`                                                                |
+| `--due`                                | 再開時刻を迎えた利用制限延期 task を対象にする                                                           | `resume`                                                                        |
 
 `--plan` と `--deliverable` も Schedule のパイプライン宣言を持たないため、`--executor-by` / `--reporter-by` の少なくとも一方を指定したときだけ executor/reporter 2段階で実行します。指定しなかった段は `stage_role` による自動選択で決まります。`--plan` では reporter が scaffold 済みの result を記入するため、frontmatter に `task_id` を持つ plan が必要です。`--by` との併用はエラーです。`--by` に `stage_role` を持つ pipeline 用 agent を指定すると、result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否します。
 
@@ -522,6 +523,9 @@ specdojo exec run --project prj-0001 --register-filter --register-types todo --r
 # 成果物を worktree に隔離して実行し、統合ブランチへ merge back する
 specdojo exec run --project prj-0001 --register PJR-0012 --worktree
 
+# app1 の統合先を、この run だけローカルの feature/login にする
+specdojo exec run --project prj-0001 --register PJR-0012 --worktree --integration-branch app1=feature/login
+
 # 統合後に読み取り専用 review を行い、完了した todo / issue を自動 close する
 specdojo exec run --project prj-0001 --register PJR-0012 --worktree --post-review
 
@@ -548,6 +552,10 @@ specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026
 ```
 
 `--register` は指定した個票の項目を実行します。`--register-filter` は `--register-types` / `--register-priorities` / `--register-statuses` のカンマ区切り条件と、正の整数の `--register-limit` で項目を選びます。条件省略時は open かつ実行可能な type が対象です。いずれも実行対象になる type は `todo` / `issue` / `change-request` / `question` / `risk` で、`decision` / `note` は対象外です。実行場所の既定は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選び、未設定時は互換性のため in-place です。`--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。worktree モードは成果物の変更を隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--post-review` または `run.register_post_review: true` を指定すると、merge back の後に完了判定を行い、todo / issue を自動 close できます。`--parallel <n>` は worktree モードでのみ指定できます。
+
+`--integration-branch <repo>=<branch>` は、register の worktree モードで、その run に限ってプロダクトリポジトリ `<repo>` の統合先を上書きします。複数リポジトリにはオプションを繰り返します。`<repo>` は `repos[].name` に宣言済みで、`<branch>` はそのリポジトリに存在する有効なローカルブランチでなければならず、リモートブランチの取得やローカルブランチの作成は行いません。同じ `<repo>` の重複、宣言にないリポジトリ、空の値は register の状態を変える前に拒否します。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定しない run の挙動は従来と変わりません。
+
+複数項目を `--parallel` で実行する場合、指定は選択された各 item run に同じように適用されます。中断した run を `--resume` するときは、開始時の指定を `pipeline-state.json` から再利用するため、オプションを繰り返す必要はありません。再開時に値を再指定する場合、その値は開始時の指定と一致する必要があり、run の途中で統合先を変更・追加する指定は拒否します。result の複数リポジトリ trace には、実際に使った統合先ブランチと統合後の commit snapshot が記録されます。
 
 `exec handoff apply --register <PJR-ID>` は、worktree 実行が `agent-config-write` で waiting になった項目の最新 result から提案差分を読み、統合先へ適用して commit します。コマンドは差分を必ず表示し、対話では `y` / `yes`、非対話実行では `--yes` による明示確認がなければ何も変更しません。提案差分がない、切り詰められている、申し送りの対象パスと一致しない、保護対象外のパスを含む、統合先へ適用できない、対象パスに既存変更がある場合は commit 前に停止します。複数リポジトリでは `# repo: <name>` で区切られた差分を、宣言済みの各統合先へ限定 commit します。`package.json` を適用した場合は、依存定義を変更したか確認して対応する lock ファイルを再生成・commit し、その後に表示された `exec run --register ... --worktree --resume` を実行します。
 

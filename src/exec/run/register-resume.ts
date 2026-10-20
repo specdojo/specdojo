@@ -16,7 +16,9 @@ import { findExecWorktree, type ExecWorktree } from "../worktree.js";
 import {
   configuredProductRepos,
   missingProductWorktrees,
+  resumeIntegrationBranches,
   withProductWorktrees,
+  type ProductRepo,
 } from "../task-repos.js";
 import { currentBranch, isExecBranchMergedIntoCurrent } from "../worktree-ops.js";
 import {
@@ -256,9 +258,32 @@ export async function resumeSingleRegisterItemWorktree(
   if (!foundWorktree) {
     return refuse(`no exec worktree to resume for ${item.id}; run the item again instead`);
   }
+  const lookup = findResumableRegisterRun({
+    repoRoot,
+    worktreePath: foundWorktree.path,
+    executionPath,
+    taskId: item.id,
+    ...(opts.resumeFrom === "executor" ? { resumeFrom: "executor" } : {}),
+  });
+  if (lookup.kind !== "resumable") return refuse(lookup.reason);
+  const target = lookup.target;
+
+  // PJR-XRAB: run 開始時の --integration-branch を checkpoint から引き継ぐ。再開時に別の統合先を
+  // 指定することは認めない（run の途中で統合先が変わると、開始点と統合先が食い違う）。
+  let products: ProductRepo[];
+  let integrationBranchOverrides: Record<string, string> | undefined;
+  try {
+    const overrides = resumeIntegrationBranches(
+      target.state.integration_branches,
+      opts.integrationBranch,
+    );
+    products = configuredProductRepos(schedulePath, overrides);
+    integrationBranchOverrides = overrides.size > 0 ? Object.fromEntries(overrides) : undefined;
+  } catch (error) {
+    return refuse(error instanceof Error ? error.message : String(error));
+  }
   // PJR-98G4: プロダクトの worktree も揃っていることを再開の条件にする。欠けたまま再開すると、
   // agent がプロダクト側の変更先を失う。
-  const products = configuredProductRepos(schedulePath);
   const worktree = withProductWorktrees(foundWorktree, products, worktreeTaskId);
   const missingProducts = missingProductWorktrees(products, worktree);
   if (missingProducts.length > 0) {
@@ -267,16 +292,6 @@ export async function resumeSingleRegisterItemWorktree(
         `run the item again instead`,
     );
   }
-
-  const lookup = findResumableRegisterRun({
-    repoRoot,
-    worktreePath: worktree.path,
-    executionPath,
-    taskId: item.id,
-    ...(opts.resumeFrom === "executor" ? { resumeFrom: "executor" } : {}),
-  });
-  if (lookup.kind !== "resumable") return refuse(lookup.reason);
-  const target = lookup.target;
 
   const artifacts = resolveRegisterResumeArtifacts({
     repoRoot,
@@ -460,6 +475,7 @@ export async function resumeSingleRegisterItemWorktree(
       resumeHandoff: target.handoff,
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,
+      ...(integrationBranchOverrides ? { integrationBranchOverrides } : {}),
       executorRateLimitOptions: resolvePinnedRateLimitRunOptions(
         opts,
         context.execDefaults,

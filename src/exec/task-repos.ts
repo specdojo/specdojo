@@ -9,6 +9,7 @@ import {
   specdojoRootDir,
   type AgentProvider,
   type SpecDojoProjectConfig,
+  type SpecDojoRepoConfig,
 } from "../shared/specdojo-config.js";
 import {
   ensureExecWorktree,
@@ -42,32 +43,160 @@ export type ProductRepo = {
   build: boolean;
 };
 
+export type IntegrationBranchOverrides = ReadonlyMap<string, string>;
+
+/** Parse repeatable `<repo>=<branch>` values used by `exec run --integration-branch`. */
+export function parseIntegrationBranchOverrides(
+  values: string | readonly string[] | undefined,
+): Map<string, string> {
+  const entries = values === undefined ? [] : typeof values === "string" ? [values] : values;
+  const overrides = new Map<string, string>();
+  for (const entry of entries) {
+    const separator = entry.indexOf("=");
+    const repo = separator > 0 ? entry.slice(0, separator).trim() : "";
+    const branch = separator > 0 ? entry.slice(separator + 1).trim() : "";
+    if (!repo || !branch) {
+      throw new Error(
+        `--integration-branch must use <repo>=<branch> with non-empty values: ${entry}`,
+      );
+    }
+    if (overrides.has(repo)) {
+      throw new Error(`--integration-branch specifies repository "${repo}" more than once`);
+    }
+    overrides.set(repo, branch);
+  }
+  return overrides;
+}
+
+function isIntegrationBranchOverrides(
+  value: string | readonly string[] | IntegrationBranchOverrides | undefined,
+): value is IntegrationBranchOverrides {
+  return value instanceof Map;
+}
+
+function toIntegrationBranchOverrides(
+  value: string | readonly string[] | IntegrationBranchOverrides | undefined,
+): IntegrationBranchOverrides {
+  return isIntegrationBranchOverrides(value) ? value : parseIntegrationBranchOverrides(value);
+}
+
+function assertLocalIntegrationBranch(product: ProductRepo, branch: string): void {
+  if (!existsSync(product.repoRoot)) {
+    throw new Error(
+      `Product repository "${product.name}" does not exist: ${product.repoRoot} (check repos[].path)`,
+    );
+  }
+  const validName = gitResult(product.repoRoot, ["check-ref-format", "--branch", branch]);
+  if (validName.status !== 0) {
+    throw new Error(
+      `--integration-branch for repository "${product.name}" is not a valid branch name: ${branch}`,
+    );
+  }
+  const exists = gitResult(product.repoRoot, [
+    "show-ref",
+    "--verify",
+    "--quiet",
+    `refs/heads/${branch}`,
+  ]);
+  if (exists.status !== 0) {
+    throw new Error(
+      `--integration-branch for repository "${product.name}" is not a local branch: ${branch}`,
+    );
+  }
+}
+
+/** Resolve the configured target; undefined deliberately means "use the current branch". */
+export function resolveProductIntegrationBranch(
+  repo: Pick<SpecDojoRepoConfig, "name" | "integration_branch">,
+  overrides: IntegrationBranchOverrides,
+): string | undefined {
+  const configuredBranch = repo.integration_branch?.trim();
+  return overrides.get(repo.name) ?? (configuredBranch || undefined);
+}
+
 export function resolveProductRepos(
   rootDir: string,
   project: SpecDojoProjectConfig,
+  integrationBranches?: string | readonly string[] | IntegrationBranchOverrides,
 ): ProductRepo[] {
-  return getProjectRepos(project).map((repo) => ({
-    name: repo.name,
-    repoRoot: resolveRepoRoot(rootDir, repo),
-    ...(repo.integration_branch?.trim()
-      ? { integrationBranch: repo.integration_branch.trim() }
-      : {}),
-    install: repo.setup?.install ?? true,
-    build: repo.setup?.build ?? true,
-  }));
+  const overrides = toIntegrationBranchOverrides(integrationBranches);
+  // Priority: run-scoped override → repos[].integration_branch → current branch (at use time).
+  const configured = getProjectRepos(project);
+  const configuredNames = new Set(configured.map((repo) => repo.name));
+  const unknown = [...overrides.keys()].filter((name) => !configuredNames.has(name));
+  if (unknown.length > 0) {
+    throw new Error(
+      `--integration-branch references undeclared product repositories: ${unknown.join(", ")}`,
+    );
+  }
+  return configured.map((repo) => {
+    const override = overrides.get(repo.name);
+    const integrationBranch = resolveProductIntegrationBranch(repo, overrides);
+    const product: ProductRepo = {
+      name: repo.name,
+      repoRoot: resolveRepoRoot(rootDir, repo),
+      ...(integrationBranch ? { integrationBranch } : {}),
+      install: repo.setup?.install ?? true,
+      build: repo.setup?.build ?? true,
+    };
+    if (override) assertLocalIntegrationBranch(product, override);
+    return product;
+  });
 }
 
 /** Product repositories of the project whose schedule path is `schedulePath` ([] when none). */
-export function configuredProductRepos(schedulePath: string): ProductRepo[] {
+export function configuredProductRepos(
+  schedulePath: string,
+  integrationBranches?: string | readonly string[] | IntegrationBranchOverrides,
+): ProductRepo[] {
+  const overrides = toIntegrationBranchOverrides(integrationBranches);
   const { config } = loadConfig();
-  if (!config) return [];
   const rootDir = specdojoRootDir();
-  for (const project of Object.values(config.projects)) {
+  for (const project of Object.values(config?.projects ?? {})) {
     if (resolve(rootDir, getProjectSchedulePath(project)) === resolve(schedulePath)) {
-      return resolveProductRepos(rootDir, project);
+      return resolveProductRepos(rootDir, project, overrides);
     }
   }
+  if (overrides.size > 0) {
+    throw new Error(
+      `--integration-branch references undeclared product repositories: ${[...overrides.keys()].join(", ")}`,
+    );
+  }
   return [];
+}
+
+/**
+ * Run-scoped `--integration-branch` values recorded in the run checkpoint (`integration_branches`).
+ * Only explicit overrides are recorded, so a run without the option keeps resolving its targets
+ * from `repos[].integration_branch` or the current branch exactly as before.
+ */
+export function integrationBranchOverrideRecord(
+  values: string | readonly string[] | undefined,
+): Record<string, string> | undefined {
+  const overrides = parseIntegrationBranchOverrides(values);
+  return overrides.size > 0 ? Object.fromEntries(overrides) : undefined;
+}
+
+/**
+ * Integration branch overrides for a resumed run. The checkpoint's overrides are reused so the
+ * option does not have to be repeated; an explicit value must match the checkpoint, because a
+ * run cannot change or add its integration target midway through execution.
+ */
+export function resumeIntegrationBranches(
+  persisted: Readonly<Record<string, string>> | undefined,
+  requested: string | readonly string[] | undefined,
+): IntegrationBranchOverrides {
+  const requestedOverrides = parseIntegrationBranchOverrides(requested);
+  for (const [repo, branch] of requestedOverrides) {
+    const original = persisted?.[repo];
+    if (original !== branch) {
+      throw new Error(
+        `--integration-branch cannot change the resumed run target for "${repo}" ` +
+          `(checkpoint: ${original ?? "not specified"}, requested: ${branch})`,
+      );
+    }
+  }
+  return new Map(Object.entries(persisted ?? {}));
 }
 
 /** Product repositories of the project `projectId` ([] when none or unknown). */

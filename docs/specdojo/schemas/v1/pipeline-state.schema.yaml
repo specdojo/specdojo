@@ -19,6 +19,15 @@ properties:
   updated_at:
     type: string
     format: date-time
+  # Run-scoped product integration targets given by `exec run --integration-branch <repo>=<branch>`.
+  # Only explicit overrides are recorded; resume reuses them instead of repos[].integration_branch.
+  integration_branches:
+    type: object
+    propertyNames:
+      pattern: "^[a-z0-9-]+$"
+    additionalProperties:
+      type: string
+      minLength: 1
   stages:
     type: object
     additionalProperties: false
