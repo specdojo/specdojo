@@ -23,13 +23,24 @@ specdojo:
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `tools/e2e/` に、ホストで実行する E2E のスクリプトを置き、`package.json` を変えずに `node --import tsx tools/e2e/<名前>.ts` などで起動できるようにする（`package.json` に script を足す場合は、案を result に書き、人が反映する）。
+- スクリプトは次を行う。
+  - 一時ディレクトリに空のリポジトリを作り、手元の specdojo（`npm pack` の tarball または dist）で `init --yes --provider claude --devcontainer`（推奨の preset）を行う。
+  - `devcontainer up` で container を作り、`devcontainer exec` で、利用者が `node` であること、`~/.local/bin` が node の持ち物であること、tmux・vim・emacs が入っていること、Claude Code の CLI が `~/.local/bin` に入ったことを確かめる。
+  - 結果を項目ごとに表示し、どれかが失敗したら終了コード 1 で終わる。
+  - 最後に、作った container・image・volume を片づける（`--keep` を指定したときは残す）。
+- docker と Dev Container CLI が見つからないときは、確かめ方を表示して終わる。
+- スクリプトの使い方を [[specdojo:remote-host-development-guide]] か開発用の文書に書く。
+- executor の sandbox には docker がないため、スクリプトの実行は `requires_human` とし、利用者がホストで流して結果を個票に残す。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG には記載しない（開発用のスクリプトのため）。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                      | 担当 | 状態 | メモ |
+| --- | --------------------------------------------------------- | ---- | ---- | ---- |
+| 1   | ホストで動かす devcontainer の E2E のスクリプトを用意する | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -37,4 +48,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-ghbp-devcontainer-local-bin-and-tmux-user]]（元の項目）
+- [[prj-0001:pjr-en6m-devcontainer-recommended-preset]]（確かめる preset）

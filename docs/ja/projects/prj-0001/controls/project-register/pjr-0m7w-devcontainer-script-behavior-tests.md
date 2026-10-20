@@ -23,13 +23,21 @@ specdojo-tmux.sh.sample と post-create.sh を、偽物の docker・devcontainer
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- PJR-EJ4F の完了後に行う（EJ4F で直したサンプルの動きを確かめるため）。
+- 統合テスト（`*.integration.test.ts`）で、一時ディレクトリに `devcontainer scaffold` の出力を作り、次を確かめる。
+  - `specdojo-tmux.sh`: 偽物の `docker`・`devcontainer`（呼ばれた引数を記録するだけのスクリプト）を置き、`env -i` で ssh の `RemoteCommand` と同じ最小の PATH にして動かす。`node_bin_dir` を足すと CLI が見つかること、`docker exec` に `-u node` と `tmux new-session -A -s <名前>` が渡ること、`devcontainer` や `docker` が見つからないときに PATH と確かめ方が出て終了コード 1 で終わること。
+  - `post-create.sh`: `HOME` を一時ディレクトリにし、偽物の `sudo`・`curl`・`npm` などで動かす。`~/.local`・`~/.local/share` の持ち主を戻す呼び出しがあること、agent の CLI のインストーラより前に `~/.local/bin` が作られること。
+- 生成したシェルスクリプト（`post-create.sh`・`specdojo-tmux.sh.sample`）を `bash -n` で確かめる。shellcheck が入っている環境では shellcheck でも確かめ、入っていなければ確かめを飛ばす（テストを失敗にしない）。
+- テストは実際のネットワークと docker に触れない。偽物のコマンドは一時ディレクトリに作り、テストの後で消す。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG には記載しない（テストだけの変更のため）。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                | 担当 | 状態 | メモ |
+| --- | --------------------------------------------------- | ---- | ---- | ---- |
+| 1   | devcontainer のシェルスクリプトの動きのテストを足す | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -37,4 +45,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-ej4f-remote-tmux-sample-path]]（元の項目）
+- [[prj-0001:pjr-ghbp-devcontainer-local-bin-and-tmux-user]]（関係する不具合）
