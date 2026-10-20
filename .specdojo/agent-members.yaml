@@ -22,9 +22,9 @@
 # 起動コマンドは .specdojo/exec-defaults.yaml の providers.<provider>.command_template
 # を member 属性（nickname / model / mode / proficiency）で展開して解決するため、member には
 # 書かない。command はテンプレートを持たない構成（provider: custom 等）専用の上書き。
-# priority は、stage_role・proficiency・必須 capabilities が一致した候補間で昇順に評価する。
-#   normal                  : Qwen -> Gemma -> Codex -> Claude
-#   expert                  : Qwen -> Gemma -> Codex -> Claude
+# register 項目の agent は、個票の difficulty と exec-defaults.yaml の routing で選ぶ（PJR-5HYP）。
+# priority は、routing に当たらない場合（difficulty のない個票、Schedule の候補）に、
+# stage_role・proficiency・必須 capabilities が一致した候補間で昇順に評価する。
 #
 # disabled: true を指定した agent は exec run --auto の候補選択（rate limit 時の
 # フォールバックを含む）から一時的に除外される。member 定義を削除せずに特定 provider
