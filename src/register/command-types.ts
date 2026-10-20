@@ -108,7 +108,7 @@ export type RegisterCommandDependencies = {
     opts: RegisterMutationOptions,
     mutate: (context: RegisterMutationContext) => RegisterMutationResult,
   ) => Promise<void>;
-  registerEventActor: (opts: { by?: string }) => string;
+  registerEventActor: (opts: { by?: string; project?: string }) => string;
   loadRegisterItems: (paths: RegisterPaths) => RegisterItemView[];
   loadItemForUpdate: (
     paths: RegisterPaths,

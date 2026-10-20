@@ -147,6 +147,27 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 }
 ```
 
+#### actor の指定
+
+`register add`・`update`・`renumber` と状態遷移コマンドの `--by` は、次の名前だけを受け付けます。未知の名前を警告だけで記録する互換設定はありません。監査記録の追跡不能を残さないため、書き込み前にエラーで停止します。
+
+- 人が操作・決定・承認した場合: project の `pm-members.yaml` にある本人の nickname
+- agent が実行した場合: `.specdojo/agent-members.yaml` の nickname または alias。alias は実体の nickname に解決して event へ記録する
+- SpecDojo の機械的な記帳: `SpecDojo`
+- 対話型オーケストレーター自身の操作: `specdojo-orchestrator`
+- 夜間 runner の操作: `night-orchestrator`
+
+`PO`・`DEV` などの Role code は責任区分であり、actor ではありません。利用者の決定や承認をオーケストレーターが代行記帳するときも、`specdojo-orchestrator` ではなく、事前に確認した利用者本人の nickname を渡します。`--by` を省略した場合の `SpecDojo` は CLI/runner の既定値であり、人の決定や承認を表すためには使いません。
+
+過去の event は監査記録として書き換えません。このリポジトリで既に使われた旧名を読むときは、次の対応を手掛かりにします。`manual` と Role code の `PO` は実体を一意に決められないため、event の reason と Git 履歴を併せて確認します。
+
+| 過去の actor                           | 現在たどる名前             |
+| -------------------------------------- | -------------------------- |
+| `orchestrator` / `claude-orchestrator` | `specdojo-orchestrator`    |
+| `codex-expert-executor`                | `sol-executor`             |
+| `naoji3x`                              | `indie`                    |
+| `manual` / `PO`                        | 一意に対応しない（要調査） |
+
 - 状態遷移は `open` から終端まで順に辿る必要はありません。人が対応した項目や、対話型 orchestrator がその場で処理した項目は、`start` を経ずに `close` / `reject` して構いません。着手を記録していない時点の遷移を後から補うと、実際には起きていない事実がイベントログに残ります。詳しい基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `中間状態を経ない終端` を参照します。
 - 直接終端させる場合は、誰がどの経路で対応したかを `register close --by <actor> --reason "<経路と根拠>"` で残します。exec 経由でないため plan / result / evidence が生成されず、実施内容と検証結果は個票の対応結果が唯一の記録になります。
 - agent へ実行させる項目は `exec run --register` を使います。この経路では runner が `start` と `wait` / `review` を記録し、plan / result / evidence も残ります。着手の記録が要る項目は、この経路を選びます。

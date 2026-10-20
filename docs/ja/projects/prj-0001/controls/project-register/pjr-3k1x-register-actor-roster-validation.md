@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-20T12:59:05Z"
@@ -53,7 +53,13 @@ register の --by に渡した値は、項目別のイベントの actor にそ�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `register` の actor を人・agent の合成名簿と予約一覧へ照合し、agent alias は実体の nickname に正規化して event へ記録するようにした。名簿にも予約一覧にもない値は、個票や event を書き換える前に理由を示して停止する。
+- 予約 actor は、CLI/runner の既定値 `SpecDojo`、対話型オーケストレーターの `specdojo-orchestrator`、夜間 runner の `night-orchestrator` の 3 つとした。オーケストレーターを pipeline agent 名簿へ混ぜると段の責務と起動設定を誤認させるため、予約名として管理する。
+- 未知の actor を警告だけで通す互換設定は設けない。監査記録の不整合を継続させず、利用者に名簿または予約名への修正を求めるためである。
+- 決定・承認は Role code ではなく人の nickname で記録する規則を、[[specdojo:pjr-rulebook]]、[[specdojo:register-operation-guide]]、コマンドリファレンスへ反映した。
+- オーケストレーター本文の正本 `.agents/specdojo-orchestrator.agent.md` と同期先は agent 保護対象のため、この executor では変更していない。人または対話型オーケストレーターが agent 実行外で、利用者の判断は本人の nickname、オーケストレーター自身の操作は `specdojo-orchestrator` を `--by` に渡す規則を正本へ追記し、`npm run orchestrator:sync` で 10 個の同期先へ反映する必要がある。
+- 過去の event は変更せず、旧 actor と現在の名前の対応、および一意に対応しない `manual` / `PO` の調査方法を [[specdojo:register-operation-guide]] に記載した。
+- 単体テストに、未知の actor の拒否、agent alias の実体名への解決、予約 actor の受け入れを追加した。
 
 ## 5. 関連ドキュメント
 

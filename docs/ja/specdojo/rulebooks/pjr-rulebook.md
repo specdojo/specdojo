@@ -145,7 +145,9 @@ Project Register Documentation Rules
 - 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 type で個票を省略しない。
 - 担当・期限・結論・topic・`derived_from`・`approach`・`targets` などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。`register add` と `register update` では、起票元に繰り返し指定できる `--from`、進め方に `--approach`、対象に繰り返し指定できる `--target` を使う。起票元、`approach`、対象を削除するときは、それぞれ `--from -`、`--approach -`、`--target -` を指定する。待機理由は `register wait --reason` で記録し、誤った現在値を手動補正するときは `register update --block-reason -` で削除する。
 - `register build` は個票を読み取り、一覧・派生ビューを再生成する。`generated/pjr-derived-items.md` では `derived_from` を逆引きし、元の項目から派生先を辿れるようにする。一覧を編集して個票へ反映する経路はない。
-- `register add`、状態遷移、`register update`、`register renumber` は現在値を個票へ、イベントを対応する項目別ログへ記録する。`--by` で actor、`--reason` で理由を明示でき、省略時もコマンドが既定値を記録する。
+- `register add`、状態遷移、`register update`、`register renumber` は現在値を個票へ、イベントを対応する項目別ログへ記録する。`--by` で actor、`--reason` で理由を明示でき、省略時は予約 actor の `SpecDojo` を記録する。
+- `--by` に指定できるのは、project の `pm-members.yaml` にある人の nickname、repository の `.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` に限る。agent の alias は実体の nickname に解決して記録し、名簿にも予約一覧にもない値は書き込み前に拒否する。
+- 決定・承認を記録する actor には、`PO` などの Role code や予約 actor ではなく、決定・承認した人の nickname を使う。`specdojo-orchestrator` は対話型オーケストレーター自身の操作だけに使い、人の判断主体を代替しない。
 - 同じ現在値へ同じ操作を再実行した場合は、新しいイベントを追加しない。イベント ID と直前イベント参照を保ったまま再実行し、既存イベントの置換や削除で重複を解消しない。
 - ID の変更は `register renumber` で行い、個票のファイル名・Frontmatter・参照と生成ビューを整合させる。
 - 主題の変化に伴う `<topic>` の変更は `register update --topic` で行う。個票のファイル名と Frontmatter の文書 ID、他文書中の旧文書 ID 参照を同時に更新し、生成ビューを再生成する。
