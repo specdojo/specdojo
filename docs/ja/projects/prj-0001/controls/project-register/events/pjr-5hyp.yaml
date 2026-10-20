@@ -64,3 +64,32 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration"
   previous_event_id: reg_2e2bfb0f5e0345e792873e091013f9a3
+- v: 1
+  id: reg_897bf32ba4fd40ef9552b2906b2ffcc4
+  ts: "2026-10-20T13:03:45Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration"
+      to: "-"
+  previous_event_id: reg_af13305b4c454b31be31dc952b91c2a7
+- v: 1
+  id: reg_e21ef4d5f43a442b91a4d4db9a9b2d1f
+  ts: "2026-10-20T13:19:04Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_897bf32ba4fd40ef9552b2906b2ffcc4

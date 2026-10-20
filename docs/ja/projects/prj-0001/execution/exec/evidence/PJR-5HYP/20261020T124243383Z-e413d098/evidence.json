@@ -1,0 +1,366 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-5HYP",
+  "run_id": "20261020T124243383Z-e413d098",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-20T12:45:42.802Z",
+    "completed_at": "2026-10-20T12:56:00.094Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-5hyp.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-5hyp-agent-routing-by-difficulty.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-defaults.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-events.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/night-orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/event-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/migration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-exec-defaults.yaml",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/commands.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/event-merge.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/item.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-5hyp-agent-routing-by-difficulty.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-defaults.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-events.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/night-orchestrator.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/run.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/event-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/migration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-exec-defaults.yaml",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/commands.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/event-merge.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/item.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 30,
+    "summary": "CHANGELOG.md                                       |  2 +\n .../040-system-design/sysd-agent-settings.md       |  2 +\n .../pjr-5hyp-agent-routing-by-difficulty.md        |  8 ++-\n docs/ja/specdojo/guides/exec-config-guide.md       | 44 +++++++++++++--\n docs/ja/specdojo/guides/exec-operation-guide.md    |  5 ++\n docs/ja/specdojo/rulebooks/pjr-rulebook.md         |  3 +-\n docs/specdojo/schemas/v1/exec-defaults.schema.yaml | 40 ++++++++++++++\n .../schemas/v1/register-events.schema.yaml         |  1 +\n .../v1/register-item-frontmatter.schema.yaml       | 14 +++++\n src/commands/init.ts                               | 60 ++++++++++++++------\n src/commands/night-orchestrator.ts                 | 18 +++---\n src/exec/agent-config.ts                           | 13 +++++\n src/exec/run/register-core.ts                      | 20 +++++++\n src/exec/run/register-mode.ts                      | 50 +++++++++++------\n src/exec/run/run.ts                                |  1 +\n src/register/command-types.ts                      |  3 +-\n src/register/core.ts                               |  1 +\n src/register/create-commands.ts                    | 36 +++++++++++-\n src/register/event-merge.ts                        |  8 ++-\n src/register/events.ts                             |  2 +\n src/register/item.ts                               | 10 ++++\n src/register/migration.ts                          |  1 +\n src/register/register.ts                           |  3 +\n templates/init-exec-defaults.yaml                  | 15 +++++\n tests/src/commands/init.test.ts                    | 34 ++++++++++++\n tests/src/exec/register.test.ts                    | 64 ++++++++++++++++++++++\n tests/src/register/commands.test.ts                | 34 ++++++++++++\n tests/src/register/event-merge.test.ts             |  3 +\n tests/src/register/item.test.ts                    | 21 +++++++\n 29 files changed, 463 insertions(+), 53 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write CHANGELOG.md docs/ja/product/040-system-design/sysd-agent-settings.md docs/ja/projects/prj-0001/controls/project-register/pjr-5hyp-agent-routing-by-difficulty.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/specdojo/schemas/v1/exec-defaults.schema.yaml docs/specdojo/schemas/v1/register-events.schema.yaml docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml src/commands/…",
+      "status": "passed",
+      "summary": "変更対象を整形済み"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿と派生ビューの生成・整合性検査が成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "対象 project の全カタログ検証が成功"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "human/orchestrator: apply protected agent-routing configuration",
+      "status": "requires_human",
+      "summary": "個票に記載した案を `.specdojo/exec-defaults.yaml` と `.specdojo/agent-members.yaml` へ反映する必要がある"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec run --project prj-0001 --register PJR-JSEY",
+      "status": "requires_human",
+      "summary": "runner コード統合後、新しいプロセスと実 agent 利用枠を使う smoke test が必要"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.4.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5HYP/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5HYP/src/schedule/build.ts\n  349:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5HYP/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 34 problems (1 error, 33 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.4.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5HYP\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\ntem's difficulty route.\n+\n\n ❯ tests/src/exec/register-pipeline-e2e.integration.test.ts:1050:33\n    1048|         ]);\n    1049|\n    1050|         expect(stdout.join(\"\")).toContain(\n       |                                 ^\n    1051|           \"--register pipeline execution requires both --executor-by a…\n    1052|         );\n ❯ tests/src/exec/register-pipeline-e2e.integration.test.ts:660:7\n ❯ tests/src/exec/register-pipeline-e2e.integration.test.ts:1030:7\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5HYP/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5HYP/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5HYP\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-qqsCet/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Bdn8FH/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-idl5Mq/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-CjsBJI/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "難易度別の agent 振り分け、個票の difficulty、夜間 orchestrator、init 雛形、関連文書とテストを実装した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-5HYP/20261020T124243383Z-e413d098/executor.log",
+      "bytes": 2504,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-5HYP/20261020T124243383Z-e413d098/parent-validation-attempt-1-lint-ts.log",
+      "bytes": 6934,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-5HYP/20261020T124243383Z-e413d098/parent-validation-attempt-1-test-integration.log",
+      "bytes": 154886,
+      "truncated": false
+    }
+  ]
+}

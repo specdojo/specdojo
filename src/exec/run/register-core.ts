@@ -52,6 +52,26 @@ import { runAgentPipeline } from "./agent-pipeline.js";
 import { spawnAgentInPlace } from "./in-place.js";
 import { commitSubject, repoRelativePath, spawnSelf } from "./mode-shared.js";
 
+// CLI choices are the highest-priority layer. A difficulty route only supplies omitted stage and
+// recovery options; without a matching route the historical priority-based selection is kept.
+export function applyRegisterDifficultyRouting(
+  item: Pick<PjrItem, "difficulty">,
+  opts: RunOpts,
+  execDefaults: ExecDefaultsConfig,
+): RunOpts {
+  if (opts.by?.trim() || !item.difficulty) return opts;
+  const route = execDefaults.routing?.[item.difficulty];
+  if (!route) return opts;
+  return {
+    ...opts,
+    executorBy: opts.executorBy ?? route.executor_by,
+    reporterBy: opts.reporterBy ?? route.reporter_by,
+    onRateLimit: opts.onRateLimit ?? route.on_rate_limit,
+    fallbackExecutorBy: opts.fallbackExecutorBy ?? route.fallback_executor_by,
+    fallbackReporterBy: opts.fallbackReporterBy ?? route.fallback_reporter_by,
+  };
+}
+
 // --register の単一 agent 実行（--by 指定時）の agent を解決する。owner（Role code）や
 // role からの自動選択は行わない（PJR-ADZ6）。agent は全員 stage_role を持つ pipeline
 // メンバーであり、owner・role から選ぶと pipeline 用でない agent（翻訳専用など）や

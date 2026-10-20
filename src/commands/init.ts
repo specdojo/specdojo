@@ -471,6 +471,40 @@ function writeExecConfiguration(
     memberTemplate.aliases ?? [],
     new Set(members.map((member) => member.nickname)),
   );
+  const pairs = providers.map((provider) => {
+    const executor = members.find(
+      (member) =>
+        member.provider === provider && member.stage_role === "executor" && member.mode === "edit",
+    );
+    const reporter = members.find(
+      (member) => member.provider === provider && member.stage_role === "reporter",
+    );
+    if (!executor || !reporter) {
+      throw new Error(
+        `init-agent-members.yaml must define an edit executor and reporter for ${provider}`,
+      );
+    }
+    return {
+      executor: preferredAgentName(executor, aliases),
+      reporter: preferredAgentName(reporter, aliases),
+    };
+  });
+  const route = (pairIndex: number, action: "stop" | "wait" | "fallback") => {
+    const resolvedIndex = Math.min(pairIndex, pairs.length - 1);
+    const pair = pairs[resolvedIndex]!;
+    const fallback = pairs.length > 1 ? pairs[(resolvedIndex + 1) % pairs.length] : undefined;
+    return {
+      executor_by: pair.executor,
+      reporter_by: pair.reporter,
+      on_rate_limit: action === "fallback" && !fallback ? "stop" : action,
+      ...(fallback
+        ? {
+            fallback_executor_by: fallback.executor,
+            fallback_reporter_by: fallback.reporter,
+          }
+        : {}),
+    };
+  };
   const providerDefaults = Object.fromEntries(
     Object.entries(defaultsTemplate.providers).filter(([provider]) =>
       selected.has(provider as InitProvider),
@@ -483,7 +517,14 @@ function writeExecConfiguration(
       : {};
   const { parent_validations: configuredParentValidations, ...otherPipeline } = commonPipeline;
   const parentValidations = selectParentValidations(repoRoot, configuredParentValidations);
-  const configuredDefaults: Record<string, unknown> = { ...commonDefaults };
+  const configuredDefaults: Record<string, unknown> = {
+    ...commonDefaults,
+    routing: {
+      hard: route(0, "wait"),
+      medium: route(1, "fallback"),
+      easy: route(2, "fallback"),
+    },
+  };
   if (parentValidations.length > 0 || Object.keys(otherPipeline).length > 0) {
     configuredDefaults.pipeline = {
       ...otherPipeline,
@@ -507,22 +548,9 @@ function writeExecConfiguration(
     dump({ ...configuredDefaults, providers: providerDefaults }, { lineWidth: 120, noRefs: true }),
     dryRun,
   );
-  const primaryProvider = providers[0];
-  const executor = members.find(
-    (member) =>
-      member.provider === primaryProvider &&
-      member.stage_role === "executor" &&
-      member.mode === "edit",
-  );
-  const reporter = members.find(
-    (member) => member.provider === primaryProvider && member.stage_role === "reporter",
-  );
-  if (!executor || !reporter) {
-    throw new Error("init-agent-members.yaml must define an edit executor and reporter");
-  }
   return {
-    executor: preferredAgentName(executor, aliases),
-    reporter: preferredAgentName(reporter, aliases),
+    executor: pairs[0]!.executor,
+    reporter: pairs[0]!.reporter,
   };
 }
 

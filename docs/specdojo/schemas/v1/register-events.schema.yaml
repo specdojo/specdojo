@@ -49,6 +49,7 @@ $defs:
           - description
           - type
           - priority
+          - difficulty
           - owner
           - registered
           - due

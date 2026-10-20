@@ -7,6 +7,7 @@ SpecDojo の利用者に影響する変更を記録します。
 ### 追加機能
 
 - `specdojo config scaffold --workspace` で、`repos` の設定から VS Code のマルチルートワークスペース（`<project-id>.code-workspace`）を生成できるようにしました。プロジェクトリポジトリ自身と `repos` で宣言された各プロダクトリポジトリを `folders` に宣言順で並べ、別リポジトリ構成でも 1 つのウィンドウで開発できます。`--project` で対象 project を指定でき（省略時は `current_project`）、既存のワークスペースファイルは `--force` を指定しない限り上書きしません（PJR-87XS）。
+- register 個票に `difficulty`（`hard` / `medium` / `easy`）を追加し、`exec-defaults.yaml` の `routing` で難易度ごとの executor・reporter・rate limit 対応・fallback を選べるようにしました。`exec run --register` と夜間 orchestrator が同じ表を使い、CLI 指定は表より優先し、難易度または表がない既存個票は従来の `priority` 自動選択を維持します。`specdojo init --exec` も選択した provider に合う表を生成します（PJR-5HYP）。
 
 - `devcontainer scaffold --preset recommended` を追加しました。端末版 Emacs と Vim、tmux、SpecDojo の文書作業向け VS Code 拡張・保存時整形・YAML schema 関連付けをまとめて設定し、同じ拡張を `.vscode/extensions.json` にも推薦します。個別の `--editor`・`--tmux` と併用でき、既存のエディタ設定は上書きしません。`specdojo init` では Dev Container を選んだ場合だけ推奨 preset の利用を質問し、`--yes --devcontainer` では利用します（PJR-EN6M）。
 
@@ -20,6 +21,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `register` の `--by` を人・agent の名簿と予約 actor の一覧に照合し、agent alias は実体名へ解決して event に記録するようにしました。未知の名前や `PO` などの Role code は書き込み前に拒否し、省略時は予約 actor の `SpecDojo` を使います。対話型オーケストレーターの名前は `specdojo-orchestrator` に統一しました（PJR-3K1X）。
 - exec の result へ executor / reporter の自由記述を描くとき、アスタリスクやアンダースコアを含む ASCII トークンをコードの書式にして、Markdown の強調と誤解釈されないようにしました。既にコードの書式で囲まれた部分は保持します。検証の適用外理由に `*.yaml` と `*.yml` を並べても markdownlint（MD037）で統合前に止まりません（PJR-A6PV）。
 - ローカル LLM や provider API へ接続できず、`Cannot connect to API`・`ECONNREFUSED` などで指名した executor / reporter が失敗した場合に、`--fallback-executor-by` / `--fallback-reporter-by` で指定した agent へ切り替えるようにしました。接続不能の文言は provider ごとの `connection_error_detection` で設定し、`--on-rate-limit` の値とは独立して1回だけ fallback します。切替履歴は rate limit と同じく pipeline state・evidence・result に記録します（PJR-DKD8）。
 - devcontainer の scaffold で生成する `post-create.sh` で、volume のマウント先の親（`~/.local`・`~/.local/share`・`~/.config`）の所有者をコンテナの利用者へ戻し、`~/.local/bin` を作成して `PATH` に加えるようにしました。Docker が親ディレクトリを root 所有で作成した環境でも Claude Code などのインストーラが失敗しないようにします。また、常時稼働ホスト接続サンプル `specdojo-tmux.sh.sample` の `docker exec` に `-u` で利用者（`devcontainer.json` の `remoteUser`、既定は `node`）を渡し、コンテナの既定の root で入らないようにしました（PJR-GHBP）。

@@ -243,6 +243,23 @@ describe("specdojo init", () => {
 
       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
       expect(defaults.pipeline?.parent_validations).toBeUndefined();
+      expect(defaults.routing).toEqual({
+        hard: {
+          executor_by: "codex-executor",
+          reporter_by: "codex-reporter",
+          on_rate_limit: "wait",
+        },
+        medium: {
+          executor_by: "codex-executor",
+          reporter_by: "codex-reporter",
+          on_rate_limit: "stop",
+        },
+        easy: {
+          executor_by: "codex-executor",
+          reporter_by: "codex-reporter",
+          on_rate_limit: "stop",
+        },
+      });
       expect(output.join("")).toContain(
         "Omitted pipeline.parent_validations: no supported npm scripts were found in package.json.",
       );
@@ -360,8 +377,25 @@ describe("specdojo init", () => {
       );
       const defaults = load(readFileSync(join(repo, ".specdojo/exec-defaults.yaml"), "utf8")) as {
         providers: Record<string, unknown>;
+        routing: Record<string, Record<string, string>>;
       };
       expect(Object.keys(defaults.providers).sort()).toEqual(["claude", "copilot", "opencode"]);
+      expect(defaults.routing).toMatchObject({
+        hard: {
+          executor_by: "claude-executor",
+          reporter_by: "claude-reporter",
+          on_rate_limit: "wait",
+          fallback_executor_by: "opencode-executor",
+          fallback_reporter_by: "opencode-reporter",
+        },
+        medium: {
+          executor_by: "opencode-executor",
+          reporter_by: "opencode-reporter",
+          on_rate_limit: "fallback",
+          fallback_executor_by: "copilot-executor",
+          fallback_reporter_by: "copilot-reporter",
+        },
+      });
       expect(existsSync(join(repo, ".github/agents/specdojo-orchestrator.md"))).toBe(true);
     } finally {
       rmSync(repo, { recursive: true, force: true });

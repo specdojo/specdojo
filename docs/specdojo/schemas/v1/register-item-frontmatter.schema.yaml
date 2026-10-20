@@ -108,6 +108,12 @@ properties:
             $ref: "#/$defs/Priority"
             description: "Handling priority (list column: 優先度)."
 
+          difficulty:
+            $ref: "#/$defs/Difficulty"
+            description: >
+              Work difficulty used to select the register executor/reporter route. Omit it to use
+              the existing priority-based automatic agent selection.
+
           owner:
             type: string
             minLength: 1
@@ -242,6 +248,14 @@ $defs:
       - medium
       - low
     description: "Handling priority of a register item."
+
+  Difficulty:
+    type: string
+    enum:
+      - hard
+      - medium
+      - easy
+    description: "Work difficulty used for register agent routing."
 
   Approach:
     type: string

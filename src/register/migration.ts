@@ -202,6 +202,7 @@ export function planRegisterMigration(paths: RegisterPaths): RegisterMigrationPl
           title: tableCellToBody(source.item.title),
           description: tableCellToBody(source.item.description),
           priority: source.item.priority,
+          ...(source.item.difficulty ? { difficulty: source.item.difficulty } : {}),
           status: source.item.status,
           owner: source.item.owner,
           registeredAt: source.item.registeredAt,
