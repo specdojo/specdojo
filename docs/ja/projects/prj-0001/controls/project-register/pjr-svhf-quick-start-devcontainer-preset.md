@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
@@ -38,11 +38,20 @@ Quick Start ガイドの導入の手順を、Dev Container を作り推奨の pr
 
 | No  | 作業                                                     | 担当 | 状態 | メモ         |
 | --- | -------------------------------------------------------- | ---- | ---- | ------------ |
-| 1   | Quick Start ガイドの導入の手順を推奨の preset に合わせる | DEV  | open | 0.4.1 の範囲 |
+| 1   | Quick Start ガイドの導入の手順を推奨の preset に合わせる | DEV  | done | 0.4.1 の範囲 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容:
+  - [[specdojo:quick-start-guide]] の「道場を開く（導入と初期設定）」における対話の例で、Dev Container を作る質問に `y`、推奨 preset を入れる質問に Enter（既定の「はい」）と答える例へ更新し、推奨 preset の内容（tmux・Emacs・Vim・推奨 VS Code 拡張と設定・`.vscode/extensions.json`）、コンテナの開き方（VS Code の「コンテナーで再度開く」または `devcontainer up`）、ホストで進める場合の案内を追記。
+  - 「CLIを初期設定する」の `init --yes` の説明に、`--devcontainer` 指定時に推奨 preset が入ることと無効化オプション（`--devcontainer-preset none`）を追記。
+  - 「個別に設定する場合」の `devcontainer scaffold` の例を `--preset recommended` 付きにし、preset を使わない場合のオプション（`--ollama`・`--cron`・`--tmux`）の説明を整理。
+  - CHANGELOG の `## [0.4.1] - 未定` に Quick Start ガイドの更新内容を記録。
+- 成果物:
+  - `docs/ja/specdojo/guides/quick-start-guide.md`
+  - `CHANGELOG.md`
+- 残課題:
+  - なし
 
 ## 5. 関連ドキュメント
 

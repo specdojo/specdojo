@@ -38,3 +38,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-EN6M"]'
+- v: 1
+  id: reg_dbe0cde1f67d4aabb7574fa248ee4d15
+  ts: "2026-10-20T21:10:00Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b84de9c5b24249da986d810e7fee3bca
+- v: 1
+  id: reg_df4e98246c8346a08f7e67b626692ef7
+  ts: "2026-10-20T21:29:07Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_dbe0cde1f67d4aabb7574fa248ee4d15
