@@ -113,7 +113,9 @@
         "vue.volar",
         "redhat.vscode-xml",
         "tamasfe.even-better-toml",
-        "astro-build.astro-vscode"
+        "astro-build.astro-vscode",
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint"
       ]
     }
   }
