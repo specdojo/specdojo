@@ -818,6 +818,10 @@ describe("runDevcontainerScaffold", () => {
       expect(config).toContain("Host <host>-tmux");
       expect(config).toContain("RequestTTY force");
       expect(config).toContain("RemoteCommand ~/bin/specdojo-tmux.sh");
+      expect(config).toContain(
+        "RemoteCommand は非対話シェルで動くため、接続先端末の ~/.zshrc などの PATH 設定は読み込まれません。",
+      );
+      expect(config).toContain("ssh <host> 'command -v devcontainer'");
       expect(config).toContain("# 例: LocalForward 5173 127.0.0.1:5173");
       expect(config).not.toMatch(/^\s*LocalForward/m);
     });
@@ -997,6 +1001,25 @@ describe("runDevcontainerScaffold", () => {
       expect(tmuxContent).toContain('container_user="developer"');
       expect(tmuxContent).toContain(
         "remoteUser を変更した場合は、下記 container_user の値を変更してください。",
+      );
+      expect(tmuxContent).toContain('node_bin_dir="/absolute/path/to/node/bin"');
+      expect(tmuxContent).toContain(
+        'export PATH="$node_bin_dir:/opt/homebrew/bin:/usr/local/bin:$PATH"',
+      );
+      expect(tmuxContent).toContain('dirname "$(command -v devcontainer)"');
+      expect(tmuxContent).toContain('node_bin_dir="/opt/homebrew/bin"');
+      expect(tmuxContent).toContain('node_bin_dir="$HOME/.nvm/versions/node/v22.0.0/bin"');
+      expect(tmuxContent).toContain('node_bin_dir="$HOME/.local/share/mise/installs/node/24/bin"');
+      expect(tmuxContent).toContain(
+        'echo "Dev Container CLI is not installed or not in PATH." >&2',
+      );
+      expect(tmuxContent).toContain('echo "Current PATH: $PATH" >&2');
+      expect(tmuxContent).toContain(
+        'echo "Check the location on the host terminal with: dirname \\"\\$(command -v devcontainer)\\"" >&2',
+      );
+      expect(tmuxContent).toContain('echo "Docker command was not found in PATH." >&2');
+      expect(tmuxContent).toContain(
+        'echo "Check the location on the host terminal with: dirname \\"\\$(command -v docker)\\"" >&2',
       );
     });
   });
