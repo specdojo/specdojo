@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-5hyp-agent-routing-by-difficulty
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-20T12:03:52Z"
+  completed_at: "2026-10-20T13:47:42Z"
+  conclusion: 個票の difficulty と exec-defaults の routing で agent を振り分けるようにした。CLI の指定は表より優先し、difficulty や表がない場合は今の自動選択のまま。統合後の動作は PJR-JSEY で確認した
   derived_from:
     - PJR-ZM1K
 ---
