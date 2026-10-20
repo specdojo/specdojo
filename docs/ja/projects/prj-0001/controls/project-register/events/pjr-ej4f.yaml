@@ -35,3 +35,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-GHBP"]'
+- v: 1
+  id: reg_ffb441bc3c0747bd88cb31d1150ae027
+  ts: "2026-10-20T11:01:14Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_092e76a2b9c8458ebd22d9b465dd9015
