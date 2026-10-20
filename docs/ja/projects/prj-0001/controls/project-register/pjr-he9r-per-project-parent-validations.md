@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-he9r-per-project-parent-validations
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T12:48:45Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-20T21:55:11Z"
+  conclusion: specdojo.config.json の `projects.<id>.run.parent_validations` で、共有の exec-defaults の親の検証に project ごとの検証を足せるようにした。指定しない project の動きは変わらない
 ---
 
 # PJR-HE9R project ごとに parent_validations を足せるようにする
