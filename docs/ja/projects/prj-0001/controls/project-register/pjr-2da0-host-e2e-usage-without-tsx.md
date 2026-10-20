@@ -32,13 +32,22 @@ tools/e2e/devcontainer-host-e2e.ts の使い方の表示とガイドは node --i
 
 ## 3. 作業内容
 
-| No  | 作業                        | 担当 | 状態 | メモ |
-| --- | --------------------------- | ---- | ---- | ---- |
-| 1   | E2E の案内を tsx なしに直す | DEV  | open | -    |
+| No  | 作業                        | 担当 | 状態 | メモ                                                                                             |
+| --- | --------------------------- | ---- | ---- | ------------------------------------------------------------------------------------------------ |
+| 1   | E2E の案内を tsx なしに直す | DEV  | done | `tools/e2e/devcontainer-host-e2e.ts`、`docs/ja/specdojo/guides/remote-host-development-guide.md` |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 4.1. 解決内容
+
+- `tools/e2e/devcontainer-host-e2e.ts` の冒頭コメントおよび `usage()` 関数内の実行案内を、`node tools/e2e/devcontainer-host-e2e.ts`（`--keep` も同様）に更新した。
+- [[specdojo:remote-host-development-guide]] の 2.2 節における実行案内を更新し、ホストとコンテナで `node_modules` を共有しているため `tsx` は使えないこと、Node 22.18 以上（型を外して直接動かせる版）が必要である旨を追記した。
+- スクリプトが Node の標準ライブラリのみを import していること、型のみのインポートが `import type` となっていることを確認・保持した。
+
+### 4.2. 確認結果
+
+- `node tools/e2e/devcontainer-host-e2e.ts --help` を実行し、コンテナ内（Node 24 環境）で新しい使い方案内が表示されて正常終了することを確認した。
+- 親 runner による検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）に委譲する。
 
 ## 5. 関連ドキュメント
 
