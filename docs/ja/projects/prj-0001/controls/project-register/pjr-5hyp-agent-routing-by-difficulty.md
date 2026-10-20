@@ -23,13 +23,26 @@ exec-defaults.yaml に、難しさ（hard・medium・easy）ごとの executor�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 0.4.1 の昇格の後に流す（0.5.0 の範囲）。
+- `exec-defaults.yaml` に振り分けの表（例: `routing`）を加える。難しさ（`hard`・`medium`・`easy`）ごとに、executor・reporter・rate limit のときの扱い（wait・fallback・stop）・代わりの executor と reporter を書ける。名前は別名でも実体でもよい。
+- 個票の frontmatter に `difficulty`（`hard`・`medium`・`easy`）を加え、`register add`・`register update` の `--difficulty` で指定できるようにする。schema と規則（[[specdojo:pjr-rulebook]]）に書く。
+- `exec run --register` で `--executor-by`・`--reporter-by` を指定しないとき、個票の `difficulty` に合う振り分けの表の agent を使う。`difficulty` がない個票や、表がない設定では今の自動選択を使う。指定したオプションは表より優先する。
+- 夜間の orchestrator（`orchestrator night`）も同じ表で agent を選ぶ。
+- 今の自動選択が `priority` の小さい順で、普通の難しさにローカルの `qwen-executor` が選ばれる点を見直し、どう直したかと理由を result に書く。`agent-members.yaml` の冒頭の古いコメント（`Qwen -> Gemma -> Codex -> Claude`）を直す案も result に書く（保護された設定のため人が反映する）。
+- 配布する `init` の `exec-defaults.yaml` の雛形に、選んだ provider に合わせた振り分けの表の例を入れる。
+- 本リポジトリの `exec-defaults.yaml` に入れる振り分けの表の案（hard は sol-executor で上限のときは待ち、代わりは opus-executor、medium は flash-high-executor で代わりは sol-executor、easy は qwen-executor で docs・src・tests の外を触らない作業に限り代わりは flash-high-executor、reporter は gemma26-reporter で代わりは sonnet-reporter）を result に書く（保護された設定のため人が反映する）。
+- [[specdojo:exec-config-guide]] と [[specdojo:exec-operation-guide]] に、振り分けの表と `difficulty` の使い方を書く。
+- 単体テストで、`difficulty` ごとの選び方、オプションが表より優先されること、表がないときに今の自動選択になることを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- runner のコードを変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
+- CHANGELOG の `## [0.5.0] - 未定` の節に書く。公開済みの版の節は変えない。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                          | 担当 | 状態 | メモ                   |
+| --- | --------------------------------------------- | ---- | ---- | ---------------------- |
+| 1   | 作業の難しさで agent を振り分ける設定を加える | DEV  | open | 0.4.1 の昇格の後に流す |
 
 ## 4. 対応結果
 
@@ -37,4 +50,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-zm1k-agent-members-model-alias]]（元の項目）
+- [[prj-0001:pjr-6dhy-night-orchestrator-approved-queue]]（夜間の orchestrator）
