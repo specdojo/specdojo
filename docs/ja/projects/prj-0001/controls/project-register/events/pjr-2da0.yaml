@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f1bef9ab84044caabec3c53326fdfbc8
+  ts: "2026-10-20T12:26:01Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ホストの devcontainer の E2E を tsx なしで動かす案内に直す
+    - field: description
+      from: ""
+      to: tools/e2e/devcontainer-host-e2e.ts の使い方の表示とガイドは node --import tsx で動かすよう案内しているが、ホストの Mac ではコンテナと共有する node_modules の esbuild が Linux 用のため tsx が動かない。スクリプトは Node の標準ライブラリしか使わず、Node 24 なら node で直接動くため、案内を node tools/e2e/devcontainer-host-e2e.ts に直す（2026-10-20、利用者がホストで流して確かめた）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-3RXY"]'
