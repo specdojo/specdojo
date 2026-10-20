@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-7p27-readme-orchestrator-approval-dialog
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-20T21:11:25Z"
+  completed_at: "2026-10-20T21:51:48Z"
+  conclusion: README の「会話で操作する」の例を、何をするか・中身・影響を日本語で示して承認を求める形にし、コマンドは求めたときに見せる説明を加えた
   derived_from:
     - PJR-C50G
 ---

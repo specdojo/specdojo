@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_650a2f8846ae47c8b48d21692cb054c9
+- v: 1
+  id: reg_0135e58511c74c399675df5e66d8ff21
+  ts: "2026-10-20T21:51:48Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分を確かめ、PJR-C50G の承認の聞き方と一致すること、ガイドにコマンドを見せて承認を聞く例が残っていないことを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: README の「会話で操作する」の例を、何をするか・中身・影響を日本語で示して承認を求める形にし、コマンドは求めたときに見せる説明を加えた
+  previous_event_id: reg_e6da6d361c9342f8b7925ba4430b9700
