@@ -38,6 +38,8 @@ import {
   getProjectRegisterPath,
   loadConfig,
   loadEnv,
+  loadMemberRoster,
+  resolveRegisterActor,
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
 import { flattenTemplateFrontmatter } from "../docs/template-frontmatter.js";
@@ -69,8 +71,18 @@ export type RegisterItemView = {
   source: "ticket" | "index";
 };
 
-export function registerEventActor(opts: { by?: string }): string {
-  return opts.by?.trim() || process.env.SPECDOJO_ACTOR?.trim() || "manual";
+export function registerEventActor(opts: { by?: string; project?: string }): string {
+  const actor = opts.by?.trim() || process.env.SPECDOJO_ACTOR?.trim() || "SpecDojo";
+  const { config } = loadConfig();
+  if (!config) throw new Error("register commands require specdojo.config.json");
+  const projectId =
+    opts.project?.trim() ||
+    process.env.SPECDOJO_PROJECT?.trim() ||
+    Object.keys(config.projects)[0] ||
+    "";
+  const project = config.projects[projectId];
+  if (!project) throw new Error(`Unknown project: ${projectId}`);
+  return resolveRegisterActor(actor, loadMemberRoster(specdojoRootDir(), project));
 }
 
 export function atomicWriteFile(path: string, content: string): void {
