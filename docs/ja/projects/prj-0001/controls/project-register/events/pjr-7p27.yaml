@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_32947f59f0834222a339186726cf36b5
+  ts: "2026-10-20T21:11:26Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: README の会話例でオーケストレーターが内容を日本語で確かめる形にする
+    - field: description
+      from: ""
+      to: README の「会話で操作する」の例では、オーケストレーターがコマンドを見せて「次を実行します。よろしいですか。」と聞いている。0.4.1 のオーケストレーター（PJR-C50G）は、何を・どんな内容で・何に影響するかを日本語で聞く形に変わったため、例をそれに合わせる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-C50G"]'

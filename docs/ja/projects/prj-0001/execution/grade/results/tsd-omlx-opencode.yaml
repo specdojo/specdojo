@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 71
-graded_at: "2026-10-11T16:17:01.421Z"
-graded_by: agy-expert-executor
-content_hash: b4b2b3f786191abbdb817d64ba44b4099842816bb4e48f58fce57a229b61743e
+graded_at: "2026-10-20T16:14:54.379Z"
+graded_by: flash-high-executor
+content_hash: c2e679928b3bca1b455ca7a51fed605147be2cc9ef5b38c2b0cb63ebc5115d88
 source_hashes:
   catalog-entry: 98fc4fcd2881655ea7e9929cec248e9a79cbe9d6ac71955a800d3a503fe279e9
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -135,37 +135,35 @@ findings:
     severity: major
     rule: vp-po-decision-readiness
     line: 172
-    anchor: "```"
+    anchor: oMLX
     message: 既定モデルを比較後に決めるとしているが、比較結果の合否閾値、承認者、判断期限、決定記録先、採否による影響を明記しなければPOが技術スタック選定を承認できない。
     message_ja: 既定モデルを比較後に決めるとしているが、比較結果の合否閾値、承認者、判断期限、決定記録先、採否による影響を明記しなければPOが技術スタック選定を承認できない。
   - id: F003
     severity: minor
     rule: vp-po-publication-accountability
     line: 217
-    anchor: ""
+    anchor: ├─ local agent A
     message: Claude Code/Codexに「最終レビュー」とセキュリティ変更を割り当てる記述へ、人間のPOが公開可否と最終判断を担うmanual gateおよび公開前の機密情報確認を追記する必要がある。
     message_ja: Claude Code/Codexに「最終レビュー」とセキュリティ変更を割り当てる記述へ、人間のPOが公開可否と最終判断を担うmanual gateおよび公開前の機密情報確認を追記する必要がある。
   - id: F004
     severity: minor
     rule: vp-pm-plan-feasibility
     line: 232
-    anchor: "## 9. 運用上の注意"
+    anchor: ""
     message: Qwen3.8との比較について、担当Role code、実施時期、完了条件を明記しなければ進捗確認可能な作業計画へ落とし込めない。
     message_ja: Qwen3.8との比較について、担当Role code、実施時期、完了条件を明記しなければ進捗確認可能な作業計画へ落とし込めない。
   - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
     line: 172
-    anchor: "```"
+    anchor: oMLX
     message: 既定モデルの保留判断について、opencode.jsonやagent設定への影響、ScheduleまたはPJRへの登録要否、判断後の更新対象を明記する必要がある。
     message_ja: 既定モデルの保留判断について、opencode.jsonやagent設定への影響、ScheduleまたはPJRへの登録要否、判断後の更新対象を明記する必要がある。
   - id: F006
     severity: major
     rule: vp-pm-control-reporting
     line: 240
-    anchor: >-
-      API key は opencode の credential store に保存する。Mac ホストでは oMLX が `~/.omlx/settings.json` に永続化するため、このファイルや API key を
-      `opencode.json`、Git、またはリポジトリ内のファイルに書かない。
+    anchor: ""
     message: 比較結果の記録先・報告先・担当Role codeと、検出した課題・リスク・変更要求・採用決定をPJR等へ分離して転記する規則がない。
     message_ja: 比較結果の記録先・報告先・担当Role codeと、検出した課題・リスク・変更要求・採用決定をPJR等へ分離して転記する規則がない。
   - id: F007
@@ -186,14 +184,14 @@ findings:
     severity: major
     rule: vp-ba-stakeholder-clarity
     line: 211
-    anchor: │
+    anchor: Claude / Codex
     message: agent別の作業適性に加え、設定担当、運用確認者、技術選定の承認者と合意対象をRole codeで明記する必要がある。
     message_ja: agent別の作業適性に加え、設定担当、運用確認者、技術選定の承認者と合意対象をRole codeで明記する必要がある。
   - id: F010
     severity: minor
     rule: vp-arc-cross-document-consistency
     line: 217
-    anchor: ""
+    anchor: ├─ local agent A
     message: >-
       本文はClaude
       Code/Codexを「大規模なリファクタの最終レビュー」とする一方、docs/ja/projects/prj-0001/030-project-management/pm-organization.mdの24行目はAI
@@ -213,7 +211,7 @@ findings:
     severity: major
     rule: vp-dev-testability
     line: 261
-    anchor: ""
+    anchor: "- <https://huggingface.co/mlx-community/Qwen3.6-35B-A3B-4bit>"
     message: "API key付きで起動する前提にもかかわらず起動確認のcurlにAuthorization: Bearerヘッダーがなく、認証が正常な環境でも失敗するため、認証付きコマンドと期待結果へ修正する必要がある。"
     message_ja: "API key付きで起動する前提にもかかわらず起動確認のcurlにAuthorization: Bearerヘッダーがなく、認証が正常な環境でも失敗するため、認証付きコマンドと期待結果へ修正する必要がある。"
   - id: F013
@@ -234,9 +232,7 @@ findings:
     severity: major
     rule: vp-qe-verifiability
     line: 240
-    anchor: >-
-      API key は opencode の credential store に保存する。Mac ホストでは oMLX が `~/.omlx/settings.json` に永続化するため、このファイルや API key を
-      `opencode.json`、Git、またはリポジトリ内のファイルに書かない。
+    anchor: ""
     message: 比較指標は列挙されているものの採用・不採用を決める閾値、測定回数、許容失敗率がなく、同じ結果から一意にpass/failを判定できない。
     message_ja: 比較指標は列挙されているものの採用・不採用を決める閾値、測定回数、許容失敗率がなく、同じ結果から一意にpass/failを判定できない。
   - id: F016
@@ -250,21 +246,21 @@ findings:
     severity: major
     rule: vp-ops-release-readiness
     line: 172
-    anchor: "```"
+    anchor: oMLX
     message: 既定モデルの比較判断が未解決のまま、ready化の合格条件、承認Role、公開前確認、未採用時の扱いがないためリリース可否を判断できない。
     message_ja: 既定モデルの比較判断が未解決のまま、ready化の合格条件、承認Role、公開前確認、未採用時の扱いがないためリリース可否を判断できない。
   - id: F018
     severity: minor
     rule: vp-ops-operability
     line: 251
-    anchor: "- `host.docker.internal` を名前解決できること: `getent hosts host.docker.internal`"
+    anchor: "- 設定変更後にメニューバーからサーバーを再起動したこと"
     message: API keyの漏えい・期限切れ・ローテーション時に、Mac側の値とopencode credential storeを更新して再接続確認する手順を追記する必要がある。
     message_ja: API keyの漏えい・期限切れ・ローテーション時に、Mac側の値とopencode credential storeを更新して再接続確認する手順を追記する必要がある。
   - id: F019
     severity: major
     rule: vp-ops-agent-boundary
     line: 217
-    anchor: ""
+    anchor: ├─ local agent A
     message: Claude Code/Codexによる設計判断・最終レビュー・セキュリティ変更は支援作業に限定し、最終承認、公開可否判断、説明責任を人間のPOに残すmanual gateを明記する必要がある。
     message_ja: Claude Code/Codexによる設計判断・最終レビュー・セキュリティ変更は支援作業に限定し、最終承認、公開可否判断、説明責任を人間のPOに残すmanual gateを明記する必要がある。
 done_criteria:

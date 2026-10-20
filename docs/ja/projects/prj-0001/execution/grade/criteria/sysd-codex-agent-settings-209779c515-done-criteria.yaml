@@ -2,8 +2,8 @@
 id: sysd-codex-agent-settings-grade-criteria
 document: sysd-codex-agent-settings
 path: docs/ja/product/040-system-design/sysd-codex-agent-settings.md
-graded_at: "2026-10-10T16:16:39.706Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-20T16:28:11.682Z"
+graded_by: flash-high-executor
 content_hash: 42a2cd4f17db9160725236e0e253365b83ba8383f39c224e60b1de5a8f56eeaf
 summary:
   satisfied: 0
@@ -16,32 +16,42 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 対象利用者、業務要件、受入条件が明示されておらず要件との整合性が確認できない。
+    reason: >-
+      Business requirements, acceptance criteria, and specific justification for choosing Codex over other providers are
+      missing.
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: モデル値やreview executorの書き込み責務に関して本文および正本との間に矛盾が存在する。
+    reason: >-
+      Inconsistencies regarding model names, parent validation responsibilities, and review executor write boundaries
+      prevent PO approval.
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: "`agents.max_depth` などの技術的制約について対応バージョンや有効性が示されていない。"
+    reason: >-
+      Technical constraints for agents.max_depth validity, version support, and limit mapping dependencies remain
+      unverified and ambiguous.
   - id: DC-004
     text: テスト設計・検証観点の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: テスト設計や検証観点を参照するための章や pass / fail 条件が定義されていない。
+    reason: >-
+      Verification viewpoints, test references, and pass/fail criteria for rate-limit patterns and sandbox boundaries
+      are missing.
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: モデル値や検証主体、書き込み責務の矛盾により実装の基礎として利用できない。
+    reason: >-
+      Mismatches between document content and source configs (.specdojo/exec-defaults.yaml, .codex/config.toml) prevent
+      implementation readiness.

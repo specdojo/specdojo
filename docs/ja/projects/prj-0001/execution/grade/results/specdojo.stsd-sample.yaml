@@ -6,8 +6,8 @@ target: kata
 rubric: grade-rubric-v2
 verdict: pass
 score: 95
-graded_at: "2026-09-27T22:05:40.145Z"
-graded_by: codex-expert-executor
+graded_at: "2026-10-20T20:25:20.464Z"
+graded_by: flash-high-executor
 content_hash: f7e0277a7d5144dd093561174b4fb750e94fc816ce75fef967ee6f6efc59c55b
 categories:
   purpose:
@@ -113,9 +113,11 @@ findings:
     line: 41
     anchor: "| `T-01`  | 開始     | 入荷済み | 入荷受入     | 商品受領後に受入日時と数量を仕入記録へ記録した   | 検品前の商品を一意に識別する                   |"
     message: T-01 は受入日時・数量の記録だけで遷移成立と読める一方、「入荷済み」の成立条件は納品情報と発注内容の照合も要求するため、照合未実施時の pass / fail が一意になるよう T-01 の条件を成立条件へ揃えてください。
+    message_ja: T-01 は受入日時・数量の記録だけで遷移成立と読める一方、「入荷済み」の成立条件は納品情報と発注内容の照合も要求するため、照合未実施時の pass / fail が一意になるよう T-01 の条件を成立条件へ揃えてください。
   - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 41
     anchor: "| `T-01`  | 開始     | 入荷済み | 入荷受入     | 商品受領後に受入日時と数量を仕入記録へ記録した   | 検品前の商品を一意に識別する                   |"
     message: 「入荷済み」の成立条件にある納品情報と発注内容の照合が T-01 と Mermaid の初期遷移から欠落しているため、状態一覧と遷移定義が同じ成立事実を要求するよう両方へ照合条件を追加してください。
+    message_ja: 「入荷済み」の成立条件にある納品情報と発注内容の照合が T-01 と Mermaid の初期遷移から欠落しているため、状態一覧と遷移定義が同じ成立事実を要求するよう両方へ照合条件を追加してください。

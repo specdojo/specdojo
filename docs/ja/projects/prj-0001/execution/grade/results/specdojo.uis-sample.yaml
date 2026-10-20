@@ -3,31 +3,77 @@ version: 1
 document: specdojo:uis-sample
 path: docs/ja/specdojo/samples/uis-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 56
-graded_at: "2026-09-09T16:47:56.552Z"
-graded_by: gemma-expert-executor
+score: 54
+graded_at: "2026-10-20T20:48:55.306Z"
+graded_by: flash-high-executor
 content_hash: 66bf1ffd140f13122a4b219ec36099cdb9574bf03efdbb7d6134b68333386388
 categories:
-  consistency:
-    score: 50
-  usability:
+  purpose:
+    score: 63
+  operations:
+    score: 75
+  planning:
     score: 67
+  business:
+    score: 58
   architecture:
-    score: 100
+    score: 75
+  usability:
+    score: 58
+  implementation:
+    score: 63
   quality:
+    score: 42
+  consistency:
     score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
     level: 3
     score: 75
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 2
     score: 50
@@ -43,60 +89,215 @@ viewpoints:
   vp-ux-language-consistency:
     level: 2
     score: 50
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 1
-  major: 6
-  minor: 1
+  major: 13
+  minor: 10
   note: 0
 findings:
-  - id: F005
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 3
-    message: ルールブック第 5 章で定義された標準構成（概要、対象ユーザー/利用目的等）に従っておらず、構成が完全に異なる。
-    anchor: "## 1. 目的と適用範囲"
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 4
-    message: Frontmatter の type が `project` となっており、ルールブックで指定された `screen` と矛盾している。
-    anchor: ""
-  - id: F008
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 4
-    message: Frontmatter の type 指定値がルールブックの定義（screen）と不整合である。
-    anchor: ""
-  - id: F004
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 7
-    message: Frontmatter に必須項目である `title` が欠落している。
-    anchor: "## 2. 入力情報"
   - id: F001
     severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 8
-    message: サンプルとしての具体性を欠いており、特定の画面を対象とした仕様として記述すべきである。
-    anchor: ""
-  - id: F006
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 8
-    message: 本文書は「画面仕様の書き方」を記述した解説書になっており、ルールブックが定義する「完成例（sample）」としての責務を果たしていない。
-    anchor: ""
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、業務ユーザー視点の画面の利用目的や表示項目、操作を定義するための最小サンプルである。
+    message: >-
+      The document defines only a meta-purpose of being a sample rather than specifying the business purpose and scope
+      of a concrete screen.
+    message_ja: このドキュメントは、具体的な画面のビジネス目的やスコープを規定するのではなく、サンプルであるというメタ的な目的のみを定義しています。
   - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      The unresolved issues section lacks specific decision criteria, decision makers, impact scope, and actionable next
+      steps required for PO approval.
+    message_ja: 未解決事項のセクションには、POの承認に必要な具体的な決定基準、意思決定者、影響範囲、および実行可能な次のステップが不足しています。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# [画面仕様](../rulebooks/uis-rulebook.md) サンプル"
+    message: The document does not explicitly define the human PO approval responsibility and target publication scope.
+    message_ja: このドキュメントは、人間によるPOの承認責任と対象となる公開スコープを明示的に定義していません。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      The document lacks work units, completion conditions, and responsible role codes necessary for implementation task
+      breakdown and scheduling.
+    message_ja: このドキュメントには、実装タスクの分解とスケジューリングに必要な作業単位、完了条件、および担当ロールコードが不足しています。
+  - id: F005
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      Potential risks, dependencies on upstream/downstream deliverables, and schedule impacts are not identified for the
+      unresolved issue.
+    message_ja: 未解決事項について、潜在的なリスク、アップストリーム/ダウンストリームの成果物への依存関係、およびスケジュールの影響が特定されていません。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      The unresolved issue lacks reporting destinations, responsible role codes, and clear separation for transfer to
+      project management records.
+    message_ja: 未解決事項には、報告先、担当ロールコード、およびプロジェクト管理記録への転記のための明確な分離が不足しています。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The document fails to articulate the specific user persona, operational problems, expected business value, and
+      success criteria for the target screen.
+    message_ja: このドキュメントは、対象となる画面の具体的なユーザーペルソナ、運用上の問題、期待されるビジネス価値、および成功基準を説明できていません。
+  - id: F008
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 8
+    anchor: ""
+    message: サンプルとしての具体性を欠いており、特定の画面を対象とした仕様として記述すべきである。
+    message_ja: サンプルとしての具体性を欠いており、特定の画面を対象とした仕様として記述すべきである。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 5
+    anchor: 本書は、業務ユーザー視点の画面の利用目的や表示項目、操作を定義するための最小サンプルである。
+    message: >-
+      The document refers only to generic business users and fails to identify concrete stakeholder roles, user
+      contexts, or reviewing parties.
+    message_ja: このドキュメントは一般的なビジネスユーザーにのみ言及しており、具体的なステークホルダーの役割、ユーザーのコンテキスト、またはレビュー担当者を特定できていません。
+  - id: F010
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 10
+    anchor: "- 前提: プロジェクト文脈は handbook の共通方針に準拠する"
+    message: Technical constraints, external dependencies, and validation technical prerequisites are not specified.
+    message_ja: 技術的な制約、外部依存関係、および検証のための技術的な前提条件が指定されていません。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 21
+    anchor: >-
+      | ------------ | ---------------------------------------------------------- | ------------------------------------
+      |
+    message: >-
+      Section 3 and the table in Section 4 redundantly repeat the exact same description of primary contents and
+      purpose.
+    message_ja: セクション3とセクション4の表は、主要な内容と目的について全く同じ説明を冗長に繰り返しています。
+  - id: F012
+    severity: major
+    rule: vp-arc-single-responsibility
+    line: 1
+    anchor: "# [画面仕様](../rulebooks/uis-rulebook.md) サンプル"
+    message: >-
+      The document conflates meta-commentary about authoring samples with the concrete UI specification itself,
+      obscuring its single responsibility.
+    message_ja: このドキュメントは、サンプルの作成に関するメタ的なコメントと具体的なUI仕様自体を混同しており、単一の責務を不明確にしています。
+  - id: F013
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      The document contains only abstract topic names without providing concrete UI fields, operations, or state
+      transitions necessary for implementation.
+    message_ja: このドキュメントには抽象的なトピック名のみが含まれており、実装に必要な具体的なUIフィールド、操作、または状態遷移が提供されていません。
+  - id: F014
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: The document does not identify the change impact scope on related UI screens, backend APIs, or data schemas.
+    message_ja: このドキュメントは、関連するUI画面、バックエンドAPI、またはデータスキーマへの変更の影響範囲を特定していません。
+  - id: F015
+    severity: minor
+    rule: vp-dev-testability
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      Verification methods, test criteria, and expected behavior conditions for validating screen behavior are not
+      provided.
+    message_ja: 画面の動作を検証するための検証方法、テスト基準、および期待される動作条件が提供されていません。
+  - id: F016
     severity: major
     rule: vp-qe-verifiability
     line: 29
-    message: 期待される成果物である「画面仕様」における判定基準や検証方法の記述例が示されておらず、完成例として機能していない。
     anchor: "| -------------- | ------------------------ |"
-  - id: F007
+    message: 期待される成果物である「画面仕様」における判定基準や検証方法の記述例が示されておらず、完成例として機能していない。
+    message_ja: 期待される成果物である「画面仕様」における判定基準や検証方法の記述例が示されておらず、完成例として機能していない。
+  - id: F017
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: ルールブック第 5 章で定義された標準構成（概要、対象ユーザー/利用目的等）に従っておらず、構成が完全に異なる。
+    message_ja: ルールブック第 5 章で定義された標準構成（概要、対象ユーザー/利用目的等）に従っておらず、構成が完全に異なる。
+  - id: F018
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 4
+    anchor: ""
+    message: Frontmatter の type が `project` となっており、ルールブックで指定された `screen` と矛盾している。
+    message_ja: Frontmatter の type が `project` となっており、ルールブックで指定された `screen` と矛盾している。
+  - id: F019
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: Frontmatter に必須項目である `title` が欠落している。
+    message_ja: Frontmatter に必須項目である `title` が欠落している。
+  - id: F020
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 8
+    anchor: ""
+    message: 本文書は「画面仕様の書き方」を記述した解説書になっており、ルールブックが定義する「完成例（sample）」としての責務を果たしていない。
+    message_ja: 本文書は「画面仕様の書き方」を記述した解説書になっており、ルールブックが定義する「完成例（sample）」としての責務を果たしていない。
+  - id: F021
     severity: major
     rule: vp-ux-readability
     line: 29
-    message: 「最小記述例」として要点を列挙しているが、実際のドキュメント構造を用いた具体例ではないため、読者が適用方法を理解しにくい。
     anchor: "| -------------- | ------------------------ |"
+    message: 「最小記述例」として要点を列挙しているが、実際のドキュメント構造を用いた具体例ではないため、読者が適用方法を理解しにくい。
+    message_ja: 「最小記述例」として要点を列挙しているが、実際のドキュメント構造を用いた具体例ではないため、読者が適用方法を理解しにくい。
+  - id: F022
+    severity: major
+    rule: vp-ux-language-consistency
+    line: 4
+    anchor: ""
+    message: Frontmatter の type 指定値がルールブックの定義（screen）と不整合である。
+    message_ja: Frontmatter の type 指定値がルールブックの定義（screen）と不整合である。
+  - id: F023
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Concrete readiness criteria and checklist items required to transition the document from draft to ready are not
+      defined.
+    message_ja: ドキュメントを下書きから準備完了状態に移行するために必要な具体的な準備基準とチェックリスト項目が定義されていません。
+  - id: F024
+    severity: minor
+    rule: vp-ops-operability
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: Operational maintenance workflows, change management procedures, and contact roles are not documented.
+    message_ja: 運用のメンテナンスワークフロー、変更管理手順、および連絡担当ロールが文書化されていません。
