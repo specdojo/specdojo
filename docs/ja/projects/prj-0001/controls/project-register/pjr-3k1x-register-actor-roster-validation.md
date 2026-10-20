@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-3k1x-register-actor-roster-validation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-20T12:59:05Z"
+  completed_at: "2026-10-20T13:51:01Z"
+  conclusion: register の --by を人と agent の名簿と予約名（SpecDojo・specdojo-orchestrator・night-orchestrator）で確かめ、alias は実体名で記録する。名簿にない名前は記帳の前に止める。オーケストレーター本文の規則は PJR-C50G で書いた
 ---
 
 # PJR-3K1X register の --by の actor が名簿と照らし合わされず、書き方がばらばらになっている

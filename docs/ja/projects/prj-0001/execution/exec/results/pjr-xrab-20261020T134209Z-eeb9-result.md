@@ -4,12 +4,14 @@ specdojo:
   type: exec-result
   task_id: PJR-XRAB
   mode: edit
-  status: in_progress
+  status: blocked
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-xrab-20261020T134209Z-eeb9-plan.md
   started_at: "2026-10-20T13:42:09.188Z"
+  completed_at: "2026-10-20T13:51:35.259Z"
   agent: sol-executor
+  block_reason: "rate limit reached; rate limit fallback: sol-executor -> opus-executor at 2026-10-20T13:47:01.303Z"
 ---
 
 # Edit Result

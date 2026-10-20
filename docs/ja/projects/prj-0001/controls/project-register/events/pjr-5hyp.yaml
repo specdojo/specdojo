@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_897bf32ba4fd40ef9552b2906b2ffcc4
+- v: 1
+  id: reg_cadd979ab97d4aeb96a90c93bfb03948
+  ts: "2026-10-20T13:47:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・差分・親の検証・JSEY の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: 個票の difficulty と exec-defaults の routing で agent を振り分けるようにした。CLI の指定は表より優先し、difficulty や表がない場合は今の自動選択のまま。統合後の動作は PJR-JSEY で確認した
+  previous_event_id: reg_e21ef4d5f43a442b91a4d4db9a9b2d1f
