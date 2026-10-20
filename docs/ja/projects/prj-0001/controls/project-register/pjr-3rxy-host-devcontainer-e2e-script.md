@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-20T11:08:30Z"
@@ -38,13 +38,17 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                      | 担当 | 状態 | メモ |
-| --- | --------------------------------------------------------- | ---- | ---- | ---- |
-| 1   | ホストで動かす devcontainer の E2E のスクリプトを用意する | DEV  | open | -    |
+| No  | 作業                                                      | 担当 | 状態 | メモ                                 |
+| --- | --------------------------------------------------------- | ---- | ---- | ------------------------------------ |
+| 1   | ホストで動かす devcontainer の E2E のスクリプトを用意する | DEV  | done | `tools/e2e/devcontainer-host-e2e.ts` |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `tools/e2e/devcontainer-host-e2e.ts` を追加した。手元のソースを npm tarball にし、一時リポジトリで `init --yes --provider claude --devcontainer`、`devcontainer up`、`devcontainer exec` による項目別検査を行う。
+- remote user と `~/.local/bin` の所有者が `node` であること、tmux・Vim・Emacs・Claude Code CLI が導入されること、および開発用コンテナに Docker CLI がないことを検査する。
+- 通常終了時と異常終了時に container・名前付き volume・新規 container image・一時ディレクトリを片づけ、`--keep` 指定時だけ調査用に残す。
+- [[specdojo:remote-host-development-guide|常時稼働ホスト運用ガイド]] に実行方法と前提条件を追記した。
+- executor の sandbox では Docker を利用できないため、Mac ホストでの実行結果の記録は利用者による確認を要する。
 
 ## 5. 関連ドキュメント
 

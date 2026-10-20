@@ -1,0 +1,17 @@
+実装を完了しました。
+
+- [E2E スクリプト](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3RXY/tools/e2e/devcontainer-host-e2e.ts)を追加
+- npm tarballから一時リポジトリを初期化し、実コンテナで利用者・所有者・各CLIを検査
+- container・volume・新規imageを自動削除し、`--keep` に対応
+- Docker CLIがコンテナ内にないことも検査
+- [運用ガイド](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3RXY/docs/ja/specdojo/guides/remote-host-development-guide.md)と[個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-3RXY/docs/ja/projects/prj-0001/controls/project-register/pjr-3rxy-host-devcontainer-e2e-script.md)を更新
+
+実コンテナ検査はDockerのあるMacで次を実行してください。
+
+```bash
+node --import tsx tools/e2e/devcontainer-host-e2e.ts
+```
+
+<specdojo_executor_evidence>
+{"final_message":"ホスト用Dev Container E2Eスクリプト、利用手順、個票の対応結果を更新した。実コンテナ検査はDockerを利用できるMacでの確認を要する。","validations":[{"command":"npx prettier --write tools/e2e/devcontainer-host-e2e.ts docs/ja/specdojo/guides/remote-host-development-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-3rxy-host-devcontainer-e2e-script.md","status":"passed","summary":"変更したTypeScriptとMarkdownを整形した"},{"command":"node --import tsx tools/e2e/devcontainer-host-e2e.ts --help","status":"passed","summary":"スクリプトを読み込み、利用方法を正常に表示した"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビューを正常に生成した"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog検証は終了コード0。既存の未作成文書に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはない"},{"command":"node --import tsx tools/e2e/devcontainer-host-e2e.ts","status":"requires_human","summary":"DockerとDev Container CLIを利用できるMacホストで、実コンテナの作成・検査・cleanupを実行する必要がある"}]}
+</specdojo_executor_evidence>
