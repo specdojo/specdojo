@@ -42,6 +42,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - README・ドキュメントサイトのトップ・全体概要ガイド・遂行の技活用ガイドで、呼び方の表記を「Spec道（仕様道）の道場」に揃えました（PJR-EVAX）。
 - Quick Start ガイドの導入手順で、Dev Container を作成し推奨 preset（tmux・Emacs・Vim・推奨の VS Code 拡張と設定・`.vscode/extensions.json`）を適用する対話例と、`devcontainer scaffold --preset recommended` の例に揃えました。コンテナを開く方法や、Dev Container を使わずに進める手順、`init --yes --devcontainer` で推奨 preset が入る説明も補記しました（PJR-SVHF）。
+- README の「会話で操作する」の例で、オーケストレーターの発言をコマンドの提示から、何をするか・中身・影響を日本語で示して承認を求める形に改めました。コマンドは既定では見せず求めたときに見せる説明に合わせました（PJR-7P27）。
 
 ## [0.4.0] - 2026-10-18
 
