@@ -1,0 +1,56 @@
+判定は `complete-with-findings` です。Job Run の出力は統合できます。全10件が `needs-work` のままで、Job の result に1項目の報告漏れがあるため、所見付きとしました。
+
+**差分の範囲（一致）**
+- 2つの commit 間の差分は27ファイルです。内訳は、10件分の評価結果ファイル（`grade/results`）と10件分の done_criteria 記録の更新、Run の記録（Run JSON、plan、result、evidence 4ファイル）の追加だけです。
+- 評価対象の成果物本体（`docs/ja/product/`）には変更がありません。
+- evidence.json の `changes` に挙がっている21件も、差分と一致しています。
+
+**状態・記録の整合（一致）**
+- Run JSON は state が `succeeded` で、attempt 1 の終了コードは 0 です。
+- evidence の終了コードも 0 で、stderr は空でした。
+- stdout には `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0` と出ています。`results.tsv` の10行はすべて `passed` でした。
+- 終了コード75・中断・`failed`・`retry_exhausted` はいずれもありません。`partial` ではないので、再試行用の記録を確かめる必要もありません。
+- 評価結果ファイルの評価者は `flash-high-executor` です。指定された `agy-expert-executor` の別名として `.specdojo/agent-members.yaml` に登録されているので、矛盾はありません。
+
+**評価結果の鮮度（最新）**
+- `grade list --changed-only`、`--dependency-changed`、`--incomplete`、`grade state --exhausted` を実行しました。評価済みの10件はどの出力にも出てきません。
+- 出力に出た未評価の候補（`sysd-github-copilot-agent-settings`、`pm-raci` など）は、件数上限 `limit=10` で選ばれなかったものです。次回の Run の対象になります。
+
+**score と verdict の変化**
+- 全10件が `needs-work` で、score は 53〜71 です。
+- 前回から score が変わったのは2件だけです。
+  - `sysd-claude-agent-settings`: 47 → 59
+  - `sysd-codex-agent-settings`: 41 → 53
+- 残り8件は score が同じで、評価日時と文書内容のハッシュ値（`content_hash`）だけが更新されています。
+- 5件は、前回評価の後に文書内容が変わっていました（`content_hash` が変化）。
+- 評価設定の見直しが必要なほど極端な偏りは見当たりません。ただ、全件 `needs-work` が続いている点は監視が必要です。
+
+**未充足の done_criteria と確認担当ロール**
+
+| 成果物 | 未充足 / 全項目 | 未充足の確認担当ロール |
+| --- | --- | --- |
+| `stsd-register-entry` | 5/5 | BA, PO, ARC, QE, DEV |
+| `sysd-antigravity-agent-settings` | 5/5 | BA, PO, ARC, QE, DEV |
+| `sysd-claude-agent-settings` | 5/5 | BA, PO, ARC, QE, DEV |
+| `sysd-codex-agent-settings` | 5/5 | BA, PO, ARC, QE, DEV |
+| `sysd-critical-flows` | 5/5 | BA, PO, ARC, QE, DEV |
+| `tsd-home-mac-dev-server` | 5/5 | BA, PO, ARC, QE, DEV |
+| `tsd-omlx-opencode` | 4/5 | BA, PO, ARC, QE |
+| `tsd-home-mac-dev-server-usage` | 4/5 | BA, PO, ARC, QE |
+| `sysd-agent-settings` | 3/5 | BA, PO, QE |
+| `sysd-cross-cutting-policy` | 2/4 | DEV, OPS |
+
+**finding（統合は妨げない）**
+1. Job の result には、Job 固有の確認事項のうち「未充足の done_criteria がある成果物と確認担当ロールの特定」が書かれていません。申し送りも「改善計画を策定」とあるだけです。上の表の内容を各ロールへ引き継ぐ必要があります。
+2. result の記述に軽微な誤りがあります。誤字「成果目」と、Run JSON の行数「+57」（実際の差分は58行追加）です。
+
+**確認できなかった範囲**
+- 各評価結果ファイルの finding 本文と、score の変化理由までは読んでいません（指示どおり再評価もしていません）。
+- `logs/grade/runs/` 配下にある元の `results.tsv` は直接開いていません。確認したのは、evidence に記録された stdout の内容です。
+- plan と result はすべて読んだわけではありません。
+
+レビューで変更したファイルはありません。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict: complete-with-findings。2つの commit 間の差分は27ファイルで、Job の出力（評価結果ファイル10件・done_criteria 記録10件・Run JSON・plan・result・evidence 4件）だけで構成され、`docs/ja/product/` には変更がない。Run JSON の state `succeeded`・終了コード0・stderr は空で、stdout は `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0`、`results.tsv` の10行はすべて `passed`。終了コード75・中断・`failed`・`retry_exhausted` はなく、`partial` でもない。鮮度確認では、`grade list --changed-only` / `--dependency-changed` / `--incomplete` と `grade state --exhausted` のどの出力にも評価済み10件は出なかった（最新）。出力に出た未評価の候補（`sysd-github-copilot-agent-settings`、`pm-raci` など）は件数上限 `limit=10` で選ばれなかったもので、次回の Run の対象。全10件が `needs-work`・score 53〜71。前回から score が変わったのは `sysd-claude-agent-settings` 47→59 と `sysd-codex-agent-settings` 41→53 の2件だけ。評価者 `flash-high-executor` は `agy-expert-executor` の別名として登録されており矛盾しない。未充足の done_criteria と確認担当ロール: `stsd-register-entry` / `sysd-antigravity-agent-settings` / `sysd-claude-agent-settings` / `sysd-codex-agent-settings` / `sysd-critical-flows` / `tsd-home-mac-dev-server` は5/5（BA, PO, ARC, QE, DEV）、`tsd-omlx-opencode` と `tsd-home-mac-dev-server-usage` は4/5（BA, PO, ARC, QE）、`sysd-agent-settings` は3/5（BA, PO, QE）、`sysd-cross-cutting-policy` は2/4（DEV, OPS）。finding（統合は妨げない）: (1) Job の result に Job 固有の確認事項『未充足の done_criteria がある成果物と確認担当ロールの特定』の記載がない。上記の一覧を各ロールへ引き継ぐ必要がある。(2) result に誤字『成果目』と、Run JSON の行数『+57』の誤り（実際の差分は58行追加）がある。確認できなかった範囲: 各評価結果ファイルの finding 本文と score の変化理由（再評価はしていない）、`logs/grade/runs/` 配下の元の `results.tsv`（確認したのは evidence に記録された stdout）、plan と result の全文。","validations":[{"command":"git diff --stat b5e6d1869cb7cc2770df1847137adf387354915c..ce52e5063831c85063141dbd62a3059080758c2d && git diff --name-status b5e6d1869cb7cc2770df1847137adf387354915c..ce52e5063831c85063141dbd62a3059080758c2d","status":"passed","summary":"27ファイルすべてが Job Run の出力（評価結果ファイル・done_criteria 記録・Run の記録）で、対象外の変更はない"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"評価済み10件は出力されず、評価結果は最新。出力された7件は今回の Run で選ばれなかった候補"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"評価済み10件は出力されない"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"出力なし（評価パイプラインの未完了はない）"},{"command":"node dist/specdojo.js grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力なし（失敗回数が上限に達した成果物はない）"}]}
+</specdojo_executor_evidence>
