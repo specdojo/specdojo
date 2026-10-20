@@ -52,7 +52,22 @@ GHBP で post-create.sh の中では ~/.local/bin を PATH に足したが、dev
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 4.1. 解決内容
+
+- `templates/devcontainer/devcontainer.json` に `"remoteEnv": { "PATH": "/home/node/.local/bin:${containerEnv:PATH}" }` を追加した。
+- `src/devcontainer/scaffold.ts` において、`devcontainer.json` 生成時に `remoteUser` に基づくパス（`/home/<remoteUser>/.local/bin`）を `remoteEnv.PATH` の先頭へ追加するようにした。すでに `remoteEnv` が存在する場合でも他の環境変数を保持し、`PATH` が設定されている場合も先頭に重複なく追加するようにした。
+- `tools/e2e/devcontainer-host-e2e.ts` に、ログインシェルから `command -v claude` が `$HOME/.local/bin/claude` を返すことの検査を追加した。
+- [[specdojo:remote-host-development-guide]] の 2.1 節および 6.3 節に、`devcontainer.json` の `remoteEnv` 設定内容および v0.4.0 以前の環境に対する `remoteEnv` 追加・リビルド手順を追記した。
+- `CHANGELOG.md` の `## [0.4.1] - 未定` 不具合修正節に変更内容を追記した。
+
+### 4.2. 確認結果
+
+- 単体テスト `tests/src/devcontainer/scaffold.test.ts` に `remoteEnv` の生成・既存設定の保持・`remoteUser` 別パス生成・重複防止のテストケースを追加した。
+- 親 runner による検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）に委譲する。
+
+### 4.3. 再発防止策
+
+- コンテナ環境の scaffold において環境変数やパスの反映が必要な場合は、起動時スクリプト（`post-create.sh`）だけでなく、後から開くシェルやエディタターミナルに反映される `devcontainer.json` の `remoteEnv` 設定も合わせて定義・検証する。
 
 ## 5. 関連ドキュメント
 

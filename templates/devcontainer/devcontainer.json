@@ -18,6 +18,9 @@
   "containerEnv": {
     "GIT_CONFIG_GLOBAL": "/home/node/.config/git/config"
   },
+  "remoteEnv": {
+    "PATH": "/home/node/.local/bin:${containerEnv:PATH}"
+  },
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {

@@ -1,0 +1,26 @@
+PJR-5JRJ「devcontainer で後から開く端末に ~/.local/bin が PATH に入らない」の対応を完了しました。
+
+### 実施内容
+
+1. **テンプレートへの `remoteEnv` 設定の追加**:
+   - [templates/devcontainer/devcontainer.json](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5JRJ/templates/devcontainer/devcontainer.json) に `"remoteEnv": { "PATH": "/home/node/.local/bin:${containerEnv:PATH}" }` を追加しました。
+
+2. **scaffold 処理での動的 `remoteEnv` 構成**:
+   - [src/devcontainer/scaffold.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5JRJ/src/devcontainer/scaffold.ts) において、`devcontainer.json` 生成時に `remoteUser` に応じたパス（`/home/<remoteUser>/.local/bin`）を `remoteEnv.PATH` の先頭へ追加するようにしました。既存の `remoteEnv` に他の環境変数が存在する場合も保持し、既に `PATH` が定義されている場合も先頭に重複なく追加します。
+
+3. **単体テストの追加**:
+   - [tests/src/devcontainer/scaffold.test.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5JRJ/tests/src/devcontainer/scaffold.test.ts) に、`remoteEnv` の生成、既存変数の保持、`remoteUser` 別パス生成、および `PATH` の重複防止を検証するテストケースを追加しました。
+
+4. **ホスト E2E スクリプトの更新**:
+   - [tools/e2e/devcontainer-host-e2e.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5JRJ/tools/e2e/devcontainer-host-e2e.ts) に、ログインシェルから `command -v claude` が `$HOME/.local/bin/claude` を返すことの検査を追加しました。
+
+5. **ガイド文書の更新**:
+   - [docs/ja/specdojo/guides/remote-host-development-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5JRJ/docs/ja/specdojo/guides/remote-host-development-guide.md) の 2.1 節および 6.3 節に、`remoteEnv` の設定内容と、v0.4.0 などの既存環境に対する `remoteEnv` 追加・リビルド手順を追記しました。
+
+6. **Changelog および個票の更新**:
+   - [CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5JRJ/CHANGELOG.md) の `## [0.4.1] - 未定` 不具合修正節に変更内容を追記しました。
+   - 個票 [docs/ja/projects/prj-0001/controls/project-register/pjr-5jrj-devcontainer-remote-env-local-bin.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-5JRJ/docs/ja/projects/prj-0001/controls/project-register/pjr-5jrj-devcontainer-remote-env-local-bin.md) の「## 4. 対応結果」を実施内容で更新しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-5JRJ devcontainer.json remoteEnv PATH configuration, scaffold logic, tests, E2E check, and documentation updated successfully","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-5jrj-devcontainer-remote-env-local-bin.md docs/ja/specdojo/guides/remote-host-development-guide.md src/devcontainer/scaffold.ts templates/devcontainer/devcontainer.json tests/src/devcontainer/scaffold.test.ts tools/e2e/devcontainer-host-e2e.ts","status":"passed","summary":"Prettier check and format passed for all changed files"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"Deliverables catalog validation passed"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"No *.yaml or *.yml file changed"},{"command":"specdojo catalog build","status":"not_applicable","reason":"No dct-*.yaml file changed"},{"command":"specdojo register build","status":"not_applicable","reason":"pjr-index.md was not changed"},{"command":"specdojo exec refresh","status":"not_applicable","reason":"No sch-*.yaml file changed"},{"command":"node --import tsx tools/e2e/devcontainer-host-e2e.ts","status":"requires_human","summary":"Host Docker daemon and Dev Container CLI required for devcontainer creation and verification"}]}
+</specdojo_executor_evidence>
