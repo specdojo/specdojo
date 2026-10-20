@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-3K1X",
   "run_id": "20261020T131254681Z-a1701205",
-  "updated_at": "2026-10-20T13:26:42.817Z",
+  "updated_at": "2026-10-20T13:30:39.104Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-3k1x-20261020T131254Z-b07d-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-10-20T13:26:42.817Z",
-      "completed_at": null,
+      "completed_at": "2026-10-20T13:30:39.104Z",
       "artifact_ref": null
     }
   },
