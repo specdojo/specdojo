@@ -26,7 +26,7 @@ specdojo:
 - 次の 0.4.1 の範囲の項目がすべて close されている。
   - 追加機能: PJR-T46Y（統合後の review と自動の close）・PJR-6DHY（夜間の orchestrator）・PJR-NS8Y（親検証の build と format-check）・PJR-EN6M（devcontainer の推奨の設定の preset）
   - 変更: PJR-16S0（orch の script の名前を model の系統にそろえる）・PJR-283N（雛形の空行をまとめる）
-  - 不具合修正: PJR-7AW0・PJR-8WBN・PJR-0EFN・PJR-G90K・PJR-E412・PJR-DKD8・PJR-GHBP・PJR-A6PV・PJR-EJ4F（2026-10-20 に追加）・PJR-0M7W（2026-10-20 に追加）・PJR-5JRJ（2026-10-20 に追加）
+  - 不具合修正: PJR-7AW0・PJR-8WBN・PJR-0EFN・PJR-G90K・PJR-E412・PJR-DKD8・PJR-GHBP・PJR-A6PV・PJR-EJ4F（2026-10-20 に追加）・PJR-0M7W（2026-10-20 に追加）・PJR-5JRJ（2026-10-20 に追加）・PJR-2DA0（2026-10-20 に追加）
 - 範囲を広げる場合は、利用者の承認を得て、この個票の範囲に書き足す。
 - CHANGELOG の `## [0.4.1] - 未定` の節に範囲の項目の利用者に見える変更が載っていることを確かめ、漏れを補う。公開日を記入する。
 - develop の `npm run check` が通る。

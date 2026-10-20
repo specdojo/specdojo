@@ -23,13 +23,18 @@ tools/e2e/devcontainer-host-e2e.ts の使い方の表示とガイドは node --i
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `tools/e2e/devcontainer-host-e2e.ts` の冒頭のコメントと使い方の表示を、`node tools/e2e/devcontainer-host-e2e.ts`（`--keep` も同じ）に改める。
+- [[specdojo:remote-host-development-guide]] の実行の方法を同じく改め、ホストとコンテナで `node_modules` を共有しているため `tsx` は使えないこと、Node 22.18 以上（型を外して直接動かせる版）が要ることを書く。
+- スクリプトが Node の標準ライブラリだけを import していることを保つ（型だけの import は `import type` にする）。
+- `node tools/e2e/devcontainer-host-e2e.ts --help` が、コンテナの中でも使い方を表示して終わることを確かめる。
+- `npx prettier --check` と `npm run lint:md` が通る。親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG には記載しない（開発用のスクリプトと、その使い方の記述のため）。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                        | 担当 | 状態 | メモ |
+| --- | --------------------------- | ---- | ---- | ---- |
+| 1   | E2E の案内を tsx なしに直す | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -37,4 +42,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-3rxy-host-devcontainer-e2e-script]]（元の項目）
