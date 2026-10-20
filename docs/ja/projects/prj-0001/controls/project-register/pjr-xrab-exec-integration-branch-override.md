@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T08:54:03Z"
   due_on: "2026-10-31"
+  block_reason: "rate limit reached; rate limit fallback: sol-executor -> opus-executor at 2026-10-20T13:47:01.303Z"
 ---
 
 # PJR-XRAB exec run でプロダクトリポジトリの統合先を run ごとに指定できるようにする
