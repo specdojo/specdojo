@@ -351,7 +351,7 @@ git push origin --delete feature/branch-policy
 | GitHub flow        | トピックのブランチ名（例: `feature/<topic>`） | トピックのブランチから統合先へ統合し、最終的に `main` へは PR で取り込む。トピックごとに書き換える場合もある               |
 | git flow           | `develop`                                     | feature を `develop` に統合し、`develop` から `main` へ release する。既存の `project/<id>/develop` の仕組みと同じ型で動く |
 
-GitHub flow では、トピックごとまたは run ごとの `integration_branch` を指定できればよい。現状は 1 リポジトリ 1 統合先のため、運用に合わせて書き換えます。
+GitHub flow で register の worktree 実行ごとにトピックを変える場合は、`exec run --integration-branch <repo>=<branch>` で設定ファイルを書き換えずに統合先を指定できます。指定がない場合は `repos[].integration_branch`、それも省略した場合はそのリポジトリの現在のブランチを使います。
 
 ### 10.2. merge の方式ごとの `Refs:` の残り方
 

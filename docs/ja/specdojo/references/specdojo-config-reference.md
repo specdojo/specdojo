@@ -115,6 +115,8 @@ SpecDojo Configuration Reference
 | `integration_branch` | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。exec branch もこのブランチの先端から作ります。                                             |
 | `setup`              | 任意 | 両方 `true`                    | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。                          |
 
+register の worktree 実行では、`exec run --integration-branch <repo>=<branch>` により `integration_branch` を run ごとに上書きできます。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定方法、ローカルブランチの検査、並列実行と再開時の扱いは [[specdojo:command-reference]] を参照してください。
+
 ```json
 {
   "base_path": "docs/ja/projects/prj-0001",
@@ -141,7 +143,7 @@ SpecDojo Configuration Reference
 `repos` を宣言した project の `exec run --worktree` と `exec worktree prepare` は、タスクごとに次の worktree を作ります。宣言の無い project は従来どおり `<worktree_base>/<task-id>/` の直下に 1 つだけ作ります。
 
 - `<worktree_base>/<task-id>/project/`: プロジェクトリポジトリの worktree です。agent の作業ディレクトリ（`cwd`）になります。`project` が予約名なのはこのためです。
-- `<worktree_base>/<task-id>/<name>/`: 宣言した各リポジトリの worktree です。exec branch は `integration_branch`（省略時は現在のブランチ）の先端から作ります。
+- `<worktree_base>/<task-id>/<name>/`: 宣言した各リポジトリの worktree です。exec branch は run の `--integration-branch`、`integration_branch`、現在のブランチの順で解決した統合先の先端から作ります。
 
 agent には、各 worktree の絶対パスを次の環境変数で渡します。
 

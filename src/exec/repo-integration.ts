@@ -357,7 +357,7 @@ export function productMergeBlockers(product: ProductWorktree): RepoIntegrationB
     blockers.push(
       block(
         `integration branch ${target === "HEAD" ? "(detached HEAD)" : target} is not a local ` +
-          `branch; set repos[].integration_branch`,
+          `branch; set repos[].integration_branch or exec run --integration-branch`,
       ),
     );
     return blockers;

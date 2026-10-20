@@ -27,6 +27,7 @@ import {
   productIntegrationTarget,
   productRepoEnvironment,
   pruneOrphanedProductExecBranches,
+  resolveProductRepos,
   withProductWorktrees,
   type ProductRepo,
 } from "../../../src/exec/task-repos.js";
@@ -866,6 +867,55 @@ describe("multi-repository task worktrees", () => {
     // productMergeBlockers does not block because tmp/ is excluded and root files were committed
     const blockers = productMergeBlockers(app1!);
     expect(blockers).toEqual([]);
+  });
+
+  it("integrates into the branch given by --integration-branch instead of the configured one", () => {
+    const fixture = setup();
+    const app1Root = fixture.products[0]!.repoRoot;
+    const app2Root = fixture.products[1]!.repoRoot;
+    const app1Current = git(app1Root, "branch", "--show-current");
+    git(app1Root, "branch", "topic");
+    git(app2Root, "branch", "topic-2");
+    fixture.products.splice(
+      0,
+      fixture.products.length,
+      ...resolveProductRepos(
+        fixture.repo,
+        {
+          repos: [
+            { name: "app1", path: "../app1" },
+            { name: "app2", path: "../app2", integration_branch: "release" },
+          ],
+        },
+        ["app1=topic", "app2=topic-2"],
+      ),
+    );
+    const worktree = prepare(fixture);
+    commitIntegrationFixture(worktree);
+
+    integrateFixture(fixture, worktree);
+    const traces = worktree.repos!.map(productIntegrationTrace);
+
+    expect(git(app1Root, "show", "topic:app1.txt")).toBe("app1 change");
+    expect(gitResult(app1Root, ["cat-file", "-e", `${app1Current}:app1.txt`]).status).not.toBe(0);
+    expect(git(app2Root, "show", "topic-2:app2.txt")).toBe("app2 change");
+    expect(gitResult(app2Root, ["cat-file", "-e", "release:app2.txt"]).status).not.toBe(0);
+    expect(traces.map((trace) => [trace.repo, trace.integrationBranch, trace.commit])).toEqual([
+      ["app1", "topic", git(app1Root, "rev-parse", "topic")],
+      ["app2", "topic-2", git(app2Root, "rev-parse", "topic-2")],
+    ]);
+  });
+
+  it("rejects an --integration-branch value that is not a local branch of the repository", () => {
+    const fixture = setup();
+    const config = { repos: [{ name: "app1", path: "../app1" }] };
+
+    expect(() => resolveProductRepos(fixture.repo, config, ["app1=missing"])).toThrow(
+      /--integration-branch for repository "app1" is not a local branch: missing/,
+    );
+    expect(() => resolveProductRepos(fixture.repo, config, ["app1=bad..name"])).toThrow(
+      /--integration-branch for repository "app1" is not a valid branch name: bad\.\.name/,
+    );
   });
 
   it("records the merge commit of a product that a resumed integration skips", () => {

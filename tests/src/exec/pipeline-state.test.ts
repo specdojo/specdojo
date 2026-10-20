@@ -111,6 +111,40 @@ describe("pipeline state", () => {
     expect(validate(state), JSON.stringify(validate.errors)).toBe(true);
   });
 
+  it("persists schema-valid integration branch overrides and keeps them across stage updates", () => {
+    const { root, executionPath } = setup();
+    const location = pipelineStateLocation({
+      repoRoot: root,
+      worktreePath: root,
+      executionPath,
+      taskId: "PJR-XRAB",
+      runId: "run-1",
+    });
+    const created = createPipelineState({
+      taskId: "PJR-XRAB",
+      runId: "run-1",
+      updatedAt: "2026-10-20T00:00:00Z",
+      integrationBranches: { app1: "feature/topic" },
+    });
+    const state = updatePipelineStage(
+      created,
+      "executor",
+      { status: "running" },
+      "2026-10-20T00:01:00Z",
+    );
+    writePipelineState(location.path, state);
+
+    expect(readPipelineState(location.path)?.integration_branches).toEqual({
+      app1: "feature/topic",
+    });
+    const schema = load(readFileSync(schemaPath(), "utf8")) as Record<string, unknown>;
+    const ajv = new Ajv2020({ allErrors: true, strict: false });
+    addFormats(ajv);
+    const validate = ajv.compile(schema);
+    expect(validate(state), JSON.stringify(validate.errors)).toBe(true);
+    expect(validate({ ...state, integration_branches: { app1: "" } })).toBe(false);
+  });
+
   it("reuses only succeeded evidence matching the task and run", () => {
     const { root, executionPath } = setup();
     const taskId = "T-TEST-doc-010";
