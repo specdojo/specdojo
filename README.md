@@ -135,13 +135,14 @@ npx specdojo devcontainer scaffold --provider claude
 
 ```text
 あなた : このプロジェクトを始めたい。まず登録簿を用意して、最初の作業を起票して。
-オーケストレーター : 次を実行します。よろしいですか。
-           npx specdojo register scaffold --project prj-0001
-           npx specdojo register add --project prj-0001 --type todo --title "..."
+オーケストレーター : 登録簿を用意し、todo を 1 件起票します。
+           ・中身: 種類 todo、タイトル「最初のタスク」、優先度 high
+           ・影響: 登録簿のファイルを作成し、develop へ commit します
+           よろしいですか？
 あなた : お願いします。
 ```
 
-状態を変える操作は承認を得てから実行し、`git push` や破壊的操作は行いません。起票した項目の
+コマンドは既定では見せず、求めたときに見せます。状態を変える操作は承認を得てから実行し、`git push` や破壊的操作は行いません。起票した項目の
 実行、状況の確認、成果物の生成も同じ流れで進みます。
 
 ```text

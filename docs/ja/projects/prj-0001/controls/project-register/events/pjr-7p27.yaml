@@ -38,3 +38,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-C50G"]'
+- v: 1
+  id: reg_650a2f8846ae47c8b48d21692cb054c9
+  ts: "2026-10-20T21:31:19Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_32947f59f0834222a339186726cf36b5
+- v: 1
+  id: reg_e6da6d361c9342f8b7925ba4430b9700
+  ts: "2026-10-20T21:50:32Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_650a2f8846ae47c8b48d21692cb054c9
