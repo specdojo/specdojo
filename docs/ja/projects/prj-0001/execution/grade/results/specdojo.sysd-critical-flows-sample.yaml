@@ -3,29 +3,75 @@ version: 1
 document: specdojo:sysd-critical-flows-sample
 path: docs/ja/specdojo/samples/sysd-critical-flows-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 50
-graded_at: "2026-09-06T02:43:15.913Z"
-graded_by: gemma-expert-executor
+score: 48
+graded_at: "2026-10-20T20:27:42.822Z"
+graded_by: flash-high-executor
 content_hash: a152fa706968e804e5137191852c059685a41fd1958ce03af6f2e3561c9b8eb1
 categories:
-  consistency:
-    score: 25
-  usability:
-    score: 83
-  architecture:
+  purpose:
+    score: 50
+  operations:
     score: 75
+  planning:
+    score: 58
+  business:
+    score: 58
+  architecture:
+    score: 67
+  usability:
+    score: 67
+  implementation:
+    score: 63
   quality:
-    score: 25
+    score: 33
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
     level: 2
     score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
+    level: 2
+    score: 50
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
     level: 2
     score: 50
   vp-qe-verifiability:
@@ -41,6 +87,15 @@ viewpoints:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,49 +103,209 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 2
-  major: 4
-  minor: 0
+  major: 14
+  minor: 7
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
+    rule: vp-po-purpose-alignment
     line: 1
-    message: rulebook で必須とされている「5. 関連ドキュメント導線」章が欠落しており、他成果物との整合性を確認できない。
-    anchor: ""
+    anchor: "# 重要フロー サンプル"
+    message: >-
+      The document defines an abstract purpose statement but fails to describe any concrete critical flows or
+      architectural decisions for the target candy store sales management system, leaving its necessity and purpose
+      alignment unfulfilled.
+    message_ja: 文書には抽象的な目的文は定義されていますが、対象となるキャンディショップの販売管理システムに関する具体的なクリティカルフローやアーキテクチャ上の決定事項が記述されていないため、その必要性や目的との整合性が満たされていません。
   - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Concrete decision points, assumptions, business impacts, and decision-makers are not identified beyond a generic
+      unresolved item, making it impossible for the product owner to judge approval or readiness.
+    message_ja: 具体的な決定ポイント、前提条件、ビジネスへの影響、および意思決定者が、一般的な未解決事項として示されているだけで特定されておらず、プロダクトオーナーが承認や準備状況を判断することが不可能です。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# 重要フロー サンプル"
+    message: >-
+      The document does not specify human approval responsibility or publication accountability for the sample
+      deliverable.
+    message_ja: 文書には、サンプル成果物に対する人間の承認責任や公開の責任が明記されていません。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      The document provides only abstract descriptions without concrete workflow steps, work units, completion criteria,
+      or role codes required for project scheduling and task breakdown.
+    message_ja: 文書には抽象的な説明しかなく、プロジェクトのスケジューリングやタスク分解に必要な具体的なワークフローのステップ、作業単位、完了基準、またはロールコードが提供されていません。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Dependencies on downstream deliverables such as test specifications and operational procedures, as well as risks
+      and project issues, are not identified.
+    message_ja: テスト仕様書や運用手順書などの後続の成果物への依存関係、およびリスクやプロジェクトの課題が特定されていません。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Unresolved items lack tracking metadata such as reporting destinations, concrete action policies, and assigned
+      role codes for progress management.
+    message_ja: 未解決事項には、報告先、具体的なアクションポリシー、および進捗管理のための割り当てられたロールコードといった追跡用メタデータが不足しています。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      The document does not describe specific business problems, user personas, expected values, or operational impacts
+      of failure for the candy store sales management system.
+    message_ja: 文書には、キャンディショップの販売管理システムにおける具体的なビジネス上の問題、ユーザーペルソナ、期待される価値、または失敗時の運用への影響が記述されていません。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      Requirements, acceptance criteria, and explicit in-scope and out-of-scope boundaries for the critical flows are
+      completely absent.
+    message_ja: クリティカルフローに関する要件、受け入れ基準、および明示的なインスコープとアウトオブスコープの境界が完全に欠落しています。
+  - id: F009
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 1
+    anchor: "# 重要フロー サンプル"
+    message: >-
+      Specific stakeholders, user personas, operational roles, and approvers are not clearly identified beyond generic
+      department labels.
+    message_ja: 特定のステークホルダー、ユーザーペルソナ、運用ロール、および承認者が、一般的な部署名以外に明確に特定されていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      Technical constraints, persistence points, external dependencies, and consistency models required for critical
+      flows are not specified.
+    message_ja: クリティカルフローに必要な技術的制約、永続化ポイント、外部依存関係、および一貫性モデルが指定されていません。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      Section 3 and the table in Section 4 duplicate identical sentences regarding the purpose and main contents without
+      providing any additional decision-making value.
+    message_ja: セクション3とセクション4の表は、目的と主な内容に関して同一の文章を重複して記載しており、追加の意思決定価値を提供していません。
+  - id: F012
     severity: major
     rule: vp-arc-single-responsibility
     line: 1
+    anchor: "# 重要フロー サンプル"
     message: 成果物の完成例（sample）としての責務ではなく、書き方のガイドとしての記述になっており、役割が不適切である。
-    anchor: ""
-  - id: F005
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: rulebook が定義する構成に従っておらず、具体的な完成例として機能していないため, sample として不適格である。
-    anchor: ""
-  - id: F004
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 3
-    message: rulebook で順序固定とされている5章構成（概要、一覧、詳細、観測性、導線）を無視し、必須項目がほぼすべて欠落している。
-    anchor: ""
-  - id: F003
+    message_ja: 成果物の完成例（sample）としての責務ではなく、書き方のガイドとしての記述になっており、役割が不適切である。
+  - id: F013
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: >-
+      The document lacks concrete inputs, outputs, schemas, persistence triggers, and completion criteria necessary for
+      developers to implement the flows.
+    message_ja: 文書には、開発者がフローを実装するために必要な具体的な入力、出力、スキーマ、永続化トリガー、および完了基準が不足しています。
+  - id: F014
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: Impact scope on existing systems, schemas, interfaces, and backward compatibility is not identified for the flows.
+    message_ja: フローに関する既存のシステム、スキーマ、インターフェース、および後方互換性への影響範囲が特定されていません。
+  - id: F015
+    severity: major
+    rule: vp-dev-testability
+    line: 13
+    anchor: "## 3. 記述内容"
+    message: Test perspectives, expected results, verification commands, and error handling verification are entirely missing.
+    message_ja: テストの観点、期待される結果、検証コマンド、およびエラーハンドリングの検証が完全に欠落しています。
+  - id: F016
     severity: major
     rule: vp-qe-verifiability
     line: 21
-    message: 冪等性や失敗時挙動など, pass/fail を判定可能な具体的な設定値や基準の例が記載されていない。
     anchor: >-
-      | 項目         |
-      値                                                                                                                               
-      | 備考                                 |
-  - id: F006
+      | ------------ |
+      ---------------------------------------------------------------------------------------------------------------------------------
+      | ------------------------------------ |
+    message: 冪等性や失敗時挙動など, pass/fail を判定可能な具体的な設定値や基準の例が記載されていない。
+    message_ja: 冪等性や失敗時挙動など, pass/fail を判定可能な具体的な設定値や基準の例が記載されていない。
+  - id: F017
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: rulebook で順序固定とされている5章構成（概要、一覧、詳細、観測性、導線）を無視し、必須項目がほぼすべて欠落している。
+    message_ja: rulebook で順序固定とされている5章構成（概要、一覧、詳細、観測性、導線）を無視し、必須項目がほぼすべて欠落している。
+  - id: F018
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# 重要フロー サンプル"
+    message: rulebook で必須とされている「5. 関連ドキュメント導線」章が欠落しており、他成果物との整合性を確認できない。
+    message_ja: rulebook で必須とされている「5. 関連ドキュメント導線」章が欠落しており、他成果物との整合性を確認できない。
+  - id: F019
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 重要フロー サンプル"
+    message: rulebook が定義する構成に従っておらず、具体的な完成例として機能していないため, sample として不適格である。
+    message_ja: rulebook が定義する構成に従っておらず、具体的な完成例として機能していないため, sample として不適格である。
+  - id: F020
     severity: major
     rule: vp-ux-readability
     line: 21
-    message: 「最小記述例」の内容がドキュメントのメタ情報に留まっており、初見の読者が重要フローの書き方を理解できる具体例になっていない。
     anchor: >-
-      | 項目         |
-      値                                                                                                                               
-      | 備考                                 |
+      | ------------ |
+      ---------------------------------------------------------------------------------------------------------------------------------
+      | ------------------------------------ |
+    message: 「最小記述例」の内容がドキュメントのメタ情報に留まっており、初見の読者が重要フローの書き方を理解できる具体例になっていない。
+    message_ja: 「最小記述例」の内容がドキュメントのメタ情報に留まっており、初見の読者が重要フローの書き方を理解できる具体例になっていない。
+  - id: F021
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 15
+    anchor: "- 主な内容: 最大5フロー（冪等/補償/非同期/順序/整合性/外部I/F障害など）について、境界・永続化点・再実行性・失敗時挙動を図または箇条書きで定義"
+    message: >-
+      Standard terms and naming conventions defined in the rulebook (such as flow ID prefix 'scf-xxx', persistence
+      points, and compensation) are not concretely utilized.
+    message_ja: >-
+      Standard terms and naming conventions defined in the rulebook (such as flow ID prefix 'scf-xxx', persistence
+      points, and compensation) are not concretely utilized.
+  - id: F022
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Criteria for transitioning from draft to ready, pre-release review checklists, and approval roles are not
+      specified.
+    message_ja: ドラフトから準備完了への移行基準、リリース前のレビューチェックリスト、および承認ロールが指定されていません。
+  - id: F023
+    severity: major
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# 重要フロー サンプル"
+    message: >-
+      Operational monitoring requirements, trace_id propagation, alerting conditions, and maintenance escalation
+      procedures required by the rulebook are completely missing.
+    message_ja: >-
+      Operational monitoring requirements, trace_id propagation, alerting conditions, and maintenance escalation
+      procedures required by the rulebook are completely missing.
