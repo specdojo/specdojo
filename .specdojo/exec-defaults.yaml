@@ -36,6 +36,32 @@ pipeline:
 run:
   register_execution: worktree
 
+# register 項目の難しさ（個票の difficulty）ごとの agent の振り分け（PJR-5HYP）。
+# exec run --register と orchestrator night が使い、CLI の --executor-by などの指定が優先する。
+# difficulty のない個票は、従来どおり stage_role と priority で選ぶ。
+# - hard: codex（sol）。上限のときは解除を待つ。待たずに切り替える場合の代わりは opus。
+# - medium: agy の flash-high。代わりは codex（sol）。
+# - easy: ローカルの qwen。docs・src・tests の外を触らない小さな作業に限る。代わりは flash-high。
+routing:
+  hard:
+    executor_by: sol-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: wait
+    fallback_executor_by: opus-executor
+    fallback_reporter_by: sonnet-reporter
+  medium:
+    executor_by: flash-high-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: fallback
+    fallback_executor_by: sol-executor
+    fallback_reporter_by: sonnet-reporter
+  easy:
+    executor_by: qwen-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: fallback
+    fallback_executor_by: flash-high-executor
+    fallback_reporter_by: sonnet-reporter
+
 rate_limit_detection:
   # exit_codes は最小限にする。多くの agent CLI は通常失敗と agent 自身の block も
   # exit 1 で返すため、素の exit 1 は rate limit と区別できない。通常失敗を利用制限
