@@ -144,6 +144,7 @@ describe("rebuildRegisterTicketFromEvents", () => {
     const update = event(4, "2026-09-28T04:00:00Z", "update", "waiting", "waiting", [
       { field: "due", from: "2026-10-01", to: "2026-10-15" },
       { field: "priority", from: "medium", to: "high" },
+      { field: "difficulty", from: "-", to: "hard" },
       { field: "approach", from: "-", to: "fully-guided" },
       { field: "targets", from: "-", to: '["deliverable-doc"]' },
       { field: "derived_from", from: "-", to: '["PJR-AB12"]' },
@@ -162,6 +163,7 @@ describe("rebuildRegisterTicketFromEvents", () => {
       "approach",
       "autopilot",
       "derived_from",
+      "difficulty",
       "due",
       "priority",
       "targets",
@@ -169,6 +171,7 @@ describe("rebuildRegisterTicketFromEvents", () => {
     expect(readSpecdojoFields(rebuilt.content)).toMatchObject({
       item_status: "in-progress",
       priority: "high",
+      difficulty: "hard",
       due_on: "2026-10-15",
       approach: "fully-guided",
       targets: ["deliverable-doc"],

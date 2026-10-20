@@ -10,6 +10,7 @@ import {
   CELL_TODO,
   REMOVE_REGISTER_ITEM_FIELD,
   VALID_PRIORITIES,
+  VALID_DIFFICULTIES,
   VALID_STATUSES,
   VALID_TYPES,
   type PjrItem,
@@ -94,6 +95,7 @@ export function registerCreateCommands(
   addCmd.requiredOption("--title <title>", "Short title for the item");
   addCmd.option("--description <text>", "Description shown in the list", "_TODO_");
   addCmd.option("--priority <priority>", `Priority: ${VALID_PRIORITIES.join(" | ")}`, "medium");
+  addCmd.option("--difficulty <difficulty>", `Difficulty: ${VALID_DIFFICULTIES.join(" | ")}`);
   addCmd.option("--status <status>", `Status: ${VALID_STATUSES.join(" | ")}`, "open");
   addCmd.option("--owner <owner>", "Owner or role", "_TODO_");
   addCmd.option(
@@ -142,6 +144,14 @@ export function registerCreateCommands(
 
       const registeredAt = parseRegisterTimestampOption(opts.registered, "registered", CELL_TODO);
       const completedAt = parseRegisterTimestampOption(opts.completed, "completed", CELL_NONE);
+      if (
+        opts.difficulty !== undefined &&
+        !(VALID_DIFFICULTIES as readonly string[]).includes(opts.difficulty)
+      ) {
+        throw new Error(
+          `Invalid difficulty: "${opts.difficulty}". Must be one of: ${VALID_DIFFICULTIES.join(", ")}`,
+        );
+      }
       if (opts.target?.some((target: string) => target.trim() === "-")) {
         throw new Error("--target - is only valid with register update");
       }
@@ -158,6 +168,7 @@ export function registerCreateCommands(
         title: opts.title,
         description: opts.description,
         priority: opts.priority,
+        ...(opts.difficulty !== undefined ? { difficulty: opts.difficulty } : {}),
         status: opts.status,
         owner: opts.owner,
         registeredAt: registeredAt ?? nowUtcTimestamp(),
@@ -263,6 +274,10 @@ export function registerUpdateCommand(
   updateCmd.option("--title <title>", "Update title");
   updateCmd.option("--description <text>", "Update description");
   updateCmd.option("--priority <priority>", `Update priority: ${VALID_PRIORITIES.join(" | ")}`);
+  updateCmd.option(
+    "--difficulty <difficulty>",
+    `Update difficulty: ${VALID_DIFFICULTIES.join(" | ")}; use - to remove`,
+  );
   updateCmd.option("--owner <owner>", "Update owner or role");
   updateCmd.option("--due <date>", "Update due date (YYYY-MM-DD, -, or _TODO_)");
   updateCmd.option("--conclusion <text>", "Update conclusion or use - to remove it");
@@ -303,6 +318,7 @@ export function registerUpdateCommand(
         "title",
         "description",
         "priority",
+        "difficulty",
         "owner",
         "due",
         "conclusion",
@@ -315,7 +331,7 @@ export function registerUpdateCommand(
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --from, --topic)",
+          "At least one field option must be specified (--title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --from, --topic)",
         );
       }
 
@@ -325,6 +341,15 @@ export function registerUpdateCommand(
       ) {
         throw new Error(
           `Invalid priority: "${opts.priority}". Must be one of: ${VALID_PRIORITIES.join(", ")}`,
+        );
+      }
+      if (
+        opts.difficulty !== undefined &&
+        opts.difficulty !== "-" &&
+        !(VALID_DIFFICULTIES as readonly string[]).includes(opts.difficulty)
+      ) {
+        throw new Error(
+          `Invalid difficulty: "${opts.difficulty}". Must be one of: ${VALID_DIFFICULTIES.join(", ")}, -`,
         );
       }
       if (opts.due !== undefined && !/^(\d{4}-\d{2}-\d{2}|-|_TODO_)$/.test(opts.due)) {
@@ -392,6 +417,11 @@ export function registerUpdateCommand(
         validateTargetsWithoutApproach: opts.target !== undefined,
       });
       const approachTargetUpdates: RegisterItemFieldUpdates = {
+        ...(opts.difficulty !== undefined
+          ? {
+              difficulty: opts.difficulty === "-" ? REMOVE_REGISTER_ITEM_FIELD : opts.difficulty,
+            }
+          : {}),
         ...(opts.approach !== undefined
           ? {
               approach: nextApproach === undefined ? REMOVE_REGISTER_ITEM_FIELD : nextApproach,
@@ -414,10 +444,14 @@ export function registerUpdateCommand(
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
         ...(opts.priority !== undefined ? { priority: opts.priority } : {}),
+        ...(opts.difficulty !== undefined && opts.difficulty !== "-"
+          ? { difficulty: opts.difficulty }
+          : {}),
         ...(opts.owner !== undefined ? { owner: opts.owner } : {}),
         ...(opts.due !== undefined ? { due: opts.due } : {}),
         ...(opts.conclusion !== undefined ? { conclusion: opts.conclusion } : {}),
       };
+      if (opts.difficulty === "-") delete updated.difficulty;
       if (opts.autopilot !== undefined) {
         if (opts.autopilot === "-") delete updated.autopilot;
         else updated.autopilot = "approved";

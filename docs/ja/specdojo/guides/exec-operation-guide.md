@@ -600,6 +600,7 @@ specdojo register add \
   --type todo \
   --title "SpecDojo 設定ガイドの改訂" \
   --topic exec-config-guide-revision \
+  --difficulty medium \
   --approach fully-guided \
   --target specdojo:exec-config-guide \
   --owner DEV
@@ -611,6 +612,7 @@ specdojo register add \
 specdojo register update \
   --project <project-id> \
   --id <PJR-ID> \
+  --difficulty hard \
   --approach fully-guided \
   --target specdojo:exec-config-guide
 ```
@@ -628,6 +630,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
+  difficulty: medium
   owner: DEV
   approach: fully-guided
   targets:
@@ -635,6 +638,8 @@ specdojo:
 ```
 
 `approach` を指定した個票では、`targets` は **1 件だけ必須** です（schedule のタスクと同様に 1 件の成果物または 1 件の kata を対象にします）。
+
+`difficulty` は `hard` / `medium` / `easy` のいずれかです。`exec run --register` と `orchestrator night` は、agent を CLI で指定していない段について `exec-defaults.yaml` の `routing` から executor・reporter・rate limit 対応を選びます。既存の個票で `difficulty` を省略した場合や表がない場合は、従来どおり agent 名簿の `priority` 順で自動選択します。CLI の指定は表より優先します。
 
 ### 4.3. 対象の指定方法と kata 保守 approach の選び方
 

@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- register 個票に `difficulty`（`hard` / `medium` / `easy`）を追加し、`exec-defaults.yaml` の `routing` で難易度ごとの executor・reporter・rate limit 対応・fallback を選べるようにしました。`exec run --register` と夜間 orchestrator が同じ表を使い、CLI 指定は表より優先し、難易度または表がない既存個票は従来の `priority` 自動選択を維持します。`specdojo init --exec` も選択した provider に合う表を生成します（PJR-5HYP）。
+
 - `devcontainer scaffold --preset recommended` を追加しました。端末版 Emacs と Vim、tmux、SpecDojo の文書作業向け VS Code 拡張・保存時整形・YAML schema 関連付けをまとめて設定し、同じ拡張を `.vscode/extensions.json` にも推薦します。個別の `--editor`・`--tmux` と併用でき、既存のエディタ設定は上書きしません。`specdojo init` では Dev Container を選んだ場合だけ推奨 preset の利用を質問し、`--yes --devcontainer` では利用します（PJR-EN6M）。
 
 - 親 runner の検証（`pipeline.parent_validations`）の固定許可リストに `build`（`npm run build`）と `format-check`（`npm run format:check`）を追加しました。別リポジトリ構成などでプロダクトリポジトリのビルドと整形の検証を親 runner に委譲できます（PJR-NS8Y）。

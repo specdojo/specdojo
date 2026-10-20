@@ -14,6 +14,21 @@ run:
   register_execution: worktree
   # Opt in after the team is ready for review-agent verdicts to close todo/issue items.
   register_post_review: false
+# `specdojo init --exec` replaces these generic names with members from the selected providers.
+# Explicit `exec run --register` stage/recovery options override the matching difficulty route.
+routing:
+  hard:
+    executor_by: primary-executor
+    reporter_by: primary-reporter
+    on_rate_limit: wait
+  medium:
+    executor_by: primary-executor
+    reporter_by: primary-reporter
+    on_rate_limit: stop
+  easy:
+    executor_by: primary-executor
+    reporter_by: primary-reporter
+    on_rate_limit: stop
 rate_limit_detection:
   exit_codes: []
   stderr_patterns: [rate limit, "429"]
