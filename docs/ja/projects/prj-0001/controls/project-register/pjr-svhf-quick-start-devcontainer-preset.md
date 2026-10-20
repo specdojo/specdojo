@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-svhf-quick-start-devcontainer-preset
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-20T13:39:26Z"
+  completed_at: "2026-10-20T21:32:20Z"
+  conclusion: Quick Start ガイドの体験の手順を Dev Container と推奨 preset を選ぶ例にし、入るものと開き方、使わない場合の進め方を書いた。個別に設定する場合の例を --preset recommended 付きにし、init --yes --devcontainer で推奨 preset が入ることを書いた
   derived_from:
     - PJR-EN6M
 ---
