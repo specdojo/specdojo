@@ -1048,7 +1048,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
         ]);
 
         expect(stdout.join("")).toContain(
-          "--register pipeline execution requires both --executor-by and --reporter-by.",
+          "--register pipeline execution requires both --executor-by and --reporter-by, either explicitly or from the item's difficulty route.",
         );
         expect(process.exitCode).toBe(1);
       });

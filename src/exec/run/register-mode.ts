@@ -30,6 +30,7 @@ import {
 } from "./shared.js";
 import { loadRosterForExecutionPath } from "./agent.js";
 import {
+  applyRegisterDifficultyRouting,
   resolveRegisterCommand,
   isRegisterPipelineRequested,
   parseRegisterExecutorSelection,
@@ -81,34 +82,49 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
     process.stdout.write("No matching register items.\n");
     return;
   }
-  const hasExecutorSelection = executorSelection.kind !== "none";
-  const optsForItem = (pjrId: string): RunOpts => ({
-    ...opts,
-    executorBy: selectedRegisterExecutor(executorSelection, pjrId),
-  });
   for (const duplicate of duplicates) {
     process.stdout.write(`Skipping duplicate register item id: ${duplicate}\n`);
   }
   const failureMode: RegisterFailureMode = opts.onFailure
     ? (opts.onFailure as RegisterFailureMode)
     : "stop";
-  // --executor-by / --reporter-by は両方揃って初めて pipeline モードになる。片方だけの指定は
-  // 曖昧なため、実行前に明示的なエラーで止める（isRegisterPipelineRequested は片方でも true を
-  // 返すため、resolveRegisterPipelineCommand 側の対称チェックとは別に、ここで早期に検知する）。
-  // 再開は state が示す段だけを実行する。stale executor の再実行では各 agent の明示指定を
-  // 個別に許可し、省略時は state に記録された actor を使う。
-  if (
-    !opts.resume &&
-    ((hasExecutorSelection && !opts.reporterBy) || (!hasExecutorSelection && opts.reporterBy))
-  ) {
-    throw new Error("--register pipeline execution requires both --executor-by and --reporter-by.");
-  }
-
   const roster = loadRosterForExecutionPath(executionPath);
   const execDefaults = loadExecDefaultsConfig(
     resolveExecDefaultsPath(opts, schedulePath),
     executionPath,
   );
+  const optsForItem = (pjrId: string): RunOpts => {
+    const { item } = resolveRegisterRunTarget(projectId, pjrId);
+    const itemOptions: RunOpts = {
+      ...opts,
+      executorBy: selectedRegisterExecutor(executorSelection, pjrId),
+    };
+    const routed = applyRegisterDifficultyRouting(item, itemOptions, execDefaults);
+    // A resume without explicit stage overrides must keep the actors recorded in pipeline state.
+    // The route still supplies recovery behavior and fallbacks for those pinned actors.
+    return opts.resume
+      ? {
+          ...routed,
+          executorBy: itemOptions.executorBy,
+          reporterBy: itemOptions.reporterBy,
+        }
+      : routed;
+  };
+  // Validate the effective per-item selection before creating worktrees or changing register
+  // state. A route may supply the counterpart of one explicitly overridden stage.
+  if (!opts.resume) {
+    for (const pjrId of ids) {
+      const itemOpts = optsForItem(pjrId);
+      if (
+        (itemOpts.executorBy && !itemOpts.reporterBy) ||
+        (!itemOpts.executorBy && itemOpts.reporterBy)
+      ) {
+        throw new Error(
+          "--register pipeline execution requires both --executor-by and --reporter-by, either explicitly or from the item's difficulty route.",
+        );
+      }
+    }
+  }
   const useWorktree = !!opts.worktree;
   const postReviewAgents = opts.postReview
     ? resolveRegisterPostReviewAgents(roster, opts, execDefaults)

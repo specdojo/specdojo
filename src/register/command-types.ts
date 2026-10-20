@@ -1,7 +1,7 @@
 import type { Command } from "commander";
 import type { Approach } from "../shared/agent-types.js";
 import type { RegisterEventAction } from "./events.js";
-import type { PjrItem, RegisterItemFieldUpdates } from "./item.js";
+import type { PjrItem, RegisterDifficulty, RegisterItemFieldUpdates } from "./item.js";
 
 export type RegisterPaths = {
   projectId: string;
@@ -26,6 +26,7 @@ export type RegisterAddFields = {
   title: string;
   description: string;
   priority: string;
+  difficulty?: RegisterDifficulty;
   status: string;
   owner: string;
   registeredAt: string;

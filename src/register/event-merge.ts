@@ -1,7 +1,7 @@
 // 統合 merge で登録簿の記帳ファイルが競合したときの解決処理。イベントファイルは追記型の記録なので、
 // 両側のイベントの和集合（同一 id は 1 件）を時刻順に並べ、`previous_event_id` の連鎖を張り直す。
 // 個票は exec branch 側を基準にし、統合先だけにあるイベントが変えたフィールドのうち、frontmatter の
-// 単純な値へ写せるもの（type / priority / owner / due / approach / targets /
+// 単純な値へ写せるもの（type / priority / difficulty / owner / due / approach / targets /
 // derived_from）だけを再構築する。
 
 import {
@@ -163,6 +163,12 @@ function fieldUpdateFromChange(change: RegisterEventChange): RegisterItemFieldUp
       return isUnset ? undefined : { item_type: value };
     case "priority":
       return isUnset ? undefined : { priority: value };
+    case "difficulty":
+      return isUnset
+        ? { difficulty: REMOVE_REGISTER_ITEM_FIELD }
+        : ["hard", "medium", "easy"].includes(value)
+          ? { difficulty: value as "hard" | "medium" | "easy" }
+          : undefined;
     case "owner":
       return { owner: isUnset ? null : value };
     case "due":

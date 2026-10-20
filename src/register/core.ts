@@ -514,6 +514,7 @@ export function buildRegisterItemContent(opts: {
       description: opts.fields.description,
       type: opts.fields.type,
       priority: opts.fields.priority,
+      ...(opts.fields.difficulty ? { difficulty: opts.fields.difficulty } : {}),
       owner: opts.fields.owner,
       registeredAt: opts.fields.registeredAt,
       due: opts.fields.due,

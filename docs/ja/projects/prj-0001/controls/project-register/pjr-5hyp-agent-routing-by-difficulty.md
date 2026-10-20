@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   owner: DEV
   registered_at: "2026-10-20T12:03:52Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration"
   derived_from:
     - PJR-ZM1K
 ---

@@ -35,12 +35,12 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 
 ## 1. 設定ファイルの分担
 
-| ファイル                       | 役割                                                                                     | 粒度         |
-| ------------------------------ | ---------------------------------------------------------------------------------------- | ------------ |
-| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・実行要件・任意の `agent` / `agent_pipeline`             | トラック     |
-| `pm-members.yaml`              | 人間の identity・連絡先・対応 Role code                                                  | プロジェクト |
-| `.specdojo/agent-members.yaml` | agent の identity・capabilities・proficiency・priority・任意の `stage_role`              | リポジトリ   |
-| `.specdojo/exec-defaults.yaml` | provider 別起動コマンドテンプレート・rate limit 検出条件・リトライポリシー・同時実行上限 | システム     |
+| ファイル                       | 役割                                                                           | 粒度         |
+| ------------------------------ | ------------------------------------------------------------------------------ | ------------ |
+| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・実行要件・任意の `agent` / `agent_pipeline`   | トラック     |
+| `pm-members.yaml`              | 人間の identity・連絡先・対応 Role code                                        | プロジェクト |
+| `.specdojo/agent-members.yaml` | agent の identity・capabilities・proficiency・priority・任意の `stage_role`    | リポジトリ   |
+| `.specdojo/exec-defaults.yaml` | 難易度別の振り分け・provider 別起動コマンド・rate limit ポリシー・同時実行上限 | システム     |
 
 `sch-strategy` は通常、phase に「どんな能力が必要か」を書き、`.specdojo/agent-members.yaml` の候補から自動選択します。provider の利用枠を計画する phase だけは `agent` で個体を指名できます。
 
@@ -237,6 +237,38 @@ rate_limit_policy:
 ```
 
 `wait` の待機中は、同一 worktree と register / pipeline の状態を別 run から保護するため project の実行ロックを保持します。register worktree の `--join` 実行は共有枠の範囲で引き続き動作できます。wait / fallback の再開時刻と切替元・切替先は pipeline state と executor evidence に記録されます。
+
+### 5.1. register の難易度別振り分け
+
+`routing` は、個票の `difficulty`（`hard` / `medium` / `easy`）ごとに register pipeline の executor・reporter と、指名した agent が rate limit になったときの扱いを定義します。
+
+```yaml
+routing:
+  hard:
+    executor_by: sol-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: wait
+    fallback_executor_by: opus-executor
+    fallback_reporter_by: sonnet-reporter
+  medium:
+    executor_by: flash-high-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: fallback
+    fallback_executor_by: sol-executor
+    fallback_reporter_by: sonnet-reporter
+  easy:
+    executor_by: qwen-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: fallback
+    fallback_executor_by: flash-high-executor
+    fallback_reporter_by: sonnet-reporter
+```
+
+`exec run --register` は個票に `difficulty` があり、対応する表がある場合だけこの指定を使います。個票に難易度がない場合、または対応する表がない場合は、`stage_role` と `priority` による従来の自動選択へ戻ります。CLI の `--executor-by`・`--reporter-by`・`--on-rate-limit`・fallback 指定は、指定した項目だけ表より優先します。`on_rate_limit: wait` でも fallback は接続不能時の切替先として使用されます。
+
+上の `qwen-executor` を使う `easy` の例は、変更範囲が docs・src・tests の内側で完結し、それらの外を変更しない作業に限る運用を前提にしています。難易度は優先度ではなく、必要な推論・判断と安全な変更範囲から決めます。
+
+`specdojo init --exec` は、選択した provider の member に合わせて 3 段階の表を生成します。provider を複数選んだ場合は、後続 provider の executor / reporter を fallback の例にも使います。
 
 `connection_error_detection` は、provider API やローカル LLM へ接続できない失敗を `rate_limit_detection` と同じ終了コード・出力パターンの仕組みで検出します。`--fallback-executor-by` / `--fallback-reporter-by` または `rate_limit_policy.pinned` の対応する fallback があれば、`--on-rate-limit` の値とは独立して代替 agent へ1回だけ切り替えます。fallback が無い場合は通常の agent 失敗として停止します。接続エラーでは同じ agent の `wait` は行いません。切替原因は pipeline state・executor evidence・result に記録されます。文言は provider ごとに異なるため、`providers.<provider>.connection_error_detection` へ置くことを推奨します。
 

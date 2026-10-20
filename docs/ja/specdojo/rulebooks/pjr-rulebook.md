@@ -65,6 +65,7 @@ Project Register Documentation Rules
 | `item_type`     | 登録項目の分類                               | ○    |
 | `item_status`   | 登録項目の処理状態                           | ○    |
 | `priority`      | 対応優先度                                   | ○    |
+| `difficulty`    | agent 振り分け用の作業難易度                 | 任意 |
 | `owner`         | 主担当者または役割                           | 任意 |
 | `registered_at` | 起票日時                                     | 任意 |
 | `due_on`        | 対応期限または判断期限                       | 任意 |
@@ -76,7 +77,7 @@ Project Register Documentation Rules
 | `targets`       | 変更対象文書の doc id リスト                 | 任意 |
 
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
-- `item_type`、`item_status`、`priority` の値は schema の enum だけを使用する。
+- `item_type`、`item_status`、`priority`、`difficulty` の値は schema の enum だけを使用する。`difficulty` は `hard` / `medium` / `easy` のいずれかとし、省略時は従来の agent 自動選択を使う。
 - `block_reason` は `waiting` 中の直近の待機・失敗理由、`conclusion` は終端時の結論として用途を分ける。`register wait --reason` は前者だけを更新し、`waiting` 以外へ遷移すると現在値から削除する。削除前の理由は項目別イベントログの変更前の値に残す。
 - Frontmatter の構造化フィールドを本文や生成一覧へ手作業で複製しない。
 - `derived_from` は同じ project の元項目を `PJR-XXXX`、別 project の元項目を `<project-id>:PJR-XXXX` で記録する。自己参照や存在しない項目は使用しない。別 project が設定にない場合は書式だけを検証し、設定された後に存在確認できるよう project 修飾を維持する。

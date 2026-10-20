@@ -276,6 +276,8 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "PJR-AB12",
         "--priority",
         "high",
+        "--difficulty",
+        "hard",
         "--owner",
         "ARC",
         "--registered",
@@ -288,6 +290,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(ticket).toContain("  item_type: todo");
       expect(ticket).toContain("  item_status: open");
       expect(ticket).toContain("  priority: high");
+      expect(ticket).toContain("  difficulty: hard");
       expect(ticket).toContain("  owner: ARC");
       // タイムゾーン付きの指定は UTC へ正規化して保存する。
       expect(ticket).toContain('  registered_at: "2026-08-01T14:30:00Z"');
@@ -300,6 +303,11 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         from_status: null,
         to_status: "open",
       });
+      expect(readEvents(registerDir, "PJR-AB12")[0]?.changes).toContainEqual({
+        field: "difficulty",
+        from: "",
+        to: "hard",
+      });
       // 未定値（完了日時・結論）はキーを置かない。
       expect(ticket).not.toContain("completed_at");
       expect(ticket).not.toContain("conclusion");
@@ -311,6 +319,32 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(readFileSync(join(registerDir, "generated/pjr-views-by-status.md"), "utf8")).toContain(
         "PJR-AB12",
       );
+    });
+  });
+
+  it("update --difficulty は難易度を event 付きで変更・削除する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      const original = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]);
+      writeFileSync(ticketPath, original, "utf8");
+      writeInitialEvent(registerDir, "PJR-AB12", "pjr-ab12-topic.md", original);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--difficulty", "easy"]);
+      expect(readFileSync(ticketPath, "utf8")).toContain("  difficulty: easy");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "difficulty",
+        from: "-",
+        to: "easy",
+      });
+
+      await runRegister(["update", "--id", "PJR-AB12", "--difficulty", "-"]);
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("  difficulty:");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "difficulty",
+        from: "easy",
+        to: "-",
+      });
     });
   });
 

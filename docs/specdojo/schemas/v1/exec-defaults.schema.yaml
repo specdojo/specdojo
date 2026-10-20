@@ -41,6 +41,13 @@ properties:
       Global default behavior when an agent hits a rate limit during exec run.
       Used for members whose provider has no override under providers.<name>.
 
+  routing:
+    $ref: "#/$defs/DifficultyRouting"
+    description: >
+      Register pipeline agents and pinned rate-limit handling selected from the register item's
+      difficulty. Explicit CLI stage and recovery options override the matching route. Missing
+      difficulty entries preserve the existing priority-based automatic selection.
+
   providers:
     type: object
     description: >
@@ -57,6 +64,39 @@ properties:
       $ref: "#/$defs/ProviderOverride"
 
 $defs:
+  AgentNickname:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+
+  DifficultyRouting:
+    type: object
+    additionalProperties: false
+    minProperties: 1
+    properties:
+      hard:
+        $ref: "#/$defs/DifficultyRoute"
+      medium:
+        $ref: "#/$defs/DifficultyRoute"
+      easy:
+        $ref: "#/$defs/DifficultyRoute"
+
+  DifficultyRoute:
+    type: object
+    additionalProperties: false
+    required: [executor_by, reporter_by, on_rate_limit]
+    properties:
+      executor_by:
+        $ref: "#/$defs/AgentNickname"
+      reporter_by:
+        $ref: "#/$defs/AgentNickname"
+      on_rate_limit:
+        type: string
+        enum: [stop, wait, fallback]
+      fallback_executor_by:
+        $ref: "#/$defs/AgentNickname"
+      fallback_reporter_by:
+        $ref: "#/$defs/AgentNickname"
+
   ParentValidationId:
     type: string
     enum:
