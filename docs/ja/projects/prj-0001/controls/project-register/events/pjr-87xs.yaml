@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_5d259700ba004c86971def5c6a572d92
+  ts: "2026-10-20T13:14:23Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f593067daba34147abbeee134136bf80
+- v: 1
+  id: reg_34c18fcaa52d4dffa50435ddc03313f2
+  ts: "2026-10-20T13:36:33Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: git merge failed: CONFLICT (content): Merge conflict in CHANGELOG.md"
+  previous_event_id: reg_5d259700ba004c86971def5c6a572d92
