@@ -18,6 +18,7 @@ SpecDojo の利用者に影響する変更を記録します。
 ### 変更
 
 - `specdojo init` と `config scaffold` が追加するオーケストレーター起動スクリプトをモデルの系統名へ揃えました。Codex は `orch:sol`（`gpt-5.6-sol`）と `orch:terra`（`gpt-5.6-terra`）、Antigravity は `orch:flash`（`gemini-3.8-flash-high`）を追加し、旧 `orch:codex`・`orch:agy` は作りません。既存の `package.json` のスクリプトは上書き・削除しないため、scaffold の再実行後に新しい名前で起動を確認してから旧スクリプトを手動で削除してください。Claude Code と、利用環境ごとにモデルが異なる OpenCode の名前は変わりません（PJR-16S0）。
+- 同梱のオーケストレーターの本文に、承認の聞き方（コマンドではなく、何をするか・中身・影響を日本語で示す）、実行の運び方、close の前の確かめ方、止まったときの対処の表、完了条件の書き方、agent の選び方を加えました（PJR-C50G）。
 
 ### 不具合修正
 
