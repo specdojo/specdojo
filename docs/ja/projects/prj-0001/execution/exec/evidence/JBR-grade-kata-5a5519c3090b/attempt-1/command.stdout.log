@@ -1,0 +1,54 @@
+
+> specdojo@0.4.1 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-5a5519c3090b project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-5a5519c3090b
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/samples/utc-sample.md
+document complete: docs/ja/specdojo/samples/utc-sample.md
+document start: docs/ja/specdojo/templates/bps-template.md
+document complete: docs/ja/specdojo/templates/bps-template.md
+document start: docs/ja/specdojo/templates/cdfd-overview-template.md
+document complete: docs/ja/specdojo/templates/cdfd-overview-template.md
+document start: docs/ja/specdojo/templates/cdfd-template.md
+document complete: docs/ja/specdojo/templates/cdfd-template.md
+document start: docs/ja/specdojo/templates/cdfd-uc-template.md
+document complete: docs/ja/specdojo/templates/cdfd-uc-template.md
+document start: docs/ja/specdojo/templates/dct-index-template.md
+document complete: docs/ja/specdojo/templates/dct-index-template.md
+document start: docs/ja/specdojo/templates/opr-template.md
+document complete: docs/ja/specdojo/templates/opr-template.md
+document start: docs/ja/specdojo/templates/pjr-change-request-template.md
+document complete: docs/ja/specdojo/templates/pjr-change-request-template.md
+document start: docs/ja/specdojo/templates/pjr-decision-template.md
+document complete: docs/ja/specdojo/templates/pjr-decision-template.md
+document start: docs/ja/specdojo/templates/pjr-derived-items-template.md
+document complete: docs/ja/specdojo/templates/pjr-derived-items-template.md
+document start: docs/ja/specdojo/templates/pjr-index-template.md
+document complete: docs/ja/specdojo/templates/pjr-index-template.md
+document start: docs/ja/specdojo/templates/pjr-issue-template.md
+document complete: docs/ja/specdojo/templates/pjr-issue-template.md
+document start: docs/ja/specdojo/templates/pjr-note-template.md
+document complete: docs/ja/specdojo/templates/pjr-note-template.md
+document start: docs/ja/specdojo/templates/pjr-question-template.md
+document complete: docs/ja/specdojo/templates/pjr-question-template.md
+document start: docs/ja/specdojo/templates/pjr-risk-template.md
+document complete: docs/ja/specdojo/templates/pjr-risk-template.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-5a5519c3090b/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-21T20:04:34Z	docs/ja/specdojo/samples/utc-sample.md	1	passed	206	fail	46	25	agy-expert-executor	machine	none		
+2026-10-21T20:06:49Z	docs/ja/specdojo/templates/bps-template.md	1	passed	133	pass	95	2	agy-expert-executor	machine	none		
+2026-10-21T20:11:03Z	docs/ja/specdojo/templates/cdfd-overview-template.md	1	passed	252	pass	91	7	agy-expert-executor	machine	none		
+2026-10-21T20:12:37Z	docs/ja/specdojo/templates/cdfd-template.md	1	passed	92	pass	95	2	agy-expert-executor	machine	none		
+2026-10-21T20:14:40Z	docs/ja/specdojo/templates/cdfd-uc-template.md	1	passed	121	pass	95	2	agy-expert-executor	machine	none		
+2026-10-21T20:16:52Z	docs/ja/specdojo/templates/dct-index-template.md	1	passed	130	pass	100	0	agy-expert-executor	machine	none		
+2026-10-21T20:22:39Z	docs/ja/specdojo/templates/opr-template.md	1	passed	346	pass	95	2	agy-expert-executor	machine	none		
+2026-10-21T20:26:51Z	docs/ja/specdojo/templates/pjr-change-request-template.md	1	passed	250	pass	91	7	agy-expert-executor	machine	none		
+2026-10-21T20:32:27Z	docs/ja/specdojo/templates/pjr-decision-template.md	1	passed	334	pass	91	7	agy-expert-executor	machine	none		
+2026-10-21T20:34:48Z	docs/ja/specdojo/templates/pjr-derived-items-template.md	1	passed	139	pass	100	0	agy-expert-executor	machine	none		
+2026-10-21T20:38:47Z	docs/ja/specdojo/templates/pjr-index-template.md	1	passed	237	pass	100	0	agy-expert-executor	machine	none		
+2026-10-21T20:40:45Z	docs/ja/specdojo/templates/pjr-issue-template.md	1	passed	116	pass	100	0	agy-expert-executor	machine	none		
+2026-10-21T20:43:22Z	docs/ja/specdojo/templates/pjr-note-template.md	1	passed	156	pass	100	0	agy-expert-executor	machine	none		
+2026-10-21T20:45:42Z	docs/ja/specdojo/templates/pjr-question-template.md	1	passed	138	pass	100	0	agy-expert-executor	machine	none		
+2026-10-21T20:48:17Z	docs/ja/specdojo/templates/pjr-risk-template.md	1	passed	153	pass	100	0	agy-expert-executor	machine	none		

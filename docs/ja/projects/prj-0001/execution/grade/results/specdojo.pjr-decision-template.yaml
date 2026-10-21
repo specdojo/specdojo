@@ -3,44 +3,99 @@ version: 1
 document: specdojo:pjr-decision-template
 path: docs/ja/specdojo/templates/pjr-decision-template.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 100
-graded_at: "2026-09-06T07:43:43.922Z"
-graded_by: codex-expert-executor
+score: 91
+graded_at: "2026-10-21T20:30:42.275Z"
+graded_by: flash-high-executor
 content_hash: 6afbcaca2eee52ed95e7508a69d0bdf01e056a347a88a4640a588624e625473e
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
-    score: 100
+  operations:
+    score: 94
+  planning:
+    score: 92
+  business:
+    score: 92
   architecture:
     score: 100
-  quality:
+  usability:
+    score: 83
+  implementation:
     score: 100
+  quality:
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
+    level: 3
+    score: 75
+  vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
+    level: 3
+    score: 75
+  vp-ux-language-consistency:
     level: 4
     score: 100
-  vp-ux-language-consistency:
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,6 +104,80 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 7
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 23
+    anchor: "| 項目     | 内容   |"
+    message: >-
+      In Section 5 and Section 6, recording decision tracking metadata such as decider, decision date, and follow-up
+      tracking targets in the markdown body duplicates frontmatter fields and derivation indices, risking status
+      reporting discrepancies.
+    message_ja: >-
+      In Section 5 and Section 6, recording decision tracking metadata such as decider, decision date, and follow-up
+      tracking targets in the markdown body duplicates frontmatter fields and derivation indices, risking status
+      reporting discrepancies.
+  - id: F002
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 13
+    anchor: "## 3. 決定内容"
+    message: >-
+      Section 3 provides only a single brief placeholder without prompting the author to define scope boundaries and
+      explicitly excluded items as required by pjr-rulebook line 136.
+    message_ja: >-
+      Section 3 provides only a single brief placeholder without prompting the author to define scope boundaries and
+      explicitly excluded items as required by pjr-rulebook line 136.
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 23
+    anchor: "| 項目     | 内容   |"
+    message: >-
+      Structured fields including '決定者' and '決定日' in Section 5, as well as '追跡先' in Section 6, redundantly duplicate
+      metadata defined in frontmatter and derived item tracking.
+    message_ja: セクション5における'決定者'および'決定日'を含む構造化フィールド、ならびにセクション6における'追跡先'は、frontmatterおよび派生アイテムの追跡で定義されたメタデータと冗長に重複しています。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 23
+    anchor: "| 項目     | 内容   |"
+    message: >-
+      The inclusion of '決定者' and '決定日' in Section 5 conflicts with pjr-rulebook's prohibition against duplicating
+      structured frontmatter fields into the document body, and '追跡先' in Section 6 conflicts with line 139 which forbids
+      duplicating tracking targets in decision bodies.
+    message_ja: >-
+      セクション5における '決定者' と '決定日' の含め方は、構造化されたフロントマターフィールドをドキュメントの本文に複製することを禁止している pjr-rulebook と矛盾しており、セクション6の '追跡先'
+      は、決定事項の本文内での追跡先情報の複製を禁止している139行目と矛盾しています。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 13
+    anchor: "## 3. 決定内容"
+    message: >-
+      Sections 3, 4, and 5 lack placeholder guidance specifying '-' for pending decisions and approvals prior to
+      resolution, as required by pjr-rulebook line 112 and standard PJR templates.
+    message_ja: セクション3、4、および5において、pjr-rulebookの112行目および標準的なPJRテンプレートの要求に従い、解決前の保留中の決定や承認を示すために '-' を指定するプレースホルダーのガイダンスが不足しています。
+  - id: F006
+    severity: minor
+    rule: vp-ux-readability
+    line: 7
+    anchor: "## 2. 検討した選択肢"
+    message: >-
+      Sections 2 and 6 rely solely on bare '_TODO_' placeholders without explanatory guidance text describing what
+      specific criteria or scope of impact should be provided.
+    message_ja: セクション2および6は、どのような特定の基準や影響範囲を提供すべきかを説明する解説テキストのない、単なる'_TODO_'プレースホルダーのみに依存しています。
+  - id: F007
+    severity: minor
+    rule: vp-ops-operability
+    line: 21
+    anchor: "## 5. 承認"
+    message: >-
+      The duplication of decision approval fields and follow-up tracking in the Markdown body impedes automated ticket
+      management and derivation tracking provided by the register command suite.
+    message_ja: >-
+      The duplication of decision approval fields and follow-up tracking in the Markdown body impedes automated ticket
+      management and derivation tracking provided by the register command suite.
