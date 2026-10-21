@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-q4cd-untangle-schedule-dashboard-cycle
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-21T22:08:53Z"
+  completed_at: "2026-10-21T23:27:51Z"
+  conclusion: schedule と dashboard が共有する Timeline index とカタログの探索を src/shared へ移し、schedule から dashboard への import をなくした。3 機能以上をまたぐ循環は 0 組になり、schedule は dashboard を import しない向きを ESLint で検査する
   derived_from:
     - PJR-T30J
 ---
