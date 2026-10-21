@@ -1545,3 +1545,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_196526b30b8249689d83e7073b034469
+- v: 1
+  id: reg_e1aaa564cf714dbb89d5da870ab56c5f
+  ts: "2026-10-21T14:31:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが result・event・統合の commit を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: PJR-XRAB と PJR-HE9R の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
+      to: PJR-W93C の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
+  previous_event_id: reg_4f4b046449d047ef8eea2a301560e357
