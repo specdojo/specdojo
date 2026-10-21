@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: low
   owner: BA
   registered_at: "2026-10-17T14:40:01Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
 ---
 
 # PJR-0WFV LP で plan モードと比べた register の価値を伝える
