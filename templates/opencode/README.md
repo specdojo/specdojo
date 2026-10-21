@@ -52,6 +52,9 @@ specdojo exec scaffold --provider opencode
 - 従来の `opencode run --agent {nickname}` と model を持つ定義ファイルで組んだ 1 段の名簿は、そのまま動く。scaffold は既存ファイルを上書きしないため、`--force` で役割ごとの定義（model を持たない）に置き換える場合だけ、上の `command_template` と 2 段の名簿へ移す。
 - 文脈の長さ（`num_ctx` など）を広げたい場合は、Modelfile（`FROM gemma4:31b`、`PARAMETER num_ctx 65536` など）を用意して Ollama で別タグを作成し（`ollama create gemma4:31b-work-64k -f Modelfile` など）、`.specdojo/agent-members.yaml` の各 member の `model` をそのタグ名へ書き換えます。
 - `specdojo init` や `config scaffold` は既存の `.specdojo/agent-members.yaml` を上書きしません。既に導入したプロジェクトで reporter を 26b に変えたい場合は、`.specdojo/agent-members.yaml` の `gemma-reporter` の `model` を `ollama-local/gemma4:26b`（または独自タグ）へ直接書き換えてください。
+- Mac の Apple シリコンでは、Ollama の公式の mlx 版（`gemma4:26b-mlx`・`gemma4:31b-mlx`）を `ollama pull` で取得して使えます。
+  - 使う場合は `.specdojo/agent-members.yaml` の `model` を `ollama-local/gemma4:26b-mlx` などに書き換えてください。Modelfile で文脈を広げる場合は `FROM` に mlx 版のタグを書きます。
+  - 既定の雛形は環境を選ばない無印のタグ（`gemma4:26b`・`gemma4:31b`）のままとします。
 - executor の result パス deny と reporter の全ツール deny は、pipeline の責務境界なので維持する。
 - `bash` は deny 基点の許可リストを維持する。`git add` / `git commit` を許可しないこと（許可すると specdojo CLI の commit 許可リストを迂回できる）。
 - 権限設計の背景は `exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。
