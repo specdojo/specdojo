@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-stb4-opencode-readme-gemma-mlx
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-21T14:57:21Z"
+  completed_at: "2026-10-21T15:46:36Z"
+  conclusion: opencode の README に、Apple シリコンでは公式の mlx 版（gemma4:26b-mlx・gemma4:31b-mlx）を pull して使えること、名簿の model と Modelfile の FROM の書き換え方、既定は無印のタグのままであることを書いた
   derived_from:
     - PJR-2ASZ
 ---

@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c8e097c5daa449c4a14b336dcc397440
+- v: 1
+  id: reg_b6c3d75a6df8435cab1a5c8ec9d75097
+  ts: "2026-10-21T15:46:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分を確かめ、タグ名が Ollama の公式の一覧にあるものと一致することを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: opencode の README に、Apple シリコンでは公式の mlx 版（gemma4:26b-mlx・gemma4:31b-mlx）を pull して使えること、名簿の model と Modelfile の FROM の書き換え方、既定は無印のタグのままであることを書いた
+  previous_event_id: reg_5a8187396af64f51af5b8edd972ed665
