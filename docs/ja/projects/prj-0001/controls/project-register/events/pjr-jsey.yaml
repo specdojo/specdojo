@@ -1564,3 +1564,19 @@
       from: PJR-XRAB と PJR-HE9R の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
       to: PJR-W93C の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
   previous_event_id: reg_4f4b046449d047ef8eea2a301560e357
+- v: 1
+  id: reg_c380f9377eed4a66850abea107503280
+  ts: "2026-10-21T23:21:18Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-CNNT と PJR-Q4CD の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-21"
+      to: "-"
+  previous_event_id: reg_e1aaa564cf714dbb89d5da870ab56c5f
