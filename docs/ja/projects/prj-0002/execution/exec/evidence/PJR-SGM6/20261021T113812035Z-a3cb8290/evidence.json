@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SGM6",
+  "run_id": "20261021T113812035Z-a3cb8290",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-21T11:39:36.083Z",
+    "completed_at": "2026-10-21T11:41:55.657Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0002/controls/project-register/pjr-sgm6-lp-orch-script-names.md",
+      "status": "M"
+    },
+    {
+      "path": "specdojo-lp:src/components/sections/GetStarted.astro",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0002/controls/project-register/pjr-sgm6-lp-orch-script-names.md",
+      "status": "M"
+    },
+    {
+      "path": "specdojo-lp:src/components/sections/GetStarted.astro",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": ".../project-register/pjr-sgm6-lp-orch-script-names.md         | 11 +++++++----\n 1 file changed, 7 insertions(+), 4 deletions(-)\n[specdojo-lp]\nsrc/components/sections/GetStarted.astro | 7 +++++--\n 1 file changed, 5 insertions(+), 2 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/components/sections/GetStarted.astro",
+      "status": "passed",
+      "summary": "specdojo-lp の対象 Astro ファイルは整形済みです。"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint .",
+      "status": "passed",
+      "summary": "specdojo-lp 全体の ESLint がエラーなく完了しました。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "specdojo-lp の静的ビルドが成功し、1ページが生成されました。"
+    },
+    {
+      "source": "executor",
+      "command": "rg による新 script 名と旧 script 名の確認",
+      "status": "passed",
+      "summary": "orch:sol・orch:terra・orch:flash を確認し、orch:codex・orch:agy が対象ファイルに残っていません。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-sgm6-lp-orch-script-names.md",
+      "status": "passed",
+      "summary": "更新した個票を Prettier で整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0002",
+      "status": "passed",
+      "summary": "tsx の IPC 制限を規約指定の起動方法で回避し、登録簿生成が成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "project と specdojo-lp の変更に空白エラーはありません。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-SGM6/project\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-xgncHZ/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-HPHu9C/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.0 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nms\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-SGM6/project/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0002-PJR-SGM6/project/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.0 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "repo": "project",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.0 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-SGM6/project\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-6eArZC/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-gL3C6m/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-aBotlB/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-quJ92u/pjr-0001-topic.md\nWarning: PJR-0001 t\n… output omitted …\n  37.95s (transform 2.96s, setup 539ms, import 18.25s, tests 40.19s, environment 6ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "LP の provider 別 orch script 名と個票を更新し、必要な検証が成功しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0002/execution/exec/evidence/PJR-SGM6/20261021T113812035Z-a3cb8290/executor.log",
+      "bytes": 1727,
+      "truncated": false
+    }
+  ]
+}

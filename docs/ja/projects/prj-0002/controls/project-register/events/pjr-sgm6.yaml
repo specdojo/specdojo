@@ -61,3 +61,32 @@
       from: "-"
       to: "agent exited with non-zero code: agent exited with non-zero code: GPT-OSS 120B (Medium)"
   previous_event_id: reg_fa28b7108d1843f381264d59115bcd4b
+- v: 1
+  id: reg_af8a7b7e4a36412d8d94a55ba12bf8c3
+  ts: "2026-10-21T11:38:34Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: agent exited with non-zero code: GPT-OSS 120B (Medium)"
+      to: "-"
+  previous_event_id: reg_5323def1e0ec49d0b0ca9a3f93cdb23c
+- v: 1
+  id: reg_f334204413064c85b37be35650e3606d
+  ts: "2026-10-21T11:45:41Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_af8a7b7e4a36412d8d94a55ba12bf8c3

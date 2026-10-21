@@ -1,0 +1,12 @@
+LP の orch script 名を更新しました。
+
+- Codex: `orch:sol`（`orch:terra` も併記）
+- Antigravity: `orch:flash`
+- `orch:codex` / `orch:agy` の残存なし
+- 個票の作業内容・対応結果を更新
+- LP の整形、ESLint、ビルドに成功
+- result ファイルと登録簿ステータスは未変更
+
+<specdojo_executor_evidence>
+{"final_message":"LP の provider 別 orch script 名と個票を更新し、必要な検証が成功しました。","validations":[{"command":"npx prettier --write src/components/sections/GetStarted.astro","status":"passed","summary":"specdojo-lp の対象 Astro ファイルは整形済みです。"},{"command":"npx eslint .","status":"passed","summary":"specdojo-lp 全体の ESLint がエラーなく完了しました。"},{"command":"npm run build","status":"passed","summary":"specdojo-lp の静的ビルドが成功し、1ページが生成されました。"},{"command":"rg による新 script 名と旧 script 名の確認","status":"passed","summary":"orch:sol・orch:terra・orch:flash を確認し、orch:codex・orch:agy が対象ファイルに残っていません。"},{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-sgm6-lp-orch-script-names.md","status":"passed","summary":"更新した個票を Prettier で整形しました。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0002","status":"passed","summary":"tsx の IPC 制限を規約指定の起動方法で回避し、登録簿生成が成功しました。"},{"command":"git diff --check","status":"passed","summary":"project と specdojo-lp の変更に空白エラーはありません。"}]}
+</specdojo_executor_evidence>

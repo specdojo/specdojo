@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-19T21:18:30Z"
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: GPT-OSS 120B (Medium)"
 ---
 
 # PJR-SGM6 LP の orch の script の名前を model の系統の名前に改める
@@ -29,13 +28,16 @@ specdojo 本体で配布する orch の script の名前を、codex は orch:sol
 
 ## 3. 作業内容
 
-| No  | 作業                                              | 担当 | 状態 | メモ |
-| --- | ------------------------------------------------- | ---- | ---- | ---- |
-| 1   | provider ごとの script の表を新しい名前に合わせる | DEV  | open | -    |
+| No  | 作業                                              | 担当 | 状態 | メモ                                                          |
+| --- | ------------------------------------------------- | ---- | ---- | ------------------------------------------------------------- |
+| 1   | provider ごとの script の表を新しい名前に合わせる | DEV  | done | `specdojo-lp:src/components/sections/GetStarted.astro` を更新 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `specdojo-lp:src/components/sections/GetStarted.astro` の provider ごとの script の表を更新し、codex を `npm run orch:sol`（`orch:terra` も追加されます）、antigravity を `npm run orch:flash` とした。
+- claude（`orch:opus`・`orch:sonnet`）と opencode（`orch:opencode`）は変更していない。
+- LP の Prettier、ESLint、静的ビルドが成功し、同ファイルに `orch:codex`・`orch:agy` が残っていないことを確認した。
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 

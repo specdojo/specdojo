@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-SGM6
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0002
   origin: register
   plan_ref: exec/plans/pjr-sgm6-20261021T113602Z-cdc4-plan.md
   started_at: "2026-10-21T11:36:02.796Z"
-  completed_at: "2026-10-21T11:37:18.429Z"
+  completed_at: "2026-10-21T11:38:34.059Z"
   agent: agy-expert-executor
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: GPT-OSS 120B (Medium)"
 ---
 
 # Edit Result
