@@ -6,6 +6,7 @@ import { dump, load } from "../shared/yaml.js";
 import { runScaffold, type ProjectSize } from "../catalog/scaffold.js";
 import { runDevcontainerScaffold } from "../devcontainer/scaffold.js";
 import { runProviderScaffold } from "../shared/provider-scaffold.js";
+import { runLefthookScaffold } from "../shared/lefthook-scaffold.js";
 import { generateDerivedViewFiles, type RegisterPaths } from "../register/register.js";
 import {
   defaultWorktreeBase,
@@ -49,6 +50,7 @@ export type InitOptions = {
   exec?: boolean;
   catalog?: string;
   devcontainer?: boolean;
+  lefthook?: boolean;
   devcontainerPreset?: string;
   workspaceName?: string;
   dryRun?: boolean;
@@ -64,6 +66,7 @@ export type InitAnswers = {
   exec: boolean;
   catalog?: ProjectSize;
   devcontainer: boolean;
+  lefthook: boolean;
   devcontainerPreset?: "recommended";
 };
 
@@ -205,6 +208,7 @@ export async function collectInitAnswers(
       exec: !!options.exec,
       catalog: parseCatalog(options.catalog),
       devcontainer,
+      lefthook: !!options.lefthook,
       ...(devcontainerPreset ? { devcontainerPreset } : {}),
     });
     for (const [label, used] of [
@@ -217,6 +221,7 @@ export async function collectInitAnswers(
       ["exec=no", !options.exec],
       ["catalog=none", !options.catalog],
       ["devcontainer=no", !options.devcontainer],
+      ["lefthook=no", !options.lefthook],
       ["devcontainer-preset=recommended", devcontainer && options.devcontainerPreset === undefined],
     ] as const) {
       if (used) process.stdout.write(`Using default: ${label}\n`);
@@ -233,6 +238,7 @@ export async function collectInitAnswers(
     const providerDefault = options.provider?.trim() || DEFAULTS.providers.join(",");
     const execDefault = !!options.exec;
     const devcontainerDefault = !!options.devcontainer;
+    const lefthookDefault = !!options.lefthook;
     const explicitDevcontainerPreset = parseDevcontainerPreset(options.devcontainerPreset);
     const providerPrompt = `Orchestrator providers (${PROVIDERS.join(", ")}) [${providerDefault}]: `;
     const projectId = await promptUntilValid(
@@ -288,6 +294,11 @@ export async function collectInitAnswers(
             (answer) => (parseBoolean(answer, true) ? "recommended" : undefined),
           )
         : explicitDevcontainerPreset;
+    const lefthook = await promptUntilValid(
+      prompter,
+      `Create Git hooks with lefthook? [${lefthookDefault ? "Y/n" : "y/N"}]: `,
+      (answer) => parseBoolean(answer, lefthookDefault),
+    );
     return validateAnswers({
       projectId,
       projectName,
@@ -298,6 +309,7 @@ export async function collectInitAnswers(
       exec,
       catalog,
       devcontainer,
+      lefthook,
       ...(devcontainerPreset ? { devcontainerPreset } : {}),
     });
   } finally {
@@ -729,6 +741,15 @@ export async function runInit(
       dryRun,
     });
   }
+  if (answers.lefthook) {
+    await runLefthookScaffold({
+      packageRoot,
+      repoRoot,
+      config,
+      force: false,
+      dryRun,
+    });
+  }
 
   const firstProvider = answers.providers[0];
   const script =
@@ -770,6 +791,7 @@ export function registerInitCommand(program: Command): void {
     .option("--exec", "Configure executor and reporter agents", false)
     .option("--catalog <size>", "Create a deliverables catalog (small|medium|large)")
     .option("--devcontainer", "Create a Dev Container for the selected providers", false)
+    .option("--lefthook", "Create pre-commit hooks for SpecDojo repositories", false)
     .option(
       "--devcontainer-preset <name>",
       "Apply a Dev Container preset when creating it (recommended|none)",

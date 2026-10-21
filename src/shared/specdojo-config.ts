@@ -8,6 +8,7 @@ import type { ValidateFunction } from "ajv";
 import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./agent-types.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./provider-scaffold.js";
 import { runWorkspaceScaffold } from "./workspace-scaffold.js";
+import { runLefthookScaffold } from "./lefthook-scaffold.js";
 import {
   ensureGitignore,
   formatGitignoreReport,
@@ -953,7 +954,7 @@ export function registerConfigCommands(program: Command): void {
 
   cfg
     .command("scaffold")
-    .description("Scaffold agent/settings templates for a provider or VS Code multi-root workspace")
+    .description("Scaffold provider settings, a VS Code multi-root workspace, or Git hooks")
     .option(
       "--provider <name>",
       "Provider template to copy (antigravity|claude|codex|copilot|opencode)",
@@ -963,6 +964,7 @@ export function registerConfigCommands(program: Command): void {
       "Generate VS Code multi-root workspace (<project-id>.code-workspace) from repos config",
       false,
     )
+    .option("--lefthook", "Generate pre-commit hooks for SpecDojo repositories", false)
     .option(
       "--project <id>",
       "Target project ID for workspace scaffolding (defaults to current_project)",
@@ -976,8 +978,8 @@ export function registerConfigCommands(program: Command): void {
     )
     .action(async (opts) => {
       try {
-        if (!opts.provider && !opts.workspace) {
-          throw new Error("Specify --provider <name> or --workspace to scaffold.");
+        if (!opts.provider && !opts.workspace && !opts.lefthook) {
+          throw new Error("Specify --provider <name>, --workspace, or --lefthook to scaffold.");
         }
         if (opts.global && !opts.provider) {
           throw new Error("--global requires --provider antigravity");
@@ -995,6 +997,19 @@ export function registerConfigCommands(program: Command): void {
           await runWorkspaceScaffold({
             repoRoot: specdojoRootDir(),
             projectId: opts.project ? String(opts.project) : undefined,
+            force: !!opts.force,
+            dryRun: !!opts.dryRun,
+          });
+        }
+        if (opts.lefthook) {
+          const { configPath, config } = loadConfig();
+          if (!config) {
+            throw new Error(`No config found: ${configPath}. Run specdojo config init first.`);
+          }
+          await runLefthookScaffold({
+            packageRoot: specdojoPackageRootDir(),
+            repoRoot: specdojoRootDir(),
+            config,
             force: !!opts.force,
             dryRun: !!opts.dryRun,
           });

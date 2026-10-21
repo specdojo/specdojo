@@ -41,6 +41,7 @@ describe("specdojo init", () => {
       "claude,codex",
       "yes",
       "no",
+      "no",
     ];
     const prompts: string[] = [];
     let closed = false;
@@ -64,14 +65,25 @@ describe("specdojo init", () => {
       exec: true,
       catalog: undefined,
       devcontainer: false,
+      lefthook: false,
     });
-    expect(prompts).toHaveLength(8);
+    expect(prompts).toHaveLength(9);
     expect(prompts.some((prompt) => prompt.includes("Deliverables catalog"))).toBe(false);
     expect(closed).toBe(true);
   });
 
   it("preserves --catalog option in interactive mode without prompting", async () => {
-    const answers = ["prj-1234", "Example Project", "yes", "alice", "Alice", "codex", "no", "no"];
+    const answers = [
+      "prj-1234",
+      "Example Project",
+      "yes",
+      "alice",
+      "Alice",
+      "codex",
+      "no",
+      "no",
+      "no",
+    ];
     const prompts: string[] = [];
     let closed = false;
     const prompter: InitPrompter = {
@@ -94,14 +106,15 @@ describe("specdojo init", () => {
       exec: false,
       catalog: "small",
       devcontainer: false,
+      lefthook: false,
     });
-    expect(prompts).toHaveLength(8);
+    expect(prompts).toHaveLength(9);
     expect(prompts.some((prompt) => prompt.includes("Deliverables catalog"))).toBe(false);
     expect(closed).toBe(true);
   });
 
   it("asks for the recommended preset only after selecting a Dev Container", async () => {
-    const answers = ["", "", "", "", "", "", "", "yes", ""];
+    const answers = ["", "", "", "", "", "", "", "yes", "", ""];
     const prompts: string[] = [];
     const prompter: InitPrompter = {
       async question(prompt) {
@@ -115,8 +128,9 @@ describe("specdojo init", () => {
       devcontainer: true,
       devcontainerPreset: "recommended",
     });
-    expect(prompts.at(-1)).toBe("Add the recommended Dev Container settings? [Y/n]: ");
-    expect(prompts).toHaveLength(9);
+    expect(prompts.at(-2)).toBe("Add the recommended Dev Container settings? [Y/n]: ");
+    expect(prompts.at(-1)).toBe("Create Git hooks with lefthook? [y/N]: ");
+    expect(prompts).toHaveLength(10);
   });
 
   it("uses the recommended preset for --yes with --devcontainer and allows opting out", async () => {
@@ -148,6 +162,7 @@ describe("specdojo init", () => {
       "codex",
       "later",
       "no",
+      "no",
     ];
     const prompts: string[] = [];
     const errors: string[] = [];
@@ -176,6 +191,7 @@ describe("specdojo init", () => {
       exec: true,
       catalog: undefined,
       devcontainer: false,
+      lefthook: false,
     });
     expect(prompts.filter((prompt) => prompt.startsWith("Project ID"))).toHaveLength(2);
     expect(prompts.filter((prompt) => prompt.startsWith("Project name"))).toHaveLength(1);
@@ -196,6 +212,25 @@ describe("specdojo init", () => {
     await expect(collectInitAnswers({ provider: "none", exec: true })).rejects.toThrow(
       "--exec requires at least one --provider",
     );
+  });
+
+  it("creates lefthook files only when explicitly selected", async () => {
+    const repo = createRepo("specdojo-init-lefthook-");
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runInit({ yes: true, provider: "codex", lefthook: true });
+
+      expect(existsSync(join(repo, "lefthook.yml"))).toBe(true);
+      expect(existsSync(join(repo, "tools/install-lefthook.mjs"))).toBe(true);
+      expect(existsSync(join(repo, "tools/specdojo-pre-commit.mjs"))).toBe(true);
+      const packageJson = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
+        scripts: Record<string, string>;
+      };
+      expect(packageJson.scripts.prepare).toBe("node tools/install-lefthook.mjs");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
   });
 
   it("creates a non-interactive exec-ready configuration and resolves its agents", async () => {

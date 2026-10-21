@@ -1,0 +1,115 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7H7N
+
+Updated ticket status → ready: /tmp/specdojo-ticket-KOcvXC/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-4CSONa/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-HzB57K/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-sS1QT1/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-ratGnr/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-94fhNB/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+ ❯ tests/src/commands/init.test.ts (17 tests | 1 failed) 227ms
+     × creates lefthook files only when explicitly selected 28ms
+Would move 1 agent member(s) from /tmp/specdojo-members-VSi1qw/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-VSi1qw/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-VSi1qw/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-VSi1qw/.specdojo/agent-members.yaml
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-21T15:40:31.936Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-21T15:39:32.379Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-21T15:39:32.655Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-I1YRGe/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-ou4TYq/outputs/partial.txt
+ ❯ tests/src/shared/lefthook-scaffold.test.ts (3 tests | 1 failed) 8ms
+     × does not overwrite files or existing package entries without force 6ms
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  2 failed | 138 passed (140)
+      Tests  2 failed | 2292 passed (2294)
+   Start at  00:39:02
+   Duration  47.65s (transform 2.98s, setup 572ms, import 19.68s, tests 54.23s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+SpecDojo package.json does not declare devDependency: prettier
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/commands/init.test.ts > specdojo init > creates lefthook files only when explicitly selected
+Error: SpecDojo package.json does not declare devDependency: prettier
+ ❯ src/shared/lefthook-scaffold.ts:98:15
+     96|       const version = dependencies[name];
+     97|       if (typeof version !== "string") {
+     98|         throw new Error(`SpecDojo package.json does not declare devDep…
+       |               ^
+     99|       }
+    100|       return [name, version];
+ ❯ requiredDependencyVersions src/shared/lefthook-scaffold.ts:95:31
+ ❯ updatePackageJson src/shared/lefthook-scaffold.ts:107:32
+ ❯ runLefthookScaffold src/shared/lefthook-scaffold.ts:208:3
+ ❯ runInit src/commands/init.ts:745:5
+ ❯ tests/src/commands/init.test.ts:222:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/src/shared/lefthook-scaffold.test.ts > lefthook scaffold > does not overwrite files or existing package entries without force
+Error: SpecDojo package.json does not declare devDependency: prettier
+ ❯ src/shared/lefthook-scaffold.ts:98:15
+     96|       const version = dependencies[name];
+     97|       if (typeof version !== "string") {
+     98|         throw new Error(`SpecDojo package.json does not declare devDep…
+       |               ^
+     99|       }
+    100|       return [name, version];
+ ❯ requiredDependencyVersions src/shared/lefthook-scaffold.ts:95:31
+ ❯ updatePackageJson src/shared/lefthook-scaffold.ts:107:32
+ ❯ runLefthookScaffold src/shared/lefthook-scaffold.ts:208:3
+ ❯ tests/src/shared/lefthook-scaffold.test.ts:80:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
