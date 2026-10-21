@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0aeafe8876c84de09c7ffd9dc13edbab
+  ts: "2026-10-21T22:09:06Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: plan の名前の末尾の乱数が短く、同じ秒に作ると名前がぶつかることがある
+    - field: description
+      from: ""
+      to: plan と in-place の stem、イベントの名前の末尾の乱数が 2 バイト（16 進 4 桁）しかなく、同じ slug で同じ秒に 2 回作ると 6 万 5 千分の 1 の確率でぶつかる。PJR-T30J の検証で単体テストが 1 回落ちた
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T30J"]'
