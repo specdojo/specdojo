@@ -1,0 +1,89 @@
+I am waiting for the `npm run docs:build` command to complete so that we can accurately measure the current build time and page count.
+ビルド完了の通知を待機しています。
+現在 `docs:build` を実行中です。完了通知を待ちます。
+引き続き `docs:build` の実行完了を待機しています。
+Mermaid SVG 生成中であることを確認しました。完了を待ちます。
+引き続き `docs:build` の実行を待機しています。
+Mermaid SVG 生成が終盤に進んでいます。完了を待ちます。
+引き続き `docs:build` の実行を待機しています。
+引き続き待機します。
+引き続き `docs:build` の実行を待機しています。
+引き続き待機します。
+Mermaid SVG の生成が完了し、VitePress のページビルド（HTML レンダリング）段階に入りました。完了を待機しています。
+レンダリング処理が進行中です。完了を待ちます。
+クライアントビルドが終わり、SSR・HTML 生成段階に進んでいます。完了を待機しています。
+`srcExclude` に `execution/exec/plans/**` と `execution/exec/results/**` を追加した状態でのビルド完了を待機しています。
+引き続き待機します。
+ビルドの完了を待機しています。
+引き続き待機します。
+HTML レンダリングが順調に進行しています。完了を待機しています。
+rendering pages 段階に入りました。引き続き待機します。
+プロジェクト登録簿項目 **PJR-G85C**「VitePress のビルド対象に exec の plan と result が含まれページ数が増え続ける」の調査および個票の更新を完了しました。
+
+本タスクは完了条件に従い、**設定変更を行わない調査タスク**として実施し、調査結果を個票（[`pjr-g85c-vitepress-exclude-exec-records.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G85C/docs/ja/projects/prj-0001/controls/project-register/pjr-g85c-vitepress-exclude-exec-records.md)）の「4. 対応結果」「5. 関連ドキュメント」へ反映しました。
+
+---
+
+### 1. ページ数とビルド時間・メモリへの影響（現行 vs 除外時の一時比較）
+
+- **ページ数の内訳**:
+  - 全 Markdown ページ数: **3,201 件**
+  - うち `execution/exec/plans/`（実行計画）: **917 件**
+  - うち `execution/exec/results/`（実行結果）: **929 件**
+  - **実行記録（plan + result）合計: 1,846 件（全体の約 57.7%）**
+  - その他通常ページ: 1,355 件（約 42.3%）
+- **現行ビルド（`npm run docs:build`）の実測結果**:
+  - VitePress のレンダリング段階で Node.js のデフォルトヒープ上限（約 2GB）を超過し、4 分 11 秒で **`FATAL ERROR: JavaScript heap out of memory`（OOM による強制終了・ビルド失敗）** が発生することを確認しました。
+- **一時的除外テスト（`srcExclude` に `execution/exec/(plans|results)/**` を指定した場合）**:
+  - VitePress のビルドが **63.66 秒**（`docs:generate` 含む全体実時間 1 分 25 秒）で正常完了しました。
+  - メモリ消費も通常枠内に収まり、OOM が完全に解消されることを実証しました。
+
+---
+
+### 2. plan / result へのリンク元とデッドリンク検査への影響
+
+- **リンク元の件数と内訳**:
+  1. **実行記録一覧（[`exec-records.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G85C/docs/ja/projects/prj-0001/execution/generated/exec-records.md)）**:
+     - 相対 Markdown リンク（`[plan](../exec/plans/...)` / `[result](../exec/results/...)`）が **1,844 件**（922 件 × 2）。
+  2. **プロジェクト登録簿の個票（`controls/project-register/pjr-*.md`）**:
+     - wikilink（`[[prj-0001:xrp-...]]` / `[[prj-0001:xrr-...]]` / `[[prj-0001:xer-...]]`）が **9 件**（4 つの個票: `pjr-0130`, `pjr-cmyx`, `pjr-6vfn`, `pjr-h95r`）。
+  3. **ほかの result（`execution/exec/results/*-result.md`）**:
+     - 他の review result 等を参照する wikilink が **36 件**（例: `T-LAUNCH-prj-charter-130-result.md` など）。
+  4. **ダッシュボード（[`dashboard.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G85C/docs/ja/projects/prj-0001/execution/generated/dashboard.md)）**:
+     - 各 plan / result への直接リンクは **0 件**（`exec-records.md` への単一リンクのみ）。
+  5. **ガイド・ルールブック**:
+     - 直接リンクは **0 件**。
+- **ビルドのデッドリンク検査（Dead Link Check）への影響**:
+  - VitePress の `srcExclude` に追加してページ生成から外すと、[`exec-records.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G85C/docs/ja/projects/prj-0001/execution/generated/exec-records.md) からの 1,844 件および個票からの 11 件、計 **1,855 件のリンク切れ（dead link）** が検出され、VitePress のビルドが中断します。
+
+---
+
+### 3. 外し方の案ごとの比較・評価
+
+| 案 | 概要 | 利点 | 欠点 |
+|---|---|---|---|
+| **案1: 全体から外す**<br>（build & dev 双方で `srcExclude` に追加） | `packages/docs-site/.vitepress/config.mts` の `srcExclude` に `execution/exec/(plans\|results)/**` を追加する。 | - ビルド時間の大幅短縮（4分超・OOM → 63 秒）。<br>- メモリ超過が解消される。<br>- 配布静的サイトのファイルサイズ・チャンクサイズが大幅削減。 | - ドキュメントサイト上で plan / result が読めなくなる。<br>- 単に追加しただけでは 1,855 件の dead link でビルドが落ちるため、`ignoreDeadLinks` の設定が必要（設定しても閲覧者は 404 になる）。 |
+| **案2: dev のときだけ外す**<br>（`command === 'dev'` 時のみ除外） | 開発サーバー起動時のみ `srcExclude` に含め、build 時は含める。 | - 手元での開発時（`docs:dev`）の HMR・ファイル監視負荷が軽くなる。<br>- 公開サイト側では従来どおり HTML として閲覧可能。 | - **根本問題が一切解決しない。** 現在すでに本番ビルドが OOM クラッシュするため、build 時に残すならヒープ拡張（`--max-old-space-size`）が必須となり、ビルド時間が伸び続ける。<br>- dev と build で挙動・リンク整合性が乖離する。 |
+| **案3: 全体から外し、リンクを GitHub 表示へ置換**<br>（推奨案） | VitePress の `srcExclude` で除外した上で、`exec-records.md` の生成リンクおよび個票からの参照を GitHub blob URL（Markdown ビューア）へ変換する。 | - ビルド時間・OOM 問題が完全に解消（63 秒で完了）。<br>- リンク切れ（404）にならず、GitHub 上で plan / result を直接閲覧可能。<br>- VitePress の内部 dead link 検査を健全に維持できる（`ignoreDeadLinks` に頼らない）。 | - `src/dashboard.ts` のリンク生成ロジックおよび `config.mts` の wikilink 解決ロジックに軽微な改修が必要。 |
+
+---
+
+### 4. 推奨案と後続タスクの完了条件の案
+
+- **推奨案**: **案3（全体から除外 + リンク先を GitHub blob URL に置換）**
+  - **選定理由**: 現在すでに実行記録が全ページの 58% を占めてビルドの OOM 破綻が発生しているため、全体からの除外が不可避です。その上で、閲覧動線を殺さず 404 や dead link エラーを防ぐには、開発者向け監査ログである plan / result を GitHub の Markdown 閲覧画面へリンクするのが最も合理的かつ安全です。
+- **改修実施タスクの完了条件の案**:
+  1. [`packages/docs-site/.vitepress/config.mts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G85C/packages/docs-site/.vitepress/config.mts) の `srcExclude` に `docs/**/execution/exec/plans/**` および `docs/**/execution/exec/results/**` を追加する。
+  2. [`src/dashboard.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G85C/src/dashboard.ts) の `exec-records.md` 生成処理において、plan / result への相対パスリンクを GitHub blob URL（またはリポジトリ参照 URL）に切り替える。
+  3. [`packages/docs-site/.vitepress/config.mts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G85C/packages/docs-site/.vitepress/config.mts) の `specdojo_wikilink` プラグインで、`execution/exec/` 配下を指す doc ID（`xep-` / `xer-` / `xrr-`）の解決先を GitHub URL へ出力するように調整する（または個票側の 9 件の記述を調整する）。
+  4. `npm run docs:build` が 1 分台で正常完了し、dead link エラーが発生しないことを検証する。
+
+---
+
+### 5. 成果物の更新
+
+- [`docs/ja/projects/prj-0001/controls/project-register/pjr-g85c-vitepress-exclude-exec-records.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-G85C/docs/ja/projects/prj-0001/controls/project-register/pjr-g85c-vitepress-exclude-exec-records.md) の「4. 対応結果」および「5. 関連ドキュメント」に調査結果・推奨案・関連ドキュメントを記録しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-G85Cの調査を完了し、個票の対応結果および関連ドキュメントを更新しました。ビルド対象からplan/resultを外すことでビルド時間（OOMクラッシュ→63秒）とメモリが劇的に改善することを実証し、リンク切れを回避する案3（全体から除外+GitHub blob URLへのリンク置換）を推奨案としてまとめました。","validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-g85c-vitepress-exclude-exec-records.md","status":"passed","summary":"formatted with no changes needed"},{"command":"npm run validate:catalog","status":"passed","summary":"catalog validated successfully"},{"command":"npm run validate:history-links","status":"passed","summary":"history links validated successfully"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"no changed `*.yaml` or `*.yml` file"}]}
+</specdojo_executor_evidence>
