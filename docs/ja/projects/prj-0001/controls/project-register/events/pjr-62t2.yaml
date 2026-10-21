@@ -38,3 +38,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-7H7N"]'
+- v: 1
+  id: reg_54b6db4872ce437abbc37736775419c9
+  ts: "2026-10-21T22:11:33Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_618f04ea16e349ef8690891d78d82678
+- v: 1
+  id: reg_33977108e47849508d510bdaa11f2f1c
+  ts: "2026-10-21T22:38:09Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /integration/ tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (wo…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /integration/ tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (wo…"
+  previous_event_id: reg_54b6db4872ce437abbc37736775419c9
