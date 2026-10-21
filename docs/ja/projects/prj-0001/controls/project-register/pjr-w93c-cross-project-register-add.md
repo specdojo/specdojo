@@ -22,13 +22,25 @@ project ごとに統合ブランチと作業ツリーが分かれているため
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 0.4.2 の範囲とする（2026-10-21、利用者が承認）。
+- `register add --project <project-id> --commit` を、別の project の作業ツリーから実行すると、対象 project の統合ブランチへ記帳される。統合ブランチは `specdojo.config.json` の project の設定で指定でき、省略時は [[specdojo:git-branching-standard]] の `project/<project-id>/develop` とする。今の作業ツリーが対象 project の統合ブランチにいる場合の動きは、今のままとする。
+- 対象のブランチを開いている作業ツリーがあれば、その作業ツリーの中で、その実行パスの register lifecycle の枠を取り、起票・`register build`・commit を行う。開いている作業ツリーがなければ、一時的な worktree で同じことを行い、終わったら外す。対象の作業ツリーの登録簿に未 commit の変更がある場合と、対象のブランチが存在しない場合は、何も書き込まずに理由を示して止まる。
+- 起票の前に、対象 project の名簿と予約名で `--by` を確かめる（PJR-3K1X の規則を対象 project の設定で適用する）。
+- `--commit` のない別の project への起票は、記帳と commit の場所が分かれて取り残しが出るため、エラーにする。
+- `register add` と `register update` の `--from` に、`<project-id>:PJR-XXXX` の形で別の project の項目を指定できる。項目があるかを、対象 project の統合ブランチの内容を git から読んで確かめ、見つからなければ止める。今の project の項目を指す従来の書き方は変えない。
+- 別の project に対する状態遷移（`close`・`reject` など）は対象外とし、エラーで止める。メッセージで、その project の作業ツリーで行うよう案内する。
+- 単体テストで、統合ブランチの解決、`--commit` のない場合と状態遷移の拒否、project 付きの `--from` の解釈を確かめる。統合テストで、2 つの project のブランチと作業ツリーを用意し、対象のブランチを開いた作業ツリーがある場合とない場合の両方で、対象のブランチに 1 件の commit で記帳されること、元の作業ツリーと元のブランチが変わらないこと、未 commit の変更があるときに止まることを確かめる。
+- [[specdojo:register-operation-guide]]・[[specdojo:command-reference]]・[[specdojo:specdojo-config-reference]] に、別の project への起票の仕方と制約を書く。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- runner と register のコードを変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
+- CHANGELOG に新しい版の節がなければ `## [Unreleased]` の節を作って書く。公開済みの版の節は変えない。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                        | 担当 | 状態 | メモ         |
+| --- | ------------------------------------------- | ---- | ---- | ------------ |
+| 1   | 別の project の登録簿へ起票できるようにする | DEV  | open | 0.4.2 の範囲 |
 
 ## 4. 対応結果
 
@@ -36,4 +48,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:register-operation-guide]]
+- [[specdojo:git-branching-standard]]
