@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-98p8-docs-site-exclude-exec-records
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-21T22:08:36Z"
+  completed_at: "2026-10-21T22:47:53Z"
+  conclusion: ドキュメントサイトから全 project の exec の plan と result を外し、それらへの相対リンクと wikilink をサイトのビルドのときだけ GitHub のファイル表示へ置き換えた。リポジトリの文書と生成物は変えていない
   derived_from:
     - PJR-G85C
 ---

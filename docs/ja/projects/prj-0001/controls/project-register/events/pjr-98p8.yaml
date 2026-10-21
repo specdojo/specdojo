@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_8c1a9670bbe649b583029a2762c50a9c
+- v: 1
+  id: reg_926676de5f5f4091af409f6b498a0a83
+  ts: "2026-10-21T22:47:53Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: executor の sandbox では docs:build を通せなかったため、オーケストレーターが NODE_OPTIONS を広げずに docs:build を流し、約 113 秒で通ること、dead link が 0 件であること、出力のリンクが GitHub の表示を指し plan と result のページがないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: ドキュメントサイトから全 project の exec の plan と result を外し、それらへの相対リンクと wikilink をサイトのビルドのときだけ GitHub のファイル表示へ置き換えた。リポジトリの文書と生成物は変えていない
+  previous_event_id: reg_20f6d18d572747df835a050f797c060d
