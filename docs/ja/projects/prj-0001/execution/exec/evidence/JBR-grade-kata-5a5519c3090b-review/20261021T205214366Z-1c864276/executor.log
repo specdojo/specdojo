@@ -1,0 +1,45 @@
+**判定は `complete-with-findings` です。** Job Run `JBR-grade-kata-5a5519c3090b` は、選ばれた 15 文書の評価がすべて終わっていて、そのまま統合できます。残る指摘は `utc-sample.md` の品質評価 1 件だけで、Job の完了は妨げません。
+
+**出力範囲**
+- 2 つの commit 間の差分は 22 ファイルで、すべてこの Job Run の出力でした。
+  - 評価結果ファイル（sidecar）が 15 件（変更 14、新規 1）。
+  - Run JSON、plan、result が各 1 件。
+  - evidence が 4 件（`command.stdout.log`、空の `command.stderr.log`、`evidence.json`、`pipeline-state.json`）。
+- 対象外のファイル変更はありませんでした。
+
+**記録どうしの整合**
+- 状態は Run JSON、`evidence.json`、`pipeline-state.json` のすべてで成功（終了コード 0）になっていて、食い違いはありません。
+- 実行ログの末尾は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` でした。
+- 評価一覧（`results.tsv`）の 15 行はすべて `passed` です。
+- 一覧の verdict と score は、15 件の評価結果ファイルの値と 1 件ずつ一致しました。評価日時も実行時間内に収まっています。
+- 評価結果ファイル上の評価者名は `flash-high-executor` です。指定された `agy-expert-executor` はこの名前の別名として登録されているので、矛盾ではありません。
+
+**Job 固有の確認事項**
+- 終了コード 75（rate limit）や中断で残った段：なし。
+- `failed` の段：なし。
+- `retry_exhausted` の文書：なし。
+- Run は `partial` ではないため、再試行用の記録の確認は不要です。
+- verdict と score の分布：14 件が pass（91〜100、うち 7 件が 100）、1 件が fail です。
+  - fail は `docs/ja/specdojo/samples/utc-sample.md`（score 46、指摘 25 件、一貫性カテゴリが 0 点）。
+  - 文書の内容は前回から変わっていません。評価基準が v1 から v2 に変わったための再評価で、score は 55 から 46 に下がりました。
+  - 高得点への偏りはあるものの、評価設定の見直しが必要と言える根拠は見つかりませんでした。
+
+**評価結果の鮮度**
+次の 3 つの確認はどれも何も出力せず、終了コード 0 でした。評価結果は最新で、未完了の評価も、再試行上限に達した文書もありません。
+- `grade list --target kata --project prj-0001 --changed-only`
+- `grade list --target kata --project prj-0001 --incomplete`
+- `grade state --target kata --project prj-0001 --exhausted`
+
+**指摘と改善指示**
+1. `utc-sample.md` が fail（46 点）でした。これはこの Job が正しく記録した品質評価の結果なので、Job の完了は妨げません。この文書は別途、改善タスクで直す必要があります。
+2. 細かい記録の不一致：`evidence.json` は変更ファイル数を 16 としていますが、差分の要約には新規 2 ファイルが入っておらず 14 件分しかありません。Job Run の result の変更ファイル一覧にも、自動で作られる evidence、plan、result が載っていません。
+
+**確認できなかった範囲**
+- 各評価結果ファイルに書かれた指摘の中身が妥当かどうかは、再評価になるため見ていません。
+- `agy-expert-executor` が実際に使ったモデルとその設定は確認していません。
+- 評価が別名経由で動いたかどうかは、評価結果ファイル上の評価者名（`flash-high-executor`）と別名登録の照合で確かめただけです。
+- `lint` などの検査は親 runner が実行するので、ここでは実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"推奨 verdict: complete-with-findings。差分（22ファイル）は Job Run `JBR-grade-kata-5a5519c3090b` の出力だけで構成されている（評価結果ファイル15件、Run JSON・plan・result 各1件、evidence 4件）。Run JSON・`evidence.json`・`pipeline-state.json` の状態はいずれも成功（終了コード0）で、stdout の `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` とも一致する。`results.tsv` の15行はすべて `passed` で、verdict と score は評価結果ファイル15件と1件ずつ一致した。評価日時は実行時間内に収まる。評価結果ファイルの `graded_by` は `flash-high-executor` で、指定の `agy-expert-executor` はその別名（`alias_of`）として登録されている。rate limit（終了コード75）・`failed`・`retry_exhausted`・未完了の段はなく、Run は `partial` ではない。分布は pass 14件（91〜100、うち100が7件）、fail 1件。fail は `docs/ja/specdojo/samples/utc-sample.md`（score 46、findings 25、`consistency` カテゴリ 0）で、`content_hash` は変わらず、rubric が v1 から v2 に変わったための再評価により score が55から46に下がった。評価設定の見直しを要する偏りの根拠は見つからなかった。鮮度の確認（`grade list --changed-only` / `--incomplete` / `grade state --exhausted`）はいずれも出力なし・終了コード0。finding: (1) `utc-sample.md` は fail で、別途改善タスクが必要（Job の完了は妨げない）。(2) `evidence.json` は `files_changed` を16としているが、`diff_summary` には新規2ファイルが含まれず14件分しかない。Job Run の result の変更ファイル一覧にも、自動生成される evidence・plan・result が載っていない（軽微）。確認できなかった範囲: 各評価結果ファイルの指摘内容が妥当かどうか（再評価になるため対象外）、`agy-expert-executor` が実際に使ったモデルと設定（`graded_by` と別名登録の照合のみ）、lint 等の検査（親 runner が実行）。","validations":[{"command":"git diff --stat db5bf4e3b5409893c10ff1e88bc74484dd8b78ef..db57797974ff23d3b8a2bf97f8b1be4e60a3e3de && git diff --name-status db5bf4e3b5409893c10ff1e88bc74484dd8b78ef..db57797974ff23d3b8a2bf97f8b1be4e60a3e3de","status":"passed","summary":"22ファイル。すべて Job Run の出力（評価結果ファイル・Run JSON・plan・result・evidence）で、対象外の変更なし"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"出力なし・終了コード0。評価結果は最新"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力なし・終了コード0。未完了の評価なし"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし・終了コード0。retry_exhausted の文書なし"}]}
+</specdojo_executor_evidence>
