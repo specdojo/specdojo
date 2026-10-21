@@ -35,3 +35,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-WSET"]'
+- v: 1
+  id: reg_ab43db5d0bcf4b87b98710ec7d676a78
+  ts: "2026-10-21T15:52:52Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_45d97ece778c4fd9872aa6e4acc6cfde
