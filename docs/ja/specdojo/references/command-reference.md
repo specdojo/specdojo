@@ -38,16 +38,16 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 
 ## 2. init / config / project
 
-| コマンド                 | 用途                                                    | 例                                          |
-| ------------------------ | ------------------------------------------------------- | ------------------------------------------- |
-| `init`                   | project から agent 実行までを質問式で初期設定する       | `specdojo init`                             |
-| `config init`            | `specdojo.config.json` と `.gitignore` を個別に用意する | `specdojo config init`                      |
-| `config migrate-members` | agent 定義を保護設定へ移す                              | `specdojo config migrate-members --dry-run` |
-| `config scaffold`        | provider や VS Code ワークスペースを個別に配置する      | `specdojo config scaffold --provider codex` |
-| `project list`           | 登録済み project を表示する                             | `specdojo project list`                     |
+| コマンド                 | 用途                                                        | 例                                          |
+| ------------------------ | ----------------------------------------------------------- | ------------------------------------------- |
+| `init`                   | project から agent 実行までを質問式で初期設定する           | `specdojo init`                             |
+| `config init`            | `specdojo.config.json` と `.gitignore` を個別に用意する     | `specdojo config init`                      |
+| `config migrate-members` | agent 定義を保護設定へ移す                                  | `specdojo config migrate-members --dry-run` |
+| `config scaffold`        | provider、VS Code ワークスペース、Git hook を個別に配置する | `specdojo config scaffold --lefthook`       |
+| `project list`           | 登録済み project を表示する                                 | `specdojo project list`                     |
 
 `init` は対話できる端末で、project ID と名前、register、人の nickname と表示名、複数指定可能な
-provider、exec、Dev Container の順に質問します。Dev Container を選んだ場合だけ、続けて推奨 preset を入れるかを質問します（既定は「入れる」）。成果物カタログは対話では質問せず、`--catalog <size>` を
+provider、exec、Dev Container、Git hook の順に質問します。Dev Container を選んだ場合だけ、続けて推奨 preset を入れるかを質問します（既定は「入れる」）。Git hook は既定では作りません。成果物カタログは対話では質問せず、`--catalog <size>` を
 明示した場合にだけ作成します。既存ファイルは上書きせず、スキップしたパスを表示します。`--dry-run` は
 予定だけを表示し、ファイルや `package.json` を変更しません。各回答は質問の直後に検証され、誤りの理由を
 表示して同じ質問だけをやり直します。それまでの回答は保持されます。`--exec` を選んだのに provider が
@@ -68,6 +68,7 @@ provider、exec、Dev Container の順に質問します。Dev Container を選�
 | `--exec`                       | executor / reporter の名簿と起動設定を作る                                | 作らない        |
 | `--catalog <size>`             | `small` / `medium` / `large` の成果物カタログを作る（対話では質問しない） | 作らない        |
 | `--devcontainer`               | 選んだ provider の Dev Container を作る                                   | 作らない        |
+| `--lefthook`                   | commit 前の文書・SpecDojo 検査を行う Git hook を作る                      | 作らない        |
 | `--devcontainer-preset <name>` | Dev Container の preset（`recommended` / `none`）を選ぶ                   | `recommended`   |
 | `--workspace-name <name>`      | Dev Container 内で使う親ディレクトリ名                                    | ホスト側の親名  |
 | `--dry-run`                    | 作成・変更予定だけを表示する                                              | 書き込む        |
@@ -102,6 +103,28 @@ specdojo config scaffold --provider antigravity --global
 ```
 
 `--force` はリポジトリ内の scaffold ファイルだけを上書きし、グローバル設定の既存項目は上書きしません。従来の `exec scaffold --provider antigravity` でも同じ `--global` / `--dry-run` の挙動を利用できます。
+
+`config scaffold --lefthook` は、利用リポジトリに `lefthook.yml`、依存なしで起動できる
+`tools/install-lefthook.mjs` と `tools/specdojo-pre-commit.mjs` を生成します。pre-commit では staged の
+Markdown と YAML だけを Prettier で整形し、staged の Markdown だけを markdownlint で検査します。
+また、`.specdojo/specdojo.config.json` の `project_register_path` 配下に staged の変更がある project では
+`specdojo register build`、`catalog_path` 配下に変更がある project では `specdojo catalog validate` を
+実行します。`catalog_path` がない構成には catalog の command を生成せず、テストは hook に含めません。
+
+```bash
+specdojo config scaffold --lefthook --dry-run
+specdojo config scaffold --lefthook
+npm install
+```
+
+既存の `lefthook.yml` と `tools/` のファイルは `--force` なしでは上書きしません。必要な
+`lefthook`・`prettier`・`markdownlint-cli` の devDependencies と `prepare`・`pre-commit` npm script は、
+不足している項目を `package.json` の変更前に表示してから追加します。同名の script、dependencies、
+devDependencies は `--force` を指定しても保持します。`package.json` がない場合は必要な JSON を表示する
+だけで、ファイルを新規作成しません。installer は linked worktree と `node_modules/lefthook` がない環境を
+成功扱いで skip します。primary worktree で `npm install`、または既存の `prepare` を保持した場合は
+`node tools/install-lefthook.mjs` を実行してください。hook 内から Git を呼ぶ入口は `GIT_DIR` などの
+repository-local 環境変数を除いてから staged files を調べます。
 
 `config scaffold --workspace` は、`.specdojo/specdojo.config.json` の `repos` 宣言から VS Code のマルチルートワークスペース（`<project-id>.code-workspace`）をリポジトリルートに生成します。`folders` にはプロジェクトリポジトリ（`.`）と各プロダクトリポジトリ（`repos[].path`）を宣言順に並べ、別リポジトリ構成でも 1 つの VS Code ウィンドウでプロジェクトとプロダクトを同時に開けます。`--project <id>` で対象 project を指定でき、省略時は `current_project` を使います。既存のファイルは `--force` を指定しない限り上書きしません。`repos` が宣言されていない project ではエラーになります。`--dry-run` は書き込まず予定の内容だけを表示します。
 
