@@ -8,6 +8,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - 別 project の作業ツリーから `register add --project <project-id> --commit` を実行し、対象 project の統合ブランチへ直接起票できるようにしました。統合ブランチは project の `integration_branch` で指定でき、省略時は `project/<project-id>/develop` です。project 修飾した `--from` は参照先 project の統合ブランチから存在を確認します（PJR-W93C）。
 
+### 変更
+
+- `templates/init-agent-members.yaml` で配布する OpenCode の `gemma-reporter` の既定モデルを 26b（`ollama-local/gemma4:26b`）にし、`gemma-executor`・`gemma-review-executor` および対話型オーケストレーターのモデル名からローカル固有のタグ（`-mlx-work-64k`）を除いて利用者が `ollama pull` で取得できるタグ名（`ollama-local/gemma4:31b`）に改めました。また `templates/opencode/README.md` に文脈長拡張のための Modelfile 手順と既存名簿の書き換え案内を追記しました（PJR-2ASZ）。
+
 ### 不具合修正
 
 - `register build` が生成する登録簿一覧・派生ビュー・PM ログで、自由記述セルのアスタリスクとアンダースコアをエスケープするようにしました。既存のコードスパンとエスケープ済みの記号は保持し、`orch:*` のような記述が複数ある場合も markdownlint（MD037）で止まりません（PJR-6SQH）。
