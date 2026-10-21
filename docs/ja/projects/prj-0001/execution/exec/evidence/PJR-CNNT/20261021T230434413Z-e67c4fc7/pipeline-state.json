@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-CNNT",
   "run_id": "20261021T230434413Z-e67c4fc7",
-  "updated_at": "2026-10-21T23:17:18.388Z",
+  "updated_at": "2026-10-21T23:19:51.854Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-cnnt-20261021T230434Z-8a0e-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-10-21T23:17:18.388Z",
-      "completed_at": null,
+      "completed_at": "2026-10-21T23:19:51.854Z",
       "artifact_ref": null
     }
   },
