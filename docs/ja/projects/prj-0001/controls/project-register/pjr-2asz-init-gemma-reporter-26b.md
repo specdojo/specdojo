@@ -22,13 +22,22 @@ init が作る名簿の雛形では gemma の executor と reporter がすべて
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 0.4.2 の範囲とする（2026-10-21、利用者が承認）。
+- `templates/init-agent-members.yaml` の `gemma-reporter` の既定のモデルを gemma4 の 26b にする（利用者の決定）。`gemma-executor`・`gemma-review-executor` は 31b のままとする。別名の `opencode-reporter` は `gemma-reporter` を指したままとし、`specdojo init` で opencode を選んだときの振り分けの表の reporter が 26b になることを確かめる。
+- 雛形・`templates/opencode/` のモデル名から、手元の Ollama で作ったタグ（`-mlx-work-64k`）をなくし、利用者が `ollama pull` で取得できるタグ名にする。タグ名は Ollama の公式のモデルの一覧で確かめ、確かめた方法を result に書く。確かめられない場合は推測で埋めず、`_ASSUMPTION_` として残し、result の申し送りに人の確認として書く。
+- 文脈の長さ（`num_ctx` など）を広げたい利用者のために、Modelfile で別のタグを作り `model` を書き換える手順を、`templates/opencode/README.md` か [[specdojo:exec-config-guide]] のどちらか 1 か所に短く書く。
+- 既に導入した利用者の名簿は上書きされないこと（`init` は既存ファイルを上書きしない）を、同じ箇所に書き、26b に変えたい場合の書き換え方を示す。
+- 本リポジトリの `.specdojo/agent-members.yaml` は変えない（保護された設定）。
+- 単体テスト（`init` の生成内容のテストなど）で、opencode を選んだときの名簿と振り分けの表の reporter が 26b の実体を指すことを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く。公開済みの版の節は変えない。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                         | 担当 | 状態 | メモ         |
+| --- | ------------------------------------------------------------ | ---- | ---- | ------------ |
+| 1   | 名簿の雛形の gemma の reporter を 26b にし、モデル名を見直す | DEV  | open | 0.4.2 の範囲 |
 
 ## 4. 対応結果
 
@@ -36,4 +45,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:exec-config-guide]]
