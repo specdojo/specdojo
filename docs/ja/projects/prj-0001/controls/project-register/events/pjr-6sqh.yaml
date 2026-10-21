@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_01ae94aeaa5448f3a2369352868f7991
+  ts: "2026-10-21T13:56:56Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 登録簿の一覧のセルで強調の記号がエスケープされず lint-md が止まる
+    - field: description
+      from: ""
+      to: "一覧の生成はセルの縦棒はエスケープするが、アスタリスクとアンダースコアはしない。説明や結論に orch: のあとにアスタリスクを付けた書き方が 2 つあると強調と解釈され、MD037 で親の検証の lint-md が止まり、develop から分かれた run がすべて止まる"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-A6PV"]'
+- v: 1
+  id: reg_583dde2bab014d44ab8bef7ca96c5751
+  ts: "2026-10-21T13:58:04Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_01ae94aeaa5448f3a2369352868f7991
+- v: 1
+  id: reg_b1144cc384874b0c871a1711345cd676
+  ts: "2026-10-21T14:12:24Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_583dde2bab014d44ab8bef7ca96c5751
+- v: 1
+  id: reg_8eb3cf70083342d6bd4e621a4f12e4a8
+  ts: "2026-10-21T14:13:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・単体テスト・親の検証を確かめ、develop の生成物が markdownlint を通ることを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: 一覧・派生ビュー・PM ログの表のセルで、コードの書式の外にある未エスケープのアスタリスクとアンダースコアをエスケープするようにした。コードの書式の中とエスケープ済みの記号は変えない。作り直した develop の生成物は markdownlint を通る
+  previous_event_id: reg_b1144cc384874b0c871a1711345cd676

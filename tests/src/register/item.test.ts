@@ -115,6 +115,19 @@ describe("toCell — 表セルのエスケープと正規化", () => {
     expect(toCell("[[prj-0001:pjr-bhmh|PJR-BHMH]]")).toBe("[[prj-0001:pjr-bhmh\\|PJR-BHMH]]");
   });
 
+  it("コードスパン外の `*` と `_` をエスケープする", () => {
+    expect(toCell("orch:* と orch:*:work、token_ と _next")).toBe(
+      "orch:\\* と orch:\\*:work、token\\_ と \\_next",
+    );
+  });
+
+  it("コードスパンと既にエスケープ済みの強調記号を保持する", () => {
+    const value = "`orch:*` と ``token_*``、orch:\\* と token\\_";
+
+    expect(toCell(value)).toBe(value);
+    expect(toCell(toCell(value))).toBe(value);
+  });
+
   it("文字列以外が渡された場合は空文字を返す", () => {
     expect(toCell(undefined as unknown as string)).toBe("");
   });
