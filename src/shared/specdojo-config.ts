@@ -45,6 +45,8 @@ export type SpecDojoProjectConfig = {
    * applied consistently.
    */
   base_path?: string;
+  /** Branch that receives direct project-register commits. */
+  integration_branch?: string;
   catalog_path?: string;
   schedule_path?: string;
   execution_path?: string;
@@ -774,12 +776,14 @@ function isValidProjectConfig(project: unknown): project is SpecDojoProjectConfi
   const candidate = project as {
     schedule_path?: unknown;
     execution_path?: unknown;
+    integration_branch?: unknown;
     project_context?: unknown;
   };
   // 省略は既定値へ解決するため許容する。ただし指定したうえでの空文字は、設定漏れと
   // 意図的な省略を区別できないため引き続き不正として扱う。
   if (!isOmittedOrNonEmptyString(candidate.schedule_path)) return false;
   if (!isOmittedOrNonEmptyString(candidate.execution_path)) return false;
+  if (!isOmittedOrNonEmptyString(candidate.integration_branch)) return false;
   if (
     candidate.project_context !== undefined &&
     (!Array.isArray(candidate.project_context) ||
@@ -820,7 +824,7 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
     if (!isValidProjectConfig(project)) {
       throw new Error(
         `Invalid .specdojo/specdojo.config.json: projects.${projectId} must omit ` +
-          `schedule_path/execution_path or set them to non-empty strings, ` +
+          `schedule_path/execution_path/integration_branch or set them to non-empty strings, ` +
           `and project_context must be a string[] when present`,
       );
     }

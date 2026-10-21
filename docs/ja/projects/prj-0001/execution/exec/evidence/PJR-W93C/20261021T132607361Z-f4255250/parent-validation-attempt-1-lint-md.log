@@ -1,0 +1,16 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.1 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md:596:365 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* と"]
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-owner.md:514:365 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* と"]
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-priority.md:367:365 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* と"]
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-status.md:215:365 error MD037/no-space-in-emphasis Spaces inside emphasis markers [Context: "* と"]

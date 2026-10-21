@@ -83,6 +83,16 @@ specdojo register add --project <project-id> --type todo \
   --title "在庫初期データの登録" --topic inventory-seed
 ```
 
+別の project の作業ツリーから起票する場合は、対象 project と `--commit` を明示します。
+
+```bash
+specdojo register add --project prj-0002 --type todo \
+  --title "共通 API の変更を追跡する" --topic shared-api-change \
+  --from prj-0001:PJR-AB12 --commit
+```
+
+この経路は対象 project の `integration_branch`（省略時は `project/<project-id>/develop`）を開いている worktree を使い、無ければ一時 worktree を作ります。対象 project の名簿で `--by` を検証し、`register lifecycle` 枠の内側で起票、派生ビュー再生成、1 件の commit を行います。対象登録簿に未 commit 変更がある場合、または統合ブランチが存在しない場合は書き込みません。`--commit` のない別 project への起票と、別 project の項目に対する状態遷移は行えません。状態遷移は対象 project の作業ツリーで実行してください。
+
 タイトルが日本語の場合は、内容を表す英語の `--topic` を小文字・ハイフン区切りで指定します。省略して `item` や日本語タイトル中の英単語だけが topic になった場合、`register add` は作成を続けたうえで警告します。警告後も、`register update --topic` で個票名と文書 ID を変更できます。成果物や kata（実践の型）を作成・修正する todo では、`--approach <approach> --target <doc-id>` を指定して進め方と対象を宣言できます（詳細は [exec運用ガイド](exec-operation-guide.md) の「register の todo から approach で成果物・kata を作る・直す手順」を参照してください）。
 
 `--priority` は次の目安で付けます（省略時は `medium`）。
@@ -194,6 +204,8 @@ specdojo register close \
 ```
 
 `--commit` は register の worktree 実行の記帳・統合と同じ `register lifecycle` 枠が空くまで待ち、枠の内側で記帳、`register build` 相当の検証・再生成、commit を順に行います。commit 対象はそのコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの未 commit 変更は残します。対象個票やevent自体に開始前の変更がある場合は、既存差分を混ぜないため書き込み前に停止します。既定の件名は `docs(register PJR-XXXX): <command> <title>` で、`-m <message>` または `--message <message>` で上書きできます。`--dry-run` と同時に指定した場合は表示だけを行い、枠の取得と commit は行いません。
+
+別 project への起票では、対象登録簿全体が clean であることを追加で確認します。元の作業ツリーのブランチと HEAD は変更しません。
 
 ### 2.2. 個票の作成
 
