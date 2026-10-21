@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-CNNT
   mode: edit
-  status: blocked
+  status: superseded
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-cnnt-20261021T223836Z-60ad-plan.md
   started_at: "2026-10-21T22:38:37.038Z"
-  completed_at: "2026-10-21T22:53:34.605Z"
+  completed_at: "2026-10-21T23:05:45.359Z"
   agent: flash-high-executor
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-unit"
 ---
 
 # Edit Result
