@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-21T13:17:35Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-md"
 ---
 
 # PJR-W93C 別の project の登録簿へ起票できるようにする
