@@ -1,0 +1,9 @@
+個票の対応結果の表に 1 行追記しました。内容は `2026-10-22 08:23` / `PJR-CNNT` / `sonnet-executor` です。
+
+- **対象の分割:** `git log` では `PJR-CNNT` の review が 08:19 で、`PJR-Q4CD` の 07:43 より後でした。そのため最新の統合を `PJR-CNNT` としました。`pjr-index.md` はこの worktree に無く、状態は確認していません。
+- **変更範囲:** 変更したのは個票だけです。
+- **親の検証:** 実行していません。lint・typecheck・test などは runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に 2026-10-22 08:23 / PJR-CNNT / sonnet-executor の 1 行を追記した。変更は個票のみ。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist の検査のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>
