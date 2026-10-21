@@ -363,7 +363,9 @@ npm install
 markdownlint で検査します。対象 project の `project_register_path` 配下を変更した場合は
 `register build`、`catalog_path` 配下を変更した場合は `catalog validate` も実行します。
 `catalog_path` がない構成には catalog の検査を生成せず、時間のかかるテストも pre-commit には
-含めません。`lefthook.yml` と `tools/` の既存ファイルは `--force` なしでは上書きしません。
+含めません。SpecDojo の文書が通る `.markdownlint.jsonc` と、provider の agent 定義を検査から外す
+`.markdownlintignore` も生成します。既存の markdownlint 設定と ignore は `--force` を付けても保持します。
+`lefthook.yml` と `tools/` の既存ファイルは `--force` なしでは上書きしません。
 必要な npm script と devDependencies は書き込み前に表示し、同名の既存項目は `--force` を付けても
 保持します。linked worktree または `node_modules` がない環境では installer が安全に skip するため、
 primary worktree で `npm install` または `node tools/install-lefthook.mjs` を実行してください。

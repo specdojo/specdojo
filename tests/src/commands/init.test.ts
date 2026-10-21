@@ -222,6 +222,8 @@ describe("specdojo init", () => {
       await runInit({ yes: true, provider: "codex", lefthook: true });
 
       expect(existsSync(join(repo, "lefthook.yml"))).toBe(true);
+      expect(existsSync(join(repo, ".markdownlint.jsonc"))).toBe(true);
+      expect(existsSync(join(repo, ".markdownlintignore"))).toBe(true);
       expect(existsSync(join(repo, "tools/install-lefthook.mjs"))).toBe(true);
       expect(existsSync(join(repo, "tools/specdojo-pre-commit.mjs"))).toBe(true);
       const packageJson = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {

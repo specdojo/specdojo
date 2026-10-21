@@ -1,0 +1,5 @@
+lefthook scaffold に markdownlint 設定・agent 定義の除外を追加しました。既存設定は `--force` 時も保持します。初回 commit の統合テスト、関連文書、CHANGELOG、個票も更新済みです。result は変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"markdownlint 設定を含む lefthook scaffold と初回 commit の統合テストを追加した","validations":[{"command":"npx prettier --write src/shared/lefthook-scaffold.ts tests/src/shared/lefthook-scaffold.test.ts tests/src/commands/init.test.ts tests/src/shared/lefthook-scaffold.integration.test.ts docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/references/command-reference.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-7h7n-lefthook-scaffold-for-users.md","status":"passed","summary":"変更した TypeScript・Markdown は整形済み"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証に成功。既存の参照先未配置に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>
