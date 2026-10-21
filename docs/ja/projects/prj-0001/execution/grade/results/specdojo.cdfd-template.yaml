@@ -3,29 +3,75 @@ version: 1
 document: specdojo:cdfd-template
 path: docs/ja/specdojo/templates/cdfd-template.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 91
-graded_at: "2026-09-22T21:33:20.221Z"
-graded_by: codex-expert-executor
+score: 95
+graded_at: "2026-10-21T20:12:35.413Z"
+graded_by: flash-high-executor
 content_hash: ad63e3d3c3b43a7169287519d11519da189aaca7b3f13910dabbe0f4ef47c954
 categories:
-  consistency:
-    score: 75
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 88
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 3
+    score: 92
+  consistency:
     score: 75
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,24 +89,25 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
   major: 0
-  minor: 3
+  minor: 2
   note: 0
 findings:
   - id: F001
-    severity: minor
-    rule: vp-arc-cross-document-consistency
-    line: 106
-    anchor: >-
-      _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
-      のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
-    message: rulebook 6.4 は全体概要に共通凡例がない場合に `specdojo:cdfd-mermaid-rulebook` の既定凡例へ従うよう求めているため、その場合の代替参照を図直後の注記用 TODO に追加してください。
-  - id: F002
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 106
@@ -68,7 +115,8 @@ findings:
       _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
       のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
     message: 全体概要に「凡例（本プロダクト共通）」がない場合の記入方法がないため、`specdojo:cdfd-mermaid-rulebook` の既定凡例へ従う旨を選択できる指示を追加してください。
-  - id: F003
+    message_ja: 全体概要に「凡例（本プロダクト共通）」がない場合の記入方法がないため、`specdojo:cdfd-mermaid-rulebook` の既定凡例へ従う旨を選択できる指示を追加してください。
+  - id: F002
     severity: minor
     rule: vp-qe-kata-conformance
     line: 106
@@ -76,5 +124,8 @@ findings:
       _TODO_: 全体概要の「凡例（本プロダクト共通）」への参照、`-->` / `==>`
       のうち使用した線種、省略した入出力と理由、別図と共有するノード、他グループの内部処理を省略したことを記述する。状態名をノードとして並べず、状態間の遷移を描かない。
     message: >-
+      rulebook 6.4 の凡例適用規則を生成物へ反映できるよう、全体概要に共通凡例がある場合の参照と、ない場合の `specdojo:cdfd-mermaid-rulebook` 適用を分岐して記入できる TODO
+      にしてください。
+    message_ja: >-
       rulebook 6.4 の凡例適用規則を生成物へ反映できるよう、全体概要に共通凡例がある場合の参照と、ない場合の `specdojo:cdfd-mermaid-rulebook` 適用を分岐して記入できる TODO
       にしてください。

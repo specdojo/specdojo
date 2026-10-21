@@ -3,44 +3,99 @@ version: 1
 document: specdojo:pjr-change-request-template
 path: docs/ja/specdojo/templates/pjr-change-request-template.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 94
-graded_at: "2026-09-06T07:30:26.431Z"
-graded_by: gemma-expert-executor
+score: 91
+graded_at: "2026-10-21T20:26:31.864Z"
+graded_by: flash-high-executor
 content_hash: 2016cbc34ca567f2fb5ae25800dda4f2636eb3c6f3e5e2eba3b80d8b52f341f2
 categories:
-  consistency:
+  purpose:
     score: 100
-  usability:
+  operations:
+    score: 94
+  planning:
+    score: 92
+  business:
     score: 92
   architecture:
     score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 3
+    score: 75
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
+    level: 4
+    score: 100
+  vp-qe-omissions-consistency:
     level: 3
     score: 75
-  vp-qe-omissions-consistency:
-    level: 4
-    score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 3
     score: 75
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,6 +104,73 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 7
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 33
+    anchor: "| 項目     | 内容   |"
+    message: >-
+      In Section 4, tracking fields such as "実施担当" (owner) and "実施期限" (due date) duplicate frontmatter fields, risking
+      status reporting discrepancies between ticket body and register index.
+    message_ja: >-
+      セクション4において、「実施担当" (owner) や "実施期限" (due date)
+      といったトラッキングフィールドがfrontmatterのフィールドと重複しており、チケット本文とレジスターインデックスの間でステータス報告の不一致が生じるリスクがあります。
+  - id: F002
+    severity: minor
+    rule: vp-ba-requirements-completeness
+    line: 31
+    anchor: "## 4. 実施追跡"
+    message: >-
+      Section 4 provides only a single "_TODO_" row for acceptance criteria without prompt instructions or guidance on
+      scope boundaries and verification criteria.
+    message_ja: セクション4には、受け入れ基準のための"_TODO_"行が1つあるだけで、スコープの境界や検証基準に関するプロンプトの指示やガイダンスがありません。
+  - id: F003
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 33
+    anchor: "| 項目     | 内容   |"
+    message: >-
+      Structured fields including "実施担当" and "実施期限" in Section 4 redundantly duplicate metadata defined in frontmatter,
+      which should be removed to eliminate unnecessary duplication without losing information.
+    message_ja: セクション4に含まれる「実施担当" や "実施期限" を含む構造化フィールドは、frontmatterで定義されたメタデータを冗長に重複させています。情報を失うことなく、不要な重複を排除するためにこれらを削除すべきです。
+  - id: F004
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 33
+    anchor: "| 項目     | 内容   |"
+    message: >-
+      The inclusion of "実施担当" and "実施期限" in Section 4 conflicts with pjr-rulebook's explicit prohibition against
+      duplicating structured frontmatter fields (owner and due_on) into the document body.
+    message_ja: >-
+      セクション4への「実施担当" と "実施期限" の含め方は、構造化されたfrontmatterのフィールド（owner および due_on）をドキュメント本文に重複させることを明示的に禁止している pjr-rulebook
+      の規定と矛盾します。
+  - id: F005
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 31
+    anchor: "## 4. 実施追跡"
+    message: >-
+      Section 4 lacks placeholder guidance specifying '-' for pending results before resolution as required by
+      pjr-rulebook line 112 and standard PJR templates.
+    message_ja: セクション4には、pjr-rulebookの112行目および標準的なPJRテンプレートで要求されている、解決前の保留中の結果に対して '-' を指定するというプレースホルダーのガイダンスが不足しています。
+  - id: F006
+    severity: minor
+    rule: vp-ux-readability
+    line: 3
+    anchor: "## 1. 変更要求"
+    message: >-
+      Sections lack explanatory guidance text describing what specific information to provide in each table, relying
+      solely on bare '_TODO_' placeholders.
+    message_ja: 各テーブルにどのような特定の情報を記載すべきかを説明する解説テキストがなく、単なる '_TODO_' のプレースホルダーのみに頼っています。
+  - id: F007
+    severity: minor
+    rule: vp-ops-operability
+    line: 22
+    anchor: "## 3. 審査・決定"
+    message: >-
+      The duplication of decision and assignment fields in the Markdown body impedes automated ticket management
+      workflows provided by the register command suite.
+    message_ja: Markdown本文内の決定および割り当てフィールドの重複により、registerコマンドスイートによって提供される自動チケット管理ワークフローが妨げられています。

@@ -3,23 +3,60 @@ version: 1
 document: specdojo:opr-template
 path: docs/ja/specdojo/templates/opr-template.md
 target: kata
-rubric: grade-rubric-v1
-verdict: needs-work
+rubric: grade-rubric-v2
+verdict: pass
 score: 95
-graded_at: "2026-09-06T07:16:51.764Z"
-graded_by: gemma-expert-executor
+graded_at: "2026-10-21T20:22:14.324Z"
+graded_by: flash-high-executor
 content_hash: 85eb8afcff07bc7d27770ffc0d89f5849de61ea6dfc93bce0b6493b80c244978
 categories:
-  consistency:
-    score: 75
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
-  quality:
+  usability:
     score: 100
+  implementation:
+    score: 100
+  quality:
+    score: 92
+  consistency:
+    score: 75
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
@@ -28,19 +65,37 @@ viewpoints:
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
     level: 4
     score: 100
   vp-qe-omissions-consistency:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,6 +104,29 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 0
+  minor: 2
   note: 0
-findings: []
+findings:
+  - id: F001
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 70
+    anchor: "| _TODO_ | _TODO_          | _TODO_ | _TODO_ |"
+    message: >-
+      In Section 12, rulebook section 6.12 explicitly requires a mandatory link to `opd-index` to prevent discrepancies
+      with operation policy, but the template table only provides generic `_TODO_` placeholders without instructing
+      authors to include `opd-index`.
+    message_ja: >-
+      セクション12のルールブック・セクション6.12では、操作ポリシーとの不整合を防ぐために `opd-index` へのリンクを必須と明記していますが、テンプレートの表には `_TODO_`
+      という一般的なプレースホルダーが用意されているだけで、作成者に `opd-index` を含めるよう指示していません。
+  - id: F002
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 7
+    anchor: "_TODO_: 対象となる運用作業と、この手順によって再現可能にする結果を記述する。`opr-<term>` の場合は `opr-index` のどの共通規約を参照し、何を具体化する文書かを明示する。"
+    message: >-
+      Section 1 does not instruct authors creating `opr-＜term＞` deliverables to retain all mandatory sections and mark
+      non-applicable ones with `なし`, `opr-index 参照`, or `本書の範囲外` alongside a reason, as required by rulebook section 5.
+    message_ja: >-
+      セクション1では、`opr-＜term＞` の成果物を作成する作成者に対し、ルールブック・セクション5の規定通り、すべての必須セクションを維持し、該当しないものについては理由とともに `なし`、`opr-index
+      参照`、または `本書の範囲外` と記載するよう指示していません。
