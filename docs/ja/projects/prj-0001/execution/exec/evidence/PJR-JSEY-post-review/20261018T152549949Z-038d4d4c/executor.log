@@ -1,0 +1,32 @@
+判定は **complete-with-findings** です。完了条件はすべて満たしており、close を止めるほどではない指摘が 3 件あります。
+
+## 完了条件との照合
+
+| 完了条件 | 判定 | 根拠 |
+| --- | --- | --- |
+| 「対応結果」の表に日時・分割の項目 ID・agent の nickname を 1 行追記する | 満たす | `2026-10-19 00:20 / PJR-T46Y / sonnet-executor` の 1 行が追加されている。日時は evidence の executor 開始時刻 `2026-10-18T15:20:46Z`（JST 00:20）と合う。agent は evidence の `stage.actor` とイベント記録の actor の両方と合う。PJR-T46Y は列挙された項目の最後で、`item_status: review` なので対象として正しい。 |
+| 本個票以外のファイルを変更しない | 満たす | executor の変更は個票の 1 ファイル・1 行のみ（evidence の変更一覧と差分の集計で確認）。 |
+| 親の検証 7 件が通り、統合まで終わる | 満たす | runner が実行した lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema の 7 件がすべて passed。統合コミット `104c5b931` がある。 |
+
+## 対象外の変更
+
+差分は 8 ファイルです。個票以外の 7 ファイル（イベント記録の追記、evidence 3 件、edit plan、edit result、置き換えられた前回 result の `status: superseded` 化）はいずれも runner が管理するファイルでした。個票の frontmatter の変化は、`item_status` が `waiting` から `review` に変わったことと、`block_reason` の削除だけで、どちらも状態遷移によるものです。対象外の変更はありませんでした。
+
+## 指摘（軽微）
+
+1. edit result の「変更ファイル」が「なし」のままですが、実際には個票を変更しています。前回の review でも同じ指摘があり、直っていません。
+2. 個票の `conclusion` が前回の「6EF8 の統合後の runner で…」のままで、今回の T46Y の結果に更新されていません。
+3. PJR-T46Y の行が 2 行あります（00:08 と 00:20）。完了条件は「実行のたびに 1 行追記」なので違反ではありませんが、00:08 の実行は review で incomplete になった回です。重複したまま残すかどうかは人の判断になります。00:08 行の agent 名は `claude-expert-executor` から `sonnet-executor` に直されていました。この修正は今回の範囲より前の `a1127eca7` で行われています。
+
+## 評価結果の確認
+
+この review では grade を使っていません。edit の検証結果（evidence にある runner の検証 7 件）を確認しました。executor 自身は lint:md を `not_run` と報告していますが、runner 側で passed になっているため問題ありません。
+
+## 確認できなかった範囲
+
+- 分割の項目 20 件すべての状態と統合時刻は個別に確かめていません。確認したのは T46Y と 6EF8 の状態、および直近の `git log` だけです。
+- lint・test の検証は自分では再実行せず、evidence の runner 結果に頼っています。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict: complete-with-findings。完了条件 3 件はすべて満たす。(1) 個票の対応結果の表に `2026-10-19 00:20 / PJR-T46Y / sonnet-executor` の 1 行が追加された。日時は evidence の executor 開始時刻 15:20:46Z（JST 00:20）と合い、agent は evidence の `stage.actor` とイベント記録の actor と合う。PJR-T46Y は列挙項目の最後で `item_status: review` のため対象として正しい。(2) executor の変更は個票の 1 ファイル・1 行のみ。a1127eca..104c5b93 の差分 8 ファイルのうち残りはイベント記録、evidence 3 件、edit plan、edit result、置き換えられた前回 result（`status: superseded`）で、いずれも runner 管理ファイル。個票 frontmatter の変化は `item_status` の waiting→review と `block_reason` の削除のみで、対象外の変更はない。(3) 親の検証 7 件（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）がすべて passed で、統合コミット 104c5b931 がある。指摘（軽微）: edit result の「変更ファイル」が「なし」のままで実際の個票変更と合わない（前回 review でも指摘済みで未修正）。個票の `conclusion` が前回の 6EF8 の記述のまま。PJR-T46Y の行が 00:08 と 00:20 の 2 行ある（実行のたびに追記する完了条件には反しないが、00:08 は incomplete になった回で、残すかどうかは人の判断。00:08 行の agent 名は範囲外の a1127eca7 で sonnet-executor に修正済み）。評価結果の確認: grade は使わず、edit の検証結果（evidence の runner 検証 7 件）を確認した。確認できなかった範囲: 分割の項目 20 件すべての状態と統合時刻は個別に確認していない（確認したのは T46Y・6EF8 の状態と直近の git log のみ）。lint・test は再実行せず evidence の runner 結果に頼った。","validations":[{"command":"git diff --stat a1127eca70dcdf5bd00acc49ff00ee08cc7403f6..104c5b93141dd93b271304e60cfaadbf7798cbee","status":"passed","summary":"8 files changed, 281 insertions(+), 3 deletions(-)。個票と runner 管理ファイルのみ"},{"command":"git diff --name-status a1127eca70dcdf5bd00acc49ff00ee08cc7403f6..104c5b93141dd93b271304e60cfaadbf7798cbee","status":"passed","summary":"M 3 件（イベント記録・個票・前回 result）、A 5 件（evidence 3 件・plan・result）。対象外の変更なし"}]}
+</specdojo_executor_evidence>

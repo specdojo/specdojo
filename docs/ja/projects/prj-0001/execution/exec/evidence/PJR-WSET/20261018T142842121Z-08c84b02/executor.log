@@ -1,0 +1,49 @@
+プロジェクト登録簿項目 **PJR-WSET「循環のなくなった機能の組に依存の向きの規則を足す」** の executor 段階の対応を完了しました。
+
+### 1. 実施内容
+
+1. **循環がなくなった機能の組の依存の向きの規則を ESLint に追加**
+   - [[prj-0001:pjr-qqky-src-feature-cycles|PJR-QQKY]] で循環が解消された 6 組について、[eslint.config.js](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSET/eslint.config.js) に `no-restricted-imports` の規則を `error` で追加しました。
+     - `src/register/**/*.ts`: `src/exec` を import しない
+     - `src/schedule/**/*.ts`: `src/exec` を import しない
+     - `src/job/**/*.ts`: `src/exec` を import しない
+     - `src/grade/**/*.ts`: `src/exec` を import しない
+     - `src/review/**/*.ts`: `src/grade` を import しない
+     - `src/docs/**/*.ts`: `src/catalog` を import しない
+   - ESLint Flat Config において各機能ブロックで `no-restricted-imports` を上書きする際、既存の CLI import 禁止規則（`src/commands/` および `src/specdojo.ts` への依存禁止）が失われないよう、`cliImportPattern` を各機能のパターンに統合して適用しました。
+   - 既存コード（`src/**/*.ts`）に対して上記規則を適用し、違反が 0 件であることを確認しました。また、一時的な不正 import による検証で各規則が正しく `error` になること、既存の CLI import 禁止も維持されていることを確認しました。
+
+2. **循環が残る組の確認**
+   - 2 機能間の直接的な循環（2-cycle）は現時点で 0 組であり、PJR-QQKY で挙げられていた 6 組すべてについて依存方向の規則を追加しました。
+   - 間接的な 3 ノード以上の循環（`schedule` → `dashboard` → `exec` → `schedule` など）は本タスクの対象外（PJR-QQKY のスコープ外）として扱っています。
+
+3. **`src/shared/` に置くものの範囲の見直し**
+   - 他機能から使われる汎用部品に限る原則に基づき、`src/shared/` 内のモジュール利用状況を分析しました。
+   - **単一機能からしか参照されていないモジュール**（各機能へ戻すべき候補）:
+     - `catalog-paths.ts`（`catalog` のみ）
+     - `template-resolution.ts`（`docs` のみ）
+     - `schedule-paths.ts`（`exec` のみ）
+     - `random.ts`（`exec` のみ）
+     - `yaml-schema-modeline.ts`（`kata` のみ）
+     - `specdojo-gitignore.ts`（`commands` のみ）
+   - **機能固有のドメイン処理**（再整理の候補）:
+     - `catalog-render.ts`: `docs/yaml-pages.ts` と `catalog` で共有されているが、カタログの Markdown 描画処理が shared にある。
+     - `schedule-index.ts`: `dashboard`、`exec`、`grade` で共有されているが、schedule 機能のドメインデータ構造・索引化処理が shared にある。
+   - これらは別項目で移動・再整理を検討する候補として整理しました。
+
+4. **ドキュメント・個票の更新**
+   - [.github/instructions/typescript.instructions.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSET/.github/instructions/typescript.instructions.md): 「モジュールと import」に、追加した 6 組の依存方向の規則を反映しました。
+   - [pjr-wset-src-feature-direction-rules.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSET/docs/ja/projects/prj-0001/controls/project-register/pjr-wset-src-feature-direction-rules.md): 作業内容のステータスを `done` に更新し、対応結果セクションに実施内容・検証結果を記載しました。
+
+5. **動作の同一性検証**
+   - 変更前後で `specdojo` 全 123 コマンド・サブコマンドの `--help` 出力を取得・比較し、SHA-256（`e59209a7a94d02ef219c1596c0b447d4ce655c8fa98e5c388360153e596054b4`）が完全一致することを確認しました。
+
+### 2. 変更ファイル
+
+- [.github/instructions/typescript.instructions.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSET/.github/instructions/typescript.instructions.md)
+- [docs/ja/projects/prj-0001/controls/project-register/pjr-wset-src-feature-direction-rules.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSET/docs/ja/projects/prj-0001/controls/project-register/pjr-wset-src-feature-direction-rules.md)
+- [eslint.config.js](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-WSET/eslint.config.js)
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-QQKY で循環の解消された 6 組（register/schedule/job/grade は exec を import しない、review は grade を import しない、docs は catalog を import しない）の依存の向きの規則を eslint.config.js に error として追加し、typescript.instructions.md および個票を更新しました。全123コマンドの --help 完全一致および静的検査を確認しました。","validations":[{"command":"npx prettier --write eslint.config.js .github/instructions/typescript.instructions.md docs/ja/projects/prj-0001/controls/project-register/pjr-wset-src-feature-direction-rules.md","status":"passed","summary":"Prettier formatting matched all modified files"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"Catalog validation passed successfully"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"Register build completed successfully"},{"command":"node --import tsx src/specdojo.ts catalog build","status":"not_applicable","reason":"dct-*.yaml was not modified in this task","summary":"Skipped catalog build"},{"command":"node --import tsx src/specdojo.ts exec refresh","status":"not_applicable","reason":"sch-*.yaml was not modified in this task","summary":"Skipped exec refresh"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"no YAML schema target was modified","summary":"Skipped validate:schema:file"}]}
+</specdojo_executor_evidence>

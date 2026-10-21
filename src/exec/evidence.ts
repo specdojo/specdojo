@@ -55,7 +55,7 @@ export type ExecEvidence = {
   validations: EvidenceValidation[];
   /** Executor-reported disposition of plan targets. Required by the runner on executor resume. */
   target_coverage?: EvidenceTargetCoverage[];
-  /** Runner-recorded pinned-agent wait/fallback history for this stage. */
+  /** Runner-recorded pinned-agent rate-limit/connection recovery history for this stage. */
   rate_limit_events?: RateLimitRecoveryEvent[];
   final_message: string;
   /** Runner-derived failure/protection reason. Present only when the executor did not succeed. */

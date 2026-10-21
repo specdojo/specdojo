@@ -64,6 +64,8 @@ export type PipelineState = {
   updated_at: string;
   stages: PipelineStages;
   artifacts?: PipelineArtifactRefs;
+  /** Run-scoped `--integration-branch` overrides (repo name → branch), reused on resume. */
+  integration_branches?: Record<string, string>;
 };
 
 export type PipelineStateLocation = {
@@ -89,6 +91,7 @@ export function createPipelineState(input: {
   executorActor?: string;
   reporterActor?: string;
   artifacts?: PipelineArtifactRefs;
+  integrationBranches?: Record<string, string>;
 }): PipelineState {
   return {
     schema_version: 1,
@@ -100,6 +103,7 @@ export function createPipelineState(input: {
       reporter: emptyStage(input.reporterActor),
     },
     ...(input.artifacts ? { artifacts: input.artifacts } : {}),
+    ...(input.integrationBranches ? { integration_branches: input.integrationBranches } : {}),
   };
 }
 
@@ -142,6 +146,9 @@ function isStageState(value: unknown): value is PipelineStageState {
         const record = event as Record<string, unknown>;
         return (
           (record.action === "wait" || record.action === "fallback") &&
+          (record.trigger === undefined ||
+            record.trigger === "rate_limit" ||
+            record.trigger === "connection_error") &&
           typeof record.from_actor === "string" &&
           typeof record.to_actor === "string" &&
           typeof record.resumed_at === "string" &&
@@ -198,6 +205,17 @@ function isArtifactRefs(value: unknown): value is PipelineArtifactRefs {
   );
 }
 
+function isIntegrationBranches(value: unknown): value is Record<string, string> {
+  return (
+    !!value &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    Object.entries(value).every(
+      ([repo, branch]) => /^[a-z0-9-]+$/.test(repo) && typeof branch === "string" && !!branch,
+    )
+  );
+}
+
 export function isPipelineState(value: unknown): value is PipelineState {
   if (!value || typeof value !== "object" || Array.isArray(value)) return false;
   const state = value as Record<string, unknown>;
@@ -215,6 +233,11 @@ export function isPipelineState(value: unknown): value is PipelineState {
     return false;
   }
   if (state.artifacts !== undefined && !isArtifactRefs(state.artifacts)) return false;
+  if (
+    state.integration_branches !== undefined &&
+    !isIntegrationBranches(state.integration_branches)
+  )
+    return false;
   const stages = state.stages as Record<string, unknown>;
   if (stages.integrate !== undefined && !isIntegrateStageState(stages.integrate)) return false;
   return isStageState(stages.executor) && isStageState(stages.reporter);

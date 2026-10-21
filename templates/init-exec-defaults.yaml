@@ -12,6 +12,23 @@ pipeline:
     - test-unit
 run:
   register_execution: worktree
+  # Opt in after the team is ready for review-agent verdicts to close todo/issue items.
+  register_post_review: false
+# `specdojo init --exec` replaces these generic names with members from the selected providers.
+# Explicit `exec run --register` stage/recovery options override the matching difficulty route.
+routing:
+  hard:
+    executor_by: primary-executor
+    reporter_by: primary-reporter
+    on_rate_limit: wait
+  medium:
+    executor_by: primary-executor
+    reporter_by: primary-reporter
+    on_rate_limit: stop
+  easy:
+    executor_by: primary-executor
+    reporter_by: primary-reporter
+    on_rate_limit: stop
 rate_limit_detection:
   exit_codes: []
   stderr_patterns: [rate limit, "429"]
@@ -68,7 +85,9 @@ providers:
     max_concurrency: 1
     rate_limit_detection:
       exit_codes: []
-      stderr_patterns: [timeout, connection refused, out of memory, model is loading]
+      stderr_patterns: [timeout, out of memory, model is loading]
+    connection_error_detection:
+      stderr_patterns: [Cannot connect to API, ECONNREFUSED, connection refused]
   antigravity:
     # 使える model の ID は `agy models` で確かめる。Gemini の Pro 系は提供されなくなったため、
     # expert は Flash の high とする（2026-10-15、agy 1.3.5 で確認）。

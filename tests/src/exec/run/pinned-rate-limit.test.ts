@@ -4,6 +4,8 @@ import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import type { ExecDefaultsConfig } from "../../../../src/exec/agent-config.js";
 import { runWithRetry } from "../../../../src/exec/run/agent.js";
+import { resolvePinnedRateLimitRunOptions } from "../../../../src/exec/run/shared.js";
+import type { MemberRoster } from "../../../../src/shared/specdojo-config.js";
 
 const temporaryDirectories: string[] = [];
 
@@ -21,6 +23,9 @@ function fixture(): string {
 
 const defaults: ExecDefaultsConfig = {
   rate_limit_detection: { stderr_patterns: ["rate limit"] },
+  connection_error_detection: {
+    stderr_patterns: ["Cannot connect to API", "ECONNREFUSED"],
+  },
   rate_limit_policy: {
     cooldown_seconds: { rate_limit: 60 },
     on_non_critical: { action: "skip" },
@@ -38,6 +43,42 @@ const defaults: ExecDefaultsConfig = {
 };
 
 describe("pinned-agent rate-limit recovery", () => {
+  it("resolves a reporter fallback even when --on-rate-limit is stop", () => {
+    const roster: MemberRoster = {
+      version: 1,
+      project_id: "test",
+      members: [
+        {
+          nickname: "fallback-reporter",
+          display_name: "Fallback Reporter",
+          email: null,
+          roles: [],
+          type: "agent",
+          command: "fallback-report",
+          stage_role: "reporter",
+          proficiency: "normal",
+          priority: 1,
+        },
+      ],
+    };
+
+    expect(
+      resolvePinnedRateLimitRunOptions(
+        { onRateLimit: "stop", fallbackReporterBy: "fallback-reporter" },
+        defaults,
+        roster,
+        "reporter",
+        { command: "primary-report", actor: "primary-reporter", provider: "opencode" },
+      ),
+    ).toMatchObject({
+      action: "stop",
+      fallbackCandidate: {
+        command: "fallback-report",
+        actor: "fallback-reporter",
+      },
+    });
+  });
+
   it("reads retry-after and resumes the same agent without a real wait", async () => {
     const directory = fixture();
     const marker = join(directory, "attempted");
@@ -109,7 +150,87 @@ describe("pinned-agent rate-limit recovery", () => {
     expect(outcome.result).toBe("success");
     expect(outcome.actor).toBe("fallback");
     expect(outcome.rateLimitEvents).toMatchObject([
-      { action: "fallback", from_actor: "primary", to_actor: "fallback" },
+      {
+        action: "fallback",
+        trigger: "rate_limit",
+        from_actor: "primary",
+        to_actor: "fallback",
+      },
     ]);
+  });
+
+  it("switches a pinned reporter to its fallback on a configured connection error", async () => {
+    const directory = fixture();
+    const disconnected = join(directory, "disconnected-reporter.cjs");
+    const fallback = join(directory, "fallback-reporter.cjs");
+    writeFileSync(
+      disconnected,
+      `console.error("Cannot connect to API: ECONNREFUSED"); process.exit(1);\n`,
+      "utf8",
+    );
+    writeFileSync(fallback, `console.log("fallback reporter complete");\n`, "utf8");
+
+    const outcome = await runWithRetry(
+      [
+        {
+          command: `node ${JSON.stringify(disconnected)}`,
+          actor: "primary-reporter",
+          provider: "opencode",
+        },
+      ],
+      "prompt",
+      defaults,
+      process.cwd(),
+      process.env,
+      undefined,
+      {
+        action: "stop",
+        maxWaitSeconds: 0,
+        fallbackCandidate: {
+          command: `node ${JSON.stringify(fallback)}`,
+          actor: "fallback-reporter",
+          provider: "custom",
+        },
+      },
+    );
+
+    expect(outcome.result).toBe("success");
+    expect(outcome.actor).toBe("fallback-reporter");
+    expect(outcome.attempts).toBe(2);
+    expect(outcome.rateLimitEvents).toMatchObject([
+      {
+        action: "fallback",
+        trigger: "connection_error",
+        from_actor: "primary-reporter",
+        to_actor: "fallback-reporter",
+      },
+    ]);
+  });
+
+  it("keeps a connection error as a failure when no fallback is configured", async () => {
+    const directory = fixture();
+    const disconnected = join(directory, "disconnected-reporter.cjs");
+    writeFileSync(disconnected, `console.error("ECONNREFUSED"); process.exit(1);\n`, "utf8");
+
+    const outcome = await runWithRetry(
+      [
+        {
+          command: `node ${JSON.stringify(disconnected)}`,
+          actor: "primary-reporter",
+          provider: "opencode",
+        },
+      ],
+      "prompt",
+      defaults,
+      process.cwd(),
+      process.env,
+      undefined,
+      { action: "stop", maxWaitSeconds: 0 },
+    );
+
+    expect(outcome.result).toBe("failure");
+    expect(outcome.actor).toBe("primary-reporter");
+    expect(outcome.attempts).toBe(1);
+    expect(outcome.rateLimitEvents).toEqual([]);
   });
 });

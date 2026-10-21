@@ -1,0 +1,10 @@
+[0m
+> gemma26-128k-executor · gemma4:26b-mlx-work-128k
+[0m
+[0m# [0mTodos
+[•] 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md` を読み、目的・完了条件を確認する
+[ ] ブランチワークフローガイドにプロダクトリポジトリの節を追加し、完成させる
+[ ] 成果物の整形と静的検査（Prettier, markdownlint）を実行する
+[ ] result ファイル `docs/ja/projects/prj-0001/execution/exec/results/pjr-wje6-trial-result.md` を記入する
+[0m
+[0m→ [0mRead docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md

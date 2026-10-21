@@ -3,35 +3,80 @@ version: 1
 document: specdojo:stc-sample
 path: docs/ja/specdojo/samples/stc-sample.md
 target: kata
-rubric: grade-rubric-v1
-reference: specdojo:prj-overview-sample
+rubric: grade-rubric-v2
 verdict: fail
-score: 37
-graded_at: "2026-09-06T02:00:36.251Z"
-graded_by: gemma-expert-executor
+score: 50
+graded_at: "2026-10-20T20:23:09.800Z"
+graded_by: flash-high-executor
 content_hash: 74fbc1593535d9c0c79e5d1d72d01901edad667246f1b5da8bf62a2966297f87
 categories:
-  consistency:
-    score: 13
-  usability:
+  purpose:
+    score: 63
+  operations:
+    score: 81
+  planning:
     score: 58
+  business:
+    score: 50
   architecture:
     score: 75
+  usability:
+    score: 67
+  implementation:
+    score: 63
   quality:
-    score: 13
+    score: 33
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
-  vp-arc-conciseness:
+  vp-po-purpose-alignment:
     level: 2
     score: 50
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
+  vp-arc-conciseness:
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
+    level: 3
+    score: 75
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
     level: 2
     score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -39,9 +84,18 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,55 +103,205 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 3
-  major: 3
-  minor: 2
+  major: 12
+  minor: 9
   note: 0
 findings:
-  - id: F003
-    severity: minor
-    rule: vp-arc-single-responsibility
-    line: 1
-    message: 「STCの作成ガイド」と「STCの具体例」の役割が混在しており、主題が不明確である。
-    anchor: ""
-  - id: F005
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: Frontmatter の `type` が不適切で、必須項目 `title` および `based_on` が欠落している。
-    anchor: ""
-  - id: F008
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    message: 具体的な STC の構成例が示されていないため、ルールブック適用時の参考にならない。
-    anchor: ""
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 3
-    message: 参照先 `stc-rulebook.md` で定義された必須構成（章番号および項目）と矛盾している。
-    anchor: ""
-  - id: F006
-    severity: blocker
-    rule: vp-qe-omissions-consistency
-    line: 3
-    message: ルールブックで定義された必須章（2〜6）がすべて欠落している。
-    anchor: ""
-  - id: F007
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 3
-    message: "`stc-rulebook` が規定する固定順序の見出し構成を完全に無視しており、サンプルとしての責務を果たしていない。"
-    anchor: ""
+    rule: vp-po-purpose-alignment
+    line: 5
+    anchor: 本書は、総合テスト仕様をシナリオ/業務単位で分割して定義する（仕様）ための最小サンプルである。
+    message: >-
+      The sample fails to demonstrate how an STC verifies end-to-end business workflows, providing only abstract
+      meta-descriptions rather than serving the purpose of an STC artifact.
+    message_ja: このサンプルは、STCがエンドツーエンドのビジネスワークフローをどのように検証するかを実証できておらず、STCのアーティファクトという目的を果たさず、抽象的なメタ記述を提供しているに過ぎません。
   - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: >-
+      The unresolved issues section lacks decision makers, impact scope, and concrete next actions required for approval
+      decisions.
+    message_ja: 未解決の問題のセクションには、承認の意思決定に必要な意思決定者、影響の範囲、および具体的な次のアクションが不足しています。
+  - id: F003
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# [総合テスト対象別](../rulebooks/stc-rulebook.md) サンプル"
+    message: >-
+      Accountability and human approval responsibility for publishing or finalizing the sample are not explicitly
+      specified.
+    message_ja: サンプルの公開または確定に関する説明責任と人間による承認の責任が明示的に指定されていません。
+  - id: F004
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 20
+    anchor: >-
+      | 項目         |
+      値                                                                                                     |
+      備考                                 |
+    message: >-
+      The sample contains no executable test units, dependencies, or completion criteria that can be planned or
+      scheduled.
+    message_ja: このサンプルには、計画やスケジュールの対象となる実行可能なテストユニット、依存関係、または完了基準が含まれていません。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Downstream risks, dependencies on upstream specifications, and schedule impacts of unresolved items are not
+      identified.
+    message_ja: 未解決事項による下流のリスク、上流の仕様への依存関係、およびスケジュールの影響が特定されていません。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 28
+    anchor: "| 論点           | 処理方針                 |"
+    message: The unresolved issues table lacks reporting destinations and role codes needed for project management control.
+    message_ja: 未解決の問題のテーブルには、プロジェクト管理制御に必要な報告先やロールコードが不足しています。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The sample does not describe the business value, user personas, or target operational scenarios for the candy
+      store sales management system.
+    message_ja: このサンプルは、菓子店の販売管理システムにおけるビジネス価値、ユーザーペルソナ、または対象となる運用シナリオを記述していません。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 11
+    anchor: "- 参照: `../rulebooks/stc-rulebook.md`"
+    message: Requirements, acceptance criteria, and explicit out-of-scope boundaries are missing from the sample.
+    message_ja: 要件、受け入れ基準、および明確なスコープ外の境界がサンプルに含まれていません。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: The document fails to identify relevant stakeholders, operational users, or test reviewers.
+    message_ja: このドキュメントは、関連するステークホルダー、運用ユーザー、またはテストレビュアーを特定できていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      Technical constraints, environment prerequisites, and external dependencies required for the test catalog are
+      completely absent.
+    message_ja: テストカタログに必要な技術的制約、環境の前提条件、および外部依存関係が完全に欠落しています。
+  - id: F011
     severity: minor
     rule: vp-arc-conciseness
     line: 7
+    anchor: "## 2. 入力情報"
     message: 具体例を提示せず記述項目の列挙に留まっており、実例としての有用性が低い。
-    anchor: ""
-  - id: F004
+    message_ja: 具体例を提示せず記述項目の列挙に留まっており、実例としての有用性が低い。
+  - id: F012
+    severity: minor
+    rule: vp-arc-single-responsibility
+    line: 1
+    anchor: "# [総合テスト対象別](../rulebooks/stc-rulebook.md) サンプル"
+    message: 「STCの作成ガイド」と「STCの具体例」の役割が混在しており、主題が不明確である。
+    message_ja: 「STCの作成ガイド」と「STCの具体例」の役割が混在しており、主題が不明確である。
+  - id: F013
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 20
+    anchor: >-
+      | 項目         |
+      値                                                                                                     |
+      備考                                 |
+    message: >-
+      Test inputs, preconditions, expected outputs, and completion criteria required for implementing tests are not
+      provided.
+    message_ja: テストの実施に必要なテスト入力、前提条件、期待される出力、および完了基準が提供されていません。
+  - id: F014
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 20
+    anchor: >-
+      | 項目         |
+      値                                                                                                     |
+      備考                                 |
+    message: The sample does not identify the scope of change impact or affected components/test suites.
+    message_ja: このサンプルは、変更の影響範囲や、影響を受けるコンポーネント/テストスイートを特定していません。
+  - id: F015
+    severity: major
+    rule: vp-dev-testability
+    line: 20
+    anchor: >-
+      | 項目         |
+      値                                                                                                     |
+      備考                                 |
+    message: Verification commands, automated test script references, and evidence locations are not specified.
+    message_ja: 検証コマンド、自動テストスクリプトの参照、およびエビデンスの場所が指定されていません。
+  - id: F016
     severity: major
     rule: vp-qe-verifiability
     line: 15
+    anchor: "- 主な内容: 個別シナリオの前提、データ準備、テスト条件、期待結果、合格基準、関連する業務仕様ID/受入条件ID/入条件ID"
     message: 判定基準を列挙しているが、具体的な判定可能な値や状態が記述されておらず検証不能である。
-    anchor: ""
+    message_ja: 判定基準を列挙しているが、具体的な判定可能な値や状態が記述されておらず検証不能である。
+  - id: F017
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [総合テスト対象別](../rulebooks/stc-rulebook.md) サンプル"
+    message: Frontmatter の `type` が不適切で、必須項目 `title` および `based_on` が欠落している。
+    message_ja: Frontmatter の `type` が不適切で、必須項目 `title` および `based_on` が欠落している。
+  - id: F018
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: ルールブックで定義された必須章（2〜6）がすべて欠落している。
+    message_ja: ルールブックで定義された必須章（2〜6）がすべて欠落している。
+  - id: F019
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: "`stc-rulebook` が規定する固定順序の見出し構成を完全に無視しており、サンプルとしての責務を果たしていない。"
+    message_ja: "`stc-rulebook` が規定する固定順序の見出し構成を完全に無視しており、サンプルとしての責務を果たしていない。"
+  - id: F020
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: 参照先 `stc-rulebook.md` で定義された必須構成（章番号および項目）と矛盾している。
+    message_ja: 参照先 `stc-rulebook.md` で定義された必須構成（章番号および項目）と矛盾している。
+  - id: F021
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    anchor: "# [総合テスト対象別](../rulebooks/stc-rulebook.md) サンプル"
+    message: 具体的な STC の構成例が示されていないため、ルールブック適用時の参考にならない。
+    message_ja: 具体的な STC の構成例が示されていないため、ルールブック適用時の参考にならない。
+  - id: F022
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 15
+    anchor: "- 主な内容: 個別シナリオの前提、データ準備、テスト条件、期待結果、合格基準、関連する業務仕様ID/受入条件ID/入条件ID"
+    message: >-
+      Terminology contains inconsistencies and typographical errors such as "入条件ID" instead of standard acceptance
+      criteria keys.
+    message_ja: 用語に不一致や、標準的な受け入れ基準のキーであるべき箇所が "入条件ID" になっているといった誤字があります。
+  - id: F023
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: Prerequisites and criteria for moving from draft to ready status are not defined.
+    message_ja: ドラフトからReadyステータスへ移行するための前提条件と基準が定義されていません。
+  - id: F024
+    severity: minor
+    rule: vp-ops-operability
+    line: 11
+    anchor: "- 参照: `../rulebooks/stc-rulebook.md`"
+    message: Operational procedures and maintenance guidelines for ongoing updates of the test catalog are missing.
+    message_ja: テストカタログの継続的な更新のための運用手順とメンテナンスガイドラインが不足しています。

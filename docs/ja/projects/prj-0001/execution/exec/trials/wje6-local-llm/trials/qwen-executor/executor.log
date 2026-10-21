@@ -1,0 +1,684 @@
+I'll start by understanding the task. Let me read the project register, the individual ticket, and related documents.
+Let me explore the directory structure and find the relevant files.
+Let me read the key documents: the branch-workflow-guide, the zdvq decision document, and the pje6 individual ticket.
+Now let me read the pje6 individual ticket and check the specdojo-config-reference for `integration_branch` context.
+Let me check the config reference for `integration_branch`, and verify the structure of the guide (where to add the section). Let me also look at how existing sections link.
+I'll use Read to view the config reference section on `integration_branch` and check the package.json.
+Now let me check the docs-lint config and rules to understand markdownlint configuration, so I can write the new section avoiding lint issues.
+The `ls` without args is denied. Let me read the markdownlint config directly.
+I have enough context. Let me check git status and verify the config has `catalog_path` to determine if catalog validate applies.
+Let me check the git config for catalog_path separately.
+The multi-line grep with `-B/-A` may have tripped the pattern. Let me use the Grep tool instead to check which project block has catalog_path.
+I have a clear picture now. Let me verify the lefthook config and how git status looks, then plan my edit. The key insight: `branch-workflow-guide.md` is under `docs/ja/specdojo/`, NOT `docs/ja/projects/`, so catalog validate won't apply to it. But I should still run markdownlint on the changed file.
+
+Let me create a todo list and write the new section. First, let me decide where to insert. The guide ends with section 10 "作業前後のチェックリスト". Since this adds a new topic (product repos which use `integration_branch` rather than the project's `develop`/`main`), I'll add it as a new section 8 placed before the checklist (section 10). Actually, looking at it, sections go: 8=複数projectを並行する, 9=既存featureブランチを移行する, 10=チェックリスト. 
+
+The most natural placement: the existing doc handles project repo (`develop`→`main`). The new section is about *product* repos integrated via `integration_branch` — a different model. I'll insert as a new section right after section "6. project developをmainへ統合する" / before "7. 承認方式を使い分ける", OR at the end before the checklist. Given it's thematically distinct (a separate repo's strategy), I'll place it as section 10 by renumbering checklist to 11, OR insert as 9.x. 
+
+Let me check the existing section flow more carefully and pick a clean insertion point: after section "9. 既存featureブランチを移行する" and before "10. 作業前後のチェックリスト", inserting it between 9 and 10 keeps the checklist last. But renumbering 10→11 is needed. Actually, simpler: add at the very end as a new section after 10, since the checklist is project-repo focused too.
+
+Let me look at the git branch worktree structure and how `integration_branch` examples would read, then write the new section. Let me set up todos.
+The `branch-workflow-guide.md` lives under `docs/ja/specdojo/`, not `docs/ja/projects/`, so catalog validate does not apply to it. I'll add the new section before the final checklist (renumbering the checklist from 10 to 11), since the new section is about the product repo integration model rather than the closing checklist.
+
+Let me write the new section content matching the document's concise Japanese style, grounded in the PJR-ZDVQ decision.
+I made some typos in the Japanese text (prodaクト, squash 后的, `Refs:` 行 without closing backtick). Let me read and fix.
+I have typos to fix: line 345 "prodaクト" → "プロダクト", line 386 "squash 后的" → "squash commit" and fix the `Refs:` quote, line 390 "确认内容" → "確認内容". Also line 386 has a mismatched backtick. Let me fix these.
+Now fix the checklist header corruption "确认内容" → "確認内容":
+Now let me verify the table column widths are consistent (the header separator for the checklist). Let me check the exact spacing I used matches the separator row alignment. Prettier's markdown-tables may reformat, but markdownlint shouldn't care about alignment as long as tables are valid. Let me verify my new section reads cleanly and run prettier + markdownlint.
+The content looks good. Now let me run prettier and markdownlint on the changed file. The `lint:md` script runs markdownlint via the docs-lint package. Let me first check the lefthook pre-commit config to know exactly what runs, then run the sandbox-safe checks on my changed file.
+For my `*.md` change, the pre-commit runs `prettier --write` then `markdownlint`. The branch-workflow-guide is under `docs/ja/specdojo/` (not `docs/ja/projects/`), so `catalog-validate` and `register-build`/`index-build` don't apply to it. I'll run prettier and markdownlint on the changed markdown file only.
+Prettier reformatted the tables. Let me re-read my section to verify alignment, then run markdownlint.
+Tables are properly aligned now. Let me run markdownlint on the changed file to confirm it passes.
+The `node packages/docs-lint/...` direct invocation isn't in the allow-list, but `npx markdownlint*` and `npm run lint:md` are allowed. However the runner runs `lint-md`, `lint-fm`, `lint-ts`, etc. as parent validations — I should not run those. The completion condition for this task is `npm run lint:md` passing. Since `lint:md` runs against `**/*.md` (all markdown), but the runner owns `lint-md`/`lint-fm`. 
+
+Let me use `npx prettier --check` to verify formatting and confirm with git diff that nothing else changed. Actually prettier already wrote the file successfully. Let me verify with a check on just my file using allowed commands, and confirm the diff scope.
+The `--check` flag isn't matching the `npx prettier*` pattern (the wildcard likely matches only the base command word). Let me use `npx markdownlint` on the changed file, which is explicitly allowed. The completion condition is that `npm run lint:md` passes; the runner will authoritatively run `lint-md`. I'll verify with the allowed `npx markdownlint` to be safe.
+The `exit=$?` echo with `;` may be expanding to a pattern that's denied. Let me run markdownlint cleanly via npm script pattern. I'll use the allowed `npx markdownlint-cli` form matching the repo's lint:md, or just run via `npm run lint:md`. But `lint:md` lints all md. Let me try the markdownlint package directly that's in the allow-list without extra syntax.
+`npx markdownlint` passed with no output (no lint errors). Now let me verify prettier formatting is stable by running `npx prettier --write` once more — it already wrote successfully. The tables are properly aligned. Let me confirm the diff scope is limited to my intended file.
+The diff is limited to the one file (+46/-1). Now I'll update the individual ticket `pjr-wje6-product-repo-branch-guide.md` per the plan's step 4 (作業内容 table status and 対応結果). This is the per-ticket record — updating it is part of the artifact work, distinct from the result file. Note: I must NOT change `item_status`/lifecycle or the register index row.
+
+The individual ticket has `## 3. 作業内容` with a row "プロダクトリポジトリの節を書く ... open" and `## 4. 対応結果` with `_TODO_`. I'll mark the work row complete and fill in 対応結果. Let me check whether the docs-structure / pjr-rulebook expects specific formatting for 対応結果 by looking at a similar completed ticket.
+These tickets retain their status fields as-is (the runner transitions them). I'll update only the `## 3. 作業内容` 状態 column and `## 4. 対応結果`, leaving frontmatter/lifecycle untouched, which aligns with the plan's "個票の作業内容・対応結果セクションを実施内容で更新する" and "登録簿（pjr-index.md）の行と個票のステータス項目は変更しない".
+
+Let me update the ticket. The 状態 column in a table — I'll mark work row done with `done`. Let me check a completed-style result. Let me look at how another todo's 対応結果 was written to match style.
+Let me look at one completed-style 対応結果 to match the established writing pattern (e.g., pjr-0138 which is about integration branch register).
+Now I understand the established pattern. Let me update the individual ticket's 作業内容 status to `done` and fill in 対応結果. I'll keep frontmatter/lifecycle untouched.
+I made a duplicate and have a stray table. Let me re-read the current state of the file to fix it cleanly.
+I removed the original work table but my replacement accidentally left a second trailing table. The 作業内容 section now has a malformed table (line 36 separator uses `--` instead of `---`) and there's a stray duplicate table at lines 49-51. Let me fix: restore the 作業内容 table to proper form and remove the stray one. Also "のよう に" needs fixing.
+Now the ticket is clean. The individual ticket `pjr-wje6-product-repo-branch-guide.md` lives under `docs/ja/projects/`, but `register build` regenerates `pjr-index.md` from tickets — I must NOT manually edit pjr-index.md, and the frontmatter status fields are left untouched (item_status still `open`, which the runner transitions). However, the pre-commit `register-build` would regenerate pjr-index.md from this ticket's metadata — but since I only changed 作業内容/対応結果 bodies (not registration metadata), that won't affect the index row. 
+
+Note: this ticket is under `docs/ja/projects/`, so catalog validate and register build apply per the table. But these are runner-owned validations in this pipeline. Let me now run prettier on both changed markdown files and verify with markdownlint. The `pjr-wje6` ticket has wikilinks in a table cell — but it's not a pipe-separated concern since cells don't contain `|`. Let me format both files.
+Prettier formatted the ticket. Let me run markdownlint on both changed files to confirm they pass (the completion condition `npm run lint:md` passes). The runner authoritatively runs `lint-md`/`lint-fm`, but I verify locally with allowed `npx markdownlint`.
+Both pass markdownlint. Let me verify the ticket's table formatting after prettier and confirm final state of both files.
+Both files are clean and properly formatted. The frontmatter is unchanged (status `draft`, item_status `open`). 
+
+Now, the ticket is under `docs/ja/projects/` and has registration metadata; the lefthook `register-build` glob (`docs/**/project-register/*.md`) would trigger on commit but I haven't modified pjr-index.md. Since this is a comparison trial executor and I must not run git commit or lifecycle transitions, I'll only record sandbox-safe validations. Let me do a final review of the complete guide section to ensure the new content reads well and check it against done criteria.
+
+Let me verify the final state of my added section in the guide one more time and confirm the diff scope.
+Both changes are scoped to the two expected files. Let me do a final review of the guide section and check whether there's any concern that the new `## 10`/`## 11` numbering could conflict — since MD025 (heading level increment) is enabled, going 9 → 10 → 11 at H2 level is fine. Let me also confirm nothing references the old section 10 number elsewhere that would now break.
+The numbering is internal to the guide (each document has its own `## 10.`); no cross-document anchor references depend on the branch-workflow-guide's old "## 10." heading, so renumbering is safe. The pattern matches existing practice (other docs also renumbered `## 10.` → `## 11.` after insertion).
+
+Now let me update my todos and finalize. I've completed the artifact edits and ran the sandbox-safe checks (prettier + markdownlint on both changed files). The remaining `lint-md`, `lint-fm`, `typecheck`, etc. are runner-owned in this pipeline.
+All work is complete. Let me do a final confirmation of both files' final state before producing the evidence.
+
+Both changed markdown files pass `npx prettier --write` (format stable) and `npx markdownlint` (no errors). The runner will authoritatively run `lint-md`, `lint-fm`, `typecheck`, `validate-schema`, `test-unit`, etc. per the allow-list; I do not run those here.
+
+## 実施内容
+
+PJR-WJE6「ブランチワークフローガイドにプロダクトリポジトリの節を加える」を完了した。
+
+**変更ファイル（2件）:**
+
+1. `docs/ja/specdojo/guides/branch-workflow-guide.md`
+   - PJR-ZDVQ の決定にもとづき、「## 10. プロダクトリポジトリの統合先を指定する」の節を追加。既存の Checklist を「## 11. 作業前後のチェックリスト」へ番号採り下げ。
+   - 完了条件に対応：
+     - SpecDojo はプロダクトリポジトリにブランチ戦略を求めず、統合先を `repos[].integration_branch` に指定すること、ブランチ名に project ID を入れる必要がないこと。
+     - GitHub flow（トピックブランチを統合先にし `main` へは PR で取り込む）と git flow（`develop` を統合先とする）での選び方を表＋ `integration_branch` の JSON 例で提示。
+     - merge commit・rebase merge・squash merge ごとの `Refs:` と SHA の残り方を表で提示。squash merge では「Pull request title and commit details」のように `Refs:` を残す設定にすること。
+     - 追跡は trace key（`Refs: <project-id>:<item-id>`）を主とし、`git log --grep 'Refs:'` で統合先上で辿れること。
+     - 既存の節（プロジェクトリポジトリの `develop`→`main` 統合）とは独立した運用として記載し矛盾しないことを明記。
+
+2. `docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md`
+   - 個票の「## 3. 作業内容」状態を `done`、「## 4. 対応結果` を実装内容で記載。frontmatter（`status: draft`, `item_status: open`）と登録簿行は変更していない。
+
+**検証:**
+- `npx prettier --write` / `npx markdownlint` を対象2ファイルに適用 → エラーなし、整形も安定。
+- `catalog validate` / `register build` / `index build` は runner 側（親検証）が担うため、executor では実行していない。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-WJE6: branch-workflow-guide.md to product repo section added (section 10) with GitHub/git flow integration_branch examples and Refs:/SHA merge-method table; ticket pjr-wje6 updated. Both files pass prettier + markdownlint.","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md","status":"passed","summary":"Both markdown files formatted; second run reports unchanged (stable)"},{"command":"npx markdownlint docs/ja/specdojo/guides/branch-workflow-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md","status":"passed","summary":"No markdownlint errors on either changed file"},{"command":"npm run lint:md","status":"not_run","reason":"Parent-runner allowlisted validation (lint-md); runner executes and records authoritatively. Not executed in agent sandbox to avoid duplicate results."}]}
+</specdojo_executor_evidence>
+
+[0m
+> qwen-executor · qwen3.8:27b-mlx-work-64k
+[0m
+[0m✗ [0mRead docs/ja/projects/prj-0001/controls/project-register/pjr-index.md failed
+[91m[1mError: [0mFile not found: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-local-llm-qwen-executor/docs/ja/projects/prj-0001/controls/project-register/pjr-index.md
+
+Did you mean one of these?
+/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-local-llm-qwen-executor/docs/ja/projects/prj-0001/controls/project-register/pjr-0007-pjr-index.md
+/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-local-llm-qwen-executor/docs/ja/projects/prj-0001/controls/project-register/pjr-0036-pjr-index.md
+/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-local-llm-qwen-executor/docs/ja/projects/prj-0001/controls/project-register/pjr-0xxz-pjr-index.md
+[0m→ [0mRead docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md
+[0m
+[0m$ [0mls -la docs/ja/projects/prj-0001/controls/project-register/
+...output truncated...
+
+Full output saved to: /home/node/.local/share/opencode/tool-output/tool_14cbba17f001ifcH36wbrZV1Cm
+
+-rw-r--r--   1 node node   944 10月 18 10:37 pjr-0049-specdojo-review.md
+-rw-r--r--   1 node node   961 10月 18 10:37 pjr-0050-review-viewpoints-template.md
+-rw-r--r--   1 node node   942 10月 18 10:37 pjr-0051-specdojo-review.md
+-rw-r--r--   1 node node   991 10月 18 10:37 pjr-0052-id.md
+-rw-r--r--   1 node node   961 10月 18 10:37 pjr-0053-template.md
+-rw-r--r--   1 node node   982 10月 18 10:37 pjr-0054-id-markdown-preview.md
+-rw-r--r--   1 node node   960 10月 18 10:37 pjr-0055-pjr.md
+-rw-r--r--   1 node node   986 10月 18 10:37 pjr-0056-item.md
+-rw-r--r--   1 node node   947 10月 18 10:37 pjr-0057-id.md
+-rw-r--r--   1 node node   949 10月 18 10:37 pjr-0058-pjr-index.md
+-rw-r--r--   1 node node   939 10月 18 10:37 pjr-0059-pjr-scaffold.md
+-rw-r--r--   1 node node   994 10月 18 10:37 pjr-0060-pjr-index-vscode.md
+-rw-r--r--   1 node node  1028 10月 18 10:37 pjr-0061-sch-defaults-start-date-sch-strategy.md
+-rw-r--r--   1 node node   951 10月 18 10:37 pjr-0063-sch-strategy.md
+-rw-r--r--   1 node node  1114 10月 18 10:37 pjr-0064-register-ts-table-header.md
+-rw-r--r--   1 node node  1024 10月 18 10:37 pjr-0065-src-tools.md
+-rw-r--r--   1 node node   899 10月 18 10:37 pjr-0066-item.md
+-rw-r--r--   1 node node   964 10月 18 10:37 pjr-0067-validate-templates.md
+-rw-r--r--   1 node node   953 10月 18 10:37 pjr-0068-auto-generate.md
+-rw-r--r--   1 node node   959 10月 18 10:37 pjr-0069-register-close-reject.md
+-rw-r--r--   1 node node   979 10月 18 10:37 pjr-0070-sch-strategy.md
+-rw-r--r--   1 node node   955 10月 18 10:37 pjr-0071-specdojo-build.md
+-rw-r--r--   1 node node   916 10月 18 10:37 pjr-0072-item.md
+-rw-r--r--   1 node node   938 10月 18 10:37 pjr-0073-opencode-agent-member.md
+-rw-r--r--   1 node node   932 10月 18 10:37 pjr-0074-claude-agent-member.md
+-rw-r--r--   1 node node   966 10月 18 10:37 pjr-0075-worktree-devcontainer.md
+-rw-r--r--   1 node node   977 10月 18 10:37 pjr-0076-schedule.md
+-rw-r--r--   1 node node   954 10月 18 10:37 pjr-0077-specdojo-exec-run.md
+-rw-r--r--   1 node node   960 10月 18 10:37 pjr-0078-schedule-gate.md
+-rw-r--r--   1 node node   952 10月 18 10:37 pjr-0079-task-step-by-step.md
+-rw-r--r--   1 node node   961 10月 18 10:37 pjr-0080-scaffold.md
+-rw-r--r--   1 node node   961 10月 18 10:37 pjr-0081-metadata-json.md
+-rw-r--r--   1 node node   931 10月 18 10:37 pjr-0082-pjr-by.md
+-rw-r--r--   1 node node   938 10月 18 10:37 pjr-0083-milestone-timeline.md
+-rw-r--r--   1 node node   929 10月 18 10:37 pjr-0084-gate-timeline.md
+-rw-r--r--   1 node node   976 10月 18 10:37 pjr-0085-specdojo-docs-structure-guide.md
+-rw-r--r--   1 node node   998 10月 18 10:37 pjr-0086-catalog-scaffold-test-ts.md
+-rw-r--r--   1 node node  1132 10月 18 10:37 pjr-0087-dct-template-yaml-markdown.md
+-rw-r--r--   1 node node   966 10月 18 10:37 pjr-0088-agent-config-guide.md
+-rw-r--r--   1 node node   949 10月 18 10:37 pjr-0089-claude-agent-settings.md
+-rw-r--r--   1 node node   962 10月 18 10:37 pjr-0090-agent-brief-review-plan.md
+-rw-r--r--   1 node node  1017 10月 18 10:37 pjr-0091-task-complete-commit-push.md
+-rw-r--r--   1 node node  1034 10月 18 10:37 pjr-0092-vitepress-repo.md
+-rw-r--r--   1 node node  1008 10月 18 10:37 pjr-0093-sch-strategy-execution-auto.md
+-rw-r--r--   1 node node  1044 10月 18 10:37 pjr-0094-sch-strategy-execution.md
+-rw-r--r--   1 node node   984 10月 18 10:37 pjr-0095-specdojo-exec-build.md
+-rw-r--r--   1 node node  1032 10月 18 10:37 pjr-0096-edit-plan-frontmatter-based-on.md
+-rw-r--r--   1 node node   937 10月 18 10:37 pjr-0097-xep-rulebook.md
+-rw-r--r--   1 node node  1029 10月 18 10:37 pjr-0098-specdojo-exec-auto-capabilities.md
+-rw-r--r--   1 node node  1020 10月 18 10:37 pjr-0099-exec-plan-creation-mode.md
+-rw-r--r--   1 node node 10241 10月 18 10:37 pjr-00qv-cdfd-rulebook.md
+-rw-r--r--   1 node node  1003 10月 18 10:37 pjr-0100-instruction-md.md
+-rw-r--r--   1 node node   932 10月 18 10:37 pjr-0101-xep-freeform-template.md
+-rw-r--r--   1 node node   940 10月 18 10:37 pjr-0102-xep-fully-guided-template.md
+-rw-r--r--   1 node node   942 10月 18 10:37 pjr-0103-xep-recipe-guided-template.md
+-rw-r--r--   1 node node   952 10月 18 10:37 pjr-0104-xep-recipe-maintenance-template.md
+-rw-r--r--   1 node node   956 10月 18 10:37 pjr-0105-xep-rulebook-maintenance-template.md
+-rw-r--r--   1 node node   952 10月 18 10:37 pjr-0106-xep-sample-maintenance-template.md
+-rw-r--r--   1 node node   914 10月 18 10:37 pjr-0107-xep-template.md
+-rw-r--r--   1 node node   914 10月 18 10:37 pjr-0108-xer-template.md
+-rw-r--r--   1 node node   932 10月 18 10:37 pjr-0109-xrp-freeform-template.md
+-rw-r--r--   1 node node   940 10月 18 10:37 pjr-0110-xrp-fully-guided-template.md
+-rw-r--r--   1 node node   942 10月 18 10:37 pjr-0111-xrp-recipe-guided-template.md
+-rw-r--r--   1 node node   952 10月 18 10:37 pjr-0112-xrp-recipe-maintenance-template.md
+-rw-r--r--   1 node node   956 10月 18 10:37 pjr-0113-xrp-rulebook-maintenance-template.md
+-rw-r--r--   1 node node   952 10月 18 10:37 pjr-0114-xrp-sample-maintenance-template.md
+-rw-r--r--   1 node node   956 10月 18 10:37 pjr-0115-xrp-template-maintenance-template.md
+-rw-r--r--   1 node node   914 10月 18 10:37 pjr-0116-xrp-template.md
+-rw-r--r--   1 node node   914 10月 18 10:37 pjr-0117-xrr-template.md
+-rw-r--r--   1 node node  1249 10月 18 10:37 pjr-0118-debian-chromium-150.md
+-rw-r--r--   1 node node  2768 10月 18 10:37 pjr-0119-charter-approval.md
+-rw-r--r--   1 node node  1596 10月 18 10:37 pjr-0120-item.md
+-rw-r--r--   1 node node  1709 10月 18 10:37 pjr-0121-item.md
+-rw-r--r--   1 node node  6759 10月 18 10:37 pjr-0122-review-launch.md
+-rw-r--r--   1 node node   939 10月 18 10:37 pjr-0123-register.md
+-rw-r--r--   1 node node  4302 10月 18 10:37 pjr-0124-human-plan-integrate-result.md
+-rw-r--r--   1 node node  1233 10月 18 10:37 pjr-0125-specdojo-pjr-todo-template-h1.md
+-rw-r--r--   1 node node 10105 10月 18 10:37 pjr-0126-pr-based-po-approval.md
+-rw-r--r--   1 node node  4143 10月 18 10:37 pjr-0127-clarify-project-why.md
+-rw-r--r--   1 node node  4588 10月 18 10:37 pjr-0128-propagate-project-context.md
+-rw-r--r--   1 node node  4480 10月 18 10:37 pjr-0129-why-what-how-recipes.md
+-rw-r--r--   1 node node  5086 10月 18 10:37 pjr-0130-clarify-why-review-viewpoints.md
+-rw-r--r--   1 node node  4217 10月 18 10:37 pjr-0131-concise-documentation-policy.md
+-rw-r--r--   1 node node  5757 10月 18 10:37 pjr-0132-detect-document-redundancy.md
+-rw-r--r--   1 node node  5814 10月 18 10:37 pjr-0133-cross-deliverable-dedup-pass.md
+-rw-r--r--   1 node node  5379 10月 18 10:37 pjr-0134-exec-auto-worker-pool.md
+-rw-r--r--   1 node node  5230 10月 18 10:37 pjr-0135-exec-register-multiple-ids.md
+-rw-r--r--   1 node node  5489 10月 18 10:37 pjr-0136-exec-limit-resume.md
+-rw-r--r--   1 node node  5280 10月 18 10:37 pjr-0137-register-id-uniqueness.md
+-rw-r--r--   1 node node  5742 10月 18 10:37 pjr-0138-register-add-on-integration-branch.md
+-rw-r--r--   1 node node  6305 10月 18 10:37 pjr-0139-register-ticket-status-transition.md
+-rw-r--r--   1 node node  6750 10月 18 10:37 pjr-0140-register-commit-missed-paths.md
+-rw-r--r--   1 node node  1204 10月 18 10:37 pjr-0141-guide-reference-content-schema-yaml.md
+-rw-r--r--   1 node node  5926 10月 18 10:37 pjr-0142-vs-code-specdojo.md
+-rw-r--r--   1 node node 11612 10月 18 10:37 pjr-0143-vs-code-marketplace.md
+-rw-r--r--   1 node node  6428 10月 18 10:37 pjr-0144-fmt-md-table-vs-code.md
+-rw-r--r--   1 node node  7735 10月 18 10:37 pjr-0145-readme-md-docs-index-md-docs-lang-index-md.md
+-rw-r--r--   1 node node  7098 10月 18 10:37 pjr-0146-forbid-links-in-history-files.md
+-rw-r--r--   1 node node 15238 10月 18 10:37 pjr-0147-retrofit-design-docs-for-existing-implementation.md
+-rw-r--r--   1 node node 20371 10月 18 10:37 pjr-0148-extend-wikilink-id-resolution-beyond-docs-scope.md
+-rw-r--r--   1 node node  7297 10月 18 10:37 pjr-0149-project-dashboard-page.md
+-rw-r--r--   1 node node  5767 10月 18 10:37 pjr-0150-pm-members-nickname-schema-validation-gap.md
+-rw-r--r--   1 node node  6489 10月 18 10:37 pjr-0151-index-build-duplicate-id-error-detection.md
+-rw-r--r--   1 node node  6668 10月 18 10:37 pjr-0152-lint-unescaped-angle-bracket-placeholder.md
+-rw-r--r--   1 node node  2283 10月 18 10:37 pjr-0153-dct-schema-yaml-done-criteria-group-top.md
+-rw-r--r--   1 node node  4307 10月 18 10:37 pjr-0154-operations-domain-timing.md
+-rw-r--r--   1 node node  4847 10月 18 10:37 pjr-0155-dct-domain-multifile.md
+-rw-r--r--   1 node node  5573 10月 18 10:37 pjr-0156-dct-merge-same-name-group.md
+-rw-r--r--   1 node node  4502 10月 18 10:37 pjr-0157-cli-verb-taxonomy.md
+-rw-r--r--   1 node node  4488 10月 18 10:37 pjr-0158-exec-run-project-lock.md
+-rw-r--r--   1 node node 11824 10月 18 10:37 pjr-0159-exec-agent-flag-by-unification.md
+-rw-r--r--   1 node node  6963 10月 18 10:37 pjr-0160-register-dependency-type-review.md
+-rw-r--r--   1 node node  7801 10月 18 10:37 pjr-0161-register-approval-workflow-policy.md
+-rw-r--r--   1 node node  5711 10月 18 10:37 pjr-0162-exec-agent-flag-removal.md
+-rw-r--r--   1 node node  7178 10月 18 10:37 pjr-0163-register-add-id-fetch.md
+-rw-r--r--   1 node node  5319 10月 18 10:37 pjr-03m3-branch-standard-three-layers.md
+-rw-r--r--   1 node node  6438 10月 18 10:37 pjr-05gc-exec-plan-doc-id-qualification.md
+-rw-r--r--   1 node node  3441 10月 18 10:37 pjr-06re-kata-maintenance-review-phase.md
+-rw-r--r--   1 node node 11447 10月 18 10:37 pjr-078k-yaml-schema-modeline-ssot.md
+-rw-r--r--   1 node node  7732 10月 18 10:37 pjr-07m5-trial-validation-completeness.md
+-rw-r--r--   1 node node 10304 10月 18 10:37 pjr-08k1-deliverable-grade-done-criteria.md
+-rw-r--r--   1 node node  9786 10月 18 10:37 pjr-09kk-npm-onboarding-path.md
+-rw-r--r--   1 node node  7507 10月 18 10:37 pjr-0da8-claude-reporter-mode-and-settings.md
+-rw-r--r--   1 node node  5135 10月 18 10:37 pjr-0ecy-reporter-changed-files-count-mismatch.md
+-rw-r--r--   1 node node  8665 10月 18 10:37 pjr-0fct-test-unit-rerun-after-fix.md
+-rw-r--r--   1 node node  5640 10月 18 10:37 pjr-0fk2-config-scaffold-agent.md
+-rw-r--r--   1 node node  7400 10月 18 10:37 pjr-0w8s-grade-retry-failed-stage.md
+-rw-r--r--   1 node node  5471 10月 18 10:37 pjr-0waa-multi-repo-integration-resume.md
+-rw-r--r--   1 node node  4353 10月 18 10:37 pjr-0wym-naming-spec-do-apply.md
+-rw-r--r--   1 node node 17058 10月 18 10:37 pjr-0xej-claude-config-dir-isolation.md
+-rw-r--r--   1 node node  6667 10月 18 10:37 pjr-0xxz-pjr-index.md
+-rw-r--r--   1 node node  5704 10月 18 10:37 pjr-13m6-exec-worktree-integration-split.md
+-rw-r--r--   1 node node  5455 10月 18 10:37 pjr-17hh-japanese-title-topic-slug.md
+-rw-r--r--   1 node node  6722 10月 18 10:37 pjr-17s7-unit-test-double-run-hang.md
+-rw-r--r--   1 node node 13604 10月 18 10:37 pjr-199g-promotion-commit-consolidation.md
+-rw-r--r--   1 node node  9033 10月 18 10:37 pjr-19hx-result-prettier-emphasis-mangling.md
+-rw-r--r--   1 node node  6098 10月 18 10:37 pjr-1d0c-pjr-index-wikilink-broken.md
+-rw-r--r--   1 node node  5289 10月 18 10:37 pjr-1d5g-grade-exclude-trash.md
+-rw-r--r--   1 node node  4604 10月 18 10:37 pjr-1dkd-integration-test-depends-on-generated-templates.md
+-rw-r--r--   1 node node  4342 10月 18 10:37 pjr-1f46-kata-sc-01-sc-03.md
+-rw-r--r--   1 node node  6765 10月 18 10:37 pjr-1jjd-register-plan-expands-referenced-findings.md
+-rw-r--r--   1 node node  4949 10月 18 10:37 pjr-1sxk-refs-trailer-project-qualified-id.md
+-rw-r--r--   1 node node  5212 10月 18 10:37 pjr-1y0g-devcontainer-stale-vscode-server.md
+-rw-r--r--   1 node node 12304 10月 18 10:37 pjr-1y9p-resume-executor-plan.md
+-rw-r--r--   1 node node  7264 10月 18 10:37 pjr-1z1h-rulebook-sample-declaration-gap.md
+-rw-r--r--   1 node node  4923 10月 18 10:37 pjr-20dv-grade-content-hash-normalization.md
+-rw-r--r--   1 node node  6231 10月 18 10:37 pjr-21e8-grade-frontmatter-flow-style.md
+-rw-r--r--   1 node node  1050 10月 18 10:37 pjr-2219-exec-plan-conventions-reference.md
+-rw-r--r--   1 node node 10210 10月 18 10:37 pjr-23dt-grade-reference-examples.md
+-rw-r--r--   1 node node 10212 10月 18 10:37 pjr-25f4-grade-two-stage-filter.md
+-rw-r--r--   1 node node 11470 10月 18 10:37 pjr-25sf-register-ai.md
+-rw-r--r--   1 node node 11140 10月 18 10:37 pjr-269z-dct-index-generation.md
+-rw-r--r--   1 node node  5052 10月 18 10:37 pjr-26k4-grade-plan-embed-documents.md
+-rw-r--r--   1 node node  6692 10月 18 10:37 pjr-27y0-grade-english-canonical-translation.md
+-rw-r--r--   1 node node  7926 10月 18 10:37 pjr-27z9-codex-bwrap-proc-mount.md
+-rw-r--r--   1 node node  4241 10月 18 10:37 pjr-2bxd-grade-plan-generated-default.md
+-rw-r--r--   1 node node  6279 10月 18 10:37 pjr-2cqr-routine-state-running-shows-previous-result.md
+-rw-r--r--   1 node node  5324 10月 18 10:37 pjr-2f3y-grade-unreviewed-content-hash.md
+-rw-r--r--   1 node node  6736 10月 18 10:37 pjr-2gfh-exec-handoff-clarity.md
+-rw-r--r--   1 node node  6417 10月 18 10:37 pjr-2gze-product-validation-not-run-delegation.md
+-rw-r--r--   1 node node  8365 10月 18 10:37 pjr-2h5f-devcontainer-scaffold.md
+-rw-r--r--   1 node node  6060 10月 18 10:37 pjr-2jfm-exec-run-split-modes.md
+-rw-r--r--   1 node node  8845 10月 18 10:37 pjr-2jye-dashboard-daily-briefing.md
+-rw-r--r--   1 node node  9225 10月 18 10:37 pjr-2kpn-register-update-topic.md
+-rw-r--r--   1 node node  6453 10月 18 10:37 pjr-2m84-integrate-merge-abort.md
+-rw-r--r--   1 node node 21335 10月 18 10:37 pjr-2t2s-antigravity-provider.md
+-rw-r--r--   1 node node  8838 10月 18 10:37 pjr-2t63-agent-members-split.md
+-rw-r--r--   1 node node  8956 10月 18 10:37 pjr-2w38-sample-quality-observation.md
+-rw-r--r--   1 node node 30745 10月 18 10:37 pjr-2zvs-grade-review-integration.md
+-rw-r--r--   1 node node  4286 10月 18 10:37 pjr-30sw-multi-repo-refs-trace.md
+-rw-r--r--   1 node node  9183 10月 18 10:37 pjr-33sb-grade-recheck-skip-empty-selection.md
+-rw-r--r--   1 node node  5983 10月 18 10:37 pjr-34f2-terminology-kata-waza-docs.md
+-rw-r--r--   1 node node 11608 10月 18 10:37 pjr-34mq-plain-repository-naming-readme.md
+-rw-r--r--   1 node node  5049 10月 18 10:37 pjr-36cn-integrate-bookkeeping-event-union.md
+-rw-r--r--   1 node node 61434 10月 18 10:37 pjr-36qg-competitive-landscape-and-release.md
+-rw-r--r--   1 node node  3718 10月 18 10:37 pjr-37wn-remove-id-reservation-mechanisms.md
+-rw-r--r--   1 node node  5919 10月 18 10:37 pjr-3d7q-grade-target-filter.md
+-rw-r--r--   1 node node  8613 10月 18 10:37 pjr-3dy1-night-orchestrator-autopilot.md
+-rw-r--r--   1 node node  6838 10月 18 10:37 pjr-3hhw-serialize-parent-validations.md
+-rw-r--r--   1 node node  7845 10月 18 10:37 pjr-3j5d-grade-test-tmpdir-mermaid-enoent.md
+-rw-r--r--   1 node node  8190 10月 18 10:37 pjr-3kbg-grade-finding-insertion-prettier-ignore.md
+-rw-r--r--   1 node node  5872 10月 18 10:37 pjr-3m8s-exec-result-frontmatter.md
+-rw-r--r--   1 node node 11483 10月 18 10:37 pjr-3n21-kata-declaration-ssot-split.md
+-rw-r--r--   1 node node  5247 10月 18 10:37 pjr-3p4w-job-routine-split.md
+-rw-r--r--   1 node node 11683 10月 18 10:37 pjr-3s8q-agent-writable-config-scope.md
+-rw-r--r--   1 node node  6733 10月 18 10:37 pjr-3w2n-exec-run-split-shared.md
+-rw-r--r--   1 node node  5360 10月 18 10:37 pjr-3xnm-grade-fidelity-normalization.md
+-rw-r--r--   1 node node  6728 10月 18 10:37 pjr-44cw-git-state-guard-false-positive.md
+-rw-r--r--   1 node node  5739 10月 18 10:37 pjr-44j9-plan-conventions-unavailable-checks.md
+-rw-r--r--   1 node node 22096 10月 18 10:37 pjr-49d2-quality-assessment.md
+-rw-r--r--   1 node node  6045 10月 18 10:37 pjr-49jk-readme-orchestrator-onboarding.md
+-rw-r--r--   1 node node  7244 10月 18 10:37 pjr-4ahz-routine-exec-cycle-sequential-execution.md
+-rw-r--r--   1 node node 13511 10月 18 10:37 pjr-4hbg-exec-run.md
+-rw-r--r--   1 node node 10947 10月 18 10:37 pjr-4nxr-cdfd-rulebook-process-group.md
+-rw-r--r--   1 node node  9373 10月 18 10:37 pjr-4rr8-ollama-sampling-recommended-params.md
+-rw-r--r--   1 node node  9149 10月 18 10:37 pjr-4tz7-grade-per-document.md
+-rw-r--r--   1 node node  6483 10月 18 10:37 pjr-4vac-job-review-result-trailing-newline.md
+-rw-r--r--   1 node node  6110 10月 18 10:37 pjr-4y48-orchestrator-launch-signal.md
+-rw-r--r--   1 node node  1074 10月 18 10:37 pjr-4z6n-register-approach-guide.md
+-rw-r--r--   1 node node 49639 10月 18 10:37 pjr-5822-multi-repo-item-design.md
+-rw-r--r--   1 node node  1700 10月 18 10:37 pjr-5dm3-gl-rulebook-conformance.md
+-rw-r--r--   1 node node  5366 10月 18 10:37 pjr-5erg-orchestrator-body-sync.md
+-rw-r--r--   1 node node  7770 10月 18 10:37 pjr-5hhs-exec-branch-not-deleted.md
+-rw-r--r--   1 node node  3871 10月 18 10:37 pjr-5kpc-grade-pipeline-hash-blank-lines.md
+-rw-r--r--   1 node node  8485 10月 18 10:37 pjr-5n64-template-declaration-resolution.md
+-rw-r--r--   1 node node  7226 10月 18 10:37 pjr-5ptx-release-v0-3-0-notes-migration.md
+-rw-r--r--   1 node node  5290 10月 18 10:37 pjr-5rs9-bps-review-finalize-and-cdfd-overview.md
+-rw-r--r--   1 node node  1114 10月 18 10:37 pjr-5tzs-kata-presets-by-scale.md
+-rw-r--r--   1 node node  2234 10月 18 10:37 pjr-5w8c-register-github-integration.md
+-rw-r--r--   1 node node  8469 10月 18 10:37 pjr-5yw6-agent-trial-base-and-reporter.md
+-rw-r--r--   1 node node  5513 10月 18 10:37 pjr-613h-enobufs-test-flaky.md
+-rw-r--r--   1 node node  9498 10月 18 10:37 pjr-6776-worktree-branch-naming.md
+-rw-r--r--   1 node node 10347 10月 18 10:37 pjr-69vp-multi-repo-e2e-docs.md
+-rw-r--r--   1 node node  5829 10月 18 10:37 pjr-6aax-assessment-validate-false-warning.md
+-rw-r--r--   1 node node  7228 10月 18 10:37 pjr-6cds-grade-test-depends-on-stored-results.md
+-rw-r--r--   1 node node  1192 10月 18 10:37 pjr-6dhy-night-orchestrator-approved-queue.md
+-rw-r--r--   1 node node  6587 10月 18 10:37 pjr-6hf3-hook-script-dependency-free-entry.md
+-rw-r--r--   1 node node 10220 10月 18 10:37 pjr-6pd7-cdfd-overview.md
+-rw-r--r--   1 node node 10985 10月 18 10:37 pjr-6qda-interactive-init.md
+-rw-r--r--   1 node node  5980 10月 18 10:37 pjr-6rn3-resume-sync-remerges-integrated-products.md
+-rw-r--r--   1 node node  3515 10月 18 10:37 pjr-6tka-deps-in-range-update-dotenv18.md
+-rw-r--r--   1 node node 11566 10月 18 10:37 pjr-6v3d-bps-sample.md
+-rw-r--r--   1 node node  8421 10月 18 10:37 pjr-6vfn-exec-run-register-executor-reporter.md
+-rw-r--r--   1 node node  9659 10月 18 10:37 pjr-6wfa-register-plan-targets.md
+-rw-r--r--   1 node node  6216 10月 18 10:37 pjr-6xnj-grade-graded-by.md
+-rw-r--r--   1 node node  6732 10月 18 10:37 pjr-755t-specdojo-not-run.md
+-rw-r--r--   1 node node 13984 10月 18 10:37 pjr-76ag-test-git-env-leak-repo-corruption.md
+-rw-r--r--   1 node node  9278 10月 18 10:37 pjr-78mq-routine-action-kind-unification.md
+-rw-r--r--   1 node node 11062 10月 18 10:37 pjr-7gak-docs-lint-dependency-vulnerabilities.md
+-rw-r--r--   1 node node  4628 10月 18 10:37 pjr-7mf6-parallel-register-run-integration.md
+-rw-r--r--   1 node node  3830 10月 18 10:37 pjr-7mxj-pipeline-resume-recovery.md
+-rw-r--r--   1 node node 29392 10月 18 10:37 pjr-7vkr-npm-release.md
+-rw-r--r--   1 node node  7713 10月 18 10:37 pjr-7wfe-schedule-agent-by-name.md
+-rw-r--r--   1 node node  4348 10月 18 10:37 pjr-7wme-register-derived-from.md
+-rw-r--r--   1 node node  3683 10月 18 10:37 pjr-7znh-schedule-build-keep-schema-modeline.md
+-rw-r--r--   1 node node  4909 10月 18 10:37 pjr-86je-docs-lint-chinese-glyphs.md
+-rw-r--r--   1 node node  6675 10月 18 10:37 pjr-86q5-product-worktree-deps-not-installed.md
+-rw-r--r--   1 node node  2593 10月 18 10:37 pjr-87xs-code-workspace-scaffold.md
+-rw-r--r--   1 node node  4283 10月 18 10:37 pjr-88k2-grade-apply-trailing-blank.md
+-rw-r--r--   1 node node  9133 10月 18 10:37 pjr-8gq4-devcontainer-workspace-dir-fixed.md
+-rw-r--r--   1 node node  1145 10月 18 10:37 pjr-8mpy-agent-members-migration.md
+-rw-r--r--   1 node node  7374 10月 18 10:37 pjr-8myj-remote-host-development-guide.md
+-rw-r--r--   1 node node  6017 10月 18 10:37 pjr-8pj4-catalog-sidebar-and-schema-mapping.md
+-rw-r--r--   1 node node  5988 10月 18 10:37 pjr-8qa1-waza-guide-md-cli-overview-guide-md-waza.md
+-rw-r--r--   1 node node 14194 10月 18 10:37 pjr-8ten-bps-sample-bps-template-bps-recipe.md
+-rw-r--r--   1 node node  1127 10月 18 10:37 pjr-8tgq-agent-members-templates-update.md
+-rw-r--r--   1 node node  8420 10月 18 10:37 pjr-8ts6-reporter-changed-files-missing-description.md
+-rw-r--r--   1 node node 11048 10月 18 10:37 pjr-8xqz-orchestrator-distribution-and-ssot.md
+-rw-r--r--   1 node node  3947 10月 18 10:37 pjr-979n-delegated-validation-block.md
+-rw-r--r--   1 node node 10035 10月 18 10:37 pjr-98g4-multi-repo-worktree-agent.md
+-rw-r--r--   1 node node 11245 10月 18 10:37 pjr-9g9y-practice-execution-terminology.md
+-rw-r--r--   1 node node  7079 10月 18 10:37 pjr-9kst-multi-repo-resume-precheck-register-records.md
+-rw-r--r--   1 node node  6459 10月 18 10:37 pjr-9m5n-npm-onboarding-path.md
+-rw-r--r--   1 node node  4158 10月 18 10:37 pjr-9p5q-migrate-existing-register-items.md
+-rw-r--r--   1 node node  7734 10月 18 10:37 pjr-9py9-maintenance-plan-findings.md
+-rw-r--r--   1 node node 10561 10月 18 10:37 pjr-9pz7-grade-0.md
+-rw-r--r--   1 node node  4463 10月 18 10:37 pjr-9qz2-exec-stale-running-stage.md
+-rw-r--r--   1 node node  6547 10月 18 10:37 pjr-9rwg-register-events-separation.md
+-rw-r--r--   1 node node  7208 10月 18 10:37 pjr-9s41-exec-templates-separation.md
+-rw-r--r--   1 node node  7377 10月 18 10:37 pjr-9s8f-split-docs-site-package.md
+-rw-r--r--   1 node node  5488 10月 18 10:37 pjr-9xg4-register-commit-under-lifecycle-lock.md
+-rw-r--r--   1 node node  8193 10月 18 10:37 pjr-9xvg-grade-plan-link-style.md
+-rw-r--r--   1 node node  9641 10月 18 10:37 pjr-9y7g-register-item-file-as-ssot.md
+-rw-r--r--   1 node node  6275 10月 18 10:37 pjr-a0ne-not-applicable-check-blocks.md
+-rw-r--r--   1 node node  4514 10月 18 10:37 pjr-a12b-remove-dead-lefthook-docs-build.md
+-rw-r--r--   1 node node  6777 10月 18 10:37 pjr-a45t-ryu-guide-md-kata-guide-md-approach.md
+-rw-r--r--   1 node node  6452 10月 18 10:37 pjr-a4py-docs-sync-9xg4-2h5f-0fk2.md
+-rw-r--r--   1 node node 10642 10月 18 10:37 pjr-a99j-agent-git-isolation-breach.md
+-rw-r--r--   1 node node  3782 10月 18 10:37 pjr-a9nc-register-title-placeholder-check.md
+-rw-r--r--   1 node node  6755 10月 18 10:37 pjr-aak1-kata-subcommands.md
+-rw-r--r--   1 node node  6910 10月 18 10:37 pjr-aar2-milestones-status-follows-last-built-track.md
+-rw-r--r--   1 node node  6593 10月 18 10:37 pjr-adz6-register-run-non-pipeline-agent-fallback.md
+-rw-r--r--   1 node node 12213 10月 18 10:37 pjr-ag7b-viewpoint-applicability-by-document-kind.md
+-rw-r--r--   1 node node 10533 10月 18 10:37 pjr-ah2p-cdfd-overview-rulebook-findings.md
+-rw-r--r--   1 node node  7302 10月 18 10:37 pjr-akj4-agent-json-response.md
+-rw-r--r--   1 node node  9552 10月 18 10:37 pjr-ankr-grade-executor-reporter.md
+-rw-r--r--   1 node node  4470 10月 18 10:37 pjr-aq9g-exec-plan-angle-placeholder-escape.md
+-rw-r--r--   1 node node 13549 10月 18 10:37 pjr-aqmw-fully-guided-refine-pass-rulebook.md
+-rw-r--r--   1 node node  4036 10月 18 10:37 pjr-avsr-grade-reporter-level-severity-mismatch.md
+-rw-r--r--   1 node node 10774 10月 18 10:37 pjr-ay1r-fully-guided-sample-rulebook.md
+-rw-r--r--   1 node node  6768 10月 18 10:37 pjr-b1sj-angle-placeholder-escape-scope.md
+-rw-r--r--   1 node node  5811 10月 18 10:37 pjr-b2ec-resume-identical-untracked-restore.md
+-rw-r--r--   1 node node  5930 10月 18 10:37 pjr-b3xq-init-provider-retry-restarts.md
+-rw-r--r--   1 node node 19822 10月 18 10:37 pjr-b7dg-rulebook-sample-coverage-check.md
+-rw-r--r--   1 node node  6679 10月 18 10:37 pjr-bb92-cdfd-overview-propagation.md
+-rw-r--r--   1 node node  4264 10月 18 10:37 pjr-bbpc-stage1-reference-kind-default.md
+-rw-r--r--   1 node node  7951 10月 18 10:37 pjr-bhmh-pinned-agent-rate-limit-policy.md
+-rw-r--r--   1 node node  8314 10月 18 10:37 pjr-bj97-codeowners-and-branch-protection.md
+-rw-r--r--   1 node node  6589 10月 18 10:37 pjr-bjh6-product-package-json-protected.md
+-rw-r--r--   1 node node  6095 10月 18 10:37 pjr-bjtc-job-review-not-run-blocks.md
+-rw-r--r--   1 node node  7456 10月 18 10:37 pjr-bk4k-executor-not-run-human-check.md
+-rw-r--r--   1 node node  4367 10月 18 10:37 pjr-bkq0-generated-blank-after-finding-removal.md
+-rw-r--r--   1 node node  6789 10月 18 10:37 pjr-bvps-grade-rubric-outdated-selector.md
+-rw-r--r--   1 node node  4742 10月 18 10:37 pjr-bwyw-bps-2-grade.md
+-rw-r--r--   1 node node  7784 10月 18 10:37 pjr-bx79-integrate-dubious-ownership-retry.md
+-rw-r--r--   1 node node  6384 10月 18 10:37 pjr-bz9j-src-exec-run-schedule-subdirs.md
+-rw-r--r--   1 node node 10248 10月 18 10:37 pjr-c0b7-plan-context-and-precommit-check.md
+-rw-r--r--   1 node node  4870 10月 18 10:37 pjr-c44h-plan-frontmatter-name-yaml-escape.md
+-rw-r--r--   1 node node  4994 10月 18 10:37 pjr-c915-exec-resume-replan.md
+-rw-r--r--   1 node node  9110 10月 18 10:37 pjr-ca0s-docs-site-output-in-node-modules.md
+-rw-r--r--   1 node node  4729 10月 18 10:37 pjr-cbqv-docs-site-npm-publish.md
+-rw-r--r--   1 node node  4609 10月 18 10:37 pjr-cf15-glossary-term-reference-check.md
+-rw-r--r--   1 node node  3020 10月 18 10:37 pjr-cjqm-branch-protection-setup.md
+-rw-r--r--   1 node node  9987 10月 18 10:37 pjr-cmyx-exec-dist-parent-validations.md
+-rw-r--r--   1 node node  6533 10月 18 10:37 pjr-ctv4-resume-integrate-bookkeeping-conflict.md
+-rw-r--r--   1 node node  7225 10月 18 10:37 pjr-cy80-checkpoint-inspect-failure-no-detail.md
+-rw-r--r--   1 node node  4738 10月 18 10:37 pjr-d0kf-exec-register-worktree-default.md
+-rw-r--r--   1 node node  4847 10月 18 10:37 pjr-d4kg-document-owner-declaration.md
+-rw-r--r--   1 node node  4082 10月 18 10:37 pjr-daw8-register-commit-header-length.md
+-rw-r--r--   1 node node 10231 10月 18 10:37 pjr-dctg-data-flow-dct-instance-analysis.md
+-rw-r--r--   1 node node  6595 10月 18 10:37 pjr-djft-grade-run-per-document-sh.md
+-rw-r--r--   1 node node  8684 10月 18 10:37 pjr-dkx8-vp-arc-conciseness-vp-ux-user-flow-check.md
+-rw-r--r--   1 node node  7436 10月 18 10:37 pjr-dpvv-docs-lint-package.md
+-rw-r--r--   1 node node  1078 10月 18 10:37 pjr-dq9e-demo-repository-dagashiya.md
+-rw-r--r--   1 node node  6632 10月 18 10:37 pjr-dt3q-transient-git-retry-not-idempotent.md
+-rw-r--r--   1 node node  5649 10月 18 10:37 pjr-dxdc-job-manual-run-id-mismatch.md
+-rw-r--r--   1 node node  1149 10月 18 10:37 pjr-e025-src-remaining-cycles.md
+-rw-r--r--   1 node node  7549 10月 18 10:37 pjr-e2q3-exec-plan-review-agent-pipeline.md
+-rw-r--r--   1 node node  5086 10月 18 10:37 pjr-e412-not-applicable-repo-env-path.md
+-rw-r--r--   1 node node 14223 10月 18 10:37 pjr-e6hg-claude-reporter-json-failure.md
+-rw-r--r--   1 node node  6751 10月 18 10:37 pjr-e6qj-worktree-generated-artifacts.md
+-rw-r--r--   1 node node  8417 10月 18 10:37 pjr-e8fy-docs-build-sidebar-scope.md
+-rw-r--r--   1 node node 22434 10月 18 10:37 pjr-e8tt-initial-release-positioning.md
+-rw-r--r--   1 node node  8712 10月 18 10:37 pjr-e9h3-grade-deterministic-reporter.md
+-rw-r--r--   1 node node  8268 10月 18 10:37 pjr-ea20-docs-site-requires-en-locale.md
+-rw-r--r--   1 node node  1163 10月 18 10:37 pjr-eank-agent-members-alias-schema.md
+-rw-r--r--   1 node node 12053 10月 18 10:37 pjr-ebtz-vp-arc-cross-document-consistency-target-kata-conformance.md
+-rw-r--r--   1 node node  7511 10月 18 10:37 pjr-enk0-sch-strategy-planning-regenerate.md
+-rw-r--r--   1 node node  6937 10月 18 10:37 pjr-eqaq-register-timestamps.md
+-rw-r--r--   1 node node 10253 10月 18 10:37 pjr-eqdb-kata-cdfd-stsd-rulebook-findings.md
+-rw-r--r--   1 node node  6639 10月 18 10:37 pjr-es57-register-file-ssot-migration.md
+-rw-r--r--   1 node node  2119 10月 18 10:37 pjr-evax-spec-do-notation.md
+-rw-r--r--   1 node node 11762 10月 18 10:37 pjr-ewwx-feature-branch-policy.md
+-rw-r--r--   1 node node  7109 10月 18 10:37 pjr-ex5e-git-identity-isolation.md
+-rw-r--r--   1 node node  7595 10月 18 10:37 pjr-excv-grade-per-document-pipeline.md
+-rw-r--r--   1 node node  2641 10月 18 10:37 pjr-exh2-product-repo-branch-only-integration.md
+-rw-r--r--   1 node node  4368 10月 18 10:37 pjr-ez9g-sch-strategy-bootstrap-human-review.md
+-rw-r--r--   1 node node  7591 10月 18 10:37 pjr-ezaf-devcontainer-template-codex-sandbox.md
+-rw-r--r--   1 node node  7410 10月 18 10:37 pjr-f1jg-cdfd-overview-runner-qe.md
+-rw-r--r--   1 node node 11652 10月 18 10:37 pjr-f346-docs-sync-recent-changes.md
+-rw-r--r--   1 node node  8638 10月 18 10:37 pjr-f4c9-npm-staged-publishing.md
+-rw-r--r--   1 node node 10052 10月 18 10:37 pjr-ffpk-agent-scratch-files-in-commit.md
+-rw-r--r--   1 node node  8998 10月 18 10:37 pjr-fkn1-kata-distribution-method.md
+-rw-r--r--   1 node node  5879 10月 18 10:37 pjr-fmz2-integrate-error-stderr.md
+-rw-r--r--   1 node node  6672 10月 18 10:37 pjr-fpcm-devcontainer-editor-toolchain.md
+-rw-r--r--   1 node node  5555 10月 18 10:37 pjr-frzb-cli-entrypoint-shortcut.md
+-rw-r--r--   1 node node  5205 10月 18 10:37 pjr-fxph-register-build-pipe-escape.md
+-rw-r--r--   1 node node  5982 10月 18 10:37 pjr-fzc4-multi-repo-design-investigation.md
+-rw-r--r--   1 node node  6784 10月 18 10:37 pjr-g1qz-grade-finding-comment-lint.md
+-rw-r--r--   1 node node  8028 10月 18 10:37 pjr-g2f4-qwen-reporter-structured-output.md
+-rw-r--r--   1 node node  5411 10月 18 10:37 pjr-g5s2-src-move-codemod.md
+-rw-r--r--   1 node node  1355 10月 18 10:37 pjr-g85c-vitepress-exclude-exec-records.md
+-rw-r--r--   1 node node  9633 10月 18 10:37 pjr-g8m9-kata-wikilink-resolution.md
+-rw-r--r--   1 node node  4277 10月 18 10:37 pjr-g8tb-docs-sync-4hbg-36cn-e2q3.md
+-rw-r--r--   1 node node  5366 10月 18 10:37 pjr-ga2k-routine-sequential-actions.md
+-rw-r--r--   1 node node  7397 10月 18 10:37 pjr-gbev-exec-reporter-machine-facts.md
+-rw-r--r--   1 node node  6530 10月 18 10:37 pjr-gbpx-exec-run-split-register.md
+-rw-r--r--   1 node node  8776 10月 18 10:37 pjr-gbvm-product-root-new-files-out-of-scope.md
+-rw-r--r--   1 node node 10056 10月 18 10:37 pjr-gbww-exec-shared-parts-to-shared.md
+-rw-r--r--   1 node node  3995 10月 18 10:37 pjr-gdqc-register-close-reject-note.md
+-rw-r--r--   1 node node  5656 10月 18 10:37 pjr-genj-resume-validation-before-develop-sync.md
+-rw-r--r--   1 node node  6871 10月 18 10:37 pjr-gh26-ledger-review-alternative.md
+-rw-r--r--   1 node node  5614 10月 18 10:37 pjr-ghkd-resume-sync-git-diff-outside-repo.md
+-rw-r--r--   1 node node  4612 10月 18 10:37 pjr-gqfx-todo-marker-false-positive-in-inline-code.md
+-rw-r--r--   1 node node  6174 10月 18 10:37 pjr-grb5-protected-config-false-positive-after-limit.md
+-rw-r--r--   1 node node  4908 10月 18 10:37 pjr-grmk-catalog-validate-hook-without-catalog.md
+-rw-r--r--   1 node node 15543 10月 18 10:37 pjr-gwy4-job-deterministic-command.md
+-rw-r--r--   1 node node  6925 10月 18 10:37 pjr-gwyj-rulebook-sample-chapter-extraction-phase2.md
+-rw-r--r--   1 node node  7202 10月 18 10:37 pjr-gx9d-vscode-extension-consolidation.md
+-rw-r--r--   1 node node  6814 10月 18 10:37 pjr-h06f-register-approach-plan-generation.md
+-rw-r--r--   1 node node  6114 10月 18 10:37 pjr-h220-viewpoint-document-kinds-maintenance.md
+-rw-r--r--   1 node node 12463 10月 18 10:37 pjr-h4h7-bps-grade-review.md
+-rw-r--r--   1 node node 12256 10月 18 10:37 pjr-h5z7-cdfd-3-bps-2-grade-finding.md
+-rw-r--r--   1 node node  9271 10月 18 10:37 pjr-h72a-register-approach-execution.md
+-rw-r--r--   1 node node  4751 10月 18 10:37 pjr-h95r-exec-complete-worktree-merge.md
+-rw-r--r--   1 node node  7780 10月 18 10:37 pjr-h9r2-resume-sync-uncommitted-overlap.md
+-rw-r--r--   1 node node  2971 10月 18 10:37 pjr-he9r-per-project-parent-validations.md
+-rw-r--r--   1 node node  9639 10月 18 10:37 pjr-hf4n-maintenance-approach-evidence.md
+-rw-r--r--   1 node node  6337 10月 18 10:37 pjr-hg98-config-init-gitignore-generated.md
+-rw-r--r--   1 node node 11004 10月 18 10:37 pjr-hj99-index-build-not-run-blocks.md
+-rw-r--r--   1 node node  5187 10月 18 10:37 pjr-hqbk-multi-repo-config-resolution.md
+-rw-r--r--   1 node node  6209 10月 18 10:37 pjr-hqkv-fast-glob-braces-vulnerability.md
+-rw-r--r--   1 node node  5675 10月 18 10:37 pjr-hrms-v030-changelog-finalize.md
+-rw-r--r--   1 node node  7953 10月 18 10:37 pjr-hz4c-tmux-terminal-npm-run-docs-dev-port-forwarding.md
+-rw-r--r--   1 node node  3918 10月 18 10:37 pjr-j29x-readme-dojo-vocabulary.md
+-rw-r--r--   1 node node  6045 10月 18 10:37 pjr-j2as-config-init-gitignore-node-modules.md
+-rw-r--r--   1 node node  5305 10月 18 10:37 pjr-j3g0-exec-resume-integrate-schedule-task.md
+-rw-r--r--   1 node node  6273 10月 18 10:37 pjr-j7we-devcontainer-emacs-template.md
+-rw-r--r--   1 node node 10460 10月 18 10:37 pjr-jftc-sch-assessment-retirement.md
+-rw-r--r--   1 node node  3248 10月 18 10:37 pjr-jfwq-executor-reporter-pipeline-schema.md
+-rw-r--r--   1 node node  7657 10月 18 10:37 pjr-jg9q-auto-rebuild-stale-tracks.md
+-rw-r--r--   1 node node  7818 10月 18 10:37 pjr-jhsc-exec-events-granularity.md
+-rw-r--r--   1 node node  1560 10月 18 10:37 pjr-jjjb-init-gitignore-node-modules.md
+-rw-r--r--   1 node node  2955 10月 18 10:37 pjr-jsey-exec-run-split-smoke.md
+-rw-r--r--   1 node node  6608 10月 18 10:37 pjr-jswe-agent-workflow-plan-vs-skills.md
+-rw-r--r--   1 node node  5835 10月 18 10:37 pjr-jt1y-kata-undecided-state.md
+-rw-r--r--   1 node node  6696 10月 18 10:37 pjr-jwxk-grade-translation-code-tokens.md
+-rw-r--r--   1 node node  3627 10月 18 10:37 pjr-jxv7-executor-evidence-collection.md
+-rw-r--r--   1 node node  4581 10月 18 10:37 pjr-k1z5-parent-validations-lint.md
+-rw-r--r--   1 node node  5596 10月 18 10:37 pjr-k1zd-opencode-plugin-bootstrap-protected-false-positive.md
+-rw-r--r--   1 node node  9436 10月 18 10:37 pjr-k332-per-item-executor-assignment.md
+-rw-r--r--   1 node node 10996 10月 18 10:37 pjr-k351-continuous-abolition-all-viewpoints.md
+-rw-r--r--   1 node node  7967 10月 18 10:37 pjr-k4ta-kata-not-needed-declaration.md
+-rw-r--r--   1 node node 15356 10月 18 10:37 pjr-k513-vscode-extension-layout.md
+-rw-r--r--   1 node node  5553 10月 18 10:37 pjr-k6kb-grade-module-split.md
+-rw-r--r--   1 node node 10013 10月 18 10:37 pjr-k9kg-kata-requirement-existing-deliverables.md
+-rw-r--r--   1 node node  7313 10月 18 10:37 pjr-kaqv-agent-raw-stderr-retention.md
+-rw-r--r--   1 node node  8902 10月 18 10:37 pjr-kata-artifact-kata-readiness-assessment.md
+-rw-r--r--   1 node node 10254 10月 18 10:37 pjr-kce0-review-viewpoints-inheritance.md
+-rw-r--r--   1 node node 11917 10月 18 10:37 pjr-kcmh-review-grade-verdict.md
+-rw-r--r--   1 node node  9974 10月 18 10:37 pjr-kecw-src-move-small-features.md
+-rw-r--r--   1 node node  4573 10月 18 10:37 pjr-kefk-orchestrator-feature-branch-rule.md
+-rw-r--r--   1 node node  5543 10月 18 10:37 pjr-keqq-devcontainer-template-volumes.md
+-rw-r--r--   1 node node  4793 10月 18 10:37 pjr-kk07-template-resolution-fallback.md
+-rw-r--r--   1 node node  5660 10月 18 10:37 pjr-m35p-protection-false-positive-generated.md
+-rw-r--r--   1 node node  4512 10月 18 10:37 pjr-m8na-sandbox-docs-build-tsx-eperm.md
+-rw-r--r--   1 node node  2854 10月 18 10:37 pjr-mbvm-grade-exclude-generated.md
+-rw-r--r--   1 node node  8374 10月 18 10:37 pjr-md3c-job-review-agent.md
+-rw-r--r--   1 node node  8682 10月 18 10:37 pjr-me20-antigravity-codex-trial.md
+-rw-r--r--   1 node node  4283 10月 18 10:37 pjr-mgnw-omlx-app-gui-setup.md
+-rw-r--r--   1 node node 16582 10月 18 10:37 pjr-mh9e-bps-29-cdfd-14.md
+-rw-r--r--   1 node node 10166 10月 18 10:37 pjr-mhhp-src-move-shared.md
+-rw-r--r--   1 node node  4655 10月 18 10:37 pjr-mp2p-devcontainer-config-persistence.md
+-rw-r--r--   1 node node  6330 10月 18 10:37 pjr-mrjt-job-run-identity-from-period.md
+-rw-r--r--   1 node node  4908 10月 18 10:37 pjr-mtfa-v030-changelog-additions.md
+-rw-r--r--   1 node node  4643 10月 18 10:37 pjr-mwwp-dashboard-cell-sanitize.md
+-rw-r--r--   1 node node  6331 10月 18 10:37 pjr-mwxs-uis-index-rulebook-bds-index-rulebook.md
+-rw-r--r--   1 node node  8291 10月 18 10:37 pjr-mx4f-integrate-conflict-commit-skips-dist-rebuild.md
+-rw-r--r--   1 node node  1290 10月 18 10:37 pjr-n02e-antigravity-quota-separation.md
+-rw-r--r--   1 node node  9500 10月 18 10:37 pjr-n03w-grade-role-and-triggers.md
+-rw-r--r--   1 node node 12190 10月 18 10:37 pjr-n22n-xrp-xrr-review.md
+-rw-r--r--   1 node node  2548 10月 18 10:37 pjr-n8aw-item.md
+-rw-r--r--   1 node node  5678 10月 18 10:37 pjr-na04-exec-plans-trial-split.md
+-rw-r--r--   1 node node  4744 10月 18 10:37 pjr-nfv7-result-trailing-newline.md
+-rw-r--r--   1 node node  3595 10月 18 10:37 pjr-njrh-orchestrator-use-register-commit.md
+-rw-r--r--   1 node node  4615 10月 18 10:37 pjr-nmsh-agy-model-not-recognized.md
+-rw-r--r--   1 node node  6839 10月 18 10:37 pjr-nn43-worktree-build-before-product-worktree.md
+-rw-r--r--   1 node node  3777 10月 18 10:37 pjr-ns8y-parent-validation-build-format-ids.md
+-rw-r--r--   1 node node  3444 10月 18 10:37 pjr-nsxt-executor-reporter-agent-definitions.md
+-rw-r--r--   1 node node  9326 10月 18 10:37 pjr-nw9v-agent-comparison-trial.md
+-rw-r--r--   1 node node  4308 10月 18 10:37 pjr-nwpc-register-where-stderr.md
+-rw-r--r--   1 node node 11479 10月 18 10:37 pjr-nyzr-adoption-strategy.md
+-rw-r--r--   1 node node  5224 10月 18 10:37 pjr-p038-register-domain-split.md
+-rw-r--r--   1 node node  7337 10月 18 10:37 pjr-p08h-devcontainer-parent-mount.md
+-rw-r--r--   1 node node  8489 10月 18 10:37 pjr-p7hy-multi-repo-single-item.md
+-rw-r--r--   1 node node 23341 10月 18 10:37 pjr-p8tk-release-stabilization-criteria.md
+-rw-r--r--   1 node node  9775 10月 18 10:37 pjr-pg6w-resume-stage-and-sync.md
+-rw-r--r--   1 node node  8509 10月 18 10:37 pjr-pjbn-grade-exec-run.md
+-rw-r--r--   1 node node  6276 10月 18 10:37 pjr-pp0d-exec-plan-todo-markdown.md
+-rw-r--r--   1 node node  7371 10月 18 10:37 pjr-ppyf-register-targets-from-first-attempt.md
+-rw-r--r--   1 node node  1607 10月 18 10:37 pjr-pv5b-devcontainer-scaffold-observations.md
+-rw-r--r--   1 node node  4091 10月 18 10:37 pjr-pzpa-grade-translation-default-translator.md
+-rw-r--r--   1 node node  2687 10月 18 10:37 pjr-q3f0-dev-dependencies-major-update.md
+-rw-r--r--   1 node node  5535 10月 18 10:37 pjr-q3jg-grade-exclude-exec-templates.md
+-rw-r--r--   1 node node 19107 10月 18 10:37 pjr-q3w9-gastown-design-philosophy.md
+-rw-r--r--   1 node node  7831 10月 18 10:37 pjr-q761-exec-run-module-split.md
+-rw-r--r--   1 node node  9372 10月 18 10:37 pjr-q7gj-parallel-integration-hook-flaky.md
+-rw-r--r--   1 node node  5791 10月 18 10:37 pjr-q828-reporter-revalidation.md
+-rw-r--r--   1 node node  6197 10月 18 10:37 pjr-q88a-register-stdout-stderr.md
+-rw-r--r--   1 node node  5861 10月 18 10:37 pjr-qcmp-register-commands-split.md
+-rw-r--r--   1 node node 10042 10月 18 10:37 pjr-qd81-gl-common.md
+-rw-r--r--   1 node node  9568 10月 18 10:37 pjr-qesv-kata-creation-criteria.md
+-rw-r--r--   1 node node  6894 10月 18 10:37 pjr-qf7t-planning-domain-and-track.md
+-rw-r--r--   1 node node 11926 10月 18 10:37 pjr-qgp4-naming-spec-do.md
+-rw-r--r--   1 node node 28760 10月 18 10:37 pjr-qhka-docs-structure-detached-unit.md
+-rw-r--r--   1 node node  5303 10月 18 10:37 pjr-qjad-grade-incomplete-exit-code.md
+-rw-r--r--   1 node node  7262 10月 18 10:37 pjr-qm88-rulebook-schema-enum-lint.md
+-rw-r--r--   1 node node  7427 10月 18 10:37 pjr-qqky-src-feature-cycles.md
+-rw-r--r--   1 node node  6537 10月 18 10:37 pjr-qqxp-docs-search-index-scope.md
+-rw-r--r--   1 node node  7359 10月 18 10:37 pjr-qvgx-codex-sandbox-tsx-ipc-eperm.md
+-rw-r--r--   1 node node  9418 10月 18 10:37 pjr-qw5t-protect-main-push-and-merge-method.md
+-rw-r--r--   1 node node  5483 10月 18 10:37 pjr-r0k4-dashboard-catalog-schedule-split.md
+-rw-r--r--   1 node node  8798 10月 18 10:37 pjr-r0xa-wait-ancestry-ours-merge-reverts.md
+-rw-r--r--   1 node node  3941 10月 18 10:37 pjr-r1n2-cli-version-from-package-json.md
+-rw-r--r--   1 node node  4440 10月 18 10:37 pjr-r8wr-parent-validation-failure-output.md
+-rw-r--r--   1 node node  5779 10月 18 10:37 pjr-rcvs-js-yaml-5-migration.md
+-rw-r--r--   1 node node  3392 10月 18 10:37 pjr-rdnc-update-docs-for-ticket-ssot.md
+-rw-r--r--   1 node node  7110 10月 18 10:37 pjr-reds-integrate-staged-deletion.md
+-rw-r--r--   1 node node  7757 10月 18 10:37 pjr-rf3b-register-item-frontmatter-schema.md
+-rw-r--r--   1 node node  3819 10月 18 10:37 pjr-rg7c-reporter-result-generation.md
+-rw-r--r--   1 node node  9994 10月 18 10:37 pjr-rp1k-maintenance-finding-instruction.md
+-rw-r--r--   1 node node  8582 10月 18 10:37 pjr-rpsx-scaffold-orchestrator-npm-scripts.md
+-rw-r--r--   1 node node  6882 10月 18 10:37 pjr-ry4c-register-commit-git-status-buffer.md
+-rw-r--r--   1 node node  5785 10月 18 10:37 pjr-rzr3-pjr-index-as-generated-view.md
+-rw-r--r--   1 node node  8321 10月 18 10:37 pjr-s190-strategy-scope-local-ids.md
+-rw-r--r--   1 node node  6897 10月 18 10:37 pjr-s5ya-register-item-type-lifecycle.md
+-rw-r--r--   1 node node  4352 10月 18 10:37 pjr-s64h-glossary-kicho-kihyo.md
+-rw-r--r--   1 node node  1132 10月 18 10:37 pjr-s9qf-result-approach-section-for-register.md
+-rw-r--r--   1 node node  5514 10月 18 10:37 pjr-say1-template-finding-comments.md
+-rw-r--r--   1 node node  3429 10月 18 10:37 pjr-sazc-orch-scripts-via-launch.md
+-rw-r--r--   1 node node  4487 10月 18 10:37 pjr-sdwf-composite-check-not-run-block.md
+-rw-r--r--   1 node node  6379 10月 18 10:37 pjr-sdxb-bootstrap.md
+-rw-r--r--   1 node node 13427 10月 18 10:37 pjr-seqc-timeline-gantt-chart-timeline.md
+-rw-r--r--   1 node node  8346 10月 18 10:37 pjr-sj3x-docs-site-kata-staging.md
+-rw-r--r--   1 node node  3703 10月 18 10:37 pjr-smet-register-stale-block-reason.md
+-rw-r--r--   1 node node  8719 10月 18 10:37 pjr-smk5-src-move-schedule-catalog.md
+-rw-r--r--   1 node node  2703 10月 18 10:37 pjr-srqz-register-dependencies.md
+-rw-r--r--   1 node node  9959 10月 18 10:37 pjr-strg-deterministic-dct-strategy-generation.md
+-rw-r--r--   1 node node  2056 10月 18 10:37 pjr-szgz-devcontainer-lp-extensions.md
+-rw-r--r--   1 node node  5161 10月 18 10:37 pjr-t0vq-pjr-id-length-evaluation.md
+-rw-r--r--   1 node node  5552 10月 18 10:37 pjr-t1jw-protected-config-gitignore-false-positive.md
+-rw-r--r--   1 node node 15993 10月 18 10:37 pjr-t2kk-grade-recheck-routine.md
+-rw-r--r--   1 node node  3341 10月 18 10:37 pjr-t2m6-register-reject-note-terminal.md
+-rw-r--r--   1 node node 10230 10月 18 10:37 pjr-t3nn-bps-rulebook-rulebook-authoring-standard.md
+-rw-r--r--   1 node node  8906 10月 18 10:37 pjr-t3vq-maintenance-plan-target-path.md
+-rw-r--r--   1 node node  1243 10月 18 10:37 pjr-t46y-register-post-run-review-auto-close.md
+-rw-r--r--   1 node node 10063 10月 18 10:37 pjr-t7em-ifx-cmd.md
+-rw-r--r--   1 node node 10334 10月 18 10:37 pjr-t7zq-register-commit-policy.md
+-rw-r--r--   1 node node  5616 10月 18 10:37 pjr-t84c-protected-config-runtime-artifacts.md
+-rw-r--r--   1 node node  5843 10月 18 10:37 pjr-ta5c-agent-run-primitive.md
+-rw-r--r--   1 node node  1193 10月 18 10:37 pjr-tatp-devcontainer-named-volumes.md
+-rw-r--r--   1 node node  7656 10月 18 10:37 pjr-tbhh-detached-unit-default.md
+-rw-r--r--   1 node node  5781 10月 18 10:37 pjr-tc43-executor-reporter-e2e-docs.md
+-rw-r--r--   1 node node  7210 10月 18 10:37 pjr-td1g-grade-review-record-structure.md
+-rw-r--r--   1 node node  8750 10月 18 10:37 pjr-tdb0-task-resume-rate-limit-executor.md
+-rw-r--r--   1 node node  3789 10月 18 10:37 pjr-th4b-eslint-max-lines-guard.md
+-rw-r--r--   1 node node  5806 10月 18 10:37 pjr-tm1b-claude-edit-allowlist-too-narrow.md
+-rw-r--r--   1 node node  6587 10月 18 10:37 pjr-tmaw-result-frontmatter-block-reason-yaml.md
+-rw-r--r--   1 node node  9769 10月 18 10:37 pjr-tndh-exec-run-register-executor-reporter.md
+-rw-r--r--   1 node node 10901 10月 18 10:37 pjr-tpy9-register-git-github.md
+-rw-r--r--   1 node node  5760 10月 18 10:37 pjr-tr8g-git-failure-reason-progress.md
+-rw-r--r--   1 node node  1138 10月 18 10:37 pjr-tsp6-agent-role-definitions-merge.md
+-rw-r--r--   1 node node  5152 10月 18 10:37 pjr-tt4j-register-cli-write-to-tickets.md
+-rw-r--r--   1 node node  4901 10月 18 10:37 pjr-tx1g-exec-resume-rate-limited-executor.md
+-rw-r--r--   1 node node  9272 10月 18 10:37 pjr-v23p-src-subdirectory-layout.md
+-rw-r--r--   1 node node  9666 10月 18 10:37 pjr-v8fv-cdfd-common-chapter-skeleton.md
+-rw-r--r--   1 node node  5058 10月 18 10:37 pjr-v96b-multi-repo-parent-validations.md
+-rw-r--r--   1 node node  3777 10月 18 10:37 pjr-vc94-update-validation-and-tests.md
+-rw-r--r--   1 node node  7856 10月 18 10:37 pjr-veq4-evidence-refs-staleness-detection.md
+-rw-r--r--   1 node node  5527 10月 18 10:37 pjr-vfd0-exec-resume-protection-blocked.md
+-rw-r--r--   1 node node  6445 10月 18 10:37 pjr-vgng-job-run-partial-failure-integration.md
+-rw-r--r--   1 node node  6943 10月 18 10:37 pjr-vh6r-agent-config-write-handoff.md
+-rw-r--r--   1 node node  6786 10月 18 10:37 pjr-vjp8-viewpoint-document-kinds-coverage-check.md
+-rw-r--r--   1 node node 52748 10月 18 10:37 pjr-vqb5-agent-grade-comparison.md
+-rw-r--r--   1 node node 13731 10月 18 10:37 pjr-vqza-routine-commit-after-run.md
+-rw-r--r--   1 node node  7292 10月 18 10:37 pjr-vv3m-kata-creation-policy-by-type.md
+-rw-r--r--   1 node node  5874 10月 18 10:37 pjr-vx97-git-diff-dubious-ownership-retry.md
+-rw-r--r--   1 node node  7472 10月 18 10:37 pjr-w2eb-npm-test-load-timeout.md
+-rw-r--r--   1 node node  8388 10月 18 10:37 pjr-w5jt-grade-single-stage-nightly.md
+-rw-r--r--   1 node node  6995 10月 18 10:37 pjr-w66b-parent-validation-typecheck.md
+-rw-r--r--   1 node node  6024 10月 18 10:37 pjr-w9rk-src-move-dashboard.md
+-rw-r--r--   1 node node  5917 10月 18 10:37 pjr-wa3r-exec-plan-common-conventions-reference.md
+-rw-r--r--   1 node node  5547 10月 18 10:37 pjr-wafc-grade-translation-no-added-code.md
+-rw-r--r--   1 node node  9118 10月 18 10:37 pjr-wj83-multi-project-build-index-register.md
+-rw-r--r--   1 node node  2330 10月 18 10:37 pjr-wje6-product-repo-branch-guide.md
+-rw-r--r--   1 node node  6810 10月 18 10:37 pjr-wjpx-gemma4-26b-moe-evaluation.md
+-rw-r--r--   1 node node  6631 10月 18 10:37 pjr-wjzd-publish-docs-lint.md
+-rw-r--r--   1 node node  8718 10月 18 10:37 pjr-wp44-not-applicable-reason-criteria.md
+-rw-r--r--   1 node node 56091 10月 18 10:37 pjr-wpr3-exec-run-split-investigation.md
+-rw-r--r--   1 node node 29893 10月 18 10:37 pjr-wpwb-viewpoint-evaluation-criteria.md
+-rw-r--r--   1 node node  3650 10月 18 10:37 pjr-wre7-omlx-context-64k.md
+-rw-r--r--   1 node node  1098 10月 18 10:37 pjr-wset-src-feature-direction-rules.md
+-rw-r--r--   1 node node  8194 10月 18 10:37 pjr-wvns-planning-artifacts-catalog-scope.md
+-rw-r--r--   1 node node  6829 10月 18 10:37 pjr-wzma-job-responsibility-boundary.md
+-rw-r--r--   1 node node  7666 10月 18 10:37 pjr-wzyw-agent-members-onboarding-gap.md
+-rw-r--r--   1 node node  6090 10月 18 10:37 pjr-x2q7-register-conclusion-overwrite.md
+-rw-r--r--   1 node node  7353 10月 18 10:37 pjr-x3e8-test-git-env-bare-repository.md
+-rw-r--r--   1 node node  6727 10月 18 10:37 pjr-x40m-grade-previous-findings.md
+-rw-r--r--   1 node node  7359 10月 18 10:37 pjr-x60a-agy-model-ids-in-templates.md
+-rw-r--r--   1 node node  5952 10月 18 10:37 pjr-x8y9-src-dependency-direction-rules.md
+-rw-r--r--   1 node node  5384 10月 18 10:37 pjr-xbdb-devcontainer-emacs-init-location.md
+-rw-r--r--   1 node node  7925 10月 18 10:37 pjr-xgjk-kata-declaration-migrate-to-rulebook.md
+-rw-r--r--   1 node node  8285 10月 18 10:37 pjr-xkks-grade-sidecar.md
+-rw-r--r--   1 node node  9444 10月 18 10:37 pjr-xmma-docs-site-puppeteer25-mermaid12.md
+-rw-r--r--   1 node node  5479 10月 18 10:37 pjr-xmqh-quickstart-decision-register.md
+-rw-r--r--   1 node node  8012 10月 18 10:37 pjr-xp0j-src-move-exec.md
+-rw-r--r--   1 node node  2361 10月 18 10:37 pjr-xrab-exec-integration-branch-override.md
+-rw-r--r--   1 node node 10051 10月 18 10:37 pjr-xtan-unify-verdict-vocabulary.md
+-rw-r--r--   1 node node  4672 10月 18 10:37 pjr-xw9m-orchestrator-note-type-non-terminal.md
+-rw-r--r--   1 node node  7743 10月 18 10:37 pjr-xxbc-result-approach-section-rename.md
+-rw-r--r--   1 node node  8142 10月 18 10:37 pjr-xy4c-devcontainer-codex-system-bwrap.md
+-rw-r--r--   1 node node 11936 10月 18 10:37 pjr-xzeq-cdfd-overview-cdfd-check-cdfd-action-grade-review.md
+-rw-r--r--   1 node node  9193 10月 18 10:37 pjr-y013-exec-commit-folding.md
+-rw-r--r--   1 node node  5127 10月 18 10:37 pjr-y06y-glossary-schema.md
+-rw-r--r--   1 node node  6066 10月 18 10:37 pjr-y0ah-integrate-only-resume.md
+-rw-r--r--   1 node node  7015 10月 18 10:37 p

@@ -2,6 +2,49 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [0.4.1] - 2026-10-21
+
+### 追加機能
+
+- `.specdojo/specdojo.config.json` の `projects.<id>.run.parent_validations` で、共有 `exec-defaults.yaml` の `pipeline.parent_validations` に project 固有の親検証を追加できるようにしました。`{ id, repo }` も指定でき、プロダクトリポジトリを持つ project だけに検証を加えても、同じ defaults を使うほかの project には影響しません（PJR-HE9R）。
+- `specdojo config scaffold --workspace` で、`repos` の設定から VS Code のマルチルートワークスペース（`<project-id>.code-workspace`）を生成できるようにしました。プロジェクトリポジトリ自身と `repos` で宣言された各プロダクトリポジトリを `folders` に宣言順で並べ、別リポジトリ構成でも 1 つのウィンドウで開発できます。`--project` で対象 project を指定でき（省略時は `current_project`）、既存のワークスペースファイルは `--force` を指定しない限り上書きしません（PJR-87XS）。
+- `exec run --register --worktree` に、プロダクトリポジトリの統合先を run ごとに上書きする繰り返し可能な `--integration-branch <repo>=<branch>` を追加しました。指定は `repos[].integration_branch` より優先し、指定がなければ従来どおり設定値または現在のブランチを使います。並列実行では各 item run に適用し、再開時は checkpoint に保存した値を再利用して途中変更を拒否します（PJR-XRAB）。
+- register 個票に `difficulty`（`hard` / `medium` / `easy`）を追加し、`exec-defaults.yaml` の `routing` で難易度ごとの executor・reporter・rate limit 対応・fallback を選べるようにしました。`exec run --register` と夜間 orchestrator が同じ表を使い、CLI 指定は表より優先し、難易度または表がない既存個票は従来の `priority` 自動選択を維持します。`specdojo init --exec` も選択した provider に合う表を生成します（PJR-5HYP）。
+
+- `devcontainer scaffold --preset recommended` を追加しました。端末版 Emacs と Vim、tmux、SpecDojo の文書作業向け VS Code 拡張・保存時整形・YAML schema 関連付けをまとめて設定し、同じ拡張を `.vscode/extensions.json` にも推薦します。個別の `--editor`・`--tmux` と併用でき、既存のエディタ設定は上書きしません。`specdojo init` では Dev Container を選んだ場合だけ推奨 preset の利用を質問し、`--yes --devcontainer` では利用します（PJR-EN6M）。
+
+- 親 runner の検証（`pipeline.parent_validations`）の固定許可リストに `build`（`npm run build`）と `format-check`（`npm run format:check`）を追加しました。別リポジトリ構成などでプロダクトリポジトリのビルドと整形の検証を親 runner に委譲できます（PJR-NS8Y）。
+- `exec run --register --post-review`（または `exec-defaults.yaml` の `register_post_review: true`）で、統合の後に review の agent が完了条件・result・差分・検証の結果を照らして判定するようにしました。`complete`・`complete-with-findings` なら todo と issue を close し、`incomplete` なら `waiting` に戻します。decision と question、SpecDojo 自身のコードを変えた項目は自動では close しません（PJR-T46Y）。
+- `register update --autopilot approved` で夜間に流してよい個票に印を付け、`specdojo orchestrator night` が印のある `open` の todo と issue だけを、worktree・統合後の review・並行で流すようにしました。1 晩の件数・並行数・連続した失敗での停止・rate limit のときの切り替えを指定でき、close したもの・`waiting` に戻したもの・新しく起票した承認待ちを朝の報告にまとめます（PJR-6DHY）。
+
+### 変更
+
+- `specdojo init` と `config scaffold` が追加するオーケストレーター起動スクリプトをモデルの系統名へ揃えました。Codex は `orch:sol`（`gpt-5.6-sol`）と `orch:terra`（`gpt-5.6-terra`）、Antigravity は `orch:flash`（`gemini-3.8-flash-high`）を追加し、旧 `orch:codex`・`orch:agy` は作りません。既存の `package.json` のスクリプトは上書き・削除しないため、scaffold の再実行後に新しい名前で起動を確認してから旧スクリプトを手動で削除してください。Claude Code と、利用環境ごとにモデルが異なる OpenCode の名前は変わりません（PJR-16S0）。
+- 同梱のオーケストレーターの本文に、承認の聞き方（コマンドではなく、何をするか・中身・影響を日本語で示す）、実行の運び方、close の前の確かめ方、止まったときの対処の表、完了条件の書き方、agent の選び方を加えました（PJR-C50G）。
+
+### 不具合修正
+
+- `register` の `--by` を人・agent の名簿と予約 actor の一覧に照合し、agent alias は実体名へ解決して event に記録するようにしました。未知の名前や `PO` などの Role code は書き込み前に拒否し、省略時は予約 actor の `SpecDojo` を使います。対話型オーケストレーターの名前は `specdojo-orchestrator` に統一しました（PJR-3K1X）。
+- exec の result へ executor / reporter の自由記述を描くとき、アスタリスクやアンダースコアを含む ASCII トークンをコードの書式にして、Markdown の強調と誤解釈されないようにしました。既にコードの書式で囲まれた部分は保持します。検証の適用外理由に `*.yaml` と `*.yml` を並べても markdownlint（MD037）で統合前に止まりません（PJR-A6PV）。
+- ローカル LLM や provider API へ接続できず、`Cannot connect to API`・`ECONNREFUSED` などで指名した executor / reporter が失敗した場合に、`--fallback-executor-by` / `--fallback-reporter-by` で指定した agent へ切り替えるようにしました。接続不能の文言は provider ごとの `connection_error_detection` で設定し、`--on-rate-limit` の値とは独立して1回だけ fallback します。切替履歴は rate limit と同じく pipeline state・evidence・result に記録します（PJR-DKD8）。
+- devcontainer の scaffold で生成する `post-create.sh` で、volume のマウント先の親（`~/.local`・`~/.local/share`・`~/.config`）の所有者をコンテナの利用者へ戻し、`~/.local/bin` を作成して `PATH` に加えるようにしました。Docker が親ディレクトリを root 所有で作成した環境でも Claude Code などのインストーラが失敗しないようにします。また、常時稼働ホスト接続サンプル `specdojo-tmux.sh.sample` の `docker exec` に `-u` で利用者（`devcontainer.json` の `remoteUser`、既定は `node`）を渡し、コンテナの既定の root で入らないようにしました（PJR-GHBP）。
+- devcontainer の scaffold で生成する `devcontainer.json` に `remoteEnv` を設定し、`/home/<remoteUser>/.local/bin`（既定は `/home/node/.local/bin`）を `PATH` の先頭に追加するようにしました。コンテナ作成後に開く端末や VS Code のターミナルで `~/.local/bin` が `PATH` に入らず、Claude Code などの CLI が見つからない問題を解消します。常時稼働ホスト運用ガイドに既存環境の修正手順を追記しました（PJR-5JRJ）。
+- 常時稼働ホスト接続サンプル `specdojo-tmux.sh.sample` で、`node_bin_dir` を設けて `/opt/homebrew/bin`・`/usr/local/bin` とともに既定で `PATH` の先頭へ追加し、冒頭コメントに `dirname "$(command -v devcontainer)"` による確かめ方と Homebrew・nvm・mise の例を記載しました。また、`devcontainer` と `docker` が見つからない際のエラー案内にその時点の `PATH` と置き場所の確かめ方を表示し、`ssh-config.sample` と常時稼働ホスト運用ガイドに `RemoteCommand` では端末の `PATH` 設定が読み込まれない注意と `ssh <host> 'command -v devcontainer'` による確認方法を記載しました（PJR-EJ4F）。
+
+- `validate:schema:file`・Prettier・markdownlint の `not_applicable` を、script や依存 package の有無だけでなく executor が変更したファイルの種類も含めて判定するようにしました。対象種類の変更がない run は適用外として受理し、対象変更がある run の誤申告は従来どおり拒否します（PJR-8WBN）。
+- executor が親検証と同じコマンドを `not_applicable` または `not_run` と報告しても、同じリポジトリで親 runner が実行した結果を正とするようにしました。親検証が成功している run が executor の重複報告によって `waiting` で止まる問題を解消し、親検証でない誤った `not_applicable` は従来どおり拒否します（PJR-7AW0）。
+- exec の雛形を展開するときに、2 行以上続く空行を 1 行にまとめるようにしました。夜間の承認の印（autopilot）がない個票の register の plan では制約の段落が空に展開されて空行が重なり、plan を commit する hook の markdownlint（MD012）で `exec run --register` が止まっていました。agent の Job の plan や保守系の plan など、ほかの雛形で段落が空に展開される場合も同じくまとめます（PJR-283N）。
+- runner の git の操作が `.git/index.lock` の取り合い（`Unable to create '...index.lock': File exists`、日本語のメッセージを含む）で失敗した場合のやり直しを、合計 0.75 秒ほどから 1.5 秒間隔で最大 10 回へ広げ、やり直すたびに警告を出すようにしました。並行の run の統合や記帳と重なっただけで統合が止まり run が `waiting` になる問題を減らします。上限に達した場合は従来どおり失敗として報告し、残っていたロックのファイルのパスをメッセージの先頭に含めます。ロックのファイルは消しません（PJR-G90K）。
+- result（edit・review・post-review）で reporter が返した文を箇条書きに描くとき、文の先頭の `1.`・`1)`・`-` などのリスト記号を外すようにしました。review の agent が判断の根拠に自分で番号を付けると `- 1. ...` が入れ子の番号付きリストになり、post-review の記帳の commit が hook の markdownlint（MD029）で失敗して、close の記帳が作業ツリーに残っていました（PJR-0EFN）。
+- commit の失敗を hook の出力から要約するとき、最初に出力された step ではなく、lefthook の summary で失敗の印が付いた step と、その出力のうち error を含む最初の行を報告するようにしました。post-review の記帳の commit が失敗したときは、失敗した hook の名前・最初のエラーの行・作業ツリーに残った記帳のファイル・hook の全出力のログ（`post-review-commit.log`）を runner のログに出します（PJR-0EFN）。
+- `not_applicable` の判定で、プロダクトリポジトリを `$SPECDOJO_REPO_<NAME>`・`${SPECDOJO_REPO_<NAME>}` で指すコマンドを、そのリポジトリのコマンドとして扱うようにしました（PJR-E412）。
+
+### 文書
+
+- README・ドキュメントサイトのトップ・全体概要ガイド・遂行の技活用ガイドで、呼び方の表記を「Spec道（仕様道）の道場」に揃えました（PJR-EVAX）。
+- Quick Start ガイドの導入手順で、Dev Container を作成し推奨 preset（tmux・Emacs・Vim・推奨の VS Code 拡張と設定・`.vscode/extensions.json`）を適用する対話例と、`devcontainer scaffold --preset recommended` の例に揃えました。コンテナを開く方法や、Dev Container を使わずに進める手順、`init --yes --devcontainer` で推奨 preset が入る説明も補記しました（PJR-SVHF）。
+- README の「会話で操作する」の例で、オーケストレーターの発言をコマンドの提示から、何をするか・中身・影響を日本語で示して承認を求める形に改めました。コマンドは既定では見せず求めたときに見せる説明に合わせました（PJR-7P27）。
+
 ## [0.4.0] - 2026-10-18
 
 同梱パッケージは `@specdojo/docs-lint` 0.2.1 を同時に公開します。docs-lint は 0.2.0 以降の変更（js-yaml の 5.4.3 への更新。引用符なしの日付と merge key は 4 系と同じ規則で読み込みます。PJR-RCVS）を含みます。`@specdojo/docs-site` は、この版では公開しません。

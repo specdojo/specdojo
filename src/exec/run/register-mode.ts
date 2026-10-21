@@ -30,6 +30,7 @@ import {
 } from "./shared.js";
 import { loadRosterForExecutionPath } from "./agent.js";
 import {
+  applyRegisterDifficultyRouting,
   resolveRegisterCommand,
   isRegisterPipelineRequested,
   parseRegisterExecutorSelection,
@@ -40,6 +41,7 @@ import {
 } from "./register-core.js";
 import { runSingleRegisterItemWorktree } from "./register-worktree.js";
 import { resumeSingleRegisterItemWorktree } from "./register-resume.js";
+import { resolveRegisterPostReviewAgents } from "./register-post-review.js";
 
 // register 項目の実行（複数ID）。in-place モードは指定順に1件ずつ直列実行し、各IDが plan/result
 // 生成・start・agent実行・review/waiting 遷移まで完結してから次へ進む。worktree モードは成果物を
@@ -80,35 +82,53 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
     process.stdout.write("No matching register items.\n");
     return;
   }
-  const hasExecutorSelection = executorSelection.kind !== "none";
-  const optsForItem = (pjrId: string): RunOpts => ({
-    ...opts,
-    executorBy: selectedRegisterExecutor(executorSelection, pjrId),
-  });
   for (const duplicate of duplicates) {
     process.stdout.write(`Skipping duplicate register item id: ${duplicate}\n`);
   }
   const failureMode: RegisterFailureMode = opts.onFailure
     ? (opts.onFailure as RegisterFailureMode)
     : "stop";
-  // --executor-by / --reporter-by は両方揃って初めて pipeline モードになる。片方だけの指定は
-  // 曖昧なため、実行前に明示的なエラーで止める（isRegisterPipelineRequested は片方でも true を
-  // 返すため、resolveRegisterPipelineCommand 側の対称チェックとは別に、ここで早期に検知する）。
-  // 再開は state が示す段だけを実行する。stale executor の再実行では各 agent の明示指定を
-  // 個別に許可し、省略時は state に記録された actor を使う。
-  if (
-    !opts.resume &&
-    ((hasExecutorSelection && !opts.reporterBy) || (!hasExecutorSelection && opts.reporterBy))
-  ) {
-    throw new Error("--register pipeline execution requires both --executor-by and --reporter-by.");
-  }
-
   const roster = loadRosterForExecutionPath(executionPath);
   const execDefaults = loadExecDefaultsConfig(
     resolveExecDefaultsPath(opts, schedulePath),
     executionPath,
   );
+  const optsForItem = (pjrId: string): RunOpts => {
+    const { item } = resolveRegisterRunTarget(projectId, pjrId);
+    const itemOptions: RunOpts = {
+      ...opts,
+      executorBy: selectedRegisterExecutor(executorSelection, pjrId),
+    };
+    const routed = applyRegisterDifficultyRouting(item, itemOptions, execDefaults);
+    // A resume without explicit stage overrides must keep the actors recorded in pipeline state.
+    // The route still supplies recovery behavior and fallbacks for those pinned actors.
+    return opts.resume
+      ? {
+          ...routed,
+          executorBy: itemOptions.executorBy,
+          reporterBy: itemOptions.reporterBy,
+        }
+      : routed;
+  };
+  // Validate the effective per-item selection before creating worktrees or changing register
+  // state. A route may supply the counterpart of one explicitly overridden stage.
+  if (!opts.resume) {
+    for (const pjrId of ids) {
+      const itemOpts = optsForItem(pjrId);
+      if (
+        (itemOpts.executorBy && !itemOpts.reporterBy) ||
+        (!itemOpts.executorBy && itemOpts.reporterBy)
+      ) {
+        throw new Error(
+          "--register pipeline execution requires both --executor-by and --reporter-by, either explicitly or from the item's difficulty route.",
+        );
+      }
+    }
+  }
   const useWorktree = !!opts.worktree;
+  const postReviewAgents = opts.postReview
+    ? resolveRegisterPostReviewAgents(roster, opts, execDefaults)
+    : undefined;
   const parallel = parseParallel(opts.parallel);
   const worktreeBase = resolveWorktreeBase(
     repoRoot,
@@ -176,12 +196,20 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
       process.stdout.write(
         `[dry-run]   plan: ${join(executionPath, "exec", "plans", `${stem}-plan.md`)}\n`,
       );
+      if (postReviewAgents) {
+        process.stdout.write(
+          `[dry-run]   post-review executor: ${postReviewAgents.executor.actor}\n`,
+        );
+        process.stdout.write(
+          `[dry-run]   post-review reporter: ${postReviewAgents.reporterCandidates[0]?.actor}\n`,
+        );
+      }
     }
     process.stdout.write(
       `[dry-run] cwd: ${useWorktree ? `${worktreeBase}/<worktree>` : repoRoot}\n`,
     );
     process.stdout.write(
-      `[dry-run] transitions: start (in-progress) → review on success / waiting on failure\n`,
+      `[dry-run] transitions: start (in-progress) → review on success / waiting on failure${postReviewAgents ? "; after integration, post-review closes eligible todo/issue items or returns incomplete items to waiting" : ""}\n`,
     );
     return;
   }
@@ -201,6 +229,7 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
     // ロックディレクトリの枠で統制する。
     providerConcurrencyGate: new ProviderConcurrencyGate(execDefaults, execLocksDir(executionPath)),
     registerCommit: !!opts.registerCommit,
+    postReview: !!opts.postReview,
     worktree: useWorktree,
     worktreeBase,
   };

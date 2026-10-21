@@ -32,6 +32,43 @@ const srcFeatureDirectories = [
 ];
 const srcFeatureImportRegex = `^(?:\\.\\./)+(?:${srcFeatureDirectories.join("|")})(?:/|$)|^(?:\\.\\./)+specdojo(?:\\.js)?$`;
 const cliImportRegex = "^(?:\\.\\./)+(?:commands(?:/|$)|specdojo(?:\\.js)?$)";
+const cliImportPattern = {
+  regex: cliImportRegex,
+  message: "Feature modules must not import src/commands or src/specdojo.ts.",
+};
+
+const featureDirectionRules = [
+  {
+    files: ["src/register/**/*.ts"],
+    forbidden: "exec",
+    feature: "register",
+  },
+  {
+    files: ["src/schedule/**/*.ts"],
+    forbidden: "exec",
+    feature: "schedule",
+  },
+  {
+    files: ["src/job/**/*.ts"],
+    forbidden: "exec",
+    feature: "job",
+  },
+  {
+    files: ["src/grade/**/*.ts"],
+    forbidden: "exec",
+    feature: "grade",
+  },
+  {
+    files: ["src/review/**/*.ts"],
+    forbidden: "grade",
+    feature: "review",
+  },
+  {
+    files: ["src/docs/**/*.ts"],
+    forbidden: "catalog",
+    feature: "docs",
+  },
+];
 
 export default tseslint.config(
   { ignores: ["dist/**", "node_modules/**", "**/*.d.ts"] },
@@ -92,16 +129,30 @@ export default tseslint.config(
       "no-restricted-imports": [
         "error",
         {
+          patterns: [cliImportPattern],
+        },
+      ],
+    },
+  },
+
+  // Direction rules between feature pairs to prevent cycles (PJR-QQKY / PJR-WSET).
+  ...featureDirectionRules.map(({ files, forbidden, feature }) => ({
+    files,
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
           patterns: [
+            cliImportPattern,
             {
-              regex: cliImportRegex,
-              message: "Feature modules must not import src/commands or src/specdojo.ts.",
+              regex: `^(?:\\.\\./)+${forbidden}(?:/|$)`,
+              message: `Modules under src/${feature} must not import src/${forbidden}.`,
             },
           ],
         },
       ],
     },
-  },
+  })),
 
   // packages/docs-lint
   {

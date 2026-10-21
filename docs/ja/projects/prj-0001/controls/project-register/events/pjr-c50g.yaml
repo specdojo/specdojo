@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_41fe28b6fa194c058d172fb26c113564
+  ts: "2026-10-20T12:03:24Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: オーケストレーターの本文に、実行の運び方・close の前の確かめ方・止まったときの対処を書く
+    - field: description
+      from: ""
+      to: 2026-10-18〜20 の運用で分かった一般的な勘どころを、配布するオーケストレーターの本文（.agents/specdojo-orchestrator.agent.md と 4 つのラッパー）に書く。実行の運び方（worktree・並行の上限・background と通知・自分に一致する pkill を避ける・dist の作り直し）、commit の作法（register の --commit を使い、統合中は普通の commit を避ける）、close の前の確かめ方（完了条件と差分の突き合わせ、agent の報告を実物で確かめる、保護された設定、runner を変えた項目の動作確認）、止まったときの対処の表、完了条件の書き方、agent は振り分けの設定に従って選ぶこと（2026-10-20、利用者が承認）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_0229f355292c4caf9af0fba7d0f9d6d6
+  ts: "2026-10-20T12:45:47Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_41fe28b6fa194c058d172fb26c113564
+- v: 1
+  id: reg_084b75110bf94781af34f97e46e30138
+  ts: "2026-10-20T12:58:37Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration"
+  previous_event_id: reg_0229f355292c4caf9af0fba7d0f9d6d6
+- v: 1
+  id: reg_c185caca892e4bd4aacc4c1c182e07ab
+  ts: "2026-10-20T13:03:40Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration"
+      to: "-"
+  previous_event_id: reg_084b75110bf94781af34f97e46e30138
+- v: 1
+  id: reg_ae3134a43f9f47c5b8c59d1d496772e8
+  ts: "2026-10-20T13:09:52Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: test -w .agents/specdojo-orchestrator.agent.md && test -w .codex/agents/specdojo-orchestrator.toml // exit 1"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: test -w .agents/specdojo-orchestrator.agent.md && test -w .codex/agents/specdojo-orchestrator.toml // exit 1"
+  previous_event_id: reg_c185caca892e4bd4aacc4c1c182e07ab
+- v: 1
+  id: reg_8157fa6148984f6d9440ae09824fcaa5
+  ts: "2026-10-20T21:29:50Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: done
+  reason: 利用者が実装者にオーケストレーターを指定し、feature/prj-0001/orchestrator-prompt-operations で書いた。同期の検査と単体テストを通し、利用者の確認を得て develop へ取り込んだ
+  changes:
+    - field: status
+      from: waiting
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: オーケストレーター本文に、承認の聞き方・実行の運び方・close の前の確かめ方・止まったときの対処・完了条件の書き方・agent の選び方と、--by で受け付ける名前を加え、10 か所の写しへ同期した
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: test -w .agents/specdojo-orchestrator.agent.md && test -w .codex/agents/specdojo-orchestrator.toml // exit 1"
+      to: "-"
+  previous_event_id: reg_ae3134a43f9f47c5b8c59d1d496772e8

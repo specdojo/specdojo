@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_12e76b6b0e1a4072a5d0c8b998678c77
+  ts: "2026-10-18T13:47:40Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: 公開されたパッケージ・Actions の結果・npm の gitHead を確認した
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: "範囲の 14 件を close し、specdojo 0.4.0 と @specdojo/docs-lint 0.2.1 を 2026-10-18 に公開した（PR #16 の merge commit 445e611d0、npm run check を通した develop の d56af8fc8 と同じ内容）。公開の workflow と GitHub Pages の deploy は成功し、公開された 0.4.0 を空のリポジトリへ入れて init で 2 段構成の名簿と接続のサンプルが作られることを確かめた。tarball での導入の確認で、新しいリポジトリの最初の実行が止まる不具合 2 件（PJR-Z104・PJR-6EF8）を見つけて公開前に直した"
+  previous_event_id: reg_74dfacc951bf4f738b05a518c356d659

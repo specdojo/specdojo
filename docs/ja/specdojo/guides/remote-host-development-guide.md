@@ -54,11 +54,13 @@ SpecDojo は自律実行を前提とします。次の 2 つが作業端末の�
 利用リポジトリに `.devcontainer/` がない場合は、指定した provider の CLI を含む最小構成を生成できます。まず dry-run で対象を確認します。
 
 ```bash
-npx specdojo devcontainer scaffold --provider claude,codex --dry-run
-npx specdojo devcontainer scaffold --provider claude,codex
+npx specdojo devcontainer scaffold --provider claude,codex --preset recommended --dry-run
+npx specdojo devcontainer scaffold --provider claude,codex --preset recommended
 ```
 
-既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。Ollama 接続、コンテナ内の cron、コンテナ内の tmux が必要な場合だけ `--ollama`、`--cron`、`--tmux` を追加します。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、`--tmux` は不要です。
+`recommended` preset は、端末版 Emacs と Vim（既存設定を上書きしない雛形）、tmux、SpecDojo の文書作業向け VS Code 拡張をまとめて追加します。拡張は Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML で、選択した provider の拡張もその provider の分だけ追加します。Markdown と YAML は保存時に Prettier で整形し、主要な SpecDojo YAML を `docs/specdojo/schemas/v1/` の schema へ関連付けます。同じ拡張は `.vscode/extensions.json` の recommendation にも追加されます。
+
+既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。preset を使わない場合、Ollama 接続、コンテナ内の cron、コンテナ内の tmux が必要なときだけ `--ollama`、`--cron`、`--tmux` を追加します。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、tmux を含めない個別指定も選べます。
 
 生成する `devcontainer.json` は、利用リポジトリ単体ではなく、その親ディレクトリをホスト側と同じ名前の `/workspaces/<親名>` へマウントします。例えば `app1-workspace/app1-specdojo` の作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成では `repos` の参照先（例: `../app1`）と `worktree_base`（例: `../app1-specdojo-worktrees`）が利用リポジトリの外にあるためです。これらの Git リポジトリと worktree は `safe.directory` の対象になります。一方、同じ親ディレクトリに置いたその他のファイルもコンテナから見えるため、秘密情報などコンテナへ公開しないファイルは別の場所へ置いてください。
 
@@ -75,9 +77,33 @@ npx specdojo devcontainer scaffold --provider claude,codex --editor emacs
 scaffold は、常時稼働ホストへの接続と tmux セッションの維持に使えるサンプルを `.devcontainer/remote-host/` に生成します。
 
 - `specdojo-tmux.sh.sample`: 常時稼働ホストの `~/bin/specdojo-tmux.sh` などへコピーし、実行権限（`chmod +x`）を付与して使います。devcontainer が停止していれば `devcontainer up` で起動し、コンテナ内の tmux セッション（`specdojo`）へ接続します。ホスト名や作業パスはプレースホルダーになっているため、ホストの環境に合わせて調整してください。
-- `ssh-config.sample`: 接続元端末の `~/.ssh/config` へ追加して使います。ホストへの通常接続エイリアスと、`RemoteCommand` と `RequestTTY force` で `specdojo-tmux.sh` を直接呼び出すエイリアス（`Host <host>-tmux`）を含みます。
+- `ssh-config.sample`: 接続元端末の `~/.ssh/config` へ追加して使います。ホストへの通常接続エイリアスと、`RemoteCommand` と `RequestTTY force` で `specdojo-tmux.sh` を直接呼び出すエイリアス（`Host <host>-tmux`）を含みます。`RemoteCommand` では端末の `PATH` の設定が読み込まれないため、接続元から `ssh <host> 'command -v devcontainer'` を実行して Dev Container CLI が見つかるか確かめられます。
 
 `devcontainer.json` の `appPort` や `forwardPorts` で開発サーバなどの公開ポートを設定している場合は、接続用エイリアスに `LocalForward` の行が含まれます。開発サーバのポートを増やしたときは、`~/.ssh/config` の tmux 接続用エイリアスにも `LocalForward <ポート> 127.0.0.1:<ポート>` を追加してください。
+
+生成される `devcontainer.json` は `remoteEnv` で `/home/node/.local/bin`（利用者が別の場合は `/home/<remoteUser>/.local/bin`）を `PATH` の先頭に追加するため、コンテナ作成後に開く端末や VS Code のターミナルでも `~/.local/bin` に入った Claude Code などの CLI がそのまま利用できます。
+
+### 2.2. 生成した Dev Container をホストで実地確認する
+
+SpecDojo 本体の開発者は、Docker daemon と Dev Container CLI を利用できる Mac のホストで、次の E2E を実行できます。ホストとコンテナで `node_modules` を共有しているため `tsx` は使えません。スクリプトは Node の標準ライブラリだけを使っており、Node 22.18 以上（型を外して直接動かせる版）が必要です。
+
+```bash
+node tools/e2e/devcontainer-host-e2e.ts
+```
+
+このスクリプトは、手元のソースを npm tarball にし、新しい一時リポジトリで `specdojo init --yes --provider claude --devcontainer` と `devcontainer up` を実行します。作成したコンテナでは、利用者、`~/.local/bin` の所有者、tmux、Vim、Emacs、Claude Code CLI の配置を項目ごとに検査します。また、agent にホストの権限を渡さない前提を守るため、開発用コンテナに Docker CLI がないことも検査します。
+
+通常は、検査の成否にかかわらず一時ディレクトリ、コンテナ、テスト用の名前付き volume、テストで新しく作られた container image を最後に削除します。失敗状態を調べる場合は `--keep` を付けて残し、表示された一時ディレクトリと Docker resource を調査後に手動で削除してください。
+
+```bash
+node tools/e2e/devcontainer-host-e2e.ts --keep
+```
+
+Docker または Dev Container CLI を利用できない場合、スクリプトは確認コマンドと Dev Container CLI の導入方法を表示し、終了コード 1 で終了します。Dev Container CLI は次のコマンドで導入できます。
+
+```bash
+npm install --global @devcontainers/cli
+```
 
 ## 3. 構成例
 
@@ -165,11 +191,31 @@ Host <ホスト名>
 
 ### 6.2. 実行環境の起動に失敗する
 
-SSH 経由の非対話シェルでは `PATH` が対話シェルと異なることがあり、コンテナ起動用のコマンドが見つからない場合があります。接続元から次を実行して確認します。
+SSH 経由の非対話シェル（`RemoteCommand` など）では、ログインシェルや対話端末で読み込まれる `~/.zshrc` などの `PATH` の設定が読み込まれないため、コンテナ起動用のコマンドが見つからない場合があります。接続元から次を実行して確認します。
 
 ```bash
-ssh <ホスト名> 'printf "PATH=%s\n" "$PATH"; command -v node || true'
+ssh <ホスト名> 'command -v devcontainer'
 ```
+
+`devcontainer` が見つからない場合は、ホスト側の通常端末で `dirname "$(command -v devcontainer)"` を実行して場所を確認し、`specdojo-tmux.sh` の `node_bin_dir` に設定してください。詳細な `PATH` を確認する場合は次を実行します。
+
+```bash
+ssh <ホスト名> 'printf "PATH=%s\n" "$PATH"; command -v node || true; command -v devcontainer || true'
+```
+
+### 6.3. コンテナ内の端末で ~/.local/bin の CLI が見つからない
+
+v0.4.0 などで生成した Dev Container 環境では、`devcontainer.json` に `remoteEnv` がないため、コンテナ作成後に開く端末や VS Code のターミナルで `~/.local/bin` が `PATH` に入らず、Claude Code などの CLI が見つからない場合があります。
+
+既存の環境を修正するには、`.devcontainer/devcontainer.json` に `remoteEnv` を追加（または既存の `remoteEnv` に `PATH` を追加）し、コンテナをリビルドしてください。
+
+```json
+  "remoteEnv": {
+    "PATH": "/home/node/.local/bin:${containerEnv:PATH}"
+  }
+```
+
+コンテナ内の利用者が `node` 以外の場合は、`/home/<remoteUser>/.local/bin` に合わせてください。
 
 ## 7. 運用上のセキュリティ
 

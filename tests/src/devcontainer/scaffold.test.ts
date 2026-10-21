@@ -63,6 +63,9 @@ describe("runDevcontainerScaffold", () => {
       if (file.endsWith("init.el")) {
         return Promise.resolve(";;; bundled Emacs defaults");
       }
+      if (file.endsWith("vimrc")) {
+        return Promise.resolve("set number\n");
+      }
       if (file.endsWith("specdojo-tmux.sh.sample")) {
         return Promise.resolve("#!/usr/bin/env bash\necho sample");
       }
@@ -166,6 +169,9 @@ describe("runDevcontainerScaffold", () => {
     expect(json.mounts).toContain(
       "source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume",
     );
+    expect(json.remoteEnv).toEqual({
+      PATH: "/home/node/.local/bin:${containerEnv:PATH}",
+    });
   });
 
   it("should mount the workspace parent and trust its repositories and worktrees", async () => {
@@ -213,6 +219,70 @@ describe("runDevcontainerScaffold", () => {
     expect(script).toContain('SAFE_DIRECTORY_SCOPE="${WORKSPACE_PARENT}/*"');
     expect(script).toContain('"$WORKSPACE_DIR" "$SAFE_DIRECTORY_SCOPE"');
     expect(script).toContain('git config --global --add safe.directory "$SAFE_DIRECTORY_SCOPE"');
+    expect(script).toContain('"${HOME}/.local"');
+    expect(script).toContain('"${HOME}/.local/share"');
+    expect(script).toContain('"${HOME}/.config"');
+    expect(script).toContain('sudo chown "$(id -u):$(id -g)" "$parent"');
+    expect(script).toContain('sudo chown -R "$(id -u):$(id -g)" "$dir"');
+    expect(script).toContain('mkdir -p "${HOME}/.local/bin"');
+    expect(script).toContain('export PATH="${HOME}/.local/bin:${PATH}"');
+  });
+
+  it("restores mount parent ownership non-recursively and creates ~/.local/bin before installers", async () => {
+    const actualFs = await vi.importActual<typeof fs>("node:fs");
+    const postCreateTemplate = actualFs.readFileSync(
+      path.join(process.cwd(), "templates/devcontainer/post-create.sh"),
+      "utf8",
+    );
+    readFileMock.mockImplementation(async (p) => {
+      const file = String(p);
+      if (file.endsWith("devcontainer.json")) {
+        return Promise.resolve(
+          JSON.stringify({
+            workspaceMount:
+              "source=${localWorkspaceFolder}/..,target=/workspaces/__SPECDOJO_WORKSPACE_NAME__,type=bind,consistency=cached",
+            workspaceFolder:
+              "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
+            features: {},
+            mounts: [],
+            containerEnv: {},
+            postCreateCommand: "bash .devcontainer/post-create.sh",
+          }),
+        );
+      }
+      if (file.endsWith("post-create.sh")) return Promise.resolve(postCreateTemplate);
+      if (file.endsWith("specdojo-tmux.sh.sample")) {
+        return Promise.resolve("#!/usr/bin/env bash\necho sample");
+      }
+      return Promise.resolve("");
+    });
+
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: ["claude"],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const script = String(findWriteCall("post-create.sh")[1]);
+    expect(script).toMatch(
+      /for parent in \\\s+"[^"]*\.local" \\\s+"[^"]*\.local\/share" \\\s+"[^"]*\.config"; do\s+if \[ -d "\$parent" \]; then\s+sudo chown "\$\(id -u\):\$\(id -g\)" "\$parent"/,
+    );
+    expect(script).toMatch(
+      /for dir in \\\s+"[^"]*\.config\/git"[\s\S]*sudo chown -R "\$\(id -u\):\$\(id -g\)" "\$dir"/,
+    );
+    expect(script).toContain('mkdir -p "${HOME}/.local/bin"');
+    expect(script).toContain('export PATH="${HOME}/.local/bin:${PATH}"');
+
+    const mkdirIndex = script.indexOf('mkdir -p "${HOME}/.local/bin"');
+    const installerIndex = script.indexOf("https://claude.ai/install.sh");
+    expect(mkdirIndex).toBeGreaterThan(-1);
+    expect(installerIndex).toBeGreaterThan(mkdirIndex);
   });
 
   it("should add tmux and cron features", async () => {
@@ -339,6 +409,119 @@ describe("runDevcontainerScaffold", () => {
     expect(initCall[1]).toBe(";;; bundled Emacs defaults");
   });
 
+  it("should combine the recommended preset with explicit options", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      preset: "recommended",
+      providers: ["codex"],
+      editors: ["emacs"],
+      ollama: false,
+      cron: true,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+    const aptPackages =
+      json.features["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"].packages;
+    expect(aptPackages.split(",").filter((item: string) => item === "emacs-nox")).toHaveLength(1);
+    expect(aptPackages).toContain("vim-nox");
+    expect(aptPackages).toContain("tmux");
+    expect(aptPackages).toContain("cron");
+    expect(json.customizations.vscode.extensions).toEqual(
+      expect.arrayContaining([
+        "mhutchie.git-graph",
+        "davidanson.vscode-markdownlint",
+        "redhat.vscode-yaml",
+        "esbenp.prettier-vscode",
+        "unifiedjs.vscode-remark",
+        "yzhang.markdown-all-in-one",
+        "streetsidesoftware.code-spell-checker",
+        "editorconfig.editorconfig",
+        "usernamehw.errorlens",
+        "tamasfe.even-better-toml",
+        "openai.chatgpt",
+      ]),
+    );
+    expect(json.customizations.vscode.extensions).not.toContain("anthropic.claude-code");
+    expect(json.customizations.vscode.settings["[markdown]"]).toMatchObject({
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true,
+    });
+    expect(json.customizations.vscode.settings["[yaml]"]).toMatchObject({
+      "editor.defaultFormatter": "esbenp.prettier-vscode",
+      "editor.formatOnSave": true,
+    });
+    expect(json.customizations.vscode.settings["yaml.schemas"]).toHaveProperty(
+      "./docs/specdojo/schemas/v1/exec-defaults.schema.yaml",
+      ".specdojo/exec-defaults.yaml",
+    );
+
+    expect(findWriteCall("vimrc")[1]).toBe("set number\n");
+    const script = String(findWriteCall("post-create.sh")[1]);
+    expect(script).toContain('[ ! -f "$HOME/.vimrc" ]');
+    expect(script).toContain('[ ! -f "$HOME/.vim/vimrc" ]');
+    expect(script).toContain('cp .devcontainer/vim/vimrc "$HOME/.vimrc"');
+
+    const extensions = JSON.parse(String(findWriteCall("extensions.json")[1]));
+    expect(extensions.recommendations).toEqual(json.customizations.vscode.extensions);
+  });
+
+  it("should preserve existing VS Code extension recommendations and add only missing ones", async () => {
+    existsSyncMock.mockImplementation((p) => {
+      const file = String(p);
+      if (file.endsWith(".vscode/extensions.json")) return true;
+      if (file.includes("/repo/.devcontainer")) return false;
+      return file.includes("templates");
+    });
+    const originalReadFile = readFileMock.getMockImplementation();
+    readFileMock.mockImplementation(async (p) => {
+      if (String(p).endsWith(".vscode/extensions.json")) {
+        return JSON.stringify({ recommendations: ["existing.extension", "mhutchie.git-graph"] });
+      }
+      return originalReadFile?.(p) ?? "";
+    });
+
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      preset: "recommended",
+      providers: [],
+      editors: [],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const extensions = JSON.parse(String(findWriteCall("extensions.json")[1]));
+    expect(extensions.recommendations[0]).toBe("existing.extension");
+    expect(
+      extensions.recommendations.filter((extension: string) => extension === "mhutchie.git-graph"),
+    ).toHaveLength(1);
+  });
+
+  it("should reject an unknown preset", async () => {
+    await expect(
+      runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        preset: "unknown",
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      }),
+    ).rejects.toThrow("Unknown Dev Container preset: unknown");
+    expect(writeFileMock).not.toHaveBeenCalled();
+  });
+
   it("should install the Emacs init where Emacs will load it without overwriting user config", async () => {
     await runDevcontainerScaffold({
       packageRoot,
@@ -422,6 +605,68 @@ describe("runDevcontainerScaffold", () => {
           expect(actualFs.existsSync(configInit)).toBe(false);
           expect(actualFs.existsSync(legacyInit)).toBe(false);
           expect(result.stdout).not.toContain("Installed Emacs init:");
+        }
+      }
+    } finally {
+      actualFs.rmSync(temporaryRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("should install the Vim config only when the user has no existing Vim config", async () => {
+    await runDevcontainerScaffold({
+      packageRoot,
+      repoRoot,
+      providers: [],
+      editors: ["vim"],
+      ollama: false,
+      cron: false,
+      tmux: false,
+      force: false,
+      dryRun: false,
+    });
+
+    const script = String(findWriteCall("post-create.sh")[1]);
+    const actualFs = await vi.importActual<typeof fs>("node:fs");
+    const temporaryRoot = actualFs.mkdtempSync(path.join(os.tmpdir(), "specdojo-vim-home-"));
+    const fakeBin = path.join(temporaryRoot, "bin");
+    actualFs.mkdirSync(fakeBin);
+    actualFs.writeFileSync(path.join(fakeBin, "npm"), "#!/usr/bin/env bash\nexit 0\n", {
+      mode: 0o755,
+    });
+
+    const cases = [
+      { name: "empty", existingPath: undefined, expectInstalled: true },
+      { name: "vimrc", existingPath: ".vimrc", expectInstalled: false },
+      { name: "vim-directory", existingPath: ".vim/vimrc", expectInstalled: false },
+    ];
+
+    try {
+      for (const testCase of cases) {
+        const home = path.join(temporaryRoot, testCase.name);
+        const workspace = path.join(home, "workspace");
+        actualFs.mkdirSync(path.join(workspace, ".devcontainer", "vim"), { recursive: true });
+        actualFs.writeFileSync(path.join(workspace, ".devcontainer", "vim", "vimrc"), "bundled");
+        if (testCase.existingPath) {
+          const existingPath = path.join(home, testCase.existingPath);
+          actualFs.mkdirSync(path.dirname(existingPath), { recursive: true });
+          actualFs.writeFileSync(existingPath, "user config");
+        }
+
+        const result = spawnSync("bash", ["-c", script], {
+          cwd: workspace,
+          encoding: "utf8",
+          env: { ...process.env, HOME: home, PATH: `${fakeBin}:${process.env.PATH ?? ""}` },
+        });
+
+        expect(result.status, `${testCase.name}: ${result.stderr}`).toBe(0);
+        const vimrc = path.join(home, ".vimrc");
+        if (testCase.expectInstalled) {
+          expect(actualFs.readFileSync(vimrc, "utf8")).toBe("bundled");
+          expect(result.stdout).toContain(`Installed Vim config: ${vimrc}`);
+        } else if (testCase.existingPath === ".vimrc") {
+          expect(actualFs.readFileSync(vimrc, "utf8")).toBe("user config");
+        } else {
+          expect(actualFs.existsSync(vimrc)).toBe(false);
         }
       }
     } finally {
@@ -547,6 +792,140 @@ describe("runDevcontainerScaffold", () => {
     expect(writeFileMock).not.toHaveBeenCalled();
   });
 
+  describe("remoteEnv configuration", () => {
+    it("should prepend ~/.local/bin to PATH and preserve other remoteEnv variables", async () => {
+      readFileMock.mockImplementation(async (p) => {
+        const file = String(p);
+        if (file.endsWith("devcontainer.json")) {
+          return Promise.resolve(
+            JSON.stringify({
+              remoteUser: "testuser",
+              workspaceMount: "source=...,target=...",
+              workspaceFolder: "...",
+              features: {},
+              mounts: [],
+              containerEnv: {},
+              remoteEnv: {
+                CUSTOM_VAR: "custom_value",
+                ANOTHER_VAR: "another_value",
+              },
+            }),
+          );
+        }
+        if (file.endsWith("post-create.sh")) return Promise.resolve("npm install");
+        if (file.endsWith("specdojo-tmux.sh.sample")) {
+          return Promise.resolve("#!/usr/bin/env bash\necho sample");
+        }
+        return Promise.resolve("");
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+      expect(json.remoteEnv).toEqual({
+        CUSTOM_VAR: "custom_value",
+        ANOTHER_VAR: "another_value",
+        PATH: "/home/testuser/.local/bin:${containerEnv:PATH}",
+      });
+    });
+
+    it("should prepend ~/.local/bin when PATH is already in remoteEnv", async () => {
+      readFileMock.mockImplementation(async (p) => {
+        const file = String(p);
+        if (file.endsWith("devcontainer.json")) {
+          return Promise.resolve(
+            JSON.stringify({
+              remoteUser: "node",
+              workspaceMount: "source=...,target=...",
+              workspaceFolder: "...",
+              features: {},
+              mounts: [],
+              containerEnv: {},
+              remoteEnv: {
+                PATH: "/opt/custom/bin:${containerEnv:PATH}",
+              },
+            }),
+          );
+        }
+        if (file.endsWith("post-create.sh")) return Promise.resolve("npm install");
+        if (file.endsWith("specdojo-tmux.sh.sample")) {
+          return Promise.resolve("#!/usr/bin/env bash\necho sample");
+        }
+        return Promise.resolve("");
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+      expect(json.remoteEnv).toEqual({
+        PATH: "/home/node/.local/bin:/opt/custom/bin:${containerEnv:PATH}",
+      });
+    });
+
+    it("should not duplicate ~/.local/bin when it is already in PATH", async () => {
+      readFileMock.mockImplementation(async (p) => {
+        const file = String(p);
+        if (file.endsWith("devcontainer.json")) {
+          return Promise.resolve(
+            JSON.stringify({
+              remoteUser: "node",
+              workspaceMount: "source=...,target=...",
+              workspaceFolder: "...",
+              features: {},
+              mounts: [],
+              containerEnv: {},
+              remoteEnv: {
+                PATH: "/home/node/.local/bin:${containerEnv:PATH}",
+              },
+            }),
+          );
+        }
+        if (file.endsWith("post-create.sh")) return Promise.resolve("npm install");
+        if (file.endsWith("specdojo-tmux.sh.sample")) {
+          return Promise.resolve("#!/usr/bin/env bash\necho sample");
+        }
+        return Promise.resolve("");
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+      expect(json.remoteEnv).toEqual({
+        PATH: "/home/node/.local/bin:${containerEnv:PATH}",
+      });
+    });
+  });
+
   describe("remote-host sample generation", () => {
     it("extracts published ports from appPort and forwardPorts", () => {
       expect(
@@ -576,6 +955,10 @@ describe("runDevcontainerScaffold", () => {
       expect(config).toContain("Host <host>-tmux");
       expect(config).toContain("RequestTTY force");
       expect(config).toContain("RemoteCommand ~/bin/specdojo-tmux.sh");
+      expect(config).toContain(
+        "RemoteCommand は非対話シェルで動くため、接続先端末の ~/.zshrc などの PATH 設定は読み込まれません。",
+      );
+      expect(config).toContain("ssh <host> 'command -v devcontainer'");
       expect(config).toContain("# 例: LocalForward 5173 127.0.0.1:5173");
       expect(config).not.toMatch(/^\s*LocalForward/m);
     });
@@ -708,6 +1091,73 @@ describe("runDevcontainerScaffold", () => {
 
       expect(findWriteCall("specdojo-tmux.sh.sample")).toBeDefined();
       expect(findWriteCall("ssh-config.sample")).toBeDefined();
+    });
+
+    it("generates specdojo-tmux.sh.sample with -u flag and reflects remoteUser from devcontainer.json", async () => {
+      const actualFs = await vi.importActual<typeof fs>("node:fs");
+      const tmuxTemplate = actualFs.readFileSync(
+        path.join(process.cwd(), "templates/devcontainer/remote-host/specdojo-tmux.sh.sample"),
+        "utf8",
+      );
+      readFileMock.mockImplementation(async (p) => {
+        const file = String(p);
+        if (file.endsWith("devcontainer.json")) {
+          return Promise.resolve(
+            JSON.stringify({
+              remoteUser: "developer",
+              workspaceMount:
+                "source=${localWorkspaceFolder}/..,target=/workspaces/__SPECDOJO_WORKSPACE_NAME__,type=bind,consistency=cached",
+              workspaceFolder:
+                "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
+              mounts: [],
+            }),
+          );
+        }
+        if (file.endsWith("post-create.sh")) return Promise.resolve("npm install");
+        if (file.endsWith("specdojo-tmux.sh.sample")) {
+          return Promise.resolve(tmuxTemplate);
+        }
+        return Promise.resolve("");
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const tmuxCall = findWriteCall("specdojo-tmux.sh.sample");
+      const tmuxContent = String(tmuxCall[1]);
+      expect(tmuxContent).toContain('docker exec -it --detach-keys="ctrl-]" -u "$container_user"');
+      expect(tmuxContent).toContain('container_user="developer"');
+      expect(tmuxContent).toContain(
+        "remoteUser を変更した場合は、下記 container_user の値を変更してください。",
+      );
+      expect(tmuxContent).toContain('node_bin_dir="/absolute/path/to/node/bin"');
+      expect(tmuxContent).toContain(
+        'export PATH="$node_bin_dir:/opt/homebrew/bin:/usr/local/bin:$PATH"',
+      );
+      expect(tmuxContent).toContain('dirname "$(command -v devcontainer)"');
+      expect(tmuxContent).toContain('node_bin_dir="/opt/homebrew/bin"');
+      expect(tmuxContent).toContain('node_bin_dir="$HOME/.nvm/versions/node/v22.0.0/bin"');
+      expect(tmuxContent).toContain('node_bin_dir="$HOME/.local/share/mise/installs/node/24/bin"');
+      expect(tmuxContent).toContain(
+        'echo "Dev Container CLI is not installed or not in PATH." >&2',
+      );
+      expect(tmuxContent).toContain('echo "Current PATH: $PATH" >&2');
+      expect(tmuxContent).toContain(
+        'echo "Check the location on the host terminal with: dirname \\"\\$(command -v devcontainer)\\"" >&2',
+      );
+      expect(tmuxContent).toContain('echo "Docker command was not found in PATH." >&2');
+      expect(tmuxContent).toContain(
+        'echo "Check the location on the host terminal with: dirname \\"\\$(command -v docker)\\"" >&2',
+      );
     });
   });
 });

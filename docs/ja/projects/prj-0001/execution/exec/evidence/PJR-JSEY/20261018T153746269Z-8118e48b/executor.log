@@ -1,0 +1,11 @@
+個票の「対応結果」の表に、PJR-8WBN の行を 1 行追記しました。
+
+- **日時:** 2026-10-19 00:39。
+- **agent:** `sonnet-executor`。
+- **対象を PJR-8WBN とした根拠:** `git log` で PJR-8WBN の `exec(register PJR-8WBN): review` が確認できました。完了条件の対象一覧のうち、最も新しく統合された項目と判断しました。`pjr-index.md` がこの worktree に無く、登録簿の状態は確認できていません。
+
+変更したのは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。lint や型検査などの親の検証は、plan どおり親の runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果表に PJR-8WBN の行（2026-10-19 00:39, sonnet-executor）を追記した。変更は個票のみ。","validations":[]}
+</specdojo_executor_evidence>

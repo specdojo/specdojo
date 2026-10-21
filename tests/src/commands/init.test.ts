@@ -100,6 +100,38 @@ describe("specdojo init", () => {
     expect(closed).toBe(true);
   });
 
+  it("asks for the recommended preset only after selecting a Dev Container", async () => {
+    const answers = ["", "", "", "", "", "", "", "yes", ""];
+    const prompts: string[] = [];
+    const prompter: InitPrompter = {
+      async question(prompt) {
+        prompts.push(prompt);
+        return answers.shift() ?? "";
+      },
+      close() {},
+    };
+
+    await expect(collectInitAnswers({}, prompter)).resolves.toMatchObject({
+      devcontainer: true,
+      devcontainerPreset: "recommended",
+    });
+    expect(prompts.at(-1)).toBe("Add the recommended Dev Container settings? [Y/n]: ");
+    expect(prompts).toHaveLength(9);
+  });
+
+  it("uses the recommended preset for --yes with --devcontainer and allows opting out", async () => {
+    await expect(collectInitAnswers({ yes: true, devcontainer: true })).resolves.toMatchObject({
+      devcontainer: true,
+      devcontainerPreset: "recommended",
+    });
+    await expect(
+      collectInitAnswers({ yes: true, devcontainer: true, devcontainerPreset: "none" }),
+    ).resolves.not.toHaveProperty("devcontainerPreset");
+    await expect(
+      collectInitAnswers({ yes: true, devcontainerPreset: "recommended" }),
+    ).rejects.toThrow("--devcontainer-preset requires --devcontainer");
+  });
+
   it("retries only an invalid interactive question and keeps earlier answers", async () => {
     const answers = [
       "project-1234",
@@ -211,6 +243,23 @@ describe("specdojo init", () => {
 
       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
       expect(defaults.pipeline?.parent_validations).toBeUndefined();
+      expect(defaults.routing).toEqual({
+        hard: {
+          executor_by: "codex-executor",
+          reporter_by: "codex-reporter",
+          on_rate_limit: "wait",
+        },
+        medium: {
+          executor_by: "codex-executor",
+          reporter_by: "codex-reporter",
+          on_rate_limit: "stop",
+        },
+        easy: {
+          executor_by: "codex-executor",
+          reporter_by: "codex-reporter",
+          on_rate_limit: "stop",
+        },
+      });
       expect(output.join("")).toContain(
         "Omitted pipeline.parent_validations: no supported npm scripts were found in package.json.",
       );
@@ -220,7 +269,9 @@ describe("specdojo init", () => {
       const packageJson = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
         scripts: Record<string, string>;
       };
-      expect(packageJson.scripts["orch:codex"]).toContain("specdojo/codex/orchestrator.md");
+      expect(packageJson.scripts["orch:sol"]).toContain("-m gpt-5.6-sol");
+      expect(packageJson.scripts["orch:terra"]).toContain("-m gpt-5.6-terra");
+      expect(packageJson.scripts["orch:codex"]).toBeUndefined();
       expect(output.join("")).toContain(
         "npx specdojo exec run --register <id> --executor-by codex-executor --reporter-by codex-reporter",
       );
@@ -326,8 +377,25 @@ describe("specdojo init", () => {
       );
       const defaults = load(readFileSync(join(repo, ".specdojo/exec-defaults.yaml"), "utf8")) as {
         providers: Record<string, unknown>;
+        routing: Record<string, Record<string, string>>;
       };
       expect(Object.keys(defaults.providers).sort()).toEqual(["claude", "copilot", "opencode"]);
+      expect(defaults.routing).toMatchObject({
+        hard: {
+          executor_by: "claude-executor",
+          reporter_by: "claude-reporter",
+          on_rate_limit: "wait",
+          fallback_executor_by: "opencode-executor",
+          fallback_reporter_by: "opencode-reporter",
+        },
+        medium: {
+          executor_by: "opencode-executor",
+          reporter_by: "opencode-reporter",
+          on_rate_limit: "fallback",
+          fallback_executor_by: "copilot-executor",
+          fallback_reporter_by: "copilot-reporter",
+        },
+      });
       expect(existsSync(join(repo, ".github/agents/specdojo-orchestrator.md"))).toBe(true);
     } finally {
       rmSync(repo, { recursive: true, force: true });
@@ -345,12 +413,10 @@ describe("specdojo init", () => {
       const executor = resolveAgentMember(roster, "agy-executor");
       expect(executor).toMatchObject({
         nickname: "flash-executor",
-        model: "gemini-3.8-flash-medium",
+        model: "gemini-3.8-flash-high",
       });
       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
-      expect(resolveMemberCommand(defaults, executor!)).toContain(
-        "--model gemini-3.8-flash-medium",
-      );
+      expect(resolveMemberCommand(defaults, executor!)).toContain("--model gemini-3.8-flash-high");
       expect(roster?.members.map((member) => member.model).join(" ")).not.toMatch(
         /gemini-3\.1-pro/,
       );
@@ -372,6 +438,27 @@ describe("specdojo init", () => {
 
       expect(output.join("")).toContain("Run npm run orch:opus");
       expect(output.join("")).not.toContain("Run npm run orch:sonnet");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it.each([
+    ["codex", "orch:sol", "orch:codex"],
+    ["antigravity", "orch:flash", "orch:agy"],
+  ])("recommends the model-family orchestrator for %s", async (provider, expected, legacy) => {
+    const repo = createRepo(`specdojo-init-${provider}-next-step-`);
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      output.push(String(chunk));
+      return true;
+    });
+    try {
+      process.chdir(repo);
+      await runInit({ yes: true, provider, dryRun: true });
+
+      expect(output.join("")).toContain(`Run npm run ${expected}`);
+      expect(output.join("")).not.toContain(`Run npm run ${legacy}`);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
@@ -404,6 +491,17 @@ describe("specdojo init", () => {
         devcontainer.features?.["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"]
           ?.packages,
       ).toContain("tmux");
+      expect(
+        devcontainer.features?.["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"]
+          ?.packages,
+      ).toContain("vim-nox");
+      expect(existsSync(join(repo, ".devcontainer/vim/vimrc"))).toBe(true);
+      expect(existsSync(join(repo, ".devcontainer/emacs/init.el"))).toBe(true);
+      const extensions = JSON.parse(
+        readFileSync(join(repo, ".vscode/extensions.json"), "utf8"),
+      ) as { recommendations: string[] };
+      expect(extensions.recommendations).toContain("openai.chatgpt");
+      expect(extensions.recommendations).toContain("davidanson.vscode-markdownlint");
       expect(existsSync(join(repo, ".devcontainer/remote-host/specdojo-tmux.sh.sample"))).toBe(
         true,
       );

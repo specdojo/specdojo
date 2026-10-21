@@ -58,12 +58,16 @@ CLI を直接操作する場合の代表フローは [遂行の技活用ガイ�
 | `orch:qwen:work`    | OpenCode / Qwen 3.8                   | `../worktrees/qwen-work`（無ければ自動作成）    |
 | `orch:gemma`        | OpenCode / Gemma 4                    | なし                                            |
 | `orch:gemma:work`   | OpenCode / Gemma 4                    | `../worktrees/gemma-work`（無ければ自動作成）   |
-| `orch:agy`          | Antigravity / `gemini-3.8-flash-high` | なし                                            |
-| `orch:agy:work`     | Antigravity / `gemini-3.8-flash-high` | `../worktrees/agy-work`（無ければ自動作成）     |
+| `orch:flash`        | Antigravity / `gemini-3.8-flash-high` | なし                                            |
+| `orch:flash:work`   | Antigravity / `gemini-3.8-flash-high` | `../worktrees/agy-work`（無ければ自動作成）     |
 
 Antigravity CLI（`agy`）はファイル定義の agent を持たないため、Codex と同じく SSOT `.agents/specdojo-orchestrator.agent.md` の本文を `-i`（初期プロンプトを与えて対話を続ける）で渡します。ラッパーは不要で、`.agents/rules/*.md` の薄いラッパー経由で `.github/instructions/` の規則も読み込まれます。
 
 Antigravity で使えるモデル ID は `agy models` で確認してください。配布時点の既定値は、agy 1.3.5 で提供される `gemini-3.8-flash-high` です。
+
+`specdojo init` と `config scaffold` が利用者の `package.json` へ追加するスクリプトは、Claude Code が `orch:opus`・`orch:sonnet`、Codex が `orch:sol`・`orch:terra`、Antigravity が `orch:flash`、OpenCode が `orch:opencode` です。Codex と Antigravity のスクリプトは、名前に対応するモデルを起動コマンドで明示します。
+
+0.4.0 以前に作った `orch:codex`・`orch:agy` は自動では削除・上書きされません。`config scaffold --provider codex` または `config scaffold --provider antigravity` を再実行して新しいスクリプトを追加し、新しい名前で起動できることを確認してから、旧スクリプトを `package.json` から削除してください。
 
 用途に応じて使い分けます。
 
@@ -80,7 +84,9 @@ npm run orch:sonnet:work
 
 frontier モデルは Claude Code が `opus`、Codex が `gpt-5.6-sol` に対応します。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使います。
 
-worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
+worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、そこから `specdojo orchestrator launch` を起動します。無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
+
+固定 worktree から起動しても、project 設定と `repos[].path` は主 worktree を基準に解決します。provider の作業ディレクトリは固定 worktree のままです。この受け渡しに使う内部用の `SPECDOJO_ORCHESTRATOR_CONFIG_ROOT` は provider 起動前に除去されるため、対話中に実行する別の `specdojo` コマンドへは引き継がれません。
 
 ### 2.1. 利用リポジトリへ設定を配置する
 

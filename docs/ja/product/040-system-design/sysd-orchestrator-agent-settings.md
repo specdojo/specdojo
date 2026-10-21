@@ -123,7 +123,8 @@ specdojo サブコマンドと引数へマッピング（必要なら --help で
 - Claude Code は `--agent specdojo-orchestrator --model <model>` で起動する。orchestrator の承認フローを維持するため `--permission-mode acceptEdits` は付けない。
 - Codex は対話 TUI に agent 選択フラグが無いため、SSOT 本文（`.agents/specdojo-orchestrator.agent.md`）を初期プロンプトとして渡し、`-m <model>` でモデルを指定する。承認・sandbox は `.codex/config.toml` の設定に従う。
 - OpenCode は `--agent qwen-orchestrator` または `--agent gemma-orchestrator` で起動し、モデルは各 agent の frontmatter で固定する。
-- `:work` は全 CLI で `tools/worktree/open-agent-worktree.sh <name> <command>...` を使用する。このスクリプトはブランチ `worktree/<name>` と配置 `../worktrees/<name>` を対応させ、未作成なら `git worktree add` で作成し、既存の場合は実際のブランチとの一致を検証してから agent を起動する。
+- `:work` は全 CLI で `tools/worktree/open-agent-worktree.sh <name> <command>...` を使用し、その worktree 内から `specdojo orchestrator launch` を起動する。このスクリプトはブランチ `worktree/<name>` と配置 `../worktrees/<name>` を対応させ、未作成なら `git worktree add` で作成し、既存の場合は実際のブランチとの一致を検証してから agent を起動する。
+- 固定 worktree 内での launch は provider の `cwd` を固定 worktree に保つ。一方、設定と `repos[].path` は主 worktree を基準に解決する。`open-agent-worktree.sh` は主 worktree を内部用の `SPECDOJO_ORCHESTRATOR_CONFIG_ROOT` で launch に渡し、launch は provider を起動する前にこの環境変数を除去する。これにより、agent が後から実行する `specdojo` コマンドは固定 worktree を通常のリポジトリルートとして扱う。
 - Claude Code の `--worktree` はブランチを `worktree-<name>`、配置を `.claude/worktrees/<name>` に固定し、他の CLI と命名・配置を統一できないため使用しない。
 - frontier モデルは Claude が `opus`、Codex が `gpt-5.6-sol` に対応する。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使う。
 

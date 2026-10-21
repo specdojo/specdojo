@@ -1,0 +1,68 @@
+---
+specdojo:
+  id: prj-0001:pjr-0efn-post-review-result-markdown-lint
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: issue
+  item_status: done
+  priority: high
+  owner: DEV
+  registered_at: "2026-10-18T16:04:14Z"
+  completed_at: "2026-10-18T18:48:12Z"
+  conclusion: result の箇条書きに描く reporter の文の先頭の番号や記号（1.・1)・-・*・+）を外すようにした。commit の失敗の要約が、成功した最初の段（format）ではなく失敗の印の付いた段と最初のエラーの行を報告するようにし、post-review の記帳の commit が失敗したときは残ったファイルと hook の全出力のログを残す。統合後に JSEY を --post-review で流し、review の agent の close の記帳が commit まで通った
+  derived_from:
+    - PJR-T46Y
+---
+
+# PJR-0EFN 統合後の review の result が markdownlint で落ち、close の記帳が commit されない
+
+## 1. 課題内容
+
+2026-10-19 01:01 の PJR-JSEY の --post-review で、review の agent が判断の根拠に自分で番号（1. 2. 3.）を付け、runner がそれを箇条書き（- ）として result に描いたため、- 1. の形が入れ子の番号付きリストとして markdownlint の MD029 に当たった。pre-commit の hook で post-review の記帳の commit が失敗し、close の記帳（個票・イベント・review の plan と result）が作業ツリーに残った。runner は失敗を git commit failed: format: の 1 行目だけで報告した
+
+## 2. 影響範囲
+
+| 観点         | 影響                                                                                |
+| ------------ | ----------------------------------------------------------------------------------- |
+| スコープ     | review の result の描画（箇条書きの各行）、post-review の記帳の commit の失敗の報告 |
+| スケジュール | 高い。夜間の自動実行で close の記帳が作業ツリーに残ったまま次へ進む                 |
+| コスト       | 人が記帳を確かめて手で commit する手間                                              |
+| 品質         | close したはずの項目が commit されず、ほかの run の commit に混ざるおそれがある     |
+| 関係者       | `--post-review` と夜間の orchestrator（PJR-6DHY）の利用者                           |
+
+## 3. 対応方針
+
+| 項目     | 内容                                                                                                                                                                                                                                                                            |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | runner は reporter が返した文の配列を `-` の箇条書きとして描く。文が `1.` などの番号で始まると、`- 1. ...` の形が入れ子の番号付きリストになり、markdownlint の MD029 に当たる。post-review の記帳の commit は pre-commit の hook で失敗し、runner は失敗を 1 行目だけで報告した |
+| 対応策   | 箇条書きに描く文の先頭の番号を外すか、番号として解釈されない形にする。commit の失敗は、hook の出力の要点を報告する                                                                                                                                                              |
+| 依存事項 | なし                                                                                                                                                                                                                                                                            |
+| 完了条件 | 下記の完了条件を満たす                                                                                                                                                                                                                                                          |
+
+### 3.1. 完了条件
+
+- result（edit・review・post-review のすべて）で、reporter が返した文を箇条書きに描くとき、文が `1.`・`1)` などの番号で始まっても、markdownlint の MD029 などに当たらない形にする（先頭の番号を外す、など）。どの形にしたかと理由を result に書く。
+- 単体テストで、番号で始まる文を含む reporter の出力から作った result が markdownlint を通ることを確かめる。
+- post-review の記帳の commit が失敗したとき、runner のログに、失敗した hook の名前と、その出力の要点（最初のエラーの行）を出す。作業ツリーに残った記帳のファイルの一覧も出す。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- runner のコードを変えるため、統合の後に `exec run --register` を `--post-review` 付きで 1 回流して動作を確かめる（PJR-JSEY）。
+- CHANGELOG は、未公開の版の節（なければ `## [0.4.1] - 未定` を作る）に書く。公開済みの版の節は変えない。
+
+## 4. 対応結果
+
+| 項目       | 内容                                                                                                                                                                                                                                                                                                                                                |
+| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 解決内容   | `src/exec/results.ts` に `stripLeadingListMarker` を加え、reporter の文を箇条書きに描くとき先頭の `1.`・`1)`・`-`・`*`・`+` を外すようにした。箇条書きの記号は runner が付け、順序は箇条書きの並びで保たれるため、番号を残す（エスケープする）より外すほうを選んだ。review の失敗時に runner が書く理由（post-review・Job Run）にも同じ処理を当てた |
+| 解決内容   | `summarizeGitHookFailure` が最初の step 見出し（並列の lefthook では成功した `format` のことがある）を失敗の step として報告していたため、summary で失敗の印（🥊 など）が付いた step の節を選び、その節で error を含む最初の行を報告するようにした                                                                                                  |
+| 解決内容   | post-review の記帳の commit が失敗したとき、失敗した hook の名前・最初のエラーの行・作業ツリーに残った記帳のファイル・hook の全出力のログ（review の evidence の `post-review-commit.log`）を標準エラー出力に出すようにした                                                                                                                         |
+| 確認結果   | 単体テストで、番号で始まる文を含む reporter の出力（review・edit）から作った result が markdownlint を通ること、lefthook の出力から失敗した `markdown` の step と MD029 の行を取り出すこと、記帳の commit の失敗の報告の行を確かめた。統合後の `exec run --register --post-review` の動作確認（PJR-JSEY）は未実施                                   |
+| 再発防止策 | 箇条書きに描く文の先頭の記号は runner が常に外す。hook の失敗は失敗した step と最初のエラーの行で報告する                                                                                                                                                                                                                                           |
+
+## 5. 関連ドキュメント
+
+- [[prj-0001:pjr-t46y-register-post-run-review-auto-close]]（元の項目）
+- [[prj-0001:pjr-jsey-exec-run-split-smoke]]（失敗した実行）

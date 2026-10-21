@@ -146,7 +146,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
-    model: gemini-3.8-flash-medium
+    model: gemini-3.8-flash-high
     mode: edit
     stage_role: executor
     capabilities: [web_search]
@@ -160,7 +160,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
-    model: gemini-3.8-flash-medium
+    model: gemini-3.8-flash-high
     mode: review
     stage_role: executor
     capabilities: [web_search]
@@ -174,7 +174,7 @@ members:
     roles: []
     type: agent
     provider: antigravity
-    model: gemini-3.8-flash-medium
+    model: gemini-3.8-flash-high
     stage_role: reporter
     capabilities: []
     proficiency: normal

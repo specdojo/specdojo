@@ -1,0 +1,13 @@
+I need to use allowed tools. Let me find the branch workflow guide using glob.
+Now let me verify related documents exist for correct linking.
+I have enough context. Now let me add a new section to the branch-workflow-guide.md about product repositories, placed before section 10 (checklist). Let me write it.
+Now let me update the individual ticket's section 3 and 4.
+Let me fix a typo and check for "refs:" lowercased incorrectly.
+Let me run the markdown lint on the changed files. The `lint:md` is a parent-run check. Per conventions, I should not duplicate parent validations. Let me verify my edits render correctly by reading the modified section.
+The edits are complete and consistent with the derivation. The markdown/table checks (`lint:md`, `lint:fm`, etc.) are all parent-run validations that I must not duplicate or execute in the sandbox.
+
+<specdojo_executor_evidence>
+{"final_message":"プロダクトリポジトリの節をbranch-workflow-guideに追加し、個票作業内容・対応結果を更新","validations":[{"command":"npm run lint:md","status":"not_applicable","reason":"parent runner runs; executor must not duplicate parent validation"},{"command":"npm run lint:fm","status":"not_applicable","reason":"parent runner runs; executor must not duplicate parent validation"},{"command":"npm run lint:ts","status":"not_applicable","reason":"parent runner runs; no TS/JS edited"},
+{"command":"npm run typecheck","status":"not_applicable","reason":"no source/type files changed by this task"},
+{"command":"npm run test:unit","status":"not_applicable","reason":"parent runner runs; docs-only change"},{"command":"npm run test:integration","status":"not_applicable","reason":"parent runner runs; docs-only change"},{"command":"npm run validate:schema","status":"not_applicable","reason":"parent runner runs; frontmatter not added/changed"}]}
+</specdojo_executor_evidence>

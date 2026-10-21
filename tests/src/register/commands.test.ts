@@ -26,6 +26,7 @@ const CONFIG = {
       catalog_path: "010-deliverables-catalog",
       schedule_path: "schedule",
       execution_path: "execution",
+      members_path: "030-project-management/pm-members.yaml",
       project_register_path: "controls/project-register",
       run: { register_date_timezone: "UTC" },
     },
@@ -197,6 +198,52 @@ function writeApproachTargets(root: string): void {
   );
 }
 
+function writeActorRosters(root: string): void {
+  const humanPath = join(root, "docs/ja/projects/prj-0001/030-project-management/pm-members.yaml");
+  mkdirSync(join(root, "docs/ja/projects/prj-0001/030-project-management"), {
+    recursive: true,
+  });
+  writeFileSync(
+    humanPath,
+    [
+      "id: prj-0001:pm-members",
+      "type: project",
+      "status: ready",
+      "title: Test members",
+      "rulebook: specdojo:pm-members-rulebook",
+      "version: 1",
+      "project_id: prj-0001",
+      "members:",
+      "  - nickname: po",
+      "    display_name: Project Owner",
+      "    roles: [PO]",
+      "    type: human",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+  writeFileSync(
+    join(root, ".specdojo/agent-members.yaml"),
+    [
+      "version: 1",
+      "members:",
+      "  - nickname: codex",
+      "    display_name: Codex",
+      "    roles: []",
+      "    type: agent",
+      "    provider: codex",
+      "    capabilities: []",
+      "    proficiency: normal",
+      "    priority: 1",
+      "aliases:",
+      "  - nickname: legacy-codex",
+      "    alias_of: codex",
+      "",
+    ].join("\n"),
+    "utf8",
+  );
+}
+
 // テンプレート（個票・派生ビュー）は実リポジトリのものを temp へ複製し、生成処理を成立させる。
 function withRepo(
   fn: (fixture: Fixture) => Promise<void> | void,
@@ -212,6 +259,7 @@ function withRepo(
         `${JSON.stringify(opts.config ?? CONFIG, null, 2)}\n`,
         "utf8",
       );
+      writeActorRosters(root);
       const registerDir = join(root, REGISTER_REL);
       mkdirSync(registerDir, { recursive: true });
       if (opts.copyTemplates !== false) {
@@ -276,6 +324,8 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "PJR-AB12",
         "--priority",
         "high",
+        "--difficulty",
+        "hard",
         "--owner",
         "ARC",
         "--registered",
@@ -288,6 +338,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(ticket).toContain("  item_type: todo");
       expect(ticket).toContain("  item_status: open");
       expect(ticket).toContain("  priority: high");
+      expect(ticket).toContain("  difficulty: hard");
       expect(ticket).toContain("  owner: ARC");
       // タイムゾーン付きの指定は UTC へ正規化して保存する。
       expect(ticket).toContain('  registered_at: "2026-08-01T14:30:00Z"');
@@ -296,9 +347,14 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(ticket).toContain("開店時の在庫初期値を決める。");
       expect(readEvents(registerDir, "PJR-AB12")[0]).toMatchObject({
         action: "add",
-        actor: "manual",
+        actor: "SpecDojo",
         from_status: null,
         to_status: "open",
+      });
+      expect(readEvents(registerDir, "PJR-AB12")[0]?.changes).toContainEqual({
+        field: "difficulty",
+        from: "",
+        to: "hard",
       });
       // 未定値（完了日時・結論）はキーを置かない。
       expect(ticket).not.toContain("completed_at");
@@ -311,6 +367,32 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       expect(readFileSync(join(registerDir, "generated/pjr-views-by-status.md"), "utf8")).toContain(
         "PJR-AB12",
       );
+    });
+  });
+
+  it("update --difficulty は難易度を event 付きで変更・削除する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      const original = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]);
+      writeFileSync(ticketPath, original, "utf8");
+      writeInitialEvent(registerDir, "PJR-AB12", "pjr-ab12-topic.md", original);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--difficulty", "easy"]);
+      expect(readFileSync(ticketPath, "utf8")).toContain("  difficulty: easy");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "difficulty",
+        from: "-",
+        to: "easy",
+      });
+
+      await runRegister(["update", "--id", "PJR-AB12", "--difficulty", "-"]);
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("  difficulty:");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "difficulty",
+        from: "easy",
+        to: "-",
+      });
     });
   });
 
@@ -716,6 +798,112 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         previous_event_id: events[0].id,
         from_status: "in-progress",
         to_status: "done",
+      });
+    });
+  });
+
+  it("register actor は agent alias を実体名へ解決して event に記録する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", ["item_status: open", "priority: high"]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["start", "--id", "PJR-AB12", "--by", "legacy-codex"]);
+
+      expect(readEvents(registerDir, "PJR-AB12")[0]).toMatchObject({
+        action: "start",
+        actor: "codex",
+      });
+    });
+  });
+
+  it("register actor は予約名を受け付ける", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", ["item_status: open", "priority: high"]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["start", "--id", "PJR-AB12", "--by", "specdojo-orchestrator"]);
+
+      expect(readEvents(registerDir, "PJR-AB12")[0].actor).toBe("specdojo-orchestrator");
+    });
+  });
+
+  it("register actor は名簿にも予約一覧にもない値を変更前に拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      const original = buildTicket("PJR-AB12", ["item_status: open", "priority: high"]);
+      writeFileSync(ticketPath, original, "utf8");
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+
+      await runRegister(["start", "--id", "PJR-AB12", "--by", "PO"]);
+
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+        'Unknown register actor: "PO"',
+      );
+      expect(readFileSync(ticketPath, "utf8")).toBe(original);
+      expect(existsSync(registerEventFilePath(registerDir, "PJR-AB12"))).toBe(false);
+    });
+  });
+
+  it("update --autopilot は夜間承認を event 付きで設定・解除する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: open",
+          "priority: high",
+          "owner: ARC",
+          'registered_at: "2026-08-01T12:00:00Z"',
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--autopilot",
+        "approved",
+        "--by",
+        "po",
+        "--reason",
+        "completion conditions approved",
+      ]);
+      expect(readFileSync(ticketPath, "utf8")).toContain("  autopilot: approved");
+      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toContainEqual({
+        field: "autopilot",
+        from: "-",
+        to: "approved",
+      });
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--autopilot",
+        "-",
+        "--by",
+        "po",
+        "--reason",
+        "approval revoked",
+      ]);
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("  autopilot:");
+      expect(readEvents(registerDir, "PJR-AB12")[1].changes).toContainEqual({
+        field: "autopilot",
+        from: "approved",
+        to: "-",
       });
     });
   });
@@ -1164,7 +1352,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "--title",
         "在庫方針を決める",
         "--by",
-        "ARC",
+        "po",
         "--reason",
         "主題変更",
       ]);
@@ -1182,7 +1370,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       );
 
       const event = readEvents(registerDir, "PJR-AB12")[0];
-      expect(event).toMatchObject({ action: "update", actor: "ARC", reason: "主題変更" });
+      expect(event).toMatchObject({ action: "update", actor: "po", reason: "主題変更" });
       expect(event.changes).toContainEqual({
         field: "id",
         from: "prj-0001:pjr-ab12-topic",

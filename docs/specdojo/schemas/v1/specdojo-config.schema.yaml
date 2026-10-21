@@ -26,6 +26,32 @@ $defs:
   NonEmptyString:
     type: string
     pattern: "\\S"
+  ParentValidationId:
+    type: string
+    enum:
+      [
+        validate-schema,
+        typecheck,
+        test-unit,
+        test-integration,
+        lint-ts,
+        lint-fm,
+        lint-md,
+        build,
+        format-check,
+      ]
+  ParentValidation:
+    oneOf:
+      - $ref: "#/$defs/ParentValidationId"
+      - type: object
+        additionalProperties: false
+        required: [id, repo]
+        properties:
+          id:
+            $ref: "#/$defs/ParentValidationId"
+          repo:
+            type: string
+            pattern: "^[a-z0-9-]+$"
   Project:
     type: object
     properties:
@@ -104,6 +130,15 @@ $defs:
         type: string
       agent_config:
         type: string
+      parent_validations:
+        description: >-
+          Parent-runner validations appended, in order, to pipeline.parent_validations from this
+          project's exec_defaults file. A plain ID targets the project repository; { id, repo }
+          targets project or a product repository declared by this project.
+        type: array
+        uniqueItems: true
+        items:
+          $ref: "#/$defs/ParentValidation"
       worktree_base:
         type: string
       register_date_timezone:

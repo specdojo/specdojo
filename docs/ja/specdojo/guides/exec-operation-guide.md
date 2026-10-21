@@ -362,6 +362,8 @@ track の再生成では、`exec validate` の警告と同じ鮮度判定を使�
 
 provider別の `max_concurrency` や agent 選択は [exec設定ガイド](exec-config-guide.md) を参照します。
 
+指名した executor / reporter が provider API やローカル LLM へ接続できず、`connection_error_detection` に一致した場合は、対応する fallback 指定があれば1回だけ切り替えます。この判定は `--on-rate-limit` とは独立しているため、rate limit を `stop` または `wait` にしていても接続不能時の fallback は働きます。fallback 未指定時は通常の失敗として停止します。
+
 ### 2.6. executor / reporter pipelineの実行と復旧
 
 `agent_pipeline` を持つ phase のタスクは、executor（成果物の編集と検証）と reporter（evidence から result を構成）の 2 stage で実行されます。実行コマンドは従来と同じで、stage の agent を固定したい場合だけ `--executor-by` / `--reporter-by` を足します。
@@ -412,7 +414,38 @@ specdojo exec resume \
 
 executor と reporter が成功した後の commit・merge・worktree 撤去で止まった場合、`exec resume --task <task-id>` は agent を起動せず、`pipeline-state.json` の `integrate` 段から統合だけを再開します。前回の merge が完了している場合は exec branch を再 merge せず、runner が残した lifecycle 差分を確認したうえで worktree 撤去と `exec complete` だけを行います。通常実行の成功時は `integrate.status=succeeded`、失敗時は `failed` と block event の `pipeline_state_ref` が残ります。
 
-### 2.7. register実行の再開
+### 2.7. register統合後のreviewと自動close
+
+register の worktree 実行では、`--post-review` を付けると、成果を統合した後に読み取り専用の review pipeline を実行できます。review executor の既定は `claude-expert-review-executor` で、`--review-by` により変更できます。reporter は `stage_role: reporter` の候補から選び、edit pipeline で `--reporter-by` を指定している場合は同じ reporter を使います。
+
+```bash
+specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --post-review
+```
+
+毎回有効にする場合は `.specdojo/exec-defaults.yaml` に設定します。既定は `false` です。post-review は統合後の差分を対象にするため、in-place 実行では利用できません。
+
+```yaml
+run:
+  register_execution: worktree
+  register_post_review: true
+```
+
+review executor は、個票の完了条件、edit plan/result、executor evidence の検証結果、統合 commit の差分を照合します。成果物や個票を変更すると runner が `incomplete` として扱います。runner は verdict と個票の種類から次の遷移を行い、review executor を actor、review result の判断根拠を reason として register event に残します。
+
+| 個票の種類   | verdict                                     | 遷移                                 |
+| ------------ | ------------------------------------------- | ------------------------------------ |
+| todo / issue | `complete` / `complete-with-findings`       | `done` へ close                      |
+| todo / issue | `incomplete`                                | `waiting`                            |
+| その他       | `complete` / `complete-with-findings`       | `review` のまま（自動 close しない） |
+| すべて       | `incomplete`、review 失敗、未対応の verdict | `waiting`                            |
+
+SpecDojo package 自身の `src/`・`tools/`・`package.json`・lock file を変更した項目は、統合済みでも実行中の親プロセスが新しい runner コードを読み直せません。この場合、verdict が完了でも自動 close せず `review` に残します。新しいプロセスで実際の `exec run` を smoke test し、人が close してください。
+
+### 2.8. register実行の再開
 
 複数の register 項目を worktree で並列実行するときは、`--executor-by` に `PJR-ID=nickname` をカンマ区切りで渡すと、項目ごとに executor を固定できます。従来の `--executor-by <nickname>` は引き続き全項目への共通指定です。項目別指定は起動対象をすべて指定する必要があり、起動対象外の ID や指定漏れがあると、状態遷移や worktree 作成の前にエラーになります。`--dry-run` では各項目について解決した executor とコマンドを確認できます。
 
@@ -567,6 +600,7 @@ specdojo register add \
   --type todo \
   --title "SpecDojo 設定ガイドの改訂" \
   --topic exec-config-guide-revision \
+  --difficulty medium \
   --approach fully-guided \
   --target specdojo:exec-config-guide \
   --owner DEV
@@ -578,6 +612,7 @@ specdojo register add \
 specdojo register update \
   --project <project-id> \
   --id <PJR-ID> \
+  --difficulty hard \
   --approach fully-guided \
   --target specdojo:exec-config-guide
 ```
@@ -595,6 +630,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
+  difficulty: medium
   owner: DEV
   approach: fully-guided
   targets:
@@ -602,6 +638,8 @@ specdojo:
 ```
 
 `approach` を指定した個票では、`targets` は **1 件だけ必須** です（schedule のタスクと同様に 1 件の成果物または 1 件の kata を対象にします）。
+
+`difficulty` は `hard` / `medium` / `easy` のいずれかです。`exec run --register` と `orchestrator night` は、agent を CLI で指定していない段について `exec-defaults.yaml` の `routing` から executor・reporter・rate limit 対応を選びます。既存の個票で `difficulty` を省略した場合や表がない場合は、従来どおり agent 名簿の `priority` 順で自動選択します。CLI の指定は表より優先します。
 
 ### 4.3. 対象の指定方法と kata 保守 approach の選び方
 

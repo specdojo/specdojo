@@ -2,12 +2,12 @@
 id: sysd-critical-flows-grade-criteria
 document: sysd-critical-flows
 path: docs/ja/product/040-system-design/sysd-critical-flows.md
-graded_at: "2026-10-15T16:11:55.258Z"
-graded_by: agy-expert-executor
-content_hash: 0617c763ae4acc31e89f7720dc40286b69bc8e7b17849e4e7fa4e8180cc13d83
+graded_at: "2026-10-20T16:30:10.182Z"
+graded_by: flash-high-executor
+content_hash: 4b6b566dcca2287d98b1d520831f6263c2f92873c1a9bfaf4becaf7b72ff10ae
 summary:
-  satisfied: 1
-  unsatisfied: 4
+  satisfied: 0
+  unsatisfied: 5
   total: 5
 criteria:
   - id: DC-001
@@ -16,9 +16,7 @@ criteria:
       - BA
     viewpoint: vp-ba-business-value
     status: unsatisfied
-    reason: >-
-      Selection rationale compared to other candidates and specific business impact when left unaddressed are not
-      documented for each critical flow.
+    reason: Selection rationale comparing other candidates and concrete business impacts when issues occur are not identified.
   - id: DC-002
     text: 重要フローの内容を承認できること
     roles:
@@ -26,14 +24,17 @@ criteria:
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
     reason: >-
-      Decision criteria, unresolved items, stakeholder impact, and approvers required for PO approval are not clearly
-      specified.
+      Decision criteria, open items, business impacts, approvers, and conditions for finalizing reference values are
+      missing.
   - id: DC-003
     text: フローの境界・永続化点・再実行性・失敗時挙動が定義されていること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
-    status: satisfied
+    status: unsatisfied
+    reason: >-
+      System and service boundaries, synchronization boundaries, and exact failure recovery constraints are not
+      sufficiently defined.
   - id: DC-004
     text: 重要フローのテストシナリオ設計に活用できること
     roles:
@@ -41,8 +42,8 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Test references lack concrete file paths or test IDs, command lines, and expected pass/fail verification criteria
-      for scenario design.
+      Concrete test IDs, file paths, test commands, inputs, and expected outcomes are not provided for designing test
+      scenarios.
   - id: DC-005
     text: フロー実装の共通理解として参照できること
     roles:
@@ -50,5 +51,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Implementation target files, configuration keys, values, and concrete inputs/outputs are missing for critical
-      execution and concurrency limits.
+      Implementation target files, schema, configuration keys, concrete limits, and input/output constraints are not
+      uniquely traceable.

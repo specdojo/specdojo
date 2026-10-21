@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b84de9c5b24249da986d810e7fee3bca
+  ts: "2026-10-20T13:39:28Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: quick start に Dev Container の推奨 preset を入れる
+    - field: description
+      from: ""
+      to: Quick Start ガイドの導入の手順を、Dev Container を作り推奨の preset（tmux・emacs・vim・推奨の VS Code 拡張）を入れる例にそろえる。今は Dev Container を作らない例と、preset のない scaffold の例のままになっている
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-EN6M"]'
+- v: 1
+  id: reg_dbe0cde1f67d4aabb7574fa248ee4d15
+  ts: "2026-10-20T21:10:00Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b84de9c5b24249da986d810e7fee3bca
+- v: 1
+  id: reg_df4e98246c8346a08f7e67b626692ef7
+  ts: "2026-10-20T21:29:07Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_dbe0cde1f67d4aabb7574fa248ee4d15
+- v: 1
+  id: reg_050c855f704c4b0090919deda47ee62e
+  ts: "2026-10-20T21:32:20Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分を確かめ、質問の文言と --devcontainer-preset の値が src/commands/init.ts と一致することを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: Quick Start ガイドの体験の手順を Dev Container と推奨 preset を選ぶ例にし、入るものと開き方、使わない場合の進め方を書いた。個別に設定する場合の例を --preset recommended 付きにし、init --yes --devcontainer で推奨 preset が入ることを書いた
+  previous_event_id: reg_df4e98246c8346a08f7e67b626692ef7

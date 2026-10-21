@@ -147,6 +147,27 @@ type は派生ビューの生成と `exec run --register` の挙動（`agent実�
 }
 ```
 
+#### actor の指定
+
+`register add`・`update`・`renumber` と状態遷移コマンドの `--by` は、次の名前だけを受け付けます。未知の名前を警告だけで記録する互換設定はありません。監査記録の追跡不能を残さないため、書き込み前にエラーで停止します。
+
+- 人が操作・決定・承認した場合: project の `pm-members.yaml` にある本人の nickname
+- agent が実行した場合: `.specdojo/agent-members.yaml` の nickname または alias。alias は実体の nickname に解決して event へ記録する
+- SpecDojo の機械的な記帳: `SpecDojo`
+- 対話型オーケストレーター自身の操作: `specdojo-orchestrator`
+- 夜間 runner の操作: `night-orchestrator`
+
+`PO`・`DEV` などの Role code は責任区分であり、actor ではありません。利用者の決定や承認をオーケストレーターが代行記帳するときも、`specdojo-orchestrator` ではなく、事前に確認した利用者本人の nickname を渡します。`--by` を省略した場合の `SpecDojo` は CLI/runner の既定値であり、人の決定や承認を表すためには使いません。
+
+過去の event は監査記録として書き換えません。このリポジトリで既に使われた旧名を読むときは、次の対応を手掛かりにします。`manual` と Role code の `PO` は実体を一意に決められないため、event の reason と Git 履歴を併せて確認します。
+
+| 過去の actor                           | 現在たどる名前             |
+| -------------------------------------- | -------------------------- |
+| `orchestrator` / `claude-orchestrator` | `specdojo-orchestrator`    |
+| `codex-expert-executor`                | `sol-executor`             |
+| `naoji3x`                              | `indie`                    |
+| `manual` / `PO`                        | 一意に対応しない（要調査） |
+
 - 状態遷移は `open` から終端まで順に辿る必要はありません。人が対応した項目や、対話型 orchestrator がその場で処理した項目は、`start` を経ずに `close` / `reject` して構いません。着手を記録していない時点の遷移を後から補うと、実際には起きていない事実がイベントログに残ります。詳しい基準は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) の `中間状態を経ない終端` を参照します。
 - 直接終端させる場合は、誰がどの経路で対応したかを `register close --by <actor> --reason "<経路と根拠>"` で残します。exec 経由でないため plan / result / evidence が生成されず、実施内容と検証結果は個票の対応結果が唯一の記録になります。
 - agent へ実行させる項目は `exec run --register` を使います。この経路では runner が `start` と `wait` / `review` を記録し、plan / result / evidence も残ります。着手の記録が要る項目は、この経路を選びます。
@@ -345,6 +366,8 @@ specdojo register history --project <project-id> --since 2026-08-01 --json
 
 ## 3. agent実行・定期実行との連携
 
+### 3.1. 通常の agent 実行
+
 登録項目は `exec run --register` で agent に実行させられます。
 
 ```bash
@@ -380,6 +403,25 @@ specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree
 実行前に、過去の register 実行が残した未 commit の plan/result を検出した場合は、現在のIDへ暗黙に混ぜず警告します。警告されたファイルを確認・整理してから再実行してください。
 
 実行フローの詳細は [exec運用ガイド](exec-operation-guide.md) を参照します。
+
+### 3.2. 完了条件を承認して夜間 queue に入れる
+
+人が個票の完了条件と変更範囲を確認した todo または issue だけ、次のコマンドで夜間実行を承認します。個票を手編集せず、event に承認者と理由を残します。
+
+```bash
+specdojo register update --project <project-id> --id PJR-0012 \
+  --autopilot approved --by <approver> --reason "完了条件と変更範囲を承認"
+
+# 承認を取り消す
+specdojo register update --project <project-id> --id PJR-0012 \
+  --autopilot - --by <approver> --reason "夜間 queue から除外"
+```
+
+`autopilot: approved` は「現在の個票に書かれた完了条件」の承認です。夜間 orchestrator は印のある `open` の todo・issue だけを ID 順に選びます。decision、印のない項目、`waiting` の項目は実行しません。完了条件を変更した場合は一度承認を取り消し、変更後の条件を再確認して承認します。
+
+夜間実行は `specdojo orchestrator night` が担います。worktree 隔離、post-review、自動 close / `waiting` への復帰を必須とし、件数、並列数、連続失敗停止、rate limit 時の fallback をオプションで制限します。承認範囲外の操作が必要になった失敗は、元項目を `derived_from` に持つ issue として起票します。結果は `execution/reports/night-orchestrator/` の朝報告 1 文書へ集約します。
+
+定期起動は Job `job-night-approved-register` と routine `rtn-night-approved-register` を使います。サンプル routine は保護された運用設定を勝手に有効化しないため `enabled: false` です。人が 2 時（Asia/Tokyo）、一晩 10 件、並列 2、連続失敗 2 件、fallback executor を確認してから有効化してください。
 
 ## 4. 例外対応と特殊な運用
 

@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSy
 import { dirname, join, resolve, sep } from "node:path";
 import { isDeepStrictEqual } from "node:util";
 import { buildSpecdojoFrontmatter, parseSpecdojoDocument } from "../docs/frontmatter-namespace.js";
-import { expandTemplate, stripTerminalControlSequences } from "./shared.js";
+import { escapeMarkdownInline, expandTemplate, stripTerminalControlSequences } from "./shared.js";
 import { formatMarkdownFile } from "./format.js";
 import type { Approach, ExecResultMeta, TaskMode, TaskOrigin } from "./types.js";
 import {
@@ -412,9 +412,32 @@ function reporterInlineText(value: string): string {
     .trim();
 }
 
+// reporter / executor 由来の自由記述は result の Markdown 本文へ直接入る。改行や山括弧を
+// 正規化したうえで、強調と解釈される `_` / `*` 入りの ASCII トークンを code span にする。
+// escapeMarkdownInline は既存の code span を保持するため、agent が意図して付けた書式は二重化しない。
+function reporterFreeText(value: string): string {
+  return escapeMarkdownInline(reporterInlineText(value));
+}
+
+// reporter や runner の文を `- ` の箇条書きに描くとき、文が自前のリスト記号（`1.`・`1)`・
+// `-`・`*`・`+`）で始まると `- 1. ...` が入れ子のリストとして解釈され、markdownlint の
+// MD029 などに当たって pre-commit hook で記帳の commit が失敗する。箇条書きの記号は runner が
+// 付けるため、先頭の記号は外す（番号の意味は箇条書きの順序で保たれる）。
+export function stripLeadingListMarker(text: string): string {
+  let current = text.trim();
+  for (;;) {
+    const next = current.replace(/^(?:\d{1,9}[.)]|[-*+])(?:\s+|$)/u, "").trim();
+    if (next === current) return current;
+    current = next;
+  }
+}
+
 function reporterBulletList(values: string[], empty: string): string {
   if (values.length === 0) return `- ${empty}`;
-  return values.map((value) => `- ${reporterInlineText(value)}`).join("\n");
+  return values
+    .map((value) => reporterFreeText(stripLeadingListMarker(reporterInlineText(value))))
+    .map((text) => `- ${text || empty}`)
+    .join("\n");
 }
 
 function findGitRoot(startDir: string): string | null {
@@ -570,7 +593,7 @@ export function renderEditReporterBody(
           reporterSummary !== undefined && reporterSummary.trim().length > 0
             ? reporterSummary
             : formatMissingSummary(file, lineStats?.get(displayPath) ?? lineStats?.get(file.path));
-        return `- \`${reporterInlineText(displayPath).replace(/`/g, "'")}\`: ${reporterInlineText(summary)}`;
+        return `- \`${reporterInlineText(displayPath).replace(/`/g, "'")}\`: ${reporterFreeText(summary)}`;
       })
       .join("\n");
   } else {
@@ -600,7 +623,7 @@ export function renderEditReporterBody(
     const lines: string[] = [];
     for (const entry of describedFiles) {
       lines.push(
-        `- \`${reporterInlineText(entry.displayPath).replace(/`/g, "'")}\`: ${reporterInlineText(entry.summary)}`,
+        `- \`${reporterInlineText(entry.displayPath).replace(/`/g, "'")}\`: ${reporterFreeText(entry.summary)}`,
       );
     }
 
@@ -670,7 +693,7 @@ export function renderEditReporterBody(
     .filter((entry) => entry.status === "unchanged")
     .map((entry) => {
       const target = reporterInlineText(entry.target).replace(/`/g, "'");
-      return `対象 \`${target}\` は未変更: ${reporterInlineText(entry.reason)}`;
+      return `対象 \`${target}\` は未変更: ${reporterFreeText(entry.reason)}`;
     });
   const humanValidationNotes = evidence.validations
     .filter(
@@ -678,7 +701,7 @@ export function renderEditReporterBody(
     )
     .map((validation) => {
       const command = reporterInlineText(validation.command).replace(/`/g, "'");
-      const summary = reporterInlineText(validation.summary) || "要約なし";
+      const summary = reporterFreeText(validation.summary) || "要約なし";
       return `人の確認が必要: \`${command}\`（${summary}）`;
     });
   const notApplicableValidationNotes = evidence.validations
@@ -687,7 +710,7 @@ export function renderEditReporterBody(
     )
     .map((validation) => {
       const command = reporterInlineText(validation.command).replace(/`/g, "'");
-      const reason = reporterInlineText(validation.reason ?? "") || "理由なし";
+      const reason = reporterFreeText(validation.reason ?? "") || "理由なし";
       return `適用外の検証: \`${command}\`（${reason}）`;
     });
   const changedPaths = evidence.changes.map((change) => change.path);
@@ -697,7 +720,7 @@ export function renderEditReporterBody(
       const reason = runnerOwnedValidationReason(validation.command);
       if (reason === undefined) return [];
       const command = reporterInlineText(validation.command).replace(/`/g, "'");
-      return [`runner が担う検証: \`${command}\`（${reporterInlineText(reason)}）`];
+      return [`runner が担う検証: \`${command}\`（${reporterFreeText(reason)}）`];
     });
   const runnerJudgedNotApplicableNotes = evidence.validations
     .filter((validation) => validation.source !== "runner" && validation.status === "not_run")
@@ -705,12 +728,12 @@ export function renderEditReporterBody(
       const reason = mechanicallyNotApplicableReason(validation.command, { changedPaths });
       if (reason === undefined) return [];
       const command = reporterInlineText(validation.command).replace(/`/g, "'");
-      return [`適用外の検証（runner の判定）: \`${command}\`（${reporterInlineText(reason)}）`];
+      return [`適用外の検証（runner の判定）: \`${command}\`（${reporterFreeText(reason)}）`];
     });
   const rateLimitRecoveryNotes = (evidence.rate_limit_events ?? []).map((event) =>
     event.action === "wait"
       ? `rate limit 後に ${event.resume_at ?? "再開可能時刻"} まで待ち、${event.to_actor} で ${event.resumed_at} に再開`
-      : `rate limit 後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
+      : `${event.trigger === "connection_error" ? "接続エラー" : "rate limit"}後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
   );
   return [
     "# Edit Result",
@@ -740,7 +763,7 @@ export function renderEditReporterBody(
     "",
     options?.approach ? "## 4. 進め方と実践の型の適用" : "## 4. 進め方",
     "",
-    reporterInlineText(output.approach),
+    reporterFreeText(output.approach),
   ].join("\n");
 }
 
@@ -750,14 +773,14 @@ function renderReviewReporterBody(output: ReviewReporterOutput, evidence: ExecEv
   const rateLimitRecoveryNotes = (evidence.rate_limit_events ?? []).map((event) =>
     event.action === "wait"
       ? `rate limit 後に ${event.resume_at ?? "再開可能時刻"} まで待ち、${event.to_actor} で ${event.resumed_at} に再開`
-      : `rate limit 後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
+      : `${event.trigger === "connection_error" ? "接続エラー" : "rate limit"}後に ${event.from_actor} から ${event.to_actor} へ切り替え、${event.resumed_at} に再開`,
   );
   return [
     "# Review Result",
     "",
     "## 1. 評価結果の確認",
     "",
-    reporterInlineText(output.grade_check),
+    reporterFreeText(output.grade_check),
     "",
     "## 2. 判断根拠",
     "",
@@ -769,7 +792,7 @@ function renderReviewReporterBody(output: ReviewReporterOutput, evidence: ExecEv
     "",
     "## 4. approach に応じた確認",
     "",
-    reporterInlineText(output.approach),
+    reporterFreeText(output.approach),
     "",
     "## 5. decision",
     "",

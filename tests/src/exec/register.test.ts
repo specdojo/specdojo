@@ -10,6 +10,7 @@ import {
   ticketPathFromItem,
 } from "../../../src/exec/register.js";
 import {
+  applyRegisterDifficultyRouting,
   isRegisterPipelineRequested,
   parseRegisterExecutorSelection,
   resolveRegisterCommand,
@@ -483,5 +484,68 @@ describe("resolveRegisterPipelineCommand", () => {
     expect(() => resolveRegisterPipelineCommand(roster, {})).toThrow(
       /No agent found for --register pipeline stage \(stage_role: executor \(mode: edit\), stage_role: reporter\)\. Specify --executor-by/,
     );
+  });
+});
+
+describe("applyRegisterDifficultyRouting", () => {
+  const defaults = {
+    routing: {
+      hard: {
+        executor_by: "hard-executor",
+        reporter_by: "hard-reporter",
+        on_rate_limit: "wait" as const,
+        fallback_executor_by: "backup-executor",
+        fallback_reporter_by: "backup-reporter",
+      },
+      medium: {
+        executor_by: "medium-executor",
+        reporter_by: "medium-reporter",
+        on_rate_limit: "fallback" as const,
+      },
+      easy: {
+        executor_by: "easy-executor",
+        reporter_by: "easy-reporter",
+        on_rate_limit: "stop" as const,
+      },
+    },
+  };
+
+  it.each([
+    ["hard", "hard-executor", "hard-reporter", "wait"],
+    ["medium", "medium-executor", "medium-reporter", "fallback"],
+    ["easy", "easy-executor", "easy-reporter", "stop"],
+  ] as const)("difficulty=%s の route を選ぶ", (difficulty, executorBy, reporterBy, action) => {
+    expect(applyRegisterDifficultyRouting({ difficulty }, {}, defaults)).toMatchObject({
+      executorBy,
+      reporterBy,
+      onRateLimit: action,
+    });
+  });
+
+  it("CLI の stage・rate limit 指定を route より優先する", () => {
+    expect(
+      applyRegisterDifficultyRouting(
+        { difficulty: "hard" },
+        {
+          executorBy: "cli-executor",
+          reporterBy: "cli-reporter",
+          onRateLimit: "stop",
+          fallbackExecutorBy: "cli-backup",
+        },
+        defaults,
+      ),
+    ).toMatchObject({
+      executorBy: "cli-executor",
+      reporterBy: "cli-reporter",
+      onRateLimit: "stop",
+      fallbackExecutorBy: "cli-backup",
+      fallbackReporterBy: "backup-reporter",
+    });
+  });
+
+  it("difficulty または route が無い場合は既存の自動選択用 options を変えない", () => {
+    const options = { parallel: "2" };
+    expect(applyRegisterDifficultyRouting({}, options, defaults)).toBe(options);
+    expect(applyRegisterDifficultyRouting({ difficulty: "easy" }, options, {})).toBe(options);
   });
 });

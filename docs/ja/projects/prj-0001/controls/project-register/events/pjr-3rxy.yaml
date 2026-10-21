@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5f59a17801c34370908005c747c1c066
+  ts: "2026-10-20T11:08:30Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ホストで本物の devcontainer を作って確かめる E2E のスクリプトを用意する
+    - field: description
+      from: ""
+      to: ホストの Mac（docker と Dev Container CLI がある）で実行し、一時ディレクトリに scaffold した devcontainer を devcontainer up で作り、devcontainer exec で利用者が node であること、~/.local/bin が node の持ち物であること、tmux・vim・emacs と agent の CLI が入ったことを確かめ、最後に container と volume を片づけるスクリプトを用意する。開発用の container には docker を入れない（agent にホストの権限を与えないため。2026-10-20、利用者が案 C を選んだ）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-GHBP"]'
+- v: 1
+  id: reg_4544e5b4546f4be6b28d79eae4134ecc
+  ts: "2026-10-20T11:09:18Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5f59a17801c34370908005c747c1c066
+- v: 1
+  id: reg_0389ca9a547e45e8850eeb12d9730210
+  ts: "2026-10-20T11:22:03Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_4544e5b4546f4be6b28d79eae4134ecc
+- v: 1
+  id: reg_236cd1d524214513a190276573e9b4f4
+  ts: "2026-10-20T12:25:35Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分と、利用者がホストで流した結果を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: tools/e2e/devcontainer-host-e2e.ts を加え、ホストで init から devcontainer up・devcontainer exec の項目別の確認と片づけまでを流せるようにした。利用者がホストの Mac で流して PASS した（2026-10-20）。ホストの node_modules はコンテナの Linux 用のため tsx が動かず、node で直接動かす必要がある。使い方の表示とガイドの直しは PJR-2DA0 で行う
+  previous_event_id: reg_0389ca9a547e45e8850eeb12d9730210

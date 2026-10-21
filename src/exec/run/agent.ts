@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { basename, relative, resolve, sep } from "node:path";
 import {
+  resolveConnectionErrorDetection,
   resolveMemberCommand,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
@@ -68,6 +69,7 @@ import {
 } from "../task-repos.js";
 import { gitEnvironment, type ExecWorktree, type ProductWorktree } from "../worktree.js";
 import {
+  isConnectionError,
   isRateLimitError,
   resolveAgentOverride,
   selectCandidates,
@@ -226,9 +228,14 @@ and does not block pipeline completion.
 Use validation status \`not_applicable\` when the repository does not meet a check's applicability
 conditions, and include a non-empty \`reason\`. The runner carries it into the result without
 blocking completion, but rejects the claim when it can confirm the check applies:
-- \`npm run <script>\` / \`npm test\`: the script exists in package.json. The placeholder \`test\`
-  script that \`npm init\` writes (\`echo "Error: no test specified" && exit 1\`) counts as absent.
-- \`npx <package>\`: the package is in package.json dependencies or devDependencies.
+- \`npm run <script>\` / \`npm test\`: the script exists in package.json and any change-type
+  condition below is met. The placeholder \`test\` script that \`npm init\` writes
+  (\`echo "Error: no test specified" && exit 1\`) counts as absent.
+- \`npx <package>\`: the package is in package.json dependencies or devDependencies and any
+  change-type condition below is met.
+- \`npm run validate:schema:file\` requires a changed \`*.yaml\` or \`*.yml\` file; Prettier
+  requires a changed \`*.md\`, \`*.ts\`, \`*.js\`, \`*.json\`, \`*.yaml\`, or \`*.yml\` file;
+  markdownlint requires a changed \`*.md\` file.
 - A command that targets a declared product repository (a \`<repo>:<path>\` argument or
   \`--prefix <repo>\`) is judged by that repository's package.json, not the project repository's.
 - \`specdojo catalog validate\`: the run's target project (or \`--project <id>\`) sets \`catalog_path\`
@@ -572,6 +579,7 @@ export async function runWithRetry(
     stderr: string;
     limit?: AgentLimitSignal;
     protectionBlock?: true;
+    connectionError?: true;
     actor?: string;
   }> => {
     let lastStderr = "";
@@ -657,6 +665,23 @@ export async function runWithRetry(
       lastStdout = attempt.stdout;
       lastExitCode = attempt.exitCode;
       lastLimit = attempt.limit;
+      const connectionError =
+        attempt.result === "failure" &&
+        isConnectionError(
+          attempt.exitCode,
+          `${attempt.stdout}\n${attempt.stderr}`,
+          resolveConnectionErrorDetection(execDefaults, candidate.provider),
+        );
+      if (connectionError) {
+        return {
+          result: "failure",
+          exitCode: attempt.exitCode,
+          stdout: attempt.stdout,
+          stderr: attempt.stderr,
+          connectionError: true,
+          actor: candidate.actor,
+        };
+      }
       if (attempt.result !== "rate_limit")
         return {
           result: attempt.result,
@@ -678,6 +703,24 @@ export async function runWithRetry(
 
   const recoveryEvents: RateLimitRecoveryEvent[] = [];
   const firstPass = await runPass(pinned ? candidates.slice(0, 1) : candidates);
+  if (firstPass.connectionError && pinned?.fallbackCandidate) {
+    const primary = candidates[0];
+    const fallback = pinned.fallbackCandidate;
+    const resumedAt = (pinned.now?.() ?? new Date()).toISOString();
+    process.stdout.write(
+      `Connection error detected for pinned agent ${primary?.actor ?? "-"}. ` +
+        `Falling back to ${fallback.actor} at ${resumedAt}.\n`,
+    );
+    recoveryEvents.push({
+      action: "fallback",
+      trigger: "connection_error",
+      from_actor: primary?.actor ?? "unknown",
+      to_actor: fallback.actor,
+      resumed_at: resumedAt,
+    });
+    const fallbackResult = await runPass([fallback]);
+    return { ...fallbackResult, attempts, rateLimitEvents: recoveryEvents };
+  }
   if (firstPass.result !== "rate_limit") {
     return { ...firstPass, attempts, rateLimitEvents: recoveryEvents };
   }
@@ -693,6 +736,7 @@ export async function runWithRetry(
       );
       recoveryEvents.push({
         action: "fallback",
+        trigger: "rate_limit",
         from_actor: primary?.actor ?? "unknown",
         to_actor: fallback.actor,
         resumed_at: resumedAt,
@@ -717,6 +761,7 @@ export async function runWithRetry(
         const resumedAt = (pinned.now?.() ?? new Date()).toISOString();
         recoveryEvents.push({
           action: "wait",
+          trigger: "rate_limit",
           from_actor: primary?.actor ?? "unknown",
           to_actor: primary?.actor ?? "unknown",
           resume_at: resumeAt.toISOString(),

@@ -1,0 +1,27 @@
+PJR-0EFN の 3 つの原因をすべて修正しました。対象の 3 つのテストファイルを `npx vitest run` で実行し、98 件すべて通っています。`npm run typecheck` も途中で実行してエラーはありませんでした。ただし lint・単体テスト全体・統合テストを含む親の検証の正式な結果は、このあと runner が出します。
+
+**1. 番号付きの文で markdownlint に落ちる問題**
+- `src/exec/results.ts` に `stripLeadingListMarker` を加え、reporter の文を箇条書きにするとき先頭の `1.`・`1)`・`-`・`*`・`+` を外すようにしました。edit・review・post-review の result はすべてこの処理を通ります。
+- 外すほうを選んだ理由: 箇条書きの記号は runner が付け、順序は並びで保たれるため、番号を残す（エスケープする）意味が薄いからです。`1.5 倍` のように後ろに空白が続かない数字はそのまま残します。
+- review の失敗時に runner が書く理由（`register-post-review.ts` と `job.ts`）にも同じ処理を入れました。
+- 旧来の `- 1. a` の形が実際に MD029 に当たることは、markdownlint で直接確かめました。
+
+**2. 失敗の報告が `format:` だけになっていた原因**
+- 原因は、hook の出力を要約する `summarizeGitHookFailure`（`src/shared/git.ts`）が最初に出てきた step を失敗扱いにしていたことです。lefthook は step を並列に実行するため、最初に出るのが成功した `format` のことがあります。
+- lefthook の末尾の summary で失敗の印（🥊 など）が付いた step を選び、その出力のうち error を含む最初の行を報告するよう直しました。
+
+**3. post-review の記帳の commit が失敗したときのログ**
+- 失敗した hook の名前、最初のエラーの行、作業ツリーに残った記帳のファイル、hook の全出力のログの場所を標準エラー出力に出すようにしました。ログは review の evidence の中の `post-review-commit.log` に書きます。
+- git 自身の `fatal:` などのメッセージは hook 名として扱いません。
+
+**テストと記録**
+- 単体テストを 5 件追加しました。番号で始まる文を含む review と edit の result が markdownlint を通ること、失敗した `markdown` の step と MD029 の行を取り出すこと、失敗時のログの行（2 件）を確かめています。
+- CHANGELOG の `## [0.4.1] - 未定` の「不具合修正」に 2 項目を追記し、個票の「対応結果」に解決内容・確認結果・再発防止策を書きました。
+- 変更したファイルは Prettier で整形済みです。
+
+**残っている作業**
+- 統合の後に `exec run --register --post-review` を 1 回流す動作確認（PJR-JSEY）は、まだ実施していません。完了条件の一つで、統合後でないとできないため、人が実施する必要があります。
+
+<specdojo_executor_evidence>
+{"final_message":"Removed leading list markers from reporter bullet items (stripLeadingListMarker) so results no longer hit markdownlint MD029. summarizeGitHookFailure now reports the step that lefthook marks as failed and its first error line. Post-review bookkeeping commit failures now log the hook name, first error line, files left uncommitted, and the full hook output log path. Added 5 unit tests and updated CHANGELOG 0.4.1 and the ticket's 対応結果. The post-integration `exec run --register --post-review` check (PJR-JSEY) has not been run.","validations":[{"command":"npx vitest run tests/src/exec/results.test.ts tests/src/exec/worktree.test.ts tests/src/exec/register-post-review.test.ts","status":"passed","summary":"3 files, 98 tests passed"},{"command":"npx prettier --write (changed files)","status":"passed","summary":"Formatted changed md/ts files; only the ticket table was re-aligned"},{"command":"specdojo exec run --register --post-review (PJR-JSEY smoke after integration)","status":"requires_human","summary":"Run once after integration to confirm post-review closes and commits the bookkeeping; this launches a real agent CLI and consumes quota"}]}
+</specdojo_executor_evidence>

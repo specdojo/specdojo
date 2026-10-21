@@ -12,8 +12,8 @@ specdojo:
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-10-18T13:04:25Z"
-  conclusion: 6EF8 の統合後の runner で exec run --register が plan の生成から統合まで通った（親検証 7 件通過）
+  completed_at: "2026-10-20T21:54:50Z"
+  conclusion: PJR-XRAB と PJR-HE9R の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
 ---
 
 # PJR-JSEY exec-run.ts の分割後に runner の動作を確かめる
@@ -24,7 +24,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 
 ## 2. 完了条件
 
-- 本個票の「対応結果」の表に、実行した日時（JST）、対象の分割の項目 ID、実行した agent の nickname を 1 行追記する。対象の分割の項目 ID は、実行時点で `review` または `done` になっている runner のコードの分割と移動の項目（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04・PJR-MHHP・PJR-XP0J・PJR-BZ9J・PJR-MX4F・PJR-DT3Q・PJR-GBWW・PJR-CY80・PJR-BHMH・PJR-H06F・PJR-YK1C・PJR-TSP6・PJR-E025・PJR-NJ6J・PJR-6EF8）のうち最も新しく統合されたものとする。
+- 本個票の「対応結果」の表に、実行した日時（JST）、対象の分割の項目 ID、実行した agent の nickname を 1 行追記する。対象の分割の項目 ID は、実行時点で `review` または `done` になっている runner のコードの分割と移動の項目（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04・PJR-MHHP・PJR-XP0J・PJR-BZ9J・PJR-MX4F・PJR-DT3Q・PJR-GBWW・PJR-CY80・PJR-BHMH・PJR-H06F・PJR-YK1C・PJR-TSP6・PJR-E025・PJR-NJ6J・PJR-6EF8・PJR-T46Y・PJR-8WBN・PJR-6DHY・PJR-E412・PJR-NS8Y・PJR-283N・PJR-G90K・PJR-0EFN・PJR-DKD8・PJR-A6PV・PJR-5HYP・PJR-XRAB・PJR-HE9R）のうち最も新しく統合されたものとする。
 - 本個票以外のファイルは変更しない。
 - 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通り、統合まで終わる。
 
@@ -57,6 +57,16 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 2026-10-18 19:06 | PJR-E025   | claude-expert-executor |
 | 2026-10-18 20:09 | PJR-NJ6J   | claude-expert-executor |
 | 2026-10-18 21:58 | PJR-6EF8   | claude-expert-executor |
+| 2026-10-19 00:08 | PJR-T46Y   | sonnet-executor        |
+| 2026-10-19 00:20 | PJR-T46Y   | sonnet-executor        |
+| 2026-10-19 00:39 | PJR-8WBN   | sonnet-executor        |
+| 2026-10-19 02:44 | PJR-283N   | sonnet-executor        |
+| 2026-10-19 03:14 | PJR-G90K   | sonnet-executor        |
+| 2026-10-19 03:41 | PJR-0EFN   | sonnet-executor        |
+| 2026-10-20 07:03 | PJR-DKD8   | sonnet-executor        |
+| 2026-10-20 07:23 | PJR-A6PV   | sonnet-executor        |
+| 2026-10-20 22:39 | PJR-5HYP   | sonnet-executor        |
+| 2026-10-21 06:50 | PJR-HE9R   | sonnet-executor        |
 
 ## 5. 関連ドキュメント
 

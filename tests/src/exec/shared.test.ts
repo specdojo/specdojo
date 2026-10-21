@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { specdojoRootDir } from "../../../src/shared/specdojo-config.js";
 import {
   collectRepeatable,
   formatDays,
@@ -138,5 +141,28 @@ describe("expandTemplate", () => {
     const actual = expandTemplate("- `depends_on`: _DEPS_\n", { _DEPS_: "\n  - [[a]]\n  - [[b]]" });
 
     expect(actual).toBe("- `depends_on`:\n  - [[a]]\n  - [[b]]\n");
+  });
+
+  it("collapses blank lines left when a standalone placeholder expands to an empty string", () => {
+    const actual = expandTemplate("段落\n\n_EMPTY_\n\n## 次\n", { _EMPTY_: "" });
+
+    expect(actual).toBe("段落\n\n## 次\n");
+  });
+
+  it("leaves no consecutive blank lines in any exec template when standalone placeholders are empty", () => {
+    const templatesDir = path.join(specdojoRootDir(), "docs", "ja", "specdojo", "exec-templates");
+    const names = readdirSync(templatesDir)
+      .filter((name) => name.endsWith(".md"))
+      .sort();
+
+    const offenders = names.filter((name) => {
+      const template = readFileSync(path.join(templatesDir, name), "utf8");
+      const placeholders = [...new Set(template.match(/^_[A-Z][A-Z_]*_$/gm) ?? [])];
+      const values = Object.fromEntries(placeholders.map((placeholder) => [placeholder, ""]));
+      return /\n{3,}/.test(expandTemplate(template, values));
+    });
+
+    expect(names.length).toBeGreaterThan(0);
+    expect(offenders).toEqual([]);
   });
 });

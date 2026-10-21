@@ -49,7 +49,10 @@ export function expandTemplate(template: string, values: Record<string, string>)
   // `: _PLACEHOLDER_` の空白が行末に残る。生成 plan は prettier の整形対象外
   // （.prettierignore）で checkpoint commit 時に markdownlint の MD009 が直接効くため、
   // ここで行末の空白を取り除く。
-  return result.replace(/[ \t]+$/gm, "");
+  // 置換値が空のとき（夜間の承認の印がない register 個票の _AUTOPILOT_CONSTRAINTS_、
+  // agent の Job の _JOB_EXECUTION_、保守系の _PROJECT_CONTEXT_ など）、前後の空行が重なって
+  // MD012 で checkpoint commit が止まるため、2 行以上続く空行を 1 行にまとめる（PJR-283N）。
+  return result.replace(/[ \t]+$/gm, "").replace(/\n{3,}/g, "\n\n");
 }
 
 // 登録簿の自由記述（title / description 列など）を Markdown 本文へ埋め込む際の安全化。

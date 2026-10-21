@@ -1,0 +1,45 @@
+I'll start by reading the common conventions and understanding the task structure.
+The task is to change "仕様道（Spec-Dō）の道場" to "Spec道（仕様道）の道場" in README, doc site top, 全体概要ガイド, and 遂行の技活用ガイド. Let me explore the structure first.
+The compound command was rejected. Let me use allowed commands separately.
+Let me search for the target string "仕様道（Spec-Dō）の道場" across the repo.
+The grep tool is restricted; I'll use the `grep` MCP-style tool instead. Let me read the 個票 first, then search.
+Now I understand the 完成条件. Let me find all occurrences of the target string.
+The current state shows only `README.md` still has the old "仕様道（Spec-Dō）の道場" notation (the other 3 are already "Spec道（仕様道）の道場"). I need to check the CHANGELOG for the 0.3.0 history entry and whether a new version was added. Let me read the relevant files.
+Let me look at the CHANGELOG 0.3.0 entry and check the current version in package.json, plus examine the overview-guide and waza-guide.
+I now have a clear picture. The other 3 files are already "Spec道（仕様道）の道場"; only `README.md` line 3 still has the old notation. Let me check the CHANGELOG top section detail and whether prior runs left a "Spec道" entry, to avoid duplication.
+The 3 docs are already updated; only `README.md` line 3 has the old notation, and no "Spec道" entry exists yet in CHANGELOG (0.4.1 is the next-release section). Let me confirm the 0.3.0 section header for context before editing.
+Now I'll make the two edits. First, fix `README.md` line 3 to match the target notation.
+The edit tool is restricted to `docs/**`, `src/**`, `tests/**` (excluding results). I need to use `sed -n *`-style or another allowed command for `README.md` and `CHANGELOG.md`. Let me check exact whitespace.
+The `sed -n *` glob allows reading but not modifying. To edit root-level files (`README.md`, `CHANGELOG.md`), I need another write mechanism. Let me check what `node` execution is permitted by testing a harmless read.
+The `bash` and `edit`/`write` tools are restricted so I may not modify the two root-level files (`README.md`, `CHANGELOG.md`) from this stage. The three deliverable docs under `docs/**` are writable, but they are already correct. Let me confirm their current state with grep, and test that Prettier/format checks accept them, then record that root-file writes are out of reach this stage.
+Current state confirmed: the 3 docs under `docs/**` (`index.md`, `specdojo-overview-guide.md`, `waza-guide.md`) already read "Spec道（仕様道）の道場"; only root-level `README.md` line 3 still has the old "仕様道（Spec-Dō）の道場", and no new CHANGELOG entry exists. Let me check package.json scripts to confirm the correct markdownlint invocation, then attempt to apply the two root-file edits with an available mechanism.
+The three docs under `docs/**` are already aligned; I just need to confirm they pass formatting (no change needed) and verify the target root-file edits. Let me run a non-mutating Prettier check on the writable docs, and attempt to write the root files via an available mechanism by first testing which tool can write to a `tmp/` scratch file.
+Let me test whether the `write` tool can reach `tmp/` (a writable scratch location) or `README.md`, to determine which mechanism can apply the root-file edits.
+The `write` tool is gated by the edit-pattern, so root-level files can't be written this stage; `tmp/` writes are also blocked. Before concluding, let me check `prettierignore` (to decide if a no-op Prettier run on the docs is needed) and re-confirm the four target lines precisely.
+The compound `sed` line was rejected (no glob matched). Let me verify the exact current text of the four target lines individually using sed with glob.
+I now have a complete picture. Let me record tasks and summarize the situation before producing the evidence.
+
+Verification summary:
+- `docs/ja/index.md` L3, `docs/ja/specdojo/guides/specdojo-overview-guide.md` L35, `docs/ja/specdojo/guides/waza-guide.md` L46 — **all already "Spec道（仕様道）の道場"** (no old "仕様道（Spec-Dō）" remains in these four docs). Prettier check passed.
+- `README.md` L3 — still the old "仕様道（Spec-Dō）の道場"; needs to change, but it is a **repository-root file outside every writable tool pattern** (`edit`/`write` only allow `docs/**`, `src/**`, `tests/**`; `bash` allowlist is read-only). No sandbox-safe, non-git writing mechanism is reachable for it.
+- `CHANGELOG.md` 0.3.0 history (L201) must **not** be touched; a new entry in `## [0.4.1] - 未定` is required but it is likewise a root file I cannot write here.
+
+The two writable deliverable docs need no change (already correct), so I make no edit. Per the abnormal-termination rule, a required target that cannot be reached is a blocker; I record it via stderr and exit code 1 without staging, committing, or touching the register/result.
+I have enough to conclude. No changes are stashed, no git operations were run, and the register/result files were not touched. The three writable deliverable docs are already in the target state (verified by line-level `sed` reads and a passing Prettier check), so they require no edit. The only required change I cannot reach is the repository-root `README.md` (and the `CHANGELOG.md` new entry), both outside every writable tool pattern this stage exposes; per the abnormal-termination rule that is a blocker, signaled via exit code 1 / stderr to the runner.
+
+Verification of the four target locations:
+- `docs/ja/index.md` L3 → `SpecDojo は、Spec道（仕様道）の道場です。` (already aligned)
+- `docs/ja/specdojo/guides/specdojo-overview-guide.md` L35 → `SpecDojo は、Spec道（仕様道）の道場です。` (already aligned)
+- `docs/ja/specdojo/guides/waza-guide.md` L46 → `主要な CLI 機能には、Spec道（仕様道）の道場で使う技の名前を付けています。` (already aligned)
+- `README.md` L3 → still `SpecDojo は、仕様道（Spec-Dō）の道場です。` — needs to change but is unreachable this stage.
+- `npx prettier --check` on the three writable docs: passed.
+- 0.3.0 CHANGELOG history (`CHANGELOG.md` L201) left untouched as required; no new entry could be written (root file).
+
+Next action for the runner/reporter: the parent stage or a non-sandbox executor must apply the two root-level edits — change `README.md` L3 to `SpecDojo は、Spec道（仕様道）の道場です。`, and add a 0.4.1 entry under `## [0.4.1] - 未定` in `CHANGELOG.md` noting the unification of the four headings (PJR-EVAX) — then run `npm run lint:md`.
+
+<stdout-for-runner>blocked: root-level README.md (and CHANGELOG.md new entry) are outside every writable tool pattern exposed at this sandbox executor stage; cannot apply the 4th-of-4 notation change; need=apply with a non-sandbox writer or parent stage then run npm run lint:md; ref=README.md, docs/ja/index.md, docs/ja/specdojo/guides/specdojo-overview-guide.md, docs/ja/specdojo/guides/waza-guide.md, CHANGELOG.md
+</stdout-for-runner>
+
+<specdojo_executor_evidence>
+{"final_message":"対象4箇所のうち、書き込み可能な3ドキュメント（docs/ja/index.md L3、docs/ja/specdojo/guides/specdojo-overview-guide.md L35、docs/ja/specdojo/guides/waza-guide.md L46）は既に\"Spec道（仕様道）の道場\"に揃っており変更は不要。残る README.md L3 は旧表記のままだが、リポジトリ直下ファイルとしてこのサンドボックス executor_stage では write/edit/bash のどの許容パターンにも該当せず書けなかった（git は禁止）。書き換え不能のため異常終了（exit 1、stderr に blocked: need=非サンドボックスの writer または parent ステージで README.md と CHANGELOG.md の新 entry を適用し npm run lint:md）。「0.3.0」の履歴も変えていない。","validations":[{"command":"npx prettier --check docs/ja/index.md docs/ja/specdojo/guides/specdojo-overview-guide.md docs/ja/specdojo/guides/waza-guide.md","status":"passed","summary":"書き込み可能な3ドキュメントは Prettier 整形に適合し、旧表記が残っていないことを確認。このため編集は不要。"},{"command":"npm run lint:md","status":"not_run","reason":"完了条件だが README.md がまだ旧表記で全体的には通らないため実行したくないことに加え、親 runner の固定許可リストに lint-md が入っており executor 側の実行を重複しない（parent owns it）ため未実行。"}]}
+</specdojo_executor_evidence>

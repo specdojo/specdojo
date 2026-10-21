@@ -271,6 +271,8 @@ export async function runAgentPipeline(params: {
   resumeHandoff?: readonly string[];
   providerConcurrencyGate?: ProviderConcurrencyGate;
   productWorktrees?: readonly ProductWorktree[];
+  /** Run-scoped `--integration-branch` values to record in the checkpoint for resume. */
+  integrationBranchOverrides?: Readonly<Record<string, string>>;
   runId?: string;
   /** reporter が返す出力の mode。省略時は edit。 */
   mode?: TaskMode;
@@ -318,6 +320,9 @@ export async function runAgentPipeline(params: {
       plan_ref: relative(repoRoot, params.planPath).split(sep).join("/"),
       result_ref: relative(cwd, resultPath).split(sep).join("/"),
     },
+    ...(params.integrationBranchOverrides
+      ? { integrationBranches: { ...params.integrationBranchOverrides } }
+      : {}),
   });
   state = updatePipelineStage(
     state,

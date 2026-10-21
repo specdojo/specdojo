@@ -1,0 +1,7 @@
+個票の「対応結果」の表に 1 行追記しました。変更したのはこの個票だけです。検査は 7 件とも親 runner の担当なので、こちらでは実行していません。
+
+追記した行は、日時が `2026-10-20 22:39`(JST。確認時の UTC 13:39 から換算)、対象の分割が PJR-5HYP、agent が `sonnet-executor` です。対象に PJR-5HYP を選んだのは、完了条件の一覧で個票が `review` または `done` のもののうち、最も新しく統合されたのがこれだと判断したためです。PJR-5HYP は `review`、PJR-E412・PJR-NS8Y・PJR-6DHY は `done` でした。「最も新しく統合された」かどうかは、一覧の項目を 1 件ずつは照合していません。git log で PJR-5HYP の commit が直近に並んでいることから判断しました。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に 2026-10-20 22:39 / PJR-5HYP / sonnet-executor の行を追記した。変更は個票のみ。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検査のため、executor では実行していない。","reason":"parent_validations"}]}
+</specdojo_executor_evidence>

@@ -25,6 +25,8 @@ export type PjrItem = {
   description: string;
   type: string;
   priority: string;
+  // executor / reporter pipeline の振り分けに使う作業難易度。未指定なら従来の自動選択。
+  difficulty?: RegisterDifficulty;
   owner: string;
   registeredAt: string;
   due: string;
@@ -39,7 +41,11 @@ export type PjrItem = {
   // この項目を起票する元になった register 項目。project 内は PJR-XXXX、project 間は
   // <project-id>:PJR-XXXX で保持し、派生先ビューと監査履歴へ展開する。
   derivedFrom?: string[];
+  // 人が完了条件を確認し、夜間 orchestrator の実行対象として承認した印。
+  autopilot?: "approved";
 };
+
+export type RegisterDifficulty = "hard" | "medium" | "easy";
 
 // 一覧ビュー1行分の表示値。日時は暦日へ変換済みで、テーブル生成と履歴の比較に使う。
 export type PjrDisplayItem = Omit<PjrItem, "registeredAt" | "completedAt"> & {
@@ -69,6 +75,7 @@ export const VALID_TYPES = [
 ] as const;
 
 export const VALID_PRIORITIES = ["high", "medium", "low"] as const;
+export const VALID_DIFFICULTIES = ["hard", "medium", "easy"] as const;
 
 export const TERMINAL_STATUSES_SET = new Set(["done", "decided", "rejected", "deferred"]);
 
@@ -95,6 +102,7 @@ export type RegisterItemFieldUpdates = {
   item_type?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   item_status?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   priority?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  difficulty?: RegisterDifficulty | typeof REMOVE_REGISTER_ITEM_FIELD;
   owner?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   registered_at?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   due_on?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
@@ -104,6 +112,7 @@ export type RegisterItemFieldUpdates = {
   approach?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   targets?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   derived_from?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
+  autopilot?: "approved" | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
 
 // 日時へ移行する前の個票が持っていた日付フィールド。移行処理だけが読み書きする。
@@ -142,6 +151,7 @@ const SPECDOJO_KEY_ORDER = [
   "item_type",
   "item_status",
   "priority",
+  "difficulty",
   "owner",
   "registered_at",
   "due_on",
@@ -149,6 +159,7 @@ const SPECDOJO_KEY_ORDER = [
   "block_reason",
   "conclusion",
   "derived_from",
+  "autopilot",
   "approach",
   "targets",
 ];
@@ -267,6 +278,8 @@ export function readRegisterItemContent(
         (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
       )
     : undefined;
+  const autopilot = fields.autopilot === "approved" ? "approved" : undefined;
+  const difficulty = asString(fields.difficulty) as RegisterDifficulty | undefined;
 
   const item: PjrItem = {
     id,
@@ -275,6 +288,7 @@ export function readRegisterItemContent(
     description: descriptionFromBody(body),
     type: asString(fields.item_type) ?? CELL_TODO,
     priority: asString(fields.priority) ?? "medium",
+    ...(difficulty ? { difficulty } : {}),
     owner: asString(fields.owner) ?? CELL_TODO,
     registeredAt: asString(fields.registered_at) ?? CELL_TODO,
     due:
@@ -288,6 +302,7 @@ export function readRegisterItemContent(
     ...(approach ? { approach } : {}),
     ...(targets && targets.length > 0 ? { targets } : {}),
     ...(derivedFrom && derivedFrom.length > 0 ? { derivedFrom } : {}),
+    ...(autopilot ? { autopilot } : {}),
   };
 
   return {
@@ -406,6 +421,7 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
     item_type: item.type,
     item_status: item.status,
     priority: item.priority,
+    ...(item.difficulty ? { difficulty: item.difficulty } : {}),
     owner: isPlaceholderCell(item.owner) ? null : item.owner.trim(),
     registered_at: isPlaceholderCell(item.registeredAt) ? null : item.registeredAt.trim(),
     due_on:
@@ -421,6 +437,7 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
     ...(item.approach ? { approach: item.approach } : {}),
     ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
     ...(item.derivedFrom && item.derivedFrom.length > 0 ? { derived_from: item.derivedFrom } : {}),
+    ...(item.autopilot ? { autopilot: item.autopilot } : {}),
   };
 }
 

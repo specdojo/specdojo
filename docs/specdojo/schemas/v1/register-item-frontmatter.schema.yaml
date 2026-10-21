@@ -108,6 +108,12 @@ properties:
             $ref: "#/$defs/Priority"
             description: "Handling priority (list column: 優先度)."
 
+          difficulty:
+            $ref: "#/$defs/Difficulty"
+            description: >
+              Work difficulty used to select the register executor/reporter route. Omit it to use
+              the existing priority-based automatic agent selection.
+
           owner:
             type: string
             minLength: 1
@@ -169,6 +175,13 @@ properties:
               Register items from which this item was derived. Use PJR-XXXX for an item in the
               same project and <project-id>:PJR-XXXX for an item in another project. Omit the key
               when the item was not derived from another register item.
+
+          autopilot:
+            type: string
+            const: approved
+            description: >
+              Human approval that the item's stated completion conditions may be executed by the
+              night orchestrator. Omit the key to keep the item out of the approved queue.
 
           approach:
             $ref: "#/$defs/Approach"
@@ -235,6 +248,14 @@ $defs:
       - medium
       - low
     description: "Handling priority of a register item."
+
+  Difficulty:
+    type: string
+    enum:
+      - hard
+      - medium
+      - easy
+    description: "Work difficulty used for register agent routing."
 
   Approach:
     type: string

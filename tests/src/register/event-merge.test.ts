@@ -144,9 +144,11 @@ describe("rebuildRegisterTicketFromEvents", () => {
     const update = event(4, "2026-09-28T04:00:00Z", "update", "waiting", "waiting", [
       { field: "due", from: "2026-10-01", to: "2026-10-15" },
       { field: "priority", from: "medium", to: "high" },
+      { field: "difficulty", from: "-", to: "hard" },
       { field: "approach", from: "-", to: "fully-guided" },
       { field: "targets", from: "-", to: '["deliverable-doc"]' },
       { field: "derived_from", from: "-", to: '["PJR-AB12"]' },
+      { field: "autopilot", from: "-", to: "approved" },
       { field: "title", from: "Sample", to: "Renamed" },
     ]);
     const resume = event(5, "2026-09-28T05:00:00Z", "start", "waiting", "in-progress");
@@ -159,7 +161,9 @@ describe("rebuildRegisterTicketFromEvents", () => {
 
     expect(rebuilt.appliedFields).toEqual([
       "approach",
+      "autopilot",
       "derived_from",
+      "difficulty",
       "due",
       "priority",
       "targets",
@@ -167,10 +171,12 @@ describe("rebuildRegisterTicketFromEvents", () => {
     expect(readSpecdojoFields(rebuilt.content)).toMatchObject({
       item_status: "in-progress",
       priority: "high",
+      difficulty: "hard",
       due_on: "2026-10-15",
       approach: "fully-guided",
       targets: ["deliverable-doc"],
       derived_from: ["PJR-AB12"],
+      autopilot: "approved",
     });
     expect(rebuilt.content).toContain("# PJR-0ABC Sample");
   });

@@ -2,9 +2,9 @@
 id: sysd-cross-cutting-policy-grade-criteria
 document: sysd-cross-cutting-policy
 path: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
-graded_at: "2026-10-15T16:14:49.411Z"
-graded_by: agy-expert-executor
-content_hash: bca41820969b2dcdea1ce393322b1db29279f2135f145be62dcaa7f60fc6238b
+graded_at: "2026-10-20T16:33:21.587Z"
+graded_by: flash-high-executor
+content_hash: 9c044498807d98d0b40dbe54a4b6549629ced8e1609ef6916125888146f34979
 summary:
   satisfied: 2
   unsatisfied: 2
@@ -22,7 +22,7 @@ criteria:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: Requirements for idempotency, timeout/cutoff policies, and logging policies are missing from the rule set.
+    reason: Common error format, idempotency, timeout setting/abortion, and logging policy are not described in the rules.
   - id: DC-003
     text: 横断ルールのテスト・検証方針が確認できること
     roles:
@@ -35,4 +35,4 @@ criteria:
       - OPS
     viewpoint: vp-ops-operability
     status: unsatisfied
-    reason: Operational perspectives for monitoring and tracing are absent, and OPD is marked as none.
+    reason: Operational perspectives for monitoring and distributed tracing are missing.

@@ -1,0 +1,87 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.0 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6DHY
+
+ ❯ tests/src/register/commands.test.ts (55 tests | 1 failed) 4094ms
+     × update --autopilot は夜間承認を event 付きで設定・解除する 52ms
+Updated ticket status → ready: /tmp/specdojo-ticket-FT704a/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-dE9HDp/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-xEuUv5/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-AZtMWN/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-1LV3kd/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-aaHXVw/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-mtDFWV/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-mtDFWV/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-mtDFWV/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-mtDFWV/.specdojo/agent-members.yaml
+Wrote agent stdout: /tmp/specdojo-agent-command-d1LHl7/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-LTlLpc/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-18T15:49:03.524Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-18T15:48:03.780Z.
+fallback complete
+
+ Test Files  1 failed | 135 passed (136)
+      Tests  1 failed | 2188 passed (2189)
+   Start at  00:46:46
+   Duration  83.16s (transform 5.01s, setup 1.04s, import 44.21s, tests 85.73s, environment 9ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/register/commands.test.ts > register CLI — 個票 frontmatter への読み書き > update --autopilot は夜間承認を event 付きで設定・解除する
+AssertionError: expected [ { field: 'autopilot', …(2) } ] to deep equally contain { field: 'autopilot', from: '', …(1) }
+
+- Expected:
+{
+  "field": "autopilot",
+  "from": "",
+  "to": "approved",
+}
+
++ Received:
+[
+  {
+    "field": "autopilot",
+    "from": "-",
+    "to": "approved",
+  },
+]
+
+ ❯ tests/src/register/commands.test.ts:750:62
+    748|       ]);
+    749|       expect(readFileSync(ticketPath, "utf8")).toContain("  autopilot:…
+    750|       expect(readEvents(registerDir, "PJR-AB12")[0].changes).toContain…
+       |                                                              ^
+    751|         field: "autopilot",
+    752|         from: "",
+ ❯ tests/src/register/commands.test.ts:225:7
+ ❯ tests/src/register/commands.test.ts:724:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SAZC",
+  "run_id": "20261020T223735391Z-9f05ec6f",
+  "updated_at": "2026-10-20T22:48:44.478Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-10-20T22:38:36.332Z",
+      "completed_at": "2026-10-20T22:42:25.238Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-SAZC/20261020T223735391Z-9f05ec6f/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-20T22:47:11.868Z",
+      "completed_at": "2026-10-20T22:48:44.478Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-sazc-20261020T223735Z-e2c0-result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-sazc-20261020T223735Z-e2c0-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-sazc-20261020T223735Z-e2c0-result.md"
+  }
+}

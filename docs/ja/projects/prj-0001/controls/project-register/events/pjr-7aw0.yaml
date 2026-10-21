@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_32559a5aa48247a0943f81b3d46c3a59
+  ts: "2026-10-18T14:46:07Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 親検証の検査を executor が not_applicable と報告すると runner が退けて止まる
+    - field: description
+      from: ""
+      to: "2026-10-18 23:45 に PJR-WJE6 を qwen-executor で流したところ、qwen は親 runner が流す検査（npm run lint:md など 7 件）を、規約どおり自分では流さず not_applicable（理由: parent runner runs）と報告した。runner は script があるため当てはまると判定して not_applicable を退け、親検証の 7 件はすべて通っていたのに executor validation failed or not run で waiting にした。親検証に設定された検査についての executor の報告は、親 runner の結果で置き換えるか無視するべきである"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-Z104"]'
+- v: 1
+  id: reg_5667c3823ab046fca97a42aa2326722f
+  ts: "2026-10-18T14:47:39Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_32559a5aa48247a0943f81b3d46c3a59
+- v: 1
+  id: reg_e3421f68915e4c5fb04b0b6278722ce6
+  ts: "2026-10-18T15:02:36Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5667c3823ab046fca97a42aa2326722f
+- v: 1
+  id: reg_6dc36fe7b09540949d0d427821e56c30
+  ts: "2026-10-18T15:28:40Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証と、WJE6 の再開・JSEY を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: 親検証に設定された検査について executor が not_run か not_applicable と報告しても、親 runner が流して通した場合は run を失敗にせず、親 runner の結果を正とするようにした。executor の failed は打ち消さない。共通の規約の要点にも書いた。qwen-executor の WJE6 が、この修正の後の再開で通った
+  previous_event_id: reg_e3421f68915e4c5fb04b0b6278722ce6

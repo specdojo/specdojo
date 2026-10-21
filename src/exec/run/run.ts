@@ -39,6 +39,7 @@ export { rebuildStaleGeneratedTracksForCycle, resolveClaimingActor } from "./sch
 export { resolveInPlaceAgentPipeline, resolveInPlaceCommand } from "./in-place.js";
 export { commitSubject, pipelineRecoveryMeta } from "./mode-shared.js";
 export {
+  applyRegisterDifficultyRouting,
   commitRegisterItemChanges,
   isRegisterPipelineRequested,
   parseRegisterExecutorSelection,

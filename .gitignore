@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# 作業用の一時ファイル（agent と orchestrator の使い捨て。commit しない）
+/tmp/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

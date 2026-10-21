@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T06:13:25Z"
@@ -32,14 +32,16 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                   | 担当 | 状態 | メモ               |
-| --- | -------------------------------------- | ---- | ---- | ------------------ |
-| 1   | `devcontainer.json` に拡張機能を加える | DEV  | open | 利用者の承認を得る |
-| 2   | devcontainer を作り直して確認する      | DEV  | open | -                  |
+| No  | 作業                                   | 担当 | 状態 | メモ                              |
+| --- | -------------------------------------- | ---- | ---- | --------------------------------- |
+| 1   | `devcontainer.json` に拡張機能を加える | DEV  | done | 利用者の承認を得る                |
+| 2   | devcontainer を作り直して確認する      | DEV  | open | devcontainer 再構築と実機動作確認 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容: `.devcontainer/devcontainer.json` の `customizations.vscode.extensions` に `bradlc.vscode-tailwindcss`（Tailwind CSS IntelliSense）および `dbaeumer.vscode-eslint`（ESLint）を追加した。なお、`astro-build.astro-vscode`（Astro）および `esbenp.prettier-vscode`（Prettier）は既に定義されていたため、重複を避けて既存設定を維持した。
+- 成果物: `.devcontainer/devcontainer.json`
+- 残課題: `.devcontainer/` の変更に関する利用者の承認、および devcontainer 再構築（Rebuild Container）後の `specdojo-lp` での構文強調表示や補完動作の確認（利用者の実機環境にて実施）。
 
 ## 5. 関連ドキュメント
 

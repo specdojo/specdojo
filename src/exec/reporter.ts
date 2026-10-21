@@ -20,6 +20,7 @@ import {
   reporterOutputSchemaForMode,
   type ReporterOutput,
 } from "./reporter-output.js";
+import { repoEnvironmentVariableName } from "./task-repos.js";
 
 export {
   REPORTER_OUTPUT_SCHEMA,
@@ -280,9 +281,10 @@ export function deriveReporterFacts(
     commands.add(command);
     target.set(repo, commands);
   };
-  // sandbox で実行できない検証を executor が not_run（親 runner へ委譲）と記録し、runner が
-  // 同じリポジトリで同じコマンドを実行して通した場合は満たされたものとして扱う。executor の
-  // failed は runner の結果で打ち消さない（PJR-2GZE）。
+  // sandbox で実行できない検証を executor が not_run（親 runner へ委譲）または
+  // not_applicable と記録し、runner が同じリポジトリで同じコマンドを実行して通した場合は、
+  // 親検証の結果を正として満たされたものと扱う。executor の failed は runner の結果で
+  // 打ち消さない（PJR-2GZE、PJR-7AW0）。
   for (const validation of evidence.validations) {
     if (validation.status !== "passed") continue;
     if (validation.source === "runner") {
@@ -306,21 +308,35 @@ export function deriveReporterFacts(
   // `npm run check` のような合成コマンドを executor が not_run（親 runner へ委譲）とした場合は、
   // 対象リポジトリの package.json の script を展開し、構成する各コマンドが同じリポジトリの
   // 親検証か executor 自身の検証で通っていれば満たされたものとして扱う（PJR-SDWF）。
-  const isDelegatedValidationSatisfied = (command: string): boolean => {
+  const validationCommandAndRepo = (
+    command: string,
+  ): { command: string; repo: string; scripts: Readonly<Record<string, string>> } => {
     const manifest = commandManifest(
       normalizeValidationCommand(command),
       applicabilityOptions,
       specdojoConfig,
     );
-    const repo = manifest.repoName ?? PARENT_VALIDATION_PROJECT_REPO;
-    const runnerPassedCommands = runnerPassedCommandsByRepo.get(repo) ?? new Set<string>();
-    if (runnerPassedCommands.has(manifest.command)) return true;
-    const passedCommands = passedCommandsByRepo.get(repo) ?? new Set<string>();
-    const components = compositeComponents(manifest.command, manifest.scripts);
+    return {
+      command: manifest.command,
+      repo: manifest.repoName ?? PARENT_VALIDATION_PROJECT_REPO,
+      scripts: manifest.scripts,
+    };
+  };
+  const isPassedParentValidation = (command: string): boolean => {
+    const target = validationCommandAndRepo(command);
+    return (runnerPassedCommandsByRepo.get(target.repo) ?? new Set<string>()).has(target.command);
+  };
+  const isDelegatedValidationSatisfied = (command: string): boolean => {
+    const target = validationCommandAndRepo(command);
+    if ((runnerPassedCommandsByRepo.get(target.repo) ?? new Set<string>()).has(target.command)) {
+      return true;
+    }
+    const passedCommands = passedCommandsByRepo.get(target.repo) ?? new Set<string>();
+    const components = compositeComponents(target.command, target.scripts);
     return (
       components !== undefined &&
       components.every((component) =>
-        isComponentSatisfied(component, passedCommands, manifest.scripts),
+        isComponentSatisfied(component, passedCommands, target.scripts),
       )
     );
   };
@@ -341,6 +357,12 @@ export function deriveReporterFacts(
     if (
       (validation.status === "not_run" || validation.status === "not_applicable") &&
       runnerOwnedValidationReason(validation.command) !== undefined
+    ) {
+      return false;
+    }
+    if (
+      (validation.status === "not_run" || validation.status === "not_applicable") &&
+      isPassedParentValidation(validation.command)
     ) {
       return false;
     }
@@ -448,6 +470,86 @@ export function runnerOwnedValidationReason(command: string): string | undefined
 
 const PROJECT_DOCUMENTS_ROOT = "docs/ja/projects/";
 
+type ChangeScopedValidation = {
+  /** Human-readable form of the path condition, used in runner-derived reasons. */
+  pathCondition: string;
+  matchesCommand: (command: string) => boolean;
+  matchesPath: (path: string) => boolean;
+};
+
+const hasExtension =
+  (extensions: readonly string[]) =>
+  (path: string): boolean => {
+    const normalized = path.toLowerCase();
+    return extensions.some((extension) => normalized.endsWith(extension));
+  };
+
+// The command-to-change mapping is kept in one place and mirrors the change-type rows in
+// xep-common-conventions-template.md. Checks such as typecheck intentionally remain outside this
+// table: PJR-8WBN requires their existing script-based applicability to stay unchanged.
+const CHANGE_SCOPED_VALIDATIONS: readonly ChangeScopedValidation[] = [
+  {
+    pathCondition: "YAML ファイル（*.yaml / *.yml）",
+    matchesCommand: (command) => /^npm run validate:schema:file(?:\s|$)/u.test(command),
+    matchesPath: hasExtension([".yaml", ".yml"]),
+  },
+  {
+    pathCondition: "Prettier 対象ファイル（*.md / *.ts / *.js / *.json / *.yaml / *.yml）",
+    matchesCommand: (command) => /^(?:npx\s+)?prettier(?:\s|$)/u.test(command),
+    matchesPath: hasExtension([".md", ".ts", ".js", ".json", ".yaml", ".yml"]),
+  },
+  {
+    pathCondition: "Markdown ファイル（*.md）",
+    matchesCommand: (command) =>
+      /^npm run lint:md(?:\s|$)/u.test(command) ||
+      /^(?:npx\s+)?(?:markdownlint|markdownlint-cli2)(?:\s|$)/u.test(command) ||
+      /^node\s+\S*specdojo-docs-lint\.js\s+markdownlint(?:\s|$)/u.test(command),
+    matchesPath: hasExtension([".md"]),
+  },
+];
+
+function changedPathSides(path: string): string[] {
+  return path.split(" -> ").map((side) => side.replaceAll("\\", "/").replace(/^\.\//u, ""));
+}
+
+function changePathsForCommand(
+  changedPaths: readonly string[],
+  repoName: string | undefined,
+  config: SpecDojoConfig | null,
+  projectId: string | undefined,
+): string[] {
+  const repoNames = declaredRepos(config, projectId).map((repo) => repo.name);
+  return changedPaths.flatMap(changedPathSides).flatMap((path) => {
+    if (repoName !== undefined) {
+      const prefix = `${repoName}:`;
+      return path.startsWith(prefix) ? [path.slice(prefix.length)] : [];
+    }
+    return repoNames.some((name) => path.startsWith(`${name}:`)) ? [] : [path];
+  });
+}
+
+function changeScopedValidationApplicability(
+  command: string,
+  changedPaths: readonly string[] | undefined,
+  repoName: string | undefined,
+  config: SpecDojoConfig | null,
+  projectId: string | undefined,
+): { recognized: boolean; applicable?: boolean; reason?: string } {
+  const validation = CHANGE_SCOPED_VALIDATIONS.find(({ matchesCommand }) =>
+    matchesCommand(command),
+  );
+  if (!validation) return { recognized: false };
+  if (changedPaths === undefined) return { recognized: true };
+  const relevantPaths = changePathsForCommand(changedPaths, repoName, config, projectId);
+  return relevantPaths.some(validation.matchesPath)
+    ? { recognized: true, applicable: true }
+    : {
+        recognized: true,
+        applicable: false,
+        reason: `変更に ${validation.pathCondition} がない`,
+      };
+}
+
 function changesReachProjectDocuments(changedPaths: readonly string[]): boolean {
   return changedPaths
     .flatMap((path) => path.split(" -> "))
@@ -526,6 +628,14 @@ export function mechanicallyNotApplicableReason(
   }
 
   const manifest = commandManifest(normalized, options, config);
+  const changeScoped = changeScopedValidationApplicability(
+    manifest.command,
+    options.changedPaths,
+    manifest.repoName,
+    config,
+    options.projectId,
+  );
+  if (changeScoped.applicable === false) return changeScoped.reason;
   const packageJson =
     manifest.repoName === undefined ? "package.json" : `${manifest.repoName} の package.json`;
   const scriptName = invokedScriptNameOf(manifest.command);
@@ -558,10 +668,19 @@ function isValidNotApplicableValidation(
   );
   if (specdojo.recognized) return specdojo.applicable !== true;
   const manifest = commandManifest(normalized, options, config);
+  const changeScoped = changeScopedValidationApplicability(
+    manifest.command,
+    options.changedPaths,
+    manifest.repoName,
+    config,
+    options.projectId,
+  );
+  if (changeScoped.applicable === false) return true;
   const scriptName = invokedScriptNameOf(manifest.command);
   if (scriptName !== undefined && hasApplicableScript(manifest.scripts, scriptName)) return false;
   const packageName = npxPackageNameOf(manifest.command);
-  return packageName === undefined || !manifest.dependencies.has(packageName);
+  if (packageName !== undefined) return !manifest.dependencies.has(packageName);
+  return true;
 }
 
 type CommandManifest = PackageManifestFacts & {
@@ -595,8 +714,25 @@ function declaredRepos(
 }
 
 /**
- * Identifies a command that targets a declared product repository, either through
- * `--prefix <repo>` (the repository name or its configured path) or a `<repo>:<path>` argument.
+ * True when a command references a shell variable without mistaking a longer variable name for
+ * the requested one. Both `$NAME` and `${NAME}` forms are recognized.
+ */
+function referencesShellVariable(command: string, variable: string): boolean {
+  if (command.includes("${" + variable + "}")) return true;
+  const reference = `$${variable}`;
+  let offset = command.indexOf(reference);
+  while (offset >= 0) {
+    const next = command[offset + reference.length];
+    if (next === undefined || !/[A-Za-z0-9_]/u.test(next)) return true;
+    offset = command.indexOf(reference, offset + reference.length);
+  }
+  return false;
+}
+
+/**
+ * Identifies a command that targets a declared product repository through `--prefix <repo>` (the
+ * repository name or its configured path), `$SPECDOJO_REPO_<NAME>` / its braced form, or a
+ * `<repo>:<path>` argument.
  */
 function productRepoCommand(
   command: string,
@@ -614,6 +750,10 @@ function productRepoCommand(
       command: normalizeValidationCommand(command.replace(PREFIX_OPTION_PATTERN, " ")),
     };
   }
+  const environmentRepo = repos.find((candidate) =>
+    referencesShellVariable(command, repoEnvironmentVariableName(candidate.name)),
+  );
+  if (environmentRepo) return { repo: environmentRepo, command };
   const tokens = command.split(" ");
   const repo = repos.find((candidate) =>
     tokens.some((token) => token.startsWith(`${candidate.name}:`)),

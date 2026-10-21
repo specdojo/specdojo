@@ -1,0 +1,11 @@
+個票の「対応結果」の表に 1 行追記しました。対象の分割は、最も新しく統合された PJR-283N です（`git log` で 02:33 JST の統合を確認）。追記した行は次のとおりです。
+
+| 日時（JST） | 対象の分割 | agent |
+| --- | --- | --- |
+| 2026-10-19 02:44 | PJR-283N | sonnet-executor |
+
+変更したのは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。検証コマンドは、親 runner が実行するものだけなので、私は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に PJR-283N の行（2026-10-19 02:44 JST、sonnet-executor）を追記した。変更は個票 1 ファイルのみ。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する許可リストの検証のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>

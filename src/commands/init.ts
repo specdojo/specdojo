@@ -34,6 +34,8 @@ const PARENT_VALIDATION_SCRIPTS = {
   "validate-schema": "validate:schema",
   typecheck: "typecheck",
   "test-unit": "test:unit",
+  build: "build",
+  "format-check": "format:check",
 } as const;
 
 export type InitOptions = {
@@ -47,6 +49,7 @@ export type InitOptions = {
   exec?: boolean;
   catalog?: string;
   devcontainer?: boolean;
+  devcontainerPreset?: string;
   workspaceName?: string;
   dryRun?: boolean;
 };
@@ -61,6 +64,7 @@ export type InitAnswers = {
   exec: boolean;
   catalog?: ProjectSize;
   devcontainer: boolean;
+  devcontainerPreset?: "recommended";
 };
 
 export interface InitPrompter {
@@ -114,6 +118,13 @@ function parseCatalog(value: string | undefined): ProjectSize | undefined {
   throw new Error(`Invalid catalog size: ${value}. Must be small, medium, large, or none`);
 }
 
+function parseDevcontainerPreset(value: string | undefined): "recommended" | undefined {
+  const normalized = value?.trim().toLowerCase();
+  if (!normalized || normalized === "none" || normalized === "-") return undefined;
+  if (normalized === "recommended") return normalized;
+  throw new Error(`Invalid Dev Container preset: ${value}. Must be recommended or none`);
+}
+
 function validateProjectId(projectId: string): string {
   if (!/^prj-[0-9]{4,}$/.test(projectId)) {
     throw new Error(`Invalid project ID: ${projectId}. Expected prj-0001 style`);
@@ -151,6 +162,9 @@ function validateAnswers(answers: InitAnswers): InitAnswers {
   validateNickname(answers.nickname);
   validateDisplayName(answers.displayName);
   validateExecProviders(answers.providers, answers.exec);
+  if (answers.devcontainerPreset && !answers.devcontainer) {
+    throw new Error("--devcontainer-preset requires --devcontainer");
+  }
   return answers;
 }
 
@@ -174,6 +188,13 @@ export async function collectInitAnswers(
   prompter?: InitPrompter,
 ): Promise<InitAnswers> {
   if (!prompter) {
+    const devcontainer = !!options.devcontainer;
+    const explicitPreset = parseDevcontainerPreset(options.devcontainerPreset);
+    const devcontainerPreset = devcontainer
+      ? options.devcontainerPreset === undefined
+        ? "recommended"
+        : explicitPreset
+      : explicitPreset;
     const answers = validateAnswers({
       projectId: options.project?.trim() || DEFAULTS.projectId,
       projectName: options.name?.trim() || DEFAULTS.projectName,
@@ -183,7 +204,8 @@ export async function collectInitAnswers(
       providers: parseProviders(options.provider),
       exec: !!options.exec,
       catalog: parseCatalog(options.catalog),
-      devcontainer: !!options.devcontainer,
+      devcontainer,
+      ...(devcontainerPreset ? { devcontainerPreset } : {}),
     });
     for (const [label, used] of [
       ["project", !options.project],
@@ -195,6 +217,7 @@ export async function collectInitAnswers(
       ["exec=no", !options.exec],
       ["catalog=none", !options.catalog],
       ["devcontainer=no", !options.devcontainer],
+      ["devcontainer-preset=recommended", devcontainer && options.devcontainerPreset === undefined],
     ] as const) {
       if (used) process.stdout.write(`Using default: ${label}\n`);
     }
@@ -210,6 +233,7 @@ export async function collectInitAnswers(
     const providerDefault = options.provider?.trim() || DEFAULTS.providers.join(",");
     const execDefault = !!options.exec;
     const devcontainerDefault = !!options.devcontainer;
+    const explicitDevcontainerPreset = parseDevcontainerPreset(options.devcontainerPreset);
     const providerPrompt = `Orchestrator providers (${PROVIDERS.join(", ")}) [${providerDefault}]: `;
     const projectId = await promptUntilValid(
       prompter,
@@ -256,6 +280,14 @@ export async function collectInitAnswers(
       `Create a Dev Container? [${devcontainerDefault ? "Y/n" : "y/N"}]: `,
       (answer) => parseBoolean(answer, devcontainerDefault),
     );
+    const devcontainerPreset =
+      devcontainer && options.devcontainerPreset === undefined
+        ? await promptUntilValid(
+            prompter,
+            "Add the recommended Dev Container settings? [Y/n]: ",
+            (answer) => (parseBoolean(answer, true) ? "recommended" : undefined),
+          )
+        : explicitDevcontainerPreset;
     return validateAnswers({
       projectId,
       projectName,
@@ -266,6 +298,7 @@ export async function collectInitAnswers(
       exec,
       catalog,
       devcontainer,
+      ...(devcontainerPreset ? { devcontainerPreset } : {}),
     });
   } finally {
     prompter.close();
@@ -438,6 +471,40 @@ function writeExecConfiguration(
     memberTemplate.aliases ?? [],
     new Set(members.map((member) => member.nickname)),
   );
+  const pairs = providers.map((provider) => {
+    const executor = members.find(
+      (member) =>
+        member.provider === provider && member.stage_role === "executor" && member.mode === "edit",
+    );
+    const reporter = members.find(
+      (member) => member.provider === provider && member.stage_role === "reporter",
+    );
+    if (!executor || !reporter) {
+      throw new Error(
+        `init-agent-members.yaml must define an edit executor and reporter for ${provider}`,
+      );
+    }
+    return {
+      executor: preferredAgentName(executor, aliases),
+      reporter: preferredAgentName(reporter, aliases),
+    };
+  });
+  const route = (pairIndex: number, action: "stop" | "wait" | "fallback") => {
+    const resolvedIndex = Math.min(pairIndex, pairs.length - 1);
+    const pair = pairs[resolvedIndex]!;
+    const fallback = pairs.length > 1 ? pairs[(resolvedIndex + 1) % pairs.length] : undefined;
+    return {
+      executor_by: pair.executor,
+      reporter_by: pair.reporter,
+      on_rate_limit: action === "fallback" && !fallback ? "stop" : action,
+      ...(fallback
+        ? {
+            fallback_executor_by: fallback.executor,
+            fallback_reporter_by: fallback.reporter,
+          }
+        : {}),
+    };
+  };
   const providerDefaults = Object.fromEntries(
     Object.entries(defaultsTemplate.providers).filter(([provider]) =>
       selected.has(provider as InitProvider),
@@ -450,7 +517,14 @@ function writeExecConfiguration(
       : {};
   const { parent_validations: configuredParentValidations, ...otherPipeline } = commonPipeline;
   const parentValidations = selectParentValidations(repoRoot, configuredParentValidations);
-  const configuredDefaults: Record<string, unknown> = { ...commonDefaults };
+  const configuredDefaults: Record<string, unknown> = {
+    ...commonDefaults,
+    routing: {
+      hard: route(0, "wait"),
+      medium: route(1, "fallback"),
+      easy: route(2, "fallback"),
+    },
+  };
   if (parentValidations.length > 0 || Object.keys(otherPipeline).length > 0) {
     configuredDefaults.pipeline = {
       ...otherPipeline,
@@ -474,22 +548,9 @@ function writeExecConfiguration(
     dump({ ...configuredDefaults, providers: providerDefaults }, { lineWidth: 120, noRefs: true }),
     dryRun,
   );
-  const primaryProvider = providers[0];
-  const executor = members.find(
-    (member) =>
-      member.provider === primaryProvider &&
-      member.stage_role === "executor" &&
-      member.mode === "edit",
-  );
-  const reporter = members.find(
-    (member) => member.provider === primaryProvider && member.stage_role === "reporter",
-  );
-  if (!executor || !reporter) {
-    throw new Error("init-agent-members.yaml must define an edit executor and reporter");
-  }
   return {
-    executor: preferredAgentName(executor, aliases),
-    reporter: preferredAgentName(reporter, aliases),
+    executor: pairs[0]!.executor,
+    reporter: pairs[0]!.reporter,
   };
 }
 
@@ -658,6 +719,7 @@ export async function runInit(
       packageRoot,
       repoRoot,
       workspaceName: options.workspaceName,
+      preset: answers.devcontainerPreset,
       providers: answers.providers,
       editors: [],
       ollama: answers.providers.includes("opencode"),
@@ -672,9 +734,11 @@ export async function runInit(
   const script =
     firstProvider === "claude"
       ? "orch:opus"
-      : firstProvider === "antigravity"
-        ? "orch:agy"
-        : `orch:${firstProvider}`;
+      : firstProvider === "codex"
+        ? "orch:sol"
+        : firstProvider === "antigravity"
+          ? "orch:flash"
+          : `orch:${firstProvider}`;
   process.stdout.write(
     "Next steps:\n" +
       (firstProvider
@@ -706,6 +770,10 @@ export function registerInitCommand(program: Command): void {
     .option("--exec", "Configure executor and reporter agents", false)
     .option("--catalog <size>", "Create a deliverables catalog (small|medium|large)")
     .option("--devcontainer", "Create a Dev Container for the selected providers", false)
+    .option(
+      "--devcontainer-preset <name>",
+      "Apply a Dev Container preset when creating it (recommended|none)",
+    )
     .option(
       "--workspace-name <name>",
       "Override the Dev Container workspace parent name used under /workspaces",

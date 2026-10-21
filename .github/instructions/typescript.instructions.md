@@ -21,7 +21,7 @@ applyTo: "{src,tools,tests,scripts}/**/*.ts"
 - 未使用の import、変数、型定義を残さない。
 - 循環依存を増やさず、共通処理は既存の shared module があればそこへ寄せる。
 - `src/shared/` は依存の根とし、ほかの `src/` の機能や CLI の入口を import しない。`src/commands/` と `src/specdojo.ts` は CLI の組み立てに専念させ、ほかの機能から import しない。これらの向きは ESLint の `no-restricted-imports` で error として検査する。
-- 機能どうしの循環依存は、上記の共通規則へ例外を足して固定せず、循環する組ごとの登録簿項目で解消してから、その組の依存方向を ESLint に追加する。
+- 機能どうしの循環依存は、上記の共通規則へ例外を足して固定せず、循環する組ごとの登録簿項目で解消してから、その組の依存方向を ESLint に追加する。PJR-QQKY・PJR-WSET で循環が解消した 6 組（`register`・`schedule`・`job`・`grade` は `exec` を import しない、`review` は `grade` を import しない、`docs` は `catalog` を import しない）は `no-restricted-imports` で error として検査している。
 - git hook（lefthook）や `prepare` から起動するスクリプトは、依存が未インストールでも動く必要がある。入口は Node 標準だけで動く plain JS（`.mjs`）とし、`tsx` などの devDependency を必要とする実装を直接呼ばない。前例は `tools/install-lefthook.mjs` である。
 - 入口では、実行環境の前提（linked worktree かどうか、`node_modules` が存在するか）を判定してから本処理へ委譲する。判定処理そのものが依存を必要とすると、判定へ到達する前に失敗する。
 

@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d5631d7c8a3b4f689da29074075090f3
+  ts: "2026-10-20T12:03:52Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 作業の難しさで agent を振り分ける設定を加える
+    - field: description
+      from: ""
+      to: exec-defaults.yaml に、難しさ（hard・medium・easy）ごとの executor・reporter・rate limit のときの扱い・代わりの agent を書く振り分けの表を加え、個票に difficulty を持たせる。exec run --register で agent を指定しないときと夜間の orchestrator は、この表で agent を選ぶ。今の自動選択は priority の小さい順で、普通の難しさに qwen-executor が選ばれるため、あわせて直す（2026-10-20、利用者が承認）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-ZM1K"]'
+- v: 1
+  id: reg_2e2bfb0f5e0345e792873e091013f9a3
+  ts: "2026-10-20T12:42:53Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d5631d7c8a3b4f689da29074075090f3
+- v: 1
+  id: reg_af13305b4c454b31be31dc952b91c2a7
+  ts: "2026-10-20T13:03:02Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration"
+  previous_event_id: reg_2e2bfb0f5e0345e792873e091013f9a3
+- v: 1
+  id: reg_897bf32ba4fd40ef9552b2906b2ffcc4
+  ts: "2026-10-20T13:03:45Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration"
+      to: "-"
+  previous_event_id: reg_af13305b4c454b31be31dc952b91c2a7
+- v: 1
+  id: reg_e21ef4d5f43a442b91a4d4db9a9b2d1f
+  ts: "2026-10-20T13:19:04Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_897bf32ba4fd40ef9552b2906b2ffcc4
+- v: 1
+  id: reg_cadd979ab97d4aeb96a90c93bfb03948
+  ts: "2026-10-20T13:47:42Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・差分・親の検証・JSEY の結果を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: 個票の difficulty と exec-defaults の routing で agent を振り分けるようにした。CLI の指定は表より優先し、difficulty や表がない場合は今の自動選択のまま。統合後の動作は PJR-JSEY で確認した
+  previous_event_id: reg_e21ef4d5f43a442b91a4d4db9a9b2d1f

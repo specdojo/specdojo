@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d2875a3e4e4b4fefaf8524db779e6ca8
+  ts: "2026-10-19T21:17:37Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer の雛形で ~/.local/bin を作れず、tmux のスクリプトが root で入る
+    - field: description
+      from: ""
+      to: init の scaffold で作った devcontainer で、opencode の volume を ~/.local/share/opencode に mount すると Docker が親の ~/.local を root の持ち物として作り、post-create.sh は mount 先しか持ち主を戻さないため、node が ~/.local/bin を作れず Claude Code などのインストーラが失敗する。また specdojo-tmux.sh.sample は docker exec に利用者を指定しないため、container の既定の root で入る（2026-10-20、利用者が報告）
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-CCXN"]'
+- v: 1
+  id: reg_acb354ddb5834c4aa95b05f44e1f16b2
+  ts: "2026-10-19T21:19:27Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d2875a3e4e4b4fefaf8524db779e6ca8
+- v: 1
+  id: reg_194b429fcffd49549db8f237bac653dd
+  ts: "2026-10-19T21:40:15Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_acb354ddb5834c4aa95b05f44e1f16b2
+- v: 1
+  id: reg_46d163479e9c47cdbc748bf6e30fce9b
+  ts: "2026-10-20T12:25:23Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分・親検証と、利用者がホストで流した E2E の PASS を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: "post-create.sh で ~/.local・~/.local/share の持ち主を戻して ~/.local/bin を作ってから CLI を入れ、specdojo-tmux.sh.sample の docker exec に -u node を付けた。利用者がホストの Mac で tools/e2e/devcontainer-host-e2e.ts を流し、本物の devcontainer で node の利用者・~/.local/bin の持ち主・Claude Code の導入が通った（2026-10-20、Dev Container host E2E: PASS）"
+  previous_event_id: reg_194b429fcffd49549db8f237bac653dd

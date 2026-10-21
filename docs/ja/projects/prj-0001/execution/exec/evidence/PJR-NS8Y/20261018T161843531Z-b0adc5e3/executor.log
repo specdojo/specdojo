@@ -1,0 +1,26 @@
+PJR-NS8Y「`parent_validations` の許可リストにプロダクトリポジトリ向けの build と format の ID がない」の対応を完了しました。
+
+### 実施内容
+
+1. **親検証の許可リスト・定義の追加** ([`src/exec/parent-validation.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NS8Y/src/exec/parent-validation.ts)):
+   - `ParentValidationId` 型に `"build"` および `"format-check"` を追加しました。
+   - `PARENT_VALIDATION_REGISTRY` に `build`（`npm run build`）および `format-check`（`npm run format:check`）の定義を追加しました。
+2. **初期化スクリプト辞書の更新** ([`src/commands/init.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NS8Y/src/commands/init.ts)):
+   - `PARENT_VALIDATION_SCRIPTS` に `build: "build"` と `"format-check": "format:check"` を追加しました。
+3. **スキーマ定義の更新** ([`docs/specdojo/schemas/v1/exec-defaults.schema.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NS8Y/docs/specdojo/schemas/v1/exec-defaults.schema.yaml)):
+   - `ParentValidationId` の `enum` に `build` と `format-check` を追加しました。
+4. **ガイドおよびリファレンスの更新**:
+   - [`docs/ja/specdojo/guides/exec-config-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NS8Y/docs/ja/specdojo/guides/exec-config-guide.md): 許可リストの ID 一覧を 9 種に更新し、`build` と `format-check` の用途（別リポジトリ構成でのビルド・整形検査の親 runner 委譲）を記載しました。
+   - [`docs/ja/specdojo/references/command-reference.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NS8Y/docs/ja/specdojo/references/command-reference.md): `pipeline.parent_validations` の指定可能 ID に `build` と `format-check` を追加しました。
+5. **CHANGELOG の更新** ([`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NS8Y/CHANGELOG.md)):
+   - `[0.4.1]` の「追加機能」に PJR-NS8Y の内容を追記しました。
+6. **単体テストの追加・更新** ([`tests/src/exec/parent-validation.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NS8Y/tests/src/exec/parent-validation.test.ts)):
+   - `build` と `format-check` の定義解決テストを追加しました。
+   - プロダクトリポジトリへの割り当て（`app1:build`、`app1:format-check`）の解決テストを追加しました。
+   - 未知 ID 拒否時の許可リスト一覧アサーションに `build` と `format-check` を含めるよう更新しました。
+7. **個票の更新** ([`docs/ja/projects/prj-0001/controls/project-register/pjr-ns8y-parent-validation-build-format-ids.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-NS8Y/docs/ja/projects/prj-0001/controls/project-register/pjr-ns8y-parent-validation-build-format-ids.md)):
+   - 「3. 対応方針」の未定事項を解消し、「4. 対応結果」に解決内容、確認結果、再発防止策を記載しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-NS8Y: Added build and format-check to parent_validations allowlist, schema, init script map, docs, changelog, ticket, and tests.","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-ns8y-parent-validation-build-format-ids.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/references/command-reference.md docs/specdojo/schemas/v1/exec-defaults.schema.yaml src/commands/init.ts src/exec/parent-validation.ts tests/src/exec/parent-validation.test.ts","status":"passed","summary":"All 8 changed files formatted cleanly with Prettier."},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"Validated deliverables catalog; passed (OK: dct-index.yaml)."}]}
+</specdojo_executor_evidence>

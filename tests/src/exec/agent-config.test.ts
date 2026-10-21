@@ -1,6 +1,6 @@
-import { existsSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   createProviderCapacityTracker,
@@ -9,15 +9,18 @@ import {
   loadExecDefaultsConfig,
   ProviderConcurrencyGate,
   providerSlotPoolPath,
+  resolveConnectionErrorDetection,
   resolveMaxConcurrency,
   resolveMaxConcurrentRuns,
   resolvePinnedRateLimitPolicy,
   resolveRegisterExecution,
+  resolveRegisterPostReview,
   resolveRateLimitDetection,
   resolveRateLimitPolicy,
   type ExecDefaultsConfig,
   type RateLimitPolicy,
 } from "../../../src/exec/agent-config.js";
+import { runParentValidations } from "../../../src/exec/parent-validation.js";
 
 describe("parent validation config", () => {
   it("loads allowlisted IDs and rejects unknown IDs", () => {
@@ -80,6 +83,81 @@ describe("parent validation config", () => {
       rmSync(root, { recursive: true, force: true });
     }
   });
+
+  it("appends only the selected project's parent validations and records product evidence", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-project-parent-validation-"));
+    const originalCwd = process.cwd();
+    try {
+      const configDir = join(root, ".specdojo");
+      const defaultsPath = join(configDir, "exec-defaults.yaml");
+      const productPath = join(root, "specdojo-lp");
+      const project1Execution = join(root, "docs/prj-0001/execution");
+      const project2Execution = join(root, "docs/prj-0002/execution");
+      mkdirSync(configDir, { recursive: true });
+      mkdirSync(productPath, { recursive: true });
+      writeFileSync(defaultsPath, "pipeline:\n  parent_validations:\n    - test-unit\n", "utf8");
+      writeFileSync(
+        join(configDir, "specdojo.config.json"),
+        JSON.stringify({
+          version: 1,
+          current_project: "prj-0001",
+          projects: {
+            "prj-0001": {
+              base_path: "docs/prj-0001",
+              execution_path: "execution",
+              run: { exec_defaults: ".specdojo/exec-defaults.yaml" },
+            },
+            "prj-0002": {
+              base_path: "docs/prj-0002",
+              execution_path: "execution",
+              repos: [{ name: "specdojo-lp", path: "specdojo-lp" }],
+              run: {
+                exec_defaults: ".specdojo/exec-defaults.yaml",
+                parent_validations: [
+                  { id: "typecheck", repo: "specdojo-lp" },
+                  { id: "lint-ts", repo: "specdojo-lp" },
+                ],
+              },
+            },
+          },
+        }),
+        "utf8",
+      );
+      process.chdir(root);
+
+      expect(
+        loadExecDefaultsConfig(defaultsPath, project1Execution).pipeline?.parent_validations,
+      ).toEqual(["test-unit"]);
+      const project2Validations = loadExecDefaultsConfig(defaultsPath, project2Execution).pipeline
+        ?.parent_validations;
+      const expectedProject2Validations = [
+        "test-unit",
+        { id: "typecheck", repo: "specdojo-lp" },
+        { id: "lint-ts", repo: "specdojo-lp" },
+      ];
+      expect(project2Validations).toEqual(expectedProject2Validations);
+      expect(
+        loadExecDefaultsConfig(
+          defaultsPath,
+          join(root, "worktrees/PJR-TEST/project/docs/prj-0002/execution"),
+        ).pipeline?.parent_validations,
+      ).toEqual(expectedProject2Validations);
+
+      const evidence = await runParentValidations(
+        project2Validations,
+        { project: root, repos: { "specdojo-lp": productPath } },
+        async () => ({ exitCode: 0, stdout: "ok", stderr: "" }),
+      );
+      expect(evidence).toEqual([
+        expect.objectContaining({ id: "test-unit", source: "runner", repo: "project" }),
+        expect.objectContaining({ id: "typecheck", source: "runner", repo: "specdojo-lp" }),
+        expect.objectContaining({ id: "lint-ts", source: "runner", repo: "specdojo-lp" }),
+      ]);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(resolve(root), { recursive: true, force: true });
+    }
+  });
 });
 
 const globalPolicy: RateLimitPolicy = {
@@ -97,6 +175,9 @@ const globalPolicy: RateLimitPolicy = {
 };
 
 const config: ExecDefaultsConfig = {
+  connection_error_detection: {
+    stderr_patterns: ["ECONNREFUSED"],
+  },
   rate_limit_detection: {
     exit_codes: [1],
     stderr_patterns: ["rate limit", "429"],
@@ -110,6 +191,9 @@ const config: ExecDefaultsConfig = {
     },
     opencode: {
       max_concurrency: 1,
+      connection_error_detection: {
+        stderr_patterns: ["Cannot connect to API", "connection refused"],
+      },
       rate_limit_detection: {
         exit_codes: [],
         stderr_patterns: ["timeout", "out of memory"],
@@ -130,6 +214,21 @@ const config: ExecDefaultsConfig = {
     },
   },
 };
+
+describe("resolveConnectionErrorDetection", () => {
+  it("returns the provider override when present", () => {
+    expect(resolveConnectionErrorDetection(config, "opencode")?.stderr_patterns).toEqual([
+      "Cannot connect to API",
+      "connection refused",
+    ]);
+  });
+
+  it("falls back to the global detection", () => {
+    expect(resolveConnectionErrorDetection(config, "codex")).toBe(
+      config.connection_error_detection,
+    );
+  });
+});
 
 describe("resolveRateLimitDetection", () => {
   it("returns the provider override when present", () => {
@@ -401,5 +500,18 @@ describe("resolveRegisterExecution", () => {
   it("未知の値を設定エラーにする", () => {
     const config = { run: { register_execution: "temporary" } } as unknown as ExecDefaultsConfig;
     expect(() => resolveRegisterExecution(config)).toThrow(/run\.register_execution/);
+  });
+});
+
+describe("resolveRegisterPostReview", () => {
+  it("既定では無効で、boolean の明示値を使う", () => {
+    expect(resolveRegisterPostReview({})).toBe(false);
+    expect(resolveRegisterPostReview({ run: { register_post_review: true } })).toBe(true);
+    expect(resolveRegisterPostReview({ run: { register_post_review: false } })).toBe(false);
+  });
+
+  it("boolean 以外を設定エラーにする", () => {
+    const config = { run: { register_post_review: "yes" } } as unknown as ExecDefaultsConfig;
+    expect(() => resolveRegisterPostReview(config)).toThrow(/run\.register_post_review/);
   });
 });

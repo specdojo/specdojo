@@ -32,3 +32,48 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_538c5bc492614e4f861277efcf3d8b49
+  ts: "2026-10-18T16:10:01Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e99f47ac2253416c82b20544d2945f51
+- v: 1
+  id: reg_737333781f3d47088ba5b2a7730c4ed7
+  ts: "2026-10-18T16:29:17Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sol-executor -> opus-executor at 2026-10-18T16:13:26.939Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_538c5bc492614e4f861277efcf3d8b49
+- v: 1
+  id: reg_292b24ed0177451f9faa5e10608281b1
+  ts: "2026-10-18T17:53:34Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証と、統合後の JSEY を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: $`SPECDOJO_REPO_<NAME>` と ${`SPECDOJO_REPO_<NAME>`} の両方の書き方を、not_applicable の判定でそのプロダクトリポジトリのコマンドとして扱うようにした。長い別の環境変数名と取り違えない。テストとガイドも合わせた
+  previous_event_id: reg_737333781f3d47088ba5b2a7730c4ed7

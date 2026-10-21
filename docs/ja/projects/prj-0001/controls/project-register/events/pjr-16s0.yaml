@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b43cd5e598024a81a9cb10be49407122
+  ts: "2026-10-19T21:17:50Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 配布する orch の script の名前を model の系統にそろえる
+    - field: description
+      from: ""
+      to: init が作る orch の script は、claude だけ model の系統（orch:opus・orch:sonnet）で、codex・antigravity は provider の名前（orch:codex・orch:agy）で model も指定していない。ZM1K の名付けに合わせ、codex は orch:sol・orch:terra、antigravity は orch:flash にし、model を指定する。opencode はローカルの model が利用者の環境ごとに違うため orch:opencode のままとする（2026-10-20、利用者が提案）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-ZM1K"]'
+- v: 1
+  id: reg_2448b5d50d4b4ff0bd2115f6f8b86214
+  ts: "2026-10-19T21:20:31Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b43cd5e598024a81a9cb10be49407122
+- v: 1
+  id: reg_978ee8a5f38344fbb1345ee215b99c84
+  ts: "2026-10-19T21:25:58Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_2448b5d50d4b4ff0bd2115f6f8b86214
+- v: 1
+  id: reg_1e5a6f67e8604e15b8e38f9e2982fc4d
+  ts: "2026-10-19T21:26:39Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+      to: "-"
+  previous_event_id: reg_978ee8a5f38344fbb1345ee215b99c84
+- v: 1
+  id: reg_f5cc392c6df14c4aac7c074093c354a8
+  ts: "2026-10-19T21:33:00Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
+  previous_event_id: reg_1e5a6f67e8604e15b8e38f9e2982fc4d
+- v: 1
+  id: reg_14d78001b6594110b011a4234236303f
+  ts: "2026-10-19T21:33:40Z"
+  action: start
+  actor: sonnet-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: Error: Cannot connect to API: Unable to connect. Is the computer able to access the url?"
+      to: "-"
+  previous_event_id: reg_f5cc392c6df14c4aac7c074093c354a8
+- v: 1
+  id: reg_52d961ae70234f77b52dc9f196d15235
+  ts: "2026-10-19T21:36:58Z"
+  action: review
+  actor: sonnet-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_14d78001b6594110b011a4234236303f
+- v: 1
+  id: reg_8fa61a8e95e9401dbab014e469dde385
+  ts: "2026-10-19T21:40:48Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・claude-reporter）の差分と親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: 配布する orch の script を orch:opus・orch:sonnet・orch:sol・orch:terra・orch:flash・orch:opencode・orch:copilot にし、codex と antigravity は model を指定した。既存の package.json は書き換えず、古い orch:codex・orch:agy からの移り方をガイドと CHANGELOG に書いた。executor が本リポジトリの package.json も改名したため worktree で戻し、本リポジトリの改名は利用者の承認を得て orchestrator が行った（99e73edda）。LP は prj-0002 の PJR-SGM6 で直す
+  previous_event_id: reg_52d961ae70234f77b52dc9f196d15235

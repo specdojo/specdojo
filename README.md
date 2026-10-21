@@ -1,6 +1,6 @@
 # SpecDojo
 
-SpecDojo は、仕様道（Spec-Dō）の道場です。
+SpecDojo は、Spec道（仕様道）の道場です。
 仕様と設計を作り、運用まで保つための体系を整えます。判断を記帳し、型に沿って実戦で書き、評定で鍛え続け、講評で完了を判断します。人と生成 AI が同じ成果物を作成・検証・更新できるようにし、仕様駆動開発のツールに対しては、その上流で仕様と設計の体系を担います。
 
 **記して、形にして、磨き続ける。**
@@ -104,8 +104,8 @@ npm run orch:opus
 | ------------- | ------------------------------------------- | --------------------------------- |
 | `claude`      | `.claude/agents/specdojo-orchestrator.md`   | `npm run orch:opus` ほか          |
 | `opencode`    | `.opencode/agents/specdojo-orchestrator.md` | `npm run orch:opencode`           |
-| `codex`       | `.specdojo/codex/orchestrator.md`           | `npm run orch:codex`              |
-| `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `npm run orch:agy`                |
+| `codex`       | `.specdojo/codex/orchestrator.md`           | `npm run orch:sol` ほか           |
+| `antigravity` | `.specdojo/antigravity/orchestrator.md`     | `npm run orch:flash`              |
 
 各設定を個別に管理したい場合は、後述の「設定を個別に行う場合」にある `config init` と `config scaffold` を使います。
 
@@ -135,13 +135,14 @@ npx specdojo devcontainer scaffold --provider claude
 
 ```text
 あなた : このプロジェクトを始めたい。まず登録簿を用意して、最初の作業を起票して。
-オーケストレーター : 次を実行します。よろしいですか。
-           npx specdojo register scaffold --project prj-0001
-           npx specdojo register add --project prj-0001 --type todo --title "..."
+オーケストレーター : 登録簿を用意し、todo を 1 件起票します。
+           ・中身: 種類 todo、タイトル「最初のタスク」、優先度 high
+           ・影響: 登録簿のファイルを作成し、develop へ commit します
+           よろしいですか？
 あなた : お願いします。
 ```
 
-状態を変える操作は承認を得てから実行し、`git push` や破壊的操作は行いません。起票した項目の
+コマンドは既定では見せず、求めたときに見せます。状態を変える操作は承認を得てから実行し、`git push` や破壊的操作は行いません。起票した項目の
 実行、状況の確認、成果物の生成も同じ流れで進みます。
 
 ```text

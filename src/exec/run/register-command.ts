@@ -1,7 +1,8 @@
 import { type Command } from "commander";
-import { loadExecDefaultsConfig } from "../agent-config.js";
+import { loadExecDefaultsConfig, resolveRegisterPostReview } from "../agent-config.js";
 import { resolveProjectPaths } from "../project.js";
 import { isRegisterFailureMode } from "../register.js";
+import { configuredProductRepos } from "../task-repos.js";
 import {
   EXCLUSIVE_EXEC_RUN,
   parseParallel,
@@ -58,6 +59,10 @@ export function registerRunCommand(exec: Command): void {
     false,
   );
   rcmd.option(
+    "--post-review",
+    "After integrating a register worktree, run a read-only completion review and automatically close eligible todo/issue items",
+  );
+  rcmd.option(
     "--on-failure <mode>",
     "With --register: stop|continue remaining items after a failure (default: stop)",
   );
@@ -95,6 +100,11 @@ export function registerRunCommand(exec: Command): void {
     "Archive the generated plan to exec/plans/done/ after a successful in-place run",
     false,
   );
+  rcmd.option(
+    "--integration-branch <repo=branch>",
+    "With register worktree mode: integrate the declared product repository <repo> into the local branch <branch> for this run (repeatable; overrides repos[].integration_branch; resume reuses the value recorded at the start)",
+    (value: string, previous: string[] = []) => [...previous, value],
+  );
   rcmd.option("--parallel <n>", "Number of worktree instances to run in parallel", "1");
   rcmd.option("--worktree-base <path>", "Override worktree base directory");
   rcmd.option(
@@ -131,7 +141,7 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--review-by <nickname>",
-    "agent-members.yaml nickname for review-mode tasks in --auto batch runs",
+    "agent-members.yaml nickname for review-mode tasks in --auto batch runs or register post-review",
   );
   rcmd.option(
     "--executor-by <nickname>",
@@ -147,11 +157,11 @@ export function registerRunCommand(exec: Command): void {
   );
   rcmd.option(
     "--fallback-executor-by <nickname>",
-    "Fallback executor used when --on-rate-limit fallback is selected",
+    "Fallback executor for a selected rate-limit fallback or configured connection error",
   );
   rcmd.option(
     "--fallback-reporter-by <nickname>",
-    "Fallback reporter used when --on-rate-limit fallback is selected",
+    "Fallback reporter for a selected rate-limit fallback or configured connection error",
   );
   rcmd.option("--dry-run", "Print resolved command without executing", false);
 
@@ -225,6 +235,14 @@ export function registerRunCommand(exec: Command): void {
           executionPath,
         );
         opts.worktree = resolveRegisterWorktree(opts, execDefaults);
+        opts.postReview = opts.postReview || resolveRegisterPostReview(execDefaults);
+      }
+      if (opts.postReview && !(hasRegister && opts.worktree)) {
+        process.stdout.write(
+          "--post-review (or run.register_post_review) requires --register in worktree mode.\n",
+        );
+        process.exitCode = 1;
+        return;
       }
       if (hasRegister && !opts.worktree && parseParallel(opts.parallel) !== 1) {
         process.stdout.write(
@@ -232,6 +250,21 @@ export function registerRunCommand(exec: Command): void {
         );
         process.exitCode = 1;
         return;
+      }
+      const integrationBranches = opts.integrationBranch ?? [];
+      if (integrationBranches.length > 0) {
+        if (!(hasRegister && opts.worktree)) {
+          process.stdout.write(
+            "--integration-branch requires --register (or --register-filter) in worktree mode.\n",
+          );
+          process.exitCode = 1;
+          return;
+        }
+        // 形式・宣言済みリポジトリ・ローカルブランチの存在を、register の状態を変える前に確かめる。
+        configuredProductRepos(
+          resolveProjectPaths({ project: opts.project }).schedulePath,
+          integrationBranches,
+        );
       }
       if (opts.join && !(hasRegister && opts.worktree)) {
         process.stdout.write(

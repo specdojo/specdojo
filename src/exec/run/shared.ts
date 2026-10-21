@@ -7,6 +7,7 @@ import {
   resolveMemberCommand,
   resolveRegisterExecution,
   resolvePinnedRateLimitPolicy,
+  type ConnectionErrorDetection,
   type ExecDefaultsConfig,
   type RateLimitDetection,
 } from "../agent-config.js";
@@ -94,6 +95,7 @@ export type RunOpts = {
   scheduledAt?: string;
   jobTrigger?: string;
   registerCommit?: boolean;
+  postReview?: boolean;
   onFailure?: string;
   resume?: boolean;
   resumeFrom?: string;
@@ -116,6 +118,8 @@ export type RunOpts = {
   due?: boolean;
   ifBusy?: string;
   join?: boolean;
+  /** Repeatable `<repo>=<branch>` product integration target overrides. */
+  integrationBranch?: string[];
   cycleRebuildStaleTracks?: boolean;
 };
 
@@ -159,6 +163,7 @@ export type PinnedRateLimitAction = "stop" | "wait" | "fallback";
 
 export type RateLimitRecoveryEvent = {
   action: "wait" | "fallback";
+  trigger?: "rate_limit" | "connection_error";
   from_actor: string;
   to_actor: string;
   resumed_at: string;
@@ -170,7 +175,9 @@ export function rateLimitRecoveryReason(events: readonly RateLimitRecoveryEvent[
     .map((event) =>
       event.action === "wait"
         ? `rate limit wait: ${event.to_actor} resumed at ${event.resumed_at}`
-        : `rate limit fallback: ${event.from_actor} -> ${event.to_actor} at ${event.resumed_at}`,
+        : event.trigger === "connection_error"
+          ? `connection error fallback: ${event.from_actor} -> ${event.to_actor} at ${event.resumed_at}`
+          : `rate limit fallback: ${event.from_actor} -> ${event.to_actor} at ${event.resumed_at}`,
     )
     .join("; ");
 }
@@ -189,9 +196,9 @@ export function isPinnedRateLimitAction(value: string): value is PinnedRateLimit
 }
 
 /**
- * Resolve CLI-over-config recovery for one pinned pipeline stage. A fallback action without a
- * fallback nickname intentionally degrades to stop, preserving the historical non-switching
- * behaviour instead of choosing an arbitrary agent.
+ * Resolve CLI-over-config recovery for one pinned pipeline stage. A fallback nickname is resolved
+ * independently of --on-rate-limit because the same candidate also handles configured connection
+ * failures. A rate-limit fallback action without a nickname still degrades to stop.
  */
 export function resolvePinnedRateLimitRunOptions(
   opts: Pick<RunOpts, "onRateLimit" | "fallbackExecutorBy" | "fallbackReporterBy">,
@@ -210,7 +217,7 @@ export function resolvePinnedRateLimitRunOptions(
     stageRole === "executor"
       ? (opts.fallbackExecutorBy ?? configured.fallbackExecutorBy)
       : (opts.fallbackReporterBy ?? configured.fallbackReporterBy);
-  if (action !== "fallback" || !nickname) {
+  if (!nickname) {
     return {
       action: action === "fallback" ? "stop" : action,
       maxWaitSeconds: configured.maxWaitSeconds,
@@ -543,28 +550,33 @@ export function isRateLimitError(
   output: string,
   detection: RateLimitDetection | undefined,
 ): boolean {
+  // `output` is combined stdout+stderr because some CLIs print failures to stdout. Successful
+  // output is ignored by default so quoted configuration/examples do not become false positives.
+  return isConfiguredAgentError(exitCode, output, detection);
+}
+
+export function isConnectionError(
+  exitCode: number | null,
+  output: string,
+  detection: ConnectionErrorDetection | undefined,
+): boolean {
+  return isConfiguredAgentError(exitCode, output, detection);
+}
+
+function isConfiguredAgentError(
+  exitCode: number | null,
+  output: string,
+  detection: RateLimitDetection | undefined,
+): boolean {
   if (!detection) return false;
-  // exit_codes is a standalone signal: an exact configured code identifies a rate limit
-  // on its own. Keep this list minimal (see exec-defaults.yaml) since generic codes like 1
-  // also mean ordinary failure.
   if (detection.exit_codes && exitCode !== null && detection.exit_codes.includes(exitCode)) {
     return true;
   }
-  if (detection.stderr_patterns) {
-    // `output` is the agent's combined stdout+stderr: some CLIs print the limit notice to
-    // stdout, not stderr (e.g. claude's "You've hit your session limit"), so scanning stderr
-    // alone misses it. By default a pattern only counts when the process also failed (non-zero
-    // or null exit). A successful run (exit 0) that merely echoes the phrase — e.g. an agent
-    // editing a file containing the literal text "rate limit" — is not a rate limit.
-    const requireNonzeroExit = detection.stderr_requires_nonzero_exit ?? true;
-    if (!requireNonzeroExit || exitCode !== 0) {
-      const lower = output.toLowerCase();
-      for (const pattern of detection.stderr_patterns) {
-        if (lower.includes(pattern.toLowerCase())) return true;
-      }
-    }
-  }
-  return false;
+  if (!detection.stderr_patterns) return false;
+  const requireNonzeroExit = detection.stderr_requires_nonzero_exit ?? true;
+  if (requireNonzeroExit && exitCode === 0) return false;
+  const lower = output.toLowerCase();
+  return detection.stderr_patterns.some((pattern) => lower.includes(pattern.toLowerCase()));
 }
 
 export function resolveExecDefaultsPath(opts: RunOpts, schedulePath: string): string {

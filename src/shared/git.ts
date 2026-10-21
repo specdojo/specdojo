@@ -11,16 +11,28 @@ export { GIT_LOCAL_ENV_VARS, gitEnvironment } from "./git-environment.js";
 // concurrent worktree commits (each firing lefthook pre-commit hooks that invoke git) contend
 // for that lock, surfacing as "Unable to create '.../index.lock'". A failed lock acquisition
 // happens before git mutates anything, so retrying the same command is safe and idempotent.
-const INDEX_LOCK_RETRY_ATTEMPTS = 5;
-const INDEX_LOCK_RETRY_BASE_MS = 50;
+// 並行の run の統合や記帳と重なると、ロックは数百ミリ秒より長く保持される（PJR-G90K）。
+// 1.5 秒間隔で 10 回までやり直し、ロックのファイルは消さない（実際に動いている git がありうる）。
+export const INDEX_LOCK_RETRY_ATTEMPTS = 10;
+export const INDEX_LOCK_RETRY_WAIT_MS = 1500;
 // dubious ownership と、`.git` がある cwd での not-a-repository は一時的に起き、すぐの
 // 再試行では収まらないことがある（並行実行中の統合段で確認した）。両方で上限を共有する。
 const TRANSIENT_GIT_RETRY_DELAYS_MS = [2000, 5000, 10000] as const;
 
+// 英語の `Unable to create '<path>/index.lock': File exists.` に加え、翻訳された git の
+// メッセージ（日本語など）でも引用符で囲まれた index.lock のパスが出るため、それも拾う。
+const INDEX_LOCK_QUOTED_PATH = /['"‘’“「]([^'"‘’“”「」\r\n]*index\.lock)['"’”」]/u;
+
+export function gitIndexLockPath(stderr: string): string | undefined {
+  return INDEX_LOCK_QUOTED_PATH.exec(stderr)?.[1];
+}
+
 export function isGitIndexLockContention(stderr: string): boolean {
   return (
     /Unable to create '[^']*index\.lock'/.test(stderr) ||
-    /Another git process seems to be running/.test(stderr)
+    /Another git process seems to be running/.test(stderr) ||
+    /別の\s*git\s*プロセス/iu.test(stderr) ||
+    gitIndexLockPath(stderr) !== undefined
   );
 }
 
@@ -59,7 +71,7 @@ export type DubiousOwnershipRetryNotice = {
 };
 
 export type TransientGitRetryNotice = DubiousOwnershipRetryNotice & {
-  reason: TransientGitRetryReason;
+  reason: TransientGitRetryReason | "index.lock contention";
 };
 
 export type TransientGitRecovery = (reason: TransientGitRetryReason) => boolean;
@@ -112,7 +124,13 @@ export function runGitWithTransientRetry<T extends RetryableGitResult>(
     }
     if (indexLockRetries < INDEX_LOCK_RETRY_ATTEMPTS && isGitIndexLockContention(stderr)) {
       indexLockRetries += 1;
-      sleep(INDEX_LOCK_RETRY_BASE_MS * indexLockRetries); // 50, 100, 150, 200, 250 ms
+      onTransientFailureRetry({
+        attempt: indexLockRetries,
+        maxAttempts: INDEX_LOCK_RETRY_ATTEMPTS,
+        waitMilliseconds: INDEX_LOCK_RETRY_WAIT_MS,
+        reason: "index.lock contention",
+      });
+      sleep(INDEX_LOCK_RETRY_WAIT_MS);
       result = run();
       continue;
     }
@@ -256,7 +274,11 @@ export function formatGitCommandFailure(
       : [...args.slice(0, subcommandIndex), ...args.slice(subcommandIndex + 1)],
   );
   const detail = summary ? ` (args: ${summary})` : "";
-  const cause = [processFailure.trim(), summarizeGitStderr(stderr)]
+  // gitResult は index.lock の取り合いをやり直したうえで失敗を返す。どのロックが残っていたかを
+  // 要約の切り詰めに左右されず先頭に残す（ロックは runner が消さないため、人が確かめる手掛かり）。
+  const lockPath = isGitIndexLockContention(stderr) ? gitIndexLockPath(stderr) : undefined;
+  const lockNotice = lockPath ? `index.lock is still held (lock: ${lockPath})` : "";
+  const cause = [processFailure.trim(), lockNotice, summarizeGitStderr(stderr)]
     .filter((part) => part !== "")
     .join(" / ");
   return cause ? `${label} failed: ${cause}${detail}` : `${label} failed${detail}`;
@@ -288,22 +310,36 @@ export function summarizeGitHookFailure(output: string): string {
     .filter(Boolean);
   if (lines.length === 0) return "unknown hook failure";
 
-  let step = "";
-  let stepIndex = -1;
+  const stepHeaders: Array<{ step: string; index: number }> = [];
   for (const [index, line] of lines.entries()) {
     const match = line.match(/^(.+?)\s*[❯▶]\s*$/u);
-    if (!match) continue;
-    step = match[1]!.trim();
-    stepIndex = index;
-    break;
+    if (match) stepHeaders.push({ step: match[1]!.trim(), index });
   }
+  // parallel: true の lefthook は成功した step の出力も並べるため、最初の step 見出しが
+  // 失敗した step とは限らない。末尾の summary で失敗印（🥊 など）が付いた step を優先する。
+  const failedSteps = lines
+    .map((line) => line.match(/^(?:🥊|✗|✘|✕|❌)️?\s*([^\s(]+)/u)?.[1])
+    .filter((name): name is string => name !== undefined && name !== "lefthook");
+  const selected =
+    stepHeaders.find((header) => failedSteps.includes(header.step)) ?? stepHeaders[0];
+  const step = selected?.step ?? failedSteps[0] ?? "";
+  const stepIndex = selected?.index ?? -1;
+  const sectionEnd =
+    selected === undefined
+      ? lines.length
+      : (stepHeaders.find((header) => header.index > selected.index)?.index ?? lines.length);
 
   const isDecoration = (line: string): boolean =>
     /^(?:hook output|summary:|exit status\b|failed steps?:|skip(?:ped)?\b)/i.test(line) ||
     /^[✓✔✗✘✕❯▶]+$/u.test(line);
-  const errorLine = lines
-    .slice(stepIndex >= 0 ? stepIndex + 1 : 0)
-    .find((line) => line !== step && !isDecoration(line) && !/[❯▶]\s*$/u.test(line));
+  const isCandidate = (line: string): boolean =>
+    line !== step && !isDecoration(line) && !/[❯▶]\s*$/u.test(line);
+  const sectionLines = lines.slice(stepIndex + 1, sectionEnd).filter(isCandidate);
+  // 整形ツールが出す "(unchanged)" などの進捗行より、error を含む行を最初のエラーとして選ぶ。
+  const errorLine =
+    sectionLines.find((line) => /\berror\b/i.test(line)) ??
+    sectionLines[0] ??
+    lines.slice(stepIndex + 1).find(isCandidate);
 
   const primary =
     step && errorLine

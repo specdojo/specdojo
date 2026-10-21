@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-wje6-product-repo-branch-guide
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: BA
   registered_at: "2026-10-12T08:53:52Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-18T15:13:12Z"
+  conclusion: "branch-workflow-guide に「10. プロダクトリポジトリの統合先を指定する」を加え、統合先の指定、GitHub flow と git flow での選び方、merge の方式ごとの Refs: と SHA の残り方、trace key での追跡を書いた。GitHub flow の例の誤りと、登録簿への参照などの 4 点は PJR-8C6E で直す"
 ---
 
 # PJR-WJE6 ブランチワークフローガイドにプロダクトリポジトリの節を加える
@@ -32,13 +34,16 @@ PJR-ZDVQ の決定にもとづき、プロダクトリポジトリにはブラ�
 
 ## 3. 作業内容
 
-| No  | 作業                           | 担当 | 状態 | メモ |
-| --- | ------------------------------ | ---- | ---- | ---- |
-| 1   | プロダクトリポジトリの節を書く | BA   | open | -    |
+| No  | 作業                           | 担当 | 状態 | メモ                                                                                         |
+| --- | ------------------------------ | ---- | ---- | -------------------------------------------------------------------------------------------- |
+| 1   | プロダクトリポジトリの節を書く | BA   | done | [[specdojo:branch-workflow-guide]] の `## 10. プロダクトリポジトリの統合先を指定する` を追加 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:branch-workflow-guide]] に `## 10. プロダクトリポジトリの統合先を指定する` を追加。既存の `## 10. 作業前後のチェックリスト` は `## 11.` に順延した。
+- 節の内容: SpecDojo はプロダクトリポジトリにブランチ戦略を求めず、プロダクト側のルールで決めた統合先を `repos[].integration_branch` に指定すること。ブランチ名に project ID を入れる必要はないこと。GitHub flow（トピックのブランチを統合先にし、`main` へは PR で取り込む）と git flow（`develop` を統合先にする）での選び方の例を、`integration_branch` の指定例として示した。merge の方式（merge commit・rebase merge・squash merge）ごとの `Refs:` と SHA の残り方を表で示し、squash merge では `Refs:` を残す設定にすることを明記した。追跡は trace key（`Refs: <project-id>:<item-id>`）を主にし、`git log --grep` で辿れることを示した。
+- 既存の節（プロジェクトリポジトリの `develop` から `main` への統合）と矛盾しない。プロジェクトリポジトリ向けの手順はそのまま維持し、プロダクトリポジトリの節は別セクションとして加えた。
+- 未完成: むしろ完了。残課題なし。
 
 ## 5. 関連ドキュメント
 

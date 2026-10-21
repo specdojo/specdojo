@@ -1,8 +1,10 @@
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { isAbsolute, join, resolve } from "node:path";
 import { listFilesRecursive, readYaml } from "./shared.js";
 import { acquirePoolSlot, releaseLock } from "./slot-lock.js";
 import {
+  getProjectExecutionPath,
+  loadConfig,
   specdojoRootDir,
   type AgentMode,
   type AgentProvider,
@@ -18,15 +20,21 @@ import {
 
 // ── Types for .specdojo/exec-defaults.yaml (global + per-provider) ─────────────
 
-export type RateLimitDetection = {
+export type AgentErrorDetection = {
   exit_codes?: number[];
   stderr_patterns?: string[];
-  // When true (the default), stderr_patterns only count as a rate-limit signal if the
-  // agent process also exited non-zero. This avoids false positives where a successful
-  // run merely echoes a pattern phrase (e.g. an agent editing a file that contains the
-  // literal text "rate limit"). Set to false to match stderr patterns regardless of exit code.
+  // When true (the default), stderr_patterns only count as an error signal if the agent process
+  // also exited non-zero. This avoids false positives where a successful run merely echoes a
+  // configured phrase. Set to false to match patterns regardless of exit code.
   stderr_requires_nonzero_exit?: boolean;
 };
+
+export type RateLimitDetection = AgentErrorDetection;
+
+// Connection failures use the same provider-scoped, exit-code/pattern matching mechanism as
+// rate limits, but have a different recovery policy: a configured pinned fallback is tried once
+// without applying --on-rate-limit wait/stop semantics.
+export type ConnectionErrorDetection = AgentErrorDetection;
 
 export type RateLimitRetry = {
   max_attempts: number;
@@ -80,6 +88,7 @@ export type ProviderOverride = {
   command_template?: string;
   command_params?: CommandParams;
   rate_limit_detection?: RateLimitDetection;
+  connection_error_detection?: ConnectionErrorDetection;
   rate_limit_policy?: RateLimitPolicy;
   // Maximum number of this provider's agents allowed to run concurrently within a single
   // `exec run` round. Caps a provider that shares a constrained resource (e.g. opencode's
@@ -88,11 +97,24 @@ export type ProviderOverride = {
   max_concurrency?: number;
 };
 
+export type RegisterDifficulty = "hard" | "medium" | "easy";
+
+export type DifficultyAgentRoute = {
+  executor_by: string;
+  reporter_by: string;
+  on_rate_limit: "stop" | "wait" | "fallback";
+  fallback_executor_by?: string;
+  fallback_reporter_by?: string;
+};
+
 export type ExecDefaultsConfig = {
   run?: {
     // Default execution location for register items. Omitted keeps the historical in-place
     // behavior so existing repositories do not start creating worktrees after an upgrade.
     register_execution?: "in-place" | "worktree";
+    // Run a read-only completion review after a register worktree has been integrated. Disabled by
+    // default because it can invoke additional agents and automatically close todo/issue items.
+    register_post_review?: boolean;
     // Maximum number of `exec run` processes that may run at once for one project, counting the
     // primary run and every `--join` run (default 4). 1 disables `--join`.
     max_concurrent_runs?: number;
@@ -103,7 +125,11 @@ export type ExecDefaultsConfig = {
     parent_validation_concurrency?: number;
   };
   rate_limit_detection?: RateLimitDetection;
+  connection_error_detection?: ConnectionErrorDetection;
   rate_limit_policy?: RateLimitPolicy;
+  // Register pipeline selection by the difficulty declared on an item. CLI stage and recovery
+  // options override the matching route; an absent route preserves priority-based selection.
+  routing?: Partial<Record<RegisterDifficulty, DifficultyAgentRoute>>;
   providers?: Partial<Record<AgentProvider, ProviderOverride>>;
 };
 
@@ -230,6 +256,14 @@ export function resolveRateLimitDetection(
   return override ?? config.rate_limit_detection;
 }
 
+export function resolveConnectionErrorDetection(
+  config: ExecDefaultsConfig,
+  provider?: AgentProvider,
+): ConnectionErrorDetection | undefined {
+  const override = provider ? config.providers?.[provider]?.connection_error_detection : undefined;
+  return override ?? config.connection_error_detection;
+}
+
 export function resolveRateLimitPolicy(
   config: ExecDefaultsConfig,
   provider?: AgentProvider,
@@ -324,6 +358,7 @@ export function providerSlotPoolPath(lockRoot: string, provider: AgentProvider):
 
 export const DEFAULT_MAX_CONCURRENT_RUNS = 4;
 export const DEFAULT_REGISTER_EXECUTION = "in-place" as const;
+export const DEFAULT_REGISTER_POST_REVIEW = false;
 
 export type RegisterExecution = "in-place" | "worktree";
 
@@ -335,6 +370,17 @@ export function resolveRegisterExecution(config: ExecDefaultsConfig): RegisterEx
   if (raw !== "in-place" && raw !== "worktree") {
     throw new Error(
       `run.register_execution in exec-defaults must be "in-place" or "worktree": ${String(raw)}`,
+    );
+  }
+  return raw;
+}
+
+export function resolveRegisterPostReview(config: ExecDefaultsConfig): boolean {
+  const raw = config.run?.register_post_review;
+  if (raw === undefined) return DEFAULT_REGISTER_POST_REVIEW;
+  if (typeof raw !== "boolean") {
+    throw new Error(
+      `run.register_post_review in exec-defaults must be true or false: ${String(raw)}`,
     );
   }
   return raw;
@@ -461,6 +507,40 @@ function loadLegacyRateLimitPolicy(executionPath?: string): RateLimitPolicy | un
   return undefined;
 }
 
+function projectParentValidations(executionPath?: string): ParentValidationEntry[] {
+  if (!executionPath) return [];
+
+  const { config } = loadConfig();
+  if (!config) return [];
+  const rootDir = specdojoRootDir();
+  const targetExecutionPath = resolve(executionPath);
+  const normalizedTarget = targetExecutionPath.replaceAll("\\", "/");
+
+  for (const [projectId, project] of Object.entries(config.projects)) {
+    const configuredExecutionPath = getProjectExecutionPath(project);
+    const resolvedExecutionPath = resolve(rootDir, configuredExecutionPath);
+    const normalizedConfigured = configuredExecutionPath.replaceAll("\\", "/");
+    // Job review loads defaults before changing cwd to its worktree. In that case loadConfig()
+    // resolves the main checkout while executionPath already points into the worktree; the
+    // repository-relative project path remains the same suffix in both locations.
+    const isProjectWorktreePath =
+      !isAbsolute(configuredExecutionPath) &&
+      normalizedTarget.endsWith(`/${normalizedConfigured.replace(/^\.\//, "")}`);
+    if (resolvedExecutionPath !== targetExecutionPath && !isProjectWorktreePath) continue;
+    const entries = (project.run as { parent_validations?: unknown } | undefined)
+      ?.parent_validations;
+    if (entries === undefined) return [];
+    if (!Array.isArray(entries)) {
+      throw new Error(
+        `Invalid .specdojo/specdojo.config.json: projects.${projectId}.run.parent_validations must be an array`,
+      );
+    }
+    return entries as ParentValidationEntry[];
+  }
+
+  return [];
+}
+
 export function loadExecDefaultsConfig(
   configPath?: string,
   executionPath?: string,
@@ -480,6 +560,20 @@ export function loadExecDefaultsConfig(
   if (!defaults.rate_limit_policy) {
     const legacyPolicy = loadLegacyRateLimitPolicy(executionPath);
     if (legacyPolicy) defaults.rate_limit_policy = legacyPolicy;
+  }
+
+  const additionalParentValidations = projectParentValidations(executionPath);
+  if (additionalParentValidations.length > 0) {
+    defaults = {
+      ...defaults,
+      pipeline: {
+        ...defaults.pipeline,
+        parent_validations: [
+          ...(defaults.pipeline?.parent_validations ?? []),
+          ...additionalParentValidations,
+        ],
+      },
+    };
   }
 
   resolveParentValidationDefinitions(defaults.pipeline?.parent_validations);

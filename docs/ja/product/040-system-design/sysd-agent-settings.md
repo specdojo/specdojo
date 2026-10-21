@@ -41,6 +41,8 @@ schedule / register item
 
 設定の一次情報は `.specdojo/exec-defaults.yaml` と `.specdojo/agent-members.yaml`、人間名簿の一次情報は project 配下の `pm-members.yaml`、実行状態の一次情報は project 配下の plan・result・append-only event である。
 
+register pipeline は、個票の `difficulty` と `.specdojo/exec-defaults.yaml` の `routing` がそろう場合、難易度別に executor・reporter・rate limit 対応を解決する。CLI の段別指定を最優先し、難易度または表がない場合は `stage_role` と `priority` による従来の自動選択へ戻す。夜間 orchestrator も独自選択を持たず、同じ `exec run --register` の解決を使用する。
+
 agent が親 runner・Git hook・CI・agent 指示の内容を変更できないよう、`package.json`、lefthook 設定、`.specdojo/**`、commitlint 設定、CI 設定、agent 指示ディレクトリ、root の指示ファイルは provider 共通の固定保護パスとする。runner は agent 終了直後かつ親検証前に起動前との差分を検査し、worktree の commit 前には未 commit 差分と branch 上の commit 済み差分を再検査する。違反時は対象パスを標準エラーへ出力して block し、branch / worktree を保持する。provider 固有の permission / sandbox は第一層として維持するが、この判定の入力には使わない。
 
 agent起動時は親プロセスの`GIT_DIR`、`GIT_WORK_TREE`その他のrepository固有環境変数を除去し、cwdから対象worktreeを再解決させる。runnerは各agent試行の前後でHEADとlocal configも比較し、agent自身のcommitまたは`core.bare`を含む設定変更を検知した場合は親検証・reporter・統合を行わずblockする。この境界は通常実行、in-place、trial、分割worktree commandのすべてへ適用する。

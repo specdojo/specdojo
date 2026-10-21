@@ -6,6 +6,7 @@ export interface RunDevcontainerScaffoldOptions {
   packageRoot: string;
   repoRoot: string;
   workspaceName?: string;
+  preset?: string;
   providers: string[];
   editors: string[];
   ollama: boolean;
@@ -13,6 +14,77 @@ export interface RunDevcontainerScaffoldOptions {
   tmux: boolean;
   force: boolean;
   dryRun: boolean;
+}
+
+const RECOMMENDED_VSCODE_EXTENSIONS = [
+  "mhutchie.git-graph",
+  "davidanson.vscode-markdownlint",
+  "redhat.vscode-yaml",
+  "esbenp.prettier-vscode",
+  "unifiedjs.vscode-remark",
+  "yzhang.markdown-all-in-one",
+  "streetsidesoftware.code-spell-checker",
+  "editorconfig.editorconfig",
+  "usernamehw.errorlens",
+  "tamasfe.even-better-toml",
+] as const;
+
+const PROVIDER_VSCODE_EXTENSIONS: Readonly<Record<string, readonly string[]>> = {
+  claude: ["anthropic.claude-code"],
+  codex: ["openai.chatgpt"],
+  copilot: ["github.copilot", "github.copilot-chat"],
+};
+
+const RECOMMENDED_VSCODE_SETTINGS = {
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+  },
+  "yaml.schemas": {
+    "./docs/specdojo/schemas/v1/agent-members.schema.yaml": ".specdojo/agent-members.yaml",
+    "./docs/specdojo/schemas/v1/exec-defaults.schema.yaml": ".specdojo/exec-defaults.yaml",
+    "./docs/specdojo/schemas/v1/job.schema.yaml": "docs/**/jobs/*.yaml",
+    "./docs/specdojo/schemas/v1/pm-members.schema.yaml": "docs/**/pm-members.yaml",
+    "./docs/specdojo/schemas/v1/pm-review-viewpoints.schema.yaml":
+      "docs/**/pm-review-viewpoints.yaml",
+    "./docs/specdojo/schemas/v1/pm-roles.schema.yaml": "docs/**/pm-roles.yaml",
+    "./docs/specdojo/schemas/v1/routine.schema.yaml": "docs/**/routines/*.yaml",
+    "./docs/specdojo/schemas/v1/sch-defaults.schema.yaml": "docs/**/sch-defaults.yaml",
+    "./docs/specdojo/schemas/v1/sch-milestones.schema.yaml": "docs/**/sch-milestones.yaml",
+    "./docs/specdojo/schemas/v1/sch-strategy.schema.yaml": "docs/**/sch-strategy-*.yaml",
+    "./docs/specdojo/schemas/v1/sch-track.schema.yaml": "docs/**/sch-track-*.yaml",
+  },
+} as const;
+
+function unique(values: readonly string[]): string[] {
+  return [...new Set(values)];
+}
+
+function providerExtensions(providers: readonly string[]): string[] {
+  return unique(providers.flatMap((provider) => PROVIDER_VSCODE_EXTENSIONS[provider] ?? []));
+}
+
+function objectValue(value: unknown): Record<string, unknown> {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : {};
+}
+
+async function readExtensionsRecommendations(pathname: string): Promise<Record<string, unknown>> {
+  if (!existsSync(pathname)) return { recommendations: [] };
+  const parsed: unknown = JSON.parse(await readFile(pathname, "utf8"));
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error(`Invalid VS Code extensions file: ${pathname}`);
+  }
+  const result = parsed as Record<string, unknown>;
+  if (result.recommendations !== undefined && !Array.isArray(result.recommendations)) {
+    throw new Error(`Invalid recommendations in VS Code extensions file: ${pathname}`);
+  }
+  return result;
 }
 
 function resolveWorkspaceName(repoRoot: string, override: string | undefined): string {
@@ -84,6 +156,9 @@ export function generateSshConfigSample(ports: number[]): string {
     "  User <user>",
     "",
     "# devcontainer 内の tmux セッションへ直接入る接続用",
+    "# RemoteCommand は非対話シェルで動くため、接続先端末の ~/.zshrc などの PATH 設定は読み込まれません。",
+    "# 接続元から「ssh <host> 'command -v devcontainer'」を実行して Dev Container CLI が見つかるか確認できます。",
+    "# 見つからない場合は、ホスト側の ~/bin/specdojo-tmux.sh の node_bin_dir を設定してください。",
     "Host <host>-tmux",
     "  HostName <host>",
     "  User <user>",
@@ -111,6 +186,7 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
     packageRoot,
     repoRoot,
     workspaceName: workspaceNameOverride,
+    preset,
     providers,
     editors,
     ollama,
@@ -119,6 +195,12 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
     force,
     dryRun,
   } = opts;
+  if (preset !== undefined && preset !== "recommended") {
+    throw new Error(`Unknown Dev Container preset: ${preset}. Available: recommended`);
+  }
+  const recommended = preset === "recommended";
+  const effectiveEditors = unique([...editors, ...(recommended ? ["emacs", "vim"] : [])]);
+  const effectiveTmux = tmux || recommended;
   const devcontainerDir = path.join(repoRoot, ".devcontainer");
   const workspaceName = resolveWorkspaceName(repoRoot, workspaceNameOverride);
 
@@ -156,8 +238,9 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
   const aptPackages: string[] = [];
   const extraScripts: string[] = [];
   let emacsInitTemplate: string | undefined;
+  let vimrcTemplate: string | undefined;
 
-  if (tmux) {
+  if (effectiveTmux) {
     aptPackages.push("tmux");
   }
   if (cron) {
@@ -165,8 +248,8 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
     devcontainer.postAttachCommand = "sudo service cron start";
   }
 
-  const knownEditors = new Set(["emacs"]);
-  for (const editor of editors) {
+  const knownEditors = new Set(["emacs", "vim"]);
+  for (const editor of effectiveEditors) {
     if (!knownEditors.has(editor)) {
       process.stdout.write(`Warning: unknown editor "${editor}"\n`);
     }
@@ -216,7 +299,51 @@ if [ ! -f "$HOME/.emacs" ] && \\
   cp .devcontainer/emacs/init.el "$EMACS_INIT"
   echo "Installed Emacs init: $EMACS_INIT"
 fi`);
+    } else if (editor === "vim") {
+      aptPackages.push("vim-nox");
+      vimrcTemplate = await readFile(path.join(templateDir, "vim", "vimrc"), "utf8");
+      extraScripts.push(`# Keep dotfiles authoritative: install the bundled defaults only when Vim has no user config.
+if [ ! -f "$HOME/.vimrc" ] && [ ! -f "$HOME/.vim/vimrc" ]; then
+  cp .devcontainer/vim/vimrc "$HOME/.vimrc"
+  echo "Installed Vim config: $HOME/.vimrc"
+fi`);
     }
+  }
+
+  let vscodeExtensions: string[] = [];
+  let extensionsFile: Record<string, unknown> | undefined;
+  if (recommended) {
+    vscodeExtensions = unique([...RECOMMENDED_VSCODE_EXTENSIONS, ...providerExtensions(providers)]);
+    const customizations = (devcontainer.customizations ??= {});
+    const vscode = (customizations.vscode ??= {});
+    const existingExtensions = Array.isArray(vscode.extensions)
+      ? vscode.extensions.filter((value: unknown): value is string => typeof value === "string")
+      : [];
+    vscode.extensions = unique([...existingExtensions, ...vscodeExtensions]);
+    const existingSettings = objectValue(vscode.settings);
+    vscode.settings = {
+      ...existingSettings,
+      "[markdown]": {
+        ...objectValue(existingSettings["[markdown]"]),
+        ...RECOMMENDED_VSCODE_SETTINGS["[markdown]"],
+      },
+      "[yaml]": {
+        ...objectValue(existingSettings["[yaml]"]),
+        ...RECOMMENDED_VSCODE_SETTINGS["[yaml]"],
+      },
+      "yaml.schemas": {
+        ...objectValue(existingSettings["yaml.schemas"]),
+        ...RECOMMENDED_VSCODE_SETTINGS["yaml.schemas"],
+      },
+    };
+
+    const extensionsPath = path.join(repoRoot, ".vscode", "extensions.json");
+    extensionsFile = await readExtensionsRecommendations(extensionsPath);
+    const existingRecommendations = (extensionsFile.recommendations ?? []) as unknown[];
+    extensionsFile.recommendations = unique([
+      ...existingRecommendations.filter((value): value is string => typeof value === "string"),
+      ...vscodeExtensions,
+    ]);
   }
 
   if (aptPackages.length > 0) {
@@ -287,7 +414,35 @@ fi`);
   }
 
   const specdojoTmuxTemplatePath = path.join(templateDir, "remote-host", "specdojo-tmux.sh.sample");
-  const specdojoTmuxScript = await readFile(specdojoTmuxTemplatePath, "utf8");
+  let specdojoTmuxScript = await readFile(specdojoTmuxTemplatePath, "utf8");
+  const remoteUser =
+    typeof devcontainer.remoteUser === "string" && devcontainer.remoteUser.trim()
+      ? devcontainer.remoteUser.trim()
+      : "node";
+  const userLocalBin = `/home/${remoteUser}/.local/bin`;
+  const existingRemoteEnv = objectValue(devcontainer.remoteEnv);
+  const existingPath =
+    typeof existingRemoteEnv.PATH === "string" ? existingRemoteEnv.PATH : undefined;
+  let remotePath: string;
+  if (existingPath) {
+    if (existingPath === "/home/node/.local/bin:${containerEnv:PATH}") {
+      remotePath = `${userLocalBin}:\${containerEnv:PATH}`;
+    } else {
+      const parts = existingPath.split(":");
+      remotePath = parts.includes(userLocalBin) ? existingPath : `${userLocalBin}:${existingPath}`;
+    }
+  } else {
+    remotePath = `${userLocalBin}:\${containerEnv:PATH}`;
+  }
+  devcontainer.remoteEnv = {
+    ...existingRemoteEnv,
+    PATH: remotePath,
+  };
+
+  specdojoTmuxScript = specdojoTmuxScript.replace(
+    'container_user="node"',
+    `container_user="${remoteUser}"`,
+  );
   const publishedPorts = extractPublishedPorts(devcontainer);
   const sshConfigScript = generateSshConfigSample(publishedPorts);
 
@@ -296,6 +451,12 @@ fi`);
     process.stdout.write(`[dry-run] would write: .devcontainer/post-create.sh\n`);
     if (emacsInitTemplate !== undefined) {
       process.stdout.write(`[dry-run] would write: .devcontainer/emacs/init.el\n`);
+    }
+    if (vimrcTemplate !== undefined) {
+      process.stdout.write(`[dry-run] would write: .devcontainer/vim/vimrc\n`);
+    }
+    if (extensionsFile !== undefined) {
+      process.stdout.write(`[dry-run] would write: .vscode/extensions.json\n`);
     }
     process.stdout.write(
       `[dry-run] would write: .devcontainer/remote-host/specdojo-tmux.sh.sample\n`,
@@ -315,6 +476,18 @@ fi`);
     await mkdir(path.join(devcontainerDir, "emacs"), { recursive: true });
     await writeFile(path.join(devcontainerDir, "emacs", "init.el"), emacsInitTemplate, "utf8");
   }
+  if (vimrcTemplate !== undefined) {
+    await mkdir(path.join(devcontainerDir, "vim"), { recursive: true });
+    await writeFile(path.join(devcontainerDir, "vim", "vimrc"), vimrcTemplate, "utf8");
+  }
+  if (extensionsFile !== undefined) {
+    await mkdir(path.join(repoRoot, ".vscode"), { recursive: true });
+    await writeFile(
+      path.join(repoRoot, ".vscode", "extensions.json"),
+      `${JSON.stringify(extensionsFile, null, 2)}\n`,
+      "utf8",
+    );
+  }
   const remoteHostDir = path.join(devcontainerDir, "remote-host");
   await mkdir(remoteHostDir, { recursive: true });
   await writeFile(path.join(remoteHostDir, "specdojo-tmux.sh.sample"), specdojoTmuxScript, "utf8");
@@ -324,6 +497,12 @@ fi`);
   process.stdout.write(`Written: .devcontainer/post-create.sh\n`);
   if (emacsInitTemplate !== undefined) {
     process.stdout.write(`Written: .devcontainer/emacs/init.el\n`);
+  }
+  if (vimrcTemplate !== undefined) {
+    process.stdout.write(`Written: .devcontainer/vim/vimrc\n`);
+  }
+  if (extensionsFile !== undefined) {
+    process.stdout.write(`Written: .vscode/extensions.json\n`);
   }
   process.stdout.write(`Written: .devcontainer/remote-host/specdojo-tmux.sh.sample\n`);
   process.stdout.write(`Written: .devcontainer/remote-host/ssh-config.sample\n`);

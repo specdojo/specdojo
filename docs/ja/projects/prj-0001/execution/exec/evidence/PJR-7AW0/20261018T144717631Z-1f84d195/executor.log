@@ -1,0 +1,12 @@
+親検証の結果を優先する修正を完了しました。
+
+- 親検証と一致する executor の `not_run` / `not_applicable` を非ブロッキング化
+- 親検証でない誤申告は従来どおり拒否
+- 単体テスト、共通規約、設定ガイド、CHANGELOG、個票を更新
+- Prettier、register build、catalog validate、差分検査は成功
+- result ファイルと登録簿ステータスは未変更
+- unit test 等の7検査は親 runner に委譲
+
+<specdojo_executor_evidence>
+{"final_message":"親検証と一致する executor の not_run / not_applicable を親 runner の結果で置き換える修正と回帰テスト、規約・ガイド・CHANGELOG・個票の更新を完了した。","validations":[{"command":"npx prettier --write src/exec/reporter.ts tests/src/exec/reporter.test.ts docs/ja/specdojo/exec-templates/xep-common-conventions-template.md docs/ja/specdojo/guides/exec-config-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-7aw0-parent-validation-not-applicable-rejected.md","status":"passed","summary":"変更した TypeScript と Markdown はすべて整形済み。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成に成功した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog 検証は終了コード 0。既存の未配置文書に関する警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"},{"command":"specdojo exec run --register","status":"requires_human","summary":"統合後に PJR-JSEY として実 agent CLI を1回実行し、runner の実動作を確認する必要がある。"}]}
+</specdojo_executor_evidence>

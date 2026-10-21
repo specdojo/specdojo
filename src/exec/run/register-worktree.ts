@@ -14,7 +14,11 @@ import {
 import { type PjrItem, type RegisterPaths } from "../../register/register.js";
 import { readResultFrontmatterSnapshot, scaffoldResult, updateResultStatus } from "../results.js";
 import { findExecWorktree, gitOutput, type ExecWorktree } from "../worktree.js";
-import { configuredProductRepos, withProductRepoPrompt } from "../task-repos.js";
+import {
+  configuredProductRepos,
+  integrationBranchOverrideRecord,
+  withProductRepoPrompt,
+} from "../task-repos.js";
 import {
   checkpointAndEnsureWorktree,
   commitTargetPaths,
@@ -83,6 +87,7 @@ import {
   rebuildRootRegisterViews,
   registerWaitSummary,
 } from "./register-state.js";
+import { runRegisterPostReview } from "./register-post-review.js";
 
 // 全体再実行が既存 run の未統合成果を破棄しないための保護。既存 worktree に再開可能な run
 // （executor 成功済みで reporter か統合が未完了）が残っている場合だけ理由を返し、呼び出し側が
@@ -117,6 +122,30 @@ export function protectResumableRegisterWorktree(
   );
 }
 
+// cleanup の再開までに別項目の commit が積まれても、対象 exec branch を最初に取り込んだ
+// first-parent commit（runner が作った merge commit）だけを post-review の差分範囲にする。
+function integratedRegisterCommitRange(
+  repoRoot: string,
+  branch: string,
+): { baseCommit: string; outputCommit: string } {
+  const tip = gitOutput(repoRoot, ["rev-parse", "--verify", `${branch}^{commit}`]).trim();
+  const outputCommit = gitOutput(repoRoot, [
+    "rev-list",
+    "--first-parent",
+    "--ancestry-path",
+    `${tip}..HEAD`,
+  ])
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .at(-1);
+  if (!outputCommit) {
+    throw new Error(`could not locate integrated commit for register branch: ${branch}`);
+  }
+  const baseCommit = gitOutput(repoRoot, ["rev-parse", `${outputCommit}^1`]).trim();
+  return { baseCommit, outputCommit };
+}
+
 // register worktree 実行の Phase 3（成果物統合と状態遷移）。成功なら worktree の成果物を
 // commit → worktree 側で register review → 統合ブランチへ merge commit 1件 → worktree 撤去、
 // 失敗なら worktree を保持したまま waiting へ戻す（wait commit 1件）。通常実行・reporter 再開・
@@ -124,6 +153,7 @@ export function protectResumableRegisterWorktree(
 // （start → review の遷移事象、plan / result、成果物を含む）か失敗時の wait commit だけになる。
 export async function finalizeRegisterWorktreeRun(params: {
   context: RegisterRunContext;
+  opts: RunOpts;
   registerPaths: RegisterPaths;
   item: PjrItem;
   ticketPath: string | null;
@@ -166,6 +196,40 @@ export async function finalizeRegisterWorktreeRun(params: {
       worktree,
       bookkeepingPaths: params.bookkeepingPaths,
     });
+  const postReview = async (
+    baseCommit: string,
+    outputCommit: string,
+  ): Promise<RegisterItemSummary | undefined> => {
+    if (!context.postReview) return undefined;
+    if (!ticketPath) {
+      throw new Error(`register post-review requires an item ticket: ${item.id}`);
+    }
+    const reviewed = await runRegisterPostReview({
+      context,
+      opts: params.opts,
+      registerPaths,
+      item,
+      ticketPath,
+      stem,
+      editPlanPath: resolve(context.executionPath, "exec", "plans", `${stem}-plan.md`),
+      editResultPath: resolve(repoRoot, repoRelativePath(worktree.path, params.worktreeResultPath)),
+      baseCommit,
+      outputCommit,
+      worktreePath: worktree.path,
+      editPipelineStatePath: params.pipelineStatePath,
+    });
+    process.stdout.write(
+      `post-review done: ${item.id} (verdict transition: ${reviewed.transition})\n`,
+    );
+    return {
+      id: item.id,
+      title: item.title,
+      outcome: reviewed.outcome,
+      transition: reviewed.transition,
+      commit: reviewed.commit ?? `committed ${outputCommit.slice(0, 12)}`,
+      reason: reviewed.reason,
+    };
+  };
 
   const completedAt = new Date().toISOString();
   const worktreeResultPath = params.worktreeResultPath;
@@ -185,6 +249,7 @@ export async function finalizeRegisterWorktreeRun(params: {
       params.resumedIntegration &&
       isExecBranchMergedIntoCurrent({ context: wtContext, worktree })
     ) {
+      const { baseCommit, outputCommit } = integratedRegisterCommitRange(repoRoot, worktree.branch);
       try {
         const lifecyclePaths = new Set(
           [worktreeResultPath, params.pipelineStatePath]
@@ -235,6 +300,8 @@ export async function finalizeRegisterWorktreeRun(params: {
       }
 
       rebuildRootRegisterViews(projectId, item.id);
+      const reviewed = await postReview(baseCommit, outputCommit);
+      if (reviewed) return reviewed;
       const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
       process.stdout.write(
         `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
@@ -249,6 +316,7 @@ export async function finalizeRegisterWorktreeRun(params: {
     }
 
     await updateResultStatus(worktreeResultPath, "complete", completedAt);
+    const baseCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
     const subject = commitSubject(`exec(register ${item.id}): `, item.title);
     // PJR-30SW: プロダクト側の commit と merge commit、プロジェクト側の merge commit に
     // `Refs: <project-id>:<item-id>` を付ける（PJR-1SXK）。
@@ -433,6 +501,9 @@ export async function finalizeRegisterWorktreeRun(params: {
 
     // review は merge で root の個票に入る。非追跡の派生ビューだけ root で作り直す。
     rebuildRootRegisterViews(projectId, item.id);
+    const outputCommit = gitOutput(repoRoot, ["rev-parse", "HEAD"]).trim();
+    const reviewed = await postReview(baseCommit, outputCommit);
+    if (reviewed) return reviewed;
     const sha = gitOutput(repoRoot, ["rev-parse", "--short", "HEAD"]).trim();
     process.stdout.write(
       `run done: ${item.id} (status: review — confirm and close with "register close")\n`,
@@ -507,7 +578,9 @@ export async function runSingleRegisterItemWorktree(
     ? `${new Date().toISOString().replace(/[-:.]/g, "")}-${randomHex(4)}`
     : undefined;
   // PJR-98G4: repos を宣言した project では、プロダクトの worktree も同じタスクの下に作る。
-  const products = configuredProductRepos(schedulePath);
+  // PJR-XRAB: --integration-branch は設定の integration_branch より優先する。
+  const products = configuredProductRepos(schedulePath, opts.integrationBranch);
+  const integrationBranchOverrides = integrationBranchOverrideRecord(opts.integrationBranch);
 
   // Phase 1: plan/result 生成 → register start → checkpoint → worktree 作成（root で直列化）。
   const setup = async (): Promise<
@@ -677,6 +750,7 @@ export async function runSingleRegisterItemWorktree(
       execDefaults: context.execDefaults,
       providerConcurrencyGate: context.providerConcurrencyGate,
       productWorktrees: worktree.repos,
+      ...(integrationBranchOverrides ? { integrationBranchOverrides } : {}),
       runId: pipelineRunId,
       executorRateLimitOptions: opts.executorBy
         ? resolvePinnedRateLimitRunOptions(
@@ -726,6 +800,7 @@ export async function runSingleRegisterItemWorktree(
   const finalize = async (): Promise<RegisterItemSummary> =>
     finalizeRegisterWorktreeRun({
       context,
+      opts,
       registerPaths,
       item,
       ticketPath,

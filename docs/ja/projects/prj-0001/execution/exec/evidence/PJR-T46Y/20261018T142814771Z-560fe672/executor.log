@@ -1,0 +1,16 @@
+実装を完了しました。
+
+- 統合後の読み取り専用 review と todo／issue の自動 close・waiting 遷移を追加。
+- `--post-review` と `run.register_post_review` を追加。
+- runner 自身の変更は自動 close せず、人による smoke test 後の close としました。
+- verdict、個票種別、再開時の commit 範囲を検証するテストを追加。
+- 運用ガイド、設定スキーマ、個票を更新。
+- executor 指示に従い result ファイルは編集していません。
+- 親 runner 管轄の lint・typecheck・単体／統合テストは未実行です。
+
+主要実装: [register-post-review.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T46Y/src/exec/run/register-post-review.ts)  
+個票: [pjr-t46y-register-post-run-review-auto-close.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T46Y/docs/ja/projects/prj-0001/controls/project-register/pjr-t46y-register-post-run-review-auto-close.md)
+
+<specdojo_executor_evidence>
+{"final_message":"register worktree統合後のreview、自動close／waiting遷移、`register_post_review`設定、runner自己変更時の人手close方針、テストと運用文書を実装した。resultは編集していない。","validations":[{"command":"npx prettier --write src/exec/run/register-worktree.ts","status":"passed","summary":"最終補強箇所を整形した"},{"command":"node --import tsx src/specdojo.ts exec run --project prj-0001 --register PJR-T46Y --worktree --post-review --dry-run","status":"passed","summary":"post-review executor／reporterの解決と統合後遷移を確認した"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/exec-defaults.schema.yaml --data templates/init-exec-defaults.yaml","status":"passed","summary":"追加した`register_post_review`設定例がスキーマに適合した"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿派生ビューを正常に生成できた"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001 > /tmp/pjr-t46y-catalog-validate.log 2>&1","status":"passed","summary":"終了コード0。既存の`based_on`参照欠落warningのみで、カタログ検証はOK"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

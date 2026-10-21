@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_767719d882c344e8833efa3f7c1451d2
+  ts: "2026-10-20T12:03:38Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: prj-0001 のオーケストレーターの運用メモを書く
+    - field: description
+      from: ""
+      to: 配布する本文に入れないこの環境ならではの事情（runner を変えたら JSEY で確かめる、opencode の executor は docs・src・tests だけ編集できる、gemma は確かめずに完了と報告しがち、agy の opus の割り当ては数日単位、夜間の列の分け方など）を prj-0001 の文書にまとめ、本文から参照させる。orchestrator（claude-orchestrator）が書く（2026-10-20、利用者が承認）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_

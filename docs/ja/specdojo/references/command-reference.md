@@ -43,11 +43,11 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 | `init`                   | project から agent 実行までを質問式で初期設定する       | `specdojo init`                             |
 | `config init`            | `specdojo.config.json` と `.gitignore` を個別に用意する | `specdojo config init`                      |
 | `config migrate-members` | agent 定義を保護設定へ移す                              | `specdojo config migrate-members --dry-run` |
-| `config scaffold`        | provider の agent・settings 設定を個別に配置する        | `specdojo config scaffold --provider codex` |
+| `config scaffold`        | provider や VS Code ワークスペースを個別に配置する      | `specdojo config scaffold --provider codex` |
 | `project list`           | 登録済み project を表示する                             | `specdojo project list`                     |
 
 `init` は対話できる端末で、project ID と名前、register、人の nickname と表示名、複数指定可能な
-provider、exec、Dev Container の順に質問します。成果物カタログは対話では質問せず、`--catalog <size>` を
+provider、exec、Dev Container の順に質問します。Dev Container を選んだ場合だけ、続けて推奨 preset を入れるかを質問します（既定は「入れる」）。成果物カタログは対話では質問せず、`--catalog <size>` を
 明示した場合にだけ作成します。既存ファイルは上書きせず、スキップしたパスを表示します。`--dry-run` は
 予定だけを表示し、ファイルや `package.json` を変更しません。各回答は質問の直後に検証され、誤りの理由を
 表示して同じ質問だけをやり直します。それまでの回答は保持されます。`--exec` を選んだのに provider が
@@ -56,20 +56,21 @@ provider、exec、Dev Container の順に質問します。成果物カタログ
 
 非対話環境では質問せず、次の主要オプションと既定値を使います。
 
-| オプション                | 用途                                                                      | 既定値          |
-| ------------------------- | ------------------------------------------------------------------------- | --------------- |
-| `--yes`                   | 質問せず既定値と指定済みオプションで実行する                              | -               |
-| `--project <id>`          | project ID                                                                | `prj-0001`      |
-| `--name <name>`           | project の表示名                                                          | `My Project`    |
-| `--no-register`           | register を作らない                                                       | register を作る |
-| `--nickname <nickname>`   | 人の名簿に書く nickname                                                   | `owner`         |
-| `--display-name <name>`   | 人の名簿に書く表示名                                                      | `Project Owner` |
-| `--provider <names>`      | provider をカンマ区切りで指定する                                         | `codex`         |
-| `--exec`                  | executor / reporter の名簿と起動設定を作る                                | 作らない        |
-| `--catalog <size>`        | `small` / `medium` / `large` の成果物カタログを作る（対話では質問しない） | 作らない        |
-| `--devcontainer`          | 選んだ provider の Dev Container を作る                                   | 作らない        |
-| `--workspace-name <name>` | Dev Container 内で使う親ディレクトリ名                                    | ホスト側の親名  |
-| `--dry-run`               | 作成・変更予定だけを表示する                                              | 書き込む        |
+| オプション                     | 用途                                                                      | 既定値          |
+| ------------------------------ | ------------------------------------------------------------------------- | --------------- |
+| `--yes`                        | 質問せず既定値と指定済みオプションで実行する                              | -               |
+| `--project <id>`               | project ID                                                                | `prj-0001`      |
+| `--name <name>`                | project の表示名                                                          | `My Project`    |
+| `--no-register`                | register を作らない                                                       | register を作る |
+| `--nickname <nickname>`        | 人の名簿に書く nickname                                                   | `owner`         |
+| `--display-name <name>`        | 人の名簿に書く表示名                                                      | `Project Owner` |
+| `--provider <names>`           | provider をカンマ区切りで指定する                                         | `codex`         |
+| `--exec`                       | executor / reporter の名簿と起動設定を作る                                | 作らない        |
+| `--catalog <size>`             | `small` / `medium` / `large` の成果物カタログを作る（対話では質問しない） | 作らない        |
+| `--devcontainer`               | 選んだ provider の Dev Container を作る                                   | 作らない        |
+| `--devcontainer-preset <name>` | Dev Container の preset（`recommended` / `none`）を選ぶ                   | `recommended`   |
+| `--workspace-name <name>`      | Dev Container 内で使う親ディレクトリ名                                    | ホスト側の親名  |
+| `--dry-run`                    | 作成・変更予定だけを表示する                                              | 書き込む        |
 
 `init` が作る `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml` は、選択した
 provider だけを含みます。親 runner の検証は、対応する `package.json` の npm script が存在する
@@ -91,6 +92,8 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
 `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。
 
+`package.json` がある場合、provider ごとのオーケストレーター起動スクリプトも追加します。Claude Code は `orch:opus`・`orch:sonnet`、Codex は `orch:sol`（`gpt-5.6-sol`）・`orch:terra`（`gpt-5.6-terra`）、Antigravity は `orch:flash`（`gemini-3.8-flash-high`）、OpenCode は `orch:opencode` です。既存のスクリプトは `--force` を付けても上書きしません。
+
 `antigravity` に限り `--global` を指定すると、`~/.gemini/antigravity-cli/settings.json` へ SpecDojo 用の permission rule を追記します。既存キー・既存 rule は保持し、実書き込み前に timestamp 付きバックアップを作ります。`--global` を省略した通常実行はユーザーディレクトリへ触れません。適用前は次の dry-run で追加 rule を確認してください。
 
 ```bash
@@ -99,6 +102,14 @@ specdojo config scaffold --provider antigravity --global
 ```
 
 `--force` はリポジトリ内の scaffold ファイルだけを上書きし、グローバル設定の既存項目は上書きしません。従来の `exec scaffold --provider antigravity` でも同じ `--global` / `--dry-run` の挙動を利用できます。
+
+`config scaffold --workspace` は、`.specdojo/specdojo.config.json` の `repos` 宣言から VS Code のマルチルートワークスペース（`<project-id>.code-workspace`）をリポジトリルートに生成します。`folders` にはプロジェクトリポジトリ（`.`）と各プロダクトリポジトリ（`repos[].path`）を宣言順に並べ、別リポジトリ構成でも 1 つの VS Code ウィンドウでプロジェクトとプロダクトを同時に開けます。`--project <id>` で対象 project を指定でき、省略時は `current_project` を使います。既存のファイルは `--force` を指定しない限り上書きしません。`repos` が宣言されていない project ではエラーになります。`--dry-run` は書き込まず予定の内容だけを表示します。
+
+```bash
+specdojo config scaffold --workspace
+specdojo config scaffold --workspace --project prj-0002 --dry-run
+specdojo config scaffold --workspace --force
+```
 
 `config migrate-members` は、各 project の `pm-members.yaml` から `type: agent` の member を取り出し、トップレベルの `agent_members_path`（既定 `.specdojo/agent-members.yaml`）へ統合します。通常実行前に `--dry-run` で対象と件数を確認してください。`--project <id>` を指定すると 1 project だけを対象にします。
 
@@ -347,7 +358,7 @@ specdojo schedule strategy generate \
 | `--to <PJR-ID>`           | 移動先の PJR-ID を指定する                                    | `renumber`                                       |
 | `--registered <datetime>` | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `add`                                            |
 | `--completed <datetime>`  | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻 | `close` / `reject`                               |
-| `--by <actor>`            | 追記型 event に記録する actor を指定                          | `add` / 更新 / 遷移コマンド                      |
+| `--by <actor>`            | 名簿または予約一覧の actor を追記型 event に記録する          | `add` / 更新 / 遷移コマンド                      |
 | `--reason <text>`         | event の理由を記録（`wait` では `block_reason` も更新）       | `add` / 更新 / 遷移コマンド                      |
 | `--conclusion <text>`     | 終端時の結論を記録・更新（`update` では `-` で削除）          | `add` / `update` / 終端コマンド                  |
 | `--block-reason <text>`   | `waiting` の理由を更新（`-` で削除）                          | `update`                                         |
@@ -365,6 +376,8 @@ specdojo schedule strategy generate \
 | `--json`                  | イベントを JSON で出力する                                    | `history`                                        |
 
 `register add` は個票 Frontmatter の `registered_at`（起票日時）を、`register close` / `register reject` は `completed_at`（完了・却下日時）を自動記入します。値は UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で、OS / コンテナの `TZ` 環境変数には依存しません。`register reopen` は `completed_at` を削除します。
+
+`register` の `--by` は、project の `pm-members.yaml` にある人の nickname、`.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` だけを受け付けます。agent alias は実体名で event に記録し、未知の値は書き込み前に拒否します。省略時は `SpecDojo` です。決定・承認では `PO` などの Role code や予約 actor ではなく、本人の nickname を指定します。
 
 `--approach` を指定する場合、`--target` は 1 件だけ必須です。成果物を作成・修正する approach の対象は成果物カタログの doc id で解決するため、まだ文書がない成果物も指定できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。
 
@@ -436,36 +449,40 @@ specdojo schedule strategy generate \
 
 主要オプション:
 
-| オプション                      | 用途                                                                                                     | 対象                                                                            |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `--task <task-id>`              | 対象タスクを指定する                                                                                     | 状態遷移系 / `run` / `plan`                                                     |
-| `--by <actor>`                  | 実行 actor / agent の nickname を指定する（手動ターゲットの agent 選択も兼ねる）                         | 状態遷移系 / `run` / `resume` / `worktree agent`                                |
-| `--edit-by <nickname>`          | `--auto` バッチで edit タスクに使う agent nickname                                                       | `run --auto` / `resume`                                                         |
-| `--review-by <nickname>`        | `--auto` バッチで review タスクに使う agent nickname                                                     | `run --auto` / `resume`                                                         |
-| `--strategy <name>`             | 選択戦略を切り替える（`critical-first` 既定 / `fifo`）                                                   | `scheduler` / `run --auto`                                                      |
-| `--auto` / `--loop`             | Ready タスクを自動選択する / Ready がなくなるまで繰り返す                                                | `run`                                                                           |
-| `--parallel <n>`                | 同時に走らせる agent 数の上限を指定する                                                                  | `run --auto` / register の worktree モード                                      |
-| `--worktree`                    | worktree に隔離して実行する                                                                              | `run --task` / `run --register`                                                 |
-| `--in-place`                    | register 項目を現在の作業ツリーで実行する（`run.register_execution` を上書き）                           | `run --register`                                                                |
-| `--track-state`                 | claim / complete の状態イベントを記録する                                                                | `run --task`                                                                    |
-| `--register <PJR-ID>`           | 登録簿の項目を実行する（空白・カンマ区切りで複数可。場所の既定は `run.register_execution`）              | `run` / `plan`                                                                  |
-| `--register-filter`             | 登録簿項目を type / priority / status / limit の条件で決定論的に選ぶ                                     | `run`                                                                           |
-| `--register-commit`             | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる（worktree モードでは常に commit のため無視） | `run --register`                                                                |
-| `--on-failure <stop\|continue>` | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）                                              | `run --register`                                                                |
-| `--resume`                      | run が止まった段（executor / reporter / 統合）を既存 worktree と checkpoint で再開する                   | register の worktree モード                                                     |
-| `--resume-from executor`        | reporter 段から再開可能な run を、既存成果を保持したまま executor 段から再開する                         | register の worktree モード（`--resume` と併用）                                |
-| `--force-restart`               | 再開可能な run の成果があっても、worktree を破棄して項目全体を再実行する                                 | register の worktree モード                                                     |
-| `--join`                        | 実行中の register worktree 実行の終了を待たずに合流して並行実行する（上限は `run.max_concurrent_runs`）  | register の worktree モード                                                     |
-| `--executor-by <nickname>`      | executor 段の agent。register では `PJR-ID=nickname,...` による項目別指定も可能                          | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
-| `--reporter-by <nickname>`      | executor/reporter パイプラインの reporter 段に使う agent nickname                                        | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
-| `--on-rate-limit <action>`      | 指名した agent の上限時の扱い。`stop` / `wait` / `fallback`                                              | `run` / `resume`                                                                |
-| `--fallback-executor-by <name>` | `fallback` 時に executor 段を1回だけ引き継ぐ agent                                                       | `run` / `resume`                                                                |
-| `--fallback-reporter-by <name>` | `fallback` 時に reporter 段を1回だけ引き継ぐ agent                                                       | `run` / `resume`                                                                |
-| `--due`                         | 再開時刻を迎えた利用制限延期 task を対象にする                                                           | `resume`                                                                        |
+| オプション                             | 用途                                                                                                     | 対象                                                                            |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `--task <task-id>`                     | 対象タスクを指定する                                                                                     | 状態遷移系 / `run` / `plan`                                                     |
+| `--by <actor>`                         | 実行 actor / agent の nickname を指定する（手動ターゲットの agent 選択も兼ねる）                         | 状態遷移系 / `run` / `resume` / `worktree agent`                                |
+| `--edit-by <nickname>`                 | `--auto` バッチで edit タスクに使う agent nickname                                                       | `run --auto` / `resume`                                                         |
+| `--review-by <nickname>`               | `--auto` の review タスク、または register の統合後 review に使う agent nickname                         | `run --auto` / `run --register --post-review` / `resume`                        |
+| `--strategy <name>`                    | 選択戦略を切り替える（`critical-first` 既定 / `fifo`）                                                   | `scheduler` / `run --auto`                                                      |
+| `--auto` / `--loop`                    | Ready タスクを自動選択する / Ready がなくなるまで繰り返す                                                | `run`                                                                           |
+| `--parallel <n>`                       | 同時に走らせる agent 数の上限を指定する                                                                  | `run --auto` / register の worktree モード                                      |
+| `--worktree`                           | worktree に隔離して実行する                                                                              | `run --task` / `run --register`                                                 |
+| `--in-place`                           | register 項目を現在の作業ツリーで実行する（`run.register_execution` を上書き）                           | `run --register`                                                                |
+| `--track-state`                        | claim / complete の状態イベントを記録する                                                                | `run --task`                                                                    |
+| `--register <PJR-ID>`                  | 登録簿の項目を実行する（空白・カンマ区切りで複数可。場所の既定は `run.register_execution`）              | `run` / `plan`                                                                  |
+| `--register-filter`                    | 登録簿項目を type / priority / status / limit の条件で決定論的に選ぶ                                     | `run`                                                                           |
+| `--register-commit`                    | 成功したIDごとに、その実行で生じた変更を1コミットにまとめる（worktree モードでは常に commit のため無視） | `run --register`                                                                |
+| `--post-review`                        | worktree 統合後に完了 review を行い、todo / issue を verdict に応じて close または waiting にする        | `run --register --worktree`                                                     |
+| `--on-failure <stop\|continue>`        | 途中失敗時に残りのIDを停止するか継続するか（既定は `stop`）                                              | `run --register`                                                                |
+| `--integration-branch <repo>=<branch>` | run ごとのプロダクトリポジトリの統合先（繰り返し可）を指定する                                           | register の worktree モード                                                     |
+| `--resume`                             | run が止まった段（executor / reporter / 統合）を既存 worktree と checkpoint で再開する                   | register の worktree モード                                                     |
+| `--resume-from executor`               | reporter 段から再開可能な run を、既存成果を保持したまま executor 段から再開する                         | register の worktree モード（`--resume` と併用）                                |
+| `--force-restart`                      | 再開可能な run の成果があっても、worktree を破棄して項目全体を再実行する                                 | register の worktree モード                                                     |
+| `--join`                               | 実行中の register worktree 実行の終了を待たずに合流して並行実行する（上限は `run.max_concurrent_runs`）  | register の worktree モード                                                     |
+| `--executor-by <nickname>`             | executor 段の agent。register では `PJR-ID=nickname,...` による項目別指定も可能                          | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
+| `--reporter-by <nickname>`             | executor/reporter パイプラインの reporter 段に使う agent nickname                                        | `run --auto` / `resume` / `run --register` / `run --plan` / `run --deliverable` |
+| `--on-rate-limit <action>`             | 指名した agent の上限時の扱い。`stop` / `wait` / `fallback`                                              | `run` / `resume`                                                                |
+| `--fallback-executor-by <name>`        | rate limit の `fallback` または接続不能時に executor 段を1回だけ引き継ぐ agent                           | `run` / `resume`                                                                |
+| `--fallback-reporter-by <name>`        | rate limit の `fallback` または接続不能時に reporter 段を1回だけ引き継ぐ agent                           | `run` / `resume`                                                                |
+| `--due`                                | 再開時刻を迎えた利用制限延期 task を対象にする                                                           | `resume`                                                                        |
 
 `--plan` と `--deliverable` も Schedule のパイプライン宣言を持たないため、`--executor-by` / `--reporter-by` の少なくとも一方を指定したときだけ executor/reporter 2段階で実行します。指定しなかった段は `stage_role` による自動選択で決まります。`--plan` では reporter が scaffold 済みの result を記入するため、frontmatter に `task_id` を持つ plan が必要です。`--by` との併用はエラーです。`--by` に `stage_role` を持つ pipeline 用 agent を指定すると、result 未記入の blocked にはせず、`--executor-by` / `--reporter-by` を使うよう案内するエラーで実行前に拒否します。
 
 指名した agent の rate limit は既定では `stop` です。`wait` は provider の reset / retry-after、次に `rate_limit_policy.cooldown_seconds` を使い、`rate_limit_policy.pinned.max_wait_seconds`（既定8時間）以内なら同じ段を同じ agent で再開します。`fallback` は対応する fallback flag または `rate_limit_policy.pinned.fallback_executor_by` / `fallback_reporter_by` の agent へ1回だけ切り替えます。fallback 未指定時と fallback agent も上限になった場合は停止します。CLI が `exec-defaults.yaml` より優先します。待機中は project の実行ロックを保持します。
+
+`connection_error_detection` に一致する接続不能は `--on-rate-limit` の値とは独立して扱い、対応する fallback flag または設定上の fallback agent があれば1回だけ切り替えます。fallback 未指定時は通常の失敗として停止し、同じ agent の再開待ちは行いません。切替元・切替先・時刻・原因は rate limit の切替と同じ pipeline state、evidence、result の経路へ記録します。
 
 agent の指定は repository 共通 roster nickname（`.specdojo/agent-members.yaml`）へ一本化します。手動ターゲット（`--task` / `--register` など）では `--by <nickname>`、`--auto` バッチでは mode 別に `--edit-by` / `--review-by` を使い、バッチ起動は `--auto` に一本化します。解決の優先順位は「単体指定（`--by`）＞ mode 別指定（`--edit-by` / `--review-by`）＞ 自動選択」です。
 
@@ -506,6 +523,12 @@ specdojo exec run --project prj-0001 --register-filter --register-types todo --r
 # 成果物を worktree に隔離して実行し、統合ブランチへ merge back する
 specdojo exec run --project prj-0001 --register PJR-0012 --worktree
 
+# app1 の統合先を、この run だけローカルの feature/login にする
+specdojo exec run --project prj-0001 --register PJR-0012 --worktree --integration-branch app1=feature/login
+
+# 統合後に読み取り専用 review を行い、完了した todo / issue を自動 close する
+specdojo exec run --project prj-0001 --register PJR-0012 --worktree --post-review
+
 # 保護設定で block された提案差分を表示し、確認後に統合先へ commit する
 specdojo exec handoff apply --project prj-0001 --register PJR-0012
 
@@ -528,7 +551,11 @@ specdojo exec run --project prj-0001 --register PJR-0012 --worktree --resume --r
 specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026-W32
 ```
 
-`--register` は指定した個票の項目を実行します。`--register-filter` は `--register-types` / `--register-priorities` / `--register-statuses` のカンマ区切り条件と、正の整数の `--register-limit` で項目を選びます。条件省略時は open かつ実行可能な type が対象です。いずれも実行対象になる type は `todo` / `issue` / `change-request` / `question` / `risk` で、`decision` / `note` は対象外です。実行場所の既定は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選び、未設定時は互換性のため in-place です。`--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。worktree モードは成果物の変更を隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--parallel <n>` は worktree モードでのみ指定できます。
+`--register` は指定した個票の項目を実行します。`--register-filter` は `--register-types` / `--register-priorities` / `--register-statuses` のカンマ区切り条件と、正の整数の `--register-limit` で項目を選びます。条件省略時は open かつ実行可能な type が対象です。いずれも実行対象になる type は `todo` / `issue` / `change-request` / `question` / `risk` で、`decision` / `note` は対象外です。実行場所の既定は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選び、未設定時は互換性のため in-place です。`--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。worktree モードは成果物の変更を隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--post-review` または `run.register_post_review: true` を指定すると、merge back の後に完了判定を行い、todo / issue を自動 close できます。`--parallel <n>` は worktree モードでのみ指定できます。
+
+`--integration-branch <repo>=<branch>` は、register の worktree モードで、その run に限ってプロダクトリポジトリ `<repo>` の統合先を上書きします。複数リポジトリにはオプションを繰り返します。`<repo>` は `repos[].name` に宣言済みで、`<branch>` はそのリポジトリに存在する有効なローカルブランチでなければならず、リモートブランチの取得やローカルブランチの作成は行いません。同じ `<repo>` の重複、宣言にないリポジトリ、空の値は register の状態を変える前に拒否します。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定しない run の挙動は従来と変わりません。
+
+複数項目を `--parallel` で実行する場合、指定は選択された各 item run に同じように適用されます。中断した run を `--resume` するときは、開始時の指定を `pipeline-state.json` から再利用するため、オプションを繰り返す必要はありません。再開時に値を再指定する場合、その値は開始時の指定と一致する必要があり、run の途中で統合先を変更・追加する指定は拒否します。result の複数リポジトリ trace には、実際に使った統合先ブランチと統合後の commit snapshot が記録されます。
 
 `exec handoff apply --register <PJR-ID>` は、worktree 実行が `agent-config-write` で waiting になった項目の最新 result から提案差分を読み、統合先へ適用して commit します。コマンドは差分を必ず表示し、対話では `y` / `yes`、非対話実行では `--yes` による明示確認がなければ何も変更しません。提案差分がない、切り詰められている、申し送りの対象パスと一致しない、保護対象外のパスを含む、統合先へ適用できない、対象パスに既存変更がある場合は commit 前に停止します。複数リポジトリでは `# repo: <name>` で区切られた差分を、宣言済みの各統合先へ限定 commit します。`package.json` を適用した場合は、依存定義を変更したか確認して対応する lock ファイルを再生成・commit し、その後に表示された `exec run --register ... --worktree --resume` を実行します。
 
@@ -577,7 +604,7 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 `--agent`と任意の`--reporter-by`を使うと、reporterなしまたは全trial共通reporterの従来方式になります。`--pair <executor>=<reporter>...`は2組以上を指定し、executorとreporterを一組として比較します。`--pair`は`--agent` / `--reporter-by`と併用できません。比較記録の`reporter_mode`には`none` / `shared` / `paired`のいずれかを保存します。各reporterについて構造化出力の成否、形式試行回数、形式再試行回数、`evidence_blocked` / `invalid_output` / `invocation_failure` / `rate_limit`の失敗分類も保存します。`evidence_blocked` は reporter の申告ではなく、executor evidence から runner が機械判定した blocked を表します。
 
-`pipeline.parent_validations`に指定できるIDは`validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md`です（各IDは組み込み許可リストの固定argvへ解決されます）。`pipeline.parent_validations`はtrialにも適用され、executor成功後・reporter起動前に各worktreeで実行されます。親検証結果は`source: runner`付きでevidenceへ保存し、失敗時はtrialを`failed`にします。比較記録と`trial status`はexecutor・親検証・全体の時間を分け、executorの検証報告総数と`passed` / `failed` / `not_run` / `requires_human`、親検証の状態と件数を別々に表示します。採用前に親検証の成功、executorの未実施・未報告、sandbox 外で人が行う確認を確認してください。
+`pipeline.parent_validations`に指定できるIDは`validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md`、`build`、`format-check`です（各IDは組み込み許可リストの固定argvへ解決されます）。`pipeline.parent_validations`はtrialにも適用され、executor成功後・reporter起動前に各worktreeで実行されます。親検証結果は`source: runner`付きでevidenceへ保存し、失敗時はtrialを`failed`にします。比較記録と`trial status`はexecutor・親検証・全体の時間を分け、executorの検証報告総数と`passed` / `failed` / `not_run` / `requires_human`、親検証の状態と件数を別々に表示します。採用前に親検証の成功、executorの未実施・未報告、sandbox 外で人が行う確認を確認してください。
 
 記録先は`execution_path/exec/trials/<comparison-id>/`です。agent選定への反映は自動化せず、人が複数比較を確認して `.specdojo/agent-members.yaml` を更新します。
 
@@ -899,6 +926,16 @@ provider CLI の実行中、起動元は `SIGINT` と `SIGQUIT` を無視して�
 
 Claude Code、Codex、Antigravity、GitHub Copilot には exec と同じ追加ルート引数を渡します。OpenCode は、起動時の `OPENCODE_CONFIG_CONTENT` に選択 agent の `permission.external_directory` を注入し、全外部ディレクトリを拒否したうえで宣言済みのリポジトリだけを許可します。外部パスへ既存の `permission.edit` が一致しないため、同じ宣言済みルートの編集許可も注入します。既存の inline config の他項目は保持します。未宣言のリポジトリは、どの provider でも許可対象になりません。
 
+`orchestrator night` は `autopilot: approved` の付いた `open` todo・issue だけを夜間 queue として実行します。
+
+```bash
+specdojo orchestrator night --project prj-0001 \
+  --max-items 10 --parallel 2 --max-consecutive-failures 2 \
+  --on-rate-limit fallback --fallback-executor-by codex-executor
+```
+
+各 wave は worktree と post-review を必須にし、成功は close、未完了は `waiting` にします。`--max-items` は一晩の件数、`--parallel` は wave の同時数、`--max-consecutive-failures` は次の wave を止める閾値です。`--on-rate-limit fallback` では fallback executor の指定が必須です。失敗を含む朝報告を保存できた場合は部分成功を表す終了コード 2、コマンド自体の異常は 1 を返します。
+
 ## 16. devcontainer
 
 `devcontainer` は、利用リポジトリの `.devcontainer/` 環境を構築するためのサブコマンドです。VS Code Dev Container などで、オーケストレーターを起動するための分離されたコンテナ環境を生成します。
@@ -907,24 +944,28 @@ Claude Code、Codex、Antigravity、GitHub Copilot には exec と同じ追加�
 | ----------------------- | ------------------------------------------- |
 | `devcontainer scaffold` | `.devcontainer/` の設定ファイル群を生成する |
 
-`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。あわせて、常時稼働ホストへの接続と tmux セッション維持のためのサンプルスクリプト（`.devcontainer/remote-host/specdojo-tmux.sh.sample`）と接続元 SSH 設定サンプル（`.devcontainer/remote-host/ssh-config.sample`）も生成します。provider は `antigravity`、`claude`、`codex`、`opencode` を指定できます。`--editor emacs` を指定した場合は Emacs 用の `emacs/init.el` も生成します。Dev Container は任意の実行環境であり、既存の Node.js 環境を置き換える必須手順ではありません。
+`devcontainer scaffold` は、指定された provider の CLI と、要求された追加機能を組み込んだ `devcontainer.json` と `post-create.sh` を生成します。あわせて、常時稼働ホストへの接続と tmux セッション維持のためのサンプルスクリプト（`.devcontainer/remote-host/specdojo-tmux.sh.sample`）と接続元 SSH 設定サンプル（`.devcontainer/remote-host/ssh-config.sample`）も生成します。provider は `antigravity`、`claude`、`codex`、`opencode` を指定できます。`--editor emacs` / `--editor vim` を指定した場合は、それぞれ Emacs 用の `emacs/init.el` / Vim 用の `vim/vimrc` も生成します。Dev Container は任意の実行環境であり、既存の Node.js 環境を置き換える必須手順ではありません。
 
 主要オプション:
 
-| オプション                | 用途                                                        |
-| ------------------------- | ----------------------------------------------------------- |
-| `--provider <names>`      | `claude,codex` のようにカンマ区切りで provider を指定する。 |
-| `--editor emacs`          | 端末版 Emacs、LSP・検索ツール、初期設定を追加する。         |
-| `--ollama`                | Ollama への接続設定（環境変数）を追加する。                 |
-| `--cron`                  | cron をインストールし、起動時にサービスを開始する。         |
-| `--tmux`                  | tmux をインストールする。                                   |
-| `--workspace-name <name>` | Dev Container 内で使う親ディレクトリ名を上書きする。        |
-| `--force`                 | `.devcontainer/` が既に存在する場合に上書きする。           |
-| `--dry-run`               | 実際にファイルを作成せず、作成予定のファイルを表示する。    |
+| オプション                | 用途                                                         |
+| ------------------------- | ------------------------------------------------------------ |
+| `--preset recommended`    | 推奨のエディタ・tmux・VS Code 拡張と設定をまとめて追加する。 |
+| `--provider <names>`      | `claude,codex` のようにカンマ区切りで provider を指定する。  |
+| `--editor <names>`        | `emacs,vim` のようにエディタと初期設定を追加する。           |
+| `--ollama`                | Ollama への接続設定（環境変数）を追加する。                  |
+| `--cron`                  | cron をインストールし、起動時にサービスを開始する。          |
+| `--tmux`                  | tmux をインストールする。                                    |
+| `--workspace-name <name>` | Dev Container 内で使う親ディレクトリ名を上書きする。         |
+| `--force`                 | `.devcontainer/` が既に存在する場合に上書きする。            |
+| `--dry-run`               | 実際にファイルを作成せず、作成予定のファイルを表示する。     |
 
 ```bash
 # claude と codex 用の CLI を含む Dev Container を生成する
 npx specdojo devcontainer scaffold --provider claude,codex
+
+# SpecDojo の文書作業向けの推奨設定をまとめて追加する
+npx specdojo devcontainer scaffold --provider claude,codex --preset recommended
 
 # 追加オプションを指定する
 npx specdojo devcontainer scaffold --provider claude --ollama --tmux
@@ -969,6 +1010,10 @@ OpenCode の API key は `/home/node/.local/share/opencode/auth.json` に入り�
 `--editor emacs` を指定すると、端末版 Emacs、ripgrep、TypeScript・Markdown・YAML・Bash 用の LSP サーバーと `.devcontainer/emacs/init.el` を追加します。初期設定は Emacs 組み込み機能だけを使い、`C-h` の後退、UTF-8、行番号、対応する括弧、端末マウス、作業ツリー外のバックアップ・自動保存、対応ファイルでの Eglot 自動接続を設定します。
 
 post-create は `~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/emacs/init.el` のいずれも無い場合だけ、生成したテンプレートを配置します。`~/.emacs.d` ディレクトリがあれば `~/.emacs.d/init.el` へ、なければ `~/.config/emacs/init.el` へコピーし、配置先を出力します。dotfiles が設定を先に配置した場合は上書きしません。初回のコンテナ作成前に既定値を変える場合は `.devcontainer/emacs/init.el` を編集してください。作成後は出力されたコピー先を編集します。コピー先を削除しない限り、再度 post-create を実行してもテンプレートの変更は反映されません。
+
+`--preset recommended` は、`--editor emacs,vim --tmux` 相当のツールに加え、Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML の VS Code 拡張を追加します。選択した provider が Claude Code、Codex、GitHub Copilot の場合は、その provider の拡張だけも追加します。Markdown と YAML は保存時に Prettier で整形し、`docs/specdojo/schemas/v1/` の主要な schema を SpecDojo の YAML へ関連付けます。同じ拡張は `.vscode/extensions.json` の `recommendations` にも入り、既存の recommendation は保持されます。個別の `--editor`・`--tmux` と一緒に指定した場合は両方を重複なく適用します。
+
+Vim の雛形は `.devcontainer/vim/vimrc` に生成され、`~/.vimrc` と `~/.vim/vimrc` のどちらも無い場合だけ `~/.vimrc` へコピーされます。既存の Vim 設定は上書きしません。Emacs の雛形も上記と同じ上書き防止を維持します。
 
 ## 17. 関連ガイド
 

@@ -6,14 +6,14 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 71
-graded_at: "2026-10-15T16:11:55.258Z"
-graded_by: agy-expert-executor
-content_hash: 0617c763ae4acc31e89f7720dc40286b69bc8e7b17849e4e7fa4e8180cc13d83
+graded_at: "2026-10-20T16:30:10.182Z"
+graded_by: flash-high-executor
+content_hash: 4b6b566dcca2287d98b1d520831f6263c2f92873c1a9bfaf4becaf7b72ff10ae
 source_hashes:
   catalog-entry: 012f9a9f165cffc908edd01db257386e2b0a3bb92ced271ff6a34b3f9e42b19d
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:sysd-index: f9beb51fab601754588ad15bf3fbf6d230423886397326caa4b5cd4d9062084f
+  dependency:sysd-index: 00399c6c78e44d44f97f896a985436e31d9816d522d29ba385fcf2ab1162da9e
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
@@ -150,8 +150,8 @@ findings:
     rule: vp-pm-dependency-risk
     line: 150
     anchor: >-
-      | Flow ID | SDI・一次情報                                         | テスト                    | 運用                  |
-      DEC・判断記録 |
+      | Flow ID | SDI・一次情報                                                  | テスト                    |
+      運用                  | DEC・判断記録 |
     message: 未作成OPR、一般名称の参照、未確定の制限値を依存・リスクとして分離し、Schedule影響とPJR登録先を示す必要がある。
     message_ja: 未作成OPR、一般名称の参照、未確定の制限値を依存・リスクとして分離し、Schedule影響とPJR登録先を示す必要がある。
   - id: F005
@@ -201,8 +201,8 @@ findings:
     rule: vp-dev-change-impact
     line: 150
     anchor: >-
-      | Flow ID | SDI・一次情報                                         | テスト                    | 運用                  |
-      DEC・判断記録 |
+      | Flow ID | SDI・一次情報                                                  | テスト                    |
+      運用                  | DEC・判断記録 |
     message: 各フロー変更時に確認するschema、生成物、CLIコマンド、後方互換性、関連テスト・運用文書を影響範囲として対応付ける必要がある。
     message_ja: 各フロー変更時に確認するschema、生成物、CLIコマンド、後方互換性、関連テスト・運用文書を影響範囲として対応付ける必要がある。
   - id: F012
@@ -210,8 +210,8 @@ findings:
     rule: vp-dev-testability
     line: 150
     anchor: >-
-      | Flow ID | SDI・一次情報                                         | テスト                    | 運用                  |
-      DEC・判断記録 |
+      | Flow ID | SDI・一次情報                                                  | テスト                    |
+      運用                  | DEC・判断記録 |
     message: 各フローのテストを実在するリポジトリ相対パスまたはテストIDで示し、実行コマンド、対象条件、期待結果、失敗時の判定を追加する必要がある。
     message_ja: 各フローのテストを実在するリポジトリ相対パスまたはテストIDで示し、実行コマンド、対象条件、期待結果、失敗時の判定を追加する必要がある。
   - id: F013
@@ -247,8 +247,8 @@ findings:
     rule: vp-ux-user-flow
     line: 150
     anchor: >-
-      | Flow ID | SDI・一次情報                                         | テスト                    | 運用                  |
-      DEC・判断記録 |
+      | Flow ID | SDI・一次情報                                                  | テスト                    |
+      運用                  | DEC・判断記録 |
     message: 関連ドキュメント表の一般名称とglob風表記を、実在する文書IDまたはリポジトリ相対パスへ置き換え、未作成OPRには作成予定のIDまたは追跡先を示す必要がある。
     message_ja: 関連ドキュメント表の一般名称とglob風表記を、実在する文書IDまたはリポジトリ相対パスへ置き換え、未作成OPRには作成予定のIDまたは追跡先を示す必要がある。
   - id: F018
@@ -273,13 +273,15 @@ findings:
     message: 各フローの監視閾値、アラート後の担当Role code、問い合わせ・エスカレーション先、復旧・再開手順を実在するOPRまたは追跡IDへ接続する必要がある。
     message_ja: 各フローの監視閾値、アラート後の担当Role code、問い合わせ・エスカレーション先、復旧・再開手順を実在するOPRまたは追跡IDへ接続する必要がある。
 done_criteria:
-  satisfied: 1
+  satisfied: 0
   total: 5
   unsatisfied:
     DC-001:
       - BA
     DC-002:
       - PO
+    DC-003:
+      - ARC
     DC-004:
       - QE
     DC-005:

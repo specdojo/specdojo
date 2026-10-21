@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-JSEY-post-review",
+  "run_id": "20261018T184628347Z-dc16244f",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-18T18:46:28.347Z",
+    "completed_at": "2026-10-18T18:47:10.220Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat 3da3e3c736d4fb1323f0037f693c6e5a6420dd0d..b7efc278a7ece9114f6a966d121c10ec2c40708d",
+      "status": "passed",
+      "summary": "7 ファイル、278 行追加、1 行削除"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-status 3da3e3c736d4fb1323f0037f693c6e5a6420dd0d..b7efc278a7ece9114f6a966d121c10ec2c40708d",
+      "status": "passed",
+      "summary": "変更は本個票と events の pjr-jsey.yaml（M）、追加は evidence 3 件と plan、result。対象外の変更なし"
+    },
+    {
+      "source": "executor",
+      "command": "git diff 3da3e3c736d4fb1323f0037f693c6e5a6420dd0d..b7efc278a7ece9114f6a966d121c10ec2c40708d -- docs/ja/projects/prj-0001/controls/project-register/",
+      "status": "passed",
+      "summary": "PJR-0EFN の行の追記、item_status の open から review への変更、start と review のイベントを確認"
+    },
+    {
+      "source": "executor",
+      "command": "git log --oneline -12 b7efc278",
+      "status": "passed",
+      "summary": "直前に統合された分割の項目は PJR-0EFN（2f0de4088）"
+    },
+    {
+      "source": "executor",
+      "command": "grep -H -m2 -E item_status pjr-0efn-*.md pjr-g90k-*.md",
+      "status": "passed",
+      "summary": "PJR-0EFN は review、PJR-G90K は done"
+    }
+  ],
+  "final_message": "verdict: complete-with-findings。個票の完了条件 3 点はすべて満たす。(1) 対応結果の表に「2026-10-19 03:41 / PJR-0EFN / sonnet-executor」が追記された。日時は executor の実行時刻（18:41Z = 03:41 JST）と合い、PJR-0EFN は統合前 commit の直前に統合された分割の項目（2f0de4088）で item_status は review。(2) 差分 7 件は本個票と runner が自動で作るファイル（events の pjr-jsey.yaml、evidence.json、executor.log、pipeline-state.json、edit plan、edit result）だけで、対象外の変更はない。(3) evidence では親の検証 7 件（lint-ts、lint-fm、lint-md、typecheck、test-unit、test-integration、validate-schema）がすべて passed で、pipeline-state.json では executor、reporter、integrate がすべて succeeded。完了を妨げる失敗や未解消の申し送りはない。grade は使わず、edit の検証結果で判定した。軽微な finding: (a) 個票 frontmatter の `conclusion` が G90K の内容のままで、close 時に 0EFN の内容へ直す必要がある。(b) edit result の「変更ファイル」が「なし」だが、実際には個票 1 件を変更しており evidence の `changes` と食い違う。確認できなかった範囲: pjr-index.md の登録簿での表示（差分外）と、各検証の出力全文（evidence には一部を省いた要約しかない）。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-JSEY-post-review/20261018T184628347Z-dc16244f/executor.log",
+      "bytes": 5746,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+**判定: `complete-with-findings`**。登録項目 PJR-JSEY の完了条件はすべて満たしていました。ただし、事実と食い違う記述が 2 点あります。どちらも完了を妨げる程度ではありません。読み取り専用の `git diff` / `git log` と、ファイルの閲覧だけで確認しました。
+
+**完了条件との照合（統合前 `d86d9a35` → 統合後 `0be6d014`）**
+
+1. **対応結果の表への 1 行追記**: 満たしています。`| 2026-10-19 00:39 | PJR-8WBN | sonnet-executor |` が 1 行だけ追加されていました。
+   - 時刻: executor の開始は 2026-10-18T15:39:02Z で、JST に直すと 10-19 00:39 になり一致します。
+   - 対象の分割: 列挙された分割項目のうち、最も新しく統合されたのは PJR-8WBN（`b5a4ecbb6`）です。それより後で統合前 commit までの commit に、列挙された ID は出てきません。
+   - agent: evidence の actor `sonnet-executor` と一致します。
+2. **個票以外のファイルを変更しない**: 満たしています。差分は 7 ファイルです。
+   - executor が変更したのは個票 `pjr-jsey-exec-run-split-smoke.md` だけです（evidence の `changes` も 1 件）。
+   - 個票の差分は、表の 1 行と `item_status` の open→review です。
+   - 残りの `events/pjr-jsey.yaml`（start と review の 2 イベント）、plan、result、evidence 一式（`evidence.json`、`executor.log`、`pipeline-state.json`）は runner が書いた管理用の記録です。対象外の変更は見当たりません。
+3. **親の検証が通り、統合まで終わる**: 満たしています。
+   - evidence には lint-ts、lint-fm、lint-md、typecheck、test-unit、test-integration、validate-schema の 7 件がすべて `passed`（exit 0）で記録されています。lint-ts は 0 errors / 30 warnings で、warning は既存のものです。
+   - `pipeline-state.json` では executor、reporter、integrate の 3 段がすべて `succeeded` でした。
+   - edit result の status は `complete` で、完了を妨げる失敗や、未実施の必須検証、未解消の申し送りはありませんでした。
+
+**指摘事項（軽微）**
+
+- edit result の「変更ファイル」が「なし」になっていますが、evidence と差分では個票 1 ファイルが変更されています。result の「実施内容」とも食い違っています。
+- 個票 frontmatter の `conclusion` が「6EF8 の統合後の runner で…」のままで、今回の 8WBN の実行を反映していません。完了条件には含まれないので、close 時に更新するかどうかの判断が残ります。
+
+**評価結果の確認**: この review では grade を使っていません。edit の検証結果（evidence の親の検証 7 件）を確認しました。
+
+**確認できなかった範囲**: 統合後の個票 PJR-8WBN の `item_status` は、確認コマンドに承認が必要だったため直接は見ていません。PJR-8WBN が統合済みであることは、commit 履歴（review の後に `b5a4ecbb6`）から判断しました。親の検証は再実行せず、evidence の記録に頼っています。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict: complete-with-findings。完了条件の3点はすべて満たしている。(1) 個票の対応結果表に `2026-10-19 00:39 | PJR-8WBN | sonnet-executor` が1行だけ追記された。時刻は executor 開始 15:39Z の JST 換算と一致する。統合前 commit までに最も新しく統合された分割項目は PJR-8WBN（b5a4ecbb6）で、それより後に列挙 ID の commit はない。agent は evidence の actor と一致する。(2) d86d9a35..0be6d014 の差分は7ファイル。executor の変更は個票のみ（evidence の changes も1件）で、ほかは runner の管理用記録（events yaml の start/review、plan、result、evidence 一式）。対象外の変更はない。(3) evidence の親の検証7件（lint-ts/lint-fm/lint-md/typecheck/test-unit/test-integration/validate-schema）はすべて passed。pipeline-state では executor/reporter/integrate がすべて succeeded。edit result は status complete で、block や未解消の申し送りはない。指摘事項（軽微）: edit result の「変更ファイル」が「なし」になっているが、実際は個票1ファイルが変更されており食い違っている。個票 frontmatter の `conclusion` が 6EF8 時点の記述のまま更新されていない（完了条件外）。評価結果の確認: grade は使わず、edit の検証結果（evidence の親の検証）を確認した。確認できなかった範囲: 統合後の PJR-8WBN 個票の `item_status` は承認が必要で直接確認していない（統合済みであることは commit 履歴で判断した）。親の検証は再実行していない。","validations":[{"command":"git diff --stat d86d9a35d3eb415a4c8bdb5d18f8e9e06ae1ee53..0be6d014b680c54746f077a9c104d0ae543f8b8c","status":"passed","summary":"7 files changed, 272 insertions(+), 1 deletion(-)。executor の変更は個票のみで、ほかは runner の管理用記録"},{"command":"git diff --name-status d86d9a35d3eb415a4c8bdb5d18f8e9e06ae1ee53..0be6d014b680c54746f077a9c104d0ae543f8b8c","status":"passed","summary":"M: 個票と events yaml。A: evidence 一式、plan、result。対象外の変更はない"},{"command":"git diff d86d9a35d3eb415a4c8bdb5d18f8e9e06ae1ee53..0be6d014b680c54746f077a9c104d0ae543f8b8c -- docs/ja/projects/prj-0001/controls/project-register/","status":"passed","summary":"個票に PJR-8WBN の行の追記と item_status の open→review。events に start/review の2イベント"},{"command":"git log --oneline -12 d86d9a35d3eb415a4c8bdb5d18f8e9e06ae1ee53","status":"passed","summary":"PJR-8WBN の統合（b5a4ecbb6）より後に、列挙された分割 ID の commit はない"}]}
+</specdojo_executor_evidence>
