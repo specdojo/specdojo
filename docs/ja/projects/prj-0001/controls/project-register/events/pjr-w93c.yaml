@@ -93,3 +93,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2dfc70b930df4d3582e35c47077c2aec
+- v: 1
+  id: reg_759723f131de4d028e283b396a8d9e67
+  ts: "2026-10-21T14:31:15Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・統合テスト・親の検証を確かめ、prj-0002 から止まる条件を試し、統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: 別の project の作業ツリーから register add --project `<id>` --commit で、相手の統合ブランチ（integration_branch、既定は project/`<id>`/develop）へ記帳できるようにした。相手のブランチを開いた作業ツリーがなければ一時的な worktree を使う。--commit なし、相手の未 commit の変更、ブランチがない場合、別の project への状態遷移は書き込み前に止める。--from は project 付きで別の project の項目を指せる
+  previous_event_id: reg_b4c3ba005c144de18fd63f129d969bd4

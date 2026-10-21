@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-w93c-cross-project-register-add
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-21T13:17:35Z"
+  completed_at: "2026-10-21T14:31:15Z"
+  conclusion: 別の project の作業ツリーから register add --project `<id>` --commit で、相手の統合ブランチ（integration_branch、既定は project/`<id>`/develop）へ記帳できるようにした。相手のブランチを開いた作業ツリーがなければ一時的な worktree を使う。--commit なし、相手の未 commit の変更、ブランチがない場合、別の project への状態遷移は書き込み前に止める。--from は project 付きで別の project の項目を指せる
 ---
 
 # PJR-W93C 別の project の登録簿へ起票できるようにする
