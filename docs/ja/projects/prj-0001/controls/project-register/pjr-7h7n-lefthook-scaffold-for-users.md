@@ -30,6 +30,8 @@ specdojo:
   - カタログを変えたとき（`catalog_path` がある project だけ）の `specdojo catalog validate`
 - 必要な devDependencies（lefthook・prettier・markdownlint-cli など）と npm script の追加は、利用者の `package.json` を書き換える前に内容を表示し、既存の script と依存を上書きしない。足りないものは案内として出す。
 - 本リポジトリで起きた事故の対策を入れる: linked worktree や `node_modules` がない環境でも hook の入口が失敗しない（依存のない入口で判定してから委譲する、`.github/instructions/typescript.instructions.md` の hook の規則と前例の `tools/install-lefthook.mjs` に従う）。hook から git を呼ぶときに `GIT_DIR` などを引き継がない。
+- 追加（2026-10-22、1 回目の統合の後の確認で判明）: `init --yes --provider claude --lefthook` の直後のリポジトリで、`npm install` してから `git add -A` と `git commit` をすると、markdownlint が既定の規則（MD013 の 1 行 80 文字、MD041 など）で、SpecDojo 自身が作った `.claude/agents/*.md` などを違反として止める。lefthook とあわせて markdownlint の設定（`.markdownlint.jsonc` など。既存のものは上書きしない）を作り、SpecDojo が作るファイルが通る規則にする。agent の定義のように規則の対象にしないファイルは、除外の設定で外す。
+- 追加: 統合テストで、`init --lefthook` で作ったファイル一式（`.claude/` や登録簿を含む）を最初の commit に入れても、hook が通ることを確かめる。
 - [[specdojo:quick-start-guide]] の個別に設定する場合と、[[specdojo:command-reference]] に、作り方と流れる検査を書く。
 - 単体テストで、生成される `lefthook.yml` の内容、既存ファイルを上書きしないこと、`catalog_path` がない project で catalog の検査が入らないことを確かめる。統合テストで、作った hook が一時のリポジトリで commit の前に動き、Markdown の違反で commit が止まることを確かめる。
 
