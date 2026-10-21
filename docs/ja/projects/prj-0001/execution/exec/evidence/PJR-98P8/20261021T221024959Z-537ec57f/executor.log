@@ -1,0 +1,13 @@
+実装を完了しました。
+
+- exec の plan 922件・result 934件をサイト生成対象から除外
+- 相対リンク／wikilinkを GitHub blob URL へ変換
+- 変換処理の単体テストを追加
+- README、CHANGELOG、個票を更新
+- VitePress ビルドは dead link 0件、実時間53.90秒
+- 一時生成物は削除済み
+- ルートの `npm run docs:build` は sandbox の IPC／Chromium制約のため、人間環境での最終確認が必要です
+
+<specdojo_executor_evidence>
+{"final_message":"exec plan/result のサイト除外と GitHub リンク置換を実装し、VitePress の dead link 0件を確認した。","validations":[{"command":"npx prettier --write packages/docs-site/.vitepress/exec-record-links.ts packages/docs-site/.vitepress/config.mts tests/packages/docs-site/exec-record-links.test.ts packages/docs-site/README.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-98p8-docs-site-exclude-exec-records.md","status":"passed","summary":"変更した TypeScript・Markdown を整形した。"},{"command":"npm --prefix packages/docs-site run typecheck","status":"passed","summary":"docs-site の型検査が成功した。"},{"command":"time -p npm --prefix packages/docs-site run docs:build","status":"passed","summary":"sandbox で起動できない Mermaid/Chromium のみ一時 SVG キャッシュで迂回し、VitePress ビルドと dead link 検査が成功した。NODE_OPTIONS は未設定、実時間53.90秒。"},{"command":"npm run docs:build","status":"requires_human","summary":"sandbox では前段生成の tsx IPC が EPERM となり、Chromium も起動できないため、通常環境で一時 SVG なしの最終確認が必要。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の生成が成功した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"カタログ検証が成功した。既存文書不在に関する警告のみ。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはない。"}]}
+</specdojo_executor_evidence>
