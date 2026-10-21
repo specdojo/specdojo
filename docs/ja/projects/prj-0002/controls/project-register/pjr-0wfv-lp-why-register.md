@@ -28,6 +28,12 @@ AI のコーディングツールの plan モードの plan（会話の中の下
 - plan モードを否定せず、「plan は段取りの下書き、register は判断と作業を残す台帳」として補い合う関係で書く。冒頭の一文は、下の申し送りの「打ち出しの軸の案」を短くしたものにする。
 - plan モードの plan の保存期間は「約 30 日」などと数字で断定せず、「既定では一定期間で消えうる」と書く。ツールや設定で変わるためである。
 - 「道具の使い分け」の節（`src/components/sections/ToolFit.astro`）の plan mode の行は、新しい対比と言い回しがそろっているかを確かめる。そろっていない場合だけ直す。
+- 対比の各セルは、確かめられる事実だけで書く。次を守る（2026-10-21 の 1 回目の run で誤りがあったため加えた）。
+  - 状態の名前は register の実際の状態（`open`・`in-progress`・`waiting`・`review`・`done`・`decided`・`rejected`・`deferred`）だけを使う。`resolved`・`closed` など存在しない状態を書かない。
+  - plan モードの plan の名前の付き方は「ランダムな名前」とだけ書く。「UUID」など、確かめていない形式を書かない。
+  - plan モードの plan の保存場所を「一時ディレクトリ」と書かない。Claude Code では既定で `~/.claude/plans/` に保存され、保存先は設定で変えられる。LP では「既定では一定期間で消えうる」程度にとどめる。
+  - decision の承認方式の具体的な値（「合意」「レビュー」など）は、pjr-rulebook と個票のテンプレートで確かめられない限り例を挙げない。
+  - 狭い画面のカード表示と広い画面の表で、列の見出しの言い回しをそろえる。
 - 申し送りの「弱い点」と競合との比較は、この項目では LP に載せない。
 - 変えるのは `specdojo-lp` の `RegisterTypes.astro` と、必要な場合の `ToolFit.astro` だけとする。
 - 作業を終える前に、`specdojo-lp` で `npm run typecheck`・`npm run lint:ts`・`npm run format:check`・`npm run build` を実行して通す。
