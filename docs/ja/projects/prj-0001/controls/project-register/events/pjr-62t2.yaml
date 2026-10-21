@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_618f04ea16e349ef8690891d78d82678
+  ts: "2026-10-21T22:09:18Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: lefthook の markdownlint で対象のファイルがないとき使い方の説明が出ないようにする
+    - field: description
+      from: ""
+      to: PJR-7H7N の hook は、commit した Markdown がすべて除外の設定で外れると、ファイルなしで markdownlint を呼び、使い方の説明が出る。対象がないときは markdownlint を呼ばずに終える
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-7H7N"]'
