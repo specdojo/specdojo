@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0002:pjr-abmp-lp-orchestrator-approval-dialog
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-20T21:09:11Z"
+  completed_at: "2026-10-21T12:13:04Z"
+  conclusion: LP の会話例で承認を求める 5 か所を、何をするか・中身・影響を日本語で示して「よろしいですか？」と聞く形にした。コマンドは会話から外し、オーケストレーターを使わない手順の側に残した
 ---
 
 # PJR-ABMP LP の会話例でオーケストレーターが内容を日本語で確かめる形にする
