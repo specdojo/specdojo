@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-19T21:18:30Z"
+  block_reason: "agent exited with non-zero code: agent exited with non-zero code: GPT-OSS 120B (Medium)"
 ---
 
 # PJR-SGM6 LP の orch の script の名前を model の系統の名前に改める
