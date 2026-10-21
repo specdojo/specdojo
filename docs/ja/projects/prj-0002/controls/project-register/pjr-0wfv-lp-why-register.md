@@ -22,7 +22,15 @@ AI のコーディングツールの plan モードの plan（会話の中の下
 
 ## 2. 完了条件
 
-- _TODO_: LP のどの節で伝えるかを決めて記載する。
+- `specdojo-lp` の「register の考え方」の節（`src/components/sections/RegisterTypes.astro`）に、plan モードの plan との違いを示す対比を加える。
+- 対比の観点は、識別（`PJR-XXXX` の ID）・種類・状態の遷移・実行の plan や result とのつながり・決定の記録（決めた人・決めた日・承認の方式）・残り方（リポジトリの履歴として残る）とする。表現は prj-0001 の PJR-YFBW で書いた [[specdojo:orchestrator-operation-guide]] の「plan モードと register の使い分け」とそろえる。
+- plan モードを否定せず、「plan は段取りの下書き、register は判断と作業を残す台帳」として補い合う関係で書く。冒頭の一文は、下の申し送りの「打ち出しの軸の案」を短くしたものにする。
+- plan モードの plan の保存期間は「約 30 日」などと数字で断定せず、「既定では一定期間で消えうる」と書く。ツールや設定で変わるためである。
+- 「道具の使い分け」の節（`src/components/sections/ToolFit.astro`）の plan mode の行は、新しい対比と言い回しがそろっているかを確かめる。そろっていない場合だけ直す。
+- 申し送りの「弱い点」と競合との比較は、この項目では LP に載せない。
+- 変えるのは `specdojo-lp` の `RegisterTypes.astro` と、必要な場合の `ToolFit.astro` だけとする。
+- 作業を終える前に、`specdojo-lp` で `npm run typecheck`・`npm run lint:ts`・`npm run format:check`・`npm run build` を実行して通す。
+- 親の検証が通る。
 
 ### 2.1. prj-0001 からの申し送り：競合との比較（2026-10-17）
 
@@ -57,9 +65,10 @@ SpecDojo の register が優位な点:
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                                      | 担当 | 状態 | メモ                      |
+| --- | --------------------------------------------------------- | ---- | ---- | ------------------------- |
+| 1   | 「register の考え方」に plan モードとの対比を加える       | BA   | open | PJR-YFBW と表現をそろえる |
+| 2   | 「道具の使い分け」の plan mode の行との言い回しを確かめる | BA   | open | 必要な場合だけ直す        |
 
 ## 4. 対応結果
 
@@ -67,4 +76,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-yfbw-guide-plan-mode-vs-register]]: 運用ガイドに同じ内容を書いた項目。
+- [[specdojo:orchestrator-operation-guide]]: 表現をそろえる先のガイド。
