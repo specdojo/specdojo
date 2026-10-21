@@ -80,3 +80,16 @@
       from: "agent exited with non-zero code: parent validation failed: lint-md"
       to: "-"
   previous_event_id: reg_1db81ff7dfe34752875124e1753c7552
+- v: 1
+  id: reg_b4c3ba005c144de18fd63f129d969bd4
+  ts: "2026-10-21T14:22:13Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2dfc70b930df4d3582e35c47077c2aec
