@@ -1,0 +1,91 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T30J
+
+ ❯ tests/src/exec/plans.test.ts (69 tests | 1 failed) 914ms
+     × builds a stem prefixed by the slug and unique across calls 5ms
+Updated ticket status → ready: /tmp/specdojo-ticket-LnGPsS/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-2BX4MG/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-4Rtgis/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-oAl97T/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-lM1moH/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-ip2JFe/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Would move 1 agent member(s) from /tmp/specdojo-members-5XajPl/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-5XajPl/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-5XajPl/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-5XajPl/.specdojo/agent-members.yaml
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-21T16:01:20.449Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-21T16:00:20.740Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-21T16:00:21.000Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-Cp205Y/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-gfzrrT/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 139 passed (140)
+      Tests  1 failed | 2293 passed (2294)
+   Start at  00:59:48
+   Duration  50.09s (transform 2.99s, setup 658ms, import 24.84s, tests 51.54s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/plans.test.ts > buildInPlaceStem / stemFromPlanPath > builds a stem prefixed by the slug and unique across calls
+AssertionError: expected 'prj-overview-20261021T155950Z-062d' not to be 'prj-overview-20261021T155950Z-062d' // Object.is equality
+ ❯ tests/src/exec/plans.test.ts:165:19
+    163|     expect(a.startsWith("prj-overview-")).toBe(true);
+    164|     // Two generations of the same slug must not collide (UTC + random…
+    165|     expect(a).not.toBe(b);
+       |                   ^
+    166|   });
+    167|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
