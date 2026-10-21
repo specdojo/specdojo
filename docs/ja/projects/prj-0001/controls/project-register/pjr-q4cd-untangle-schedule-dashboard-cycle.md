@@ -38,12 +38,16 @@ PJR-T30J で、schedule → dashboard → exec → schedule と schedule → das
 
 | No  | 作業                                       | 担当 | 状態 | メモ         |
 | --- | ------------------------------------------ | ---- | ---- | ------------ |
-| 1   | schedule から dashboard への import を外す | DEV  | open | 0.4.2 の範囲 |
+| 1   | schedule から dashboard への import を外す | DEV  | done | 0.4.2 の範囲 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `src/dashboard/timeline-build.ts` が持っていた Timeline index の型・読み込みを `src/shared/timeline-index.ts` へ、ドメイン別のカタログ探索を `src/shared/catalog-files.ts` へ移した。どちらも schedule と dashboard が共有し、shared 内のみを import する処理であるため `src/shared/` に置いた。
+- `src/schedule/strategy-generate-scope.ts` の import 先を上記の shared module に変更し、schedule から dashboard への import をなくした。`src/dashboard/timeline-build.ts` は従来の関数と型を re-export するため、CLI と既存の module API は変えていない。
+- ESLint の `no-restricted-imports` に「`schedule` は `dashboard` を import しない」を error として追加し、`.github/instructions/typescript.instructions.md` の解消済みの依存方向を 7 組に更新した。
+- PJR-T30J と同じく、`src/shared/`・`src/commands/`・`src/specdojo.ts` を除いた `src/` 直下の機能単位で static import / re-export のグラフから単純閉路を列挙した。3 機能以上をまたぐ循環は 0 組で、PJR-T30J の 2 組はどちらも解消した。
+- 利用者から見た動きは変わらないため、CHANGELOG は更新していない。残課題はない。
 
 ## 5. 関連ドキュメント
 
-- PJR-T30J（循環の洗い出し）
+- [[prj-0001:pjr-t30j-shared-scope-and-multi-feature-cycles|PJR-T30J shared の機能固有のモジュールを戻し、3 機能以上をまたぐ循環をほどく]]
