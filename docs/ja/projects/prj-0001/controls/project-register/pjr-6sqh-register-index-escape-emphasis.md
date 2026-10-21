@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6sqh-register-index-escape-emphasis
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-21T13:56:54Z"
+  completed_at: "2026-10-21T14:13:36Z"
+  conclusion: 一覧・派生ビュー・PM ログの表のセルで、コードの書式の外にある未エスケープのアスタリスクとアンダースコアをエスケープするようにした。コードの書式の中とエスケープ済みの記号は変えない。作り直した develop の生成物は markdownlint を通る
   derived_from:
     - PJR-A6PV
 ---

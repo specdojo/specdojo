@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_583dde2bab014d44ab8bef7ca96c5751
+- v: 1
+  id: reg_8eb3cf70083342d6bd4e621a4f12e4a8
+  ts: "2026-10-21T14:13:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・単体テスト・親の検証を確かめ、develop の生成物が markdownlint を通ることを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: 一覧・派生ビュー・PM ログの表のセルで、コードの書式の外にある未エスケープのアスタリスクとアンダースコアをエスケープするようにした。コードの書式の中とエスケープ済みの記号は変えない。作り直した develop の生成物は markdownlint を通る
+  previous_event_id: reg_b1144cc384874b0c871a1711345cd676
