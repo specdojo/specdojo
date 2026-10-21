@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_01ae94aeaa5448f3a2369352868f7991
+  ts: "2026-10-21T13:56:56Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 登録簿の一覧のセルで強調の記号がエスケープされず lint-md が止まる
+    - field: description
+      from: ""
+      to: "一覧の生成はセルの縦棒はエスケープするが、アスタリスクとアンダースコアはしない。説明や結論に orch: のあとにアスタリスクを付けた書き方が 2 つあると強調と解釈され、MD037 で親の検証の lint-md が止まり、develop から分かれた run がすべて止まる"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-A6PV"]'
