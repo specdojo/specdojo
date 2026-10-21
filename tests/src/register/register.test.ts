@@ -853,6 +853,59 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
     });
   });
 
+  it("強調記号を含む自由記述から生成した一覧・派生ビュー・PM ログが MD037 を満たす", () => {
+    withRegisterDir((paths, dir) => {
+      writeFileSync(
+        join(dir, "pjr-cd34-source.md"),
+        buildTicket("PJR-CD34", "起票元", [
+          "item_status: open",
+          "priority: medium",
+          "owner: DEV",
+          'registered_at: "2026-08-01T12:00:00Z"',
+        ]),
+        "utf8",
+      );
+      const ticketPath = join(dir, "pjr-ab12-topic.md");
+      const originalContent = buildTicket("PJR-AB12", "orch:* と orch:*:work", [
+        "item_status: done",
+        "priority: high",
+        "owner: DEV",
+        'registered_at: "2026-08-02T12:00:00Z"',
+        'completed_at: "2026-08-03T12:00:00Z"',
+        "derived_from:",
+        "  - PJR-CD34",
+        'conclusion: "done_* と done_*:work を反映"',
+      ])
+        .replace("  item_type: todo", "  item_type: issue")
+        .replace("個票本文の説明。", "token_ と _next を確認し、`kept_*` は保持する。");
+      writeFileSync(ticketPath, originalContent, "utf8");
+
+      const views = generateDerivedViewFiles(paths, "all");
+      for (const view of views) {
+        const errors = markdownlintErrors(view.content) as Array<{ ruleNames: string[] }>;
+        const md037Errors = errors.filter((error) => error.ruleNames.includes("MD037"));
+        expect(md037Errors, view.path).toEqual([]);
+      }
+
+      for (const fileName of [
+        "pjr-index.md",
+        "pjr-views-by-status.md",
+        "pjr-views-by-priority.md",
+        "pjr-views-by-owner.md",
+        "pjr-derived-items.md",
+        "pm-issue-log.md",
+      ]) {
+        expect(findView(views, fileName)).toContain("orch:\\* と orch:\\*:work");
+      }
+      expect(findView(views, "pjr-index.md")).toContain(
+        "token\\_ と \\_next を確認し、`kept_*` は保持する。",
+      );
+
+      // 個票の本文や frontmatter は変更されていないこと（表示時のみエスケープ）
+      expect(readFileSync(ticketPath, "utf8")).toBe(originalContent);
+    });
+  });
+
   it("同一入力から同一出力を返す（生成が決定的）", () => {
     withRegisterDir((paths, dir) => {
       writeTwoTickets(dir);
