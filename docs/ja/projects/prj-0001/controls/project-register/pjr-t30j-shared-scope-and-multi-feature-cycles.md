@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-18T15:47:38Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit; rate limit fallback: sol-executor -> opus-executor at 2026-10-21T15:54:08.618Z"
   derived_from:
     - PJR-WSET
 ---
