@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-19T21:41:15Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
 ---
 
 # PJR-7H7N 利用者向けに git の hook（lefthook）を scaffold する
