@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_af8a7b7e4a36412d8d94a55ba12bf8c3
+- v: 1
+  id: reg_beb6ccddb0eb41869367c1cab3be1fc8
+  ts: "2026-10-21T11:47:26Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが LP の差分を確かめ、0.4.1 の init が作る script の名前と一致することを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: LP の provider ごとの script の表を、codex は npm run orch:sol（orch:terra も追加）、antigravity は npm run orch:flash にした。orch:codex・orch:agy は残っていない
+  previous_event_id: reg_f334204413064c85b37be35650e3606d

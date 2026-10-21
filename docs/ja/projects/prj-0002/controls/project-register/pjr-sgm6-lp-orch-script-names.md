@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0002:pjr-sgm6-lp-orch-script-names
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-19T21:18:30Z"
+  completed_at: "2026-10-21T11:47:26Z"
+  conclusion: LP の provider ごとの script の表を、codex は npm run orch:sol（orch:terra も追加）、antigravity は npm run orch:flash にした。orch:codex・orch:agy は残っていない
 ---
 
 # PJR-SGM6 LP の orch の script の名前を model の系統の名前に改める
