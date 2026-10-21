@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-19T21:41:15Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
 ---
 
 # PJR-7H7N 利用者向けに git の hook（lefthook）を scaffold する
@@ -45,7 +46,11 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `specdojo init --lefthook` の対話・非対話 opt-in と `config scaffold --lefthook` を追加した。既定は生成しない。
+- staged の Markdown・YAML を対象にした Prettier、Markdown の markdownlint、設定済みパスに応じた `register build`・`catalog validate` を含む `lefthook.yml` を生成する。
+- linked worktree・依存未導入時に安全に skip し、Git の repository-local 環境変数を子プロセスへ渡さない入口スクリプトを同梱した。
+- 既存ファイル・npm script・依存を上書きせず、`package.json` への不足項目を変更前に表示するようにした。
+- 単体テストと一時 Git リポジトリを使う統合テストを追加し、Quick Start・コマンドリファレンス・CHANGELOG を更新した。残課題はない。
 
 ## 5. 関連ドキュメント
 

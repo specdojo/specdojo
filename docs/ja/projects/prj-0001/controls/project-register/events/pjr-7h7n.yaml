@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_b1d682e76ff946a7a4000ac103f5247b
+- v: 1
+  id: reg_42fa4137694a410391699a3b53dfb889
+  ts: "2026-10-21T15:41:31Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_45a9a47f7f774035a97d96908994952f
