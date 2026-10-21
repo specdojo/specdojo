@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_24084ff592b241b589c0ce406a201710
+- v: 1
+  id: reg_3af46cbceab54d4eab9f8aac8b90e2c3
+  ts: "2026-10-21T23:27:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: agy の 1 回目の実装が lint とテストで止まったため codex で最初からやり直した。オーケストレーターが差分・親の検証を確かめ、統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: plan・in-place の stem・イベントの名前の末尾の乱数を 4 バイトにし、それでもぶつかったときは連番を付けるようにした。既存の 4 桁の名前と新しい名前の両方を読める。テストは乱数と時刻を差し替えて決定的に確かめる
+  previous_event_id: reg_b5eac90baec14ac0b509c48dcd206b23

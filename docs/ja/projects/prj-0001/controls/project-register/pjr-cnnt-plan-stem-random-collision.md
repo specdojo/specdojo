@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-cnnt-plan-stem-random-collision
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-21T22:09:05Z"
+  completed_at: "2026-10-21T23:27:38Z"
+  conclusion: plan・in-place の stem・イベントの名前の末尾の乱数を 4 バイトにし、それでもぶつかったときは連番を付けるようにした。既存の 4 桁の名前と新しい名前の両方を読める。テストは乱数と時刻を差し替えて決定的に確かめる
   derived_from:
     - PJR-T30J
 ---
