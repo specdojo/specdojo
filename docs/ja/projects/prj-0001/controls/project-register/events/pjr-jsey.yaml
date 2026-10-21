@@ -1580,3 +1580,16 @@
       from: "2026-10-21"
       to: "-"
   previous_event_id: reg_e1aaa564cf714dbb89d5da870ab56c5f
+- v: 1
+  id: reg_e41746c4f6e6454c98542d5ac743f5f3
+  ts: "2026-10-21T23:21:30Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c380f9377eed4a66850abea107503280
