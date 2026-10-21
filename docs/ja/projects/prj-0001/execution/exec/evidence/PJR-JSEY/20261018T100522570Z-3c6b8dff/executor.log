@@ -1,0 +1,9 @@
+個票の「対応結果」の表に 1 行追記しました。内容は 2026-10-18 19:06 JST、対象の分割 PJR-E025、agent `claude-expert-executor` です。
+
+対象に PJR-E025 を選んだのは、直近のコミット履歴で最後に統合された分割の項目が PJR-E025 だったためです。登録簿 `pjr-index.md` は、この worktree では見つかりませんでした。PJR-E025 の状態は登録簿で確認していません。
+
+変更したのは個票 `pjr-jsey-exec-run-split-smoke.md` だけです。agent 内では検証を実行していません。親の検証 7 件は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"個票 pjr-jsey-exec-run-split-smoke.md の対応結果に PJR-E025 の行を追記した。他のファイルは変更していない。","validations":[]}
+</specdojo_executor_evidence>

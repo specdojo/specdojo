@@ -3,44 +3,96 @@ version: 1
 document: specdojo:stc-index-sample
 path: docs/ja/specdojo/samples/stc-index-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 67
-graded_at: "2026-09-06T01:52:28.682Z"
-graded_by: gemma-expert-executor
+score: 81
+graded_at: "2026-10-20T20:21:14.315Z"
+graded_by: flash-high-executor
 content_hash: 450b099990ae36d6a16f74f1d57640670b4cc668fb996ab745354dbf5964d98f
 categories:
-  consistency:
-    score: 63
-  usability:
-    score: 67
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 75
+  implementation:
+    score: 100
   quality:
+    score: 67
+  consistency:
     score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 3
     score: 75
-  vp-arc-single-responsibility:
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
     level: 3
     score: 75
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 1
     score: 25
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -52,42 +104,48 @@ finding_counts:
   minor: 2
   note: 0
 findings:
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 4
-    message: Frontmatter の `type` が `project` となっており, rulebook 第 4.1 節の「`test` 固定」というルールに違反している。
-    anchor: ""
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 9
-    message: "rulebook で定義された必須見出し構成（## 1 〜 ## 8）に従っておらず、第 2 章から 第 8 章までの必須項目がすべて欠落している。"
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-  - id: F005
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 9
-    message: rulebook で定義された標準テンプレの見出し構成を無視しており、kata（種別）としての責務を果たすサンプルになっていない。
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-  - id: F006
-    severity: major
-    rule: vp-ux-readability
-    line: 9
-    message: 記述が抽象的すぎて、STC Index の具体的な書き方（特に共通ルールや判定基準の定義方法）を学習するためのガイドとして機能していない。
-    anchor: "- 対象: 駄菓子屋の販売管理システム"
-  - id: F002
-    severity: minor
-    rule: vp-qe-verifiability
-    line: 20
-    message: 判定基準の具体例がなく、verifiability（検証可能性）を担保する記述方法のサンプルとして不十分である。
-    anchor: >-
-      | 項目         |
-      値                                                                                                                                    
-      | 備考                                 |
   - id: F001
     severity: minor
     rule: vp-arc-conciseness
     line: 29
-    message: 「主な内容」の記述が前の節の内容をそのまま反復しており、冗長である。
     anchor: "| -------------- | ------------------------ |"
+    message: 「主な内容」の記述が前の節の内容をそのまま反復しており、冗長である。
+    message_ja: 「主な内容」の記述が前の節の内容をそのまま反復しており、冗長である。
+  - id: F002
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 20
+    anchor: >-
+      | 項目         |
+      値                                                                                                                                    
+      | 備考                                 |
+    message: 判定基準の具体例がなく、verifiability（検証可能性）を担保する記述方法のサンプルとして不十分である。
+    message_ja: 判定基準の具体例がなく、verifiability（検証可能性）を担保する記述方法のサンプルとして不十分である。
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: "rulebook で定義された必須見出し構成（## 1 〜 ## 8）に従っておらず、第 2 章から 第 8 章までの必須項目がすべて欠落している。"
+    message_ja: "rulebook で定義された必須見出し構成（## 1 〜 ## 8）に従っておらず、第 2 章から 第 8 章までの必須項目がすべて欠落している。"
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 4
+    anchor: ""
+    message: Frontmatter の `type` が `project` となっており, rulebook 第 4.1 節の「`test` 固定」というルールに違反している。
+    message_ja: Frontmatter の `type` が `project` となっており, rulebook 第 4.1 節の「`test` 固定」というルールに違反している。
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: rulebook で定義された標準テンプレの見出し構成を無視しており、kata（種別）としての責務を果たすサンプルになっていない。
+    message_ja: rulebook で定義された標準テンプレの見出し構成を無視しており、kata（種別）としての責務を果たすサンプルになっていない。
+  - id: F006
+    severity: major
+    rule: vp-ux-readability
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: 記述が抽象的すぎて、STC Index の具体的な書き方（特に共通ルールや判定基準の定義方法）を学習するためのガイドとして機能していない。
+    message_ja: 記述が抽象的すぎて、STC Index の具体的な書き方（特に共通ルールや判定基準の定義方法）を学習するためのガイドとして機能していない。

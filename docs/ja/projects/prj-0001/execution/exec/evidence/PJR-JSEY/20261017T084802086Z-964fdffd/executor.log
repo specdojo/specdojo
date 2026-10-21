@@ -1,0 +1,5 @@
+PJR-BZ9J の動作確認行を個票へ追記しました。変更は個票1ファイルのみです。親検証・reporter・統合は runner に委ねます。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果に 2026-10-17 17:49 JST、PJR-BZ9J、codex-expert-executor の動作確認記録を追記した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown は整形済み。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成が成功し、追加の追跡対象差分は発生しなかった。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog 検証が成功した。既存の参照先不在に関する警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"}]}
+</specdojo_executor_evidence>

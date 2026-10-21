@@ -1,0 +1,40 @@
+判定は **`complete-with-findings`** です。Run は `succeeded` で、選ばれた15件はすべて評価が完了しています。完了を妨げる問題はありませんが、評価結果自体に finding が多く残っています。
+
+**一致した点**
+- **差分の範囲:** `f41dd448..c70f299b` の22ファイルは、この Run の出力だけで構成されています。内訳は次のとおりで、対象外の変更はありません。
+  - evidence 4件と plan・result の追加
+  - 評価結果サイドカー（`grade/results/specdojo.*.yaml`）15件の更新
+  - Run JSON の追加
+- **状態の記録:** Run JSON（`state=succeeded`、attempt 1 `exit_code=0`）、`evidence.json`（executor `exit_code=0`）、`pipeline-state.json`（executor・reporter とも `succeeded`）が相互に合っています。
+- **パイプラインの完了:** stdout の集計は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` です。`results.tsv` の15行はすべて段1が `passed` でした。
+  - `failed` の段、終了コード75（rate limit）、中断、`retry_exhausted` はありません。
+  - 未完了の段がないため、同じ `--run-id` での再開は不要です。
+- **result の集計:** 全15件のサイドカーの `verdict`/`score` は `results.tsv` と一致しました。result が報告した分布（pass 1・needs-work 6・fail 8）も正しいです。
+- **鮮度:** `grade list --target kata --project prj-0001 --changed-only` が出力したのは、この Run の対象外である templates 2件（`pjr-derived-items-template.md`、`pjr-index-template.md`）だけです。対象15件の評価は最新です。
+  - `--incomplete` と `grade state --exhausted` は空でした。
+  - 判定直前にも再確認し、成果物に変化はありませんでした。
+
+**finding（完了は妨げない）**
+1. **評価の偏り:** result は「極端な偏りは見られません」としていますが、偏りがある可能性があります。
+   - 8/15 が fail で、tsd-sample 26、utc-index-sample 36、tsp-index-sample 40 など、20件超の finding を持つ低スコアが samples に集中しています。
+   - 今回の samples は `graded_by: flash-high-executor`、既存の rulebook サイドカーは `agy-expert-executor` で、記録上の評価者が違います。
+   - `results.tsv` の executor 欄はすべて `agy-expert-executor` で、サイドカーの `graded_by` とも食い違っています。
+   - 評価設定（executor とモデルの対応）の見直しが必要かは、人手での確認が必要です。
+2. **`sysd-index-sample` の判定:** score 79・finding 5件で `fail` になっています。fail が score 以外の基準で決まったかは確認していません。
+3. **result の行数:** result は Run JSON を「+61 / -0 行」としていますが、実際の差分は +64 行です（軽微な記載のずれ）。
+4. **review plan の記載不備:** 「Job Run result」欄が `_RUN../...review-result.md` となっており、Job Run の result ではなく review result を指しています。Job Run の result は `exec/results/JBR-grade-kata-32340914f2be-result.md` を読んで照合しました。
+5. **次の Run への持ち越し:** templates 2件は上限15件の範囲外で、次の Run で選ばれる見込みです。
+
+**改善指示**
+- fail が samples に集中している原因について、評価設定と `graded_by` の記録の食い違いを確認してください。
+- fail 8件は成果物の修正タスクとして扱ってください。
+
+**確認できなかった範囲**
+- `--dependency-changed`、`--rulebook-changed`、`--unreviewed`、`--ungraded`、`--rubric-outdated` での鮮度確認は実行していません。
+- 各サイドカーの finding の中身と重大度は精読していません（再評価はしない方針のため）。
+- `logs/grade/runs/...` の実ファイルは見ておらず、stdout に出た `results.tsv` だけで判断しています。
+- `command.stderr.log` は差分上0行（空）でした。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict 案: complete-with-findings。差分 f41dd448..c70f299b の22ファイルは Run 出力（evidence 4件、plan、result、grade サイドカー15件、Run JSON）だけで構成され、対象外の変更はない。Run JSON state=succeeded / attempt exit_code=0、evidence.json の executor exit_code=0、pipeline-state.json の executor・reporter とも succeeded で相互に整合する。stdout は selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0。results.tsv の15件はすべて段1が passed で、failed・終了コード75・中断・`retry_exhausted` はない。サイドカー15件の verdict/score は results.tsv と一致し、result の分布（pass 1 / needs-work 6 / fail 8）も正しい。鮮度: `grade list --target kata --changed-only` が出力したのは対象外の templates 2件（pjr-derived-items-template.md、pjr-index-template.md）だけで、対象15件は最新。`--incomplete` と `grade state --exhausted` は空。判定直前の再確認でも変化なし。finding: (1) fail 8/15 が samples に集中し低スコア（26〜54、finding 20件超）が多いため、result の『極端な偏りなし』には疑義がある。サイドカー `graded_by` は flash-high-executor だが results.tsv の executor は agy-expert-executor で、記録が食い違う。評価設定の見直し要否は人手で確認が必要。(2) sysd-index-sample は score 79 でも fail で、fail の基準は未確認。(3) result は Run JSON を +61 行としているが実際は +64 行（軽微）。(4) review plan の『Job Run result』欄が review result のパスを誤って指している。(5) templates 2件は上限15件の範囲外で次の Run へ持ち越し。確認できなかった範囲: `--dependency-changed` / `--rulebook-changed` / `--unreviewed` / `--ungraded` / `--rubric-outdated` での鮮度確認、各 finding の重大度の精読、logs/grade 配下の実ファイル。","validations":[{"command":"git diff --stat f41dd44844f11f180423cf92466b3928087d8a0c..c70f299bbfa159d2b07152f20270259360a169c5 && git diff --name-status f41dd44844f11f180423cf92466b3928087d8a0c..c70f299bbfa159d2b07152f20270259360a169c5","status":"passed","summary":"22ファイル、すべて Job Run の出力（evidence・plan・result・grade サイドカー15件・Run JSON）"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"対象外の templates 2件のみ出力。評価対象15件は最新（判定直前にも再実行して同じ結果）"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力なし（未完了パイプラインなし）"},{"command":"node /workspaces/specdojo-workspace/specdojo/dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし（`retry_exhausted` なし）"}]}
+</specdojo_executor_evidence>

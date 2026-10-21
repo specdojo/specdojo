@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-quality-management-plan-sample
 path: docs/ja/specdojo/samples/pm-quality-management-plan-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 89
-graded_at: "2026-09-09T16:13:07.473Z"
-graded_by: gemma-expert-executor
+score: 90
+graded_at: "2026-10-16T20:52:24.552Z"
+graded_by: agy-expert-executor
 content_hash: 5695a324894abd8b0c95fb6531010b1c2027b4e819a934174c178456ebdc2c0d
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -52,21 +107,24 @@ finding_counts:
   minor: 2
   note: 0
 findings:
-  - id: F002
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 16
-    message: 「品質方針と適用範囲」において, rulebook で必須とされている「対象期間」および「人と AI の境界」の記述が欠落している。
-    anchor: 中期価値ゲートは初期リリースの合否条件には含めず、継続判断に用いる。
   - id: F001
     severity: minor
     rule: vp-qe-verifiability
-    line: 31
+    line: 20
+    anchor: "| レビュー         | 主な観点                               | 実施者               | 証跡               |"
     message: レビュー表に「出口条件」が含まれておらず、pass / fail の判定基準が不明確である。
-    anchor: "| -------------------------------------- | ------------------------------------ | ------ | ------------------ |"
+    message_ja: レビュー表に「出口条件」が含まれておらず、pass / fail の判定基準が不明確である。
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 5
+    anchor: 品質は、文書が整っていることではなく、店主と家族が販売・在庫・つけの記録を正しく続けられ、追加負担を許容できることを中心に判定する。文書・実装・公開物の品質は、その価値を安全に実現するための条件として扱う。
+    message: 「品質方針と適用範囲」において, rulebook で必須とされている「対象期間」および「人と AI の境界」の記述が欠落している。
+    message_ja: 「品質方針と適用範囲」において, rulebook で必須とされている「対象期間」および「人と AI の境界」の記述が欠落している。
   - id: F003
     severity: minor
     rule: vp-ux-language-consistency
-    line: 31
+    line: 20
+    anchor: "| レビュー         | 主な観点                               | 実施者               | 証跡               |"
     message: レビュー表の列名（レビュー、実施者、証跡）が、rulebook の定義（対象、実施責任、出口条件・証跡）と不整合である。
-    anchor: "| -------------------------------------- | ------------------------------------ | ------ | ------------------ |"
+    message_ja: レビュー表の列名（レビュー、実施者、証跡）が、rulebook の定義（対象、実施責任、出口条件・証跡）と不整合である。

@@ -1,0 +1,7 @@
+actor の厳格な名簿照合、alias 正規化、予約名、テスト、規則・ガイド・CHANGELOG・個票更新まで反映しました。
+
+ただし、保護対象の `.agents/specdojo-orchestrator.agent.md` は executor から編集できません。人またはオーケストレーターが actor 規則を正本へ追記し、`npm run orchestrator:sync` で10同期先へ反映する必要があります。result ファイルは指示どおり未編集です。
+
+<specdojo_executor_evidence>
+{"final_message":"actor 照合の実装・テスト・文書更新は完了。保護対象のオーケストレーター正本と同期先への反映は human handoff が必要。","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-3k1x-register-actor-roster-validation.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/rulebooks/pjr-rulebook.md src/register/command-types.ts src/register/core.ts src/shared/specdojo-config.ts tests/src/register/commands.test.ts","status":"passed","summary":"変更した Markdown・TypeScript を整形した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"IPC 制限を回避する規約指定の起動方法で登録簿ビューを再生成した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検証成功。既存の参照先未作成 warning のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"},{"command":"node tools/validate-orchestrator-sync.mjs","status":"passed","summary":"現在の正本と10同期先は一致。ただし今回必要な actor 規則は保護対象の正本へ未反映。"},{"command":"npm run orchestrator:sync","status":"requires_human","summary":"保護対象のオーケストレーター正本へ actor 規則を追記した後、人または対話型オーケストレーターが10同期先へ反映する必要がある。"}]}
+</specdojo_executor_evidence>

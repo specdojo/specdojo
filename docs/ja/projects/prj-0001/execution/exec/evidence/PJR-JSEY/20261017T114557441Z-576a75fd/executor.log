@@ -1,0 +1,7 @@
+個票の対応結果へ `PJR-GBWW` の動作確認行を追記しました。result・登録簿ステータスは変更していません。
+
+検証は整形、register build、catalog validate、差分検査まで成功しています。`npx tsx` の IPC 制約は規約指定の `node --import tsx` で回避しました。親検証は runner に委ねます。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果表へ 2026-10-17 20:47 JST、PJR-GBWW、codex-expert-executor の行を追記した","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown は整形済みで変更なし"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成に成功"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"既存の参照先不在警告はあるが、全 catalog の検証が終了コード 0 で成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,121 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4e8aa83035ee4a32a88759b7715b6b2e
+  ts: "2026-10-17T23:11:40Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 2026-10-17 の夜に codex の上限で ZJXQ が止まり、朝まで再開されなかった。利用者の提案で起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent を指定した実行で、上限のときに待つか代わりの agent へ切り替えるかを選べるようにする
+    - field: description
+      from: ""
+      to: exec run --register などで --executor-by により agent を指定した実行は、上限に達すると waiting で止まり、人が --resume するまで再開しない。解ける時刻まで待って同じ agent で再開する（wait）か、指定した代わりの agent へ切り替えて続ける（fallback）かを、コマンドの引数と exec-defaults の既定で選べるようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+- v: 1
+  id: reg_4e477712d29a494bae89f57b35ee7291
+  ts: "2026-10-17T23:16:45Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4e8aa83035ee4a32a88759b7715b6b2e
+- v: 1
+  id: reg_626a1f4b1aa64c4293e32b95bace99a8
+  ts: "2026-10-17T23:35:14Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+  previous_event_id: reg_4e477712d29a494bae89f57b35ee7291
+- v: 1
+  id: reg_8d1a3fa5ff4a4afc9c996c65e34795a1
+  ts: "2026-10-17T23:37:23Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+      to: "-"
+  previous_event_id: reg_626a1f4b1aa64c4293e32b95bace99a8
+- v: 1
+  id: reg_224b7d6dca3f4a83ab8651ddbfbb38d7
+  ts: "2026-10-17T23:47:32Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8d1a3fa5ff4a4afc9c996c65e34795a1
+- v: 1
+  id: reg_a6aa3f69c2ea4788bf149ebd615daa92
+  ts: "2026-10-17T23:56:18Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に、--on-rate-limit wait を付けた exec run --register（PJR-JSEY、6295ce464）が統合まで通った（2026-10-18）。初回は型エラーと並行実行の負荷による統合テストの時間切れで止まり、--resume-from executor で直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: agent を指定した実行で、上限のときの扱いを --on-rate-limit stop|wait|fallback と exec-defaults の rate_limit_policy.pinned で選べるようにした。wait は解ける時刻まで待って同じ agent で再開し、fallback は --fallback-executor-by・--fallback-reporter-by の agent へ切り替える。既定は従来どおり stop
+  previous_event_id: reg_224b7d6dca3f4a83ab8651ddbfbb38d7
+- v: 1
+  id: reg_21049b1697bc45418da8dfa5d8bd47ca
+  ts: "2026-10-18T00:41:29Z"
+  action: update
+  actor: claude-orchestrator
+  from_status: done
+  to_status: done
+  reason: 結論の文の | が登録簿の一覧の表の列を壊し、並行の run の lint-md を失敗させたため、区切りを・に改める（2026-10-18）
+  changes:
+    - field: conclusion
+      from: agent を指定した実行で、上限のときの扱いを --on-rate-limit stop|wait|fallback と exec-defaults の rate_limit_policy.pinned で選べるようにした。wait は解ける時刻まで待って同じ agent で再開し、fallback は --fallback-executor-by・--fallback-reporter-by の agent へ切り替える。既定は従来どおり stop
+      to: agent を指定した実行で、上限のときの扱いを --on-rate-limit（stop・wait・fallback）と exec-defaults の rate_limit_policy.pinned で選べるようにした。wait は解ける時刻まで待って同じ agent で再開し、fallback は --fallback-executor-by・--fallback-reporter-by の agent へ切り替える。既定は従来どおり stop
+  previous_event_id: reg_a6aa3f69c2ea4788bf149ebd615daa92

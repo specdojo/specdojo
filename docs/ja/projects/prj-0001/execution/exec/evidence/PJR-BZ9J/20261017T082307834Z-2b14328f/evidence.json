@@ -1,0 +1,1074 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-BZ9J",
+  "run_id": "20261017T082307834Z-2b14328f",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-17T08:24:21.955Z",
+    "completed_at": "2026-10-17T08:37:56.551Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bz9j-src-exec-run-schedule-subdirs.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard-timeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run-agent-pipeline.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-agent.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-in-place.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-job.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-lifecycle-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-lock.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-mode-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-mode.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-resume.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-state.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-worktree.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-schedule-mode.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-schedule-prepare.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-schedule-task.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-calendar.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-cpm.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart-render.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart-scope.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-hash.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-index.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-initial.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-progress.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-ready.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/task-view.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/cycle.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/exec.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-multiple-ids.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run-downgrade-unfilled.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-inplace.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-lock-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-lock.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-parent-validation-gate.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-resolve-claiming-actor.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-resolve-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-worker-pool.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-calendar.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-cpm.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-gantt-chart-render.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-gantt-chart-scope.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-hash.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-progress.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-ready.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-validation.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register/commit.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/build.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/dist-freshness.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/agent.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/in-place.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/job.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/lock.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/mode-shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-mode.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/schedule-mode.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/calendar.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/cpm.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/gantt-chart-render.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/gantt-chart-scope.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/gantt-chart.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/hash.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/index.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/initial.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/progress.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/ready.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/schedule.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/downgrade-unfilled.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/inplace.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/lock-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/lock.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/parent-validation-gate.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/resolve-claiming-actor.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/resolve-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/run.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/worker-pool.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/calendar.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/cpm.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/gantt-chart-render.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/gantt-chart-scope.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/hash.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/progress.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/ready.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/validation.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tmp/exec-run-schedule-mapping.json",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-bz9j-help-after.json",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-bz9j-help-before.json",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-bz9j-src-exec-run-schedule-subdirs.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard-timeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run-agent-pipeline.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-agent.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-in-place.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-job.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-lifecycle-commands.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-lock.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-mode-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-core.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-mode.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-resume.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-state.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-register-worktree.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-schedule-mode.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-schedule-prepare.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-schedule-task.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run-shared.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/run.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-calendar.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-cpm.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart-render.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart-scope.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-gantt-chart.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-hash.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-index.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-initial.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-progress.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule-ready.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/schedule.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec/task-view.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/trial-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/cycle.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/exec.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-multiple-ids.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-worktree.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run-downgrade-unfilled.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-inplace.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-lock-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-lock.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-parent-validation-gate.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-resolve-claiming-actor.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-resolve-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run-worker-pool.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/run.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-calendar.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-cpm.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-gantt-chart-render.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-gantt-chart-scope.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-hash.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-progress.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-ready.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec/schedule-validation.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register/commit.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/build.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/dist-freshness.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/agent.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/in-place.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/job.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/lock.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/mode-shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-core.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-mode.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-state.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/schedule-mode.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/schedule-task.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/calendar.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/cpm.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/gantt-chart-render.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/gantt-chart-scope.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/gantt-chart.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/hash.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/index.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/initial.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/progress.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/ready.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/schedule/schedule.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/downgrade-unfilled.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/inplace.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/lock-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/lock.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/parent-validation-gate.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/resolve-claiming-actor.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/resolve-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/run.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/run/worker-pool.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/calendar.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/cpm.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/gantt-chart-render.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/gantt-chart-scope.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/hash.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/progress.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/ready.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/schedule/validation.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tmp/exec-run-schedule-mapping.json",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-bz9j-help-after.json",
+      "status": "??"
+    },
+    {
+      "path": "tmp/pjr-bz9j-help-before.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 118,
+    "summary": ".../sysd-antigravity-agent-settings.md             |    2 +-\n .../pjr-bz9j-src-exec-run-schedule-subdirs.md      |   16 +-\n src/commands/agent.ts                              |    2 +-\n src/dashboard/dashboard-timeline.ts                |    4 +-\n src/exec/commands.ts                               |    6 +-\n src/exec/core.ts                                   |    4 +-\n src/exec/plans-core.ts                             |    2 +-\n src/exec/run-agent-pipeline.ts                     |  430 --------\n src/exec/run-agent.ts                              |  768 --------------\n src/exec/run-in-place.ts                           |  727 -------------\n src/exec/run-job.ts                                |  983 ------------------\n src/exec/run-lifecycle-commands.ts                 |  705 -------------\n src/exec/run-lock.ts                               |  230 -----\n src/exec/run-mode-shared.ts                        |  179 ----\n src/exec/run-register-command.ts                   |  370 -------\n src/exec/run-register-core.ts                      |  572 -----------\n src/exec/run-register-mode.ts                      |  275 -----\n src/exec/run-register-resume.ts                    |  542 ----------\n src/exec/run-register-state.ts                     |  439 --------\n src/exec/run-register-worktree.ts                  |  697 -------------\n src/exec/run-schedule-mode.ts                      |  487 ---------\n src/exec/run-schedule-prepare.ts                   |  524 ----------\n src/exec/run-schedule-task.ts                      |  798 ---------------\n src/exec/run-shared.ts                             |  633 ------------\n src/exec/run.ts                                    |   63 --\n src/exec/schedule-calendar.ts                      |  237 -----\n src/exec/schedule-cpm.ts                           |  146 ---\n src/exec/schedule-gantt-chart-render.ts            |  563 -----------\n src/exec/schedule-gantt-chart-scope.ts             |  134 ---\n src/exec/schedule-gantt-chart.ts                   |    5 -\n src/exec/schedule-hash.ts                          |  121 ---\n src/exec/schedule-index.ts                         |  357 -------\n src/exec/schedule-initial.ts                       |  165 ---\n src/exec/schedule-progress.ts                      |  156 ---\n src/exec/schedule-ready.ts                         |  223 ----\n src/exec/schedule.ts                               |  423 --------\n src/exec/task-view.ts                              |    4 +-\n src/exec/trial-commands.ts                         |    2 +-\n src/exec/worktree-command.ts                       |    6 +-\n src/grade/target-discovery.ts                      |    2 +-\n src/register/register.ts                           |    2 +-\n src/routine/routine.ts                             |    2 +-\n tests/src/dashboard/dashboard.test.ts              |    2 +-\n tests/src/exec/cycle.integration.test.ts           |    2 +-\n tests/src/exec/exec.test.ts                        |    2 +-\n .../exec/register-multiple-ids.integration.test.ts |    2 +-\n tests/src/exec/register-resume.test.ts             |    2 +-\n .../src/exec/register-worktree.integration.test.ts |    2 +-\n tests/src/exec/register.test.ts                    |    2 +-\n tests/src/exec/run-downgrade-unfilled.test.ts      |  138 ---\n tests/src/exec/run-inplace.test.ts                 | 1065 --------------------\n tests/src/exec/run-lock-command.test.ts            |  115 ---\n tests/src/exec/run-lock.test.ts                    |  264 -----\n tests/src/exec/run-parent-validation-gate.test.ts  |  164 ---\n tests/src/exec/run-resolve-claiming-actor.test.ts  |  131 ---\n tests/src/exec/run-resolve-command.test.ts         |  324 ------\n tests/src/exec/run-worker-pool.test.ts             |   86 --\n tests/src/exec/run.test.ts                         |  737 --------------\n tests/src/exec/schedule-calendar.test.ts           |  185 ----\n tests/src/exec/schedule-cpm.test.ts                |  247 -----\n tests/src/exec/schedule-gantt-chart-render.test.ts |  131 ---\n …"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "TypeScriptのビルドとdistのクリーン再生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/build-if-stale.mjs",
+      "status": "passed",
+      "summary": "再生成後のdist freshness確認に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tmp/capture-cli-help.mjs tmp/pjr-bz9j-help-after.json && cmp -s tmp/pjr-bz9j-help-before.json tmp/pjr-bz9j-help-after.json",
+      "status": "passed",
+      "summary": "全123コマンド・サブコマンドのhelp出力が移動前後で完全一致"
+    },
+    {
+      "source": "executor",
+      "command": "node -e '<mappingに基づき新旧distパスを検査>'",
+      "status": "passed",
+      "summary": "新しいdist出力29件が存在し、古い出力パス29件が残っていないことを確認"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "プロジェクト登録簿の生成に成功"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "全catalogがOK。既存のbased_on参照先不在警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js exec run --register <PJR-ID> --worktree",
+      "status": "requires_human",
+      "summary": "本変更の統合後、orchestratorがregister実行を1回流して統合完了まで確認するclose条件"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BZ9J/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BZ9J/src/schedule/build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BZ9J/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BZ9J\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-GoOHyr/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-7PvnzR/worktrees/prj-0001-T-T-doc-010/project\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/sp\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BZ9J/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BZ9J/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-BZ9J\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-Fqve6D/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-NcrJHb/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-6DkETa/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-HWasbh/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  39.25s (transform 2.57s, setup 503ms, import 18.43s, tests 41.88s, environment 6ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "ソース29件とテスト17件をcodemodで移動し、CLI help 123件の一致、build、dist再生成、catalog/register検証を確認した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-BZ9J/20261017T082307834Z-2b14328f/executor.log",
+      "bytes": 1841,
+      "truncated": false
+    }
+  ]
+}

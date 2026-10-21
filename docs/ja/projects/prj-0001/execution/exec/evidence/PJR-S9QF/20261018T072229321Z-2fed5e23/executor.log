@@ -1,0 +1,27 @@
+今しばらくお待ちください。テストの完了を待機しています。
+今しばらくお待ちください。markdownlint の完了を待機しています。
+markdownlint の完了を待機しています。
+markdownlint の実行完了を待機しています。
+PJR-S9QF「approach のない result の第 4 章を「進め方」に改める」に対応しました。
+
+### 実施内容
+
+1. **edit result テンプレートの更新**:
+   - [`docs/ja/specdojo/exec-templates/xer-template.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-S9QF/docs/ja/specdojo/exec-templates/xer-template.md) の第4章を `_APPROACH_SECTION_` プレースホルダへ変更しました。
+
+2. **result 生成ロジックの更新**:
+   - [`src/exec/results.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-S9QF/src/exec/results.ts):
+     - `APPROACH_SECTION_WITH_APPROACH`（「4. 進め方と実践の型の適用」）と `APPROACH_SECTION_WITHOUT_APPROACH`（「4. 進め方」および指示「_TODO_: どう進めたか、根拠にした文書や規約を記入する。」）を定義しました。
+     - `scaffoldResult` で `approach` の有無に応じて `_APPROACH_SECTION_` を展開し、古いテンプレートに対するフォールバック置換も保持しました。
+     - `renderReporterResult` および `renderEditReporterBody` で、`approach` の有無に応じて第4章の見出しを「## 4. 進め方と実践の型の適用」または「## 4. 進め方」に切り替えるようにしました。
+
+3. **単体テストの追加**:
+   - [`tests/src/exec/results.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-S9QF/tests/src/exec/results.test.ts) に、`scaffoldResult` と `renderReporterResult` それぞれで `approach` の有無に応じた第4章の見出しおよび指示文が正しく生成されることを検証するテストケースを追加しました。
+
+4. **個票と CHANGELOG の更新**:
+   - 個票 [`pjr-s9qf-result-approach-section-for-register.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-S9QF/docs/ja/projects/prj-0001/controls/project-register/pjr-s9qf-result-approach-section-for-register.md) の作業内容を `done` に更新し、対応結果を記載しました。
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-S9QF/CHANGELOG.md) の `## [0.4.0] - 未定` の変更セクションに対応内容を追記しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-S9QF: approach のない result の第 4 章を「進め方」に改め、scaffold と reporter 生成および単体テストを整備しました。","validations":[{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"catalog validation passed with OK: dct-index.yaml"},{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-s9qf-result-approach-section-for-register.md docs/ja/specdojo/exec-templates/xer-template.md src/exec/results.ts tests/src/exec/results.test.ts","status":"passed","summary":"formatted modified files with prettier"}]}
+</specdojo_executor_evidence>

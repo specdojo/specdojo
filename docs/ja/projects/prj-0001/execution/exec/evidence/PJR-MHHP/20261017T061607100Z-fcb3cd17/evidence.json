@@ -1,0 +1,1646 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-MHHP",
+  "run_id": "20261017T061607100Z-fcb3cd17",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-17T06:17:03.319Z",
+    "completed_at": "2026-10-17T06:23:37.951Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".github/instructions/vitest.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-mhhp-src-move-shared.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/agent-response.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/agent.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/build-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/build-if-stale.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/catalog/build-references.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/plan-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/exec-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable/deliverable.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable/trash.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/devcontainer/command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dist-freshness.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/docs/doc-index.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/frontmatter-namespace.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/index-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/template-resolution.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/viewpoint-document-kinds-check.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/yaml-pages-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/yaml-pages.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-handoff.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-limit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-integration-git.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter-output.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-in-place.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-mode-shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-schedule-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-schedule-index.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-trial-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-trial-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/git-environment.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/init-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/orchestrator.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/package-paths.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/practice-id.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/date.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/history.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/maintenance-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/renumber.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/spawn-self.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/specdojo-config.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/specdojo-gitignore.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/watch.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/yaml-schema-modeline.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/yaml.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/setup/git-environment.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/agent-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/agent-response.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/build-command.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/build-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dist-freshness.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-agent-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-format.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans-grade-findings.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-resume.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-results.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run-resolve-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/git-environment-isolation.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/init-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/kata/kata.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/orchestrator-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/package-paths.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/practice-id.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register/date.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/build.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/spawn-self.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/specdojo-config-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/specdojo-config-env.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/specdojo-config-repos.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/specdojo-config.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/specdojo-gitignore.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/yaml.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/tools/build-if-stale.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/src-move-codemod.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/build-if-stale.mjs",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/commands/build.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/commands/watch.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/agent-response.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/build-if-stale.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/dist-freshness.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/git-environment.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/package-paths.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/practice-id.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/spawn-self.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/specdojo-gitignore.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/yaml-schema-modeline.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/yaml.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/agent.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/build.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/build.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/orchestrator.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/agent-response.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/dist-freshness.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/git-environment-isolation.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/package-paths.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/practice-id.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/spawn-self.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config-env.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config-repos.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/specdojo-gitignore.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/yaml.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": ".github/instructions/vitest.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-cross-cutting-policy.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-mhhp-src-move-shared.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/agent-response.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/agent.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/build-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/build-if-stale.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/catalog/build-references.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/plan-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/exec-records.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable/deliverable.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable/trash.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/devcontainer/command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dist-freshness.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/docs/doc-index.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/frontmatter-namespace.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/index-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/template-resolution.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/viewpoint-document-kinds-check.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/yaml-pages-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/yaml-pages.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-agent-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-handoff.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-limit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-parent-validation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-integration-git.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter-output.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-in-place.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-mode-shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-schedule-mode.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-schedule-index.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-trial-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-trial-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree-ops-commit.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/git-environment.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/init-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/orchestrator.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/package-paths.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/practice-id.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/date.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/history.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/maintenance-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/renumber.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/spawn-self.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/specdojo-config.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/specdojo-gitignore.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/watch.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/yaml-schema-modeline.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/yaml.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/setup/git-environment.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/agent-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/agent-response.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/build-command.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/build-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dist-freshness.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-agent-config-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-format.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans-grade-findings.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register-resume.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-results.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run-resolve-command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/git-environment-isolation.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/init-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/kata/kata.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/orchestrator-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/package-paths.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/practice-id.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register/date.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/schedule/build.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/spawn-self.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/specdojo-config-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/specdojo-config-env.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/specdojo-config-repos.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/specdojo-config.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/specdojo-gitignore.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/yaml.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/tools/build-if-stale.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/tools/src-move-codemod.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/build-if-stale.mjs",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/commands/build.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/commands/init.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/commands/orchestrator.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/commands/watch.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/agent-response.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/build-if-stale.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/dist-freshness.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/git-environment.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/package-paths.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/practice-id.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/spawn-self.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/specdojo-gitignore.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/yaml-schema-modeline.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/yaml.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/agent.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/build.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/build.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/commands/orchestrator.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/agent-response.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/dist-freshness.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/git-environment-isolation.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/package-paths.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/practice-id.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/spawn-self.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config-command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config-env.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config-repos.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/specdojo-gitignore.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/shared/yaml.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 188,
+    "summary": ".github/instructions/vitest.instructions.md        |   2 +-\n .../040-system-design/sysd-cross-cutting-policy.md |   2 +-\n docs/ja/product/040-system-design/sysd-index.md    |   2 +-\n .../010-deliverables-catalog/dct-data-flow.yaml    |   8 +-\n .../dct-data-model-bdd.yaml                        |   2 +-\n .../dct-data-model-cdsd.yaml                       |   2 +-\n .../dct-system-design.yaml                         |   2 +-\n .../010-deliverables-catalog/dct-test-specs.yaml   |  10 +-\n .../project-register/pjr-mhhp-src-move-shared.md   |  13 +-\n docs/ja/specdojo/guides/exec-config-guide.md       |   2 +-\n .../schemas/v1/specdojo-config.schema.yaml         |   2 +-\n src/agent-response.ts                              |  51 --\n src/agent.ts                                       | 169 ----\n src/build-command.ts                               | 231 -----\n src/build-if-stale.ts                              |  37 -\n src/catalog/build-references.ts                    |   2 +-\n src/catalog/build.ts                               |   4 +-\n src/catalog/catalog.ts                             |   4 +-\n src/catalog/generate.ts                            |   4 +-\n src/catalog/plan-generate.ts                       |   2 +-\n src/catalog/plan.ts                                |   2 +-\n src/catalog/scaffold.ts                            |   4 +-\n src/dashboard/dashboard.ts                         |   4 +-\n src/dashboard/exec-records.ts                      |   2 +-\n src/dashboard/routines.ts                          |   2 +-\n src/dashboard/timeline.ts                          |   2 +-\n src/deliverable/deliverable.ts                     |   2 +-\n src/deliverable/trash.ts                           |   2 +-\n src/devcontainer/command.ts                        |   4 +-\n src/dist-freshness.ts                              | 209 -----\n src/docs/doc-index.ts                              |   2 +-\n src/docs/frontmatter-namespace.ts                  |   2 +-\n src/docs/index-command.ts                          |   2 +-\n src/docs/template-resolution.ts                    |   4 +-\n src/docs/viewpoint-document-kinds-check.ts         |   2 +-\n src/docs/yaml-pages-command.ts                     |   2 +-\n src/docs/yaml-pages.ts                             |   2 +-\n src/exec-agent-config.ts                           |   2 +-\n src/exec-commands.ts                               |   2 +-\n src/exec-core.ts                                   |   2 +-\n src/exec-handoff.ts                                |   2 +-\n src/exec-limit.ts                                  |   2 +-\n src/exec-parent-validation.ts                      |   2 +-\n src/exec-plans-core.ts                             |   6 +-\n src/exec-plans-generation.ts                       |   2 +-\n src/exec-plans-storage.ts                          |   2 +-\n src/exec-project.ts                                |   2 +-\n src/exec-provider-scaffold.ts                      |   2 +-\n src/exec-register.ts                               |   2 +-\n src/exec-repo-integration-git.ts                   |   2 +-\n src/exec-repo-integration.ts                       |   2 +-\n src/exec-reporter-output.ts                        |   2 +-\n src/exec-reporter.ts                               |   2 +-\n src/exec-results.ts                                |   2 +-\n src/exec-run-agent.ts                              |   2 +-\n src/exec-run-in-place.ts                           |   6 +-\n src/exec-run-job.ts                                |   4 +-\n src/exec-run-lifecycle-commands.ts                 |   2 +-\n src/exec-run-mode-shared.ts                        |   4 +-\n src/exec-run-register-core.ts                      |   2 +-\n src/exec-run-register-mode.ts                      |   2 +-\n src/exec-run-register-resume.ts                    |   2 +-\n src/exec-run-register-worktree.ts                  |   2 +-\n src/exec-run-schedule-mode.ts                      |   2 +-\n src/exec-run-schedule-prepare.ts                   |   6 +-\n src/exec-run-shared.ts     …"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "dist を再生成し、旧直下出力が残らず commands/shared 配下へ出力された"
+    },
+    {
+      "source": "executor",
+      "command": "node tools/build-if-stale.mjs",
+      "status": "passed",
+      "summary": "hook 入口が終了コード0で完了した"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tmp/pjr-mhhp/collect-help.mjs tmp/pjr-mhhp/help-after.json && cmp -s tmp/pjr-mhhp/help-before.json tmp/pjr-mhhp/help-after.json",
+      "status": "passed",
+      "summary": "CLIルートを含む123 help対象で差分なし"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build --project prj-0001",
+      "status": "passed",
+      "summary": "カタログ生成物を再生成した"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "検証成功。既存の未作成文書に関する based_on 警告のみ"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビューを再生成した"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-only --diff-filter=ACM -z | xargs -0 npx prettier --write",
+      "status": "passed",
+      "summary": "変更済み追跡ファイルを整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/commands src/shared tests/src/commands tests/src/shared",
+      "status": "passed",
+      "summary": "移動先の新規ファイルを整形した"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec run --register (post-integration)",
+      "status": "requires_human",
+      "summary": "統合後に orchestrator が実行する close 条件"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MHHP/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MHHP/src/schedule/build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MHHP/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MHHP\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-m4NhVX/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-4m02Bd/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-rC\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MHHP/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MHHP/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MHHP\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-ByPwbU/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-We5GlQ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-1y7n4c/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-UYKYcw/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  39.20s (transform 2.60s, setup 512ms, import 18.28s, tests 41.81s, environment 8ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "実装16件を src/commands・src/shared、テスト17件を対応ディレクトリへ移動した。パス補正と文書更新を行い、123件の help 出力は移動前後で一致した。build、hook入口、catalog、register の検証も完了した。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MHHP/20261017T061607100Z-fcb3cd17/executor.log",
+      "bytes": 2131,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+`gitResult` が 1 MiB を超える git の出力を受け取れるようにし、stderr が空の失敗でもエラーメッセージに原因が出るようにしました。テスト（単体・統合）、型検査、lint はこの段階では実行していません。親 runner が後で実行するので、修正とテストが通るかはその結果待ちです。
+
+**原因の確認:** Node で出力上限を小さくして子プロセスを起動し、個票の説明どおり `status: null`・`SIGTERM`・`ENOBUFS` で失敗することを確かめました。
+
+**変更内容**
+- `src/exec-worktree.ts`
+  - `gitResult` の `spawnSync` に出力上限 256 MiB（`GIT_OUTPUT_MAX_BUFFER`）を指定しました。
+  - `describeGitProcessFailure` を追加しました。`spawnSync` の `error` と終了 signal から原因の文字列を作ります。`ENOBUFS` のときは `output exceeded maxBuffer (ENOBUFS)` と出します。
+  - `formatGitCommandFailure` に省略可能な第 3 引数（プロセス側の原因）を追加しました。既存の呼び出しは変更不要です。
+  - `gitOutput` は、終了コードが 0 以外のときに加えて `error` があるときも失敗として扱い、上記の原因をメッセージに含めます。
+- `tests/src/exec-worktree.test.ts`（単体テスト）
+  - 実際に `ENOBUFS` を起こし、原因と signal がメッセージに含まれることを確かめるテスト。
+  - 起動の失敗（`EACCES`）、git が自分の終了コードで終わった場合、stderr が空のときのメッセージ形式のテスト。
+- `tests/src/exec-worktree.integration.test.ts`（統合テスト）
+  - 未追跡のファイル 5,000 個（約 1.15 MB）を置いた状態で、`gitOutput` が `git status --porcelain=v1 -z --untracked-files=all` の出力を全件受け取れることを確かめるテスト。
+- 個票 `pjr-ry4c-register-commit-git-status-buffer.md`
+  - 「対応結果」セクションに上記の対応を記入しました。ステータスの項目は変更していません。
+
+**実行した検証**
+- Prettier（変更した TS 3 ファイルと個票）：問題なし。
+- markdownlint（個票）：問題なし。
+- `specdojo catalog validate`：成功しました（`OK: dct-index.yaml`）。今回の変更とは関係のない既存の警告（`based_on` を検証する文書が見つからない）が出ています。
+
+個票の完了条件のうち `npm run check` は、親 runner が実行する typecheck、lint、テストなどの結果で判断することになります。
+
+<specdojo_executor_evidence>
+{"final_message":"gitResult の spawnSync に maxBuffer（256 MiB）を指定し、describeGitProcessFailure で ENOBUFS・signal・spawn error を失敗メッセージへ含めるようにした。単体・統合テストを追加し、個票の対応結果を更新した。","validations":[{"command":"npx prettier --write src/exec-worktree.ts tests/src/exec-worktree.test.ts tests/src/exec-worktree.integration.test.ts","status":"passed","summary":"formatted; integration test file reformatted"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-ry4c-register-commit-git-status-buffer.md","status":"passed","summary":"unchanged"},{"command":"npx markdownlint docs/ja/projects/prj-0001/controls/project-register/pjr-ry4c-register-commit-git-status-buffer.md","status":"passed","summary":"no errors"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK: dct-index.yaml (pre-existing unrelated based_on warnings only)"}]}
+</specdojo_executor_evidence>

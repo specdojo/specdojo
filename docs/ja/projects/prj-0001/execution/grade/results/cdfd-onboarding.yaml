@@ -5,12 +5,12 @@ path: docs/ja/product/010-business-specs/010-data-flow/cdfd-onboarding.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 53
-graded_at: "2026-10-07T16:07:35.457Z"
+score: 65
+graded_at: "2026-10-17T16:13:25.903Z"
 graded_by: agy-expert-executor
 content_hash: 49e33de5aa2be69433cf813bbcbd95b37a6266c4c857b20a7fb30db27b4f47c1
 source_hashes:
-  catalog-entry: 3947f9651f373eb747ed7a7122361d5ef1083326477eb627765c8d9b6800aec0
+  catalog-entry: 120624db7390ebb96f5026a38ef9b2ee246bb4f3507249afcfe423e507bedbf2
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   dependency:cdfd-overview: 9b8b4b2f64e2ef5c6ce0069204a94780e3ae43bc1b7d68004a654308d80abd7a
@@ -19,45 +19,45 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 25
-  operations:
-    score: 63
-  planning:
-    score: 25
-  business:
     score: 50
+  operations:
+    score: 75
+  planning:
+    score: 50
+  business:
+    score: 58
   consistency:
-    score: 25
+    score: 38
   architecture:
     score: 92
   usability:
     score: 94
   implementation:
-    score: 25
+    score: 50
   quality:
-    score: 44
+    score: 63
 viewpoints:
   vp-po-purpose-alignment:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 4
     score: 100
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-control-reporting:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
     level: 1
     score: 25
@@ -65,8 +65,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
     level: 3
     score: 75
@@ -77,20 +77,20 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-done-criteria:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 1
     score: 25
@@ -104,11 +104,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -203,7 +203,7 @@ findings:
     message: >-
       Explicit technical constraints and validation schemas for the Kata and execution configuration data stores should
       be defined to ensure structural integrity.
-    message_ja: 構造的な整合性を確保するために、Kata および実行構成データストアに対する明示的な技術的制約とバリデーションスキーマを定義する必要があります。
+    message_ja: 構造的な完全性を確保するために、Kata および実行構成データストアに対する明示的な技術的制約とバリデーションスキーマを定義する必要があります。
   - id: F011
     severity: major
     rule: vp-dev-implementation-readiness
@@ -292,7 +292,7 @@ findings:
     message: >-
       The missing completion condition column forces the reader to guess the definition of done, slightly degrading the
       overall readability of the process table.
-    message_ja: 完了条件の列が不足しているため、読み手が完了の定義を推測せざるを得ず、プロセス表全体の可読性がわずかに低下しています。
+    message_ja: 完了条件の列が不足しているため、読者が完了の定義を推測せざるを得ず、プロセス表の全体的な読みやすさがわずかに低下しています。
   - id: F020
     severity: major
     rule: vp-ops-release-readiness

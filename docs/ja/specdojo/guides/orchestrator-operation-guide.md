@@ -42,26 +42,32 @@ CLI を直接操作する場合の代表フローは [遂行の技活用ガイ�
 
 `package.json` に、対話起動用の npm スクリプトを `orch:` 接頭辞で用意しています。Claude Code / Codex はモデル別に用意し、`:work` 付きは固定 worktree で起動します。
 
-| スクリプト          | CLI・モデル                         | worktree                                        |
-| ------------------- | ----------------------------------- | ----------------------------------------------- |
-| `orch:sonnet`       | Claude Code / `sonnet`              | なし                                            |
-| `orch:sonnet:work`  | Claude Code / `sonnet`              | `../worktrees/claude-work`（無ければ自動作成）  |
-| `orch:opus`         | Claude Code / `opus`                | なし                                            |
-| `orch:opus:work`    | Claude Code / `opus`                | `../worktrees/claude-work`（無ければ自動作成）  |
-| `orch:terra`        | Codex / `gpt-5.6-terra`             | なし                                            |
-| `orch:terra:work`   | Codex / `gpt-5.6-terra`             | `../worktrees/codex-work`（無ければ自動作成）   |
-| `orch:sol`          | Codex / `gpt-5.6-sol`               | なし                                            |
-| `orch:sol:work`     | Codex / `gpt-5.6-sol`               | `../worktrees/codex-work`（無ければ自動作成）   |
-| `orch:copilot`      | GitHub Copilot                      | なし                                            |
-| `orch:copilot:work` | GitHub Copilot                      | `../worktrees/copilot-work`（無ければ自動作成） |
-| `orch:qwen`         | OpenCode / Qwen 3.8                 | なし                                            |
-| `orch:qwen:work`    | OpenCode / Qwen 3.8                 | `../worktrees/qwen-work`（無ければ自動作成）    |
-| `orch:gemma`        | OpenCode / Gemma 4                  | なし                                            |
-| `orch:gemma:work`   | OpenCode / Gemma 4                  | `../worktrees/gemma-work`（無ければ自動作成）   |
-| `orch:agy`          | Antigravity / `gemini-3.1-pro-high` | なし                                            |
-| `orch:agy:work`     | Antigravity / `gemini-3.1-pro-high` | `../worktrees/agy-work`（無ければ自動作成）     |
+| スクリプト          | CLI・モデル                           | worktree                                        |
+| ------------------- | ------------------------------------- | ----------------------------------------------- |
+| `orch:sonnet`       | Claude Code / `sonnet`                | なし                                            |
+| `orch:sonnet:work`  | Claude Code / `sonnet`                | `../worktrees/claude-work`（無ければ自動作成）  |
+| `orch:opus`         | Claude Code / `opus`                  | なし                                            |
+| `orch:opus:work`    | Claude Code / `opus`                  | `../worktrees/claude-work`（無ければ自動作成）  |
+| `orch:terra`        | Codex / `gpt-5.6-terra`               | なし                                            |
+| `orch:terra:work`   | Codex / `gpt-5.6-terra`               | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:sol`          | Codex / `gpt-5.6-sol`                 | なし                                            |
+| `orch:sol:work`     | Codex / `gpt-5.6-sol`                 | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:copilot`      | GitHub Copilot                        | なし                                            |
+| `orch:copilot:work` | GitHub Copilot                        | `../worktrees/copilot-work`（無ければ自動作成） |
+| `orch:qwen`         | OpenCode / Qwen 3.8                   | なし                                            |
+| `orch:qwen:work`    | OpenCode / Qwen 3.8                   | `../worktrees/qwen-work`（無ければ自動作成）    |
+| `orch:gemma`        | OpenCode / Gemma 4                    | なし                                            |
+| `orch:gemma:work`   | OpenCode / Gemma 4                    | `../worktrees/gemma-work`（無ければ自動作成）   |
+| `orch:flash`        | Antigravity / `gemini-3.8-flash-high` | なし                                            |
+| `orch:flash:work`   | Antigravity / `gemini-3.8-flash-high` | `../worktrees/agy-work`（無ければ自動作成）     |
 
 Antigravity CLI（`agy`）はファイル定義の agent を持たないため、Codex と同じく SSOT `.agents/specdojo-orchestrator.agent.md` の本文を `-i`（初期プロンプトを与えて対話を続ける）で渡します。ラッパーは不要で、`.agents/rules/*.md` の薄いラッパー経由で `.github/instructions/` の規則も読み込まれます。
+
+Antigravity で使えるモデル ID は `agy models` で確認してください。配布時点の既定値は、agy 1.3.5 で提供される `gemini-3.8-flash-high` です。
+
+`specdojo init` と `config scaffold` が利用者の `package.json` へ追加するスクリプトは、Claude Code が `orch:opus`・`orch:sonnet`、Codex が `orch:sol`・`orch:terra`、Antigravity が `orch:flash`、OpenCode が `orch:opencode` です。Codex と Antigravity のスクリプトは、名前に対応するモデルを起動コマンドで明示します。
+
+0.4.0 以前に作った `orch:codex`・`orch:agy` は自動では削除・上書きされません。`config scaffold --provider codex` または `config scaffold --provider antigravity` を再実行して新しいスクリプトを追加し、新しい名前で起動できることを確認してから、旧スクリプトを `package.json` から削除してください。
 
 用途に応じて使い分けます。
 
@@ -78,7 +84,9 @@ npm run orch:sonnet:work
 
 frontier モデルは Claude Code が `opus`、Codex が `gpt-5.6-sol` に対応します。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使います。
 
-worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
+worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、そこから `specdojo orchestrator launch` を起動します。無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
+
+固定 worktree から起動しても、project 設定と `repos[].path` は主 worktree を基準に解決します。provider の作業ディレクトリは固定 worktree のままです。この受け渡しに使う内部用の `SPECDOJO_ORCHESTRATOR_CONFIG_ROOT` は provider 起動前に除去されるため、対話中に実行する別の `specdojo` コマンドへは引き継がれません。
 
 ### 2.1. 利用リポジトリへ設定を配置する
 
@@ -114,6 +122,37 @@ npx specdojo config scaffold --provider antigravity --global
 読み取り・状況確認のみのコマンド（`--help` / `list` / `status` / `where` / `validate` / `--dry-run`）は、説明の上でそのまま実行します。
 
 対象 project は、`--project <id>` → 環境変数 `SPECDOJO_PROJECT` → `specdojo.config.json` の `current_project` → `projects` 先頭、の順で解決します（[遂行の技活用ガイド](waza-guide.md) の `プロジェクト解決順序` を参照）。会話で対象を特定できない場合は確認します。
+
+### 3.1. plan モードと register の使い分け
+
+Claude Code などの AI ツールが備える plan モード（計画モード）と、`specdojo` のプロジェクト登録簿（register）は、目的とライフサイクルが異なります。オーケストレーターとの対話では、両者の役割を理解して適切に使い分けることが重要です。
+
+#### plan モードと register の性質の違い
+
+Claude Code の plan モードで作成される plan は、会話の中でアイデアを整理し、作業手順の当たりをつけるための「使い捨ての下書き（ドラフト）」です。既定では `~/.claude/plans/` 配下にランダムな名前で保存され、古いファイルは一定期間（約 30 日）で自動削除される一時的な性質を持ちます（Claude Code では `plansDirectory` 設定で保存先を変更できます）。これは Claude Code に限らず、他の AI ツール（Codex、Antigravity、OpenCode など）が提供する一時的な plan 機能や計画モードにも共通する特徴です。
+
+一方、`specdojo` のプロジェクト登録簿（register）は、プロジェクト進行中の意思決定、課題、作業を体系的に記録・追跡する「リポジトリの正本台帳」です（詳細は [[specdojo:register-operation-guide|登録簿運用ガイド]] を参照してください）。
+
+両者の違いを次の観点で対比します。
+
+| 観点                      | plan モードの plan（会話の下書き）                                 | プロジェクト登録簿（register）                                                                                              |
+| :------------------------ | :----------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------- |
+| **識別**                  | ランダムな名前（UUID 等）。会話外や後からの参照は困難              | `PJR-XXXX` の恒久的な ID。コミットログや他文書から `Refs:` で追跡可能                                                       |
+| **種類**                  | 種別の区別なし（Markdown の自由記述）                              | 明確な種別区分（`decision`・`todo`・`issue`・`question`・`risk`・`note` など）                                              |
+| **状態の遷移とイベント**  | 状態管理なし（会話終了や時間経過とともに消去）                     | 明示的な状態遷移（`open` → `in-progress` → `resolved` / `closed` 等）と `events/pjr-XXXX.yaml` による変更履歴の追跡         |
+| **exec・commit との接続** | exec の plan / result や Git コミットとの体系的な紐付けなし        | `specdojo exec` の plan / result への接続（[[specdojo:exec-operation-guide\|exec運用ガイド]] 参照）、統合コミットとの紐付け |
+| **意思決定の記録**        | 決定内容や合意の経緯が会話ログに埋もれて散逸する                   | `decision` による決定者・決定日・承認方式（合意・レビュー・委任等）の確実な記録                                             |
+| **履歴の永続性**          | 既定で一時ディレクトリに保存され、一定期間（約 30 日）で削除される | リポジトリ内の個票（`pjr-XXXX-<topic>.md`）として Git 履歴とともに永続管理                                                  |
+| **一覧での見渡し**        | 会話横断での俯瞰や残課題の一覧化は困難                             | 生成される一覧（`pjr-index.md`）や派生ビューにより、全体の状況や残課題を一覧で見渡し可能                                    |
+
+#### 運用の流れ
+
+オーケストレーターと対話しながら進める場合、次のように plan モードから register へ情報を昇格させる運用を推奨します。
+
+1. **会話の中での検討・下書き（plan モード）**: オーケストレーターと対話しながらアプローチを検討する段階では、AI ツールの plan モードを使って自由に方針や作業手順を下書きします。この plan は使い捨てのドラフトとして扱います。手元にログを残したい場合でも、`plansDirectory` を `tmp/plans` などの Git コミット対象外のディレクトリに指定し、リポジトリにコミットしません。
+2. **残す判断の記録（register: decision）**: 会話や plan モードで合意した設計方針・重要な判断は、plan モード内に放置せず、`decision` 種別の個票として登録簿に書き写します。決定者、決定日、承認方式を記録することで、後から経緯を検証可能にします。
+3. **作業範囲と完了条件の確定（register: todo）**: 実行すべき作業範囲は、`todo` 種別の個票として登録簿に登録し、plan モードで検討した具体的な作業項目や検証条件を「完了条件」セクションへ書き写します。
+4. **タスクの実行と追跡（exec）**: 登録された todo に対して `specdojo exec` を実行し、exec plan と result を通じて成果物の変更と検証を進めます。
 
 ## 4. 安全と権限
 

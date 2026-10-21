@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f9e43910a09e41dc8d11b876f5750a98
+  ts: "2026-10-14T22:18:45Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-ZM1K の決定のフォローアップ（2026-10-15）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 本リポジトリの agent の名簿を 2 段構成へ移す
+    - field: description
+      from: ""
+      to: 本リポジトリの agent-members.yaml と exec-defaults.yaml を実体と別名の 2 段へ移し、今の名前を別名として残す。Job・routine の指定が別名で動くことを確かめる。 PJR-ZM1K の決定に基づく（Y8P9 の完了後、0.4.0）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
+- v: 1
+  id: reg_ce9a16ded7f8443dad7d710e63acf767
+  ts: "2026-10-18T09:53:01Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: open
+  to_status: done
+  reason: 保護された設定のため orchestrator が feature/prj-0001/agent-two-level で行い、利用者の承認を得て統合した。統合後に JSEY・E025 の実行と agent run の dry-run で確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 本リポジトリの名簿を実体 39・別名 18 の 2 段へ移し、今の名前をすべて別名として残した。exec-defaults の起動のコマンドを役割の定義と {model} で組み立てる形にした。0ZAS に従い thinking を有効にした executor・gemma26 の executor・oMLX の定義を無効にした。Job 8 件・routine 9 件の検証が通り、Job と routine の名前は別名で正しい起動のコマンドになる
+  previous_event_id: reg_f9e43910a09e41dc8d11b876f5750a98

@@ -1,0 +1,17 @@
+個票の「対応結果」表に 1 行追記しました。対象は `PJR-YK1C` です。変更した追跡ファイルはこの個票だけです。
+
+追記した行は次のとおりです。
+- 日時: 2026-10-18 17:12(JST)
+- 対象の分割: `PJR-YK1C`
+- agent: `claude-expert-executor`
+
+次の 3 点は私の判断です。
+- **対象の分割:** `PJR-YK1C` を、最も新しく統合された項目としました。`git log` で `PJR-YK1C` の統合コミットが最新だったためです。
+- **日時:** `date` が返した現在時刻 08:12 UTC を JST に換算しました。
+- **agent の nickname:** 指示にはありませんでした。`.specdojo/agent-members.yaml` の `claude-expert-executor` と `claude-executor` のうち、前の行の命名に合わせて前者を選びました。
+
+`npx prettier --write` を個票に実行し、表の列幅を揃えました。lint、typecheck、テストは、指示どおり親 runner の検証に任せ、私は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果表に PJR-YK1C の行(2026-10-18 17:12 / claude-expert-executor)を追記し、prettier で整形した。個票以外は変更していない。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"表の列幅を整形"}]}
+</specdojo_executor_evidence>

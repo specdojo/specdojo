@@ -32,3 +32,80 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_b876bf81d7644c7898731aeceb185ed3
+  ts: "2026-10-20T13:42:10Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d48bd04d957f421e9311691c6d3c539b
+- v: 1
+  id: reg_b5095d4345b44880aac8fd68d3156374
+  ts: "2026-10-20T13:51:35Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "rate limit reached; rate limit fallback: sol-executor -> opus-executor at 2026-10-20T13:47:01.303Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "rate limit reached; rate limit fallback: sol-executor -> opus-executor at 2026-10-20T13:47:01.303Z"
+  previous_event_id: reg_b876bf81d7644c7898731aeceb185ed3
+- v: 1
+  id: reg_7af957a2e07446179eaa6757bad530b1
+  ts: "2026-10-20T21:12:49Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "rate limit reached; rate limit fallback: sol-executor -> opus-executor at 2026-10-20T13:47:01.303Z"
+      to: "-"
+  previous_event_id: reg_b5095d4345b44880aac8fd68d3156374
+- v: 1
+  id: reg_e0a0bf2a8f7d4db3890c5c629ca8795b
+  ts: "2026-10-20T21:27:50Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7af957a2e07446179eaa6757bad530b1
+- v: 1
+  id: reg_10b58c571f27461a81f8c832869097b2
+  ts: "2026-10-20T21:55:02Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・差分・親の検証を確かめ、統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: exec run --register の worktree の実行に --integration-branch `<repo>`=`<branch>` を加え、run ごとにプロダクトリポジトリの統合先を指定できるようにした。優先順位は run の指定、repos の integration_branch、現在のブランチの順で、指定しない場合の動きは変わらない
+  previous_event_id: reg_e0a0bf2a8f7d4db3890c5c629ca8795b

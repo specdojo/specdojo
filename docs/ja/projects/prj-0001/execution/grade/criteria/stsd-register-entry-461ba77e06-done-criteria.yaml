@@ -2,8 +2,8 @@
 id: stsd-register-entry-grade-criteria
 document: stsd-register-entry
 path: docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md
-graded_at: "2026-10-10T16:02:18.576Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-20T16:07:12.167Z"
+graded_by: flash-high-executor
 content_hash: 48c647b4efecd15bfe8dcfe583519d02eea22fa18c70c886d97ce88f85fcbb19
 summary:
   satisfied: 0
@@ -16,32 +16,42 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 現行運用で成立する直接終端などの全遷移が定義されておらず、正確性に欠けるため。
+    reason: >-
+      Direct terminal transitions and reopen transitions are missing, and waiting state recording locations conflict
+      with operational guide.
   - id: DC-002
     text: 状態遷移の業務的妥当性を承認できること
     roles:
       - PO
     viewpoint: vp-po-purpose-alignment
     status: unsatisfied
-    reason: 未解決の ASSUMPTION（再開時や却下時の遷移仕様の CLI との差異など）が残っており、PO が承認を判断できないため。
+    reason: >-
+      Unresolved assumptions regarding terminal and reopen transition behavior prevent approving the business validity
+      of the state model.
   - id: DC-003
     text: 状態遷移実装の基礎として参照できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: item_status 等の現行制約との対応や、コマンドと状態の整合が取れていないため。
+    reason: >-
+      Inconsistencies with CLI implementation guards and schema field handling prevent the document from serving as an
+      architectural implementation base.
   - id: DC-004
     text: 状態ベースのテスト設計に活用できること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 全許可・禁止遷移などの検証対象や期待結果が定義されておらず、テスト設計に活用できないため。
+    reason: >-
+      Qualitative transition conditions lack concrete pass/fail verification criteria necessary for state-based test
+      design.
   - id: DC-005
     text: 状態管理実装の参照として使えること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 実装可能な遷移行列として CLI コマンドやスキーマの現行制約との整合が取れていないため。
+    reason: >-
+      Discrepancies in command-level transition rules and frontmatter key updates prevent development from using this as
+      an implementation reference.

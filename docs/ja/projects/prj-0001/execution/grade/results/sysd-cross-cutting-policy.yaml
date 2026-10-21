@@ -5,44 +5,44 @@ path: docs/ja/product/040-system-design/sysd-cross-cutting-policy.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 56
-graded_at: "2026-10-10T16:20:56.666Z"
-graded_by: agy-expert-executor
-content_hash: bca41820969b2dcdea1ce393322b1db29279f2135f145be62dcaa7f60fc6238b
+score: 66
+graded_at: "2026-10-20T16:33:21.587Z"
+graded_by: flash-high-executor
+content_hash: 9c044498807d98d0b40dbe54a4b6549629ced8e1609ef6916125888146f34979
 source_hashes:
-  catalog-entry: d83e8cfcd93baea87c5a83396cfc0763b481ba86313bfeb3356cddec6e89aa2f
+  catalog-entry: 4dd86c0645a196cb89d7adc4d401315d2fe8f64f5e930d3b2d8c0814f55b654c
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:sysd-index: b7e187664be665489c7db0d0c1f62145b5ba32d7000638de0e81f324b4dd0a8d
+  dependency:sysd-index: 00399c6c78e44d44f97f896a985436e31d9816d522d29ba385fcf2ab1162da9e
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 63
+    score: 75
   operations:
-    score: 56
+    score: 69
   planning:
     score: 75
   business:
-    score: 58
+    score: 67
   consistency:
-    score: 25
+    score: 50
   architecture:
-    score: 75
+    score: 83
   usability:
     score: 75
   implementation:
-    score: 50
+    score: 63
   quality:
-    score: 44
+    score: 56
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 3
     score: 75
@@ -59,17 +59,17 @@ viewpoints:
     level: 3
     score: 75
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
   vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 3
     score: 75
@@ -77,23 +77,23 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
     level: 3
     score: 75
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-done-criteria:
     level: 1
     score: 25
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 3
     score: 75
@@ -104,11 +104,11 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -189,19 +189,15 @@ findings:
     anchor: >-
       SpecDojo CLI、agent、実行runner、Git
       worktreeへ横断的に適用する責務、設定解決、状態遷移、失敗処理、権限のルールを定義する。実装・設定を一次情報とし、本書は設計意図と検証可能な制約のSSOTである。
-    message: >-
-      成果物カタログはエラー・タイムアウト・冪等・トレーシング・設定上書き階層・モジュール境界を対象として宣言しているが、本文はSpecDojoのagent実行規範に限定されているため、カタログまたは本文の適用範囲を一致させる必要がある。
-    message_ja: >-
-      成果物カタログはエラー・タイムアウト・冪等・トレーシング・設定上書き階層・モジュール境界を対象として宣言しているが、本文はSpecDojoのagent実行規範に限定されているため、カタログまたは本文の適用範囲を一致させる必要がある。
+    message: 成果物カタログはエラー・タイムアウト・冪等・トレーシング・設定上書き階層・モジュール境界を対象として宣言しているが、本文はSpecDojoのagent実行規範に限定されているため、カタログまたは本文の適用範囲を一致させる必要がある。
+    message_ja: 成果物カタログはエラー・タイムアウト・冪等・トレーシング・設定上書き階層・モジュール境界を対象として宣言しているが、本文はSpecDojoのagent実行規範に限定されているため、カタログまたは本文の適用範囲を一致させる必要がある。
   - id: F010
     severity: minor
     rule: vp-arc-cross-document-consistency
     line: 190
     anchor: "| CDFD            | `cdfd-task-execution`     | task状態の概念フロー    | 参照   |"
-    message: >-
-      関連文書表がstatus=deprecatedかつtrash配下へ移動済みの`cdfd-task-execution`、`cdfd-register-lifecycle`、`cdfd-multi-project`を現行参照としているため、後継SSOTへの更新または履歴参照である旨の明示が必要である。
-    message_ja: >-
-      関連文書表がstatus=deprecatedかつtrash配下へ移動済みの`cdfd-task-execution`、`cdfd-register-lifecycle`、`cdfd-multi-project`を現行参照としているため、後継SSOTへの更新または履歴参照である旨の明示が必要である。
+    message: 関連文書表がstatus=deprecatedかつtrash配下へ移動済みの`cdfd-task-execution`、`cdfd-register-lifecycle`、`cdfd-multi-project`を現行参照としているため、後継SSOTへの更新または履歴参照である旨の明示が必要である。
+    message_ja: 関連文書表がstatus=deprecatedかつtrash配下へ移動済みの`cdfd-task-execution`、`cdfd-register-lifecycle`、`cdfd-multi-project`を現行参照としているため、後継SSOTへの更新または履歴参照である旨の明示が必要である。
   - id: F011
     severity: major
     rule: vp-arc-technical-constraints
@@ -209,10 +205,8 @@ findings:
     anchor: >-
       - **Rule（MUST）**: policyはtaskのcriticalityと正規化signalに従い、上限付きretry、適合memberへのfallback、またはblockを選ぶ。独立したReady
       taskと別providerは継続できる。
-    message: >-
-      `scp-RET-002`が依存するcriticality区分、正規化signalとの対応、attempt・backoff上限の設定キーが定義されておらず、retry・fallback・blockを選択する構成判断を実装へ固定できない。
-    message_ja: >-
-      `scp-RET-002`が依存するcriticality区分、正規化signalとの対応、attempt・backoff上限の設定キーが定義されておらず、retry・fallback・blockを選択する構成判断を実装へ固定できない。
+    message: "`scp-RET-002`が依存するcriticality区分、正規化signalとの対応、attempt・backoff上限の設定キーが定義されておらず、retry・fallback・blockを選択する構成判断を実装へ固定できない。"
+    message_ja: "`scp-RET-002`が依存するcriticality区分、正規化signalとの対応、attempt・backoff上限の設定キーが定義されておらず、retry・fallback・blockを選択する構成判断を実装へ固定できない。"
   - id: F012
     severity: minor
     rule: vp-arc-conciseness
@@ -251,10 +245,8 @@ findings:
     anchor: >-
       - **Rule（MUST）**: policyはtaskのcriticalityと正規化signalに従い、上限付きretry、適合memberへのfallback、またはblockを選ぶ。独立したReady
       taskと別providerは継続できる。
-    message: >-
-      `scp-RET-002`のEnforcementはattempt上限、backoff上限、候補順、on_exhaustedのテスト名を列挙するだけで、入力別の期待動作、上限値または設定キー、実行する検証コマンドがなく、変更後の合否を再現できない。
-    message_ja: >-
-      `scp-RET-002`のEnforcementはattempt上限、backoff上限、候補順、on_exhaustedのテスト名を列挙するだけで、入力別の期待動作、上限値または設定キー、実行する検証コマンドがなく、変更後の合否を再現できない。
+    message: "`scp-RET-002`のEnforcementはattempt上限、backoff上限、候補順、on_exhaustedのテスト名を列挙するだけで、入力別の期待動作、上限値または設定キー、実行する検証コマンドがなく、変更後の合否を再現できない。"
+    message_ja: "`scp-RET-002`のEnforcementはattempt上限、backoff上限、候補順、on_exhaustedのテスト名を列挙するだけで、入力別の期待動作、上限値または設定キー、実行する検証コマンドがなく、変更後の合否を再現できない。"
   - id: F016
     severity: major
     rule: vp-qe-done-criteria

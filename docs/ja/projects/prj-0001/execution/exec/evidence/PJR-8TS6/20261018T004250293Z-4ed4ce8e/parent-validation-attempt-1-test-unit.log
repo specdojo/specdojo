@@ -1,0 +1,219 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8TS6
+
+ ❯ tests/src/exec/reporter.test.ts (80 tests | 1 failed) 67ms
+     × asks for path-keyed descriptions without requiring the evidence order or count 8ms
+Updated ticket status → ready: /tmp/specdojo-ticket-XnDRRc/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-RbUHAQ/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-vWlLbl/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-m5Z523/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-6zvXAx/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-Wd31hP/pjr-0001-topic.md
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-18T00:55:37.960Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-18T00:54:38.256Z.
+fallback complete
+before
+  
+  
+docs/selected.md
+Wrote agent stdout: /tmp/specdojo-agent-command-lJx7mY/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-IV5cGn/outputs/partial.txt
+Would move 1 agent member(s) from /tmp/specdojo-members-1oefe0/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-1oefe0/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-1oefe0/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-1oefe0/.specdojo/agent-members.yaml
+
+ Test Files  1 failed | 133 passed (134)
+      Tests  1 failed | 2093 passed (2094)
+   Start at  09:54:14
+   Duration  41.99s (transform 2.56s, setup 559ms, import 20.32s, tests 45.75s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+problem
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/reporter.test.ts > reporter structured output > asks for path-keyed descriptions without requiring the evidence order or count
+AssertionError: expected 'You are the reporter stage of a SpecD…' to contain 'exact path from its evidence.changes …'
+
+- Expected
++ Received
+
+- exact path from its evidence.changes entry
++ You are the reporter stage of a SpecDojo executor/reporter pipeline.
++ Use only the supplied plan and bounded executor evidence. Do not edit or inspect files. Do not
++ invent facts that are absent from evidence. Return exactly one JSON object matching the supplied
++ JSON Schema, without Markdown fences or commentary. The runner owns frontmatter, outcome,
++ block_reason, the authoritative changed-file list, and Markdown rendering. It derives those facts
++ mechanically from evidence; your response supplies prose associated with evidence paths.
++
++ The runner renders your free-text JSON fields as Markdown. Wrap every identifier or field name
++ containing an underscore in inline code (for example, `depends_on`) so Markdown parsers do not
++ misread it as emphasis.
++
++ The plan below was written as generic instructions for a single agent that both edits the
++ deliverable and records its own result. In this pipeline, those two responsibilities are split:
++ the executor already completed the deliverable edit and intentionally left the result file
++ untouched because the runner writes it from your prose and machine facts. For edit mode, explain
++ what was changed in each file in changed_files, especially deliverables (docs/), source files (src/),
++ and test files (tests/). Identify each changed_files summary with the exact path from its evidence.changes
++ entry. The runner matches descriptions by path: order does not matter, missing descriptions are filled
++ with Git change metadata by the runner, and paths absent from evidence are discarded. Do not include
++ statuses. An empty changes list requires an empty changed_files list. Validation entries with source="runner" were executed by the parent
++ process and remain authoritative machine facts. Do not turn them into outcome or block_reason
++ fields. When runner_context is present, it contains additional authoritative facts: do not ask for
++ a command in mechanically_not_applicable to be run, because the runner already determined that it
++ does not apply and will preserve that handoff itself. Paths in runner_managed_attempt_changes were
++ materially changed during the executor attempt but are intentionally absent from changed_files;
++ do not request confirmation solely because the executor mentions one of those changes while the
++ path is absent from changed_files.
++ <specdojo_plan>
++ # Plan
++
++ Do the work.
++ </specdojo_plan>
++
++ <specdojo_executor_evidence>
++ {
++   "schema_version": 1,
++   "task_id": "T-TEST-doc-010",
++   "run_id": "run-1",
++   "stage": {
++     "role": "executor",
++     "actor": "executor",
++     "status": "succeeded",
++     "started_at": "2026-08-10T07:00:00.000Z",
++     "completed_at": "2026-08-10T07:01:00.000Z",
++     "exit_code": 0,
++     "attempts": 1
++   },
++   "changes": [
++     {
++       "path": "docs/test.md",
++       "status": "M"
++     }
++   ],
++   "diff_summary": {
++     "files_changed": 1,
++     "summary": "docs/test.md | 2 ++"
++   },
++   "validations": [
++     {
++       "command": "npm test",
++       "status": "passed",
++       "summary": "10 tests passed"
++     }
++   ],
++   "final_message": "updated the document",
++   "log_refs": [
++     {
++       "kind": "agent-output-excerpt",
++       "path": "execution/exec/evidence/T-TEST-doc-010/run-1/executor.log",
++       "bytes": 100,
++       "truncated": false
++     }
++   ]
++ }
++ </specdojo_executor_evidence>
++
++ <specdojo_reporter_output_schema mode="edit">
++ {
++   "$schema": "https://json-schema.org/draft/2020-12/schema",
++   "type": "object",
++   "additionalProperties": false,
++   "required": [
++     "schema_version",
++     "mode",
++     "summary",
++     "changed_files",
++     "handoff",
++     "approach"
++   ],
++   "properties": {
++     "schema_version": {
++       "const": 1
++     },
++     "mode": {
++       "const": "edit"
++     },
++     "summary": {
++       "type": "array",
++       "minItems": 1,
++       "maxItems": 100,
++       "items": {
++         "$ref": "#/$defs/text"
++       }
++     },
++     "changed_files": {
++       "type": "array",
++       "maxItems": 1000,
++       "items": {
++         "type": "object",
++         "additionalProperties": false,
++         "required": [
++           "path",
++           "summary"
++         ],
++         "properties": {
++           "path": {
++             "$ref": "#/$defs/text"
++           },
++           "summary": {
++             "$ref": "#/$defs/text"
++           }
++         }
++       }
++     },
++     "handoff": {
++       "type": "array",
++       "maxItems": 100,
++       "items": {
++         "$ref": "#/$defs/text"
++       }
++     },
++     "approach": {
++       "$ref": "#/$defs/text"
++     }
++   },
++   "$defs": {
++     "text": {
++       "type": "string",
++       "minLength": 1,
++       "maxLength": 4000
++     }
++   }
++ }
++ </specdojo_reporter_output_schema>
++
+
+ ❯ tests/src/exec/reporter.test.ts:199:20
+    197|     });
+    198|
+    199|     expect(prompt).toContain("exact path from its evidence.changes ent…
+       |                    ^
+    200|     expect(prompt).toContain("order does not matter");
+    201|     expect(prompt).toContain(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

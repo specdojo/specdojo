@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_092e76a2b9c8458ebd22d9b465dd9015
+  ts: "2026-10-20T11:00:36Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 接続のスクリプトを ssh から動かすと Dev Container CLI が見つからない
+    - field: description
+      from: ""
+      to: specdojo-tmux.sh.sample を ssh の RemoteCommand で動かすと、ログインも対話もしないシェルで動くため、Mac の端末で読み込まれる Homebrew・nvm などの PATH の設定が入らず、「Dev Container CLI is not installed」で止まる（2026-10-20、利用者が報告）。サンプルは PATH の追加をコメントで書いているだけで、自宅の Mac 向けの設計書の helper にある node_bin_dir と /opt/homebrew/bin・/usr/local/bin の追加が引き継がれていない
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-GHBP"]'
+- v: 1
+  id: reg_ffb441bc3c0747bd88cb31d1150ae027
+  ts: "2026-10-20T11:01:14Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_092e76a2b9c8458ebd22d9b465dd9015
+- v: 1
+  id: reg_12b6b0696a304f1d88b4c121005dc754
+  ts: "2026-10-20T11:19:58Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ffb441bc3c0747bd88cb31d1150ae027
+- v: 1
+  id: reg_6429cafeec1543a78dff7ead1e218917
+  ts: "2026-10-20T11:21:35Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分・親検証と、生成したサンプルを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: specdojo-tmux.sh.sample に node_bin_dir の変数を設け、/opt/homebrew/bin・/usr/local/bin と合わせて PATH の先頭に足すようにした。値の確かめ方と Homebrew・nvm・mise の例をコメントに書き、devcontainer や docker が見つからないときは PATH を表示する。生成したサンプルは bash -n と shellcheck を通った
+  previous_event_id: reg_12b6b0696a304f1d88b4c121005dc754

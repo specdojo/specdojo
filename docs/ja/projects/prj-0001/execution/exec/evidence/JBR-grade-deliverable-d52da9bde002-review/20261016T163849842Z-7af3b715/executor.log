@@ -1,0 +1,64 @@
+レビューの判定は **`complete-with-findings`** です。Run は成功し、出力は Job の範囲内に収まり、記録どうしも食い違いはありません。ただし Job Run result には、Job 固有の確認事項に対する答えが 2 件抜けています。
+
+**1. 出力範囲**
+- `af9a4e66..3ea6629c` はコミット 1 件（`chore(routine): 成果物の継続品質評価`）、27 ファイルです。すべて `docs/ja/projects/prj-0001/execution/` 配下にあります。
+- 内訳は done_criteria 10 件、grade results 10 件、Run JSON、plan、result、evidence 4 件です。
+- 評価対象の成果物本体は変更されていません。10 件とも `content_hash` は変わらず、変わったのは `source_hashes.catalog-entry` だけでした。
+- HEAD は出力 commit と一致し、未コミットの差分は review 用の未追跡ファイルだけです。
+
+**2. 記録どうしの整合**
+- Run JSON は `state: succeeded`、`exit_code: 0` で、evidence の `job-command` も `passed` / exit 0、stderr は 0 バイトです。
+- stdout の最終行は `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0` でした。
+- `results.tsv` は 10 行すべて stage 1 が `passed` です。
+- result の記述（未完了なし、failed なし、`retry_exhausted` なし、pass 1 件・needs-work 9 件）はこれらと一致します。
+
+**3. Job 固有の確認事項**
+- **rate limit（終了コード75）・中断**: 該当なし。`grade list --incomplete` と `grade state --exhausted` の出力は空でした。
+- **`failed` の段**: なし。
+- **`retry_exhausted`**: なし。
+- **verdict と score**:
+
+| 成果物 | verdict | score（前回→今回） | findings |
+| --- | --- | --- | --- |
+| cdfd-action | needs-work | 63→73 | 16 |
+| cdfd-check | needs-work | 71→79 | 18 |
+| cdfd-onboarding | needs-work | 53→65 | 21 |
+| cdfd-orchestrator | needs-work | 91（変化なし） | 5 |
+| cdfd-plan | needs-work | 78（変化なし） | 13 |
+| cdfd-uc-deliverable | pass | 100（変化なし） | 0 |
+| cdsd-execution | needs-work | 49→65 | 24 |
+| cdsd-planning | needs-work | 50→65 | 22 |
+| cdsd-sharing | needs-work | 45→59 | 27 |
+| stsd-routine-run | needs-work | 64（変化なし） | 24 |
+
+  - verdict は 10 件とも前回から変わっていません。
+  - **偏りの疑いがあります**: score が上がった 6 件は本文も rubric（`grade-rubric-v2`）も変わっていないのに上昇しました。上昇幅は +8〜+16 です。多くの観点が level 1（25 点）から level 2（50 点）へ一律に上がっています（例: cdfd-check の 3 観点）。
+- **未充足の done_criteria と確認担当ロール**: 10 件とも status の変化はなく、reason の文面だけが更新されました。
+  - cdfd-action: DC-001（BA）、DC-003（PO）
+  - cdfd-check: DC-001（BA）
+  - cdfd-onboarding: DC-001（BA）
+  - cdfd-plan: DC-001（BA）
+  - cdsd-execution: DC-001（BA）、DC-002（ARC）、DC-003（QE）
+  - cdsd-planning: DC-001（BA）、DC-002（ARC）、DC-003（QE）
+  - cdsd-sharing: DC-001（BA）、DC-002（ARC）、DC-003（QE）
+  - stsd-routine-run: DC-001（BA）、DC-002（PO）、DC-003（ARC）、DC-004（QE）、DC-005（DEV）
+  - cdfd-orchestrator と cdfd-uc-deliverable は全項目が充足しています。
+
+**4. 評価結果の鮮度**
+対象 10 件は、`grade list` の `--changed-only`、`--dependency-changed`、`--incomplete`、`--rubric-outdated`、`--rulebook-changed` のどれにも出てきませんでした。`--ungraded` の出力は 0 行です。最初の確認の後に成果物の変更はなく、`changed-during-review` には当たりません。
+
+**指摘と改善指示**
+- **F-1**: Job Run result に、未充足の done_criteria がある成果物と確認担当ロールが書かれていません。上の一覧を補ってください。
+- **F-2**: Job Run result は score の分布を述べるだけで、評価設定の見直しが要るかの判断がありません。本文が変わらないまま score が上がった件について、agy 評価のばらつき（緩和方向）かを確かめるかどうか、評価設定の担当者が判断してください。
+- **F-3**: `needs-work` の 9 件の findings への対応は、grade の範囲として成果物 owner へ引き継ぎます。
+
+いずれも Run の完了は妨げません。
+
+**確認できなかった範囲**
+- 前回評価から今回までの agy executor の設定やプロンプトの変更履歴は確認していません。このため、score 上昇の原因は特定できていません。
+- `logs/grade/runs/per-document/JBR-grade-deliverable-d52da9bde002/` の実ファイルはコミット対象外のため読んでいません。stdout に出力された `results.tsv` で代わりに確認しました。
+- `findings` の個々の内容が妥当かは見ていません。成果物の再評価は review の範囲外です。
+
+<specdojo_executor_evidence>
+{"final_message":"判定は complete-with-findings。Run JBR-grade-deliverable-d52da9bde002 は `state: succeeded`、`exit_code: 0`、stderr 0 バイト。`af9a4e66..3ea6629c` はコミット 1 件・27 ファイルで、すべて `docs/ja/projects/prj-0001/execution/` 配下（done_criteria 10、grade results 10、Run JSON、plan、result、evidence 4）。評価対象 10 件は `content_hash` が変わらず、変わったのは `source_hashes.catalog-entry` だけ。`results.tsv` は 10 件すべて stage 1 `passed`。incomplete、failed、`retry_exhausted`、exhausted はなく、`grade list --incomplete` と `grade state --exhausted` の出力は空。verdict は前回から変化なし（pass 1 件 cdfd-uc-deliverable 100、needs-work 9 件）。score は本文・rubric（`grade-rubric-v2`）とも変わらないまま 6 件で上昇（+8〜+16: cdfd-action 63→73、cdfd-check 71→79、cdfd-onboarding 53→65、cdsd-execution 49→65、cdsd-planning 50→65、cdsd-sharing 45→59）。多くの観点が level 1→2 へ一律に上がっており、評価のばらつき（緩和方向）の疑いがある。未充足の done_criteria と確認担当ロール: cdfd-action DC-001(BA)/DC-003(PO)、cdfd-check DC-001(BA)、cdfd-onboarding DC-001(BA)、cdfd-plan DC-001(BA)、cdsd-execution・cdsd-planning・cdsd-sharing DC-001(BA)/DC-002(ARC)/DC-003(QE)、stsd-routine-run DC-001(BA)/DC-002(PO)/DC-003(ARC)/DC-004(QE)/DC-005(DEV)。cdfd-orchestrator と cdfd-uc-deliverable は全項目が充足。done_criteria の status 変化はなく、reason の文面だけが更新された。鮮度: 対象 10 件は `--changed-only`、`--dependency-changed`、`--incomplete`、`--rubric-outdated`、`--rulebook-changed` のどれにも出ず、`--ungraded` は 0 行。HEAD は出力 commit と一致し、review 中の変更なし。指摘: F-1 Job Run result に未充足 done_criteria と担当ロールの記載がない。F-2 評価設定の見直し要否の判断がなく、本文が変わらないままの score 上昇を評価設定の担当者が確認すべき。F-3 needs-work 9 件の findings 対応を成果物 owner へ引き継ぐ。いずれも Run の完了は妨げない。確認できなかった範囲: 前回評価以降の agy executor の設定・プロンプト変更履歴（score 上昇の原因は特定できていない）、コミット対象外の `logs/grade/runs/per-document/JBR-grade-deliverable-d52da9bde002/` の実ファイル（stdout の `results.tsv` で代わりに確認）、findings 個々の妥当性（review の範囲外）。","validations":[{"command":"git diff --stat af9a4e66da6904078daad3252b29c426f2920d13..3ea6629c0b4e24a21ca8bc11c501b195c2fa38fd && git diff --name-status af9a4e66da6904078daad3252b29c426f2920d13..3ea6629c0b4e24a21ca8bc11c501b195c2fa38fd","status":"passed","summary":"27 ファイル、すべて docs/ja/projects/prj-0001/execution/ 配下。範囲外の変更なし"},{"command":"npx specdojo grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"評価対象 10 件はいずれも出力されない（最新）"},{"command":"npx specdojo grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"評価対象 10 件はいずれも出力されない"},{"command":"npx specdojo grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"出力なし"},{"command":"npx specdojo grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力なし（exhausted 0 件）"},{"command":"npx specdojo grade list --target deliverable --project prj-0001 --rubric-outdated","status":"passed","summary":"評価対象 10 件はいずれも出力されない"},{"command":"npx specdojo grade list --target deliverable --project prj-0001 --rulebook-changed","status":"passed","summary":"評価対象 10 件はいずれも出力されない"},{"command":"npx specdojo grade list --target deliverable --project prj-0001 --ungraded","status":"passed","summary":"出力 0 行"}]}
+</specdojo_executor_evidence>

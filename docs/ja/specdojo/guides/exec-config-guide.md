@@ -35,12 +35,12 @@ SpecDojo のエージェント実行は、`sch-strategy-<track>.yaml` の phase 
 
 ## 1. 設定ファイルの分担
 
-| ファイル                       | 役割                                                                                     | 粒度         |
-| ------------------------------ | ---------------------------------------------------------------------------------------- | ------------ |
-| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・実行要件・任意の `agent` / `agent_pipeline`             | トラック     |
-| `pm-members.yaml`              | 人間の identity・連絡先・対応 Role code                                                  | プロジェクト |
-| `.specdojo/agent-members.yaml` | agent の identity・capabilities・proficiency・priority・任意の `stage_role`              | リポジトリ   |
-| `.specdojo/exec-defaults.yaml` | provider 別起動コマンドテンプレート・rate limit 検出条件・リトライポリシー・同時実行上限 | システム     |
+| ファイル                       | 役割                                                                           | 粒度         |
+| ------------------------------ | ------------------------------------------------------------------------------ | ------------ |
+| `sch-strategy-<track>.yaml`    | phase ごとの `mode`・`approach`・実行要件・任意の `agent` / `agent_pipeline`   | トラック     |
+| `pm-members.yaml`              | 人間の identity・連絡先・対応 Role code                                        | プロジェクト |
+| `.specdojo/agent-members.yaml` | agent の identity・capabilities・proficiency・priority・任意の `stage_role`    | リポジトリ   |
+| `.specdojo/exec-defaults.yaml` | 難易度別の振り分け・provider 別起動コマンド・rate limit ポリシー・同時実行上限 | システム     |
 
 `sch-strategy` は通常、phase に「どんな能力が必要か」を書き、`.specdojo/agent-members.yaml` の候補から自動選択します。provider の利用枠を計画する phase だけは `agent` で個体を指名できます。
 
@@ -93,7 +93,7 @@ pipeline では `agent_pipeline.stages` を `executor`、`reporter` の順に定
 
 ## 3. エージェントの定義
 
-`.specdojo/agent-members.yaml` の member には `type: agent` と `provider`・`capabilities`・`proficiency`・`priority` を定義します。起動コマンドは通常 member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。
+`.specdojo/agent-members.yaml` の member には `type: agent` と `provider`・`capabilities`・`proficiency`・`priority` を定義します。特定のモデルを表す実体には `model` と、provider が対応する場合は `effort` も定義できます。起動コマンドは通常 member には書かず、`.specdojo/exec-defaults.yaml` の `providers.<provider>.command_template` を member 属性（`{nickname}`・`{model}`・`{mode}`・`{proficiency}` と `command_params` の変数）で展開して解決します。member の `command` はテンプレートで表現できない特殊構成向けの上書きとしてのみ使います。
 
 ```yaml
 members:
@@ -118,6 +118,33 @@ members:
     priority: 10
 ```
 
+モデルを持つ実体の `nickname` は、モデルの版を含めず、モデルの系統と役割で付けます（例: `opus-executor`・`sol-review-executor`）。版は `model` に記録します。同じモデル系統を既定でない provider から使う場合は、`agy-opus-executor` のように provider 名を前に付けます。従来名など実体を指す名前はトップレベルの `aliases` に置き、`alias_of` で実体または別の alias を指します。
+
+```yaml
+members:
+  - nickname: sol-executor
+    display_name: Sol Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-5.6-sol
+    effort: high
+    mode: edit
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: expert
+    priority: 10
+
+aliases:
+  - nickname: codex-expert-executor
+    alias_of: sol-executor
+```
+
+alias の連鎖は使用できますが、循環してはならず、終端は存在する有効な member でなければなりません。`loadMemberRoster` はこの整合性を読み込み時に検証します。`aliases` のない従来形式も引き続き有効です。
+
+`--by`・`--executor-by`・`--reporter-by`・`--fallback-executor-by`・`--fallback-reporter-by` の指定、Schedule / Job / routine の `agent` には、実体名と alias のどちらも使用できます。alias は command を組み立てる前に実体へ解決され、`{nickname}` と `{model}` には実体の値が入ります。自動選択は初めから実体を候補にします。event・pipeline state・result の actor には、実際に動いた model を追跡できるよう実体名だけを記録します。指定された alias は actor の別フィールドには保存せず、対応関係は agent 名簿を正本とします。
+
 pipeline 専用 agent には `stage_role: executor` または `stage_role: reporter` を指定します。`stage_role` を省略した既存 agent は従来の単一 agent フロー専用です。自動選択では、従来タスクから stage role 付き agent を除外し、pipeline stage から stage role 未指定 agent と異なる stage role の agent を除外します。これにより既存 agent 定義を変更せず、新しい pipeline agent を追加できます。
 
 `exec run --auto` は phase または pipeline stage の `capabilities` をすべて持つ agent を候補にします。`proficiency` が指定されている場合は一致する agent のみを候補にし、未指定の場合は全水準を候補に含めます。候補のソートキーは次の順に評価します。
@@ -128,7 +155,7 @@ pipeline 専用 agent には `stage_role: executor` または `stage_role: repor
 
 ソート後、`exec-defaults.yaml` の `providers.<provider>.max_concurrency` が設定された provider について、現在実行中の agent が上限に達していれば、その provider の候補を除外します。別 provider の候補が残ればそれを実行者に繰り上げます。すべての候補の provider が上限に達している場合は、claim も worktree 生成も行わずにそのタスクを繰り延べます（タスクは `todo` のまま保持され、取りこぼしません）。`--loop` 実行では、agent 終了時に provider の枠を解放し、空いた `--parallel` 枠へ次の Ready タスクを投入します。`max_concurrency` はグローバルな `--parallel` を下げないため、他 provider は並列実行を維持します。auto 選択以外では、register の worktree モードで実行する executor/reporter pipeline（`--parallel` / `--resume` を含む）に適用し、項目ごとの各 stage を provider の空き枠まで待機させます。その他の Schedule phase の `agent`、`--by` / `--edit-by` / `--review-by` / `--executor-by` / `--reporter-by` による明示指定や Schedule task の resume 実行には適用しません。
 
-phase の by-name agent が rate limit になった場合は、別 agent へ自動フォールバックせず待機状態にします。`exec resume` は同じ agent を再開し、運用者が差し替える場合だけ stage override を指定します。
+phase の by-name agent や `--executor-by` / `--reporter-by` で指名した agent の rate limit は、`--on-rate-limit stop|wait|fallback` で扱いを選べます。`stop`（既定）は従来どおり待機状態にし、`wait` は provider の reset / retry-after（無ければ `cooldown_seconds`）まで待って同じ段を同じ agent で1回再開します。待ち時間が `pinned.max_wait_seconds`（既定8時間）を超える、または再開時刻が得られない場合は停止します。`fallback` は `--fallback-executor-by` / `--fallback-reporter-by`（または後述の既定）で指定した agent へ1回だけ切り替え、未指定時や fallback も rate limit の場合は停止します。`exec resume` でも同じ指定が使えます。
 
 ## 4. 実行フロー
 
@@ -184,9 +211,19 @@ rate_limit_detection:
     - "rate limit"
     - "429"
 
+# provider API へ接続できない場合の文言は provider ごとの設定を推奨
+connection_error_detection:
+  stderr_patterns:
+    - "ECONNREFUSED"
+
 rate_limit_policy:
   cooldown_seconds:
     rate_limit: 900
+  pinned:
+    action: stop # stop | wait | fallback。CLI の --on-rate-limit が優先
+    max_wait_seconds: 28800 # 既定も8時間
+    # fallback_executor_by: claude-expert-executor
+    # fallback_reporter_by: claude-reporter
   on_non_critical:
     action: skip
   on_critical:
@@ -199,11 +236,73 @@ rate_limit_policy:
     on_exhausted: block
 ```
 
-`test-integration` は組み込み許可リストで `npm run test:integration` へ解決されます。設定や executor evidence に command・引数を書くことはできません。未知 ID、重複 ID は agent 起動前の設定エラーになります。親 runner は `shell: false` の固定 argv で実行し、現時点で許可される ID は `validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md` の 7 つです。
+複数 project が同じ `exec-defaults.yaml` を参照し、一部の project だけに親検証を足す場合は、`.specdojo/specdojo.config.json` の `projects.<id>.run.parent_validations` を使います。この配列は共有 defaults の `pipeline.parent_validations` を置き換えず、その後ろへ指定順に追加されます。
+
+```json
+{
+  "projects": {
+    "prj-0001": {
+      "run": { "exec_defaults": ".specdojo/exec-defaults.yaml" }
+    },
+    "prj-0002": {
+      "repos": [{ "name": "specdojo-lp", "path": "../specdojo-lp" }],
+      "run": {
+        "exec_defaults": ".specdojo/exec-defaults.yaml",
+        "parent_validations": [
+          { "id": "typecheck", "repo": "specdojo-lp" },
+          { "id": "lint-ts", "repo": "specdojo-lp" }
+        ]
+      }
+    }
+  }
+}
+```
+
+この例では共有 defaults の検証は両 project に適用され、`specdojo-lp` の 2 件は `prj-0002` の run だけに適用されます。`prj-0001` は `specdojo-lp` を `repos` に持たなくても影響を受けません。共有側と project 側に同じ ID・同じ `repo` の組を書くと、合成後の重複として agent 起動前にエラーになります。project 固有の検証も親 runner が固定 argv で実行し、evidence には `source: runner` と実行先の `repo` が記録されます。
+
+`wait` の待機中は、同一 worktree と register / pipeline の状態を別 run から保護するため project の実行ロックを保持します。register worktree の `--join` 実行は共有枠の範囲で引き続き動作できます。wait / fallback の再開時刻と切替元・切替先は pipeline state と executor evidence に記録されます。
+
+### 5.1. register の難易度別振り分け
+
+`routing` は、個票の `difficulty`（`hard` / `medium` / `easy`）ごとに register pipeline の executor・reporter と、指名した agent が rate limit になったときの扱いを定義します。
+
+```yaml
+routing:
+  hard:
+    executor_by: sol-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: wait
+    fallback_executor_by: opus-executor
+    fallback_reporter_by: sonnet-reporter
+  medium:
+    executor_by: flash-high-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: fallback
+    fallback_executor_by: sol-executor
+    fallback_reporter_by: sonnet-reporter
+  easy:
+    executor_by: qwen-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: fallback
+    fallback_executor_by: flash-high-executor
+    fallback_reporter_by: sonnet-reporter
+```
+
+`exec run --register` は個票に `difficulty` があり、対応する表がある場合だけこの指定を使います。個票に難易度がない場合、または対応する表がない場合は、`stage_role` と `priority` による従来の自動選択へ戻ります。CLI の `--executor-by`・`--reporter-by`・`--on-rate-limit`・fallback 指定は、指定した項目だけ表より優先します。`on_rate_limit: wait` でも fallback は接続不能時の切替先として使用されます。
+
+上の `qwen-executor` を使う `easy` の例は、変更範囲が docs・src・tests の内側で完結し、それらの外を変更しない作業に限る運用を前提にしています。難易度は優先度ではなく、必要な推論・判断と安全な変更範囲から決めます。
+
+`specdojo init --exec` は、選択した provider の member に合わせて 3 段階の表を生成します。provider を複数選んだ場合は、後続 provider の executor / reporter を fallback の例にも使います。
+
+`connection_error_detection` は、provider API やローカル LLM へ接続できない失敗を `rate_limit_detection` と同じ終了コード・出力パターンの仕組みで検出します。`--fallback-executor-by` / `--fallback-reporter-by` または `rate_limit_policy.pinned` の対応する fallback があれば、`--on-rate-limit` の値とは独立して代替 agent へ1回だけ切り替えます。fallback が無い場合は通常の agent 失敗として停止します。接続エラーでは同じ agent の `wait` は行いません。切替原因は pipeline state・executor evidence・result に記録されます。文言は provider ごとに異なるため、`providers.<provider>.connection_error_detection` へ置くことを推奨します。
+
+`test-integration` は組み込み許可リストで `npm run test:integration` へ解決されます。設定や executor evidence に command・引数を書くことはできません。未知 ID、重複 ID は agent 起動前の設定エラーになります。親 runner は `shell: false` の固定 argv で実行し、現時点で許可される ID は `validate-schema`、`typecheck`、`test-unit`、`test-integration`、`lint-ts`、`lint-fm`、`lint-md`、`build`、`format-check` の 9 つです。
 
 `typecheck`（`npm run typecheck`）は Vitest と異なり型検査を行うため、executor が残した TypeScript の型エラーを検出します。Vitest は型検査を行わないため、`typecheck` を親検証に含めないと型エラーは test-unit を通過して統合時の pre-commit hook で初めて失敗するため、既定では `test-unit` の前に置いて早めに止めます（PJR-W66B）。
 
 `lint-ts`（`npm run lint:ts`）、`lint-fm`（`npm run lint:fm`）、`lint-md`（`npm run lint:md`）は、executor が残した ESLint・frontmatter・Markdown の lint エラーを agent の段階で検出します。指定しない場合、これらのエラーは統合後の `npm run check` まで持ち越されます（PJR-K1Z5）。
+
+`build`（`npm run build`）と `format-check`（`npm run format:check`）は、別リポジトリ構成でプロダクトリポジトリのビルド確認とコード整形確認を親 runner で実行するために使います。agent の sandbox 内で npm を実行できない環境でも、統合前にビルドと整形の検査を自動化できます（PJR-NS8Y）。
 
 `specdojo.config.json` の project に `repos` を宣言した別リポジトリ構成では、`pipeline.parent_validations` の要素に `{ id, repo }` を書き、検証を実行するリポジトリを割り当てられます（PJR-V96B）。ID だけの要素はプロジェクトリポジトリで実行します。`repo` には、プロジェクトリポジトリを表す `project` か、`repos` で宣言したプロダクトリポジトリの名前を書きます。
 
@@ -219,13 +318,15 @@ pipeline:
 
 - 親 runner は、割り当てたリポジトリの task worktree（`<worktree_base>/<task-id>/<repo>/`）を `cwd` にして検証を実行します。そのリポジトリに変更が無くても省略しません。統合先の破損を検出するためです。
 - evidence の runner 検証には `repo` を記録します。記録するのは、task がプロダクトリポジトリを持つ場合か、要素が `{ id, repo }` の場合です。`repos` を持たない project で ID だけを書いた場合、evidence と実行場所は従来と同じです。
-- executor がプロダクトリポジトリの検証を `not_run` として親 runner へ委譲するときは、`npm --prefix <repo> run <script>` のように対象リポジトリをコマンドへ含めます。runner はコマンドとリポジトリの組で照合し、同じリポジトリに割り当てた同一コマンドの親検証が成功した場合だけ、委譲済みの検証を満たしたものとして扱います。別のプロダクトリポジトリや project リポジトリでの成功は代用しません。
+- executor がプロダクトリポジトリの検証を `not_run` または `not_applicable` として報告するときは、`npm --prefix <repo> run <script>`、`<repo>:<path>`、または `$SPECDOJO_REPO_<NAME>` / `${SPECDOJO_REPO_<NAME>}` のように対象リポジトリをコマンドへ含めます。runner はコマンドとリポジトリの組で照合し、同じリポジトリに割り当てた同一コマンドの親検証が成功した場合だけ、executor の報告を無視して親検証を正とします。別のプロダクトリポジトリや project リポジトリでの成功は代用しません。
 - ログと block 理由では、プロダクトリポジトリの検証を `<repo>:<id>`（例: `app2:test-unit`）と表示します。
 - task の worktree が無いリポジトリへ割り当てた検証は、コマンドを起動せずに `failed` になります。`repos` に無い名前を書いた場合も同じです。
 - 同じ `id` と `repo` の組の重複、`id`・`repo` 以外のキー、`repo` の無いオブジェクトは、agent 起動前の設定エラーになります。
 - 実行するコマンドは、どのリポジトリでも ID ごとの固定 argv です（例: `test-unit` は `npm run test:unit`）。リポジトリ別に command や npm script 名を指定する手段は設けません。プロダクトリポジトリの npm script 名が異なる場合は、プロダクト側の `package.json` に許可リストと同じ名前の script（`test:unit` など）を用意してください。用意できない検証は、そのリポジトリへ割り当てないでください。script が無いまま割り当てると、`npm run` が失敗して親検証は `failed` になります。
 
 `run.register_execution` は、`exec run --register` の既定の実行場所です。`worktree` または `in-place` を指定します。省略時は既存リポジトリとの互換性のため `in-place` です。CLI の `--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。
+
+`run.register_post_review` は、register の worktree 統合後に読み取り専用 review pipeline を実行し、todo / issue を verdict に応じて自動 close または `waiting` へ遷移するかを指定する boolean です。既定は `false` です。CLI の `--post-review` でもその run だけ有効にできます。review executor の既定は `claude-expert-review-executor` で、`--review-by` が優先されます。詳しい判定と、runner 自身を変更した項目を自動 close しない規則は [exec運用ガイド](exec-operation-guide.md) を参照してください。
 
 `run.max_concurrent_runs` は、同じ project で同時に動かせる `exec run` プロセスの数の上限です。最初の run と、register の worktree 実行へ `--join` で合流する run の合計で数えます。正の整数だけを指定でき、省略時や不正な値の場合は `4` です。`1` を指定すると `--join` は無効になります。現在の使用数は `exec slots --project <project-id>` で確認できます。
 
@@ -235,9 +336,10 @@ pipeline:
 
 provider ごとに挙動が異なる設定は `providers.<provider>` に置きます。各キーは対応するグローバル値を完全に置き換え、未指定のキーはグローバル値にフォールバックします。`<provider>` は `pm-members[].provider` に対応します。指定できるキーは次のとおりです。
 
-- `command_template`: その provider の agent を起動するコマンドテンプレート。`{nickname}`・`{mode}`・`{proficiency}` と `command_params` の変数を member 属性で展開します。グローバル既定は持ちません。
+- `command_template`: その provider の agent を起動するコマンドテンプレート。`{nickname}`・`{model}`・`{mode}`・`{proficiency}` と `command_params` の変数を member 属性で展開します。`model` のない従来 member は、これまでどおり `command_params` の `model` を使用できます。グローバル既定は持ちません。
 - `command_params`: テンプレートの追加変数表。`by_mode.<mode>`、`by_proficiency.<proficiency>`、`by_nickname.<nickname>` に変数名と値の組を置きます。同じ変数は `by_nickname`、`by_proficiency`、`by_mode` の順で優先します。
 - `rate_limit_detection`: provider 固有の検出シグナル（`stderr_patterns` を優先します）。
+- `connection_error_detection`: provider API やローカル LLM へ接続できない場合の検出シグナル（`stderr_patterns` を優先します）。
 - `rate_limit_policy`: provider 固有のリトライ／フォールバック／block ポリシー。
 - `rate_limit_policy.cooldown_seconds`: reset / retry-after が無い retryable signal にだけ使う明示的な延期秒数。未指定の kind は再開時刻を推定しません。
 - `max_concurrency`: その provider の agent を 1 ラウンドで同時に走らせる上限（正の整数）。未指定・0 以下・非整数は「上限なし」として扱います。register の worktree 実行では、`--join` で合流した run を跨いで数えます。
@@ -247,26 +349,34 @@ provider ごとに挙動が異なる設定は `providers.<provider>` に置き�
 ```yaml
 providers:
   claude:
-    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
+    command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"
+    command_params:
+      by_mode:
+        edit: { agent: claude-executor }
+        review: { agent: claude-review-executor }
+        report: { agent: claude-reporter }
 
   codex:
     command_template: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model {model} -c model_reasoning_effort="{effort}"'
     command_params:
-      by_proficiency:
-        normal: { model: gpt-5.4-mini, effort: medium }
-        expert: { model: gpt-5.5, effort: high }
+      by_proficiency: # model は実体の member の model を使い、effort だけを切り替える
+        normal: { effort: medium }
+        expert: { effort: high }
 
   antigravity:
     command_template: 'agy --sandbox --add-dir "$(pwd)" --model {model} -p "$(cat)"'
+    # model を持たない従来の 1 段の member だけが、次の model を使う
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.1-pro-high }
+        expert: { model: gemini-3.8-flash-high }
       by_nickname:
-        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-expert-executor: { model: claude-opus-5-5-high }
 ```
 
 `by_nickname` は、同じ provider の一部 member だけモデルなどを差し替える用途です。層をまたぐ同名変数は意図的な上書きとして許可されます。一方、`nickname`、`mode`、`proficiency` は組み込み変数なので、どの `command_params` 層でも再定義できません。
+
+Claude Code と OpenCode は、member の identity と `--agent` で選ぶ役割定義を分けます。実体 member の `model` は `{model}` へ、`command_params` の `agent` は `{agent}` へ展開し、同じ役割ファイルを複数モデルで共有します。edit / review / report は `by_mode`、expert や grade のように mode だけで一意に決まらない役割は `by_proficiency` または `by_nickname` で `agent` を上書きします。
 
 `max_concurrency` は、同一ホストの単一モデルを共有する provider（例: ローカル Ollama の `opencode`）が複数同時起動でメモリ競合・モデルロード待ちにより不安定になるのを防ぐために使います。グローバルな `--parallel` を下げずに、その provider だけを直列化できます。register の並列 pipeline では executor と reporter の各 stage が個別に枠を取得するため、別 provider の executor を並列化しつつ、同一 provider の reporter だけを直列化できます。
 
@@ -334,7 +444,12 @@ members:
 providers:
   opencode:
     max_concurrency: 1
-    command_template: "opencode run --agent {nickname}"
+    command_template: "opencode run --agent {agent} --model {model}"
+    command_params:
+      by_mode:
+        edit: { agent: opencode-executor }
+        review: { agent: opencode-review-executor }
+        report: { agent: opencode-reporter }
 ```
 
 ### 6.2. クラウド executor とローカル reporter の混在構成
@@ -408,9 +523,9 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 - 親検証は失敗時だけ出力を保存し、成功時は要約だけを記録します。失敗ログは `parent-validation-output` として `log_refs` から参照します。同じ run の resume や統合段の再検証では attempt 番号を増やして新しいログを追加し、以前の失敗ログを上書きしません。親検証の要約は 1,000 文字以内で先頭と末尾を残すため、末尾に出る失敗ケース名と件数を evidence から確認できます。
 - evidence ディレクトリは Git の管理対象です。成功して統合された run のログは履歴に残り、失敗中の worktree では未コミットのまま保持されます。`--force-restart` などで worktree を破棄すると未コミットログも失われるため、必要な調査を先に行います。既知パターンは保存前に秘匿しますが、未知形式の秘密が残る可能性を考慮し、ログを外部共有する前に内容を確認します。
 - executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`）を出します。`validations[].status` は `passed` / `failed` / `not_run` / `not_applicable` / `requires_human` のいずれかです。`not_applicable` はリポジトリが検査の適用条件を満たさない場合に使い、`reason` へ理由を必ず記録します。`requires_human` は、実 agent CLI の起動、利用枠や課金を伴う操作、認証情報やホスト側の操作など、agent の sandbox から実行できない確認だけに使います。実行できるが省略した検証には使わず、`not_run` として記録します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
-- `pipeline.parent_validations` には `validate-schema`（`npm run validate:schema`）、`typecheck`（`npm run typecheck`）、`test-unit`（`npm run test:unit`）、`test-integration`（`npm run test:integration`）、`lint-ts`（`npm run lint:ts`）、`lint-fm`（`npm run lint:fm`）、`lint-md`（`npm run lint:md`）を指定できます。親 runner は executor の成功後・reporter の起動前に、指定順で固定 argv の検証を実行します。
-- executor prompt には設定済み ID と対応コマンドを明示します。executor はそのコマンドや対象限定版を sandbox 内で実行せず、親 runner の結果だけを `source: runner` と許可リスト `id` 付きで同じ `validations` 配列へ保存します。これにより sandbox 内で成立しない検証を親へ移した場合も二重実行しません。
-- result の `changed_files` のパスは evidence の `changes` から、execution の evidence、project register とその派生ビュー、当該 result という runner 管理記録を除いて runner が機械生成します。除外後の変更一覧だけを reporter へ渡し、edit の変更説明は evidence のパスと対にして受け取ります。runner はパスで突き合わせるため、説明の順序は問いません。説明が不足したパスには差分参照を促す既定文を記録し、evidence にないパスの説明は捨てます。`outcome` と `block_reason` は stage の状態・終了コード・保護機構が保存した理由・executor / 親 runner の検証から機械生成します。reporter の JSON Schema は文章項目と対応づけ用のパスだけを受け付け、いずれかの検証が failed または `not_run` なら、reporter の文章にかかわらず機械判定は blocked です。ただし、executor が `not_run`（親 runner へ委譲）と記録したコマンドを、親 runner が同じリポジトリで同じコマンドとして実行し成功していれば、その `not_run` は満たされたものとして扱います。さらに、`npm run <name>` に対応する script がない、`npx <package>` の package が `dependencies` / `devDependencies` にない、または SpecDojo サブコマンドの設定上の適用条件を満たさないことを runner が機械的に確定できる場合、その `not_run` は block せず、edit result の申し送りへ「適用外の検証（runner の判定）」として追記します。SpecDojo の起動形は `specdojo <subcommand>`、`npx specdojo <subcommand>`、ソース／配布済み CLI の直接起動を認識し、`catalog validate` は対象 project の `catalog_path` で判定します。対象 project は、コマンドの `--project <id>`、run の対象 project（runner が execution path に一致する project を設定から特定したもの）、`current_project` の順に決めます。別の project が `catalog_path` を持っていても、run の対象 project に `catalog_path` がなければ適用外です。対象 project に `catalog_path` があっても、executor の変更（runner 管理記録を除き、rename は変更前後の両方を見ます）が `docs/ja/projects/` 配下に及ばない run では、plan の共通規約の検証表と同じく適用外とし、executor の `not_applicable` も受理します。変更が及ぶ run では従来どおり適用対象です。また、`<repo>:<path>` を引数に含むコマンドや `--prefix <repo>` 付きのコマンドは、対象 project が `repos` で宣言したそのプロダクトリポジトリの `package.json` で script と依存を判定します（`--prefix` はリポジトリ名か設定の `path` と一致するものを対象にします）。設定が読めない、対象 project を特定できない、または適用条件を未定義のサブコマンドは機械的な救済をせず、通常の `not_run` として扱います。executor の failed は親 runner の成功や適用外判定で打ち消しません。`npm run check` のように npm script を `&&` でつないだだけの合成コマンドを executor が `not_run` とした場合は、対象リポジトリの `package.json` の script を展開し、構成する各コマンドが同じリポジトリの親検証か executor 自身の検証で通っていれば満たされたものとして扱います。`npm test` は、`npm run test:unit` と `npm run test:integration` の両方が通っていれば満たされたものとします。構成するコマンドの script の中身と同じコマンドを executor が直接実行して通した場合も満たします（`tsx` の起動の書き方の違いはそろえて比べます）。任意のシェルを含む script は展開しません。理由付きの `not_applicable` は block の理由にせず、runner が edit result の申し送りへ「適用外の検証: `<コマンド>`（<理由>）」として機械的に追記します。ただし、理由がない場合、`npm run <name>` の script が存在する場合、または `npx <package>` の package が `dependencies` / `devDependencies` に存在する場合は誤申告として blocked にします。SpecDojo サブコマンドは package の有無だけでは反証せず、既知の適用条件を設定から判定します。適用条件が未定義なら理由付きの agent の申告に従います。`specdojo index build`（`npx specdojo index build`・`node --import tsx src/specdojo.ts index build` などの起動形を含みます）は runner が担う検証です。出力先の `.specdojo/doc-index.json` は agent が書き込めず、index は worktree の準備と統合の前に runner が再生成するため、executor への指示では実行も記録もしないよう伝えます。executor が `not_run` / `not_applicable` と記録しても block の理由にせず、`not_run` の場合は edit result の申し送りへ「runner が担う検証: `<コマンド>`（<理由>）」として追記します。runner の再生成が失敗した場合は worktree の準備で run が止まるか、runner の検証の失敗として block するため、満たしたものとは扱いません。executor の failed は救済せず、ほかの SpecDojo サブコマンドの `not_run` の扱いも変えません。executor の `requires_human` は block の理由にせず、runner が edit result の申し送りへ「人の確認が必要: `<コマンド>`（<要約>）」として機械的に追記します。項目は review へ進み、人が確認してから close します。
+- `pipeline.parent_validations` には `validate-schema`（`npm run validate:schema`）、`typecheck`（`npm run typecheck`）、`test-unit`（`npm run test:unit`）、`test-integration`（`npm run test:integration`）、`lint-ts`（`npm run lint:ts`）、`lint-fm`（`npm run lint:fm`）、`lint-md`（`npm run lint:md`）、`build`（`npm run build`）、`format-check`（`npm run format:check`）を指定できます。親 runner は executor の成功後・reporter の起動前に、指定順で固定 argv の検証を実行します。
+- executor prompt には設定済み ID と対応コマンドを明示します。executor はそのコマンドや対象限定版を sandbox 内で実行せず、executor evidence の validations にも含めなくてよいものとします。親 runner の結果は `source: runner` と許可リスト `id` 付きで同じ `validations` 配列へ保存します。executor が同じ検査を `not_run` または `not_applicable` として含めた場合も、同じリポジトリで実行された親 runner の結果を正とします。これにより sandbox 内で成立しない検証を親へ移した場合も二重実行せず、executor の重複報告で run を止めません。
+- result の `changed_files` のパスは evidence の `changes` から、execution の evidence、project register とその派生ビュー、当該 result という runner 管理記録を除いて runner が機械生成します。除外後の変更一覧だけを reporter へ渡し、edit の変更説明は evidence のパスと対にして受け取ります。runner はパスで突き合わせるため、説明の順序は問いません。説明が不足したパスには Git の変更メタデータ（追加・変更・削除・名前の変更、行数）を記録し、変更ファイルが多い場合（50 件超）はディレクトリごとに集約して記録します。evidence にないパスの説明は捨てます。`outcome` と `block_reason` は stage の状態・終了コード・保護機構が保存した理由・executor / 親 runner の検証から機械生成します。reporter の JSON Schema は文章項目と対応づけ用のパスだけを受け付け、いずれかの検証が failed または `not_run` なら、reporter の文章にかかわらず機械判定は blocked です。ただし、executor が `not_run` または `not_applicable` と記録したコマンドを、親 runner が同じリポジトリで同じコマンドとして実行し成功していれば、親 runner の結果を正として executor の報告を無視します。さらに、`npm run <name>` に対応する script がない、`npx <package>` の package が `dependencies` / `devDependencies` にない、検査の対象となる種類の変更ファイルがない、または SpecDojo サブコマンドの設定上の適用条件を満たさないことを runner が機械的に確定できる場合、その `not_run` は block せず、edit result の申し送りへ「適用外の検証（runner の判定）」として追記します。変更ファイル種別で判定する対応は共通規約の検査表を正本とし、`validate:schema:file` は `*.yaml` / `*.yml`、Prettier は `*.md` / `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`、markdownlint は `*.md` の変更がある場合だけ適用対象とします。rename は変更前後の両方を見て、プロダクトリポジトリのコマンドはそのリポジトリの変更だけで判定します。`typecheck` など、この対応に含まれない検査の判定は変更しません。SpecDojo の起動形は `specdojo <subcommand>`、`npx specdojo <subcommand>`、ソース／配布済み CLI の直接起動を認識し、`catalog validate` は対象 project の `catalog_path` で判定します。対象 project は、コマンドの `--project <id>`、run の対象 project（runner が execution path に一致する project を設定から特定したもの）、`current_project` の順に決めます。別の project が `catalog_path` を持っていても、run の対象 project に `catalog_path` がなければ適用外です。対象 project に `catalog_path` があっても、executor の変更（runner 管理記録を除き、rename は変更前後の両方を見ます）が `docs/ja/projects/` 配下に及ばない run では、plan の共通規約の検証表と同じく適用外とし、executor の `not_applicable` も受理します。変更が及ぶ run では従来どおり適用対象です。また、`<repo>:<path>` を引数に含むコマンド、`--prefix <repo>` 付きのコマンド、または `$SPECDOJO_REPO_<NAME>` / `${SPECDOJO_REPO_<NAME>}` を含むコマンドは、対象 project が `repos` で宣言したそのプロダクトリポジトリの `package.json` で script と依存を判定します（`--prefix` はリポジトリ名か設定の `path` と一致するものを対象にします）。設定が読めない、対象 project を特定できない、または適用条件を未定義のサブコマンドは機械的な救済をせず、通常の `not_run` として扱います。executor の failed は親 runner の成功や適用外判定で打ち消しません。`npm run check` のように npm script を `&&` でつないだだけの合成コマンドを executor が `not_run` とした場合は、対象リポジトリの `package.json` の script を展開し、構成する各コマンドが同じリポジトリの親検証か executor 自身の検証で通っていれば満たされたものとして扱います。`npm test` は、`npm run test:unit` と `npm run test:integration` の両方が通っていれば満たされたものとします。構成するコマンドの script の中身と同じコマンドを executor が直接実行して通した場合も満たします（`tsx` の起動の書き方の違いはそろえて比べます）。任意のシェルを含む script は展開しません。理由付きの `not_applicable` は block の理由にせず、runner が edit result の申し送りへ「適用外の検証: `<コマンド>`（<理由>）」として機械的に追記します。ただし、理由がない場合、変更ファイル種別を含む適用条件を満たした `npm run <name>` の script が存在する場合、または同条件を満たした `npx <package>` の package が `dependencies` / `devDependencies` に存在する場合は誤申告として blocked にします。SpecDojo サブコマンドは package の有無だけでは反証せず、既知の適用条件を設定から判定します。適用条件が未定義なら理由付きの agent の申告に従います。`specdojo index build`（`npx specdojo index build`・`node --import tsx src/specdojo.ts index build` などの起動形を含みます）は runner が担う検証です。出力先の `.specdojo/doc-index.json` は agent が書き込めず、index は worktree の準備と統合の前に runner が再生成するため、executor への指示では実行も記録もしないよう伝えます。executor が `not_run` / `not_applicable` と記録しても block の理由にせず、`not_run` の場合は edit result の申し送りへ「runner が担う検証: `<コマンド>`（<理由>）」として追記します。runner の再生成が失敗した場合は worktree の準備で run が止まるか、runner の検証の失敗として block するため、満たしたものとは扱いません。executor の failed は救済せず、ほかの SpecDojo サブコマンドの `not_run` の扱いも変えません。executor の `requires_human` は block の理由にせず、runner が edit result の申し送りへ「人の確認が必要: `<コマンド>`（<要約>）」として機械的に追記します。項目は review へ進み、人が確認してから close します。
 - reporter の出力は JSON Schema で厳格に検証します。形式不正のときは同じ plan と evidence のまま reporter だけを最大 3 回再実行し、executor は再実行しません。
 - reporter stage の再開では、現在の設定 ID と一致する親検証が保存済み evidence にそろっている場合だけ executor evidence を再利用します。`{ id, repo }` を使う場合は、ID とリポジトリの組が一致することを求めます。再実行時も同じ割り当てで、各リポジトリの worktree を `cwd` にします。保存済みの親検証がすべて成功していれば再実行しません。`failed` / `not_run` があれば、親 runner が現在の worktree で固定許可リストの親検証を再実行し、同じ ID の結果を evidence 上で置換してから reporter へ渡します。過去の親検証ログは置換せず、新しい失敗ログだけを追加します。executor 由来の検証は再実行・置換しません。設定 ID が変わった、または結果が欠けている場合、Schedule 実行は新しい executor run としてやり直し、register 実行は明示的な再実行を促して再開を拒否します。
 - result の frontmatter は runner が scaffold した内容を保ち、本文は検証済みの reporter 文章と evidence 由来の事実を組み合わせて runner が描画します。reporter はファイルを書きません。
@@ -423,7 +538,7 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 
 | provider    | 配布内容                                                                                                                                              | 配置先                                 |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| claude      | `agents/*.md`、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                                                 | `.claude/agents/`、`.specdojo/claude/` |
+| claude      | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                        | `.claude/agents/`、`.specdojo/claude/` |
 | codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）                                                                                               | `.codex/agents/`                       |
 | opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                             | `.opencode/agents/`                    |
 | copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
@@ -460,6 +575,34 @@ specdojo config scaffold --provider claude
 - `settings.*.json` の `Edit(...)` / `Write(...)` パスパターンの調整は利用者に委ねます。scaffold は `.specdojo/specdojo.config.json` のパス設定に基づく書き換えを行いません（テンプレートを事実上の推奨レイアウト前提で配布します）。
 - 将来 provider を追加する場合は `templates/<provider>/` を追加し、`package.json` の `files` に含めます。repository 内へのコピーは provider 名からディレクトリを解決します。ユーザーディレクトリ設定も扱う provider だけは、グローバル設定原本と配置先を実装の許可リストへ明示します。
 
+### 7.2. agent の名簿の 2 段構成と移行
+
+`specdojo init --exec` と `config scaffold` が配布する agent の名簿と定義は、実体と別名の 2 段構成です（0.4.0 から）。実体は model の系統と役割で名付け、provider・`model`・役割を持ちます。従来の名前は `aliases` で実体を指す別名として残します。claude と opencode の agent の定義は役割（executor・review executor・reporter）ごとの 1 ファイルで `model` を持たず、`command_params.by_mode` で mode から定義を選び、model は実体の `model` を `--model {model}` で渡します。
+
+| provider    | init が生成する実体                                               | 別名（従来の名前）                                                   | model の書き場所                                     |
+| ----------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------- |
+| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`    | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                           |
+| codex       | `terra-executor`・`terra-review-executor`・`terra-reporter`       | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（effort は `by_proficiency`）         |
+| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`       | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み） |
+| antigravity | `flash-executor`・`flash-review-executor`・`flash-reporter`       | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                  |
+| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter` | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                 |
+
+init は選んだ provider の実体だけを名簿へ書き、別名は向き先の実体が選ばれたものだけを残します。次の手順の案内（`--executor-by` / `--reporter-by`）には別名を示します。antigravity の `agent-members-snippet.yaml` は実体を `disabled: true` で配布するため、別名は末尾にコメントの例として置きます。別名は無効な member を指せないので、向き先の実体を有効にしたものだけを `aliases` へ写します。
+
+既存の利用者の 1 段の名簿（`aliases` も `model` も持たない member と、`--agent {nickname}` の `command_template`）は、変更しなくてもそのまま動きます。
+
+- `aliases` は省略でき、`model` を持たない member は従来どおり `command_params`（`by_proficiency` など）の `model` で起動します。member の `model` がある場合だけ、そちらが優先されます。
+- init は既存の `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml` を上書きしません。scaffold も、`--force` を指定しない限り既存の agent の定義を上書きしません。
+- 注意点は、`--force` で claude / opencode の定義を役割ごとの定義（`model` を持たない）に置き換えた場合です。従来の `--agent {nickname}` のままだと model が渡らず、provider の既定の model で起動します。置き換える場合は、次の手順で 2 段へ移します。
+
+1 段から 2 段へ移す手順は次のとおりです。`.specdojo/` は agent が書き換えられない保護設定のため、人間（または orchestrator の承認を経た操作）が行います。
+
+1. member ごとに、使っている model の系統と役割から実体の名前を決め（`claude-expert-executor` が opus なら `opus-executor`）、`nickname` を実体の名前へ変え、`model`（版を含む ID）を加えます。同じ系統を既定でない provider から使う場合は `agy-opus-executor` のように provider 名を前に付けます。
+2. 従来の名前を、トップレベルの `aliases` に `nickname` と `alias_of`（実体の名前）の組で加えます。Job・routine・`sch-strategy`・文書・スクリプトにある名前は、別名として解決されるため変えなくて構いません。
+3. `.specdojo/exec-defaults.yaml` の `command_params.by_proficiency` などにある `model` を外し、member の `model` を正とします。codex の reasoning effort のように model 以外の値は残します。
+4. claude と opencode は、`templates/<provider>/agents/` の役割ごとの定義を `config scaffold --provider <name> --force` で配置し（手を加えた定義がある場合は差分を確認してから）、`command_template` を `--agent {agent} --model {model}` と `command_params.by_mode` の形へ改めます。model ごとに複製していた定義ファイル（`claude-expert-review-executor.md` など）は、別名から参照されなくなったら削除します。
+5. `npx specdojo exec run --register <id> --executor-by <alias> --reporter-by <alias> --dry-run` などで、別名から実体が選ばれ、起動のコマンドに `--model` の値が入ることを確かめてから、変更をコミットします。event と result の actor には実体の名前が記録されます。
+
 ## 8. agent 権限とプロンプトインジェクション対策
 
 exec の plan は done_criteria と成果物本文から生成され、agent は無人で実行されます。成果物やレビュー対象文書に埋め込まれた指示（プロンプトインジェクション）によって、agent がタスク外のファイル書き換え・情報持ち出しを行うリスクを前提に、権限を設計します。
@@ -491,8 +634,8 @@ providers:
     command_template: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model {model} -c model_reasoning_effort="{effort}"'
     command_params:
       by_proficiency:
-        normal: { model: gpt-5.4-mini, effort: medium }
-        expert: { model: gpt-5.5, effort: high }
+        normal: { effort: medium }
+        expert: { effort: high }
 ```
 
 - `--sandbox workspace-write`: 書き込みを worktree（cwd 配下）と一時ディレクトリに限定します。`danger-full-access` は claude の bypassPermissions に相当するため使いません。
@@ -537,11 +680,11 @@ providers:
     command_params:
       by_proficiency:
         normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.1-pro-high }
+        expert: { model: gemini-3.8-flash-high }
       by_nickname:
-        agy-claude-executor: { model: claude-sonnet-4-6 }
-        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
-        agy-claude-expert-review-executor: { model: claude-opus-4-6-thinking }
+        agy-claude-executor: { model: claude-sonnet-5-5-medium }
+        agy-claude-expert-executor: { model: claude-opus-5-5-high }
+        agy-claude-expert-review-executor: { model: claude-opus-5-5-high }
         agy-gpt-executor: { model: gpt-oss-120b-medium }
 ```
 
@@ -582,7 +725,7 @@ providers:
 
 ### 8.4. 親 runner が実行する設定と Git 状態の変更ガード
 
-commit 許可リストだけでは、register 由来の除外リスト方式や、commit より前に親 runner が検証を起動する経路を守れません。そのため `src/exec-agent-protected-config.ts` の固定定義で、次のパスを全 provider 共通の書き込み禁止対象にします。
+commit 許可リストだけでは、register 由来の除外リスト方式や、commit より前に親 runner が検証を起動する経路を守れません。そのため `src/exec/agent-protected-config.ts` の固定定義で、次のパスを全 provider 共通の書き込み禁止対象にします。
 
 - `package.json`、`lefthook.yml` / `.lefthook.yml`
 - `.specdojo/**`（ただし既知の生成物 `.specdojo/doc-index.json` は除く）
@@ -597,17 +740,17 @@ runner は agent の各試行前後でファイル内容を比較し、差分が
 
 保護対象の候補はパスの固定定義で分類し、実際に block する対象は `agentProtectedConfigPaths()` で確定します。`.specdojo/doc-index.json` は `index build` が再生成し commit しない既知の生成物なので、リポジトリの ignore 規則にも一致する場合だけ除外します。判定には `git check-ignore --no-index` を使い、過去に追跡されていた worktree でも生成物として扱います。任意の ignore 対象を除外すると、agent が `.gitignore` と新規設定を同時に作って回避できるため、除外は既知の生成物の固定リストに限定します。Git による判定が失敗した場合や ignore 規則から外れた場合は除外せず、保護側へ倒します。agent 前後の snapshot と commit 前の再検査はこの判定を共有します。`pm-members.yaml` は schema により人間だけを受け付ける通常成果物なので、この保護対象には含めません。
 
-agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。除去対象は`src/git-environment.ts`の`GIT_LOCAL_ENV_VARS`を正本とします。Vitestの全3設定も共通setupを使ってtest module読込前に同じ変数をworkerから除去するため、Git hook経由で`npm test`が起動されても、テストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
+agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。除去対象は`src/shared/git-environment.ts`の`GIT_LOCAL_ENV_VARS`を正本とします。Vitestの全3設定も共通setupを使ってtest module読込前に同じ変数をworkerから除去するため、Git hook経由で`npm test`が起動されても、テストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
 
 TypeScriptのテスト・tool・本体コードが`spawnSync`、`spawn`、`execFileSync`、`execFile`でGitを直接起動する箇所は、AST検査により`gitEnvironment()`から作った`env`だけを許可します。`env: process.env`や単なる`env`プロパティは隔離済みとは扱いません。shell scriptとnpm scriptのGit起動はこのAST検査の対象外ですが、現状のhook経路はVitest setupを必ず通り、hookから直接Gitを起動するテスト用scriptはありません。今後その経路を追加する場合は、入口で`GIT_LOCAL_ENV_VARS`相当を除去する専用検査を追加します。
 
 executor / reporter pipelineのexecutor promptは、commitとrepository設定を親runnerが所有することを明記し、`git commit`およびlocal / global / system configの変更（`user.name` / `user.email`を含む）を禁止します。fixture commitに使うテスト用identityはVitest workerと子プロセスの環境変数だけへ注入し、fixtureを含むrepositoryのlocal configへは書き込みません。
 
-さらに`src/exec-agent-git-state.ts`が各agent試行の直前にagentのcwdから解決したHEAD（commitとsymbolic ref）およびlocal configを記録し、終了直後に比較します。runnerが作成したworktree branchをVS Codeが発見した際に付与する`branch.*.vscode-merge-base`は表示用metadataなので比較から除外します。それ以外のlocal configは順序と重複を保って比較し、`core.bare`などrepository動作に関わる変更を検知します。HEADまたは監視対象設定に差分があれば`agent-git-state-write:`と変更フィールドを標準エラーへ出力し、親検証・reporter・commit・mergeへ進まずblockします。通常のworktree実行だけでなく、in-place、`exec trial`、`exec worktree agent`にも同じ境界を適用します。
+さらに`src/exec/agent-git-state.ts`が各agent試行の直前にagentのcwdから解決したHEAD（commitとsymbolic ref）およびlocal configを記録し、終了直後に比較します。runnerが作成したworktree branchをVS Codeが発見した際に付与する`branch.*.vscode-merge-base`は表示用metadataなので比較から除外します。それ以外のlocal configは順序と重複を保って比較し、`core.bare`などrepository動作に関わる変更を検知します。HEADまたは監視対象設定に差分があれば`agent-git-state-write:`と変更フィールドを標準エラーへ出力し、親検証・reporter・commit・mergeへ進まずblockします。通常のworktree実行だけでなく、in-place、`exec trial`、`exec worktree agent`にも同じ境界を適用します。
 
 設定変更が必要なタスクでは、agent は対象パス、変更理由、提案差分、変更後に必要な検証を result の申し送りへ記載して block します。人間または対話型 orchestrator は agent 実行外で `specdojo exec handoff apply --project <project-id> --register <PJR-ID>` を実行し、表示された提案差分を確認して統合先へ適用・commit します。対話入力では `y` / `yes`、非対話実行では `--yes` が必要で、確認がなければ変更しません。`package.json` の依存定義を変更した場合は、コマンドの案内に従って対応する lock ファイルを再生成・commit してから `exec run --register ... --worktree --resume` で再開します。提案差分がない、切り詰められている、対象パスと一致しない、または統合先へ安全に適用できない場合は自動適用せずエラーにします。agent 用の解除フラグはありません。
 
-ただし block は agent の記入を待たずに成立するため、記入を agent の遵守だけに委ねると申し送りが `_TODO_` のまま残ります。そのため `src/exec-protection-handoff.ts` が、block した時点で機構側から result の申し送り節へ次を自動記録します（`agent-config-write` / `agent-git-state-write` の双方が対象です）。
+ただし block は agent の記入を待たずに成立するため、記入を agent の遵守だけに委ねると申し送りが `_TODO_` のまま残ります。そのため `src/exec/protection-handoff.ts` が、block した時点で機構側から result の申し送り節へ次を自動記録します（`agent-config-write` / `agent-git-state-write` の双方が対象です）。
 
 - 保護機構名と、標準エラーへ出力するものと同じ block メッセージ。
 - 対象パス（`agent-config-write`）または対象フィールド（`agent-git-state-write`）。

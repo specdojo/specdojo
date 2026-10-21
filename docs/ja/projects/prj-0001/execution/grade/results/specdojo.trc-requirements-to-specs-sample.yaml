@@ -3,29 +3,75 @@ version: 1
 document: specdojo:trc-requirements-to-specs-sample
 path: docs/ja/specdojo/samples/trc-requirements-to-specs-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 93
-graded_at: "2026-09-06T03:32:42.814Z"
-graded_by: gemma-expert-executor
+score: 94
+graded_at: "2026-10-20T20:36:40.429Z"
+graded_by: flash-high-executor
 content_hash: 7c8dff121878e967a75fe0a630bb24c80f1228ab81bc3eb2a014037543756ea1
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
+    score: 83
+  consistency:
     score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,14 +81,23 @@ viewpoints:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -54,15 +109,17 @@ finding_counts:
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
+    rule: vp-qe-kata-conformance
     line: 3
-    message: Frontmatter の `based_on` と本文のトレースマトリクスで参照されている仕様 ID が不整合である。
     anchor: "## 1. 目的と適用範囲"
+    message: Frontmatter の `based_on` と本文のトレースマトリクスで参照されている仕様 ID が不整合である。
+    message_ja: Frontmatter の `based_on` と本文のトレースマトリクスで参照されている仕様 ID が不整合である。
   - id: F002
     severity: minor
     rule: vp-ux-language-consistency
     line: 19
-    message: ギャップ欄に rulebook で指定された `_UNDECIDED_:` ではなく `_TODO_:` が使用されており、語彙が統一されていない。
     anchor: >-
       | req-r1-002 | 在庫引当をリアルタイムで更新する | bes-stock-allocation, ifx-msg-stock | 一部充足 | _TODO_: 障害時の再送仕様が未確定          |
       再送方針は IF 仕様で検討中 |
+    message: ギャップ欄に rulebook で指定された `_UNDECIDED_:` ではなく `_TODO_:` が使用されており、語彙が統一されていない。
+    message_ja: ギャップ欄に rulebook で指定された `_UNDECIDED_:` ではなく `_TODO_:` が使用されており、語彙が統一されていない。

@@ -3,44 +3,99 @@ version: 1
 document: specdojo:opr-batch-sample
 path: docs/ja/specdojo/samples/opr-batch-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 75
-graded_at: "2026-09-05T15:07:27.906Z"
-graded_by: gemma-expert-executor
+score: 67
+graded_at: "2026-10-16T20:04:44.857Z"
+graded_by: agy-expert-executor
 content_hash: d851e89cc823ebc8f607d594f61ab40e44e056a3ab0c391c1485991b6a1a96fd
 categories:
-  consistency:
-    score: 38
+  purpose:
+    score: 75
+  operations:
+    score: 81
+  planning:
+    score: 75
+  business:
+    score: 67
+  architecture:
+    score: 92
   usability:
     score: 83
-  architecture:
-    score: 100
+  implementation:
+    score: 63
   quality:
-    score: 75
+    score: 58
+  consistency:
+    score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
     level: 2
     score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 1
     score: 25
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,39 +103,186 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 0
+  major: 9
+  minor: 12
   note: 0
 findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 1
+    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
+    message: >-
+      The document lacks a clear description of its specific operational purpose, scope, and expected outcomes,
+      presenting only isolated procedure fragments without connecting them to project goals.
+    message_ja: ドキュメントには、具体的な運用の目的、範囲、および期待される成果に関する明確な記述が不足しており、プロジェクトの目標との関連付けがない孤立した手順の断片のみが示されています。
   - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
+    message: Open issues, prerequisites, and operational impact scope required for PO approval or review are not documented.
+    message_ja: POによる承認またはレビューに必要な未解決の問題、前提条件、および運用の影響範囲が文書化されていません。
+  - id: F003
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 6
+    anchor: ""
+    message: >-
+      The procedures lack concrete work units, execution sequence, completion criteria, and assigned role codes
+      necessary for task scheduling and progress tracking.
+    message_ja: 手順には、タスクのスケジューリングと進捗管理に必要な具体的な作業単位、実行順序、完了基準、および割り当てられたロールコードが不足しています。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 6
+    anchor: ""
+    message: >-
+      Risks and dependencies regarding batch failure impacts on subsequent processing schedules and dependent
+      deliverables are not identified.
+    message_ja: バッチの失敗が後続の処理スケジュールや依存する成果物に与える影響に関するリスクと依存関係が特定されていません。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 11
+    anchor: "- エスカレーション:"
+    message: >-
+      Reporting destinations and ticket recording requirements for escalation and rerun decisions are not clearly
+      separated or specified.
+    message_ja: エスカレーションや再実行の決定に関する報告先とチケット記録の要件が、明確に区別または指定されていません。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 6
+    anchor: ""
+    message: >-
+      The document does not describe the operational issues, target users, or business value served by the batch retry
+      and escalation controls.
+    message_ja: ドキュメントには、バッチの再試行およびエスカレーション制御によって提供される運用の課題、対象ユーザー、またはビジネス価値が記載されていません。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 6
+    anchor: ""
+    message: >-
+      Applicable batch scope, exclusions, prerequisite conditions, and acceptance criteria are missing, preventing
+      operators from verifying procedural completeness.
+    message_ja: 適用されるバッチの範囲、除外事項、前提条件、および受け入れ基準が不足しており、オペレーターが手順の完全性を検証することができません。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 6
+    anchor: ""
+    message: >-
+      Stakeholders, primary operators, notification recipients, and agreed responsibilities beyond Ops Lead are not
+      clearly defined.
+    message_ja: ステークホルダー、主要なオペレーター、通知先、および Ops Lead 以外の合意された責任が明確に定義されていません。
+  - id: F009
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 9
+    anchor: "- 同一run_idで再実行可否を確認（冪等性方式に従う）"
+    message: >-
+      Technical constraints, idempotency verification mechanisms, and external system dependencies are not concretely
+      specified.
+    message_ja: 技術的な制約、冪等性の検証メカニズム、および外部システムへの依存関係が具体的に指定されていません。
+  - id: F010
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 6
+    anchor: ""
+    message: >-
+      Concrete execution commands, required input parameters, prerequisite checks, and completion conditions needed to
+      carry out the batch retry are completely missing.
+    message_ja: バッチの再試行を実行するために必要な具体的な実行コマンド、必要な入力パラメータ、前提条件のチェック、および完了条件が完全に欠落しています。
+  - id: F011
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 11
+    anchor: "- エスカレーション:"
+    message: >-
+      Side effects and impact of batch rerun execution on database states, downstream jobs, and related systems are
+      insufficiently identified.
+    message_ja: バッチの再実行がデータベースの状態、ダウンストリームジョブ、および関連システムに与える副作用と影響の特定が不十分です。
+  - id: F012
+    severity: minor
+    rule: vp-dev-testability
+    line: 6
+    anchor: ""
+    message: >-
+      Verification procedures, expected log patterns, and validation steps to confirm successful batch rerun execution
+      are not provided.
+    message_ja: バッチの再実行が正常に完了したことを確認するための検証手順、期待されるログパターン、およびバリデーションステップが提供されていません。
+  - id: F013
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 9
+    anchor: "- 同一run_idで再実行可否を確認（冪等性方式に従う）"
+    message: >-
+      The criteria for verifying whether a rerun is permissible under the idempotency rule are not defined in an
+      objectively testable pass/fail format.
+    message_ja: 冪等性のルールに基づき再実行が許容されるかどうかを検証するための基準が、客観的にテスト可能な Pass/Fail 形式で定義されていません。
+  - id: F014
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
     message: Frontmatter の必須項目 `title` が不足している。
-    anchor: ""
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 6
-    message: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
-    anchor: "## 1. バッチ再実行・失敗時対応"
-  - id: F003
+    message_ja: Frontmatter の必須項目 `title` が不足している。
+  - id: F015
     severity: major
     rule: vp-qe-omissions-consistency
-    line: 45
+    line: 1
+    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
+    message: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
+    message_ja: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 6
+    anchor: ""
     message: >-
       `opr-rulebook` 第 5
       章で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バックアップ・リストア、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線）がすべて省略されており、ルールに違反している。
-    anchor: ""
-  - id: F004
+    message_ja: >-
+      `opr-rulebook` 第 5
+      章で定義されている必須章（概要、適用範囲・前提、定期点検、障害対応、アラート対応、バックアップ・リストア、運用変更、アカウント付与・剥奪、問い合わせ一次対応、証跡、関連文書導線）がすべて省略されており、ルールに違反している。
+  - id: F017
     severity: major
     rule: vp-qe-kata-conformance
-    line: 45
-    message: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 7` とすべきである。
+    line: 1
+    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
+    message: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
+    message_ja: Frontmatter の `rulebook` 指定が `specdojo:opd-rulebook` となっており、成果物種別（operations/OPR）と矛盾している。
+  - id: F018
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 6
     anchor: ""
-  - id: F005
+    message: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 7` とすべきである。
+    message_ja: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 7` とすべきである。
+  - id: F019
     severity: major
     rule: vp-ux-readability
-    line: 45
-    message: 必須構成を大幅に省略しており、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+    line: 6
     anchor: ""
+    message: 必須構成を大幅に省略しており、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+    message_ja: 必須構成を大幅に省略しており、`opr-＜term＞` 文書を正しく作成するためのサンプルとして不十分である。
+  - id: F020
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 運用手順: バッチ再実行・失敗対応 サンプル"
+    message: >-
+      Open issues, prerequisite verification items, and criteria to promote the document from draft to ready are not
+      specified.
+    message_ja: 未解決の問題、前提条件の検証項目、およびドキュメントをドラフトから ready へ昇格させるための基準が指定されていません。
+  - id: F021
+    severity: major
+    rule: vp-ops-operability
+    line: 6
+    anchor: ""
+    message: >-
+      Essential operational procedures including execution tooling, log and trail storage locations, inquiry contacts,
+      and change workflows are completely omitted, preventing operational execution.
+    message_ja: 実行ツール、ログおよびトレイルの保存場所、問い合わせ先、および変更のワークフローを含む不可欠な運用手順が完全に省略されており、運用の実行ができません。

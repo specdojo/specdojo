@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=../../../../specdojo/schemas/v1/job.schema.yaml
+id: job-night-approved-register
+name: 承認済み登録項目の夜間実行
+description: 人が autopilot を承認した open todo・issue だけを実行し、朝報告を作る。
+inputs:
+  max_items:
+    type: integer
+    default: 10
+    minimum: 1
+  parallel:
+    type: integer
+    default: 2
+    minimum: 1
+  max_consecutive_failures:
+    type: integer
+    default: 2
+    minimum: 1
+  on_rate_limit:
+    type: string
+    default: fallback
+    enum: [stop, fallback]
+  fallback_executor:
+    type: string
+    default: codex-executor
+task:
+  mode: command
+  owner: ARC
+  partial_exit_code: 2
+  command: >-
+    {{specdojo}} orchestrator night --project "{{project_id}}"
+    --scheduled-at "{{scheduled_at}}" --max-items "{{inputs.max_items}}"
+    --parallel "{{inputs.parallel}}"
+    --max-consecutive-failures "{{inputs.max_consecutive_failures}}"
+    --on-rate-limit "{{inputs.on_rate_limit}}"
+    --fallback-executor-by "{{inputs.fallback_executor}}"
+  review:
+    agent:
+      executor: claude-expert-review-executor
+      reporter: claude-reporter
+run:
+  idempotency_key: "{{job_id}}:{{scheduled_at}}"

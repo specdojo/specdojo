@@ -1,0 +1,390 @@
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dump, load } from "../shared/yaml.js";
+import { resolveSpecdojoPath } from "../docs/template-resolution.js";
+import {
+  GRADE_LEVEL_REVIEW_VERDICTS,
+  REVIEW_VERDICTS,
+  describeInvalidReviewVerdict,
+} from "./types.js";
+import type { ReviewViewpoint, ReviewViewpointsDoc, ViewpointEvaluation } from "./types.js";
+
+export const COMMON_VIEWPOINTS_ID = "specdojo:pm-review-viewpoints";
+
+type DocumentMetadata = Record<string, unknown>;
+
+function nestedRecord(value: unknown): Record<string, unknown> | undefined {
+  return isRecord(value) ? value : undefined;
+}
+
+/**
+ * Resolve the rulebook ID that represents a document kind. Rulebooks identify themselves,
+ * recipes/samples/deliverables refer to their rulebook directly, and templates carry the
+ * generated document's rulebook in frontmatter_template.
+ */
+export function documentKind(metadata: DocumentMetadata): string | undefined {
+  const direct = metadata["rulebook"];
+  if (
+    typeof direct === "string" &&
+    !["none", "undecided", "not-needed"].includes(direct) &&
+    direct.trim()
+  ) {
+    return direct;
+  }
+
+  const id = metadata["id"];
+  if (metadata["type"] === "rulebook" && typeof id === "string" && id.trim()) return id;
+
+  const frontmatterTemplate = nestedRecord(metadata["frontmatter_template"]);
+  const generatedMetadata = nestedRecord(frontmatterTemplate?.["specdojo"]);
+  const generatedRulebook = generatedMetadata?.["rulebook"];
+  if (
+    typeof generatedRulebook === "string" &&
+    !["none", "undecided", "not-needed"].includes(generatedRulebook) &&
+    generatedRulebook.trim()
+  ) {
+    return generatedRulebook;
+  }
+  return undefined;
+}
+
+/**
+ * Apply a viewpoint's document-kind declaration. Omitted declarations and unclassified
+ * documents remain applicable for backward compatibility unless explicitly excluded.
+ */
+export function viewpointAppliesToDocument(
+  viewpoint: ReviewViewpoint,
+  metadata: DocumentMetadata,
+): boolean {
+  const declaration = viewpoint.document_kinds;
+  if (!declaration) return true;
+  const kind = documentKind(metadata);
+  if (!kind) return declaration.unclassified !== "exclude";
+  if (declaration.exclude?.includes(kind)) return false;
+  return declaration.include === undefined || declaration.include.includes(kind);
+}
+
+const COLLECTIONS = [
+  ["categories", "id"],
+  ["coverage_types", "id"],
+  ["severity_levels", "id"],
+  ["verdict_definitions", "id"],
+  ["viewpoints", "id"],
+  ["role_viewpoint_sets", "role"],
+] as const;
+
+type CollectionName = (typeof COLLECTIONS)[number][0];
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function loadYamlMapping(path: string): Record<string, unknown> {
+  const loaded = load(readFileSync(path, "utf8"));
+  if (!isRecord(loaded)) throw new Error(`Review viewpoints file is not a YAML mapping: ${path}`);
+  return loaded;
+}
+
+function recordArray(
+  doc: Record<string, unknown>,
+  name: CollectionName,
+  path: string,
+): Record<string, unknown>[] {
+  const value = doc[name];
+  if (value === undefined) return [];
+  if (!Array.isArray(value) || value.some((item) => !isRecord(item))) {
+    throw new Error(`Review viewpoints '${name}' must be an array of mappings: ${path}`);
+  }
+  return value as Record<string, unknown>[];
+}
+
+function stringKey(item: Record<string, unknown>, key: string, context: string): string {
+  const value = item[key];
+  if (typeof value !== "string" || !value.trim()) {
+    throw new Error(`Review viewpoints item is missing '${key}': ${context}`);
+  }
+  return value;
+}
+
+function disabledKeys(
+  overlay: Record<string, unknown>,
+  name: CollectionName,
+  path: string,
+): string[] {
+  const disabled = overlay["disabled"];
+  if (disabled === undefined) return [];
+  if (!isRecord(disabled))
+    throw new Error(`Review viewpoints 'disabled' must be a mapping: ${path}`);
+  const value = disabled[name];
+  if (value === undefined) return [];
+  if (!Array.isArray(value) || value.some((item) => typeof item !== "string" || !item.trim())) {
+    throw new Error(`Review viewpoints 'disabled.${name}' must be a string array: ${path}`);
+  }
+  return value as string[];
+}
+
+function mergeCollection(opts: {
+  base: Record<string, unknown>[];
+  patch: Record<string, unknown>[];
+  disabled: string[];
+  key: string;
+  name: CollectionName;
+  path: string;
+}): Record<string, unknown>[] {
+  const { base, patch, disabled, key, name, path } = opts;
+  const order: string[] = [];
+  const values = new Map<string, Record<string, unknown>>();
+
+  for (const item of base) {
+    const itemKey = stringKey(item, key, `common ${name}`);
+    if (values.has(itemKey)) throw new Error(`Duplicate common ${name} key: ${itemKey}`);
+    order.push(itemKey);
+    values.set(itemKey, item);
+  }
+
+  const patchKeys = new Set<string>();
+  for (const item of patch) {
+    const itemKey = stringKey(item, key, `${path} ${name}`);
+    if (patchKeys.has(itemKey)) throw new Error(`Duplicate project ${name} key: ${itemKey}`);
+    patchKeys.add(itemKey);
+    if (!values.has(itemKey)) order.push(itemKey);
+    values.set(itemKey, item);
+  }
+
+  const disabledSet = new Set(disabled);
+  for (const itemKey of disabledSet) {
+    if (patchKeys.has(itemKey)) {
+      throw new Error(`Project ${name} key cannot be both upserted and disabled: ${itemKey}`);
+    }
+    if (!values.has(itemKey)) {
+      throw new Error(`Project disables unknown ${name} key: ${itemKey}`);
+    }
+  }
+
+  return order
+    .filter((itemKey) => !disabledSet.has(itemKey))
+    .map((itemKey) => values.get(itemKey)!);
+}
+
+const VIEWPOINT_EVALUATIONS: readonly ViewpointEvaluation[] = [
+  "deterministic",
+  "referential",
+  "discretionary",
+];
+
+// Values removed when evaluation was redefined by where the judging criterion lives (PJR-WPWB).
+// Old values are rejected with guidance instead of being ignored.
+const LEGACY_VIEWPOINT_EVALUATIONS: Readonly<Record<string, string>> = {
+  agent: "referential or discretionary",
+  human: "referential or discretionary",
+};
+
+function validateViewpointFields(doc: Record<string, unknown>, path: string): void {
+  for (const viewpoint of recordArray(doc, "viewpoints", path)) {
+    const id = String(viewpoint["id"] ?? "(unknown)");
+    // continuous was removed when every viewpoint became a grade target (PJR-K351).
+    // Reject it instead of ignoring it so that an overlay cannot silently expect a narrower scope.
+    if (Object.hasOwn(viewpoint, "continuous")) {
+      throw new Error(
+        `Viewpoint '${id}' uses removed field 'continuous'; every viewpoint is graded, ` +
+          `so delete it and narrow scope with grade_targets or document_kinds: ${path}`,
+      );
+    }
+    const value = viewpoint["evaluation"];
+    if (value === undefined) continue;
+    if (typeof value === "string" && value in LEGACY_VIEWPOINT_EVALUATIONS) {
+      throw new Error(
+        `Viewpoint '${id}' uses removed evaluation '${value}'; use ${LEGACY_VIEWPOINT_EVALUATIONS[value]} ` +
+          `(allowed: ${VIEWPOINT_EVALUATIONS.join(", ")}): ${path}`,
+      );
+    }
+    if (!(VIEWPOINT_EVALUATIONS as readonly unknown[]).includes(value)) {
+      throw new Error(
+        `Viewpoint '${id}' has unknown evaluation '${String(value)}'; allowed: ${VIEWPOINT_EVALUATIONS.join(", ")}: ${path}`,
+      );
+    }
+  }
+}
+
+// verdict_definitions は review の verdict と同じ語彙に限る（PJR-XTAN）。grade_rubric の review_verdict は
+// grade の level を review の入力にする写像であり、level から決まる 3 値だけを許す。
+function validateVerdictVocabulary(doc: Record<string, unknown>, path: string): void {
+  for (const definition of recordArray(doc, "verdict_definitions", path)) {
+    const value = definition["id"];
+    if (!(REVIEW_VERDICTS as readonly unknown[]).includes(value)) {
+      throw new Error(`verdict_definitions has ${describeInvalidReviewVerdict(value)}: ${path}`);
+    }
+  }
+  const rubric = doc["grade_rubric"];
+  if (rubric === undefined) return;
+  if (!isRecord(rubric))
+    throw new Error(`Review viewpoints 'grade_rubric' must be a mapping: ${path}`);
+  const levels = rubric["levels"];
+  if (!Array.isArray(levels)) return;
+  for (const level of levels) {
+    if (!isRecord(level)) continue;
+    const value = level["review_verdict"];
+    if (!(GRADE_LEVEL_REVIEW_VERDICTS as readonly unknown[]).includes(value)) {
+      throw new Error(
+        `grade_rubric level ${String(level["level"])} review_verdict has ` +
+          `${describeInvalidReviewVerdict(value, GRADE_LEVEL_REVIEW_VERDICTS)}: ${path}`,
+      );
+    }
+  }
+}
+
+function validateResolvedInheritance(doc: Record<string, unknown>, projectPath: string): void {
+  const categories = new Set(
+    recordArray(doc, "categories", projectPath).map((item) => String(item.id)),
+  );
+  const coverageTypes = new Set(
+    recordArray(doc, "coverage_types", projectPath).map((item) => String(item.id)),
+  );
+  const viewpoints = recordArray(doc, "viewpoints", projectPath);
+  const viewpointRoles = new Map<string, string>();
+
+  for (const viewpoint of viewpoints) {
+    const id = stringKey(viewpoint, "id", `${projectPath} viewpoints`);
+    const role = stringKey(viewpoint, "role", `${projectPath} viewpoint ${id}`);
+    const category = stringKey(viewpoint, "category", `${projectPath} viewpoint ${id}`);
+    if (!categories.has(category)) {
+      throw new Error(`Viewpoint '${id}' refers to unknown category '${category}': ${projectPath}`);
+    }
+    const coverage = viewpoint["coverage_types"];
+    if (coverage !== undefined) {
+      if (!Array.isArray(coverage) || coverage.some((value) => typeof value !== "string")) {
+        throw new Error(`Viewpoint '${id}' coverage_types must be a string array: ${projectPath}`);
+      }
+      for (const coverageId of coverage) {
+        if (!coverageTypes.has(coverageId as string)) {
+          throw new Error(
+            `Viewpoint '${id}' refers to unknown coverage type '${String(coverageId)}': ${projectPath}`,
+          );
+        }
+      }
+    }
+    viewpointRoles.set(id, role);
+  }
+
+  const assigned = new Set<string>();
+  for (const roleSet of recordArray(doc, "role_viewpoint_sets", projectPath)) {
+    const role = stringKey(roleSet, "role", `${projectPath} role_viewpoint_sets`);
+    const refs = roleSet["viewpoints"];
+    if (!Array.isArray(refs) || refs.some((value) => typeof value !== "string")) {
+      throw new Error(`Role viewpoint set '${role}' must contain a string array: ${projectPath}`);
+    }
+    for (const ref of refs as string[]) {
+      const viewpointRole = viewpointRoles.get(ref);
+      if (!viewpointRole) {
+        throw new Error(
+          `Role viewpoint set '${role}' refers to unknown viewpoint '${ref}': ${projectPath}`,
+        );
+      }
+      if (viewpointRole !== role) {
+        throw new Error(
+          `Role viewpoint set '${role}' contains viewpoint '${ref}' owned by '${viewpointRole}': ${projectPath}`,
+        );
+      }
+      assigned.add(ref);
+    }
+  }
+
+  for (const id of viewpointRoles.keys()) {
+    if (!assigned.has(id)) {
+      throw new Error(
+        `Resolved viewpoint '${id}' is not assigned to a role_viewpoint_set: ${projectPath}`,
+      );
+    }
+  }
+}
+
+export function commonViewpointsPath(): string {
+  return resolveSpecdojoPath("docs/ja/specdojo/defaults/pm-review-viewpoints.yaml");
+}
+
+/**
+ * Resolve one inheritance level: common collections are loaded first, project arrays upsert by
+ * id (or role), and disabled keys are removed last. A project cannot upsert and disable the same
+ * key. Legacy full project files without `extends` remain readable as-is.
+ */
+export function resolveViewpointsDoc(
+  projectPath: string,
+  commonPath = commonViewpointsPath(),
+): ReviewViewpointsDoc {
+  const project = loadYamlMapping(projectPath);
+  if (project["extends"] === undefined) {
+    validateViewpointFields(project, projectPath);
+    validateVerdictVocabulary(project, projectPath);
+    return project as ReviewViewpointsDoc;
+  }
+  if (project["extends"] !== COMMON_VIEWPOINTS_ID) {
+    throw new Error(
+      `Unsupported review viewpoints inheritance '${String(project["extends"])}'; expected '${COMMON_VIEWPOINTS_ID}': ${projectPath}`,
+    );
+  }
+
+  const common = loadYamlMapping(commonPath);
+  if (common["id"] !== COMMON_VIEWPOINTS_ID) {
+    throw new Error(`Common review viewpoints id must be '${COMMON_VIEWPOINTS_ID}': ${commonPath}`);
+  }
+
+  const resolved: Record<string, unknown> = { ...common, ...project };
+  for (const [name, key] of COLLECTIONS) {
+    resolved[name] = mergeCollection({
+      base: recordArray(common, name, commonPath),
+      patch: recordArray(project, name, projectPath),
+      disabled: disabledKeys(project, name, projectPath),
+      key,
+      name,
+      path: projectPath,
+    });
+  }
+  delete resolved["extends"];
+  delete resolved["disabled"];
+  validateViewpointFields(common, commonPath);
+  validateViewpointFields(project, projectPath);
+  validateVerdictVocabulary(common, commonPath);
+  validateVerdictVocabulary(project, projectPath);
+  validateResolvedInheritance(resolved, projectPath);
+  return resolved as ReviewViewpointsDoc;
+}
+
+export function buildViewpointsOverlay(
+  commonPath: string,
+  projectId: string,
+): Record<string, unknown> {
+  const common = loadYamlMapping(commonPath);
+  if (common["id"] !== COMMON_VIEWPOINTS_ID) {
+    throw new Error(`Common review viewpoints id must be '${COMMON_VIEWPOINTS_ID}': ${commonPath}`);
+  }
+  return {
+    id: `${projectId}:pm-review-viewpoints`,
+    type: "project",
+    status: "draft",
+    title: "レビュー観点一覧",
+    rulebook: "none",
+    version: 1,
+    project_id: projectId,
+    extends: COMMON_VIEWPOINTS_ID,
+    viewpoints: [],
+    role_viewpoint_sets: [],
+    disabled: { viewpoints: [], role_viewpoint_sets: [] },
+  };
+}
+
+export function scaffoldViewpoints(opts: {
+  commonPath: string;
+  projectId: string;
+  outputPath: string;
+  force: boolean;
+}): { written: boolean; skipped: boolean } {
+  const { commonPath, projectId, outputPath, force } = opts;
+
+  if (existsSync(outputPath) && !force) return { written: false, skipped: true };
+
+  const doc = buildViewpointsOverlay(commonPath, projectId);
+  const dir = outputPath.includes("/") ? outputPath.slice(0, outputPath.lastIndexOf("/")) : ".";
+  if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+
+  writeFileSync(outputPath, dump(doc, { lineWidth: 120, noRefs: true }), "utf8");
+  return { written: true, skipped: false };
+}

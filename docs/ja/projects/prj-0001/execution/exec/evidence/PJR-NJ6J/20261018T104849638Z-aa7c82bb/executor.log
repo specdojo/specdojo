@@ -1,0 +1,28 @@
+I found and fixed why the wait was skipped. The runner now reads the codex usage-limit message correctly and, in the reproduced case, waits until 23:17 JST before resuming the same stage. I ran the affected test files directly and they pass under both JST and `America/Los_Angeles`. The parent runner's full checks (typecheck, lint, unit and integration tests) haven't run yet.
+
+**Cause.** The runner read the reset time from the agent's whole output and used the first time it found. That output includes the contents of files codex displayed while working. The actual run log (`/tmp/claude-1000/.../scratchpad/8tgq.log`) shows this:
+- Line 3630 is an example comment echoed from `.specdojo/exec-defaults.yaml`: `resets 4:10am (UTC)`.
+- Line 86204 is codex's real message: `try again at 11:17 PM`.
+
+The example came first, so the runner read the reset as 04:10 UTC the next day (13:10 JST), about 18 hours away. That is over the 28,800-second limit, so it skipped the wait. Read from codex's message alone, the reset is 14:17 UTC (23:17 JST), about 4h13m away. The evidence directory for that run (`20261018T095320717Z-a1e6484e`) isn't in the repository, so this log is the only record.
+
+**Changes:**
+- **`src/exec/limit.ts`**
+  - The reset time is now read line by line, starting from the end of the output, where the provider prints its message. The logged message line (`raw_message`) also uses the last matching line.
+  - agy's relative form (`Resets in 4h36m50s`) is now read. It wasn't before. A long one like `85h46m36s` is read but goes past the limit, so the run doesn't wait.
+  - New function `decidePinnedWait`. When the wait is skipped, the log now gives one of three reasons:
+    - the reset time couldn't be read (the original message line is printed);
+    - the reset time has already passed;
+    - the reset time is too far away (it prints the time, the seconds to wait, and the limit).
+- **`src/exec/run/agent.ts`**: the wait logic now calls `decidePinnedWait`. Before, nothing was logged when no reset time was found at all.
+- **`tests/src/exec/limit.test.ts`**: new tests with fixed times. They cover a replay of the 8TGQ output, a reset that crosses midnight (23:30 → 1:05 AM next day), 12:15 AM and 12:15 PM, agy's relative form, and each of the wait decisions.
+- **`CHANGELOG.md`**: added an entry under 不具合修正 in the `## [0.4.0] - 未定` section.
+- **Ticket file** (`pjr-nj6j-pinned-wait-skipped-usage-limit.md`): filled in section 4 (対応結果) with the cause, fix, checks and prevention. I didn't change the status fields.
+
+**Remaining risk:** if a provider's message has no time in it but something echoed earlier does, the runner could still pick up the echoed time.
+
+I also left a reproduction script at `tmp/repro-nj6j.ts`, which is excluded from commits.
+
+<specdojo_executor_evidence>
+{"final_message":"Cause identified from the actual PJR-8TGQ run log: the reset time was read from the first match over the entire codex output, so the echoed example 'resets 4:10am (UTC)' from .specdojo/exec-defaults.yaml (line 3630) was used instead of codex's 'try again at 11:17 PM' (line 86204). That gave a wait of about 18h, over the 28800s limit, so the wait was skipped. Fix in src/exec/limit.ts: the reset time is read per line starting from the end of the output; agy's relative 'Resets in XhYmZs' is now parsed; new decidePinnedWait gives separate skip messages for unreadable (with the original line), already passed, and exceeds the limit. src/exec/run/agent.ts uses it. Added fixed-time unit tests (8TGQ replay, crossing midnight, 12 AM/PM, agy relative, wait decisions), a CHANGELOG 0.4.0 entry, and the ticket's 対応結果 section.","validations":[{"command":"npx vitest run --config vitest.unit.config.ts tests/src/exec/limit.test.ts tests/src/exec/run/pinned-rate-limit.test.ts","status":"passed","summary":"2 files, 17 tests passed"},{"command":"TZ=America/Los_Angeles npx vitest run --config vitest.unit.config.ts tests/src/exec/limit.test.ts","status":"passed","summary":"15 tests passed; the time assertions do not depend on the process timezone"},{"command":"npx tsx tmp/repro-nj6j.ts","status":"passed","summary":"Replay of the codex output with the echoed example now gives resume_at 2026-10-18T14:17:00Z (was 2026-10-19T04:10:00Z); agy relative form is read"},{"command":"npx prettier --check src/exec/limit.ts src/exec/run/agent.ts tests/src/exec/limit.test.ts CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-nj6j-pinned-wait-skipped-usage-limit.md","status":"passed","summary":"All matched files use Prettier code style"}]}
+</specdojo_executor_evidence>

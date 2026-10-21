@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_441a6168b14a4b80bd2bc43afb007f01
+  ts: "2026-10-15T22:12:43Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-V23P の決定のフォローアップ（2026-10-16）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec を src/exec へ移す
+    - field: description
+      from: ""
+      to: codemod で exec の 73 ファイルを src/exec/ へ移し、移した後の exec/ の中をさらに分けるかを判断する。 PJR-V23P の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-16"
+- v: 1
+  id: reg_95e568ce70e041169d908ad4a203db15
+  ts: "2026-10-17T07:10:33Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_441a6168b14a4b80bd2bc43afb007f01
+- v: 1
+  id: reg_7065c37b5f834baaadd30de9667174a9
+  ts: "2026-10-17T07:27:16Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_95e568ce70e041169d908ad4a203db15
+- v: 1
+  id: reg_610dbee3d18a45c5ad2dd9452394c152
+  ts: "2026-10-17T08:12:27Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に全コマンドの --help、node tools/build-if-stale.mjs、dist の配置を確かめ、exec run --register（PJR-JSEY、d0ff5173f）が統合まで通った（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: codemod で exec の 73 ファイルと role-types を src/exec、テスト 66 件を tests/src/exec へ移し、src の直下は specdojo.ts だけになった。全 106 コマンドの --help は移す前の 0.3.1 と一致し、hook の入口が動き、分割後の runner で PJR-JSEY が統合まで通った。src/exec の 74 ファイルは run 18・schedule 11・worktree 6 などで、さらに分けるかは別に判断する
+  previous_event_id: reg_7065c37b5f834baaadd30de9667174a9

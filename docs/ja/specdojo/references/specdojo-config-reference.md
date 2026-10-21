@@ -93,12 +93,34 @@ SpecDojo Configuration Reference
 
 `projects.<project-id>.run` に指定します。これらのパスは `base_path` の影響を受けず、リポジトリルート基準です。
 
-| キー                     | 既定値         | 役割・利用箇所                                                                                                |
-| ------------------------ | -------------- | ------------------------------------------------------------------------------------------------------------- |
-| `exec_defaults`          | なし           | provider、権限、リトライなどを定義する exec defaults ファイルです。agent を起動する `exec run` が参照します。 |
-| `agent_config`           | なし           | `exec_defaults` の旧キーです。互換目的でのみ利用し、新しい設定では `exec_defaults` を使います。               |
-| `worktree_base`          | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。         |
-| `register_date_timezone` | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。        |
+| キー                     | 既定値         | 役割・利用箇所                                                                                                               |
+| ------------------------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `exec_defaults`          | なし           | provider、権限、リトライなどを定義する exec defaults ファイルです。agent を起動する `exec run` が参照します。                |
+| `agent_config`           | なし           | `exec_defaults` の旧キーです。互換目的でのみ利用し、新しい設定では `exec_defaults` を使います。                              |
+| `parent_validations`     | `[]`           | この project だけで追加する親 runner の検証です。`exec_defaults` の `pipeline.parent_validations` の後ろへ指定順に加えます。 |
+| `worktree_base`          | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。                        |
+| `register_date_timezone` | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。                       |
+
+`parent_validations` の要素は、共有 defaults と同じく検証 ID、または `{ "id": "<id>", "repo": "<repo>" }` です。共有 defaults を複製せず、プロダクトリポジトリを持つ project だけに検証を追加できます。たとえば `prj-0002` だけで `specdojo-lp` の型と lint を検査する設定は次のとおりです。
+
+```json
+{
+  "projects": {
+    "prj-0002": {
+      "repos": [{ "name": "specdojo-lp", "path": "../specdojo-lp" }],
+      "run": {
+        "exec_defaults": ".specdojo/exec-defaults.yaml",
+        "parent_validations": [
+          { "id": "typecheck", "repo": "specdojo-lp" },
+          { "id": "lint-ts", "repo": "specdojo-lp" }
+        ]
+      }
+    }
+  }
+}
+```
+
+有効な一覧は「共有 defaults の `pipeline.parent_validations` → project の `run.parent_validations`」の順です。同じ ID と実行先の組が両方にある場合は重複として agent 起動前にエラーになります。`run.parent_validations` を省略した project には共有 defaults だけが適用されるため、`repos` を持たない別 project はプロダクトリポジトリ向けの追加検証に影響されません。許可される ID と実行結果の記録は [[specdojo:exec-config-guide|exec設定ガイド]] を参照してください。
 
 `config init` は一般既定の `../worktrees` ではなく、実行したリポジトリのディレクトリ名から作る `../<リポジトリ名>-worktrees` を `worktree_base` へ明示します。例えば `app1-specdojo/` で実行した場合は `../app1-specdojo-worktrees` です。
 
@@ -114,6 +136,8 @@ SpecDojo Configuration Reference
 | `path`               | 必須 | なし                           | リポジトリのルートです。SpecDojo ルートからの相対パスで書き、実在するディレクトリを指します。                                     |
 | `integration_branch` | 任意 | そのリポジトリの現在のブランチ | exec が変更を統合する先のブランチです。exec branch もこのブランチの先端から作ります。                                             |
 | `setup`              | 任意 | 両方 `true`                    | worktree 作成時の準備の有無です。`install`（依存導入）と `build`（生成物の build）を真偽値で指定します。                          |
+
+register の worktree 実行では、`exec run --integration-branch <repo>=<branch>` により `integration_branch` を run ごとに上書きできます。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定方法、ローカルブランチの検査、並列実行と再開時の扱いは [[specdojo:command-reference]] を参照してください。
 
 ```json
 {
@@ -141,7 +165,7 @@ SpecDojo Configuration Reference
 `repos` を宣言した project の `exec run --worktree` と `exec worktree prepare` は、タスクごとに次の worktree を作ります。宣言の無い project は従来どおり `<worktree_base>/<task-id>/` の直下に 1 つだけ作ります。
 
 - `<worktree_base>/<task-id>/project/`: プロジェクトリポジトリの worktree です。agent の作業ディレクトリ（`cwd`）になります。`project` が予約名なのはこのためです。
-- `<worktree_base>/<task-id>/<name>/`: 宣言した各リポジトリの worktree です。exec branch は `integration_branch`（省略時は現在のブランチ）の先端から作ります。
+- `<worktree_base>/<task-id>/<name>/`: 宣言した各リポジトリの worktree です。exec branch は run の `--integration-branch`、`integration_branch`、現在のブランチの順で解決した統合先の先端から作ります。
 
 agent には、各 worktree の絶対パスを次の環境変数で渡します。
 
@@ -168,6 +192,8 @@ agent 実行の前後で行う保護設定（`package.json`、CI 設定など）
 プロダクトリポジトリの変更は、`exec run --worktree` の統合段で runner がリポジトリごとに commit し、宣言順のプロダクト、最後にプロジェクトの順で統合します。統合の順序、失敗時の部分状態、再開は [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] の「複数リポジトリの worktree と統合順序」と「複数リポジトリの統合の失敗と再開」を参照してください。`exec worktree commit` はプロダクト側を統合しないため、プロダクト worktree に未 commit の変更か exec branch の commit が残るタスクは、プロジェクト側の commit の前に停止します。撤去は、全リポジトリの worktree が撤去できることを確かめてからまとめて行います。
 
 exec worktree の中で設定を読む場合（agent が worktree で `specdojo` を実行する場合など）、`path` の代わりに同じタスクの `<worktree_base>/<task-id>/<name>/` へ解決します。
+
+`repos` を宣言した project では、`specdojo config scaffold --workspace` を実行すると、リポジトリルートに VS Code のマルチルートワークスペース（`<project-id>.code-workspace`）を生成できます。ワークスペースの `folders` にはプロジェクトリポジトリ（`.`）と宣言した各プロダクトリポジトリ（`repos[].path`）が宣言順に並び、VS Code で 1 つのウィンドウから両リポジトリを同時に操作できます。既存のワークスペースファイルは `--force` を付けない限り上書きしません。
 
 設定の読み込み時に、次の誤りを対象（`projects.<project-id>.repos[<n>]`）と原因を示すエラーにします。誤りは全 project 分をまとめて表示します。
 

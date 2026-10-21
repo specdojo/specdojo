@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0c5c747e844743f0b4d1de53ffdb4570
+  ts: "2026-10-19T21:41:24Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ローカル LLM につながらないとき reporter が切り替わらずに止まる
+    - field: description
+      from: ""
+      to: 2026-10-20 06:33 に PJR-16S0 の reporter（gemma26-reporter）が、ホストの Ollama が止まっていたため Cannot connect to API で失敗し、--fallback-reporter-by claude-reporter を指定していたのに切り替わらずに waiting になった。切り替えは rate limit のときだけ働き、つながらないエラーは対象にしていない
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-BHMH"]'
+- v: 1
+  id: reg_d991a4e9f3c54092bb6223cf3b063d50
+  ts: "2026-10-19T21:43:32Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0c5c747e844743f0b4d1de53ffdb4570
+- v: 1
+  id: reg_951c47ddd7824071a9c8824f9c9eb2f7
+  ts: "2026-10-19T21:59:31Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d991a4e9f3c54092bb6223cf3b063d50
+- v: 1
+  id: reg_ae93712914064cb88bec3850579c07cd
+  ts: "2026-10-19T22:07:39Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証と、統合後の JSEY を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: "provider ごとの connection_error_detection を加え、agent がつながらないエラーで失敗したとき、指定した代わりの executor・reporter へ 1 回だけ切り替えるようにした（--on-rate-limit とは独立）。イベントに trigger: connection_error を記録する。本リポジトリの exec-defaults.yaml にも opencode の検出を orchestrator が加えた（b60d459b2）。統合後の JSEY が通った"
+  previous_event_id: reg_951c47ddd7824071a9c8824f9c9eb2f7

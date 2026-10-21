@@ -32,3 +32,80 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_946f0b6ebc0f4e8a8c6425f0a77904ba
+  ts: "2026-10-18T14:30:57Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8bf99d8e4e2b478eaabbec731160389a
+- v: 1
+  id: reg_125310dae8564655b133b25ffcc476df
+  ts: "2026-10-18T14:45:11Z"
+  action: wait
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run lint:md, npm run lint:fm, npm run lint:ts, npm run typecheck, npm run test:unit, npm run test:integration, npm run valid…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run lint:md, npm run lint:fm, npm run lint:ts, npm run typecheck, npm run test:unit, npm run test:integration, npm run valid…"
+  previous_event_id: reg_946f0b6ebc0f4e8a8c6425f0a77904ba
+- v: 1
+  id: reg_40adc390ab414a3ca2362eb533cbc63b
+  ts: "2026-10-18T15:05:00Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run lint:md, npm run lint:fm, npm run lint:ts, npm run typecheck, npm run test:unit, npm run test:integration, npm run valid…"
+      to: "-"
+  previous_event_id: reg_125310dae8564655b133b25ffcc476df
+- v: 1
+  id: reg_b37ffa2d8c194921866ec6b4fbd2ded7
+  ts: "2026-10-18T15:10:41Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_40adc390ab414a3ca2362eb533cbc63b
+- v: 1
+  id: reg_91f82dfdbbc9457597647ead93e12992
+  ts: "2026-10-18T15:13:12Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（qwen-executor・gemma26-reporter）の差分と親検証を確認した。7AW0 の修正の後に再開して統合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: "branch-workflow-guide に「10. プロダクトリポジトリの統合先を指定する」を加え、統合先の指定、GitHub flow と git flow での選び方、merge の方式ごとの Refs: と SHA の残り方、trace key での追跡を書いた。GitHub flow の例の誤りと、登録簿への参照などの 4 点は PJR-8C6E で直す"
+  previous_event_id: reg_b37ffa2d8c194921866ec6b4fbd2ded7

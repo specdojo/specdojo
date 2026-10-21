@@ -1,0 +1,14 @@
+生成済みテンプレートへの依存を解消しました。
+
+- fixture 自身で登録簿生成物を作成。
+- コピー元の `generated/` を除外。
+- 対象2テストで fixture 生成物を明示検証。
+- 個票の対応結果を更新。
+- 登録簿ステータスと result ファイルは未変更。
+- 統合テスト等は親 runner の検証に委譲。
+
+カタログ検証は成功し、既存の未作成文書に関する警告のみでした。
+
+<specdojo_executor_evidence>
+{"final_message":"fixtureを自己完結させ、生成物のないcheckoutでも並列統合テストを実行できるよう修正した","validations":[{"command":"npx prettier --write tests/src/exec-register-pipeline-e2e.integration.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-1dkd-integration-test-depends-on-generated-templates.md","status":"passed","summary":"変更したTypeScriptとMarkdownを整形した"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の派生ビューを正常に再生成した"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全カタログが検証成功。既存の未作成参照文書に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーや不正な差分はない"}]}
+</specdojo_executor_evidence>

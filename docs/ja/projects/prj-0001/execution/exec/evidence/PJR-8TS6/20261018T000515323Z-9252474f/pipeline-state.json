@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-8TS6",
+  "run_id": "20261018T000515323Z-9252474f",
+  "updated_at": "2026-10-18T00:34:03.085Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "agy-expert-executor",
+      "attempts": 1,
+      "started_at": "2026-10-18T00:07:44.859Z",
+      "completed_at": "2026-10-18T00:29:58.491Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-8TS6/20261018T000515323Z-9252474f/evidence.json"
+    },
+    "reporter": {
+      "status": "failed",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-18T00:32:49.466Z",
+      "completed_at": "2026-10-18T00:34:03.085Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-8ts6-20261018T000515Z-ecdc-result.md"
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-8ts6-20261018T000515Z-ecdc-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-8ts6-20261018T000515Z-ecdc-result.md"
+  }
+}

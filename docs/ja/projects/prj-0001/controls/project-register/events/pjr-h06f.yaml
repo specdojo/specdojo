@@ -1,0 +1,140 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_67f4c30340a5442ba3482ea72be4b126
+  ts: "2026-10-17T12:17:16Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-H72A の決定
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run --register で approach の plan の作り方を使う
+    - field: description
+      from: ""
+      to: 個票に approach があれば、schedule と同じ plan の作り方（approach のテンプレート、kata の参照、DCT の done_criteria）を使い、個票の完了条件を追加の条件として載せる。kata の id を対象にした保守の approach にも対応する。PJR-H72A の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_29412c90859047ffbf52bbc087bb6570
+  ts: "2026-10-17T23:56:39Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_67f4c30340a5442ba3482ea72be4b126
+- v: 1
+  id: reg_1e27599e8e5c471487f30c8b01f45ce8
+  ts: "2026-10-18T00:07:47Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-md"
+  previous_event_id: reg_29412c90859047ffbf52bbc087bb6570
+- v: 1
+  id: reg_59a8df03452f4cc69f780ba9cb5fe47e
+  ts: "2026-10-18T00:42:12Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_1e27599e8e5c471487f30c8b01f45ce8
+- v: 1
+  id: reg_2b03d47d65f24a0cb5945aaea4cd4b8c
+  ts: "2026-10-18T00:50:40Z"
+  action: wait
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-h06f.yaml 13ms (unchanged); FAIL  /integration/ tests/src/exec/pipeline-e2e.integra…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-h06f.yaml 13ms (unchanged); FAIL  /integration/ tests/src/exec/pipeline-e2e.integra…"
+  previous_event_id: reg_59a8df03452f4cc69f780ba9cb5fe47e
+- v: 1
+  id: reg_6c8faa6021f04daa9aca93b51cbc2814
+  ts: "2026-10-18T01:38:03Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/controls/project-register/events/pjr-h06f.yaml 13ms (unchanged); FAIL  /integration/ tests/src/exec/pipeline-e2e.integra…"
+      to: "-"
+  previous_event_id: reg_2b03d47d65f24a0cb5945aaea4cd4b8c
+- v: 1
+  id: reg_32f68609fcf84ea9982c2bd2b8038457
+  ts: "2026-10-18T01:47:29Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6c8faa6021f04daa9aca93b51cbc2814
+- v: 1
+  id: reg_ea16815854a24c0aafee5363b61a0809
+  ts: "2026-10-18T03:03:08Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・claude-reporter）の結果を差分・plan の生成・JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 個票に approach があれば schedule と同じ plan の作り方（approach のテンプレート・kata・DCT の完了条件）を使うようにした。plan の内容は一時 worktree で、runner の動作は JSEY で確かめた
+  previous_event_id: reg_32f68609fcf84ea9982c2bd2b8038457

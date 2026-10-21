@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ry4c-register-commit-git-status-buffer
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-13T21:18:07Z"
   due_on: null
+  completed_at: "2026-10-14T13:27:16Z"
+  conclusion: gitResult の spawnSync に maxBuffer（256 MiB）を指定し、ENOBUFS・signal・起動の失敗を失敗メッセージに含めるようにした
 ---
 
 # PJR-RY4C 未追跡のファイルが多いと register の --commit が git status failed で止まる
@@ -49,7 +51,11 @@ gitResult の spawnSync が maxBuffer を指定しないため、git status --po
 
 ## 4. 対応結果
 
--
+- `src/exec-worktree.ts` の `gitResult` の `spawnSync` に `maxBuffer: GIT_OUTPUT_MAX_BUFFER`（256 MiB）を指定し、1 MiB を超える git の出力を打ち切らずに受け取れるようにした。
+- `describeGitProcessFailure` を追加し、`spawnSync` の `error`（`ENOBUFS` は `output exceeded maxBuffer (ENOBUFS)` と明示）と終了 signal から原因を組み立てるようにした。
+- `formatGitCommandFailure` に省略可能な第 3 引数（プロセス側の失敗の原因）を追加し、stderr が空でも原因がメッセージの先頭に載るようにした。`gitOutput` は `status` が 0 以外、または `error` がある場合にこの原因を含めて `GitCommandError` を投げる。
+- `tests/src/exec-worktree.test.ts` に、実際の `ENOBUFS`（小さい `maxBuffer` で子プロセスを起動）で原因と signal が含まれることと、stderr が空のときの失敗メッセージの単体テストを追加した。
+- `tests/src/exec-worktree.integration.test.ts` に、未追跡のファイル 5,000 個（1 MiB 超）の `git status --porcelain=v1 -z --untracked-files=all` を `gitOutput` で全件受け取れることの統合テストを追加した。
 
 ## 5. 関連ドキュメント
 

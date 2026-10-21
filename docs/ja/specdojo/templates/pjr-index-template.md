@@ -40,6 +40,7 @@ Project Register
 - [[pjr-views-by-status|台帳ビュー（状態別）]]
 - [[pjr-views-by-priority|台帳ビュー（優先度別）]]
 - [[pjr-views-by-owner|台帳ビュー（担当者別）]]
+- [[pjr-derived-items|登録項目の派生関係]]
 
 ### 2.2. controls 全体の派生管理ビュー
 

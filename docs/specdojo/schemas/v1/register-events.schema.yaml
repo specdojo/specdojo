@@ -49,12 +49,17 @@ $defs:
           - description
           - type
           - priority
+          - difficulty
           - owner
           - registered
           - due
           - completed
           - conclusion
           - block_reason
+          - approach
+          - targets
+          - derived_from
+          - autopilot
       from:
         type: string
       to:

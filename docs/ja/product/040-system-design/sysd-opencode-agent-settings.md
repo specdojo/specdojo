@@ -26,10 +26,10 @@ OpenCode は Qwen 3.8 と Gemma 4 を用途別 agent として使い分ける。
 
 - **非対話実行は `opencode run`**: TUI を起動せず、SpecDojo が生成した plan を標準入力で渡す。
 - **provider とモデル一覧は `opencode.json`**: 実際に利用可能なローカルモデルをプロジェクト設定として共有する。
-- **agent 定義は `.opencode/agents/*.md`**: モデル、primary / subagent、permission、最小限の実行契約を定義する。タスク固有の指示は edit / review plan を正本とする。
+- **agent 定義は `.opencode/agents/*.md`**: 役割ごとの primary / subagent、permission、最小限の実行契約を定義する。モデルは member の `model` を起動時の `--model` へ渡し、タスク固有の指示は edit / review plan を正本とする。
 - **共通ルールは project root の `AGENTS.md` を基本とする**: `.opencode/AGENTS.md` を使う場合は `opencode.json` の `instructions` に明示する。
 - **permission を安全境界とする**: edit agent は必要な編集操作を許可し、review agent は result ファイル以外の編集を禁止する。
-- **モデルは agent 名で明示する**: Qwen は汎用・コード寄り、Gemma は文書作成・レビュー寄りに使う。通常 agent は `reasoningEffort: none`、expert agent は同一モデルタグへの `reasoningEffort: high` で thinking を有効化する。thinking 用の派生タグは作らない。
+- **モデルと役割を分離する**: Qwen は汎用・コード寄り、Gemma は文書作成・レビュー寄りに使うが、モデルは実体 member で選び、agent 定義は役割で選ぶ。通常 agent は `reasoningEffort: none`、expert agent は `reasoningEffort: high` とし、thinking 用の派生タグは作らない。
 - **limit 情報は provider 非依存に共通化しない**: OpenCode 自身の session limit を前提にせず、失敗要因は Ollama のロード待ち、メモリ不足、接続タイムアウトを主として扱う。
 
 ## 2. 責務分担
@@ -40,7 +40,7 @@ OpenCode は Qwen 3.8 と Gemma 4 を用途別 agent として使い分ける。
 
 ```text
 specdojo exec run
-   → providers.opencode の command template から解決した opencode run --agent <name> を起動
+   → providers.opencode の command template から解決した opencode run --agent <role> --model <model> を起動
    → plan を標準入力で渡す
    → OpenCode agent が成果物または result を編集
    → OpenCode CLI の終了状態を共通フローへ返す
@@ -57,8 +57,10 @@ repo-root/
 ├─ .opencode/
 │  ├─ AGENTS.md                        # instructions で明示して使うOpenCode固有ルール
 │  └─ agents/
-│     ├─ qwen-*.md                     # Qwen の通常・expert pipeline agent
-│     └─ gemma-*.md                    # Gemma の通常・expert pipeline agent
+│     ├─ opencode-executor.md          # pipeline executor（edit）
+│     ├─ opencode-review-executor.md   # pipeline executor（review）
+│     ├─ opencode-reporter.md          # pipeline reporter
+│     └─ opencode-*.md                 # expert・grade・translator の役割定義
 ```
 
 OpenCode の設定は複数箇所からマージされる。主な優先順は remote config、global config、`OPENCODE_CONFIG`、project root の `opencode.json`、`.opencode/`、`OPENCODE_CONFIG_CONTENT` の順で、後の設定が競合キーを上書きする。
@@ -87,9 +89,9 @@ SpecDojo の project management 配下と worktree の共通構成は親設計�
 
 ### 5.3. 使用モデル
 
-`opencode.json` には Qwen 3.8 と Gemma 4 のモデルを定義し、agent frontmatter が各モデルを明示的に選ぶ。provider 単位の同時実行上限は1である。
+`opencode.json` には Qwen 3.8 と Gemma 4 のモデルを定義し、`.specdojo/agent-members.yaml` の実体 member が各モデルを明示的に選ぶ。provider 単位の同時実行上限は1である。
 
-| モデルID                   | 用途                           | agent 例  | 注意点                          |
+| モデルID                   | 用途                           | member 例 | 注意点                          |
 | -------------------------- | ------------------------------ | --------- | ------------------------------- |
 | `qwen3.8:27b-mlx-work-64k` | 汎用作業・コード寄りタスク     | `qwen-*`  | expert は thinking を有効化する |
 | `gemma4:31b-mlx-work-64k`  | 文書作成・編集・レビュー       | `gemma-*` | expert は thinking を有効化する |
@@ -115,7 +117,7 @@ OpenCode 固有ルールを `.opencode/AGENTS.md` に分離する場合は、`op
 - result ファイルへの done criteria 記録
 - `.env`、secrets、破壊的操作、`git push` の禁止
 
-モデルと permission は agent 定義に置き、SpecDojo exec の具体的な処理手順は edit / review plan に置く。`AGENTS.md` や agent 定義へタスク固有の手順を重複記載しない。
+モデルは agent member、permission は agent 定義、SpecDojo exec の具体的な処理手順は edit / review plan に置く。`AGENTS.md` や agent 定義へタスク固有の手順を重複記載しない。
 
 ## 7. `.opencode/agents/` エージェント定義
 
@@ -125,24 +127,24 @@ OpenCode の project agent は `.opencode/agents/<name>.md` に定義する。�
 
 ### 7.1. frontmatter フィールド
 
-| フィールド    | 必須 | 説明                                                            |
-| ------------- | ---- | --------------------------------------------------------------- |
-| `description` | ○    | agent の用途と選択条件                                          |
-| `mode`        | -    | `primary` / `subagent` / `all`。SpecDojo 直接起動では `primary` |
-| `model`       | -    | `provider/model-id`。省略時はグローバルモデル                   |
-| `temperature` | -    | 出力のランダム性                                                |
-| `permission`  | -    | `allow` / `ask` / `deny` またはコマンド別パターン               |
-| `steps`       | -    | agent の最大ステップ数                                          |
+| フィールド    | 必須 | 説明                                                                                  |
+| ------------- | ---- | ------------------------------------------------------------------------------------- |
+| `description` | ○    | agent の用途と選択条件                                                                |
+| `mode`        | -    | `primary` / `subagent` / `all`。SpecDojo 直接起動では `primary`                       |
+| `model`       | -    | pipeline の役割定義では指定しない。agent member の `model` を CLI の `--model` で渡す |
+| `temperature` | -    | 出力のランダム性                                                                      |
+| `permission`  | -    | `allow` / `ask` / `deny` またはコマンド別パターン                                     |
+| `steps`       | -    | agent の最大ステップ数                                                                |
 
 `tools` は非推奨のため、新規設定では `permission` を使用する。
 
 member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy 構成は使わない。
 
-### 7.2. モデル別 executor
+### 7.2. 役割別 executor
 
 pipeline executor（edit）は executor plan に従って成果物の編集と検証だけを行い、result は更新しない。`docs/ja/projects/**/execution/exec/results/**` は明示的に deny する。変更ファイルと検証結果は runner が evidence として収集できるよう、ツール出力と最終応答へ残す。
 
-実際のファイル: `.opencode/agents/qwen-executor.md`、`.opencode/agents/gemma-executor.md` と各 expert agent。
+実際のファイル: `.opencode/agents/opencode-executor.md`、`.opencode/agents/opencode-expert-executor.md`、`.opencode/agents/opencode-grade-executor.md`。
 
 主な安全境界は次のとおり。
 
@@ -152,11 +154,11 @@ pipeline executor（edit）は executor plan に従って成果物の編集と�
 - Web 検索と検索結果の参照を許可し、外部ディレクトリとsubagentの利用を禁止する。
 - agent 自身による claim、complete、reopen、block を禁止する。
 
-### 7.3. モデル別 review executor
+### 7.3. 役割別 review executor
 
 pipeline executor（review）は review plan の各観点に従って成果物を多観点でレビューするが、成果物・result のいずれにも書き込まない（`edit` を全面 deny する）。レビュー結果はツール出力と最終応答へ残し、reporter が evidence として引き継ぐ。
 
-実際のファイル: `.opencode/agents/qwen-review-executor.md`、`.opencode/agents/gemma-review-executor.md` と各 expert agent。
+実際のファイル: `.opencode/agents/opencode-review-executor.md`、`.opencode/agents/opencode-expert-review-executor.md`。
 
 主な安全境界は次のとおり。
 
@@ -165,30 +167,51 @@ pipeline executor（review）は review plan の各観点に従って成果物�
 - `.env` と `secrets` の読み取りを禁止する。Web 検索と検索結果の参照を許可し、外部ディレクトリとsubagentの利用を禁止する。
 - 全基準を確認できない場合は pass または approve と判定しない。
 
-### 7.4. モデル別 reporter
+### 7.4. reporter
 
 pipeline reporter は標準入力で渡された plan、executor evidence、出力スキーマだけから構造化結果を返す。read / glob / grep / list / bash / edit / Web / subagent をすべて deny とし、成果物や result を直接変更できないようにする。応答には指定スキーマ外の説明やコードフェンスを加えない。edit/review どちらの executor の後段にも使う。
 
-実際のファイル: `.opencode/agents/qwen-reporter.md`、`.opencode/agents/gemma-reporter.md`。
+実際のファイル: `.opencode/agents/opencode-reporter.md`。
 
 ### 7.5. エージェント一覧
 
-| ファイル名   | `--agent` 指定名 | mode      | モデル                     | stage_role          | 用途                     |
-| ------------ | ---------------- | --------- | -------------------------- | ------------------- | ------------------------ |
-| `qwen-*.md`  | `qwen-*`         | `primary` | `qwen3.8:27b-mlx-work-64k` | executor / reporter | Qwen 通常・expert agent  |
-| `gemma-*.md` | `gemma-*`        | `primary` | `gemma4:31b-mlx-work-64k`  | executor / reporter | Gemma 通常・expert agent |
+| ファイル名                           | `--agent` 指定名                  | mode      | モデル指定  | 用途                           |
+| ------------------------------------ | --------------------------------- | --------- | ----------- | ------------------------------ |
+| `opencode-executor.md`               | `opencode-executor`               | `primary` | CLI         | 通常 executor（edit）          |
+| `opencode-expert-executor.md`        | `opencode-expert-executor`        | `primary` | CLI         | expert executor（edit）        |
+| `opencode-grade-executor.md`         | `opencode-grade-executor`         | `primary` | CLI         | grade 用 executor              |
+| `opencode-review-executor.md`        | `opencode-review-executor`        | `primary` | CLI         | 通常 executor（review）        |
+| `opencode-expert-review-executor.md` | `opencode-expert-review-executor` | `primary` | CLI         | expert executor（review）      |
+| `opencode-reporter.md`               | `opencode-reporter`               | `primary` | CLI         | reporter                       |
+| `gemma26-translator.md`              | `gemma26-translator`              | `primary` | frontmatter | grade finding の翻訳           |
+| `qwen-orchestrator.md`               | `qwen-orchestrator`               | `primary` | frontmatter | Qwen 対話型オーケストレーター  |
+| `gemma-orchestrator.md`              | `gemma-orchestrator`              | `primary` | frontmatter | Gemma 対話型オーケストレーター |
 
 ## 8. エージェント割り当て設定
 
 ### 8.1. `.specdojo/agent-members.yaml`
 
-起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.opencode.command_template` で定義する。`{nickname}` が `--agent` の指定名に展開されるため、member の nickname と agent 定義のファイル名を一致させる。
+起動コマンドは親設計の `起動コマンドの解決` に従い、`.specdojo/exec-defaults.yaml` の `providers.opencode.command_template` で定義する。`{agent}` は `command_params` から役割ファイルを選び、`{model}` は実体 member のモデルを渡すため、member の nickname と agent 定義のファイル名は一致させない。
 
 ```yaml
 providers:
   opencode:
-    command_template: "opencode run --agent {nickname}"
+    command_template: "opencode run --agent {agent} --model {model}"
+    command_params:
+      by_mode:
+        edit: { agent: opencode-executor }
+        review: { agent: opencode-review-executor }
+        report: { agent: opencode-reporter }
+      by_proficiency:
+        expert: { agent: opencode-expert-executor }
+      by_nickname:
+        qwen-expert-review-executor: { agent: opencode-expert-review-executor }
+        gemma-expert-review-executor: { agent: opencode-expert-review-executor }
+        ornith-expert-executor: { agent: opencode-grade-executor }
+        qwen36-expert-executor: { agent: opencode-grade-executor }
 ```
+
+同じ変数は `by_nickname` が最優先なので、edit の expert、review の expert、grade、translator のように `mode` と `proficiency` だけでは一意に決まらない役割を明示できる。実体・別名への移行時は、新しい実体 nickname に合わせて `by_nickname` のキーも更新する。
 
 `.specdojo/agent-members.yaml` の member は選択属性だけを持ち、`command` を書かない。
 
@@ -224,11 +247,11 @@ members:
     scheduler_strategy: fifo
 ```
 
-OpenCode の executor（edit / review）は `websearch` と `webfetch` を利用できるため、`capabilities: [web_search]` とする。reporter は渡された evidence だけを扱うため capability を持たせない。normal taskでは、Web検索の要否にかかわらず `priority: 1` によりOpenCodeを最初の候補とする。すべてのOpenCode member は既定モデル `gemma4:31b-mlx-work-64k` を使用する。
+OpenCode の executor（edit / review）は `websearch` と `webfetch` を利用できるため、`capabilities: [web_search]` とする。reporter は渡された evidence だけを扱うため capability を持たせない。normal taskでは、Web検索の要否にかかわらず `priority: 1` によりOpenCodeを最初の候補とする。各 OpenCode member のモデルは実体 member の `model` で選ぶ。
 
 ### 8.2. `sch-strategy-<track>.yaml`
 
-phase の共通契約は親設計に従う。外部Web検索が必要なphaseは `capabilities: [web_search]` とし、OpenCode agentも候補に含める。本設計では edit / review いずれの agent も `gemma4:31b-mlx-work-64k` を共有するため、`proficiency` でモデルを切り替える運用は行わない。
+phase の共通契約は親設計に従う。外部Web検索が必要なphaseは `capabilities: [web_search]` とし、OpenCode agentも候補に含める。`proficiency` は役割を、実体 member の `model` はモデルを選ぶため、同じ役割定義を異なるモデルで使用できる。
 
 ### 8.3. `.specdojo/exec-defaults.yaml`
 
@@ -274,7 +297,7 @@ OpenCode は provider 抽象化層であるため、quota 残量、session limit
 
 ### 8.4. 実行コマンド
 
-共通の実行コマンドは親設計を参照する。OpenCode agent を明示する場合は `specdojo exec run --by qwen-executor` のようにモデル名を含む nickname を使用する。
+共通の実行コマンドは親設計を参照する。OpenCode agent を明示する場合は、モデル系統と役割を表す実体 nickname または互換用の別名を使用する。`--agent` に渡す役割ファイル名は command template が解決する。
 
 ## 9. 非対話実行とセッション
 
@@ -284,7 +307,8 @@ OpenCode は provider 抽象化層であるため、quota 残量、session limit
 
 ```bash
 opencode run \
-  --agent qwen-executor \
+  --agent opencode-executor \
+  --model ollama-local/qwen3.8:27b-mlx-work-64k \
   --format json \
   "SpecDojo plan を実行してください"
 ```
@@ -303,7 +327,8 @@ opencode run \
   --attach http://127.0.0.1:4096 \
   --username opencode \
   --password "${OPENCODE_SERVER_PASSWORD}" \
-  --agent qwen-executor \
+  --agent opencode-executor \
+  --model ollama-local/qwen3.8:27b-mlx-work-64k \
   "SpecDojo plan を実行してください"
 ```
 
@@ -315,13 +340,13 @@ worktree のライフサイクル、配置、ブランチ名、イベントフ�
 
 ## 12. 現状差分と導入順序
 
-| 項目                           | 現状                                          | 対応                                                    |
-| ------------------------------ | --------------------------------------------- | ------------------------------------------------------- |
-| `opencode.json`                | provider・3モデル・デフォルトモデルを定義済み | 必要に応じて `instructions` と provider 制限を追加      |
-| `AGENTS.md`                    | project root に共通ルールを定義済み           | OpenCode 固有指示を追加する場合だけ別ファイルを参照     |
-| `.opencode/agents/*.md`        | edit / review agent を定義済み                | `opencode debug agent <name>` で認識を確認              |
-| `.specdojo/agent-members.yaml` | `opencode-*-agent` の選択属性を定義済み       | 単一タスク実行で起動を確認                              |
-| `exec-defaults.yaml`           | `rate limit` / `429` を検出                   | command template と Ollama 固有エラーを必要に応じて追加 |
+| 項目                           | 現状                                           | 対応                                                    |
+| ------------------------------ | ---------------------------------------------- | ------------------------------------------------------- |
+| `opencode.json`                | provider・3モデル・デフォルトモデルを定義済み  | 必要に応じて `instructions` と provider 制限を追加      |
+| `AGENTS.md`                    | project root に共通ルールを定義済み            | OpenCode 固有指示を追加する場合だけ別ファイルを参照     |
+| `.opencode/agents/*.md`        | 役割ごとの agent を定義済み                    | `opencode debug agent <name>` で認識を確認              |
+| `.specdojo/agent-members.yaml` | 旧 nickname の1段名簿                          | PJR-8MPY で実体・別名の2段構成へ移行                    |
+| `exec-defaults.yaml`           | `{nickname}` を `--agent` に渡す旧テンプレート | PJR-8MPY で `{agent}` と `--model {model}` へ切り替える |
 
 導入確認は agent 認識確認、`exec-defaults.yaml` の command template 更新、単一タスク実行、並列実行の順で行う。
 

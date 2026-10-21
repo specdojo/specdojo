@@ -3,29 +3,75 @@ version: 1
 document: specdojo:prj-assumptions-constraints-dependencies-sample
 path: docs/ja/specdojo/samples/prj-assumptions-constraints-dependencies-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: pass
-score: 94
-graded_at: "2026-09-05T21:48:25.978Z"
-graded_by: gemma-expert-executor
+score: 97
+graded_at: "2026-10-17T20:11:37.291Z"
+graded_by: agy-expert-executor
 content_hash: 60e8c87ca729f0894aabfcf60f0d1b58db28001c4fb0c097afbd49abf5554879
 categories:
-  consistency:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
+  architecture:
     score: 100
   usability:
     score: 92
-  architecture:
+  implementation:
     score: 100
   quality:
-    score: 88
+    score: 92
+  consistency:
+    score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -55,12 +110,22 @@ findings:
   - id: F001
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 63
+    line: 27
+    anchor: >-
+      | ID      | 依存先・条件                           | 必要となる理由                                                       |
+      受領・成立条件                                                 |
+      変化のトリガー                                                     | 所有者   |
+      対応方針                                                                     |
     message: 依存関係表の列名（「依存先・条件」「必要となる理由」等）が、rulebook 6.3 節の推奨表（「内容または依存先」「影響・必要な理由」等）と一致していない。
-    anchor: ""
+    message_ja: 依存関係表の列名（「依存先・条件」「必要となる理由」等）が、rulebook 6.3 節の推奨表（「内容または依存先」「影響・必要な理由」等）と一致していない。
   - id: F002
     severity: minor
     rule: vp-ux-language-consistency
-    line: 63
+    line: 27
+    anchor: >-
+      | ID      | 依存先・条件                           | 必要となる理由                                                       |
+      受領・成立条件                                                 |
+      変化のトリガー                                                     | 所有者   |
+      対応方針                                                                     |
     message: 依存関係表の列名に使用されている用語が, rulebook の推奨表記（「内容または依存先」等）と統一されていない。
-    anchor: ""
+    message_ja: 依存関係表の列名に使用されている用語が, rulebook の推奨表記（「内容または依存先」等）と統一されていない。

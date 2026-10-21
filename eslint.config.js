@@ -14,6 +14,62 @@ const sharedRules = {
   ],
 };
 
+const srcFeatureDirectories = [
+  "catalog",
+  "commands",
+  "dashboard",
+  "deliverable",
+  "devcontainer",
+  "docs",
+  "exec",
+  "grade",
+  "job",
+  "kata",
+  "register",
+  "review",
+  "routine",
+  "schedule",
+];
+const srcFeatureImportRegex = `^(?:\\.\\./)+(?:${srcFeatureDirectories.join("|")})(?:/|$)|^(?:\\.\\./)+specdojo(?:\\.js)?$`;
+const cliImportRegex = "^(?:\\.\\./)+(?:commands(?:/|$)|specdojo(?:\\.js)?$)";
+const cliImportPattern = {
+  regex: cliImportRegex,
+  message: "Feature modules must not import src/commands or src/specdojo.ts.",
+};
+
+const featureDirectionRules = [
+  {
+    files: ["src/register/**/*.ts"],
+    forbidden: "exec",
+    feature: "register",
+  },
+  {
+    files: ["src/schedule/**/*.ts"],
+    forbidden: "exec",
+    feature: "schedule",
+  },
+  {
+    files: ["src/job/**/*.ts"],
+    forbidden: "exec",
+    feature: "job",
+  },
+  {
+    files: ["src/grade/**/*.ts"],
+    forbidden: "exec",
+    feature: "grade",
+  },
+  {
+    files: ["src/review/**/*.ts"],
+    forbidden: "grade",
+    feature: "review",
+  },
+  {
+    files: ["src/docs/**/*.ts"],
+    forbidden: "catalog",
+    feature: "docs",
+  },
+];
+
 export default tseslint.config(
   { ignores: ["dist/**", "node_modules/**", "**/*.d.ts"] },
 
@@ -36,6 +92,67 @@ export default tseslint.config(
       "@typescript-eslint/no-misused-promises": "error",
     },
   },
+
+  // Keep production modules and functions small enough to review and maintain. These are
+  // warnings so existing oversized functions remain visible without blocking development.
+  {
+    files: ["src/**/*.ts"],
+    rules: {
+      "max-lines": ["warn", { max: 1000, skipBlankLines: true, skipComments: true }],
+      "max-lines-per-function": ["warn", { max: 200, skipBlankLines: true, skipComments: true }],
+    },
+  },
+
+  // shared is the dependency root: it must not reach into a feature or the CLI entry point.
+  {
+    files: ["src/shared/**/*.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              regex: srcFeatureImportRegex,
+              message: "Modules under src/shared must not import other src features.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+
+  // Feature modules must not depend on command wiring or the top-level CLI entry point.
+  {
+    files: ["src/**/*.ts"],
+    ignores: ["src/commands/**/*.ts", "src/shared/**/*.ts", "src/specdojo.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [cliImportPattern],
+        },
+      ],
+    },
+  },
+
+  // Direction rules between feature pairs to prevent cycles (PJR-QQKY / PJR-WSET).
+  ...featureDirectionRules.map(({ files, forbidden, feature }) => ({
+    files,
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            cliImportPattern,
+            {
+              regex: `^(?:\\.\\./)+${forbidden}(?:/|$)`,
+              message: `Modules under src/${feature} must not import src/${forbidden}.`,
+            },
+          ],
+        },
+      ],
+    },
+  })),
 
   // packages/docs-lint
   {

@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0964ca12a68949d3a5ee8562eaf67fdf
+  ts: "2026-10-15T22:12:10Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-V23P の決定のフォローアップ（2026-10-16）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: job・routine・kata・deliverable・devcontainer・review・docs を移す
+    - field: description
+      from: ""
+      to: codemod で小さい機能のファイルを src/job/・src/routine/・src/kata/・src/deliverable/・src/devcontainer/・src/review/・src/docs/ へ移す。 PJR-V23P の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-16"
+- v: 1
+  id: reg_a246c233b2524c2bb995f1c670518467
+  ts: "2026-10-16T14:33:01Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0964ca12a68949d3a5ee8562eaf67fdf
+- v: 1
+  id: reg_774d90655cf24e94b79a91954e6dc869
+  ts: "2026-10-16T14:47:30Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a246c233b2524c2bb995f1c670518467
+- v: 1
+  id: reg_a5830e9c383a4ebcacc95bec3224ad04
+  ts: "2026-10-16T14:48:55Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に rename・dist・移す前の 0.3.1 との --help を比べ、kata list・index build・routine と job の validate を確かめた（2026-10-16）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-16"
+    - field: conclusion
+      from: "-"
+      to: codemod で job・routine・kata・deliverable・devcontainer・review・docs の 21 ファイルとテスト 13 件を各ディレクトリへ移した。git は 34 件を rename と認識し、dist の古い出力は残らず、--help（23 コマンド）は移す前の 0.3.1 と一致した
+  previous_event_id: reg_774d90655cf24e94b79a91954e6dc869

@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1b1eaa3c818d44fd90f096b74d0656de
+  ts: "2026-10-18T06:20:11Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: init の対話からカタログの質問をなくす
+    - field: description
+      from: ""
+      to: 対話式の init で成果物カタログの size（small など）を選ぶと、全ドメインの dct-*.yaml が一度に展開され、導入直後の利用者には何を残すかが分からない。導入直後に必要なのは register だけのため、対話からカタログの質問をなくし、--catalog の指定でだけ作る。成果物が定まったら catalog scaffold で足すよう案内する（2026-10-18、利用者が案 B を選んだ）
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_fa698687a84b45a1aa6bae966270d170
+  ts: "2026-10-18T07:05:13Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1b1eaa3c818d44fd90f096b74d0656de
+- v: 1
+  id: reg_673996e1864540ababa0440e44c10077
+  ts: "2026-10-18T07:19:47Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_fa698687a84b45a1aa6bae966270d170
+- v: 1
+  id: reg_4f09d84dcfb24019be96573cc35ef098
+  ts: "2026-10-18T07:21:49Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分と親検証を確認し、対話の init を dry-run で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 対話式の init から成果物カタログの質問を除き、--catalog を指定したときだけ作るようにした。最後の案内で後から catalog scaffold で足せることを示し、quick start ガイドとコマンドリファレンスを合わせた。案内が参照する quick-start-guide のパスは利用者のリポジトリにはない（node_modules/specdojo の中）ため、URL にするかは後で決める
+  previous_event_id: reg_673996e1864540ababa0440e44c10077

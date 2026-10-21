@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1ee4e5f50c814a2fa7e47aabc659f1cf
+  ts: "2026-10-18T18:07:57Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: result に書く検査の理由の文で * などがエスケープされず、統合の前に止まる
+    - field: description
+      from: ""
+      to: 2026-10-19 03:07 の PJR-EVAX で、executor が validate:schema:file の not_applicable の理由に「No *.yaml or *.yml files were changed」と書き、runner がそれをそのまま result に描いたため、*.yaml or * が強調と読まれて markdownlint の MD037 に当たり、統合の前の記法の検査で止まった。8WBN・Z104 の後は executor が not_applicable の理由を書くことが増えたため起きやすい
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-19"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-8WBN"]'
+- v: 1
+  id: reg_90b408bf64c74218a56ade410f2548ab
+  ts: "2026-10-19T22:12:08Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_1ee4e5f50c814a2fa7e47aabc659f1cf
+- v: 1
+  id: reg_3a98778d0b034dc98de707ca64611965
+  ts: "2026-10-19T22:21:14Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_90b408bf64c74218a56ade410f2548ab
+- v: 1
+  id: reg_3d262105fde54d3ea44ba7a547694b76
+  ts: "2026-10-19T22:28:11Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証と、統合後の JSEY を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: result に描く自由記述の文に既存の escapeMarkdownInline を適用し、* や _ を含む語をコードの書式で囲むようにした。既にコードの書式の部分は変えない。統合後の JSEY が通った
+  previous_event_id: reg_3a98778d0b034dc98de707ca64611965

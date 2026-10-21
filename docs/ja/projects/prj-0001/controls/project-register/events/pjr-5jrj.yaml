@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_922739526e8a418a88adc526bc27cd7f
+  ts: "2026-10-20T11:22:39Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer で後から開く端末に ~/.local/bin が PATH に入らない
+    - field: description
+      from: ""
+      to: GHBP で post-create.sh の中では ~/.local/bin を PATH に足したが、devcontainer.json に remoteEnv がないため、container の作成の後に開く端末や VS Code の terminal では ~/.local/bin が PATH に入らず、そこに入った Claude Code などの CLI が見つからない（2026-10-20、v0.4.0 の環境の直し方を確かめる中で見つかった）
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-20"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-GHBP"]'
+- v: 1
+  id: reg_1a4f731e5aa240318681ab885ed0aaa3
+  ts: "2026-10-20T11:53:55Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_922739526e8a418a88adc526bc27cd7f
+- v: 1
+  id: reg_2f22c0e1614945ebb330f47188c531ee
+  ts: "2026-10-20T12:08:33Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1a4f731e5aa240318681ab885ed0aaa3
+- v: 1
+  id: reg_b2b6ff1c743542088677020a30ce4eb5
+  ts: "2026-10-20T12:09:33Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分・親検証と、生成した devcontainer.json を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-20"
+    - field: conclusion
+      from: "-"
+      to: 生成する devcontainer.json の remoteEnv で /home/`<remoteUser>`/.local/bin を PATH の先頭に足すようにし、単体テストを加えた。ホストの E2E のスクリプトに、ログインシェルで command -v claude が ~/.local/bin/claude を返す確認を足し、ガイドに v0.4.0 の環境の直し方を書いた
+  previous_event_id: reg_2f22c0e1614945ebb330f47188c531ee

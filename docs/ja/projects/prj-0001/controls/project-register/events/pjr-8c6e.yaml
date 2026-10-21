@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_268d8657f24c46ca8a64d64b845abd8f
+  ts: "2026-10-18T15:12:21Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ブランチ運用ガイドのプロダクトリポジトリの節の誤りを直す
+    - field: description
+      from: ""
+      to: WJE6 で足した branch-workflow-guide の「10. プロダクトリポジトリの統合先を指定する」に、GitHub flow の統合先の例が main になっている誤り、プロジェクトの内部の事情（派生項目として起票中）と登録簿の項目への参照、実在の項目 ID を使った git log の例が残っている。配布するガイドなので、利用者の環境で意味が通る形に直す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-19"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-WJE6"]'
+- v: 1
+  id: reg_2ab33956ab154eb48054e33900d2a3db
+  ts: "2026-10-18T15:45:22Z"
+  action: start
+  actor: gemma-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_268d8657f24c46ca8a64d64b845abd8f
+- v: 1
+  id: reg_11d23cc9eb83490581437298f415989f
+  ts: "2026-10-18T16:01:25Z"
+  action: review
+  actor: gemma-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2ab33956ab154eb48054e33900d2a3db
+- v: 1
+  id: reg_f2355727b36c4a8c874d4385c88ad6ad
+  ts: "2026-10-18T16:05:04Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（gemma-executor・gemma26-reporter）の差分と親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: branch-workflow-guide の 10 の節で、GitHub flow の例を feature/`<topic>` に直し、内部の事情（派生項目として起票中）と登録簿への参照を消し、git log の例を仮の値にした。ほかの記述は変えていない
+  previous_event_id: reg_11d23cc9eb83490581437298f415989f

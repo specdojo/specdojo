@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-JSEY-post-review",
+  "run_id": "20261018T155913415Z-51b5eb3b",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-18T15:59:13.415Z",
+    "completed_at": "2026-10-18T16:00:09.231Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-8c6e.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-nszt.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-8c6e-branch-guide-product-section-fixes.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-nszt-post-review-verdict-tests.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": ".../controls/project-register/events/pjr-8c6e.yaml        | 15 ++++++++++++++-\n .../controls/project-register/events/pjr-nszt.yaml        | 15 ++++++++++++++-\n .../pjr-8c6e-branch-guide-product-section-fixes.md        |  2 +-\n .../pjr-nszt-post-review-verdict-tests.md                 |  2 +-\n 4 files changed, 30 insertions(+), 4 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat d86d9a35d3eb415a4c8bdb5d18f8e9e06ae1ee53..0be6d014b680c54746f077a9c104d0ae543f8b8c",
+      "status": "passed",
+      "summary": "7 files changed, 272 insertions(+), 1 deletion(-)。executor の変更は個票のみで、ほかは runner の管理用記録"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --name-status d86d9a35d3eb415a4c8bdb5d18f8e9e06ae1ee53..0be6d014b680c54746f077a9c104d0ae543f8b8c",
+      "status": "passed",
+      "summary": "M: 個票と events yaml。A: evidence 一式、plan、result。対象外の変更はない"
+    },
+    {
+      "source": "executor",
+      "command": "git diff d86d9a35d3eb415a4c8bdb5d18f8e9e06ae1ee53..0be6d014b680c54746f077a9c104d0ae543f8b8c -- docs/ja/projects/prj-0001/controls/project-register/",
+      "status": "passed",
+      "summary": "個票に PJR-8WBN の行の追記と item_status の open→review。events に start/review の2イベント"
+    },
+    {
+      "source": "executor",
+      "command": "git log --oneline -12 d86d9a35d3eb415a4c8bdb5d18f8e9e06ae1ee53",
+      "status": "passed",
+      "summary": "PJR-8WBN の統合（b5a4ecbb6）より後に、列挙された分割 ID の commit はない"
+    }
+  ],
+  "final_message": "verdict: complete-with-findings。完了条件の3点はすべて満たしている。(1) 個票の対応結果表に `2026-10-19 00:39 | PJR-8WBN | sonnet-executor` が1行だけ追記された。時刻は executor 開始 15:39Z の JST 換算と一致する。統合前 commit までに最も新しく統合された分割項目は PJR-8WBN（b5a4ecbb6）で、それより後に列挙 ID の commit はない。agent は evidence の actor と一致する。(2) d86d9a35..0be6d014 の差分は7ファイル。executor の変更は個票のみ（evidence の changes も1件）で、ほかは runner の管理用記録（events yaml の start/review、plan、result、evidence 一式）。対象外の変更はない。(3) evidence の親の検証7件（lint-ts/lint-fm/lint-md/typecheck/test-unit/test-integration/validate-schema）はすべて passed。pipeline-state では executor/reporter/integrate がすべて succeeded。edit result は status complete で、block や未解消の申し送りはない。指摘事項（軽微）: edit result の「変更ファイル」が「なし」になっているが、実際は個票1ファイルが変更されており食い違っている。個票 frontmatter の `conclusion` が 6EF8 時点の記述のまま更新されていない（完了条件外）。評価結果の確認: grade は使わず、edit の検証結果（evidence の親の検証）を確認した。確認できなかった範囲: 統合後の PJR-8WBN 個票の `item_status` は承認が必要で直接確認していない（統合済みであることは commit 履歴で判断した）。親の検証は再実行していない。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-JSEY-post-review/20261018T155913415Z-51b5eb3b/executor.log",
+      "bytes": 6030,
+      "truncated": false
+    }
+  ]
+}

@@ -5,11 +5,11 @@ description: >
   Defines global defaults for specdojo exec run.
   Agent selection requirements are declared on sch-strategy phases; this file only
   contains runtime defaults shared across tracks, such as parent-run pipeline validations,
-  agent launch command templates, rate-limit detection, and retry policy.
+  agent launch command templates, rate-limit / connection-error detection, and retry policy.
   Detection signals, exit codes, and wait times differ per agent runtime provider, so the
-  top-level rate_limit_detection / rate_limit_policy act as global defaults and providers.<name>
-  supplies per-provider overrides keyed by pm-members[].provider. Launch command templates
-  are provider-specific and have no global default.
+  top-level rate_limit_detection / connection_error_detection / rate_limit_policy act as global
+  defaults and providers.<name> supplies per-provider overrides keyed by pm-members[].provider.
+  Launch command templates are provider-specific and have no global default.
 type: object
 additionalProperties: false
 
@@ -23,10 +23,17 @@ properties:
     description: "Defaults for `exec run`, including register execution location and project concurrency."
 
   rate_limit_detection:
-    $ref: "#/$defs/RateLimitDetection"
+    $ref: "#/$defs/AgentErrorDetection"
     description: >
       Global default signals used to detect agent rate-limit / transient failures.
       Used for members whose provider has no override under providers.<name>.
+
+  connection_error_detection:
+    $ref: "#/$defs/AgentErrorDetection"
+    description: >
+      Global default signals used to detect agent connection failures. A pinned stage switches
+      once to its configured fallback agent when these signals match, independently of
+      --on-rate-limit. Used when a provider has no override under providers.<name>.
 
   rate_limit_policy:
     $ref: "#/$defs/RateLimitPolicy"
@@ -34,10 +41,18 @@ properties:
       Global default behavior when an agent hits a rate limit during exec run.
       Used for members whose provider has no override under providers.<name>.
 
+  routing:
+    $ref: "#/$defs/DifficultyRouting"
+    description: >
+      Register pipeline agents and pinned rate-limit handling selected from the register item's
+      difficulty. Explicit CLI stage and recovery options override the matching route. Missing
+      difficulty entries preserve the existing priority-based automatic selection.
+
   providers:
     type: object
     description: >
-      Per-provider overrides of rate_limit_detection and rate_limit_policy. The key
+      Per-provider overrides of rate_limit_detection, connection_error_detection, and
+      rate_limit_policy. The key
       matches pm-members[].provider (the agent runtime that executes the member command).
       For a given member, exec run resolves detection and policy from its provider override
       when present, otherwise from the top-level (global) values. This keeps provider-specific
@@ -49,9 +64,53 @@ properties:
       $ref: "#/$defs/ProviderOverride"
 
 $defs:
+  AgentNickname:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+
+  DifficultyRouting:
+    type: object
+    additionalProperties: false
+    minProperties: 1
+    properties:
+      hard:
+        $ref: "#/$defs/DifficultyRoute"
+      medium:
+        $ref: "#/$defs/DifficultyRoute"
+      easy:
+        $ref: "#/$defs/DifficultyRoute"
+
+  DifficultyRoute:
+    type: object
+    additionalProperties: false
+    required: [executor_by, reporter_by, on_rate_limit]
+    properties:
+      executor_by:
+        $ref: "#/$defs/AgentNickname"
+      reporter_by:
+        $ref: "#/$defs/AgentNickname"
+      on_rate_limit:
+        type: string
+        enum: [stop, wait, fallback]
+      fallback_executor_by:
+        $ref: "#/$defs/AgentNickname"
+      fallback_reporter_by:
+        $ref: "#/$defs/AgentNickname"
+
   ParentValidationId:
     type: string
-    enum: [validate-schema, typecheck, test-unit, test-integration, lint-ts, lint-fm, lint-md]
+    enum:
+      [
+        validate-schema,
+        typecheck,
+        test-unit,
+        test-integration,
+        lint-ts,
+        lint-fm,
+        lint-md,
+        build,
+        format-check,
+      ]
 
   PipelineDefaults:
     type: object
@@ -107,6 +166,14 @@ $defs:
           Default execution location for `exec run --register`. `--worktree` and `--in-place`
           override this value. When omitted, the historical `in-place` behavior is retained for
           compatibility with existing repositories.
+      register_post_review:
+        type: boolean
+        default: false
+        description: >
+          Whether `exec run --register` performs a read-only completion review after worktree
+          integration and automatically closes eligible todo/issue items. `--post-review` enables
+          the same behavior for one run. This option requires worktree execution and is disabled
+          when omitted.
       max_concurrent_runs:
         type: integer
         minimum: 1
@@ -140,8 +207,13 @@ $defs:
           Extra template variables resolved by member attributes. Resolution precedence is
           by_nickname, then by_proficiency, then by_mode.
       rate_limit_detection:
-        $ref: "#/$defs/RateLimitDetection"
+        $ref: "#/$defs/AgentErrorDetection"
         description: "Provider-specific failure signals. Prefer stderr_patterns over generic exit_codes."
+      connection_error_detection:
+        $ref: "#/$defs/AgentErrorDetection"
+        description: >
+          Provider-specific connection failure signals. Prefer stderr_patterns over generic
+          exit_codes so ordinary agent failures are not treated as unavailable providers.
       rate_limit_policy:
         $ref: "#/$defs/RateLimitPolicy"
         description: "Provider-specific retry / fallback / block policy."
@@ -200,18 +272,18 @@ $defs:
       type: string
       minLength: 1
 
-  RateLimitDetection:
+  AgentErrorDetection:
     type: object
     additionalProperties: false
-    description: "Exit codes and stderr patterns that identify rate-limit / transient failures."
+    description: "Exit codes and output patterns that identify a configured agent failure class."
     properties:
       exit_codes:
         type: array
         uniqueItems: true
         description: >
-          Exit codes treated as a rate-limit / transient signal. Avoid generic codes such as 1:
-          most agent CLIs also use exit 1 for ordinary failure and for the agent's own block
-          signal, so a bare exit 1 cannot be distinguished from a rate limit. Prefer stderr_patterns,
+          Exit codes treated as the configured failure signal. Avoid generic codes such as 1:
+          most agent CLIs also use exit 1 for ordinary failures and for the agent's own block
+          signal, so a bare exit 1 cannot identify one failure class. Prefer stderr_patterns,
           or set provider-specific codes under providers.<name>.
         items:
           type: integer
@@ -224,10 +296,10 @@ $defs:
       stderr_requires_nonzero_exit:
         type: boolean
         description: >
-          Optional. When true (the default), stderr_patterns only count as a rate-limit
-          signal if the agent process also exited non-zero. This avoids false positives
-          where a successful run echoes a pattern phrase (e.g. an agent editing a file that
-          contains the literal text "rate limit"). Set to false to match regardless of exit code.
+          Optional. When true (the default), stderr_patterns only count as the configured
+          failure signal if the agent process also exited non-zero. This avoids false positives
+          where a successful run echoes a pattern phrase. Set to false to match regardless of
+          exit code.
 
   RateLimitPolicy:
     type: object
@@ -262,6 +334,28 @@ $defs:
           oom:
             type: number
             exclusiveMinimum: 0
+      pinned:
+        type: object
+        additionalProperties: false
+        description: >
+          Recovery for an agent selected by nickname. CLI --on-rate-limit and fallback stage
+          flags override these values. Omitted action preserves the historical rate-limit stop
+          behavior. The fallback nicknames also handle configured connection errors independently
+          of action.
+        properties:
+          action:
+            type: string
+            enum: [stop, wait, fallback]
+          max_wait_seconds:
+            type: number
+            minimum: 0
+            description: Maximum wait for reset/retry-after/cooldown (default 28800 seconds).
+          fallback_executor_by:
+            type: string
+            pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
+          fallback_reporter_by:
+            type: string
+            pattern: "^[a-z0-9][a-z0-9_-]{0,62}$"
       on_non_critical:
         type: object
         additionalProperties: false

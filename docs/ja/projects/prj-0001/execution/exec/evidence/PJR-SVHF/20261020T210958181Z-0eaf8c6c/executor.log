@@ -1,0 +1,95 @@
+docs:build の完了を待機しています。
+引き続き docs:build の処理を待機しています。
+引き続き docs:build のビルド完了を待機しています。
+引き続き mermaid 図の生成完了を待機しています。
+もう間もなく完了します。待機しています。
+引き続き待機しています。
+引き続き待機します。
+docs:build の完了を待機しています。
+引き続き docs:build を待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+docs:build の完了を待機しています。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+Mermaid SVG の生成が完了し、最終ビルドの完了を待機しています。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+HTML レンダリング完了を待機しています。
+引き続き待機します。
+メモリ制限を拡張した docs:build の完了を待機しています。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+docs:build のレンダリング完了を待機しています。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+ページレンダリングの完了を待機しています。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続きページレンダリングの完了を待機しています（3,000ページ以上を処理中）。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続きレンダリング完了を待機しています。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+引き続き待機します。
+プロジェクト登録簿の項目 PJR-SVHF「quick start に Dev Container の推奨 preset を入れる」の対応を完了しました。
+
+### 実施内容
+
+1. [[quick-start-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SVHF/docs/ja/specdojo/guides/quick-start-guide.md)] の更新
+   - 「道場を開く（導入と初期設定）」における対話例を、Dev Container 作成に `y`、推奨 preset に Enter（既定の「はい」）と答える例へ更新し、推奨 preset の内容（tmux・Emacs・Vim・推奨 VS Code 拡張と設定・`.vscode/extensions.json`）、コンテナの開き方（VS Code の「コンテナーで再度開く」または `devcontainer up`）、ホストで進める場合の案内を追記。
+   - 「CLIを初期設定する」の `init --yes` の説明に、`--devcontainer` 指定時に推奨 preset が入ることと無効化オプション（`--devcontainer-preset none`）を追記。
+   - 「個別に設定する場合」の `devcontainer scaffold` の例を `--preset recommended` 付きにし、preset を使わない場合のオプション（`--ollama`・`--cron`・`--tmux`）の説明を整理。
+2. [[CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SVHF/CHANGELOG.md)] の更新
+   - `## [0.4.1] - 未定` の「### 文書」節に、Quick Start ガイドの推奨 preset 導入手順に関する変更内容を追記。
+3. [[pjr-svhf-quick-start-devcontainer-preset.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SVHF/docs/ja/projects/prj-0001/controls/project-register/pjr-svhf-quick-start-devcontainer-preset.md)] 個票の更新
+   - 作業内容テーブルの該当行の状態を `done` に更新し、対応結果セクションに実施内容・成果物・残課題を記入。
+
+<specdojo_executor_evidence>
+{"final_message":"Quick Start ガイドの導入手順を Dev Container 推奨 preset（recommended）に揃え、コンテナ起動方法とホストでの進行手順、scaffold の推奨 preset 例および CHANGELOG の更新を完了しました。","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/quick-start-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-svhf-quick-start-devcontainer-preset.md","status":"passed","summary":"Formatted 3 changed markdown files"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"Project deliverables catalog validated successfully"},{"command":"npm run docs:build","status":"passed","summary":"VitePress documentation build succeeded"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"no *.yaml or *.yml files were changed in this task"}]}
+</specdojo_executor_evidence>

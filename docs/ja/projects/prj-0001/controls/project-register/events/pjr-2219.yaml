@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_82571dbc11bf46e68e896c888fd3b548
+  ts: "2026-10-17T12:17:44Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-WA3R の決定
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: plan の共通の規約を参照にする
+    - field: description
+      from: ""
+      to: plan の本文には異常終了の条件と共通の規約の要点だけを残し、詳細は worktree から読める別ファイルを参照させる。PJR-WA3R の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_d5f194bd7391470897ae13f29db4cb2d
+  ts: "2026-10-18T07:42:59Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_82571dbc11bf46e68e896c888fd3b548
+- v: 1
+  id: reg_8befa93a1de745bb80e947dbe5546a7b
+  ts: "2026-10-18T07:51:17Z"
+  action: wait
+  actor: agy-claude-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:07.444Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:07.444Z"
+  previous_event_id: reg_d5f194bd7391470897ae13f29db4cb2d
+- v: 1
+  id: reg_b071b1448d924658a99cecdee2066d64
+  ts: "2026-10-18T07:55:18Z"
+  action: start
+  actor: claude-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "rate limit reached; rate limit fallback: agy-claude-expert-executor -> codex-expert-executor at 2026-10-18T07:51:07.444Z"
+      to: "-"
+  previous_event_id: reg_8befa93a1de745bb80e947dbe5546a7b
+- v: 1
+  id: reg_987a78cfbbc74eeb837d8527a377792e
+  ts: "2026-10-18T08:09:16Z"
+  action: review
+  actor: claude-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b071b1448d924658a99cecdee2066d64
+- v: 1
+  id: reg_97a281a7e98742488d968cb7ad6c8180
+  ts: "2026-10-18T08:12:10Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（claude-expert-executor・gemma26-reporter）の差分・テスト・親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: plan の本文には、共通の規約の断片の印で囲んだ要点と、詳細の参照パス・作業前に読む指示だけを載せるようにした。要点は詳細から機械的に取り出し、原本は断片の 1 か所。印のない断片は全文を載せる。参照先は利用者のリポジトリでは node_modules/specdojo の中で、worktree の npm ci で読める
+  previous_event_id: reg_987a78cfbbc74eeb837d8527a377792e

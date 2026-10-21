@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_85814db4130a48d39b253e55889dedb0
+  ts: "2026-10-14T21:25:57Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-Y8P9 を分けて起票（2026-10-15、利用者が承認）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register.ts の残りのドメインの処理を分ける
+    - field: description
+      from: ""
+      to: src/register.ts（2,418 行）に残る登録簿のドメインの処理（移行・番号の振り直し・派生ビュー・項目の更新など）を責務ごとのモジュールへ移す。 動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
+- v: 1
+  id: reg_848550c6de214b7fa7c9d3518ac28157
+  ts: "2026-10-14T21:27:29Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_85814db4130a48d39b253e55889dedb0
+- v: 1
+  id: reg_59a0648d73ac401fa0311a4e8902683d
+  ts: "2026-10-14T21:41:55Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged); FAIL  /unit/ tests/src/doc…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged); FAIL  /unit/ tests/src/doc…"
+  previous_event_id: reg_848550c6de214b7fa7c9d3518ac28157
+- v: 1
+  id: reg_bb14fbbea1a34c25893eb0f1c17fe3a3
+  ts: "2026-10-14T21:43:40Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: format: docs/ja/projects/prj-0001/execution/exec/evidence/PJR-P038/20261014T212729066Z-81d2c320/evidence.json 31ms (unchanged); FAIL  /unit/ tests/src/doc…"
+      to: "-"
+  previous_event_id: reg_59a0648d73ac401fa0311a4e8902683d
+- v: 1
+  id: reg_96280ccf5cc8493ba3e3b9dc52dc89b9
+  ts: "2026-10-14T21:48:25Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_bb14fbbea1a34c25893eb0f1c17fe3a3
+- v: 1
+  id: reg_7c367f8045ce4349b6fbaabde7baf65b
+  ts: "2026-10-14T21:49:34Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に --help・export・循環 import を確かめた（2026-10-15）。初回は統合の commit の hook でテストが負荷により時間切れになり、--resume で統合した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: register.ts の残りのドメインの処理を core・migration・renumber・update・views の 5 モジュールへ移し、register.ts は 2,418 行から 629 行になった。--help と export は分割の前後で一致した
+  previous_event_id: reg_96280ccf5cc8493ba3e3b9dc52dc89b9

@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3efcc98a1d6347ce881047d8b4a3c991
+  ts: "2026-10-17T11:27:25Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の指摘（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer の作業ディレクトリが /workspaces/specdojo-workspace に固定されている
+    - field: description
+      from: ""
+      to: "devcontainer scaffold の雛形が、親のディレクトリを /workspaces/specdojo-workspace にマウントし、作業ディレクトリを /workspaces/specdojo-workspace/`<repo>` にする。利用者の親のディレクトリが app1-workspace でも specdojo-workspace という名前になるため、親のディレクトリの名前（例: /workspaces/app1-workspace/app1-specdojo）に合わせる"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_0be244530fb142e59b4f400d43fbc36f
+  ts: "2026-10-17T13:09:31Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3efcc98a1d6347ce881047d8b4a3c991
+- v: 1
+  id: reg_7d7b979bbb9f459eb299af5df74bf516
+  ts: "2026-10-17T13:21:15Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0be244530fb142e59b4f400d43fbc36f
+- v: 1
+  id: reg_b4d964ca9a6c4198b030484680e3d8b6
+  ts: "2026-10-17T14:01:19Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、app1-workspace/app1-specdojo で scaffold して /workspaces/app1-workspace になること、--workspace-name my-ws で上書きできること、bad/name で止まることを確かめた（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: devcontainer scaffold が作業ディレクトリに親のディレクトリの名前を使い、--workspace-name で上書きできるようにした。パスに使えない名前は理由を出して止める。CHANGELOG の記載は公開済みの 0.3.1 の節に入っていたため、0.4.0 の節へ移した（73a28cecd）
+  previous_event_id: reg_7d7b979bbb9f459eb299af5df74bf516

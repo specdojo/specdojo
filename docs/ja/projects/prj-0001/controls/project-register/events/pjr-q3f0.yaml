@@ -32,3 +32,19 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_99da4b449eea4b5e9aab134a66a42993
+  ts: "2026-10-15T22:02:17Z"
+  action: defer
+  actor: naoji3x
+  from_status: open
+  to_status: deferred
+  reason: 利用者の判断（2026-10-16）。周辺のパッケージが TypeScript 7 に追いついていない
+  changes:
+    - field: status
+      from: open
+      to: deferred
+    - field: conclusion
+      from: "-"
+      to: typescript-eslint が TypeScript 7 に未対応（<6.1.0）のため延期する。typescript-eslint が対応したら再開する
+  previous_event_id: reg_4590c96a572d4fb99b4f74dafa65ce33

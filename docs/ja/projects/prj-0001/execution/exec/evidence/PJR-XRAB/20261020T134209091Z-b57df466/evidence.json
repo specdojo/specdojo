@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XRAB",
+  "run_id": "20261020T134209091Z-b57df466",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "rate_limited",
+    "started_at": "2026-10-20T13:43:41.254Z",
+    "completed_at": "2026-10-20T13:51:34.786Z",
+    "exit_code": 1,
+    "attempts": 2
+  },
+  "changes": [
+    {
+      "path": "docs/specdojo/schemas/v1/pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-state.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/specdojo/schemas/v1/pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/repo-integration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/task-repos.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-state.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/task-repos.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 12,
+    "summary": ".../specdojo/schemas/v1/pipeline-state.schema.yaml |   9 ++\n src/exec/pipeline-state.ts                         |  20 +++\n src/exec/repo-integration.ts                       |   2 +-\n src/exec/run/agent-pipeline.ts                     |   5 +\n src/exec/run/register-command.ts                   |  21 +++\n src/exec/run/register-resume.ts                    |  38 ++++--\n src/exec/run/register-worktree.ts                  |  11 +-\n src/exec/run/shared.ts                             |   2 +\n src/exec/task-repos.ts                             | 146 +++++++++++++++++++--\n tests/src/exec/pipeline-state.test.ts              |  34 +++++\n tests/src/exec/task-repos.integration.test.ts      |  50 +++++++\n tests/src/exec/task-repos.test.ts                  |  94 +++++++++++++\n 12 files changed, 405 insertions(+), 27 deletions(-)"
+  },
+  "validations": [],
+  "rate_limit_events": [
+    {
+      "action": "fallback",
+      "trigger": "rate_limit",
+      "from_actor": "sol-executor",
+      "to_actor": "opus-executor",
+      "resumed_at": "2026-10-20T13:47:01.303Z"
+    }
+  ],
+  "final_message": "You've hit your session limit · resets 12:50am (Asia/Tokyo)",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XRAB/20261020T134209091Z-b57df466/executor.log",
+      "bytes": 60,
+      "truncated": false
+    }
+  ]
+}

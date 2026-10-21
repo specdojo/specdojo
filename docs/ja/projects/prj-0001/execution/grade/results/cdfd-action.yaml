@@ -5,12 +5,12 @@ path: docs/ja/product/010-business-specs/010-data-flow/cdfd-action.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 63
-graded_at: "2026-10-07T16:02:08.030Z"
+score: 73
+graded_at: "2026-10-17T16:04:31.079Z"
 graded_by: agy-expert-executor
 content_hash: 5d3fc7872c2d9f07e2e7282dc9c546babd6f6c39af2fc4c2afc0ad10611e17da
 source_hashes:
-  catalog-entry: 143f5e3d6bddfc7b775438e881fb2db7bf612db3bbad63bf0922d71818e9bcc2
+  catalog-entry: 13a3f1bee8ca15ccabb50c5aabcedc7ce92c9cdda40f595a6305268767581f05
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
   dependency:cdfd-overview: 9b8b4b2f64e2ef5c6ce0069204a94780e3ae43bc1b7d68004a654308d80abd7a
@@ -19,36 +19,36 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 63
+    score: 75
   operations:
-    score: 44
+    score: 63
   planning:
-    score: 75
+    score: 83
   business:
-    score: 75
+    score: 83
   consistency:
-    score: 25
+    score: 38
   architecture:
     score: 100
   usability:
     score: 94
   implementation:
-    score: 63
+    score: 75
   quality:
-    score: 44
+    score: 63
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-plan-feasibility:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-pm-dependency-risk:
     level: 4
     score: 100
@@ -59,14 +59,14 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
     level: 4
     score: 100
   vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
     level: 4
     score: 100
@@ -77,20 +77,20 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-done-criteria:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 1
     score: 25
@@ -104,11 +104,11 @@ viewpoints:
     level: 4
     score: 100
   vp-ops-release-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-operability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -159,10 +159,8 @@ findings:
     rule: vp-arc-cross-document-consistency
     line: 60
     anchor: ""
-    message: >-
-      docs/ja/projects/prj-0001/030-project-management/pm-raci.mdでは変更要求の採否と継続判断のAをPOとしているため、P-12-01やP-13-01の主担当から最終判断を分離してください。
-    message_ja: >-
-      docs/ja/projects/prj-0001/030-project-management/pm-raci.mdでは変更要求の採否と継続判断のAをPOとしているため、P-12-01やP-13-01の主担当から最終判断を分離してください。
+    message: docs/ja/projects/prj-0001/030-project-management/pm-raci.mdでは変更要求の採否と継続判断のAをPOとしているため、P-12-01やP-13-01の主担当から最終判断を分離してください。
+    message_ja: docs/ja/projects/prj-0001/030-project-management/pm-raci.mdでは変更要求の採否と継続判断のAをPOとしているため、P-12-01やP-13-01の主担当から最終判断を分離してください。
   - id: F006
     severity: major
     rule: vp-dev-implementation-readiness

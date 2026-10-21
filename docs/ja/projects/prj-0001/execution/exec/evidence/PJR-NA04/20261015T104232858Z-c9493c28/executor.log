@@ -1,0 +1,14 @@
+責務別に7モジュールへ分割し、既存3ファイルを明示的再 export の façade にしました。
+
+- 全ファイル 1,000 行以下（最大868行）
+- 公開 API は分割前後で一致
+- 18コマンドの `--help` に差分なし
+- 移動した127関数の本体に差分なし
+- 新規循環 import なし
+- 個票とシステム設計を更新
+- result は指示どおり未編集
+- 統合後の `exec run --register` は orchestrator の close 条件として残ります
+
+<specdojo_executor_evidence>
+{"final_message":"exec-plans・exec・exec-trialを責務別の7モジュールへ分割し、公開APIとCLI出力を維持しました。","validations":[{"command":"npx prettier --write src/exec-plans.ts src/exec-plans-core.ts src/exec-plans-generation.ts src/exec-plans-storage.ts src/exec.ts src/exec-core.ts src/exec-commands.ts src/exec-trial.ts src/exec-trial-core.ts src/exec-trial-commands.ts docs/ja/projects/prj-0001/controls/project-register/pjr-na04-exec-plans-trial-split.md docs/ja/product/040-system-design/sysd-index.md","status":"passed","summary":"変更したTypeScript・Markdownを整形しました。"},{"command":"for spec in 'exec' 'exec validate' 'exec refresh' 'exec plan' 'exec archive' 'exec scheduler' 'exec scaffold' 'exec status' 'exec where' 'exec run' 'exec cycle' 'exec resume' 'exec trial' 'exec trial run' 'exec trial status' 'exec trial rate' 'exec trial adopt' 'exec trial discard'; do name=${spec// /__}; node --import tsx src/specdojo.ts $spec --help > \"tmp/pjr-na04-help-after/$name.txt\" || exit 1; done; for before in tmp/pjr-na04-help-before/*.txt; do name=$(basename \"$before\"); diff -u \"$before\" \"tmp/pjr-na04-help-after/$name\" || exit 1; done","status":"passed","summary":"指定された18コマンドの分割前後のヘルプ出力が一致しました。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビュー生成に成功しました。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog検証に成功しました。既存の欠落文書に関する警告のみです。"},{"command":"git diff --check","status":"passed","summary":"空白エラーはありません。"},{"command":"specdojo exec run --register","status":"requires_human","summary":"統合後にorchestratorが1回実行するclose条件です。"}]}
+</specdojo_executor_evidence>

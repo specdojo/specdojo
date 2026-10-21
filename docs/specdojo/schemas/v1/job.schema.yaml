@@ -190,6 +190,13 @@ $defs:
       command:
         type: string
         minLength: 1
+      partial_exit_code:
+        description: >
+          Optional non-zero exit code that records a reviewable partial Job Run. Other non-zero
+          exit codes remain failures.
+        type: integer
+        minimum: 1
+        maximum: 255
       precondition:
         type: object
         additionalProperties: false

@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_4f06fbdffa254a2a87b9c2b19df858a9
+  ts: "2026-10-14T13:49:04Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: リファクタリングの段取り（2026-10-14、利用者が承認）の段 4 として起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec-run.ts の共通部と agent の pipeline を分ける
+    - field: description
+      from: ""
+      to: src/exec-run.ts（8,584 行）のうち、実行モードに共通の型・agent の解決・worker pool・再試行と、executor / reporter の pipeline（runAgentPipeline・runReporterStage）を別のモジュールへ移す。動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-14"
+- v: 1
+  id: reg_1a211a30318f47a3af4880231f43bce7
+  ts: "2026-10-14T14:46:43Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4f06fbdffa254a2a87b9c2b19df858a9
+- v: 1
+  id: reg_6324d20b25ed4adaa3e360ad20b035f9
+  ts: "2026-10-14T14:59:05Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration, typecheck, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration, typecheck, test-unit"
+  previous_event_id: reg_1a211a30318f47a3af4880231f43bce7
+- v: 1
+  id: reg_5306fcf835e541ea848faee064329b0e
+  ts: "2026-10-14T14:59:46Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-ts, test-integration, typecheck, test-unit"
+      to: "-"
+  previous_event_id: reg_6324d20b25ed4adaa3e360ad20b035f9
+- v: 1
+  id: reg_903b19c0939d4a4781a2f6a02c8fa435
+  ts: "2026-10-14T15:09:54Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_5306fcf835e541ea848faee064329b0e
+- v: 1
+  id: reg_7b815421e59143698227a9b2c3da74b6
+  ts: "2026-10-14T15:19:05Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に --help・export・循環 import を確かめ、分割後の runner で exec run --register（PJR-JSEY、4ddd615ab）が統合まで通った（2026-10-15）。初回は import の抜けで親の検証が失敗し、--resume-from executor で直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: exec-run.ts の共通部を exec-run-shared・exec-run-agent、pipeline を exec-run-agent-pipeline へ移し、exec-run.ts は 8,584 行から 6,949 行になった。--help と export は分割の前後で一致し、分割後の runner で PJR-JSEY が統合まで通った
+  previous_event_id: reg_903b19c0939d4a4781a2f6a02c8fa435

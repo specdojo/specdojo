@@ -1,0 +1,55 @@
+<specdojo_executor_evidence>
+{"final_message":"Added product repository branch operation section to the branch workflow guide and validated with prettier and markdownlint.","validations":[{"command":"npx prettier --write docs/ja/specdojo/guides/branch-workflow-guide.md","status":"passed","summary":"Formatted the file successfully.","reason":""},{"command":"npx markdownlint docs/ja/specdojo/guides/branch-workflow-guide.md","status":"passed","summary":"No linting errors found.","reason":""}]}
+</specdojo_executor_evidence>
+
+[0m
+> gemma-expert-executor · gemma4:31b-mlx-work-64k
+[0m
+[0m→ [0mRead docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md
+[0m✱ [0mGlob "docs/ja/specdojo/branch-workflow-guide.md"[90m 0 matches[0m
+[0m✱ [0mGlob "**/branch-workflow-guide*"[90m 1 match[0m
+[0m→ [0mRead docs/ja/specdojo/guides/branch-workflow-guide.md
+[0m
+[0m← [0mEdit docs/ja/specdojo/guides/branch-workflow-guide.md
+Index: /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+===================================================================
+--- /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
++++ /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-expert-executor/docs/ja/specdojo/guides/branch-workflow-guide.md
+@@ -351,4 +351,27 @@
+ | main統合前           | 最新 `main` の取り込み、project全体の検証、レビュー対象、未解決事項  |
+ | 削除前               | 統合済みであること、未退避のcommit・変更・resultがないこと           |
+ 
+ 誤ったブランチから作業を始めた場合は、そのまま統合せず、現在の commit と正しいベースとの差分を確認します。修正方法を決められない場合は branch と worktree を保持し、変更を失う操作を行わずにレビューを依頼します。
++
++## 11. プロダクトリポジトリのブランチ運用
++
++SpecDojo は、プロダクトリポジトリ（本プロジェクト以外の成果物が格納されるリポジトリ）に対して特定のブランチ戦略を強制しません。プロダクト側の運用ルールに従った統合先ブランチを、`specdojo.config.json` の `repos[].integration_branch` に指定して利用してください。プロダクトリポジトリのブランチ名に project ID を含める必要はありません。
++
++### 11.1. 統合先ブランチの選び方
++
++運用スタイルに応じて、次のように指定します。
++
++- **GitHub flow の場合**: トピックブランチを統合先にし、そこから `main` へ Pull Request で取り込む運用であれば、そのトピックブランチ（または `main` 自体）を指定します。
++- **git flow の場合**: `develop` ブランチを統合先とする運用であれば、`develop` を指定します。
++
++### 11.2. 追跡用 trace key (`Refs:`) の扱い
++
++SpecDojo は変更の追跡に trace key（`Refs: <project-id>:<item-id>`）を使用します。統合時の merge 方式によって commit 履歴の残り方が異なります。
++
++| merge 方式 | 履歴の状態 | `Refs:` の残り方と注意点 |
++| :--- | :--- | :--- |
++| **merge commit** (`--no-ff`) | 全 commit と merge commit が残る | merge commit のメッセージに `Refs:` を含めることで、統合タイミングを明確に追跡できます。 |
++| **rebase merge** | commit が直線的に並び替わる | 各 commit メッセージに `Refs:` を維持するか、最終的な先端 commit に含めます。 |
++| **squash merge** | 1つの commit にまとめられる | **必須**: squash 後の commit メッセージに必ず `Refs:` を含めてください。これを行わないと、どのタスクに基づく変更か追跡不能になります。 |
++
++追跡は主にこの trace key をベースに行い、`git log --grep "Refs: <project-id>:<item-id>"` で対象の変更を辿れるようにします。
+
+[0m
+[0m→ [0mRead package.json
+[0m
+[0m$ [0mnpx prettier --write docs/ja/specdojo/guides/branch-workflow-guide.md
+docs/ja/specdojo/guides/branch-workflow-guide.md 79ms
+[0m
+[0m$ [0mnpx markdownlint docs/ja/specdojo/guides/branch-workflow-guide.md
+(no output)
+[0m

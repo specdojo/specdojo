@@ -1,0 +1,1122 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-KECW",
+  "run_id": "20261016T143300225Z-86e7f22a",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-16T14:34:47.267Z",
+    "completed_at": "2026-10-16T14:41:51.541Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kecw-src-move-small-features.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build-references.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build-render.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable-trash.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/deliverable.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/devcontainer-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/devcontainer-scaffold.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/doc-index.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-handoff.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter-output.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/frontmatter-namespace.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/index-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/init-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job-definition.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/job.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/kata-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/kata.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-migration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-renumber.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-update.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-views.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review-grade.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/review-plan.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/review-types.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/routine-definition.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/routine.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/schedule-approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule-strategy-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/template-frontmatter.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/template-resolution.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/viewpoint-document-kinds-check.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/yaml-pages-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/yaml-pages.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/devcontainer-scaffold.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/deliverable-trash.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/doc-index.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-plans-grade-findings.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/kata-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/kata.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review-grade.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/review-plan.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/routine.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/template-frontmatter.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/template-resolution.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/viewpoint-document-kinds-check.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/yaml-pages.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/tools/src-move-codemod.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/src-move-codemod.mjs",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable/deliverable.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/deliverable/trash.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/devcontainer/command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/devcontainer/scaffold.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/doc-index.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/frontmatter-namespace.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/index-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/template-frontmatter.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/template-resolution.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/viewpoint-document-kinds-check.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/yaml-pages-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/yaml-pages.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/kata/command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/kata/kata.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/review/plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/review/types.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/deliverable/trash.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/devcontainer/scaffold.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/docs/doc-index.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/docs/template-frontmatter.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/docs/template-resolution.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/docs/viewpoint-document-kinds-check.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/docs/yaml-pages.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/job/job.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/kata/command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/kata/kata.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/review/grade.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/review/plan.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/routine/routine.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/040-system-design/sysd-index.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-bdd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cdsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-cld.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-model-stsd.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-system-design.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/010-deliverables-catalog/dct-test-specs.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-kecw-src-move-small-features.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build-references.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build-render.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable-trash.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/deliverable.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/devcontainer-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/devcontainer-scaffold.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/doc-index.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/exec-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-handoff.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-reporter-output.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec-run-schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/frontmatter-namespace.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/grade-apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-result.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade-targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/index-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/init-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job-definition.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/job.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/kata-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/kata.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/register-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-migration.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-renumber.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-update.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register-views.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review-grade.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/review-plan.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/review-types.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/routine-definition.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/routine.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/schedule-approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule-strategy-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/template-frontmatter.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/template-resolution.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/viewpoint-document-kinds-check.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/yaml-pages-command.ts",
+      "status": "D"
+    },
+    {
+      "path": "src/yaml-pages.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/devcontainer-scaffold.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/dashboard/dashboard.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/deliverable-trash.integration.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/doc-index.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/exec-plans-grade-findings.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec-plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/job.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/kata-command.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/kata.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review-grade.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/review-plan.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/routine.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/template-frontmatter.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/template-resolution.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/viewpoint-document-kinds-check.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/src/yaml-pages.test.ts",
+      "status": "D"
+    },
+    {
+      "path": "tests/tools/src-move-codemod.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tools/src-move-codemod.mjs",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable/deliverable.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/deliverable/trash.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/devcontainer/command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/devcontainer/scaffold.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/doc-index.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/frontmatter-namespace.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/index-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/template-frontmatter.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/template-resolution.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/viewpoint-document-kinds-check.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/yaml-pages-command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/docs/yaml-pages.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/kata/command.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/kata/kata.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/review/plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/review/types.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/deliverable/trash.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/devcontainer/scaffold.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/docs/doc-index.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/docs/template-frontmatter.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/docs/template-resolution.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/docs/viewpoint-document-kinds-check.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/docs/yaml-pages.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/job/job.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/kata/command.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/kata/kata.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/review/grade.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/review/plan.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/routine/routine.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 124,
+    "summary": "docs/ja/product/040-system-design/sysd-index.md    |   2 +-\n .../010-deliverables-catalog/dct-data-flow.yaml    |  20 +-\n .../dct-data-model-bdd.yaml                        |   8 +-\n .../dct-data-model-cdsd.yaml                       |   6 +-\n .../dct-data-model-cld.yaml                        |   2 +-\n .../dct-data-model-stsd.yaml                       |   6 +-\n .../dct-system-design.yaml                         |   4 +-\n .../010-deliverables-catalog/dct-test-specs.yaml   |  22 +-\n .../pjr-kecw-src-move-small-features.md            |  18 +-\n docs/ja/specdojo/guides/review-guide.md            |   2 +-\n .../standards/rulebook-authoring-standard.md       |   4 +-\n src/catalog-build-references.ts                    |   2 +-\n src/catalog-build-render.ts                        |   2 +-\n src/catalog-build.ts                               |   8 +-\n src/catalog-generate.ts                            |   6 +-\n src/catalog-plan.ts                                |   2 +-\n src/catalog-scaffold.ts                            |   5 +-\n src/catalog.ts                                     |   4 +-\n src/dashboard/routines.ts                          |   2 +-\n src/deliverable-trash.ts                           | 180 ----\n src/deliverable.ts                                 | 115 ---\n src/devcontainer-command.ts                        |  53 --\n src/devcontainer-scaffold.ts                       | 220 -----\n src/doc-index.ts                                   | 584 -------------\n src/exec-commands.ts                               |   2 +-\n src/exec-handoff.ts                                |   2 +-\n src/exec-plans-core.ts                             |  16 +-\n src/exec-plans-generation.ts                       |   6 +-\n src/exec-plans-storage.ts                          |   4 +-\n src/exec-register.ts                               |   2 +-\n src/exec-reporter-output.ts                        |   4 +-\n src/exec-results.ts                                |   4 +-\n src/exec-run-agent.ts                              |   2 +-\n src/exec-run-job.ts                                |   2 +-\n src/exec-run-schedule-prepare.ts                   |   4 +-\n src/frontmatter-namespace.ts                       |  52 --\n src/grade-apply.ts                                 |   4 +-\n src/grade-core.ts                                  |   4 +-\n src/grade-markdown.ts                              |   2 +-\n src/grade-plan.ts                                  |   4 +-\n src/grade-result.ts                                |   2 +-\n src/grade-target-discovery.ts                      |   2 +-\n src/grade-targets.ts                               |   4 +-\n src/index-command.ts                               | 119 ---\n src/init-command.ts                                |   2 +-\n src/job-definition.ts                              | 924 ---------------------\n src/job.ts                                         | 682 ---------------\n src/kata-command.ts                                | 408 ---------\n src/kata.ts                                        | 252 ------\n src/register-core.ts                               |   2 +-\n src/register-create-commands.ts                    |   2 +-\n src/register-migration.ts                          |   2 +-\n src/register-renumber.ts                           |   2 +-\n src/register-update.ts                             |   2 +-\n src/register-views.ts                              |   4 +-\n src/review-grade.ts                                | 319 -------\n src/review-plan.ts                                 | 390 ---------\n src/review-types.ts                                | 126 ---\n src/routine-definition.ts                          | 535 ------------\n src/routine.ts                                     | 617 --------------\n src/schedule-approach.ts                           |   4 +-\n src/schedule-strategy-generate.ts                  |   2 +-\n src/schedule.ts                                    |   2 +-\n src/specdojo.ts                                    |  14 +-\n…"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "TypeScriptビルドが成功し、新しい7個のdistサブディレクトリを生成した。旧出力21件は残存していない。"
+    },
+    {
+      "source": "executor",
+      "command": "diff -ru /tmp/pjr-kecw-375b/help-before /tmp/pjr-kecw-375b/help-after",
+      "status": "passed",
+      "summary": "job・routine・kata・devcontainer・index・yaml-pagesと各サブコマンド、合計23件のヘルプ出力に差分なし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build",
+      "status": "passed",
+      "summary": "更新した成果物カタログから生成文書を正常に再生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "全カタログがOK。既存の未作成文書に関する`based_on`警告のみで、移動によるエラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "個票更新後のプロジェクト登録簿生成が成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/docs/viewpoint-document-kinds-check.ts",
+      "status": "passed",
+      "summary": "107件のrulebookに対する観点判断がすべて網羅されている。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write <changed TypeScript, YAML, and Markdown files>",
+      "status": "passed",
+      "summary": "変更対象をPrettierで整形した。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KECW/src/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspa\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KECW/src/schedule-build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KECW/src/schedule-strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KECW\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-U7nvKN/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-RVOa98/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-WM\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KECW/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KECW/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-KECW\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-gYySq9/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-zXoyY0/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8PI7Cb/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-eh4wOt/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  39.01s (transform 2.61s, setup 532ms, import 18.61s, tests 41.72s, environment 7ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "小機能のソース21件とテスト13件を機能別ディレクトリへ移し、関連import・文書・カタログ・個票を更新した。ヘルプ出力23件は一致し、旧dist出力の残存もない。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-KECW/20261016T143300225Z-86e7f22a/executor.log",
+      "bytes": 2203,
+      "truncated": false
+    }
+  ]
+}

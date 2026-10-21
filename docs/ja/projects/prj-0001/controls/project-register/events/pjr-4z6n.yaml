@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e3fe622cff584c418fbc382e1100cd3a
+  ts: "2026-10-17T12:17:29Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-H72A の決定
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register から approach で実行する手順をガイドに書く
+    - field: description
+      from: ""
+      to: register の todo から approach を使って成果物と kata を作る・直す手順と、exec run --deliverable との違いを exec のガイドに書く。PJR-H72A の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_1495941e3c274af7b789f5f3389f0a95
+  ts: "2026-10-18T06:51:46Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e3fe622cff584c418fbc382e1100cd3a
+- v: 1
+  id: reg_5f2bd5e7b6844b6fa9f78a28385f009d
+  ts: "2026-10-18T07:04:39Z"
+  action: review
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1495941e3c274af7b789f5f3389f0a95
+- v: 1
+  id: reg_fce307c6ff0a44b5b5fb250a2955af6b
+  ts: "2026-10-18T07:21:40Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・gemma26-reporter）の差分と親検証を確認し、target の件数の制約が実装と一致することを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: exec-operation-guide に、register の todo から approach で成果物と kata を作る・直す手順の節を加えた。approach と target の指定、kata の approach の選び方、組み合わせの誤りのエラー、exec run --deliverable との違いを書き、register-operation-guide から参照した
+  previous_event_id: reg_5f2bd5e7b6844b6fa9f78a28385f009d

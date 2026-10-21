@@ -3,31 +3,77 @@ version: 1
 document: specdojo:opr-index-sample
 path: docs/ja/specdojo/samples/opr-index-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 84
-graded_at: "2026-09-05T16:20:21.088Z"
-graded_by: gemma-expert-executor
+score: 75
+graded_at: "2026-10-16T20:17:16.807Z"
+graded_by: agy-expert-executor
 content_hash: fb7d1232ddeaa53f4aab4e2732f91067211de2662c69f19451620f8e8a9a52d5
 categories:
-  consistency:
-    score: 63
+  purpose:
+    score: 75
+  operations:
+    score: 81
+  planning:
+    score: 75
+  business:
+    score: 67
+  architecture:
+    score: 92
   usability:
     score: 100
-  architecture:
-    score: 100
+  implementation:
+    score: 63
   quality:
     score: 75
+  consistency:
+    score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 3
+    score: 75
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
     level: 4
     score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
     level: 4
     score: 100
@@ -43,30 +89,173 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
 finding_counts:
   blocker: 0
-  major: 2
-  minor: 1
+  major: 6
+  minor: 12
   note: 0
 findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-purpose-alignment
+    line: 1
+    anchor: "# 運用手順: 全体 サンプル"
+    message: >-
+      The document does not define explicit operational scope boundaries (in-scope and out-of-scope systems or
+      operational environments) for its standardized procedures.
+    message_ja: ドキュメントには、標準化された手順における明確な運用の範囲（スコープ内およびスコープ外のシステムまたは運用環境）が定義されていません。
+  - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 運用手順: 全体 サンプル"
+    message: Open issues, prerequisites, and operational impact scope required for PO approval or review are not documented.
+    message_ja: POの承認またはレビューに必要な未解決の課題、前提条件、および運用の影響範囲が文書化されていません。
   - id: F003
     severity: minor
-    rule: vp-qe-kata-conformance
-    line: 3
-    message: 参照先のパスおよびファイル名（`opr-rulebook.md`）が、実際のルールブック（`opr-index-rulebook.md`）と一致していない。
-    anchor: "- 参照: `../rulebooks/opr-rulebook.md`"
-  - id: F002
+    rule: vp-pm-plan-feasibility
+    line: 9
+    anchor: "## 2. 日次/週次/月次点検手順"
+    message: >-
+      The routine inspection procedures lack detailed execution steps, specific timing or deadlines, and duration
+      estimates needed for operational scheduling and tracking.
+    message_ja: 日常的な点検手順において、運用のスケジューリングと追跡に必要な詳細な実行ステップ、具体的なタイミングや期限、および所要時間の見積もりが不足しています。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 9
+    anchor: "## 2. 日次/週次/月次点検手順"
+    message: >-
+      Operational risks, dependencies on external tools, and the impact of delayed inspections or reviews on subsequent
+      operational schedules are not identified.
+    message_ja: 運用のリスク、外部ツールへの依存関係、および点検やレビューの遅延がその後の運用スケジュールに与える影響が特定されていません。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 17
+    anchor: "## 3. 証跡（ログ、チケット、チェックリスト、実施記録）"
+    message: >-
+      Concrete reporting destinations, escalation workflows, and criteria for transferring operational risks or change
+      requests to project management tracking are not specified.
+    message_ja: 具体的な報告先、エスカレーションのワークフロー、および運用のリスクや変更要求をプロジェクト管理の追跡に転送するための基準が明記されていません。
+  - id: F006
+    severity: minor
+    rule: vp-ba-business-value
+    line: 5
+    anchor: "## 1. 概要（index）"
+    message: >-
+      The document does not describe the specific business problems, impacted business stakeholders, consequences of
+      operational neglect, or criteria for measuring delivered business value.
+    message_ja: ドキュメントには、具体的なビジネス上の問題、影響を受けるビジネスステークホルダー、運用の放置による結果、または提供されたビジネス価値を測定するための基準が記載されていません。
+  - id: F007
     severity: major
-    rule: vp-qe-kata-conformance
-    line: 6
-    message: Frontmatter の `rulebook` 指定が `opd-rulebook` になっており、対象成果物の種別と不整合である。
-    anchor: ""
-  - id: F001
+    rule: vp-ba-requirements-completeness
+    line: 9
+    anchor: "## 2. 日次/週次/月次点検手順"
+    message: >-
+      The document omits operational scope, system prerequisites, and procedure acceptance criteria across required
+      operational domains, preventing verification of procedural completeness.
+    message_ja: ドキュメントには、必要な運用ドメイン全体における運用の範囲、システムの前提条件、および手順の受け入れ基準が欠落しており、手順の完全性の検証ができません。
+  - id: F008
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 9
+    anchor: "## 2. 日次/週次/月次点検手順"
+    message: >-
+      External stakeholders, business system owners, verification approvers, and agreed operational interfaces across
+      roles are insufficiently detailed.
+    message_ja: 外部ステークホルダー、ビジネスシステムの所有者、検証の承認者、および役割をまたいだ合意された運用のインターフェースの詳細が不十分です。
+  - id: F009
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 17
+    anchor: "## 3. 証跡（ログ、チケット、チェックリスト、実施記録）"
+    message: >-
+      Concrete technical platforms, toolchain dependencies, log schemas, and storage system constraints are not
+      specified.
+    message_ja: 具体的な技術プラットフォーム、ツールチェーンの依存関係、ログスキーマ、およびストレージシステムの制約が明記されていません。
+  - id: F010
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 9
+    anchor: "## 2. 日次/週次/月次点検手順"
+    message: >-
+      The procedures lack concrete inspection targets, tool configurations, input/output specifications, and
+      step-by-step instructions necessary for operators to execute the routine tasks.
+    message_ja: 手順には、オペレーターが日常的なタスクを実行するために必要な具体的な点検対象、ツールの設定、入出力仕様、およびステップバイステップの指示が不足しています。
+  - id: F011
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 25
+    anchor: "## 4. 関連ドキュメント導線（`opd` 参照、`mip` / `otp` / `cop` 連携）"
+    message: >-
+      The impact of modifications to routine procedures or evidence retention rules on existing systems, tools, and
+      operational workflows is not identified.
+    message_ja: 日常的な手順や証跡保持ルールの変更が、既存のシステム、ツール、および運用のワークフローに与える影響が特定されていません。
+  - id: F012
+    severity: minor
+    rule: vp-dev-testability
+    line: 9
+    anchor: "## 2. 日次/週次/月次点検手順"
+    message: >-
+      Verification methods, test procedures, and expected results to validate operational execution and evidence logging
+      are not provided.
+    message_ja: 運用の実行と証跡の記録を検証するための検証方法、テスト手順、および期待される結果が提供されていません。
+  - id: F013
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# 運用手順: 全体 サンプル"
+    message: Frontmatter の必須項目 `title` が不足している。
+    message_ja: Frontmatter の必須項目 `title` が不足している。
+  - id: F014
     severity: major
     rule: vp-qe-omissions-consistency
     line: 11
-    message: ルールブックで必須とされている本文構成（2, 4-10章）が欠落しており、サンプルとして不完全である。
     anchor: "| 頻度 | 手順                         | 実施者   | 完了条件                           | 証跡               |"
+    message: ルールブックで必須とされている本文構成（2, 4-10章）が欠落しており、サンプルとして不完全である。
+    message_ja: ルールブックで必須とされている本文構成（2, 4-10章）が欠落しており、サンプルとして不完全である。
+  - id: F015
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 6
+    anchor: ""
+    message: Frontmatter の `rulebook` 指定が `opd-rulebook` になっており、対象成果物の種別と不整合である。
+    message_ja: Frontmatter の `rulebook` 指定が `opd-rulebook` になっており、対象成果物の種別と不整合である。
+  - id: F016
+    severity: minor
+    rule: vp-qe-kata-conformance
+    line: 3
+    anchor: "- 参照: `../rulebooks/opr-rulebook.md`"
+    message: 参照先のパスおよびファイル名（`opr-rulebook.md`）が、実際のルールブック（`opr-index-rulebook.md`）と一致していない。
+    message_ja: 参照先のパスおよびファイル名（`opr-rulebook.md`）が、実際のルールブック（`opr-index-rulebook.md`）と一致していない。
+  - id: F017
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 運用手順: 全体 サンプル"
+    message: >-
+      Open issues, prerequisite verification items, and criteria to promote the document from draft to ready are not
+      specified.
+    message_ja: 未解決の課題、前提条件の検証項目、およびドキュメントをドラフトから準備完了へと昇格させるための基準が明記されていません。
+  - id: F018
+    severity: major
+    rule: vp-ops-operability
+    line: 9
+    anchor: "## 2. 日次/週次/月次点検手順"
+    message: >-
+      Essential operational runbook procedures including incident handling, change execution, and inquiry escalation are
+      omitted from the index, impairing operational execution.
+    message_ja: インシデント対応、変更の実行、および問い合わせのエスカレーションを含む不可欠な運用のランブック手順がインデックスから漏れており、運用の実行を妨げています。

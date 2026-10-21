@@ -36,6 +36,32 @@ pipeline:
 run:
   register_execution: worktree
 
+# register 項目の難しさ（個票の difficulty）ごとの agent の振り分け（PJR-5HYP）。
+# exec run --register と orchestrator night が使い、CLI の --executor-by などの指定が優先する。
+# difficulty のない個票は、従来どおり stage_role と priority で選ぶ。
+# - hard: codex（sol）。上限のときは解除を待つ。待たずに切り替える場合の代わりは opus。
+# - medium: agy の flash-high。代わりは codex（sol）。
+# - easy: ローカルの qwen。docs・src・tests の外を触らない小さな作業に限る。代わりは flash-high。
+routing:
+  hard:
+    executor_by: sol-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: wait
+    fallback_executor_by: opus-executor
+    fallback_reporter_by: sonnet-reporter
+  medium:
+    executor_by: flash-high-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: fallback
+    fallback_executor_by: sol-executor
+    fallback_reporter_by: sonnet-reporter
+  easy:
+    executor_by: qwen-executor
+    reporter_by: gemma26-reporter
+    on_rate_limit: fallback
+    fallback_executor_by: flash-high-executor
+    fallback_reporter_by: sonnet-reporter
+
 rate_limit_detection:
   # exit_codes は最小限にする。多くの agent CLI は通常失敗と agent 自身の block も
   # exit 1 で返すため、素の exit 1 は rate limit と区別できない。通常失敗を利用制限
@@ -66,7 +92,8 @@ rate_limit_policy:
     on_exhausted: block # 全候補試行後はブロックして人間に委ねる
 
 # provider 別の設定。command_template は agent の起動コマンドで、member 属性
-# （{nickname} / {mode} / {proficiency} と command_params の変数）で展開する。
+# （{nickname} / {model} / {mode} / {proficiency} と command_params の変数）で展開する。
+# {model} は実体の member の model（PJR-ZM1K・PJR-YK1C）。{nickname} には別名ではなく実体の名前が入る。
 # member 側の command はテンプレートを持たない構成（provider: custom 等）専用の上書き。
 #
 # 検出・ポリシー上書きは、各 provider ブロックの rate_limit_detection を
@@ -79,9 +106,14 @@ rate_limit_policy:
 # 実際の出力で検証してから確定する。
 providers:
   claude:
-    # モデルは .claude/agents/{nickname}.md の model フィールドで指定するため、
-    # テンプレートにモデル名を含めない。permission は mode 別 settings で分離する。
-    command_template: "claude -p --verbose --agent {nickname} --settings .specdojo/claude/settings.{mode}.json"
+    # 役割の定義は .claude/agents/ の役割ごとの 1 ファイル（PJR-TSP6）を mode で選び、
+    # モデルは実体の member の model を --model で渡す。permission は mode 別 settings で分離する。
+    command_template: "claude -p --verbose --agent {agent} --model {model} --settings .specdojo/claude/settings.{mode}.json"
+    command_params:
+      by_mode:
+        edit: { agent: claude-executor }
+        review: { agent: claude-review-executor }
+        report: { agent: claude-reporter }
     # Anthropic API: 429 / rate limit に加え、モデル高負荷時の overloaded を検出。
     # session limit は logs/exec-auto.log で実観測:
     #   "You've hit your session limit · resets 4:10am (UTC)"
@@ -118,16 +150,16 @@ providers:
         - "premium request"
 
   codex:
-    # codex exec には worker 名を選択するオプションがないため {nickname} は使わず、
-    # モデルと reasoning effort を proficiency で切り替える。--ephemeral は rollout
+    # codex exec には worker 名を選択するオプションがないため {nickname} は使わない。
+    # モデルは実体の member の model、reasoning effort は proficiency で切り替える。--ephemeral は rollout
     # ファイルを保存しない（実行履歴の正本は SpecDojo の event・plan・result）。
     # sandbox_workspace_write.network_access=false は sandbox 内からの直接の
     # ネットワークアクセスを遮断する（web_search はモデル側ツールのため影響しない）。
     command_template: 'codex exec --ephemeral --sandbox workspace-write -c approval_policy="never" -c sandbox_workspace_write.network_access=false --model {model} -c model_reasoning_effort="{effort}"'
     command_params:
       by_proficiency:
-        normal: { model: gpt-5.6-terra, effort: medium }
-        expert: { model: gpt-5.6-sol, effort: high }
+        normal: { effort: medium }
+        expert: { effort: high }
     # OpenAI: 429 / rate limit（API）に加え、ChatGPT プランの 5時間枠（session limit）
     # と週次上限（weekly / usage limit）がスタックする。
     rate_limit_detection:
@@ -139,9 +171,21 @@ providers:
         - "usage limit"
 
   opencode:
-    # {nickname} が --agent の指定名になるため、member の nickname と
-    # .opencode/agents/<name>.md のファイル名を一致させる。
-    command_template: "opencode run --agent {nickname}"
+    # 役割の定義は .opencode/agents/ の役割ごとの 1 ファイル（PJR-TSP6）を mode で選び、
+    # モデルは実体の member の model を --model で渡す。役割に収まらない agent
+    # （翻訳、thinking を有効にした executor）は by_nickname で定義を指定する。
+    command_template: "opencode run --agent {agent} --model {model}"
+    command_params:
+      by_mode:
+        edit: { agent: opencode-executor }
+        review: { agent: opencode-review-executor }
+        report: { agent: opencode-reporter }
+      by_nickname:
+        gemma26-translator: { agent: gemma26-translator }
+        qwen-expert-executor: { agent: opencode-expert-executor }
+        gemma-expert-executor: { agent: opencode-expert-executor }
+        qwen-expert-review-executor: { agent: opencode-expert-review-executor }
+        gemma-expert-review-executor: { agent: opencode-expert-review-executor }
     # 同一ホストの単一 Ollama モデルを共有するため、複数の opencode agent を同時起動
     # するとメモリ競合・モデルロード待ちで不安定になる。1 ラウンドで同時に走る opencode
     # を 1 つに制限する（他 provider のグローバル --parallel は下げない）。
@@ -152,9 +196,14 @@ providers:
       exit_codes: []
       stderr_patterns:
         - "timeout"
-        - "connection refused"
         - "out of memory"
         - "model is loading"
+    # Ollama が止まっているなど、つながらないときは指定した代わりの agent へ切り替える（PJR-DKD8）。
+    connection_error_detection:
+      stderr_patterns:
+        - "Cannot connect to API"
+        - "ECONNREFUSED"
+        - "connection refused"
     # 同一ホストの OpenCode provider を共有するため、別 member への try_next でも
     # モデル切替・メモリ不足は解消しないことがある。復旧は wait+backoff を優先する。
     rate_limit_policy:
@@ -180,18 +229,10 @@ providers:
     # agy のモデル ID は推論強度を含む（gemini-3.8-flash-{high,medium,low} など）。--effort を
     # 併用すると ID と食い違ったときに "invalid model selection" で起動に失敗するため、
     # 強度はモデル ID だけで指定する（2026-09-21 実測: flash-high + --effort medium で失敗）。
+    # 使える model の ID は `agy models` で確かめる。Gemini の Pro 系は提供されなくなったため、
+    # expert は Flash の high とする（2026-10-15、agy 1.3.5 で確認）。
     command_template: 'agy --sandbox --add-dir "$(pwd)" --dangerously-skip-permissions --model {model} -p "$(cat)"'
-    command_params:
-      by_proficiency:
-        normal: { model: gemini-3.8-flash-medium }
-        expert: { model: gemini-3.1-pro-high }
-      # Gemini 以外の Antigravity 提供モデルは member nickname で明示的に選ぶ。
-      # by_nickname は proficiency / mode の既定値より優先される。
-      by_nickname:
-        agy-claude-executor: { model: claude-sonnet-4-6 }
-        agy-claude-expert-executor: { model: claude-opus-4-6-thinking }
-        agy-claude-expert-review-executor: { model: claude-opus-4-6-thinking }
-        agy-gpt-executor: { model: gpt-oss-120b-medium }
+    # モデルの ID は実体の member の model に書く（PJR-8MPY）。
     # Gemini API の制限文言は未観測。429 / quota / RESOURCE_EXHAUSTED を初期値とし、
     # 実観測した文言で更新する（observed-agent-limit-stderr と同じ扱い）。
     rate_limit_detection:

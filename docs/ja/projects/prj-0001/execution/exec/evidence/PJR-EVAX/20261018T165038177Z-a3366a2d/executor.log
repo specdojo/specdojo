@@ -1,0 +1,3 @@
+<specdojo_executor_evidence>
+{"final_message":"The terminology change from 「仕様道（Spec-Dō）の道場」 to 「Spec道（仕様道）の道場」 was already applied to the target files (README.md, docs/ja/index.md, docs/ja/specdojo/guides/specdojo-overview-guide.md, and docs/ja/specdojo/guides/waza-guide.md) in the current worktree, as verified by grep. No further edits were required. Validation with `npm run lint:md` passed.","validations":[{"command":"npm run lint:md","status":"passed","summary":"No markdown lint errors found."}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-d52da9bde002-review",
+  "run_id": "20261016T163849842Z-7af3b715",
+  "stage": {
+    "role": "executor",
+    "actor": "claude-expert-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-16T16:38:49.842Z",
+    "completed_at": "2026-10-16T16:40:38.044Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat af9a4e66da6904078daad3252b29c426f2920d13..3ea6629c0b4e24a21ca8bc11c501b195c2fa38fd && git diff --name-status af9a4e66da6904078daad3252b29c426f2920d13..3ea6629c0b4e24a21ca8bc11c501b195c2fa38fd",
+      "status": "passed",
+      "summary": "27 ファイル、すべて docs/ja/projects/prj-0001/execution/ 配下。範囲外の変更なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target deliverable --project prj-0001 --changed-only",
+      "status": "passed",
+      "summary": "評価対象 10 件はいずれも出力されない（最新）"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target deliverable --project prj-0001 --dependency-changed",
+      "status": "passed",
+      "summary": "評価対象 10 件はいずれも出力されない"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target deliverable --project prj-0001 --incomplete",
+      "status": "passed",
+      "summary": "出力なし"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade state --target deliverable --project prj-0001 --exhausted",
+      "status": "passed",
+      "summary": "出力なし（exhausted 0 件）"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target deliverable --project prj-0001 --rubric-outdated",
+      "status": "passed",
+      "summary": "評価対象 10 件はいずれも出力されない"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target deliverable --project prj-0001 --rulebook-changed",
+      "status": "passed",
+      "summary": "評価対象 10 件はいずれも出力されない"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade list --target deliverable --project prj-0001 --ungraded",
+      "status": "passed",
+      "summary": "出力 0 行"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d52da9bde002/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-func\n… output omitted …\nce/worktrees/prj-0001-JBR-grade-deliverable-d52da9bde002/src/schedule/build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d52da9bde002/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d52da9bde002\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/deliverable/trash.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m4 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 82\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-agent-git-state.integration.test.ts \u001b[2m(\u001b[22m\u001b[2m6 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 160\u001b[2mms\u001b[22m\u001b[39\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d52da9bde002/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d52da9bde002/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d52da9bde002\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/exec-reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m80 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 65\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 868\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec-plans.test.ts \u001b[2m(\u001b[22m\u001b\n… output omitted …\nrated Markdown: ja/removed.md\n\n\u001b[90mstderr\u001b[2m | tests/packages/docs-site/gen-mermaid-svg.test.ts\u001b[2m > \u001b[22m\u001b[2mMermaid SVG generation basics\u001b[2m > \u001b[22m\u001b[2mignores generated Markdown and removes any stale manifest entry\n\u001b[22m\u001b[39m[mermaid] skipping missing or generated Markdown: ja/generated/invalid.md\n\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "判定は complete-with-findings。Run JBR-grade-deliverable-d52da9bde002 は `state: succeeded`、`exit_code: 0`、stderr 0 バイト。`af9a4e66..3ea6629c` はコミット 1 件・27 ファイルで、すべて `docs/ja/projects/prj-0001/execution/` 配下（done_criteria 10、grade results 10、Run JSON、plan、result、evidence 4）。評価対象 10 件は `content_hash` が変わらず、変わったのは `source_hashes.catalog-entry` だけ。`results.tsv` は 10 件すべて stage 1 `passed`。incomplete、failed、`retry_exhausted`、exhausted はなく、`grade list --incomplete` と `grade state --exhausted` の出力は空。verdict は前回から変化なし（pass 1 件 cdfd-uc-deliverable 100、needs-work 9 件）。score は本文・rubric（`grade-rubric-v2`）とも変わらないまま 6 件で上昇（+8〜+16: cdfd-action 63→73、cdfd-check 71→79、cdfd-onboarding 53→65、cdsd-execution 49→65、cdsd-planning 50→65、cdsd-sharing 45→59）。多くの観点が level 1→2 へ一律に上がっており、評価のばらつき（緩和方向）の疑いがある。未充足の done_criteria と確認担当ロール: cdfd-action DC-001(BA)/DC-003(PO)、cdfd-check DC-001(BA)、cdfd-onboarding DC-001(BA)、cdfd-plan DC-001(BA)、cdsd-execution・cdsd-planning・cdsd-sharing DC-001(BA)/DC-002(ARC)/DC-003(QE)、stsd-routine-run DC-001(BA)/DC-002(PO)/DC-003(ARC)/DC-004(QE)/DC-005(DEV)。cdfd-orchestrator と cdfd-uc-deliverable は全項目が充足。done_criteria の status 変化はなく、reason の文面だけが更新された。鮮度: 対象 10 件は `--changed-only`、`--dependency-changed`、`--incomplete`、`--rubric-outdated`、`--rulebook-changed` のどれにも出ず、`--ungraded` は 0 行。HEAD は出力 commit と一致し、review 中の変更なし。指摘: F-1 Job Run result に未充足 done_criteria と担当ロールの記載がない。F-2 評価設定の見直し要否の判断がなく、本文が変わらないままの score 上昇を評価設定の担当者が確認すべき。F-3 needs-work 9 件の findings 対応を成果物 owner へ引き継ぐ。いずれも Run の完了は妨げない。確認できなかった範囲: 前回評価以降の agy executor の設定・プロンプト変更履歴（score 上昇の原因は特定できていない）、コミット対象外の `logs/grade/runs/per-document/JBR-grade-deliverable-d52da9bde002/` の実ファイル（stdout の `results.tsv` で代わりに確認）、findings 個々の妥当性（review の範囲外）。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-d52da9bde002-review/20261016T163849842Z-7af3b715/executor.log",
+      "bytes": 9187,
+      "truncated": false
+    }
+  ]
+}

@@ -2,9 +2,9 @@
 id: sysd-critical-flows-grade-criteria
 document: sysd-critical-flows
 path: docs/ja/product/040-system-design/sysd-critical-flows.md
-graded_at: "2026-10-10T16:18:55.565Z"
-graded_by: agy-expert-executor
-content_hash: 966617c380ef236d4b8e01cde7d9122583b38dadea3d63971773790324dc133f
+graded_at: "2026-10-20T16:30:10.182Z"
+graded_by: flash-high-executor
+content_hash: 4b6b566dcca2287d98b1d520831f6263c2f92873c1a9bfaf4becaf7b72ff10ae
 summary:
   satisfied: 0
   unsatisfied: 5
@@ -16,14 +16,16 @@ criteria:
       - BA
     viewpoint: vp-ba-business-value
     status: unsatisfied
-    reason: The selection reasons for critical flows and specific business impacts if ignored are not documented.
+    reason: Selection rationale comparing other candidates and concrete business impacts when issues occur are not identified.
   - id: DC-002
     text: 重要フローの内容を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: Pending issues, impact scope, and approvers necessary for the PO's approval decision are not explicitly stated.
+    reason: >-
+      Decision criteria, open items, business impacts, approvers, and conditions for finalizing reference values are
+      missing.
   - id: DC-003
     text: フローの境界・永続化点・再実行性・失敗時挙動が定義されていること
     roles:
@@ -31,8 +33,8 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      While persistence points are listed, system boundaries and technical configuration constraints remain
-      insufficiently defined.
+      System and service boundaries, synchronization boundaries, and exact failure recovery constraints are not
+      sufficiently defined.
   - id: DC-004
     text: 重要フローのテストシナリオ設計に活用できること
     roles:
@@ -40,8 +42,8 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Test references use glob patterns and lack specific execution commands or expected results, making them unusable
-      for scenario design.
+      Concrete test IDs, file paths, test commands, inputs, and expected outcomes are not provided for designing test
+      scenarios.
   - id: DC-005
     text: フロー実装の共通理解として参照できること
     roles:
@@ -49,5 +51,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Specific configuration keys (e.g., parallel limits, retry backoffs) are not traceable for establishing a shared
-      understanding of the implementation.
+      Implementation target files, schema, configuration keys, concrete limits, and input/output constraints are not
+      uniquely traceable.

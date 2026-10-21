@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { readFileSync } from "node:fs";
-import { load } from "js-yaml";
+import { load } from "./yaml.js";
 import { globFilesSync } from "./glob-files.js";
 
 type Term = {

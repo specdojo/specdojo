@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c2e422043686431ab1cd98b412166ec5
+  ts: "2026-10-15T22:12:26Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-V23P の決定のフォローアップ（2026-10-16）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade と register を src/grade・src/register へ移す
+    - field: description
+      from: ""
+      to: codemod で grade と register のファイルを各ディレクトリへ移す。 PJR-V23P の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-16"
+- v: 1
+  id: reg_7f0c1999d3374c058de33c35c6ffe78f
+  ts: "2026-10-16T22:46:33Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c2e422043686431ab1cd98b412166ec5
+- v: 1
+  id: reg_f2db899d11b74a9b944c15bcb3cc3f03
+  ts: "2026-10-16T22:56:58Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7f0c1999d3374c058de33c35c6ffe78f
+- v: 1
+  id: reg_f6e27308e6874843bfe78d68bdc9a4db
+  ts: "2026-10-17T06:15:09Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に rename・dist・移す前の 0.3.1 との --help を比べ、register build と grade list を確かめた（2026-10-17）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: codemod で grade の 13 ファイルと register の 16 ファイル、テスト 14 件を src/grade・src/register へ移した。--help（25 コマンド）は移す前の 0.3.1 と一致した。src/grade.ts は再 export だけの 22 行で import のパスがすべて変わったため、git は rename ではなく追加と削除と判定した
+  previous_event_id: reg_f2db899d11b74a9b944c15bcb3cc3f03

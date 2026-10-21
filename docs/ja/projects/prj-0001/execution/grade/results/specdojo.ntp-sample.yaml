@@ -3,29 +3,75 @@ version: 1
 document: specdojo:ntp-sample
 path: docs/ja/specdojo/samples/ntp-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 69
-graded_at: "2026-09-05T12:15:53.886Z"
-graded_by: gemma-expert-executor
+score: 79
+graded_at: "2026-10-15T21:20:25.997Z"
+graded_by: agy-expert-executor
 content_hash: a418e6503b9dfb56b6d4bdfd9b189ce5c033f191790ed553e7f152a44d69f615
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 67
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 67
+  implementation:
+    score: 100
   quality:
+    score: 67
+  consistency:
     score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
     level: 4
     score: 100
   vp-arc-conciseness:
     level: 2
     score: 50
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -56,29 +111,34 @@ findings:
     severity: major
     rule: vp-arc-conciseness
     line: 20
+    anchor: "| 項目         | 値                                                         | 備考                                 |"
     message: 「4. 最小記述例」の内容が前節の内容の反復に留まっており、冗長である。
-    anchor: "| 項目         | 値                                                         | 備考                                 |"
-  - id: F003
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 20
-    message: rulebook で必須とされている「4. 検証観点」が欠落し、代わりに「4. 最小記述例」となっている。
-    anchor: "| 項目         | 値                                                         | 備考                                 |"
-  - id: F004
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 20
-    message: rulebook の本文構成（標準テンプレ）に準拠しておらず、サンプルとしての整合性が欠けている。
-    anchor: "| 項目         | 値                                                         | 備考                                 |"
-  - id: F005
-    severity: major
-    rule: vp-ux-readability
-    line: 20
-    message: サンプルとしての具体性に欠け、各項目の記述水準や具体例が不明確であるため、初見の読者が作成内容を判断できない。
-    anchor: "| 項目         | 値                                                         | 備考                                 |"
+    message_ja: 「4. 最小記述例」の内容が前節の内容の反復に留まっており、冗長である。
   - id: F002
     severity: major
     rule: vp-qe-verifiability
     line: 25
-    message: 判定基準などの具体例が提示されておらず、rulebook が求める「判定可能な記述」の具体像を読者が把握できない。
     anchor: ""
+    message: 判定基準などの具体例が提示されておらず、rulebook が求める「判定可能な記述」の具体像を読者が把握できない。
+    message_ja: 判定基準などの具体例が提示されておらず、rulebook が求める「判定可能な記述」の具体像を読者が把握できない。
+  - id: F003
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 20
+    anchor: "| 項目         | 値                                                         | 備考                                 |"
+    message: rulebook で必須とされている「4. 検証観点」が欠落し、代わりに「4. 最小記述例」となっている。
+    message_ja: rulebook で必須とされている「4. 検証観点」が欠落し、代わりに「4. 最小記述例」となっている。
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 20
+    anchor: "| 項目         | 値                                                         | 備考                                 |"
+    message: rulebook の本文構成（標準テンプレ）に準拠しておらず、サンプルとしての整合性が欠けている。
+    message_ja: rulebook の本文構成（標準テンプレ）に準拠しておらず、サンプルとしての整合性が欠けている。
+  - id: F005
+    severity: major
+    rule: vp-ux-readability
+    line: 20
+    anchor: "| 項目         | 値                                                         | 備考                                 |"
+    message: サンプルとしての具体性に欠け、各項目の記述水準や具体例が不明確であるため、初見の読者が作成内容を判断できない。
+    message_ja: サンプルとしての具体性に欠け、各項目の記述水準や具体例が不明確であるため、初見の読者が作成内容を判断できない。

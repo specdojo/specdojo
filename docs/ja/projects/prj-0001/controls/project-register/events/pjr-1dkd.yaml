@@ -32,3 +32,48 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_b44481e0c38b4c6b9e10c7541a808677
+  ts: "2026-10-14T13:48:06Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_93a0570d02534114862ca73ab4de1fbb
+- v: 1
+  id: reg_979f07d8e6224079ad2358e6dea2b42e
+  ts: "2026-10-14T13:58:40Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b44481e0c38b4c6b9e10c7541a808677
+- v: 1
+  id: reg_deccb99df4864a488b9b62eeba2966a4
+  ts: "2026-10-14T14:01:03Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、生成物のない新しい checkout（51abd8956）で exec-register-pipeline-e2e の 17 件が通ることを確かめた（2026-10-14）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-14"
+    - field: conclusion
+      from: "-"
+      to: fixture が登録簿の生成物を自分で作って commit し、実リポジトリからのテンプレートのコピーでは generated/ を除くようにして、生成物のない checkout でも並列実行の 2 件が通るようにした
+  previous_event_id: reg_979f07d8e6224079ad2358e6dea2b42e

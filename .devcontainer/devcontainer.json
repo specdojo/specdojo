@@ -112,7 +112,10 @@
         "yzhang.markdown-all-in-one",
         "vue.volar",
         "redhat.vscode-xml",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "astro-build.astro-vscode",
+        "bradlc.vscode-tailwindcss",
+        "dbaeumer.vscode-eslint"
       ]
     }
   }

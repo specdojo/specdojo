@@ -1,0 +1,14 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.3.0 typecheck
+> tsc -b --noEmit
+
+src/exec-worktree-ops-lifecycle.ts(367,9): error TS2304: Cannot find name 'appendGitFailureLog'.
+src/exec-worktree-ops-lifecycle.ts(367,9): error TS2304: Cannot find name 'appendGitFailureLog'.
+
+
+--- stderr ---

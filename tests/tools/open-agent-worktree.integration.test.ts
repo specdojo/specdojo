@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { gitEnvironment } from "../../src/exec-worktree.js";
+import { gitEnvironment } from "../../src/exec/worktree.js";
 
 const scriptPath = path.resolve("tools/worktree/open-agent-worktree.sh");
 const fixtures: string[] = [];
@@ -51,6 +51,28 @@ describe("tools/worktree/open-agent-worktree.sh", () => {
       env: gitEnvironment(),
     });
     expect(git(worktree, "branch", "--show-current")).toBe("worktree/codex-work");
+  });
+
+  it("passes the main checkout root to orchestrator launch while running inside the worktree", () => {
+    const { repo, worktree } = createFixture();
+
+    const output = execFileSync(
+      scriptPath,
+      [
+        "codex-work",
+        process.execPath,
+        "-e",
+        "process.stdout.write(JSON.stringify({cwd:process.cwd(),configRoot:process.env.SPECDOJO_ORCHESTRATOR_CONFIG_ROOT}))",
+      ],
+      {
+        cwd: repo,
+        env: gitEnvironment(),
+        encoding: "utf8",
+      },
+    );
+
+    const commandOutput = output.trim().split("\n").at(-1);
+    expect(JSON.parse(commandOutput ?? "")).toEqual({ cwd: worktree, configRoot: repo });
   });
 
   it("refuses to start an agent when the existing worktree uses another branch", () => {

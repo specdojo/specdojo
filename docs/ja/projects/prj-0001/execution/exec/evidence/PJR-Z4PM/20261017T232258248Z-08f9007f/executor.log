@@ -1,0 +1,33 @@
+今、変更前の CLI ヘルプ出力を記録するタスクを実行しています。完了通知を待機します。
+変更ファイルの状態を確認するタスクを実行しています。完了通知を待機します。
+変更前後の CLI ヘルプ出力を比較するタスクを実行しています。完了通知を待機します。
+catalog validate の実行タスクを開始しました。完了通知を待機します。
+関連ユニットテストの実行タスクを開始しました。完了通知を待機します。
+# PJR-Z4PM review と grade、docs と catalog の循環をほどく 対応完了報告
+
+PJR-QQKY の決定および PJR-Z4PM の完了条件に基づき、`grade` ⇄ `review` および `catalog` ⇄ `docs` の 2 組の循環する依存関係を解消しました。
+
+## 実施内容
+
+1. **`review` → `grade/result` の依存解消**
+   - `GradeResult` 型および `src/review/grade.ts` が利用する関数（`gradeContentHash`・`gradeFindingDisplayMessage`・`gradeResultPathForDocument`・`parseGradeResult` 等）を `src/shared/grade-result.ts` へ抽出し、`src/grade/result.ts` から再 export して後方互換性を保ちました。
+   - `src/review/grade.ts` の import 先を `src/shared/grade-result.js` へ切り替え、`src/review/` から `src/grade/` への依存を 0 件に解消しました。
+   - `src/exec/` を変更しない制約を守るため、`review/grade.ts` 自体の移動は行わず、型および共通関数を `src/shared/` へ配置しました。
+
+2. **`docs` → `catalog/build` の依存解消**
+   - `isDctTemplateCatalog`・`renderCatalogTemplateBody` およびその描画処理（`renderSections`・`renderTable`・`renderDoneCriteria` 等）を `src/shared/catalog-render.ts` へ抽出し、パス解決処理（`resolveBasePath` 等）を `src/shared/catalog-paths.ts` へ抽出しました。
+   - `src/catalog/build-render.ts`・`src/catalog/paths.ts`・`src/catalog/types.ts` からそれらを再 export して既存インターフェースを維持しました。
+   - `src/docs/yaml-pages.ts` の import 先を `src/shared/catalog-render.js` へ切り替え、`src/docs/` から `src/catalog/` への依存を 0 件に解消しました。
+
+3. **循環解消と規則遵守の確認**
+   - 変更後の依存関係を確認し、`src/review/` → `src/grade/`（0 件）、`src/docs/` → `src/catalog/`（0 件）となり、2 組の循環が完全に解消されたことを確認しました。
+   - `src/shared/` 配下のモジュールが外部の `src/` 機能を一切 import していないことを確認し、[pjr-x8y9-src-dependency-direction-rules.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z4PM/docs/ja/projects/prj-0001/controls/project-register/pjr-x8y9-src-dependency-direction-rules.md) の規則を遵守しています。
+   - 変更前後の `grade`・`yaml-pages`・`catalog` および各サブコマンド計 14 件の `--help` 出力を取得・比較し、完全一致（差分なし）を確認しました。
+   - `src/exec/` 配下のファイルは一切変更していません。
+
+4. **個票の更新**
+   - [pjr-z4pm-src-small-cycles.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Z4PM/docs/ja/projects/prj-0001/controls/project-register/pjr-z4pm-src-small-cycles.md) の作業内容テーブルを done に更新し、対応結果セクションを記入しました（frontmatter のステータスは規約に従い維持）。
+
+<specdojo_executor_evidence>
+{"final_message":"review と grade、docs と catalog の循環を解消し、CLI ヘルプ出力の一致と catalog validate の通過を確認しました。","validations":[{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK: dct-index.yaml"}]}
+</specdojo_executor_evidence>

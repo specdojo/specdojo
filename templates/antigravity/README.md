@@ -40,7 +40,7 @@ npx specdojo config scaffold --provider antigravity --global
 Antigravity CLI（`agy`）はファイル定義の agent を持たないため、`--agent <name>` では起動できません。規範の本文を `-i` で渡します。
 
 ```sh
-agy --add-dir "$(pwd)" --model gemini-3.1-pro-high -i "$(cat .specdojo/antigravity/orchestrator.md)"
+agy --add-dir "$(pwd)" --model gemini-3.8-flash-high -i "$(cat .specdojo/antigravity/orchestrator.md)"
 ```
 
 `--add-dir "$(pwd)"` を付けないと、作業ディレクトリのファイルを読み書きできず、`AGENTS.md` と `.agents/rules/*.md` も読み込まれません。
@@ -50,11 +50,15 @@ agy --add-dir "$(pwd)" --model gemini-3.1-pro-high -i "$(cat .specdojo/antigravi
 ```json
 {
   "scripts": {
-    "orch:agy": "agy --add-dir \"$(pwd)\" --model gemini-3.1-pro-high -i \"$(cat .specdojo/antigravity/orchestrator.md)\""
+    "orch:flash": "specdojo orchestrator launch --provider antigravity -- --add-dir \"$(pwd)\" --model gemini-3.8-flash-high -i \"$(cat .specdojo/antigravity/orchestrator.md)\""
   }
 }
 ```
 
 ## executor / reporter として使う
 
-`exec-defaults-snippet.yaml` を `.specdojo/exec-defaults.yaml` の `providers` へ、`agent-members-snippet.yaml` の member 定義をリポジトリ共通の `.specdojo/agent-members.yaml` の `members` へ写します。agent は project ごとの `pm-members.yaml` へ書きません。モデル ID は推論強度を含むため、`--effort` を併用すると起動に失敗します。headless 実行に必要な command は上記のグローバル permission で許可し、`--dangerously-skip-permissions` は使いません。
+`exec-defaults-snippet.yaml` を `.specdojo/exec-defaults.yaml` の `providers` へ、`agent-members-snippet.yaml` の member 定義をリポジトリ共通の `.specdojo/agent-members.yaml` の `members` へ写します。agent は project ごとの `pm-members.yaml` へ書きません。
+
+名簿は実体と別名の 2 段で書きます。実体（`flash-executor`・`agy-opus-executor` など）は model の系統で名付け、model の ID を `model` に持ちます。従来の名前（`agy-executor`・`agy-claude-executor` など）は `aliases` で実体を指す別名にします。スニペット末尾の `aliases` の例は、向き先の member を有効にしたものだけを写します（別名は無効な member を指せません）。
+
+使えるモデル ID は `agy models` で確認します。モデル ID は推論強度を含むため、`--effort` を併用すると起動に失敗します。headless 実行に必要な command は上記のグローバル permission で許可し、`--dangerously-skip-permissions` は使いません。

@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 64
-graded_at: "2026-10-11T16:22:03.637Z"
+graded_at: "2026-10-15T16:19:41.207Z"
 graded_by: agy-expert-executor
-content_hash: b7e187664be665489c7db0d0c1f62145b5ba32d7000638de0e81f324b4dd0a8d
+content_hash: f9beb51fab601754588ad15bf3fbf6d230423886397326caa4b5cd4d9062084f
 source_hashes:
   catalog-entry: 0215888fcdcef5830bb399382957cddd56a0df4ad20fabf4de0e88f729772749
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -131,14 +131,16 @@ findings:
     severity: major
     rule: vp-pm-plan-feasibility
     line: 41
-    anchor: ""
+    anchor: >-
+      | ドキュメントサイト | `docs/`、`packages/docs-site/` | `npm run docs:build`      | `.vitepress/dist`（workspace 直下） | CI /
+      ローカル検証 |
     message: 変更タスクを計画・完了判定できるよう、「代表実行」「経路を検証」「分離を確認」の対象ケース、実行手順、期待結果を具体化する必要がある。
     message_ja: 変更タスクを計画・完了判定できるよう、「代表実行」「経路を検証」「分離を確認」の対象ケース、実行手順、期待結果を具体化する必要がある。
   - id: F003
     severity: major
     rule: vp-pm-dependency-risk
     line: 59
-    anchor: "| アーキテクチャ | `tsd-index`                 | 採用技術と実行基盤の一覧           |"
+    anchor: "| -------------- | --------------------------- | ---------------------------------- |"
     message: 廃止済み `cdfd-task-execution` と `cdfd-register-lifecycle` への依存を、現行の `cdfd-do`、`cdfd-plan` などへ更新し、後続作業への影響を解消する必要がある。
     message_ja: 廃止済み `cdfd-task-execution` と `cdfd-register-lifecycle` への依存を、現行の `cdfd-do`、`cdfd-plan` などへ更新し、後続作業への影響を解消する必要がある。
   - id: F004
@@ -162,8 +164,9 @@ findings:
     rule: vp-arc-cross-document-consistency
     line: 34
     anchor: >-
-      | ------------------ | ------------------------------ | ------------------------- |
-      ------------------------------------ | ----------------- |
+      | Git Integration | Git source and repository policy |
+      `src/exec-worktree.ts`、`src/exec-worktree-ops.ts`、`src/exec-worktree-ops-*.ts`、`src/exec-repo-integration.ts`、`src/exec-repo-integration-*.ts`、`.github/`
+      | DEV / ARC | branch / worktree / repository integration / PR境界 |
     message: >-
       `npm run docs:index` は package scripts に存在しないため、実在する `npm run docs:generate` または `specdojo index build`
       へ修正する必要がある。
@@ -174,7 +177,7 @@ findings:
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 59
-    anchor: "| アーキテクチャ | `tsd-index`                 | 採用技術と実行基盤の一覧           |"
+    anchor: "| -------------- | --------------------------- | ---------------------------------- |"
     message: >-
       `cdfd-task-execution` と `cdfd-register-lifecycle` は deprecated として trash 配下へ移動済みであり、現行の `cdfd-do` と `cdfd-plan`
       など後継 SSOT への参照へ更新する必要がある。
@@ -199,7 +202,9 @@ findings:
     severity: major
     rule: vp-dev-change-impact
     line: 41
-    anchor: ""
+    anchor: >-
+      | ドキュメントサイト | `docs/`、`packages/docs-site/` | `npm run docs:build`      | `.vitepress/dist`（workspace 直下） | CI /
+      ローカル検証 |
     message: API、DB schema、設定 schema、Job、監視設定を変更する場合の SSOT、生成物、テスト、運用手順への影響を変更トリガーとして追加する必要がある。
     message_ja: API、DB schema、設定 schema、Job、監視設定を変更する場合の SSOT、生成物、テスト、運用手順への影響を変更トリガーとして追加する必要がある。
   - id: F011
@@ -207,8 +212,9 @@ findings:
     rule: vp-dev-testability
     line: 34
     anchor: >-
-      | ------------------ | ------------------------------ | ------------------------- |
-      ------------------------------------ | ----------------- |
+      | Git Integration | Git source and repository policy |
+      `src/exec-worktree.ts`、`src/exec-worktree-ops.ts`、`src/exec-worktree-ops-*.ts`、`src/exec-repo-integration.ts`、`src/exec-repo-integration-*.ts`、`.github/`
+      | DEV / ARC | branch / worktree / repository integration / PR境界 |
     message: "`npm run docs:index` を実在するコマンドへ修正し、各変更種別について実行する lint・schema・test・build コマンドと期待結果を明示する必要がある。"
     message_ja: "`npm run docs:index` を実在するコマンドへ修正し、各変更種別について実行する lint・schema・test・build コマンドと期待結果を明示する必要がある。"
   - id: F012
@@ -223,15 +229,17 @@ findings:
     rule: vp-qe-done-criteria
     line: 48
     anchor: >-
-      | PO承認・PR境界変更     | Git運用標準、登録簿運用ガイド                | register CDFD、重要フロー                      |
-      authorとapproverの分離を確認  |
+      | ---------------------- | ------------------------------------------------ |
+      ---------------------------------------------- | ----------------------------- |
     message: 運用文書ディレクトリだけが示され、運用・監視設定そのものの SSOT が特定できないため DC-004 を確認できない。
     message_ja: 運用文書ディレクトリだけが示され、運用・監視設定そのものの SSOT が特定できないため DC-004 を確認できない。
   - id: F014
     severity: major
     rule: vp-qe-verifiability
     line: 41
-    anchor: ""
+    anchor: >-
+      | ドキュメントサイト | `docs/`、`packages/docs-site/` | `npm run docs:build`      | `.vitepress/dist`（workspace 直下） | CI /
+      ローカル検証 |
     message: 「代表実行成功」「経路を検証」「分離を確認」などの完了条件について、実行する検査・対象ケース・期待結果を明記しなければ判定者ごとに合否が変わる。
     message_ja: 「代表実行成功」「経路を検証」「分離を確認」などの完了条件について、実行する検査・対象ケース・期待結果を明記しなければ判定者ごとに合否が変わる。
   - id: F015
@@ -266,14 +274,16 @@ findings:
     severity: minor
     rule: vp-ux-user-flow
     line: 52
-    anchor: ""
+    anchor: >-
+      | 登録項目ID規則変更     | `src/register.ts`、`src/register-*.ts`、命名標準 | register CDFD、重要フロー                      |
+      衝突検出と参照更新を検証      |
     message: 関連文書の ID がコード表記だけでリンク化されていないため、解決可能な wikilink または Markdown リンクへ変更する必要がある。
     message_ja: 関連文書の ID がコード表記だけでリンク化されていないため、解決可能な wikilink または Markdown リンクへ変更する必要がある。
   - id: F020
     severity: major
     rule: vp-ux-user-flow
     line: 59
-    anchor: "| アーキテクチャ | `tsd-index`                 | 採用技術と実行基盤の一覧           |"
+    anchor: "| -------------- | --------------------------- | ---------------------------------- |"
     message: データフローの導線が廃止済み文書を指しており、利用者が現行の Plan・Do 設計へ到達できないため後継文書への導線へ置き換える必要がある。
     message_ja: データフローの導線が廃止済み文書を指しており、利用者が現行の Plan・Do 設計へ到達できないため後継文書への導線へ置き換える必要がある。
   - id: F021
@@ -288,8 +298,8 @@ findings:
     rule: vp-ops-operability
     line: 48
     anchor: >-
-      | PO承認・PR境界変更     | Git運用標準、登録簿運用ガイド                | register CDFD、重要フロー                      |
-      authorとapproverの分離を確認  |
+      | ---------------------- | ------------------------------------------------ |
+      ---------------------------------------------- | ----------------------------- |
     message: 運用手順ディレクトリだけでなく、監視、ログ、通知、定期処理などの運用設定 SSOT、更新責任、検証・再生成手順を特定する必要がある。
     message_ja: 運用手順ディレクトリだけでなく、監視、ログ、通知、定期処理などの運用設定 SSOT、更新責任、検証・再生成手順を特定する必要がある。
 done_criteria:

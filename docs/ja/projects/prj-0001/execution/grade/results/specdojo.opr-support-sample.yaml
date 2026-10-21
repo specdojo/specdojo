@@ -3,45 +3,99 @@ version: 1
 document: specdojo:opr-support-sample
 path: docs/ja/specdojo/samples/opr-support-sample.md
 target: kata
-rubric: grade-rubric-v1
-reference: specdojo:prj-overview-sample
+rubric: grade-rubric-v2
 verdict: fail
-score: 72
-graded_at: "2026-09-05T17:27:20.297Z"
-graded_by: gemma-expert-executor
+score: 58
+graded_at: "2026-10-16T20:30:13.452Z"
+graded_by: agy-expert-executor
 content_hash: 48792af58ac26f7b9a186fe89fb482404ce0a4038a729814528192df5bb031fb
 categories:
-  consistency:
-    score: 25
-  usability:
-    score: 83
+  purpose:
+    score: 63
+  operations:
+    score: 81
+  planning:
+    score: 67
+  business:
+    score: 50
   architecture:
-    score: 100
-  quality:
+    score: 92
+  usability:
     score: 75
+  implementation:
+    score: 63
+  quality:
+    score: 50
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 2
     score: 50
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 0
     score: 0
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -49,31 +103,173 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 1
-  major: 3
-  minor: 0
+  major: 11
+  minor: 8
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 6
-    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
-    anchor: ""
+    rule: vp-po-purpose-alignment
+    line: 12
+    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
+    message: >-
+      The document lacks a clear statement of purpose, scope, and operational necessity, making it impossible to
+      evaluate alignment with project objectives.
+    message_ja: 文書には目的、範囲、および運用の必要性に関する明確な記述が不足しているため、プロジェクトの目的との整合性を評価することが不可能です。
   - id: F002
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 12
+    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
+    message: >-
+      The sample lacks an open issues or decision readiness section detailing assumptions and pending points for PO
+      approval.
+    message_ja: サンプルには、前提条件やPOの承認待ち事項を詳述した、オープンな課題または意思決定準備状況のセクションが不足しています。
+  - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 16
+    anchor: ""
+    message: >-
+      The procedure lacks responsible role codes, step-by-step sequencing with conditions, and completion criteria
+      required for work planning and feasibility estimation.
+    message_ja: 手順には、作業計画や実現可能性の推定に必要な責任役割コード、条件を含むステップごとの順序、および完了基準が不足しています。
+  - id: F004
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 22
+    anchor: ""
+    message: >-
+      Operational risks and explicit dependency impacts on downstream deliverables or project registers are not
+      identified.
+    message_ja: 運用のリスク、および後続の成果物やプロジェクトレジスターに対する明示的な依存関係の影響が特定されていません。
+  - id: F005
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 22
+    anchor: ""
+    message: >-
+      The document does not separate reporting destinations or specify items to be logged and tracked in project
+      management registers.
+    message_ja: 文書では、報告先が分離されておらず、プロジェクト管理レジスターに記録および追跡されるべき項目も指定されていません。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 12
+    anchor: "- 障害疑いは `opr-incident` へ（P判定を付与）"
+    message: >-
+      The document fails to articulate the business problem, target users, and expected business value or success
+      criteria of the support procedure.
+    message_ja: 文書では、サポート手順のビジネス上の課題、対象ユーザー、および期待されるビジネス価値や成功基準が明確に述べられていません。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 16
+    anchor: ""
+    message: Scope of accepted inquiries, exclusions, operating hours, and acceptance criteria are completely omitted.
+    message_ja: 受付可能な問い合わせの範囲、除外事項、営業時間、および受け入れ基準が完全に省略されています。
+  - id: F008
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 16
+    anchor: ""
+    message: >-
+      Stakeholders, including inquiry submitters, first-line operators, and escalation reviewers, are not clearly
+      identified.
+    message_ja: 問い合わせの提出者、一次ラインのオペレーター、およびエスカレーションのレビュアーを含むステークホルダーが明確に特定されていません。
+  - id: F009
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 16
+    anchor: ""
+    message: >-
+      Technical constraints and supporting tools (e.g., ticketing systems, communication platforms) used for inquiry
+      handling are not defined.
+    message_ja: 問い合わせ対応に使用される技術的な制約や支援ツール（例：チケッティングシステム、コミュニケーションプラットフォーム）が定義されていません。
+  - id: F010
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 20
+    anchor: ""
+    message: >-
+      The procedure provides only abstract stages without specific inquiry intake fields, response templates, or
+      actionable implementation details.
+    message_ja: 手順には、具体的な問い合わせ受付フィールド、回答テンプレート、または実行可能な実装の詳細がなく、抽象的な段階のみが示されています。
+  - id: F011
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 22
+    anchor: ""
+    message: Impact of procedure changes on related operational runbooks and ticketing workflows is not documented.
+    message_ja: 手順の変更が関連する運用のランブックやチケッティングワークフローに与える影響が文書化されていません。
+  - id: F012
+    severity: minor
+    rule: vp-dev-testability
+    line: 16
+    anchor: ""
+    message: >-
+      The document provides no verification steps, simulation checks, or acceptance tests to validate the inquiry
+      handling process.
+    message_ja: 文書には、問い合わせ対応プロセスを検証するための検証ステップ、シミュレーションチェック、または受け入れテストが含まれていません。
+  - id: F013
+    severity: major
+    rule: vp-qe-verifiability
+    line: 22
+    anchor: ""
+    message: >-
+      Priority determination rules and criteria for successful temporary resolution lack measurable, pass/fail
+      verifiable conditions.
+    message_ja: 優先度の決定ルールと一時的な解決の成功基準に、測定可能で合否判定可能な条件が欠けています。
+  - id: F014
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 15
-    message: "`opr-rulebook` 第 5 章で定義されている必須章がほぼすべて欠落しており、かつ省略理由の記載もないため、運用手順書の構成として不成立である。"
     anchor: ""
-  - id: F003
+    message: "`opr-rulebook` 第 5 章で定義されている必須章がほぼすべて欠落しており、かつ省略理由の記載もないため、運用手順書の構成として不成立である。"
+    message_ja: "`opr-rulebook` 第 5 章で定義されている必須章がほぼすべて欠落しており、かつ省略理由の記載もないため、運用手順書の構成として不成立である。"
+  - id: F015
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 6
+    anchor: ""
+    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
+    message_ja: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、手順書であるため `specdojo:opr-rulebook` とすべきである。
+  - id: F016
     severity: major
     rule: vp-qe-kata-conformance
     line: 15
-    message: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 10` とすべきである。
     anchor: ""
-  - id: F004
+    message: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 10` とすべきである。
+    message_ja: 見出し番号が `## 1` となっているが、ルールおよびテンプレートの定義に従い `## 10` とすべきである。
+  - id: F017
     severity: major
     rule: vp-ux-readability
     line: 15
-    message: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとしての役割（完成形の提示）を果たせておらず、不十分である。
     anchor: ""
+    message: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとしての役割（完成形の提示）を果たせておらず、不十分である。
+    message_ja: 必須構成を大幅に省略しているため、`opr-＜term＞` 文書を正しく作成するためのサンプルとしての役割（完成形の提示）を果たせておらず、不十分である。
+  - id: F018
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 23
+    anchor: ""
+    message: >-
+      The abbreviation "P判定" is used without definition or alignment with standard incident priority terminology, and
+      standard role codes are missing.
+    message_ja: 略語「P判定」が定義や標準的なインシデント優先順位の用語との整合性なしに使用されており、標準的な役割コードも不足しています。
+  - id: F019
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 5
+    anchor: "## 1. 問い合わせ一次対応手順（テンプレ・ナレッジ）"
+    message: The sample remains in draft status without criteria or pending tasks specified for advancing it to ready.
+    message_ja: サンプルはドラフト状態のままであり、readyに進めるための基準や保留タスクが指定されていません。
+  - id: F020
+    severity: major
+    rule: vp-ops-operability
+    line: 16
+    anchor: ""
+    message: >-
+      The runbook lacks essential operational information such as logging repositories, audit trails, knowledge base
+      update flows, and responsible operation teams.
+    message_ja: ランブックには、ログのリポジトリ、監査証跡、ナレッジベースの更新フロー、および責任を持つ運用チームなどの不可欠な運用情報が不足しています。

@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_aee227eaa9de493db4d6811b5a59a1cc
+  ts: "2026-10-14T21:42:05Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-VGNG の対応で本リポジトリの設定を直した際に、配布物にも同じ ID が残ることを見つけた。利用者の判断で 0.3.1 で直す（2026-10-15）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 配布する雛形と文書の agy の model の ID が提供終了のものになっている
+    - field: description
+      from: ""
+      to: init が生成する exec-defaults の雛形・antigravity の雛形・ガイドが、agy 1.3.5 で提供されていない gemini-3.1-pro-high・claude-sonnet-4-6・claude-opus-4-6-thinking を指す。0.3.0 で init から agy を設定した利用者は expert の agy が invalid model selection で起動しない。0.3.1 で直す
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
+- v: 1
+  id: reg_b8238f4880ab426d999f1b2deb852d62
+  ts: "2026-10-14T21:49:46Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_aee227eaa9de493db4d6811b5a59a1cc
+- v: 1
+  id: reg_8390ea24097f4a2f8d56d38a5cfa0106
+  ts: "2026-10-14T21:55:15Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+  previous_event_id: reg_b8238f4880ab426d999f1b2deb852d62
+- v: 1
+  id: reg_9a886f6caca047499a55b572c37eebdc
+  ts: "2026-10-14T21:57:49Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: agent exited with non-zero code: agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result …"
+      to: "-"
+  previous_event_id: reg_8390ea24097f4a2f8d56d38a5cfa0106
+- v: 1
+  id: reg_eec573da238949b4894a8b1f353b9852
+  ts: "2026-10-14T22:05:27Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9a886f6caca047499a55b572c37eebdc
+- v: 1
+  id: reg_f346a5e64c5f463995a9edaf89151244
+  ts: "2026-10-14T22:06:15Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、対象に古い ID が残っていないこと、CHANGELOG の 0.3.1 の記載を確かめた（2026-10-15）。package.json は保護設定のため exec handoff apply で適用した（d6e1dd005）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: init の雛形・antigravity の雛形と README・ガイド 2 件・設計書・本リポジトリの orch:agy の agy の model の ID を提供中のものへ置き換え、agy models で確かめる旨を書き、init の雛形のテストを加えた。CHANGELOG の 0.3.1 に記載した
+  previous_event_id: reg_eec573da238949b4894a8b1f353b9852

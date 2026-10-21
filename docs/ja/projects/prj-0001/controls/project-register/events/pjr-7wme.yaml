@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d5209842dd534bdeb9753d66ee935df6
+  ts: "2026-10-18T00:38:50Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者の指摘（2026-10-18）。実行中に見つけた問題の起票や decision からの todo を、元の項目から機械的に辿れるようにするため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 個票に起票の元になった項目（derived_from）を記録できるようにする
+    - field: description
+      from: ""
+      to: 個票の frontmatter に derived_from（元になった項目の ID の一覧。project をまたぐ場合は prj-0001:PJR-XXXX）を加え、register add --from で指定できるようにする。元の項目の側から派生先の一覧を辿れるようにし、decision の追跡先も同じ関係で表す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+- v: 1
+  id: reg_305b46c7582a4022a59712df9e046293
+  ts: "2026-10-18T05:48:13Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d5209842dd534bdeb9753d66ee935df6
+- v: 1
+  id: reg_d1afd3d5dc054dd7b205744b57abe8fc
+  ts: "2026-10-18T06:07:57Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_305b46c7582a4022a59712df9e046293
+- v: 1
+  id: reg_780e3cdb7e0347d7aaca1bfd6f26f102
+  ts: "2026-10-18T06:31:07Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
+      to: "-"
+  previous_event_id: reg_d1afd3d5dc054dd7b205744b57abe8fc
+- v: 1
+  id: reg_8f350e93308d4c3fa401bfcf18120421
+  ts: "2026-10-18T06:41:10Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_780e3cdb7e0347d7aaca1bfd6f26f102
+- v: 1
+  id: reg_901c140d1330469392ed3c0762c0b5ae
+  ts: "2026-10-18T06:43:53Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・claude-reporter）の差分・親検証と、register add --from の dry-run を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 個票の frontmatter に derived_from を加え、register add・update の --from（繰り返し可）で指定できるようにした。存在しない項目は理由を出して止める。派生先は generated/pjr-derived-items.md と history で辿れる。CHANGELOG への記載は PJR-HZW3 で補う
+  previous_event_id: reg_8f350e93308d4c3fa401bfcf18120421

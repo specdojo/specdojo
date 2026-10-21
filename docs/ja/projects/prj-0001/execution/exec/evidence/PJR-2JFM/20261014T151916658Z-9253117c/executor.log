@@ -1,0 +1,13 @@
+実装を完了しました。
+
+- Schedule・in-place・Job を6モジュールへ分割
+- `exec-run.ts` を6,949行から3,531行へ縮小
+- 全新規モジュールは1,000行以下
+- 公開 export 52件と3コマンドの help 出力は分割前後で一致
+- 個票の作業内容・対応結果を更新
+- result ファイルは reporter 管理のため未編集
+- 親検証は runner に委譲
+
+<specdojo_executor_evidence>
+{"final_message":"Schedule・in-place・Job の実行処理をモード別モジュールへ分割し、公開 API と CLI help の互換性を維持した。","validations":[{"command":"npx prettier --check src/exec-run.ts src/exec-run-schedule-prepare.ts src/exec-run-schedule-task.ts src/exec-run-schedule-mode.ts src/exec-run-in-place.ts src/exec-run-job.ts src/exec-run-mode-shared.ts docs/ja/projects/prj-0001/controls/project-register/pjr-2jfm-exec-run-split-modes.md","status":"passed","summary":"変更した TypeScript・Markdown はすべて整形済み"},{"command":"node --import tsx src/specdojo.ts exec run --help; node --import tsx src/specdojo.ts exec cycle --help; node --import tsx src/specdojo.ts exec resume --help","status":"passed","summary":"3コマンドを読み込め、保存した分割前出力との差分なし"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証成功。既存の未配置文書に関する警告のみ"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の派生ビュー生成成功"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

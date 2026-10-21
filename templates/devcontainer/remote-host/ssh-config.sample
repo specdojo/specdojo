@@ -1,0 +1,19 @@
+# 接続元端末の ~/.ssh/config 用設定サンプル
+# <host> や <user> などのプレースホルダーは実際の接続先環境に合わせて変更してください。
+
+# 常時稼働ホストへの通常接続用
+Host <host>
+  HostName <host>
+  User <user>
+
+# devcontainer 内の tmux セッションへ直接入る接続用
+# RemoteCommand は非対話シェルで動くため、接続先端末の ~/.zshrc などの PATH 設定は読み込まれません。
+# 接続元から「ssh <host> 'command -v devcontainer'」を実行して Dev Container CLI が見つかるか確認できます。
+# 見つからない場合は、ホスト側の ~/bin/specdojo-tmux.sh の node_bin_dir を設定してください。
+Host <host>-tmux
+  HostName <host>
+  User <user>
+  RequestTTY force
+  RemoteCommand ~/bin/specdojo-tmux.sh
+  # devcontainer.json の公開ポート（appPort / forwardPorts）に合わせて LocalForward を追加してください。
+  # 例: LocalForward 5173 127.0.0.1:5173

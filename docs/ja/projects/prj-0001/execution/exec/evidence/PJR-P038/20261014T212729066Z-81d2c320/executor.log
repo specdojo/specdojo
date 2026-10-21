@@ -1,0 +1,15 @@
+executor stage の実装を完了しました。
+
+- `register.ts` を 2,418 行から 629 行へ縮小。
+- 共通基盤、移行、派生ビュー、項目更新、再採番を5モジュールへ抽出。すべて1,000行以下です。
+- 従来の公開 export 50件を維持し、循環 import はありません。
+- `register` と全14サブコマンドの `--help` は分割前後で一致しました。
+- 関連設計書と PJR-P038 個票を更新しました。
+- result は executor stage 指示に従い編集していません。
+- 親 runner 担当の lint、型検査、unit/integration、schema 検証は未実行です。
+
+`catalog validate` は成功しましたが、対象外の未作成文書に関する既存警告があります。
+
+<specdojo_executor_evidence>
+{"final_message":"register.tsを責務別の5モジュールへ分割し、公開API・CLI help・依存方向を維持した","validations":[{"command":"npx prettier --check src/register.ts src/register-core.ts src/register-migration.ts src/register-views.ts src/register-update.ts src/register-renumber.ts docs/ja/product/040-system-design/sysd-index.md docs/ja/product/040-system-design/sysd-critical-flows.md docs/ja/projects/prj-0001/controls/project-register/pjr-p038-register-domain-split.md","status":"passed","summary":"全変更ファイルがPrettier形式に適合"},{"command":"node --import tsx src/specdojo.ts register --help > tmp/pjr-p038-help-after/register.txt; for subcommand in scaffold add close reject defer reopen start wait review update migrate build history renumber; do node --import tsx src/specdojo.ts register \"$subcommand\" --help > \"tmp/pjr-p038-help-after/$subcommand.txt\" || exit 1; done; diff -ru tmp/pjr-p038-help-before tmp/pjr-p038-help-after","status":"passed","summary":"register本体と全14サブコマンドのhelpに差分なし"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の派生ビュー8ファイルを正常生成"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"catalog検証成功。対象外の未作成文書に関する既存警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

@@ -1,0 +1,488 @@
+Reading prompt from stdin...
+OpenAI Codex v0.162.1
+--------
+workdir: /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBPX
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: high
+reasoning summaries: none
+session id: 01a13b13-3a1d-7fa1-a022-425b4b93f448
+--------
+user
+---
+specdojo:
+  id: prj-0001:xep-pjr-gbpx-20261014t154021z-20a0
+  type: exec-plan
+  rulebook: none
+  task_id: PJR-GBPX
+  name: "exec-run.ts の register の実行とコマンドの登録を分ける"
+  mode: edit
+  status: ready
+  project_id: prj-0001
+  origin: register
+  owner: DEV
+---
+
+# Edit Plan: PJR-GBPX exec-run.ts の register の実行とコマンドの登録を分ける
+
+## 1. このタスクで行うこと
+
+プロジェクト登録簿の項目 PJR-GBPX「exec-run.ts の register の実行とコマンドの登録を分ける」に対応する。
+
+src/exec-run.ts のうち、register の実行（worktree での実行・統合・再開）と、run・cycle・resume のコマンドの登録を別のモジュールへ移す。動作は変えない
+
+## 2. 対象項目
+
+- `id`: PJR-GBPX
+- `type`: todo
+- `priority`: medium
+- `owner`: DEV
+- `due`: -
+- `登録簿`: `docs/ja/projects/prj-0001/controls/project-register/pjr-index.md`
+- `個票`: `docs/ja/projects/prj-0001/controls/project-register/pjr-gbpx-exec-run-split-register.md`
+- `result`: `docs/ja/projects/prj-0001/execution/exec/results/pjr-gbpx-20261014T154021Z-20a0-result.md`
+
+## 3. 進め方
+
+1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
+3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
+4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
+5. 判断に迷う箇所は _TODO_ / _ASSUMPTION_ で残し、根拠と次のアクションを result に書く。
+
+### grade result から展開された finding
+
+- なし
+
+plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+## 4. 完了手順
+
+1. 「進め方」に従って対応を完了する。
+2. 共通規約に従って、必要な整形・静的検査を実行する。
+3. result に実施内容・変更ファイル・申し送りを記入する。これはタスク完了に必須であり、_TODO_ を残したまま終了しない（詳細は共通規約を参照）。
+4. 登録簿（`pjr-index.md`）の行と個票のステータス項目は変更しない。状態遷移（review / close など）は runner と人間が行う。
+
+## 5. 異常終了の条件
+
+- 前提不足・対象ファイル不明・静的検査未解消の場合は異常終了する（終了コード 1）。
+- 標準エラー出力に理由を出力する（例: `blocked: <reason>; need=<next action>; ref=<path>`）。
+- agent 自身は登録簿の状態を変更せず、終了コードと標準エラー出力で runner に結果を返す。
+
+## 共通: 記法・成果物規約
+
+この規約は、生成される全 exec plan に共通で適用される。result の完了条件、他文書を参照する際のリンク記法、成果物の状態（status）の扱いを統一する。
+
+- result（review plan の場合は review result）への記入は、タスク完了に必須の作業である。成果物の編集とは別に、最後に必ず実施する。
+- 終了コード 0 で完了する前に、result の必須セクションをすべて実際の内容で埋め、プレースホルダ（_TODO_ など）や未記入のセクションを残さない。
+- 成果物に変更が不要と判断した場合でも、result の記入は省略しない。変更不要と判断した理由と根拠を result に記入してから完了する。
+- result が未記入・プレースホルダのまま終了コード 0 で終了すると、runner は成果物未完了（block）として扱い、タスクはやり直しになる。完了前に result の記入漏れがないことを必ず確認する。
+- result の frontmatter は scaffold 済みの構造を正本とする。`id` / `task_id` / `mode` / `project_id` / `plan_ref` / `agent` / `execution` / `approach` / `targets` はキーの追加・削除・改名をせず、scaffold された値のまま維持する。見出し構成（`# Edit Result` などの H1、`## 1.` 以降の章立て）も独自の構成に置き換えない。埋めるのは本文セクションの `_TODO_` プレースホルダの中身だけである。`status` と `completed_at` は完了処理（runner 側）が更新するため、自分で書き換えない。
+- 文書へのリンクは、対象文書が既に存在する場合は `[[id|title]]` 形式で記載する（`id` は project 修飾 doc id）。
+- リンクを表（テーブル）のセル内に置く場合は、区切りの `|` を `[[id\|title]]` のようにエスケープする。エスケープしないと列がずれて表が壊れ、prettier 整形でセルが分割されて固定化される。
+- まだ存在しない文書を参照する場合は、`[[...]]` ではなく `` `id` `` または `` `filename` `` のようにバッククォートで仮置きする。
+- Markdown の自由記述では、`_` を含む識別子・フィールド名（例: `depends_on`）を必ずインラインコードで囲む。result に描画される executor evidence や reporter の自由記述も同じ記法にする。
+- 成果物 frontmatter の `status` を `ready` に変更しない。`ready` への昇格は人間のみが行うため、`draft` のまま据え置く（exec のコミット時ガードでも昇格はブロックされる）。
+- plan に「プロジェクトコンテキスト」章がある場合、そこに挙がる文書はプロジェクト共通の前提を読むための参照であり、成果物 frontmatter の `based_on` へ転記しない。参照して得た前提は本文の記述内容へ反映する。
+- 成果物 frontmatter の `based_on` に書けるのは、その成果物の `depends_on` の推移閉包に含まれる先行成果物だけである。閉包外の ID を書くと `catalog validate` が「`based_on` が `depends_on` の推移閉包に含まれていません」としてエラーになり、コミットがブロックされる。`based_on` を増やす必要が生じた場合は、自分で転記せず、根拠不足として result に記録する。
+- ファイルの読み取り・書き込み・編集は、作業ディレクトリ（カレントディレクトリ）からの相対パスで指定する。絶対パスを自分で組み立てたり、作業ディレクトリ名を推測して指定したりしない（作業ディレクトリ名の取り違えは外部パス扱いになり拒否される）。
+- 編集・書き込みが作業ディレクトリ外（`external_directory`）として拒否された場合、原因はパス指定の誤り（誤った絶対パス・ディレクトリ名の取り違え）である。bash の heredoc などへ回避的に切り替えず、相対パスに直したうえで同じ編集ツールで再実行する。
+- 作業用のファイル（編集用スクリプト、検証用の一時データなど）はリポジトリの外（一時ディレクトリ）または worktree の `tmp/` 配下に置き、終了前に削除する。使い捨てのファイルを最上位に作らない。`tmp/` 配下のファイルは commit の対象から除外される。
+- 整形・静的検査は、この plan の完了手順または本共通規約で明示されたコマンドを実行する。変更対象に必要な test、build、schema 検証は、plan に個別記載がなくても実行してよい。同じ test script では対象限定と全件を同一 executor run 内で連続実行せず、どちらか一方に絞る。下表、plan、またはプロジェクト標準が全件 test を求める場合は、全件を1回だけ実行して対象限定の実行を省く。この制約は executor が sandbox 内で実行する test script の回数に対するものであり、親検証に設定された ID のコマンドは対象外である（親 runner が別途実行する）。実行したコマンド・対象・結果は result に記録する。
+- executor / reporter pipeline で親 runner の検証が設定されている場合、executor は設定済み ID に対応するコマンドを sandbox 内で実行せず、executor 終了後に親 runner が固定許可リストから実行して evidence へ追記する。`validate-schema` は `npm run validate:schema`、`test-unit` は `npm run test:unit`、`test-integration` は `npm run test:integration` に対応する。executor は親検証と同じコマンドの対象限定版も追加せず、二重実行しない。
+- 検査を実行する前に、リポジトリの `package.json`、`.specdojo/specdojo.config.json`、hook 設定を読み、下表の適用条件を確認する。条件を満たさない検査は実行せず、executor evidence の validations に `not_applicable` と非適用の理由を `reason` へ記録する。`not_run` は適用される検査を実行しなかった場合だけに使う。誤って `not_run` と記録しても、npm script・依存 package の不在、または SpecDojo サブコマンドの設定上の非適用を runner が機械的に確定できる場合は適用外として扱われるが、この救済を前提に記録を省略しない。
+- 依存パッケージの有無は、対象リポジトリの `package.json` の `dependencies` / `devDependencies` と、リポジトリに固定された package manager の設定を基準に判断する。`npx` が未導入パッケージをネットワークから一時取得できることは、導入済みとはみなさない。設定ファイルがない、壊れているなどの理由で適用条件を確定できない検査は実行せず、validations に `not_applicable` として理由と次の確認事項を記録する。
+- Markdown 成果物を編集した場合、Prettier が導入されているときだけ `npx prettier --write <対象ファイル>` で整形する。`markdownlint-cli` または `markdownlint` が導入されているときだけ `npx markdownlint <対象ファイル>` を実行し、`markdownlint-cli2` を採用するリポジトリでは、そのリポジトリで定めた CLI2 のコマンドを実行する。適用した検査でエラーが出た場合は修正してから完了とする。
+- 終了する前に、コミット時に実行される検査（pre-commit 相当）のうち、現在のリポジトリに設定され、上記の適用条件を満たすものを先回りで実行する。適用した検査の失敗はすべて修正してから完了する。
+- 実行対象は、変更したファイルの種別で判断する。下表のうち、変更したファイルが該当し、かつ適用条件を満たす行の検査を実行する。該当行がない場合や適用条件を満たさない場合は追加の検査は不要である。ただし親検証に設定された ID のコマンドは下表よりも優先し、executor は実行しない。下表に同じコマンドが挙がっていても、親 runner の実行に委ねる。
+- 検査コマンドの正本はリポジトリの hook 設定（`lefthook.yml` など）である。下表と設定が食い違う場合は、適用条件を満たす設定側のコマンドに合わせ、実行したコマンドと結果を result に記録する。`specdojo` コマンドは、リポジトリで定められた起動方法（`npx specdojo <subcommand>`、`npx tsx src/specdojo.ts <subcommand>` など）で実行する。ただし、sandbox 環境で `tsx` の IPC エラー（`EPERM`）が発生する場合は、代わりに `node --import tsx src/specdojo.ts <subcommand>` を使用して実行する。
+
+| 変更したファイル                                                                                       | 適用条件                                                                            | 実行する検査                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `*.md`                                                                                                 | 対応するローカル依存が `package.json` にある                                        | `npx prettier --write <対象ファイル>`、導入済み実装に対応する markdownlint コマンド                                                   |
+| `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`                                                        | Prettier が `package.json` にある                                                   | `npx prettier --write <対象ファイル>`                                                                                                 |
+| `src/`、`tests/`、`scripts/`、`tools/`、`tsconfig*.json`                                               | `package.json` に `typecheck` script がある                                         | `npm run typecheck`                                                                                                                   |
+| `src/`、`tests/`、`docs/ja/specdojo/templates/`、`docs/ja/specdojo/exec-templates/`、`vitest.config.*` | pipeline executor は `test:unit`、それ以外は `test` script が `package.json` にある | pipeline executor は `npm run test:unit`、それ以外は `npm test`（`test-unit` が親検証に設定されている場合は executor では実行しない） |
+| `docs/ja/projects/` 配下                                                                               | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog validate`                                                                                                           |
+| `dct-*.yaml`                                                                                           | 対象 project に `catalog_path` が設定されている                                     | `specdojo catalog build`                                                                                                              |
+| `pjr-index.md`                                                                                         | 対象 project に `project_register_path` が設定されている                            | `specdojo register build`                                                                                                             |
+| `sch-*.yaml`                                                                                           | 対象 project に `schedule_path` が設定されている                                    | `specdojo exec refresh`                                                                                                               |
+| `docs/` 配下                                                                                           | リポジトリで定められた起動方法により SpecDojo CLI を実行できる                      | `specdojo index build`                                                                                                                |
+
+---
+
+# Pipeline executor stage instructions
+
+This invocation is the executor stage of an executor/reporter pipeline. Edit and validate the
+artifacts required by the plan, but do not create or update the result file. Any plan instruction
+that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
+runner stage and does not apply here.
+
+The parent runner owns Git commits and repository configuration. Do not run git commit or change
+local, global, or system Git configuration, including user.name and user.email. A Git state change
+will stop the pipeline before validation, reporting, commit, or merge.
+
+Do not create disposable or scratch files at the repository root; place them in `tmp/` within
+the worktree or outside the repository. Files under `tmp/` are excluded from commits.
+
+When writing Markdown in the final evidence, wrap identifiers or field names containing an
+underscore in inline code (for example, `depends_on`).
+
+The SpecDojo parent runner will execute these allowlisted validations after you exit: lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit (npm run lint:ts, npm run lint:fm, npm run lint:md, npm run test:integration, npm run validate:schema, npm run typecheck, npm run test:unit). Do not run those commands inside the agent sandbox or report duplicate executor results for them. Run only the remaining sandbox-safe validations required by the plan. Parent-run results will be appended to evidence with source=runner and are authoritative.
+
+
+
+
+Use validation status `requires_human` only for a check that cannot run from the agent sandbox,
+such as launching a real agent CLI, consuming a usage quota or incurring a charge, or requiring
+credentials or a host-side operation. Do not use it for a check that could run but was skipped;
+report that as `not_run`. A `requires_human` check is carried into the result as a human handoff
+and does not block pipeline completion.
+
+Use validation status `not_applicable` when the repository does not meet a check's applicability
+conditions, and include a non-empty `reason`. The runner carries it into the result without
+blocking completion, but rejects the claim when it can confirm the check applies:
+- `npm run <script>` / `npm test`: the script exists in package.json.
+- `npx <package>`: the package is in package.json dependencies or devDependencies.
+- A command that targets a declared product repository (a `<repo>:<path>` argument or
+  `--prefix <repo>`) is judged by that repository's package.json, not the project repository's.
+- `specdojo catalog validate`: the run's target project (or `--project <id>`) sets `catalog_path`
+  and your changes reach `docs/ja/projects/`. A project without `catalog_path`, or changes
+  outside `docs/ja/projects/`, is a valid reason; state it in `reason`.
+
+Do not run or report `specdojo index build`. It writes `.specdojo/doc-index.json`, which the
+agent may not write, and the runner regenerates the index while preparing the worktree and before
+integration.
+
+End the final response with exactly one machine-readable report using this envelope. Do not place
+Markdown fences around the JSON.
+
+<specdojo_executor_evidence>
+{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]}
+</specdojo_executor_evidence>
+
+warning: Codex could not find bubblewrap on PATH. Install bubblewrap with your OS package manager. See the sandbox prerequisites: https://developers.openai.com/codex/concepts/sandboxing#prerequisites. Codex will use the bundled bubblewrap in the meantime.
+codex
+まず登録簿・個票と関連設計を確認し、`exec-run.ts` の責務境界と既存テストを把握します。その後、挙動を変えない範囲でモジュール分割し、親 runner と重複しない検査だけを実行します。なお、この executor 段階では指示どおり result ファイルは編集しません。
+exec
+/bin/bash -lc "pwd && rg --files -g 'AGENTS.md' -g '"'!**/.env'"' -g '"'!secrets/**'"' -g 'package.json' -g 'lefthook*.yml' -g 'lefthook*.yaml' -g '.specdojo/specdojo.config.json' -g 'docs/ja/projects/prj-0001/controls/project-register/pjr-index.md' -g 'docs/ja/projects/prj-0001/controls/project-register/pjr-gbpx-exec-run-split-register.md' -g 'src/exec-run.ts' -g 'src/**/*exec*run*.ts' -g 'tests/**/*exec*run*.ts' -g 'docs/**/*exec*run*.md' -g 'docs/**/*architecture*.md' -g 'docs/**/*design*.md'" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBPX
+ succeeded in 25ms:
+/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBPX
+package.json
+AGENTS.md
+lefthook.yml
+src/exec-run-job.ts
+src/exec-run.ts
+src/exec-run-agent-pipeline.ts
+src/exec-run-schedule-prepare.ts
+src/exec-run-schedule-mode.ts
+src/exec-run-agent.ts
+src/exec-run-in-place.ts
+src/exec-run-lock.ts
+src/exec-run-mode-shared.ts
+src/exec-run-shared.ts
+src/exec-run-schedule-task.ts
+tests/src/exec-run-resolve-claiming-actor.test.ts
+tests/src/exec-run-downgrade-unfilled.test.ts
+tests/src/exec-run.test.ts
+tests/src/exec-run-worker-pool.test.ts
+tests/src/exec-run-resolve-command.test.ts
+tests/src/exec-run-parent-validation-gate.test.ts
+tests/src/exec-run-inplace.test.ts
+tests/src/exec-run-lock.test.ts
+tests/src/exec-run-lock-command.test.ts
+packages/vscode-specdojo/package.json
+packages/docs-lint/package.json
+packages/docs-site/package.json
+docs/ja/specdojo/guides/track-design-guide.md
+docs/ja/specdojo/guides/schedule-design-guide.md
+docs/ja/specdojo/guides/timeline-design-guide.md
+docs/ja/specdojo/templates/generated/dct-architecture-template.md
+docs/ja/specdojo/templates/generated/dct-system-design-template.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-system-design.md
+docs/ja/projects/prj-0001/010-deliverables-catalog/generated/dct-architecture.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-5822-multi-repo-item-design.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0147-retrofit-design-docs-for-existing-implementation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0158-exec-run-project-lock.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-4hbg-exec-run.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-fzc4-multi-repo-design-investigation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-tndh-exec-run-register-executor-reporter.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-2jfm-exec-run-split-modes.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-pjbn-grade-exec-run.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-q3w9-gastown-design-philosophy.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-6vfn-exec-run-register-executor-reporter.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-3w2n-exec-run-split-shared.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-gbpx-exec-run-split-register.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-9qz2-exec-stale-running-stage.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-bk4k-executor-not-run-human-check.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-zp0b-system-design-sysd-term-sysd-agent-settings.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-wpr3-exec-run-split-investigation.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-q761-exec-run-module-split.md
+docs/ja/projects/prj-0001/controls/project-register/pjr-0077-specdojo-exec-run.md
+
+exec
+/bin/bash -lc "sed -n '1,220p' AGENTS.md
+sed -n '1,260p' docs/ja/projects/prj-0001/controls/project-register/pjr-gbpx-exec-run-split-register.md
+rg -n -C 3 'PJR-GBPX|exec-run.ts の register' docs/ja/projects/prj-0001/controls/project-register/pjr-index.md
+sed -n '1,260p' docs/ja/projects/prj-0001/controls/project-register/pjr-wpr3-exec-run-split-investigation.md
+sed -n '1,260p' docs/ja/projects/prj-0001/controls/project-register/pjr-q761-exec-run-module-split.md
+sed -n '1,220p' package.json
+sed -n '1,260p' lefthook.yml
+sed -n '1,240p' .specdojo/specdojo.config.json" in /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBPX
+ succeeded in 0ms:
+# Agent Instructions
+
+## Language
+
+- 回答は原則として日本語で行う。
+
+## Project Policy
+
+- 変更前に関連する設計書を確認する。
+- タスクに関係しない変更を行わない。
+
+## Safety
+
+- 認証情報、秘密鍵、`.env`、`secrets/` を読み込まない。
+- 破壊的変更や `git push` を行わない。
+---
+specdojo:
+  id: prj-0001:pjr-gbpx-exec-run-split-register
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: in-progress
+  priority: medium
+  owner: DEV
+  registered_at: "2026-10-14T13:49:29Z"
+  due_on: null
+---
+
+# PJR-GBPX exec-run.ts の register の実行とコマンドの登録を分ける
+
+## 1. 概要
+
+src/exec-run.ts のうち、register の実行（worktree での実行・統合・再開）と、run・cycle・resume のコマンドの登録を別のモジュールへ移す。動作は変えない
+
+## 2. 完了条件
+
+対象（2026-10-14 時点の宣言の名前。行数は目安）:
+
+- register の実行: `parseRegisterExecutorSelection`、`resolveRegisterPipelineCommand`、`autoSelectRegisterPipelineAgents`、`runSingleRegisterItem`、`commitRegisterState`、`registerWaitSummary`、`syncExecBranchAfterWait`、`runRegisterMode` と補助の関数。worktree での実行と統合・再開（`finalizeRegisterWorktreeRun`、`runSingleRegisterItemWorktree`、`resumeRegisterIntegration`、`resumeSingleRegisterItemWorktree`）は別のモジュールに分けてよい（合わせて約 2,100 行）。
+- コマンドの登録と cycle・resume: `registerRunCommand`、`rebuildStaleGeneratedTracksForCycle`、`runCycleMode`、`registerCycleCommand`、`prepareScheduleIntegrationResume`、`runResumeMode`、`registerResumeCommand`（約 1,050 行）。
+
+[[prj-0001:pjr-2jfm-exec-run-split-modes]] の統合の後に行う。本件の後、`src/exec-run.ts` は再 export と、どこにも移さなかった小さな宣言だけになる想定である。
+
+共通の条件（リファクタリングの段取りの共通の完了条件。PJR-QCMP の結果を見て調整する）:
+
+- 移すだけにし、ロジックは変えない。分割の途中で不具合や改善点を見つけても直さず、result に書く。
+- `src/exec-run.ts` が現在 export しているものは、すべて同じ名前で `src/exec-run.ts` から import できる（移した先から再 export する）。既存のテストは import のパスを含めて変更せずに通る。テストの追加は妨げない。再 export は `export *` を使わず、分割の前に `src/exec-run.ts` が export していた名前だけを明示的に再 export する（PJR-K6KB では `export *` で内部用の関数まで公開された）。
+- 分割の前後で、`exec run`・`exec cycle`・`exec resume` の `--help` の出力が一致する。前後の出力を `tmp/` に保存して比べ、比べたコマンドの一覧と差分がないことを result に記録する。
+- 新しく作るモジュールはそれぞれ 1,000 行以下を目安とする。1 つの関数が大きいなどで超える場合は、理由を result に書く。関数の中身の分割は本件では行わない。
+- 新しい循環 import を作らない。移した先のモジュールから `src/exec-run.ts` を import しない。
+- ファイル名は既存の `src/exec-*.ts` の命名に揃え、`exec-run-` で始める。
+- モジュールの構成に触れている設計書（[[sysd-index]] など）があれば更新する。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- 本件は runner 自身のコードを変えるため、統合の後に orchestrator が小さな `exec run --register` を 1 回流し、統合まで終わることを確かめる（本件の close の条件）。
+
+## 3. 作業内容
+
+| No  | 作業                                                                | 担当         | 状態 | メモ                                    |
+| --- | ------------------------------------------------------------------- | ------------ | ---- | --------------------------------------- |
+| 1   | 分割の前の `--help` の出力を `tmp/` に保存する                      | DEV          | open | `exec run`・`exec cycle`・`exec resume` |
+| 2   | 対象の宣言をモジュールへ移し、`src/exec-run.ts` から再 export する  | DEV          | open | 移すだけ                                |
+| 3   | 分割の後の `--help` の出力と比べ、テストと検証を通す                | DEV          | open | 差分なし                                |
+| 4   | result に、移したものの対応表と残った行数、見つけた改善点を記録する | DEV          | open | -                                       |
+| 5   | 統合の後に `exec run --register` を 1 回流して runner を確かめる    | orchestrator | open | close の条件                            |
+
+## 4. 対応結果
+
+_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+
+## 5. 関連ドキュメント
+
+- [[prj-0001:pjr-2jfm-exec-run-split-modes]]: 段 4 の 2 件目（先に行う）。
+- [[prj-0001:pjr-th4b-eslint-max-lines-guard]]: 分割後の行数の上限。
+rg: docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: IO error for operation on docs/ja/projects/prj-0001/controls/project-register/pjr-index.md: No such file or directory (os error 2)
+---
+specdojo:
+  id: prj-0001:pjr-wpr3-exec-run-split-investigation
+  type: project
+  status: ready
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: done
+  priority: medium
+  owner: ARC
+  registered_at: "2026-10-02T12:14:16Z"
+  completed_at: "2026-10-07T22:18:00Z"
+  conclusion: exec-run.ts の関数の分類・依存・重複・状態遷移を調べ、3 案を PJR-Q761 で比較した。利用者が選択肢 C を選んだ
+---
+
+# PJR-WPR3 exec-run.ts の分割方針の調査と選択肢の比較
+
+## 1. 概要
+
+exec-run.ts の関数・依存・初回と再開の重複を調べ、モジュールの境界と状態遷移の選択肢と推奨案を exec-run.ts の分割方針の決定の個票へ書く。決定はしない（v0.3.0 の公開後）
+
+## 2. 完了条件
+
+- 調査と比較だけを行い、`src/` のコードは変更しない。決定は [[prj-0001:pjr-q761-exec-run-module-split]] で利用者が行う。
+- `src/exec-run.ts`（2026-10-07 時点で 7,948 行、トップレベルの関数 114 個）の関数を、段階（準備・worktree・agent の起動・親検証・reporter・統合・再開・register の記帳・CLI の登録など）ごとに分類した一覧を作る。関数ごとに行数と、主に呼び出す側・呼ばれる側を示す。
+- 段階の間の依存と、他のモジュール（`exec-worktree*.ts`・`exec-register*.ts`・`exec-parent-validation.ts`・`exec-reporter.ts` など）への依存を整理し、分割したときに循環依存が生じうる箇所を挙げる。
+- 初回の実行と再開（executor・reporter・統合の各段からの再開）の経路で重複している処理を、関数名と行の範囲で具体的に挙げる。
+- 現在の暗黙の状態（`pipeline-state.json` の各段の状態と register の状態）の遷移を表にし、初回と再開を 1 つの状態遷移にまとめる場合の形を示す。
+- 選択肢を 3 つ以上比べる（例: 段階ごとのモジュールへの分割のみ、分割と明示的な状態遷移の導入、段階的な切り出しの順序づけ）。各選択肢について、利点・懸念・既存のテストへの影響・作業量・切り出しの順序を書く。
+- 推奨案を 1 つ示し、最初に切り出す範囲と、振る舞いを変えていないことを確かめる方法（既存の unit / integration テスト、追加すべきテスト）を書く。
+- 選択肢の比較を [[prj-0001:pjr-q761-exec-run-module-split]] の「検討した選択肢」に書き、決定内容と承認の欄は `_TODO_` のまま残す。関数の一覧などの詳しい調査結果は本個票の対応結果に書く。
+- `npm run check` が通る。
+
+## 3. 作業内容
+
+| No  | 作業                                     | 担当 | 状態 | メモ                            |
+| --- | ---------------------------------------- | ---- | ---- | ------------------------------- |
+| 1   | 関数の分類・依存・重複・状態遷移を調べる | ARC  | done | コードは変更していない          |
+| 2   | 選択肢を比べ、推奨案を書く               | ARC  | done | PJR-Q761 の「検討した選択肢」へ |
+| 3   | 方針を決める                             | PO   | open | PJR-Q761 で利用者が決める       |
+
+## 4. 対応結果
+
+### 4.1. 調査範囲と結論
+
+2026-10-08 時点の `src/exec-run.ts` は 7,948 行、トップレベル関数は 114 個だった。TypeScript AST で関数宣言、行範囲、同一ファイル内の直接呼び出しを抽出し、実装と関連テストを照合した。`src/` のコードは変更していない。
+
+主な結論は次のとおり。
+
+- ファイル内には CLI 登録、実行対象の選択、agent 起動、親検証、reporter、worktree 統合、Schedule と Register の状態遷移、Job 実行が同居している。
+- Register worktree の初回と executor 再開は `runAgentPipeline`、初回・各再開の統合は `finalizeRegisterWorktreeRun` をすでに共有している。一方、入口の復元・記帳と、Schedule / in-place / Register 間の pipeline 段制御には重複が残る。
+- 一括して状態機械へ置き換えるより、既存の公開 export を façade で維持しながら、純粋な選択処理、agent 呼び出し、pipeline 段、ドメイン別統合の順に切り出す方が、差分と回帰時の切り戻し単位を小さくできる。
+- 推奨は「段階的なモジュール切り出し後に、初回と再開を同じ遷移関数へ載せる」案である。これは調査上の推奨であり、採否は [[prj-0001:pjr-q761-exec-run-module-split|PJR-Q761 exec-run.ts の分割方針を決める]] で決定する。
+
+### 4.2. 段階別の全体像
+
+| 段階                    | 主な責務                                                          | 主な関数・行                                                                            | 直接依存する既存モジュール                                                                                        |
+| ----------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| 準備・選択              | option、agent 候補、phase、lock、prompt の解決                    | `pinnedExecutor` から `loadPrompt`（398-932）                                           | `exec-agent-config.ts`、`exec-strategy.ts`、`exec-run-lock.ts`、`exec-slot-lock.ts`                               |
+| 親検証・契約            | executor prompt、再開時 target 被覆、親検証の実行と evidence 追記 | `resolveResumedCoverageTargets` から `executorRequirements`（942-1200）                 | `exec-evidence.ts`、`exec-parent-validation.ts`                                                                   |
+| agent 起動              | reporter 選択、process 起動、retry、利用制限、保護機構            | `reporterRequirements` から `agentEnvironment`（1202-1596）                             | `exec-agent-config.ts`、`exec-agent-git-state.ts`、`exec-agent-protected-config.ts`、`exec-protection-handoff.ts` |
+| Schedule 準備           | claim、plan/result/worktree、review 前 grade、完了事前判定        | `findClaimEventPath` から `readCompletionPreflight`（1598-2029）                        | `exec-events.ts`、`exec-plans.ts`、`exec-results.ts`、`exec-worktree*.ts`、`review-grade.ts`                      |
+| Schedule 実行・統合     | executor / reporter / 親検証 / commit / merge / block / complete  | `runPreparedTask`（2031-2702）                                                          | `exec-pipeline-state.ts`、`exec-reporter.ts`、`exec-repo-integration.ts`、`exec-worktree-ops.ts`                  |
+| 状態 CLI                | 自 CLI の validate / refresh / claim / complete / block 呼び出し  | `runPreparedTaskSafely` から `spawnBlock`（2709-2873）                                  | `spawn-self.ts`、`exec-events.ts`                                                                                 |
+| Schedule orchestration  | auto/manual の準備、worker pool、実行                             | `runBatchMode` から `runManualMode`（2875-3272）                                        | `exec-schedule*.ts`、`exec-task-view.ts`                                                                          |
+| in-place / Job          | worktree を使わない plan、Job command、任意 analysis              | `resolveInPlaceCommand` から `runJobMode`（3278-4310）                                  | `exec-plans.ts`、`exec-results.ts`、`job.ts`                                                                      |
+| Register 選択・pipeline | Register agent 選択、executor、reporter、evidence                 | `resolveRegisterCommand` から `runAgentPipeline`（4316-4835）                           | `exec-register.ts`、`exec-evidence.ts`、`exec-reporter.ts`、`exec-pipeline-state.ts`                              |
+| Register 記帳           | transition、管理対象 path、commit                                 | `spawnRegisterTransition` から `registerReporterManagedPaths`（4839-4951）              | `register.ts`、`register-events.ts`、`register-item.ts`                                                           |
+| Register in-place       | 1 個票の plan/result/agent/transition                             | `runSingleRegisterItem`（4957-5164）                                                    | `exec-register.ts`、`exec-results.ts`                                                                             |
+| Register worktree・統合 | setup、checkpoint、wait、commit、merge、review、cleanup           | `registerStatePaths` から `runSingleRegisterItemWorktree`（5169-6145）                  | `exec-worktree*.ts`、`exec-repo-integration.ts`、`exec-repo-trace.ts`                                             |
+| Register 再開           | checkpoint 選択、入力復元、executor / reporter / integrate 再開   | `protectResumableRegisterWorktree` から `resumeSingleRegisterItemWorktree`（6150-6663） | `exec-register-resume.ts`、`exec-pipeline-state.ts`、`exec-task-repos.ts`                                         |
+| CLI・cycle              | Register 実行、slot 表示、cycle、Schedule 再開、Commander 登録    | `runRegisterMode` から `registerResumeCommand`（6670-7948）                             | `commander`、`exec-run-lock.ts`、`exec-schedule*.ts`                                                              |
+
+### 4.3. トップレベル関数一覧
+
+「呼出元」「主な呼出先」は `src/exec-run.ts` 内の直接呼び出しを示す。`外部/CLI` は Commander callback またはテストから直接呼ばれる公開 helper を含む。呼出先が多い関数は主要な 4 件までを記載した。
+
+| 段階                   | 関数                                        | 行範囲（行数）  | 主な呼出元                                                                         | 主な呼出先                                                                  |
+| ---------------------- | ------------------------------------------- | --------------- | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| 準備・選択             | `pinnedExecutor`                            | 398-400 (3)     | `prepareSingleTask`, `resolveInPlaceCommand`                                       | -                                                                           |
+| 準備・選択             | `pinnedReporter`                            | 402-404 (3)     | `prepareSingleTask`, `runInPlaceMode`                                              | -                                                                           |
+| 準備・選択             | `resolveAgentOverride`                      | 409-448 (40)    | `resolveReporterAgentCandidates`, `prepareSingleTask`, `runCommandJobMode`         | -                                                                           |
+| 準備・選択             | `runCompletionDrivenWorkerPool`             | 509-562 (54)    | `runBatchMode`, `runRegisterMode`                                                  | -                                                                           |
+| 準備・選択             | `buildTaskPhaseMap`                         | 564-622 (59)    | `runBatchMode`, `runManualMode`, `runResumeMode`                                   | -                                                                           |
+| 準備・選択             | `resolveTaskPhaseContext`                   | 624-653 (30)    | `prepareSingleTask`                                                                | -                                                                           |
+| 準備・選択             | `selectCandidates`                          | 655-704 (50)    | `resolveReporterAgentCandidates`, `prepareSingleTask`, `resolveInPlaceCommand`     | -                                                                           |
+| 準備・選択             | `collectBusyActors`                         | 709-723 (15)    | `prepareSingleTask`                                                                | -                                                                           |
+| agent 起動             | `isRateLimitError`                          | 725-752 (28)    | `executeAgent`                                                                     | -                                                                           |
+| 準備・選択             | `resolveExecDefaultsPath`                   | 754-773 (20)    | `resolveJoinSlotLimit`, `runBatchMode`, `runManualMode`                            | -                                                                           |
+| 準備・選択             | `configuredWorktreeBase`                    | 775-786 (12)    | `runBatchMode`, `runManualMode`, `runRegisterMode`                                 | -                                                                           |
+| 準備・選択             | `parseParallel`                             | 788-798 (11)    | `runBatchMode`, `runRegisterMode`, `registerRunCommand`                            | -                                                                           |
+| 準備・選択             | `parseExecRunBusyPolicy`                    | 800-806 (7)     | `withProjectExecRunLock`                                                           | -                                                                           |
+| 準備・選択             | `resolveRegisterWorktree`                   | 808-818 (11)    | `registerRunCommand`                                                               | -                                                                           |
+| 準備・選択             | `resolveJoinSlotLimit`                      | 832-838 (7)     | `withProjectExecRunLock`                                                           | `resolveExecDefaultsPath`                                                   |
+| 準備・選択             | `withProjectExecRunLock`                    | 840-904 (65)    | `registerRunCommand`, `registerCycleCommand`, `registerResumeCommand`              | `parseExecRunBusyPolicy`, `resolveJoinSlotLimit`                            |
+| agent 起動             | `delay`                                     | 906-908 (3)     | `runWithRetry`                                                                     | -                                                                           |
+| 準備・選択             | `expandPromptRefs`                          | 910-927 (18)    | `loadPrompt`, `runInPlaceMode`, `runCommandJobMode`                                | -                                                                           |
+| 準備・選択             | `loadPrompt`                                | 929-932 (4)     | `prepareSingleTask`                                                                | `expandPromptRefs`                                                          |
+| 親検証・契約           | `resolveResumedCoverageTargets`             | 942-954 (13)    | `buildExecutorPrompt`, `resumedTargetCoverageFailure`                              | -                                                                           |
+| 親検証・契約           | `executorEvidenceContract`                  | 956-1043 (88)   | `buildExecutorPrompt`                                                              | -                                                                           |
+| 親検証・契約           | `buildExecutorPrompt`                       | 1045-1056 (12)  | `prepareSingleTask`, `runPreparedTask`, `runInPlaceMode`                           | `resolveResumedCoverageTargets`, `executorEvidenceContract`                 |
+| 親検証・契約           | `resumedTargetCoverageFailure`              | 1058-1073 (16)  | `runPreparedTask`, `runAgentPipeline`                                              | `resolveResumedCoverageTargets`                                             |
+| 親検証・契約           | `runConfiguredParentValidationBatch`        | 1084-1103 (20)  | 親検証 wrapper 3 関数                                                              | -                                                                           |
+| 親検証・契約           | `runConfiguredParentValidations`            | 1105-1111 (7)   | 外部/CLI                                                                           | `runConfiguredParentValidationBatch`                                        |
+| 親検証・契約           | `refreshParentValidationsForReporterResume` | 1113-1159 (47)  | `runPreparedTask`, `resumeRegisterIntegration`, `resumeSingleRegisterItemWorktree` | `runConfiguredParentValidationBatch`                                        |
+| 親検証・契約           | `appendParentValidationsToExecutorEvidence` | 1164-1190 (27)  | `runPreparedTask`, `runInPlaceMode`, `runAgentPipeline`                            | `runConfiguredParentValidationBatch`                                        |
+| 準備・選択             | `executorRequirements`                      | 1192-1200 (9)   | `prepareSingleTask`, `resolveInPlaceCommand`                                       | -                                                                           |
+| 準備・選択             | `reporterRequirements`                      | 1202-1210 (9)   | `resolveReporterAgentCandidates`, `prepareSingleTask`                              | -                                                                           |
+| 準備・選択             | `resolveReporterAgentCandidates`            | 1212-1266 (55)  | `prepareSingleTask`, `runInPlaceMode`                                              | `reporterRequirements`, `resolveAgentOverride`, `selectCandidates`          |
+| 準備・選択             | `loadRosterForExecutionPath`                | 1268-1284 (17)  | `runBatchMode`, `runManualMode`, `runInPlaceMode`                                  | -                                                                           |
+| agent 起動             | `executeAgent`                              | 1286-1353 (68)  | `runWithRetry`                                                                     | `isRateLimitError`                                                          |
+| agent 起動             | `reportProtectionHandoffRecord`             | 1366-1372 (7)   | `runWithRetry`, `spawnAgentInPlace`                                                | -                                                                           |
+| agent 起動             | `rateLimitPrefix`                           | 1377-1379 (3)   | `runWithRetry`                                                                     | -                                                                           |
+| agent 起動             | `runWithRetry`                              | 1381-1561 (181) | `runPreparedTask`, `runInPlaceMode`, `runReporterStage`                            | `executeAgent`, `rateLimitPrefix`, `reportProtectionHandoffRecord`, `delay` |
+| worktree               | `pathInsideWorktree`                        | 1563-1569 (7)   | `agentEnvironment`, `runPreparedTask`, `registerPathsInsideWorktree`               | -                                                                           |
+| worktree               | `reportProductWorktrees`                    | 1571-1578 (8)   | `prepareSingleTask`, `runSingleRegisterItemWorktree`                               | -                                                                           |
+| agent 起動             | `agentEnvironment`                          | 1583-1596 (14)  | `runPreparedTask`, `runReporterStage`, `runAgentPipeline`                          | `pathInsideWorktree`                                                        |
+| Schedule 準備          | `findClaimEventPath`                        | 1598-1603 (6)   | `prepareSingleTask`, `prepareScheduleIntegrationResume`                            | -                                                                           |
+| Schedule 準備          | `gradeBeforeReviewPlan`                     | 1608-1641 (34)  | `prepareSingleTask`, `runInPlaceMode`                                              | -                                                                           |
+| Schedule 準備          | `prepareSingleTask`                         | 1643-1978 (336) | `runBatchMode`, `runManualMode`, `runResumeMode`                                   | agent 選択、plan/result、claim、worktree 準備                               |
+| 統合                   | `downgradeUnfilledResult`                   | 1986-2001 (16)  | `runPreparedTask`, `finalizeRegisterWorktreeRun`                                   | -                                                                           |
+| Schedule 準備          | `checkCompletionBeforeIntegration`          | 2003-2010 (8)   | `readCompletionPreflight`                                                          | -                                                                           |
+| Schedule 準備          | `readCompletionPreflight`                   | 2012-2029 (18)  | `runPreparedTask`                                                                  | `checkCompletionBeforeIntegration`                                          |
+| Schedule 実行・統合    | `runPreparedTask`                           | 2031-2702 (672) | `runPreparedTaskSafely`, `runManualMode`, `runResumeMode`                          | agent、親検証、reporter、統合、状態遷移                                     |
+| Schedule 実行          | `runPreparedTaskSafely`                     | 2709-2748 (40)  | `runBatchMode`                                                                     | `runPreparedTask`, `spawnBlock`                                             |
+| 状態 CLI               | `spawnSelf`                                 | 2750-2754 (5)   | 各 `spawn*` helper                                                                 | -                                                                           |
+| 状態 CLI               | `spawnValidate`                             | 2756-2760 (5)   | `registerRunCommand`, `runCycleMode`                                               | `spawnSelf`                                                                 |
+| 状態 CLI               | `spawnRefresh`                              | 2762-2766 (5)   | `runBatchMode`, `registerRunCommand`, `runCycleMode`                               | `spawnSelf`                                                                 |
+| 状態 CLI               | `spawnScheduleBuild`                        | 2768-2772 (5)   | `rebuildStaleGeneratedTracksForCycle`                                              | `spawnSelf`                                                                 |
+| 状態 CLI               | `spawnIndexBuild`                           | 2777-2779 (3)   | `runBatchMode`, `runCycleMode`                                                     | `spawnSelf`                                                                 |
+| 状態 CLI               | `spawnClaim`                                | 2781-2795 (15)  | `prepareSingleTask`, `runInPlaceMode`                                              | `spawnSelf`                                                                 |
+| 状態 CLI               | `spawnComplete`                             | 2797-2801 (5)   | `runPreparedTask`, `runInPlaceMode`                                                | `spawnSelf`                                                                 |
+| 状態 CLI               | `spawnRelease`                              | 2805-2824 (20)  | `prepareSingleTask`                                                                | `spawnSelf`                                                                 |
+| 状態遷移               | `extractBlockReason`                        | 2832-2846 (15)  | Schedule / in-place / Register pipeline                                            | -                                                                           |
+| 状態遷移               | `pipelineRecoveryMeta`                      | 2848-2860 (13)  | `runPreparedTask`, `runInPlaceMode`                                                | -                                                                           |
+| 状態 CLI               | `spawnBlock`                                | 2862-2873 (12)  | Schedule の実行・安全 wrapper                                                      | `spawnSelf`                                                                 |
+| Schedule orchestration | `runBatchMode`                              | 2875-3095 (221) | `registerRunCommand`, `runCycleMode`                                               | 準備、worker pool、実行、refresh                                            |
+| Schedule 準備          | `resolveClaimingActor`                      | 3100-3111 (12)  | `runManualMode`, `runResumeMode`                                                   | -                                                                           |
+| Schedule orchestration | `runManualMode`                             | 3113-3272 (160) | `registerRunCommand`                                                               | 準備、claim actor 解決、実行                                                |
+| in-place 準備          | `resolveInPlaceCommand`                     | 3278-3330 (53)  | `runInPlaceMode`, `runJobMode`                                                     | `pinnedExecutor`, `selectCandidates`, `executorRequirements`                |
+| in-place 準備          | `resolveInPlaceAgentPipeline`               | 3344-3379 (36)  | `runInPlaceMode`                                                                   | -                                                                           |
+| agent 起動             | `spawnAgentInPlace`                         | 3381-3440 (60)  | `runInPlaceMode`, `runJobMode`, `runSingleRegisterItem`                            | `reportProtectionHandoffRecord`                                             |
+| in-place 実行          | `runInPlaceMode`                            | 3444-3918 (475) | `registerRunCommand`                                                               | plan/result、executor、親検証、reporter、完了                               |
+| Job 実行               | `runCommandJobMode`                         | 3920-4143 (224) | `runJobMode`                                                                       | command evidence、任意 reporter、Job 完了                                   |
+| Job 実行               | `runJobMode`                                | 4145-4310 (166) | `registerRunCommand`                                                               | Job materialize、command / agent 分岐                                       |
+| Register 選択          | `resolveRegisterCommand`                    | 4316-4376 (61)  | Register の 3 実行経路                                                             | `selectCandidates`                                                          |
+| Register 選択          | `isRegisterPipelineRequested`               | 4381-4385 (5)   | Register の 3 実行経路                                                             | -                                                                           |
+| Register 選択          | `parseRegisterExecutorSelection`            | 4396-4438 (43)  | `runRegisterMode`                                                                  | -                                                                           |
+| Register 選択          | `selectedRegisterExecutor`                  | 4440-4446 (7)   | `runRegisterMode`                                                                  | -                                                                           |
+| Register 選択          | `resolveRegisterPipelineCommand`            | 4451-4504 (54)  | Job / Register の pipeline 経路                                                    | `resolveAgentOverride`                                                      |
+| reporter               | `runReporterStage`                          | 4509-4637 (129) | Job、`runAgentPipeline`、reporter 再開                                             | `agentEnvironment`, `runWithRetry`                                          |
+| pipeline               | `runAgentPipeline`                          | 4645-4835 (191) | Job、Register 初回、executor 再開                                                  | executor、evidence、親検証、`runReporterStage`                              |
+| Register 記帳          | `spawnRegisterTransition`                   | 4839-4847 (9)   | Register 実行・再開・派生 view 更新                                                | `spawnSelf`                                                                 |
+| Register 記帳          | `commitRegisterItemChanges`                 | 4868-4889 (22)  | `runSingleRegisterItem`                                                            | `commitSubject`                                                             |
+| path                   | `repoRelativePath`                          | 4891-4893 (3)   | Schedule / Register の記帳と統合                                                   | -                                                                           |
+| 統合                   | `commitSubject`                             | 4899-4904 (6)   | Schedule / Register の commit                                                      | -                                                                           |
+| Register 記帳          | `registerEventPathForTicket`                | 4906-4915 (10)  | Register 管理 path helper                                                          | -                                                                           |
+| Register 記帳          | `registerRunnerManagedPaths`                | 4917-4943 (27)  | Register 初回 / 再開                                                               | `registerEventPathForTicket`, `repoRelativePath`                            |
+| Register 記帳          | `registerReporterManagedPaths`              | 4945-4951 (7)   | Register pipeline 初回 / 再開                                                      | -                                                                           |
+| Register in-place      | `runSingleRegisterItem`                     | 4957-5164 (208) | `runRegisterMode`                                                                  | plan/result、transition、agent / pipeline、commit                           |
+| Register 記帳          | `registerStatePaths`                        | 5169-5190 (22)  | `commitRegisterState`                                                              | `repoRelativePath`, `registerEventPathForTicket`                            |
+| Register 記帳          | `commitRegisterState`                       | 5194-5214 (21)  | wait / 成功統合                                                                    | `registerStatePaths`, `repoRelativePath`                                    |
+| worktree               | `registerPathsInsideWorktree`               | 5216-5228 (13)  | `finalizeRegisterWorktreeRun`                                                      | `pathInsideWorktree`                                                        |
+| Register 記帳          | `copyRepoPaths`                             | 5232-5249 (18)  | wait / 再開                                                                        | `repoRelativePath`                                                          |
+| Register 記帳          | `registerFailureArtifactPaths`              | 5254-5258 (5)   | `registerWaitSummary`                                                              | `repoRelativePath`                                                          |
+| Register 記帳          | `restorePreservedRegisterTicket`            | 5268-5302 (35)  | `syncExecBranchAfterWait`                                                          | `repoRelativePath`                                                          |
+| Register 記帳          | `registerTransitionPaths`                   | 5307-5317 (11)  | `resumeSingleRegisterItemWorktree`                                                 | `registerEventPathForTicket`                                                |
+| Register 記帳          | `registerBookkeepingPaths`                  | 5322-5338 (17)  | `resumeSingleRegisterItemWorktree`                                                 | `registerRunnerManagedPaths`                                                |
+| Register 記帳          | `rebuildRootRegisterViews`                  | 5343-5347 (5)   | Register finalize / 再開                                                           | `spawnRegisterTransition`                                                   |
+| Register 記帳          | `registerWaitSummary`                       | 5353-5423 (71)  | Register finalize / setup 失敗                                                     | copy、wait transition、commit、branch 同期                                  |
+| Register 記帳          | `commitRegisterWaitState`                   | 5429-5462 (34)  | `registerWaitSummary`                                                              | `isRegisterResultPath`, `commitRegisterState`                               |
+| Register 記帳          | `isRegisterResultPath`                      | 5464-5466 (3)   | `commitRegisterWaitState`                                                          | `repoRelativePath`                                                          |
+| worktree               | `syncExecBranchAfterWait`                   | 5476-5543 (68)  | `registerWaitSummary`                                                              | copy、ticket 復元、commit                                                   |
+| 統合                   | `recordIntegrateStage`                      | 5548-5564 (17)  | Schedule / Register 統合                                                           | -                                         

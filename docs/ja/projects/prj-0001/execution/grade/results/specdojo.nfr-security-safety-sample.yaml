@@ -3,44 +3,99 @@ version: 1
 document: specdojo:nfr-security-safety-sample
 path: docs/ja/specdojo/samples/nfr-security-safety-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
 score: 56
-graded_at: "2026-09-05T11:49:44.821Z"
-graded_by: gemma-expert-executor
+graded_at: "2026-10-15T21:15:36.282Z"
+graded_by: agy-expert-executor
 content_hash: 314888ab8330ced724ff4791d3971e075a4c404d515e62dcc9f273fc69c07719
 categories:
-  consistency:
-    score: 63
+  purpose:
+    score: 50
+  operations:
+    score: 69
+  planning:
+    score: 50
+  business:
+    score: 50
+  architecture:
+    score: 83
   usability:
     score: 75
-  architecture:
-    score: 100
+  implementation:
+    score: 50
   quality:
-    score: 13
+    score: 33
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,31 +103,163 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 1
-  major: 3
-  minor: 0
+  major: 17
+  minor: 2
   note: 0
 findings:
+  - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      Specific scope boundaries and objective alignment for the target system (駄菓子屋の販売管理システム) are missing, leaving
+      priority and necessity unclear.
+    message_ja: >-
+      Specific scope boundaries and objective alignment for the target system (駄菓子屋の販売管理システム) are missing, leaving
+      priority and necessity unclear.
   - id: F002
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 3
-    message: ルールブックで定義された必須構成（見出し 1〜5）がすべて欠落している。
-    anchor: "## 1. 目的と適用範囲"
+    rule: vp-po-decision-readiness
+    line: 31
+    anchor: ""
+    message: >-
+      The pending issues table merely defers work to actual implementation without specifying decision owners, criteria,
+      or impact.
+    message_ja: 保留中の課題テーブルでは、意思決定の責任者、基準、または影響が指定されず、作業を実際の実装に先送りしているだけです。
   - id: F003
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 3
-    message: ルールブックで指定された順序固定の必須見出し構成に全く準拠していない。
-    anchor: "## 1. 目的と適用範囲"
+    severity: minor
+    rule: vp-po-publication-accountability
+    line: 1
+    anchor: "# [非機能要件 / 機密性・安全性](../rulebooks/nfr-security-safety-rulebook.md) サンプル"
+    message: >-
+      The document lacks explicit designation of the responsible human owner or approver accountable for final decisions
+      and publication.
+    message_ja: ドキュメントには、最終的な決定および公開に対して責任を負う、明確な人間の責任者または承認者の指定が欠けています。
   - id: F004
     severity: major
-    rule: vp-ux-readability
-    line: 17
-    message: 具体的な記述例ではなく抽象的な項目リストとなっており、実装ガイドとしての役割を果たしていない。
+    rule: vp-pm-plan-feasibility
+    line: 15
+    anchor: "- 主な内容: 認証・認可、脆弱性対応SLA、暗号化、アクセス制御"
+    message: >-
+      The document only lists abstract topic keywords without actionable work units, completion criteria, role
+      assignments, or time estimates.
+    message_ja: ドキュメントには抽象的なトピックのキーワードのみがリストされており、実行可能な作業単位、完了基準、役割の割り当て、または工数見積もりがありません。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 31
     anchor: ""
-  - id: F001
+    message: Dependencies on downstream deliverables (such as sac-* or stc-*) and implementation risks are not identified.
+    message_ja: Dependencies on downstream deliverables (such as sac-* or stc-*) and implementation risks are not identified.
+  - id: F006
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 31
+    anchor: ""
+    message: The document lacks reporting destinations, responsible role codes, and tracking targets for project journals.
+    message_ja: ドキュメントには、プロジェクトジャーナルの報告先、責任ある役割のコード、および追跡対象が欠けています。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: >-
+      The sample does not explain the target business stakeholders, business issues, or expected security value for the
+      candy store sales management system.
+    message_ja: サンプルでは、キャンディストアの販売管理システムにおける対象となるビジネスステークホルダー、ビジネス上の課題、または期待されるセキュリティ価値について説明されていません。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 15
+    anchor: "- 主な内容: 認証・認可、脆弱性対応SLA、暗号化、アクセス制御"
+    message: Security requirements, acceptance criteria, in-scope and out-of-scope boundaries are entirely missing.
+    message_ja: セキュリティ要件、受け入れ基準、およびスコープ内・スコープ外の境界が完全に欠落しています。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 9
+    anchor: "- 対象: 駄菓子屋の販売管理システム"
+    message: Stakeholders, operational actors, and verifiers are not identified for the target system.
+    message_ja: 対象となるシステムについて、ステークホルダー、運用担当者、および検証者が特定されていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 15
+    anchor: "- 主な内容: 認証・認可、脆弱性対応SLA、暗号化、アクセス制御"
+    message: Technical constraints, architectural assumptions, and security protocol standards are not specified.
+    message_ja: 技術的な制約、アーキテクチャの仮定、およびセキュリティプロトコルの標準が指定されていません。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 20
+    anchor: >-
+      | 項目         | 値                                                                          |
+      備考                                 |
+    message: >-
+      Section 3 and Section 4 duplicate the identical list of security topic keywords without providing distinct
+      information.
+    message_ja: セクション3とセクション4では、異なる情報を提供することなく、セキュリティトピックのキーワードの同一リストを重複して記載しています。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 15
+    anchor: "- 主な内容: 認証・認可、脆弱性対応SLA、暗号化、アクセス制御"
+    message: Specific configuration values, implementation inputs, and completion criteria are missing.
+    message_ja: 具体的な設定値、実装入力、および完了基準が欠落しています。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 31
+    anchor: ""
+    message: Impact on existing deliverables, downstream schemas, and operational procedures is not identified.
+    message_ja: 既存の成果物、下流のスキーマ、および運用手順への影響が特定されていません。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 15
+    anchor: "- 主な内容: 認証・認可、脆弱性対応SLA、暗号化、アクセス制御"
+    message: Verification commands, expected test results, and testability procedures are not specified.
+    message_ja: 検証コマンド、期待されるテスト結果、およびテスト可能性の手順が指定されていません。
+  - id: F015
     severity: major
     rule: vp-qe-verifiability
     line: 23
-    message: 判定基準や具体的数値などの検証可能な表現が欠落しており、非機能要件のサンプルとして機能していない。
     anchor: "| 目的         | 不正利用防止とセキュリティを定義する                                        | specdojo:deliverables-reference 準拠 |"
+    message: 判定基準や具体的数値などの検証可能な表現が欠落しており、非機能要件のサンプルとして機能していない。
+    message_ja: 判定基準や具体的数値などの検証可能な表現が欠落しており、非機能要件のサンプルとして機能していない。
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: ルールブックで定義された必須構成（見出し 1〜5）がすべて欠落している。
+    message_ja: ルールブックで定義された必須構成（見出し 1〜5）がすべて欠落している。
+  - id: F017
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: ルールブックで指定された順序固定の必須見出し構成に全く準拠していない。
+    message_ja: ルールブックで指定された順序固定の必須見出し構成に全く準拠していない。
+  - id: F018
+    severity: major
+    rule: vp-ux-readability
+    line: 17
+    anchor: ""
+    message: 具体的な記述例ではなく抽象的な項目リストとなっており、実装ガイドとしての役割を果たしていない。
+    message_ja: 具体的な記述例ではなく抽象的な項目リストとなっており、実装ガイドとしての役割を果たしていない。
+  - id: F019
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 31
+    anchor: ""
+    message: The ready criteria and resolution conditions for pending items are not specified for moving out of draft status.
+    message_ja: ドラフト状態から移行するための、保留事項の準備完了基準および解決条件が指定されていません。
+  - id: F020
+    severity: major
+    rule: vp-ops-operability
+    line: 31
+    anchor: ""
+    message: Information required for ongoing maintenance, change management, and responsible roles is completely missing.
+    message_ja: 継続的なメンテナンス、変更管理、および責任ある役割に必要な情報が完全に欠落しています。

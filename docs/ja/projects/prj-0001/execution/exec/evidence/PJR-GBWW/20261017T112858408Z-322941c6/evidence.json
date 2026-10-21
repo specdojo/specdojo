@@ -1,0 +1,418 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-GBWW",
+  "run_id": "20261017T112858408Z-322941c6",
+  "stage": {
+    "role": "executor",
+    "actor": "codex-expert-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-17T11:28:58.408Z",
+    "completed_at": "2026-10-17T11:37:58.410Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-gbww.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable/trash.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/history.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/migrate-timestamps.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/transition-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-document.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-scope.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-profiles.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/agent-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/artifact-path.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/fs.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/git.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/text.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/time.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-gbww-exec-shared-parts-to-shared.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/routines.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/deliverable/trash.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/shared.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/job/job.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/history.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/migrate-timestamps.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/transition-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/definition.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/routine/routine.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/schedule.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-document.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-scope.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-profiles.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/agent-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/artifact-path.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/fs.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/git.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/text.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/time.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 38,
+    "summary": ".../controls/project-register/events/pjr-gbww.yaml |  16 +\n .../pjr-gbww-exec-shared-parts-to-shared.md        |  28 +-\n src/dashboard/dashboard.ts                         |   3 +-\n src/dashboard/routines.ts                          |   2 +-\n src/dashboard/shared.ts                            |   2 +-\n src/dashboard/timeline-build.ts                    |   3 +-\n src/deliverable/trash.ts                           |   2 +-\n src/exec/shared.ts                                 | 225 ++----------\n src/exec/types.ts                                  |  48 +--\n src/exec/worktree.ts                               | 380 ++-------------------\n src/grade/pipeline-state.ts                        |   2 +-\n src/grade/target-discovery.ts                      |   2 +-\n src/grade/targets.ts                               |   2 +-\n src/job/definition.ts                              |   4 +-\n src/job/job.ts                                     |   5 +-\n src/register/core.ts                               |   2 +-\n src/register/create-commands.ts                    |   2 +-\n src/register/events.ts                             |   2 +-\n src/register/history.ts                            |   2 +-\n src/register/item.ts                               |   2 +-\n src/register/migrate-timestamps.ts                 |   2 +-\n src/register/register.ts                           |   4 +-\n src/register/transition-commands.ts                |   2 +-\n src/routine/definition.ts                          |   2 +-\n src/routine/routine.ts                             |  11 +-\n src/schedule/approach.ts                           |   4 +-\n src/schedule/build.ts                              |   4 +-\n src/schedule/schedule.ts                           |   2 +-\n src/schedule/strategy-generate-document.ts         |   2 +-\n src/schedule/strategy-generate-scope.ts            |   2 +-\n src/schedule/strategy-generate.ts                  |   2 +-\n src/schedule/strategy-profiles.ts                  |   2 +-\n src/shared/agent-types.ts                          |  30 ++\n 33 files changed, 173 insertions(+), 630 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "TypeScriptのビルドが成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "cmp -s /tmp/pjr-gbww-help-head.txt /tmp/pjr-gbww-help-after-2.txt",
+      "status": "passed",
+      "summary": "Git HEADと変更後で全123コマンド／サブコマンドのhelp出力が一致した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "プロジェクト登録簿の生成に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "全catalogがOK。未作成文書に関する警告のみだった。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分に空白エラーはなかった。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec run --register",
+      "status": "requires_human",
+      "summary": "統合後にorchestratorが1回完走させるclose条件。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBWW/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBWW/src/schedule/build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBWW/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 25 problems (0 errors, 25 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBWW\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-C4tyA5/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-0Xygue/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-task-repos-yZ\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBWW/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBWW/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-GBWW\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-DLcxS7/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ABaOGo/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-3vO2kd/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-A87Ilz/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  41.21s (transform 2.55s, setup 558ms, import 19.10s, tests 43.91s, environment 7ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating."
+    }
+  ],
+  "final_message": "実装、個票、残存循環、全123コマンドのhelp一致を確認済み。親runnerの検証と統合後のexec run --registerは未検証。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-GBWW/20261017T112858408Z-322941c6/executor.log",
+      "bytes": 1432,
+      "truncated": false
+    }
+  ]
+}

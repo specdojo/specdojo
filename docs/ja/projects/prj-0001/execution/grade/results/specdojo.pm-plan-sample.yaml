@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-plan-sample
 path: docs/ja/specdojo/samples/pm-plan-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 68
-graded_at: "2026-09-09T15:55:32.496Z"
-graded_by: gemma-expert-executor
+score: 84
+graded_at: "2026-10-16T20:49:54.443Z"
+graded_by: agy-expert-executor
 content_hash: d7ffe63f7c636e8a02f1689b7635a24f5ddc9804d892a5b7bfd58d085abb9f43
 categories:
-  consistency:
-    score: 38
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 92
+  implementation:
+    score: 100
   quality:
+    score: 67
+  consistency:
     score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -43,6 +89,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 4
     score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -52,57 +107,68 @@ finding_counts:
   minor: 4
   note: 0
 findings:
-  - id: F007
-    severity: major
-    rule: vp-qe-kata-conformance
-    line: 27
-    message: 現金支出、作業時間、運用負荷を区別して管理する規則 (6.2) が適用されず、「参加者の時間」に混在している。
-    anchor: ""
-  - id: F002
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 35
-    message: 判断ゲートの条件に成功基準等の ID（SC-01等）による参照がなく、正本との追跡可能性が欠如している。
-    anchor: "| 品質結果                 | レビュー・試験記録     | 各判断ゲート前         | QE、PO     |"
-  - id: F003
+  - id: F001
     severity: minor
     rule: vp-qe-verifiability
-    line: 35
+    line: 22
+    anchor: "| 初期リリース   | 初期成功基準と受入条件を満たす           | 試験結果、未解決事項        | QE、PM     | PO       | レビュー結果、決定記録 |"
     message: 判断条件が総称的であり、具体的にどの項目で pass/fail を判定するかが不明確である。
-    anchor: "| 品質結果                 | レビュー・試験記録     | 各判断ゲート前         | QE、PO     |"
+    message_ja: 判断条件が総称的であり、具体的にどの項目で pass/fail を判定するかが不明確である。
+  - id: F002
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 33
+    anchor: "| 作業順序・担当           | Schedule               | 節目、遅延、依存変更時 | PM         |"
+    message: 正本表に RACI が欠落している。
+    message_ja: 正本表に RACI が欠落している。
+  - id: F003
+    severity: minor
+    rule: vp-qe-omissions-consistency
+    line: 42
+    anchor: "| 論点                                 | 決定期限           | 判断者 |"
+    message: 未決事項表に template で定義されている「現状」列が欠落している。
+    message_ja: 未決事項表に template で定義されている「現状」列が欠落している。
+  - id: F004
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 14
+    anchor: >-
+      | 参加者の時間       | 店舗営業や学業を圧迫しない。日常操作の追加負担は1日10分以内    | 試用準備時と試用中                 | 機能または確認手順を減らす                |
+      PM   |
+    message: 現金支出、作業時間、運用負荷を区別して管理する規則 (6.2) が適用されず、「参加者の時間」に混在している。
+    message_ja: 現金支出、作業時間、運用負荷を区別して管理する規則 (6.2) が適用されず、「参加者の時間」に混在している。
+  - id: F005
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 22
+    anchor: "| 初期リリース   | 初期成功基準と受入条件を満たす           | 試験結果、未解決事項        | QE、PM     | PO       | レビュー結果、決定記録 |"
+    message: 判断ゲートの条件に成功基準等の ID（SC-01等）による参照がなく、正本との追跡可能性が欠如している。
+    message_ja: 判断ゲートの条件に成功基準等の ID（SC-01等）による参照がなく、正本との追跡可能性が欠如している。
   - id: F006
     severity: major
     rule: vp-qe-kata-conformance
-    line: 35
+    line: 22
+    anchor: "| 初期リリース   | 初期成功基準と受入条件を満たす           | 試験結果、未解決事項        | QE、PM     | PO       | レビュー結果、決定記録 |"
     message: 判断ゲートにおいて条件 ID を参照せず総称で記載しており、rulebook (6.3) に違反している。
-    anchor: "| 品質結果                 | レビュー・試験記録     | 各判断ゲート前         | QE、PO     |"
-  - id: F009
-    severity: minor
-    rule: vp-ux-readability
-    line: 35
-    message: 判断ゲートの条件が抽象的であり、参照先を即座に特定できないため、可読性が低い。
-    anchor: "| 品質結果                 | レビュー・試験記録     | 各判断ゲート前         | QE、PO     |"
-  - id: F001
+    message_ja: 判断ゲートにおいて条件 ID を参照せず総称で記載しており、rulebook (6.3) に違反している。
+  - id: F007
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 46
+    rule: vp-qe-kata-conformance
+    line: 33
+    anchor: "| 作業順序・担当           | Schedule               | 節目、遅延、依存変更時 | PM         |"
     message: 正本表に RACI が含まれておらず、責任の正本が不明確である。
-    anchor: ""
-  - id: F004
-    severity: major
-    rule: vp-qe-omissions-consistency
-    line: 46
-    message: 正本表に RACI が欠落している。
-    anchor: ""
-  - id: F005
-    severity: minor
-    rule: vp-qe-omissions-consistency
-    line: 55
-    message: 未決事項表に template で定義されている「現状」列が欠落している。
-    anchor: ""
+    message_ja: 正本表に RACI が含まれておらず、責任の正本が不明確である。
   - id: F008
     severity: minor
     rule: vp-qe-kata-conformance
-    line: 57
+    line: 44
+    anchor: "| 現金支出と試用準備時間の具体的な上限 | 初期リリース着手前 | PO     |"
     message: "未決事項に _UNDECIDED_: ラベルが付与されておらず、rulebook (6.5) に違反している。"
-    anchor: ""
+    message_ja: "未決事項に _UNDECIDED_: ラベルが付与されておらず、rulebook (6.5) に違反している。"
+  - id: F009
+    severity: minor
+    rule: vp-ux-readability
+    line: 22
+    anchor: "| 初期リリース   | 初期成功基準と受入条件を満たす           | 試験結果、未解決事項        | QE、PM     | PO       | レビュー結果、決定記録 |"
+    message: 判断ゲートの条件が抽象的であり、参照先を即座に特定できないため、可読性が低い。
+    message_ja: 判断ゲートの条件が抽象的であり、参照先を即座に特定できないため、可読性が低い。

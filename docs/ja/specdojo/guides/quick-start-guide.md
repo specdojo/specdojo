@@ -48,9 +48,10 @@ question を起票する（迷っていること）
 プロジェクトリポジトリを作り、SpecDojo を導入して `init` の質問に答えます。
 
 ```bash
-mkdir app1-specdojo
-git -C app1-specdojo init
-cd app1-specdojo
+mkdir app1-workspace
+mkdir app1-workspace/app1-specdojo
+git -C app1-workspace/app1-specdojo init
+cd app1-workspace/app1-specdojo
 npm init -y
 npm install --save-dev specdojo
 npx specdojo init
@@ -66,11 +67,17 @@ Your nickname [owner]: owner
 Your display name [Project Owner]: 店主
 Orchestrator providers (...) [codex]: claude        <- 使う AI ツールを 1 つ選ぶ
 Delegate work to agents (exec)? [y/N]:              <- Enter（実戦は後で設定する）
-Deliverables catalog (none|small|medium|large) [none]:  <- Enter（カタログは使わない）
-Create a Dev Container? [y/N]:                      <- Enter
+Create a Dev Container? [y/N]: y                    <- y（Dev Container を作る。使わない場合は Enter）
+Add the recommended Dev Container settings? [Y/n]:  <- Enter（推奨 preset を入れる）
 ```
 
-登録簿は `docs/ja/projects/prj-0001/controls/project-register/` に作られます。オーケストレーターで進める場合は、終了時に表示される `npm run orch:<provider>` で起動します。
+入力が不正な場合は理由が表示され、同じ質問だけがもう一度表示されます。たとえば provider に
+`claud` と入力すると、利用可能な provider の一覧に続いて provider の質問だけが再表示されます。
+それまでに答えた project や名簿の内容を入力し直す必要はありません。
+
+Dev Container を作る質問に `y`、推奨 preset に Enter（既定の「はい」）と答えると、tmux・Emacs・Vim・推奨の VS Code 拡張と設定・`.vscode/extensions.json` が入った環境が生成されます。作成したコンテナは、VS Code の「コンテナーで再度開く」または `devcontainer up` で開けます（詳しい説明は [[specdojo:remote-host-development-guide]] を参照）。Dev Container を使わずに手元の環境で進めたい場合は、Dev Container の質問に Enter または `n`（いいえ）と答えて先へ進めます。この 10 分の体験は記帳だけで進められるため、コンテナを開かずにそのままホスト環境で続けて構いません。
+
+登録簿は `docs/ja/projects/prj-0001/controls/project-register/` に作られます。オーケストレーターで進める場合は、終了時に表示される `npm run orch:<provider>` で起動します。成果物カタログは対話では作られません。成果物の構成が定まったら、[[#41-成果物カタログを作成する|成果物カタログを作成する]] に従って `catalog_path` を設定し、`catalog scaffold` で追加してください。
 
 ### 1.2. 迷っていることを起票する（question）
 
@@ -191,6 +198,8 @@ npx specdojo register build --project prj-0001
 
 ## 2. CLIを初期設定する
 
+Node.js 22.13 以上と Git を用意します。オーケストレーターに Claude Code を使う場合は、Claude Code も導入してログインしておきます。ほかの provider も選べます。
+
 既定では、SpecDojo の成果物更新、登録簿の状態遷移、実行記録をプロダクトの Git 履歴に混ぜないため、次の **別リポジトリ構成**で始めます。
 
 - **プロダクトリポジトリ** `app1/`: ソースコードと、仕様・設計などのプロダクトドキュメントを置きます。
@@ -204,27 +213,30 @@ app1-workspace/
 └── app1-specdojo-worktrees/ # task 単位の worktree 置き場
 ```
 
-`app1-workspace/` 直下でプロジェクトリポジトリと worktree 用ディレクトリを作成し、`app1-specdojo/` に依存パッケージと SpecDojo の設定ファイルを用意します。
+既に開発している `app1/` と並べてプロジェクトリポジトリを作り、`app1-specdojo/` に SpecDojo を導入します。worktree 用ディレクトリは、最初の隔離実行時に設定に従って作られます。
 
 ```bash
-mkdir app1-specdojo
-git -C app1-specdojo init
-cd app1-specdojo
+mkdir app1-workspace
+mkdir app1-workspace/app1-specdojo
+git -C app1-workspace/app1-specdojo init
+cd app1-workspace/app1-specdojo
 npm init -y
-npm install --save-dev specdojo @specdojo/docs-lint
+npm install --save-dev specdojo
 # 質問に答えて project、register、agent 実行までを初期設定する
 npx specdojo init
 ```
 
 `specdojo init` は、project ID と名前、人の nickname と表示名、利用する agent provider、
-exec・成果物カタログ・Dev Container の要否を順に質問します。選択に応じて設定、登録簿、人と
+exec・Dev Container の要否を順に質問し、Dev Container を選んだ場合だけ推奨 preset を入れるか（既定は「はい」）を続けて質問します。成果物カタログは対話では質問せず、`--catalog <size>` を
+明示した場合にだけ初期化時に作成します。選択に応じて設定、登録簿、人と
 agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`、exec の起動設定を
 作成します。exec の親検証は、対応する npm script が `package.json` にあるものだけを設定し、
 該当する script がなければ省略します。既存ファイルは上書きせず、作成内容は `--dry-run` で
-先に確認できます。
+先に確認できます。対話中に不正な値を入力した場合は理由を表示して同じ質問だけをやり直し、
+それまでの回答は保持します。非対話環境や `--yes` では再質問せず、不正な指定をエラーとして終了します。
 
 CI や標準入力が端末でない環境では質問しません。次のようにオプションだけで同じ初期設定を
-行えます。省略値は画面に表示されます。
+行えます。`--devcontainer` を指定した場合は既定で推奨 preset（tmux・Emacs・Vim・推奨の VS Code 拡張と設定）が入ります（preset を使わない場合は `--devcontainer-preset none` を指定します）。省略値は画面に表示されます。
 
 ```bash
 npx specdojo init --yes \
@@ -234,18 +246,74 @@ npx specdojo init --yes \
   --display-name "Project Owner" \
   --provider claude,codex \
   --exec \
-  --catalog small \
   --devcontainer \
   --dry-run
 ```
 
 初期化後は、表示された `npm run orch:<provider>` でオーケストレーターを起動し、最初の 1 件を
-起票します。オーケストレーターを使わない場合は、同じ案内に表示される
+起票します。成果物カタログが必要になった場合は、`.specdojo/specdojo.config.json` に `catalog_path` を設定して `specdojo catalog scaffold` で追加します（詳細は [[#41-成果物カタログを作成する|成果物カタログを作成する]] を参照）。オーケストレーターを使わない場合は、同じ案内に表示される
 `exec run --register <id> --executor-by <executor> --reporter-by <reporter>` で実行できます。
 作成された設定と文書は内容を確認して commit してください。
 
-`@specdojo/docs-lint` は SpecDojo 文書向けの remark プラグインと検証コマンドを提供します。
-最小構成では、リポジトリルートの `.remarkrc.yaml` から次のように公開 export を参照できます。
+LP の例と同じく Claude Code へ作業を任せる場合は、provider の質問に `claude`、exec の質問に「はい」と答えます。初期化後は `npm run orch:opus`（または `npm run orch:sonnet`）でオーケストレーターを起動できます。
+
+プロダクトを変更する前に、`.specdojo/specdojo.config.json` の `projects.prj-0001` へ、同じ workspace にあるプロダクトリポジトリを接続します。
+
+```json
+"repos": [
+  {
+    "name": "app1",
+    "path": "../app1",
+    "integration_branch": "main"
+  }
+]
+```
+
+最初の作業を起票して個票へ完了条件を書いたら、Claude Code の executor と reporter を指定して実行できます。
+
+```bash
+npx specdojo register add \
+  --project prj-0001 \
+  --type todo \
+  --title "最初のタスク"
+npx specdojo exec run \
+  --project prj-0001 \
+  --register PJR-XXXX \
+  --worktree \
+  --executor-by claude-executor \
+  --reporter-by claude-reporter
+```
+
+実行後は両方のリポジトリの commit とプロダクトの動作を確認します。
+
+```bash
+git -C ../app1 log --oneline -1
+git log --oneline -1
+npm --prefix ../app1 run dev
+```
+
+人が result と成果物を確認し、気づいた改善を次の `todo` や `issue` として残してから、元の登録項目を close します。
+
+```bash
+npx specdojo register add \
+  --project prj-0001 \
+  --type todo \
+  --title "次の改善" \
+  --commit
+npx specdojo register close \
+  --project prj-0001 \
+  --id PJR-XXXX \
+  --conclusion "完了条件を満たした" \
+  --commit
+```
+
+`@specdojo/docs-lint` は初期設定に必須ではありません。SpecDojo 文書向けの remark プラグインと検証コマンドを使う場合だけ追加します。
+
+```bash
+npm install --save-dev @specdojo/docs-lint
+```
+
+リポジトリルートの `.remarkrc.yaml` から次のように公開 export を参照できます。
 
 ```yaml
 plugins:
@@ -290,11 +358,11 @@ npx specdojo config scaffold --provider antigravity --global
 Dev Container は任意です。分離された環境が必要な場合だけ、既存の `.devcontainer/` がないことと生成内容を dry-run で確認してから作成します。
 
 ```bash
-npx specdojo devcontainer scaffold --provider <name> --dry-run
-npx specdojo devcontainer scaffold --provider <name>
+npx specdojo devcontainer scaffold --provider <name> --preset recommended --dry-run
+npx specdojo devcontainer scaffold --provider <name> --preset recommended
 ```
 
-Dev Container の `<name>` には `antigravity`、`claude`、`codex`、`opencode` を指定します。既存の `.devcontainer/` は通常実行では上書きされません。生成設定は provider の設定ディレクトリを名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。Ollama 接続、cron、tmux は必要な場合だけ `--ollama`、`--cron`、`--tmux` で追加します。
+Dev Container の `<name>` には `antigravity`、`claude`、`codex`、`opencode` を指定します。`--preset recommended` を指定すると、tmux・Emacs・Vim・推奨の VS Code 拡張と設定がまとめて設定されます。既存の `.devcontainer/` は通常実行では上書きされません。生成設定は provider の設定ディレクトリを名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。preset を使わない場合、Ollama 接続、cron、tmux は必要な場合だけ `--ollama`、`--cron`、`--tmux` で個別に足せます。詳しい説明は [[specdojo:remote-host-development-guide]] を参照してください。
 
 設定したプロジェクトを確認します。
 

@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+#
+# specdojo-tmux.sh.sample
+#
+# 常時稼働ホスト上で devcontainer 内の tmux セッションへ入るためのスクリプトです。
+# ホスト側の ~/bin/specdojo-tmux.sh などへコピーし、実行権限（chmod +x）を付与して使用してください。
+#
+# 前提ツール:
+#   - Docker (Docker Desktop または Docker Engine): コンテナの実行環境
+#   - Dev Container CLI (@devcontainers/cli): コンテナの起動に使用 (npm install -g @devcontainers/cli)
+#   - tmux: コンテナ内にインストールされている必要があります
+#
+# 起動コマンド:
+#   - コンテナ起動: devcontainer up --workspace-folder "$workspace_dir"
+#   - セッション接続: docker exec -it ... tmux new-session -A -s <名前>
+#
+# 利用者（ユーザー）の変更:
+#   - devcontainer.json の remoteUser（既定は node）に合わせて -u でコンテナに入ります。
+#   - remoteUser を変更した場合は、下記 container_user の値を変更してください。
+#
+# PATH の設定（SSH 経由での実行）:
+#   - ssh の RemoteCommand は非対話シェルで動くため、Mac の通常端末で読み込まれる
+#     ~/.zshrc などの PATH の設定が反映されません。
+#   - ホスト側の通常端末で node と devcontainer の配置場所を確認し、必要に応じて
+#     下記 node_bin_dir を設定してください:
+#       dirname "$(command -v devcontainer)"
+#   - Homebrew の例: node_bin_dir="/opt/homebrew/bin"
+#   - nvm の例:      node_bin_dir="$HOME/.nvm/versions/node/v22.0.0/bin"
+#   - mise の例:     node_bin_dir="$HOME/.local/share/mise/installs/node/24/bin"
+#   - node と Dev Container CLI は同じ node_bin_dir にあることを前提とします。
+#
+set -euo pipefail
+
+# コンテナ内とホスト側の作業ディレクトリ（実際の環境に合わせて設定してください）
+container_workspace_dir="/workspaces/<workspace-name>/<repo-name>"
+workspace_dir="${HOME}/<path-to-workspace>/<repo-name>"
+
+# コンテナ内の実行ユーザー（devcontainer.json の remoteUser に合わせます。既定は node です）
+# remoteUser を変更した場合は、この値を変更してください。
+container_user="node"
+
+# セッション名（必要に応じて変更してください）
+session_name="specdojo"
+
+# Mac や Linux の通常端末で確認した実際のディレクトリへ置き換えてください。
+# Homebrew の例: node_bin_dir="/opt/homebrew/bin"
+# nvm の例: node_bin_dir="$HOME/.nvm/versions/node/v22.0.0/bin"
+# mise の例: node_bin_dir="$HOME/.local/share/mise/installs/node/24/bin"
+# node と Dev Container CLI は同じ node_bin_dir にあることを前提とします。
+node_bin_dir="/absolute/path/to/node/bin"
+export PATH="$node_bin_dir:/opt/homebrew/bin:/usr/local/bin:$PATH"
+
+find_container() {
+  local id
+  id="$(docker ps -q --filter "label=devcontainer.local_folder=$workspace_dir" | head -n 1)"
+  if [ -n "$id" ]; then
+    echo "$id"
+    return
+  fi
+  docker ps --format '{{.Names}}\t{{.Image}}' | awk '$2 ~ /^vsc-/ {print $1; exit}'
+}
+
+if [ ! -f "$workspace_dir/.devcontainer/devcontainer.json" ]; then
+  echo "devcontainer.json was not found: $workspace_dir" >&2
+  echo "Set workspace_dir to the repository path on the host." >&2
+  exit 1
+fi
+
+if ! command -v devcontainer >/dev/null 2>&1; then
+  echo "Dev Container CLI is not installed or not in PATH." >&2
+  echo "Current PATH: $PATH" >&2
+  echo "Check the location on the host terminal with: dirname \"\$(command -v devcontainer)\"" >&2
+  echo "Install it with: npm install -g @devcontainers/cli" >&2
+  exit 1
+fi
+
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Docker command was not found in PATH." >&2
+  echo "Current PATH: $PATH" >&2
+  echo "Check the location on the host terminal with: dirname \"\$(command -v docker)\"" >&2
+  exit 1
+fi
+
+if ! docker info >/dev/null 2>&1; then
+  echo "Docker is not running on the host." >&2
+  exit 1
+fi
+
+container_name="$(find_container)"
+
+if [ -z "$container_name" ]; then
+  echo "Starting devcontainer..." >&2
+  devcontainer up --workspace-folder "$workspace_dir"
+  container_name="$(find_container)"
+fi
+
+if [ -z "$container_name" ]; then
+  echo "The devcontainer did not start." >&2
+  exit 1
+fi
+
+exec docker exec -it --detach-keys="ctrl-]" -u "$container_user" -w "$container_workspace_dir" "$container_name" tmux new-session -A -s "$session_name"

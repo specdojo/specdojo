@@ -1,0 +1,11 @@
+保存済み grade result に依存しないテストへ修正しました。
+
+- plan テストを空の一時結果ディレクトリへ隔離
+- 本文非埋め込みを専用 fixture の固有文字列で検証
+- 個票の対応結果を更新
+- `src/` と result ファイルは未変更
+- 親 runner 所管のテスト・lint・型検査は未実行
+
+<specdojo_executor_evidence>
+{"final_message":"grade plan の単体テストを保存済み評価結果から隔離し、専用 fixture による本文非埋め込み検証へ変更した。","validations":[{"command":"npx prettier --write tests/src/grade.test.ts tests/fixtures/grade/non-embedded-target.md tests/fixtures/grade/non-embedded-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-6cds-grade-test-depends-on-stored-results.md","status":"passed","summary":"変更した TypeScript と Markdown はすべて整形済みだった。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"プロジェクト登録簿の生成に成功した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全カタログを検証し終了コード 0。未作成成果物に関する既存警告のみだった。"},{"command":"git diff --check","status":"passed","summary":"空白エラーや不正な差分は検出されなかった。"}]}
+</specdojo_executor_evidence>

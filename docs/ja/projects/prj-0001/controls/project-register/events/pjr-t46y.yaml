@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_133bcbbc84ba40ba903ed370faee644c
+  ts: "2026-10-18T00:40:06Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-3DY1 の決定のフォローアップ（2026-10-18）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の実行のあとに review の agent が判定し、todo と issue を自動で close する
+    - field: description
+      from: ""
+      to: 段階 A。統合の後に review の agent が個票の完了条件・result・差分・検証の結果を照らして verdict を出し、complete なら close、incomplete なら waiting に戻す。runner 自身のコードを変えた項目の動作確認の扱いも決める。 PJR-3DY1 の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+- v: 1
+  id: reg_10d10ee2426f4927b7f9f50eef7c002a
+  ts: "2026-10-18T14:28:18Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_133bcbbc84ba40ba903ed370faee644c
+- v: 1
+  id: reg_846ccaf9c8d84805ab645c55694bbd33
+  ts: "2026-10-18T14:56:41Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_10d10ee2426f4927b7f9f50eef7c002a
+- v: 1
+  id: reg_f502ab3eda9c46c38cf5a7439a6ff454
+  ts: "2026-10-18T15:28:26Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・親検証と、JSEY の --post-review の 2 回の実行を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: exec run --register の統合の後に、review の agent（既定は claude-expert-review-executor）が完了条件・result・差分・検証の結果を照らして verdict を出す段を加えた。既定では動かさず、--post-review か register_post_review で有効にする。complete・complete-with-findings なら close、incomplete なら waiting に戻し、runner のコードを変えた項目は人の close に残す。JSEY を --post-review で流し、incomplete で waiting に戻る場合と complete-with-findings で close される場合の両方を確かめた。complete と decision のテストは PJR-NSZT で補う
+  previous_event_id: reg_846ccaf9c8d84805ab645c55694bbd33

@@ -1,0 +1,28 @@
+Waiting for CLI help outputs to complete...
+`node --import tsx src/specdojo.ts catalog validate` を実行中です。完了を待機しています。
+PJR-4Z6N「register から approach で実行する手順をガイドに書く」のタスクに対応し、以下の変更を実施しました。
+
+### 実施内容
+
+1. **[`exec-operation-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4Z6N/docs/ja/specdojo/guides/exec-operation-guide.md)**
+   - 冒頭の「この文書で分かること」および 1.3 節のユースケース一覧に、register から approach を使った実行を追加しました。
+   - 新規に「4. register の todo から approach で成果物・kata を作る・直す手順」節を追加し、以下を記述しました:
+     - `exec run --deliverable`（in-place）との違い（worktree 隔離、統合ブランチへの merge commit、review 状態への遷移、登録簿の記帳）を整理し、register 経由の経路を推奨する方針を明記
+     - 個票 Frontmatter の `approach` と `targets`（1 件必須）、および `register add` / `update` の `--approach` と `--target` による指定方法
+     - 成果物（成果物カタログの doc id または canonical `local_id`）と kata（`specdojo:pjr-rulebook` 等の doc id）の対象指定方法、および kata 保守の進め方（`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance`）の選び方
+     - `approach` と対象の組み合わせ誤りや未解決 doc id が起票・更新時および実行時に検証されエラーになること
+     - plan 生成時に成果物カタログの `done_criteria` と個票の完了条件の両方が載ること（DCT を基本とし個票条件を追加）、owner に個票の `owner` を使うこと
+     - 起票から plan 確認、worktree 実行、close までの一連の実行コマンド例
+2. **[`register-operation-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4Z6N/docs/ja/specdojo/guides/register-operation-guide.md)**
+   - 1.2 節（登録の判断基準）および 3 節（agent 実行との連携）に、todo 個票に `--approach` と `--target` を指定して成果物・kata を作成・修正できる旨と、[`exec-operation-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4Z6N/docs/ja/specdojo/guides/exec-operation-guide.md) の手順への参照を追加しました。
+3. **[`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4Z6N/CHANGELOG.md)**
+   - 未公開版（`## [0.4.0] - 未定`）の「文書」節に、PJR-4Z6N による exec 運用ガイド更新内容を追記しました。
+4. **[`pjr-4z6n-register-approach-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4Z6N/docs/ja/projects/prj-0001/controls/project-register/pjr-4z6n-register-approach-guide.md)**
+   - 作業内容テーブルの No. 1 を `done` に更新し、「対応結果」セクションに実施内容と結果を記載しました。
+5. **検証**
+   - 変更した Markdown ファイルを Prettier で整形しました。
+   - `node --import tsx src/specdojo.ts catalog validate` を実行し、成果物カタログの検証を通過することを確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":"exec運用ガイドへのregisterからapproachで成果物・kataを実行する手順の追加、関連文書・個票・CHANGELOGの更新、整形およびカタログ検証を完了しました。","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-4z6n-register-approach-guide.md docs/ja/specdojo/guides/exec-operation-guide.md docs/ja/specdojo/guides/register-operation-guide.md","status":"passed","summary":"変更したMarkdownファイルをPrettierで整形しました。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"成果物カタログ（DCT）の検証が正常に通過しました。"}]}
+</specdojo_executor_evidence>

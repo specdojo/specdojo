@@ -1,0 +1,166 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f083030d9ed14d6097db36f5e2675a0e
+  ts: "2026-10-17T12:17:04Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-H72A の決定
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 個票に approach と対象を書けるようにする
+    - field: description
+      from: ""
+      to: 個票の frontmatter と schema に approach と targets（成果物の local_id か kata の id）を加え、register add --approach --target で指定でき、組み合わせの誤りを起票の時点で止める。PJR-H72A の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_3f4463baa34141a586a3b398182b5513
+  ts: "2026-10-17T14:02:12Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f083030d9ed14d6097db36f5e2675a0e
+- v: 1
+  id: reg_4d10be4f55d84faba849200bfe838e76
+  ts: "2026-10-17T14:15:06Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-fm, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-fm, test-unit"
+  previous_event_id: reg_3f4463baa34141a586a3b398182b5513
+- v: 1
+  id: reg_c69f93a5f97c4e3c9cb8d1dd5188bd2b
+  ts: "2026-10-17T14:49:15Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-fm, test-unit"
+      to: "-"
+  previous_event_id: reg_4d10be4f55d84faba849200bfe838e76
+- v: 1
+  id: reg_d40d5ed572fd4be8ac65dbfc8a0448a1
+  ts: "2026-10-17T14:57:30Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c69f93a5f97c4e3c9cb8d1dd5188bd2b
+- v: 1
+  id: reg_4cd196c1cc744c3d8217bc0913abcb4a
+  ts: "2026-10-17T14:59:05Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_d40d5ed572fd4be8ac65dbfc8a0448a1
+- v: 1
+  id: reg_61aae42d32f044429c0ed32f5824a31f
+  ts: "2026-10-17T15:00:12Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: rate limit reached
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: rate limit reached
+  previous_event_id: reg_4cd196c1cc744c3d8217bc0913abcb4a
+- v: 1
+  id: reg_a801c66e043d4e96ac1b40d8cb7de5f9
+  ts: "2026-10-17T23:06:51Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: rate limit reached
+      to: "-"
+  previous_event_id: reg_61aae42d32f044429c0ed32f5824a31f
+- v: 1
+  id: reg_883be9244491469498860fbeeb0456b4
+  ts: "2026-10-17T23:15:02Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_a801c66e043d4e96ac1b40d8cb7de5f9
+- v: 1
+  id: reg_8b2421f29d47451d85573d407d3c74e7
+  ts: "2026-10-17T23:16:30Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、未作成の成果物を fully-guided の対象にできること、rulebook-maintenance で kata を対象にできること、種類の合わない組み合わせとカタログにない対象で止まることを dry-run で確かめた（2026-10-18）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 個票の frontmatter に approach を加え、register add・update の --approach・--target で書けるようにした。approach を書いた個票は対象を 1 件必須とし、成果物の approach の対象は成果物カタログで、kata の approach の対象は文書の索引で解決し、組み合わせの誤りを起票の時点で止める
+  previous_event_id: reg_883be9244491469498860fbeeb0456b4

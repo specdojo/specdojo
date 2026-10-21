@@ -19,6 +19,15 @@ properties:
   updated_at:
     type: string
     format: date-time
+  # Run-scoped product integration targets given by `exec run --integration-branch <repo>=<branch>`.
+  # Only explicit overrides are recorded; resume reuses them instead of repos[].integration_branch.
+  integration_branches:
+    type: object
+    propertyNames:
+      pattern: "^[a-z0-9-]+$"
+    additionalProperties:
+      type: string
+      minLength: 1
   stages:
     type: object
     additionalProperties: false
@@ -57,6 +66,8 @@ $defs:
         format: date-time
       artifact_ref:
         type: [string, "null"]
+      rate_limit_events:
+        $ref: "#/$defs/rateLimitEvents"
       # Keys are repository names (`project` for the project repository) in integration order.
       repos:
         type: object
@@ -102,3 +113,30 @@ $defs:
         format: date-time
       artifact_ref:
         type: [string, "null"]
+      rate_limit_events:
+        $ref: "#/$defs/rateLimitEvents"
+  rateLimitEvents:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [action, from_actor, to_actor, resumed_at]
+      properties:
+        action:
+          type: string
+          enum: [wait, fallback]
+        trigger:
+          type: string
+          enum: [rate_limit, connection_error]
+        from_actor:
+          type: string
+          minLength: 1
+        to_actor:
+          type: string
+          minLength: 1
+        resumed_at:
+          type: string
+          format: date-time
+        resume_at:
+          type: string
+          format: date-time

@@ -2,9 +2,9 @@
 id: sysd-antigravity-agent-settings-grade-criteria
 document: sysd-antigravity-agent-settings
 path: docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md
-graded_at: "2026-10-10T16:12:14.087Z"
-graded_by: agy-expert-executor
-content_hash: ade83ab86eecf2ce4f88cc1219bea911534c633f15a5abe677a7eb397ad41027
+graded_at: "2026-10-20T16:22:39.674Z"
+graded_by: flash-high-executor
+content_hash: f99c416bb8e8084fb53c9544c828b02525ea2a5018329b8b91355ffe56be99fd
 summary:
   satisfied: 0
   unsatisfied: 5
@@ -16,32 +16,38 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: 業務要件や採用理由（PJR-2T2Sなど）との整合性が確認できないため。
+    reason: Missing business requirement alignment and acceptance criteria for custom agent support and provider adoption.
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: custom agent対応の方針と影響範囲が未決定であり、POが承認できる状態にないため。
+    reason: >-
+      Missing resolved design decisions, scope of impact, and safety boundaries for custom agents required for PO
+      approval.
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: 現行CLIのcustom agent対応状況という重要な技術前提が誤認されたままであるため。
+    reason: >-
+      Missing technical constraints regarding CLI version compatibility and custom agent discovery/selection
+      specifications.
   - id: DC-004
     text: テスト設計・検証観点の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: custom agentの検証や、各stageの成功状態・evidenceの判定条件が不明確であるため。
+    reason: >-
+      Missing test verification criteria for custom agent selection and explicit pass/fail conditions for stage
+      integration.
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: custom agentの採否が誤った能力前提で記載され、設定やテストを実装すべきか判断できないため。
+    reason: Missing accurate implementation specifications for custom agent configuration and stage agent definitions.

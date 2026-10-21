@@ -1,0 +1,9 @@
+個票の「対応結果」の表に、2026-10-19 03:41 JST、対象の分割 PJR-0EFN、agent `sonnet-executor` の 1 行を追記しました。
+
+- **対象の分割:** 直近の git log に PJR-0EFN の review の commit があり、これが最も新しい統合です。ただし登録簿 `pjr-index.md` はこの worktree に見つからず、PJR-0EFN の状態は確認していません。
+- **変更範囲:** 変更したのは個票 1 ファイルだけです。
+- **検証:** 親 runner が実行する検査は、エージェント側では実行していません。それ以外に適用される検査はないため、`not_applicable` としています。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に 2026-10-19 03:41 / PJR-0EFN / sonnet-executor の 1 行を追記した。個票以外は変更していない。","validations":[{"command":"npx prettier --check","status":"not_applicable","reason":"親 runner が lint-md などで検査する。executor 側で追加実行が必要な検査はない。"}]}
+</specdojo_executor_evidence>

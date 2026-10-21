@@ -1,0 +1,16 @@
+対応を完了しました。
+
+- 配布雛形、ガイド、設計書、npm スクリプトを現行モデル ID に更新
+- `agy models` による確認方法を追記
+- 旧 ID が対象ファイルに残っていないことを確認
+- Claude Code 用の `claude-sonnet-4-6` は維持
+- 回帰テストと CHANGELOG 0.3.1 項目を追加
+- 個票の対応結果を更新
+- Prettier、登録簿生成、カタログ検証、空白検査に成功
+- result は executor 指示に従い未編集
+
+<specdojo_executor_evidence>
+{"final_message":"agy 1.3.5で提供されるモデルIDへ配布雛形・文書・起動スクリプトを更新し、回帰テストとCHANGELOGを追加した。","validations":[{"command":"npx prettier --write CHANGELOG.md package.json templates/init-exec-defaults.yaml templates/antigravity/exec-defaults-snippet.yaml templates/antigravity/README.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md tests/src/init-command.test.ts tests/src/exec-provider-scaffold.test.ts","status":"passed","summary":"変更した雛形、文書、設定、テストを整形した"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-x60a-agy-model-ids-in-templates.md","status":"passed","summary":"更新した個票を整形した"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成に成功した"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"全カタログが成功。既存の未作成成果物に関する警告のみ"},{"command":"if rg -n 'gemini-3\\.1-pro|claude-sonnet-4-6|claude-opus-4-6' templates/init-exec-defaults.yaml templates/antigravity/exec-defaults-snippet.yaml templates/antigravity/README.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/orchestrator-operation-guide.md docs/ja/product/040-system-design/sysd-antigravity-agent-settings.md package.json; then exit 1; fi","status":"passed","summary":"対象ファイルに提供終了モデルIDが残っていない"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーなし"}]}
+</specdojo_executor_evidence>
+
+agent-config-write: protected configuration changes detected; paths=package.json; agent must record the required change in the result handoff for human or orchestrator application

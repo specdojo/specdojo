@@ -1,0 +1,388 @@
+{
+  "schema_version": 1,
+  "comparison_id": "wje6-gemma31",
+  "project_id": "prj-0001",
+  "task_id": "PJR-WJE6",
+  "status": "active",
+  "created_at": "2026-10-18T04:44:17.288Z",
+  "completed_at": null,
+  "base_commit": "cb1ba8d89effafa471649d3e88dc6a50ae071e33",
+  "base": {
+    "requested_revision": "HEAD",
+    "resolved_commit": "cb1ba8d89effafa471649d3e88dc6a50ae071e33",
+    "head_commit_at_start": "cb1ba8d89effafa471649d3e88dc6a50ae071e33",
+    "base_is_ancestor_of_head": true,
+    "defaulted_to_head": true,
+    "plan_path_exists_at_base": false,
+    "compatible": false,
+    "referenced_paths": [
+      {
+        "path": ".specdojo/specdojo.config.json",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/projects/",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/projects/prj-0001/execution/exec/results/pjr-wje6-trial-result.md",
+        "exists_at_base": false
+      },
+      {
+        "path": "docs/ja/specdojo/exec-templates/",
+        "exists_at_base": true
+      },
+      {
+        "path": "docs/ja/specdojo/templates/",
+        "exists_at_base": true
+      },
+      {
+        "path": "lefthook.yml",
+        "exists_at_base": true
+      },
+      {
+        "path": "package.json",
+        "exists_at_base": true
+      },
+      {
+        "path": "scripts/",
+        "exists_at_base": false
+      },
+      {
+        "path": "src/",
+        "exists_at_base": true
+      },
+      {
+        "path": "tests/",
+        "exists_at_base": true
+      },
+      {
+        "path": "tools/",
+        "exists_at_base": true
+      }
+    ],
+    "missing_referenced_paths": [
+      "docs/ja/projects/prj-0001/execution/exec/results/pjr-wje6-trial-result.md",
+      "scripts/"
+    ],
+    "warnings": [
+      "The plan file is not present at the base commit; the current plan content will still be supplied to every trial.",
+      "Referenced paths missing at the base commit: docs/ja/projects/prj-0001/execution/exec/results/pjr-wje6-trial-result.md, scripts/"
+    ]
+  },
+  "reporter_mode": "shared",
+  "plan": {
+    "path": "tmp/trial/pjr-wje6-trial-plan-noindex.md",
+    "sha256": "d2f730cae04e9d9e6ba820b6e229c2a2864d48d4d336ea0274ad8b44117a72e1",
+    "prompt_sha256": "8424cbcc05f7d3846502459e57e0cd618ecfccf8340a9dddc96bfb119a0ce4bb"
+  },
+  "selected_trial_id": null,
+  "trials": [
+    {
+      "trial_id": "gemma-expert-executor",
+      "agent": "gemma-expert-executor",
+      "reporter_agent": "gemma26-reporter",
+      "worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-expert-executor",
+      "branch": "exec/prj-0001-trial-wje6-gemma31-gemma-expert-executor",
+      "status": "succeeded",
+      "started_at": "2026-10-18T04:45:57.851Z",
+      "completed_at": "2026-10-18T04:59:38.082Z",
+      "duration_ms": 820231,
+      "executor": {
+        "exit_code": 0,
+        "attempts": 1,
+        "duration_ms": 609653,
+        "structured_output": true,
+        "validations_reported": 2,
+        "validations_passed": 2,
+        "validations_failed": 0,
+        "validations_not_run": 0,
+        "validations_requires_human": 0,
+        "files_changed": 1,
+        "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/trials/wje6-gemma31/trials/gemma-expert-executor/evidence.json",
+        "final_message": "Added product repository branch operation section to the branch workflow guide and validated with prettier and markdownlint.",
+        "validations": [
+          {
+            "source": "executor",
+            "command": "npx prettier --write docs/ja/specdojo/guides/branch-workflow-guide.md",
+            "status": "passed",
+            "summary": "Formatted the file successfully."
+          },
+          {
+            "source": "executor",
+            "command": "npx markdownlint docs/ja/specdojo/guides/branch-workflow-guide.md",
+            "status": "passed",
+            "summary": "No linting errors found."
+          },
+          {
+            "id": "lint-ts",
+            "source": "runner",
+            "command": "npm run lint:ts",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-expert-executor/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-pe\n… output omitted …\n/prj-0001-trial-wje6-gemma31-gemma-expert-executor/src/schedule/build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-expert-executor/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 28 problems (0 errors, 28 warnings)"
+          },
+          {
+            "id": "lint-fm",
+            "source": "runner",
+            "command": "npm run lint:fm",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+          },
+          {
+            "id": "lint-md",
+            "source": "runner",
+            "command": "npm run lint:md",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+          },
+          {
+            "id": "test-integration",
+            "source": "runner",
+            "command": "npm run test:integration",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-expert-executor\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-XfIOrZ/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-frygrr/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.jso\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+          },
+          {
+            "id": "validate-schema",
+            "source": "runner",
+            "command": "npm run validate:schema",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nok.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-expert-executor/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-expert-executor/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+          },
+          {
+            "id": "typecheck",
+            "source": "runner",
+            "command": "npm run typecheck",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+          },
+          {
+            "id": "test-unit",
+            "source": "runner",
+            "command": "npm run test:unit",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-expert-executor\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-fDFeRt/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ANDe6y/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-8WHizK/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-pVabDf/pjr-0001-topi\n… output omitted …\n18.21s, tests 46.71s, environment 6ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit"
+          }
+        ],
+        "changes": [
+          {
+            "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+            "status": "M"
+          }
+        ],
+        "diff_summary": "docs/ja/specdojo/guides/branch-workflow-guide.md | 23 +++++++++++++++++++++++\n 1 file changed, 23 insertions(+)"
+      },
+      "parent_validation": {
+        "configured_ids": [
+          "lint-ts",
+          "lint-fm",
+          "lint-md",
+          "test-integration",
+          "validate-schema",
+          "typecheck",
+          "test-unit"
+        ],
+        "status": "passed",
+        "duration_ms": 164740,
+        "validations_passed": 7,
+        "validations_failed": 0,
+        "validations_not_run": 0
+      },
+      "reporter": {
+        "status": "succeeded",
+        "structured_output": true,
+        "format_attempts": 1,
+        "format_retries": 0,
+        "outcome": "complete",
+        "output": {
+          "schema_version": 1,
+          "mode": "edit",
+          "summary": [
+            "ブランチワークフローガイドにプロダクトリポジトリの節を追加しました。",
+            "プロダクトリポジトリにおいては特定のブランチ戦略を強制せず、プロダクト側のルールで統合先（`integration_branch`）を指定することを記載しました。",
+            "GitHub flow と git flow の例、および `merge` 方式ごとの `Refs:` の残り方についても記述しています。",
+            "`npx prettier --write` による整形および `npx markdownlint` による静的検査を実行し、問題がないことを確認しました。"
+          ],
+          "changed_files": [
+            {
+              "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+              "summary": "プロダクトリポジトリにおけるブランチ戦略の扱い、統合先（`integration_branch`）の指定方法、GitHub flow/git flow の例、および `merge` 方式ごとの `Refs:` の挙動に関する節を追加しました。"
+            }
+          ],
+          "handoff": [],
+          "approach": "まず個票の内容を確認し、ブランチワークフローガイドにプロダクトリポジトリに関する記述を追加する方針を立てました。対象ファイルである `docs/ja/specdojo/guides/branch-workflow-guide.md` を編集し、プロダクト独自の統合先指定ルールや、主要なフロー（GitHub flow/git flow）および `merge` 操作による `Refs:` の変化に関する情報を盛り込みました。最後に、指示に従い `prettier` と `markdownlint` を用いてドキュメントの整形と静的検査を行い、完了としています。"
+        },
+        "failure_category": null,
+        "failure_reason": ""
+      },
+      "subjective": {
+        "judgment_quality": null,
+        "writing_quality": null,
+        "scope_adherence": null,
+        "notes": ""
+      }
+    },
+    {
+      "trial_id": "gemma-executor",
+      "agent": "gemma-executor",
+      "reporter_agent": "gemma26-reporter",
+      "worktree": "/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor",
+      "branch": "exec/prj-0001-trial-wje6-gemma31-gemma-executor",
+      "status": "succeeded",
+      "started_at": "2026-10-18T04:59:38.083Z",
+      "completed_at": "2026-10-18T05:09:16.093Z",
+      "duration_ms": 578010,
+      "executor": {
+        "exit_code": 0,
+        "attempts": 1,
+        "duration_ms": 307307,
+        "structured_output": true,
+        "validations_reported": 2,
+        "validations_passed": 2,
+        "validations_failed": 0,
+        "validations_not_run": 0,
+        "validations_requires_human": 0,
+        "files_changed": 2,
+        "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/trials/wje6-gemma31/trials/gemma-executor/evidence.json",
+        "final_message": "ブランチワークフローガイドにプロダクトリポジトリの運用に関する節を追記し、個票を更新した。",
+        "validations": [
+          {
+            "source": "executor",
+            "command": "npx prettier --write docs/ja/specdojo/guides/branch-workflow-guide.md",
+            "status": "passed",
+            "summary": "Formatting applied successfully."
+          },
+          {
+            "source": "executor",
+            "command": "npx markdownlint docs/ja/specdojo/guides/branch-workflow-guide.md",
+            "status": "passed",
+            "summary": "No lint errors found."
+          },
+          {
+            "id": "lint-ts",
+            "source": "runner",
+            "command": "npm run lint:ts",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-funct\n… output omitted …\npace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/src/schedule/build.ts\n  347:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 28 problems (0 errors, 28 warnings)"
+          },
+          {
+            "id": "lint-fm",
+            "source": "runner",
+            "command": "npm run lint:fm",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+          },
+          {
+            "id": "lint-md",
+            "source": "runner",
+            "command": "npm run lint:md",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+          },
+          {
+            "id": "test-integration",
+            "source": "runner",
+            "command": "npm run test:integration",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor\n\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-yM7Cjo/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /tmp/specdojo-worktree-ops-base-OV8SSx/T-T-doc-010\nSkipping worktree dependencies: no tracked package-lock.json in /t\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+          },
+          {
+            "id": "validate-schema",
+            "source": "runner",
+            "command": "npm run validate:schema",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.3.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nmembers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.3.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+          },
+          {
+            "id": "typecheck",
+            "source": "runner",
+            "command": "npm run typecheck",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 typecheck\n> tsc -b --noEmit"
+          },
+          {
+            "id": "test-unit",
+            "source": "runner",
+            "command": "npm run test:unit",
+            "status": "passed",
+            "summary": "exit 0: > specdojo@0.3.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-trial-wje6-gemma31-gemma-executor\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-vQiaKL/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-I8nB3m/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-0RI4pE/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-R6rU9F/pjr-0001-topic.md\nWa\n… output omitted …\n18.12s, tests 47.00s, environment 7ms)\n\n\nerror: unknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit"
+          }
+        ],
+        "changes": [
+          {
+            "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md",
+            "status": "M"
+          },
+          {
+            "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+            "status": "M"
+          }
+        ],
+        "diff_summary": ".../pjr-wje6-product-repo-branch-guide.md          |  6 +++--\n docs/ja/specdojo/guides/branch-workflow-guide.md   | 26 +++++++++++++++++++++-\n 2 files changed, 29 insertions(+), 3 deletions(-)"
+      },
+      "parent_validation": {
+        "configured_ids": [
+          "lint-ts",
+          "lint-fm",
+          "lint-md",
+          "test-integration",
+          "validate-schema",
+          "typecheck",
+          "test-unit"
+        ],
+        "status": "passed",
+        "duration_ms": 167556,
+        "validations_passed": 7,
+        "validations_failed": 0,
+        "validations_not_run": 0
+      },
+      "reporter": {
+        "status": "succeeded",
+        "structured_output": true,
+        "format_attempts": 1,
+        "format_retries": 0,
+        "outcome": "complete",
+        "output": {
+          "schema_version": 1,
+          "mode": "edit",
+          "summary": [
+            "ブランチワークフローガイドにプロダクトリポジトリの運用（`integration_branch` の指定や GitHub flow / git flow の例）に関する節を追記し、関連する個票を更新しました。"
+          ],
+          "changed_files": [
+            {
+              "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md",
+              "summary": "ブランチワークフローガイドに関する事項の実施結果を記載するために更新されました。"
+            },
+            {
+              "path": "docs/ja/specdojo/guides/branch-workflow-guide.md",
+              "summary": "プロダクトリポジトリにおけるブランチ戦略の記述（`integration_branch` の指定例、GitHub flow と git flow の選び方、merge 方式ごとの `Refs:` の差異について）を追記しました。"
+            }
+          ],
+          "handoff": [],
+          "approach": "1. 個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-wje6-product-repo-branch-guide.md` を確認し、ブランチワークフローガイドへの追記が必要であることを把握しました。\n2. `docs/ja/specdojo/guides/branch-workflow-guide.md` に対して、プロダクト側のルールで統合先 (`integration_branch`) を指定する旨、および GitHub flow と git flow の例、`merge` 方式ごとの `Refs:` の残り方の違いについての記述を追加しました。\n3. 最後に個票を更新し、作業を完了させました。"
+        },
+        "failure_category": null,
+        "failure_reason": ""
+      },
+      "subjective": {
+        "judgment_quality": null,
+        "writing_quality": null,
+        "scope_adherence": null,
+        "notes": ""
+      }
+    }
+  ],
+  "agent_selection": {
+    "policy": "manual",
+    "target": "agent-members.yaml",
+    "rationale": "A single comparison does not automatically change agent assignment. A human reviews objective and subjective results, then updates agent-members.yaml priority/capabilities when repeated evidence supports the change."
+  }
+}

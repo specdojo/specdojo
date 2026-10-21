@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d7fc7a841c7342df9385c22c8b18e5c8
+  ts: "2026-10-18T16:42:24Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 統合の git 操作が index.lock の一時的な取り合いで待たずに失敗する
+    - field: description
+      from: ""
+      to: "2026-10-19 01:32 と 01:41 に、PJR-EVAX の統合が git restore failed: Unable to create .git/index.lock で失敗した。並行の run の統合や記帳と同じ時刻に重なったためで、ロックはすぐに外れる一時的なものだった。runner の統合の git 操作は index.lock を待たずに失敗し、run を waiting にする。並行の run が多い夜間の自動実行では起こりやすい"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-19"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-RY4C"]'
+- v: 1
+  id: reg_efe991f846df4a4c9feb3f78ed0a91d2
+  ts: "2026-10-18T17:55:09Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d7fc7a841c7342df9385c22c8b18e5c8
+- v: 1
+  id: reg_361970fd399d476ea33df4fc4fee9293
+  ts: "2026-10-18T18:06:06Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sol-executor -> opus-executor at 2026-10-18T17:56:21.301Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_efe991f846df4a4c9feb3f78ed0a91d2
+- v: 1
+  id: reg_1eb422108d17499a86313da49e220f52
+  ts: "2026-10-18T18:19:52Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex-expert-executor・gemma26-reporter）の差分・テスト・親検証と、統合後の JSEY を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-19"
+    - field: conclusion
+      from: "-"
+      to: 既存のやり直しの仕組み（runGitWithTransientRetry）で、index.lock の取り合いを 1.5 秒おきに最大 10 回やり直すようにした。翻訳されたメッセージも見分け、上限に達したらロックのパスを添えて失敗を報告する。ロックのファイルは消さない。統合後の JSEY が通った
+  previous_event_id: reg_361970fd399d476ea33df4fc4fee9293

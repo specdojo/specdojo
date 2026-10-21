@@ -1,0 +1,41 @@
+レビューは完了しました。判定は **`complete-with-findings`**（統合可能だが指摘あり）です。Job Run は正常に終了し、評価された15件はすべて最新の結果を持っています。指摘は、15件すべてが不合格評価だったことと、Job Run の result の記述に不正確な点があることの2つです。
+
+**完了条件ごとの確認結果**
+
+1. **出力範囲:** 2つの commit 間の差分は25ファイルで、すべてこの Job Run の出力でした。
+   - runner が追加した evidence 4件、plan、result、Run JSON。
+   - 評価結果ファイル（サイドカー）15件の更新。
+   - 前回 run `JBR-grade-kata-43607f377df1` の失敗で残っていた途中状態ファイル3件の削除。対象は `mip-index`、`nfr-index`、`nfr-maintainability`（いずれも `stage_failed: 1`、`consecutive_failures: 1`）で、stdout の `document resume` 3件と一致し、今回再開して完了したため削除されたものです。
+   - 関係のない変更はありませんでした。
+2. **記録の整合:** 次の記録はすべて相互に一致しました。
+   - Run JSON は `state: succeeded`、attempt 1 の終了コードは 0。
+   - evidence の終了コードも 0 で、stderr は空。
+   - pipeline-state では executor と reporter がどちらも `succeeded`。
+   - stdout は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0`。
+3. **score・verdict・finding の変化:** `results.tsv` の verdict・score・findings 件数は、15件すべてサイドカーの `verdict` / `score` / `finding_counts` の合計と一致しました。
+   - 例として `ntp-sample` は rubric が v1 から v2 に変わり、score は 69 から 79、評価者は `gemma-expert-executor` から `agy-expert-executor` に替わっています。`content_hash` は変わっていません。
+4. **鮮度と残件:** `grade list --target kata` を6種類の条件（`--changed-only`、`--incomplete`、`--ungraded`、`--rubric-outdated`、`--dependency-changed`、`--rulebook-changed`）で実行し、15件はどれにも出てきませんでした。`grade state --exhausted` も出力なしでした。
+   - そのため、終了コード75（rate limit）や中断で残った段はなく、`failed` の段や `retry_exhausted` の文書もありません。
+
+**指摘（完了は妨げない）**
+
+- **verdict の偏り:** 15件はすべて `pass` になりませんでした。
+  - `fail` が8件（score 47〜63）で、うち7件は blocker を1〜3件含みます。
+  - `needs-work` が7件（score 70〜88）です。
+  - 特に `nfr-*` と `opr-*` の各サンプルは major の指摘が多くなっています。評価設定（rubric v2 と agy 単段）が厳しすぎるのか、サンプル自体の品質が低いのかは、今回の材料だけでは判断できません。人による確認を勧めます。
+- **Job Run の result の記述:** 次の2点が不正確です。
+  - 「`failed` (status が `fail`) の段はなく」と書かれており、段の status（すべて `passed`）と評価の verdict（`fail`）を混同した書き方になっています。
+  - 変更ファイル一覧の Run JSON の説明が意味の通らない文になっています。
+  - どちらも事実の誤りではありません。
+
+**確認できなかった範囲**
+
+- 前回 run の失敗が、rate limit・agent 側の失敗・`grade apply` での拒否のどれだったのか。残っていた状態ファイルに原因の記録がないためです。
+- 実行環境だけにある `logs/grade/runs/per-document/JBR-grade-kata-0946a04e624d/` の中身（stdout に出た `results.tsv` 以外）。
+- findings の内容が妥当かどうか。再評価は行わない方針のためです。
+
+成果物と result は変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict: complete-with-findings。Job Run は正常に終了し、評価された15件はすべて最新の結果を持つ。\n\n照合の根拠:\n- 差分 `14e09dd..b83484f`（25ファイル）はこの Job Run の出力だけで構成されていた。内訳は runner の evidence 4件・plan・result・Run JSON、評価結果ファイル（サイドカー）15件の更新、前回 run `JBR-grade-kata-43607f377df1` の失敗で残っていた途中状態ファイル3件（`mip-index`、`nfr-index`、`nfr-maintainability`。いずれも `stage_failed: 1`、`consecutive_failures: 1`）の削除。削除した3件は stdout の `document resume` 3件と一致し、今回再開して完了したもの。\n- Run JSON は `state: succeeded`、attempt 1 の終了コードは 0。evidence の終了コードも 0 で stderr は空。pipeline-state では executor と reporter がどちらも `succeeded`。stdout は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0`。\n- `results.tsv` の段の status は15件すべて `passed`。各文書の verdict・score・findings 件数は、サイドカーの `verdict` / `score` / `finding_counts` の合計と15件すべて一致した。\n- 鮮度: `grade list --target kata --project prj-0001` を `--changed-only`、`--incomplete`、`--ungraded`、`--rubric-outdated`、`--dependency-changed`、`--rulebook-changed` の6条件で実行し、15件はどれにも出なかった。`grade state --exhausted` も出力なし。終了コード75や中断で残った段、`failed` の段、`retry_exhausted` の文書はない。\n\n指摘（完了は妨げない）:\n- verdict の偏り: 15件すべてが `pass` にならなかった。`fail` が8件（score 47〜63、うち7件は blocker 1〜3件）、`needs-work` が7件（score 70〜88）。特に `nfr-*` と `opr-*` の各サンプルは major が多い。評価設定（rubric v2 と agy 単段）が厳しすぎるのか、サンプル自体の品質が低いのかは、今回の材料だけでは判断できないため人による確認を勧める。\n- Job Run の result の記述: 「`failed` (status が `fail`) の段はなく」は段の status（すべて `passed`）と評価の verdict（`fail`）を混同した書き方。変更ファイル一覧の Run JSON の説明も意味の通らない文。どちらも事実の誤りではない。\n\n確認できなかった範囲:\n- 前回 run の失敗が rate limit・agent 側の失敗・`grade apply` での拒否のどれだったか（残っていた状態ファイルに原因の記録がない）。\n- 実行環境だけにある `logs/grade/runs/per-document/JBR-grade-kata-0946a04e624d/` の中身（stdout に出た `results.tsv` 以外）。\n- findings の内容が妥当かどうか（再評価は行わない方針のため）。\n\n成果物と result は変更していない。","validations":[{"command":"git diff --stat / --name-status 14e09ddec3703aa7da56754ff75f593e5f68d4f6..b83484ff31bea6d3cba9dd2e727e86a300a9fdf9","status":"passed","summary":"25ファイルすべてがこの Job Run の出力（evidence、plan、result、Run JSON、サイドカー15件、再開して完了した途中状態ファイル3件の削除）"},{"command":"node --import tsx src/specdojo.ts grade list --target kata --project prj-0001 (--changed-only|--incomplete|--ungraded|--rubric-outdated|--dependency-changed|--rulebook-changed)","status":"passed","summary":"評価した15件はどの条件でも出力されず、評価結果は最新"},{"command":"node --import tsx src/specdojo.ts grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし。retry_exhausted の文書はない"}]}
+</specdojo_executor_evidence>

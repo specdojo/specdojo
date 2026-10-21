@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ae089aaf649f4af481a20fe3aa898d4b
+  ts: "2026-10-15T22:12:51Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-V23P の決定のフォローアップ（2026-10-16）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: src の機能の間の依存の向きの規則を入れる
+    - field: description
+      from: ""
+      to: 移動の後に、shared/ が他の機能を import しないことなど、機能の間の依存の向きを ESLint の no-restricted-imports などで検査する。 PJR-V23P の決定に基づく
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-16"
+- v: 1
+  id: reg_09c8f8faaeab4115a7593b6788d72b42
+  ts: "2026-10-17T08:53:50Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ae089aaf649f4af481a20fe3aa898d4b
+- v: 1
+  id: reg_40257031cb684e1e9fcf6390a52b8b04
+  ts: "2026-10-17T09:07:39Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_09c8f8faaeab4115a7593b6788d72b42
+- v: 1
+  id: reg_67641b01950c43e2bc049525de638629
+  ts: "2026-10-17T09:13:29Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_40257031cb684e1e9fcf6390a52b8b04
+- v: 1
+  id: reg_70bab002504c44f6bf2881e0a6ec29ff
+  ts: "2026-10-17T09:18:38Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_67641b01950c43e2bc049525de638629
+- v: 1
+  id: reg_d64eb3425400462db9b8795e688e0d63
+  ts: "2026-10-17T09:23:43Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、一時 worktree で違反する import 2 件が lint で error になることと、lint:ts が通ることを確かめた（2026-10-17）。初回は不安定なテスト（PJR-613H）で親の検証が落ち、--resume で通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-17"
+    - field: conclusion
+      from: "-"
+      to: src/shared/specdojo-config.ts の src/exec への依存をなくし（型を src/shared/agent-types.ts、provider-scaffold を src/shared へ移した）、src/shared が他の機能を、機能が src/commands と src/specdojo.ts を import しない規則を ESLint の no-restricted-imports で error として入れた。機能どうしの循環は PJR-QQKY で扱う
+  previous_event_id: reg_70bab002504c44f6bf2881e0a6ec29ff

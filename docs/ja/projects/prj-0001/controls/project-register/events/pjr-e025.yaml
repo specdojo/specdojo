@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_8f7535ce58c048f0b6f6a41f84ae75b5
+  ts: "2026-10-17T08:45:12Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-QQKY の決定のフォローアップ（2026-10-17）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 汎用の部品の移動の後に残る循環をほどく
+    - field: description
+      from: ""
+      to: register から exec/worktree-ops・exec/slot-lock、job から exec/plans、grade から exec/schedule-index、exec から grade/result などの残りを 1 件ずつ見て、shared へ移すか依存の向きを逆にする。 PJR-QQKY の決定に基づく。動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-17"
+- v: 1
+  id: reg_07a34959a7fa4f63896067e38b963e42
+  ts: "2026-10-18T09:17:30Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8f7535ce58c048f0b6f6a41f84ae75b5
+- v: 1
+  id: reg_1f65b46a33074ef5ad243656f9134d78
+  ts: "2026-10-18T09:36:49Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_07a34959a7fa4f63896067e38b963e42
+- v: 1
+  id: reg_2a2590a8c57e441cb0b1d585a9d19e22
+  ts: "2026-10-18T09:51:23Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_1f65b46a33074ef5ad243656f9134d78
+- v: 1
+  id: reg_1548895fdf7541eaa27f73c7ca2292a9
+  ts: "2026-10-18T10:02:04Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2a2590a8c57e441cb0b1d585a9d19e22
+- v: 1
+  id: reg_ccc97b254e424e17bf54183db123edbd
+  ts: "2026-10-18T10:12:24Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（codex で単体テストの失敗、codex でやり直し、gemma26-reporter）の差分・親検証を確認し、import の残りを数え、JSEY で runner を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: 4 組の循環（register→exec/worktree-ops・slot-lock、job→exec/plans、grade→exec/schedule-index、exec→grade/result）を、ロック・git・plan の雛形・schedule の索引・grade の result の型などを src/shared へ移してほどいた。register・job・grade から exec、exec から grade への import はなくなった。result に組ごとの判断と --help の一致の記録がないため、orchestrator が import を数えて確かめ、統合後の runner で JSEY を流した。schedule-index など機能に属するものを shared に置いた是非は PJR-WSET で見直す
+  previous_event_id: reg_1548895fdf7541eaa27f73c7ca2292a9

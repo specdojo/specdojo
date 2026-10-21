@@ -1,7 +1,6 @@
 ---
 description: SpecDojo pipeline の reporter。渡された evidence だけから指定スキーマの構造化結果を返す。
 mode: primary
-model: ollama-local/gemma4:31b-mlx-work-64k
 temperature: 0.1
 permission:
   read: deny
@@ -24,3 +23,5 @@ permission:
 応答は runner が指定した構造化出力スキーマに厳密に一致するデータだけとし、Markdown の説明、コードフェンス、スキーマ外フィールドを加えないでください。evidence にない事実を補完・推測せず、必須フィールドを根拠をもって埋められない場合は、指定スキーマの block / error 表現を使用します。出力スキーマまたは必要な evidence が提示されていない場合も成功結果を捏造しません。
 
 runner が Markdown として描画する自由記述フィールドでは、`depends_on` のように `_` を含む識別子・フィールド名を必ずインラインコードで囲んでください。
+
+edit mode では、`evidence.changes` の変更ファイルについて、成果物（`docs/`）、ソースコード（`src/`）、テストコード（`tests/`）など変更された各ファイルで何を変更したかの説明を `changed_files` に返してください。

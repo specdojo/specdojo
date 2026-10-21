@@ -3,44 +3,99 @@ version: 1
 document: specdojo:opr-incident-sample
 path: docs/ja/specdojo/samples/opr-incident-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 75
-graded_at: "2026-09-05T15:59:06.080Z"
-graded_by: gemma-expert-executor
+score: 70
+graded_at: "2026-10-16T20:12:20.727Z"
+graded_by: agy-expert-executor
 content_hash: 974a734971b28db96a780c5ddbe06ff480f64cb07c84cd133799d554b20a86ad
 categories:
-  consistency:
-    score: 38
+  purpose:
+    score: 88
+  operations:
+    score: 88
+  planning:
+    score: 83
+  business:
+    score: 67
+  architecture:
+    score: 92
   usability:
     score: 83
-  architecture:
-    score: 100
-  quality:
+  implementation:
     score: 75
+  quality:
+    score: 58
+  consistency:
+    score: 25
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 3
+    score: 75
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 3
+    score: 75
+  vp-pm-dependency-risk:
+    level: 3
+    score: 75
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 3
+    score: 75
+  vp-ba-requirements-completeness:
     level: 2
     score: 50
+  vp-ba-stakeholder-clarity:
+    level: 3
+    score: 75
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 3
+    score: 75
+  vp-dev-change-impact:
+    level: 3
+    score: 75
+  vp-dev-testability:
+    level: 3
+    score: 75
   vp-qe-verifiability:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-qe-omissions-consistency:
     level: 1
     score: 25
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 2
     score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,39 +103,161 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 5
-  minor: 0
+  major: 6
+  minor: 12
   note: 0
 findings:
+  - id: F001
+    severity: minor
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 運用手順: 障害対応 サンプル"
+    message: >-
+      The document lacks operational assumptions, system scope, and pending decisions needed for PO approval and
+      informed operational decision-making.
+    message_ja: ドキュメントには、POの承認および十分な情報に基づいた運用の意思決定に必要な、運用の前提条件、システムのスコープ、および未決定の事項が不足しています。
   - id: F002
+    severity: minor
+    rule: vp-pm-plan-feasibility
+    line: 22
+    anchor: "## 4. 関連ドキュメント導線"
+    message: >-
+      The operational steps (e.g., '復旧作業→確認') lack specific sub-tasks, completion criteria, and estimated durations
+      necessary for actionable planning and task tracking.
+    message_ja: 運用の手順（例：'復旧作業→確認'）には、実行可能な計画とタスク管理に必要な具体的なサブタスク、完了基準、および推定所要時間が不足しています。
+  - id: F003
+    severity: minor
+    rule: vp-pm-dependency-risk
+    line: 33
+    anchor: ""
+    message: >-
+      Risks, dependencies on external services or infrastructure, and pending issues that could affect operational
+      schedules or subsequent deliverables are not identified.
+    message_ja: 運用のスケジュールやその後の成果物に影響を与える可能性のあるリスク、外部サービスやインフラへの依存関係、および未解決の課題が特定されていません。
+  - id: F004
+    severity: minor
+    rule: vp-ba-business-value
+    line: 18
+    anchor: ""
+    message: >-
+      The document does not explicitly describe the business context, affected end users, or expected business value of
+      establishing these incident handling procedures.
+    message_ja: ドキュメントには、これらのインシデント対応手順を確立することによるビジネスコンテキスト、影響を受けるエンドユーザー、または期待されるビジネス価値が明示的に記載されていません。
+  - id: F005
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 16
+    anchor: ""
+    message: >-
+      The document completely omits the scope and out-of-scope boundaries, leaving users unable to verify what systems
+      and operational contexts are covered.
+    message_ja: ドキュメントにはスコープと対象外の境界が完全に省略されており、どのシステムや運用のコンテキストがカバーされているかをユーザーが検証できません。
+  - id: F006
+    severity: minor
+    rule: vp-ba-stakeholder-clarity
+    line: 22
+    anchor: "## 4. 関連ドキュメント導線"
+    message: >-
+      The roles of incident reporters, affected stakeholders, and specific first responders prior to Ops Lead escalation
+      are not clearly defined.
+    message_ja: インシデント報告者の役割、影響を受けるステークホルダー、および Ops Lead へのエスカレーション前の特定の初回対応者の役割が明確に定義されていません。
+  - id: F007
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 22
+    anchor: "## 4. 関連ドキュメント導線"
+    message: >-
+      Technical constraints, specific tools (monitoring SaaS, log systems), and architectural mechanisms for service
+      degradation or bypass are not specified.
+    message_ja: 技術的な制約、特定のツール（監視 SaaS、ログシステム）、およびサービス低下やバイパスのためのアーキテクチャ上のメカニズムが指定されていません。
+  - id: F008
+    severity: minor
+    rule: vp-dev-implementation-readiness
+    line: 22
+    anchor: "## 4. 関連ドキュメント導線"
+    message: >-
+      Concrete execution details, commands, checklists, and explicit verification criteria required for engineers to
+      implement the recovery procedures are not provided.
+    message_ja: エンジニアが復旧手順を実行するために必要な具体的な実行詳細、コマンド、チェックリスト、および明確な検証基準が提供されていません。
+  - id: F009
+    severity: minor
+    rule: vp-dev-change-impact
+    line: 22
+    anchor: "## 4. 関連ドキュメント導線"
+    message: >-
+      The secondary impacts of operational interventions (such as service degradation or bypass) on dependent services
+      and ongoing jobs are not identified.
+    message_ja: 運用の介入（サービス低下やバイパスなど）が、依存するサービスや進行中のジョブに与える二次的な影響が特定されていません。
+  - id: F010
+    severity: minor
+    rule: vp-dev-testability
+    line: 22
+    anchor: "## 4. 関連ドキュメント導線"
+    message: >-
+      Specific health check commands, verification procedures, and expected results to validate service restoration are
+      not defined.
+    message_ja: サービスの復旧を検証するための具体的なヘルスチェックコマンド、検証手順、および期待される結果が定義されていません。
+  - id: F011
+    severity: minor
+    rule: vp-qe-verifiability
+    line: 22
+    anchor: "## 4. 関連ドキュメント導線"
+    message: >-
+      The recovery verification criteria lack quantitative metrics or pass/fail conditions to definitively verify
+      service recovery.
+    message_ja: 復旧の検証基準に、サービスの復旧を確定的に検証するための定量的な指標や合否条件が不足しています。
+  - id: F012
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# 運用手順: 障害対応 サンプル"
     message: Frontmatter の必須項目 `title` が不足している。
-    anchor: ""
-  - id: F003
+    message_ja: Frontmatter の必須項目 `title` が不足している。
+  - id: F013
     severity: major
     rule: vp-qe-omissions-consistency
     line: 5
-    message: "`opr-rulebook` 第 5 章で定義された必須章（適用範囲・前提、定期点検、アラート対応、バックアップ、バッチ、変更、アカウント、問い合わせ）が省略されており、理由（なし/参照先）の記載もないためルールに違反している。"
-    anchor: ""
-  - id: F005
-    severity: major
-    rule: vp-ux-readability
-    line: 5
-    message: 必須構成を大幅に省略し、かつ標準の番号付けを無視しているため、`opr-＜term＞` 文書を作成するための完成形サンプルとして不十分である。
-    anchor: ""
-  - id: F001
-    severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 6
-    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、成果物種別と矛盾しているため `specdojo:opr-rulebook` とすべきである。
     anchor: "## 1. 概要（incident）"
-  - id: F004
+    message: "`opr-rulebook` 第 5 章で定義された必須章（適用範囲・前提、定期点検、アラート対応、バックアップ、バッチ、変更、アカウント、問い合わせ）が省略されており、理由（なし/参照先）の記載もないためルールに違反している。"
+    message_ja: "`opr-rulebook` 第 5 章で定義された必須章（適用範囲・前提、定期点検、アラート対応、バックアップ、バッチ、変更、アカウント、問い合わせ）が省略されており、理由（なし/参照先）の記載もないためルールに違反している。"
+  - id: F014
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 6
+    anchor: ""
+    message: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、成果物種別と矛盾しているため `specdojo:opr-rulebook` とすべきである。
+    message_ja: Frontmatter の `rulebook` が `specdojo:opd-rulebook` となっており、成果物種別と矛盾しているため `specdojo:opr-rulebook` とすべきである。
+  - id: F015
     severity: major
     rule: vp-qe-kata-conformance
     line: 11
+    anchor: "| 優先度 | 初動SLA | 切り分け                   | 一次対応                  | 復旧                 | エスカレーション        |"
     message: >-
       見出し番号が `opr-rulebook` および `opr-template.md` で定義された固定順序（障害対応は ## 4, 証跡は ## 11, 導線は ## 12）に従っておらず、## 2, ## 3, ## 4
       となっている。
+    message_ja: >-
+      見出し番号が `opr-rulebook` および `opr-template.md` で定義された固定順序（障害対応は ## 4, 証跡は ## 11, 導線は ## 12）に従っておらず、## 2, ## 3, ## 4
+      となっている。
+  - id: F016
+    severity: major
+    rule: vp-ux-readability
+    line: 5
+    anchor: "## 1. 概要（incident）"
+    message: 必須構成を大幅に省略し、かつ標準の番号付けを無視しているため、`opr-＜term＞` 文書を作成するための完成形サンプルとして不十分である。
+    message_ja: 必須構成を大幅に省略し、かつ標準の番号付けを無視しているため、`opr-＜term＞` 文書を作成するための完成形サンプルとして不十分である。
+  - id: F017
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 運用手順: 障害対応 サンプル"
+    message: Prerequisites and criteria for transitioning the document status from draft to ready are not specified.
+    message_ja: ドキュメントのステータスを draft から ready へ移行するための前提条件と基準が指定されていません。
+  - id: F018
+    severity: minor
+    rule: vp-ops-operability
+    line: 33
     anchor: ""
+    message: >-
+      Procedures and responsibilities for reviewing and updating this runbook after incidents or system changes are not
+      described.
+    message_ja: インシデントやシステム変更の後に、このランブックをレビューおよび更新するための手順と責任が記載されていません。

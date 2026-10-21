@@ -62,6 +62,50 @@ describe("specdojo-config.schema.yaml", () => {
     expect(valid).toBe(true);
   });
 
+  it("accepts project-specific parent validations with product repository assignments", () => {
+    const valid = validate({
+      version: 1,
+      projects: {
+        "prj-0002": {
+          repos: [{ name: "specdojo-lp", path: "../specdojo-lp" }],
+          run: {
+            exec_defaults: ".specdojo/exec-defaults.yaml",
+            parent_validations: [
+              { id: "typecheck", repo: "specdojo-lp" },
+              { id: "lint-ts", repo: "specdojo-lp" },
+            ],
+          },
+        },
+      },
+    });
+
+    expect(validate.errors ?? []).toEqual([]);
+    expect(valid).toBe(true);
+  });
+
+  it("rejects unknown project-specific parent validation IDs and command injection keys", () => {
+    expect(
+      validate({
+        version: 1,
+        projects: {
+          "prj-0001": { run: { parent_validations: ["arbitrary-command"] } },
+        },
+      }),
+    ).toBe(false);
+    expect(
+      validate({
+        version: 1,
+        projects: {
+          "prj-0001": {
+            run: {
+              parent_validations: [{ id: "typecheck", repo: "app1", command: "npm run evil" }],
+            },
+          },
+        },
+      }),
+    ).toBe(false);
+  });
+
   it("accepts only protected repository-relative agent member paths", () => {
     expect(
       validate({

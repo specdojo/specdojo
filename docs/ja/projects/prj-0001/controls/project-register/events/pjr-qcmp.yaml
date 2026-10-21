@@ -32,3 +32,48 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_2ab0090793284020bd81e98b59de83cf
+  ts: "2026-10-14T13:59:13Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_e27c503784b840d5a394819963ecae18
+- v: 1
+  id: reg_85ddd486dd9046f58d24a5c2949a5875
+  ts: "2026-10-14T14:20:16Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2ab0090793284020bd81e98b59de83cf
+- v: 1
+  id: reg_599464a0d30d4901ba8fab6c1bfddee4
+  ts: "2026-10-14T14:21:59Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後、分割の前の checkout と register の 15 コマンドの --help を比べて一致を確かめた（2026-10-14）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-14"
+    - field: conclusion
+      from: "-"
+      to: registerRegisterCommands の 14 のサブコマンドの登録を作成・遷移・保守の 3 モジュールへ移し、依存はインターフェース経由で受け取る形にした。register.ts は 3,156 行から 2,418 行になり、--help の出力は分割の前後で一致した
+  previous_event_id: reg_85ddd486dd9046f58d24a5c2949a5875

@@ -1,0 +1,108 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_b81e4fd0f8f6446ebf700f88f8b9b529
+  ts: "2026-10-14T21:26:24Z"
+  action: add
+  actor: claude-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-Y8P9 を分けて起票（2026-10-15、利用者が承認）
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: job.ts・routine.ts を分ける
+    - field: description
+      from: ""
+      to: Job と routine の処理（合わせて 2,644 行）を責務ごとのモジュールへ移す。 動作は変えない
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-15"
+- v: 1
+  id: reg_317e6bf6776c47a089ff265759cb54de
+  ts: "2026-10-15T11:08:24Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b81e4fd0f8f6446ebf700f88f8b9b529
+- v: 1
+  id: reg_141fa4054a97448fb68861083864db31
+  ts: "2026-10-15T11:20:07Z"
+  action: wait
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-ts, typecheck, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-ts, typecheck, test-unit"
+  previous_event_id: reg_317e6bf6776c47a089ff265759cb54de
+- v: 1
+  id: reg_f47e658800464466b02c955b32eda715
+  ts: "2026-10-15T11:21:33Z"
+  action: start
+  actor: codex-expert-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-ts, typecheck, test-unit"
+      to: "-"
+  previous_event_id: reg_141fa4054a97448fb68861083864db31
+- v: 1
+  id: reg_66e921a3d2ed493f86f2fad7f35ddd6a
+  ts: "2026-10-15T11:31:19Z"
+  action: review
+  actor: codex-expert-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f47e658800464466b02c955b32eda715
+- v: 1
+  id: reg_e9d868a2024547698c7c48c490120e78
+  ts: "2026-10-15T11:35:24Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後に export・--help・循環 import と routine・job の validate を確かめた（2026-10-15）。初回は import の抜けで検証に失敗し、--resume-from executor で直した。定期実行での動作は 2026-10-16 01:00 の実行で確かめる
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-15"
+    - field: conclusion
+      from: "-"
+      to: job.ts と routine.ts の定義の読み込みと検証を job-definition・routine-definition へ移し、すべて 1,000 行以下にした。export と job・routine の 9 コマンドの --help は分割の前後で一致し、routine 9 件と job 8 件の validate が通った
+  previous_event_id: reg_66e921a3d2ed493f86f2fad7f35ddd6a

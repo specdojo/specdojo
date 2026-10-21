@@ -1,0 +1,31 @@
+PJR-2219 の実装は終わりましたが、テストや型チェックはまだ一度も実行していません。sandbox 内で実行が禁止されているためで、`npm run typecheck`・`lint:ts`・`test:unit` などは親 runner の結果待ちです。
+
+**変更内容**
+- `docs/ja/specdojo/exec-templates/xep-common-conventions-template.md`: このファイルを、要点と詳細の唯一の原本にしました。失敗に直結する 9 項目を `<!-- plan-essentials:start -->`〜`end` マーカーの間に集めています。
+  - result の記入は必須で、`_TODO_` などのプレースホルダを残さない
+  - リンクは `[[id|title]]` で書き、表のセル内では `|` をエスケープする。まだ無い文書はバッククォートで仮置きする
+  - `_` を含む識別子はインラインコードにする
+  - 成果物の `status` を `ready` にしない
+  - ファイルは相対パスで指定する
+  - YAML 成果物は schema（`_SCHEMA_REF_`）に従う
+- `src/exec/plans-core.ts`: `injectCommonConventions` が plan に入れるのは、見出し・詳細のパスと「作業を始める前に読む」指示・要点だけになりました。
+  - review plan には、これまでどおり review の判断手順も入れます。
+  - マーカーの無い古い断片は、これまでどおり全文を入れます。テスト用の簡易な断片との互換のためです。
+  - schedule・register・job の plan はすべてこの関数を通るので、参照の書き方は同じになります。
+- `tests/src/exec/plans.test.ts` と `tests/src/exec/register-plan-escape.test.ts`: 詳細の本文を plan に含むことを前提にしていたテストを、「参照パスと要点を含み、詳細の本文は含まない」ことの確認に改めました。approach のある plan と無い plan、review plan、`injectCommonConventions` 単体（要点の取り出しと、マーカー無しの互換）のテストも追加しています。
+- `CHANGELOG.md`: `## [0.4.0] - 未定` の「変更」節に追記しました。
+- 個票: 「対応結果」に実施内容と判断を書き、作業内容の表のメモ欄も更新しました。表の状態欄（`open`）と frontmatter の状態は変えていません。既存の plan（履歴）にも手を入れていません。
+
+**判断したこと**
+- **要点の持ち方**: 別の断片に分けず、詳細のファイルからマーカーで機械的に取り出す方式にしました。同じ規則が 2 か所に分かれず、詳細を読む agent も要点を同じ場所で目にできるためです。
+- **worktree から読めるか**: plan に書くパスは、利用者のリポジトリでは `node_modules/specdojo/docs/...` になります。worktree を準備するときに `npm ci` を実行するので、worktree の中から読めます。そのため、runner がファイルを worktree に置く処理は追加していません。ただし、`package-lock.json` を git で管理していないリポジトリでは worktree に依存が入らず、このパスは読めません。そこは残課題として個票に書きました。
+
+**検証**
+- prettier と markdownlint はエラーなしです。
+- `catalog validate` は OK でした。警告が出ていますが、どれも今回の変更とは関係のない `based_on` の文書についてのものです。
+
+`tmp/restructure.py`（テンプレートの並べ替えに使った一時ファイル）は、削除コマンドが承認待ちになったため残っています。`tmp/` 配下は commit されません。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-2219: The plan body now carries only the heading, the path to the full common conventions with an instruction to read it before starting, and the essentials extracted from the plan-essentials block of xep-common-conventions-template.md (review plans also keep the review procedure). The reference path is resolved by specdojoReferencePath; worktrees can read node_modules/specdojo because worktree preparation runs npm ci, so no runner-side copy was added. Tests, CHANGELOG and the ticket were updated. Existing plans were not changed. tmp/restructure.py remains because its deletion awaited approval.","validations":[{"command":"npx prettier --write src/exec/plans-core.ts tests/src/exec/plans.test.ts tests/src/exec/register-plan-escape.test.ts CHANGELOG.md docs/ja/specdojo/exec-templates/xep-common-conventions-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-2219-exec-plan-conventions-reference.md","status":"passed","summary":"formatted; only the ticket file changed"},{"command":"npx markdownlint CHANGELOG.md docs/ja/specdojo/exec-templates/xep-common-conventions-template.md docs/ja/projects/prj-0001/controls/project-register/pjr-2219-exec-plan-conventions-reference.md","status":"passed","summary":"exit 0, no errors"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"OK; the only warnings concern based_on documents unrelated to this change"}]}
+</specdojo_executor_evidence>

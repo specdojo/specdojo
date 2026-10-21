@@ -1,0 +1,7 @@
+PJR-JSEY の対応結果へ、最新の対象 PJR-13M6 と実行情報を追記しました。変更は[個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JSEY/docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md:43)のみです。
+
+整形、登録簿生成、catalog 検証、差分検査は成功しました。親検証・reporter・統合は、この後 runner が継続します。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-JSEY の対応結果に 2026-10-15 19:37 JST、PJR-13M6、codex-expert-executor を追記した。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"対象 Markdown は整形済みで変更なし。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿と派生ビューを正常に再生成した。"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全 catalog の検証に成功した。既存の未作成文書に関する警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなどの差分異常なし。"}]}
+</specdojo_executor_evidence>

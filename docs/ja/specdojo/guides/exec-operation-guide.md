@@ -17,7 +17,7 @@ Exec Operation Guide
 
 **この文書で分かること**
 
-- 実行経路の選び方、状態遷移、blocked 復帰、再実行、human タスクの扱い
+- 実行経路の選び方、状態遷移、blocked 復帰、再実行、human タスクの扱い、register から approach を使って成果物・kata を作る・直す手順
 
 **次に読む文書**
 
@@ -73,17 +73,18 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 
 ### 1.3. ユースケース別の選び方
 
-| やりたいこと                            | 代表コマンド                          | 状態追跡        | worktree |
-| --------------------------------------- | ------------------------------------- | --------------- | -------- |
-| 1 task をカレントで軽く実行する         | `exec run --task`                     | なし            | なし     |
-| 1 task をカレントで実行し進捗へ反映する | `exec run --task --track-state`       | あり            | なし     |
-| 1 task を隔離して実行する               | `exec run --task --worktree`          | あり            | あり     |
-| Ready 順に自動実行する                  | `exec run --auto`                     | あり            | あり     |
-| 登録簿の項目を agent に実行させる       | `exec run --register`                 | register の遷移 | 設定依存 |
-| 登録簿の複数項目を指定順に実行する      | `exec run --register PJR-A PJR-B`     | register の遷移 | 設定依存 |
-| plan を確認してから実行する             | `exec plan` -> `exec run --plan`      | 任意            | 任意     |
-| worktree の各段階を人が確認する         | `exec worktree prepare` から `remove` | 手動            | あり     |
-| 同じplanで複数agentを比較する           | `exec trial run`                      | なし            | agent別  |
+| やりたいこと                                          | 代表コマンド                          | 状態追跡        | worktree |
+| ----------------------------------------------------- | ------------------------------------- | --------------- | -------- |
+| 1 task をカレントで軽く実行する                       | `exec run --task`                     | なし            | なし     |
+| 1 task をカレントで実行し進捗へ反映する               | `exec run --task --track-state`       | あり            | なし     |
+| 1 task を隔離して実行する                             | `exec run --task --worktree`          | あり            | あり     |
+| Ready 順に自動実行する                                | `exec run --auto`                     | あり            | あり     |
+| 登録簿の項目を agent に実行させる                     | `exec run --register`                 | register の遷移 | 設定依存 |
+| 登録簿の todo から approach で成果物・kata を実行する | `exec run --register <PJR-ID>`        | register の遷移 | 設定依存 |
+| 登録簿の複数項目を指定順に実行する                    | `exec run --register PJR-A PJR-B`     | register の遷移 | 設定依存 |
+| plan を確認してから実行する                           | `exec plan` -> `exec run --plan`      | 任意            | 任意     |
+| worktree の各段階を人が確認する                       | `exec worktree prepare` から `remove` | 手動            | あり     |
+| 同じplanで複数agentを比較する                         | `exec trial run`                      | なし            | agent別  |
 
 `exec run --register ... --register-commit` は、各IDのcommit後にhookによる整形差分を同じcommitへ収束させ、対象差分が残っていないことを検証します。登録簿・派生ビュー・当該plan/resultはrunner管理パスとして扱い、その他の実行前からある利用者変更はcommitしません。過去の未commit plan/resultを検出した場合は、現在のIDへ混ぜず警告します。
 
@@ -361,6 +362,8 @@ track の再生成では、`exec validate` の警告と同じ鮮度判定を使�
 
 provider別の `max_concurrency` や agent 選択は [exec設定ガイド](exec-config-guide.md) を参照します。
 
+指名した executor / reporter が provider API やローカル LLM へ接続できず、`connection_error_detection` に一致した場合は、対応する fallback 指定があれば1回だけ切り替えます。この判定は `--on-rate-limit` とは独立しているため、rate limit を `stop` または `wait` にしていても接続不能時の fallback は働きます。fallback 未指定時は通常の失敗として停止します。
+
 ### 2.6. executor / reporter pipelineの実行と復旧
 
 `agent_pipeline` を持つ phase のタスクは、executor（成果物の編集と検証）と reporter（evidence から result を構成）の 2 stage で実行されます。実行コマンドは従来と同じで、stage の agent を固定したい場合だけ `--executor-by` / `--reporter-by` を足します。
@@ -411,7 +414,38 @@ specdojo exec resume \
 
 executor と reporter が成功した後の commit・merge・worktree 撤去で止まった場合、`exec resume --task <task-id>` は agent を起動せず、`pipeline-state.json` の `integrate` 段から統合だけを再開します。前回の merge が完了している場合は exec branch を再 merge せず、runner が残した lifecycle 差分を確認したうえで worktree 撤去と `exec complete` だけを行います。通常実行の成功時は `integrate.status=succeeded`、失敗時は `failed` と block event の `pipeline_state_ref` が残ります。
 
-### 2.7. register実行の再開
+### 2.7. register統合後のreviewと自動close
+
+register の worktree 実行では、`--post-review` を付けると、成果を統合した後に読み取り専用の review pipeline を実行できます。review executor の既定は `claude-expert-review-executor` で、`--review-by` により変更できます。reporter は `stage_role: reporter` の候補から選び、edit pipeline で `--reporter-by` を指定している場合は同じ reporter を使います。
+
+```bash
+specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --post-review
+```
+
+毎回有効にする場合は `.specdojo/exec-defaults.yaml` に設定します。既定は `false` です。post-review は統合後の差分を対象にするため、in-place 実行では利用できません。
+
+```yaml
+run:
+  register_execution: worktree
+  register_post_review: true
+```
+
+review executor は、個票の完了条件、edit plan/result、executor evidence の検証結果、統合 commit の差分を照合します。成果物や個票を変更すると runner が `incomplete` として扱います。runner は verdict と個票の種類から次の遷移を行い、review executor を actor、review result の判断根拠を reason として register event に残します。
+
+| 個票の種類   | verdict                                     | 遷移                                 |
+| ------------ | ------------------------------------------- | ------------------------------------ |
+| todo / issue | `complete` / `complete-with-findings`       | `done` へ close                      |
+| todo / issue | `incomplete`                                | `waiting`                            |
+| その他       | `complete` / `complete-with-findings`       | `review` のまま（自動 close しない） |
+| すべて       | `incomplete`、review 失敗、未対応の verdict | `waiting`                            |
+
+SpecDojo package 自身の `src/`・`tools/`・`package.json`・lock file を変更した項目は、統合済みでも実行中の親プロセスが新しい runner コードを読み直せません。この場合、verdict が完了でも自動 close せず `review` に残します。新しいプロセスで実際の `exec run` を smoke test し、人が close してください。
+
+### 2.8. register実行の再開
 
 複数の register 項目を worktree で並列実行するときは、`--executor-by` に `PJR-ID=nickname` をカンマ区切りで渡すと、項目ごとに executor を固定できます。従来の `--executor-by <nickname>` は引き続き全項目への共通指定です。項目別指定は起動対象をすべて指定する必要があり、起動対象外の ID や指定漏れがあると、状態遷移や worktree 作成の前にエラーになります。`--dry-run` では各項目について解決した executor とコマンドを確認できます。
 
@@ -535,3 +569,140 @@ specdojo exec refresh --project <project-id>
 ```
 
 成果物の `status` を `ready` に昇格できるのは人だけです。エージェント実行では、`ready` へ昇格させるコミットは exec のガードで拒否されます。
+
+## 4. register の todo から approach で成果物・kata を作る・直す手順
+
+プロジェクト登録簿（register）の `todo` 個票に進め方（`approach`）と対象（`targets`）を指定し、成果物や kata（実践の型: rulebook / recipe / sample / template）を agent に作成・修正させる手順を説明します。
+
+### 4.1. register 経路と exec run --deliverable の違い
+
+成果物や kata を単発で作成・修正する経路には、`exec run --deliverable` と register 経由（`exec run --register`）の 2 つがあります。
+
+| 観点               | `exec run --deliverable <localId>`             | register 経由（`exec run --register <PJR-ID>`）          |
+| ------------------ | ---------------------------------------------- | -------------------------------------------------------- |
+| 実行場所・隔離     | カレントの作業ツリーでそのまま実行（in-place） | git worktree で作業を安全に隔離（`--worktree` 推奨）     |
+| ブランチ統合       | 統合ブランチへの merge commit を行わない       | 成功時に統合ブランチへ merge commit（1 項目 1 commit）   |
+| 状態管理・レビュー | 状態イベントを記録せず、review 遷移もない      | `open -> in-progress -> review` と遷移し、人間が確認可能 |
+| 台帳・監査履歴     | 登録簿に記録されない                           | 個票および `events/` 配下の変更履歴に残る                |
+
+`exec run --deliverable` は作業場所でそのまま実行する軽量な経路ですが、worktree 隔離・統合・review・台帳の記帳を行いません。このため過去の版との互換性のために残されており、計画外や単発の作業であっても、成果物や kata を作る・直す際は変更の安全な隔離と台帳管理が揃った **register の経路（個票に approach を指定して `exec run --register` で実行）を推奨します**。
+
+### 4.2. 個票の起票と approach・target の指定
+
+register 経由で実行するには、個票に `approach` と `targets` を指定します。
+
+`register add` で新規起票するときに `--approach` と `--target` を指定します。
+
+```bash
+# 成果物を作成・修正する todo を起票する例
+specdojo register add \
+  --project <project-id> \
+  --type todo \
+  --title "SpecDojo 設定ガイドの改訂" \
+  --topic exec-config-guide-revision \
+  --difficulty medium \
+  --approach fully-guided \
+  --target specdojo:exec-config-guide \
+  --owner DEV
+```
+
+既存の個票へ追加または変更する場合は `register update` を使います。
+
+```bash
+specdojo register update \
+  --project <project-id> \
+  --id <PJR-ID> \
+  --difficulty hard \
+  --approach fully-guided \
+  --target specdojo:exec-config-guide
+```
+
+個票 Frontmatter には次のように `approach` と `targets` が記録されます。
+
+```yaml
+specdojo:
+  id: prj-0001:pjr-xxxx-exec-config-guide-revision
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: todo
+  item_status: open
+  priority: medium
+  difficulty: medium
+  owner: DEV
+  approach: fully-guided
+  targets:
+    - specdojo:exec-config-guide
+```
+
+`approach` を指定した個票では、`targets` は **1 件だけ必須** です（schedule のタスクと同様に 1 件の成果物または 1 件の kata を対象にします）。
+
+`difficulty` は `hard` / `medium` / `easy` のいずれかです。`exec run --register` と `orchestrator night` は、agent を CLI で指定していない段について `exec-defaults.yaml` の `routing` から executor・reporter・rate limit 対応を選びます。既存の個票で `difficulty` を省略した場合や表がない場合は、従来どおり agent 名簿の `priority` 順で自動選択します。CLI の指定は表より優先します。
+
+### 4.3. 対象の指定方法と kata 保守 approach の選び方
+
+`targets` に指定する対象文書の書き方と、kata 保守の進め方（`approach`）の選び方は次のとおりです。
+
+#### 4.3.1. 成果物を対象にする場合
+
+- **対象（`targets`）**: 成果物カタログ（DCT）に定義されている成果物の文書 ID（doc id）を指定します（例: `prj-0001:cxd-specdojo`、`specdojo:exec-config-guide`）。プロダクト成果物の場合は `local_id` の canonical 形式（`<project-id>:<local_id>`）も受け付けます。まだ文書ファイルが作成されていない成果物であっても、カタログに定義されていればカタログで解決され、起票・実行できます。
+- **進め方（`approach`）**: 成果物を作成・修正する進め方（`fully-guided`、`recipe-guided`、`freeform`、`bootstrap`、`retrofit`、`cross-deliverable-dedup` など）から目的に応じて選びます。
+
+#### 4.3.2. kata（実践の型）を対象にする場合
+
+- **対象（`targets`）**: kata の文書 ID（doc id）を指定します（例: `specdojo:pjr-rulebook`、`specdojo:exec-human-finalize-recipe` など）。kata は文書索引（doc-index）で解決されます。
+- **進め方（`approach`）の選び方**: 見直したい kata の種別に対応する保守 approach を選びます。kata 保守では、通常の「成果物 → 実践の型」という参照の向きが逆になり、実践の型そのものが改訂・編集の対象になります。
+
+| kata の種別 | approach               | 対象となる文書                                                    |
+| ----------- | ---------------------- | ----------------------------------------------------------------- |
+| rulebook    | `rulebook-maintenance` | 作成ルール、規律、品質基準（例: `specdojo:pjr-rulebook`）         |
+| recipe      | `recipe-maintenance`   | 実行手順、運用レシピ（例: `specdojo:exec-human-finalize-recipe`） |
+| sample      | `sample-maintenance`   | 実例、サンプル成果物                                              |
+| template    | `template-maintenance` | 雛形、テンプレート（例: 個票や成果物のテンプレート）              |
+
+### 4.4. 組み合わせの検証とエラー
+
+`approach` と対象の組み合わせに誤りがある場合は、**起票・更新の時点（`register add` / `register update`）および実行の時点（`exec run --register` / `exec plan --register`）** で検証され、エラーで停止します。
+
+- 成果物を対象に `rulebook-maintenance` などの kata 保守 approach を指定した場合、または kata 文書を対象に `fully-guided` などの成果物作成 approach を指定した場合は、種別の不一致として拒否されます。
+- 指定した doc id が成果物カタログ（成果物の場合）または文書索引（kata の場合）で解決できない場合もエラーになります。
+- `approach` を指定しながら `--target` が省略されている場合や、複数件指定されている場合もエラーになります。
+
+### 4.5. plan の生成と owner の扱い
+
+`exec run --register`（または `exec plan --register`）で生成される plan は、通常の register plan ではなく、schedule と共通の approach テンプレートを用いた plan になります。
+
+- **完了条件の合成**: 成果物カタログ（DCT）の `done_criteria` と、個票の「2. 完了条件」節に記載された条件の **両方が plan に載ります**。DCT の `done_criteria` を基本とし、個票の完了条件を追加の条件として併記します。
+- **kata 保守の plan**: 指定された kata の文書 ID を編集対象とします。カタログ上でその kata を一意に宣言している成果物があれば根拠として併記し、共有または未宣言の場合は kata 単独の保守 plan を生成します。
+- **owner の扱い**: schedule のタスクで使われる `owner_rules`（トラック別の自動解決規則）は参照せず、**個票の `owner`（例: `DEV`）をそのまま plan の担当（owner）として使用します**。
+
+### 4.6. 実行手順の流れ
+
+起票から完了までの一連のコマンド実行手順は次のとおりです。
+
+```bash
+# 1. todo 個票を起票する（approach と target を指定）
+specdojo register add \
+  --project <project-id> \
+  --type todo \
+  --title "SpecDojo 設定ガイドの改訂" \
+  --topic exec-config-guide-revision \
+  --approach fully-guided \
+  --target specdojo:exec-config-guide \
+  --owner DEV
+
+# 2. （任意）事前に生成される plan の内容を確認する
+specdojo exec plan --project <project-id> --register <PJR-ID>
+
+# 3. worktree 隔離で agent を実行する
+specdojo exec run --project <project-id> --register <PJR-ID> --worktree
+
+# 4. agent が成功すると成果物が統合ブランチへマージされ、個票が review 状態に遷移する
+#    成果物と対応結果を確認し、問題なければ close する
+specdojo register close \
+  --project <project-id> \
+  --id <PJR-ID> \
+  --conclusion "設定ガイドを改訂し検証を通過"
+```

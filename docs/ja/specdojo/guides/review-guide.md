@@ -174,7 +174,7 @@ viewpoint は継続品質評価 `specdojo grade` の正本です。review plan �
 
 `document_kinds.include` は列挙した種類だけへ適用し、`document_kinds.exclude` は列挙した種類を除外します。二つは同時に指定できません。宣言を省略した観点は全種類へ適用します。`grade_targets` は kata / deliverable という評価経路の大分類、`document_kinds` は rulebook ID による文書種類の細分類であり、両方を指定した場合は双方を満たす文書だけを対象にします。
 
-`include` または `exclude` で rulebook ID を列挙した観点は、すべての rulebook について扱いを判断済みにします。列挙していない rulebook を既定の結果（`exclude` の観点では適用、`include` の観点では対象外）のままにすると判断した場合は、`document_kinds.confirmed_default` へ列挙します。`confirmed_default` は判断の記録で、適用判定は変えません。同じ rulebook を `include` / `exclude` と重ねて書くことはできません。`src/viewpoint-document-kinds-check.ts` の検証は、どこにも載っていない rulebook、存在しない rulebook ID、重複した判断を観点 ID と rulebook ID の組で error として報告します。この検証は `npm test`（`npm run check` に含まれる）で実行され、`npx tsx src/viewpoint-document-kinds-check.ts` で単独でも実行できます。`unclassified` だけを宣言した観点は全種類へ適用するため、検証の対象外です。
+`include` または `exclude` で rulebook ID を列挙した観点は、すべての rulebook について扱いを判断済みにします。列挙していない rulebook を既定の結果（`exclude` の観点では適用、`include` の観点では対象外）のままにすると判断した場合は、`document_kinds.confirmed_default` へ列挙します。`confirmed_default` は判断の記録で、適用判定は変えません。同じ rulebook を `include` / `exclude` と重ねて書くことはできません。`src/docs/viewpoint-document-kinds-check.ts` の検証は、どこにも載っていない rulebook、存在しない rulebook ID、重複した判断を観点 ID と rulebook ID の組で error として報告します。この検証は `npm test`（`npm run check` に含まれる）で実行され、`npx tsx src/docs/viewpoint-document-kinds-check.ts` で単独でも実行できます。`unclassified` だけを宣言した観点は全種類へ適用するため、検証の対象外です。
 
 `grade_rubric` の level 0-4 は category を跨いで共有し、viewpoint score を `level × 25` とします。`grade_rubric` には level ごとの `review_verdict`（level 4 が `complete`、level 3 が `complete-with-findings`、level 0-2 が `incomplete`）が定義されています。これは grade の level を review の入力にする写像であり、review はこの対応で観点を判定し直しません。写像の使い方は `grade の結果を review の入力にする規則` に示します。
 

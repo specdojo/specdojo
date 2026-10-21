@@ -3,34 +3,80 @@ version: 1
 document: specdojo:opd-sample
 path: docs/ja/specdojo/samples/opd-sample.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 53
-graded_at: "2026-09-05T13:51:23.651Z"
-graded_by: gemma-expert-executor
+score: 49
+graded_at: "2026-10-15T21:33:21.090Z"
+graded_by: agy-expert-executor
 content_hash: 2bda7adf7d909fa7fb1215c6939233fa35033ef454facfa15bf189b92e56fd89
 categories:
-  consistency:
+  purpose:
     score: 50
-  usability:
+  operations:
     score: 75
+  planning:
+    score: 58
+  business:
+    score: 50
   architecture:
-    score: 100
+    score: 83
+  usability:
+    score: 67
+  implementation:
+    score: 50
   quality:
-    score: 13
+    score: 33
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 4
-    score: 100
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 3
+    score: 75
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 3
+    score: 75
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 2
+    score: 50
   vp-arc-conciseness:
-    level: 4
-    score: 100
+    level: 3
+    score: 75
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
+    level: 2
+    score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -38,9 +84,18 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 3
+    score: 75
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,43 +103,202 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 3
-  major: 3
-  minor: 0
+  major: 15
+  minor: 5
   note: 0
 findings:
+  - id: F001
+    severity: major
+    rule: vp-po-purpose-alignment
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      The document does not define operational scope, non-scope, or operational policies corresponding to the target
+      system ('駄菓子屋の販売管理システム'), remaining only as an abstract meta-description.
+    message_ja: >-
+      The document does not define operational scope, non-scope, or operational policies corresponding to the target
+      system ('駄菓子屋の販売管理システム'), remaining only as an abstract meta-description.
   - id: F002
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 1
-    message: Frontmatter に必須項目 `title` が不足している。
-    anchor: ""
+    rule: vp-po-decision-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Section 5 lists an open issue without identifying decision makers, specific decision items, impact scope, or
+      concrete next actions for PO approval.
+    message_ja: セクション 5 には、意思決定者、具体的な決定事項、影響範囲、または PO の承認を得るための具体的な次のアクションが特定されていない未解決の課題が記載されています。
   - id: F003
-    severity: blocker
-    rule: vp-qe-omissions-consistency
+    severity: minor
+    rule: vp-po-publication-accountability
     line: 1
-    message: Frontmatter の `type` が `project` となっており、ルール規定の `operations` と不一致である。
-    anchor: ""
-  - id: F005
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 1
-    message: 成果物の具体例を示す「サンプル」としての責務を果たしておらず、ルールの適用例が提示されていない。
-    anchor: ""
-  - id: F006
-    severity: major
-    rule: vp-ux-readability
-    line: 1
-    message: 必須構成を省略し形式的な説明に留まっているため、読者が完成形のイメージを把握できず、サンプルとして機能していない。
-    anchor: ""
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: The document lacks explicit designation of human PO approval authority and accountability for publication.
+    message_ja: ドキュメントには、人間の PO による承認権限および公開に対する責任が明示的に指定されていません。
   - id: F004
-    severity: blocker
-    rule: vp-qe-omissions-consistency
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: >-
+      Operational tasks, work units, done criteria, and assigned role codes are completely absent, making task planning
+      and progress tracking impossible.
+    message_ja: 運用タスク、作業単位、完了基準、および割り当てられたロールコードが完全に欠落しているため、タスクの計画と進捗の追跡が不可能です。
+  - id: F005
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Operational risks and downstream deliverable dependencies arising from deferred operational requirements are not
+      identified or evaluated.
+    message_ja: 運用要件の延期から生じる運用上のリスクや、後続の成果物への依存関係が特定または評価されていません。
+  - id: F006
+    severity: minor
+    rule: vp-pm-control-reporting
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      The open issue in Section 5 does not designate a reporting destination, responsible role code, or tracking
+      categorization for project control.
+    message_ja: セクション 5 の未解決事項には、プロジェクト管理のための報告先、責任ロールコード、または追跡用のカテゴリ分けが指定されていません。
+  - id: F007
+    severity: major
+    rule: vp-ba-business-value
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      The document fails to describe the target business operations, business value, impacts of operational failure, or
+      business success criteria for the confectionery store system.
+    message_ja: ドキュメントには、菓子店システムの対象となる業務、ビジネス価値、運用失敗の影響、またはビジネスの成功基準が記載されていません。
+  - id: F008
+    severity: major
+    rule: vp-ba-requirements-completeness
     line: 3
-    message: "`opd-rulebook` で定義された必須構成（見出し 1〜12）がすべて欠落しており、独自の構成になっている。"
-    anchor: ""
-  - id: F001
+    anchor: "## 1. 目的と適用範囲"
+    message: >-
+      Operational requirements, acceptance conditions, service hours, and explicit in-scope/out-of-scope boundaries are
+      entirely missing.
+    message_ja: 運用要件、受け入れ条件、サービス時間、および明確なインスコープ/アウトオブスコープの境界が完全に欠落しています。
+  - id: F009
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 7
+    anchor: "## 2. 入力情報"
+    message: >-
+      Stakeholders, operational roles (such as store staff and operators), verifiers, and agreed service levels are not
+      identified.
+    message_ja: ステークホルダー、運用ロール（店舗スタッフやオペレーターなど）、検証者、および合意されたサービスレベルが特定されていません。
+  - id: F010
+    severity: major
+    rule: vp-arc-technical-constraints
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: >-
+      Technical assumptions, system architecture constraints, external dependencies, and monitoring/backup targets are
+      completely absent.
+    message_ja: 技術的な前提条件、システムアーキテクチャの制約、外部依存関係、および監視/バックアップの対象が完全に欠落しています。
+  - id: F011
+    severity: minor
+    rule: vp-arc-conciseness
+    line: 18
+    anchor: "## 4. 最小記述例"
+    message: >-
+      Section 4 duplicates the general description and bullet points of Section 3 in a table format without providing
+      distinct decision content.
+    message_ja: セクション 4 は、個別の決定内容を提供することなく、セクション 3 の一般的な説明と箇条書きをテーブル形式で重複させています。
+  - id: F012
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: >-
+      Operational configuration parameters, alert threshold values, backup specifications, and execution constraints are
+      completely missing for implementation and setup.
+    message_ja: 実装とセットアップのための運用設定パラメータ、アラートの閾値、バックアップ仕様、および実行制約が完全に欠落しています。
+  - id: F013
+    severity: major
+    rule: vp-dev-change-impact
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: >-
+      Change management policies, rollback conditions, approval gates, and impact assessment criteria for operational
+      changes are omitted.
+    message_ja: 運用変更に関する変更管理ポリシー、ロールバック条件、承認ゲート、および影響評価基準が省略されています。
+  - id: F014
+    severity: major
+    rule: vp-dev-testability
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: >-
+      Validation procedures, test methods, and verification criteria for operational configurations and alerting rules
+      are not provided.
+    message_ja: 運用設定およびアラートルールに関する検証手順、テスト方法、および検証基準が提供されていません。
+  - id: F015
     severity: major
     rule: vp-qe-verifiability
     line: 26
+    anchor: "## 5. 未解決事項"
     message: SLO/SLA/KPI 等の判定基準が具体的に記述されておらず、検証不能である。
-    anchor: ""
+    message_ja: SLO/SLA/KPI 等の判定基準が具体的に記述されておらず、検証不能である。
+  - id: F016
+    severity: major
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: Frontmatter に必須項目 `title` が不足している。
+    message_ja: Frontmatter に必須項目 `title` が不足している。
+  - id: F017
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: Frontmatter の `type` が `project` となっており、ルール規定の `operations` と不一致である。
+    message_ja: Frontmatter の `type` が `project` となっており、ルール規定の `operations` と不一致である。
+  - id: F018
+    severity: blocker
+    rule: vp-qe-omissions-consistency
+    line: 3
+    anchor: "## 1. 目的と適用範囲"
+    message: "`opd-rulebook` で定義された必須構成（見出し 1〜12）がすべて欠落しており、独自の構成になっている。"
+    message_ja: "`opd-rulebook` で定義された必須構成（見出し 1〜12）がすべて欠落しており、独自の構成になっている。"
+  - id: F019
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: 成果物の具体例を示す「サンプル」としての責務を果たしておらず、ルールの適用例が提示されていない。
+    message_ja: 成果物の具体例を示す「サンプル」としての責務を果たしておらず、ルールの適用例が提示されていない。
+  - id: F020
+    severity: major
+    rule: vp-ux-readability
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: 必須構成を省略し形式的な説明に留まっているため、読者が完成形のイメージを把握できず、サンプルとして機能していない。
+    message_ja: 必須構成を省略し形式的な説明に留まっているため、読者が完成形のイメージを把握できず、サンプルとして機能していない。
+  - id: F021
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: >-
+      The H1 title format deviates from the rulebook naming standard '運用方針・設計: ＜対象名＞' and embeds a hyperlink in the
+      heading.
+    message_ja: "H1 タイトルの形式がルールブックの命名標準である '運用方針・設計: ＜対象名＞' から逸脱しており、見出しにハイパーリンクが含まれています。"
+  - id: F022
+    severity: minor
+    rule: vp-ops-release-readiness
+    line: 26
+    anchor: "## 5. 未解決事項"
+    message: >-
+      Prerequisites and completion criteria (ready criteria) for transitioning the sample from draft to ready status are
+      not defined.
+    message_ja: サンプルをドラフトからレディ状態へ移行するための前提条件と完了基準（ready criteria）が定義されていません。
+  - id: F023
+    severity: major
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# [運用方針・設計](../rulebooks/opd-rulebook.md) サンプル"
+    message: >-
+      Essential operational routing, contact channels, maintenance procedures, and required links to OPR runbooks
+      ('opr-index') are completely missing.
+    message_ja: 不可欠な運用ルーティング、連絡手段、メンテナンス手順、および OPR ランブック（'opr-index'）への必要なリンクが完全に欠落しています。

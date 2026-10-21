@@ -1,0 +1,13 @@
+dashboard／timeline の移動を完了しました。
+
+- 実装 7 ファイルを `src/dashboard/`、テスト 2 ファイルを `tests/src/dashboard/` へ codemod で移動
+- import、設計書、カタログの参照パスを更新
+- codemod から登録簿・execution・logs の履歴を除外
+- 3 種類の `--help` は移動前後で一致
+- build 成功、新 `dist/dashboard/` を生成し旧出力が残らないことを確認
+- 個票を更新。result は executor 指示どおり未編集
+- 親 runner 所管の検証は重複実行していません
+
+<specdojo_executor_evidence>
+{"final_message":"dashboard と timeline の src/dashboard への移動、codemod 改修、文書更新、個票更新を完了した。","validations":[{"command":"node tools/src-move-codemod.mjs --dry-run tmp/pjr-w9rk-moves.tsv","status":"passed","summary":"対応表どおりの9ファイル移動、import書き換え、履歴除外を確認した。"},{"command":"node tools/src-move-codemod.mjs tmp/pjr-w9rk-moves.tsv","status":"passed","summary":"一時Git indexを使用し、pipeline管理のindexを変更せずに移動とimport書き換えを適用した。"},{"command":"cmp -s tmp/pjr-w9rk-help-before/dashboard.txt tmp/pjr-w9rk-help-after/dashboard.txt && cmp -s tmp/pjr-w9rk-help-before/dashboard-build.txt tmp/pjr-w9rk-help-after/dashboard-build.txt && cmp -s tmp/pjr-w9rk-help-before/timeline.txt tmp/pjr-w9rk-help-after/timeline.txt","status":"passed","summary":"dashboard、dashboard build、timeline のhelp出力が移動前後で一致した。"},{"command":"npx prettier --write tools/src-move-codemod.mjs tests/tools/src-move-codemod.integration.test.ts src/dashboard/dashboard.ts src/dashboard/exec-records.ts src/dashboard/routines.ts src/dashboard/shared.ts src/dashboard/dashboard-timeline.ts src/dashboard/timeline.ts src/dashboard/timeline-build.ts src/schedule-strategy-generate-scope.ts src/specdojo.ts tests/src/dashboard/dashboard.test.ts tests/src/dashboard/timeline-build.test.ts docs/ja/product/040-system-design/sysd-index.md docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-w9rk-src-move-dashboard.md","status":"passed","summary":"変更対象を整形した。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿生成に成功した。"},{"command":"node --import tsx src/specdojo.ts catalog build","status":"passed","summary":"カタログ生成に成功した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"カタログ検証に成功した。既存の参照先未配置に関する警告のみ。"},{"command":"npm run build","status":"passed","summary":"ビルドに成功し、新しいdist/dashboard出力を確認した。旧dashboard・timeline出力は残っていない。"},{"command":"git diff --check","status":"passed","summary":"空白エラーはない。"}]}
+</specdojo_executor_evidence>

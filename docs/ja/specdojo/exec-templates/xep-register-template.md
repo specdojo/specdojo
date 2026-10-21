@@ -15,13 +15,12 @@ _PJR_DESCRIPTION_
 - `priority`: _PJR_PRIORITY_
 - `owner`: _PJR_OWNER_
 - `due`: _PJR_DUE_
-- `登録簿`: `_PJR_INDEX_PATH_`
 - `個票`: _PJR_TICKET_REF_
 - `result`: `_RESULT_REF_`
 
 ## 3. 進め方
 
-1. 登録簿の該当行と個票（存在する場合）を読み、目的・完了条件・制約を把握する。
+1. 個票（存在する場合）を読み、目的・完了条件・制約を把握する。登録簿の一覧は大きいため読まない。
 2. 個票に完了条件がある場合はそれを作業の基準にする。無い場合はタイトルと説明から完了条件の仮説を立て、その仮説を result に明記する。
 3. 関連する成果物・設計書・実装を確認し、対象ファイルを特定して変更する。
 4. 個票が存在する場合は、個票の作業内容・対応結果セクションを実施内容で更新する。
@@ -32,6 +31,8 @@ _PJR_DESCRIPTION_
 _GRADE_FINDINGS_
 
 plan に展開された finding は、message と同じ viewpoint ID の判定根拠に照らして解消する。未解消、根拠不足、または判断不能の場合は、理由と次のアクションを result に記録する。grade result サイドカーは再評価時に更新されるため、本タスクでは直接編集しない。
+
+_AUTOPILOT_CONSTRAINTS_
 
 ## 4. 完了手順
 

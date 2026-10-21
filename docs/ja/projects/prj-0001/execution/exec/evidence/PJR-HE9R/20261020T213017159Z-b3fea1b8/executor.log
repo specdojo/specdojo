@@ -1,0 +1,7 @@
+`projects.<id>.run.parent_validations` を実装しました。共有 defaults の検証へ project 固有設定を追記し、`prj-0001` に影響せず `prj-0002` の `specdojo-lp` 向け検証が runner evidence に残るテストも追加しています。
+
+schema、設定ガイド、リファレンス、CHANGELOG、個票を更新済みです。現設定には `prj-0002` の宣言がないため、実設定自体は変更していません。result は executor の指示どおり未編集です。親 runner 管轄の型検査・lint・テスト・schema 検査は実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"project 固有の `parent_validations` の追加実装、テスト、schema、文書、個票の更新を完了","validations":[{"command":"npx prettier --write src/shared/specdojo-config.ts src/exec/agent-config.ts docs/specdojo/schemas/v1/specdojo-config.schema.yaml tests/docs/specdojo/schemas/specdojo-config-schema.test.ts tests/src/exec/agent-config.test.ts docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/specdojo/guides/exec-config-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-he9r-per-project-parent-validations.md","status":"passed","summary":"全変更対象を整形"},{"command":"npx prettier --write src/exec/agent-config.ts","status":"passed","summary":"最終ソース変更を整形"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検証成功。既存の参照先未配置に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし"}]}
+</specdojo_executor_evidence>

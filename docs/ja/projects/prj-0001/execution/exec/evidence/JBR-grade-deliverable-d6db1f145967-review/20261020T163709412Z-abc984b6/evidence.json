@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-deliverable-d6db1f145967-review",
+  "run_id": "20261020T163709412Z-abc984b6",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-review-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-20T16:37:09.412Z",
+    "completed_at": "2026-10-20T16:38:55.459Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 0,
+    "summary": ""
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --stat b5e6d1869cb7cc2770df1847137adf387354915c..ce52e5063831c85063141dbd62a3059080758c2d && git diff --name-status b5e6d1869cb7cc2770df1847137adf387354915c..ce52e5063831c85063141dbd62a3059080758c2d",
+      "status": "passed",
+      "summary": "27ファイルすべてが Job Run の出力（評価結果ファイル・done_criteria 記録・Run の記録）で、対象外の変更はない"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target deliverable --project prj-0001 --changed-only",
+      "status": "passed",
+      "summary": "評価済み10件は出力されず、評価結果は最新。出力された7件は今回の Run で選ばれなかった候補"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target deliverable --project prj-0001 --dependency-changed",
+      "status": "passed",
+      "summary": "評価済み10件は出力されない"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade list --target deliverable --project prj-0001 --incomplete",
+      "status": "passed",
+      "summary": "出力なし（評価パイプラインの未完了はない）"
+    },
+    {
+      "source": "executor",
+      "command": "node dist/specdojo.js grade state --target deliverable --project prj-0001 --exhausted",
+      "status": "passed",
+      "summary": "出力なし（失敗回数が上限に達した成果物はない）"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d6db1f145967/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-func\n… output omitted …\nce/worktrees/prj-0001-JBR-grade-deliverable-d6db1f145967/src/schedule/build.ts\n  349:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d6db1f145967/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 33 problems (0 errors, 33 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d6db1f145967\u001b[39m\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nmbers-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d6db1f145967/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d6db1f145967/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.11 \u001b[39m\u001b[90m/workspaces/specdojo-workspace/worktrees/prj-0001-JBR-grade-deliverable-d6db1f145967\u001b[39m\n\n \u001b[32m✓\u001b[39m tests/src/exec/reporter.test.ts \u001b[2m(\u001b[22m\u001b[2m102 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[32m 45\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/grade/grade.test.ts \u001b[2m(\u001b[22m\u001b[2m69 tests\u001b[22m\u001b[2m)\u001b[22m\u001b[33m 626\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m tests/src/exec/results.test.ts \u001b[\n… output omitted …\ns\u001b[2m > \u001b[22m\u001b[2mMermaid SVG generation basics\u001b[2m > \u001b[22m\u001b[2mignores generated Markdown and removes any stale manifest entry\n\u001b[22m\u001b[39m[mermaid] skipping missing or generated Markdown: ja/generated/invalid.md\n\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "verdict: complete-with-findings。2つの commit 間の差分は27ファイルで、Job の出力（評価結果ファイル10件・done_criteria 記録10件・Run JSON・plan・result・evidence 4件）だけで構成され、`docs/ja/product/` には変更がない。Run JSON の state `succeeded`・終了コード0・stderr は空で、stdout は `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0`、`results.tsv` の10行はすべて `passed`。終了コード75・中断・`failed`・`retry_exhausted` はなく、`partial` でもない。鮮度確認では、`grade list --changed-only` / `--dependency-changed` / `--incomplete` と `grade state --exhausted` のどの出力にも評価済み10件は出なかった（最新）。出力に出た未評価の候補（`sysd-github-copilot-agent-settings`、`pm-raci` など）は件数上限 `limit=10` で選ばれなかったもので、次回の Run の対象。全10件が `needs-work`・score 53〜71。前回から score が変わったのは `sysd-claude-agent-settings` 47→59 と `sysd-codex-agent-settings` 41→53 の2件だけ。評価者 `flash-high-executor` は `agy-expert-executor` の別名として登録されており矛盾しない。未充足の done_criteria と確認担当ロール: `stsd-register-entry` / `sysd-antigravity-agent-settings` / `sysd-claude-agent-settings` / `sysd-codex-agent-settings` / `sysd-critical-flows` / `tsd-home-mac-dev-server` は5/5（BA, PO, ARC, QE, DEV）、`tsd-omlx-opencode` と `tsd-home-mac-dev-server-usage` は4/5（BA, PO, ARC, QE）、`sysd-agent-settings` は3/5（BA, PO, QE）、`sysd-cross-cutting-policy` は2/4（DEV, OPS）。finding（統合は妨げない）: (1) Job の result に Job 固有の確認事項『未充足の done_criteria がある成果物と確認担当ロールの特定』の記載がない。上記の一覧を各ロールへ引き継ぐ必要がある。(2) result に誤字『成果目』と、Run JSON の行数『+57』の誤り（実際の差分は58行追加）がある。確認できなかった範囲: 各評価結果ファイルの finding 本文と score の変化理由（再評価はしていない）、`logs/grade/runs/` 配下の元の `results.tsv`（確認したのは evidence に記録された stdout）、plan と result の全文。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-d6db1f145967-review/20261020T163709412Z-abc984b6/executor.log",
+      "bytes": 7916,
+      "truncated": false
+    }
+  ]
+}

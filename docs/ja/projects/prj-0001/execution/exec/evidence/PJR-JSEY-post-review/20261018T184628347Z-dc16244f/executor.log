@@ -1,0 +1,30 @@
+## PJR-JSEY 統合後レビュー: complete-with-findings
+
+完了条件はすべて満たしているので、この項目は close して構いません。成果物の記載に小さな不整合が 2 点あり、軽微な finding として残します。
+
+### 完了条件との照合
+
+| 完了条件 | 判定 | 根拠 |
+| --- | --- | --- |
+| 「対応結果」の表に 1 行追記する（日時（JST）、対象の分割の項目 ID、agent の nickname） | 満たす | 差分で `2026-10-19 03:41 \| PJR-0EFN \| sonnet-executor` の 1 行が加わっています。executor は 2026-10-18T18:40:59Z〜18:41:28Z に動いており、JST では 03:41 なので日時は合っています。 |
+| 対象 ID は最も新しく統合された分割の項目 | 満たす | `git log` では、統合前 commit の直前に統合されたのは PJR-0EFN（2f0de4088）です。PJR-0EFN の個票は `item_status: review` で、条件どおり `review` または `done` に当たります。直前の 2a6f98a97 で、対象の一覧にも 0EFN が加えられています。 |
+| 本個票以外のファイルは変更しない | 満たす | 差分は 7 件です。1 件が本個票、残り 6 件は runner が自動で作るファイルです（events の `pjr-jsey.yaml`（start と review の記帳）、evidence.json、executor.log、pipeline-state.json、edit plan、edit result）。executor evidence の `changes` も本個票 1 件だけです。対象外の変更は入っていません。 |
+| 親の検証 7 件が通り、統合まで終わる | 満たす | evidence では lint-ts、lint-fm、lint-md、typecheck、test-unit、test-integration、validate-schema がすべて `passed` です。lint-ts は error 0、warning 31 です。pipeline-state.json では executor、reporter、integrate がすべて `succeeded` です（reporter は 2 回目で成功）。 |
+
+edit result と evidence には、完了を妨げる失敗、未実施の必須検証、未解消の申し送りはありません。executor が自分で申告した `npx prettier --check` は `not_applicable` ですが、markdownlint は親の lint-md で通っています。この review では grade を使わず、edit の検証結果で判定しました。
+
+### finding（軽微）
+
+1. **個票の `conclusion` が古いまま**: 本文には 0EFN の行が加わりましたが、frontmatter の `conclusion` は「G90K の統合後の runner で…」のままです。close するときに 0EFN の内容へ直す必要があります。
+2. **edit result の変更ファイル欄が実際と合わない**: 「2. 変更ファイル」が「なし」になっていますが、実際には個票 1 件を変更しています。evidence の `changes` とも食い違っています。
+
+### 確認できなかった範囲
+
+- `pjr-index.md` の登録簿で、この項目がどう表示されるか（今回の差分には含まれず、確認していません）
+- 各検証の出力全文（evidence には一部を省いた要約しか残っていません）
+
+確認に使ったのは読み取り専用のコマンドだけで、ファイルは何も変更していません。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict: complete-with-findings。個票の完了条件 3 点はすべて満たす。(1) 対応結果の表に「2026-10-19 03:41 / PJR-0EFN / sonnet-executor」が追記された。日時は executor の実行時刻（18:41Z = 03:41 JST）と合い、PJR-0EFN は統合前 commit の直前に統合された分割の項目（2f0de4088）で item_status は review。(2) 差分 7 件は本個票と runner が自動で作るファイル（events の pjr-jsey.yaml、evidence.json、executor.log、pipeline-state.json、edit plan、edit result）だけで、対象外の変更はない。(3) evidence では親の検証 7 件（lint-ts、lint-fm、lint-md、typecheck、test-unit、test-integration、validate-schema）がすべて passed で、pipeline-state.json では executor、reporter、integrate がすべて succeeded。完了を妨げる失敗や未解消の申し送りはない。grade は使わず、edit の検証結果で判定した。軽微な finding: (a) 個票 frontmatter の `conclusion` が G90K の内容のままで、close 時に 0EFN の内容へ直す必要がある。(b) edit result の「変更ファイル」が「なし」だが、実際には個票 1 件を変更しており evidence の `changes` と食い違う。確認できなかった範囲: pjr-index.md の登録簿での表示（差分外）と、各検証の出力全文（evidence には一部を省いた要約しかない）。","validations":[{"command":"git diff --stat 3da3e3c736d4fb1323f0037f693c6e5a6420dd0d..b7efc278a7ece9114f6a966d121c10ec2c40708d","status":"passed","summary":"7 ファイル、278 行追加、1 行削除"},{"command":"git diff --name-status 3da3e3c736d4fb1323f0037f693c6e5a6420dd0d..b7efc278a7ece9114f6a966d121c10ec2c40708d","status":"passed","summary":"変更は本個票と events の pjr-jsey.yaml（M）、追加は evidence 3 件と plan、result。対象外の変更なし"},{"command":"git diff 3da3e3c736d4fb1323f0037f693c6e5a6420dd0d..b7efc278a7ece9114f6a966d121c10ec2c40708d -- docs/ja/projects/prj-0001/controls/project-register/","status":"passed","summary":"PJR-0EFN の行の追記、item_status の open から review への変更、start と review のイベントを確認"},{"command":"git log --oneline -12 b7efc278","status":"passed","summary":"直前に統合された分割の項目は PJR-0EFN（2f0de4088）"},{"command":"grep -H -m2 -E item_status pjr-0efn-*.md pjr-g90k-*.md","status":"passed","summary":"PJR-0EFN は review、PJR-G90K は done"}]}
+</specdojo_executor_evidence>

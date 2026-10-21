@@ -1,0 +1,111 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ce88e3a5a5554ba1942a4f2c7385638a
+  ts: "2026-10-18T02:56:23Z"
+  action: add
+  actor: manual
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の plan が大きい一覧を読ませ、一覧のパスも誤っている
+    - field: description
+      from: ""
+      to: register の todo の plan（xep-register-template・xep-register-investigate-template）は、進め方の最初で登録簿の一覧の該当行を読ませ、対象項目に一覧のパスを挙げている。一覧は約 479KB あり、文脈が 64k のローカル LLM（gemma26-executor）は分けて読むうちに文脈を使い切り、何も変更せずに終わった（WJE6 の試行 wje6-local-llm）。挙げているパスも controls/project-register/pjr-index.md で、実際の生成先 generated/pjr-index.md と違う。作業に必要なのは個票だけである
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-18"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_fdda3ed0a48f41bfb4e1571a0f8bd85c
+  ts: "2026-10-18T05:54:52Z"
+  action: start
+  actor: agy-expert-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ce88e3a5a5554ba1942a4f2c7385638a
+- v: 1
+  id: reg_83c0c5d4a5fd414b9e17fda8235dc986
+  ts: "2026-10-18T06:20:48Z"
+  action: wait
+  actor: agy-expert-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_fdda3ed0a48f41bfb4e1571a0f8bd85c
+- v: 1
+  id: reg_66ed08c0bc874b50b395370629b783c3
+  ts: "2026-10-18T06:41:57Z"
+  action: start
+  actor: claude-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_83c0c5d4a5fd414b9e17fda8235dc986
+- v: 1
+  id: reg_3beb29d558f74c52a265b44284e9b440
+  ts: "2026-10-18T06:48:21Z"
+  action: review
+  actor: claude-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_66ed08c0bc874b50b395370629b783c3
+- v: 1
+  id: reg_1faf92880bbb4b4c88b5ae51c4e18b83
+  ts: "2026-10-18T06:49:30Z"
+  action: close
+  actor: claude-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run（agy-expert-executor・claude-reporter）の差分と親検証を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-18"
+    - field: conclusion
+      from: "-"
+      to: register の plan の 2 つの雛形から一覧のパスを外し、進め方の最初を個票を読むことにして一覧は読まないと明記した。生成した plan に一覧のパスが含まれないことを単体テストで確かめた。CHANGELOG への記載は PJR-HZW3 で補う
+  previous_event_id: reg_3beb29d558f74c52a265b44284e9b440
