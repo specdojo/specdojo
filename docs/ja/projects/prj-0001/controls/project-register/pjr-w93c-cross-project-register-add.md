@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-21T13:17:35Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-md"
 ---
 
 # PJR-W93C 別の project の登録簿へ起票できるようにする
@@ -39,13 +38,18 @@ project ごとに統合ブランチと作業ツリーが分かれているため
 
 ## 3. 作業内容
 
-| No  | 作業                                        | 担当 | 状態 | メモ         |
-| --- | ------------------------------------------- | ---- | ---- | ------------ |
-| 1   | 別の project の登録簿へ起票できるようにする | DEV  | open | 0.4.2 の範囲 |
+| No  | 作業                                        | 担当 | 状態 | メモ                               |
+| --- | ------------------------------------------- | ---- | ---- | ---------------------------------- |
+| 1   | 別の project の登録簿へ起票できるようにする | DEV  | open | 実装・テスト・利用者向け文書を更新 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- project ごとの `integration_branch` と既定の `project/<project-id>/develop` を解決し、別 project への `register add --commit` を対象ブランチの既存 worktree または一時 worktreeで実行するようにした。
+- 対象登録簿の未 commit 変更、`--commit` の欠落、対象ブランチの欠落、別 project への状態遷移を、書き込み前に拒否するようにした。
+- project 修飾した `--from` を参照先 project の統合ブランチの Git tree で検証するようにした。
+- 単体テストと、既存／一時 worktree、元ブランチの不変、1 commit、未 commit 変更の拒否を扱う統合テストを追加した。
+- [[specdojo:register-operation-guide]]、[[specdojo:command-reference]]、[[specdojo:specdojo-config-reference]]、CHANGELOG を更新した。
+- 残課題: 統合後に [[prj-0001:pjr-jsey-exec-run-split-smoke|PJR-JSEY]] の手順で `exec run --register` を 1 回実行し、配布 CLI の実運用経路を確認する。
 
 ## 5. 関連ドキュメント
 

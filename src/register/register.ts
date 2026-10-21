@@ -81,6 +81,7 @@ import {
 } from "./views.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { registerLifecyclePoolPath } from "./lifecycle-lock.js";
+import { inCrossProjectWorktree, resolveCrossProjectMutationTarget } from "./cross-project.js";
 
 export {
   PJR_ID_ALPHABET,
@@ -342,52 +343,78 @@ function commitRegisterMutation(
   );
 }
 
+async function runRegisterMutationInCurrentWorktree(
+  command: string,
+  opts: RegisterMutationOptions,
+  mutate: (context: RegisterMutationContext) => RegisterMutationResult,
+  requireCleanRegister: boolean,
+): Promise<void> {
+  const paths = resolveRegisterPaths(opts);
+  if (!opts.commit || opts.dryRun) {
+    mutate({ paths, assertCommitTargetsClean: () => undefined });
+    return;
+  }
+
+  const repoRoot = specdojoRootDir();
+  if (!paths.executionPath) {
+    throw new Error(`Execution path is not configured for project ${paths.projectId}`);
+  }
+  const mutex = new CrossProcessMutex(
+    registerLifecyclePoolPath(paths.executionPath),
+    {
+      actor: registerEventActor(opts),
+      label: `register ${command}`,
+    },
+    {
+      onWait: () =>
+        process.stdout.write("Waiting for the register lifecycle lock held by another operation\n"),
+    },
+  );
+
+  await mutex.runExclusive(() => {
+    const preexisting = new Set(worktreeStatusPaths(repoRoot));
+    if (requireCleanRegister) {
+      const registerPrefix = `${repoRelative(repoRoot, paths.projectRegisterPath)}/`;
+      const dirtyRegisterPaths = [...preexisting].filter(
+        (path) => path === registerPrefix.slice(0, -1) || path.startsWith(registerPrefix),
+      );
+      if (dirtyRegisterPaths.length > 0) {
+        throw new Error(
+          `Cannot add to project ${paths.projectId} because its register has uncommitted changes:\n` +
+            dirtyRegisterPaths.map((path) => `  ${path}`).join("\n"),
+        );
+      }
+    }
+    const assertCommitTargetsClean = (targets: readonly string[]): void => {
+      const overlapping = targets
+        .map((target) => repoRelative(repoRoot, target))
+        .filter((target) => preexisting.has(target));
+      if (overlapping.length === 0) return;
+      throw new Error(
+        `Cannot use --commit because register targets already have uncommitted changes:\n` +
+          overlapping.map((path) => `  ${path}`).join("\n"),
+      );
+    };
+    const result = mutate({ paths, assertCommitTargetsClean });
+    rebuildRegisterViews(paths);
+    commitRegisterMutation(repoRoot, paths, command, result, preexisting, opts.message);
+  });
+}
+
 async function runRegisterMutation(
   command: string,
   opts: RegisterMutationOptions,
   mutate: (context: RegisterMutationContext) => RegisterMutationResult,
 ): Promise<void> {
   try {
-    const paths = resolveRegisterPaths(opts);
-    if (!opts.commit || opts.dryRun) {
-      mutate({ paths, assertCommitTargetsClean: () => undefined });
+    const crossProjectTarget = resolveCrossProjectMutationTarget(command, opts);
+    if (crossProjectTarget) {
+      await inCrossProjectWorktree(crossProjectTarget, () =>
+        runRegisterMutationInCurrentWorktree(command, opts, mutate, true),
+      );
       return;
     }
-
-    const repoRoot = specdojoRootDir();
-    if (!paths.executionPath) {
-      throw new Error(`Execution path is not configured for project ${paths.projectId}`);
-    }
-    const mutex = new CrossProcessMutex(
-      registerLifecyclePoolPath(paths.executionPath),
-      {
-        actor: registerEventActor(opts),
-        label: `register ${command}`,
-      },
-      {
-        onWait: () =>
-          process.stdout.write(
-            "Waiting for the register lifecycle lock held by another operation\n",
-          ),
-      },
-    );
-
-    await mutex.runExclusive(() => {
-      const preexisting = new Set(worktreeStatusPaths(repoRoot));
-      const assertCommitTargetsClean = (targets: readonly string[]): void => {
-        const overlapping = targets
-          .map((target) => repoRelative(repoRoot, target))
-          .filter((target) => preexisting.has(target));
-        if (overlapping.length === 0) return;
-        throw new Error(
-          `Cannot use --commit because register targets already have uncommitted changes:\n` +
-            overlapping.map((path) => `  ${path}`).join("\n"),
-        );
-      };
-      const result = mutate({ paths, assertCommitTargetsClean });
-      rebuildRegisterViews(paths);
-      commitRegisterMutation(repoRoot, paths, command, result, preexisting, opts.message);
-    });
+    await runRegisterMutationInCurrentWorktree(command, opts, mutate, false);
   } catch (error) {
     printCommandError(error);
   }

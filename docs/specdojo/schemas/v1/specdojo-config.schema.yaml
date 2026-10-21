@@ -57,6 +57,11 @@ $defs:
     properties:
       base_path:
         type: string
+      integration_branch:
+        description: >-
+          Branch that receives direct project-register commits. Defaults to
+          project/<project-id>/develop.
+        $ref: "#/$defs/NonEmptyString"
       catalog_path:
         type: string
       schedule_path:
