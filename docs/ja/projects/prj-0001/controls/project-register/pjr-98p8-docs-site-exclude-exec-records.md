@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   difficulty: hard
   owner: DEV
@@ -40,11 +40,15 @@ PJR-G85C の調査で、plan と result がサイトの約 6 割を占め、手�
 
 | No  | 作業                                                                 | 担当 | 状態 | メモ         |
 | --- | -------------------------------------------------------------------- | ---- | ---- | ------------ |
-| 1   | サイトから plan と result を外し、リンクを GitHub の表示に置き換える | DEV  | open | 0.4.2 の範囲 |
+| 1   | サイトから plan と result を外し、リンクを GitHub の表示に置き換える | DEV  | done | 0.4.2 の範囲 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `packages/docs-site/.vitepress/config.mts` の `srcExclude` で全 project の exec plan / result をページ生成から除外した。
+- サイトの Markdown 処理で、除外対象への相対 Markdown リンクと wikilink を GitHub の `main` branch 上のファイル表示へ置き換えるようにした。リポジトリ URL と branch は config の定数へ集約し、元の Markdown と生成物は変更しない。
+- 変換処理を純粋関数へ分離し、相対リンク、wikilink、表示名付き wikilink、および plan / result 以外を変更しないことの単体テストを追加した。
+- docs-site の README と CHANGELOG の `Unreleased` を更新した。
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 

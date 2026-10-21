@@ -38,3 +38,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-G85C"]'
+- v: 1
+  id: reg_8c1a9670bbe649b583029a2762c50a9c
+  ts: "2026-10-21T22:10:26Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_645eecb991534271b844a52a49ec48f8
+- v: 1
+  id: reg_20f6d18d572747df835a050f797c060d
+  ts: "2026-10-21T22:24:28Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8c1a9670bbe649b583029a2762c50a9c

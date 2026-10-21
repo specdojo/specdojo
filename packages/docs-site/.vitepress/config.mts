@@ -25,12 +25,20 @@ import {
   toSiteDocIndexEntry,
 } from "./kata-staging";
 import { scanLocaleSidebar } from "./locale-sidebar";
+import { resolveExecRecordWikilink, rewriteExecRecordMarkdownHref } from "./exec-record-links";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
 const WORKSPACE_ROOT = path.resolve(process.env.SPECDOJO_DOCS_ROOT ?? process.cwd());
 const CONTENT_ROOT = path.join(WORKSPACE_ROOT, "docs");
 const MERMAID_OUT_DIR = path.join(WORKSPACE_ROOT, "public", "mermaid");
+
+// サイトから除外した exec の plan / result は、リポジトリ上の正本へリンクする。
+// URL の組み立て元をここに集約し、Markdown 本文や doc-index には GitHub 固有値を持たせない。
+const GITHUB_SOURCE = {
+  repositoryUrl: "https://github.com/specdojo/specdojo",
+  branch: "main",
+} as const;
 
 // package 参照中の kata をページ走査より前にステージングへ複製する。
 // VitePress は設定の読み込み後にページを走査するため、build / dev の両方でここが先に動く。
@@ -940,6 +948,8 @@ export default defineConfig({
     "templates/**",
     "logs/**",
     "packages/**",
+    "docs/**/execution/exec/plans/**",
+    "docs/**/execution/exec/results/**",
   ],
 
   // サイト設定（サイドバーを含む）とページのハッシュ表は、既定では全ページの HTML へ
@@ -1098,6 +1108,21 @@ export default defineConfig({
         return `<code v-pre>${content}</code>`;
       };
 
+      // srcExclude した plan / result への Markdown リンクは、元文書を書き換えず
+      // GitHub のファイル表示へ付け替える。外部 URL 化により dead link 検査も維持できる。
+      const defaultLinkOpen = md.renderer.rules.link_open;
+      md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+        const token = tokens[idx];
+        const href = token.attrGet("href");
+        const currentRelPath = (env as { relativePath?: string } | undefined)?.relativePath;
+        if (href && currentRelPath) {
+          token.attrSet("href", rewriteExecRecordMarkdownHref(href, currentRelPath, GITHUB_SOURCE));
+        }
+        return defaultLinkOpen
+          ? defaultLinkOpen(tokens, idx, options, env, self)
+          : self.renderToken(tokens, idx, options);
+      };
+
       const defaultFence = md.renderer.rules.fence;
 
       md.renderer.rules.fence = (tokens, idx, options, env, self) => {
@@ -1141,7 +1166,14 @@ export default defineConfig({
 
         if (!silent) {
           const entry = docIndex[id];
-          if (entry) {
+          const execRecordLink = resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
+          if (execRecordLink) {
+            let token = state.push("link_open", "a", 1);
+            token.attrSet("href", execRecordLink.href);
+            token = state.push("text", "", 0);
+            token.content = execRecordLink.displayText;
+            state.push("link_close", "a", -1);
+          } else if (entry) {
             const entryPath = stripEntryLineSuffix(entry);
 
             // YAML は表示用生成ページがあればそちらへ付け替える（なければ元パスのまま）。
