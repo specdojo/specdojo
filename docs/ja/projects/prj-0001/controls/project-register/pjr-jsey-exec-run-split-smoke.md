@@ -66,6 +66,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 2026-10-20 07:23 | PJR-A6PV   | sonnet-executor        |
 | 2026-10-20 22:39 | PJR-5HYP   | sonnet-executor        |
 | 2026-10-21 06:50 | PJR-HE9R   | sonnet-executor        |
+| 2026-10-21 23:25 | PJR-W93C   | sonnet-executor        |
 
 ## 5. 関連ドキュメント
 
