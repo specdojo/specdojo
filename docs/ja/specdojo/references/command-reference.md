@@ -104,9 +104,10 @@ specdojo config scaffold --provider antigravity --global
 
 `--force` はリポジトリ内の scaffold ファイルだけを上書きし、グローバル設定の既存項目は上書きしません。従来の `exec scaffold --provider antigravity` でも同じ `--global` / `--dry-run` の挙動を利用できます。
 
-`config scaffold --lefthook` は、利用リポジトリに `lefthook.yml`、依存なしで起動できる
-`tools/install-lefthook.mjs` と `tools/specdojo-pre-commit.mjs` を生成します。pre-commit では staged の
-Markdown と YAML だけを Prettier で整形し、staged の Markdown だけを markdownlint で検査します。
+`config scaffold --lefthook` は、利用リポジトリに `lefthook.yml`、`.markdownlint.jsonc`、
+`.markdownlintignore`、依存なしで起動できる `tools/install-lefthook.mjs` と
+`tools/specdojo-pre-commit.mjs` を生成します。pre-commit では staged の Markdown と YAML だけを
+Prettier で整形し、staged の Markdown だけを markdownlint で検査します。
 また、`.specdojo/specdojo.config.json` の `project_register_path` 配下に staged の変更がある project では
 `specdojo register build`、`catalog_path` 配下に変更がある project では `specdojo catalog validate` を
 実行します。`catalog_path` がない構成には catalog の command を生成せず、テストは hook に含めません。
@@ -117,7 +118,10 @@ specdojo config scaffold --lefthook
 npm install
 ```
 
-既存の `lefthook.yml` と `tools/` のファイルは `--force` なしでは上書きしません。必要な
+生成する markdownlint 設定は SpecDojo の文書向けに行長などの規則を調整し、ignore は Claude Code、
+GitHub Copilot、OpenCode の agent 定義を検査対象から外します。既存の markdownlint 設定と ignore は
+`--force` を付けても上書きしません。既存の `lefthook.yml` と `tools/` のファイルは `--force` なしでは
+上書きしません。必要な
 `lefthook`・`prettier`・`markdownlint-cli` の devDependencies と `prepare`・`pre-commit` npm script は、
 不足している項目を `package.json` の変更前に表示してから追加します。同名の script、dependencies、
 devDependencies は `--force` を指定しても保持します。`package.json` がない場合は必要な JSON を表示する

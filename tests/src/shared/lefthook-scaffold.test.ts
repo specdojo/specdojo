@@ -1,4 +1,4 @@
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -63,6 +63,8 @@ describe("lefthook scaffold", () => {
       mkdirSync(join(repoRoot, "tools"), { recursive: true });
       writeFileSync(join(repoRoot, "lefthook.yml"), "keep: true\n", "utf8");
       writeFileSync(join(repoRoot, "tools/install-lefthook.mjs"), "// keep\n", "utf8");
+      writeFileSync(join(repoRoot, ".markdownlint.yaml"), "MD013: true\n", "utf8");
+      writeFileSync(join(repoRoot, ".markdownlintignore"), "custom/\n", "utf8");
       writeFileSync(
         join(repoRoot, "package.json"),
         `${JSON.stringify(
@@ -87,6 +89,9 @@ describe("lefthook scaffold", () => {
 
       expect(readFileSync(join(repoRoot, "lefthook.yml"), "utf8")).toBe("keep: true\n");
       expect(readFileSync(join(repoRoot, "tools/install-lefthook.mjs"), "utf8")).toBe("// keep\n");
+      expect(existsSync(join(repoRoot, ".markdownlint.jsonc"))).toBe(false);
+      expect(readFileSync(join(repoRoot, ".markdownlint.yaml"), "utf8")).toBe("MD013: true\n");
+      expect(readFileSync(join(repoRoot, ".markdownlintignore"), "utf8")).toBe("custom/\n");
       const packageJson = JSON.parse(readFileSync(join(repoRoot, "package.json"), "utf8")) as {
         scripts: Record<string, string>;
         devDependencies: Record<string, string>;
@@ -113,6 +118,37 @@ describe("lefthook scaffold", () => {
       ) as { scripts: Record<string, string>; devDependencies: Record<string, string> };
       expect(forcedPackageJson.scripts.prepare).toBe("custom prepare");
       expect(forcedPackageJson.devDependencies.prettier).toBe("custom-version");
+      expect(existsSync(join(repoRoot, ".markdownlint.jsonc"))).toBe(false);
+      expect(readFileSync(join(repoRoot, ".markdownlint.yaml"), "utf8")).toBe("MD013: true\n");
+      expect(readFileSync(join(repoRoot, ".markdownlintignore"), "utf8")).toBe("custom/\n");
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("creates markdownlint rules and excludes generated agent definitions", async () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-lefthook-markdownlint-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    try {
+      writeFileSync(join(repoRoot, "package.json"), '{"name":"fixture"}\n', "utf8");
+
+      await runLefthookScaffold({
+        packageRoot,
+        repoRoot,
+        config: configWithCatalog,
+        force: false,
+        dryRun: false,
+      });
+
+      const config = JSON.parse(readFileSync(join(repoRoot, ".markdownlint.jsonc"), "utf8")) as {
+        MD013: boolean;
+        MD041: boolean;
+      };
+      expect(config.MD013).toBe(false);
+      expect(config.MD041).toBe(false);
+      expect(readFileSync(join(repoRoot, ".markdownlintignore"), "utf8")).toBe(
+        ".claude/agents/\n.github/agents/\n.opencode/agents/\n",
+      );
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
     }

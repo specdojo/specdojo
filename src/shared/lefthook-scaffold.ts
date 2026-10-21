@@ -10,6 +10,31 @@ const REQUIRED_SCRIPTS = {
   "pre-commit": "lefthook run pre-commit",
 } as const;
 
+const MARKDOWNLINT_CONFIG_FILES = [
+  ".markdownlint.jsonc",
+  ".markdownlint.json",
+  ".markdownlint.yaml",
+  ".markdownlint.yml",
+  ".markdownlintrc",
+] as const;
+
+const MARKDOWNLINT_CONFIG = `${JSON.stringify(
+  {
+    MD013: false,
+    MD024: false,
+    MD033: false,
+    MD036: false,
+    MD041: false,
+    MD060: false,
+  },
+  null,
+  2,
+)}\n`;
+
+const MARKDOWNLINT_IGNORE = [".claude/agents/", ".github/agents/", ".opencode/agents/", ""].join(
+  "\n",
+);
+
 type JsonObject = Record<string, unknown>;
 
 export interface RunLefthookScaffoldOptions {
@@ -193,6 +218,31 @@ async function writeScaffoldFile(
   process.stdout.write(`Written: ${destinationLabel}\n`);
 }
 
+async function writeMarkdownlintScaffold(opts: RunLefthookScaffoldOptions): Promise<void> {
+  const existingConfig = MARKDOWNLINT_CONFIG_FILES.find((filename) =>
+    existsSync(path.join(opts.repoRoot, filename)),
+  );
+  if (existingConfig) {
+    process.stdout.write(`Skipped (markdownlint config already exists): ${existingConfig}\n`);
+  } else {
+    await writeScaffoldFile(
+      undefined,
+      path.join(opts.repoRoot, ".markdownlint.jsonc"),
+      ".markdownlint.jsonc",
+      MARKDOWNLINT_CONFIG,
+      { force: false, dryRun: opts.dryRun },
+    );
+  }
+
+  await writeScaffoldFile(
+    undefined,
+    path.join(opts.repoRoot, ".markdownlintignore"),
+    ".markdownlintignore",
+    MARKDOWNLINT_IGNORE,
+    { force: false, dryRun: opts.dryRun },
+  );
+}
+
 export async function runLefthookScaffold(opts: RunLefthookScaffoldOptions): Promise<void> {
   const templateTools = path.join(opts.packageRoot, "templates", "lefthook", "tools");
   await writeScaffoldFile(
@@ -202,6 +252,7 @@ export async function runLefthookScaffold(opts: RunLefthookScaffoldOptions): Pro
     renderLefthookConfig(opts.config),
     opts,
   );
+  await writeMarkdownlintScaffold(opts);
   for (const filename of ["install-lefthook.mjs", "specdojo-pre-commit.mjs"]) {
     await writeScaffoldFile(
       path.join(templateTools, filename),
@@ -217,7 +268,7 @@ export async function runLefthookScaffold(opts: RunLefthookScaffoldOptions): Pro
       "Next steps:\n" +
         "  1. Run npm install and review the package.json additions shown above.\n" +
         "  2. Run node tools/install-lefthook.mjs if an existing prepare script was kept.\n" +
-        "  3. Stage and commit lefthook.yml, tools/, and package.json.\n",
+        "  3. Stage and commit lefthook.yml, markdownlint settings, tools/, and package.json.\n",
     );
   }
 }

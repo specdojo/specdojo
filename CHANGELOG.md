@@ -6,7 +6,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
-- `specdojo init --lefthook` と `specdojo config scaffold --lefthook` で、利用リポジトリ向けの `lefthook.yml` と依存なしの入口スクリプトを生成できるようにしました。pre-commit は staged の Markdown・YAML に対する Prettier、Markdown に対する markdownlint、設定済みパスの変更に対する `register build`・`catalog validate` を実行します。既存ファイル・npm script・依存は上書きせず、package への追加内容を先に表示します（PJR-7H7N）。
+- `specdojo init --lefthook` と `specdojo config scaffold --lefthook` で、利用リポジトリ向けの `lefthook.yml`、SpecDojo 文書向けの markdownlint 設定と agent 定義の除外、依存なしの入口スクリプトを生成できるようにしました。pre-commit は staged の Markdown・YAML に対する Prettier、Markdown に対する markdownlint、設定済みパスの変更に対する `register build`・`catalog validate` を実行します。既存ファイル・npm script・依存は上書きせず、package への追加内容を先に表示します（PJR-7H7N）。
 - 別 project の作業ツリーから `register add --project <project-id> --commit` を実行し、対象 project の統合ブランチへ直接起票できるようにしました。統合ブランチは project の `integration_branch` で指定でき、省略時は `project/<project-id>/develop` です。project 修飾した `--from` は参照先 project の統合ブランチから存在を確認します（PJR-W93C）。
 
 ### 変更
