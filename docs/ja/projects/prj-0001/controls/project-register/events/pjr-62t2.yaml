@@ -67,3 +67,32 @@
       from: "-"
       to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /integration/ tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (wo…"
   previous_event_id: reg_54b6db4872ce437abbc37736775419c9
+- v: 1
+  id: reg_cf8bc8b1cd4d4048b8924108ee7e695a
+  ts: "2026-10-21T22:54:17Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /integration/ tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (wo…"
+      to: "-"
+  previous_event_id: reg_33977108e47849508d510bdaa11f2f1c
+- v: 1
+  id: reg_9ff4db37e50848f6b74b333721d6ecd5
+  ts: "2026-10-21T23:02:55Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cf8bc8b1cd4d4048b8924108ee7e695a
