@@ -1,0 +1,15 @@
+schedule → dashboard の依存を解消しました。
+
+- Timeline 読み込みとカタログ探索を `src/shared/` に移動
+- dashboard 側の既存 export は維持
+- ESLint に schedule → dashboard 禁止規則を追加
+- 個票と TypeScript 実装ルールを更新
+- 3機能以上をまたぐ循環は 0 組
+- result ファイルは reporter stage のため未編集
+- Prettier、カタログ検証、互換 export 確認、差分検査は成功
+
+lint・型検査・単体／統合テスト等は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"schedule から dashboard への依存を shared 経由へ変更し、対象の2循環を解消した","validations":[{"command":"npx prettier --write src/shared/timeline-index.ts src/shared/catalog-files.ts src/dashboard/timeline-build.ts src/schedule/strategy-generate-scope.ts eslint.config.js .github/instructions/typescript.instructions.md docs/ja/projects/prj-0001/controls/project-register/pjr-q4cd-untangle-schedule-dashboard-cycle.md","status":"passed","summary":"対象ファイルを整形した"},{"command":"npx prettier --write src/dashboard/timeline-build.ts","status":"passed","summary":"最終変更後のファイルを再整形した"},{"command":"node tmp/check-feature-cycles.mjs","status":"passed","summary":"3機能以上をまたぐ循環は0組だった"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"設定済みプロジェクトのカタログ検証がすべて成功した"},{"command":"node --import tsx --input-type=module -e 'import { collectCatalogFilesByDomain, loadTimelineIndex } from \"./src/dashboard/timeline-build.ts\"; if (typeof collectCatalogFilesByDomain !== \"function\" || typeof loadTimelineIndex !== \"function\") throw new Error(\"timeline-build compatibility exports missing\");'","status":"passed","summary":"timeline-build の既存互換 export を確認した"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはなかった"}]}
+</specdojo_executor_evidence>
