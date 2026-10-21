@@ -1,0 +1,11 @@
+個票の「対応結果」の表に 1 行を追記しました。変更したのはこの個票だけです。
+
+追記した行は「2026-10-21 23:25 / PJR-W93C / sonnet-executor」です。対象を PJR-W93C にしたのは、`git log` で PJR-W93C の統合コミット(`5775a6caa`)が最新だと分かったためです。日時は `TZ=Asia/Tokyo date` で取りました。
+
+PJR-W93C の登録簿での状態は確認していません。`pjr-index.md` が worktree に無く、`grep` が失敗したためです。
+
+親の検証(lint-ts、lint-fm、lint-md、typecheck、test-unit、test-integration、validate-schema)は親 runner が実行します。この executor では実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に PJR-W93C の行(2026-10-21 23:25 JST、sonnet-executor)を追記した。他のファイルは変更していない。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist の検証のため、この executor では実行していない。"}]}
+</specdojo_executor_evidence>
