@@ -24,13 +24,20 @@ PJR-7H7N の hook は、commit した Markdown がすべて除外の設定で外
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 0.4.2 の範囲とする（2026-10-22、利用者が承認）。
+- `templates/lefthook/tools/specdojo-pre-commit.mjs` の markdownlint の処理で、`.markdownlintignore` などで対象のファイルがなくなった場合は、markdownlint を呼ばずに成功で終える。Prettier の処理にも同じ空の呼び出しがあれば合わせて直す。
+- 対象のファイルがある場合の動き（違反で commit が止まること）は変えない。
+- 統合テストで、除外されるファイルだけを commit したときに、hook が使い方の説明を出さずに通ることを確かめる。既存の統合テストは通ったままにする。
+
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                             | 担当 | 状態 | メモ         |
+| --- | ------------------------------------------------ | ---- | ---- | ------------ |
+| 1   | 対象のファイルがないとき markdownlint を呼ばない | DEV  | open | 0.4.2 の範囲 |
 
 ## 4. 対応結果
 
@@ -38,4 +45,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- PJR-7H7N（利用者向けの lefthook の scaffold）
