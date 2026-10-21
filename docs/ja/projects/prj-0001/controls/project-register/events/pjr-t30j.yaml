@@ -80,3 +80,16 @@
       from: "agent exited with non-zero code: parent validation failed: test-unit; rate limit fallback: sol-executor -> opus-executor at 2026-10-21T15:54:08.618Z"
       to: "-"
   previous_event_id: reg_d3202b8ac1f04b5e8c6ed5429b4e3662
+- v: 1
+  id: reg_3038e881164f4c02ad5fd89ccd955066
+  ts: "2026-10-21T16:14:22Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d42355be458a4d2fa6cf35c6ebb06257
