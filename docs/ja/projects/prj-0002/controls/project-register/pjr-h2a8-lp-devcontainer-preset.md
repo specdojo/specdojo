@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0002:pjr-h2a8-lp-devcontainer-preset
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-20T13:31:11Z"
+  completed_at: "2026-10-21T12:12:55Z"
+  conclusion: LP の初期設定の手順に、Dev Container を作るかの質問に y、推奨 preset の質問に Enter と答えることと、推奨 preset に入るもの（tmux・Emacs・Vim・推奨の VS Code 拡張と設定）を書いた
 ---
 
 # PJR-H2A8 LP の初期設定の手順に Dev Container の推奨 preset を入れる
