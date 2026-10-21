@@ -194,15 +194,40 @@ export function ticketRefCell(filename: string): string {
   return `[${filename.replace(/\.md$/, "")}](./${filename})`;
 }
 
-// 表セルへ埋め込むために1行化し、列区切りの `|` をエスケープする。
-// すでにエスケープ済みの `\|` は再エスケープせず、複数回の呼び出しに対して冪等にする。
+// Markdown のコードスパン。コードとして明示された内容は、表セルでも著者の記法を保持する。
+const MARKDOWN_CODE_SPAN = /(`+)[\s\S]*?\1/g;
+
+// コードスパン外の未エスケープな強調記号をエスケープする。
+// 記号の直前に偶数個のバックスラッシュがある場合は Markdown 上で未エスケープなので、
+// バックスラッシュを 1 個加える。奇数個なら既にエスケープ済みとして保持する。
+function escapeTableCellEmphasis(text: string): string {
+  const escapeSegment = (segment: string): string =>
+    segment.replace(/(?<!\\)((?:\\\\)*)[*_]/g, (match) => {
+      return `${match.slice(0, -1)}\\${match.slice(-1)}`;
+    });
+
+  let result = "";
+  let lastIndex = 0;
+  for (const match of text.matchAll(MARKDOWN_CODE_SPAN)) {
+    const start = match.index ?? 0;
+    result += escapeSegment(text.slice(lastIndex, start));
+    result += match[0];
+    lastIndex = start + match[0].length;
+  }
+  return result + escapeSegment(text.slice(lastIndex));
+}
+
+// 表セルへ埋め込むために1行化し、列区切りの `|` と強調記号の `*` / `_` を
+// エスケープする。既存コードスパンとエスケープ済みの記号は保持し、複数回の呼び出しに
+// 対して冪等にする。
 export function toCell(text: string): string {
   if (typeof text !== "string") return "";
-  return text
+  const normalized = text
     .replace(/\r?\n/g, " ")
     .replace(/\s+/g, " ")
     .replace(/(?<!\\)((\\\\)*)\|/g, "$1\\|")
     .trim();
+  return escapeTableCellEmphasis(normalized);
 }
 
 // H1（`# PJR-XXXX タイトル`）からタイトルを導出する。表示 ID の接頭辞は取り除く。
@@ -236,9 +261,9 @@ export function descriptionFromBody(body: string): string {
   }
   if (paragraph.length === 0) return CELL_TODO;
 
-  const text = toCell(paragraph.join(" "));
+  const text = paragraph.join(" ");
   if (text.startsWith(CELL_TODO)) return CELL_TODO;
-  return text;
+  return toCell(text);
 }
 
 // ================================
