@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-2asz-init-gemma-reporter-26b
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-21T14:34:31Z"
+  completed_at: "2026-10-21T14:51:39Z"
+  conclusion: 名簿の雛形の gemma-reporter を ollama-local/gemma4:26b、gemma-executor・gemma-review-executor と opencode のオーケストレーターを ollama-local/gemma4:31b にし、手元で作ったタグ（mlx-work-64k）をなくした。文脈を広げる別タグを Modelfile と ollama create で作る手順と、導入済みの名簿の書き換え方を opencode の README に書いた
 ---
 
 # PJR-2ASZ 配布する名簿の雛形の gemma の reporter を 26b にし、モデル名を利用者の環境に合わせる

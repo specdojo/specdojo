@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_94d276dddd7344e58336620b3f52b4b7
+- v: 1
+  id: reg_d8f208f600e64f7abc623d2a4db98bc6
+  ts: "2026-10-21T14:51:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と単体テストを確かめた。result にタグの確かめ方がなかったため、Ollama の公式の一覧（https://ollama.com/library/gemma4/tags）で gemma4:26b と gemma4:31b が実在することを確認した。手元のタグは gemma4:26b-mlx・gemma4:31b-mlx（Apple シリコン向け）から num_ctx 65536 などを変えて作ったもの
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: 名簿の雛形の gemma-reporter を ollama-local/gemma4:26b、gemma-executor・gemma-review-executor と opencode のオーケストレーターを ollama-local/gemma4:31b にし、手元で作ったタグ（mlx-work-64k）をなくした。文脈を広げる別タグを Modelfile と ollama create で作る手順と、導入済みの名簿の書き換え方を opencode の README に書いた
+  previous_event_id: reg_8c9408f51ee445e3a335ac39341e9982
