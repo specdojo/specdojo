@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   owner: OPS
   registered_at: "2026-10-11T09:20:10Z"
+  block_reason: run.parent_validations は共有の親の検証へ追記するだけで減らせないため、project ごとに置き換える仕組みを本体で用意する方針（案 B）を利用者が選んだ。prj-0001 の PJR-P14M の実装を待つ
 ---
 
 # PJR-B3W9 prj-0002 専用の exec 既定設定を用意する

@@ -32,3 +32,19 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_8edf2e6f87bb41299e9162f4fc7b7d43
+  ts: "2026-10-21T13:20:19Z"
+  action: wait
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: waiting
+  reason: run.parent_validations は共有の親の検証へ追記するだけで減らせないため、project ごとに置き換える仕組みを本体で用意する方針（案 B）を利用者が選んだ。prj-0001 の PJR-P14M の実装を待つ
+  changes:
+    - field: status
+      from: open
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: run.parent_validations は共有の親の検証へ追記するだけで減らせないため、project ごとに置き換える仕組みを本体で用意する方針（案 B）を利用者が選んだ。prj-0001 の PJR-P14M の実装を待つ
+  previous_event_id: reg_9f3220642fb9491ab2ee1d930aa38194
