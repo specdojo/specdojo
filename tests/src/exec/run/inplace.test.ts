@@ -878,7 +878,7 @@ describe("exec run (in-place, default)", () => {
         f.endsWith("-plan.md"),
       );
       expect(planFiles).toHaveLength(1);
-      expect(planFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/);
+      expect(planFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{8}-plan\.md$/);
     } finally {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
@@ -948,7 +948,7 @@ describe("exec run (in-place, default)", () => {
       expect(remaining).toHaveLength(0);
       const doneFiles = readdirSync(join(executionPath, "exec", "plans", "done"));
       expect(doneFiles).toHaveLength(1);
-      expect(doneFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{4}-.*-plan\.md$/);
+      expect(doneFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{8}-.*-plan\.md$/);
     } finally {
       process.chdir(originalCwd);
       rmSync(repo, { recursive: true, force: true });
@@ -1132,7 +1132,7 @@ describe("exec plan (command naming)", () => {
         f.endsWith("-plan.md"),
       );
       expect(planFiles).toHaveLength(1);
-      expect(planFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/);
+      expect(planFiles[0]).toMatch(/^doc-\d{8}T\d{6}Z-[0-9a-f]{8}-plan\.md$/);
       expect(process.exitCode).toBe(0);
     } finally {
       process.chdir(originalCwd);

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-21T22:09:05Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-unit"
   derived_from:
     - PJR-T30J
 ---
@@ -55,8 +54,15 @@ plan と in-place の stem、イベントの名前の末尾の乱数が 2 バイ
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `buildInPlaceStem`、アーカイブ済み plan、event ファイル名の乱数を2バイトから4バイトへ拡張した。
+- `buildInPlaceStem` は同一プロセス内で同じ slug・UTC秒・乱数が重複した場合、連番を加えて別の stem にする。アーカイブは既存ファイル名を確認して連番を加え、event は排他的な新規作成に失敗した場合に連番付きの名前で再試行する。単に乱数を延ばすだけでなく、再現した衝突でも既存ファイルを失わないため、この方式を採用した。
+- 時刻と乱数を関数として注入する単体テストを追加し、同じ値を返す場合にも stem、アーカイブ済み plan、event がそれぞれ別名になることを決定的に確認できるようにした。Node.js の ESM で変更できない `crypto.randomBytes` 自体はモックしない。
+- `stemFromPlanPath` は従来どおり stem 全体を取り出すため、従来の16進4桁の名前、新しい16進8桁の名前、連番付きの名前を読み取れる。ライフサイクルガイドと CHANGELOG に新しい命名を記載した。
+- executor sandbox では変更ファイルを Prettier で整形した。型検査、lint、単体・統合テスト、schema 検査は pipeline の親 runner が実行する。
+- 統合後の `exec run --register` による実動作確認は、[[prj-0001:pjr-jsey-exec-run-split-smoke|PJR-JSEY]] の手順で人または後続 runner が行う。
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:plan-result-lifecycle-guide|plan/resultライフサイクルガイド]]
+- [[sysd-cross-cutting-policy|SpecDojo システム設計横断ルール]]（`scp-STA-001`）
+- [[prj-0001:pjr-jsey-exec-run-split-smoke|PJR-JSEY exec-run.ts の分割後に runner の動作を確かめる]]

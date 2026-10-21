@@ -16,6 +16,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- plan / result の stem、アーカイブ済み plan、実行 event の乱数部分を2バイトから4バイトへ広げ、同じ slug・UTC秒・乱数が重複した場合は連番で別名にするようにしました。event は排他的な新規作成で既存履歴を上書きせず、旧形式の plan 名も引き続き読み取れます（PJR-CNNT）。
 - `templates/lefthook/tools/specdojo-pre-commit.mjs` で、commit したファイルが `.markdownlintignore` や `.prettierignore` で除外されて検査対象がなくなった場合に、markdownlint や Prettier を呼ばずに成功で終えるようにしました。除外ファイルのみを commit したときに markdownlint の使い方の説明（Usage）が出力される問題を解消します（PJR-62T2）。
 - `register build` が生成する登録簿一覧・派生ビュー・PM ログで、自由記述セルのアスタリスクとアンダースコアをエスケープするようにしました。既存のコードスパンとエスケープ済みの記号は保持し、`orch:*` のような記述が複数ある場合も markdownlint（MD037）で止まりません（PJR-6SQH）。
 
