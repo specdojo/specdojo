@@ -1606,3 +1606,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_e41746c4f6e6454c98542d5ac743f5f3
+- v: 1
+  id: reg_846fcec3e4ec4fa8ab20f842105143b5
+  ts: "2026-10-21T23:27:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが result・event・plan の名前・統合の commit を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: PJR-W93C の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
+      to: PJR-CNNT と PJR-Q4CD の統合後も exec run --register が start から review まで通り、plan の名前は新しい 16 進 8 桁の形で作られた
+  previous_event_id: reg_0e339f257d384cfe9a213139fb1b2b0b
