@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-7h7n-lefthook-scaffold-for-users
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-19T21:41:15Z"
+  completed_at: "2026-10-21T16:58:32Z"
+  conclusion: init --lefthook と config scaffold --lefthook で、lefthook.yml・hook の入口・markdownlint の設定と除外を作るようにした。commit の前に、変えた Markdown と YAML の Prettier、Markdown の markdownlint、登録簿の register build、カタログの catalog validate を流す。既定は作らず、既存のファイルと package.json の項目は上書きしない
 ---
 
 # PJR-7H7N 利用者向けに git の hook（lefthook）を scaffold する

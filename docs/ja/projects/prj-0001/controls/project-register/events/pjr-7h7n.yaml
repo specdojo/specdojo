@@ -148,3 +148,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9dba80e2609342f39b875e24234ba282
+- v: 1
+  id: reg_d069b67695a0488481849e3f63050510
+  ts: "2026-10-21T16:58:32Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "オーケストレーターが一時のリポジトリで、init --lefthook の直後の最初の commit が通ること、違反のある Markdown の commit が止まることを確かめた。指摘: 対象の Markdown がすべて除外されたとき markdownlint の使い方の説明が出る（動きは正しい）"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: init --lefthook と config scaffold --lefthook で、lefthook.yml・hook の入口・markdownlint の設定と除外を作るようにした。commit の前に、変えた Markdown と YAML の Prettier、Markdown の markdownlint、登録簿の register build、カタログの catalog validate を流す。既定は作らず、既存のファイルと package.json の項目は上書きしない
+  previous_event_id: reg_6a08c65103844b4d8e5d82929c63a626
