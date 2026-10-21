@@ -35,3 +35,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-WSET"]'
+- v: 1
+  id: reg_ab43db5d0bcf4b87b98710ec7d676a78
+  ts: "2026-10-21T15:52:52Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_45d97ece778c4fd9872aa6e4acc6cfde
+- v: 1
+  id: reg_d3202b8ac1f04b5e8c6ed5429b4e3662
+  ts: "2026-10-21T16:01:39Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit; rate limit fallback: sol-executor -> opus-executor at 2026-10-21T15:54:08.618Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit; rate limit fallback: sol-executor -> opus-executor at 2026-10-21T15:54:08.618Z"
+  previous_event_id: reg_ab43db5d0bcf4b87b98710ec7d676a78
