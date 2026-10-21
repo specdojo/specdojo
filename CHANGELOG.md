@@ -16,6 +16,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - `register build` が生成する登録簿一覧・派生ビュー・PM ログで、自由記述セルのアスタリスクとアンダースコアをエスケープするようにしました。既存のコードスパンとエスケープ済みの記号は保持し、`orch:*` のような記述が複数ある場合も markdownlint（MD037）で止まりません（PJR-6SQH）。
 
+### 文書
+
+- `templates/opencode/README.md` に、Mac の Apple シリコン向けに Ollama の公式 mlx 版（`gemma4:26b-mlx`・`gemma4:31b-mlx`）を利用する場合の指定方法と Modelfile での文脈拡張の案内を追記しました（PJR-STB4）。
+
 ## [0.4.1] - 2026-10-21
 
 ### 追加機能

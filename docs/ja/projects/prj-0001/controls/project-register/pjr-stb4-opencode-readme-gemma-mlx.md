@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: low
   difficulty: easy
   owner: DEV
@@ -39,12 +39,19 @@ specdojo:
 
 | No  | 作業                                       | 担当 | 状態 | メモ         |
 | --- | ------------------------------------------ | ---- | ---- | ------------ |
-| 1   | opencode の README に mlx 版の案内を加える | DEV  | open | 0.4.2 の範囲 |
+| 1   | opencode の README に mlx 版の案内を加える | DEV  | done | 0.4.2 の範囲 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容:
+  - `templates/opencode/README.md` のカスタマイズ節に、Mac の Apple シリコン向けに Ollama 公式の mlx 版（`gemma4:26b-mlx`・`gemma4:31b-mlx`）を `ollama pull` で取得して利用する手順、`.specdojo/agent-members.yaml` の `model` 設定（`ollama-local/gemma4:26b-mlx` など）および Modelfile の `FROM` 句でのタグ指定方法、既定の雛形は環境を選ばない無印タグ（`gemma4:26b`・`gemma4:31b`）のままとする方針を追記した。
+  - `CHANGELOG.md` の `## [Unreleased]` の `### 文書` 節に本変更内容を追記した。
+- 成果物:
+  - `templates/opencode/README.md`
+  - `CHANGELOG.md`
+  - `docs/ja/projects/prj-0001/controls/project-register/pjr-stb4-opencode-readme-gemma-mlx.md`
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 
-- PJR-2ASZ（名簿の雛形の gemma の見直し）
+- [[prj-0001:pjr-2asz-init-gemma-reporter-26b|PJR-2ASZ]]（名簿の雛形の gemma の見直し）
