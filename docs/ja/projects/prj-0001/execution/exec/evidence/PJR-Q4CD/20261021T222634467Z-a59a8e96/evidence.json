@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-Q4CD",
+  "run_id": "20261021T222634467Z-a59a8e96",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-21T22:28:06.738Z",
+    "completed_at": "2026-10-21T22:34:24.272Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".github/instructions/typescript.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-q4cd.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-q4cd-untangle-schedule-dashboard-cycle.md",
+      "status": "M"
+    },
+    {
+      "path": "eslint.config.js",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-scope.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/catalog-files.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/timeline-index.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": ".github/instructions/typescript.instructions.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-q4cd-untangle-schedule-dashboard-cycle.md",
+      "status": "M"
+    },
+    {
+      "path": "eslint.config.js",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/timeline-build.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/schedule/strategy-generate-scope.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/catalog-files.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/timeline-index.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": ".github/instructions/typescript.instructions.md    |   2 +-\n .../pjr-q4cd-untangle-schedule-dashboard-cycle.md  |  10 +-\n eslint.config.js                                   |   7 +-\n src/dashboard/timeline-build.ts                    | 200 ++-------------------\n src/schedule/strategy-generate-scope.ts            |   3 +-\n 5 files changed, 26 insertions(+), 196 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/shared/timeline-index.ts src/shared/catalog-files.ts src/dashboard/timeline-build.ts src/schedule/strategy-generate-scope.ts eslint.config.js .github/instructions/typescript.instructions.md docs/ja/projects/prj-0001/controls/project-register/pjr-q4cd-untangle-schedule-dashboard-cycle.md",
+      "status": "passed",
+      "summary": "対象ファイルを整形した"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/dashboard/timeline-build.ts",
+      "status": "passed",
+      "summary": "最終変更後のファイルを再整形した"
+    },
+    {
+      "source": "executor",
+      "command": "node tmp/check-feature-cycles.mjs",
+      "status": "passed",
+      "summary": "3機能以上をまたぐ循環は0組だった"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "設定済みプロジェクトのカタログ検証がすべて成功した"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx --input-type=module -e 'import { collectCatalogFilesByDomain, loadTimelineIndex } from \"./src/dashboard/timeline-build.ts\"; if (typeof collectCatalogFilesByDomain !== \"function\" || typeof loadTimelineIndex !== \"function\") throw new Error(\"timeline-build compatibility exports missing\");'",
+      "status": "passed",
+      "summary": "timeline-build の既存互換 export を確認した"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分に空白エラーはなかった"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q4CD/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q4CD/src/schedule/build.ts\n  349:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q4CD/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 33 problems (0 errors, 33 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q4CD\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q4CD/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q4CD/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-Q4CD\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-k40eTH/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ramGUf/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-vOpQXD/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-l5POTJ/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "schedule から dashboard への依存を shared 経由へ変更し、対象の2循環を解消した",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-Q4CD/20261021T222634467Z-a59a8e96/executor.log",
+      "bytes": 2094,
+      "truncated": false
+    }
+  ]
+}

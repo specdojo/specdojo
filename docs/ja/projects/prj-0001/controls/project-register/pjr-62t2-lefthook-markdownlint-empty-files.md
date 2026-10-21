@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-21T22:09:17Z"
+  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /integration/ tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (wo…"
   derived_from:
     - PJR-7H7N
 ---

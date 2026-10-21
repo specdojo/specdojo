@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-g85c-vitepress-exclude-exec-records
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-11T22:10:30Z"
+  completed_at: "2026-10-21T22:48:10Z"
+  conclusion: plan と result をドキュメントサイトのビルド対象から外し、リンクを GitHub のファイル表示へ置き換えた（PJR-98P8）。手元の docs:build がメモリの上限を広げずに約 113 秒で通る
 ---
 
 # PJR-G85C VitePress のビルド対象に exec の plan と result が含まれページ数が増え続ける

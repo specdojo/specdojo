@@ -11,6 +11,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- ドキュメントサイトでは exec の plan / result をページ生成の対象から外し、実行記録一覧などからのリンクを GitHub 上の正本へ置き換えるようにしました。元の実行記録と dead link 検査は維持したまま、ページ数とビルド時のメモリ使用量を削減します（PJR-98P8）。
 - `templates/init-agent-members.yaml` で配布する OpenCode の `gemma-reporter` の既定モデルを 26b（`ollama-local/gemma4:26b`）にし、`gemma-executor`・`gemma-review-executor` および対話型オーケストレーターのモデル名からローカル固有のタグ（`-mlx-work-64k`）を除いて利用者が `ollama pull` で取得できるタグ名（`ollama-local/gemma4:31b`）に改めました。また `templates/opencode/README.md` に文脈長拡張のための Modelfile 手順と既存名簿の書き換え案内を追記しました（PJR-2ASZ）。
 
 ### 不具合修正
