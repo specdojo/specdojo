@@ -214,7 +214,45 @@ describe("archivePlan", () => {
     expect(existsSync(result.to as string)).toBe(true);
     const doneFiles = readdirSync(join(executionPath, "exec", "plans", "done"));
     expect(doneFiles).toHaveLength(1);
-    expect(doneFiles[0]).toMatch(/^alpha-only-a-\d{8}T\d{6}Z-[0-9a-f]{4}-plan\.md$/);
+    expect(doneFiles[0]).toMatch(/^alpha-only-a-\d{8}T\d{6}Z-[0-9a-f]{8}-plan\.md$/);
+  });
+
+  it("keeps both plans when the timestamp and random suffix collide", () => {
+    root = mkdtempSync(join(tmpdir(), "specdojo-archive-"));
+    const executionPath = join(root, "execution");
+    const dependencies = {
+      now: () => "2026-10-22T12:34:56Z",
+      randomHex: (bytes: number) => {
+        expect(bytes).toBe(4);
+        return "0123abcd";
+      },
+    };
+
+    writePlan(executionPath, "alpha-only-a");
+    const first = archivePlan({ executionPath, slug: "alpha-only-a" }, dependencies);
+    writePlan(executionPath, "alpha-only-a");
+    const second = archivePlan({ executionPath, slug: "alpha-only-a" }, dependencies);
+
+    expect(first.to).toBe(
+      join(
+        executionPath,
+        "exec",
+        "plans",
+        "done",
+        "alpha-only-a-20261022T123456Z-0123abcd-plan.md",
+      ),
+    );
+    expect(second.to).toBe(
+      join(
+        executionPath,
+        "exec",
+        "plans",
+        "done",
+        "alpha-only-a-20261022T123456Z-0123abcd-1-plan.md",
+      ),
+    );
+    expect(readFileSync(first.to as string, "utf8")).toBe("# plan alpha-only-a\n");
+    expect(readFileSync(second.to as string, "utf8")).toBe("# plan alpha-only-a\n");
   });
 
   it("deletes the plan when delete is set", () => {

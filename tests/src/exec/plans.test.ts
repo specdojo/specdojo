@@ -156,19 +156,32 @@ describe("deliverableDocId", () => {
 });
 
 describe("buildInPlaceStem / stemFromPlanPath", () => {
-  it("builds a stem prefixed by the slug and unique across calls", () => {
-    const a = buildInPlaceStem("prj-overview");
-    const b = buildInPlaceStem("prj-overview");
+  it("uses a sequence fallback when the slug, second, and random suffix collide", () => {
+    const dependencies = {
+      now: () => "2026-10-22T12:34:56Z",
+      randomHex: (bytes: number) => {
+        expect(bytes).toBe(4);
+        return "0123abcd";
+      },
+    };
 
-    expect(a.startsWith("prj-overview-")).toBe(true);
-    // Two generations of the same slug must not collide (UTC + random suffix).
-    expect(a).not.toBe(b);
+    const a = buildInPlaceStem("prj-overview", dependencies);
+    const b = buildInPlaceStem("prj-overview", dependencies);
+
+    expect(a).toBe("prj-overview-20261022T123456Z-0123abcd");
+    expect(b).toBe("prj-overview-20261022T123456Z-0123abcd-1");
   });
 
-  it("recovers the stem from a plan path (round-trips with the plan file name)", () => {
-    const stem = buildInPlaceStem("overview");
+  it("recovers both the new and existing stem formats from a plan path", () => {
+    const stem = buildInPlaceStem("overview", {
+      now: () => "2026-10-22T12:34:56Z",
+      randomHex: () => "89abcdef",
+    });
 
     expect(stemFromPlanPath(`/repo/exec/plans/${stem}-plan.md`)).toBe(stem);
+    expect(stemFromPlanPath("overview-20261022T123456Z-ab12-plan.md")).toBe(
+      "overview-20261022T123456Z-ab12",
+    );
     expect(stemFromPlanPath("prj-overview-result-plan.md")).toBe("prj-overview-result");
   });
 });

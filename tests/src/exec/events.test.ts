@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -16,6 +16,7 @@ import {
   isDependencySatisfied,
   readAllEventFiles,
   validateEventShape,
+  writeEventFile,
 } from "../../../src/exec/events.js";
 import type {
   ExecEventV1,
@@ -798,6 +799,31 @@ function validEvent(taskId: string): string {
 }
 
 describe("readAllEventFiles", () => {
+  it("keeps both events when their timestamp and random suffix collide", () => {
+    const { dir, projectPath } = setupEventsRepo();
+    try {
+      const event = makeEvent();
+      const dependencies = {
+        randomHex: (bytes: number) => {
+          expect(bytes).toBe(4);
+          return "0123abcd";
+        },
+      };
+
+      const first = writeEventFile(projectPath, event, dependencies);
+      const second = writeEventFile(projectPath, event, dependencies);
+
+      expect(first).toMatch(/_claim_0123abcd\.json$/);
+      expect(second).toMatch(/_claim_0123abcd-1\.json$/);
+      expect(readFileSync(first, "utf8")).toBe(`${JSON.stringify(event, null, 2)}\n`);
+      expect(readFileSync(second, "utf8")).toBe(`${JSON.stringify(event, null, 2)}\n`);
+    } finally {
+      process.chdir(originalCwd);
+      rmSync(dir, { recursive: true, force: true });
+      restoreEnv();
+    }
+  });
+
   it("reads well-formed event files", () => {
     const { dir, projectPath, eventsDir } = setupEventsRepo();
     try {
