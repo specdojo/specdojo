@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_beeb388ec2cd4955aaddee1920595dba
+  ts: "2026-10-21T14:34:32Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 配布する名簿の雛形の gemma の reporter を 26b にし、モデル名を利用者の環境に合わせる
+    - field: description
+      from: ""
+      to: init が作る名簿の雛形では gemma の executor と reporter がすべて 31b を指し、モデル名も手元の Ollama で作ったタグ（mlx-work-64k）のままで、利用者の環境にそのままでは無い。既定の reporter を 26b にし、モデル名の決め方と用意の仕方を利用者が分かる形にする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-21"
+    - field: due
+      from: ""
+      to: _TODO_
