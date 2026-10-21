@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-62t2-lefthook-markdownlint-empty-files
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-21T22:09:17Z"
+  completed_at: "2026-10-21T23:06:51Z"
+  conclusion: lefthook の hook で、.markdownlintignore で対象のファイルがなくなったときは markdownlint を呼ばずに成功で終えるようにした。対象があるときは今までどおり違反で止まる
   derived_from:
     - PJR-7H7N
 ---

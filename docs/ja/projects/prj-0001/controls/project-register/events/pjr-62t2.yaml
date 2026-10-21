@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cf8bc8b1cd4d4048b8924108ee7e695a
+- v: 1
+  id: reg_df104bdfd3ef42459f28965916fda958
+  ts: "2026-10-21T23:06:51Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが一時のリポジトリで、init --lefthook の直後の最初の commit で使い方の説明が出ないこと、違反のある Markdown の commit が止まることを確かめた。1 回目の統合は並行の検証の負荷で E2E が時間切れになり、再開で通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: lefthook の hook で、.markdownlintignore で対象のファイルがなくなったときは markdownlint を呼ばずに成功で終えるようにした。対象があるときは今までどおり違反で止まる
+  previous_event_id: reg_9ff4db37e50848f6b74b333721d6ecd5
