@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-62T2",
+  "run_id": "20261021T221058749Z-c7284f0f",
+  "updated_at": "2026-10-21T22:58:28.891Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-10-21T22:12:45.739Z",
+      "completed_at": "2026-10-21T22:22:13.241Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-62T2/20261021T221058749Z-c7284f0f/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-21T22:27:20.823Z",
+      "completed_at": "2026-10-21T22:29:20.799Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-62t2-20261021T221058Z-ce14-result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-21T22:58:28.891Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: test: error: unknown option '--reserve'; FAIL  |integration| tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (worktree) > rechecks every plan target when an executor resumes after a rate limit; Test Files  1 failed | 161 passed (162); Tests  1 failed | 2504 passed (2505)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-62t2-20261021T221058Z-ce14-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-62t2-20261021T221058Z-ce14-result.md"
+  }
+}

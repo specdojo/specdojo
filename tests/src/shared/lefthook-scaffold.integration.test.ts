@@ -104,4 +104,61 @@ describe("scaffolded lefthook", () => {
       rmSync(repoRoot, { recursive: true, force: true });
     }
   });
+
+  it("commits successfully without showing usage when only ignored markdown files are staged", async () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-lefthook-ignored-"));
+    const config: SpecDojoConfig = {
+      version: 1,
+      current_project: "prj-0001",
+      projects: {
+        "prj-0001": {
+          base_path: "docs/ja/projects/prj-0001",
+          project_register_path: "controls/project-register",
+        },
+      },
+    };
+    try {
+      git(repoRoot, ["init"]);
+      writeFileSync(join(repoRoot, "package.json"), '{"name":"fixture","private":true}\n', "utf8");
+      mkdirSync(join(repoRoot, ".specdojo"), { recursive: true });
+      writeFileSync(
+        join(repoRoot, ".specdojo/specdojo.config.json"),
+        `${JSON.stringify(config, null, 2)}\n`,
+        "utf8",
+      );
+      symlinkSync(join(packageRoot, "node_modules"), join(repoRoot, "node_modules"), "dir");
+      await runLefthookScaffold({ packageRoot, repoRoot, config, force: false, dryRun: false });
+      execFileSync(process.execPath, ["tools/install-lefthook.mjs"], {
+        cwd: repoRoot,
+        env: gitEnvironment(),
+        stdio: "pipe",
+      });
+
+      writeFileSync(join(repoRoot, "README.md"), "# Valid\n", "utf8");
+      git(repoRoot, ["add", "."]);
+      git(repoRoot, ["commit", "--no-verify", "-m", "initial"]);
+
+      mkdirSync(join(repoRoot, ".github", "agents"), { recursive: true });
+      writeFileSync(
+        join(repoRoot, ".github", "agents", "orchestrator.md"),
+        "# Orchestrator\n",
+        "utf8",
+      );
+      git(repoRoot, ["add", ".github/agents/orchestrator.md"]);
+
+      const commit = spawnSync("git", ["commit", "-m", "commit ignored markdown only"], {
+        cwd: repoRoot,
+        env: gitEnvironment(),
+        encoding: "utf8",
+      });
+
+      expect(commit.status, `${commit.stdout}\n${commit.stderr}`).toBe(0);
+      const combinedOutput = `${commit.stdout}\n${commit.stderr}`;
+      expect(combinedOutput).not.toMatch(
+        /Usage: markdownlint|MarkdownLint Command Line Interface/u,
+      );
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
 });

@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import { join, posix } from "node:path";
 
 const repoRoot = process.cwd();
@@ -100,27 +101,99 @@ function runSpecDojoForChangedProjects(key, args) {
   return 0;
 }
 
+function getIgnoreModule() {
+  const tryPaths = [
+    join(repoRoot, "node_modules", "markdownlint-cli", "markdownlint.js"),
+    join(repoRoot, "package.json"),
+  ];
+  for (const candidatePath of tryPaths) {
+    if (existsSync(candidatePath)) {
+      try {
+        const req = createRequire(candidatePath);
+        return req("ignore");
+      } catch {
+        // Continue searching
+      }
+    }
+  }
+  return null;
+}
+
+function parseSimpleIgnore(content) {
+  const rules = content
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"));
+
+  return (file) => {
+    const normalized = posix.normalize(file.replaceAll("\\", "/")).replace(/^\.\//, "");
+    for (const rule of rules) {
+      const isNegated = rule.startsWith("!");
+      const pattern = (isNegated ? rule.slice(1) : rule).replace(/^\.\//, "");
+      let matches = false;
+      if (pattern.endsWith("/")) {
+        matches = normalized === pattern.slice(0, -1) || normalized.startsWith(pattern);
+      } else {
+        matches =
+          normalized === pattern ||
+          normalized.endsWith(`/${pattern}`) ||
+          normalized.startsWith(`${pattern}/`);
+      }
+      if (matches) {
+        return !isNegated;
+      }
+    }
+    return false;
+  };
+}
+
+function getIgnoreFilter(ignoreFileName) {
+  const ignorePath = join(repoRoot, ignoreFileName);
+  if (!existsSync(ignorePath)) return () => false;
+  const content = readFileSync(ignorePath, "utf8");
+  const ignoreFactory = getIgnoreModule();
+  if (ignoreFactory) {
+    const ig = ignoreFactory().add(content);
+    return (file) => ig.ignores(posix.normalize(file.replaceAll("\\", "/")).replace(/^\.\//, ""));
+  }
+  return parseSimpleIgnore(content);
+}
+
+function filterFiles(candidateFiles, ignoreFileName) {
+  if (candidateFiles.length === 0) return [];
+  const isIgnored = getIgnoreFilter(ignoreFileName);
+  return candidateFiles.filter((file) => !isIgnored(file));
+}
+
+function isMarkdownFile(file) {
+  return /\.(md|markdown)$/i.test(file);
+}
+
 let status;
 switch (command) {
-  case "prettier":
+  case "prettier": {
+    const targetFiles = filterFiles(files, ".prettierignore");
     status =
-      files.length === 0
+      targetFiles.length === 0
         ? 0
         : runNode(join(repoRoot, "node_modules", "prettier", "bin", "prettier.cjs"), [
             "--write",
             "--",
-            ...files,
+            ...targetFiles,
           ]);
     break;
-  case "markdownlint":
+  }
+  case "markdownlint": {
+    const targetFiles = filterFiles(files.filter(isMarkdownFile), ".markdownlintignore");
     status =
-      files.length === 0
+      targetFiles.length === 0
         ? 0
         : runNode(join(repoRoot, "node_modules", "markdownlint-cli", "markdownlint.js"), [
             "--",
-            ...files,
+            ...targetFiles,
           ]);
     break;
+  }
   case "register-build":
     status = runSpecDojoForChangedProjects("project_register_path", ["register", "build"]);
     break;

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-21T22:09:17Z"
-  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /integration/ tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (wo…"
   derived_from:
     - PJR-7H7N
 ---
@@ -38,11 +37,13 @@ PJR-7H7N の hook は、commit した Markdown がすべて除外の設定で外
 
 | No  | 作業                                             | 担当 | 状態 | メモ         |
 | --- | ------------------------------------------------ | ---- | ---- | ------------ |
-| 1   | 対象のファイルがないとき markdownlint を呼ばない | DEV  | open | 0.4.2 の範囲 |
+| 1   | 対象のファイルがないとき markdownlint を呼ばない | DEV  | done | 0.4.2 の範囲 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `templates/lefthook/tools/specdojo-pre-commit.mjs` にて、`.markdownlintignore` および `.prettierignore` による除外判定ロジックを追加した。対象ファイルがすべて除外された場合は、markdownlint や Prettier を呼び出さずに終了コード 0 で正常終了するようにした。
+- 統合テスト `tests/src/shared/lefthook-scaffold.integration.test.ts` に、`.markdownlintignore` で除外されるファイルのみを staged にして commit した場合に、Usage などの説明を出力せずに hook が正常終了することを検証するテストケースを追加した。
+- CHANGELOG の `## [Unreleased]` の不具合修正に本対応を追記した。
 
 ## 5. 関連ドキュメント
 
