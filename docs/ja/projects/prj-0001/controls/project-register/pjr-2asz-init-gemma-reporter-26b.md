@@ -37,11 +37,24 @@ init が作る名簿の雛形では gemma の executor と reporter がすべて
 
 | No  | 作業                                                         | 担当 | 状態 | メモ         |
 | --- | ------------------------------------------------------------ | ---- | ---- | ------------ |
-| 1   | 名簿の雛形の gemma の reporter を 26b にし、モデル名を見直す | DEV  | open | 0.4.2 の範囲 |
+| 1   | 名簿の雛形の gemma の reporter を 26b にし、モデル名を見直す | DEV  | done | 0.4.2 の範囲 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容:
+  - `templates/init-agent-members.yaml` の `gemma-reporter` の既定モデルを `ollama-local/gemma4:26b` に更新し、`gemma-executor` および `gemma-review-executor` からローカル固有のタグを除去して `ollama-local/gemma4:31b` に統一した。
+  - `templates/opencode/agents/specdojo-orchestrator.md` の `model` から `-mlx-work-64k` を削除し、`ollama-local/gemma4:31b` に変更した。
+  - `templates/opencode/README.md` のモデル例を公式タグ表記に改め、文脈長（`num_ctx` など）を広げるための Modelfile によるタグ作成・名簿書き換え手順と、既存導入プロジェクトで `gemma-reporter` を 26b に変更するための書き換え手順を追記した。
+  - `tests/src/commands/init.test.ts` を更新し、opencode 選択時の `gemma-reporter`（`ollama-local/gemma4:26b`）解決および振り分け表（`medium` ルーティング）の reporter が 26b の実体を指すことを検証した。
+  - `CHANGELOG.md` の `## [Unreleased]` に変更内容を追記した。
+- 成果物:
+  - `templates/init-agent-members.yaml`
+  - `templates/opencode/agents/specdojo-orchestrator.md`
+  - `templates/opencode/README.md`
+  - `tests/src/commands/init.test.ts`
+  - `CHANGELOG.md`
+  - `docs/ja/projects/prj-0001/controls/project-register/pjr-2asz-init-gemma-reporter-26b.md`
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 
