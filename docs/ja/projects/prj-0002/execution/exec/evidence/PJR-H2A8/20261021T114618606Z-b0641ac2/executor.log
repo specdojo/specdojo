@@ -1,0 +1,10 @@
+対応を完了しました。
+
+- `specdojo-lp:src/components/sections/GetStarted.astro` に Dev Container は `y`、推奨 preset は Enter（既定の「はい」）と答える説明を追加。
+- preset の内容として tmux・Emacs・Vim・推奨 VS Code 拡張と設定を明記。
+- 個票の作業内容・対応結果を更新。result は reporter 管轄のため未変更。
+- Prettier、ESLint、Astro ビルド、登録簿再生成が成功。生成 HTML の会話版・コマンド版双方への反映も確認済みです。
+
+<specdojo_executor_evidence>
+{"final_message":"LP の初期設定手順に Dev Container と推奨 preset の回答方法・導入内容を追加し、個票を更新しました。","validations":[{"command":"npx prettier --write src/components/sections/GetStarted.astro","status":"passed","summary":"対象 Astro ファイルは整形済みです。"},{"command":"npx prettier --write docs/ja/projects/prj-0002/controls/project-register/pjr-h2a8-lp-devcontainer-preset.md","status":"passed","summary":"更新した個票は整形済みです。"},{"command":"npx eslint .","status":"passed","summary":"specdojo-lp 全体の ESLint がエラーなく完了しました。"},{"command":"npm run build","status":"passed","summary":"specdojo-lp の静的ビルドが成功し、1ページが生成されました。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0002","status":"passed","summary":"prj-0002 の登録簿生成が成功しました。"},{"command":"rg によるソースおよび生成 HTML の反映確認","status":"passed","summary":"追加文言を確認し、会話版とコマンド版の2か所に描画されることを確認しました。"},{"command":"git diff --check","status":"passed","summary":"project と specdojo-lp の変更に空白エラーはありません。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0002","status":"not_applicable","summary":"カタログ検証は非適用です。","reason":"prj-0002 に catalog_path が設定されていません。"}]}
+</specdojo_executor_evidence>
