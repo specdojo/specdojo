@@ -1,0 +1,24 @@
+タスク PJR-0WFV「LP で plan モードと比べた register の価値を伝える」の executor ステージにおける変更と検証が完了しました。
+
+### 実施内容
+
+1. [RegisterTypes.astro](file:///workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0WFV/specdojo-lp/src/components/sections/RegisterTypes.astro)
+   - 「register の考え方」セクション内に「plan モードと register の使い分け」の節を追加しました。
+   - 冒頭に「1 件を早く仕上げるだけでなく、プロジェクトの判断と作業を検証できる形で残し、複数の agent に安全に実行させる台帳です。AI ツールの plan モードは段取りの下書き、register は判断と作業を残す台帳として補い合います。」と明記し、補完関係を示しました。
+   - 6 つの観点（識別・種類・状態の遷移・実行の plan・result とのつながり・決定の記録・残り方）に基づく対比表（広い画面用テーブルおよび狭い画面用カード表示）を追加しました。
+   - 列見出しおよびカードの項目名を `観点`、`plan モードの plan（下書き）`、`SpecDojo の register（台帳）` で完全に統一しました。
+   - plan モードの保存期間は「既定では一定期間で消えうる」とし、register の状態名には実在する 8 つの状態（`open`・`in-progress`・`waiting`・`review`・`done`・`decided`・`rejected`・`deferred`）のみを使用しました。
+
+2. [ToolFit.astro](file:///workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0WFV/specdojo-lp/src/components/sections/ToolFit.astro)
+   - plan mode の行における関係性の説明を「補完。plan は段取りの下書き、register は判断と作業を残す台帳」へ更新し、言い回しを統一しました。
+
+3. [pjr-0wfv-lp-why-register.md](file:///workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0WFV/project/docs/ja/projects/prj-0002/controls/project-register/pjr-0wfv-lp-why-register.md)
+   - 作業内容の各項目の状態を `done` に更新し、対応結果セクションに実施内容・成果物・残課題を記入しました（ステータス項目は維持）。
+
+4. 検証
+   - `specdojo-lp` で `format:check`、`typecheck`、`lint:ts`、`build` を実行し、すべて正常終了を確認しました。
+   - `project` で変更した個票ファイルの Prettier および markdownlint の通過を確認しました。
+
+<specdojo_executor_evidence>
+{"final_message":"PJR-0WFV の完了条件に従い、specdojo-lp の RegisterTypes.astro への対比の追加、ToolFit.astro の言い回しの統一、および個票の対応結果の更新を実施し、すべての検証を通過しました。","validations":[{"command":"npm --prefix /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0WFV/specdojo-lp run format:check","status":"passed","summary":"Prettier format check passed for specdojo-lp"},{"command":"npm --prefix /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0WFV/specdojo-lp run typecheck","status":"passed","summary":"Astro check passed with 0 errors"},{"command":"npm --prefix /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0WFV/specdojo-lp run lint:ts","status":"passed","summary":"ESLint passed for specdojo-lp"},{"command":"npm --prefix /workspaces/specdojo-workspace/worktrees/prj-0002-PJR-0WFV/specdojo-lp run build","status":"passed","summary":"Astro build succeeded"},{"command":"npx prettier --check docs/ja/projects/prj-0002/controls/project-register/pjr-0wfv-lp-why-register.md","status":"passed","summary":"Prettier check passed for modified register item"},{"command":"npx markdownlint docs/ja/projects/prj-0002/controls/project-register/pjr-0wfv-lp-why-register.md","status":"passed","summary":"Markdownlint passed for modified register item"},{"command":"npm run validate:schema:file","reason":"No changed *.yaml or *.yml files","status":"not_applicable","summary":"Schema validation skipped"},{"command":"specdojo catalog validate","reason":"Target project prj-0002 does not set catalog_path","status":"not_applicable","summary":"Catalog validation skipped"}]}
+</specdojo_executor_evidence>

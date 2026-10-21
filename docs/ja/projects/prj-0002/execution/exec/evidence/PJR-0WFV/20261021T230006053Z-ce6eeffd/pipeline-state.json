@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-0WFV",
+  "run_id": "20261021T230006053Z-ce6eeffd",
+  "updated_at": "2026-10-21T23:14:06.417Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-10-21T23:03:33.363Z",
+      "completed_at": "2026-10-21T23:09:19.031Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/exec/evidence/PJR-0WFV/20261021T230006053Z-ce6eeffd/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-21T23:12:32.314Z",
+      "completed_at": "2026-10-21T23:13:33.618Z",
+      "artifact_ref": "docs/ja/projects/prj-0002/execution/exec/results/pjr-0wfv-20261021T230006Z-7229-result.md"
+    },
+    "integrate": {
+      "status": "succeeded",
+      "actor": "flash-high-executor",
+      "attempts": 1,
+      "started_at": "2026-10-21T23:13:33.638Z",
+      "completed_at": "2026-10-21T23:14:06.417Z",
+      "artifact_ref": null,
+      "repos": {
+        "specdojo-lp": {
+          "status": "merged",
+          "commit": "b7631adcdb40a6f9e612eabe59984564a2bfca7d",
+          "merged_at": "2026-10-21T23:14:04.032Z"
+        },
+        "specdojo-assets": {
+          "status": "unchanged",
+          "commit": null,
+          "merged_at": null
+        },
+        "project": {
+          "status": "merged",
+          "commit": null,
+          "merged_at": "2026-10-21T23:14:04.035Z"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0002/execution/exec/plans/pjr-0wfv-20261021T230006Z-7229-plan.md",
+    "result_ref": "docs/ja/projects/prj-0002/execution/exec/results/pjr-0wfv-20261021T230006Z-7229-result.md"
+  }
+}

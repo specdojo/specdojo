@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: low
   owner: BA
   registered_at: "2026-10-17T14:40:01Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
 ---
 
 # PJR-0WFV LP で plan モードと比べた register の価値を伝える
@@ -74,12 +73,30 @@ SpecDojo の register が優位な点:
 
 | No  | 作業                                                      | 担当 | 状態 | メモ                      |
 | --- | --------------------------------------------------------- | ---- | ---- | ------------------------- |
-| 1   | 「register の考え方」に plan モードとの対比を加える       | BA   | open | PJR-YFBW と表現をそろえる |
-| 2   | 「道具の使い分け」の plan mode の行との言い回しを確かめる | BA   | open | 必要な場合だけ直す        |
+| 1   | 「register の考え方」に plan モードとの対比を加える       | BA   | done | PJR-YFBW と表現をそろえる |
+| 2   | 「道具の使い分け」の plan mode の行との言い回しを確かめる | BA   | done | 必要な場合だけ直す        |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 実施内容
+
+- `specdojo-lp` の `src/components/sections/RegisterTypes.astro` に「plan モードと register の使い分け」の節と対比（狭い画面用のカード表示および広い画面用の表）を追加。
+  - 識別（`PJR-XXXX` の ID）・種類（7 種類）・状態の遷移（8 状態）・実行の plan・result とのつながり・決定の記録（決めた人・決めた日・承認の方式）・残り方（リポジトリの履歴）の 6 観点で対比を記載。
+  - plan モードを否定せず、「plan は段取りの下書き、register は判断と作業を残す台帳」として補い合う関係で記述。
+  - 冒頭の一文を「1 件を早く仕上げるだけでなく、プロジェクトの判断と作業を検証できる形で残し、複数の agent に安全に実行させる台帳です。」とした。
+  - plan モードの保存期間は断定せず「既定では一定期間で消えうる」とし、ランダムな名前や保存場所の制約、register の実際の状態名のみを使用する要件を満たした。
+  - 狭い画面のカード表示と広い画面の表で、列見出しの言い回し（`観点`・`plan モードの plan（下書き）`・`SpecDojo の register（台帳）`）を統一。
+- `specdojo-lp` の `src/components/sections/ToolFit.astro` における plan mode の行の表現を、新しい対比に合わせて「補完。plan は段取りの下書き、register は判断と作業を残す台帳」に更新。
+- `specdojo-lp` にて `npm run format:check`、`npm run typecheck`、`npm run lint:ts`、`npm run build` を実行し、すべて通過することを確認。
+
+### 成果物
+
+- `specdojo-lp:src/components/sections/RegisterTypes.astro`
+- `specdojo-lp:src/components/sections/ToolFit.astro`
+
+### 残課題
+
+- なし
 
 ## 5. 関連ドキュメント
 
