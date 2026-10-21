@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-t30j-shared-scope-and-multi-feature-cycles
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-18T15:47:38Z"
+  completed_at: "2026-10-21T16:15:10Z"
+  conclusion: shared の 8 モジュールの利用元を数え、kata だけが使う yaml-schema-modeline を src/kata へ移した。残る 7 つは shared の別のモジュールが使うか 2 つ以上の機能が使うため残した。3 つ以上の機能をまたぐ循環 2 組は、ほどかずに起票の案を残した
   derived_from:
     - PJR-WSET
 ---
