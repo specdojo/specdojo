@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-22T12:56:35Z"
-  block_reason: "agent exited with non-zero code: agent exited with non-zero code: error: authentication failed or timed out"
   derived_from:
     - PJR-EN6M
 ---
