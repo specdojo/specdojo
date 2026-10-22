@@ -26,6 +26,7 @@ RUN apt-get update && \
       chromium \
       chromium-headless-shell \
       fonts-noto-cjk \
+      fonts-noto-color-emoji \
       locales \
       tzdata \
       libnss3 \

@@ -10,6 +10,10 @@ SpecDojo の利用者に影響する変更を記録します。
 - Dev Container の推奨 preset に GitHub CLI（`gh`）を加え、コンテナ内で行ったログインをリポジトリ別の名前付き volume に保存するようにしました。ホストの認証情報はマウントせず、自動ログインもしません。共有された認証を agent が使ってリモートを書き換えないよう、Claude Code・Codex・OpenCode・Antigravity の配布権限では `git push` と `gh` の書き込みを拒否します。pipeline executor と reporter は全 `gh` を拒否し、Claude Code と OpenCode の対話型オーケストレーターだけは専用権限で読み取りを許可します（PJR-ZH7Q）。
 - `specdojo.config.json` の `external_projects` で別リポジトリの project を別名付きで宣言し、`register add --project <別名> --commit` から相手にインストールされた SpecDojo へ起票を委譲できるようにしました。`--from <別名>:PJR-XXXX` は相手の実 project ID へ変換し、`orchestrator launch` は宣言した外部リポジトリにも編集許可を付けます（PJR-5B42）。
 
+### 変更
+
+- ドキュメントサイトの Mermaid 12 で既定のレイアウトを Dagre から ELK へ切り替え、複雑な図を層状・直角配線で描くようにしました。日本語と絵文字のフォントを描画環境へ揃え、図中の絵文字が欠けないようにしました。文書編集ガイドには、辺が多い図の分割、中心へ矢印を集める `architecture` 図、格子状に並べる `block` 図の書き方を追加しました（PJR-QF45）。
+
 ### 文書
 
 - Quick Start ガイドを register のユースケース別の実行例を中心に組み替え、`difficulty` と approach、統合後 review、夜間実行、再開、別 project への起票を「こんなとき」「チャットでの頼み方」「コマンド」の順で追加しました。成果物カタログ、Schedule、worktree、routine は発展手順として後段にまとめました（PJR-98SQ）。
