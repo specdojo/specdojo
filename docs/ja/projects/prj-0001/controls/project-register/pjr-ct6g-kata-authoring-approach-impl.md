@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-22T13:50:38Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: lint-fm, typecheck, test-unit"
   derived_from:
     - PJR-V2W5
 ---
@@ -46,7 +47,12 @@ PJR-V2W5 の決定に従い、rulebook-authoring など 4 つの approach、--ta
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `rulebook-authoring`・`recipe-authoring`・`sample-authoring`・`template-authoring` を追加し、register の起票時と実行時に新規 kata ID、種類別の末尾、重複、手本成果物を検証するようにした。
+- リポジトリ全体の設定キーを `kata_namespace`、利用者 kata の配置を `docs/ja/kata/{rulebooks,recipes,samples,templates}/` とした。既定値は元リポジトリのディレクトリ名を正規化した値とし、worktree でも同じ名前空間を保つ。project 単位ではなくリポジトリ単位で共有でき、同梱の `specdojo:` kata と衝突しないためである。
+- authoring plan に執筆標準、新規配置、読み取り専用の手本、`undecided`・未記入だけを更新する参照条件を載せた。既存参照と `not-needed` は上書きせず result へ申し送る。
+- `kata list`・`kata show` が利用者名前空間の kata を解決できるようにし、ガイド、コマンド・設定リファレンス、執筆標準、CHANGELOG を更新した。
+- authoring は register 専用とした。Schedule の成果物単位 target では「新規 kata ID + 0 件以上の手本」を区別できないため、strategy profile は用意せず plan 生成時に拒否する。
+- 単体テストに approach・対象・名前空間・解決規則・plan 契約を追加し、統合テストに一時リポジトリでの rulebook 新規作成とカタログ参照更新を追加した。実装上の残課題はない。統合後の完了確認は PJR-JSEY で行う。
 
 ## 5. 関連ドキュメント
 
