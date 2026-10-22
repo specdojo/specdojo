@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-H72A"]'
+- v: 1
+  id: reg_81974b72a3154b41abbf5bff74472555
+  ts: "2026-10-22T13:55:31Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_aebfe49073f64d629e6077d0ff18d16f
