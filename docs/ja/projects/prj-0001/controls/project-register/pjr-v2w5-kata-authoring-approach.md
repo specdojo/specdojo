@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-v2w5-kata-authoring-approach
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-10-22T13:23:21Z"
+  completed_at: "2026-10-22T13:51:46Z"
+  conclusion: "kata を新しく作る approach を rulebook-authoring など 4 つとし、--target の 1 つ目に新しい kata の id、2 つ目以降に手本の成果物を書く。利用者の kata は specdojo: 以外のリポジトリ単位の名前空間とし、カタログの undecided の参照は同じ実行で付け替える"
   derived_from:
     - PJR-H72A
 ---
