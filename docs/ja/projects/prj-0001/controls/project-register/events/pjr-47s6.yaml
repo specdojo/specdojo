@@ -83,3 +83,16 @@
       from: "agent exited with non-zero code: agent exited with non-zero code: error: authentication failed or timed out"
       to: "-"
   previous_event_id: reg_638b38bebc384cea9a4a38e72bc055f0
+- v: 1
+  id: reg_729a02552c9d4990b697219a28105ad9
+  ts: "2026-10-22T13:54:44Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9d8ad57fac43417f9bb4fd9658293216
