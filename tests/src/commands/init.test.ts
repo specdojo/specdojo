@@ -442,6 +442,16 @@ describe("specdojo init", () => {
       expect(mediumReporter?.nickname).toBe("gemma-reporter");
       expect(mediumReporter?.model).toBe("ollama-local/gemma4:26b");
       expect(existsSync(join(repo, ".github/agents/specdojo-orchestrator.md"))).toBe(true);
+      expect(existsSync(join(repo, ".specdojo/claude/settings.orchestrator.json"))).toBe(true);
+      const initializedPackage = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
+        scripts: Record<string, string>;
+      };
+      expect(initializedPackage.scripts["orch:opus"]).toContain(
+        "--settings .specdojo/claude/settings.orchestrator.json",
+      );
+      expect(initializedPackage.scripts["orch:opus"]).not.toContain(
+        "--settings .specdojo/claude/settings.edit.json",
+      );
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

@@ -33,13 +33,65 @@ permission:
     "npm run lint:md*": allow
     "npm run lint:fm*": allow
     "npm run validate:schema:file*": allow
+    "gh auth status*": allow
+    "gh issue list*": allow
+    "gh issue status*": allow
+    "gh issue view*": allow
+    "gh pr checks*": allow
+    "gh pr diff*": allow
+    "gh pr list*": allow
+    "gh pr status*": allow
+    "gh pr view*": allow
+    "gh release list*": allow
+    "gh release view*": allow
+    "gh repo list*": allow
+    "gh repo view*": allow
+    "gh run list*": allow
+    "gh run view*": allow
+    "gh run watch*": allow
+    "gh search *": allow
+    "gh status*": allow
+    "gh workflow list*": allow
+    "gh workflow view*": allow
     "git push*": deny
-    "gh *": deny
-  edit:
-    "*": deny
-    "docs/**": allow
-    "src/**": allow
-    "tests/**": allow
+    "gh api*": deny
+    "gh pr close*": deny
+    "gh pr create*": deny
+    "gh pr merge*": deny
+    "gh auth login*": deny
+    "gh auth logout*": deny
+    "gh auth refresh*": deny
+    "gh auth setup-git*": deny
+    "gh * archive*": deny
+    "gh * cancel*": deny
+    "gh * clone*": deny
+    "gh * close*": deny
+    "gh * comment*": deny
+    "gh * create*": deny
+    "gh * delete*": deny
+    "gh * disable*": deny
+    "gh * edit*": deny
+    "gh * enable*": deny
+    "gh * fork*": deny
+    "gh * install*": deny
+    "gh * lock*": deny
+    "gh * merge*": deny
+    "gh * pin*": deny
+    "gh * ready*": deny
+    "gh * remove*": deny
+    "gh * rename*": deny
+    "gh * reopen*": deny
+    "gh * rerun*": deny
+    "gh * review*": deny
+    "gh * run*": deny
+    "gh * set*": deny
+    "gh * sync*": deny
+    "gh * transfer*": deny
+    "gh * unlock*": deny
+    "gh * unpin*": deny
+    "gh * upgrade*": deny
+    "gh * upload*": deny
+  edit: allow
   task: deny
   webfetch: allow
   websearch: allow

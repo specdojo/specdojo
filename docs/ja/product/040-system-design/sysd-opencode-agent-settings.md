@@ -173,6 +173,8 @@ pipeline reporter は標準入力で渡された plan、executor evidence、出�
 
 実際のファイル: `.opencode/agents/opencode-reporter.md`。
 
+対話型オーケストレーターは pipeline role と別の `.opencode/agents/specdojo-orchestrator.md` を使うため、`permission.edit` と `permission.bash` を分離する。利用者の承認後に `.specdojo/` や `package.json` なども変更できるよう、orchestrator の `edit` はリポジトリ全体で allow する。executor・review executor は読み取りを含む全 `gh` を deny するが、オーケストレーターは `gh pr view`・`gh pr list`・`gh run list`・`gh run view`・`gh release view` などの読み取りだけを allow する。`git push`、`gh api`、PR・release・repository などの書き込みサブコマンドは明示 deny し、未列挙の `gh` は deny 基点の許可リストにより拒否する。
+
 ### 7.5. エージェント一覧
 
 | ファイル名                           | `--agent` 指定名                  | mode      | モデル指定  | 用途                           |
