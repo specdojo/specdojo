@@ -18,6 +18,10 @@ properties:
     description: Repository-wide protected agent registry path.
     type: string
     pattern: "^(?!.*(?:^|/)\\.\\.(?:/|$))\\.specdojo/.+\\.ya?ml$"
+  kata_authority:
+    description: Repository-wide authority used by locally authored kata.
+    type: string
+    pattern: "^(?!prj-)(?!specdojo$)[a-z][a-z0-9-]*$"
   projects:
     type: object
     additionalProperties:

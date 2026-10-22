@@ -265,6 +265,8 @@ export function resolveRegisterActor(actor: string, roster: MemberRoster | null)
 export type SpecDojoConfig = {
   version: 1;
   current_project?: string;
+  /** Repository-wide authority used by locally authored kata. */
+  kata_authority?: string;
   /** Repository-wide protected agent registry. Must stay under .specdojo/. */
   agent_members_path?: string;
   projects: Record<string, SpecDojoProjectConfig>;
@@ -273,6 +275,56 @@ export type SpecDojoConfig = {
 };
 
 export const DEFAULT_AGENT_MEMBERS_PATH = ".specdojo/agent-members.yaml";
+
+export const KATA_AUTHORITY_PATTERN = /^(?!prj-)(?!specdojo$)[a-z][a-z0-9-]*$/;
+
+function repositoryIdentityRoot(rootDir: string): string {
+  const root = resolve(rootDir);
+  const dotGit = join(root, ".git");
+  if (!existsSync(dotGit) || statSync(dotGit).isDirectory()) return root;
+  const gitdirLine = readTextFileOrNull(dotGit)
+    ?.split(/\r?\n/)
+    .find((line) => line.startsWith("gitdir:"));
+  if (!gitdirLine) return root;
+  const gitdir = resolve(root, gitdirLine.slice("gitdir:".length).trim()).replaceAll("\\", "/");
+  const marker = "/.git/worktrees/";
+  const markerIndex = gitdir.lastIndexOf(marker);
+  return markerIndex >= 0 ? gitdir.slice(0, markerIndex) : root;
+}
+
+export function defaultKataAuthority(rootDir: string = specdojoRootDir()): string {
+  const directoryName = basename(repositoryIdentityRoot(rootDir));
+  const normalized = directoryName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  const withLetterPrefix = /^[a-z]/.test(normalized) ? normalized : `repo-${normalized}`;
+  const withoutReservedAuthority =
+    withLetterPrefix === "specdojo" || withLetterPrefix.startsWith("prj-")
+      ? `repo-${withLetterPrefix}`
+      : withLetterPrefix;
+  return KATA_AUTHORITY_PATTERN.test(withoutReservedAuthority)
+    ? withoutReservedAuthority
+    : "repository";
+}
+
+export function getKataAuthority(
+  config: SpecDojoConfig | null,
+  rootDir: string = specdojoRootDir(),
+): string {
+  return config?.kata_authority?.trim() || defaultKataAuthority(rootDir);
+}
+
+export function isSpecdojoSourceRepository(rootDir: string = specdojoRootDir()): boolean {
+  try {
+    const pkg = JSON.parse(readFileSync(join(rootDir, "package.json"), "utf8")) as {
+      name?: unknown;
+    };
+    return pkg.name === "specdojo" && existsSync(join(rootDir, "src", "specdojo.ts"));
+  } catch {
+    return false;
+  }
+}
 
 type AgentMemberRoster = {
   version: number;
@@ -904,6 +956,16 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
       );
     }
     assertProtectedAgentMembersPath(parsed.agent_members_path, configPath);
+  }
+
+  if (
+    parsed.kata_authority !== undefined &&
+    (typeof parsed.kata_authority !== "string" ||
+      !KATA_AUTHORITY_PATTERN.test(parsed.kata_authority))
+  ) {
+    throw new Error(
+      `Invalid .specdojo/specdojo.config.json: kata_authority must match ${KATA_AUTHORITY_PATTERN}`,
+    );
   }
 
   for (const [projectId, project] of Object.entries(parsed.projects)) {

@@ -42,7 +42,7 @@ SpecDojo は道場のメタファーとして、進め方（`approach`）を「R
 
 ### 1.1. approach の選び方
 
-進め方は、まずタスクの目的で分かれ、通常の成果物作成・更新では実践の型の整備状況でさらに分かれます。`fully-guided` / `recipe-guided` / `freeform` は実践の型をどこまで基準にするかを表します。`retrofit` は実装先行時の現在動作調査、`bootstrap` / `cross-deliverable-dedup`・各 `*-maintenance`・`finalize` 系は、それぞれの目的に応じて選ぶ進め方です。
+進め方は、まずタスクの目的で分かれ、通常の成果物作成・更新では実践の型の整備状況でさらに分かれます。`fully-guided` / `recipe-guided` / `freeform` は実践の型をどこまで基準にするかを表します。`retrofit` は実装先行時の現在動作調査、`bootstrap` / `cross-deliverable-dedup`・各 `*-authoring`・各 `*-maintenance`・`finalize` 系は、それぞれの目的に応じて選ぶ進め方です。
 
 ```mermaid
 flowchart TD
@@ -56,6 +56,7 @@ flowchart TD
   FF --> W
   P -->|"実装先行の成果物を反映・新設"| RF["retrofit<br/>実装 → 成果物"]
   P -->|"成果物と実践の型を新規に一括整備"| BS["bootstrap"]
+  P -->|"既存成果物から実践の型だけを新規作成"| AU["各 authoring<br/>成果物 → 新しい実践の型"]
   P -->|"成果物群の重複を整理"| DD["cross-deliverable-dedup"]
   P -->|"実践の型を見直す"| MT["各 maintenance<br/>成果物 → 実践の型"]
   P -->|"human が確定する"| FIN["finalize / bootstrap-finalize<br/>status を ready へ昇格"]
@@ -65,7 +66,7 @@ flowchart TD
 
 ### 1.2. approach 一覧
 
-`approach` は、目的に応じて「成果物の作成・更新」「初期整備・実装反映・横断整理」「実践の型のメンテナンス」「human による確定」の4種に分けられます。以下の表にある edit / review は plan テンプレート、result は実行記録のテンプレートです。テンプレートには各 `approach` で行う具体的な手順が定義されています。mode や execution に対応する専用テンプレートがない場合のフォールバック規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
+`approach` は、目的に応じて「成果物の作成・更新」「初期整備・実装反映・横断整理」「実践の型の新規作成」「実践の型のメンテナンス」「human による確定」の5種に分けられます。以下の表にある edit / review は plan テンプレート、result は実行記録のテンプレートです。テンプレートには各 `approach` で行う具体的な手順が定義されています。mode や execution に対応する専用テンプレートがない場合のフォールバック規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
 
 #### 1.2.1. 成果物の作成・更新
 
@@ -123,7 +124,20 @@ flowchart LR
 
 `retrofit` では、実装を現在動作（AS-IS）の根拠、既存成果物・決定記録・プロジェクトコンテキストを意図された仕様の根拠、`done_criteria` を成果物が満たすべき目的として扱います。三者が一致すれば成果物へ反映し、実装が意図された仕様と異なる場合は実装へ無条件に合わせず、乖離と修正対象候補を result に記録します。実装から確認できない目的・業務判断・将来方針は推測しません。
 
-#### 1.2.3. 実践の型のメンテナンス
+#### 1.2.3. 実践の型の新規作成
+
+既存成果物を読み取り専用の手本として、指定した種類の kata だけを新規作成します。`--target` の先頭は新しい kata ID、後続は任意の手本成果物です。
+
+| `approach`           | 作る対象 | 対応テンプレート                                             |
+| -------------------- | -------- | ------------------------------------------------------------ |
+| `rulebook-authoring` | rulebook | [edit](../exec-templates/xep-rulebook-authoring-template.md) |
+| `recipe-authoring`   | recipe   | [edit](../exec-templates/xep-recipe-authoring-template.md)   |
+| `sample-authoring`   | sample   | [edit](../exec-templates/xep-sample-authoring-template.md)   |
+| `template-authoring` | template | [edit](../exec-templates/xep-template-authoring-template.md) |
+
+authoring は register 専用です。Schedule の成果物単位の target では新しい kata ID と複数の手本を区別できないため、strategy profile は用意しません。
+
+#### 1.2.4. 実践の型のメンテナンス
 
 通常の成果物作業とは参照の向きを逆にし、成果物や review result を根拠として対象の実践の型を見直します。
 
@@ -150,7 +164,7 @@ flowchart LR
 
 rulebook frontmatter で `not-needed` と宣言された型はメンテナンス対象ではなく、strategy へ対応する `*-maintenance` フェーズを生成しません。作成が必要になった場合は、先に要否判断の根拠と rulebook frontmatter の宣言を更新します。
 
-#### 1.2.4. human による確定
+#### 1.2.5. human による確定
 
 `execution: human` と組み合わせ、確認対象の `status` を `ready` へ昇格する確定プロファイルです。`ready` への昇格は human のみが行えます。
 

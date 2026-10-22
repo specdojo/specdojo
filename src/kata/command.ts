@@ -7,6 +7,9 @@ import {
   type SpecdojoResolutionRoots,
   specdojoResourceCandidates,
 } from "../docs/template-resolution.js";
+import { getKataAuthority, loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
+import { parsePracticeId } from "../shared/practice-id.js";
+import { AUTHORING_KINDS, kataKindDirectory } from "./authoring.js";
 
 export const KATA_RESOURCE_KINDS = [
   "rulebook",
@@ -171,6 +174,49 @@ function enumerateConfig(
   });
 }
 
+function enumerateAuthoredResources(roots: SpecdojoResolutionRoots): KataResource[] {
+  const repositoryRoot = roots.repositoryRoot ?? specdojoRootDir();
+  const configuredAuthority = getKataAuthority(loadConfig(repositoryRoot).config, repositoryRoot);
+  return AUTHORING_KINDS.flatMap((kind) => {
+    const relativeDir = kataKindDirectory(kind, true);
+    const absoluteDir = resolve(repositoryRoot, relativeDir);
+    return relativeFiles(absoluteDir).flatMap((filePath) => {
+      const resolvedPath = resolve(absoluteDir, filePath);
+      const id = resourceId(resolvedPath);
+      let authority: string | undefined;
+      try {
+        authority = parsePracticeId(id).authority;
+      } catch {
+        return [];
+      }
+      if (authority !== configuredAuthority) return [];
+      return [
+        {
+          id,
+          kind,
+          ejectable: false,
+          relativePath: normalizeRelativePath(join(relativeDir, filePath)),
+          repositoryPath: resolvedPath,
+          resolvedPath,
+          source: "repository" as const,
+          state: "ejected" as const,
+          difference: "-" as const,
+        },
+      ];
+    });
+  });
+}
+
+function specdojoOwnedResource(resource: KataResource): boolean {
+  if (resource.kind === "standard") return true;
+  try {
+    const authority = parsePracticeId(resource.id).authority;
+    return authority === undefined || authority === "specdojo";
+  } catch {
+    return true;
+  }
+}
+
 const ALL_LIST_KINDS: readonly string[] = [...KATA_RESOURCE_KINDS, ...KATA_REFERENCED_KINDS];
 
 function assertKind(kind: string | undefined): KataListKind | undefined {
@@ -189,14 +235,18 @@ export function listKataResources(
     options.all || (kind !== undefined && !isEjectableKind(kind))
       ? RESOURCE_KINDS
       : EJECTABLE_KINDS;
-  return configs
+  const bundledAndOverrides = configs
     .filter((config) => kind === undefined || config.kind === kind)
     .flatMap((config) => enumerateConfig(config, options.roots ?? {}))
-    .sort(
-      (first, second) =>
-        first.kind.localeCompare(second.kind) ||
-        first.relativePath.localeCompare(second.relativePath),
-    );
+    .filter(specdojoOwnedResource);
+  const authored = enumerateAuthoredResources(options.roots ?? {}).filter(
+    (resource) => kind === undefined || resource.kind === kind,
+  );
+  return [...bundledAndOverrides, ...authored].sort(
+    (first, second) =>
+      first.kind.localeCompare(second.kind) ||
+      first.relativePath.localeCompare(second.relativePath),
+  );
 }
 
 function localId(id: string): string {

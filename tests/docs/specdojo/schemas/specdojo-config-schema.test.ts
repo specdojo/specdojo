@@ -62,6 +62,13 @@ describe("specdojo-config.schema.yaml", () => {
     expect(valid).toBe(true);
   });
 
+  it("accepts a repository-wide kata authority and rejects invalid or reserved values", () => {
+    expect(validate({ version: 1, kata_authority: "customer-docs", projects: {} })).toBe(true);
+    for (const kataAuthority of ["Customer_Docs", "prj-example", "specdojo"]) {
+      expect(validate({ version: 1, kata_authority: kataAuthority, projects: {} })).toBe(false);
+    }
+  });
+
   it("accepts a project integration branch and rejects a blank value", () => {
     expect(
       validate({

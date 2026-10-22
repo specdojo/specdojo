@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { load as loadYaml } from "js-yaml";
@@ -7,15 +7,59 @@ import { specdojoPackageRootDir } from "../../../src/shared/package-paths.js";
 import {
   assertValidActor,
   getProjectCatalogPath,
+  getKataAuthority,
   getProjectContext,
   getProjectMembersPath,
   getProjectExecutionPath,
   getProjectSchedulePath,
+  loadConfig,
   loadMemberRoster,
   migrateAgentMembers,
   resolveAgentMember,
 } from "../../../src/shared/specdojo-config.js";
-import type { MemberRoster, SpecDojoProjectConfig } from "../../../src/shared/specdojo-config.js";
+import type {
+  MemberRoster,
+  SpecDojoConfig,
+  SpecDojoProjectConfig,
+} from "../../../src/shared/specdojo-config.js";
+
+describe("kata authority", () => {
+  it("uses an explicit repository-wide authority", () => {
+    const config = {
+      version: 1,
+      kata_authority: "customer-docs",
+      projects: {},
+    } satisfies SpecDojoConfig;
+    expect(getKataAuthority(config, "/tmp/ignored")).toBe("customer-docs");
+  });
+
+  it("derives a lowercase hyphenated authority from the repository directory", () => {
+    expect(getKataAuthority(null, "/tmp/Customer Docs")).toBe("customer-docs");
+    expect(getKataAuthority(null, "/tmp/123")).toBe("repo-123");
+    expect(getKataAuthority(null, "/tmp/specdojo")).toBe("repo-specdojo");
+    expect(getKataAuthority(null, "/tmp/prj-example")).toBe("repo-prj-example");
+  });
+
+  it.each(["Customer_Docs", "prj-example", "specdojo"])(
+    "rejects invalid or reserved configured authority %s",
+    (kataAuthority) => {
+      const root = mkdtempSync(join(tmpdir(), "specdojo-kata-authority-"));
+      const configPath = join(root, ".specdojo", "specdojo.config.json");
+      mkdirSync(dirname(configPath), { recursive: true });
+      writeFileSync(
+        configPath,
+        JSON.stringify({ version: 1, kata_authority: kataAuthority, projects: {} }),
+        "utf8",
+      );
+
+      try {
+        expect(() => loadConfig(root)).toThrow(/kata_authority must match/);
+      } finally {
+        rmSync(root, { recursive: true, force: true });
+      }
+    },
+  );
+});
 
 function makeRoster(nicknames: string[]): MemberRoster {
   return {

@@ -6,6 +6,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- 既存成果物を手本に kata だけを新規作成する `rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` approach を追加しました。利用者の kata はリポジトリ単位の `kata_authority` と `docs/ja/kata/` 配置で同梱 kata から分離し、手本の未決参照は同じ実行で新しい ID へ更新します（PJR-CT6G）。
 - Dev Container の preset に、provider の CLI と最低限だけを入れる `minimal` と、推奨構成に開発ツール・Ollama 接続・cron を加える `full` を追加しました。`specdojo init` では `minimal` / `recommended` / `full` を選択でき、既定は従来どおり `recommended`、従来の `none` は `minimal` の別名として利用できます（PJR-47S6）。
 - Dev Container の推奨 preset に GitHub CLI（`gh`）を加え、コンテナ内で行ったログインをリポジトリ別の名前付き volume に保存するようにしました。ホストの認証情報はマウントせず、自動ログインもしません。共有された認証を agent が使ってリモートを書き換えないよう、Claude Code・Codex・OpenCode・Antigravity の配布権限では `git push` と `gh` の書き込みを拒否します。pipeline executor と reporter は全 `gh` を拒否し、Claude Code と OpenCode の対話型オーケストレーターだけは専用権限で読み取りを許可します（PJR-ZH7Q）。
 - `specdojo.config.json` の `external_projects` で別リポジトリの project を別名付きで宣言し、`register add --project <別名> --commit` から相手にインストールされた SpecDojo へ起票を委譲できるようにしました。`--from <別名>:PJR-XXXX` は相手の実 project ID へ変換し、`orchestrator launch` は宣言した外部リポジトリにも編集許可を付けます（PJR-5B42）。
