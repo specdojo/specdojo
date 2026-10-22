@@ -37,6 +37,7 @@ Quick Start は register の使い方が最初の体験とカタログ作成へ�
   - 合意した範囲を変える（change-request）
   - リスクと気づきを残す（risk・note）
   - 成果物を作る・直す（`--approach fully-guided`・`recipe-guided`・`retrofit` と `--target <成果物の doc id>`。PJR-H72A の決定）
+  - 成果物と kata を一組で作る（`--approach bootstrap` と `--target <成果物の doc id>`。初期立ち上げ用で、成果物と rulebook・recipe・sample・template を同じ実行で作る）
   - kata を直す（`--approach rulebook-maintenance` などと `--target <kata の id>`）
   - 統合後に review の agent に確かめさせる（`--post-review`）
   - 夜の間に流す（`register update --autopilot approved` → `orchestrator night`）
