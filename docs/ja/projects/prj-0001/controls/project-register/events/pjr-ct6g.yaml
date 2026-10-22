@@ -128,3 +128,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_faa435039a0043d9aac86d777391a4e1
+- v: 1
+  id: reg_91968aab933f45b8a6703dd13ac493b5
+  ts: "2026-10-22T23:24:28Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "オーケストレーターが一時のリポジトリで kata_authority を edu-scratch にして起票と plan を試し、specdojo: の id が止まること、置き場所と付け替えの条件が plan に載ることを確かめた。統合後の runner の動作を PJR-JSEY で確認した。設定のキーは規則の用語に合わせ kata_namespace から kata_authority に直させた"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-23"
+    - field: conclusion
+      from: "-"
+      to: "rulebook-authoring・recipe-authoring・sample-authoring・template-authoring を加えた。--target の 1 つ目に新しい kata の id、2 つ目以降に手本の成果物を書く。利用者の kata は設定の kata_authority の authority で docs/ja/kata の下に作り、specdojo: は本体専用とする。手本の成果物のカタログの参照が undecided か未記入なら付け替える。schedule では使わない（register 専用）"
+  previous_event_id: reg_abafd8b3efa941d2956bc6e17a35ff6f

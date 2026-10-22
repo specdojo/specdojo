@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ct6g-kata-authoring-approach-impl
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-22T13:50:38Z"
+  completed_at: "2026-10-22T23:24:28Z"
+  conclusion: "rulebook-authoring・recipe-authoring・sample-authoring・template-authoring を加えた。--target の 1 つ目に新しい kata の id、2 つ目以降に手本の成果物を書く。利用者の kata は設定の kata_authority の authority で docs/ja/kata の下に作り、specdojo: は本体専用とする。手本の成果物のカタログの参照が undecided か未記入なら付け替える。schedule では使わない（register 専用）"
   derived_from:
     - PJR-V2W5
 ---
