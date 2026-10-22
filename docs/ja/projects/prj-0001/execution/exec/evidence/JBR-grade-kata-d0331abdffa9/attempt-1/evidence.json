@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-d0331abdffa9",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-22T20:00:56.281Z",
+    "completed_at": "2026-10-22T20:46:42.324Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-todo-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-views-by-owner-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-views-by-priority-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pjr-views-by-status-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-change-request-log-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-communication-plan-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-decision-log-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-issue-log-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-organization-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-plan-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-quality-management-plan-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-raci-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.pm-risk-register-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-assumptions-constraints-dependencies-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-charter-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-d0331abdffa9.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 16,
+    "summary": ".../grade/results/specdojo.pjr-todo-template.yaml  | 101 +++++++--\n .../specdojo.pjr-views-by-owner-template.yaml      |  67 +++++-\n .../specdojo.pjr-views-by-priority-template.yaml   |  67 +++++-\n .../specdojo.pjr-views-by-status-template.yaml     | 132 ++++++++---\n .../specdojo.pm-change-request-log-template.yaml   | 102 +++++++--\n .../specdojo.pm-communication-plan-template.yaml   |  67 +++++-\n .../results/specdojo.pm-decision-log-template.yaml | 107 ++++++---\n .../results/specdojo.pm-issue-log-template.yaml    | 246 ++++++++++++++++++---\n .../results/specdojo.pm-organization-template.yaml |  97 ++++++--\n .../grade/results/specdojo.pm-plan-template.yaml   | 131 ++++++++---\n ...ecdojo.pm-quality-management-plan-template.yaml |  83 +++++--\n .../grade/results/specdojo.pm-raci-template.yaml   |  93 ++++++--\n .../specdojo.pm-risk-register-template.yaml        | 222 ++++++++++++++++---\n ...umptions-constraints-dependencies-template.yaml |  77 ++++++-\n .../results/specdojo.prj-charter-template.yaml     | 101 ++++++++-\n 15 files changed, 1403 insertions(+), 290 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-d0331abdffa9 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-d0331abdffa9/…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-d0331abdffa9 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-d0331abdffa9/results.tsv\nelse\n  grade_status=$?\n  cat logs/grade/runs/per-document/JBR-grade-kata-d0331abdffa9/results.tsv\n  if [ \"$grade_status\" -eq 2 ]; then\n    printf 'grade pipeline partial: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-d0331abdffa9' \"$grade_status\" >&2\n  else\n    printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-d0331abdffa9' \"$grade_status\" >&2\n  fi\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-d0331abdffa9/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-d0331abdffa9/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.4.2 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-d0331abdffa9 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-d0331abdffa9\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/specdojo/templates/pjr-todo-template.md\ndocument complete: docs/ja/specdojo/templates/pjr-todo-template.md\ndocument start: docs/ja/specdojo/templates/pjr-views-by-owner-template.md\ndocument complete: docs/ja/specdojo/templates/pjr-views-by-owner-template.md\ndocument start: docs/ja/specdojo/templates/pjr-views-by-priority-template.md\ndocument complete: docs/ja/specdojo/templates/pjr-views-by-priority-template.md\ndocument start: docs/ja/specdojo/templates/pjr-views-by-status-template.md\ndocument complete: docs/ja/specdojo/templates/pjr-views-by-status-template.md\ndocument start: docs/ja/specdojo/templates/pm-change-request-log-template.md\ndocument complete: docs/ja/specdojo/templates/pm-change-request-log-template.md\ndocument start: docs/ja/specdojo/templates/pm-communication-plan-template.md\ndocument complete: docs/ja/specdojo/templates/pm-communication-plan-template.md\ndocument start: docs/ja/specdojo/templates/pm-decision-log-template.md\ndocument complete: docs/ja/specdojo/templates/pm-decision-log-template.md\ndocument start: docs/ja/specdojo/templates/pm-issue-log-template.md\ndocument complete: docs/ja/specdojo/templates/pm-issue-log-template.md\ndocument start: docs/ja/specdojo/templates/pm-organization-template.md\ndocument complete: docs/ja/specdojo/templates/pm-organization-template.md\ndocument start: docs/ja/specdojo/templates/pm-plan-template.md\ndocument complete: docs/ja/specdojo/templates/pm-plan-template.md\ndocument start: docs/ja/specdojo/templates/pm-quality-management-plan-template.md\ndocument complete: docs/ja/specdojo/templates/pm-quality-management-plan-template.md\ndocument start: docs/ja/specdojo/templates/pm-raci-template.md\ndocument complete: docs/ja/specdojo/templates/pm-raci-template.md\ndocument start: docs/ja/specdojo/templates/pm-risk-register-template.md\ndocument complete: docs/ja/specdojo/templates/pm-risk-register-template.md\ndocument start: docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md\ndocument complete: docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md\ndocument start: docs/ja/specdojo/templates/prj-charter-template.md\ndocument complete: docs/ja/specdojo/templates/prj-charter-template.md\ngrade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-d0331abdffa9/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-22T20:05:41Z\tdocs/ja/specdojo/templates/pjr-todo-template.md\t1\tpassed\t275\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:08:10Z\tdocs/ja/specdojo/templates/pjr-views-by-owner-template.md\t1\tpassed\t147\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:10:05Z\tdocs/ja/specdojo/templates/pjr-views-by-priority-template.md\t1\tpassed\t113\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:12:39Z\tdocs/ja/specdojo/templates/pjr-views-by-status-template.md\t1\tpassed\t152\tneeds-work\t88\t5\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:18:30Z\tdocs/ja/specdojo/templates/pm-change-request-log-template.md\t1\tpassed\t349\tneeds-work\t87\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:21:08Z\tdocs/ja/specdojo/templates/pm-communication-plan-template.md\t1\tpassed\t156\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:23:21Z\tdocs/ja/specdojo/templates/pm-decision-log-template.md\t1\tpassed\t132\tneeds-work\t88\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:26:22Z\tdocs/ja/specdojo/templates/pm-issue-log-template.md\t1\tpassed\t180\tfail\t57\t19\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:28:09Z\tdocs/ja/specdojo/templates/pm-organization-template.md\t1\tpassed\t105\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:30:30Z\tdocs/ja/specdojo/templates/pm-plan-template.md\t1\tpassed\t139\tneeds-work\t83\t8\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:32:09Z\tdocs/ja/specdojo/templates/pm-quality-management-plan-template.md\t1\tpassed\t97\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:34:13Z\tdocs/ja/specdojo/templates/pm-raci-template.md\t1\tpassed\t123\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:40:04Z\tdocs/ja/specdojo/templates/pm-risk-register-template.md\t1\tpassed\t349\tfail\t64\t17\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:42:02Z\tdocs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md\t1\tpassed\t116\tpass\t97\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-22T20:46:41Z\tdocs/ja/specdojo/templates/prj-charter-template.md\t1\tpassed\t277\tpass\t98\t2\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-d0331abdffa9/attempt-1/command.stdout.log",
+      "bytes": 5210,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-d0331abdffa9/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

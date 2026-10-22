@@ -1,0 +1,54 @@
+
+> specdojo@0.4.2 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-d0331abdffa9 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=15 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-d0331abdffa9
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/templates/pjr-todo-template.md
+document complete: docs/ja/specdojo/templates/pjr-todo-template.md
+document start: docs/ja/specdojo/templates/pjr-views-by-owner-template.md
+document complete: docs/ja/specdojo/templates/pjr-views-by-owner-template.md
+document start: docs/ja/specdojo/templates/pjr-views-by-priority-template.md
+document complete: docs/ja/specdojo/templates/pjr-views-by-priority-template.md
+document start: docs/ja/specdojo/templates/pjr-views-by-status-template.md
+document complete: docs/ja/specdojo/templates/pjr-views-by-status-template.md
+document start: docs/ja/specdojo/templates/pm-change-request-log-template.md
+document complete: docs/ja/specdojo/templates/pm-change-request-log-template.md
+document start: docs/ja/specdojo/templates/pm-communication-plan-template.md
+document complete: docs/ja/specdojo/templates/pm-communication-plan-template.md
+document start: docs/ja/specdojo/templates/pm-decision-log-template.md
+document complete: docs/ja/specdojo/templates/pm-decision-log-template.md
+document start: docs/ja/specdojo/templates/pm-issue-log-template.md
+document complete: docs/ja/specdojo/templates/pm-issue-log-template.md
+document start: docs/ja/specdojo/templates/pm-organization-template.md
+document complete: docs/ja/specdojo/templates/pm-organization-template.md
+document start: docs/ja/specdojo/templates/pm-plan-template.md
+document complete: docs/ja/specdojo/templates/pm-plan-template.md
+document start: docs/ja/specdojo/templates/pm-quality-management-plan-template.md
+document complete: docs/ja/specdojo/templates/pm-quality-management-plan-template.md
+document start: docs/ja/specdojo/templates/pm-raci-template.md
+document complete: docs/ja/specdojo/templates/pm-raci-template.md
+document start: docs/ja/specdojo/templates/pm-risk-register-template.md
+document complete: docs/ja/specdojo/templates/pm-risk-register-template.md
+document start: docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md
+document complete: docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md
+document start: docs/ja/specdojo/templates/prj-charter-template.md
+document complete: docs/ja/specdojo/templates/prj-charter-template.md
+grade pipeline complete: selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-d0331abdffa9/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-22T20:05:41Z	docs/ja/specdojo/templates/pjr-todo-template.md	1	passed	275	pass	100	0	agy-expert-executor	machine	none		
+2026-10-22T20:08:10Z	docs/ja/specdojo/templates/pjr-views-by-owner-template.md	1	passed	147	pass	100	0	agy-expert-executor	machine	none		
+2026-10-22T20:10:05Z	docs/ja/specdojo/templates/pjr-views-by-priority-template.md	1	passed	113	pass	100	0	agy-expert-executor	machine	none		
+2026-10-22T20:12:39Z	docs/ja/specdojo/templates/pjr-views-by-status-template.md	1	passed	152	needs-work	88	5	agy-expert-executor	machine	none		
+2026-10-22T20:18:30Z	docs/ja/specdojo/templates/pm-change-request-log-template.md	1	passed	349	needs-work	87	3	agy-expert-executor	machine	none		
+2026-10-22T20:21:08Z	docs/ja/specdojo/templates/pm-communication-plan-template.md	1	passed	156	pass	100	0	agy-expert-executor	machine	none		
+2026-10-22T20:23:21Z	docs/ja/specdojo/templates/pm-decision-log-template.md	1	passed	132	needs-work	88	3	agy-expert-executor	machine	none		
+2026-10-22T20:26:22Z	docs/ja/specdojo/templates/pm-issue-log-template.md	1	passed	180	fail	57	19	agy-expert-executor	machine	none		
+2026-10-22T20:28:09Z	docs/ja/specdojo/templates/pm-organization-template.md	1	passed	105	pass	100	0	agy-expert-executor	machine	none		
+2026-10-22T20:30:30Z	docs/ja/specdojo/templates/pm-plan-template.md	1	passed	139	needs-work	83	8	agy-expert-executor	machine	none		
+2026-10-22T20:32:09Z	docs/ja/specdojo/templates/pm-quality-management-plan-template.md	1	passed	97	pass	100	0	agy-expert-executor	machine	none		
+2026-10-22T20:34:13Z	docs/ja/specdojo/templates/pm-raci-template.md	1	passed	123	pass	100	0	agy-expert-executor	machine	none		
+2026-10-22T20:40:04Z	docs/ja/specdojo/templates/pm-risk-register-template.md	1	passed	349	fail	64	17	agy-expert-executor	machine	none		
+2026-10-22T20:42:02Z	docs/ja/specdojo/templates/prj-assumptions-constraints-dependencies-template.md	1	passed	116	pass	97	2	agy-expert-executor	machine	none		
+2026-10-22T20:46:41Z	docs/ja/specdojo/templates/prj-charter-template.md	1	passed	277	pass	98	2	agy-expert-executor	machine	none		

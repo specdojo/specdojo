@@ -3,34 +3,80 @@ version: 1
 document: specdojo:pm-issue-log-template
 path: docs/ja/specdojo/templates/pm-issue-log-template.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
-score: 59
-graded_at: "2026-09-10T15:32:17.642Z"
-graded_by: gemma-expert-executor
+score: 57
+graded_at: "2026-10-22T20:25:45.889Z"
+graded_by: flash-high-executor
 content_hash: a4bcfc2b5eaca28b2e580996cd317272ecb2f549df3642c99665fd90d661710a
 categories:
-  consistency:
-    score: 13
+  purpose:
+    score: 50
+  operations:
+    score: 81
+  planning:
+    score: 50
+  business:
+    score: 50
+  architecture:
+    score: 92
   usability:
     score: 75
-  architecture:
-    score: 100
+  implementation:
+    score: 75
   quality:
     score: 50
+  consistency:
+    score: 0
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+  vp-po-purpose-alignment:
+    level: 2
+    score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-qe-verifiability:
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
     level: 4
     score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 0
     score: 0
@@ -38,9 +84,18 @@ viewpoints:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 3
+    score: 75
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 3
+    score: 75
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,37 +103,162 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 2
-  major: 3
-  minor: 0
+  major: 14
+  minor: 3
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
+    rule: vp-po-purpose-alignment
     line: 1
-    message: Frontmatter の rulebook ID が `specdojo:pjr-rulebook` となっており, 正しくは `specdojo:pm-issue-log-rulebook` である。
-    anchor: ""
+    anchor: "# 課題ログ"
+    message: >-
+      The template is defined as a generated view from PJR tickets instead of providing an authoring template for
+      tracking materialized issues, deviating from its core purpose.
+    message_ja: このテンプレートは、マテリアライズされた課題を追跡するための作成用テンプレートを提供するのではなく、PJRチケットから生成されたビューとして定義されており、その本来の目的から逸脱しています。
+  - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# 課題ログ"
+    message: >-
+      The template lacks placeholders and guidance for capturing decision points, pending issues, and escalation
+      criteria for PO evaluation.
+    message_ja: このテンプレートには、決定ポイント、保留中の課題、およびPO評価のためのエスカレーション基準を記録するためのプレースホルダーやガイダンスが不足しています。
   - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 1
+    anchor: "# 課題ログ"
+    message: >-
+      The template provides no structure or guidance for task breakdown, role assignments, resolution deadlines, or
+      completion conditions.
+    message_ja: このテンプレートには、タスクの分解、役割の割り当て、解決の期限、または完了条件に関する構造やガイダンスがありません。
+  - id: F004
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# 課題ログ"
+    message: >-
+      The template does not include sections or guidance for identifying dependencies, schedule impact, or links to risk
+      registers.
+    message_ja: このテンプレートには、依存関係、スケジュールの影響、またはリスクレジスターへのリンクを特定するためのセクションやガイダンスが含まれていません。
+  - id: F005
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 1
+    anchor: "# 課題ログ"
+    message: The template lacks fields and sections for progress tracking, status update rules, and reporting escalation paths.
+    message_ja: このテンプレートには、進捗の追跡、ステータス更新のルール、および報告のエスカレーションパスのためのフィールドやセクションが不足しています。
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 1
+    anchor: "# 課題ログ"
+    message: >-
+      The template lacks structure and guidance for recording business impact, risk of inaction, and expected value of
+      issue resolution.
+    message_ja: このテンプレートには、ビジネスへの影響、何もしなかった場合のリスク、および課題解決の期待値を記録するための構造やガイダンスが不足しています。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 1
+    anchor: "# 課題ログ"
+    message: >-
+      The template lacks placeholders and guidance for defining resolution requirements, acceptance criteria, and issue
+      scope.
+    message_ja: このテンプレートには、解決要件、受け入れ基準、および課題の範囲を定義するためのプレースホルダーやガイダンスが不足しています。
+  - id: F008
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 1
+    anchor: "# 課題ログ"
+    message: The template provides no fields or guidance for identifying issue owners, affected stakeholders, or reviewers.
+    message_ja: このテンプレートには、課題のオーナー、影響を受けるステークホルダー、またはレビューアーを特定するためのフィールドやガイダンスがありません。
+  - id: F009
+    severity: minor
+    rule: vp-arc-technical-constraints
+    line: 5
+    anchor: <!-- specdojo:view-slot=table -->
+    message: >-
+      The template relies on a custom slot `＜!— specdojo:view-slot=table —＞` without specifying technical constraints,
+      generator tooling, or syntax rules.
+    message_ja: このテンプレートは、技術的な制約、ジェネレーターのツール、または構文ルールを指定せずに、カスタムスロット `＜!— specdojo:view-slot=table —＞` に依存しています。
+  - id: F010
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 1
+    anchor: "# 課題ログ"
+    message: >-
+      The template fails to provide actionable input fields, schema structure, or placeholders needed to author an issue
+      log.
+    message_ja: このテンプレートは、課題ログを作成するために必要な実行可能な入力フィールド、スキーマ構造、またはプレースホルダーを提供できていません。
+  - id: F011
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    anchor: "# 課題ログ"
+    message: The template lacks verifiable completion conditions and objective pass/fail criteria for resolving issues.
+    message_ja: このテンプレートには、課題を解決するための検証可能な完了条件および客観的な合否基準が不足しています。
+  - id: F012
     severity: blocker
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# 課題ログ"
     message: rulebook で必須とされている 6 つの構成章（概要、課題ログ一覧、優先度と期限、対応計画、進捗レビュー、関連ドキュメント）がすべて欠落している。
-    anchor: ""
-  - id: F005
+    message_ja: rulebook で必須とされている 6 つの構成章（概要、課題ログ一覧、優先度と期限、対応計画、進捗レビュー、関連ドキュメント）がすべて欠落している。
+  - id: F013
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 3
+    anchor: "> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。"
+    message: rulebook で定義された構成を無視し, 自動生成ビューとしての定義となっているため, 作成用テンプレートとしての責務を果たしていない。
+    message_ja: rulebook で定義された構成を無視し, 自動生成ビューとしての定義となっているため, 作成用テンプレートとしての責務を果たしていない。
+  - id: F014
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 課題ログ"
+    message: Frontmatter の rulebook ID が `specdojo:pjr-rulebook` となっており, 正しくは `specdojo:pm-issue-log-rulebook` である。
+    message_ja: Frontmatter の rulebook ID が `specdojo:pjr-rulebook` となっており, 正しくは `specdojo:pm-issue-log-rulebook` である。
+  - id: F015
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 3
+    anchor: "> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。"
+    message: 本文中で文書を「派生ビュー」と定義しているが, 対応する rulebook および sample では手動作成の構造化文書として定義されており, 成果物間の整合性が取れていない。
+    message_ja: 本文中で文書を「派生ビュー」と定義しているが, 対応する rulebook および sample では手動作成の構造化文書として定義されており, 成果物間の整合性が取れていない。
+  - id: F016
     severity: major
     rule: vp-ux-readability
     line: 1
+    anchor: "# 課題ログ"
     message: べきある構成要素や入力ガイド（_TODO_ 等）が一切なく, 初見の読者が rulebook に沿って内容を記述するための手段が提供されていない。
-    anchor: ""
-  - id: F002
+    message_ja: べきある構成要素や入力ガイド（_TODO_ 等）が一切なく, 初見の読者が rulebook に沿って内容を記述するための手段が提供されていない。
+  - id: F017
+    severity: minor
+    rule: vp-ux-language-consistency
+    line: 3
+    anchor: "> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。"
+    message: >-
+      Terminology such as '派生ビュー' and '個票' introduces confusion by departing from the standard issue log vocabulary
+      defined in the rulebook.
+    message_ja: >-
+      Terminology such as '派生ビュー' and '個票' introduces confusion by departing from the standard issue log vocabulary
+      defined in the rulebook.
+  - id: F018
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 11
-    message: 本文中で文書を「派生ビュー」と定義しているが, 対応する rulebook および sample では手動作成の構造化文書として定義されており, 成果物間の整合性が取れていない。
-    anchor: ""
-  - id: F004
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 11
-    message: rulebook で定義された構成を無視し, 自動生成ビューとしての定義となっているため, 作成用テンプレートとしての責務を果たしていない。
-    anchor: ""
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# 課題ログ"
+    message: The template status is marked as 'ready' despite containing critical blocker defects that make it unfit for use.
+    message_ja: このテンプレートは、使用に適さない重大なブロッカーとなる欠陥を含んでいるにもかかわらず、ステータスが 'ready' とマークされています。
+  - id: F019
+    severity: minor
+    rule: vp-ops-operability
+    line: 3
+    anchor: "> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。"
+    message: >-
+      The document notes that it is regenerable, but provides no operational commands or procedures for performing the
+      regeneration.
+    message_ja: このドキュメントには再生成可能である旨が記載されていますが、再生成を実行するための操作コマンドや手順が提供されていません。
