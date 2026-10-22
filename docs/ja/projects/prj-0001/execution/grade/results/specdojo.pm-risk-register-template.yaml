@@ -3,44 +3,99 @@ version: 1
 document: specdojo:pm-risk-register-template
 path: docs/ja/specdojo/templates/pm-risk-register-template.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: fail
 score: 64
-graded_at: "2026-09-11T15:14:28.279Z"
-graded_by: gemma-expert-executor
+graded_at: "2026-10-22T20:39:11.743Z"
+graded_by: flash-high-executor
 content_hash: e04b4e3b5615ddfa2f343c6424141a6be12409808c43a101cee3054ad9d8f25e
 categories:
-  consistency:
-    score: 38
-  usability:
+  purpose:
+    score: 50
+  operations:
     score: 75
+  planning:
+    score: 50
+  business:
+    score: 50
   architecture:
     score: 100
+  usability:
+    score: 83
+  implementation:
+    score: 50
   quality:
     score: 50
+  consistency:
+    score: 50
 viewpoints:
-  vp-arc-cross-document-consistency:
+  vp-po-purpose-alignment:
     level: 2
     score: 50
+  vp-po-decision-readiness:
+    level: 2
+    score: 50
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 2
+    score: 50
+  vp-pm-dependency-risk:
+    level: 2
+    score: 50
+  vp-pm-control-reporting:
+    level: 2
+    score: 50
+  vp-ba-business-value:
+    level: 2
+    score: 50
+  vp-ba-requirements-completeness:
+    level: 2
+    score: 50
+  vp-ba-stakeholder-clarity:
+    level: 2
+    score: 50
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
-  vp-qe-verifiability:
+  vp-dev-implementation-readiness:
+    level: 2
+    score: 50
+  vp-dev-change-impact:
+    level: 2
+    score: 50
+  vp-dev-testability:
     level: 4
     score: 100
+  vp-qe-verifiability:
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-kata-conformance:
     level: 0
     score: 0
   vp-ux-readability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 2
+    score: 50
+  vp-ops-operability:
+    level: 2
+    score: 50
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -48,31 +103,148 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 1
-  major: 3
+  major: 16
   minor: 0
   note: 0
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
+    rule: vp-po-purpose-alignment
     line: 1
-    message: Frontmatter の rulebook 指定が specdojo:pjr-rulebook となっており、正しくは specdojo:pm-risk-register-rulebook である。
-    anchor: ""
+    anchor: "# リスク登録簿"
+    message: >-
+      The template references an incorrect rulebook and describes itself as an auto-generated view, failing to align
+      with the purpose of a risk register defined by its parent rulebook.
+    message_ja: このテンプレートは誤ったルールブックを参照しており、自身を自動生成されたビューとして記述しています。そのため、親となるルールブックで定義されたリスクレジスターの目的に適合していません。
   - id: F002
+    severity: major
+    rule: vp-po-decision-readiness
+    line: 1
+    anchor: "# リスク登録簿"
+    message: >-
+      The template lacks structure and placeholders for risk evaluation criteria, pending items, and impact analysis
+      required for PO decision-making.
+    message_ja: このテンプレートには、POの意思決定に必要なリスク評価基準、保留事項、および影響分析のための構造とプレースホルダーが不足しています。
+  - id: F003
+    severity: major
+    rule: vp-pm-plan-feasibility
+    line: 1
+    anchor: "# リスク登録簿"
+    message: >-
+      The template does not provide fields for actionable mitigation tasks, assigned roles, deadlines, or completion
+      criteria.
+    message_ja: このテンプレートには、実行可能な緩和タスク、割り当てられた役割、期限、または完了基準のためのフィールドが提供されていません。
+  - id: F004
+    severity: major
+    rule: vp-pm-dependency-risk
+    line: 1
+    anchor: "# リスク登録簿"
+    message: >-
+      The template fails to provide sections for recording identified risks, dependencies, or impacts on schedules and
+      subsequent deliverables.
+    message_ja: このテンプレートには、特定されたリスク、依存関係、またはスケジュールやその後の成果物への影響を記録するためのセクションがありません。
+  - id: F005
+    severity: major
+    rule: vp-pm-control-reporting
+    line: 1
+    anchor: "# リスク登録簿"
+    message: >-
+      The template lacks sections for monitoring cycles, reporting triggers, and explicit linkages to related documents
+      like pm-issue-log.
+    message_ja: >-
+      The template lacks sections for monitoring cycles, reporting triggers, and explicit linkages to related documents
+      like pm-issue-log.
+  - id: F006
+    severity: major
+    rule: vp-ba-business-value
+    line: 1
+    anchor: "# リスク登録簿"
+    message: The template lacks placeholders to describe the business context, target risks, and expected mitigation value.
+    message_ja: このテンプレートには、ビジネスコンテキスト、対象となるリスク、および期待される緩和価値を記述するためのプレースホルダーが不足しています。
+  - id: F007
+    severity: major
+    rule: vp-ba-requirements-completeness
+    line: 1
+    anchor: "# リスク登録簿"
+    message: >-
+      The template does not provide the required sections to capture complete risk requirements, scope, and acceptance
+      criteria.
+    message_ja: このテンプレートには、完全なリスク要件、スコープ、および受け入れ基準を捉えるために必要なセクションが提供されていません。
+  - id: F008
+    severity: major
+    rule: vp-ba-stakeholder-clarity
+    line: 1
+    anchor: "# リスク登録簿"
+    message: The template lacks placeholders and table columns to specify responsible roles, stakeholders, and reviewers.
+    message_ja: このテンプレートには、責任ある役割、ステークホルダー、およびレビュアーを指定するためのプレースホルダーとテーブルの列が不足しています。
+  - id: F009
+    severity: major
+    rule: vp-dev-implementation-readiness
+    line: 1
+    anchor: "# リスク登録簿"
+    message: >-
+      The template does not provide the necessary input fields, table templates, or authoring structure required for
+      implementation.
+    message_ja: このテンプレートには、実装に必要な入力フィールド、テーブルテンプレート、または作成構造が提供されていません。
+  - id: F010
+    severity: major
+    rule: vp-dev-change-impact
+    line: 1
+    anchor: "# リスク登録簿"
+    message: >-
+      The template incorrectly specifies derivation from individual PJR files, causing severe confusion regarding build
+      processes and deliverable dependencies.
+    message_ja: このテンプレートは、個別のPJRファイルからの派生を誤って指定しており、ビルドプロセスと成果物の依存関係に関する重大な混乱を招いています。
+  - id: F011
+    severity: major
+    rule: vp-qe-verifiability
+    line: 1
+    anchor: "# リスク登録簿"
+    message: >-
+      The template lacks evaluation criteria and completion condition structures, preventing verifiable pass/fail
+      assessments for risks.
+    message_ja: このテンプレートには評価基準と完了条件の構造が不足しており、リスクの検証可能な合否判定ができません。
+  - id: F012
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
+    anchor: "# リスク登録簿"
     message: rulebook で定義された必須本文構成（概要〜関連ドキュメント）がすべて欠落している。
-    anchor: ""
-  - id: F004
+    message_ja: rulebook で定義された必須本文構成（概要〜関連ドキュメント）がすべて欠落している。
+  - id: F013
+    severity: blocker
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# リスク登録簿"
+    message: ルールブックでは手動作成の文書構成を定義しているが、本テンプレートは自動生成ビューとして定義されており、責務が根本的に矛盾している。
+    message_ja: ルールブックでは手動作成の文書構成を定義しているが、本テンプレートは自動生成ビューとして定義されており、責務が根本的に矛盾している。
+  - id: F014
+    severity: major
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# リスク登録簿"
+    message: Frontmatter の rulebook 指定が specdojo:pjr-rulebook となっており、正しくは specdojo:pm-risk-register-rulebook である。
+    message_ja: Frontmatter の rulebook 指定が specdojo:pjr-rulebook となっており、正しくは specdojo:pm-risk-register-rulebook である。
+  - id: F015
     severity: major
     rule: vp-ux-readability
     line: 1
+    anchor: "# リスク登録簿"
     message: ルールブックに定義されたリスク登録簿としての構造を持たず、実務上のテンプレートとして機能していない。
-    anchor: ""
-  - id: F003
-    severity: blocker
-    rule: vp-qe-kata-conformance
-    line: 7
-    message: ルールブックでは手動作成の文書構成を定義しているが、本テンプレートは自動生成ビューとして定義されており、責務が根本的に矛盾している。
-    anchor: ""
+    message_ja: ルールブックに定義されたリスク登録簿としての構造を持たず、実務上のテンプレートとして機能していない。
+  - id: F016
+    severity: major
+    rule: vp-ops-release-readiness
+    line: 1
+    anchor: "# リスク登録簿"
+    message: The template is marked as ready in its frontmatter despite containing unresolved blocker and major issues.
+    message_ja: このテンプレートは、未解決のブロッカーや重大な問題を抱えているにもかかわらず、フロントマターで ready とマークされています。
+  - id: F017
+    severity: major
+    rule: vp-ops-operability
+    line: 1
+    anchor: "# リスク登録簿"
+    message: >-
+      The template claims to be regenerable from individual PJR files, but no regeneration mechanism or operational
+      workflow is provided.
+    message_ja: このテンプレートは個別のPJRファイルから再生成可能であると主張していますが、再生成のメカニズムや運用ワークフローは提供されていません。

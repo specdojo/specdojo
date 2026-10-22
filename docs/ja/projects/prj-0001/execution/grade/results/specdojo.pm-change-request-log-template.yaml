@@ -3,29 +3,75 @@ version: 1
 document: specdojo:pm-change-request-log-template
 path: docs/ja/specdojo/templates/pm-change-request-log-template.md
 target: kata
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 81
-graded_at: "2026-09-10T07:44:04.973Z"
-graded_by: gemma-expert-executor
+score: 87
+graded_at: "2026-10-22T20:18:28.331Z"
+graded_by: flash-high-executor
 content_hash: 299496596264acadbe5a362a6ecab73a4e2e4695505402a98048dccd5502e288
 categories:
-  consistency:
-    score: 50
-  usability:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
     score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
     score: 75
-viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
+  consistency:
     score: 50
+viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-verifiability:
@@ -35,12 +81,21 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 1
+    score: 25
   vp-ux-readability:
     level: 4
     score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:
@@ -54,19 +109,22 @@ finding_counts:
 findings:
   - id: F001
     severity: major
-    rule: vp-arc-cross-document-consistency
-    line: 13
-    message: rulebook に指定されている ID が `specdojo:pjr-rulebook` となっており、専用の `specdojo:pm-change-request-log-rulebook` と不整合である。
-    anchor: ""
+    rule: vp-qe-omissions-consistency
+    line: 5
+    anchor: <!-- specdojo:view-slot=table -->
+    message: ルールブックで定義されている必須 6 章（概要〜関連ドキュメント）が不足しており、表スロットのみの構成となっているため、標準構成と矛盾している。
+    message_ja: ルールブックで定義されている必須 6 章（概要〜関連ドキュメント）が不足しており、表スロットのみの構成となっているため、標準構成と矛盾している。
   - id: F002
     severity: major
-    rule: vp-qe-omissions-consistency
-    line: 44
-    message: ルールブックで定義されている必須 6 章（概要〜関連ドキュメント）が不足しており、表スロットのみの構成となっているため、標準構成と矛盾している。
-    anchor: ""
+    rule: vp-qe-kata-conformance
+    line: 1
+    anchor: "# 変更要求ログ"
+    message: rulebook に指定されている ID が `specdojo:pjr-rulebook` となっており、専用の `specdojo:pm-change-request-log-rulebook` と不整合である。
+    message_ja: rulebook に指定されている ID が `specdojo:pjr-rulebook` となっており、専用の `specdojo:pm-change-request-log-rulebook` と不整合である。
   - id: F003
     severity: major
     rule: vp-qe-kata-conformance
-    line: 42
+    line: 3
+    anchor: "> このファイルは各 `pjr-XXXX-<topic>.md`（個票）から生成された派生ビューです。正本は個票の Frontmatter であり、このファイルは再生成可能です。"
     message: 本テンプレートが前提とする「個票からの派生ビュー（生成物）」という性質が、ルールブックで定義されている手動作成ルールと矛盾している。
-    anchor: ""
+    message_ja: 本テンプレートが前提とする「個票からの派生ビュー（生成物）」という性質が、ルールブックで定義されている手動作成ルールと矛盾している。
