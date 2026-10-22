@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_23c83fdb58fb4191b6d4c276ba94eb5c
+  ts: "2026-10-22T22:18:08Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Mermaid の既定のレイアウトを ELK に切り替え、図の絵文字の文字化けを直す
+    - field: description
+      from: ""
+      to: Mermaid 12 で ELK が同梱され既定になったが、docs-site の mermaid-config.json が dagre を明示している。ELK に切り替え、ノードの絵文字が文字化けする問題を直す。中心に集める図の描き方（architecture 図）も docs の書き方の文書に書く
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-23"
+    - field: due
+      from: ""
+      to: _TODO_
