@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_81974b72a3154b41abbf5bff74472555
+- v: 1
+  id: reg_92a0e0948f9e4b3a8819a0a26d66d191
+  ts: "2026-10-22T14:10:24Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが章立てと主な節のコマンドを確かめ、docs:build が通ること、章の参照が新しい見出しと合うことを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: Quick Start に register のユースケース別の章（13 節）を置き、カタログと schedule、worktree、routine を発展として後ろに回した。各節に、こんなとき・チャットでの頼み方・そのまま打てるコマンドをそろえた
+  previous_event_id: reg_a965647ebd6544b3803061b122367e24

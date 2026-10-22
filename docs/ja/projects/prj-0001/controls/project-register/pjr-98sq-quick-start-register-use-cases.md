@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-98sq-quick-start-register-use-cases
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-22T13:18:07Z"
+  completed_at: "2026-10-22T14:10:24Z"
+  conclusion: Quick Start に register のユースケース別の章（13 節）を置き、カタログと schedule、worktree、routine を発展として後ろに回した。各節に、こんなとき・チャットでの頼み方・そのまま打てるコマンドをそろえた
   derived_from:
     - PJR-H72A
 ---
