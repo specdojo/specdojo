@@ -65,6 +65,10 @@ template は、記述する部分を _TODO_ などのプレースホルダとし
 
 要否は初回の `bootstrap` で判断します。`undecided` の型は、必要なら項目を省略したうえで必要な型を成果物と一緒に整備し、不要なら `not-needed` へ更新します。既存の型を廃止する、または `not-needed` を必要へ変更する場合は、成果物の実績・繰り返し発生したレビュー指摘・schema の表現範囲を根拠として rulebook frontmatter の宣言も同時に更新します。
 
+成果物と型を一組で初めて作るときは `bootstrap` を使います。成果物がすでにあり、そこから再利用可能な型だけを新しく起こすとき、または手本なしで型だけを作るときは `rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` を使います。authoring では手本の成果物本文を変更せず、該当参照が `undecided` または未記入の場合だけ新しい kata ID へ更新します。
+
+利用者が作る kata はリポジトリ単位の `kata_authority` を使い、`docs/ja/kata/{rulebooks,recipes,samples,templates}/` に置きます。`specdojo:` は SpecDojo 本体専用であり、利用者リポジトリでは新規作成できません。これにより、同じリポジトリの複数 project で型を共有しながら、将来追加される同名の同梱 kata と衝突しません。
+
 `kind: generated` の成果物には実践の型を適用しません。成果物ごとの型宣言は置かず、`kind` から非適用を導出します。rulebook を持たない成果物は成果物カタログの `rulebook: not-needed` で表します。
 
 ## 3. 進め方（approach）との参照分担

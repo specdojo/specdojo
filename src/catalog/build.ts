@@ -10,7 +10,7 @@ import type {
   DctValidationResult,
 } from "./types.js";
 import { isDctCatalogFileName } from "./types.js";
-import { declaredIncludes, declaredKata } from "../kata/kata.js";
+import { declaredIncludes, declaredKata, resolveKataDocumentPathIfExists } from "../kata/kata.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { flattenTemplateFrontmatter } from "../docs/template-frontmatter.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
@@ -25,7 +25,6 @@ import {
   resolveSpecdojoPath,
   resolveSpecdojoPathIfExists,
   specdojoDirectoryPaths,
-  specdojoResourceCandidates,
 } from "../docs/template-resolution.js";
 
 type CatalogKataKind = "rulebook" | "recipe" | "sample" | "template";
@@ -40,14 +39,12 @@ const CATALOG_KATA_DIRS: Record<CatalogKataKind, string> = {
 };
 
 function declaredKataCandidates(repoRoot: string, kind: CatalogKataKind, id: string): string[] {
-  const localId = id.includes(":") ? id.split(":").slice(1).join(":") : id;
   const extensions = kind === "rulebook" || kind === "recipe" ? ["md"] : ["md", "yaml", "json"];
-  return extensions.map((extension) => {
-    const relativePath = `docs/ja/specdojo/${CATALOG_KATA_DIRS[kind]}/${localId}.${extension}`;
-    return (
-      resolveSpecdojoPathIfExists(relativePath, { repositoryRoot: repoRoot }) ??
-      specdojoResourceCandidates(relativePath, { repositoryRoot: repoRoot }).repositoryPath
-    );
+  return extensions.flatMap((extension) => {
+    const resolved = resolveKataDocumentPathIfExists(kind, id, extension, {
+      repositoryRoot: repoRoot,
+    });
+    return resolved ? [resolved] : [];
   });
 }
 

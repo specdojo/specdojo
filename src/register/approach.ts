@@ -7,6 +7,7 @@ import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { getProjectCatalogPath, loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
 import { APPROACHES, type Approach } from "../shared/agent-types.js";
 import { load } from "../shared/yaml.js";
+import { assertAuthorableKataId, authoredKataExists, authoringKind } from "../kata/authoring.js";
 
 const MAINTENANCE_TARGET_KIND: Partial<Record<Approach, string>> = {
   "rulebook-maintenance": "rulebook",
@@ -98,10 +99,14 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
       );
     }
     approach = approachText as Approach;
-    if (targets.length !== 1) {
+    const kind = authoringKind(approach);
+    if (!kind && targets.length !== 1) {
       throw new Error(
         `Approach "${approach}" requires exactly one --target doc id (received ${targets.length})`,
       );
+    }
+    if (kind && targets.length < 1) {
+      throw new Error(`Approach "${approach}" requires the new kata id as the first --target`);
     }
   }
 
@@ -113,6 +118,39 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
     for (const target of targets) {
       if (!entries[target]) {
         throw new Error(`Target document id is not resolvable via the document index: ${target}`);
+      }
+    }
+    return;
+  }
+
+  const authoringTargetKind = authoringKind(approach);
+  if (authoringTargetKind) {
+    const [kataId, ...exampleIds] = targets;
+    if (!kataId) {
+      throw new Error(`Approach "${approach}" requires the new kata id as the first --target`);
+    }
+    assertAuthorableKataId(kataId, authoringTargetKind, opts.repoRoot);
+    if (entries[kataId] || authoredKataExists(kataId, opts.repoRoot)) {
+      throw new Error(
+        `Kata id ${kataId} already exists; use ${authoringTargetKind}-maintenance instead`,
+      );
+    }
+    if (exampleIds.length === 0) return;
+    if (!opts.catalogPath) {
+      throw new Error(
+        `Approach "${approach}" requires catalog_path to resolve exemplar deliverables`,
+      );
+    }
+    const deliverableDocIds = catalogDeliverableDocIds(
+      opts.catalogPath,
+      opts.repoRoot,
+      opts.projectId,
+    );
+    for (const exampleId of exampleIds) {
+      if (!deliverableDocIds.has(exampleId)) {
+        throw new Error(
+          `Approach "${approach}" requires every --target after the first to be a catalog deliverable, but ${exampleId} is not one`,
+        );
       }
     }
     return;

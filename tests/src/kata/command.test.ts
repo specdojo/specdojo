@@ -150,6 +150,37 @@ describe("kata commands", () => {
     );
   });
 
+  it("lists and shows only this repository authority from docs/ja/kata", () => {
+    writeAt(
+      repositoryRoot,
+      ".specdojo/specdojo.config.json",
+      JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
+    );
+    const localPath = writeAt(
+      repositoryRoot,
+      "docs/ja/kata/rulebooks/payment-rulebook.md",
+      markdown("customer:payment-rulebook", "customer"),
+    );
+    writeAt(
+      repositoryRoot,
+      "docs/ja/kata/rulebooks/foreign-rulebook.md",
+      markdown("foreign:foreign-rulebook", "foreign"),
+    );
+    writeAt(
+      repositoryRoot,
+      "docs/ja/specdojo/rulebooks/misplaced-rulebook.md",
+      markdown("customer:misplaced-rulebook", "misplaced"),
+    );
+
+    const resources = listKataResources({ roots: roots() });
+    expect(resources.map((resource) => resource.id)).toContain("customer:payment-rulebook");
+    expect(resources.map((resource) => resource.id)).not.toContain("foreign:foreign-rulebook");
+    expect(resources.map((resource) => resource.id)).not.toContain("customer:misplaced-rulebook");
+    expect(findKataResource("customer:payment-rulebook", { roots: roots() }).resolvedPath).toBe(
+      localPath,
+    );
+  });
+
   it("reports same, modified, and package-missing ejected files", () => {
     const same = markdown("specdojo:same-rulebook");
     writeAt(packageRoot, "docs/ja/specdojo/rulebooks/same-rulebook.md", same);

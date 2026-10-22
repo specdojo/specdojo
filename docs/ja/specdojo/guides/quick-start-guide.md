@@ -336,7 +336,7 @@ npx specdojo config init
 
 `specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形は register だけを使える最小構成であり、project パスはリポジトリルートを基準とし、`run.worktree_base` はディレクトリ名から作る `../<リポジトリ名>-worktrees` を指します。例えば `app1-specdojo/` では `../app1-specdojo-worktrees` です。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。catalog、schedule、exec へ進むときに追加するキーと既定値は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] で確認できます。
 
-プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書と SpecDojo の型（Kata）は `app1-specdojo/docs/ja/projects/` と `app1-specdojo/docs/ja/specdojo/` に置きます。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
+プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書は `app1-specdojo/docs/ja/projects/` に置きます。同梱の SpecDojo の型（Kata）は `app1-specdojo/docs/ja/specdojo/`、このリポジトリで新しく作る kata は `app1-specdojo/docs/ja/kata/` から解決します。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
 
 成果物と実装を常に同じ変更・履歴として扱う場合に限り、**同一リポジトリ構成**としてプロダクトリポジトリのルートで同じ初期化手順を実行できます。CLI は構成を強制しません。
 
@@ -631,7 +631,30 @@ npx specdojo exec run \
 
 ほかの kata を直す場合は、表に従って `--approach` を置き換えます。`--target` には文書索引で解決でき、approach の種別と一致する kata の doc id を 1 件だけ指定します。
 
-### 3.9. 統合後にreviewのagentへ確かめさせる
+### 3.9. 既存成果物からkataを新しく作る
+
+**こんなとき:** 成果物は既にあり、その実績を手本に rulebook など 1 種類の kata だけを新しく作りたいとき。
+
+```bash
+# チャット:「成果物 <deliverable-doc-id> を手本に <kata-id> の rulebook を新しく作る todo を起票して、agent に任せて」
+npx specdojo register add \
+  --project <project-id> \
+  --type todo \
+  --title "既存成果物からrulebookを作る" \
+  --topic author-rulebook \
+  --difficulty hard \
+  --approach rulebook-authoring \
+  --target <kata-authority>:<name>-rulebook \
+  --target <deliverable-doc-id>
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree
+```
+
+1 件目の `--target` は新しい kata ID、2 件目以降は任意の手本成果物です。成果物も型もまだない初期立ち上げには `bootstrap` を使います。手本なしで kata だけを作る場合は 2 件目以降を省略します。recipe / sample / template では `approach` と ID の末尾を同じ種類へ置き換えます。
+
+### 3.10. 統合後にreviewのagentへ確かめさせる
 
 **こんなとき:** worktree の成果を統合した後、完了条件・result・差分・検証結果を別の review agent に照合させたいとき。
 
@@ -646,7 +669,7 @@ npx specdojo exec run \
 
 `--post-review` は worktree 実行でだけ使えます。todo と issue は判定が `complete` または `complete-with-findings` なら自動 close され、`incomplete` なら `waiting` に戻ります。question、decision、および SpecDojo 自身のコードを変えた項目は自動 close されません。
 
-### 3.10. 夜の間に流す
+### 3.11. 夜の間に流す
 
 **こんなとき:** 人が内容と完了条件を確認した todo・issue だけを、夜間に worktree と post-review 付きでまとめて流したいとき。
 
@@ -668,7 +691,7 @@ npx specdojo orchestrator night \
 
 夜間 queue に入るのは `autopilot: approved` の付いた `open` の todo と issue だけです。まず対象を確認する場合は、`orchestrator night` に `--dry-run` を付けます。朝の報告には close、`waiting`、失敗した項目がまとめられます。
 
-### 3.11. 止まった項目を再開する
+### 3.12. 止まった項目を再開する
 
 **こんなとき:** register の worktree 実行が agent、検証、reporter、統合の途中で止まり、残っている成果を生かして続けるか、破棄して最初からやり直したいとき。
 
@@ -704,7 +727,7 @@ npx specdojo exec run \
 
 `--force-restart` は未統合の成果を破棄します。先に evidence と agent のログを確認し、再利用しないと判断した場合だけ指定します。
 
-### 3.12. 別のproject・別のリポジトリへ起票する
+### 3.13. 別のproject・別のリポジトリへ起票する
 
 **こんなとき:** 作業中の気づきが別 project の責務であり、その project の登録簿と統合ブランチへ、起票元との関係を残して渡したいとき。
 
@@ -749,7 +772,7 @@ npx specdojo register add \
 
 どちらも別 project への起票では `--commit` が必須です。別リポジトリでは、相手に SpecDojo 0.4.2 以上と対象 project の統合ブランチが必要です。push は行わず、close などの状態遷移は対象 project の作業ツリーで行います。
 
-### 3.13. issueからdecision、todo、成果物カタログへ進む
+### 3.14. issueからdecision、todo、成果物カタログへ進む
 
 プロジェクト立ち上げ時に、問題、判断、実施作業がまだ混在している場合は、次の順で具体化します。この流れは register の履歴を、発展手順の成果物カタログと Schedule へつなぐ橋渡しです。
 

@@ -9,11 +9,11 @@ specdojo:
 
 Rulebook Authoring Standard
 
-`docs/ja/specdojo/rulebooks/` 配下の各 `*-rulebook.md` が従うべき章立て・記述ルール・Frontmatter 規約・禁止事項・運用ルールを定義します。Frontmatter の共通原則は [document-metadata-standard.md](document-metadata-standard.md) に従い、機械検証は参照スキーマに従います。
+`docs/ja/specdojo/rulebooks/` と `docs/ja/kata/rulebooks/` 配下の各 `*-rulebook.md` が従うべき章立て・記述ルール・Frontmatter 規約・禁止事項・運用ルールを定義します。Frontmatter の共通原則は [document-metadata-standard.md](document-metadata-standard.md) に従い、機械検証は参照スキーマに従います。
 
 ## 1. 適用範囲
 
-- 対象: `docs/ja/specdojo/rulebooks/` 配下のすべての `*-rulebook.md`
+- 対象: `docs/ja/specdojo/rulebooks/` と `docs/ja/kata/rulebooks/` 配下のすべての `*-rulebook.md`
 - 目的: 章構成・見出しレベル・記述品質・Frontmatter を統一し、参照・保守を容易にする
 - Frontmatter 共通原則: [document-metadata-standard.md](document-metadata-standard.md)
 - 参照スキーマ: [rulebook-frontmatter.schema.yaml](../../../specdojo/schemas/v1/rulebook-frontmatter.schema.yaml)
@@ -35,17 +35,17 @@ Rulebook Authoring Standard
 - `id` はauthority、英小文字・数字・ハイフンで構成し、一意にする（正確な制約は参照スキーマに従う）。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 
-| 項目          | 必須 | 説明                                                           |
-| ------------- | ---- | -------------------------------------------------------------- |
-| id            | ○    | `specdojo:<prefix>-rulebook` 形式の一意 ID                     |
-| type          | ○    | `rulebook` 固定                                                |
-| status        | ○    | `draft` / `ready` / `deprecated`                               |
-| target_format | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`） |
-| recipe        | 任意 | 対応する recipe の完全 ID、`undecided`、`not-needed`           |
-| sample        | 任意 | 対応する sample の完全 ID または ID 配列、上記2状態            |
-| template      | 任意 | 対応する template の完全 ID、`undecided`、`not-needed`         |
-| based_on      | 任意 | 上位規約や根拠ドキュメント                                     |
-| supersedes    | 任意 | 置き換え関係                                                   |
+| 項目          | 必須 | 説明                                                                                                 |
+| ------------- | ---- | ---------------------------------------------------------------------------------------------------- |
+| id            | ○    | 同梱は `specdojo:<prefix>-rulebook`、利用者作成は `<kata_authority>:<prefix>-rulebook` 形式の一意 ID |
+| type          | ○    | `rulebook` 固定                                                                                      |
+| status        | ○    | `draft` / `ready` / `deprecated`                                                                     |
+| target_format | 任意 | 対象ドキュメントのフォーマット（`yaml` / `json` / `markdown`）                                       |
+| recipe        | 任意 | 対応する recipe の完全 ID、`undecided`、`not-needed`                                                 |
+| sample        | 任意 | 対応する sample の完全 ID または ID 配列、上記2状態                                                  |
+| template      | 任意 | 対応する template の完全 ID、`undecided`、`not-needed`                                               |
+| based_on      | 任意 | 上位規約や根拠ドキュメント                                                                           |
+| supersedes    | 任意 | 置き換え関係                                                                                         |
 
 - `target_format` が未記載の場合は markdown を対象とみなす。
 - `recipe` / `sample` / `template` は要否と所在の正本であり、`undecided` は要否未判断、項目省略は必要だが未整備、完全 ID は必要かつ整備済み、`not-needed` は不要を表す。

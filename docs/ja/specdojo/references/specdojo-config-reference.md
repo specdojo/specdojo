@@ -57,10 +57,13 @@ SpecDojo Configuration Reference
 | `version`            | 必須 | なし。現行値は `1`                     | 設定形式のバージョンです。すべての config 利用コマンドが検証します。                                        |
 | `current_project`    | 任意 | コマンドにより `projects` の先頭を使用 | `--project` と `SPECDOJO_PROJECT` を省略したときの対象 project です。                                       |
 | `agent_members_path` | 任意 | `.specdojo/agent-members.yaml`         | 全 project が共有する保護済み agent 定義です。`.specdojo/` 配下の YAML だけを指定できます。                 |
+| `kata_authority`     | 任意 | リポジトリのディレクトリ名             | 利用者が新しく作る kata のリポジトリ単位の authority です。英小文字・数字・ハイフンで指定します。           |
 | `projects`           | 必須 | なし                                   | project ID をキー、project 設定を値とするオブジェクトです。複数 project を1ファイルで扱えます。             |
 | `external_projects`  | 任意 | なし                                   | 別リポジトリの project をローカルの別名で宣言します。`register add` と `orchestrator launch` が使用します。 |
 
 対象 project の一般的な解決順序は、`--project <id>`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭です。一部のコマンドは `current_project` を参照せず `projects` の先頭へフォールバックするため、複数 project では `--project` を明示してください。
+
+`kata_authority` は project ごとではなくリポジトリ全体で共有します。省略時は元リポジトリのディレクトリ名を小文字・ハイフン形式へ正規化した値です。worktree でも元リポジトリの名前を使います。利用者の kata は `docs/ja/kata/` 配下に置かれ、この authority の ID だけを利用者リポジトリから解決します。値は英小文字から始め、英小文字・数字・ハイフンだけを使います。project ID と区別するため `prj-` で始めず、SpecDojo 本体専用の `specdojo` も使いません。
 
 ### 2.1. `external_projects`のキー
 

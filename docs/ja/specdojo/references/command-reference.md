@@ -146,7 +146,7 @@ specdojo config scaffold --workspace --force
 
 ### 2.1. kata
 
-`kata` は、利用リポジトリで上書きした型（Kata）と npm package から参照中の型を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。
+`kata` は、利用リポジトリで作成・上書きした型（Kata）と npm package から参照中の型を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。`kata_authority` の kata は `docs/ja/kata/` からだけ解決し、`kata list` と `kata show` にも表示します。
 
 | コマンド         | 用途                                                    | 例                                               |
 | ---------------- | ------------------------------------------------------- | ------------------------------------------------ |
@@ -408,7 +408,7 @@ specdojo schedule strategy generate \
 
 `register` の `--by` は、project の `pm-members.yaml` にある人の nickname、`.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` だけを受け付けます。agent alias は実体名で event に記録し、未知の値は書き込み前に拒否します。省略時は `SpecDojo` です。決定・承認では `PO` などの Role code や予約 actor ではなく、本人の nickname を指定します。
 
-`--approach` を指定する場合、`--target` は 1 件だけ必須です。成果物を作成・修正する approach の対象は成果物カタログの doc id で解決するため、まだ文書がない成果物も指定できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。
+`--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は成果物カタログの doc id で解決するため、まだ文書がない成果物も指定できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring だけは、1 件目を新しい kata ID、2 件目以降を任意の手本成果物 ID とします。
 
 `item_type: note` は `open` のまま更新する記録です。`register close` / `register reject` / `register defer` は終了コード 1 で拒否し、対応・回答・判断が必要な場合は `todo` / `question` / `decision` など目的に合う別の `item_type` で起票するよう案内します。本文の追記や修正には `register update` を使用できます。
 
@@ -420,7 +420,9 @@ specdojo schedule strategy generate \
 
 `external_projects` に宣言した別名を `register add --project <別名> --commit` へ渡すと、相手のリポジトリの `node_modules/.bin/specdojo` を起動し、宣言した実 project ID で起票します。相手の登録簿の形式、名簿、`integration_branch`、commit は相手の CLI に任せ、呼び出し元は相手のファイルを直接変更しません。`--from <別名>:PJR-XXXX` は相手へ `<実 project ID>:PJR-XXXX` として渡すため、相手の CLI が存在を検証し、`derived_from` にも実 project ID が残ります。
 
-`register add --approach <approach> --target <doc-id>` は、個票 Frontmatter に進め方と対象を書きます。`approach` を指定すると対象は 1 件だけ必須です。成果物を作成・修正する進め方は成果物カタログにある文書を、`rulebook-maintenance` などの保守の進め方は名前に対応する kata 種別を対象にします。文書索引で解決できない ID、対象種別の不一致、複数対象との組み合わせは書き込み前に拒否します。`approach` を指定しない `--target` は複数回指定でき、従来どおり変更網羅検証の対象宣言として使えます。`register update` でも同じ検証を行います。
+`register add --approach <approach> --target <doc-id>` は、個票 Frontmatter に進め方と対象を書きます。成果物を作成・修正する進め方は成果物カタログにある文書を、`rulebook-maintenance` などの保守の進め方は名前に対応する kata 種別を対象にし、対象は 1 件だけです。`rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` は、1 件目を新しい kata ID、2 件目以降を手本にするカタログ成果物 ID とします。新しい ID の authority、種類別の末尾、既存 ID との重複、手本の存在を起票時と実行時に検証します。既存 ID には対応する `*-maintenance` を使います。手本の該当参照が `undecided` または未記入なら同じ実行で新 ID へ更新し、別 ID または `not-needed` なら上書きせず result へ申し送ります。`approach` を指定しない `--target` は複数回指定でき、従来どおり変更網羅検証の対象宣言として使えます。`register update` でも同じ検証を行います。
+
+kata authoring は register 専用です。Schedule の task は対象成果物を起点にするため、「新しい kata ID + 0 件以上の手本」という target 契約を損なわずに表現できません。strategy の phase に指定した場合は plan 生成時に停止します。
 
 記帳系コマンドの `--commit` は、register の worktree 実行と同じ project の `register lifecycle` 枠を取得してから、記帳、`register build` 相当の検証・派生ビュー再生成、pathspec を限定した commit を行います。commit 対象はコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの変更を含めません。対象個票・event・参照文書に開始前の未 commit 変更がある場合は、既存差分との混在を避けるため記帳前に停止します。既定件名は `docs(register PJR-XXXX): <command> <title>` で、`-m` / `--message` により上書きできます。`--dry-run --commit` は変更予定だけを表示し、枠の取得と commit は行いません。
 

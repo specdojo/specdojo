@@ -87,6 +87,8 @@ phase_sets:
 
 `approach` の値ごとの意味と、rulebook / recipe / sample / template の参照方針は [実践の進め方ガイド](ryu-guide.md) を参照します。
 
+`*-authoring` は register の `--target` 順序で新規 kata ID と手本を表すため、Schedule の phase では使用できません。strategy に指定すると plan 生成時に停止します。
+
 pipeline では `agent_pipeline.stages` を `executor`、`reporter` の順に定義します。各 stage は `stage_role` と任意の `capabilities` / `proficiency` を持ちます。特定 member を使う phase は、これと併せて `agent.executor` / `agent.reporter` を指定します。pipeline の構造例は [Schedule設計ガイド](schedule-design-guide.md) の `executor / reporter pipeline` を参照してください。
 
 解決順序は `--executor-by` / `--reporter-by`、phase の `agent`、`capabilities` / `proficiency` / `priority` による自動選択です。CLI は緊急の差し替えに使います。指定した member は対応する `stage_role` を持つ必要があり、`schedule build` が phase の nickname と role を検証します。従来の単一 agent タスクでは stage override を使用できません。

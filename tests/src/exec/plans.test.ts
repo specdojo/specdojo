@@ -204,19 +204,23 @@ describe("parsePlanTaskIdentity", () => {
     ].join("\n");
   }
 
-  it.each(["bootstrap", "retrofit", "finalize", "bootstrap-finalize", "fully-guided"])(
-    "approach %s を frontmatter から復元する",
-    (approach) => {
-      const identity = parsePlanTaskIdentity(planWithApproach(approach));
+  it.each([
+    "bootstrap",
+    "rulebook-authoring",
+    "retrofit",
+    "finalize",
+    "bootstrap-finalize",
+    "fully-guided",
+  ])("approach %s を frontmatter から復元する", (approach) => {
+    const identity = parsePlanTaskIdentity(planWithApproach(approach));
 
-      expect(identity).toEqual({
-        taskId: "T-TEST-overview-010",
-        mode: "edit",
-        projectId: "test",
-        approach,
-      });
-    },
-  );
+    expect(identity).toEqual({
+      taskId: "T-TEST-overview-010",
+      mode: "edit",
+      projectId: "test",
+      approach,
+    });
+  });
 
   it("未知の approach は無視して identity のみ復元する", () => {
     const identity = parsePlanTaskIdentity(planWithApproach("unknown-approach"));
@@ -881,6 +885,33 @@ describe("generateSinglePlan", () => {
       // Sibling plan and index are untouched (single-task generation must not wipe them).
       expect(readFileSync(join(plansDir, "T-TEST-overview-099-plan.md"), "utf8")).toBe("keep me\n");
       expect(readFileSync(join(plansDir, "index.md"), "utf8")).toBe("# existing index\n");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("authoring approach は target 契約を表せない schedule plan では拒否する", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-authoring-schedule-"));
+    const catalogPath = join(root, "catalog");
+    try {
+      writeCatalog(catalogPath);
+      await expect(
+        generateSinglePlan({
+          executionPath: join(root, "execution"),
+          projectId: "test",
+          catalogPath,
+          task: {
+            id: "T-TEST-overview-025",
+            local_id: "overview",
+            name: "rulebook authoring",
+            mode: "edit",
+            approach: "rulebook-authoring",
+            schedule_file: "sch-track-test.yaml",
+            fifo_rank: 0,
+            critical_first_rank: 0,
+          },
+        }),
+      ).rejects.toThrow(/register-only/);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

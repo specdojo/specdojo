@@ -348,7 +348,8 @@ export function gradeFindingTargetPath(
 
 // grade の --target。実践の型メンテナンス系は実践の型そのものを評価対象にする。
 export function gradeTargetKind(approach: Approach | undefined): "kata" | "deliverable" {
-  return approach === "rulebook-maintenance" ||
+  return approach?.endsWith("-authoring") ||
+    approach === "rulebook-maintenance" ||
     approach === "recipe-maintenance" ||
     approach === "sample-maintenance" ||
     approach === "template-maintenance"
@@ -431,6 +432,10 @@ export function deliverableDependsOn(
 
 const PROJECT_CONTEXT_EXCLUDED_APPROACHES = new Set<Approach>([
   "cross-deliverable-dedup",
+  "rulebook-authoring",
+  "recipe-authoring",
+  "sample-authoring",
+  "template-authoring",
   "rulebook-maintenance",
   "recipe-maintenance",
   "sample-maintenance",
@@ -555,6 +560,10 @@ function refDocIdFromPath(refPath: string): string {
 // approach ごとに、成果物に加えて変更・確定の対象になる実践の型の種別。
 const TARGET_REF_KINDS: Partial<Record<Approach, readonly (keyof KataRefs)[]>> = {
   bootstrap: ["rulebook", "recipe", "sample", "template"],
+  "rulebook-authoring": ["rulebook"],
+  "recipe-authoring": ["recipe"],
+  "sample-authoring": ["sample"],
+  "template-authoring": ["template"],
   "bootstrap-finalize": ["rulebook", "recipe", "sample", "template"],
   "rulebook-maintenance": ["rulebook"],
   "recipe-maintenance": ["recipe"],

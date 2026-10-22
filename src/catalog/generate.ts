@@ -4,7 +4,8 @@ import { dump, load } from "../shared/yaml.js";
 import { type ResolvedDeliverable, collectResolvedDeliverables } from "./build.js";
 import { resolveBasePath } from "./paths.js";
 import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import { practiceLocalId } from "../shared/practice-id.js";
+import { parsePracticeId, practiceLocalId } from "../shared/practice-id.js";
+import { resolveKataDocumentPathIfExists } from "../kata/kata.js";
 import { flattenTemplateFrontmatter } from "../docs/template-frontmatter.js";
 import { isDctCatalogFileName, type DctDeliverableItem, type DctDoc } from "./types.js";
 import {
@@ -82,6 +83,7 @@ function normalizeDctName(name: string): string {
 function findTemplate(
   templatesPath: string,
   rulebooksPath: string,
+  repoRoot: string,
   rulebookId: string | undefined,
   ext: ".md" | ".yaml",
   resourceRoots?: SpecdojoResolutionRoots,
@@ -96,9 +98,16 @@ function findTemplate(
   }
 
   const rulebookFileName = `${practiceLocalId(rulebookId)}.md`;
-  const rulebookPath = resourceRoots
-    ? resolveSpecdojoPathIfExists(`docs/ja/specdojo/rulebooks/${rulebookFileName}`, resourceRoots)
-    : join(rulebooksPath, rulebookFileName);
+  const rulebookAuthority = parsePracticeId(rulebookId).authority;
+  const localRulebook = rulebookAuthority !== undefined && rulebookAuthority !== "specdojo";
+  const rulebookPath = localRulebook
+    ? resolveKataDocumentPathIfExists("rulebook", rulebookId, "md", {
+        ...resourceRoots,
+        repositoryRoot: repoRoot,
+      })
+    : resourceRoots
+      ? resolveSpecdojoPathIfExists(`docs/ja/specdojo/rulebooks/${rulebookFileName}`, resourceRoots)
+      : join(rulebooksPath, rulebookFileName);
   if (!rulebookPath) return null;
   if (!existsSync(rulebookPath)) return null;
 
@@ -113,9 +122,16 @@ function findTemplate(
   }
 
   const templateFileName = `${practiceLocalId(templateId)}${ext}`;
-  const candidate = resourceRoots
-    ? resolveSpecdojoPathIfExists(`docs/ja/specdojo/templates/${templateFileName}`, resourceRoots)
-    : join(templatesPath, templateFileName);
+  const templateAuthority = parsePracticeId(templateId).authority;
+  const localTemplate = templateAuthority !== undefined && templateAuthority !== "specdojo";
+  const candidate = localTemplate
+    ? resolveKataDocumentPathIfExists("template", templateId, ext.slice(1), {
+        ...resourceRoots,
+        repositoryRoot: repoRoot,
+      })
+    : resourceRoots
+      ? resolveSpecdojoPathIfExists(`docs/ja/specdojo/templates/${templateFileName}`, resourceRoots)
+      : join(templatesPath, templateFileName);
   if (!candidate) return null;
   return existsSync(candidate) ? candidate : null;
 }
@@ -180,19 +196,28 @@ function generateContent(
   projectId: string,
   templatesPath: string,
   rulebooksPath: string,
+  repoRoot: string,
   resourceRoots?: SpecdojoResolutionRoots,
 ): string {
   if (isYamlPath(resolvedPath)) {
     const template = findTemplate(
       templatesPath,
       rulebooksPath,
+      repoRoot,
       item.rulebook,
       ".yaml",
       resourceRoots,
     );
     return template ? expandYamlTemplate(template, item, projectId) : fallbackYaml(item, projectId);
   }
-  const template = findTemplate(templatesPath, rulebooksPath, item.rulebook, ".md", resourceRoots);
+  const template = findTemplate(
+    templatesPath,
+    rulebooksPath,
+    repoRoot,
+    item.rulebook,
+    ".md",
+    resourceRoots,
+  );
   if (template) {
     const raw = readFileSync(template, "utf8");
     return replaceGeneratedPlaceholders(flattenTemplateFrontmatter(raw), item, projectId) as string;
@@ -289,6 +314,7 @@ export function runGenerate(opts: {
           projectId,
           templatesPath,
           rulebooksPath,
+          repoRoot,
           resourceRoots,
         );
         if (!dryRun) {

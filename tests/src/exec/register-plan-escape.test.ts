@@ -221,6 +221,32 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     );
   }
 
+  async function writeAuthoringFixture(): Promise<void> {
+    const templatesPath = path.join(dir, "docs", "ja", "specdojo", "exec-templates");
+    await mkdir(templatesPath, { recursive: true });
+    await mkdir(path.join(dir, ".specdojo"), { recursive: true });
+    await writeFile(
+      path.join(dir, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
+      "utf8",
+    );
+    await writeFile(path.join(dir, "package.json"), '{"name":"customer"}\n', "utf8");
+    for (const filename of [
+      "xep-common-conventions-template.md",
+      "xep-rulebook-authoring-template.md",
+      "xep-recipe-authoring-template.md",
+    ]) {
+      await writeFile(
+        path.join(templatesPath, filename),
+        await readFile(
+          path.join(specdojoSourceRoot, "docs", "ja", "specdojo", "exec-templates", filename),
+          "utf8",
+        ),
+        "utf8",
+      );
+    }
+  }
+
   it("アンダースコア入り識別子や _TODO_ を含む項目でも MD049/MD050 違反を出さない", async () => {
     const outPath = path.join(dir, "plan.md");
     await generateRegisterPlan({
@@ -440,6 +466,77 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     expect(content).toContain("targets:\n    - prj-test:test-rulebook");
     expect(content).toContain("docs/ja/specdojo/rulebooks/test-rulebook.md");
     expect(content).toContain("register-specific criterion is satisfied");
+  });
+
+  it("kata authoring approach は新規 id、配置、標準、手本、参照更新条件を plan に載せる", async () => {
+    const outPath = path.join(dir, "plan-with-authoring-approach.md");
+    await writeAuthoringFixture();
+    const catalogPath = await writeCatalog("undecided");
+    process.env.SPECDOJO_PACKAGE_ROOT = dir;
+    process.chdir(dir);
+
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      catalogPath,
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({
+        approach: "rulebook-authoring",
+        targets: ["customer:test-rulebook", "prj-test:overview"],
+      }),
+      stem: "xep-pjr-authoring",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+    expect(content).toContain("approach: rulebook-authoring");
+    expect(content).toContain("docs/ja/kata/rulebooks/test-rulebook.md");
+    expect(content).toContain("specdojo:rulebook-authoring-standard");
+    expect(content).toContain("`prj-test:overview`: Test Overview");
+    expect(content).toContain("手本の成果物は読み取り専用");
+    expect(content).toContain("`undecided` または未記入");
+    expect(content).toContain("すでに別の kata を指す場合は上書きせず");
+  });
+
+  it("recipe authoring は手本 rulebook の not-needed を未判断として扱わない", async () => {
+    const outPath = path.join(dir, "plan-with-recipe-authoring-approach.md");
+    await writeAuthoringFixture();
+    const rulebooksPath = path.join(dir, "docs", "ja", "specdojo", "rulebooks");
+    await mkdir(rulebooksPath, { recursive: true });
+    await writeFile(
+      path.join(rulebooksPath, "test-rulebook.md"),
+      [
+        "---",
+        "specdojo:",
+        "  id: specdojo:test-rulebook",
+        "  type: rulebook",
+        "  status: draft",
+        "  recipe: not-needed",
+        "---",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    const catalogPath = await writeCatalog("specdojo:test-rulebook");
+    process.env.SPECDOJO_PACKAGE_ROOT = dir;
+    process.chdir(dir);
+
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      catalogPath,
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({
+        approach: "recipe-authoring",
+        targets: ["customer:test-recipe", "prj-test:overview"],
+      }),
+      stem: "xep-pjr-recipe-authoring",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+    expect(content).toContain("現在の参照: `not-needed`");
+    expect(content).toContain("`not-needed` も意図的な判断として上書きしない");
   });
 
   it("個票が targets を宣言していなければ plan frontmatter に targets が含まれない", async () => {
