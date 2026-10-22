@@ -12,7 +12,7 @@ specdojo:
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-22T12:42:33Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  block_reason: 'integrate failed: project: git commit failed: test: if (!process.send) throw new Error("Expected worker to be run in node:child_process");; FAIL  /integration/ tests/src/exec/register-resume.integrati…'
   derived_from:
     - PJR-EN6M
 ---
@@ -47,18 +47,20 @@ specdojo:
 ## 4. 対応結果
 
 - 推奨 preset の apt package に `gh` を加え、`~/.config/gh` をリポジトリ別の名前付き volume に保存するようにした。preset を使わない生成物には `gh` とこの volume を加えない。ホストの認証情報の mount と自動ログインは行わない。
-- agent は GitHub CLI の読み取りも含めて全面拒否する方針にした。`gh api` は任意の HTTP method を指定でき、今後サブコマンドが増える可能性もあるため、書き込み操作だけの列挙では漏れが生じるためである。PR の確認などは web 検索または利用者が実行して渡した結果を使う。
+- pipeline executor・review executor・reporter は、GitHub CLI の読み取りも含めて全面拒否する方針にした。`gh api` は任意の HTTP method を指定でき、今後サブコマンドが増える可能性もあるため、無人 pipeline では全 `gh` を止める。
+- 対話型オーケストレーターは、利用者と確認しながら PR・workflow run・release の状態を確認する必要があるため、役割別設定を持てる Claude Code と OpenCode に限り `gh pr view`・`gh pr list`・`gh run list`・`gh run view`・`gh release view` などの読み取りを許可した。`git push`、`gh api`、PR・release・repository などの書き込みサブコマンドは deny する。
+- Claude Code の `orch:opus`・`orch:sonnet` は新しい `settings.orchestrator.json` を使う。executor 用の `settings.edit.json` は使わないため、利用者が承認した `.specdojo/`・`package.json`・`CLAUDE.md` などの設定変更を妨げない。
 
-| provider    | 止める範囲                                    | 境界・制約                                                                                    |
-| ----------- | --------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Claude Code | 全ロールの `git push` と全 `gh`               | ロール別 settings の Bash deny。scaffold する orchestrator の npm script にも settings を渡す |
-| Codex       | `git push` と全 `gh`                          | project-local `.codex/rules/specdojo.rules` の `forbidden`。無人 exec は network 無効化も併用 |
-| OpenCode    | executor・review・orchestrator の同じコマンド | deny 基点の Bash 許可リストに明示 deny を重ねる。reporter は Bash 全面 deny                   |
-| Antigravity | `git push` と全 `gh`                          | `--global` を明示した場合にユーザー設定へ deny をマージ。通常の scaffold だけでは適用しない   |
+| provider    | pipeline executor・reporter         | 対話型 orchestrator                | 境界・制約                                                                                            |
+| ----------- | ----------------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Claude Code | `git push` と全 `gh` を deny        | `git push` と `gh` 書き込みを deny | 専用 `settings.orchestrator.json` で読み取りを allow。保護設定の Edit deny は持たない                 |
+| Codex       | `git push` と全 `gh` を `forbidden` | 同じく全 `gh` を `forbidden`       | project-local rule は役割共通で、orchestrator だけを例外にできない。無人 exec は network 無効化も併用 |
+| OpenCode    | `git push` と全 `gh` を deny        | `git push` と `gh` 書き込みを deny | agent 定義ごとの許可で全 Edit と `gh` 読み取りを allow。reporter は Bash 全面 deny                    |
+| Antigravity | `git push` と全 `gh` を deny        | 同じく全 `gh` を deny              | global settings は役割共通で、orchestrator だけを例外にできない。`--global` 指定時だけマージ          |
 
 - これらの境界は各 provider が agent に提供する shell command を止める。利用者自身の terminal 操作、別の GitHub client、外部 MCP などは対象外であり、今回の配布設定では agent にその代替経路を追加していない。
 - 常時稼働ホスト運用ガイド、コマンドリファレンス、Quick Start、exec 設定ガイド、provider 別 README、CHANGELOG を実装に合わせて更新した。
-- 推奨 preset と preset なしの生成差分、および 4 provider の配布権限を単体テストへ追加した。親 runner が `lint-ts`・`lint-fm`・`lint-md`・`typecheck`・`test-unit`・`test-integration`・`validate-schema` を実行する。
+- 推奨 preset と preset なしの生成差分、4 provider の配布権限、Claude Code の orchestrator 専用設定と起動スクリプト、OpenCode の orchestrator 読み取り許可を単体テストへ追加した。親 runner が `lint-ts`・`lint-fm`・`lint-md`・`typecheck`・`test-unit`・`test-integration`・`validate-schema` を実行する。
 - 本リポジトリの `.specdojo/`、`.claude/`、`.codex/`、`.opencode/` などの保護設定は変更していない。
 
 ## 5. 関連ドキュメント
