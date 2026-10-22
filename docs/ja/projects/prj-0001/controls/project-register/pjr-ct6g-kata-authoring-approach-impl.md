@@ -30,6 +30,7 @@ PJR-V2W5 の決定に従い、rulebook-authoring など 4 つの approach、--ta
 - `--target` の 1 つ目を新しく作る kata の id、2 つ目以降を手本にする成果物の doc id（任意、カタログにある成果物）とする。1 つ目の id が既にある場合は `<種類>-maintenance` を案内して止め、id の末尾が種類と合わない場合と、2 つ目以降がカタログの成果物でない場合も、起票と実行の時点で止める。
 - `exec run --register` は、これらの approach の plan に、従う作り方の規則（`<種類>-authoring-standard`）、手本の成果物、作る kata の置き場所を載せ、手本の成果物そのものは変えないことを条件に入れる。
 - 利用者のリポジトリでの kata の名前空間を設定のキーで指定でき（キーの名前と既定は設計で決め、理由を result に書く）、`specdojo:` の id での新しい kata の作成は、本リポジトリ（SpecDojo 自身）以外では止める。利用者の名前空間の kata は利用者のリポジトリだけから解決する。置き場所を決め、`kata list`・`kata show` で表示できる。
+- 追加（2026-10-23、オーケストレーターの確認で判明。PJR-V2W5 の P2 の名前空間を、規則の用語にそろえる）: 利用者の kata の所有元を表す設定のキーと文書の言葉を、規則（[[specdojo:id-and-file-naming-standard]]・[[specdojo:practice-system-composition-guide]]）の用語の「authority」にそろえる。設定のキーは `kata_namespace` ではなく `kata_authority` とし、ガイド・リファレンス・テスト・CHANGELOG の「名前空間」の言葉も authority にそろえる。authority の形式（英小文字・数字・ハイフン、`prj-` で始めない、`specdojo` を使わない）を設定の検証で確かめる。
 - 手本にした成果物のカタログの参照のうち、作った種類のものが `undecided` か未記入なら、同じ実行で新しい kata の id に付け替える。別の kata を指している場合は付け替えず、result の申し送りに書く。
 - schedule の approach として使えるようにするかを決め、理由を result に書く。
 - [[specdojo:kata-guide]] と、コマンドリファレンス・設定リファレンスに、`bootstrap` との使い分けと使い方を書く。
