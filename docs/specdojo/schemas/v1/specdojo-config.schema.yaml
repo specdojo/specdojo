@@ -22,6 +22,15 @@ properties:
     type: object
     additionalProperties:
       $ref: "#/$defs/Project"
+  external_projects:
+    description: >-
+      Project registers hosted by other repositories, keyed by a local alias. Aliases must not
+      collide with a local project id.
+    type: object
+    propertyNames:
+      pattern: "^[a-z0-9-]+$"
+    additionalProperties:
+      $ref: "#/$defs/ExternalProject"
 $defs:
   NonEmptyString:
     type: string
@@ -95,6 +104,22 @@ $defs:
           $ref: "#/$defs/Repo"
       run:
         $ref: "#/$defs/Run"
+  ExternalProject:
+    type: object
+    additionalProperties: false
+    required:
+      - path
+      - project_id
+    properties:
+      path:
+        description: External repository root, relative to the SpecDojo root.
+        type: string
+        pattern: "\\S"
+        not:
+          pattern: "^(/|[A-Za-z]:[\\\\/])"
+      project_id:
+        description: Project id understood by SpecDojo in the external repository.
+        $ref: "#/$defs/NonEmptyString"
   Repo:
     type: object
     additionalProperties: false

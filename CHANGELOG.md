@@ -2,6 +2,12 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [Unreleased]
+
+### 追加機能
+
+- `specdojo.config.json` の `external_projects` で別リポジトリの project を別名付きで宣言し、`register add --project <別名> --commit` から相手にインストールされた SpecDojo へ起票を委譲できるようにしました。`--from <別名>:PJR-XXXX` は相手の実 project ID へ変換し、`orchestrator launch` は宣言した外部リポジトリにも編集許可を付けます（PJR-5B42）。
+
 ## [0.4.2] - 2026-10-22
 
 ### 追加機能

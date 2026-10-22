@@ -4,6 +4,7 @@ import { join, resolve } from "node:path";
 import { gitOutput, gitResult, worktreeStatusPaths } from "../shared/git.js";
 import {
   loadConfig,
+  resolveExternalProjectRoot,
   specdojoRootDir,
   type SpecDojoConfig,
   type SpecDojoProjectConfig,
@@ -120,7 +121,17 @@ export function resolveCrossProjectMutationTarget(
   const { config, configPath } = loadConfig(repoRoot);
   if (!config) throw new Error(`register commands require specdojo.config.json (${configPath})`);
   const project = config.projects[projectId];
-  if (!project) throw new Error(`Unknown project: ${projectId} (check ${configPath})`);
+  if (!project) {
+    const externalProject = config.external_projects?.[projectId];
+    if (externalProject) {
+      const targetRoot = resolveExternalProjectRoot(repoRoot, externalProject);
+      throw new Error(
+        `Cross-repository register ${command} is not supported for external project ${projectId}. ` +
+          `Run the command in ${targetRoot} for project ${externalProject.project_id}.`,
+      );
+    }
+    throw new Error(`Unknown project: ${projectId} (check ${configPath})`);
+  }
 
   const branch = resolveProjectIntegrationBranch(projectId, project);
   const branchNow = currentBranch(repoRoot);
