@@ -67,3 +67,35 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: lint-fm, typecheck, test-unit"
   previous_event_id: reg_ca9d48f9ff8243979df9ad718036a7f4
+- v: 1
+  id: reg_6027a335c2be48ada5aaafc6380ae951
+  ts: "2026-10-22T22:48:56Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-fm, typecheck, test-unit"
+      to: "-"
+  previous_event_id: reg_5b70b78ccb2740d3abfaef1085aaa10c
+- v: 1
+  id: reg_bdb9a0b7731d4bc58013355814e3ca4f
+  ts: "2026-10-22T23:01:44Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  previous_event_id: reg_6027a335c2be48ada5aaafc6380ae951
