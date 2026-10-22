@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-ZH7Q
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-zh7q-20261022T130231Z-4be19bff-plan.md
   started_at: "2026-10-22T13:02:31.810Z"
-  completed_at: "2026-10-22T13:24:01.072Z"
+  completed_at: "2026-10-22T13:36:03.150Z"
   agent: sol-executor
-  block_reason: "integrate failed: project: git commit failed: test: if (!process.send) throw new Error(\"Expected worker to be run in node:child_process\");; FAIL  /integration/ tests/src/exec/register-resume.integrati…"
 ---
 
 # Edit Result

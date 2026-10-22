@@ -12,9 +12,9 @@ export { specdojoPackageRootDir } from "./package-paths.js";
 export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = {
   claude: {
     "orch:opus":
-      "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus --settings .specdojo/claude/settings.edit.json",
+      "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus --settings .specdojo/claude/settings.orchestrator.json",
     "orch:sonnet":
-      "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet --settings .specdojo/claude/settings.edit.json",
+      "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet --settings .specdojo/claude/settings.orchestrator.json",
   },
   codex: {
     "orch:sol":

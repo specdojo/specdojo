@@ -538,7 +538,7 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 
 | provider    | 配布内容                                                                                                                                              | 配置先                                 |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| claude      | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.review.json` / `settings.report.json`                                        | `.claude/agents/`、`.specdojo/claude/` |
+| claude      | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.orchestrator.json` / `settings.review.json` / `settings.report.json`         | `.claude/agents/`、`.specdojo/claude/` |
 | codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）、`rules/*.rules`（command rule）                                                              | `.codex/agents/`、`.codex/rules/`      |
 | opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                             | `.opencode/agents/`                    |
 | copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
@@ -551,6 +551,8 @@ agent が exec 実行時に読み込む provider 固有の設定（agent 定義�
 Claude member の `mode` はこの `{mode}` を権限プロファイル名へ展開するためにも使います。edit executor は `edit`、review executor は `review`、reporter は `report` を指定します。reporter の適格性は task mode ではなく `stage_role: reporter` で決まり、`settings.report.json` は Edit/Write と `git add` / `git commit` を deny します。
 
 `settings.edit.json` は、利用者のリポジトリ固有の構成（ルート直下の成果物や `app/`・`lib/` など）にも対応できるよう、既定でリポジトリ全体への Edit を許可します。一方、agent の権限や親 runner・hook・CI の実行内容を変更できる `.specdojo/`、agent 設定、CI 設定、ルート直下の `package.json` などは deny します。deny の範囲は runner の agent-config-write 検査と同じ保護対象を unit test で照合し、Claude Code の事前拒否と runner の事後検査を重ねます。
+
+`settings.orchestrator.json` は `init` と `config scaffold` が追加する `orch:opus`・`orch:sonnet` 専用です。対話型オーケストレーターは利用者の承認を得て保護設定も変更するため、`settings.edit.json` のパス deny を引き継ぎません。代わりに `git push` と GitHub CLI の書き込み操作を deny し、PR・workflow run・release などの読み取りコマンドだけを allow します。
 
 ### 7.1. scaffold コマンド
 
@@ -622,7 +624,7 @@ provider によらず、exec の実行構造そのものが次の境界を提供
 
 ### 8.2. provider 別の権限設定
 
-**claude** は `provider 設定の配布と scaffold` のとおり、ロール別 `--settings`（edit は `docs/**`、`src/**`、`tests/**`、review は result 配下のみ書き込み可）でパス単位に制限します。各ロールは `git push` と `gh` を deny し、scaffold が加える対話型オーケストレーターの npm script も edit 用 settings を読み込みます。`--permission-mode bypassPermissions` は使わず、`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します。
+**claude** は `provider 設定の配布と scaffold` のとおり、pipeline のロール別 `--settings` でパス単位に制限します。executor・review executor・reporter は `git push` と全 `gh` を deny します。対話型オーケストレーターの npm script は専用の `settings.orchestrator.json` を読み込み、保護設定を含む編集を妨げず、`git push` と `gh` の書き込みだけを deny して読み取りを allow します。`--permission-mode bypassPermissions` は使わず、`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します。
 
 **antigravity** は `config scaffold --provider antigravity --global` で fine-grained permission を追記します。グローバル設定は利用者のすべてのリポジトリに効くため、allow は読み取りの Git コマンド（`git status` / `diff` / `log` / `show`）だけとし、`npm run` など任意のスクリプトを実行できる command は含めません。deny には、`git push`、全 `gh`、Git の変更操作・破壊的 command・秘密情報・固定保護設定へのアクセスを入れます。`--dangerously-skip-permissions` は使いません。CLI の permission に加えて、実行後の provider 非依存ガードでも保護設定の変更を block します。
 
@@ -652,9 +654,9 @@ providers:
 | opencode-review-executor | 全面 deny（成果物・result のいずれも変更しない） | 読み取り系・検証系の許可リスト。他は deny                            |
 | opencode-reporter        | 全面 deny（result への反映は runner が行う）     | 全面 deny                                                            |
 
-`bash` を deny 基点の許可リストにするのは、`git add` / `git commit` を含む任意コマンドを塞ぐためで、denylist（`git push` などの列挙）では不十分です。将来の許可リスト追加で意図せず開かないよう、`git push` と全 `gh` は末尾でも明示 deny します。ローカル Ollama 前提のため外部送信面はもともと小さいですが、`read` の `.env` / `secrets` deny と `external_directory: deny` は維持します。
+`bash` を deny 基点の許可リストにするのは、`git add` / `git commit` を含む任意コマンドを塞ぐためで、denylist（`git push` などの列挙）では不十分です。executor・review executor は、将来の許可リスト追加で意図せず開かないよう `git push` と全 `gh` を末尾でも明示 deny します。対話型オーケストレーターは agent 定義ごとに権限を分離できるため、`edit` をリポジトリ全体で allow し、PR・workflow run・release などの読み取りだけを allow します。`gh api` と書き込みサブコマンドは明示 deny し、それ以外は先頭の deny により拒否されます。
 
-GitHub CLI は provider 間で機能差を作らず、読み取りも含めて agent から全面拒否します。`gh api` は任意の HTTP method を指定でき、GitHub CLI のサブコマンドは将来増えるため、書き込み操作だけを列挙すると漏れが生じるためです。PR の確認などが必要な場合は、agent の web 検索または利用者が実行して渡した結果を使います。
+Codex の project-local rule と Antigravity の global settings は役割共通であり、同じリポジトリまたは利用者の orchestrator だけを例外にできません。この 2 provider は全 agent の `gh` 全面拒否を維持します。Claude と OpenCode は orchestrator 専用設定を持てるため読み取りだけを許可し、pipeline executor・reporter は全 `gh` を拒否します。
 
 **copilot**（GitHub Copilot CLI）は command のフラグで権限を制御します。deny は allow より常に優先され、`--allow-all-tools` すら上書きできます。`.specdojo/agent-members.yaml` には copilot member を `disabled: true` で定義し、起動コマンドは `providers.copilot.command_template` に定義します。有効化する際も次の構成を維持します。
 

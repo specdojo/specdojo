@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-22T12:42:33Z"
-  block_reason: 'integrate failed: project: git commit failed: test: if (!process.send) throw new Error("Expected worker to be run in node:child_process");; FAIL  /integration/ tests/src/exec/register-resume.integrati…'
   derived_from:
     - PJR-EN6M
 ---

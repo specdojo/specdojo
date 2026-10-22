@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-ZH7Q",
+  "run_id": "20261022T131804066Z-31a0fe2b",
+  "updated_at": "2026-10-22T13:36:03.171Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-10-22T13:18:04.066Z",
+      "completed_at": "2026-10-22T13:19:35.570Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-ZH7Q/20261022T131804066Z-31a0fe2b/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-22T13:23:09.056Z",
+      "completed_at": "2026-10-22T13:24:00.616Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-zh7q-20261022T130231Z-4be19bff-result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "gemma26-reporter",
+      "attempts": 2,
+      "started_at": "2026-10-22T13:36:03.171Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: test: if (!process.send) throw new Error(\"Expected worker to be run in node:child_process\");; FAIL  |integration| tests/src/exec/register-resume.integration.test.ts > exec run --register --worktree --resume > resumes a protected-config block after the human applies the same change on the integration branch; Test Files  2 failed | 164 passed (166); Tests  6 failed | 2524 passed (2530)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-zh7q-20261022T130231Z-4be19bff-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-zh7q-20261022T130231Z-4be19bff-result.md"
+  }
+}
