@@ -1,0 +1,65 @@
+**判定: `complete-with-findings`。** Job Run は終了コード 0 で成功し、選択された 10 件はすべて評価できました。評価結果も最新です。全件が `needs-work` で未充足の `done_criteria` も残りますが、grade の役割はこれを記録することなので、Run の完了は妨げません。
+
+**出力範囲（完了条件1）**
+- `900e0f4..da100c7` の変更は 27 ファイルです。内訳は次のとおりです。
+  - grade の評価結果ファイル 10 件と `done_criteria` 10 件（変更）
+  - 当該 Run の plan・result・evidence・pipeline-state・Run JSON（追加）
+- `docs/ja/product`・`src`・`tools` には変更がなく、対象外の変更は混入していません。
+
+**記録どうしの整合（完了条件2）**
+- Run JSON（state `succeeded`、`exit_code` 0）、`evidence.json`、`pipeline-state.json`（executor・reporter とも succeeded）、result（`status: complete`）は互いに一致しています。
+- stdout では `selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0`、stderr は空です。
+- `results.tsv` は 10 件すべて `passed` でした。`failed`、`retry_exhausted`、終了コード 75（rate limit）による中断は 0 件です。`partial` ではないため、再開の確認は不要です。
+- 評価結果ファイルの `graded_by` は `flash-high-executor` で、`results.tsv` の `agy-expert-executor` と名前が違います。`.specdojo/agent-members.yaml` で `agy-expert-executor` は `alias_of: flash-high-executor` と定義されているので、矛盾ではありません。
+
+**score・verdict・finding（完了条件3）**
+各評価結果ファイルの値は `results.tsv` と一致しています。blocker は全件 0 です。
+
+| 成果物 | verdict | score | finding 件数（major / minor） |
+| --- | --- | --- | --- |
+| `opr-agent-cli-update` | `needs-work` | 60 | 35（30 / 5） |
+| `pm-raci` | `needs-work` | 84 | 7（4 / 3） |
+| `sysd-claude-agent-settings` | `needs-work` | 59 | 30（20 / 10） |
+| `sysd-github-copilot-agent-settings` | `needs-work` | 52 | 32（28 / 4） |
+| `sysd-index` | `needs-work` | 64 | 22（17 / 5） |
+| `sysd-job-execution` | `needs-work` | 81 | 10（6 / 4） |
+| `sysd-opencode-agent-settings` | `needs-work` | 59 | 30（22 / 8） |
+| `sysd-orchestrator-agent-settings` | `needs-work` | 65 | 22（18 / 4） |
+| `tsd-home-mac-dev-server-usage` | `needs-work` | 71 | 22（12 / 10） |
+| `tsd-home-mac-dev-server` | `needs-work` | 71 | 22（10 / 12） |
+
+- 差分を見ると、主な変化は `graded_at`・`content_hash`・`source_hashes` の更新と、finding の行番号や引用箇所（anchor）の追従です。`sysd-job-execution` は score 81 のまま変わっていません。
+- 全件 `needs-work` で major が多いことが評価設定の偏りかどうかは、この Run の記録だけでは判断できません。
+
+**鮮度確認（E-01/E-02）**
+- `grade list --target deliverable --project prj-0001` を `--changed-only`・`--dependency-changed`・`--incomplete` で実行し、すべて空出力でした。`grade state --exhausted` も空です。
+- verdict を決める直前にもう一度実行し、同じく空でした。
+
+**未充足の done_criteria と確認担当ロール**
+
+| 成果物 | 未充足の criteria（担当ロール） |
+| --- | --- |
+| `opr-agent-cli-update` | DC-001（OPS）、DC-002（ARC）、DC-003（QE） |
+| `pm-raci` | DC-001（PO）、DC-004（QE） |
+| `sysd-claude-agent-settings` | DC-001〜005（BA、PO、ARC、QE、DEV） |
+| `sysd-github-copilot-agent-settings` | DC-001（BA）、DC-002（PO）、DC-004（QE）、DC-005（DEV） |
+| `sysd-index` | DC-001（ARC）、DC-004（OPS） |
+| `sysd-job-execution` | DC-004（QE） |
+| `sysd-opencode-agent-settings` | DC-001（BA）、DC-002（PO）、DC-004（QE）、DC-005（DEV） |
+| `sysd-orchestrator-agent-settings` | DC-001〜005（BA、PO、ARC、QE、DEV） |
+| `tsd-home-mac-dev-server` | DC-002（PO）、DC-003（ARC）、DC-004（QE）、DC-005（DEV） |
+| `tsd-home-mac-dev-server-usage` | DC-001（BA）、DC-002（PO）、DC-003（ARC）、DC-004（QE） |
+
+**finding（改善指示）**
+1. Job Run の result に、Job の確認事項にある「未充足の `done_criteria` と確認担当ロールの特定」が書かれていません。上の表の内容が result から抜けています。次回以降、reporter の analysis にこの項目を含めることを求めます。
+2. `grade/criteria/generated/*.md` の summary が、更新後の YAML と食い違っています。例: `pm-raci` は generated が 3/1、YAML が 2/2。`tsd-home-mac-dev-server` は generated が 0/5、YAML が 1/4。この閲覧用ファイルは今回の差分に含まれていないので Run の範囲外ですが、docs を再生成して同期する必要があります。
+3. 10 件の成果物はそれぞれの owner ロールで finding に基づく修正を計画してください。この Run の完了は妨げません。
+
+**確認できなかった範囲**
+- 個々の finding が妥当かどうかは確認していません。review では成果物を再評価しないためです。
+- 実行ログ `logs/grade/runs/per-document/JBR-grade-deliverable-3bc50a65c395/` の実体はコミット範囲外なので読んでいません。stdout に転記された `results.tsv` で代わりに確認しました。
+- lint・テストなどの親 runner の検証結果は、この時点ではまだありません。
+
+<specdojo_executor_evidence>
+{"final_message":"判定: complete-with-findings。根拠: Job Run は終了コード 0 で成功した（Run JSON state succeeded、exit_code 0、pipeline-state の executor・reporter とも succeeded）。stdout では selected=10 processed=10 incomplete=0 exhausted=0、stderr は空、results.tsv は 10 件すべて passed で、failed・`retry_exhausted`・rate limit 中断はなく、partial でもない。差分 900e0f4..da100c7 の 27 ファイルは、grade の評価結果ファイル 10 件と `done_criteria` 10 件の変更、当該 Run の plan・result・evidence・pipeline-state・Run JSON の追加だけで、docs/ja/product・src・tools は変更されていない。評価結果ファイルの verdict・score・finding 件数は results.tsv と一致した（全件 `needs-work`、score 52〜84、blocker 0）。`graded_by` の `flash-high-executor` は、agent-members.yaml で `agy-expert-executor` の別名（`alias_of`）として定義されている。鮮度確認として grade list の --changed-only・--dependency-changed・--incomplete と grade state --exhausted を実行し、verdict 決定前の再実行も含めてすべて空出力だった。未充足の `done_criteria` と確認担当ロール: opr-agent-cli-update は DC-001 OPS、DC-002 ARC、DC-003 QE。pm-raci は DC-001 PO、DC-004 QE。sysd-claude-agent-settings と sysd-orchestrator-agent-settings は DC-001〜005（BA、PO、ARC、QE、DEV）。sysd-github-copilot-agent-settings と sysd-opencode-agent-settings は DC-001 BA、DC-002 PO、DC-004 QE、DC-005 DEV。sysd-index は DC-001 ARC、DC-004 OPS。sysd-job-execution は DC-004 QE。tsd-home-mac-dev-server は DC-002 PO、DC-003 ARC、DC-004 QE、DC-005 DEV。tsd-home-mac-dev-server-usage は DC-001 BA、DC-002 PO、DC-003 ARC、DC-004 QE。finding: (1) Job Run の result に、Job の確認事項である未充足の `done_criteria` と確認担当ロールの特定が書かれていない。次回以降、reporter の analysis にこの項目を含めることを求める。(2) grade/criteria/generated/*.md の summary が更新後の YAML と食い違っている（pm-raci は generated 3/1、YAML 2/2。tsd-home-mac-dev-server は generated 0/5、YAML 1/4）。今回の差分外なので Run の範囲外だが、docs の再生成で同期が必要。(3) 全件 `needs-work` で major が多いことが評価設定の偏りかどうかは、この Run の記録だけでは判断できない。確認できなかった範囲: 個々の finding の妥当性（review では再評価しないため）、logs/grade/runs 配下の実行ログの実体（コミット範囲外のため、stdout に転記された results.tsv で代わりに確認した）、親 runner の検証結果（この時点では未実行）。","validations":[{"command":"git diff --stat / --name-status 900e0f4794238fb512d7251b004bc28e03b2b3d8..da100c73d0a9264cfd16cc4f95b9386007c3ca68","status":"passed","summary":"27 ファイルはすべて当該 Job Run の grade 評価結果ファイル・done_criteria と Run の記録だけ。product・src・tools の変更なし"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"空出力（評価結果は最新）。verdict 決定前の再実行も空"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"空出力。verdict 決定前の再実行も空"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"空出力（未完了の評価パイプラインなし）"},{"command":"node dist/specdojo.js grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"空出力（retry_exhausted の成果物なし）"}]}
+</specdojo_executor_evidence>

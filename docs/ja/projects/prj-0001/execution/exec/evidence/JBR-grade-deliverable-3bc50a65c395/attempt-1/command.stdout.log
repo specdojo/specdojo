@@ -1,0 +1,39 @@
+
+> specdojo@0.4.2 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-deliverable-3bc50a65c395 project=prj-0001 target=deliverable kind=none changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-deliverable-3bc50a65c395
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
+document start: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document complete: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
+document start: docs/ja/product/040-system-design/sysd-claude-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-claude-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-index.md
+document complete: docs/ja/product/040-system-design/sysd-index.md
+document start: docs/ja/product/040-system-design/sysd-job-execution.md
+document complete: docs/ja/product/040-system-design/sysd-job-execution.md
+document start: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md
+document start: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md
+document complete: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md
+document start: docs/ja/product/090-operations/opr-agent-cli-update.md
+document complete: docs/ja/product/090-operations/opr-agent-cli-update.md
+document start: docs/ja/projects/prj-0001/030-project-management/pm-raci.md
+document complete: docs/ja/projects/prj-0001/030-project-management/pm-raci.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-deliverable-3bc50a65c395/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-22T16:03:03Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md	1	passed	118	needs-work	71	22	agy-expert-executor	machine	none		
+2026-10-22T16:05:43Z	docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md	1	passed	158	needs-work	71	22	agy-expert-executor	machine	none		
+2026-10-22T16:07:55Z	docs/ja/product/040-system-design/sysd-claude-agent-settings.md	1	passed	130	needs-work	59	30	agy-expert-executor	machine	none		
+2026-10-22T16:11:08Z	docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md	1	passed	191	needs-work	52	32	agy-expert-executor	machine	none		
+2026-10-22T16:14:26Z	docs/ja/product/040-system-design/sysd-index.md	1	passed	196	needs-work	64	22	agy-expert-executor	machine	none		
+2026-10-22T16:17:17Z	docs/ja/product/040-system-design/sysd-job-execution.md	1	passed	169	needs-work	81	10	agy-expert-executor	machine	none		
+2026-10-22T16:23:31Z	docs/ja/product/040-system-design/sysd-opencode-agent-settings.md	1	passed	372	needs-work	59	30	agy-expert-executor	machine	none		
+2026-10-22T16:26:22Z	docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md	1	passed	169	needs-work	65	22	agy-expert-executor	machine	none		
+2026-10-22T16:29:38Z	docs/ja/product/090-operations/opr-agent-cli-update.md	1	passed	194	needs-work	60	35	agy-expert-executor	machine	none		
+2026-10-22T16:32:46Z	docs/ja/projects/prj-0001/030-project-management/pm-raci.md	1	passed	186	needs-work	84	7	agy-expert-executor	machine	none		

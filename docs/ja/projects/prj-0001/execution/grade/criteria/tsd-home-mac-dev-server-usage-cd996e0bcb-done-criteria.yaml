@@ -2,7 +2,7 @@
 id: tsd-home-mac-dev-server-usage-grade-criteria
 document: tsd-home-mac-dev-server-usage
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md
-graded_at: "2026-10-20T16:09:19.626Z"
+graded_at: "2026-10-22T16:03:01.858Z"
 graded_by: flash-high-executor
 content_hash: 16177150b6dce7fb283d6df0cbbe75010783c784a89a856d96e8b4b3f2bc58e2
 summary:
@@ -16,21 +16,23 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: The document lacks selection rationale and constraints of technologies mapped to business requirements.
+    reason: The rationale for selecting technologies and their constraints are not aligned with business requirements.
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: The document lacks decision criteria, alternatives, and open issues necessary for PO approval.
+    reason: >-
+      Information necessary for PO approval such as alternative comparison, selection rationale, and unresolved issues
+      is missing.
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: The document lacks version policies, update policies, and licensing constraints for the tools used.
+    reason: Technical constraints, version policies, update policies, and licensing constraints are not identified.
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
@@ -38,8 +40,8 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      The document lacks references to test frameworks and CI/CD environments, verification targets, commands, and
-      expected results.
+      References to test frameworks and CI/CD environments along with verification commands and expected results are
+      absent.
   - id: DC-005
     text: 開発環境構築・ライブラリ選定の参照として使えること
     roles:
