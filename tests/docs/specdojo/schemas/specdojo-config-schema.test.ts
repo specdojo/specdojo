@@ -62,6 +62,18 @@ describe("specdojo-config.schema.yaml", () => {
     expect(valid).toBe(true);
   });
 
+  it("accepts a project integration branch and rejects a blank value", () => {
+    expect(
+      validate({
+        version: 1,
+        projects: { "prj-0001": { integration_branch: "project/custom/develop" } },
+      }),
+    ).toBe(true);
+    expect(validate({ version: 1, projects: { "prj-0001": { integration_branch: " " } } })).toBe(
+      false,
+    );
+  });
+
   it("accepts project-specific parent validations with product repository assignments", () => {
     const valid = validate({
       version: 1,

@@ -35,3 +35,80 @@
     - field: derived_from
       from: ""
       to: '["PJR-WSET"]'
+- v: 1
+  id: reg_ab43db5d0bcf4b87b98710ec7d676a78
+  ts: "2026-10-21T15:52:52Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_45d97ece778c4fd9872aa6e4acc6cfde
+- v: 1
+  id: reg_d3202b8ac1f04b5e8c6ed5429b4e3662
+  ts: "2026-10-21T16:01:39Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit; rate limit fallback: sol-executor -> opus-executor at 2026-10-21T15:54:08.618Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit; rate limit fallback: sol-executor -> opus-executor at 2026-10-21T15:54:08.618Z"
+  previous_event_id: reg_ab43db5d0bcf4b87b98710ec7d676a78
+- v: 1
+  id: reg_d42355be458a4d2fa6cf35c6ebb06257
+  ts: "2026-10-21T16:04:31Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit; rate limit fallback: sol-executor -> opus-executor at 2026-10-21T15:54:08.618Z"
+      to: "-"
+  previous_event_id: reg_d3202b8ac1f04b5e8c6ed5429b4e3662
+- v: 1
+  id: reg_3038e881164f4c02ad5fd89ccd955066
+  ts: "2026-10-21T16:14:22Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d42355be458a4d2fa6cf35c6ebb06257
+- v: 1
+  id: reg_8d28f672b7454f6587c9f1d8511324f6
+  ts: "2026-10-21T16:15:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが利用元の表・差分・親の検証を確かめた。1 回目の単体テストの失敗は plan の名前の乱数の偶然の衝突で、再実行で通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: shared の 8 モジュールの利用元を数え、kata だけが使う yaml-schema-modeline を src/kata へ移した。残る 7 つは shared の別のモジュールが使うか 2 つ以上の機能が使うため残した。3 つ以上の機能をまたぐ循環 2 組は、ほどかずに起票の案を残した
+  previous_event_id: reg_3038e881164f4c02ad5fd89ccd955066

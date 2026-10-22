@@ -1,0 +1,24 @@
+Now waiting for the background integration test task to finish.
+Now waiting for the background integration test task to finish.
+Now waiting for the background integration test task to finish.
+Now waiting for the background catalog validation task to finish.
+Now waiting for the background catalog validation task to finish.
+プロジェクト登録簿の項目 **PJR-62T2「lefthook の markdownlint で対象のファイルがないとき使い方の説明が出ないようにする」** の実装およびテストが完了しました。
+
+### 実施内容
+
+1. **lefthook pre-commit スクリプトの修正**:
+   - [specdojo-pre-commit.mjs](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-62T2/templates/lefthook/tools/specdojo-pre-commit.mjs) に `.markdownlintignore` および `.prettierignore` の除外パターンを評価するロジック（`getIgnoreFilter` / `filterFiles`）を追加しました。
+   - staged なファイルがすべて除外対象となった場合は、`markdownlint` および `prettier` を空の引数で呼び出さずに終了コード `0` で正常終了するようにしました。これにより、markdownlint の Usage（使い方の説明）が出力される挙動を解消しました。
+   - 対象ファイルが存在する場合のリンター実行および違反時のコミット中断の挙動は維持しています。
+
+2. **統合テストの追加**:
+   - [lefthook-scaffold.integration.test.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-62T2/tests/src/shared/lefthook-scaffold.integration.test.ts#L108-L163) に、`.markdownlintignore` で除外されるファイルのみを staged にして commit した場合に、Usage などの説明を出力せずに正常終了することを検証するテストケースを追加しました。
+
+3. **個票および CHANGELOG の更新**:
+   - 個票 [pjr-62t2-lefthook-markdownlint-empty-files.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-62T2/docs/ja/projects/prj-0001/controls/project-register/pjr-62t2-lefthook-markdownlint-empty-files.md) の作業内容を作業完了（`done`）とし、対応結果を記載しました。
+   - [CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-62T2/CHANGELOG.md#L18) の `## [Unreleased]` の不具合修正セクションに対応内容を追記しました。
+
+<specdojo_executor_evidence>
+{"final_message":"lefthook の pre-commit 時に .markdownlintignore で対象ファイルが除外されて空になった場合、markdownlint を呼び出さずに正常終了するよう修正し、統合テストと CHANGELOG を追加しました。","validations":[{"command":"npx prettier --check templates/lefthook/tools/specdojo-pre-commit.mjs tests/src/shared/lefthook-scaffold.integration.test.ts CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-62t2-lefthook-markdownlint-empty-files.md","status":"passed","summary":"変更したスクリプト・テスト・文書の整形を確認した"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証が正常に終了した（未配置成果物の based_on 警告のみ）"},{"command":"npm run validate:schema:file","status":"not_applicable","reason":"変更ファイルに *.yaml や *.yml が含まれないため"}]}
+</specdojo_executor_evidence>

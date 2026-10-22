@@ -35,3 +35,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-HZW3"]'
+- v: 1
+  id: reg_20c8679e0406401b9f0cedde89cfdfb6
+  ts: "2026-10-21T11:34:17Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: done
+  reason: 利用者（indie）が PR のマージ・タグの push・npm stage の承認を行い、オーケストレーターが公開された版と workflow の結果を確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: "specdojo 0.4.1 を npm に公開した（latest）。PR #17 を merge commit で main へ取り込み、v0.4.1 のタグで npm の公開と GitHub Pages の更新が通った。npm から入れた 0.4.1 で init・推奨 preset・振り分けの表・difficulty 付きの起票を確かめた"
+  previous_event_id: reg_415522462d944dcf846c8629111381e3

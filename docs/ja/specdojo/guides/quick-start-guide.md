@@ -69,6 +69,7 @@ Orchestrator providers (...) [codex]: claude        <- 使う AI ツールを 1 
 Delegate work to agents (exec)? [y/N]:              <- Enter（実戦は後で設定する）
 Create a Dev Container? [y/N]: y                    <- y（Dev Container を作る。使わない場合は Enter）
 Add the recommended Dev Container settings? [Y/n]:  <- Enter（推奨 preset を入れる）
+Create Git hooks with lefthook? [y/N]:               <- Enter（この体験では作らない）
 ```
 
 入力が不正な場合は理由が表示され、同じ質問だけがもう一度表示されます。たとえば provider に
@@ -227,7 +228,7 @@ npx specdojo init
 ```
 
 `specdojo init` は、project ID と名前、人の nickname と表示名、利用する agent provider、
-exec・Dev Container の要否を順に質問し、Dev Container を選んだ場合だけ推奨 preset を入れるか（既定は「はい」）を続けて質問します。成果物カタログは対話では質問せず、`--catalog <size>` を
+exec・Dev Container・Git hook の要否を順に質問し、Dev Container を選んだ場合だけ推奨 preset を入れるか（既定は「はい」）を続けて質問します。Git hook は既定では作りません。成果物カタログは対話では質問せず、`--catalog <size>` を
 明示した場合にだけ初期化時に作成します。選択に応じて設定、登録簿、人と
 agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`、exec の起動設定を
 作成します。exec の親検証は、対応する npm script が `package.json` にあるものだけを設定し、
@@ -247,6 +248,7 @@ npx specdojo init --yes \
   --provider claude,codex \
   --exec \
   --devcontainer \
+  --lefthook \
   --dry-run
 ```
 
@@ -347,6 +349,26 @@ npx specdojo config scaffold --provider <name>
 
 `<name>` には `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定します。従来の
 `specdojo exec scaffold --provider <name>` も互換入口として利用できます。
+
+commit 前に文書と SpecDojo の入力を検査する場合は、生成予定と `package.json` への追加内容を
+dry-run で確認してから lefthook を配置します。
+
+```bash
+npx specdojo config scaffold --lefthook --dry-run
+npx specdojo config scaffold --lefthook
+npm install
+```
+
+生成した hook は、変更した Markdown と YAML だけを Prettier で整形し、変更した Markdown だけを
+markdownlint で検査します。対象 project の `project_register_path` 配下を変更した場合は
+`register build`、`catalog_path` 配下を変更した場合は `catalog validate` も実行します。
+`catalog_path` がない構成には catalog の検査を生成せず、時間のかかるテストも pre-commit には
+含めません。SpecDojo の文書が通る `.markdownlint.jsonc` と、provider の agent 定義を検査から外す
+`.markdownlintignore` も生成します。既存の markdownlint 設定と ignore は `--force` を付けても保持します。
+`lefthook.yml` と `tools/` の既存ファイルは `--force` なしでは上書きしません。
+必要な npm script と devDependencies は書き込み前に表示し、同名の既存項目は `--force` を付けても
+保持します。linked worktree または `node_modules` がない環境では installer が安全に skip するため、
+primary worktree で `npm install` または `node tools/install-lefthook.mjs` を実行してください。
 
 Antigravity CLI を無人実行する場合は、先に dry-run でユーザー設定へ追加する permission rule を確認し、明示的に適用します。このグローバル設定は利用者のすべてのリポジトリに効きます。通常の scaffold はユーザーディレクトリへ触れません。
 

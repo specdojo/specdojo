@@ -94,6 +94,8 @@ exec/results/<stem>-result.md
 2. `--task <task-id>` がある場合は、`<stem> = <task-id>` とします。
 3. task identity がない場合は、`<slug>-<UTC>-<rand>` のユニーク名を採番します。
 
+`<rand>` は4バイト（16進8桁）です。同じプロセス内で slug・UTC秒・乱数がすべて重複した場合は、`<rand>-1`、`<rand>-2` のように連番を加えます。plan path から stem を読む処理は stem 全体を連結キーとして扱うため、従来の16進4桁の名前と連番付きの名前をどちらも読み取れます。
+
 これにより、task 実行は固定名で扱い、schedule 非依存の実行は実行ごとの証跡を残せます。
 
 ### 2.4. deliverable指定の解決
@@ -199,10 +201,10 @@ specdojo exec archive --project <project-id> --task <task-id>
 | 軽量実行（状態追跡なし）        | `exec archive` で明示的に移動する |
 | `exec run --archive-on-success` | 成功時に移動する                  |
 
-固定名 plan を `done/` へ移動する場合は、UTC タイムスタンプと短い乱数を付けて衝突を避けます。
+固定名 plan を `done/` へ移動する場合は、UTC タイムスタンプと4バイトの乱数を付けます。同じ名前が既にある場合は、既存ファイルを上書きせず末尾に連番を加えます。
 
 ```text
-exec/plans/done/<slug>-<UTC>-<rand>-plan.md
+exec/plans/done/<slug>-<UTC>-<rand>[-<sequence>]-plan.md
 ```
 
 不要な plan は `done/` へ移動せず削除してもかまいません。plan は catalog と schedule から再生成でき、result が記録として残るためです。

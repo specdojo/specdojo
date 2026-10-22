@@ -145,20 +145,32 @@ export function buildEvent(type: ExecEventType, o: Record<string, unknown>): Exe
   return e;
 }
 
-export function writeEventFile(projectPath: string, event: ExecEventV1): string {
+export function writeEventFile(
+  projectPath: string,
+  event: ExecEventV1,
+  dependencies: { randomHex?: (bytes: number) => string } = {},
+): string {
   const execDir = eventsDirForProject(projectPath);
   ensureDir(execDir);
 
   const tsPart = tsForFilenameUtc(event.ts);
   const byPart = safeSlug(event.by);
   const idPart = safeSlug(event.task_id);
-  const rand = randomHex(2);
+  const makeRandomHex = dependencies.randomHex ?? randomHex;
+  const base = `${tsPart}_${byPart}_${idPart}_${event.type}_${makeRandomHex(4)}`;
+  const contents = JSON.stringify(event, null, 2) + "\n";
 
-  const filename = `${tsPart}_${byPart}_${idPart}_${event.type}_${rand}.json`;
-  const fullpath = join(execDir, filename);
-
-  writeFileSync(fullpath, JSON.stringify(event, null, 2) + "\n", "utf8");
-  return fullpath;
+  for (let sequence = 0; ; sequence += 1) {
+    const filename = `${base}${sequence === 0 ? "" : `-${sequence}`}.json`;
+    const fullpath = join(execDir, filename);
+    try {
+      // `wx` preserves the append-only event contract even if another writer wins the name.
+      writeFileSync(fullpath, contents, { encoding: "utf8", flag: "wx" });
+      return fullpath;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== "EEXIST") throw error;
+    }
+  }
 }
 
 export function foldEventsToState(

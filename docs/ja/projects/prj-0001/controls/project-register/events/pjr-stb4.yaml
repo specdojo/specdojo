@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6f565979cb1f49ccaab4b758eae50b5d
+  ts: "2026-10-21T14:57:23Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: opencode の README に Apple シリコン向けの mlx 版の gemma の案内を加える
+    - field: description
+      from: ""
+      to: 名簿の雛形は環境を選ばない gemma4:26b と gemma4:31b を既定にした（PJR-2ASZ）。Mac の Apple シリコンでは Ollama の公式の mlx 版（gemma4:26b-mlx など）が使えるため、選び方と書き換え方を opencode の README に一言添える
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-21"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2ASZ"]'
+- v: 1
+  id: reg_c8e097c5daa449c4a14b336dcc397440
+  ts: "2026-10-21T15:20:44Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6f565979cb1f49ccaab4b758eae50b5d
+- v: 1
+  id: reg_5a8187396af64f51af5b8edd972ed665
+  ts: "2026-10-21T15:45:08Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c8e097c5daa449c4a14b336dcc397440
+- v: 1
+  id: reg_b6c3d75a6df8435cab1a5c8ec9d75097
+  ts: "2026-10-21T15:46:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分を確かめ、タグ名が Ollama の公式の一覧にあるものと一致することを確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: opencode の README に、Apple シリコンでは公式の mlx 版（gemma4:26b-mlx・gemma4:31b-mlx）を pull して使えること、名簿の model と Modelfile の FROM の書き換え方、既定は無印のタグのままであることを書いた
+  previous_event_id: reg_5a8187396af64f51af5b8edd972ed665

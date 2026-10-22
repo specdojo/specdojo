@@ -2,6 +2,28 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [0.4.2] - 2026-10-22
+
+### 追加機能
+
+- `specdojo init --lefthook` と `specdojo config scaffold --lefthook` で、利用リポジトリ向けの `lefthook.yml`、SpecDojo 文書向けの markdownlint 設定と agent 定義の除外、依存なしの入口スクリプトを生成できるようにしました。pre-commit は staged の Markdown・YAML に対する Prettier、Markdown に対する markdownlint、設定済みパスの変更に対する `register build`・`catalog validate` を実行します。既存ファイル・npm script・依存は上書きせず、package への追加内容を先に表示します（PJR-7H7N）。
+- 別 project の作業ツリーから `register add --project <project-id> --commit` を実行し、対象 project の統合ブランチへ直接起票できるようにしました。統合ブランチは project の `integration_branch` で指定でき、省略時は `project/<project-id>/develop` です。project 修飾した `--from` は参照先 project の統合ブランチから存在を確認します（PJR-W93C）。
+
+### 変更
+
+- ドキュメントサイトでは exec の plan / result をページ生成の対象から外し、実行記録一覧などからのリンクを GitHub 上の正本へ置き換えるようにしました。元の実行記録と dead link 検査は維持したまま、ページ数とビルド時のメモリ使用量を削減します（PJR-98P8）。
+- `templates/init-agent-members.yaml` で配布する OpenCode の `gemma-reporter` の既定モデルを 26b（`ollama-local/gemma4:26b`）にし、`gemma-executor`・`gemma-review-executor` および対話型オーケストレーターのモデル名からローカル固有のタグ（`-mlx-work-64k`）を除いて利用者が `ollama pull` で取得できるタグ名（`ollama-local/gemma4:31b`）に改めました。また `templates/opencode/README.md` に文脈長拡張のための Modelfile 手順と既存名簿の書き換え案内を追記しました（PJR-2ASZ）。
+
+### 不具合修正
+
+- plan / result の stem、アーカイブ済み plan、実行 event の乱数部分を2バイトから4バイトへ広げ、同じ slug・UTC秒・乱数が重複した場合は連番で別名にするようにしました。event は排他的な新規作成で既存履歴を上書きせず、旧形式の plan 名も引き続き読み取れます（PJR-CNNT）。
+- `templates/lefthook/tools/specdojo-pre-commit.mjs` で、commit したファイルが `.markdownlintignore` や `.prettierignore` で除外されて検査対象がなくなった場合に、markdownlint や Prettier を呼ばずに成功で終えるようにしました。除外ファイルのみを commit したときに markdownlint の使い方の説明（Usage）が出力される問題を解消します（PJR-62T2）。
+- `register build` が生成する登録簿一覧・派生ビュー・PM ログで、自由記述セルのアスタリスクとアンダースコアをエスケープするようにしました。既存のコードスパンとエスケープ済みの記号は保持し、`orch:*` のような記述が複数ある場合も markdownlint（MD037）で止まりません（PJR-6SQH）。
+
+### 文書
+
+- `templates/opencode/README.md` に、Mac の Apple シリコン向けに Ollama の公式 mlx 版（`gemma4:26b-mlx`・`gemma4:31b-mlx`）を利用する場合の指定方法と Modelfile での文脈拡張の案内を追記しました（PJR-STB4）。
+
 ## [0.4.1] - 2026-10-21
 
 ### 追加機能

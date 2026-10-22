@@ -3,8 +3,9 @@ import { basename, join, relative, resolve } from "node:path";
 import { collectResolvedDeliverables } from "../catalog/build.js";
 import { resolveBasePath } from "../catalog/paths.js";
 import type { DctDoc } from "../catalog/types.js";
+import { collectCatalogFilesByDomain } from "../shared/catalog-files.js";
 import { readYaml } from "../shared/fs.js";
-import { collectCatalogFilesByDomain, loadTimelineIndex } from "../dashboard/timeline-build.js";
+import { loadTimelineIndex } from "../shared/timeline-index.js";
 
 export type StrategyCatalogRef = {
   id: string;

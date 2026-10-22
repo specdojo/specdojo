@@ -45,11 +45,29 @@ export function execDocId(projectId: string, prefix: "xep" | "xrp", localBase: s
   return projectId ? `${projectId}:${localId}` : localId;
 }
 
-// In-place plan/result share one unique stem (`<slug>-<UTC>-<rand>`) so each run keeps a
-// distinct file and id (no doc-index collision) and the result name is derivable from the
-// plan. Mirrors the done/ archive naming convention (tsForFilenameUtc + randomHex).
-export function buildInPlaceStem(slug: string): string {
-  return `${slug}-${tsForFilenameUtc(nowUtcIsoSeconds())}-${randomHex(2)}`;
+const issuedInPlaceStems = new Set<string>();
+
+// In-place plan/result share one unique stem (`<slug>-<UTC>-<rand>[-<sequence>]`) so each
+// run keeps a distinct file and id (no doc-index collision) and the result name is derivable
+// from the plan. The sequence is only used if the random source repeats within this process.
+export function buildInPlaceStem(
+  slug: string,
+  dependencies: {
+    now?: () => string;
+    randomHex?: (bytes: number) => string;
+  } = {},
+): string {
+  const now = dependencies.now ?? nowUtcIsoSeconds;
+  const makeRandomHex = dependencies.randomHex ?? randomHex;
+  const base = `${slug}-${tsForFilenameUtc(now())}-${makeRandomHex(4)}`;
+  let stem = base;
+  let sequence = 1;
+  while (issuedInPlaceStems.has(stem)) {
+    stem = `${base}-${sequence}`;
+    sequence += 1;
+  }
+  issuedInPlaceStems.add(stem);
+  return stem;
 }
 
 // Recover the shared stem from a plan path: `.../exec/plans/<stem>-plan.md` → `<stem>`.

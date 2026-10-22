@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-T30J",
+  "run_id": "20261021T155249574Z-8396e40d",
+  "stage": {
+    "role": "executor",
+    "actor": "opus-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-21T15:54:03.098Z",
+    "completed_at": "2026-10-21T15:57:22.218Z",
+    "exit_code": 0,
+    "attempts": 2
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-t30j.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-t30j-shared-scope-and-multi-feature-cycles.md",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/yaml-schema-modeline.ts -> src/kata/yaml-schema-modeline.ts",
+      "status": "R"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-t30j-shared-scope-and-multi-feature-cycles.md",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/yaml-schema-modeline.ts -> src/kata/yaml-schema-modeline.ts",
+      "status": "R"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": "...r-t30j-shared-scope-and-multi-feature-cycles.md | 43 +++++++++++++++++++++-\n src/kata/kata.ts                                   |  2 +-\n src/{shared => kata}/yaml-schema-modeline.ts       |  0\n 3 files changed, 42 insertions(+), 3 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/kata",
+      "status": "passed",
+      "summary": "2 files / 41 tests passed after moving yaml-schema-modeline into src/kata"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-t30j-shared-scope-and-multi-feature-cycles.md src/kata/kata.ts src/kata/yaml-schema-modeline.ts",
+      "status": "passed",
+      "summary": "formatted ticket table; TS files unchanged"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo catalog validate",
+      "status": "not_applicable",
+      "summary": "no catalog change",
+      "reason": "changes under docs/ja/projects/ are limited to a project-register ticket; no catalog or deliverable files were changed"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T30J/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nmax-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T30J/src/schedule/build.ts\n  349:8  warning  Function 'buildScheduleTrack' has too many lines (435). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T30J/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n✖ 33 problems (0 errors, 33 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T30J\n\nWritten: lefthook.yml\nWritten: tools/install-lefthook.mjs\nWritten: tools/specdojo-pre-commit.mjs\nPlanned package.json additions:\n{\n  \"scripts\": {\n    \"prepare\": \"node tools/install-lefthook.mjs\",\n    \"pre-commit\": \"lefthook run pre-commit\"\n  },\n  \"devDependencies\": {\n    \"lefthook\": \"^2.1.9\",\n    \"prettier\": \"^3.8.4\",\n \n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.1 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T30J/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T30J/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.1 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.1 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-T30J\n\nRate limit detected for pinned agent pinned. Waiting until 2026-10-21T16:11:30.322Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-21T16:10:30.726Z.\nfallback complete\nConnection error detected for pinned agent primary-reporter. Falling back to fallback-reporte\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "rate_limit_events": [
+    {
+      "action": "fallback",
+      "trigger": "rate_limit",
+      "from_actor": "sol-executor",
+      "to_actor": "opus-executor",
+      "resumed_at": "2026-10-21T15:54:08.618Z"
+    }
+  ],
+  "final_message": "`src/shared/` の 8 モジュールの利用元を数え、kata だけが使う `yaml-schema-modeline` を `src/kata/` へ移して import を直した。残りの 7 つは `src/shared/` 内の別モジュールか 2 つ以上の機能が使うため残した。3 つ以上の機能をまたぐ循環は 2 組（schedule→dashboard→exec→schedule、schedule→dashboard→routine→exec→schedule）で、どちらも `schedule/strategy-generate-scope.ts` → `dashboard/timeline-build.ts` を通る。この項目ではほどかず、起票案と合わせて個票の対応結果に書いた。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-T30J/20261021T155249574Z-8396e40d/executor.log",
+      "bytes": 3799,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-T30J/20261021T155249574Z-8396e40d/parent-validation-attempt-1-test-unit.log",
+      "bytes": 3810,
+      "truncated": false
+    }
+  ]
+}

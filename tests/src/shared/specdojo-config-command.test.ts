@@ -113,6 +113,42 @@ describe("config onboarding commands", () => {
       rmSync(repo, { recursive: true, force: true });
     }
   });
+
+  it("scaffolds lefthook files through the config command", async () => {
+    const repo = mkdtempSync(join(tmpdir(), "specdojo-config-lefthook-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+    try {
+      mkdirSync(join(repo, ".git"));
+      mkdirSync(join(repo, ".specdojo"));
+      writeFileSync(
+        join(repo, ".specdojo/specdojo.config.json"),
+        `${JSON.stringify(
+          {
+            version: 1,
+            current_project: "prj-0001",
+            projects: {
+              "prj-0001": {
+                base_path: "docs/ja/projects/prj-0001",
+                project_register_path: "controls/project-register",
+              },
+            },
+          },
+          null,
+          2,
+        )}\n`,
+        "utf8",
+      );
+      writeFileSync(join(repo, "package.json"), '{"name":"fixture","scripts":{}}\n', "utf8");
+      process.chdir(repo);
+      await runConfigCommand(["scaffold", "--lefthook"]);
+
+      expect(existsSync(join(repo, "lefthook.yml"))).toBe(true);
+      expect(existsSync(join(repo, "tools/specdojo-pre-commit.mjs"))).toBe(true);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("config init .gitignore", () => {

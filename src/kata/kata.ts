@@ -7,7 +7,7 @@ import {
   resolveSpecdojoReferencePathIfExists,
   specdojoResourceCandidates,
 } from "../docs/template-resolution.js";
-import { readYamlSchemaModelineRef } from "../shared/yaml-schema-modeline.js";
+import { readYamlSchemaModelineRef } from "./yaml-schema-modeline.js";
 
 // 実践の型（rulebook / recipe / sample / template）の解決を 1 か所に集約する。
 // plan 生成（明示パスの注入）と validate（参照先の存在確認）の両方から使う。

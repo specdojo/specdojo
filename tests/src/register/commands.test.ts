@@ -1604,7 +1604,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
 
       // 一覧に出る暦日は移行前後で変わらない。
       const views = readFileSync(join(registerDir, "generated/pjr-index.md"), "utf8");
-      expect(views).toContain("| ARC | 2026-08-01 | _TODO_ | 2026-08-05 |");
+      expect(views).toContain("| ARC | 2026-08-01 | \\_TODO\\_ | 2026-08-05 |");
     });
   });
 

@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_645eecb991534271b844a52a49ec48f8
+  ts: "2026-10-21T22:08:37Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: ドキュメントサイトから exec の plan と result を外し、リンクを GitHub の表示に置き換える
+    - field: description
+      from: ""
+      to: PJR-G85C の調査で、plan と result がサイトの約 6 割を占め、手元の docs:build がメモリ不足で落ちることが分かった。推奨の案（サイトから外し、実行の記録の一覧などからのリンクを GitHub のファイル表示へ置き換える）を実装する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-G85C"]'
+- v: 1
+  id: reg_8c1a9670bbe649b583029a2762c50a9c
+  ts: "2026-10-21T22:10:26Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_645eecb991534271b844a52a49ec48f8
+- v: 1
+  id: reg_20f6d18d572747df835a050f797c060d
+  ts: "2026-10-21T22:24:28Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_8c1a9670bbe649b583029a2762c50a9c
+- v: 1
+  id: reg_926676de5f5f4091af409f6b498a0a83
+  ts: "2026-10-21T22:47:53Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: executor の sandbox では docs:build を通せなかったため、オーケストレーターが NODE_OPTIONS を広げずに docs:build を流し、約 113 秒で通ること、dead link が 0 件であること、出力のリンクが GitHub の表示を指し plan と result のページがないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: ドキュメントサイトから全 project の exec の plan と result を外し、それらへの相対リンクと wikilink をサイトのビルドのときだけ GitHub のファイル表示へ置き換えた。リポジトリの文書と生成物は変えていない
+  previous_event_id: reg_20f6d18d572747df835a050f797c060d

@@ -1,0 +1,23 @@
+タスク PJR-2ASZ「配布する名簿の雛形の gemma の reporter を 26b にし、モデル名を利用者の環境に合わせる」の executor stage に対応しました。
+
+### 実施内容
+
+1. **名簿雛形の gemma モデル更新**
+   - [templates/init-agent-members.yaml](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2ASZ/templates/init-agent-members.yaml) の `gemma-reporter` の既定モデルを `ollama-local/gemma4:26b` に更新しました。
+   - `gemma-executor` および `gemma-review-executor` のモデル名からローカル固有タグ（`-mlx-work-64k`）を除去し、`ollama-local/gemma4:31b` に統一しました。
+   - タグ名は Web 検索ツール経由で `ollama.com` の公式モデル情報（`gemma4:26b`、`gemma4:31b`）を確認して決定しました。
+
+2. **OpenCode テンプレートの更新**
+   - [templates/opencode/agents/specdojo-orchestrator.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2ASZ/templates/opencode/agents/specdojo-orchestrator.md) の `model` から `-mlx-work-64k` を削除し、`ollama-local/gemma4:31b` に更新しました。
+   - [templates/opencode/README.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2ASZ/templates/opencode/README.md) のモデル設定例を公式タグ表記に改め、文脈長（`num_ctx` など）拡張のための Modelfile によるタグ作成・名簿書き換え手順、および既存導入プロジェクトで `gemma-reporter` を 26b に変更するための書き換え手順を追記しました。
+
+3. **単体テストの更新**
+   - [tests/src/commands/init.test.ts](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2ASZ/tests/src/commands/init.test.ts) を更新し、`specdojo init` で opencode を選択した際の名簿および振り分け表（`medium` ルーティング）の reporter が `gemma-reporter`（`ollama-local/gemma4:26b`）の実体を解決することを検証しました。
+
+4. **CHANGELOG と登録簿個票の更新**
+   - [CHANGELOG.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2ASZ/CHANGELOG.md) の `## [Unreleased]` の節に変更内容を追記しました。
+   - 個票 [pjr-2asz-init-gemma-reporter-26b.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-2ASZ/docs/ja/projects/prj-0001/controls/project-register/pjr-2asz-init-gemma-reporter-26b.md) の作業内容と対応結果セクションを実施内容で更新しました。
+
+<specdojo_executor_evidence>
+{"final_message":"OpenCode の gemma-reporter の既定モデルを 26b（ollama-local/gemma4:26b）に更新し、gemma の各エージェントおよび雛形からローカル固有タグを除去して公式タグ（ollama-local/gemma4:31b）に統一しました。また templates/opencode/README.md に Modelfile による文脈長拡張手順および既存名簿の書き換え案内を追記し、単体テストと CHANGELOG を更新しました。","validations":[{"command":"npm run validate:schema:file -- --modeline templates/init-agent-members.yaml","status":"passed","summary":"templates/init-agent-members.yaml is valid against agent-members.schema.yaml"},{"command":"npx prettier --check CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-2asz-init-gemma-reporter-26b.md templates/init-agent-members.yaml templates/opencode/README.md templates/opencode/agents/specdojo-orchestrator.md tests/src/commands/init.test.ts","status":"passed","summary":"All changed files pass Prettier formatting checks"},{"command":"npm run validate:catalog","status":"passed","summary":"Catalog files validated successfully"}]}
+</specdojo_executor_evidence>

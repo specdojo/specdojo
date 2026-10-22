@@ -267,7 +267,9 @@ describe("config scaffold CLI command", () => {
       process.chdir(tempDir);
       await runConfigCommand(["scaffold"]);
       expect(process.exitCode).toBe(1);
-      expect(stderr.join("")).toContain("Specify --provider <name> or --workspace to scaffold.");
+      expect(stderr.join("")).toContain(
+        "Specify --provider <name>, --workspace, or --lefthook to scaffold.",
+      );
     } finally {
       rmSync(tempDir, { recursive: true, force: true });
     }

@@ -34,9 +34,10 @@ kata からリンクされる guide / reference）のうち、利用リポジト
 `node_modules/specdojo` です。
 
 サイドバーは URL の範囲ごとに分かれ、`/ja/specdojo/` では SpecDojo 文書、
-`/ja/projects/<project-id>/` では対象 project の文書だけを表示します。plan / result / event などの
-実行記録はページとしてビルドしますが、サイドバーには列挙しません。project の dashboard から
-`exec-records.md` を経由して参照できます。
+`/ja/projects/<project-id>/` では対象 project の文書だけを表示します。exec の plan / result は
+ページとしてビルドせず、`exec-records.md` などからのリンクを GitHub 上の正本へ置き換えます。
+event などの実行記録はページとして残しますが、サイドバーには列挙しません。project の dashboard
+から `exec-records.md` を経由して参照できます。
 
 ローカル検索には SpecDojo 文書と登録簿一覧 `pjr-index` を含め、登録簿の個票、派生ビュー、管理ログ、
 実行記録を含めません。登録項目は `pjr-index` のタイトル・説明・結論から検索し、一覧のリンクから

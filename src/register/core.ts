@@ -348,8 +348,9 @@ export function generatePjrId(
 
 export function formatTableRow(item: PjrDisplayItem): string {
   // frontmatter・本文由来を問わず、表へ展開する全セルを同じ規則で無害化する。
-  // 列区切りの `|` と改行をエスケープし、山括弧プレースホルダをインラインコード化する。
-  // 既存コードスパンは変換処理が保持するため、再生成しても二重に囲まれない。
+  // 列区切りの `|`、強調記号、改行をエスケープし、山括弧プレースホルダを
+  // インラインコード化する。既存コードスパンは変換処理が保持するため、再生成しても
+  // 二重に囲まれない。
   const cells = [
     item.id,
     item.status,

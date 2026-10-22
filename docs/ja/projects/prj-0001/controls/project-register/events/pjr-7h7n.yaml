@@ -32,3 +32,138 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_45a9a47f7f774035a97d96908994952f
+  ts: "2026-10-21T15:28:15Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b1d682e76ff946a7a4000ac103f5247b
+- v: 1
+  id: reg_42fa4137694a410391699a3b53dfb889
+  ts: "2026-10-21T15:41:31Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_45a9a47f7f774035a97d96908994952f
+- v: 1
+  id: reg_7b6c990a8ada4960b49f77645d25f2da
+  ts: "2026-10-21T15:42:32Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration, test-unit"
+      to: "-"
+  previous_event_id: reg_42fa4137694a410391699a3b53dfb889
+- v: 1
+  id: reg_ef9ae75b7119444e8d70ea43c46ee1aa
+  ts: "2026-10-21T15:51:55Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sol-executor -> opus-executor at 2026-10-21T15:42:41.918Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7b6c990a8ada4960b49f77645d25f2da
+- v: 1
+  id: reg_60ae318400cd41e8bcbbefbf14cffa22
+  ts: "2026-10-21T16:41:08Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_ef9ae75b7119444e8d70ea43c46ee1aa
+- v: 1
+  id: reg_3fb956f89f124af49c701b01eaee3182
+  ts: "2026-10-21T16:49:21Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+  previous_event_id: reg_60ae318400cd41e8bcbbefbf14cffa22
+- v: 1
+  id: reg_9dba80e2609342f39b875e24234ba282
+  ts: "2026-10-21T16:49:57Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: typecheck, test-unit"
+      to: "-"
+  previous_event_id: reg_3fb956f89f124af49c701b01eaee3182
+- v: 1
+  id: reg_6a08c65103844b4d8e5d82929c63a626
+  ts: "2026-10-21T16:57:16Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9dba80e2609342f39b875e24234ba282
+- v: 1
+  id: reg_d069b67695a0488481849e3f63050510
+  ts: "2026-10-21T16:58:32Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: "オーケストレーターが一時のリポジトリで、init --lefthook の直後の最初の commit が通ること、違反のある Markdown の commit が止まることを確かめた。指摘: 対象の Markdown がすべて除外されたとき markdownlint の使い方の説明が出る（動きは正しい）"
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: init --lefthook と config scaffold --lefthook で、lefthook.yml・hook の入口・markdownlint の設定と除外を作るようにした。commit の前に、変えた Markdown と YAML の Prettier、Markdown の markdownlint、登録簿の register build、カタログの catalog validate を流す。既定は作らず、既存のファイルと package.json の項目は上書きしない
+  previous_event_id: reg_6a08c65103844b4d8e5d82929c63a626

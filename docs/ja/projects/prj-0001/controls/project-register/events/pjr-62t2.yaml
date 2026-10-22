@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_618f04ea16e349ef8690891d78d82678
+  ts: "2026-10-21T22:09:18Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: lefthook の markdownlint で対象のファイルがないとき使い方の説明が出ないようにする
+    - field: description
+      from: ""
+      to: PJR-7H7N の hook は、commit した Markdown がすべて除外の設定で外れると、ファイルなしで markdownlint を呼び、使い方の説明が出る。対象がないときは markdownlint を呼ばずに終える
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-7H7N"]'
+- v: 1
+  id: reg_54b6db4872ce437abbc37736775419c9
+  ts: "2026-10-21T22:11:33Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_618f04ea16e349ef8690891d78d82678
+- v: 1
+  id: reg_33977108e47849508d510bdaa11f2f1c
+  ts: "2026-10-21T22:38:09Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /integration/ tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (wo…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /integration/ tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (wo…"
+  previous_event_id: reg_54b6db4872ce437abbc37736775419c9
+- v: 1
+  id: reg_cf8bc8b1cd4d4048b8924108ee7e695a
+  ts: "2026-10-21T22:54:17Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /integration/ tests/src/exec/pipeline-e2e.integration.test.ts > executor / reporter pipeline resume E2E (wo…"
+      to: "-"
+  previous_event_id: reg_33977108e47849508d510bdaa11f2f1c
+- v: 1
+  id: reg_9ff4db37e50848f6b74b333721d6ecd5
+  ts: "2026-10-21T23:02:55Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cf8bc8b1cd4d4048b8924108ee7e695a
+- v: 1
+  id: reg_df104bdfd3ef42459f28965916fda958
+  ts: "2026-10-21T23:06:51Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが一時のリポジトリで、init --lefthook の直後の最初の commit で使い方の説明が出ないこと、違反のある Markdown の commit が止まることを確かめた。1 回目の統合は並行の検証の負荷で E2E が時間切れになり、再開で通った
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: lefthook の hook で、.markdownlintignore で対象のファイルがなくなったときは markdownlint を呼ばずに成功で終えるようにした。対象があるときは今までどおり違反で止まる
+  previous_event_id: reg_9ff4db37e50848f6b74b333721d6ecd5

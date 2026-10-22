@@ -1,0 +1,14 @@
+別 project の統合ブランチへ直接起票する機能を実装しました。
+
+- `integration_branch` 設定と既定ブランチ解決を追加
+- 既存／一時 worktree での起票・再生成・1 commit に対応
+- 未 commit 登録簿、`--commit` 欠落、状態遷移、存在しないブランチを拒否
+- project 修飾 `--from` を統合ブランチの Git tree で検証
+- 単体・統合テスト、利用者向け文書、CHANGELOG、個票を更新
+- result ファイルと登録簿ステータスは未変更
+
+親 runner が lint、型検査、単体・統合テスト、schema 検証を実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"別 project の統合ブランチへの安全な register add と project 修飾 --from の検証を実装し、テスト・文書・個票を更新した。","validations":[{"command":"npx prettier --write src/register/cross-project.ts src/register/register.ts src/register/derivation.ts src/shared/specdojo-config.ts tests/src/register/cross-project.test.ts tests/src/register/cross-project.integration.test.ts tests/docs/specdojo/schemas/specdojo-config-schema.test.ts docs/specdojo/schemas/v1/specdojo-config.schema.yaml docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/specdojo/guides/register-operation-guide.md docs/ja/specdojo/references/command-reference.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-w93c-cross-project-register-add.md","status":"passed","summary":"変更した TypeScript・Markdown・YAML を整形した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全 catalog が OK。既存の未作成文書に関する警告のみ。"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"登録簿の検証と全派生ビューの再生成に成功した。"},{"command":"git diff --check","status":"passed","summary":"空白エラーは検出されなかった。"},{"command":"npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree","status":"requires_human","summary":"PJR-W93C の統合後に、PJR-JSEY の手順で配布 CLI の register 実行経路を確認する必要がある。"}]}
+</specdojo_executor_evidence>
