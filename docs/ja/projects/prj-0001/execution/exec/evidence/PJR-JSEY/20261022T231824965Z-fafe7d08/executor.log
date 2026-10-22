@@ -1,0 +1,10 @@
+個票の「対応結果」の表に、PJR-CT6G の行を 1 行追記しました。変更したのは個票だけです。
+
+- **追記した行:** 2026-10-23 08:19、PJR-CT6G、sonnet-executor。
+- **PJR-CT6G を選んだ理由:** `git log --merges` を見ると、完了条件の項目リストのうち最も新しく統合されていたのが PJR-CT6G だったためです。`pjr-index.md` は読めませんでした。PJR-Q4CD など、他の項目の統合時期は確認していません。
+- **日時と agent 名:** 日時は `date` コマンドで確認した現在の JST です。agent 名は、直近の行に合わせて sonnet-executor にしました。
+- **親の検証:** 親 runner が実行するため、実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票 pjr-jsey-exec-run-split-smoke.md の対応結果の表に PJR-CT6G の行（2026-10-23 08:19 JST, sonnet-executor）を追記した。他のファイルは変更していない。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検証のため executor では実行しない"}]}
+</specdojo_executor_evidence>
