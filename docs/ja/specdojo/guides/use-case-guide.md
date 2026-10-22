@@ -76,7 +76,7 @@ flowchart TD
 
 - ゴール: 目的・スコープ・対象成果物が未確定な状態を、記録しながら決めていく。
 - 進め方: `issue` / `question` を登録し、調査のうえ `decision` で方針を確定し、`todo` で成果物カタログ作成につなげる。決定後は schedule 側で計画済み作業を管理する。
-- 主に使う文書: [登録簿運用ガイド](register-operation-guide.md)、[Quick Startガイド](quick-start-guide.md) の `registerで課題と判断を整理する`。
+- 主に使う文書: [Quick Startガイド](quick-start-guide.md) の `registerをユースケース別に使う`、[登録簿運用ガイド](register-operation-guide.md)。
 
 ### 2.3. 既存プロダクト（文書なし）から着手する
 
@@ -96,7 +96,7 @@ flowchart TD
 
 - ゴール: agent の変更を task 単位で隔離し、成功時だけ統合する。
 - 進め方: 統合先ブランチにいることを確認し、`exec run --worktree`（または `--auto`）で実行する。段階ごとに確認する場合は分割コマンドを使う。
-- 主に使う文書: [Quick Startガイド](quick-start-guide.md) の `（発展）worktreeで1タスクを隔離実行する`、[exec worktree運用ガイド](exec-worktree-guide.md)、[ブランチワークフローガイド](branch-workflow-guide.md)。
+- 主に使う文書: [Quick Startガイド](quick-start-guide.md) の `発展: worktreeで1タスクを隔離実行する`、[exec worktree運用ガイド](exec-worktree-guide.md)、[ブランチワークフローガイド](branch-workflow-guide.md)。
 
 ### 3.3. 対話（チャット）で運用する
 
