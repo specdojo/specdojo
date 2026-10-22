@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: high
   difficulty: hard
   owner: DEV
@@ -54,11 +54,14 @@ Quick Start は register の使い方が最初の体験とカタログ作成へ�
 
 | No  | 作業                                                 | 担当 | 状態 | メモ            |
 | --- | ---------------------------------------------------- | ---- | ---- | --------------- |
-| 1   | Quick Start を register のユースケース別に組み替える | DEV  | open | ZH7Q・47S6 の後 |
+| 1   | Quick Start を register のユースケース別に組み替える | DEV  | done | ZH7Q・47S6 の後 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- [[specdojo:quick-start-guide]] の 1 章と 2 章を維持し、3 章を register の 12 ユースケースと、従来の issue → decision → todo → 成果物カタログの流れに組み替えた。
+- 各ユースケースに「こんなとき」、`# チャット:`、`--project` を明示したコマンドを置き、`difficulty` の振り分け、成果物・kata の approach、統合後 review、夜間実行、再開、別 project・別リポジトリへの起票を追加した。
+- 成果物カタログ、Schedule、worktree、routine の章を発展手順として後段に置き、[[specdojo:use-case-guide]] の参照先見出しを新しい構成へ合わせた。
+- CLI の `register add --help`、`register update --help`、`exec run --help`、`orchestrator night --help` と書き込まない dry-run で掲載構文を確認した。残課題はない。
 
 ## 5. 関連ドキュメント
 
