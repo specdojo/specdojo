@@ -27,6 +27,9 @@ specdojo:
 - 次の版の範囲とする（2026-10-22、利用者が承認）。
 - `devcontainer scaffold --preset recommended`（`init` で Dev Container を選んだときの既定を含む）で、apt の `gh` を入れる。ログイン情報（`~/.config/gh`）は、ほかの provider の設定と同じく名前付きボリュームに保存し、コンテナを作り直しても残る。ホストの認証情報はマウントせず、自動でログインもしない。`--preset` を使わない場合は今の動きのままとする。
 - 配布する agent の権限設定（claude のロール別の settings、codex・opencode・antigravity の対応する設定や agent の定義のうち、コマンドの許可と禁止を書けるもの）に、`git push` と、`gh` の書き込み操作（少なくとも `gh pr create`・`gh pr merge`・`gh pr close`・`gh release`・`gh repo`・`gh api` の書き込み）を止める規則を加える。agent に `gh` の読み取り（`gh pr view` など）を許すかは設計で決め、理由を result に書く。provider ごとに止められる範囲と止められない範囲を result に表で書く。
+- 追加（2026-10-22、1 回目の統合の後の確認で判明、利用者が承認）: `init` と `config scaffold` が作るオーケストレーターの起動（`orch:opus`・`orch:sonnet` など）に、executor 用の権限設定（`settings.edit.json`）を渡さない。executor 用の設定は保護された設定（`.specdojo/`・`package.json`・`CLAUDE.md` など）の編集も禁じるため、利用者の承認を得てオーケストレーターが行う設定の変更ができなくなる。
+- 追加: オーケストレーター専用の権限設定（例: `templates/claude/settings.orchestrator.json`）を作り、オーケストレーターの起動にはそれを渡す。止めるのは `git push` と `gh` の書き込み操作だけとし、保護された設定の編集は禁じない。`gh` の読み取り（`gh pr view`・`gh pr list`・`gh run list`・`gh run view`・`gh release view` など）はオーケストレーターにだけ許す。executor と reporter は 1 回目の作りどおり `gh` を全面的に禁じる。claude 以外の provider でオーケストレーターに同じ区別を付けられるかを確かめ、付けられない場合はその理由を result の表に書く。
+- 追加: 単体テストで、オーケストレーターの起動に executor 用の設定が渡らないこと、オーケストレーター用の設定で `gh` の読み取りが許され書き込みと `git push` が禁じられること、executor と reporter の設定は全面禁止のままであることを確かめる。
 - 本リポジトリの `.specdojo/` や `.claude/` などの保護された設定は変えない（必要なら変更案を result に書く）。
 - [[specdojo:remote-host-development-guide]] の推奨 preset の説明に、`gh` が入ること、ログインは利用者が必要なときに行うこと、コンテナの中の agent からも認証が見えるため agent の権限設定で書き込み操作を止めていることを書く。
 - 単体テストで、推奨 preset の生成物に `gh` とログイン情報のボリュームが入ること、preset を使わないときは入らないこと、配布する権限設定に禁止の規則が入っていることを確かめる。
