@@ -44,7 +44,11 @@ Mermaid 12 で ELK が同梱され既定になったが、docs-site の mermaid-
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `packages/docs-site/mermaid-config.json` の全体および flowchart の既定レイアウトを `elk` に変更し、`fontFamily` に `Noto Color Emoji` を追加した。
+- `.devcontainer/Dockerfile` に `fonts-noto-color-emoji` を追加し、ローカルの Mermaid 描画環境で絵文字フォントを利用できるようにした。
+- [[specdojo:docs-editing-guide]] に ELK、辺が多い図の分割、`architecture` 図、`block` 図の使い分けを追記した。Mermaid 12.0.0 では `architecture` 図の辺ラベルが使えないことと、組み込みアイコン5種も明記した。
+- `CHANGELOG.md` の `Unreleased` にドキュメントサイトの変更を記載した。
+- 残課題: 保護設定 `.github/workflows/deploy.yml` のフォント導入を `fonts-noto-cjk` から `fonts-noto-cjk fonts-noto-color-emoji` へ変更し、devcontainer の再ビルド後に `npm run docs:rebuild:mermaid` で SVG の描画を確認する。いずれもオーケストレーターが行う。
 
 ## 5. 関連ドキュメント
 
