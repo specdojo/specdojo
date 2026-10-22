@@ -240,6 +240,11 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
   let emacsInitTemplate: string | undefined;
   let vimrcTemplate: string | undefined;
 
+  if (recommended) {
+    aptPackages.push("gh");
+    devcontainer.mounts.push(`source=${volumeName("gh")},target=/home/node/.config/gh,type=volume`);
+  }
+
   if (effectiveTmux) {
     aptPackages.push("tmux");
   }

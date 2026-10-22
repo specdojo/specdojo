@@ -48,10 +48,7 @@ describe("runDevcontainerScaffold", () => {
             workspaceFolder:
               "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
             features: {},
-            mounts: [
-              "source=specdojo-git,target=/home/node/.config/git,type=volume",
-              "source=specdojo-gh,target=/home/node/.config/gh,type=volume",
-            ],
+            mounts: ["source=specdojo-git,target=/home/node/.config/git,type=volume"],
             containerEnv: {},
             postCreateCommand: "bash .devcontainer/post-create.sh",
           }),
@@ -166,7 +163,7 @@ describe("runDevcontainerScaffold", () => {
     expect(json.mounts).toContain(
       "source=repo-specdojo-git,target=/home/node/.config/git,type=volume",
     );
-    expect(json.mounts).toContain(
+    expect(json.mounts).not.toContain(
       "source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume",
     );
     expect(json.remoteEnv).toEqual({
@@ -430,6 +427,10 @@ describe("runDevcontainerScaffold", () => {
     expect(aptPackages).toContain("vim-nox");
     expect(aptPackages).toContain("tmux");
     expect(aptPackages).toContain("cron");
+    expect(aptPackages).toContain("gh");
+    expect(json.mounts).toContain(
+      "source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume",
+    );
     expect(json.customizations.vscode.extensions).toEqual(
       expect.arrayContaining([
         "mhutchie.git-graph",

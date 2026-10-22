@@ -33,7 +33,7 @@ npx specdojo config scaffold --provider antigravity --global
 - 既存 JSON や permission 配列の形式が不正な場合は、バックアップも書き込みも行わずエラーにします。
 - `--force` はリポジトリ内の配布物だけに作用し、グローバル設定の既存項目を上書きしません。
 
-権限原本は、必要な検証コマンドを allow し、`git push`、破壊的コマンド、秘密情報、親 runner・hook・CI・agent 設定を変更できるパスを deny します。`.specdojo/doc-index.json` のような既知の生成物は検証で更新できるよう、`.specdojo/` 全体ではなく設定ファイルと provider ディレクトリを個別に deny します。provider 非依存の実行後ガードも併用されます。
+権限原本は、必要な検証コマンドを allow し、`git push`、読み取りを含む全 `gh`、破壊的コマンド、秘密情報、親 runner・hook・CI・agent 設定を変更できるパスを deny します。`.specdojo/doc-index.json` のような既知の生成物は検証で更新できるよう、`.specdojo/` 全体ではなく設定ファイルと provider ディレクトリを個別に deny します。provider 非依存の実行後ガードも併用されます。
 
 ## オーケストレーターの起動
 

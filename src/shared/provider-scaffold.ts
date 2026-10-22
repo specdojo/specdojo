@@ -12,9 +12,9 @@ export { specdojoPackageRootDir } from "./package-paths.js";
 export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = {
   claude: {
     "orch:opus":
-      "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus",
+      "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus --settings .specdojo/claude/settings.edit.json",
     "orch:sonnet":
-      "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet",
+      "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet --settings .specdojo/claude/settings.edit.json",
   },
   codex: {
     "orch:sol":
@@ -40,6 +40,7 @@ export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = 
 // npm package 内の templates/<provider>/ を配布原本として、利用リポジトリへコピーする。
 // repository 内の配置規則は provider 名から機械的に決まる。
 //   templates/<provider>/agents/**        -> .<provider>/agents/**   （--agent の自動発見位置）
+//   templates/<provider>/rules/**         -> .<provider>/rules/**    （command rule の自動発見位置）
 //   templates/<provider>/README.md        -> コピーしない（配布原本の説明書）
 //   templates/<provider>/ 配下のその他    -> .specdojo/<provider>/** （--settings 等で明示参照）
 // Copilot の orchestrator だけは native の探索先 .github/agents/ に同梱 wrapper を配置する。
@@ -150,9 +151,10 @@ export async function buildProviderScaffoldPlan(opts: {
       continue;
     }
 
-    const destinationRelPath = relFile.startsWith("agents/")
-      ? `.${provider}/${relFile}`
-      : `.specdojo/${provider}/${relFile}`;
+    const destinationRelPath =
+      relFile.startsWith("agents/") || relFile.startsWith("rules/")
+        ? `.${provider}/${relFile}`
+        : `.specdojo/${provider}/${relFile}`;
     entries.push({
       sourcePath: path.join(templateDir, ...relFile.split("/")),
       destinationPath: path.join(repoRoot, ...destinationRelPath.split("/")),

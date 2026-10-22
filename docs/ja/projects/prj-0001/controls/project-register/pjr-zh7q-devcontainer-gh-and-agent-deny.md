@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: hard
   owner: DEV
@@ -38,11 +38,24 @@ specdojo:
 
 | No  | 作業                                                             | 担当 | 状態 | メモ   |
 | --- | ---------------------------------------------------------------- | ---- | ---- | ------ |
-| 1   | 推奨 preset に gh を加え、agent の push と gh の書き込みを止める | DEV  | open | 次の版 |
+| 1   | 推奨 preset に gh を加え、agent の push と gh の書き込みを止める | DEV  | done | 次の版 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 推奨 preset の apt package に `gh` を加え、`~/.config/gh` をリポジトリ別の名前付き volume に保存するようにした。preset を使わない生成物には `gh` とこの volume を加えない。ホストの認証情報の mount と自動ログインは行わない。
+- agent は GitHub CLI の読み取りも含めて全面拒否する方針にした。`gh api` は任意の HTTP method を指定でき、今後サブコマンドが増える可能性もあるため、書き込み操作だけの列挙では漏れが生じるためである。PR の確認などは web 検索または利用者が実行して渡した結果を使う。
+
+| provider    | 止める範囲                                    | 境界・制約                                                                                    |
+| ----------- | --------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Claude Code | 全ロールの `git push` と全 `gh`               | ロール別 settings の Bash deny。scaffold する orchestrator の npm script にも settings を渡す |
+| Codex       | `git push` と全 `gh`                          | project-local `.codex/rules/specdojo.rules` の `forbidden`。無人 exec は network 無効化も併用 |
+| OpenCode    | executor・review・orchestrator の同じコマンド | deny 基点の Bash 許可リストに明示 deny を重ねる。reporter は Bash 全面 deny                   |
+| Antigravity | `git push` と全 `gh`                          | `--global` を明示した場合にユーザー設定へ deny をマージ。通常の scaffold だけでは適用しない   |
+
+- これらの境界は各 provider が agent に提供する shell command を止める。利用者自身の terminal 操作、別の GitHub client、外部 MCP などは対象外であり、今回の配布設定では agent にその代替経路を追加していない。
+- 常時稼働ホスト運用ガイド、コマンドリファレンス、Quick Start、exec 設定ガイド、provider 別 README、CHANGELOG を実装に合わせて更新した。
+- 推奨 preset と preset なしの生成差分、および 4 provider の配布権限を単体テストへ追加した。親 runner が `lint-ts`・`lint-fm`・`lint-md`・`typecheck`・`test-unit`・`test-integration`・`validate-schema` を実行する。
+- 本リポジトリの `.specdojo/`、`.claude/`、`.codex/`、`.opencode/` などの保護設定は変更していない。
 
 ## 5. 関連ドキュメント
 

@@ -527,6 +527,7 @@ describe("specdojo init", () => {
         workspaceMount: string;
         workspaceFolder: string;
         features?: Record<string, { packages?: string }>;
+        mounts?: string[];
       };
       expect(devcontainer.workspaceMount).toContain("target=/workspaces/stable-workspace,");
       expect(devcontainer.workspaceFolder).toBe(
@@ -540,6 +541,17 @@ describe("specdojo init", () => {
         devcontainer.features?.["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"]
           ?.packages,
       ).toContain("vim-nox");
+      expect(
+        devcontainer.features?.["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"]
+          ?.packages,
+      ).toContain("gh");
+      expect(devcontainer.mounts).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(
+            /^source=.+-specdojo-gh,target=\/home\/node\/\.config\/gh,type=volume$/,
+          ),
+        ]),
+      );
       expect(existsSync(join(repo, ".devcontainer/vim/vimrc"))).toBe(true);
       expect(existsSync(join(repo, ".devcontainer/emacs/init.el"))).toBe(true);
       const extensions = JSON.parse(

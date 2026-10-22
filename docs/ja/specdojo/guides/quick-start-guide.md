@@ -384,7 +384,7 @@ npx specdojo devcontainer scaffold --provider <name> --preset recommended --dry-
 npx specdojo devcontainer scaffold --provider <name> --preset recommended
 ```
 
-Dev Container の `<name>` には `antigravity`、`claude`、`codex`、`opencode` を指定します。`--preset recommended` を指定すると、tmux・Emacs・Vim・推奨の VS Code 拡張と設定がまとめて設定されます。既存の `.devcontainer/` は通常実行では上書きされません。生成設定は provider の設定ディレクトリを名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。preset を使わない場合、Ollama 接続、cron、tmux は必要な場合だけ `--ollama`、`--cron`、`--tmux` で個別に足せます。詳しい説明は [[specdojo:remote-host-development-guide]] を参照してください。
+Dev Container の `<name>` には `antigravity`、`claude`、`codex`、`opencode` を指定します。`--preset recommended` を指定すると、`gh`・tmux・Emacs・Vim・推奨の VS Code 拡張と設定がまとめて設定されます。既存の `.devcontainer/` は通常実行では上書きされません。生成設定は provider の設定ディレクトリと `gh` の認証を名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。GitHub へのログインは必要なときに利用者がコンテナ内で行います。preset を使わない場合は `gh` の導入と認証 volume を行わず、Ollama 接続、cron、tmux は必要な場合だけ `--ollama`、`--cron`、`--tmux` で個別に足せます。詳しい説明は [[specdojo:remote-host-development-guide]] を参照してください。
 
 設定したプロジェクトを確認します。
 

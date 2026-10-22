@@ -981,17 +981,17 @@ specdojo orchestrator night --project prj-0001 \
 
 主要オプション:
 
-| オプション                | 用途                                                         |
-| ------------------------- | ------------------------------------------------------------ |
-| `--preset recommended`    | 推奨のエディタ・tmux・VS Code 拡張と設定をまとめて追加する。 |
-| `--provider <names>`      | `claude,codex` のようにカンマ区切りで provider を指定する。  |
-| `--editor <names>`        | `emacs,vim` のようにエディタと初期設定を追加する。           |
-| `--ollama`                | Ollama への接続設定（環境変数）を追加する。                  |
-| `--cron`                  | cron をインストールし、起動時にサービスを開始する。          |
-| `--tmux`                  | tmux をインストールする。                                    |
-| `--workspace-name <name>` | Dev Container 内で使う親ディレクトリ名を上書きする。         |
-| `--force`                 | `.devcontainer/` が既に存在する場合に上書きする。            |
-| `--dry-run`               | 実際にファイルを作成せず、作成予定のファイルを表示する。     |
+| オプション                | 用途                                                               |
+| ------------------------- | ------------------------------------------------------------------ |
+| `--preset recommended`    | `gh`、推奨のエディタ・tmux・VS Code 拡張と設定をまとめて追加する。 |
+| `--provider <names>`      | `claude,codex` のようにカンマ区切りで provider を指定する。        |
+| `--editor <names>`        | `emacs,vim` のようにエディタと初期設定を追加する。                 |
+| `--ollama`                | Ollama への接続設定（環境変数）を追加する。                        |
+| `--cron`                  | cron をインストールし、起動時にサービスを開始する。                |
+| `--tmux`                  | tmux をインストールする。                                          |
+| `--workspace-name <name>` | Dev Container 内で使う親ディレクトリ名を上書きする。               |
+| `--force`                 | `.devcontainer/` が既に存在する場合に上書きする。                  |
+| `--dry-run`               | 実際にファイルを作成せず、作成予定のファイルを表示する。           |
 
 ```bash
 # claude と codex 用の CLI を含む Dev Container を生成する
@@ -1010,7 +1010,7 @@ npx specdojo devcontainer scaffold --provider claude --editor emacs
 npx specdojo devcontainer scaffold --workspace-name app1-workspace
 ```
 
-`.devcontainer/` が既に存在する場合は何も書き込まず、置き換える場合だけ `--force` を指定します。上書き前や初回生成前は `--dry-run` で対象ファイルを確認してください。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存してコンテナ再作成後も利用できるようにし、ホストの認証情報・秘密鍵・`.env` を直接マウントしません。認証は生成したコンテナ内で行います。
+`.devcontainer/` が既に存在する場合は何も書き込まず、置き換える場合だけ `--force` を指定します。上書き前や初回生成前は `--dry-run` で対象ファイルを確認してください。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存してコンテナ再作成後も利用できるようにし、ホストの認証情報・秘密鍵・`.env` を直接マウントしません。認証は生成したコンテナ内で利用者が必要なときに行い、自動ログインはしません。
 
 生成する `devcontainer.json` は `${localWorkspaceFolder}/..` を、ホスト側の親ディレクトリ名に合わせた `/workspaces/<親名>` へマウントし、`workspaceFolder` をその中の `${localWorkspaceFolderBasename}` へ向けます。例えば `app1-workspace/app1-specdojo` で scaffold すると、作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成の `repos` と `worktree_base` はプロジェクトリポジトリの外にあるため、親ディレクトリを共有することでプロダクトリポジトリと exec の worktree をコンテナから利用できます。`post-create.sh` はマウントした親ディレクトリ配下の Git リポジトリと worktree を `safe.directory` の対象にします。親ディレクトリ内のその他のファイルもコンテナから見えるため、コンテナへ公開しないファイルは同じ親ディレクトリに置かないでください。
 
@@ -1024,12 +1024,12 @@ Codex 自身の sandbox は引き続き使用し、`workspace-write` で許可�
 
 名前付きボリュームは `<repository>-specdojo-*` という名前で生成します。`<repository>` は scaffold の対象ディレクトリ名を Docker volume 名に使える小文字へ正規化した値です。本体リポジトリや別の利用リポジトリとは共有せず、同じリポジトリの Dev Container を作り直した場合だけ再利用します。固定名を共有すればログインを使い回せますが、プロジェクトごとのアカウントを分けられず、`safe.directory` などのコンテナ固有 Git 設定も混在するため、分離を既定とします。volume 名は scaffold を実行した時点のディレクトリ名から決まり、生成した `devcontainer.json` に固定されます。後でディレクトリ名を変えても volume は変わりません。一方、別の場所にある同じディレクトリ名のリポジトリ（例: 別組織の `app`）を scaffold すると同じ volume 名になり、認証情報を共有します。分離したい場合は、生成後に `devcontainer.json` の `mounts` の `source` を一意な名前へ書き換えてください。
 
-保存先は次のとおりです。表の「常時」は provider の指定にかかわらず mount します。GitHub CLI の設定は `gh` を利用者が導入して使う場合に保存され、未使用時は空の volume のままです。
+保存先は次のとおりです。表の「常時」は provider の指定にかかわらず mount します。GitHub CLI の設定と認証は推奨 preset のときだけ保存します。
 
 | 対象                          | コンテナ内の保存先                 | volume 名                             | 条件                   |
 | ----------------------------- | ---------------------------------- | ------------------------------------- | ---------------------- |
 | コンテナ固有の Git 設定       | `/home/node/.config/git`           | `<repository>-specdojo-git`           | 常時                   |
-| GitHub CLI の設定・認証       | `/home/node/.config/gh`            | `<repository>-specdojo-gh`            | 常時                   |
+| GitHub CLI の設定・認証       | `/home/node/.config/gh`            | `<repository>-specdojo-gh`            | `recommended` preset   |
 | Claude Code の設定・認証      | `/home/node/.claude`               | `<repository>-specdojo-claude`        | `claude` provider      |
 | Codex の設定・認証            | `/home/node/.codex`                | `<repository>-specdojo-codex`         | `codex` provider       |
 | OpenCode の設定               | `/home/node/.config/opencode`      | `<repository>-specdojo-opencode`      | `opencode` provider    |
@@ -1044,7 +1044,7 @@ OpenCode の API key は `/home/node/.local/share/opencode/auth.json` に入り�
 
 post-create は `~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/emacs/init.el` のいずれも無い場合だけ、生成したテンプレートを配置します。`~/.emacs.d` ディレクトリがあれば `~/.emacs.d/init.el` へ、なければ `~/.config/emacs/init.el` へコピーし、配置先を出力します。dotfiles が設定を先に配置した場合は上書きしません。初回のコンテナ作成前に既定値を変える場合は `.devcontainer/emacs/init.el` を編集してください。作成後は出力されたコピー先を編集します。コピー先を削除しない限り、再度 post-create を実行してもテンプレートの変更は反映されません。
 
-`--preset recommended` は、`--editor emacs,vim --tmux` 相当のツールに加え、Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML の VS Code 拡張を追加します。選択した provider が Claude Code、Codex、GitHub Copilot の場合は、その provider の拡張だけも追加します。Markdown と YAML は保存時に Prettier で整形し、`docs/specdojo/schemas/v1/` の主要な schema を SpecDojo の YAML へ関連付けます。同じ拡張は `.vscode/extensions.json` の `recommendations` にも入り、既存の recommendation は保持されます。個別の `--editor`・`--tmux` と一緒に指定した場合は両方を重複なく適用します。
+`--preset recommended` は、`gh` とその認証を保存する名前付き volume、`--editor emacs,vim --tmux` 相当のツールに加え、Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML の VS Code 拡張を追加します。選択した provider が Claude Code、Codex、GitHub Copilot の場合は、その provider の拡張だけも追加します。Markdown と YAML は保存時に Prettier で整形し、`docs/specdojo/schemas/v1/` の主要な schema を SpecDojo の YAML へ関連付けます。同じ拡張は `.vscode/extensions.json` の `recommendations` にも入り、既存の recommendation は保持されます。個別の `--editor`・`--tmux` と一緒に指定した場合は両方を重複なく適用します。preset を指定しない場合は `gh` と認証 volume を追加しません。
 
 Vim の雛形は `.devcontainer/vim/vimrc` に生成され、`~/.vimrc` と `~/.vim/vimrc` のどちらも無い場合だけ `~/.vimrc` へコピーされます。既存の Vim 設定は上書きしません。Emacs の雛形も上記と同じ上書き防止を維持します。
 

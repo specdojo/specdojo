@@ -22,6 +22,8 @@ permission:
     "npm run lint:fm*": allow
     "npm run validate:schema:file*": allow
     "specdojo exec validate*": allow
+    "git push*": deny
+    "gh *": deny
   edit: deny
   task: deny
   webfetch: allow
