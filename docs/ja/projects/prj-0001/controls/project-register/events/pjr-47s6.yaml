@@ -38,3 +38,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-EN6M"]'
+- v: 1
+  id: reg_d2d6d3aa8e664ad38737dabe29e735cb
+  ts: "2026-10-22T13:00:26Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bf9a0dadb4844056b9d4ed58330fdc79
+- v: 1
+  id: reg_638b38bebc384cea9a4a38e72bc055f0
+  ts: "2026-10-22T13:01:41Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: agent exited with non-zero code: error: authentication failed or timed out"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: agent exited with non-zero code: error: authentication failed or timed out"
+  previous_event_id: reg_d2d6d3aa8e664ad38737dabe29e735cb
