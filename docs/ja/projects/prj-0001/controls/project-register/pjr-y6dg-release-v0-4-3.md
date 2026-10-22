@@ -20,7 +20,7 @@ specdojo:
 
 ## 1. 概要
 
-v0.4.3 の範囲（5B42・ZH7Q・47S6・98SQ・QF45）を main へ昇格し、specdojo 0.4.3 を npm に公開する
+v0.4.3 の範囲（5B42・ZH7Q・47S6・98SQ・QF45・CT6G）を main へ昇格し、specdojo 0.4.3 を npm に公開する
 
 ## 2. 完了条件
 

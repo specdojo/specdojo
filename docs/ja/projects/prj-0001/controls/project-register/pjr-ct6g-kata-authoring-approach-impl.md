@@ -24,7 +24,7 @@ PJR-V2W5 の決定に従い、rulebook-authoring など 4 つの approach、--ta
 
 ## 2. 完了条件
 
-- 次の版の範囲とする（2026-10-22、利用者が承認）。[[prj-0001:pjr-v2w5-kata-authoring-approach]] の決定内容に従う。
+- v0.4.3 の範囲とする（2026-10-22 に起票、2026-10-23 に利用者が v0.4.3 に含めることを承認）。[[prj-0001:pjr-v2w5-kata-authoring-approach]] の決定内容に従う。
 - `APPROACHES` に `rulebook-authoring`・`recipe-authoring`・`sample-authoring`・`template-authoring` を加え、`register add`・`register update` の `--approach` で指定できる。
 - `--target` の 1 つ目を新しく作る kata の id、2 つ目以降を手本にする成果物の doc id（任意、カタログにある成果物）とする。1 つ目の id が既にある場合は `<種類>-maintenance` を案内して止め、id の末尾が種類と合わない場合と、2 つ目以降がカタログの成果物でない場合も、起票と実行の時点で止める。
 - `exec run --register` は、これらの approach の plan に、従う作り方の規則（`<種類>-authoring-standard`）、手本の成果物、作る kata の置き場所を載せ、手本の成果物そのものは変えないことを条件に入れる。
@@ -42,7 +42,7 @@ PJR-V2W5 の決定に従い、rulebook-authoring など 4 つの approach、--ta
 
 | No  | 作業                                  | 担当 | 状態 | メモ   |
 | --- | ------------------------------------- | ---- | ---- | ------ |
-| 1   | kata を新しく作る approach を実装する | DEV  | open | 次の版 |
+| 1   | kata を新しく作る approach を実装する | DEV  | open | v0.4.3 |
 
 ## 4. 対応結果
 
