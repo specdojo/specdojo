@@ -1728,3 +1728,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1ee5104847694270a6609baa593a8ab3
+- v: 1
+  id: reg_c9c5b3ffc98944879980c455ac98d311
+  ts: "2026-10-22T23:24:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが result・event・統合の commit を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-23"
+    - field: conclusion
+      from: PJR-5B42 の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
+      to: PJR-CT6G の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
+  previous_event_id: reg_2b6614e5ae6346af9eb3067b24ef8bfd
