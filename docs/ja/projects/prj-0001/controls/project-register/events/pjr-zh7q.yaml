@@ -141,3 +141,16 @@
       from: 'integrate failed: project: git commit failed: test: if (!process.send) throw new Error("Expected worker to be run in node:child_process");; FAIL  /integration/ tests/src/exec/register-resume.integrati…'
       to: "-"
   previous_event_id: reg_7717510ebb1243488dc12f73ea0a341a
+- v: 1
+  id: reg_990523ba585445769878af97da2475e5
+  ts: "2026-10-22T13:38:42Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_05adbd7c56ae436caaa1edec8e17a8d2
