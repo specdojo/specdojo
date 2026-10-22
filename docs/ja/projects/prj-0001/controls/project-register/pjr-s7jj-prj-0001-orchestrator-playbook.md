@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-20T12:03:38Z"
+  completed_at: "2026-10-22T11:11:04Z"
+  conclusion: prj-0001 のオーケストレーターの運用メモ（pm-orchestrator-playbook）を書き、CLAUDE.md と AGENTS.md から参照するようにした。実行の列、agent の癖、再開の使い分け、JSEY、落とし穴、別の project との分担、リリースの手順を、0.4.1 と 0.4.2 の運用に基づいて書いた
 ---
 
 # PJR-S7JJ prj-0001 のオーケストレーターの運用メモを書く
