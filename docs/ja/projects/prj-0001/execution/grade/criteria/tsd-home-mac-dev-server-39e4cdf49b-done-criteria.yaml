@@ -2,12 +2,12 @@
 id: tsd-home-mac-dev-server-grade-criteria
 document: tsd-home-mac-dev-server
 path: docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server.md
-graded_at: "2026-10-20T16:12:12.841Z"
+graded_at: "2026-10-22T16:05:41.828Z"
 graded_by: flash-high-executor
 content_hash: d0d3aa9edab9042511674be17988a318e62bdc18a2ffc0c497c43163e08d08c1
 summary:
-  satisfied: 0
-  unsatisfied: 5
+  satisfied: 1
+  unsatisfied: 4
   total: 5
 criteria:
   - id: DC-001
@@ -15,22 +15,21 @@ criteria:
     roles:
       - BA
     viewpoint: vp-ba-requirements-completeness
-    status: unsatisfied
-    reason: Acceptance criteria and operational requirements are missing to verify alignment with selected technologies.
+    status: satisfied
   - id: DC-002
     text: 技術スタック選定を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: Approval targets, decision-maker role, and unresolved items are not documented for PO sign-off.
+    reason: Decision criteria, approver, and open issues necessary for approval are not specified.
   - id: DC-003
     text: 技術的制約・ライセンス・バージョン方針が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: Versioning policies and license terms for adopted technologies are not identified.
+    reason: License conditions and version policies for the adopted technologies are not identified.
   - id: DC-004
     text: テストフレームワーク・CI/CD環境の参照として使えること
     roles:
@@ -44,4 +43,4 @@ criteria:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: Dependency library selections and Antigravity CLI inclusion in adopted technologies are missing.
+    reason: Library selections or references to their authoritative definitions are missing.

@@ -3,29 +3,86 @@ version: 1
 document: prj-0001:pm-raci
 path: docs/ja/projects/prj-0001/030-project-management/pm-raci.md
 target: deliverable
-rubric: grade-rubric-v1
+rubric: grade-rubric-v2
 verdict: needs-work
-score: 73
-graded_at: "2026-09-25T16:18:21.733Z"
-graded_by: codex-expert-executor
+score: 84
+graded_at: "2026-10-22T16:32:44.124Z"
+graded_by: flash-high-executor
 content_hash: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+source_hashes:
+  catalog-entry: 24f39ace23ca879a072ccd020e5c9a10396a5f749727c0a102a8b7f3089979e0
+  deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
+  dependency:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
+  members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
+  roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
+  schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   consistency:
     score: 50
-  usability:
-    score: 81
   architecture:
     score: 100
+  usability:
+    score: 81
+  implementation:
+    score: 100
   quality:
-    score: 67
+    score: 75
 viewpoints:
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
   vp-arc-cross-document-consistency:
     level: 2
     score: 50
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
+    level: 4
+    score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
     level: 4
     score: 100
   vp-qe-done-criteria:
@@ -46,6 +103,15 @@ viewpoints:
   vp-ux-language-consistency:
     level: 3
     score: 75
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
+    level: 4
+    score: 100
   vp-arc-document-structure:
     level: 4
     score: 100
@@ -66,12 +132,18 @@ findings:
     message: >-
       「Launch Track Strategy」を `PM=A/R`、`ARC=C` としているが、Schedule の `sch-strategy-launch` は `owner=ARC` であり、44行目の「owner
       は主たる R と一致」方針に反するため、RACI または Schedule の正本を整合させる必要がある。
+    message_ja: >-
+      「Launch Track Strategy」を `PM=A/R`、`ARC=C` としているが、Schedule の `sch-strategy-launch` は `owner=ARC` であり、44行目の「owner
+      は主たる R と一致」方針に反するため、RACI または Schedule の正本を整合させる必要がある。
   - id: F002
     severity: major
     rule: vp-qe-done-criteria
     line: 24
     anchor: "| RACI、管理計画、コミュニケーション計画、Launch Track Strategy | C   | A/R | C   | C   | I   | C   | I   | C   |"
     message: >-
+      Schedule owner と異なる責任配置を含むため、成果物・プロセス別マトリクスを承認可能にするには `sch-strategy-launch` の `ARC` owner と本行の `PM=A/R`
+      のどちらを正とするか確定して整合させる必要がある。
+    message_ja: >-
       Schedule owner と異なる責任配置を含むため、成果物・プロセス別マトリクスを承認可能にするには `sch-strategy-launch` の `ARC` owner と本行の `PM=A/R`
       のどちらを正とするか確定して整合させる必要がある。
   - id: F003
@@ -82,6 +154,9 @@ findings:
     message: >-
       「成果物作成」の `PM=A` が各成果物行の Accountable とどう異なるか、また `BA`・`ARC`・`DEV`・`UX` のどれが主たる R
       か判定できないため、作成プロセスの対象範囲と内容の最終判断との差、主担当の決定方法を明記する必要がある。
+    message_ja: >-
+      「成果物作成」の `PM=A` が各成果物行の Accountable とどう異なるか、また `BA`・`ARC`・`DEV`・`UX` のどれが主たる R
+      か判定できないため、作成プロセスの対象範囲と内容の最終判断との差、主担当の決定方法を明記する必要がある。
   - id: F004
     severity: major
     rule: vp-qe-omissions-consistency
@@ -90,18 +165,23 @@ findings:
     message: >-
       `sch-track-planning.yaml` の `sch-strategy-launch` は `owner=ARC` だが本行では `ARC=C` であり、Schedule owner と主たる R
       を矛盾させないという rulebook の必須制約を満たしていない。
+    message_ja: >-
+      `sch-track-planning.yaml` の `sch-strategy-launch` は `owner=ARC` だが本行では `ARC=C` であり、Schedule owner と主たる R
+      を矛盾させないという rulebook の必須制約を満たしていない。
   - id: F005
     severity: minor
     rule: vp-ux-readability
     line: 38
     anchor: "| 成果物作成                         | C   | A   | R   | R   | R   | C   | R   | C   |"
     message: 「成果物作成」が各成果物別行と重複して見え、`PM=A` と成果物ごとの A の関係を読み分けにくいため、「作成フローの運営」など対象を限定する説明を加える必要がある。
+    message_ja: 「成果物作成」が各成果物別行と重複して見え、`PM=A` と成果物ごとの A の関係を読み分けにくいため、「作成フローの運営」など対象を限定する説明を加える必要がある。
   - id: F006
     severity: minor
     rule: vp-ux-user-flow
     line: 44
     anchor: "- Schedule の `owner` は、成果物または作業を主導する `R` の Role code と一致させる。"
     message: Schedule owner との照合を要求しているが参照対象の Schedule／strategy が特定されていないため、対応する正本の文書IDまたはリンクを示す必要がある。
+    message_ja: Schedule owner との照合を要求しているが参照対象の Schedule／strategy が特定されていないため、対応する正本の文書IDまたはリンクを示す必要がある。
   - id: F007
     severity: minor
     rule: vp-ux-language-consistency
@@ -110,10 +190,15 @@ findings:
     message: >-
       「Launch Track Strategy」は成果物カタログの「Launch スケジュール戦略定義」と表記が異なり対象の照合を曖昧にするため、正式名称または `sch-strategy-launch` local_id
       に統一する必要がある。
+    message_ja: >-
+      「Launch Track Strategy」は成果物カタログの「Launch スケジュール戦略定義」と表記が異なり対象の照合を曖昧にするため、正式名称または `sch-strategy-launch` local_id
+      に統一する必要がある。
 done_criteria:
-  satisfied: 3
+  satisfied: 2
   total: 4
   unsatisfied:
     DC-001:
       - PO
+    DC-004:
+      - QE
   detail_ref: prj-0001:pm-raci-grade-criteria

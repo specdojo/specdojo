@@ -2,9 +2,9 @@
 id: sysd-claude-agent-settings-grade-criteria
 document: sysd-claude-agent-settings
 path: docs/ja/product/040-system-design/sysd-claude-agent-settings.md
-graded_at: "2026-10-20T16:24:55.570Z"
+graded_at: "2026-10-22T16:07:53.366Z"
 graded_by: flash-high-executor
-content_hash: c3421e8fa99172c4556a348fbabff12fd78caa5ac5f03534b69f17bfd2c4b2f2
+content_hash: 6223d7ac29194eeff2a98bc69bf009978d032c8d20d47c395797af538883213f
 summary:
   satisfied: 0
   unsatisfied: 5
@@ -16,14 +16,18 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: Business requirements and acceptance criteria justifying the adoption of Claude Code are missing.
+    reason: >-
+      Business requirements, target scope, and adoption criteria are not clearly defined or aligned with the adoption
+      rationale and constraints.
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: Permission policy for automated execution contains contradictory rules preventing PO approval.
+    reason: >-
+      Design policy cannot be approved due to conflicting permissionMode policies and missing provider
+      selection/decision criteria.
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
@@ -31,15 +35,15 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      Technical constraints and dependencies are inconsistent, including contradictory permission modes and non-existent
-      parent limit table references.
+      Technical constraints and dependencies cannot be uniquely identified due to contradictory permissionMode
+      definitions and broken references to parent limit tables.
   - id: DC-004
     text: テスト設計・検証観点の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: Verification viewpoints, test mapping, expected outcomes, and failure criteria are missing.
+    reason: Verification tables, test commands, expected results, and test design references are missing.
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
@@ -47,5 +51,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Contradictory permission modes prevent developers from determining the correct implementation for command
-      templates and settings.
+      Conflicting permissionMode definitions across sections prevent implementers from determining valid command
+      template and settings combinations.

@@ -2,8 +2,8 @@
 id: opr-agent-cli-update-grade-criteria
 document: opr-agent-cli-update
 path: docs/ja/product/090-operations/opr-agent-cli-update.md
-graded_at: "2026-10-12T16:18:54.887Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-22T16:29:36.595Z"
+graded_by: flash-high-executor
 content_hash: 8592810431b49b5e57545a3d404fe96690adfe293bb54b99715190b2a462b67c
 summary:
   satisfied: 0
@@ -16,7 +16,9 @@ criteria:
       - OPS
     viewpoint: vp-ops-operability
     status: unsatisfied
-    reason: The procedures lack executable granularity, role codes, time windows, and individual update steps for each CLI.
+    reason: >-
+      Individual CLI update procedures are not executable because Codex update command conflicts with actual install
+      location and operational details such as roles and maintenance windows are missing.
   - id: DC-002
     text: 手順の技術的正確性が確認できること
     roles:
@@ -24,8 +26,8 @@ criteria:
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
     reason: >-
-      Technical accuracy is unverified due to mismatched Codex installation paths and invalid feature lockfile upgrade
-      assumptions.
+      Technical accuracy cannot be verified because npm global install fails to update Codex in ~/.local/bin and
+      devcontainer upgrade does not manage post-create CLI versions.
   - id: DC-003
     text: 手順の完了条件・証跡要件が確認できること
     roles:
@@ -33,5 +35,5 @@ criteria:
     viewpoint: vp-qe-verifiability
     status: unsatisfied
     reason: >-
-      Completion criteria and evidence requirements lack expected versions, startup validation, and specific trace
-      identifiers.
+      Completion criteria and evidence requirements cannot be verified because expected versions, pass/fail conditions,
+      and audit trail identifiers/retention periods are not defined.
