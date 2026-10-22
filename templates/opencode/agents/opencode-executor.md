@@ -29,6 +29,8 @@ permission:
     "ls *": allow
     "grep *": allow
     "sed -n *": allow
+    "git push*": deny
+    "gh *": deny
   edit:
     "*": deny
     "docs/**": allow

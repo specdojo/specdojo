@@ -33,6 +33,8 @@ permission:
     "npm run lint:md*": allow
     "npm run lint:fm*": allow
     "npm run validate:schema:file*": allow
+    "git push*": deny
+    "gh *": deny
   edit:
     "*": deny
     "docs/**": allow

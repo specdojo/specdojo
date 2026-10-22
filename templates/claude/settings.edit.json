@@ -26,7 +26,16 @@
       "Edit(./.gitlab-ci.yaml)",
       "Edit(./azure-pipelines.yml)",
       "Edit(./azure-pipelines.yaml)",
-      "Edit(./Jenkinsfile)"
+      "Edit(./Jenkinsfile)",
+      "Bash(git push)",
+      "Bash(git push *)",
+      "Bash(gh *)",
+      "Bash(/usr/bin/git push)",
+      "Bash(/usr/bin/git push *)",
+      "Bash(/usr/bin/gh *)",
+      "Bash(/usr/local/bin/git push)",
+      "Bash(/usr/local/bin/git push *)",
+      "Bash(/usr/local/bin/gh *)"
     ]
   }
 }

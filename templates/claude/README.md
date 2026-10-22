@@ -16,9 +16,9 @@ specdojo:
 | パス                   | 利用プロジェクトでの配置先 | 説明                                                                  |
 | ---------------------- | -------------------------- | --------------------------------------------------------------------- |
 | `agents/*.md`          | `.claude/agents/`          | 役割ごとの agent 定義。`--agent <name>` で参照されるため配置先は固定  |
-| `settings.edit.json`   | `.specdojo/claude/`        | edit executor 用 permission 設定。成果物への書き込みを許可する        |
+| `settings.edit.json`   | `.specdojo/claude/`        | edit executor と orchestrator 用 permission 設定                      |
 | `settings.review.json` | `.specdojo/claude/`        | review executor 用 permission 設定。result 配下のみ書き込みを許可する |
-| `settings.report.json` | `.specdojo/claude/`        | reporter 用 permission 設定。Edit/Write と git add/commit を拒否する  |
+| `settings.report.json` | `.specdojo/claude/`        | reporter 用 permission 設定。ファイル編集を拒否する                   |
 
 ## 3. 導入手順
 
@@ -28,7 +28,7 @@ specdojo:
 specdojo exec scaffold --provider claude
 ```
 
-既存ファイルは上書きされません（`--force` 指定時のみ上書き）。`--dry-run` でコピー予定を確認できます。コピー後に次の 2 点を行います。
+既存ファイルは上書きされません（`--force` 指定時のみ上書き）。`--dry-run` でコピー予定を確認できます。scaffold が `package.json` に追加する対話型オーケストレーターの npm script は `settings.edit.json` も指定します。コピー後に次の 3 点を行います。
 
 1. `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` に `--settings .specdojo/claude/settings.{mode}.json` を指定する（`--permission-mode bypassPermissions` は付けない）。member 側に `command` は書かない。
 2. agent の定義は役割（executor・review executor・reporter）ごとの 1 ファイルで、model を持たない。`command_params.by_mode` で mode から定義を選び、model は実体の member の `model` を `--model {model}` で渡す。
@@ -67,4 +67,5 @@ aliases:
 
 - edit 用の既定値は `docs/**`、`src/**`、`tests/**` を許可する。`Edit(...)` / `Write(...)` のパスパターンは、利用プロジェクトの成果物・execution ディレクトリ配置に合わせて調整する。
 - report 用の既定値はファイルへの Edit/Write と `git add` / `git commit` を deny する。reporter は evidence から構造化結果を返すだけで、result への反映は runner が行う。
-- 全セッション共通で効かせたい deny（`.env` 読み取り禁止、`git push` 禁止など）は、利用プロジェクトの `.claude/settings.json` に置く。ここで配布するロール別設定は `--settings` 指定時の追加マージであり、共通設定の allow を取り消すことはできない。
+- 全ロールで `git push` と全 `gh` を deny する。Dev Container の名前付き volume に GitHub 認証がある場合も、remote の読み取り・書き込みは利用者へ引き渡す。
+- そのほかの全セッション共通 deny（`.env` 読み取り禁止など）は、利用プロジェクトの `.claude/settings.json` に置く。ここで配布するロール別設定は `--settings` 指定時の追加マージであり、共通設定の allow を取り消すことはできない。

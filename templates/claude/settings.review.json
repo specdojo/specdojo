@@ -2,6 +2,18 @@
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
     "allow": ["Edit(docs/ja/projects/**/exec/results/**)"],
-    "deny": ["Bash(git add *)", "Bash(git commit *)"]
+    "deny": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push)",
+      "Bash(git push *)",
+      "Bash(gh *)",
+      "Bash(/usr/bin/git push)",
+      "Bash(/usr/bin/git push *)",
+      "Bash(/usr/bin/gh *)",
+      "Bash(/usr/local/bin/git push)",
+      "Bash(/usr/local/bin/git push *)",
+      "Bash(/usr/local/bin/gh *)"
+    ]
   }
 }

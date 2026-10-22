@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { load } from "js-yaml";
 import {
+  ORCHESTRATOR_NPM_SCRIPTS,
   applyProviderScaffoldPlan,
   buildProviderScaffoldPlan,
   listProviderTemplates,
@@ -34,6 +35,18 @@ const ANTIGRAVITY_GLOBAL_SETTINGS = {
     deny: ["command(git push)", "write_file(.specdojo/)"],
   },
 };
+
+const CLAUDE_REMOTE_WRITE_DENIES = [
+  "Bash(git push)",
+  "Bash(git push *)",
+  "Bash(gh *)",
+  "Bash(/usr/bin/git push)",
+  "Bash(/usr/bin/git push *)",
+  "Bash(/usr/bin/gh *)",
+  "Bash(/usr/local/bin/git push)",
+  "Bash(/usr/local/bin/git push *)",
+  "Bash(/usr/local/bin/gh *)",
+];
 
 async function makeAntigravityTemplateFixture(packageRoot: string): Promise<void> {
   const templateDir = path.join(packageRoot, "templates", "antigravity");
@@ -68,11 +81,12 @@ describe("specdojoPackageRootDir", () => {
 
     expect(settings.permissions?.allow).toBeUndefined();
     // Write(path) は claude CLI の権限判定の対象外で、Edit(path) が全ファイル編集ツールを覆う。
-    // 無効なルールを残すと CLI が警告を出すため、deny は Edit(**) と git 操作だけにする。
+    // 無効なルールを残すと CLI が警告を出すため、deny は有効な Edit/Bash rule だけにする。
     expect(settings.permissions?.deny).toEqual([
       "Edit(**)",
       "Bash(git add *)",
       "Bash(git commit *)",
+      ...CLAUDE_REMOTE_WRITE_DENIES,
     ]);
   });
 
@@ -88,7 +102,65 @@ describe("specdojoPackageRootDir", () => {
     expect(settings.permissions?.deny).toEqual([
       ...PROTECTED_DIRECTORY_PREFIXES.map((prefix) => `Edit(${prefix}**)`),
       ...[...PROTECTED_EXACT_PATHS].map((protectedPath) => `Edit(./${protectedPath})`),
+      ...CLAUDE_REMOTE_WRITE_DENIES,
     ]);
+  });
+
+  it("ships remote-write denials for every Claude role", async () => {
+    const templateRoot = path.join(specdojoPackageRootDir(), "templates", "claude");
+    for (const fileName of ["settings.edit.json", "settings.review.json", "settings.report.json"]) {
+      const settings = JSON.parse(await readFile(path.join(templateRoot, fileName), "utf8")) as {
+        permissions?: { deny?: string[] };
+      };
+      expect(settings.permissions?.deny).toEqual(
+        expect.arrayContaining(CLAUDE_REMOTE_WRITE_DENIES),
+      );
+    }
+    expect(ORCHESTRATOR_NPM_SCRIPTS.claude?.["orch:opus"]).toContain(
+      "--settings .specdojo/claude/settings.edit.json",
+    );
+    expect(ORCHESTRATOR_NPM_SCRIPTS.claude?.["orch:sonnet"]).toContain(
+      "--settings .specdojo/claude/settings.edit.json",
+    );
+  });
+
+  it("ships command denials for Codex, OpenCode, and Antigravity", async () => {
+    const packageRoot = specdojoPackageRootDir();
+    const codexRules = await readFile(
+      path.join(packageRoot, "templates", "codex", "rules", "specdojo.rules"),
+      "utf8",
+    );
+    expect(codexRules).toContain('["git", "/usr/bin/git", "/usr/local/bin/git"]');
+    expect(codexRules).toContain('["gh", "/usr/bin/gh", "/usr/local/bin/gh"]');
+    expect(codexRules.match(/decision = "forbidden"/g)).toHaveLength(4);
+
+    for (const fileName of [
+      "opencode-executor.md",
+      "opencode-review-executor.md",
+      "specdojo-orchestrator.md",
+    ]) {
+      const agent = await readFile(
+        path.join(packageRoot, "templates", "opencode", "agents", fileName),
+        "utf8",
+      );
+      expect(agent).toContain('    "git push*": deny');
+      expect(agent).toContain('    "gh *": deny');
+    }
+
+    const antigravity = JSON.parse(
+      await readFile(
+        path.join(packageRoot, "templates", "antigravity", "settings.global.json"),
+        "utf8",
+      ),
+    ) as { permissions: { deny: string[] } };
+    expect(antigravity.permissions.deny).toEqual(
+      expect.arrayContaining([
+        "command(git push)",
+        "command(gh)",
+        "command(/usr/bin/git push)",
+        "command(/usr/bin/gh)",
+      ]),
+    );
   });
 
   it("ships scoped Antigravity permissions without the all-permissions bypass", async () => {
@@ -114,6 +186,7 @@ describe("specdojoPackageRootDir", () => {
     expect(settings.permissions.deny).toEqual(
       expect.arrayContaining([
         "command(git push)",
+        "command(gh)",
         "read_file(.env)",
         "write_file(.specdojo/exec-defaults.yaml)",
         "write_file(package.json)",
@@ -219,6 +292,29 @@ describe("buildProviderScaffoldPlan", () => {
       ]);
       expect(plan.entries[0]?.destinationPath).toBe(
         path.join(repoRoot, ".claude", "agents", "claude-edit-agent.md"),
+      );
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("maps Codex command rules to the project-local discovery path", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const repoRoot = path.join(dir, "repo");
+      await mkdir(repoRoot, { recursive: true });
+
+      const plan = await buildProviderScaffoldPlan({
+        packageRoot: specdojoPackageRootDir(),
+        repoRoot,
+        provider: "codex",
+      });
+
+      expect(plan.entries.map((entry) => entry.destinationRelPath)).toContain(
+        ".codex/rules/specdojo.rules",
+      );
+      expect(plan.entries.map((entry) => entry.destinationRelPath)).not.toContain(
+        ".specdojo/codex/rules/specdojo.rules",
       );
     } finally {
       await rm(dir, { recursive: true, force: true });
@@ -551,10 +647,10 @@ describe("runProviderScaffold", () => {
 
       const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
       expect(pkg.scripts["orch:opus"]).toBe(
-        "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus",
+        "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus --settings .specdojo/claude/settings.edit.json",
       );
       expect(pkg.scripts["orch:sonnet"]).toBe(
-        "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet",
+        "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet --settings .specdojo/claude/settings.edit.json",
       );
       expect(pkg.scripts.test).toBe("echo test");
     } finally {
@@ -679,7 +775,7 @@ describe("runProviderScaffold", () => {
         // 利用者が書き換えたスクリプトは、テンプレートを配置し直すときも保つ。
         expect(pkgForced.scripts["orch:opus"]).toBe("custom");
         expect(pkgForced.scripts["orch:sonnet"]).toBe(
-          "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet",
+          "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model sonnet --settings .specdojo/claude/settings.edit.json",
         );
       } finally {
         vi.restoreAllMocks();
@@ -731,7 +827,7 @@ describe("runProviderScaffold", () => {
       const content = await readFile(path.join(repoRoot, "package.json"), "utf8");
       expect(content).toMatch(/^\{\n {4}"name"/);
       expect(JSON.parse(content).scripts["orch:opus"]).toBe(
-        "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus",
+        "specdojo orchestrator launch --provider claude -- --agent specdojo-orchestrator --model opus --settings .specdojo/claude/settings.edit.json",
       );
     } finally {
       await rm(dir, { recursive: true, force: true });
