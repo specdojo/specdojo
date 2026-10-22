@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-5b42-cross-repo-register-add
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-22T11:11:14Z"
+  completed_at: "2026-10-22T12:51:27Z"
+  conclusion: 設定の external_projects に別名ごとに相手のリポジトリのパス（相対）と project ID を宣言し、register add --project `<別名>` --commit で相手のリポジトリの specdojo（0.4.2 以上）に起票を任せるようにした。--from `<別名>`:PJR-XXXX は相手の project ID に変換して渡し、orchestrator launch は宣言したリポジトリにも編集を許可する。状態遷移は対象外
   derived_from:
     - PJR-W93C
 ---
