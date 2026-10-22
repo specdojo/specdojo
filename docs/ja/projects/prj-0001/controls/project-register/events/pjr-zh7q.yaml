@@ -154,3 +154,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_05adbd7c56ae436caaa1edec8e17a8d2
+- v: 1
+  id: reg_d960638ddae7463fb466461867b7cc5f
+  ts: "2026-10-22T14:09:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 1 回目の統合でオーケストレーターに executor 用の設定が渡っていたため、利用者（indie）の承認で完了条件を補って直した。オーケストレーターが設定の中身と起動の指定を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: 推奨 preset に gh とログイン情報の名前付きボリュームを加えた。配布する executor と reporter の権限設定で git push と gh を全面的に止め、オーケストレーターには専用の settings.orchestrator.json を渡して gh の読み取りだけを許し、書き込みと git push を止めた。保護された設定の編集は禁じない
+  previous_event_id: reg_990523ba585445769878af97da2475e5

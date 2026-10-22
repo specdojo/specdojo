@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zh7q-devcontainer-gh-and-agent-deny
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-22T12:42:33Z"
+  completed_at: "2026-10-22T14:09:55Z"
+  conclusion: 推奨 preset に gh とログイン情報の名前付きボリュームを加えた。配布する executor と reporter の権限設定で git push と gh を全面的に止め、オーケストレーターには専用の settings.orchestrator.json を渡して gh の読み取りだけを許し、書き込みと git push を止めた。保護された設定の編集は禁じない
   derived_from:
     - PJR-EN6M
 ---
