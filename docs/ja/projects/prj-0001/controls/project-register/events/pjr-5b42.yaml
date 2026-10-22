@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0db6282410d247e2bf4b2e8c9d8c28c0
+  ts: "2026-10-22T11:11:15Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 別のリポジトリの project の登録簿へ起票できるようにする
+    - field: description
+      from: ""
+      to: PJR-W93C は同じリポジトリの中の project に限られる。設定で別のリポジトリの project を別名付きで宣言し、register add でその別名を指定すると、相手のリポジトリの specdojo を起動して起票させる。project ID の衝突を別名で避け、orchestrator launch で相手のリポジトリへの編集を許可する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-W93C"]'
