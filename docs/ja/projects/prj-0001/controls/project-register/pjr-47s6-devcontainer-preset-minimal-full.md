@@ -41,11 +41,16 @@ specdojo:
 
 | No  | 作業                                                      | 担当 | 状態 | メモ          |
 | --- | --------------------------------------------------------- | ---- | ---- | ------------- |
-| 1   | preset に minimal と full を加え、init で選べるようにする | DEV  | open | PJR-ZH7Q の後 |
+| 1   | preset に minimal と full を加え、init で選べるようにする | DEV  | done | PJR-ZH7Q の後 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `devcontainer scaffold --preset` に `minimal` / `recommended` / `full` を実装した。`minimal` と preset なしは provider の CLI と最低限だけ、`recommended` は従来の推奨構成、`full` は推奨構成に ripgrep・fd・fzf・yq・shellcheck・shfmt、Ollama 接続、cron を加える。
+- preset と個別の `--ollama`・`--cron`・`--tmux`・`--editor` は引き続き合成できる。Debian の `fd-find` package は post-create で `fd` コマンドとしても利用できるようにした。
+- `specdojo init` の Dev Container の質問を3 preset の選択に変更し、既定を `recommended` のまま維持した。`--devcontainer-preset` は `minimal` と `full` を受け付け、従来の `none` は `minimal` へ正規化する。
+- [[specdojo:remote-host-development-guide]]・[[specdojo:quick-start-guide]]・[[specdojo:command-reference]] に3 preset の比較表を追加し、CHANGELOG の `Unreleased` に記載した。
+- 単体テストに preset なしを含む4構成の apt package、VS Code 拡張、Ollama 環境変数、cron の差分と、`init` の質問・既定・値の解釈を追加した。
+- 残課題: なし。
 
 ## 5. 関連ドキュメント
 

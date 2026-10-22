@@ -68,7 +68,7 @@ Your display name [Project Owner]: 店主
 Orchestrator providers (...) [codex]: claude        <- 使う AI ツールを 1 つ選ぶ
 Delegate work to agents (exec)? [y/N]:              <- Enter（実戦は後で設定する）
 Create a Dev Container? [y/N]: y                    <- y（Dev Container を作る。使わない場合は Enter）
-Add the recommended Dev Container settings? [Y/n]:  <- Enter（推奨 preset を入れる）
+Dev Container preset (minimal, recommended, full) [recommended]:  <- Enter（推奨 preset を選ぶ）
 Create Git hooks with lefthook? [y/N]:               <- Enter（この体験では作らない）
 ```
 
@@ -76,7 +76,7 @@ Create Git hooks with lefthook? [y/N]:               <- Enter（この体験で�
 `claud` と入力すると、利用可能な provider の一覧に続いて provider の質問だけが再表示されます。
 それまでに答えた project や名簿の内容を入力し直す必要はありません。
 
-Dev Container を作る質問に `y`、推奨 preset に Enter（既定の「はい」）と答えると、tmux・Emacs・Vim・推奨の VS Code 拡張と設定・`.vscode/extensions.json` が入った環境が生成されます。作成したコンテナは、VS Code の「コンテナーで再度開く」または `devcontainer up` で開けます（詳しい説明は [[specdojo:remote-host-development-guide]] を参照）。Dev Container を使わずに手元の環境で進めたい場合は、Dev Container の質問に Enter または `n`（いいえ）と答えて先へ進めます。この 10 分の体験は記帳だけで進められるため、コンテナを開かずにそのままホスト環境で続けて構いません。
+Dev Container を作る質問に `y`、preset に Enter と答えると、既定の `recommended` が選ばれ、tmux・Emacs・Vim・推奨の VS Code 拡張と設定・`.vscode/extensions.json` が入った環境が生成されます。作成したコンテナは、VS Code の「コンテナーで再度開く」または `devcontainer up` で開けます（詳しい説明は [[specdojo:remote-host-development-guide]] を参照）。Dev Container を使わずに手元の環境で進めたい場合は、Dev Container の質問に Enter または `n`（いいえ）と答えて先へ進めます。この 10 分の体験は記帳だけで進められるため、コンテナを開かずにそのままホスト環境で続けて構いません。
 
 登録簿は `docs/ja/projects/prj-0001/controls/project-register/` に作られます。オーケストレーターで進める場合は、終了時に表示される `npm run orch:<provider>` で起動します。成果物カタログは対話では作られません。成果物の構成が定まったら、[[#41-成果物カタログを作成する|成果物カタログを作成する]] に従って `catalog_path` を設定し、`catalog scaffold` で追加してください。
 
@@ -228,7 +228,7 @@ npx specdojo init
 ```
 
 `specdojo init` は、project ID と名前、人の nickname と表示名、利用する agent provider、
-exec・Dev Container・Git hook の要否を順に質問し、Dev Container を選んだ場合だけ推奨 preset を入れるか（既定は「はい」）を続けて質問します。Git hook は既定では作りません。成果物カタログは対話では質問せず、`--catalog <size>` を
+exec・Dev Container・Git hook の要否を順に質問し、Dev Container を選んだ場合だけ `minimal` / `recommended` / `full` の preset（既定は `recommended`）を続けて質問します。Git hook は既定では作りません。成果物カタログは対話では質問せず、`--catalog <size>` を
 明示した場合にだけ初期化時に作成します。選択に応じて設定、登録簿、人と
 agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`、exec の起動設定を
 作成します。exec の親検証は、対応する npm script が `package.json` にあるものだけを設定し、
@@ -237,7 +237,7 @@ agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`�
 それまでの回答は保持します。非対話環境や `--yes` では再質問せず、不正な指定をエラーとして終了します。
 
 CI や標準入力が端末でない環境では質問しません。次のようにオプションだけで同じ初期設定を
-行えます。`--devcontainer` を指定した場合は既定で推奨 preset（tmux・Emacs・Vim・推奨の VS Code 拡張と設定）が入ります（preset を使わない場合は `--devcontainer-preset none` を指定します）。省略値は画面に表示されます。
+行えます。`--devcontainer` を指定した場合は既定で `recommended` preset（tmux・Emacs・Vim・推奨の VS Code 拡張と設定）が入ります。CLI と最低限だけにする場合は `--devcontainer-preset minimal` を指定します。従来の `none` も `minimal` と同じ意味で受け付けます。省略値は画面に表示されます。
 
 ```bash
 npx specdojo init --yes \
@@ -385,6 +385,14 @@ npx specdojo devcontainer scaffold --provider <name> --preset recommended
 ```
 
 Dev Container の `<name>` には `antigravity`、`claude`、`codex`、`opencode` を指定します。`--preset recommended` を指定すると、`gh`・tmux・Emacs・Vim・推奨の VS Code 拡張と設定がまとめて設定されます。既存の `.devcontainer/` は通常実行では上書きされません。生成設定は provider の設定ディレクトリと `gh` の認証を名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。GitHub へのログインは必要なときに利用者がコンテナ内で行います。preset を使わない場合は `gh` の導入と認証 volume を行わず、Ollama 接続、cron、tmux は必要な場合だけ `--ollama`、`--cron`、`--tmux` で個別に足せます。詳しい説明は [[specdojo:remote-host-development-guide]] を参照してください。
+
+| preset        | 内容                                                                                                                                                 |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `minimal`     | 選んだ provider の CLI と SpecDojo の動作に必要な最小構成。preset を省略した場合と同じ。                                                             |
+| `recommended` | `minimal` に `gh`、Emacs、Vim、tmux、文書作業向けの VS Code 拡張・設定を追加する。                                                                   |
+| `full`        | `recommended` に ripgrep、fd、fzf、yq、shellcheck、shfmt、Ollama 接続、cron を追加する。fd は `fd-find` package から `fd` コマンドとして利用できる。 |
+
+`--ollama`・`--cron`・`--tmux`・`--editor` はどの preset にも個別に追加できます。詳しい説明は [[specdojo:remote-host-development-guide]] を参照してください。
 
 設定したプロジェクトを確認します。
 
