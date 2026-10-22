@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_39f31574cdea4233be47d532f6c27a29
+  ts: "2026-10-22T22:17:57Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 文書の編集ツール（図・プレゼン・表）の方針を決める
+    - field: description
+      from: ""
+      to: 人との連携を重視し、図・プレゼン・表をどのツールと形式で書くかを決める。local の編集環境の検討レポート（2026-10-17）は draw.io・Slidev・CSV を推奨するが、agent が書いて直す運用との相性もあるため、継続して検討する
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-23"
+    - field: due
+      from: ""
+      to: _TODO_
