@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_bd271311a32348af96d72e0d1d105e22
+- v: 1
+  id: reg_ca5db2370d004c54a6c2b469aa45f149
+  ts: "2026-10-22T23:24:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターがコンテナに絵文字のフォントを入れて cdfd-overview を描き、ELK の直角の配線と、ノードの絵文字（📝・✅・🔍 など）が表示されることを確かめた。workflow のフォントの追加は保護された設定のため、利用者（indie）の承認でオーケストレーターが反映した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-23"
+    - field: conclusion
+      from: "-"
+      to: docs-site の Mermaid の既定のレイアウトを ELK にし、fontFamily と devcontainer・GitHub Pages のビルドに絵文字のフォントを加えた。図の大きさの目安と、architecture 図・block 図の使い分けを docs-editing-guide に書いた
+  previous_event_id: reg_96cb03e9de08416d99b26fb356577d2f

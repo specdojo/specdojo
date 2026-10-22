@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-qf45-mermaid-elk-layout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-22T22:18:08Z"
+  completed_at: "2026-10-22T23:24:58Z"
+  conclusion: docs-site の Mermaid の既定のレイアウトを ELK にし、fontFamily と devcontainer・GitHub Pages のビルドに絵文字のフォントを加えた。図の大きさの目安と、architecture 図・block 図の使い分けを docs-editing-guide に書いた
 ---
 
 # PJR-QF45 Mermaid の既定のレイアウトを ELK に切り替え、図の絵文字の文字化けを直す
