@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-47s6-devcontainer-preset-minimal-full
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-22T12:56:35Z"
+  completed_at: "2026-10-22T14:10:11Z"
+  conclusion: devcontainer の preset に minimal と full を加え、init で minimal・recommended・full から選べるようにした。preset を指定しないときと --devcontainer-preset none は minimal と同じ
   derived_from:
     - PJR-EN6M
 ---

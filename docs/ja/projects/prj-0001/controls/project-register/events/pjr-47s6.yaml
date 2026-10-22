@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9d8ad57fac43417f9bb4fd9658293216
+- v: 1
+  id: reg_069964b100b6413aaa16c5997480c4e9
+  ts: "2026-10-22T14:10:11Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが一時のリポジトリで 3 つの preset の生成物（apt のパッケージ、VS Code 拡張、Ollama、gh のボリューム）を見比べ、init のオプションを確かめた。1 回目は agy の認証の失敗で止まり、codex で流し直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: devcontainer の preset に minimal と full を加え、init で minimal・recommended・full から選べるようにした。preset を指定しないときと --devcontainer-preset none は minimal と同じ
+  previous_event_id: reg_729a02552c9d4990b697219a28105ad9
