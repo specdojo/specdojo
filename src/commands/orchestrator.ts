@@ -5,6 +5,7 @@ import { type Command } from "commander";
 import { agentExtraRootArguments, resolveProductRepos } from "../exec/task-repos.js";
 import {
   loadConfig,
+  resolveExternalProjects,
   specdojoRootDir,
   type AgentProvider,
   type SpecDojoConfig,
@@ -188,10 +189,17 @@ export function resolveOrchestratorLaunch(options: {
   if (!config) throw new Error(`No config found: ${configPath}`);
   const projectId = resolveOrchestratorProjectId(config, options.project, env);
   const repos = resolveProductRepos(configRootDir, config.projects[projectId]);
+  const externalProjects = resolveExternalProjects(configRootDir, config);
+  const repoRoots = [
+    ...new Set([
+      ...repos.map((repo) => repo.repoRoot),
+      ...externalProjects.map((project) => project.repoRoot),
+    ]),
+  ];
   const launch = buildOrchestratorLaunch({
     provider: options.provider,
     providerArgs: options.providerArgs,
-    repoRoots: repos.map((repo) => repo.repoRoot),
+    repoRoots,
     cwd: rootDir,
     env,
   });

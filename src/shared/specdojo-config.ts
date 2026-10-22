@@ -88,6 +88,14 @@ export type SpecDojoRepoConfig = {
   setup?: SpecDojoRepoSetup;
 };
 
+/** A project register hosted by another repository and addressed locally by an alias. */
+export type SpecDojoExternalProjectConfig = {
+  /** Repository root, relative to the SpecDojo root. */
+  path: string;
+  /** Project id understood by the SpecDojo installation in the external repository. */
+  project_id: string;
+};
+
 export const REPO_NAME_PATTERN = /^[a-z0-9-]+$/;
 
 /**
@@ -260,6 +268,8 @@ export type SpecDojoConfig = {
   /** Repository-wide protected agent registry. Must stay under .specdojo/. */
   agent_members_path?: string;
   projects: Record<string, SpecDojoProjectConfig>;
+  /** External project registers delegated to the SpecDojo installation in another repository. */
+  external_projects?: Record<string, SpecDojoExternalProjectConfig>;
 };
 
 export const DEFAULT_AGENT_MEMBERS_PATH = ".specdojo/agent-members.yaml";
@@ -390,6 +400,81 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 const REPO_KEYS = new Set(["name", "path", "integration_branch", "setup"]);
 const REPO_SETUP_KEYS = new Set(["install", "build"]);
+const EXTERNAL_PROJECT_KEYS = new Set(["path", "project_id"]);
+
+export type ResolvedExternalProject = SpecDojoExternalProjectConfig & {
+  alias: string;
+  repoRoot: string;
+};
+
+/** Resolve a configured external-project repository from the SpecDojo root. */
+export function resolveExternalProjectRoot(
+  rootDir: string,
+  project: Pick<SpecDojoExternalProjectConfig, "path">,
+): string {
+  return resolve(rootDir, project.path);
+}
+
+/** Return external projects in configuration order with absolute repository roots. */
+export function resolveExternalProjects(
+  rootDir: string,
+  config: Pick<SpecDojoConfig, "external_projects">,
+): ResolvedExternalProject[] {
+  return Object.entries(config.external_projects ?? {}).map(([alias, project]) => ({
+    alias,
+    ...project,
+    repoRoot: resolveExternalProjectRoot(rootDir, project),
+  }));
+}
+
+/** Validate top-level `external_projects` declarations. */
+export function validateExternalProjects(
+  externalProjects: unknown,
+  projectIds: readonly string[],
+  rootDir: string,
+): string[] {
+  if (externalProjects === undefined) return [];
+  if (!isRecord(externalProjects)) return ["external_projects must be an object"];
+
+  const errors: string[] = [];
+  for (const [alias, value] of Object.entries(externalProjects)) {
+    const at = `external_projects.${alias}`;
+    if (!REPO_NAME_PATTERN.test(alias)) {
+      errors.push(
+        `external project alias ${JSON.stringify(alias)} must match ${String(REPO_NAME_PATTERN)}`,
+      );
+    }
+    if (projectIds.includes(alias)) {
+      errors.push(`${at} collides with local project id "${alias}"`);
+    }
+    if (!isRecord(value)) {
+      errors.push(`${at} must be an object with path and project_id`);
+      continue;
+    }
+    for (const key of Object.keys(value).sort()) {
+      if (!EXTERNAL_PROJECT_KEYS.has(key)) errors.push(`${at}: unknown key "${key}"`);
+    }
+
+    const path = value.path;
+    if (typeof path !== "string" || path.trim().length === 0) {
+      errors.push(`${at}.path must be a non-empty string`);
+    } else if (isAbsolute(path)) {
+      errors.push(`${at}.path must be relative to the SpecDojo root (got absolute "${path}")`);
+    } else {
+      const absolutePath = resolve(rootDir, path);
+      if (!existsSync(absolutePath)) {
+        errors.push(`${at}.path "${path}" does not exist (resolved to ${absolutePath})`);
+      } else if (!statSync(absolutePath).isDirectory()) {
+        errors.push(`${at}.path "${path}" is not a directory (resolved to ${absolutePath})`);
+      }
+    }
+
+    if (typeof value.project_id !== "string" || value.project_id.trim().length === 0) {
+      errors.push(`${at}.project_id must be a non-empty string`);
+    }
+  }
+  return errors;
+}
 
 /**
  * Validate `projects.<projectId>.repos`. Returns one message per problem (empty when valid) so
@@ -838,10 +923,16 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
     .flatMap((projectId) =>
       validateProjectRepos(projectId, parsed.projects[projectId], projectIds, rootDir),
     );
-  if (repoErrors.length > 0) {
+  const externalProjectErrors = validateExternalProjects(
+    parsed.external_projects,
+    projectIds,
+    rootDir,
+  );
+  const configErrors = [...repoErrors, ...externalProjectErrors];
+  if (configErrors.length > 0) {
     throw new Error(
       `Invalid .specdojo/specdojo.config.json (${configPath}):\n` +
-        repoErrors.map((message) => `  - ${message}`).join("\n"),
+        configErrors.map((message) => `  - ${message}`).join("\n"),
     );
   }
 

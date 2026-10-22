@@ -38,3 +38,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-W93C"]'
+- v: 1
+  id: reg_d9945065d8bb45bf85e59cd0f51faf2b
+  ts: "2026-10-22T12:26:24Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0db6282410d247e2bf4b2e8c9d8c28c0
+- v: 1
+  id: reg_57efb39100b0487a9b791164d79019bc
+  ts: "2026-10-22T12:41:22Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d9945065d8bb45bf85e59cd0f51faf2b

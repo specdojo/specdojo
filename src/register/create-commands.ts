@@ -20,6 +20,7 @@ import { resolveSpecdojoTemplatePath } from "../docs/template-resolution.js";
 import type { RegisterAddFields, RegisterCommandDependencies } from "./command-types.js";
 import { validateRegisterApproachTargetsForProject } from "./approach.js";
 import { normalizeDerivedFrom, validateDerivedFrom } from "./derivation.js";
+import { delegateExternalRegisterAdd } from "./external-project.js";
 
 function collectTarget(value: string, previous: string[] = []): string[] {
   return [...previous, value];
@@ -131,6 +132,12 @@ export function registerCreateCommands(
   addCmd.option("--dry-run", "Print the generated item file without writing", false);
   addRegisterCommitOptions(addCmd);
   addCmd.action(async (opts) => {
+    try {
+      if (delegateExternalRegisterAdd(opts)) return;
+    } catch (error) {
+      printCommandError(error);
+      return;
+    }
     await runRegisterMutation("add", opts, ({ paths, assertCommitTargetsClean }) => {
       const explicitTopic = opts.topic?.trim();
       const topic = explicitTopic || slugify(opts.title);

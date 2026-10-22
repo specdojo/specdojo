@@ -13,7 +13,7 @@ SpecDojo Configuration Reference
 
 **対象範囲**
 
-- `.specdojo/specdojo.config.json` のトップレベル、project、`run`、`repos` の設定キー
+- `.specdojo/specdojo.config.json` のトップレベル、project、`run`、`repos`、`external_projects` の設定キー
 
 **ここで引けるもの**
 
@@ -52,14 +52,37 @@ SpecDojo Configuration Reference
 
 ## 2. トップレベルのキー
 
-| キー                 | 必須 | 既定値                                 | 役割・利用箇所                                                                                  |
-| -------------------- | ---- | -------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `version`            | 必須 | なし。現行値は `1`                     | 設定形式のバージョンです。すべての config 利用コマンドが検証します。                            |
-| `current_project`    | 任意 | コマンドにより `projects` の先頭を使用 | `--project` と `SPECDOJO_PROJECT` を省略したときの対象 project です。                           |
-| `agent_members_path` | 任意 | `.specdojo/agent-members.yaml`         | 全 project が共有する保護済み agent 定義です。`.specdojo/` 配下の YAML だけを指定できます。     |
-| `projects`           | 必須 | なし                                   | project ID をキー、project 設定を値とするオブジェクトです。複数 project を1ファイルで扱えます。 |
+| キー                 | 必須 | 既定値                                 | 役割・利用箇所                                                                                              |
+| -------------------- | ---- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `version`            | 必須 | なし。現行値は `1`                     | 設定形式のバージョンです。すべての config 利用コマンドが検証します。                                        |
+| `current_project`    | 任意 | コマンドにより `projects` の先頭を使用 | `--project` と `SPECDOJO_PROJECT` を省略したときの対象 project です。                                       |
+| `agent_members_path` | 任意 | `.specdojo/agent-members.yaml`         | 全 project が共有する保護済み agent 定義です。`.specdojo/` 配下の YAML だけを指定できます。                 |
+| `projects`           | 必須 | なし                                   | project ID をキー、project 設定を値とするオブジェクトです。複数 project を1ファイルで扱えます。             |
+| `external_projects`  | 任意 | なし                                   | 別リポジトリの project をローカルの別名で宣言します。`register add` と `orchestrator launch` が使用します。 |
 
 対象 project の一般的な解決順序は、`--project <id>`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭です。一部のコマンドは `current_project` を参照せず `projects` の先頭へフォールバックするため、複数 project では `--project` を明示してください。
+
+### 2.1. `external_projects`のキー
+
+別リポジトリの登録簿へ起票する場合は、トップレベルの `external_projects` に、呼び出し元だけで使う別名をキーとして、相手のリポジトリと project ID を宣言します。
+
+```json
+{
+  "external_projects": {
+    "customer": {
+      "path": "../customer-specdojo",
+      "project_id": "prj-0002"
+    }
+  }
+}
+```
+
+| キー         | 必須 | 役割                                                                       |
+| ------------ | ---- | -------------------------------------------------------------------------- |
+| `path`       | 必須 | このリポジトリのルートから相手のリポジトリへの相対パスです。               |
+| `project_id` | 必須 | 相手の `specdojo.config.json` の `projects` にある実際の project ID です。 |
+
+別名は `[a-z0-9-]+` とし、ローカルの `projects` の ID と重ねられません。`path` は存在するディレクトリでなければならず、絶対パスは使えません。起票時は相手の `node_modules/.bin/specdojo` を使うため、相手に SpecDojo 0.4.2 以上が必要です。`orchestrator launch` は `repos` に加えて、宣言したすべての外部リポジトリにも provider 別の編集許可を付けます。
 
 ## 3. projectのパスキー
 

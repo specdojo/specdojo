@@ -93,6 +93,24 @@ specdojo register add --project prj-0002 --type todo \
 
 この経路は対象 project の `integration_branch`（省略時は `project/<project-id>/develop`）を開いている worktree を使い、無ければ一時 worktree を作ります。対象 project の名簿で `--by` を検証し、`register lifecycle` 枠の内側で起票、派生ビュー再生成、1 件の commit を行います。対象登録簿に未 commit 変更がある場合、または統合ブランチが存在しない場合は書き込みません。`--commit` のない別 project への起票と、別 project の項目に対する状態遷移は行えません。状態遷移は対象 project の作業ツリーで実行してください。
 
+別リポジトリの project へ起票する場合は、`specdojo.config.json` のトップレベルに別名を宣言し、その別名を `--project` に指定します。
+
+```json
+{
+  "external_projects": {
+    "customer": { "path": "../customer-specdojo", "project_id": "prj-0002" }
+  }
+}
+```
+
+```bash
+specdojo register add --project customer --type todo \
+  --title "相手側で追跡する" --topic remote-follow-up \
+  --from customer:PJR-AB12 --commit
+```
+
+呼び出し元は相手の登録簿を直接編集せず、相手にインストールされた SpecDojo 0.4.2 以上へ処理を渡します。`--from customer:PJR-AB12` は相手の実 project ID に置き換えて検証・記録されます。相手のリポジトリや CLI がない場合、版が古い場合、`--commit` がない場合は起票前に停止します。相手への状態遷移は、相手のリポジトリへ移動して実行します。
+
 タイトルが日本語の場合は、内容を表す英語の `--topic` を小文字・ハイフン区切りで指定します。省略して `item` や日本語タイトル中の英単語だけが topic になった場合、`register add` は作成を続けたうえで警告します。警告後も、`register update --topic` で個票名と文書 ID を変更できます。成果物や kata（実践の型）を作成・修正する todo では、`--approach <approach> --target <doc-id>` を指定して進め方と対象を宣言できます（詳細は [exec運用ガイド](exec-operation-guide.md) の「register の todo から approach で成果物・kata を作る・直す手順」を参照してください）。
 
 `--priority` は次の目安で付けます（省略時は `medium`）。
