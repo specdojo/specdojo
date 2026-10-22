@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-W93C"]'
+- v: 1
+  id: reg_d9945065d8bb45bf85e59cd0f51faf2b
+  ts: "2026-10-22T12:26:24Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0db6282410d247e2bf4b2e8c9d8c28c0
