@@ -171,6 +171,86 @@ describe("runDevcontainerScaffold", () => {
     });
   });
 
+  it.each([
+    {
+      name: "no preset",
+      preset: undefined,
+      aptPackages: [],
+      recommended: false,
+      ollama: false,
+      cron: false,
+    },
+    {
+      name: "minimal",
+      preset: "minimal",
+      aptPackages: [],
+      recommended: false,
+      ollama: false,
+      cron: false,
+    },
+    {
+      name: "recommended",
+      preset: "recommended",
+      aptPackages: ["gh", "tmux", "emacs-nox", "ripgrep", "vim-nox"],
+      recommended: true,
+      ollama: false,
+      cron: false,
+    },
+    {
+      name: "full",
+      preset: "full",
+      aptPackages: [
+        "gh",
+        "ripgrep",
+        "fd-find",
+        "fzf",
+        "yq",
+        "shellcheck",
+        "shfmt",
+        "tmux",
+        "cron",
+        "emacs-nox",
+        "vim-nox",
+      ],
+      recommended: true,
+      ollama: true,
+      cron: true,
+    },
+  ] as const)(
+    "should apply the $name preset feature set",
+    async ({ preset, aptPackages, recommended, ollama, cron }) => {
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        preset,
+        providers: ["codex"],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+      const aptFeature = json.features["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"];
+      expect(aptFeature?.packages?.split(",") ?? []).toEqual(aptPackages);
+      expect(json.customizations?.vscode?.extensions?.length > 0).toBe(recommended);
+      expect(json.containerEnv.OLLAMA_BASE_URL !== undefined).toBe(ollama);
+      expect(json.containerEnv.LOCAL_OPENAI_BASE_URL !== undefined).toBe(ollama);
+      expect(json.postAttachCommand === "sudo service cron start").toBe(cron);
+      expect(
+        json.mounts.includes("source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume"),
+      ).toBe(recommended);
+      expect(
+        writeFileMock.mock.calls.some(([file]) => String(file).endsWith("extensions.json")),
+      ).toBe(recommended);
+
+      const script = String(findWriteCall("post-create.sh")[1]);
+      expect(script.includes("/usr/local/bin/fd")).toBe(preset === "full");
+    },
+  );
+
   it("should mount the workspace parent and trust its repositories and worktrees", async () => {
     const actualFs = await vi.importActual<typeof fs>("node:fs");
     const devcontainerTemplate = actualFs.readFileSync(

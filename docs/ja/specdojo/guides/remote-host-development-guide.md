@@ -58,9 +58,17 @@ npx specdojo devcontainer scaffold --provider claude,codex --preset recommended 
 npx specdojo devcontainer scaffold --provider claude,codex --preset recommended
 ```
 
-`recommended` preset は、GitHub CLI（`gh`）、端末版 Emacs と Vim（既存設定を上書きしない雛形）、tmux、SpecDojo の文書作業向け VS Code 拡張をまとめて追加します。拡張は Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML で、選択した provider の拡張もその provider の分だけ追加します。Markdown と YAML は保存時に Prettier で整形し、主要な SpecDojo YAML を `docs/specdojo/schemas/v1/` の schema へ関連付けます。同じ拡張は `.vscode/extensions.json` の recommendation にも追加されます。
+用途に合わせて、provider とは別に次の preset を選びます。
 
-既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。GitHub へのログインは自動では行わないため、利用者が必要なときだけコンテナ内で `gh auth login` を実行します。認証は同じリポジトリのコンテナを作り直しても名前付き volume に残りますが、同じ利用者で動く agent からも見えます。このため配布する agent 権限では `git push` と `gh` の書き込みを拒否します。pipeline executor・review executor・reporter は読み取りを含む全 `gh` を拒否し、対話型オーケストレーターは役割別設定を持てる Claude Code と OpenCode でだけ `gh pr view`・`gh run view` などの読み取りを許可します。Codex と Antigravity は権限が役割共通のため全 `gh` を拒否します。preset を使わない場合は `gh` とその認証 volume を追加せず、Ollama 接続、コンテナ内の cron、コンテナ内の tmux が必要なときだけ `--ollama`、`--cron`、`--tmux` を追加します。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、tmux を含めない個別指定も選べます。
+| preset        | 内容                                                                                                                                                 |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `minimal`     | 選んだ provider の CLI と SpecDojo の動作に必要な最小構成。preset を省略した場合と同じ。                                                             |
+| `recommended` | `minimal` に GitHub CLI（`gh`）、端末版 Emacs と Vim、tmux、SpecDojo の文書作業向け VS Code 拡張・設定を追加する。                                   |
+| `full`        | `recommended` に ripgrep、fd、fzf、yq、shellcheck、shfmt、Ollama 接続、cron を追加する。fd は `fd-find` package から `fd` コマンドとして利用できる。 |
+
+`recommended` / `full` のエディタ設定は既存設定を上書きしません。VS Code 拡張は Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML で、選択した provider の拡張もその provider の分だけ追加します。Markdown と YAML は保存時に Prettier で整形し、主要な SpecDojo YAML を `docs/specdojo/schemas/v1/` の schema へ関連付けます。同じ拡張は `.vscode/extensions.json` の recommendation にも追加されます。
+
+既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。GitHub へのログインは自動では行わないため、利用者が必要なときだけコンテナ内で `gh auth login` を実行します。認証は同じリポジトリのコンテナを作り直しても名前付き volume に残りますが、同じ利用者で動く agent からも見えます。このため配布する agent 権限では `git push` と `gh` の書き込みを拒否します。pipeline executor・review executor・reporter は読み取りを含む全 `gh` を拒否し、対話型オーケストレーターは役割別設定を持てる Claude Code と OpenCode でだけ `gh pr view`・`gh run view` などの読み取りを許可します。Codex と Antigravity は権限が役割共通のため全 `gh` を拒否します。preset に個別の `--ollama`・`--cron`・`--tmux`・`--editor` を加えることもできます。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、tmux を含めない `minimal` も選べます。
 
 生成する `devcontainer.json` は、利用リポジトリ単体ではなく、その親ディレクトリをホスト側と同じ名前の `/workspaces/<親名>` へマウントします。例えば `app1-workspace/app1-specdojo` の作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成では `repos` の参照先（例: `../app1`）と `worktree_base`（例: `../app1-specdojo-worktrees`）が利用リポジトリの外にあるためです。これらの Git リポジトリと worktree は `safe.directory` の対象になります。一方、同じ親ディレクトリに置いたその他のファイルもコンテナから見えるため、秘密情報などコンテナへ公開しないファイルは別の場所へ置いてください。
 
