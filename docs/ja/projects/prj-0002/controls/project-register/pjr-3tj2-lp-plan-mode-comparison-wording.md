@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: low
   difficulty: easy
   owner: UX
   registered_at: "2026-10-23T23:38:52Z"
+  block_reason: "agent exited with non-zero code: executor validation failed or not run: npm run format:check, npm run build"
   derived_from:
     - PJR-0WFV
 ---

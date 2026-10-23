@@ -38,3 +38,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-0WFV"]'
+- v: 1
+  id: reg_f6bcd3b98ba44ab9acbeb8fcbd7c73cb
+  ts: "2026-10-23T23:39:25Z"
+  action: start
+  actor: qwen-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_8194b443b716435b935071a1a66fc0fd
+- v: 1
+  id: reg_4aeb80406eb749d597a568ef747c7852
+  ts: "2026-10-23T23:53:56Z"
+  action: wait
+  actor: qwen-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: executor validation failed or not run: npm run format:check, npm run build"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: executor validation failed or not run: npm run format:check, npm run build"
+  previous_event_id: reg_f6bcd3b98ba44ab9acbeb8fcbd7c73cb
