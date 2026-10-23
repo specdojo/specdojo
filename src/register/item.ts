@@ -198,6 +198,35 @@ export function ticketRefCell(filename: string): string {
 // Markdown のコードスパン。コードとして明示された内容は、表セルでも著者の記法を保持する。
 const MARKDOWN_CODE_SPAN = /(`+)[\s\S]*?\1/g;
 
+// URL の囲みを適用しない Markdown の範囲。コードスパン、山括弧、リンク（shortcut / reference
+// link を含む）は著者がすでに選んだ記法として保持する。
+const MARKDOWN_URL_PROTECTED_SPAN =
+  /(`+)[\s\S]*?\1|<[^<>\r\n]*>|!?\[[^\]\r\n]*\](?:\([^\r\n)]*\)|\[[^\]\r\n]*\])?/g;
+
+// 全角の閉じ括弧・句読点と半角の閉じ括弧は URL の直後に続く本文として扱う。
+// ASCII の句読点は query に使えるため一度 URL 候補へ含め、末尾にあるものだけ戻す。
+const BARE_HTTP_URL = /https?:\/\/[^\s<>"'`）］｝〉》」』】〕〗〙〛。、，！？；：…)\]}]+/g;
+const TRAILING_ASCII_URL_PUNCTUATION = /[.,;:!?]+$/;
+
+function encloseBareHttpUrls(text: string): string {
+  const encloseSegment = (segment: string): string =>
+    segment.replace(BARE_HTTP_URL, (candidate) => {
+      const trailing = candidate.match(TRAILING_ASCII_URL_PUNCTUATION)?.[0] ?? "";
+      const url = trailing ? candidate.slice(0, -trailing.length) : candidate;
+      return url ? `<${url}>${trailing}` : candidate;
+    });
+
+  let result = "";
+  let lastIndex = 0;
+  for (const match of text.matchAll(MARKDOWN_URL_PROTECTED_SPAN)) {
+    const start = match.index ?? 0;
+    result += encloseSegment(text.slice(lastIndex, start));
+    result += match[0];
+    lastIndex = start + match[0].length;
+  }
+  return result + encloseSegment(text.slice(lastIndex));
+}
+
 // コードスパン外の未エスケープな強調記号をエスケープする。
 // 記号の直前に偶数個のバックスラッシュがある場合は Markdown 上で未エスケープなので、
 // バックスラッシュを 1 個加える。奇数個なら既にエスケープ済みとして保持する。
@@ -209,7 +238,10 @@ function escapeTableCellEmphasis(text: string): string {
 
   let result = "";
   let lastIndex = 0;
-  for (const match of text.matchAll(MARKDOWN_CODE_SPAN)) {
+  // URL 内の `*` / `_` は URL の一部なので変えない。bare URL はこの処理より先に
+  // autolink 化されるが、Markdown link のリンク先にある URL も同じ規則で保持する。
+  const protectedSpan = new RegExp(`${MARKDOWN_CODE_SPAN.source}|${BARE_HTTP_URL.source}`, "g");
+  for (const match of text.matchAll(protectedSpan)) {
     const start = match.index ?? 0;
     result += escapeSegment(text.slice(lastIndex, start));
     result += match[0];
@@ -218,9 +250,9 @@ function escapeTableCellEmphasis(text: string): string {
   return result + escapeSegment(text.slice(lastIndex));
 }
 
-// 表セルへ埋め込むために1行化し、列区切りの `|` と強調記号の `*` / `_` を
-// エスケープする。既存コードスパンとエスケープ済みの記号は保持し、複数回の呼び出しに
-// 対して冪等にする。
+// 表セルへ埋め込むために1行化し、素の HTTP(S) URL を autolink にしてから、列区切りの
+// `|` と強調記号の `*` / `_` をエスケープする。既存コードスパン、Markdown link、
+// autolink、エスケープ済みの記号は保持し、複数回の呼び出しに対して冪等にする。
 export function toCell(text: string): string {
   if (typeof text !== "string") return "";
   const normalized = text
@@ -228,7 +260,7 @@ export function toCell(text: string): string {
     .replace(/\s+/g, " ")
     .replace(/(?<!\\)((\\\\)*)\|/g, "$1\\|")
     .trim();
-  return escapeTableCellEmphasis(normalized);
+  return escapeTableCellEmphasis(encloseBareHttpUrls(normalized));
 }
 
 // H1（`# PJR-XXXX タイトル`）からタイトルを導出する。表示 ID の接頭辞は取り除く。

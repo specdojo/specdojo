@@ -2,6 +2,16 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [Unreleased]
+
+### 変更
+
+- 利用者が作る kata の配置を `docs/ja/kata/<種類>s/` から `docs/ja/specdojo/<種類>s/<kata_authority>/` へ変更しました。0.4.4 のあいだは旧配置も警告付きで読み、新旧に同じ ID がある場合は新配置を優先します（PJR-EKRW）。
+
+### 不具合修正
+
+- `register build` が生成する登録簿一覧・派生ビュー・PM ログで、自由記述セルの素の HTTP(S) URL を autolink にするようにしました。全角の括弧や句読点、半角の閉じ括弧は URL の外へ残し、既存の autolink・Markdown link・コードスパンは保持するため、markdownlint（MD034）で止まりません（PJR-4J4A）。
+
 ## [0.4.3] - 2026-10-23
 
 ### 追加機能

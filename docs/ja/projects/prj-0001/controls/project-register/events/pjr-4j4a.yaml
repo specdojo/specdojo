@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_040ae6243d64483cba7c22b827687bd1
+  ts: "2026-10-23T14:18:30Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 登録簿の一覧のセルで素の URL が囲まれず lint-md が止まる
+    - field: description
+      from: ""
+      to: 一覧の生成はセルの説明や結論に書かれた URL をそのまま描くため、markdownlint の MD034 に当たり、develop から分かれた run の親の検証がすべて止まる。PJR-Y6DG の結論の specdojo.org の URL で起きた
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-6SQH"]'
+- v: 1
+  id: reg_17567cd6fe924b34a8ddb422c2495d87
+  ts: "2026-10-23T14:19:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_040ae6243d64483cba7c22b827687bd1
+- v: 1
+  id: reg_4e2eb3d780d44e229be9be3bb1666947
+  ts: "2026-10-23T14:31:10Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_17567cd6fe924b34a8ddb422c2495d87

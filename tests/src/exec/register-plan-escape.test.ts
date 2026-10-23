@@ -82,6 +82,12 @@ describe("inlineCodeAnglePlaceholders", () => {
     expect(once).toBe("`dct-<domain>.yaml` と `<phase>`.");
     expect(inlineCodeAnglePlaceholders(once)).toBe(once);
   });
+
+  it("HTTP(S) autolink は山括弧プレースホルダとしてコード化しない", () => {
+    const value = "homepage は <https://specdojo.org>。";
+
+    expect(inlineCodeAnglePlaceholders(value)).toBe(value);
+  });
 });
 
 describe("generateRegisterPlan の Markdown 安全性", () => {
@@ -490,7 +496,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
     const content = await readFile(outPath, "utf8");
     expect(content).toContain("approach: rulebook-authoring");
-    expect(content).toContain("docs/ja/kata/rulebooks/test-rulebook.md");
+    expect(content).toContain("docs/ja/specdojo/rulebooks/customer/test-rulebook.md");
     expect(content).toContain("specdojo:rulebook-authoring-standard");
     expect(content).toContain("`prj-test:overview`: Test Overview");
     expect(content).toContain("手本の成果物は読み取り専用");
