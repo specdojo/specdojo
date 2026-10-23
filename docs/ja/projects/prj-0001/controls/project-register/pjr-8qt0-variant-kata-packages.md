@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-8qt0-variant-kata-packages
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   owner: ARC
   registered_at: "2026-10-23T12:32:19Z"
+  completed_at: "2026-10-23T13:48:37Z"
+  conclusion: 公式の variant は specdojo のリポジトリの packages/`kata-<authority>` に置き別のパッケージとして公開する。利用者は設定に読むパッケージを並べ、各パッケージが authority を宣言する。specdojo は core 専用。育てた kata は id もパスも変えずに移す。置き場所は docs/ja/specdojo/`<種類>s`/`<authority>`/（core は種類のディレクトリの直下）
   derived_from:
     - PJR-CT6G
 ---

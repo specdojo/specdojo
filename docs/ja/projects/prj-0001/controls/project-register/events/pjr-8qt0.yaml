@@ -35,3 +35,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-CT6G"]'
+- v: 1
+  id: reg_bbc401bf7a94410bbff1f6c229e2303b
+  ts: "2026-10-23T13:48:37Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者（indie）が推奨の L1・R1・A1・M1 と、利用者が提案した置き場所 Q1 を承認した。置き場所の修正は PJR-EKRW
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-23"
+    - field: conclusion
+      from: "-"
+      to: 公式の variant は specdojo のリポジトリの packages/`kata-<authority>` に置き別のパッケージとして公開する。利用者は設定に読むパッケージを並べ、各パッケージが authority を宣言する。specdojo は core 専用。育てた kata は id もパスも変えずに移す。置き場所は docs/ja/specdojo/`<種類>s`/`<authority>`/（core は種類のディレクトリの直下）
+  previous_event_id: reg_e40b2ea402174c83bb5d5e98729bbec6
