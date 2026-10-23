@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-23T23:43:14Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
   derived_from:
     - PJR-EKRW
 ---
