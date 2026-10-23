@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_17567cd6fe924b34a8ddb422c2495d87
+- v: 1
+  id: reg_c83ca2e0d6a7407b80052d4573f5afb7
+  ts: "2026-10-23T14:32:48Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが、develop の一覧で Y6DG の結論の URL が囲まれ、生成物が markdownlint を通ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-23"
+    - field: conclusion
+      from: "-"
+      to: 一覧・派生ビュー・PM ログの表のセルで、素の http・https の URL を山括弧で囲むようにした。全角の括弧や句読点の手前で URL を区切り、既に囲まれたもの・リンク・コードの書式の中は変えない。作り直した develop の生成物は markdownlint を通る
+  previous_event_id: reg_4e2eb3d780d44e229be9be3bb1666947

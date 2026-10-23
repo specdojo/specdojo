@@ -12,7 +12,7 @@ specdojo:
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-23T13:47:59Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
   derived_from:
     - PJR-8QT0
 ---
