@@ -906,6 +906,63 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
     });
   });
 
+  it("素の URL を含む自由記述から生成した一覧・派生ビュー・PM ログが MD034 を満たす", () => {
+    withRegisterDir((paths, dir) => {
+      writeFileSync(
+        join(dir, "pjr-cd34-source.md"),
+        buildTicket("PJR-CD34", "起票元", [
+          "item_status: open",
+          "priority: medium",
+          "owner: DEV",
+          'registered_at: "2026-08-01T12:00:00Z"',
+        ]),
+        "utf8",
+      );
+      const ticketPath = join(dir, "pjr-ab12-topic.md");
+      const originalContent = buildTicket("PJR-AB12", "homepage は https://specdojo.org", [
+        "item_status: done",
+        "priority: high",
+        "owner: DEV",
+        'registered_at: "2026-08-02T12:00:00Z"',
+        'completed_at: "2026-08-03T12:00:00Z"',
+        "derived_from:",
+        "  - PJR-CD34",
+        'conclusion: "文中の https://example.com/a_b と <https://example.com/kept> を確認"',
+      ])
+        .replace("  item_type: todo", "  item_type: issue")
+        .replace("個票本文の説明。", "（homepage は https://specdojo.org）。");
+      writeFileSync(ticketPath, originalContent, "utf8");
+
+      const views = generateDerivedViewFiles(paths, "all");
+      for (const view of views) {
+        const errors = markdownlintErrors(view.content) as Array<{ ruleNames: string[] }>;
+        const md034Errors = errors.filter((error) => error.ruleNames.includes("MD034"));
+        expect(md034Errors, view.path).toEqual([]);
+      }
+
+      for (const fileName of [
+        "pjr-index.md",
+        "pjr-views-by-status.md",
+        "pjr-views-by-priority.md",
+        "pjr-views-by-owner.md",
+        "pm-issue-log.md",
+      ]) {
+        const content = findView(views, fileName);
+        expect(content).toContain("homepage は <https://specdojo.org>");
+        expect(content).toContain("（homepage は <https://specdojo.org>）。");
+        expect(content).toContain(
+          "文中の <https://example.com/a_b> と <https://example.com/kept> を確認",
+        );
+      }
+      expect(findView(views, "pjr-derived-items.md")).toContain(
+        "homepage は <https://specdojo.org>",
+      );
+
+      // 個票の本文や frontmatter は変更されていないこと（表示時のみ autolink 化）
+      expect(readFileSync(ticketPath, "utf8")).toBe(originalContent);
+    });
+  });
+
   it("同一入力から同一出力を返す（生成が決定的）", () => {
     withRegisterDir((paths, dir) => {
       writeTwoTickets(dir);
