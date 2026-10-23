@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-0wfv-lp-why-register
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: BA
   registered_at: "2026-10-17T14:40:01Z"
   due_on: null
+  completed_at: "2026-10-23T23:38:38Z"
+  conclusion: LP の「register の考え方」に plan モードの plan との対比（識別・種類・状態の遷移・実行の plan と result とのつながり・決定の記録・残り方）を加え、「道具の使い分け」の plan mode の行の言い回しをそろえた（specdojo-lp の ec83873）。文面の 2 点の手直しは別の todo で行う
 ---
 
 # PJR-0WFV LP で plan モードと比べた register の価値を伝える
