@@ -24,7 +24,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 
 ## 2. 完了条件
 
-- 本個票の「対応結果」の表に、実行した日時（JST）、対象の分割の項目 ID、実行した agent の nickname を 1 行追記する。対象の分割の項目 ID は、実行時点で `review` または `done` になっている runner のコードの分割と移動の項目（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04・PJR-MHHP・PJR-XP0J・PJR-BZ9J・PJR-MX4F・PJR-DT3Q・PJR-GBWW・PJR-CY80・PJR-BHMH・PJR-H06F・PJR-YK1C・PJR-TSP6・PJR-E025・PJR-NJ6J・PJR-6EF8・PJR-T46Y・PJR-8WBN・PJR-6DHY・PJR-E412・PJR-NS8Y・PJR-283N・PJR-G90K・PJR-0EFN・PJR-DKD8・PJR-A6PV・PJR-5HYP・PJR-XRAB・PJR-HE9R・PJR-W93C・PJR-CNNT・PJR-Q4CD・PJR-5B42・PJR-CT6G）のうち最も新しく統合されたものとする。
+- 本個票の「対応結果」の表に、実行した日時（JST）、対象の分割の項目 ID、実行した agent の nickname を 1 行追記する。対象の分割の項目 ID は、実行時点で `review` または `done` になっている runner のコードの分割と移動の項目（PJR-3W2N・PJR-2JFM・PJR-GBPX・PJR-13M6・PJR-NA04・PJR-MHHP・PJR-XP0J・PJR-BZ9J・PJR-MX4F・PJR-DT3Q・PJR-GBWW・PJR-CY80・PJR-BHMH・PJR-H06F・PJR-YK1C・PJR-TSP6・PJR-E025・PJR-NJ6J・PJR-6EF8・PJR-T46Y・PJR-8WBN・PJR-6DHY・PJR-E412・PJR-NS8Y・PJR-283N・PJR-G90K・PJR-0EFN・PJR-DKD8・PJR-A6PV・PJR-5HYP・PJR-XRAB・PJR-HE9R・PJR-W93C・PJR-CNNT・PJR-Q4CD・PJR-5B42・PJR-CT6G・PJR-EKRW）のうち最も新しく統合されたものとする。
 - 本個票以外のファイルは変更しない。
 - 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通り、統合まで終わる。
 
