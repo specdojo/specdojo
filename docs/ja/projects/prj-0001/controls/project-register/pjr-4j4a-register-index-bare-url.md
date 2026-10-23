@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-4j4a-register-index-bare-url
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-23T14:18:29Z"
+  completed_at: "2026-10-23T14:32:48Z"
+  conclusion: 一覧・派生ビュー・PM ログの表のセルで、素の http・https の URL を山括弧で囲むようにした。全角の括弧や句読点の手前で URL を区切り、既に囲まれたもの・リンク・コードの書式の中は変えない。作り直した develop の生成物は markdownlint を通る
   derived_from:
     - PJR-6SQH
 ---
