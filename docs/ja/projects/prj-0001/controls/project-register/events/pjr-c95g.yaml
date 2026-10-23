@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-EKRW"]'
+- v: 1
+  id: reg_f9970ff2c5684fb5941be593bc95f1ea
+  ts: "2026-10-23T23:44:11Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_40488294837b41c49701b9ba4fcc8a74
