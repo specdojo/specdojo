@@ -128,3 +128,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_490fb106bbc644e99f4b58582c1865bd
+- v: 1
+  id: reg_9fa1917cda594337ade768ff74756179
+  ts: "2026-10-23T15:02:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが一時のリポジトリで、rulebook-authoring の plan の置き場所、kata list の表示、古い置き場所の案内を確かめ、統合後の runner の動作を PJR-JSEY で確認した。2 回目の失敗は prj- で始まる authority のテストの手本が原因で、plan に指摘を書き足して直させた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: specdojo 以外の authority の kata の置き場所を docs/ja/specdojo/`<種類>s`/`<authority>`/ にした（core は種類のディレクトリの直下のまま）。0.4.4 のあいだは古い docs/ja/kata/ も読み、移すよう案内する。core の kata をたどる処理が authority のサブディレクトリを数えないようにした
+  previous_event_id: reg_c8df56a3e73848319a12a18e45d21f35

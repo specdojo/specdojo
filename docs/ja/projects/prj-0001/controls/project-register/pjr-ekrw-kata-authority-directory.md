@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ekrw-kata-authority-directory
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-23T13:47:59Z"
+  completed_at: "2026-10-23T15:02:22Z"
+  conclusion: specdojo 以外の authority の kata の置き場所を docs/ja/specdojo/`<種類>s`/`<authority>`/ にした（core は種類のディレクトリの直下のまま）。0.4.4 のあいだは古い docs/ja/kata/ も読み、移すよう案内する。core の kata をたどる処理が authority のサブディレクトリを数えないようにした
   derived_from:
     - PJR-8QT0
 ---
