@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e40b2ea402174c83bb5d5e98729bbec6
+  ts: "2026-10-23T12:32:20Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 追加の kata のパッケージ（variant package）の扱いを決める
+    - field: description
+      from: ""
+      to: 規則では業界や用途ごとの kata の一式を別の authority のパッケージ（variant package）として持てるとしているが、置き場所・公開の仕方・利用者のリポジトリから読む仕組み・authority の登録の仕方が決まっておらず、実装もない。coderdojo-lessons で育てる edu-scratch の kata を将来配る前提で決める
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-CT6G"]'
