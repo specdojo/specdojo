@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-2c32d9d98320",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-23T20:00:56.938Z",
+    "completed_at": "2026-10-23T20:15:28.684Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-comparison-of-alternatives-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-issues-and-approach-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-overview-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-scope-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-stakeholder-register-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-success-criteria-and-acceptance-criteria-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-template.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-2c32d9d98320.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 8,
+    "summary": "...jo.prj-comparison-of-alternatives-template.yaml | 81 +++++++++++++++---\n .../specdojo.prj-issues-and-approach-template.yaml | 74 +++++++++++++++--\n .../results/specdojo.prj-overview-template.yaml    | 66 +++++++++++++--\n .../grade/results/specdojo.prj-scope-template.yaml | 95 +++++++++++++++++-----\n ...specdojo.prj-stakeholder-register-template.yaml | 67 +++++++++++++--\n ...-criteria-and-acceptance-criteria-template.yaml | 67 +++++++++++++--\n .../grade/results/specdojo.stsd-template.yaml      | 67 +++++++++++++--\n 7 files changed, 450 insertions(+), 67 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-2c32d9d98320 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-2c32d9d98320/…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-2c32d9d98320 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-2c32d9d98320/results.tsv\nelse\n  grade_status=$?\n  cat logs/grade/runs/per-document/JBR-grade-kata-2c32d9d98320/results.tsv\n  if [ \"$grade_status\" -eq 2 ]; then\n    printf 'grade pipeline partial: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-2c32d9d98320' \"$grade_status\" >&2\n  else\n    printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-2c32d9d98320' \"$grade_status\" >&2\n  fi\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-2c32d9d98320/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-2c32d9d98320/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.4.3 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-2c32d9d98320 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=7 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-2c32d9d98320\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/specdojo/templates/prj-comparison-of-alternatives-template.md\ndocument complete: docs/ja/specdojo/templates/prj-comparison-of-alternatives-template.md\ndocument start: docs/ja/specdojo/templates/prj-issues-and-approach-template.md\ndocument complete: docs/ja/specdojo/templates/prj-issues-and-approach-template.md\ndocument start: docs/ja/specdojo/templates/prj-overview-template.md\ndocument complete: docs/ja/specdojo/templates/prj-overview-template.md\ndocument start: docs/ja/specdojo/templates/prj-scope-template.md\ndocument complete: docs/ja/specdojo/templates/prj-scope-template.md\ndocument start: docs/ja/specdojo/templates/prj-stakeholder-register-template.md\ndocument complete: docs/ja/specdojo/templates/prj-stakeholder-register-template.md\ndocument start: docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md\ndocument complete: docs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md\ndocument start: docs/ja/specdojo/templates/stsd-template.md\ndocument complete: docs/ja/specdojo/templates/stsd-template.md\ngrade pipeline complete: selected=7 processed=7 completed_now=7 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-2c32d9d98320/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-23T20:03:12Z\tdocs/ja/specdojo/templates/prj-comparison-of-alternatives-template.md\t1\tpassed\t125\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-23T20:05:19Z\tdocs/ja/specdojo/templates/prj-issues-and-approach-template.md\t1\tpassed\t125\tpass\t98\t1\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-23T20:07:25Z\tdocs/ja/specdojo/templates/prj-overview-template.md\t1\tpassed\t125\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-23T20:09:00Z\tdocs/ja/specdojo/templates/prj-scope-template.md\t1\tpassed\t94\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-23T20:11:01Z\tdocs/ja/specdojo/templates/prj-stakeholder-register-template.md\t1\tpassed\t119\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-23T20:12:35Z\tdocs/ja/specdojo/templates/prj-success-criteria-and-acceptance-criteria-template.md\t1\tpassed\t92\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-23T20:15:27Z\tdocs/ja/specdojo/templates/stsd-template.md\t1\tpassed\t170\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-2c32d9d98320/attempt-1/command.stdout.log",
+      "bytes": 2973,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-2c32d9d98320/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}
