@@ -67,3 +67,35 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
   previous_event_id: reg_bcaafdc5e6484c3eb89675c1e0ce6653
+- v: 1
+  id: reg_24ade64bac1b460f81243371d91b35dd
+  ts: "2026-10-23T14:32:43Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
+      to: "-"
+  previous_event_id: reg_07f76d6df486470ea053d5d7909aee24
+- v: 1
+  id: reg_e382021cd702459d9200d46801775cab
+  ts: "2026-10-23T14:41:23Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_24ade64bac1b460f81243371d91b35dd

@@ -12,7 +12,7 @@ specdojo:
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-23T13:47:59Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
   derived_from:
     - PJR-8QT0
 ---
@@ -41,11 +41,15 @@ specdojo:
 
 | No  | 作業                                            | 担当 | 状態 | メモ   |
 | --- | ----------------------------------------------- | ---- | ---- | ------ |
-| 1   | 利用者の kata の置き場所を authority ごとに直す | DEV  | open | v0.4.4 |
+| 1   | 利用者の kata の置き場所を authority ごとに直す | DEV  | done | v0.4.4 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 非 `specdojo:` authority の正準配置を `docs/ja/specdojo/<種類>s/<authority>/<local-id>.<拡張子>` へ変更し、authoring plan、kata 参照解決、`kata list` / `kata show`、文書 ID 索引を新配置へ対応させた。
+- 0.4.4 の移行互換として旧 `docs/ja/kata/<種類>s/` を警告付きで読み、新旧に同じ ID がある場合は新配置を優先するようにした。
+- core の kata 一覧は ID の authority で利用者 kata を除外し、docs-site の package ステージングと package 側の文書 ID 索引は authority サブディレクトリを core として扱わないようにした。grade は利用リポジトリの authority サブディレクトリを kata 評価対象として列挙することをテストした。
+- 命名標準、型の構成ガイド、kata ガイド、コマンド・設定リファレンス、authoring standard、関連ガイド、CHANGELOG を新配置と移行手順に合わせて更新した。
+- 単体テストへ新配置、旧配置の読み込みと案内、新旧重複時の優先、core 走査からの除外を追加し、統合テストの authoring 出力先を新配置へ更新した。残課題はない。
 
 ## 5. 関連ドキュメント
 
