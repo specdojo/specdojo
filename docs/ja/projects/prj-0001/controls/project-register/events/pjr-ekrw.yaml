@@ -115,3 +115,16 @@
       from: "agent exited with non-zero code: parent validation failed: test-unit"
       to: "-"
   previous_event_id: reg_e382021cd702459d9200d46801775cab
+- v: 1
+  id: reg_c8df56a3e73848319a12a18e45d21f35
+  ts: "2026-10-23T14:53:30Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_490fb106bbc644e99f4b58582c1865bd
