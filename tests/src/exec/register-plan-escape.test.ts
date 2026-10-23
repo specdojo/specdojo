@@ -82,6 +82,12 @@ describe("inlineCodeAnglePlaceholders", () => {
     expect(once).toBe("`dct-<domain>.yaml` と `<phase>`.");
     expect(inlineCodeAnglePlaceholders(once)).toBe(once);
   });
+
+  it("HTTP(S) autolink は山括弧プレースホルダとしてコード化しない", () => {
+    const value = "homepage は <https://specdojo.org>。";
+
+    expect(inlineCodeAnglePlaceholders(value)).toBe(value);
+  });
 });
 
 describe("generateRegisterPlan の Markdown 安全性", () => {

@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   difficulty: medium
   owner: DEV
@@ -53,7 +53,17 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容:
+  - `src/register/item.ts` の `toCell` で、コードスパン・山括弧・Markdown link の外にある素の HTTP(S) URL を autolink に変換するようにした。
+  - URL 直後の全角の閉じ括弧・句読点と半角の閉じ括弧を URL の外へ残し、既存の autolink・Markdown link・コードスパンと URL 内の強調記号を保持する冪等な変換にした。
+  - 後段の山括弧プレースホルダ変換が HTTP(S) autolink をコード化しないようにし、一覧・派生ビュー・PM ログで同じ表示を維持した。
+- 確認結果:
+  - `toCell` の単体テストに、全角括弧と句点、文中 URL、半角閉じ括弧、既存 autolink、Markdown link、コードスパン、URL 内のアンダースコア、冪等性のケースを追加した。
+  - 個票から一覧・派生ビュー・PM ログを生成するテストに MD034 の検査を追加し、表示時だけ URL が autolink になり、個票は変更されないことを確認するようにした。
+  - `node --import tsx src/specdojo.ts register build --project prj-0001` が成功し、PJR-Y6DG の結論にある URL が `<https://specdojo.org>` として生成されることを確認した。
+  - `node --import tsx src/specdojo.ts catalog validate --project prj-0001` が既存の参照先未配置に関する警告のみで成功した。
+- 再発防止策:
+  - 全表セルが通る `toCell` に URL の変換を集約し、各ビューで個別に URL を扱わない構造を維持した。
 
 ## 5. 関連ドキュメント
 

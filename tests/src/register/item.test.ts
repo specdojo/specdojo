@@ -128,6 +128,33 @@ describe("toCell — 表セルのエスケープと正規化", () => {
     expect(toCell(toCell(value))).toBe(value);
   });
 
+  it("文中の素の HTTP(S) URL を末尾の全角・半角の句読点や閉じ括弧を除いて囲む", () => {
+    const value =
+      "（homepage は https://specdojo.org）。詳細は https://example.com/path?q=1、" +
+      "補足 (https://example.com/docs)。";
+
+    expect(toCell(value)).toBe(
+      "（homepage は <https://specdojo.org>）。詳細は <https://example.com/path?q=1>、" +
+        "補足 (<https://example.com/docs>)。",
+    );
+  });
+
+  it("autolink・Markdown link・コードスパンの URL を変えず URL 内の強調記号も保持する", () => {
+    const value =
+      "<https://example.com/a_b> [site](https://example.com/a_b) " +
+      "[https://example.com/a_b] `https://example.com/a_b`";
+
+    expect(toCell(value)).toBe(value);
+    expect(toCell(toCell(value))).toBe(value);
+  });
+
+  it("URL の囲みを再適用しても結果が変わらない", () => {
+    const once = toCell("文中 https://example.com/a_b と末尾 https://specdojo.org。");
+
+    expect(once).toBe("文中 <https://example.com/a_b> と末尾 <https://specdojo.org>。");
+    expect(toCell(once)).toBe(once);
+  });
+
   it("文字列以外が渡された場合は空文字を返す", () => {
     expect(toCell(undefined as unknown as string)).toBe("");
   });

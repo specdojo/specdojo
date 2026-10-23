@@ -90,7 +90,9 @@ function replaceOutsideMarkdownCodeSpans(
 // ドットを含めるのは `dct-<domain>.yaml` のような拡張子付きの参照を分断しないためだが、
 // 文末の句点を巻き込まないよう、末尾のドットはコードスパンの外へ戻す。
 export function inlineCodeAnglePlaceholders(text: string): string {
-  const placeholder = /[A-Za-z0-9._-]*(?:<[^<>\r\n]+>[A-Za-z0-9._-]*)+/g;
+  // HTTP(S) autolink は Markdown として既に安全な山括弧記法なので、プレースホルダとして
+  // code span 化しない。register の表セルで bare URL を囲んだ後も autolink を保持する。
+  const placeholder = /[A-Za-z0-9._-]*(?:<(?!https?:\/\/)[^<>\r\n]+>[A-Za-z0-9._-]*)+/g;
   const wrapToken = (token: string): string => {
     const trailing = token.match(/\.+$/)?.[0] ?? "";
     const body = trailing ? token.slice(0, -trailing.length) : token;
