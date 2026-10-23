@@ -1,7 +1,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   declaredIncludes,
   declaredKata,
@@ -59,16 +59,16 @@ describe("kata", () => {
   }
 
   describe("resolveKataRefs", () => {
-    it("利用者 authority の kata は docs/ja/kata だけから解決する", () => {
+    it("利用者 authority の kata は authority サブディレクトリから解決する", () => {
       writeFileSync(
         join(root, ".specdojo", "specdojo.config.json"),
         JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
         "utf8",
       );
-      mkdirSync(join(root, "docs/ja/kata/rulebooks"), { recursive: true });
-      mkdirSync(join(root, "docs/ja/kata/recipes"), { recursive: true });
+      mkdirSync(join(root, "docs/ja/specdojo/rulebooks/customer"), { recursive: true });
+      mkdirSync(join(root, "docs/ja/specdojo/recipes/customer"), { recursive: true });
       writeFileSync(
-        join(root, "docs/ja/kata/rulebooks/payment-rulebook.md"),
+        join(root, "docs/ja/specdojo/rulebooks/customer/payment-rulebook.md"),
         [
           "---",
           "specdojo:",
@@ -82,18 +82,46 @@ describe("kata", () => {
         "utf8",
       );
       writeFileSync(
-        join(root, "docs/ja/kata/recipes/payment-recipe.md"),
+        join(root, "docs/ja/specdojo/recipes/customer/payment-recipe.md"),
         "---\nspecdojo:\n  id: customer:payment-recipe\n  type: recipe\n  status: draft\n---\n",
         "utf8",
       );
 
       expect(resolveKataRefs("customer:payment-rulebook")).toMatchObject({
-        rulebook: "docs/ja/kata/rulebooks/payment-rulebook.md",
-        recipe: "docs/ja/kata/recipes/payment-recipe.md",
+        rulebook: "docs/ja/specdojo/rulebooks/customer/payment-rulebook.md",
+        recipe: "docs/ja/specdojo/recipes/customer/payment-recipe.md",
       });
       expect(resolveKataRefs("foreign:payment-rulebook").rulebook).toBe(
         ".specdojo/unresolvable-kata/rulebooks/payment-rulebook.md",
       );
+    });
+
+    it("旧配置を警告付きで読み、新旧が重複すれば authority サブディレクトリを優先する", () => {
+      writeFileSync(
+        join(root, ".specdojo", "specdojo.config.json"),
+        JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
+        "utf8",
+      );
+      mkdirSync(join(root, "docs/ja/kata/rulebooks"), { recursive: true });
+      const legacyPath = join(root, "docs/ja/kata/rulebooks/payment-rulebook.md");
+      const canonicalPath = join(root, "docs/ja/specdojo/rulebooks/customer/payment-rulebook.md");
+      const rulebook = (body: string) =>
+        `---\nspecdojo:\n  id: customer:payment-rulebook\n  type: rulebook\n  status: draft\n---\n\n${body}\n`;
+      writeFileSync(legacyPath, rulebook("legacy"), "utf8");
+      const warning = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+      expect(resolveKataRefs("customer:payment-rulebook").rulebook).toBe(
+        "docs/ja/kata/rulebooks/payment-rulebook.md",
+      );
+      expect(warning.mock.calls.flat().join("")).toContain("legacy path");
+
+      mkdirSync(join(canonicalPath, ".."), { recursive: true });
+      writeFileSync(canonicalPath, rulebook("canonical"), "utf8");
+      expect(resolveKataRefs("customer:payment-rulebook").rulebook).toBe(
+        "docs/ja/specdojo/rulebooks/customer/payment-rulebook.md",
+      );
+      expect(warning.mock.calls.flat().join("")).toContain("both");
+      warning.mockRestore();
     });
 
     it("rulebook frontmatter の宣言から各参照先パスを解決する", () => {

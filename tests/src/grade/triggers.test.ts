@@ -487,4 +487,18 @@ describe("grade triggers", () => {
       ),
     ).toContain(deliverablePath);
   });
+
+  it("authority サブディレクトリの利用者 kata を評価対象として列挙する", () => {
+    const userKataPath = join(rootDir, "docs/ja/specdojo/rulebooks/customer/payment-rulebook.md");
+    mkdirSync(join(userKataPath, ".."), { recursive: true });
+    writeFileSync(
+      userKataPath,
+      "---\nspecdojo:\n  id: customer:payment-rulebook\n  type: rulebook\n  status: draft\n---\n",
+      "utf8",
+    );
+
+    expect(discoverGradeTargets({ target: "kata", project: "prj-0001" }, rootDir)).toContain(
+      userKataPath,
+    );
+  });
 });

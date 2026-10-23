@@ -9,11 +9,11 @@ specdojo:
 
 Rulebook Authoring Standard
 
-`docs/ja/specdojo/rulebooks/` と `docs/ja/kata/rulebooks/` 配下の各 `*-rulebook.md` が従うべき章立て・記述ルール・Frontmatter 規約・禁止事項・運用ルールを定義します。Frontmatter の共通原則は [document-metadata-standard.md](document-metadata-standard.md) に従い、機械検証は参照スキーマに従います。
+`docs/ja/specdojo/rulebooks/` 直下と `docs/ja/specdojo/rulebooks/<authority>/` 配下の各 `*-rulebook.md` が従うべき章立て・記述ルール・Frontmatter 規約・禁止事項・運用ルールを定義します。Frontmatter の共通原則は [document-metadata-standard.md](document-metadata-standard.md) に従い、機械検証は参照スキーマに従います。
 
 ## 1. 適用範囲
 
-- 対象: `docs/ja/specdojo/rulebooks/` と `docs/ja/kata/rulebooks/` 配下のすべての `*-rulebook.md`
+- 対象: `docs/ja/specdojo/rulebooks/` 直下と `docs/ja/specdojo/rulebooks/<authority>/` 配下のすべての `*-rulebook.md`
 - 目的: 章構成・見出しレベル・記述品質・Frontmatter を統一し、参照・保守を容易にする
 - Frontmatter 共通原則: [document-metadata-standard.md](document-metadata-standard.md)
 - 参照スキーマ: [rulebook-frontmatter.schema.yaml](../../../specdojo/schemas/v1/rulebook-frontmatter.schema.yaml)

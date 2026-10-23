@@ -194,9 +194,15 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
   async function writeKataFixture(): Promise<void> {
     const templatesPath = path.join(dir, "docs", "ja", "specdojo", "exec-templates");
-    const rulebooksPath = path.join(dir, "docs", "ja", "specdojo", "rulebooks");
+    const rulebooksPath = path.join(dir, "docs", "ja", "specdojo", "rulebooks", "customer");
     await mkdir(templatesPath, { recursive: true });
     await mkdir(rulebooksPath, { recursive: true });
+    await mkdir(path.join(dir, ".specdojo"), { recursive: true });
+    await writeFile(
+      path.join(dir, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
+      "utf8",
+    );
     for (const filename of [
       "xep-common-conventions-template.md",
       "xep-rulebook-maintenance-template.md",
@@ -215,7 +221,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       [
         "---",
         "specdojo:",
-        "  id: prj-test:test-rulebook",
+        "  id: customer:test-rulebook",
         "  type: rulebook",
         "  status: draft",
         "---",
@@ -447,7 +453,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
   it("kata maintenance approach は指定した kata id を直接の編集対象にする", async () => {
     const outPath = path.join(dir, "plan-with-kata-approach.md");
     await writeKataFixture();
-    const catalogPath = await writeCatalog("prj-test:test-rulebook");
+    const catalogPath = await writeCatalog("customer:test-rulebook");
     const ticket = await writeTicket();
     process.env.SPECDOJO_PACKAGE_ROOT = dir;
     process.chdir(dir);
@@ -458,7 +464,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       registerPaths: makeRegisterPaths(),
       item: makeItem({
         approach: "rulebook-maintenance",
-        targets: ["prj-test:test-rulebook"],
+        targets: ["customer:test-rulebook"],
         ticket,
       }),
       stem: "xep-pjr-test",
@@ -469,8 +475,8 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
     expect(content).toContain("origin: register");
     expect(content).toContain("approach: rulebook-maintenance");
-    expect(content).toContain("targets:\n    - prj-test:test-rulebook");
-    expect(content).toContain("docs/ja/specdojo/rulebooks/test-rulebook.md");
+    expect(content).toContain("targets:\n    - customer:test-rulebook");
+    expect(content).toContain("docs/ja/specdojo/rulebooks/customer/test-rulebook.md");
     expect(content).toContain("register-specific criterion is satisfied");
   });
 
@@ -496,7 +502,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
     const content = await readFile(outPath, "utf8");
     expect(content).toContain("approach: rulebook-authoring");
-    expect(content).toContain("docs/ja/kata/rulebooks/test-rulebook.md");
+    expect(content).toContain("docs/ja/specdojo/rulebooks/customer/test-rulebook.md");
     expect(content).toContain("specdojo:rulebook-authoring-standard");
     expect(content).toContain("`prj-test:overview`: Test Overview");
     expect(content).toContain("手本の成果物は読み取り専用");

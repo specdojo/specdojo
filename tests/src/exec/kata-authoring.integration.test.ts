@@ -103,12 +103,12 @@ describe("kata authoring register integration", () => {
     });
 
     const plan = readFileSync(planPath, "utf8");
-    expect(plan).toContain("docs/ja/kata/rulebooks/payment-rulebook.md");
+    expect(plan).toContain("docs/ja/specdojo/rulebooks/customer/payment-rulebook.md");
     expect(plan).toContain("手本の成果物は読み取り専用");
     expect(plan).toContain("`undecided` または未記入なら");
 
     // The fake executor follows the generated plan's externally observable contract.
-    const authoredPath = join(root, "docs/ja/kata/rulebooks/payment-rulebook.md");
+    const authoredPath = join(root, "docs/ja/specdojo/rulebooks/customer/payment-rulebook.md");
     mkdirSync(dirname(authoredPath), { recursive: true });
     writeFileSync(
       authoredPath,

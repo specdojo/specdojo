@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from "node:fs";
-import { extname, join, resolve } from "node:path";
+import { extname, resolve } from "node:path";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import {
   getKataAuthority,
@@ -12,7 +12,8 @@ import { parsePracticeId, practiceLocalId } from "../shared/practice-id.js";
 import { load } from "../shared/yaml.js";
 import { resolveSpecdojoReferencePathIfExists } from "../docs/template-resolution.js";
 
-export const KATA_AUTHORING_BASE = "docs/ja/kata";
+export const KATA_AUTHORING_BASE = "docs/ja/specdojo";
+export const LEGACY_KATA_AUTHORING_BASE = "docs/ja/kata";
 
 export const AUTHORING_KINDS = ["rulebook", "recipe", "sample", "template"] as const;
 export type AuthoringKind = (typeof AUTHORING_KINDS)[number];
@@ -42,18 +43,86 @@ export function isAuthoringApproach(approach: string | undefined): boolean {
   );
 }
 
-export function kataKindDirectory(kind: AuthoringKind, local = false): string {
-  return local ? `${KATA_AUTHORING_BASE}/${KIND_DIR[kind]}` : `docs/ja/specdojo/${KIND_DIR[kind]}`;
+export function kataKindDirectory(kind: AuthoringKind): string {
+  return `${KATA_AUTHORING_BASE}/${KIND_DIR[kind]}`;
+}
+
+export function authoredKataDirectory(kind: AuthoringKind, authority: string): string {
+  const directory = kataKindDirectory(kind);
+  return authority === "specdojo" ? directory : `${directory}/${authority}`;
+}
+
+export function legacyKataKindDirectory(kind: AuthoringKind): string {
+  return `${LEGACY_KATA_AUTHORING_BASE}/${KIND_DIR[kind]}`;
 }
 
 export function authoredKataPath(
   id: string,
   kind: AuthoringKind,
-  extension: "md" | "yaml" | "json" = "md",
+  extension: "md" | "yaml" | "yml" | "json" = "md",
 ): string {
-  const specdojoOwned = parsePracticeId(id).authority === "specdojo";
-  const directory = kataKindDirectory(kind, !specdojoOwned);
+  const authority = parsePracticeId(id).authority;
+  const directory = authoredKataDirectory(kind, authority ?? "specdojo");
   return `${directory}/${practiceLocalId(id)}.${extension}`;
+}
+
+export function legacyAuthoredKataPath(
+  id: string,
+  kind: AuthoringKind,
+  extension: "md" | "yaml" | "yml" | "json" = "md",
+): string {
+  return `${legacyKataKindDirectory(kind)}/${practiceLocalId(id)}.${extension}`;
+}
+
+const warnedLegacyPaths = new Set<string>();
+
+export function warnLegacyAuthoredKata(
+  id: string,
+  canonicalPath: string,
+  legacyPath: string,
+  rootDir: string,
+  duplicate: boolean,
+): void {
+  const warningKey = `${resolve(rootDir, legacyPath)}:${duplicate ? "duplicate" : "legacy"}`;
+  if (warnedLegacyPaths.has(warningKey)) return;
+  warnedLegacyPaths.add(warningKey);
+  const detail = duplicate
+    ? `both ${canonicalPath} and legacy ${legacyPath} exist; using ${canonicalPath}; remove the legacy file`
+    : `legacy path ${legacyPath} is deprecated; move it to ${canonicalPath}`;
+  process.stderr.write(`warning: Kata ${id}: ${detail}.\n`);
+}
+
+export function resolveAuthoredKataPathIfExists(
+  id: string,
+  kind: AuthoringKind,
+  extension: "md" | "yaml" | "yml" | "json",
+  rootDir: string = specdojoRootDir(),
+): { relativePath: string; absolutePath: string; legacy: boolean } | undefined {
+  const authority = parsePracticeId(id).authority;
+  const canonicalPath = authoredKataPath(id, kind, extension);
+  const canonicalAbsolutePath = resolve(rootDir, canonicalPath);
+  if (!authority || authority === "specdojo") {
+    return existsSync(canonicalAbsolutePath)
+      ? { relativePath: canonicalPath, absolutePath: canonicalAbsolutePath, legacy: false }
+      : undefined;
+  }
+  if (authority !== configuredKataAuthority(rootDir)) return undefined;
+
+  const legacyPath = legacyAuthoredKataPath(id, kind, extension);
+  const legacyAbsolutePath = resolve(rootDir, legacyPath);
+  const canonicalExists = existsSync(canonicalAbsolutePath);
+  const legacyExists = existsSync(legacyAbsolutePath);
+  if (canonicalExists && legacyExists) {
+    warnLegacyAuthoredKata(id, canonicalPath, legacyPath, rootDir, true);
+  } else if (legacyExists) {
+    warnLegacyAuthoredKata(id, canonicalPath, legacyPath, rootDir, false);
+  }
+  if (canonicalExists) {
+    return { relativePath: canonicalPath, absolutePath: canonicalAbsolutePath, legacy: false };
+  }
+  return legacyExists
+    ? { relativePath: legacyPath, absolutePath: legacyAbsolutePath, legacy: true }
+    : undefined;
 }
 
 export function configuredKataAuthority(rootDir: string = specdojoRootDir()): string {
@@ -105,16 +174,17 @@ function dataFileId(path: string): string | undefined {
 }
 
 export function authoredKataExists(id: string, rootDir: string = specdojoRootDir()): boolean {
-  const localId = practiceLocalId(id);
   for (const kind of AUTHORING_KINDS) {
     const extensions =
       kind === "rulebook" || kind === "recipe" ? ["md"] : ["md", "yaml", "yml", "json"];
-    for (const local of [true, false]) {
-      const directory = resolve(rootDir, kataKindDirectory(kind, local));
-      for (const extension of extensions) {
-        const candidate = join(directory, `${localId}.${extension}`);
-        if (existsSync(candidate) && dataFileId(candidate) === id) return true;
-      }
+    for (const extension of extensions) {
+      const resolved = resolveAuthoredKataPathIfExists(
+        id,
+        kind,
+        extension as "md" | "yaml" | "yml" | "json",
+        rootDir,
+      );
+      if (resolved && dataFileId(resolved.absolutePath) === id) return true;
     }
   }
   return false;

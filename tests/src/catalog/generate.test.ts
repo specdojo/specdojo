@@ -199,10 +199,14 @@ groups:
 });
 
 describe("runGenerate — テンプレートがある成果物", () => {
-  it("利用者 authority の rulebook と template を docs/ja/kata から解決する", () => {
+  it("利用者 authority の rulebook と template を authority サブディレクトリから解決する", () => {
     mkdirSync(path.join(fx.repoRoot, ".specdojo"), { recursive: true });
-    mkdirSync(path.join(fx.repoRoot, "docs/ja/kata/rulebooks"), { recursive: true });
-    mkdirSync(path.join(fx.repoRoot, "docs/ja/kata/templates"), { recursive: true });
+    mkdirSync(path.join(fx.repoRoot, "docs/ja/specdojo/rulebooks/customer"), {
+      recursive: true,
+    });
+    mkdirSync(path.join(fx.repoRoot, "docs/ja/specdojo/templates/customer"), {
+      recursive: true,
+    });
     writeFileSync(
       path.join(fx.repoRoot, ".specdojo/specdojo.config.json"),
       JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
@@ -213,7 +217,7 @@ describe("runGenerate — テンプレートがある成果物", () => {
       CATALOG_ONE_WORK_MD.replace("specdojo:prj-charter-rulebook", "customer:prj-charter-rulebook"),
     );
     writeFileSync(
-      path.join(fx.repoRoot, "docs/ja/kata/rulebooks/prj-charter-rulebook.md"),
+      path.join(fx.repoRoot, "docs/ja/specdojo/rulebooks/customer/prj-charter-rulebook.md"),
       [
         "---",
         "specdojo:",
@@ -227,7 +231,7 @@ describe("runGenerate — テンプレートがある成果物", () => {
       "utf8",
     );
     writeFileSync(
-      path.join(fx.repoRoot, "docs/ja/kata/templates/prj-charter-template.md"),
+      path.join(fx.repoRoot, "docs/ja/specdojo/templates/customer/prj-charter-template.md"),
       [
         "---",
         "specdojo:",

@@ -1,0 +1,111 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.3 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EKRW
+
+Updated ticket status → ready: /tmp/specdojo-ticket-IHBBHT/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-oTwHYS/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-fKTjOD/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-GyMLXQ/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-qV5pDS/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-mJLp7n/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Would move 1 agent member(s) from /tmp/specdojo-members-3ujVEo/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-3ujVEo/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-3ujVEo/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-3ujVEo/.specdojo/agent-members.yaml
+ ❯ tests/src/exec/register-plan-escape.test.ts (23 tests | 1 failed) 5569ms
+     × kata maintenance approach は指定した kata id を直接の編集対象にする 12ms
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-23T14:04:17.287Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-23T14:03:17.630Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-23T14:03:17.894Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-YtSdmN/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-8ftmlt/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 143 passed (144)
+      Tests  1 failed | 2340 passed (2341)
+   Start at  23:02:46
+   Duration  48.59s (transform 2.87s, setup 570ms, import 19.46s, tests 57.77s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > kata maintenance approach は指定した kata id を直接の編集対象にする
+Error: Target document id is not resolvable via the document index: prj-test:test-rulebook
+ ❯ validateRegisterApproachTargets src/register/approach.ts:164:13
+    162|     const indexedPath = entries[targetId];
+    163|     if (!indexedPath) {
+    164|       throw new Error(`Target document id is not resolvable via the do…
+       |             ^
+    165|     }
+    166|     const actualKind = targetDocumentType(resolvedIndexPath(opts.repoR…
+ ❯ generateRegisterPlan src/exec/register.ts:451:5
+ ❯ tests/src/exec/register-plan-escape.test.ts:448:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

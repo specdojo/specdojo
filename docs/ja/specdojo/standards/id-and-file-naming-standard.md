@@ -48,6 +48,8 @@ repo/apps/product-b/docs/
 
 npm package が所有する型（Kata）の文書は、利用プロジェクトの成果物と同じ Unit に展開しても所有元を識別できるよう、package ごとに定めた authority を ID の namespace として持つ。SpecDojo core の authority は `specdojo` とする。
 
+Kata の配置は authority と対応させる。SpecDojo core は `docs/ja/specdojo/<種類>s/<local-id>.<拡張子>`、それ以外の authority は `docs/ja/specdojo/<種類>s/<authority>/<local-id>.<拡張子>` とする。authority はファイル名には含めず、利用者リポジトリと variant package でも同じ配置を使う。
+
 複数の SpecDojo Unit を横断して扱う場合は、必要に応じて Unit ID とドキュメントIDの組み合わせで識別する。
 
 ```text
@@ -143,6 +145,8 @@ specdojo:track-design-guide
 ```
 
 authority は論理的な所有元であり、ファイル名には含めない。SpecDojo core をローカルへコピーして明示的に override する場合も、同じ論理文書として同じ完全 ID を維持する。
+
+`specdojo:` の文書は種類ディレクトリの直下へ置き、ほかの authority の文書は同じ種類ディレクトリの authority サブディレクトリへ置く。たとえば `customer:payment-rulebook` は `docs/ja/specdojo/rulebooks/customer/payment-rulebook.md` に置く。
 
 #### 3.1.4. local-id の形式
 
