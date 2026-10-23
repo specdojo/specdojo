@@ -59,6 +59,43 @@ describe("kata", () => {
   }
 
   describe("resolveKataRefs", () => {
+    it("利用者 authority の kata は docs/ja/kata だけから解決する", () => {
+      writeFileSync(
+        join(root, ".specdojo", "specdojo.config.json"),
+        JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
+        "utf8",
+      );
+      mkdirSync(join(root, "docs/ja/kata/rulebooks"), { recursive: true });
+      mkdirSync(join(root, "docs/ja/kata/recipes"), { recursive: true });
+      writeFileSync(
+        join(root, "docs/ja/kata/rulebooks/payment-rulebook.md"),
+        [
+          "---",
+          "specdojo:",
+          "  id: customer:payment-rulebook",
+          "  type: rulebook",
+          "  status: draft",
+          "  recipe: customer:payment-recipe",
+          "---",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      writeFileSync(
+        join(root, "docs/ja/kata/recipes/payment-recipe.md"),
+        "---\nspecdojo:\n  id: customer:payment-recipe\n  type: recipe\n  status: draft\n---\n",
+        "utf8",
+      );
+
+      expect(resolveKataRefs("customer:payment-rulebook")).toMatchObject({
+        rulebook: "docs/ja/kata/rulebooks/payment-rulebook.md",
+        recipe: "docs/ja/kata/recipes/payment-recipe.md",
+      });
+      expect(resolveKataRefs("foreign:payment-rulebook").rulebook).toBe(
+        ".specdojo/unresolvable-kata/rulebooks/payment-rulebook.md",
+      );
+    });
+
     it("rulebook frontmatter の宣言から各参照先パスを解決する", () => {
       writeRulebook(
         "specdojo:prj-overview-rulebook",

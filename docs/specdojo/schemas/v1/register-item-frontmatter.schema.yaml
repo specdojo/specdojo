@@ -56,7 +56,20 @@ properties:
             targets:
               type: array
               minItems: 1
-              maxItems: 1
+          allOf:
+            - if:
+                properties:
+                  approach:
+                    enum:
+                      - rulebook-authoring
+                      - recipe-authoring
+                      - sample-authoring
+                      - template-authoring
+              else:
+                properties:
+                  targets:
+                    type: array
+                    maxItems: 1
       - type: object
         required:
           - rulebook
@@ -186,9 +199,9 @@ properties:
           approach:
             $ref: "#/$defs/Approach"
             description: >
-              Execution approach for the single target. When present, targets must
-              contain exactly one document id whose kind is compatible with the
-              approach.
+              Execution approach. Authoring approaches use the first target as the new kata id
+              and any remaining targets as exemplar deliverables. Other approaches require one
+              compatible document id.
 
           targets:
             type: array
@@ -264,6 +277,10 @@ $defs:
       - recipe-guided
       - freeform
       - bootstrap
+      - rulebook-authoring
+      - recipe-authoring
+      - sample-authoring
+      - template-authoring
       - retrofit
       - cross-deliverable-dedup
       - rulebook-maintenance

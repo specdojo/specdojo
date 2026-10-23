@@ -1,0 +1,14 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.2 typecheck
+> tsc -b --noEmit
+
+src/schedule/strategy-profiles.ts(232,14): error TS2739: Type '{ bootstrap: { approach: "bootstrap"; phase_sets: string[]; finalize_approach: "bootstrap-finalize"; }; retrofit: { approach: "retrofit"; phase_sets: string[]; finalize_approach: "finalize"; }; ... 9 more ...; "bootstrap-finalize": { ...; }; }' is missing the following properties from type 'Record<"fully-guided" | "recipe-guided" | "freeform" | "bootstrap" | "rulebook-authoring" | "recipe-authoring" | "sample-authoring" | "template-authoring" | "retrofit" | "cross-deliverable-dedup" | ... 5 more ... | "bootstrap-finalize", StrategyProfile>': "rulebook-authoring", "recipe-authoring", "sample-authoring", "template-authoring"
+src/schedule/strategy-profiles.ts(232,14): error TS2739: Type '{ bootstrap: { approach: "bootstrap"; phase_sets: string[]; finalize_approach: "bootstrap-finalize"; }; retrofit: { approach: "retrofit"; phase_sets: string[]; finalize_approach: "finalize"; }; ... 9 more ...; "bootstrap-finalize": { ...; }; }' is missing the following properties from type 'Record<"fully-guided" | "recipe-guided" | "freeform" | "bootstrap" | "rulebook-authoring" | "recipe-authoring" | "sample-authoring" | "template-authoring" | "retrofit" | "cross-deliverable-dedup" | ... 5 more ... | "bootstrap-finalize", StrategyProfile>': "rulebook-authoring", "recipe-authoring", "sample-authoring", "template-authoring"
+
+
+--- stderr ---

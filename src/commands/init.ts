@@ -4,7 +4,7 @@ import { dirname, join, relative } from "node:path";
 import type { Command } from "commander";
 import { dump, load } from "../shared/yaml.js";
 import { runScaffold, type ProjectSize } from "../catalog/scaffold.js";
-import { runDevcontainerScaffold } from "../devcontainer/scaffold.js";
+import { runDevcontainerScaffold, type DevcontainerPreset } from "../devcontainer/scaffold.js";
 import { runProviderScaffold } from "../shared/provider-scaffold.js";
 import { runLefthookScaffold } from "../shared/lefthook-scaffold.js";
 import { generateDerivedViewFiles, type RegisterPaths } from "../register/register.js";
@@ -67,7 +67,7 @@ export type InitAnswers = {
   catalog?: ProjectSize;
   devcontainer: boolean;
   lefthook: boolean;
-  devcontainerPreset?: "recommended";
+  devcontainerPreset?: DevcontainerPreset;
 };
 
 export interface InitPrompter {
@@ -121,11 +121,16 @@ function parseCatalog(value: string | undefined): ProjectSize | undefined {
   throw new Error(`Invalid catalog size: ${value}. Must be small, medium, large, or none`);
 }
 
-function parseDevcontainerPreset(value: string | undefined): "recommended" | undefined {
+function parseDevcontainerPreset(value: string | undefined): DevcontainerPreset | undefined {
   const normalized = value?.trim().toLowerCase();
-  if (!normalized || normalized === "none" || normalized === "-") return undefined;
-  if (normalized === "recommended") return normalized;
-  throw new Error(`Invalid Dev Container preset: ${value}. Must be recommended or none`);
+  if (!normalized) return undefined;
+  if (normalized === "none" || normalized === "-") return "minimal";
+  if (normalized === "minimal" || normalized === "recommended" || normalized === "full") {
+    return normalized;
+  }
+  throw new Error(
+    `Invalid Dev Container preset: ${value}. Must be minimal, recommended, full, or none`,
+  );
 }
 
 function validateProjectId(projectId: string): string {
@@ -290,8 +295,8 @@ export async function collectInitAnswers(
       devcontainer && options.devcontainerPreset === undefined
         ? await promptUntilValid(
             prompter,
-            "Add the recommended Dev Container settings? [Y/n]: ",
-            (answer) => (parseBoolean(answer, true) ? "recommended" : undefined),
+            "Dev Container preset (minimal, recommended, full) [recommended]: ",
+            (answer) => parseDevcontainerPreset(answer.trim() || "recommended")!,
           )
         : explicitDevcontainerPreset;
     const lefthook = await promptUntilValid(
@@ -734,9 +739,9 @@ export async function runInit(
       preset: answers.devcontainerPreset,
       providers: answers.providers,
       editors: [],
-      ollama: answers.providers.includes("opencode"),
+      ollama: false,
       cron: false,
-      tmux: true,
+      tmux: false,
       force: false,
       dryRun,
     });
@@ -794,7 +799,7 @@ export function registerInitCommand(program: Command): void {
     .option("--lefthook", "Create pre-commit hooks for SpecDojo repositories", false)
     .option(
       "--devcontainer-preset <name>",
-      "Apply a Dev Container preset when creating it (recommended|none)",
+      "Apply a Dev Container preset when creating it (minimal|recommended|full; none aliases minimal)",
     )
     .option(
       "--workspace-name <name>",

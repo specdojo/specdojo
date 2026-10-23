@@ -2,9 +2,9 @@
 id: sysd-orchestrator-agent-settings-grade-criteria
 document: sysd-orchestrator-agent-settings
 path: docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md
-graded_at: "2026-10-11T16:42:13.616Z"
-graded_by: agy-expert-executor
-content_hash: 029f906e70c15e4479ff656f777c5ab42041abfc0e52e85fb5ca532cdcd4d97d
+graded_at: "2026-10-22T16:26:20.432Z"
+graded_by: flash-high-executor
+content_hash: 183dd1bbd3cd9959599df54820091f50f07a4106b9c1060774380e44411fe310
 summary:
   satisfied: 0
   unsatisfied: 5
@@ -17,31 +17,29 @@ criteria:
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
     reason: >-
-      Business problems, out-of-scope exclusions, and Antigravity scope are missing to align design rationale with
-      business requirements.
+      Non-scope boundaries, acceptance criteria, and business justification for adopting the orchestrator architecture
+      are missing.
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: Antigravity and orch:agy are omitted from the design scope and OpenCode permissions conflict with npx specdojo.
+    reason: PO cannot approve the design policy due to omission of Antigravity/orch:agy and OpenCode permission mismatch.
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
       - ARC
     viewpoint: vp-arc-technical-constraints
     status: unsatisfied
-    reason: Technical constraints for Antigravity and OpenCode npx specdojo permission rules are not identified.
+    reason: Technical constraints for Antigravity invocation and OpenCode npx specdojo bash permission matching are missing.
   - id: DC-004
     text: テスト設計・検証観点の参照として使えること
     roles:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: >-
-      Verification perspectives section is missing and test references for approval, permissions, and worktrees are not
-      provided.
+    reason: Verification viewpoints, test references, and pass/fail criteria beyond byte-level sync lint are absent.
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
@@ -49,5 +47,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Implementation details for Antigravity configurations, templates, and OpenCode npx specdojo permissions are
+      Implementation details for Antigravity templates/launch scripts and OpenCode npx command permission rules are
       missing.

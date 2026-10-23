@@ -9,6 +9,7 @@ import type { CriteriaItem } from "../catalog/types.js";
 import type { ReviewViewpoint } from "../review/types.js";
 import type { RoleDefinition } from "./role-types.js";
 import type { ReviewGradeOutcome } from "../review/grade.js";
+import { isAuthoringApproach, type AuthoringKind } from "../kata/authoring.js";
 import {
   MISSING,
   applicableReviewCriteria,
@@ -63,6 +64,7 @@ function buildEditPlanMarkdown(
     origin?: TaskOrigin;
     targets?: readonly string[];
     refs?: KataRefs;
+    authoring?: AuthoringPlanFields;
     additionalConditions?: string;
   },
 ): string {
@@ -132,6 +134,18 @@ function buildEditPlanMarkdown(
       crossDeliverables,
       catalogPath,
     ),
+    _AUTHORING_KATA_ID_: planOverrides?.authoring?.id ?? MISSING,
+    _AUTHORING_KATA_KIND_: planOverrides?.authoring?.kind ?? MISSING,
+    _AUTHORING_KATA_PATH_: planOverrides?.authoring?.path ?? MISSING,
+    _AUTHORING_STANDARD_ID_: planOverrides?.authoring?.standardId ?? MISSING,
+    _AUTHORING_STANDARD_PATH_: planOverrides?.authoring?.standardPath ?? MISSING,
+    _AUTHORING_EXEMPLARS_:
+      planOverrides?.authoring?.exemplars
+        .map(
+          (example) =>
+            `- \`${example.id}\`: ${example.name}（\`${example.path}\`、現在の参照: \`${example.currentReference}\`）`,
+        )
+        .join("\n") || "- なし（kata だけを新規作成する）",
   };
   const body = expandTemplate(template, values);
   if (!planOverrides?.additionalConditions) return body;
@@ -237,6 +251,20 @@ type PlanGenContext = {
   reviewGradeOutcome?: ReviewGradeOutcome;
 };
 
+export type AuthoringPlanFields = {
+  id: string;
+  kind: AuthoringKind;
+  path: string;
+  standardId: string;
+  standardPath: string;
+  exemplars: Array<{
+    id: string;
+    name: string;
+    path: string;
+    currentReference: string;
+  }>;
+};
+
 async function writeTaskPlan(
   ctx: PlanGenContext,
   task: PlanTask,
@@ -247,10 +275,16 @@ async function writeTaskPlan(
     origin?: TaskOrigin;
     targets?: readonly string[];
     refs?: KataRefs;
+    authoring?: AuthoringPlanFields;
     additionalConditions?: string;
   },
 ): Promise<string> {
   const mode: TaskMode = task.mode ?? "edit";
+  if (isAuthoringApproach(task.approach) && override?.origin !== "register") {
+    throw new Error(
+      `Approach ${task.approach} is register-only because schedule targets cannot express a new kata id followed by exemplar deliverables`,
+    );
+  }
   const localId = task.local_id;
   const targetLocalIds = [...new Set(task.target_local_ids ?? [])];
   const crossDeliverables = new Map<string, DeliverableInfo>();
@@ -405,6 +439,7 @@ export async function generateRegisterApproachPlan(opts: {
   targets: readonly string[];
   deliverable?: DeliverableInfo | null;
   refs?: KataRefs;
+  authoring?: AuthoringPlanFields;
   additionalConditions: string;
   outPath?: string;
   stem: string;
@@ -427,6 +462,7 @@ export async function generateRegisterApproachPlan(opts: {
     origin: "register",
     targets: opts.targets,
     ...(opts.refs ? { refs: opts.refs } : {}),
+    ...(opts.authoring ? { authoring: opts.authoring } : {}),
     additionalConditions: opts.additionalConditions,
     ...(opts.outPath ? { outPath: opts.outPath } : {}),
     stem: opts.stem,

@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join, relative, resolve } from "node:path";
+import { extname, join, relative, resolve } from "node:path";
 import {
   findRegisterItem,
   loadRegisterItems,
@@ -25,7 +25,14 @@ import {
   type DeliverableInfo,
 } from "./plans-core.js";
 import { collectDocIndexEntries } from "../docs/doc-index.js";
-import { resolveKataRefs, type KataRefs } from "../kata/kata.js";
+import { loadRulebookRefs, resolveKataRefs, type KataRefs } from "../kata/kata.js";
+import {
+  authoredKataPath,
+  authoringKind,
+  authoringStandardId,
+  authoringStandardPath,
+} from "../kata/authoring.js";
+import { validateRegisterApproachTargets } from "../register/approach.js";
 import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
 import {
   escapeMarkdownInline,
@@ -441,16 +448,76 @@ export async function generateRegisterPlan(opts: {
   const ticketPath = ticketPathFromItem(item, opts.registerPaths.projectRegisterPath);
 
   if (item.approach) {
+    validateRegisterApproachTargets({
+      repoRoot: specdojoRootDir(),
+      projectId: opts.projectId,
+      ...(opts.catalogPath ? { catalogPath: opts.catalogPath } : {}),
+      approach: item.approach,
+      targets: item.targets,
+    });
     const [targetId] = item.targets ?? [];
-    if (!targetId || (item.targets?.length ?? 0) !== 1) {
-      throw new Error(`Register item ${item.id} approach requires exactly one target document id.`);
-    }
+    if (!targetId) throw new Error(`Register item ${item.id} approach requires a target.`);
+    const newKataKind = authoringKind(item.approach);
     const maintenanceKind = MAINTENANCE_TARGET_KIND[
       item.approach as keyof typeof MAINTENANCE_TARGET_KIND
     ] as keyof KataRefs | undefined;
     let deliverable: DeliverableInfo | null = null;
     let refs: KataRefs | undefined;
-    if (maintenanceKind) {
+    let authoring: Parameters<typeof generateRegisterApproachPlan>[0]["authoring"];
+    if (newKataKind) {
+      const examples = (item.targets ?? []).slice(1).map((exampleId) => {
+        if (!opts.catalogPath) {
+          throw new Error(
+            `Register item ${item.id} approach requires catalog_path to resolve ${exampleId}.`,
+          );
+        }
+        const resolved = resolveDeliverableByDocId(
+          opts.catalogPath,
+          opts.projectId,
+          exampleId,
+        ).info;
+        const rulebookId = resolved.deliverable.rulebook;
+        let currentReference: string;
+        if (newKataKind === "rulebook") {
+          currentReference = rulebookId ?? "未記入";
+        } else if (
+          !rulebookId ||
+          rulebookId === "undecided" ||
+          rulebookId === "not-needed" ||
+          rulebookId === "none"
+        ) {
+          currentReference = `rulebook が ${rulebookId ?? "未記入"} のため参照を更新できない`;
+        } else {
+          const declaredReference = loadRulebookRefs(rulebookId)[newKataKind];
+          currentReference = Array.isArray(declaredReference)
+            ? declaredReference.join(", ")
+            : (declaredReference ?? "未記入");
+        }
+        return {
+          id: exampleId,
+          name: resolved.deliverable.name,
+          path: resolved.resolvedPath,
+          currentReference,
+        };
+      });
+      const exemplarExtension = extname(examples[0]?.path ?? "").slice(1);
+      const authoredExtension =
+        (newKataKind === "sample" || newKataKind === "template") &&
+        (exemplarExtension === "yaml" || exemplarExtension === "json")
+          ? exemplarExtension
+          : "md";
+      const kataPath = authoredKataPath(targetId, newKataKind, authoredExtension);
+      refs = { rulebook: MISSING, recipe: MISSING, sample: MISSING, template: MISSING };
+      refs[newKataKind] = kataPath;
+      authoring = {
+        id: targetId,
+        kind: newKataKind,
+        path: kataPath,
+        standardId: authoringStandardId(newKataKind),
+        standardPath: authoringStandardPath(newKataKind),
+        exemplars: examples,
+      };
+    } else if (maintenanceKind) {
       deliverable = opts.catalogPath
         ? findUniqueDeliverableForKataTarget(opts.catalogPath, targetId, maintenanceKind)
         : null;
@@ -482,6 +549,7 @@ export async function generateRegisterPlan(opts: {
       targets: item.targets ?? [],
       deliverable,
       ...(refs ? { refs } : {}),
+      ...(authoring ? { authoring } : {}),
       additionalConditions: [
         registerCompletionConditions(item, ticketPath),
         registerAutopilotConstraints(item),

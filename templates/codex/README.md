@@ -13,9 +13,10 @@ specdojo:
 
 ## 2. 構成
 
-| パス            | 利用プロジェクトでの配置先 | 説明                                                   |
-| --------------- | -------------------------- | ------------------------------------------------------ |
-| `agents/*.toml` | `.codex/agents/`           | subagent 定義。command template から直接選択はされない |
+| パス            | 利用プロジェクトでの配置先 | 説明                                                       |
+| --------------- | -------------------------- | ---------------------------------------------------------- |
+| `agents/*.toml` | `.codex/agents/`           | subagent 定義。command template から直接選択はされない     |
+| `rules/*.rules` | `.codex/rules/`            | `git push` と全 `gh` を拒否する project-local command rule |
 
 配布する subagent には、成果物の編集と検証だけを担い result を更新しない `codex-expert-executor` を含みます。
 
@@ -88,8 +89,9 @@ npm run orch:terra
 
    model を持たない従来の 1 段の member は、`command_params.by_proficiency` に `model` を書けばそのまま動く（member の `model` があればそちらが優先される）。
 
-3. 対話セッション用のデフォルト（`.codex/config.toml`）は利用環境に合わせて作成する。モデルや `approval_policy` の好みを含むため、このテンプレートには含めていない。
-4. コピーしたファイルと `.specdojo/agent-members.yaml` をコミットする。worktree はコミット済み内容から作られるため、未コミットだと agent 実行時に設定が読めない。
+3. scaffold が配置する `.codex/rules/specdojo.rules` を維持する。この rule は Dev Container の共有 GitHub 認証を agent が使わないよう、`git push` と読み取りを含む全 `gh` を `forbidden` にする。project-local rule は信頼済み project で読み込まれる。
+4. 対話セッション用のデフォルト（`.codex/config.toml`）は利用環境に合わせて作成する。モデルや `approval_policy` の好みを含むため、このテンプレートには含めていない。
+5. コピーしたファイルと `.specdojo/agent-members.yaml` をコミットする。worktree はコミット済み内容から作られるため、未コミットだと agent 実行時に設定が読めない。
 
 ## 4. カスタマイズ
 

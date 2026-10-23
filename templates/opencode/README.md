@@ -56,5 +56,6 @@ specdojo exec scaffold --provider opencode
   - 使う場合は `.specdojo/agent-members.yaml` の `model` を `ollama-local/gemma4:26b-mlx` などに書き換えてください。Modelfile で文脈を広げる場合は `FROM` に mlx 版のタグを書きます。
   - 既定の雛形は環境を選ばない無印のタグ（`gemma4:26b`・`gemma4:31b`）のままとします。
 - executor の result パス deny と reporter の全ツール deny は、pipeline の責務境界なので維持する。
-- `bash` は deny 基点の許可リストを維持する。`git add` / `git commit` を許可しないこと（許可すると specdojo CLI の commit 許可リストを迂回できる）。
+- executor・review executor の `bash` は deny 基点の許可リストを維持する。`git add` / `git commit` を許可せず、末尾の `git push` と全 `gh` の明示 deny も維持する（許可リストの追加で remote 操作を誤って開かないため）。
+- orchestrator は利用者の承認後に保護設定も変更できるよう `edit` をリポジトリ全体で allow する。`gh pr view`・`gh pr list`・`gh run list`・`gh run view`・`gh release view` などの読み取りだけを allow し、`git push`、`gh api`、PR・release・repository などの書き込みサブコマンドは明示 deny する。それ以外の `gh` は先頭の `"*": deny` により拒否する。
 - 権限設計の背景は `exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。

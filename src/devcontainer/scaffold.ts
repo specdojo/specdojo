@@ -16,6 +16,9 @@ export interface RunDevcontainerScaffoldOptions {
   dryRun: boolean;
 }
 
+export const DEVCONTAINER_PRESETS = ["minimal", "recommended", "full"] as const;
+export type DevcontainerPreset = (typeof DEVCONTAINER_PRESETS)[number];
+
 const RECOMMENDED_VSCODE_EXTENSIONS = [
   "mhutchie.git-graph",
   "davidanson.vscode-markdownlint",
@@ -195,12 +198,17 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
     force,
     dryRun,
   } = opts;
-  if (preset !== undefined && preset !== "recommended") {
-    throw new Error(`Unknown Dev Container preset: ${preset}. Available: recommended`);
+  if (preset !== undefined && !DEVCONTAINER_PRESETS.includes(preset as DevcontainerPreset)) {
+    throw new Error(
+      `Unknown Dev Container preset: ${preset}. Available: ${DEVCONTAINER_PRESETS.join(", ")}`,
+    );
   }
-  const recommended = preset === "recommended";
-  const effectiveEditors = unique([...editors, ...(recommended ? ["emacs", "vim"] : [])]);
-  const effectiveTmux = tmux || recommended;
+  const includesRecommended = preset === "recommended" || preset === "full";
+  const full = preset === "full";
+  const effectiveEditors = unique([...editors, ...(includesRecommended ? ["emacs", "vim"] : [])]);
+  const effectiveTmux = tmux || includesRecommended;
+  const effectiveOllama = ollama || full;
+  const effectiveCron = cron || full;
   const devcontainerDir = path.join(repoRoot, ".devcontainer");
   const workspaceName = resolveWorkspaceName(repoRoot, workspaceNameOverride);
 
@@ -240,10 +248,23 @@ export async function runDevcontainerScaffold(opts: RunDevcontainerScaffoldOptio
   let emacsInitTemplate: string | undefined;
   let vimrcTemplate: string | undefined;
 
+  if (includesRecommended) {
+    aptPackages.push("gh");
+    devcontainer.mounts.push(`source=${volumeName("gh")},target=/home/node/.config/gh,type=volume`);
+  }
+
+  if (full) {
+    aptPackages.push("ripgrep", "fd-find", "fzf", "yq", "shellcheck", "shfmt");
+    extraScripts.push(`# Debian installs fd as fdfind. Expose the upstream command name as well.
+if command -v fdfind >/dev/null 2>&1 && ! command -v fd >/dev/null 2>&1; then
+  sudo ln -s "$(command -v fdfind)" /usr/local/bin/fd
+fi`);
+  }
+
   if (effectiveTmux) {
     aptPackages.push("tmux");
   }
-  if (cron) {
+  if (effectiveCron) {
     aptPackages.push("cron");
     devcontainer.postAttachCommand = "sudo service cron start";
   }
@@ -312,7 +333,7 @@ fi`);
 
   let vscodeExtensions: string[] = [];
   let extensionsFile: Record<string, unknown> | undefined;
-  if (recommended) {
+  if (includesRecommended) {
     vscodeExtensions = unique([...RECOMMENDED_VSCODE_EXTENSIONS, ...providerExtensions(providers)]);
     const customizations = (devcontainer.customizations ??= {});
     const vscode = (customizations.vscode ??= {});
@@ -348,12 +369,12 @@ fi`);
 
   if (aptPackages.length > 0) {
     devcontainer.features["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"] = {
-      packages: aptPackages.join(","),
+      packages: unique(aptPackages).join(","),
       upgradePackages: false,
     };
   }
 
-  if (ollama) {
+  if (effectiveOllama) {
     devcontainer.containerEnv["OLLAMA_BASE_URL"] = "http://host.docker.internal:11434";
     devcontainer.containerEnv["LOCAL_OPENAI_BASE_URL"] = "http://host.docker.internal:11434/v1";
   }

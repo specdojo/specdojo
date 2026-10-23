@@ -338,6 +338,38 @@ npx specdojo-docs-site build .
 
 開発サーバは `npx specdojo-docs-site dev .` で起動します。`build` と `dev` は、利用リポジトリに存在しない package 同梱の kata・guide・reference を、gitignore 済みの `specdojo-kata-staging/` へ一時的に複製して `/ja/specdojo/` で配信します。eject 済みの文書は利用リポジトリ側を優先するため、サイト表示のために `kata install --all` を実行する必要はありません。
 
+### 6.1. Mermaid 図を組み立てる
+
+docs-site の Mermaid 12 は、既定のレイアウトに ELK を使います。ELK は複雑な図でも要素を層に分け、辺を直角に配線するため、通常は図ごとのレイアウト指定を加えません。既存の図が `config` で `dagre` を指定している場合は、その図の意図を優先します。`elk.stress` など ELK の別方式は要素が重なることがあるため使いません。
+
+1 つの図の辺が 20 本前後を超える場合は、目的ごとに図を分けるか、`subgraph` で関係のまとまりを示します。中心の要素に周囲から矢印を集める図は、`architecture` 図を使うと辺ごとに接続面を指定できます。`T` は上、`B` は下、`L` は左、`R` は右です。
+
+```mermaid
+architecture-beta
+    service top(cloud)[上]
+    service bottom(database)[下]
+    service left(internet)[左]
+    service right(disk)[右]
+    service center(server)[中心]
+
+    top:B --> T:center
+    bottom:T --> B:center
+    left:R --> L:center
+    right:L --> R:center
+```
+
+Mermaid 12.0.0 の `architecture` 図では、辺にラベルを付けられません。関係の名前を示す場合はノード名へ含めるか、辺ラベルを使える `flowchart` で描きます。`architecture` 図の組み込みアイコンは `cloud`・`database`・`disk`・`internet`・`server` です。それ以外の Iconify アイコンは表示側でアイコンパックの登録が必要なため、登録していない環境では使いません。
+
+要素を格子状に並べる図には `block` 図を使えます。要素が詰まりやすいため、空けたい 1 列には `space`、複数列には `space:<列数>` を置きます。
+
+```mermaid
+block
+    columns 3
+    a["A"] space b["B"]
+    space center["中心"] space
+    c["C"] space d["D"]
+```
+
 サイト上の情報量を抑えるため、ナビゲーションと検索には次の範囲を使います。
 
 - `/ja/specdojo/` では SpecDojo 文書、`/ja/projects/<project-id>/` では対象 project の文書をサイドバーに表示します。

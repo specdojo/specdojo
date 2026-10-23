@@ -1,11 +1,14 @@
 import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import { practiceLocalId } from "../shared/practice-id.js";
+import { parsePracticeId, practiceLocalId } from "../shared/practice-id.js";
+import { authoredKataPath, configuredKataAuthority, type AuthoringKind } from "./authoring.js";
 import {
   resolveSpecdojoPathIfExists,
   resolveSpecdojoReferencePathIfExists,
   specdojoResourceCandidates,
+  type SpecdojoResolutionRoots,
 } from "../docs/template-resolution.js";
 import { readYamlSchemaModelineRef } from "./yaml-schema-modeline.js";
 
@@ -42,7 +45,11 @@ const KIND_DIR: Record<KataKind, string> = {
 };
 
 function rulebookFsPath(rulebookId: string): string {
-  const relativePath = `${DOCS_BASE}/rulebooks/${practiceLocalId(rulebookId)}.md`;
+  const relativePath = practiceRepoPath("rulebook", rulebookId, "md");
+  const authority = parsePracticeId(rulebookId).authority;
+  if (authority && authority !== "specdojo") {
+    return resolve(specdojoRootDir(), relativePath);
+  }
   return (
     resolveSpecdojoPathIfExists(relativePath) ??
     specdojoResourceCandidates(relativePath).repositoryPath
@@ -89,7 +96,61 @@ function formatExt(targetFormat: string | undefined): string {
 // Canonical repo-root-relative path (no leading slash): the agent opens these files
 // from the run CWD (repo root or worktree root).
 function repoPath(kind: KataKind, id: string, ext: string): string {
-  return `${DOCS_BASE}/${KIND_DIR[kind]}/${practiceLocalId(id)}.${ext}`;
+  return practiceRepoPath(kind, id, ext);
+}
+
+function isSpecdojoResourceId(id: string): boolean {
+  const authority = parsePracticeId(id).authority;
+  return !authority || authority === "specdojo";
+}
+
+function kataReferencePath(relativePath: string, id: string): string {
+  if (!isSpecdojoResourceId(id)) return relativePath;
+  return resolveSpecdojoReferencePathIfExists(relativePath) ?? relativePath;
+}
+
+function kataFsPath(relativePath: string, id: string): string {
+  if (!isSpecdojoResourceId(id)) return resolve(specdojoRootDir(), relativePath);
+  return (
+    resolveSpecdojoPathIfExists(relativePath) ??
+    specdojoResourceCandidates(relativePath).repositoryPath
+  );
+}
+
+function practiceRepoPath(
+  kind: AuthoringKind,
+  id: string,
+  ext: string,
+  rootDir: string = specdojoRootDir(),
+): string {
+  const authority = parsePracticeId(id).authority;
+  const directory = kind === "rulebook" ? "rulebooks" : KIND_DIR[kind];
+  if (authority && authority !== "specdojo") {
+    if (authority !== configuredKataAuthority(rootDir)) {
+      return `${KATA_UNRESOLVABLE_BASE}/${directory}/${practiceLocalId(id)}.${ext}`;
+    }
+    return authoredKataPath(id, kind).replace(/\.md$/, `.${ext}`);
+  }
+  return `${DOCS_BASE}/${directory}/${practiceLocalId(id)}.${ext}`;
+}
+
+const KATA_UNRESOLVABLE_BASE = ".specdojo/unresolvable-kata";
+
+export function resolveKataDocumentPathIfExists(
+  kind: AuthoringKind,
+  id: string,
+  extension: string,
+  roots: SpecdojoResolutionRoots = {},
+): string | undefined {
+  const repositoryRoot = roots.repositoryRoot ?? specdojoRootDir();
+  const authority = parsePracticeId(id).authority;
+  if (authority && authority !== "specdojo") {
+    if (authority !== configuredKataAuthority(repositoryRoot)) return undefined;
+    const relativePath = practiceRepoPath(kind, id, extension, repositoryRoot);
+    const absolutePath = resolve(repositoryRoot, relativePath);
+    return existsSync(absolutePath) ? absolutePath : undefined;
+  }
+  return resolveSpecdojoPathIfExists(practiceRepoPath(kind, id, extension, repositoryRoot), roots);
 }
 
 // 宣言 ID は拡張子を持たないため、対象形式を優先しつつ実在する例外形式も解決する。
@@ -97,7 +158,7 @@ function repoPath(kind: KataKind, id: string, ext: string): string {
 function declaredRefExt(kind: KataKind, id: string, preferredExt: string): string {
   const candidates = kind === "recipe" ? ["md"] : [preferredExt, "md", "yaml", "json"];
   for (const ext of [...new Set(candidates)]) {
-    if (resolveSpecdojoPathIfExists(repoPath(kind, id, ext))) return ext;
+    if (resolveKataDocumentPathIfExists(kind, id, ext)) return ext;
   }
   return preferredExt;
 }
@@ -116,7 +177,7 @@ function resolveRef(
   }
   if (primaryId) {
     const relativePath = repoPath(kind, primaryId, declaredRefExt(kind, primaryId, ext));
-    return resolveSpecdojoReferencePathIfExists(relativePath) ?? relativePath;
+    return kataReferencePath(relativePath, primaryId);
   }
   return MISSING;
 }
@@ -139,8 +200,7 @@ export function resolveKataRefs(
   const fm = usableRulebookId ? loadRulebookRefs(usableRulebookId) : {};
   return {
     rulebook: usableRulebookId
-      ? (resolveSpecdojoReferencePathIfExists(rulebookRepoPath(usableRulebookId)) ??
-        rulebookRepoPath(usableRulebookId))
+      ? kataReferencePath(rulebookRepoPath(usableRulebookId), usableRulebookId)
       : MISSING,
     recipe: usableRulebookId ? resolveRef("recipe", fm.recipe, "md") : MISSING,
     sample: usableRulebookId
@@ -154,7 +214,7 @@ export function resolveKataRefs(
 
 // rulebook の repo 相対パス（先頭スラッシュ無し）。
 function rulebookRepoPath(rulebookId: string): string {
-  return `${DOCS_BASE}/rulebooks/${practiceLocalId(rulebookId)}.md`;
+  return practiceRepoPath("rulebook", rulebookId, "md");
 }
 
 // 主 rulebook の frontmatter `includes` から、併せて適用する rulebook の宣言順・重複除去済み
@@ -185,9 +245,7 @@ export function resolveIncludedRulebooks(rulebookId: string | undefined): string
   }
   return declaredIncludeIds(rulebookId)
     .filter((id) => existsSync(rulebookFsPath(id)))
-    .map(
-      (id) => resolveSpecdojoReferencePathIfExists(rulebookRepoPath(id)) ?? rulebookRepoPath(id),
-    );
+    .map((id) => kataReferencePath(rulebookRepoPath(id), id));
 }
 
 export type DeclaredInclude = {
@@ -239,9 +297,7 @@ export function declaredKata(rulebookId: string): DeclaredKata[] {
       out.push({
         kind,
         id,
-        fsPath:
-          resolveSpecdojoPathIfExists(relativePath) ??
-          specdojoResourceCandidates(relativePath).repositoryPath,
+        fsPath: kataFsPath(relativePath, id),
       });
     }
   };

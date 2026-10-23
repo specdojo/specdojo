@@ -52,6 +52,10 @@ $defs:
         "recipe-guided",
         "freeform",
         "bootstrap",
+        "rulebook-authoring",
+        "recipe-authoring",
+        "sample-authoring",
+        "template-authoring",
         "retrofit",
         "cross-deliverable-dedup",
         "rulebook-maintenance",
@@ -67,6 +71,8 @@ $defs:
       a deliverable. bootstrap authors the deliverable and its full reference set
       (rulebook/recipe/sample/template) together in one task as a mutually consistent whole;
       it is used to initially establish a deliverable and its reference materials.
+      The *-authoring values create one new kata from optional read-only exemplar deliverables;
+      they are register-only because their ordered target contract is not available to schedule.
       retrofit reads implementation evidence declared by the catalog and reflects the verified
       current behavior into an existing or newly created deliverable without treating the
       implementation as the unconditional source of intended behavior.

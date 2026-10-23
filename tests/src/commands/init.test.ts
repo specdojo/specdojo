@@ -113,7 +113,7 @@ describe("specdojo init", () => {
     expect(closed).toBe(true);
   });
 
-  it("asks for the recommended preset only after selecting a Dev Container", async () => {
+  it("asks for a preset only after selecting a Dev Container and defaults to recommended", async () => {
     const answers = ["", "", "", "", "", "", "", "yes", "", ""];
     const prompts: string[] = [];
     const prompter: InitPrompter = {
@@ -128,22 +128,57 @@ describe("specdojo init", () => {
       devcontainer: true,
       devcontainerPreset: "recommended",
     });
-    expect(prompts.at(-2)).toBe("Add the recommended Dev Container settings? [Y/n]: ");
+    expect(prompts.at(-2)).toBe(
+      "Dev Container preset (minimal, recommended, full) [recommended]: ",
+    );
     expect(prompts.at(-1)).toBe("Create Git hooks with lefthook? [y/N]: ");
     expect(prompts).toHaveLength(10);
   });
 
-  it("uses the recommended preset for --yes with --devcontainer and allows opting out", async () => {
+  it("interprets all Dev Container preset values and keeps none as a minimal alias", async () => {
     await expect(collectInitAnswers({ yes: true, devcontainer: true })).resolves.toMatchObject({
       devcontainer: true,
       devcontainerPreset: "recommended",
     });
     await expect(
       collectInitAnswers({ yes: true, devcontainer: true, devcontainerPreset: "none" }),
-    ).resolves.not.toHaveProperty("devcontainerPreset");
+    ).resolves.toMatchObject({ devcontainerPreset: "minimal" });
+    await expect(
+      collectInitAnswers({ yes: true, devcontainer: true, devcontainerPreset: "minimal" }),
+    ).resolves.toMatchObject({ devcontainerPreset: "minimal" });
+    await expect(
+      collectInitAnswers({ yes: true, devcontainer: true, devcontainerPreset: "full" }),
+    ).resolves.toMatchObject({ devcontainerPreset: "full" });
     await expect(
       collectInitAnswers({ yes: true, devcontainerPreset: "recommended" }),
     ).rejects.toThrow("--devcontainer-preset requires --devcontainer");
+    await expect(
+      collectInitAnswers({ yes: true, devcontainer: true, devcontainerPreset: "large" }),
+    ).rejects.toThrow("Must be minimal, recommended, full, or none");
+  });
+
+  it("accepts full and retries an invalid interactive preset", async () => {
+    const answers = ["", "", "", "", "", "", "", "yes", "large", "full", ""];
+    const prompts: string[] = [];
+    const errors: string[] = [];
+    vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
+      errors.push(String(chunk));
+      return true;
+    });
+    const prompter: InitPrompter = {
+      async question(prompt) {
+        prompts.push(prompt);
+        return answers.shift() ?? "";
+      },
+      close() {},
+    };
+
+    await expect(collectInitAnswers({}, prompter)).resolves.toMatchObject({
+      devcontainer: true,
+      devcontainerPreset: "full",
+    });
+    expect(prompts.filter((prompt) => prompt.startsWith("Dev Container preset"))).toHaveLength(2);
+    expect(errors.join("")).toContain("Must be minimal, recommended, full, or none");
   });
 
   it("retries only an invalid interactive question and keeps earlier answers", async () => {
@@ -442,6 +477,16 @@ describe("specdojo init", () => {
       expect(mediumReporter?.nickname).toBe("gemma-reporter");
       expect(mediumReporter?.model).toBe("ollama-local/gemma4:26b");
       expect(existsSync(join(repo, ".github/agents/specdojo-orchestrator.md"))).toBe(true);
+      expect(existsSync(join(repo, ".specdojo/claude/settings.orchestrator.json"))).toBe(true);
+      const initializedPackage = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
+        scripts: Record<string, string>;
+      };
+      expect(initializedPackage.scripts["orch:opus"]).toContain(
+        "--settings .specdojo/claude/settings.orchestrator.json",
+      );
+      expect(initializedPackage.scripts["orch:opus"]).not.toContain(
+        "--settings .specdojo/claude/settings.edit.json",
+      );
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
@@ -527,6 +572,7 @@ describe("specdojo init", () => {
         workspaceMount: string;
         workspaceFolder: string;
         features?: Record<string, { packages?: string }>;
+        mounts?: string[];
       };
       expect(devcontainer.workspaceMount).toContain("target=/workspaces/stable-workspace,");
       expect(devcontainer.workspaceFolder).toBe(
@@ -540,6 +586,17 @@ describe("specdojo init", () => {
         devcontainer.features?.["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"]
           ?.packages,
       ).toContain("vim-nox");
+      expect(
+        devcontainer.features?.["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"]
+          ?.packages,
+      ).toContain("gh");
+      expect(devcontainer.mounts).toEqual(
+        expect.arrayContaining([
+          expect.stringMatching(
+            /^source=.+-specdojo-gh,target=\/home\/node\/\.config\/gh,type=volume$/,
+          ),
+        ]),
+      );
       expect(existsSync(join(repo, ".devcontainer/vim/vimrc"))).toBe(true);
       expect(existsSync(join(repo, ".devcontainer/emacs/init.el"))).toBe(true);
       const extensions = JSON.parse(

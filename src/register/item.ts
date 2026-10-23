@@ -33,7 +33,8 @@ export type PjrItem = {
   completedAt: string;
   conclusion: string;
   ticket: string;
-  // approach を持つ項目は targets 1 件と組み合わせ、起票・更新時に対象種別を検証する。
+  // 通常の approach は target 1 件、authoring は新規 kata ID と任意の手本を組み合わせ、
+  // 起票・更新時に対象種別を検証する。
   approach?: Approach;
   // 個票が宣言する対象文書の doc id リスト。plan frontmatter の targets へ転記され、
   // target coverage 検証に使われる。宣言がない項目は undefined（検証 skip）。

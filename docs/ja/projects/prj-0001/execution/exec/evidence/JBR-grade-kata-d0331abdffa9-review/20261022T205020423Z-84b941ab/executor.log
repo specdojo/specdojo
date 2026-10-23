@@ -1,0 +1,34 @@
+## レビュー結果: JBR-grade-kata-d0331abdffa9
+
+**判定: `complete-with-findings`**。Run は `succeeded` で、成果物に未完了・失敗・retry 上限到達の文書はありません。統合を止める問題はありません。ただし、評価結果の一部に低評価があり、reporter の result には件数の誤記があります。成果物も result も変更していません。
+
+### 一致を確認した点
+- **差分の範囲**: 差分（`e4a9c6e..6f2519a`）は22ファイルです。内訳は、テンプレート15件の評価結果サイドカーの更新、Run JSON、plan と result、evidence 一式（attempt-1）です。対象外のファイルは含まれていません。
+- **実行記録の整合**: Run JSON、evidence、pipeline state の記述は互いに一致しています。
+  - Run JSON は `state: succeeded`、`attempts[0].exit_code: 0` です。
+  - evidence はコマンドの終了コードが 0 で、stderr は 0 バイトでした。
+  - pipeline state では executor と reporter がどちらも `succeeded` です。
+- **全件完了**: stdout は `selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0` でした。
+  - `results.tsv` では15件すべての status が `passed` です。終了コード 75 の段、`failed` の段、`retry_exhausted` の文書はありません。
+- **サイドカーとの照合**: 15件のサイドカーの `verdict`・`score`・finding 合計は `results.tsv` と全件一致しました。
+  - 例: pm-issue-log は fail・57点・finding 19件、pm-risk-register は fail・64点・finding 17件です。
+  - `graded_by: flash-high-executor` は tsv の `agy-expert-executor` と表記が違います。しかし `.specdojo/agent-members.yaml` で `agy-expert-executor` が `flash-high-executor` の別名と定義されており、同じ executor です。
+- **鮮度**: `grade list --target kata --project prj-0001` を `--changed-only`、`--dependency-changed`、`--incomplete` で実行し、どれも出力は空でした。`grade state --exhausted` も空です。評価結果は最新で、未完了の評価はありません。
+
+### Finding（統合は止めない）
+1. **result の件数誤記**: Job Run result の「実施内容」は「pass 8件 / fail 3件」としています。正しくは **pass 9件 / needs-work 4件 / fail 2件**（fail は pm-issue-log と pm-risk-register）です。また、Run の状態を「`complete`」と書いていますが、Run JSON 上は `succeeded` です。成果物とは無関係な記述の誤りなので、統合は止めません。
+2. **低評価のテンプレート**: 評価結果に次の finding が残っています。
+   - pm-issue-log-template: fail・57点。blocker 2 / major 14 / minor 3 です。前回は59点（fail）でした。
+   - pm-risk-register-template: fail・64点。blocker 1 / major 16 です。
+   - needs-work（4件）: pjr-views-by-status 88点、pm-change-request-log 87点、pm-decision-log 88点、pm-plan 83点。
+   - これはテンプレート自体の品質の問題で、評価 Job の完了条件には関係しません。改善は別の edit タスクで扱うべきです。
+3. **verdict の偏り**: 100点が7件で、fail の2件は blocker を含む実際の指摘に基づいています。評価設定を見直す必要があるほどの偏りは見られません。
+
+### 確認できなかった範囲
+- 各 finding の内容が妥当かどうかは確認していません。成果物の再評価は review の範囲外です。
+- 鮮度の確認はプロジェクト全体に対して一括で実行しました。文書ごとに `--path` を指定しては実行していません。
+- 前回のスコアと比べたのは pm-issue-log の1件だけです。
+
+<specdojo_executor_evidence>
+{"final_message":"推奨 verdict: complete-with-findings。差分（e4a9c6e..6f2519a）の22ファイルは当該 Job Run の出力だけで構成される（テンプレート15件のサイドカー、Run JSON、plan と result、evidence 一式）。Run JSON は state=succeeded / exit_code=0。evidence のコマンド終了コードは 0、stderr は 0 バイト。pipeline state は executor と reporter がともに succeeded。stdout は selected=15 processed=15 completed_now=15 incomplete=0 exhausted=0 で、results.tsv の15件はすべて passed。終了コード 75 の段、failed の段、`retry_exhausted` の文書はない。15件のサイドカーの verdict / score / finding 合計は results.tsv と全件一致した（`graded_by` の flash-high-executor は agy-expert-executor の別名）。鮮度確認として grade list --target kata --project prj-0001 を --changed-only / --dependency-changed / --incomplete で実行し、grade state --exhausted と合わせてすべて出力は空だった。Finding: (1) Job Run result が「pass 8件 / fail 3件」と誤記している（正しくは pass 9 / needs-work 4 / fail 2）。Run 状態も succeeded ではなく complete と書いている。統合は止めない。(2) pm-issue-log-template が fail 57（blocker 2 / major 14 / minor 3、前回は59）、pm-risk-register-template が fail 64（blocker 1 / major 16）。needs-work は pjr-views-by-status 88、pm-change-request-log 87、pm-decision-log 88、pm-plan 83。テンプレートの改善は別の edit タスクで扱うべき。(3) 100点が7件あるが、評価設定を見直す必要があるほどの偏りは見られない。確認できなかった範囲: 各 finding の内容の妥当性（再評価は review の範囲外）。鮮度確認はプロジェクト全体で一括実行し、文書ごとの --path 指定はしていない。前回スコアとの比較は pm-issue-log の1件のみ。","validations":[{"command":"git diff --stat / --name-status e4a9c6e68bcc93b81041d51f28a3a06159fe6451..6f2519afab251e81a4272b8e2d2c0d47bb2a858d","status":"passed","summary":"22ファイル。すべて当該 Job Run の出力（サイドカー15件、Run JSON、plan と result、evidence）で、対象外の変更はない"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"出力は空。評価結果は最新"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"出力は空"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力は空。未完了の評価パイプラインはない"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力は空。retry 上限に達した文書はない"}]}
+</specdojo_executor_evidence>

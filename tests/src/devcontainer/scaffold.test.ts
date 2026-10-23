@@ -48,10 +48,7 @@ describe("runDevcontainerScaffold", () => {
             workspaceFolder:
               "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
             features: {},
-            mounts: [
-              "source=specdojo-git,target=/home/node/.config/git,type=volume",
-              "source=specdojo-gh,target=/home/node/.config/gh,type=volume",
-            ],
+            mounts: ["source=specdojo-git,target=/home/node/.config/git,type=volume"],
             containerEnv: {},
             postCreateCommand: "bash .devcontainer/post-create.sh",
           }),
@@ -166,13 +163,93 @@ describe("runDevcontainerScaffold", () => {
     expect(json.mounts).toContain(
       "source=repo-specdojo-git,target=/home/node/.config/git,type=volume",
     );
-    expect(json.mounts).toContain(
+    expect(json.mounts).not.toContain(
       "source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume",
     );
     expect(json.remoteEnv).toEqual({
       PATH: "/home/node/.local/bin:${containerEnv:PATH}",
     });
   });
+
+  it.each([
+    {
+      name: "no preset",
+      preset: undefined,
+      aptPackages: [],
+      recommended: false,
+      ollama: false,
+      cron: false,
+    },
+    {
+      name: "minimal",
+      preset: "minimal",
+      aptPackages: [],
+      recommended: false,
+      ollama: false,
+      cron: false,
+    },
+    {
+      name: "recommended",
+      preset: "recommended",
+      aptPackages: ["gh", "tmux", "emacs-nox", "ripgrep", "vim-nox"],
+      recommended: true,
+      ollama: false,
+      cron: false,
+    },
+    {
+      name: "full",
+      preset: "full",
+      aptPackages: [
+        "gh",
+        "ripgrep",
+        "fd-find",
+        "fzf",
+        "yq",
+        "shellcheck",
+        "shfmt",
+        "tmux",
+        "cron",
+        "emacs-nox",
+        "vim-nox",
+      ],
+      recommended: true,
+      ollama: true,
+      cron: true,
+    },
+  ] as const)(
+    "should apply the $name preset feature set",
+    async ({ preset, aptPackages, recommended, ollama, cron }) => {
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        preset,
+        providers: ["codex"],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const json = JSON.parse(String(findWriteCall("devcontainer.json")[1]));
+      const aptFeature = json.features["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"];
+      expect(aptFeature?.packages?.split(",") ?? []).toEqual(aptPackages);
+      expect(json.customizations?.vscode?.extensions?.length > 0).toBe(recommended);
+      expect(json.containerEnv.OLLAMA_BASE_URL !== undefined).toBe(ollama);
+      expect(json.containerEnv.LOCAL_OPENAI_BASE_URL !== undefined).toBe(ollama);
+      expect(json.postAttachCommand === "sudo service cron start").toBe(cron);
+      expect(
+        json.mounts.includes("source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume"),
+      ).toBe(recommended);
+      expect(
+        writeFileMock.mock.calls.some(([file]) => String(file).endsWith("extensions.json")),
+      ).toBe(recommended);
+
+      const script = String(findWriteCall("post-create.sh")[1]);
+      expect(script.includes("/usr/local/bin/fd")).toBe(preset === "full");
+    },
+  );
 
   it("should mount the workspace parent and trust its repositories and worktrees", async () => {
     const actualFs = await vi.importActual<typeof fs>("node:fs");
@@ -430,6 +507,10 @@ describe("runDevcontainerScaffold", () => {
     expect(aptPackages).toContain("vim-nox");
     expect(aptPackages).toContain("tmux");
     expect(aptPackages).toContain("cron");
+    expect(aptPackages).toContain("gh");
+    expect(json.mounts).toContain(
+      "source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume",
+    );
     expect(json.customizations.vscode.extensions).toEqual(
       expect.arrayContaining([
         "mhutchie.git-graph",

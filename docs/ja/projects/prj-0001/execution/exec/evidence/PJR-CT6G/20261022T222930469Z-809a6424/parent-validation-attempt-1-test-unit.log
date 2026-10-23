@@ -1,0 +1,136 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.2 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G
+
+Updated ticket status → ready: /tmp/specdojo-ticket-DNZBBk/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-GFXuTU/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-kVfEIi/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Iwp2hV/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-d19lCr/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-gEgjGU/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+ ❯ tests/src/kata/kata.test.ts (32 tests | 1 failed) 102ms
+       × 利用者 namespace の kata は docs/ja/kata だけから解決する 13ms
+Would move 1 agent member(s) from /tmp/specdojo-members-ZWPpul/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-ZWPpul/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-ZWPpul/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-ZWPpul/.specdojo/agent-members.yaml
+ ❯ tests/src/exec/register-plan-escape.test.ts (22 tests | 1 failed) 5366ms
+     × kata maintenance approach は指定した kata id を直接の編集対象にする 11ms
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-22T22:47:38.951Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-22T22:46:39.266Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-22T22:46:39.582Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-UA3ei4/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-m0CHzD/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  2 failed | 141 passed (143)
+      Tests  2 failed | 2330 passed (2332)
+   Start at  07:46:09
+   Duration  46.33s (transform 2.97s, setup 573ms, import 18.80s, tests 54.39s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > kata maintenance approach は指定した kata id を直接の編集対象にする
+Error: Unsupported SpecDojo resource path: .specdojo/unresolvable-kata/rulebooks/test-rulebook.md
+ ❯ normalizedResourcePath src/shared/template-resolution.ts:33:11
+     31|     !normalized.startsWith("docs/specdojo/schemas/")
+     32|   ) {
+     33|     throw new Error(`Unsupported SpecDojo resource path: ${relativePat…
+       |           ^
+     34|   }
+     35|   return normalized;
+ ❯ specdojoResourceCandidates src/shared/template-resolution.ts:42:22
+ ❯ resolveSpecdojoPathIfExists src/shared/template-resolution.ts:53:43
+ ❯ resolveSpecdojoReferencePathIfExists src/shared/template-resolution.ts:105:20
+ ❯ resolveKataRefs src/kata/kata.ts:162:10
+ ❯ src/exec/plans-core.ts:225:18
+ ❯ findUniqueDeliverableForKataTarget src/exec/plans-core.ts:224:62
+ ❯ generateRegisterPlan src/exec/register.ts:515:11
+ ❯ tests/src/exec/register-plan-escape.test.ts:447:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/src/kata/kata.test.ts > kata > resolveKataRefs > 利用者 namespace の kata は docs/ja/kata だけから解決する
+Error: Unsupported SpecDojo resource path: docs/ja/kata/rulebooks/payment-rulebook.md
+ ❯ normalizedResourcePath src/shared/template-resolution.ts:33:11
+     31|     !normalized.startsWith("docs/specdojo/schemas/")
+     32|   ) {
+     33|     throw new Error(`Unsupported SpecDojo resource path: ${relativePat…
+       |           ^
+     34|   }
+     35|   return normalized;
+ ❯ specdojoResourceCandidates src/shared/template-resolution.ts:42:22
+ ❯ resolveSpecdojoPathIfExists src/shared/template-resolution.ts:53:43
+ ❯ resolveSpecdojoReferencePathIfExists src/shared/template-resolution.ts:105:20
+ ❯ resolveKataRefs src/kata/kata.ts:162:10
+ ❯ tests/src/kata/kata.test.ts:90:14
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

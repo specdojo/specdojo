@@ -47,7 +47,7 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 | `project list`           | 登録済み project を表示する                                 | `specdojo project list`                     |
 
 `init` は対話できる端末で、project ID と名前、register、人の nickname と表示名、複数指定可能な
-provider、exec、Dev Container、Git hook の順に質問します。Dev Container を選んだ場合だけ、続けて推奨 preset を入れるかを質問します（既定は「入れる」）。Git hook は既定では作りません。成果物カタログは対話では質問せず、`--catalog <size>` を
+provider、exec、Dev Container、Git hook の順に質問します。Dev Container を選んだ場合だけ、続けて `minimal` / `recommended` / `full` の preset を質問します（既定は `recommended`）。Git hook は既定では作りません。成果物カタログは対話では質問せず、`--catalog <size>` を
 明示した場合にだけ作成します。既存ファイルは上書きせず、スキップしたパスを表示します。`--dry-run` は
 予定だけを表示し、ファイルや `package.json` を変更しません。各回答は質問の直後に検証され、誤りの理由を
 表示して同じ質問だけをやり直します。それまでの回答は保持されます。`--exec` を選んだのに provider が
@@ -69,9 +69,11 @@ provider、exec、Dev Container、Git hook の順に質問します。Dev Contai
 | `--catalog <size>`             | `small` / `medium` / `large` の成果物カタログを作る（対話では質問しない） | 作らない        |
 | `--devcontainer`               | 選んだ provider の Dev Container を作る                                   | 作らない        |
 | `--lefthook`                   | commit 前の文書・SpecDojo 検査を行う Git hook を作る                      | 作らない        |
-| `--devcontainer-preset <name>` | Dev Container の preset（`recommended` / `none`）を選ぶ                   | `recommended`   |
+| `--devcontainer-preset <name>` | Dev Container の preset（`minimal` / `recommended` / `full`）を選ぶ       | `recommended`   |
 | `--workspace-name <name>`      | Dev Container 内で使う親ディレクトリ名                                    | ホスト側の親名  |
 | `--dry-run`                    | 作成・変更予定だけを表示する                                              | 書き込む        |
+
+`--devcontainer-preset none` は後方互換のため受け付け、`minimal` と同じ構成として扱います。
 
 `init` が作る `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml` は、選択した
 provider だけを含みます。親 runner の検証は、対応する `package.json` の npm script が存在する
@@ -144,7 +146,7 @@ specdojo config scaffold --workspace --force
 
 ### 2.1. kata
 
-`kata` は、利用リポジトリで上書きした型（Kata）と npm package から参照中の型を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。
+`kata` は、利用リポジトリで作成・上書きした型（Kata）と npm package から参照中の型を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。`kata_authority` の kata は `docs/ja/kata/` からだけ解決し、`kata list` と `kata show` にも表示します。
 
 | コマンド         | 用途                                                    | 例                                               |
 | ---------------- | ------------------------------------------------------- | ------------------------------------------------ |
@@ -406,7 +408,7 @@ specdojo schedule strategy generate \
 
 `register` の `--by` は、project の `pm-members.yaml` にある人の nickname、`.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` だけを受け付けます。agent alias は実体名で event に記録し、未知の値は書き込み前に拒否します。省略時は `SpecDojo` です。決定・承認では `PO` などの Role code や予約 actor ではなく、本人の nickname を指定します。
 
-`--approach` を指定する場合、`--target` は 1 件だけ必須です。成果物を作成・修正する approach の対象は成果物カタログの doc id で解決するため、まだ文書がない成果物も指定できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。
+`--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は成果物カタログの doc id で解決するため、まだ文書がない成果物も指定できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring だけは、1 件目を新しい kata ID、2 件目以降を任意の手本成果物 ID とします。
 
 `item_type: note` は `open` のまま更新する記録です。`register close` / `register reject` / `register defer` は終了コード 1 で拒否し、対応・回答・判断が必要な場合は `todo` / `question` / `decision` など目的に合う別の `item_type` で起票するよう案内します。本文の追記や修正には `register update` を使用できます。
 
@@ -416,11 +418,17 @@ specdojo schedule strategy generate \
 
 `register add --from <ID>` は、起票の元になった登録項目を個票 Frontmatter の `derived_from` へ記録します。`--from` は複数回指定でき、同じ project の項目は `PJR-XXXX`、別 project の項目は `<project-id>:PJR-XXXX` を使います。自己参照、未設定の project、存在しない項目は書き込み前に拒否します。別 project の項目は、その project の `integration_branch`（省略時は `project/<project-id>/develop`）の Git tree を読んで存在を確認します。`register update --from <ID>` は一覧を置換し、`--from -` で削除します。`register build` は `generated/pjr-derived-items.md` を生成し、元の項目から派生先を逆引きできるようにします。decision から todo を起票するときも、この関係を追跡先として使います。
 
-`register add --approach <approach> --target <doc-id>` は、個票 Frontmatter に進め方と対象を書きます。`approach` を指定すると対象は 1 件だけ必須です。成果物を作成・修正する進め方は成果物カタログにある文書を、`rulebook-maintenance` などの保守の進め方は名前に対応する kata 種別を対象にします。文書索引で解決できない ID、対象種別の不一致、複数対象との組み合わせは書き込み前に拒否します。`approach` を指定しない `--target` は複数回指定でき、従来どおり変更網羅検証の対象宣言として使えます。`register update` でも同じ検証を行います。
+`external_projects` に宣言した別名を `register add --project <別名> --commit` へ渡すと、相手のリポジトリの `node_modules/.bin/specdojo` を起動し、宣言した実 project ID で起票します。相手の登録簿の形式、名簿、`integration_branch`、commit は相手の CLI に任せ、呼び出し元は相手のファイルを直接変更しません。`--from <別名>:PJR-XXXX` は相手へ `<実 project ID>:PJR-XXXX` として渡すため、相手の CLI が存在を検証し、`derived_from` にも実 project ID が残ります。
+
+`register add --approach <approach> --target <doc-id>` は、個票 Frontmatter に進め方と対象を書きます。成果物を作成・修正する進め方は成果物カタログにある文書を、`rulebook-maintenance` などの保守の進め方は名前に対応する kata 種別を対象にし、対象は 1 件だけです。`rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` は、1 件目を新しい kata ID、2 件目以降を手本にするカタログ成果物 ID とします。新しい ID の authority、種類別の末尾、既存 ID との重複、手本の存在を起票時と実行時に検証します。既存 ID には対応する `*-maintenance` を使います。手本の該当参照が `undecided` または未記入なら同じ実行で新 ID へ更新し、別 ID または `not-needed` なら上書きせず result へ申し送ります。`approach` を指定しない `--target` は複数回指定でき、従来どおり変更網羅検証の対象宣言として使えます。`register update` でも同じ検証を行います。
+
+kata authoring は register 専用です。Schedule の task は対象成果物を起点にするため、「新しい kata ID + 0 件以上の手本」という target 契約を損なわずに表現できません。strategy の phase に指定した場合は plan 生成時に停止します。
 
 記帳系コマンドの `--commit` は、register の worktree 実行と同じ project の `register lifecycle` 枠を取得してから、記帳、`register build` 相当の検証・派生ビュー再生成、pathspec を限定した commit を行います。commit 対象はコマンドが新たに変更した個票・event・参照文書だけで、開始前からあるほかの変更を含めません。対象個票・event・参照文書に開始前の未 commit 変更がある場合は、既存差分との混在を避けるため記帳前に停止します。既定件名は `docs(register PJR-XXXX): <command> <title>` で、`-m` / `--message` により上書きできます。`--dry-run --commit` は変更予定だけを表示し、枠の取得と commit は行いません。
 
 別 project への `register add` は `--commit` が必須です。対象 project の登録簿に未 commit 変更がある場合、または統合ブランチがローカルに存在しない場合は、何も書き込まず終了コード 1 で停止します。元の worktree とブランチは変更しません。`close`、`reject` など別 project の状態遷移は受け付けず、対象 project の worktree での実行を案内します。
+
+別リポジトリへの起票も `--commit` が必須です。相手のリポジトリ、`node_modules/.bin/specdojo`、0.4.2 以上の版のいずれかを確認できない場合は、相手を変更せず停止します。相手の起票が失敗した場合は相手の標準出力・標準エラー出力と終了コードをそのまま引き継ぎ、push は行いません。外部 project の `close` などの状態遷移は委譲しないため、案内された相手のリポジトリで実行してください。
 
 一覧・派生ビューの「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。
 
@@ -977,17 +985,25 @@ specdojo orchestrator night --project prj-0001 \
 
 主要オプション:
 
-| オプション                | 用途                                                         |
-| ------------------------- | ------------------------------------------------------------ |
-| `--preset recommended`    | 推奨のエディタ・tmux・VS Code 拡張と設定をまとめて追加する。 |
-| `--provider <names>`      | `claude,codex` のようにカンマ区切りで provider を指定する。  |
-| `--editor <names>`        | `emacs,vim` のようにエディタと初期設定を追加する。           |
-| `--ollama`                | Ollama への接続設定（環境変数）を追加する。                  |
-| `--cron`                  | cron をインストールし、起動時にサービスを開始する。          |
-| `--tmux`                  | tmux をインストールする。                                    |
-| `--workspace-name <name>` | Dev Container 内で使う親ディレクトリ名を上書きする。         |
-| `--force`                 | `.devcontainer/` が既に存在する場合に上書きする。            |
-| `--dry-run`               | 実際にファイルを作成せず、作成予定のファイルを表示する。     |
+| オプション                | 用途                                                          |
+| ------------------------- | ------------------------------------------------------------- |
+| `--preset <name>`         | `minimal` / `recommended` / `full` の構成をまとめて適用する。 |
+| `--provider <names>`      | `claude,codex` のようにカンマ区切りで provider を指定する。   |
+| `--editor <names>`        | `emacs,vim` のようにエディタと初期設定を追加する。            |
+| `--ollama`                | Ollama への接続設定（環境変数）を追加する。                   |
+| `--cron`                  | cron をインストールし、起動時にサービスを開始する。           |
+| `--tmux`                  | tmux をインストールする。                                     |
+| `--workspace-name <name>` | Dev Container 内で使う親ディレクトリ名を上書きする。          |
+| `--force`                 | `.devcontainer/` が既に存在する場合に上書きする。             |
+| `--dry-run`               | 実際にファイルを作成せず、作成予定のファイルを表示する。      |
+
+preset の違いは次のとおりです。preset は provider とは別に選び、個別の `--ollama`・`--cron`・`--tmux`・`--editor` を追加指定できます。
+
+| preset        | 内容                                                                                                                                                 |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `minimal`     | 選んだ provider の CLI と SpecDojo の動作に必要な最小構成。preset を省略した場合と同じ。                                                             |
+| `recommended` | `minimal` に `gh`、Emacs、Vim、tmux、文書作業向けの VS Code 拡張・設定を追加する。                                                                   |
+| `full`        | `recommended` に ripgrep、fd、fzf、yq、shellcheck、shfmt、Ollama 接続、cron を追加する。fd は `fd-find` package から `fd` コマンドとして利用できる。 |
 
 ```bash
 # claude と codex 用の CLI を含む Dev Container を生成する
@@ -995,6 +1011,9 @@ npx specdojo devcontainer scaffold --provider claude,codex
 
 # SpecDojo の文書作業向けの推奨設定をまとめて追加する
 npx specdojo devcontainer scaffold --provider claude,codex --preset recommended
+
+# ローカル LLM や routine を含む開発用の構成を追加する
+npx specdojo devcontainer scaffold --provider claude,codex --preset full
 
 # 追加オプションを指定する
 npx specdojo devcontainer scaffold --provider claude --ollama --tmux
@@ -1006,7 +1025,7 @@ npx specdojo devcontainer scaffold --provider claude --editor emacs
 npx specdojo devcontainer scaffold --workspace-name app1-workspace
 ```
 
-`.devcontainer/` が既に存在する場合は何も書き込まず、置き換える場合だけ `--force` を指定します。上書き前や初回生成前は `--dry-run` で対象ファイルを確認してください。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存してコンテナ再作成後も利用できるようにし、ホストの認証情報・秘密鍵・`.env` を直接マウントしません。認証は生成したコンテナ内で行います。
+`.devcontainer/` が既に存在する場合は何も書き込まず、置き換える場合だけ `--force` を指定します。上書き前や初回生成前は `--dry-run` で対象ファイルを確認してください。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存してコンテナ再作成後も利用できるようにし、ホストの認証情報・秘密鍵・`.env` を直接マウントしません。認証は生成したコンテナ内で利用者が必要なときに行い、自動ログインはしません。
 
 生成する `devcontainer.json` は `${localWorkspaceFolder}/..` を、ホスト側の親ディレクトリ名に合わせた `/workspaces/<親名>` へマウントし、`workspaceFolder` をその中の `${localWorkspaceFolderBasename}` へ向けます。例えば `app1-workspace/app1-specdojo` で scaffold すると、作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成の `repos` と `worktree_base` はプロジェクトリポジトリの外にあるため、親ディレクトリを共有することでプロダクトリポジトリと exec の worktree をコンテナから利用できます。`post-create.sh` はマウントした親ディレクトリ配下の Git リポジトリと worktree を `safe.directory` の対象にします。親ディレクトリ内のその他のファイルもコンテナから見えるため、コンテナへ公開しないファイルは同じ親ディレクトリに置かないでください。
 
@@ -1020,12 +1039,12 @@ Codex 自身の sandbox は引き続き使用し、`workspace-write` で許可�
 
 名前付きボリュームは `<repository>-specdojo-*` という名前で生成します。`<repository>` は scaffold の対象ディレクトリ名を Docker volume 名に使える小文字へ正規化した値です。本体リポジトリや別の利用リポジトリとは共有せず、同じリポジトリの Dev Container を作り直した場合だけ再利用します。固定名を共有すればログインを使い回せますが、プロジェクトごとのアカウントを分けられず、`safe.directory` などのコンテナ固有 Git 設定も混在するため、分離を既定とします。volume 名は scaffold を実行した時点のディレクトリ名から決まり、生成した `devcontainer.json` に固定されます。後でディレクトリ名を変えても volume は変わりません。一方、別の場所にある同じディレクトリ名のリポジトリ（例: 別組織の `app`）を scaffold すると同じ volume 名になり、認証情報を共有します。分離したい場合は、生成後に `devcontainer.json` の `mounts` の `source` を一意な名前へ書き換えてください。
 
-保存先は次のとおりです。表の「常時」は provider の指定にかかわらず mount します。GitHub CLI の設定は `gh` を利用者が導入して使う場合に保存され、未使用時は空の volume のままです。
+保存先は次のとおりです。表の「常時」は provider の指定にかかわらず mount します。GitHub CLI の設定と認証は `recommended` / `full` preset のときだけ保存します。
 
 | 対象                          | コンテナ内の保存先                 | volume 名                             | 条件                   |
 | ----------------------------- | ---------------------------------- | ------------------------------------- | ---------------------- |
 | コンテナ固有の Git 設定       | `/home/node/.config/git`           | `<repository>-specdojo-git`           | 常時                   |
-| GitHub CLI の設定・認証       | `/home/node/.config/gh`            | `<repository>-specdojo-gh`            | 常時                   |
+| GitHub CLI の設定・認証       | `/home/node/.config/gh`            | `<repository>-specdojo-gh`            | `recommended` / `full` |
 | Claude Code の設定・認証      | `/home/node/.claude`               | `<repository>-specdojo-claude`        | `claude` provider      |
 | Codex の設定・認証            | `/home/node/.codex`                | `<repository>-specdojo-codex`         | `codex` provider       |
 | OpenCode の設定               | `/home/node/.config/opencode`      | `<repository>-specdojo-opencode`      | `opencode` provider    |
@@ -1040,7 +1059,7 @@ OpenCode の API key は `/home/node/.local/share/opencode/auth.json` に入り�
 
 post-create は `~/.emacs`、`~/.emacs.el`、`~/.emacs.d/init.el`、`~/.config/emacs/init.el` のいずれも無い場合だけ、生成したテンプレートを配置します。`~/.emacs.d` ディレクトリがあれば `~/.emacs.d/init.el` へ、なければ `~/.config/emacs/init.el` へコピーし、配置先を出力します。dotfiles が設定を先に配置した場合は上書きしません。初回のコンテナ作成前に既定値を変える場合は `.devcontainer/emacs/init.el` を編集してください。作成後は出力されたコピー先を編集します。コピー先を削除しない限り、再度 post-create を実行してもテンプレートの変更は反映されません。
 
-`--preset recommended` は、`--editor emacs,vim --tmux` 相当のツールに加え、Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML の VS Code 拡張を追加します。選択した provider が Claude Code、Codex、GitHub Copilot の場合は、その provider の拡張だけも追加します。Markdown と YAML は保存時に Prettier で整形し、`docs/specdojo/schemas/v1/` の主要な schema を SpecDojo の YAML へ関連付けます。同じ拡張は `.vscode/extensions.json` の `recommendations` にも入り、既存の recommendation は保持されます。個別の `--editor`・`--tmux` と一緒に指定した場合は両方を重複なく適用します。
+`recommended` / `full` preset は、`gh` とその認証を保存する名前付き volume、`--editor emacs,vim --tmux` 相当のツールに加え、Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML の VS Code 拡張を追加します。選択した provider が Claude Code、Codex、GitHub Copilot の場合は、その provider の拡張だけも追加します。Markdown と YAML は保存時に Prettier で整形し、`docs/specdojo/schemas/v1/` の主要な schema を SpecDojo の YAML へ関連付けます。同じ拡張は `.vscode/extensions.json` の `recommendations` にも入り、既存の recommendation は保持されます。個別の `--editor`・`--tmux` と一緒に指定した場合は両方を重複なく適用します。`minimal` または preset を指定しない場合は `gh` と認証 volume を追加しません。
 
 Vim の雛形は `.devcontainer/vim/vimrc` に生成され、`~/.vimrc` と `~/.vim/vimrc` のどちらも無い場合だけ `~/.vimrc` へコピーされます。既存の Vim 設定は上書きしません。Emacs の雛形も上記と同じ上書き防止を維持します。
 

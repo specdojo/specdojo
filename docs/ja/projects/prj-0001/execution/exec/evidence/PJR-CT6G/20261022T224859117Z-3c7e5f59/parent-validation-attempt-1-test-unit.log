@@ -1,0 +1,432 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.2 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G
+
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-22T23:00:43.989Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-22T22:59:44.449Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-22T22:59:44.702Z.
+fallback reporter complete
+Updated ticket status → ready: /tmp/specdojo-ticket-iK7oQn/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-5i92w8/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-uouXa4/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-tttzrn/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-W2eWAt/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-eGn8E6/pjr-0001-topic.md
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+before
+  
+  
+docs/selected.md
+Wrote agent stdout: /tmp/specdojo-agent-command-l0pRpw/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-X8LSJ1/outputs/partial.txt
+Would move 1 agent member(s) from /tmp/specdojo-members-W5cVKH/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-W5cVKH/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-W5cVKH/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-W5cVKH/.specdojo/agent-members.yaml
+ ❯ tests/src/catalog/generate.test.ts (18 tests | 15 failed) 60ms
+     × カタログ情報から Frontmatter・H1・overview・_TODO_ を持つ Markdown 雛形を生成する 9ms
+     × YAML 成果物にはメタ情報のみの YAML 雛形を生成する 3ms
+     × rulebook が undecided の場合は生成物へ未判断値を転記しない 3ms
+     × 利用者 namespace の rulebook と template を docs/ja/kata から解決する 7ms
+     × Markdown テンプレートを平坦化し _PROJECT_ID_ を置換、記入プレースホルダは残す 3ms
+     × YAML テンプレートの metadata_template を展開し _PROJECT_ID_ を置換する 3ms
+     × rulebook 系統の共有テンプレートを異なる local_id の成果物へ適用する 3ms
+     × template: not-needed は local_id 慣例テンプレートがあっても最小雛形へ退避する 3ms
+     × template: undecided は local_id 慣例テンプレートがあっても最小雛形へ退避する 2ms
+     × template 未宣言は local_id 慣例テンプレートがあっても最小雛形へ退避する 3ms
+     × 既存ファイルは上書きせず skip し、--force で上書きする 3ms
+     × --dry-run では書き込まず生成予定のみ報告する 3ms
+     × --dct 指定時は該当 dct のみ生成する 2ms
+     × dct- プレフィックスや .yaml 付きの指定も一致する 2ms
+     × 複数指定で複数 dct を対象にできる 3ms
+ ❯ tests/src/kata/command.test.ts (11 tests | 1 failed) 48ms
+     × reports same, modified, and package-missing ejected files 7ms
+
+ Test Files  2 failed | 141 passed (143)
+      Tests  16 failed | 2318 passed (2334)
+   Start at  07:59:23
+   Duration  48.83s (transform 3.14s, setup 631ms, import 24.17s, tests 51.84s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+reporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+problem
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 16 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — テンプレートがない成果物 > カタログ情報から Frontmatter・H1・overview・_TODO_ を持つ Markdown 雛形を生成する
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "out/prj-charter.md: repoRoot is not defined",
++ ]
+
+ ❯ tests/src/catalog/generate.test.ts:116:27
+    114|     const result = run(fx);
+    115|
+    116|     expect(result.errors).toEqual([]);
+       |                           ^
+    117|     expect(result.written).toEqual(["out/prj-charter.md"]);
+    118|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — テンプレートがない成果物 > YAML 成果物にはメタ情報のみの YAML 雛形を生成する
+AssertionError: expected [] to deeply equal [ 'out/pm-roles.yaml' ]
+
+- Expected
++ Received
+
+- [
+-   "out/pm-roles.yaml",
+- ]
++ []
+
+ ❯ tests/src/catalog/generate.test.ts:153:28
+    151|     const result = run(fx);
+    152|
+    153|     expect(result.written).toEqual(["out/pm-roles.yaml"]);
+       |                            ^
+    154|     const doc = load(readFileSync(outPath(fx, "pm-roles.yaml"), "utf8"…
+    155|     expect(doc).toEqual({
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — テンプレートがない成果物 > rulebook が undecided の場合は生成物へ未判断値を転記しない
+AssertionError: expected [ …(2) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "out/undecided-md.md: repoRoot is not defined",
++   "out/undecided-yaml.yaml: repoRoot is not defined",
++ ]
+
+ ❯ tests/src/catalog/generate.test.ts:191:27
+    189|     const result = run(fx);
+    190|
+    191|     expect(result.errors).toEqual([]);
+       |                           ^
+    192|     expect(readFileSync(outPath(fx, "undecided-md.md"), "utf8")).not.t…
+    193|     expect(load(readFileSync(outPath(fx, "undecided-yaml.yaml"), "utf8…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — テンプレートがある成果物 > 利用者 namespace の rulebook と template を docs/ja/kata から解決する
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "out/prj-charter.md: repoRoot is not defined",
++ ]
+
+ ❯ tests/src/catalog/generate.test.ts:253:27
+    251|     const result = run(fx);
+    252|
+    253|     expect(result.errors).toEqual([]);
+       |                           ^
+    254|     expect(readFileSync(outPath(fx, "prj-charter.md"), "utf8")).toCont…
+    255|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — テンプレートがある成果物 > Markdown テンプレートを平坦化し _PROJECT_ID_ を置換、記入プレースホルダは残す
+AssertionError: expected [] to deeply equal [ 'out/prj-charter.md' ]
+
+- Expected
++ Received
+
+- [
+-   "out/prj-charter.md",
+- ]
++ []
+
+ ❯ tests/src/catalog/generate.test.ts:285:28
+    283|     const result = run(fx);
+    284|
+    285|     expect(result.written).toEqual(["out/prj-charter.md"]);
+       |                            ^
+    286|     const content = readFileSync(outPath(fx, "prj-charter.md"), "utf8"…
+    287|     // frontmatter_template が生成物 Frontmatter へ平坦化されている
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — テンプレートがある成果物 > YAML テンプレートの metadata_template を展開し _PROJECT_ID_ を置換する
+AssertionError: expected [] to deeply equal [ 'out/pm-roles.yaml' ]
+
+- Expected
++ Received
+
+- [
+-   "out/pm-roles.yaml",
+- ]
++ []
+
+ ❯ tests/src/catalog/generate.test.ts:338:28
+    336|     const result = run(fx);
+    337|
+    338|     expect(result.written).toEqual(["out/pm-roles.yaml"]);
+       |                            ^
+    339|     const doc = load(readFileSync(outPath(fx, "pm-roles.yaml"), "utf8"…
+    340|     expect(doc.id).toBe("prjx:pm-roles");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — テンプレートがある成果物 > rulebook 系統の共有テンプレートを異なる local_id の成果物へ適用する
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "out/opr-backup-restore.md: repoRoot is not defined",
++ ]
+
+ ❯ tests/src/catalog/generate.test.ts:393:27
+    391|     const result = run(fx);
+    392|
+    393|     expect(result.errors).toEqual([]);
+       |                           ^
+    394|     const content = readFileSync(outPath(fx, "opr-backup-restore.md"),…
+    395|     expect(content).toContain("id: prjx:opr-backup-restore");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — テンプレートがある成果物 > template: not-needed は local_id 慣例テンプレートがあっても最小雛形へ退避する
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — テンプレートがある成果物 > template: undecided は local_id 慣例テンプレートがあっても最小雛形へ退避する
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "out/prj-charter.md: repoRoot is not defined",
++ ]
+
+ ❯ tests/src/catalog/generate.test.ts:415:29
+    413|       const result = run(fx);
+    414|
+    415|       expect(result.errors).toEqual([]);
+       |                             ^
+    416|       const content = readFileSync(outPath(fx, "prj-charter.md"), "utf…
+    417|       expect(content).not.toContain("この慣例テンプレートは使わない");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — テンプレートがある成果物 > template 未宣言は local_id 慣例テンプレートがあっても最小雛形へ退避する
+AssertionError: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "out/prj-charter.md: repoRoot is not defined",
++ ]
+
+ ❯ tests/src/catalog/generate.test.ts:433:27
+    431|     const result = run(fx);
+    432|
+    433|     expect(result.errors).toEqual([]);
+       |                           ^
+    434|     const content = readFileSync(outPath(fx, "prj-charter.md"), "utf8"…
+    435|     expect(content).not.toContain("この慣例テンプレートは使わない");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — 生成対象の絞り込みと上書き防止 > 既存ファイルは上書きせず skip し、--force で上書きする
+AssertionError: expected [] to deeply equal [ 'out/prj-charter.md' ]
+
+- Expected
++ Received
+
+- [
+-   "out/prj-charter.md",
+- ]
++ []
+
+ ❯ tests/src/catalog/generate.test.ts:484:28
+    482|
+    483|     const forced = run(fx, true);
+    484|     expect(forced.written).toEqual(["out/prj-charter.md"]);
+       |                            ^
+    485|     expect(readFileSync(target, "utf8")).not.toBe("既存の本文");
+    486|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — 生成対象の絞り込みと上書き防止 > --dry-run では書き込まず生成予定のみ報告する
+AssertionError: expected [] to deeply equal [ 'out/prj-charter.md' ]
+
+- Expected
++ Received
+
+- [
+-   "out/prj-charter.md",
+- ]
++ []
+
+ ❯ tests/src/catalog/generate.test.ts:493:28
+    491|     const result = run(fx, false, true);
+    492|
+    493|     expect(result.written).toEqual(["out/prj-charter.md"]);
+       |                            ^
+    494|     expect(existsSync(outPath(fx, "prj-charter.md"))).toBe(false);
+    495|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — dct フィルタ > --dct 指定時は該当 dct のみ生成する
+AssertionError: expected [] to deeply equal [ 'out/prj-charter.md' ]
+
+- Expected
++ Received
+
+- [
+-   "out/prj-charter.md",
+- ]
++ []
+
+ ❯ tests/src/catalog/generate.test.ts:515:28
+    513|     const result = run(fx, false, false, ["project-definition"]);
+    514|
+    515|     expect(result.written).toEqual(["out/prj-charter.md"]);
+       |                            ^
+    516|     expect(existsSync(outPath(fx, "pm-plan.md"))).toBe(false);
+    517|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — dct フィルタ > dct- プレフィックスや .yaml 付きの指定も一致する
+AssertionError: expected [] to deeply equal [ 'out/pm-plan.md' ]
+
+- Expected
++ Received
+
+- [
+-   "out/pm-plan.md",
+- ]
++ []
+
+ ❯ tests/src/catalog/generate.test.ts:522:28
+    520|     const result = run(fx, false, false, ["dct-project-management.yaml…
+    521|
+    522|     expect(result.written).toEqual(["out/pm-plan.md"]);
+       |                            ^
+    523|   });
+    524|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/16]⎯
+
+ FAIL  tests/src/catalog/generate.test.ts > runGenerate — dct フィルタ > 複数指定で複数 dct を対象にできる
+AssertionError: expected [] to deeply equal [ 'out/prj-charter.md', …(1) ]
+
+- Expected
++ Received
+
+- [
+-   "out/prj-charter.md",
+-   "out/pm-plan.md",
+- ]
++ []
+
+ ❯ tests/src/catalog/generate.test.ts:528:28
+    526|     const result = run(fx, false, false, ["project-definition", "proje…
+    527|
+    528|     expect(result.written).toEqual(["out/prj-charter.md", "out/pm-plan…
+       |                            ^
+    529|   });
+    530|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/16]⎯
+
+ FAIL  tests/src/kata/command.test.ts > kata commands > reports same, modified, and package-missing ejected files
+AssertionError: expected { …(2) } to deeply equal { …(3) }
+
+- Expected
++ Received
+
+  {
+-   "project:local-standard": "package-missing",
+    "specdojo:changed-rulebook": "modified",
+    "specdojo:same-rulebook": "same",
+  }
+
+ ❯ tests/src/kata/command.test.ts:207:25
+    205|       listKataResources({ roots: roots() }).map((resource) => [resourc…
+    206|     );
+    207|     expect(differences).toEqual({
+       |                         ^
+    208|       "specdojo:changed-rulebook": "modified",
+    209|       "specdojo:same-rulebook": "same",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/16]⎯
+

@@ -1,0 +1,15 @@
+Claude/OpenCode のオーケストレーター権限を分離しました。
+
+- Claude に専用の [settings.orchestrator.json](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZH7Q/templates/claude/settings.orchestrator.json) を追加。
+- `orch:opus` / `orch:sonnet` は executor 設定を使わないよう変更。
+- オーケストレーターのみ `gh` の読み取りを許可し、書き込み・`git push` は拒否。
+- executor・review・reporter の全 `gh` 拒否を維持。
+- OpenCode でも同様に役割を分離し、保護設定の編集を許可。
+- 設計書、ガイド、CHANGELOG、個票、単体テストを更新。
+- result・登録簿イベント・runner evidence は編集していません。
+
+Claude の permission パターンは、公式の prefix 記法に合わせています。[Claude Code CLI reference](https://docs.anthropic.com/en/docs/claude-code/cli-usage)
+
+<specdojo_executor_evidence>
+{"final_message":"Claude/OpenCode の対話型オーケストレーターを pipeline 権限から分離し、GitHub CLI の読み取りのみ許可しつつ、書き込みと git push を拒否する設定・生成処理・文書・テストを更新した。","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/product/040-system-design/sysd-claude-agent-settings.md docs/ja/product/040-system-design/sysd-opencode-agent-settings.md docs/ja/projects/prj-0001/controls/project-register/pjr-zh7q-devcontainer-gh-and-agent-deny.md docs/ja/specdojo/guides/exec-config-guide.md docs/ja/specdojo/guides/remote-host-development-guide.md src/shared/provider-scaffold.ts templates/claude/README.md templates/claude/settings.orchestrator.json templates/opencode/README.md templates/opencode/agents/specdojo-orchestrator.md tests/src/commands/init.test.ts tests/src/shared/provider-scaffold.test.ts","status":"passed","summary":"変更対象全体を Prettier で整形した。"},{"command":"npx prettier --write docs/ja/product/040-system-design/sysd-opencode-agent-settings.md docs/ja/projects/prj-0001/controls/project-register/pjr-zh7q-devcontainer-gh-and-agent-deny.md docs/ja/specdojo/guides/exec-config-guide.md templates/claude/settings.orchestrator.json templates/opencode/README.md templates/opencode/agents/specdojo-orchestrator.md tests/src/shared/provider-scaffold.test.ts","status":"passed","summary":"最終調整後の対象を再整形した。"},{"command":"npm run lint:orchestrator-sync","status":"passed","summary":"オーケストレーター本文の同期対象 10 件が一致した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全 catalog が OK。既存の未配置文書に関する警告はあるが終了コードは 0。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはない。"}]}
+</specdojo_executor_evidence>

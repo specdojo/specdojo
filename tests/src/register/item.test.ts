@@ -416,7 +416,7 @@ describe("register-item-frontmatter schema — enum 検証", () => {
     expect(schema.$defs.Approach.enum).toEqual([...APPROACHES]);
   });
 
-  it("approach がある場合は targets を 1 件だけ要求する", () => {
+  it("通常の approach は target 1 件、authoring は新規 id と複数の手本を受け付ける", () => {
     const validator = buildValidator(
       "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
     );
@@ -435,6 +435,15 @@ describe("register-item-frontmatter schema — enum 検証", () => {
     expect(validator({ specdojo: base })).toBe(false);
     expect(validator({ specdojo: { ...base, targets: ["doc-a", "doc-b"] } })).toBe(false);
     expect(validator({ specdojo: { ...base, targets: ["doc-a"] } })).toBe(true);
+    expect(
+      validator({
+        specdojo: {
+          ...base,
+          approach: "rulebook-authoring",
+          targets: ["customer:new-rulebook", "doc-a", "doc-b"],
+        },
+      }),
+    ).toBe(true);
   });
 
   it("derived_from は project 内 ID と project 修飾 ID の配列だけを受け付ける", () => {

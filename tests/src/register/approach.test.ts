@@ -16,6 +16,13 @@ describe("validateRegisterApproachTargets", () => {
     mkdirSync(join(root, "docs/ja/specdojo/rulebooks"), { recursive: true });
     mkdirSync(join(root, "docs/ja/specdojo/recipes"), { recursive: true });
     mkdirSync(join(root, "docs/ja/specdojo/templates"), { recursive: true });
+    mkdirSync(join(root, ".specdojo"), { recursive: true });
+    writeFileSync(
+      join(root, ".specdojo/specdojo.config.json"),
+      JSON.stringify({ version: 1, kata_authority: "example-repo", projects: {} }),
+      "utf8",
+    );
+    writeFileSync(join(root, "package.json"), '{"name":"example-repo"}\n', "utf8");
 
     writeFileSync(
       join(root, "docs/ja/product/deliverable.md"),
@@ -205,5 +212,61 @@ describe("validateRegisterApproachTargets", () => {
         targets: ["missing-doc"],
       }),
     ).toThrow(/is not a catalog deliverable/);
+  });
+
+  it("authoring approach は新しい kata id と任意の手本成果物を受け付ける", () => {
+    expect(() =>
+      validateRegisterApproachTargets({
+        repoRoot: root,
+        projectId: "prj-test",
+        catalogPath,
+        approach: "rulebook-authoring",
+        targets: ["example-repo:payment-rulebook", "deliverable-doc", "prj-test:uncreated"],
+      }),
+    ).not.toThrow();
+
+    expect(() =>
+      validateRegisterApproachTargets({
+        repoRoot: root,
+        projectId: "prj-test",
+        catalogPath,
+        approach: "sample-authoring",
+        targets: ["example-repo:payment-sample"],
+      }),
+    ).not.toThrow();
+  });
+
+  it("authoring approach は authority・末尾・手本・既存 id を検証する", () => {
+    const base = {
+      repoRoot: root,
+      projectId: "prj-test",
+      catalogPath,
+      approach: "rulebook-authoring",
+    } as const;
+    expect(() =>
+      validateRegisterApproachTargets({ ...base, targets: ["specdojo:payment-rulebook"] }),
+    ).toThrow(/reserved for the SpecDojo repository/);
+    expect(() =>
+      validateRegisterApproachTargets({ ...base, targets: ["other:payment-rulebook"] }),
+    ).toThrow(/kata_authority "example-repo"/);
+    expect(() =>
+      validateRegisterApproachTargets({ ...base, targets: ["example-repo:payment-recipe"] }),
+    ).toThrow(/must end with -rulebook/);
+    expect(() =>
+      validateRegisterApproachTargets({
+        ...base,
+        targets: ["example-repo:payment-rulebook", "missing-doc"],
+      }),
+    ).toThrow(/every --target after the first to be a catalog deliverable/);
+
+    mkdirSync(join(root, "docs/ja/kata/rulebooks"), { recursive: true });
+    writeFileSync(
+      join(root, "docs/ja/kata/rulebooks/payment-rulebook.md"),
+      "---\nspecdojo:\n  id: example-repo:payment-rulebook\n  type: rulebook\n  status: draft\n---\n",
+      "utf8",
+    );
+    expect(() =>
+      validateRegisterApproachTargets({ ...base, targets: ["example-repo:payment-rulebook"] }),
+    ).toThrow(/use rulebook-maintenance instead/);
   });
 });

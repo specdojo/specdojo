@@ -381,7 +381,7 @@ VS Code でプロジェクトリポジトリとプロダクトリポジトリを
 
 プロダクト文書は実装と同期して改訂するため、`app1/docs/ja/product/` に置きます。README、ソースコードから生成する API リファレンス、パッケージ利用者向けの手順など、コードと同じ revision で読む付属文書も `app1/` に置きます。
 
-`app1-specdojo/` には `docs/ja/projects/` と `docs/ja/specdojo/` を置きます。前者はプロジェクト固有の目的、判断、計画、実行記録、後者は運用に使う philosophy / standard / rulebook / recipe / sample / template などの型です。この境界により、プロダクトの内容と同じ revision が必要な文書は `app1/`、SpecDojo の記帳と再利用可能な型は `app1-specdojo/` の履歴に残ります。
+`app1-specdojo/` には `docs/ja/projects/`、`docs/ja/specdojo/`、`docs/ja/kata/` を置きます。順に、プロジェクト固有の目的・判断・計画・実行記録、SpecDojo が配布する型、利用者がリポジトリ単位の authority で新しく作る rulebook / recipe / sample / template です。この境界により、プロダクトの内容と同じ revision が必要な文書は `app1/`、SpecDojo の記帳と再利用可能な型は `app1-specdojo/` の履歴に残ります。
 
 プロダクト文書の catalog `base_path` を別リポジトリへ解決する機能と、[[prj-0001:pjr-xkks-grade-sidecar|PJR-XKKS grade result のサイドカー化]] で定める成果物へ書き込まない grade 運用は、プロダクト文書を成果物として管理する場合の前提です。exec はプロダクト文書をファイルとして変更・統合できますが、catalog・grade・doc index の対象にはしません。
 

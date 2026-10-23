@@ -1,14 +1,14 @@
 {
-  "layout": "dagre",
+  "layout": "elk",
   "theme": "default",
-  "fontFamily": "Noto Sans Mono CJK JP, Noto Sans CJK JP, Noto Sans JP, monospace, sans-serif",
+  "fontFamily": "Noto Sans Mono CJK JP, Noto Sans CJK JP, Noto Sans JP, Noto Color Emoji, monospace, sans-serif",
   "themeVariables": {
     "fontSize": "14px",
     "lineHeight": "1.4",
     "padding": 16
   },
   "flowchart": {
-    "layout": "dagre",
+    "layout": "elk",
     "useMaxWidth": false,
     "htmlLabels": false,
     "wrappingWidth": 220

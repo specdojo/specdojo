@@ -11,10 +11,7 @@
       "upgradePackages": false
     }
   },
-  "mounts": [
-    "source=specdojo-git,target=/home/node/.config/git,type=volume",
-    "source=specdojo-gh,target=/home/node/.config/gh,type=volume"
-  ],
+  "mounts": ["source=specdojo-git,target=/home/node/.config/git,type=volume"],
   "containerEnv": {
     "GIT_CONFIG_GLOBAL": "/home/node/.config/git/config"
   },
