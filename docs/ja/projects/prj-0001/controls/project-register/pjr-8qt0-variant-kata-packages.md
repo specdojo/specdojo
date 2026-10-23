@@ -63,32 +63,44 @@ specdojo:
 
 ## 3. 決定内容
 
-_TODO_: 利用者の決定の後に記載する（推奨は L1・R1・A1・M1）。
+推奨のとおり、次のように決める。
+
+1. 置き場所と公開は L1 とする。公式に保守する variant は specdojo のリポジトリの `packages/kata-<authority>/` に置き、npm に別のパッケージ（例: `@specdojo/kata-edu-scratch`）として公開する。版と公開のタグは本体と別に持つ。
+2. 利用者のリポジトリから読む仕組みは R1 とする。設定に読む variant package の名前を並べ、各パッケージは `package.json` に自分の authority を宣言する。`node_modules` 全体は探さない。解決の順は、利用者のリポジトリ、宣言した variant package、SpecDojo core とし、同じ authority を宣言するパッケージが 2 つあれば設定の検証で止める。
+3. authority の扱いは A1 とする。`specdojo` は core 専用の予約とし、公式の variant の authority は文書に一覧を持つ。第三者の variant は自由に名乗れるが、`prj-` で始めない。
+4. 利用者のリポジトリで育てた kata の移し方は M1 とする。id もパスも変えずに variant package へ移す。
+5. kata の置き場所は Q1 とする。本体の kata は `docs/ja/specdojo/<種類>s/<local-id>.md`、それ以外の authority は `docs/ja/specdojo/<種類>s/<authority>/<local-id>.md` とし、利用者のリポジトリと variant package で同じパスを使う。0.4.3 の `docs/ja/kata/` は 0.4.4 でこの形に直す。
+6. variant package を読む仕組み（R1）の実装は、coderdojo-lessons の `edu-scratch:` の kata が形になった時点で todo を起票する。
 
 ## 4. 採択理由
 
-- _TODO_: 判断根拠を記載する。
+- 公式の variant を本体のリポジトリで保守することで、規則と検査に追従しやすく、本体と独立に版を出せる。
+- 読むパッケージを設定で明示することで、今の resolver の方針（`node_modules` 全体を探さない）を保てる。
+- kata を SpecDojo の領域（`docs/ja/specdojo/`）に収めることで、利用者の文書のディレクトリと authority の名前がぶつからず、本体の kata も移さずに済む（利用者の提案）。
+- id もパスも変えずに移せるため、利用者のリポジトリで育てた kata を配るときに参照の書き換えが要らない。
 
 ## 5. 承認
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 決定者   | _TODO_ |
-| 決定日   | _TODO_ |
-| 承認方式 | _TODO_ |
-| 証跡     | _TODO_ |
+| 項目     | 内容                                                                                                                   |
+| -------- | ---------------------------------------------------------------------------------------------------------------------- |
+| 決定者   | 利用者（indie）                                                                                                        |
+| 決定日   | 2026-10-23                                                                                                             |
+| 承認方式 | commit                                                                                                                 |
+| 証跡     | orchestrator との会話（2026-10-23）で、L1・R1・A1・M1 と、利用者の提案の置き場所 Q1 を「推奨でお願いします」として承認 |
 
 - 承認方式は `commit` または `PR` を記載する。`PR` の場合は証跡に PR URL と merge SHA を本文テキストで記載する。
 - 不可逆・高リスク・framework schema 破壊的変更に該当する決定は `PR` 方式で承認する。
 
 ## 6. 影響範囲とフォローアップ
 
-| 項目       | 内容   |
-| ---------- | ------ |
-| 影響範囲   | _TODO_ |
-| 必要な対応 | _TODO_ |
-| 追跡先     | _TODO_ |
+| 項目       | 内容                                                                                                                                                       |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 影響範囲   | kata の解決（`src/kata/`）、設定の schema、id とファイル名の規則、kata のガイド、docs-site のステージング                                                  |
+| 必要な対応 | 0.4.3 の `docs/ja/kata/` を Q1 の置き場所に直す todo を起票した。variant package を読む仕組みの todo は、`edu-scratch:` の kata が形になった時点で起票する |
+| 追跡先     | 置き場所を直す todo（本決定と同時に起票）                                                                                                                  |
 
 ## 7. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[specdojo:id-and-file-naming-standard]]
+- [[specdojo:practice-system-composition-guide]]
+- PJR-CT6G（kata を新しく作る approach の実装）
