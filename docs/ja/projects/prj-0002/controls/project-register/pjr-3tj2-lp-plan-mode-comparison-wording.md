@@ -24,13 +24,19 @@ PJR-0WFV で LP の「register の考え方」に加えた plan モードとの�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- `specdojo-lp` の `src/components/sections/RegisterTypes.astro` の `planModeComparisonRows` で、`aspect: "状態の遷移"` の行の `planMode` を `状態管理なし` にする。括弧書きの「会話終了や時間経過とともに消去」は削る。plan のファイルは会話が終わっても残るため、事実と違う。消え方は「残り方」の行の「既定では一定期間で消えうる」に任せる。
+- 同じファイルの「plan モードと register の使い分け」の見出しの直後の段落を、次の 2 文にする。
+  - 1 文目: `register は、1 件を早く仕上げる道具ではなく、プロジェクトの判断と作業を検証できる形で残し、複数の agent に安全に実行させる台帳です。`
+  - 2 文目: `AI ツールの plan モードは段取りの下書きとして、register と補い合います。`
+- ほかの行・見出し・表示の構造・`ToolFit.astro` は変えない。変えるのは `RegisterTypes.astro` だけとする。
+- 作業を終える前に、`specdojo-lp` で `npm run typecheck`・`npm run lint:ts`・`npm run format:check`・`npm run build` を実行して通す。
+- 親の検証が通る。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                   | 担当 | 状態 | メモ                       |
+| --- | -------------------------------------- | ---- | ---- | -------------------------- |
+| 1   | 対比の状態の遷移の行と冒頭の段落を直す | UX   | open | `RegisterTypes.astro` だけ |
 
 ## 4. 対応結果
 
@@ -38,4 +44,4 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0002:pjr-0wfv-lp-why-register]]: 対比を加えた元の項目。
