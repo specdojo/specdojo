@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-23T23:43:14Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
   derived_from:
     - PJR-EKRW
 ---
@@ -56,7 +57,11 @@ init --catalog small が作るカタログのうち 15 個が成果物のない 
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `type: project` の成果物カタログでは空の `groups` を受理し、未指定または配列以外の `groups` は引き続きエラーにするよう検査を修正した。
+- 空の領域も `catalog build` で見出しを持つ派生ビューを生成できることを単体テストに追加した。
+- 一時リポジトリで `init --yes --provider claude --exec --catalog small` を実行し、その直後の `specdojo build` が通る統合テストを追加した。
+- schema は `type: project` の空の `groups` をすでに許可し、`type: template` には `minItems: 1` を要求しているため変更していない。
+- 再発防止として、空配列、キーの未指定、非配列をそれぞれ独立した回帰テストで固定した。
 
 ## 5. 関連ドキュメント
 
