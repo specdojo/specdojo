@@ -1,6 +1,6 @@
 {
   "name": "specdojo",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A dojo for Spec-Dō, the way of specification: decide with a register, write specs and designs with kata, and keep sharpening them with AI.",
   "license": "MIT",
   "author": "naoji3x",
@@ -25,7 +25,7 @@
     "type": "git",
     "url": "git+https://github.com/specdojo/specdojo.git"
   },
-  "homepage": "https://github.com/specdojo/specdojo#readme",
+  "homepage": "https://specdojo.org",
   "bugs": {
     "url": "https://github.com/specdojo/specdojo/issues"
   },
