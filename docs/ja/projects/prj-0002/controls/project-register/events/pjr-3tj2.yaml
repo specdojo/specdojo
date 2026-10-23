@@ -67,3 +67,19 @@
       from: "-"
       to: "agent exited with non-zero code: executor validation failed or not run: npm run format:check, npm run build"
   previous_event_id: reg_f6bcd3b98ba44ab9acbeb8fcbd7c73cb
+- v: 1
+  id: reg_d4a1a342672c487783f564f3d5b4110b
+  ts: "2026-10-23T23:57:27Z"
+  action: start
+  actor: flash-high-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: executor validation failed or not run: npm run format:check, npm run build"
+      to: "-"
+  previous_event_id: reg_4aeb80406eb749d597a568ef747c7852
