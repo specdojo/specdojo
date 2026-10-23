@@ -9,7 +9,12 @@ import {
 } from "../docs/template-resolution.js";
 import { getKataAuthority, loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
 import { parsePracticeId } from "../shared/practice-id.js";
-import { AUTHORING_KINDS, kataKindDirectory } from "./authoring.js";
+import {
+  AUTHORING_KINDS,
+  authoredKataDirectory,
+  legacyKataKindDirectory,
+  warnLegacyAuthoredKata,
+} from "./authoring.js";
 
 export const KATA_RESOURCE_KINDS = [
   "rulebook",
@@ -178,32 +183,53 @@ function enumerateAuthoredResources(roots: SpecdojoResolutionRoots): KataResourc
   const repositoryRoot = roots.repositoryRoot ?? specdojoRootDir();
   const configuredAuthority = getKataAuthority(loadConfig(repositoryRoot).config, repositoryRoot);
   return AUTHORING_KINDS.flatMap((kind) => {
-    const relativeDir = kataKindDirectory(kind, true);
-    const absoluteDir = resolve(repositoryRoot, relativeDir);
-    return relativeFiles(absoluteDir).flatMap((filePath) => {
-      const resolvedPath = resolve(absoluteDir, filePath);
-      const id = resourceId(resolvedPath);
-      let authority: string | undefined;
-      try {
-        authority = parsePracticeId(id).authority;
-      } catch {
-        return [];
-      }
-      if (authority !== configuredAuthority) return [];
-      return [
-        {
-          id,
-          kind,
-          ejectable: false,
-          relativePath: normalizeRelativePath(join(relativeDir, filePath)),
-          repositoryPath: resolvedPath,
-          resolvedPath,
-          source: "repository" as const,
-          state: "ejected" as const,
-          difference: "-" as const,
-        },
-      ];
+    const canonicalDir = authoredKataDirectory(kind, configuredAuthority);
+    const legacyDir = legacyKataKindDirectory(kind);
+    const resourcesFrom = (relativeDir: string): KataResource[] => {
+      const absoluteDir = resolve(repositoryRoot, relativeDir);
+      return relativeFiles(absoluteDir).flatMap((filePath) => {
+        const resolvedPath = resolve(absoluteDir, filePath);
+        const id = resourceId(resolvedPath);
+        let authority: string | undefined;
+        try {
+          authority = parsePracticeId(id).authority;
+        } catch {
+          return [];
+        }
+        if (authority !== configuredAuthority) return [];
+        return [
+          {
+            id,
+            kind,
+            ejectable: false,
+            relativePath: normalizeRelativePath(join(relativeDir, filePath)),
+            repositoryPath: resolvedPath,
+            resolvedPath,
+            source: "repository" as const,
+            state: "ejected" as const,
+            difference: "-" as const,
+          },
+        ];
+      });
+    };
+
+    const canonical = resourcesFrom(canonicalDir);
+    const canonicalIds = new Set(canonical.map((resource) => resource.id));
+    const legacy = resourcesFrom(legacyDir).flatMap((resource) => {
+      const canonicalPath = normalizeRelativePath(
+        join(canonicalDir, relative(legacyDir, resource.relativePath)),
+      );
+      const duplicate = canonicalIds.has(resource.id);
+      warnLegacyAuthoredKata(
+        resource.id,
+        canonicalPath,
+        resource.relativePath,
+        repositoryRoot,
+        duplicate,
+      );
+      return duplicate ? [] : [resource];
     });
+    return [...canonical, ...legacy];
   });
 }
 

@@ -91,11 +91,22 @@ function relativeFilesBelow(root: string): string[] {
   if (!existsSync(root)) return [];
   const files: string[] = [];
   const visit = (current: string): void => {
+    const relativeDirectory = path.relative(root, current).split(path.sep).join("/");
+    const coreKataDirectory = new Set([
+      "rulebooks",
+      "standards",
+      "recipes",
+      "samples",
+      "templates",
+    ]).has(relativeDirectory);
     for (const entry of readdirSync(current, { withFileTypes: true })) {
       if (entry.name === "generated") continue;
       const absolutePath = path.join(current, entry.name);
-      if (entry.isDirectory()) visit(absolutePath);
-      else if (entry.isFile()) files.push(path.relative(root, absolutePath));
+      if (entry.isDirectory()) {
+        // core package の種類ディレクトリ直下だけを同梱 kata として扱う。
+        // authority サブディレクトリは利用者・variant 所有のためステージングしない。
+        if (!coreKataDirectory) visit(absolutePath);
+      } else if (entry.isFile()) files.push(path.relative(root, absolutePath));
     }
   };
   visit(root);

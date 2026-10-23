@@ -63,7 +63,7 @@ SpecDojo Configuration Reference
 
 対象 project の一般的な解決順序は、`--project <id>`、`SPECDOJO_PROJECT`、`current_project`、`projects` の先頭です。一部のコマンドは `current_project` を参照せず `projects` の先頭へフォールバックするため、複数 project では `--project` を明示してください。
 
-`kata_authority` は project ごとではなくリポジトリ全体で共有します。省略時は元リポジトリのディレクトリ名を小文字・ハイフン形式へ正規化した値です。worktree でも元リポジトリの名前を使います。利用者の kata は `docs/ja/kata/` 配下に置かれ、この authority の ID だけを利用者リポジトリから解決します。値は英小文字から始め、英小文字・数字・ハイフンだけを使います。project ID と区別するため `prj-` で始めず、SpecDojo 本体専用の `specdojo` も使いません。
+`kata_authority` は project ごとではなくリポジトリ全体で共有します。省略時は元リポジトリのディレクトリ名を小文字・ハイフン形式へ正規化した値です。worktree でも元リポジトリの名前を使います。利用者の kata は `docs/ja/specdojo/<種類>s/<kata_authority>/` 配下に置かれ、この authority の ID だけを利用者リポジトリから解決します。値は英小文字から始め、英小文字・数字・ハイフンだけを使います。project ID と区別するため `prj-` で始めず、SpecDojo 本体専用の `specdojo` も使いません。0.4.4 のあいだは旧 `docs/ja/kata/` も移行元として読みます。
 
 ### 2.1. `external_projects`のキー
 

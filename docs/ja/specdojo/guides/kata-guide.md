@@ -67,7 +67,9 @@ template は、記述する部分を _TODO_ などのプレースホルダとし
 
 成果物と型を一組で初めて作るときは `bootstrap` を使います。成果物がすでにあり、そこから再利用可能な型だけを新しく起こすとき、または手本なしで型だけを作るときは `rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` を使います。authoring では手本の成果物本文を変更せず、該当参照が `undecided` または未記入の場合だけ新しい kata ID へ更新します。
 
-利用者が作る kata はリポジトリ単位の `kata_authority` を使い、`docs/ja/kata/{rulebooks,recipes,samples,templates}/` に置きます。`specdojo:` は SpecDojo 本体専用であり、利用者リポジトリでは新規作成できません。これにより、同じリポジトリの複数 project で型を共有しながら、将来追加される同名の同梱 kata と衝突しません。
+利用者が作る kata はリポジトリ単位の `kata_authority` を使い、`docs/ja/specdojo/{rulebooks,recipes,samples,templates}/<kata_authority>/` に置きます。たとえば `customer:payment-rulebook` の配置は `docs/ja/specdojo/rulebooks/customer/payment-rulebook.md` です。`specdojo:` は SpecDojo 本体専用であり、利用者リポジトリでは新規作成できません。これにより、同じリポジトリの複数 project で型を共有しながら、将来追加される同名の同梱 kata と衝突しません。
+
+0.4.4 のあいだは旧 `docs/ja/kata/` 配置も読みますが、解決時に新配置への移動案内を出します。同じ ID が新旧の両方にある場合は authority サブディレクトリ側を使い、旧ファイルの削除を案内します。
 
 `kind: generated` の成果物には実践の型を適用しません。成果物ごとの型宣言は置かず、`kind` から非適用を導出します。rulebook を持たない成果物は成果物カタログの `rulebook: not-needed` で表します。
 

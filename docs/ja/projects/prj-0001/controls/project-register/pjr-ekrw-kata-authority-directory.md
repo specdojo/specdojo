@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-23T13:47:59Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
   derived_from:
     - PJR-8QT0
 ---

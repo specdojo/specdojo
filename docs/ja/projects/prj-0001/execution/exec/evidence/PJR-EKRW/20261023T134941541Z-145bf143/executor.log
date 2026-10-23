@@ -1,0 +1,12 @@
+利用者 kata の authority 別配置への移行を実装しました。
+
+- 新配置を `docs/ja/specdojo/<種類>s/<authority>/` に統一
+- 旧 `docs/ja/kata/` は警告付きで読み、新配置を優先
+- plan 生成、kata 解決・一覧、文書索引、grade、docs-site を対応
+- 単体・統合テストと関連文書、CHANGELOG、個票を更新
+- result と登録簿のステータスは未変更
+- 統合後の PJR-JSEY 実行のみ後続作業です
+
+<specdojo_executor_evidence>
+{"final_message":"利用者 kata の authority 別配置、旧配置との互換警告、新配置優先、core 走査との分離、関連テスト・文書更新を完了した。","validations":[{"command":"npx prettier --check 'CHANGELOG.md' 'docs/ja/projects/prj-0001/controls/project-register/pjr-ekrw-kata-authority-directory.md' 'docs/ja/specdojo/guides/{docs-structure-guide,kata-guide,practice-system-composition-guide,quick-start-guide}.md' 'docs/ja/specdojo/references/{command-reference,specdojo-config-reference}.md' 'docs/ja/specdojo/standards/{id-and-file-naming-standard,recipe-authoring-standard,rulebook-authoring-standard,sample-authoring-standard,template-authoring-standard}.md' 'packages/docs-site/{README.md,.vitepress/kata-staging.ts}' 'src/{docs/doc-index.ts,kata/{authoring,command,kata}.ts}' 'tests/src/{catalog/generate.test.ts,docs/doc-index.test.ts,exec/{kata-authoring.integration.test.ts,register-plan-escape.test.ts},grade/triggers.test.ts,kata/{command.test.ts,kata.test.ts},register/approach.test.ts}' 'tests/packages/docs-site/kata-staging.test.ts'","status":"passed","summary":"変更対象はすべて Prettier 準拠"},{"command":"node --import tsx -e \"await Promise.all([import('./src/kata/authoring.ts'), import('./src/kata/kata.ts'), import('./src/kata/command.ts'), import('./src/docs/doc-index.ts'), import('./packages/docs-site/.vitepress/kata-staging.ts')]); process.stdout.write('module imports ok\\n')\"","status":"passed","summary":"変更した主要モジュールを正常に読み込み"},{"command":"npm --prefix packages/docs-site run typecheck","status":"passed","summary":"docs-site の型検査に成功"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビュー生成に成功"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"全カタログが OK。既存の未配置成果物に関する警告のみ"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし"},{"command":"npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --join","status":"requires_human","summary":"exec plan 生成変更の統合後動作確認として、統合後に PJR-JSEY を実行する"}]}
+</specdojo_executor_evidence>

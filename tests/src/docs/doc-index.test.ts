@@ -558,9 +558,29 @@ describe("buildDocIndex", () => {
         "package-rulebook.md",
       );
       const guidePath = join(packageRoot, "docs", "ja", "specdojo", "guides", "package-guide.md");
+      const variantPath = join(
+        packageRoot,
+        "docs",
+        "ja",
+        "specdojo",
+        "rulebooks",
+        "customer",
+        "variant-rulebook.md",
+      );
+      const repositoryKataPath = join(
+        repoRoot,
+        "docs",
+        "ja",
+        "specdojo",
+        "rulebooks",
+        "customer",
+        "repository-rulebook.md",
+      );
       mkdirSync(docsRoot, { recursive: true });
       mkdirSync(join(rulebookPath, ".."), { recursive: true });
       mkdirSync(join(guidePath, ".."), { recursive: true });
+      mkdirSync(join(variantPath, ".."), { recursive: true });
+      mkdirSync(join(repositoryKataPath, ".."), { recursive: true });
       writeFileSync(
         rulebookPath,
         "---\nspecdojo:\n  id: specdojo:package-rulebook\n  type: rulebook\n  status: ready\n---\n",
@@ -569,6 +589,16 @@ describe("buildDocIndex", () => {
       writeFileSync(
         guidePath,
         "---\nspecdojo:\n  id: specdojo:package-guide\n  type: guide\n  status: ready\n---\n",
+        "utf8",
+      );
+      writeFileSync(
+        variantPath,
+        "---\nspecdojo:\n  id: customer:variant-rulebook\n  type: rulebook\n  status: ready\n---\n",
+        "utf8",
+      );
+      writeFileSync(
+        repositoryKataPath,
+        "---\nspecdojo:\n  id: customer:repository-rulebook\n  type: rulebook\n  status: draft\n---\n",
         "utf8",
       );
 
@@ -581,6 +611,10 @@ describe("buildDocIndex", () => {
         "node_modules/specdojo/docs/ja/specdojo/rulebooks/package-rulebook.md",
       );
       expect(lookupDocIndex("specdojo:package-guide", outputPath)).toBeUndefined();
+      expect(lookupDocIndex("customer:variant-rulebook", outputPath)).toBeUndefined();
+      expect(lookupDocIndex("customer:repository-rulebook", outputPath)).toBe(
+        "docs/ja/specdojo/rulebooks/customer/repository-rulebook.md",
+      );
       expect(lookupDocIndex("specdojo:missing-rulebook", outputPath)).toBeUndefined();
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
