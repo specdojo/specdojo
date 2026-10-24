@@ -83,3 +83,16 @@
       from: "agent exited with non-zero code: parent validation failed: test-integration; rate limit fallback: sol-executor -> opus-executor at 2026-10-24T12:53:50.053Z"
       to: "-"
   previous_event_id: reg_d638b7a7b35041b88969367eb1b54b7e
+- v: 1
+  id: reg_938bc0e1bbdd496a9e0074257de37e1a
+  ts: "2026-10-24T13:16:45Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c33756611fe544d0bbf1bf88ec766d29
