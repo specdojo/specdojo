@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-SAZC"]'
+- v: 1
+  id: reg_adb74e6649c044b68de4bdd55fb8a218
+  ts: "2026-10-24T00:09:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: 利用者（indie）が npm run orch:sol:work で ERR_MODULE_NOT_FOUND に当たった。原因は PJR-SAZC でオーケストレーターが worktree の中のソースを起動する形にしたこと。利用者の承認で feature/prj-0001/orch-work-scripts-fix で直して develop へ取り込み（74fb142e8）、同じ形で worktree から codex の起動まで通ることを確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: 本リポジトリの orch の work の script 8 本を、本体のソースと本体の依存で orchestrator launch を起動する形（tsx に本体の src/specdojo.ts を絶対パスで渡す）に直した。作業の場所は worktree のまま、設定は本体の場所から読む
+  previous_event_id: reg_3f0da38c8be94d589cd056fab6a1b1f8

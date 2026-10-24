@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-24T00:06:22Z"
+  completed_at: "2026-10-24T00:09:01Z"
+  conclusion: 本リポジトリの orch の work の script 8 本を、本体のソースと本体の依存で orchestrator launch を起動する形（tsx に本体の src/specdojo.ts を絶対パスで渡す）に直した。作業の場所は worktree のまま、設定は本体の場所から読む
   derived_from:
     - PJR-SAZC
 ---
