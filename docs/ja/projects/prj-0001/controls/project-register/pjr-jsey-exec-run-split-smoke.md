@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-10-24T22:43:42Z"
   conclusion: PJR-SS72 と PJR-68KR の統合後も exec run --register が start から review まで通った。途中の 2 回の停止は単体テストの時間切れで、PJR-J44D で直した
 ---
 

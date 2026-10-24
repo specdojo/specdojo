@@ -2055,3 +2055,19 @@
       from: PJR-ZV60 の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
       to: PJR-SS72 と PJR-68KR の統合後も exec run --register が start から review まで通った。途中の 2 回の停止は単体テストの時間切れで、PJR-J44D で直した
   previous_event_id: reg_00b426f3f8a744eb93c8382a90ca5e51
+- v: 1
+  id: reg_1e930ee8ca0749d095cceade0c7ed8bf
+  ts: "2026-10-24T23:53:33Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: R1FB と 84F7 の統合後に runner の動作を確かめる
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-25"
+      to: "-"
+  previous_event_id: reg_8b428508da9d4f9787bba0e9aaf6a02b
