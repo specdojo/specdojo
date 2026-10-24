@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: low
   difficulty: easy
   owner: DEV
@@ -39,11 +39,33 @@ codex の agent の定義（本リポジトリの .codex/agents と配布する 
 
 | No  | 作業                                           | 担当 | 状態 | メモ |
 | --- | ---------------------------------------------- | ---- | ---- | ---- |
-| 1   | codex の agent の定義のモデルを GPT-6 に上げる | DEV  | open | -    |
+| 1   | codex の agent の定義のモデルを GPT-6 に上げる | DEV  | done | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容:
+  - 配布する `templates/codex/agents/*.toml` のモデルを、名簿の雛形（PJR-9482）と同じ GPT-6 の 2 段構成にそろえた。
+    - `codex-executor.toml`・`codex-review-executor.toml`: `gpt-6-luna`（`model_reasoning_effort = "medium"`）
+    - `codex-expert-executor.toml`・`codex-expert-review-executor.toml`: `gpt-6.1-sol`（`model_reasoning_effort = "high"`）
+    - `specdojo-orchestrator.toml`: `gpt-6.1-sol`（`model_reasoning_effort = "medium"`）
+  - `npm run lint:orchestrator-sync` を実行し、`specdojo-orchestrator.toml` の同期検査が通ることを確認した。
+  - 単体テスト `tests/src/shared/provider-scaffold.test.ts` にテストを追加し、配布する codex の agent の定義が提供終了モデル（`gpt-5.4-mini`・`gpt-5.5`）や移行用モデル（`gpt-5.6-*`）を使わず、GPT-6 系（`gpt-6-luna`・`gpt-6.1-sol`）を使用していることを確かめた。
+  - 文書は `templates/codex/README.md` と [[specdojo:exec-config-guide]]（配布 subagent のモデルと既存利用者が `.codex/agents` を書き換える手順）および CHANGELOG の `## [Unreleased]` を更新した。
+- 成果物:
+  - `templates/codex/agents/codex-executor.toml`
+  - `templates/codex/agents/codex-review-executor.toml`
+  - `templates/codex/agents/codex-expert-executor.toml`
+  - `templates/codex/agents/codex-expert-review-executor.toml`
+  - `templates/codex/agents/specdojo-orchestrator.toml`
+  - `templates/codex/README.md`
+  - `docs/ja/specdojo/guides/exec-config-guide.md`
+  - `tests/src/shared/provider-scaffold.test.ts`
+  - `CHANGELOG.md`
+- 残課題:
+  - 本リポジトリの `.codex/agents/*.toml` は保護された設定のため変更していない。オーケストレーターが反映する変更案は次のとおり。
+    - `.codex/agents/codex-executor.toml`・`codex-review-executor.toml` の `model` を `gpt-6-luna` にする。
+    - `.codex/agents/codex-expert-executor.toml`・`codex-expert-review-executor.toml` の `model` を `gpt-6.1-sol` にする。
+    - `.codex/agents/specdojo-orchestrator.toml` の `model` を `gpt-6.1-sol` にする。
 
 ## 5. 関連ドキュメント
 

@@ -1,6 +1,6 @@
 name = "codex-expert-review-executor"
 description = "複雑な多観点レビューを支援する SpecDojo pipeline の executor（review）subagent。成果物・result のいずれにも書き込まない。"
-model = "gpt-5.5"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

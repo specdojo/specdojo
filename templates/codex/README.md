@@ -18,7 +18,17 @@ specdojo:
 | `agents/*.toml` | `.codex/agents/`           | subagent 定義。command template から直接選択はされない     |
 | `rules/*.rules` | `.codex/rules/`            | `git push` と全 `gh` を拒否する project-local command rule |
 
-配布する subagent には、成果物の編集と検証だけを担い result を更新しない `codex-expert-executor` を含みます。
+配布する `agents/*.toml` のモデルは、名簿の雛形と同じ GPT-6 の 2 段構成（normal は `gpt-6-luna`、expert は `gpt-6.1-sol`）にそろえています。成果物の編集と検証だけを担い result を更新しない `codex-expert-executor` も含みます。
+
+| ファイル名                          | モデル        | reasoning effort | 用途                                                                |
+| ----------------------------------- | ------------- | ---------------- | ------------------------------------------------------------------- |
+| `codex-executor.toml`               | `gpt-6-luna`  | `medium`         | 標準的な成果物の編集と検証（result は更新しない）                   |
+| `codex-review-executor.toml`        | `gpt-6-luna`  | `medium`         | 多観点レビュー（成果物・result のいずれにも書き込まない）           |
+| `codex-expert-executor.toml`        | `gpt-6.1-sol` | `high`           | 複雑な分析・設計判断を伴う編集と検証（result は更新しない）         |
+| `codex-expert-review-executor.toml` | `gpt-6.1-sol` | `high`           | 複雑な多観点レビュー（成果物・result のいずれにも書き込まない）     |
+| `specdojo-orchestrator.toml`        | `gpt-6.1-sol` | `medium`         | 対話型オーケストレーター（提案 → 承認 → 実行で CLI 操作を代行する） |
+
+※ `gpt-6-luna` は Max までで Ultra を受け付けないため、Ultra は割り当てません。
 
 ## 3. 導入手順
 
@@ -100,3 +110,20 @@ npm run orch:luna
 - worker のモデルは実体の member の `model`、reasoning effort は `command_params.by_proficiency` で調整する。subagent（`agents/*.toml`）側の `model` / `model_reasoning_effort` は利用プランに合わせて調整する。
 - `codex-expert-executor` の result 更新禁止は pipeline の責務境界なので維持する。SpecDojo worker としての選択は `.specdojo/agent-members.yaml` の `stage_role: executor` で行い、custom subagent ファイルは起動コマンドから直接選択されない。
 - 権限設計の背景は `exec-config-guide.md` の `agent 権限とプロンプトインジェクション対策` を参照する。
+
+### 既存の利用者の `.codex/agents` の更新
+
+`specdojo config scaffold --provider codex` は既存のファイルを上書きしません。以前の版で生成された `.codex/agents/*.toml`（`gpt-5.4-mini`・`gpt-5.5`・`gpt-5.6-terra` など）を GPT-6 系へ更新する場合は、次のいずれかを行います。
+
+1. **scaffold で一括再配置する場合**:
+   手動のカスタマイズを行っていない場合は、`--force` を指定してテンプレートで上書きします。
+
+   ```sh
+   specdojo config scaffold --provider codex --force
+   ```
+
+2. **手動で書き換える場合**:
+   各 `.codex/agents/*.toml` の `model`（および必要に応じて `model_reasoning_effort`）を直接編集します。
+   - `codex-executor.toml`・`codex-review-executor.toml`: `model = "gpt-6-luna"`、`model_reasoning_effort = "medium"`
+   - `codex-expert-executor.toml`・`codex-expert-review-executor.toml`: `model = "gpt-6.1-sol"`、`model_reasoning_effort = "high"`
+   - `specdojo-orchestrator.toml`: `model = "gpt-6.1-sol"`、`model_reasoning_effort = "medium"`

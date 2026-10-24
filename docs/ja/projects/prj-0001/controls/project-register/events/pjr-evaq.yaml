@@ -38,3 +38,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-9482"]'
+- v: 1
+  id: reg_f951f923147c499d94bee4f4e9e42436
+  ts: "2026-10-24T13:41:50Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_206682da6b3345ef85a52d7dc1f02464
+- v: 1
+  id: reg_1dcd31e77247497ba249cbcb3abf12f5
+  ts: "2026-10-24T13:59:29Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f951f923147c499d94bee4f4e9e42436
