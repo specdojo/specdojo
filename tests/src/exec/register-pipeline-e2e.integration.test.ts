@@ -20,6 +20,8 @@ import { registerExecCommands } from "../../../src/exec/exec.js";
 import { registerRegisterCommands } from "../../../src/register/register.js";
 import { registerConfigCommands } from "../../../src/shared/specdojo-config.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
+import { readSpecdojoFields } from "../../../src/register/item.js";
+import { MARKDOWN_HOOK_ERROR, MARKDOWN_HOOK_FAILURE } from "../../helpers/git-hook-output.js";
 
 // PJR-TNDH: `exec run --register` を executor/reporter パイプラインで実行する E2E 検証。
 // register 項目は agent_pipeline を持たないため、--executor-by / --reporter-by の明示指定だけで
@@ -694,6 +696,71 @@ afterEach(() => {
 
 describe("exec run --register executor/reporter pipeline (E2E)", () => {
   it(
+    "keeps the failed checkpoint step and first error in the summary and block reason",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const stdout: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          stdout.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const hookPath = join(root, ".git", "hooks", "pre-commit");
+        writeFileSync(
+          hookPath,
+          [
+            "#!/bin/sh",
+            // checkpoint だけを拒否し、root の wait commit は通す。
+            'case "$(git branch --show-current)" in',
+            "exec/*)",
+            "cat <<'HOOK_OUTPUT' >&2",
+            MARKDOWN_HOOK_FAILURE,
+            "HOOK_OUTPUT",
+            "exit 1",
+            ";;",
+            "esac",
+            "exit 0",
+            "",
+          ].join("\n"),
+          "utf8",
+        );
+        chmodSync(hookPath, 0o755);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        const expected = `lint Markdown documentation: ${MARKDOWN_HOOK_ERROR}`;
+        const waitingTicket = readFileSync(
+          join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"),
+          "utf8",
+        );
+        expect(waitingTicket).toContain("item_status: waiting");
+        expect(readSpecdojoFields(waitingTicket).block_reason).toContain(
+          `checkpoint failed: Checkpoint commit failed: ${expected}`,
+        );
+        expect(stdout.join("")).toContain(expected);
+        expect(stdout.join("")).not.toContain(
+          "format documentation and configuration: Checking formatting",
+        );
+      });
+    },
+  );
+
+  it(
     "resolves per-item --executor-by assignments in dry-run and rejects assignments outside the target",
     { timeout: 30_000 },
     async () => {
@@ -1076,8 +1143,9 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             // から環境変数付きで exec された場合だけ統合 commit を落とす（task commit は通す）。
             `if [ -f '${rejectMarker}' ] && [ "$SPECDOJO_TEST_MERGE_COMMIT" = "1" ]; then`,
             "  printf '\\033[31m╭── hook output ──╮\\033[0m\\n' >&2",
-            "  printf '┃ typecheck ❯\\n' >&2",
-            "  printf '┃ src/demo.ts(1,1): error TS2322: merge hook rejected\\n' >&2",
+            "  cat <<'HOOK_OUTPUT' >&2",
+            MARKDOWN_HOOK_FAILURE,
+            "HOOK_OUTPUT",
             "  printf '╰─────────────────╯\\n' >&2",
             "  exit 1",
             "fi",
@@ -1126,7 +1194,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           "utf8",
         );
         expect(waitingTicket).toContain("item_status: waiting");
-        expect(waitingTicket).toContain("typecheck: src/demo.ts(1,1): error TS2322");
+        expect(waitingTicket).toContain(`lint Markdown documentation: ${MARKDOWN_HOOK_ERROR}`);
         expect(waitingTicket).not.toContain("\u001b[31m");
         expect(waitingTicket).not.toContain("╭── hook output");
 
