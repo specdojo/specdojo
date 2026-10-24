@@ -67,3 +67,32 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
   previous_event_id: reg_f9970ff2c5684fb5941be593bc95f1ea
+- v: 1
+  id: reg_1c1f69ada13c42698654cf76394056d0
+  ts: "2026-10-23T23:53:36Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+      to: "-"
+  previous_event_id: reg_2895a786bba3462a91b52b6bc85ec5e4
+- v: 1
+  id: reg_a59a5a2d8d394ac8b0be62928ef2d206
+  ts: "2026-10-24T00:04:55Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1c1f69ada13c42698654cf76394056d0
