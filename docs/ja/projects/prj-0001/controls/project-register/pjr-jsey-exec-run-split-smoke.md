@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-C95G の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
+  completed_at: "2026-10-24T10:06:37Z"
+  conclusion: PJR-ZV60 の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
 ---
 
 # PJR-JSEY exec-run.ts の分割後に runner の動作を確かめる
