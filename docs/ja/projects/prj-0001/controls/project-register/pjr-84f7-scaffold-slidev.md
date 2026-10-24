@@ -27,6 +27,25 @@ specdojo:
 
 それでも、Slidev の本体・テーマ・活動のコンポーネント（`ScratchBlocks.vue` など）がリポジトリにないため、sample を `slidev build` で確かめられなかった。教材は別のリポジトリ（プロダクトリポジトリ）にあり、そちらには Slidev が入っている。
 
+### 1.1. 利用者の project で手で入れた構成（参考）
+
+coderdojo-lessons-specdojo では、表示を確かめるために次を手で入れ、kata の sample を `slidev export --format png` で書き出せた（commit `0b24afc`）。scaffold で入れる範囲を決める材料にする。
+
+| 種類               | 入れたもの                                                                                                                                           |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| npm の開発依存     | `@slidev/cli` ^53.0.0、`slidev-theme-neversink` ^0.4.1、`scratchblocks` ^3.7.1、`playwright-chromium` ^1.64.1、`prettier-plugin-slidev` ^1.0.5       |
+| 整形と検査         | `.prettierrc` で kata の Slidev のファイルに `slidev` parser、`.markdownlintignore` で同じファイルを除外                                             |
+| 表示用のスクリプト | kata を、プロダクトリポジトリの活動の `components/` と一緒に `tmp/` の下へ写し、`slidev`（`--remote`）または `slidev export --format png` を実行する |
+| Dev Container      | apt に `fonts-noto-cjk`、`post-create.sh` に `playwright install-deps chromium`                                                                      |
+| `.gitignore`       | `/tmp/`                                                                                                                                              |
+
+分かったこと:
+
+- Slidev は既定で `localhost` だけで待ち受ける。tmux や SSH からホストのブラウザで開くには `--remote` が要る（`--bind` は `--remote` と一緒でないと効かない）。
+- 日本語のフォントがないと、書き出した PNG の日本語が表示されない。
+- Chromium は、システムのライブラリがないと起動しない（終了コード 127）。
+- 活動固有のコンポーネント（`ScratchBlocks.vue`）は kata に含まれないため、プロダクトリポジトリから写す必要があった。
+
 ## 2. 完了条件
 
 - `init` と `config scaffold` に、Slidev を選んで入れるオプションがある。
