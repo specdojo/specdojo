@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-9482-init-roster-gpt6-expert-tier
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-24T12:51:55Z"
+  completed_at: "2026-10-24T13:18:08Z"
+  conclusion: 配布する名簿の雛形を、claude は sonnet（normal）と opus（expert）、codex は luna（gpt-6-luna、normal）と sol（gpt-6.1-sol、expert）の 2 段にし、codex-expert-executor・claude-expert-executor などの別名を加えた。init の振り分けの表は hard を expert、medium と easy を normal にし、codex の orch は orch:sol と orch:luna にした。既存の利用者の名簿と package.json は書き換えない
   derived_from:
     - PJR-2ASZ
 ---

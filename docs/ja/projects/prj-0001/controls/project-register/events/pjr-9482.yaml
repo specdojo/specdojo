@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c33756611fe544d0bbf1bf88ec766d29
+- v: 1
+  id: reg_982768766d154045b5a1e4ac8b626308
+  ts: "2026-10-24T13:18:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが一時のリポジトリで init（claude と codex）を流し、名簿の実体と別名、振り分けの表、orch の script を確かめた。codex の上限のため 2 回目以降は opus で流した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: 配布する名簿の雛形を、claude は sonnet（normal）と opus（expert）、codex は luna（gpt-6-luna、normal）と sol（gpt-6.1-sol、expert）の 2 段にし、codex-expert-executor・claude-expert-executor などの別名を加えた。init の振り分けの表は hard を expert、medium と easy を normal にし、codex の orch は orch:sol と orch:luna にした。既存の利用者の名簿と package.json は書き換えない
+  previous_event_id: reg_938bc0e1bbdd496a9e0074257de37e1a
