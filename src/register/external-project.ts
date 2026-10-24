@@ -1,5 +1,5 @@
 import { spawnSync, type SpawnSyncReturns } from "node:child_process";
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
   loadConfig,
@@ -123,20 +123,33 @@ function versionAtLeast(version: string, required: string): boolean {
   return true;
 }
 
-function targetSpecdojoExecutable(repoRoot: string): string {
+function targetSpecdojoExecutable(repoRoot: string): { command: string; args: string[] } {
   const executable = join(
     repoRoot,
     "node_modules",
     ".bin",
     process.platform === "win32" ? "specdojo.cmd" : "specdojo",
   );
-  if (!existsSync(executable)) {
-    throw new Error(
-      `External project repository does not have SpecDojo installed: ${executable}. ` +
-        `Install specdojo ${MINIMUM_EXTERNAL_REGISTER_VERSION} or newer in that repository.`,
-    );
+  if (existsSync(executable)) return { command: executable, args: [] };
+
+  const packagePath = join(repoRoot, "package.json");
+  if (existsSync(packagePath)) {
+    const pkg: unknown = JSON.parse(readFileSync(packagePath, "utf8"));
+    if (pkg && typeof pkg === "object" && "name" in pkg && pkg.name === "specdojo") {
+      const entrypoint = join(repoRoot, "dist", "specdojo.js");
+      if (!existsSync(entrypoint)) {
+        throw new Error(
+          `External SpecDojo repository has not been built: ${entrypoint}. ` +
+            "Run npm run build in that repository.",
+        );
+      }
+      return { command: process.execPath, args: [entrypoint] };
+    }
   }
-  return executable;
+  throw new Error(
+    `External project repository does not have SpecDojo installed: ${executable}. ` +
+      `Install specdojo ${MINIMUM_EXTERNAL_REGISTER_VERSION} or newer in that repository.`,
+  );
 }
 
 /**
@@ -163,7 +176,7 @@ export function delegateExternalRegisterAdd(
 
   const repoRoot = resolveExternalProjectRoot(rootDir, externalProject);
   const executable = targetSpecdojoExecutable(repoRoot);
-  const versionResult = run(executable, ["--version"], {
+  const versionResult = run(executable.command, [...executable.args, "--version"], {
     cwd: repoRoot,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
@@ -194,11 +207,15 @@ export function delegateExternalRegisterAdd(
     );
   }
 
-  const result = run(executable, buildExternalRegisterAddArgs(alias, externalProject, opts), {
-    cwd: repoRoot,
-    encoding: "utf8",
-    stdio: "inherit",
-  });
+  const result = run(
+    executable.command,
+    [...executable.args, ...buildExternalRegisterAddArgs(alias, externalProject, opts)],
+    {
+      cwd: repoRoot,
+      encoding: "utf8",
+      stdio: "inherit",
+    },
+  );
   if (result.error) {
     throw new Error(`Failed to run SpecDojo in external project ${alias}: ${result.error.message}`);
   }

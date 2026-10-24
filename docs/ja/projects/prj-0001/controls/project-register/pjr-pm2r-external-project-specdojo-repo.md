@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T13:41:22Z"
@@ -55,7 +55,10 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `src/register/external-project.ts` の CLI 解決を拡張した。インストール済みの CLI を優先し、存在しない場合に相手の `package.json` の `name` が `specdojo` なら、`process.execPath` と相手の `dist/specdojo.js` で版の確認と起票を行う。未ビルドの場合は `npm run build` を案内して、起票前に停止する。
+- 単体テストに、Node.js に渡す引数、インストール済み CLI の優先、未ビルド時の停止、別パッケージの除外、既存の版の条件を追加した。統合テストには、`name: specdojo` と `dist/specdojo.js` を持ち、`node_modules/.bin/specdojo` のない一時リポジトリへの起票を追加した。相手の統合ブランチへの 1 件の commit と呼び出し元が変わらないことを検証する。
+- [[specdojo:command-reference|CLI コマンドリファレンス]]・[[specdojo:specdojo-config-reference|設定リファレンス]]・[[specdojo:register-operation-guide|登録簿運用ガイド]] に起動方法とビルドの前提を追記し、CHANGELOG の Unreleased に記載した。
+- executor で Prettier 整形、本体のビルド、登録簿の派生ビュー生成、カタログ検証が通った。カタログ検証は未作成の成果物に関する警告を出したが、終了コードは 0。型検査、lint、単体テスト・統合テスト、schema 検査の成否は、executor 終了後に実行する親 runner の evidence を正とする。統合後の実 agent による確認は PJR-JSEY で行う。
 
 ## 5. 関連ドキュメント
 
