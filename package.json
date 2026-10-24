@@ -123,6 +123,7 @@
     "js-yaml": "^5.4.3",
     "prettier": "^3.8.4",
     "remark-parse": "^11.0.0",
+    "tinyglobby": "^0.2.17",
     "unified": "^11.0.5"
   },
   "devDependencies": {
@@ -145,7 +146,6 @@
     "remark-lint": "^10.0.1",
     "remark-mdx": "^3.1.1",
     "remark-stringify": "^11.0.0",
-    "tinyglobby": "^0.2.17",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.61.0",
