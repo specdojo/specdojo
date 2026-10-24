@@ -18,26 +18,31 @@ specdojo:
 
 ## 1. 課題内容
 
-着手の checkpoint と待ち状態の記帳の commit が hook で失敗したとき、runner の要約と block_reason が、成功した prettier の step を失敗として挙げる。
+着手の checkpoint と待ち状態の記帳の commit が hook で失敗したとき、runner の要約と `block_reason` が、成功した prettier の step を失敗として挙げる。
+
+- 起きたこと: 着手の checkpoint の commit が失敗したとき、要約と `block_reason` は `format documentation and configuration: Checking formatting...` だった。
+- 実際: lefthook の summary では prettier の step（format documentation and configuration）は成功し、失敗の印が付いたのは markdownlint の step（lint Markdown documentation）だった。
+- 0.4.1 の PJR-0EFN で直した要約の処理が、着手の checkpoint と待ち状態の記帳の commit では使われていないように見える（報告時の見立て）。
+- 報告元: 利用者の project（coderdojo-lessons-specdojo の prj-0001）のPJR-7W1M（[[prj-0001:pjr-ss72-maintenance-plan-md036]] と同じ run で起きた）。
 
 ## 2. 影響範囲
 
-| 観点         | 影響   |
-| ------------ | ------ |
-| スコープ     | _TODO_ |
-| スケジュール | _TODO_ |
-| コスト       | _TODO_ |
-| 品質         | _TODO_ |
-| 関係者       | _TODO_ |
+| 観点         | 影響                                                                        |
+| ------------ | --------------------------------------------------------------------------- |
+| スコープ     | runner の commit の失敗の報告（着手の checkpoint、待ち状態の記帳）          |
+| スケジュール | 作業は止めないが、原因の特定に evidence の `integrate.log` を読む必要がある |
+| コスト       | 誤った step を先に調べる手間がかかる                                        |
+| 品質         | `block_reason` に誤った原因が残る                                           |
+| 関係者       | exec run の失敗を調べる利用者                                               |
 
 ## 3. 対応方針
 
-| 項目     | 内容   |
-| -------- | ------ |
-| 原因     | _TODO_ |
-| 対応策   | _TODO_ |
-| 依存事項 | _TODO_ |
-| 完了条件 | _TODO_ |
+| 項目     | 内容                                                                                                                                                                |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 原因     | 未確定。要約が hook の出力の最初の step を挙げているように見える                                                                                                    |
+| 対応策   | 着手の checkpoint と待ち状態の記帳の commit でも、PJR-0EFN の要約の処理を使い、lefthook の summary で失敗の印が付いた step と最初の error の行を挙げる              |
+| 依存事項 | なし                                                                                                                                                                |
+| 完了条件 | 着手の checkpoint と待ち状態の記帳の commit が hook で失敗したとき、要約と `block_reason` に失敗した step の名前と error の行が出る。この条件を確かめる test がある |
 
 ## 4. 対応結果
 
@@ -45,4 +50,5 @@ _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-ss72-maintenance-plan-md036]]：同じ run で起きた不具合
+- 報告元: 利用者の project（coderdojo-lessons-specdojo の prj-0001）のPJR-7W1M
