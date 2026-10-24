@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T22:28:40Z"
@@ -62,7 +62,42 @@ orchestrator の指示文は、完了条件で「result に書く」と指示さ
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 実施内容
+
+- executor の報告と evidence に、省略可能な文字列配列 `handoff` を追加した。保存前に秘匿処理し、先頭 100 件・各 4,000 文字に制限する。不正な型・空文字列は除外し、欄のない既存の報告・evidence も引き続き受け付ける。
+- reporter へ `handoff` を渡し、edit result の申し送りには runner が reporter の補足と合わせて機械的に転記する。reporter が空配列を返しても executor の記録は残し、同じ文字列の重複は除く。
+- executor の prompt と register plan の雛形に、result への記録を求める完了条件は個票の対応結果と報告の `handoff` の両方へ書くことを明記した。完了条件の仮説・判断理由・未解消 finding の記録も同じ書き先に合わせた。
+- schema、運用ガイド、CHANGELOG の `Unreleased` を更新した。
+- 回帰テストを追加した。報告から evidence・reporter 向けの入力を経由して result の申し送りに届くこと、reporter による省略と重複、再描画の冪等性、既存形式との互換性、秘匿処理・件数と文字数の上限を確認する。テストの実行結果は親 runner の検証記録を参照する。
+
+### オーケストレーター本文の修正案（反映は後続作業）
+
+対象は本文の正本 `.agents/specdojo-orchestrator.agent.md`。保護された設定のため、この executor は本文と写しを編集していない。2026-10-25 の承認済みの分担に従い、オーケストレーターが次の文案を反映する。
+
+1. 「完了条件の書き方」の保護設定に関する箇条書きを次に置き換える。
+
+   > 保護された設定に触れる場合、register の項目では案を個票の対応結果に書き、pipeline では報告の `handoff` にも書く。反映は利用者の承認のもとで行うと書く。「result に書く」は executor が result を直接書ける実行形式に限る。
+
+2. 同じ章の未決点に関する箇条書きを次に置き換える。
+
+   > 未決の点は `_UNDECIDED_` で残すか、executor に決めさせて理由を記録させるかを明記する。register の項目では個票の対応結果に書かせ、pipeline では報告の `handoff` にも書かせる。「result に書く」は executor が result を直接書ける実行形式に限る。
+
+3. 「止まったときの対処」の保護設定に関する箇条書きを次に置き換える。
+
+   > 保護された設定（agent の定義・名簿・`exec-defaults.yaml`・`package.json` など）は、executor が書き換えると統合の前に止まる。register の完了条件では「案を個票の対応結果に書き、pipeline では報告の `handoff` にも書く」と指示する。「案を result に書く」は executor が result を直接書ける実行形式に限る。反映は利用者の承認のもと feature ブランチで行う。
+
+4. 「close の前の確かめ方」の最初の箇条書きを次に置き換える。
+
+   > 完了条件を 1 項目ずつ、差分（`git show`）と個票の対応結果と result の両方に照らして確かめる。完了条件が求める記録を result だけで未達と判定せず、個票の対応結果にもあるかを確認する。親の検証が通っただけで close しない。
+
+反映後に `npm run orchestrator:sync` で 10 か所の写しへ同期し、`npm run lint:orchestrator-sync` で一致を検証する。文案は reporter が result の申し送りにも記録する。
+
+### 検証と残る作業
+
+- 型検査、TypeScript・frontmatter・Markdown の lint、unit・integration test、schema の検証は、この pipeline の指定に従い親 runner に委ねる。executor が同じ検証を重複実行しない。
+- executor で変更ファイルの Prettier 整形と `git diff --check` が成功した。hook が求める `node --import tsx src/specdojo.ts register build` と `node --import tsx tools/catalog-validate-if-configured.mjs` も終了コード 0 で成功した。catalog の検証には未作成文書への参照に関する警告がある。検証結果は最終 evidence にも記録する。
+- 統合後はオーケストレーターが上記本文案の反映・同期を行い、[[prj-0001:pjr-jsey-exec-run-split-smoke|PJR-JSEY]] の動作確認を実施してから close を判断する。実 agent を起動するため、この executor 内では実行しない。
+- 登録簿の行、個票のステータス、result はこの executor では変更していない。
 
 ## 5. 関連ドキュメント
 
