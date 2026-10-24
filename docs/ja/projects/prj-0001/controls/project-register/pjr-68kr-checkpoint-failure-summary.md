@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T13:41:13Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-24T22:44:05Z"
+  conclusion: 着手の checkpoint・待ち状態の記帳・統合の commit のすべてで、hook の失敗の要約に PJR-0EFN と同じ処理を使い、lefthook の summary で失敗の印が付いた step と最初の error の行を挙げるようにした
 ---
 
 # PJR-68KR checkpoint の commit の失敗の要約が、失敗していない step を挙げる

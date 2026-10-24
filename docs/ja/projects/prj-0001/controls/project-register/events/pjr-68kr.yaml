@@ -122,3 +122,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_0881b217412347409e98e0bfbf76e7a2
+- v: 1
+  id: reg_0219776418424e28b9e1d8364913a47f
+  ts: "2026-10-24T22:44:05Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と単体テストを確かめ、統合後の runner の動作を PJR-JSEY で確認した。統合の 2 回の停止は単体テストの時間切れで、PJR-J44D で直した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: 着手の checkpoint・待ち状態の記帳・統合の commit のすべてで、hook の失敗の要約に PJR-0EFN と同じ処理を使い、lefthook の summary で失敗の印が付いた step と最初の error の行を挙げるようにした
+  previous_event_id: reg_d8fd28c265e74eebb42f9da6d9d92429
