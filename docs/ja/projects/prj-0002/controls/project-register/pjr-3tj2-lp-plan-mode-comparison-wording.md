@@ -36,11 +36,17 @@ PJR-0WFV で LP の「register の考え方」に加えた plan モードとの�
 
 | No  | 作業                                   | 担当 | 状態 | メモ                       |
 | --- | -------------------------------------- | ---- | ---- | -------------------------- |
-| 1   | 対比の状態の遷移の行と冒頭の段落を直す | UX   | open | `RegisterTypes.astro` だけ |
+| 1   | 対比の状態の遷移の行と冒頭の段落を直す | UX   | done | `RegisterTypes.astro` だけ |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 実施内容:
+  - `specdojo-lp` の `src/components/sections/RegisterTypes.astro` の `planModeComparisonRows` で、`aspect: "状態の遷移"` の行の `planMode` を `状態管理なし` に修正し、括弧書きの「会話終了や時間経過とともに消去」を削除した。
+  - 同ファイルの「plan モードと register の使い分け」見出し直後の段落について、主語を補い「`register` は、1 件を早く仕上げる道具ではなく、プロジェクトの判断と作業を検証できる形で残し、複数の `agent` に安全に実行させる台帳です。AI ツールの `plan` モードは段取りの下書きとして、`register` と補い合います。」の 2 文へ修正した。
+- 成果物:
+  - `specdojo-lp:src/components/sections/RegisterTypes.astro`
+- 残課題:
+  - なし
 
 ## 5. 関連ドキュメント
 
