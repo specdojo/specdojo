@@ -31,6 +31,7 @@ describe("executor evidence", () => {
 
     expect(parseExecutorReport(stdout)).toEqual({
       finalMessage: "done; api_key=[REDACTED]",
+      handoff: [],
       validations: [
         {
           source: "executor",
@@ -42,6 +43,27 @@ describe("executor evidence", () => {
       targetCoverage: [],
     });
     expect(redactSensitiveText("Authorization: Bearer abc.def.ghi")).not.toContain("abc.def.ghi");
+  });
+
+  it("bounds and redacts handoff notes while ignoring invalid or absent handoff fields", () => {
+    const report = (handoff: unknown) =>
+      parseExecutorReport(
+        `<specdojo_executor_evidence>${JSON.stringify({ handoff })}</specdojo_executor_evidence>`,
+      );
+    expect(report(["  次の確認: api_key=do-not-store  ", null, 42, {}, " "]).handoff).toEqual([
+      "次の確認: api_key=[REDACTED]",
+    ]);
+    for (const handoff of [undefined, null, "note", {}]) {
+      expect(report(handoff).handoff).toEqual([]);
+    }
+    const bounded = report(Array.from({ length: 101 }, () => "あ".repeat(4_001))).handoff;
+    expect(bounded).toHaveLength(100);
+    expect(bounded.every((note) => note.length === 4_000 && note.endsWith("…"))).toBe(true);
+    expect(parseExecutorReport("legacy output").handoff).toEqual([]);
+    expect(
+      parseExecutorReport("<specdojo_executor_evidence>{oops}</specdojo_executor_evidence>")
+        .handoff,
+    ).toEqual([]);
   });
 
   it("accepts a requires_human validation in executor evidence", () => {
@@ -188,6 +210,7 @@ describe("executor evidence", () => {
       "<specdojo_executor_evidence>",
       JSON.stringify({
         final_message: "artifact updated",
+        handoff: ["設定の案: api_key=do-not-store"],
         validations: [
           { command: "npm test", status: "passed", summary: "ok" },
           {
@@ -231,6 +254,7 @@ describe("executor evidence", () => {
     expect(evidence.attempt_changes).toEqual([{ path: "artifact.md", status: "M" }]);
     expect(evidence.diff_summary.files_changed).toBe(1);
     expect(evidence.final_message).toBe("artifact updated");
+    expect(evidence.handoff).toEqual(["設定の案: api_key=[REDACTED]"]);
     expect(evidence.validations).toEqual([
       { source: "executor", command: "npm test", status: "passed", summary: "ok" },
       {
@@ -267,6 +291,11 @@ describe("executor evidence", () => {
     addFormats(ajv);
     const validate = ajv.compile(schema);
     expect(validate(evidence), JSON.stringify(validate.errors)).toBe(true);
+    const { handoff: _handoff, ...legacy } = evidence;
+    expect(validate(legacy), JSON.stringify(validate.errors)).toBe(true);
+    for (const handoff of [[""], ["x".repeat(4_001)], Array(101).fill("note"), "note"]) {
+      expect(validate({ ...evidence, handoff })).toBe(false);
+    }
     expect(
       validate({
         ...evidence,

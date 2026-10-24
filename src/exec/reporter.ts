@@ -960,7 +960,9 @@ export function buildReporterPrompt(opts: {
 from the stored grade result. Record that judgement in verdict and put unmet items and improvement
 instructions in improvements. If evidence.final_message identifies "確認できなかった範囲",
 record that scope in rationale or improvements and reflect it in the verdict.`
-      : "";
+      : `\n\nThe runner preserves evidence.handoff mechanically in the result's handoff section, even when
+your handoff is empty. Do not omit, reinterpret, or contradict those executor notes. Use your
+handoff only for additional notes supported by evidence; do not repeat evidence.handoff.`;
   return `You are the reporter stage of a SpecDojo executor/reporter pipeline.
 Use only the supplied plan and bounded executor evidence. Do not edit or inspect files. Do not
 invent facts that are absent from evidence. Return exactly one JSON object matching the supplied
