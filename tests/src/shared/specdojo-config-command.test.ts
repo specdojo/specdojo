@@ -84,6 +84,37 @@ describe("config onboarding commands", () => {
       await runConfigCommand(["scaffold", "--provider", "codex"]);
 
       expect(existsSync(join(repo, ".codex", "agents", "codex-executor.toml"))).toBe(true);
+      expect(existsSync(join(repo, ".prettierrc"))).toBe(false);
+      expect(existsSync(join(repo, ".markdownlintignore"))).toBe(false);
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("scaffolds Slidev through config, supports dry-run, and preserves settings with force", async () => {
+    const repo = mkdtempSync(join(tmpdir(), "specdojo-config-slidev-"));
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      output.push(String(chunk));
+      return true;
+    });
+    try {
+      mkdirSync(join(repo, ".git"));
+      writeFileSync(join(repo, "package.json"), '{"name":"fixture"}\n');
+      process.chdir(repo);
+      await runConfigCommand(["scaffold", "--slidev", "--dry-run"]);
+      expect(existsSync(join(repo, ".prettierrc"))).toBe(false);
+      expect(readFileSync(join(repo, "package.json"), "utf8")).toBe('{"name":"fixture"}\n');
+
+      await runConfigCommand(["scaffold", "--slidev"]);
+      expect(existsSync(join(repo, ".prettierrc"))).toBe(true);
+      expect(readFileSync(join(repo, "package.json"), "utf8")).toContain('"@slidev/cli"');
+      writeFileSync(join(repo, ".prettierrc"), '{"tabWidth":4}\n');
+      writeFileSync(join(repo, ".markdownlintignore"), "custom/\n");
+      await runConfigCommand(["scaffold", "--slidev", "--force"]);
+      expect(readFileSync(join(repo, ".prettierrc"), "utf8")).toBe('{"tabWidth":4}\n');
+      expect(readFileSync(join(repo, ".markdownlintignore"), "utf8")).toBe("custom/\n");
+      expect(output.join("")).toContain("Merge the overrides above manually");
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

@@ -4,6 +4,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+### 追加機能
+
+- `init --slidev` と `config scaffold --slidev` で、Slidev 本体・Prettier plugin と kata 用の整形・markdownlint 除外設定を追加できるようにしました。既存設定・依存は保持し、追加内容を表示します。`init` の Dev Container preset が `full` の場合は Slidev 導入を既定で選び、`--no-slidev` で解除できます。`full` の VS Code 拡張に `antfu.slidev` を追加しました（PJR-84F7）。
+
 ### 変更
 
 - 同梱のオーケストレーターの本文で、register の完了条件の記録の書き先を「個票の対応結果」と報告の `handoff` にし、close の前に result だけでなく個票の対応結果も確かめるようにしました（PJR-R1FB）。

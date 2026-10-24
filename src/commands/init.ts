@@ -7,6 +7,7 @@ import { runScaffold, type ProjectSize } from "../catalog/scaffold.js";
 import { runDevcontainerScaffold, type DevcontainerPreset } from "../devcontainer/scaffold.js";
 import { runProviderScaffold } from "../shared/provider-scaffold.js";
 import { runLefthookScaffold } from "../shared/lefthook-scaffold.js";
+import { runSlidevScaffold, SLIDEV_KATA_PATTERNS } from "../shared/slidev-scaffold.js";
 import { generateDerivedViewFiles, type RegisterPaths } from "../register/register.js";
 import {
   defaultWorktreeBase,
@@ -51,6 +52,7 @@ export type InitOptions = {
   catalog?: string;
   devcontainer?: boolean;
   lefthook?: boolean;
+  slidev?: boolean;
   devcontainerPreset?: string;
   workspaceName?: string;
   dryRun?: boolean;
@@ -67,6 +69,7 @@ export type InitAnswers = {
   catalog?: ProjectSize;
   devcontainer: boolean;
   lefthook: boolean;
+  slidev: boolean;
   devcontainerPreset?: DevcontainerPreset;
 };
 
@@ -214,6 +217,7 @@ export async function collectInitAnswers(
       catalog: parseCatalog(options.catalog),
       devcontainer,
       lefthook: !!options.lefthook,
+      slidev: options.slidev ?? (devcontainer && devcontainerPreset === "full"),
       ...(devcontainerPreset ? { devcontainerPreset } : {}),
     });
     for (const [label, used] of [
@@ -227,6 +231,7 @@ export async function collectInitAnswers(
       ["catalog=none", !options.catalog],
       ["devcontainer=no", !options.devcontainer],
       ["lefthook=no", !options.lefthook],
+      [`slidev=${answers.slidev ? "yes" : "no"}`, options.slidev === undefined],
       ["devcontainer-preset=recommended", devcontainer && options.devcontainerPreset === undefined],
     ] as const) {
       if (used) process.stdout.write(`Using default: ${label}\n`);
@@ -304,6 +309,12 @@ export async function collectInitAnswers(
       `Create Git hooks with lefthook? [${lefthookDefault ? "Y/n" : "y/N"}]: `,
       (answer) => parseBoolean(answer, lefthookDefault),
     );
+    const slidevDefault = options.slidev ?? (devcontainer && devcontainerPreset === "full");
+    const slidev = await promptUntilValid(
+      prompter,
+      `Set up Slidev for kata? [${slidevDefault ? "Y/n" : "y/N"}]: `,
+      (answer) => parseBoolean(answer, slidevDefault),
+    );
     return validateAnswers({
       projectId,
       projectName,
@@ -315,6 +326,7 @@ export async function collectInitAnswers(
       catalog,
       devcontainer,
       lefthook,
+      slidev,
       ...(devcontainerPreset ? { devcontainerPreset } : {}),
     });
   } finally {
@@ -774,9 +786,13 @@ export async function runInit(
       packageRoot,
       repoRoot,
       config,
+      markdownlintIgnorePatterns: answers.slidev ? SLIDEV_KATA_PATTERNS : [],
       force: false,
       dryRun,
     });
+  }
+  if (answers.slidev) {
+    await runSlidevScaffold({ repoRoot, dryRun });
   }
 
   const firstProvider = answers.providers[0];
@@ -820,6 +836,8 @@ export function registerInitCommand(program: Command): void {
     .option("--catalog <size>", "Create a deliverables catalog (small|medium|large)")
     .option("--devcontainer", "Create a Dev Container for the selected providers", false)
     .option("--lefthook", "Create pre-commit hooks for SpecDojo repositories", false)
+    .option("--slidev", "Set up Slidev and formatting for kata (default with full preset)")
+    .option("--no-slidev", "Skip Slidev setup, including with the full preset")
     .option(
       "--devcontainer-preset <name>",
       "Apply a Dev Container preset when creating it (minimal|recommended|full; none aliases minimal)",
