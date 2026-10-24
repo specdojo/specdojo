@@ -28,13 +28,13 @@ specdojo:
 specdojo config scaffold --provider codex
 ```
 
-`package.json` がある場合は、モデルの系統で名付けた `orch:sol` と `orch:terra` も追加されます。モデルはそれぞれ `gpt-5.6-sol` と `gpt-5.6-terra` を明示して起動します。
+`package.json` がある場合は、モデルの系統で名付けた `orch:sol` と `orch:luna` も追加されます。モデルはそれぞれ `gpt-6.1-sol` と `gpt-6-luna` を明示して起動します。既存の `orch:terra` などのスクリプトは書き換えません。
 
 ```json
 {
   "scripts": {
-    "orch:sol": "specdojo orchestrator launch --provider codex -- -m gpt-5.6-sol \"$(cat .specdojo/codex/orchestrator.md)\"",
-    "orch:terra": "specdojo orchestrator launch --provider codex -- -m gpt-5.6-terra \"$(cat .specdojo/codex/orchestrator.md)\""
+    "orch:sol": "specdojo orchestrator launch --provider codex -- -m gpt-6.1-sol \"$(cat .specdojo/codex/orchestrator.md)\"",
+    "orch:luna": "specdojo orchestrator launch --provider codex -- -m gpt-6-luna \"$(cat .specdojo/codex/orchestrator.md)\""
   }
 }
 ```
@@ -42,7 +42,7 @@ specdojo config scaffold --provider codex
 ```sh
 npm run orch:sol
 # または
-npm run orch:terra
+npm run orch:luna
 ```
 
 コピー後に次を行います。
@@ -71,21 +71,23 @@ npm run orch:terra
 
    この構成では Codex executor は `npm run test:unit` を実行し、親 runner が `npm run test:integration` の結果を evidence へ追加する。
 
-2. SpecDojo が起動する agent をリポジトリ共通の `.specdojo/agent-members.yaml` へ実体と別名の 2 段で定義する。実体は model の系統で名付け（`terra-executor`・`sol-executor` など）、`model` に版を含む ID（`gpt-5.6-terra` など）を持つ。従来の名前（`codex-executor`・`codex-expert-executor` など）は `aliases` で実体を指す別名にする。project ごとの `pm-members.yaml` は人間専用なので、`type: agent` を書かない。
+2. SpecDojo が起動する agent をリポジトリ共通の `.specdojo/agent-members.yaml` へ実体と別名の 2 段で定義する。実体は model の系統で名付け（`luna-executor`・`sol-executor` など）、`model` に版を含む ID（`gpt-6-luna` など）を持つ。従来の名前（`codex-executor`・`codex-expert-executor` など）は `aliases` で実体を指す別名にする。project ごとの `pm-members.yaml` は人間専用なので、`type: agent` を書かない。
 
    ```yaml
    members:
-     - nickname: terra-executor
+     - nickname: luna-executor
        provider: codex
-       model: gpt-5.6-terra
+       model: gpt-6-luna
        mode: edit
        stage_role: executor
        proficiency: normal
        # display_name などの必須項目は省略
    aliases:
      - nickname: codex-executor
-       alias_of: terra-executor
+       alias_of: luna-executor
    ```
+
+   `specdojo init --exec` は codex を 2 段で書く。normal の段は `gpt-6-luna` の `luna-executor`・`luna-review-executor`・`luna-reporter`（別名 `codex-executor`・`codex-review-executor`・`codex-reporter`）、expert の段は `proficiency: expert` を付けた `gpt-6.1-sol` の `sol-executor`・`sol-review-executor`（別名 `codex-expert-executor`・`codex-expert-review-executor`）である。reasoning effort は `by_proficiency` で normal が `medium`、expert が `high` になる（`gpt-6-luna` は Max までで Ultra を受け付けないため、Ultra は割り当てない）。
 
    model を持たない従来の 1 段の member は、`command_params.by_proficiency` に `model` を書けばそのまま動く（member の `model` があればそちらが優先される）。
 

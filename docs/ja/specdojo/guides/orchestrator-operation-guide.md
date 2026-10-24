@@ -65,7 +65,7 @@ Antigravity CLI（`agy`）はファイル定義の agent を持たないため�
 
 Antigravity で使えるモデル ID は `agy models` で確認してください。配布時点の既定値は、agy 1.3.5 で提供される `gemini-3.8-flash-high` です。
 
-`specdojo init` と `config scaffold` が利用者の `package.json` へ追加するスクリプトは、Claude Code が `orch:opus`・`orch:sonnet`、Codex が `orch:sol`・`orch:terra`、Antigravity が `orch:flash`、OpenCode が `orch:opencode` です。Codex と Antigravity のスクリプトは、名前に対応するモデルを起動コマンドで明示します。
+`specdojo init` と `config scaffold` が利用者の `package.json` へ追加するスクリプトは、Claude Code が `orch:opus`・`orch:sonnet`、Codex が `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、Antigravity が `orch:flash`、OpenCode が `orch:opencode` です。Codex と Antigravity のスクリプトは、名前に対応するモデルを起動コマンドで明示します。
 
 0.4.0 以前に作った `orch:codex`・`orch:agy` は自動では削除・上書きされません。`config scaffold --provider codex` または `config scaffold --provider antigravity` を再実行して新しいスクリプトを追加し、新しい名前で起動できることを確認してから、旧スクリプトを `package.json` から削除してください。
 

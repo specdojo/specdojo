@@ -724,9 +724,9 @@ describe("runProviderScaffold", () => {
       provider: "codex",
       scripts: {
         "orch:sol":
-          'specdojo orchestrator launch --provider codex -- -m gpt-5.6-sol "$(cat .specdojo/codex/orchestrator.md)"',
-        "orch:terra":
-          'specdojo orchestrator launch --provider codex -- -m gpt-5.6-terra "$(cat .specdojo/codex/orchestrator.md)"',
+          'specdojo orchestrator launch --provider codex -- -m gpt-6.1-sol "$(cat .specdojo/codex/orchestrator.md)"',
+        "orch:luna":
+          'specdojo orchestrator launch --provider codex -- -m gpt-6-luna "$(cat .specdojo/codex/orchestrator.md)"',
       },
       legacy: "orch:codex",
     },
@@ -802,8 +802,9 @@ describe("runProviderScaffold", () => {
 
       const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
       expect(pkg.scripts["orch:codex"]).toBe("custom codex");
-      expect(pkg.scripts["orch:sol"]).toContain("-m gpt-5.6-sol");
-      expect(pkg.scripts["orch:terra"]).toContain("-m gpt-5.6-terra");
+      expect(pkg.scripts["orch:sol"]).toContain("-m gpt-6.1-sol");
+      expect(pkg.scripts["orch:luna"]).toContain("-m gpt-6-luna");
+      expect(pkg.scripts["orch:terra"]).toBeUndefined();
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
