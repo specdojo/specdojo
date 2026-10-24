@@ -111,6 +111,8 @@ specdojo register add --project customer --type todo \
 
 呼び出し元は相手の登録簿を直接編集せず、相手にインストールされた SpecDojo 0.4.2 以上へ処理を渡します。`--from customer:PJR-AB12` は相手の実 project ID に置き換えて検証・記録されます。相手のリポジトリや CLI がない場合、版が古い場合、`--commit` がない場合は起票前に停止します。相手への状態遷移は、相手のリポジトリへ移動して実行します。
 
+SpecDojo 自身のリポジトリへ起票する場合も、同じように別名を宣言できます。相手で `npm install` と `npm run build` を実行しておきます。相手に `node_modules/.bin/specdojo` がなく、`package.json` の `name` が `specdojo` なら、呼び出し元と同じ Node.js で `node <相手>/dist/specdojo.js` を起動します。未ビルドの場合は `npm run build` を案内して停止し、版の条件（0.4.2 以上）も引き続き確認します。
+
 タイトルが日本語の場合は、内容を表す英語の `--topic` を小文字・ハイフン区切りで指定します。省略して `item` や日本語タイトル中の英単語だけが topic になった場合、`register add` は作成を続けたうえで警告します。警告後も、`register update --topic` で個票名と文書 ID を変更できます。成果物や kata（実践の型）を作成・修正する todo では、`--approach <approach> --target <doc-id>` を指定して進め方と対象を宣言できます（詳細は [exec運用ガイド](exec-operation-guide.md) の「register の todo から approach で成果物・kata を作る・直す手順」を参照してください）。
 
 `--priority` は次の目安で付けます（省略時は `medium`）。

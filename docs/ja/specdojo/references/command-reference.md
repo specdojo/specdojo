@@ -433,7 +433,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 別 project への `register add` は `--commit` が必須です。対象 project の登録簿に未 commit 変更がある場合、または統合ブランチがローカルに存在しない場合は、何も書き込まず終了コード 1 で停止します。元の worktree とブランチは変更しません。`close`、`reject` など別 project の状態遷移は受け付けず、対象 project の worktree での実行を案内します。
 
-別リポジトリへの起票も `--commit` が必須です。相手のリポジトリ、`node_modules/.bin/specdojo`、0.4.2 以上の版のいずれかを確認できない場合は、相手を変更せず停止します。相手の起票が失敗した場合は相手の標準出力・標準エラー出力と終了コードをそのまま引き継ぎ、push は行いません。外部 project の `close` などの状態遷移は委譲しないため、案内された相手のリポジトリで実行してください。
+別リポジトリへの起票も `--commit` が必須です。起動する CLI は相手の `node_modules/.bin/specdojo` を優先します。これがなく、相手の `package.json` の `name` が `specdojo` の場合は、呼び出し元と同じ Node.js で `node <相手>/dist/specdojo.js` を起動します。SpecDojo 自身の clone では、先に `npm install` と `npm run build` を実行してください。`dist/specdojo.js` がない場合は `npm run build` を案内して停止します。相手のリポジトリ、起動する CLI、0.4.2 以上の版のいずれかを確認できない場合は、相手を変更せず停止します。相手の起票が失敗した場合は相手の標準出力・標準エラー出力と終了コードをそのまま引き継ぎ、push は行いません。外部 project の `close` などの状態遷移は委譲しないため、案内された相手のリポジトリで実行してください。
 
 一覧・派生ビューの「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。
 

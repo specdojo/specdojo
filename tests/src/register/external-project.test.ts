@@ -118,13 +118,22 @@ describe("delegateExternalRegisterAdd preconditions", () => {
     process.exitCode = undefined;
   });
 
-  function createFixture(): string {
+  function createFixture(installTargetCli = true): string {
     fixtureRoot = mkdtempSync(join(tmpdir(), "specdojo-external-register-unit-"));
     const source = join(fixtureRoot, "source");
     const target = join(fixtureRoot, "target");
     mkdirSync(join(source, ".specdojo"), { recursive: true });
     mkdirSync(join(target, "node_modules/.bin"), { recursive: true });
-    writeFileSync(join(target, "node_modules/.bin/specdojo"), "test");
+    if (installTargetCli) {
+      writeFileSync(
+        join(
+          target,
+          "node_modules/.bin",
+          process.platform === "win32" ? "specdojo.cmd" : "specdojo",
+        ),
+        "test",
+      );
+    }
     writeFileSync(
       join(source, ".specdojo/specdojo.config.json"),
       JSON.stringify({
@@ -136,6 +145,110 @@ describe("delegateExternalRegisterAdd preconditions", () => {
     process.chdir(source);
     return source;
   }
+
+  function createSelfRepository(build = true): string {
+    createFixture(false);
+    const target = join(fixtureRoot, "target");
+    writeFileSync(join(target, "package.json"), JSON.stringify({ name: "specdojo" }));
+    if (build) {
+      mkdirSync(join(target, "dist"));
+      writeFileSync(join(target, "dist/specdojo.js"), "test");
+    }
+    return target;
+  }
+
+  function successfulRun(version = "0.4.5") {
+    return vi.fn(() => ({
+      status: 0,
+      signal: null,
+      output: [null, `${version}\n`, ""],
+      pid: 1,
+      stdout: `${version}\n`,
+      stderr: "",
+    }));
+  }
+
+  it("uses Node and the self repository's dist entrypoint for version inspection and add", () => {
+    const target = createSelfRepository();
+    const run = successfulRun();
+
+    expect(delegateExternalRegisterAdd(baseOptions, run)).toBe(true);
+    expect(run).toHaveBeenCalledTimes(2);
+    expect(run.mock.calls).toEqual([
+      [
+        process.execPath,
+        [join(target, "dist/specdojo.js"), "--version"],
+        { cwd: target, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+      ],
+      [
+        process.execPath,
+        [
+          join(target, "dist/specdojo.js"),
+          ...buildExternalRegisterAddArgs(
+            "customer",
+            { path: "../target", project_id: "target" },
+            baseOptions,
+          ),
+        ],
+        { cwd: target, encoding: "utf8", stdio: "inherit" },
+      ],
+    ]);
+  });
+
+  it("prefers an installed CLI over the self repository fallback", () => {
+    const source = createFixture();
+    const target = join(fixtureRoot, "target");
+    // No dist entrypoint: the fallback would fail if selected.
+    writeFileSync(join(target, "package.json"), JSON.stringify({ name: "specdojo" }));
+    const run = successfulRun();
+
+    expect(delegateExternalRegisterAdd(baseOptions, run)).toBe(true);
+    expect(run.mock.calls[0]).toEqual([
+      join(target, "node_modules/.bin", process.platform === "win32" ? "specdojo.cmd" : "specdojo"),
+      ["--version"],
+      { cwd: join(source, "../target"), encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+    ]);
+  });
+
+  it("asks to build an unbuilt self repository before invoking any CLI", () => {
+    createSelfRepository(false);
+    const run = successfulRun();
+
+    expect(() => delegateExternalRegisterAdd(baseOptions, run)).toThrow("Run npm run build");
+    expect(run).not.toHaveBeenCalled();
+  });
+
+  it.each(["0.4.1", "unknown"])("still rejects self repository version %s", (version) => {
+    createSelfRepository();
+    const run = successfulRun(version);
+
+    expect(() => delegateExternalRegisterAdd(baseOptions, run)).toThrow("0.4.2 or newer");
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+
+  it("still requires 0.4.5 for --source when using the self repository", () => {
+    createSelfRepository();
+    const run = successfulRun("0.4.4");
+
+    expect(() => delegateExternalRegisterAdd(baseOptions, run)).toThrow(
+      "0.4.5 or newer is required for --source",
+    );
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+
+  it.each([{}, { name: "another-package" }, null])(
+    "does not run dist from an unrelated repository with package metadata %j",
+    (pkg) => {
+      const target = createSelfRepository();
+      writeFileSync(join(target, "package.json"), JSON.stringify(pkg));
+      const run = successfulRun();
+
+      expect(() => delegateExternalRegisterAdd(baseOptions, run)).toThrow(
+        "does not have SpecDojo installed",
+      );
+      expect(run).not.toHaveBeenCalled();
+    },
+  );
 
   it("stops before invoking the target CLI when --commit is absent", () => {
     createFixture();

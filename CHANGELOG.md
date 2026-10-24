@@ -12,6 +12,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `external_projects` で SpecDojo 自身のリポジトリへ起票できるようにしました。相手に `node_modules/.bin/specdojo` がなく、`package.json` の `name` が `specdojo` の場合は `node <相手>/dist/specdojo.js` を使います。未ビルドの場合は `npm run build` を案内して停止します（PJR-PM2R）。
+- 着手の checkpoint・待ち状態の記帳・統合の commit が hook で失敗したとき、空白を含む step 名（`lint Markdown documentation` など）でも、成功した Prettier の step ではなく、失敗印の付いた step と最初の error の行を要約するようにしました。checkpoint の失敗要約を補足説明より前に置き、`block_reason` にも原因を残します（PJR-68KR）。
 - owner の role に当てはまるレビュー観点がないとき（カタログや `pm-roles.yaml`・`pm-review-viewpoints.yaml` がない project など）、edit plan のレビュー観点の欄を `_MISSING_` だけの段落ではなく箇条書きの 1 項目（`- _MISSING_`）にしました。`rulebook-maintenance` などの kata の見直しの plan が、着手の checkpoint の commit で hook の markdownlint（MD036）に止められていました（PJR-SS72）。
 
 ## [0.4.5] - 2026-10-24

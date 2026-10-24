@@ -46,7 +46,7 @@ function shellQuote(value: string): string {
   return `'${value.replaceAll("'", `'\\''`)}'`;
 }
 
-function createFixture(installTargetCli: boolean): Fixture {
+function createFixture(installTargetCli: boolean | "self"): Fixture {
   const sourceRoot = process.cwd();
   const parent = mkdtempSync(join(tmpdir(), "specdojo-external-register-"));
   const source = join(parent, "source");
@@ -95,7 +95,24 @@ function createFixture(installTargetCli: boolean): Fixture {
   );
   writeFileSync(join(target, ".gitignore"), "**/generated/\n**/execution/exec/.locks/\n");
 
-  if (installTargetCli) {
+  if (installTargetCli === "self") {
+    writeFileSync(
+      join(target, "package.json"),
+      JSON.stringify({ name: "specdojo", type: "module" }),
+    );
+    mkdirSync(join(target, "dist"));
+    // A Node entrypoint, deliberately without executable permissions or a .bin shim.
+    writeFileSync(
+      join(target, "dist/specdojo.js"),
+      'import { spawnSync } from "node:child_process";\n' +
+        `const result = spawnSync(process.execPath, ${JSON.stringify([
+          join(sourceRoot, "node_modules/tsx/dist/cli.mjs"),
+          join(sourceRoot, "src/specdojo.ts"),
+        ])}.concat(process.argv.slice(2)), { stdio: "inherit" });\n` +
+        "process.exitCode = result.status ?? 1;\n",
+      { mode: 0o644 },
+    );
+  } else if (installTargetCli) {
     const binDir = join(target, "node_modules/.bin");
     mkdirSync(binDir, { recursive: true });
     const executable = join(binDir, "specdojo");
@@ -220,6 +237,43 @@ describe("cross-repository register add", () => {
     expect(git(fixture.target, "ls-tree", "-r", "--name-only", TARGET_BRANCH)).not.toContain(
       "missing-cli",
     );
+  });
+
+  it("delegates through Node to a SpecDojo self repository without a .bin shim", async () => {
+    fixture = createFixture("self");
+    const targetHead = git(fixture.target, "rev-parse", TARGET_BRANCH);
+    const sourceHead = git(fixture.source, "rev-parse", "HEAD");
+    const sourceStatus = git(fixture.source, "status", "--porcelain");
+    expect(existsSync(join(fixture.target, "node_modules/.bin/specdojo"))).toBe(false);
+    process.chdir(fixture.source);
+
+    await runRegister([
+      "add",
+      "--project",
+      "customer",
+      "--type",
+      "todo",
+      "--title",
+      "SpecDojo 本体へ起票する",
+      "--topic",
+      "self-repo-item",
+      "--id",
+      "PJR-SE1F",
+      "--commit",
+    ]);
+
+    expect(process.exitCode).toBeUndefined();
+    expect(git(fixture.source, "rev-parse", "HEAD")).toBe(sourceHead);
+    expect(git(fixture.source, "status", "--porcelain")).toBe(sourceStatus);
+    expect(git(fixture.target, "rev-list", "--count", `${targetHead}..${TARGET_BRANCH}`)).toBe("1");
+    const content = git(
+      fixture.target,
+      "show",
+      `${TARGET_BRANCH}:${TARGET_REGISTER}/pjr-se1f-self-repo-item.md`,
+    );
+    expect(content).toContain("SpecDojo 本体へ起票する");
+    expect(content).toContain("prj-target:pjr-se1f-self-repo-item");
+    expect(existsSync(join(fixture.source, "docs"))).toBe(false);
   });
 
   it("directs external-project state transitions to the target repository", async () => {
