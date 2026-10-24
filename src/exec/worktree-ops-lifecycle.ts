@@ -392,8 +392,9 @@ function checkpointAndEnsureProjectWorktree(
           "",
         ]);
         throw new Error(
-          `Checkpoint commit failed (${params.commitMessage}); staged changes rolled back ` +
-            `(likely a failing git hook): ${summarizeGitHookFailure(output)}`,
+          // register の短い block_reason にも step とエラーが残るよう、補足より先に要約を置く。
+          `Checkpoint commit failed: ${summarizeGitHookFailure(output)} ` +
+            `(${params.commitMessage}; staged changes rolled back; likely a failing git hook)`,
         );
       }
     }

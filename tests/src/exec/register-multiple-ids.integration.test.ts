@@ -4,9 +4,11 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { commitRegisterItemChanges } from "../../../src/exec/run/run.js";
+import { commitRegisterWaitState } from "../../../src/exec/run/register-state.js";
 import { worktreeStatusPaths } from "../../../src/exec/worktree-ops.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
 import type { PjrItem } from "../../../src/register/register.js";
+import { MARKDOWN_HOOK_ERROR, MARKDOWN_HOOK_FAILURE } from "../../helpers/git-hook-output.js";
 
 function git(cwd: string, ...args: string[]): string {
   const result = spawnSync("git", args, {
@@ -51,6 +53,51 @@ function makeItem(id = "PJR-0001", title = "register commit test"): PjrItem {
     ticket: "-",
   };
 }
+
+describe("commitRegisterWaitState", () => {
+  it("reports the failed Markdown step after a successful Prettier step", () => {
+    const repo = createGitRepository();
+    try {
+      writeFileSync(join(repo, "docs", "pjr-index.md"), "waiting\n", "utf8");
+      const hookPath = join(repo, ".git", "hooks", "pre-commit");
+      writeFileSync(
+        hookPath,
+        [
+          "#!/bin/sh",
+          "cat <<'HOOK_OUTPUT' >&2",
+          MARKDOWN_HOOK_FAILURE,
+          "HOOK_OUTPUT",
+          "exit 1",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      chmodSync(hookPath, 0o755);
+
+      expect(() =>
+        commitRegisterWaitState({
+          repoRoot: repo,
+          registerPaths: {
+            projectId: "test",
+            projectRegisterPath: join(repo, "docs"),
+            pjrIndexPath: join(repo, "docs", "pjr-index.md"),
+            generatedPath: join(repo, "docs", "generated"),
+            controlsGeneratedPath: join(repo, "controls", "generated"),
+            registerDateTimeZone: "UTC",
+          },
+          item: makeItem(),
+          ticketPath: null,
+          bookkeepingPaths: [],
+          message: "exec(register PJR-0001): wait",
+        }),
+      ).toThrow(`git commit failed: lint Markdown documentation: ${MARKDOWN_HOOK_ERROR}`);
+      expect(git(repo, "diff", "--cached", "--name-only")).toBe("");
+      expect(readFileSync(join(repo, "docs", "pjr-index.md"), "utf8")).toBe("waiting\n");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+});
 
 describe("commitRegisterItemChanges", () => {
   it("100文字を超えるタイトルでもsubjectを上限内に収めてcommitする", () => {

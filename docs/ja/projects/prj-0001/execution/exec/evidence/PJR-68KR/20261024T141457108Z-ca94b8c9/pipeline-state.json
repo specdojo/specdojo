@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-68KR",
+  "run_id": "20261024T141457108Z-ca94b8c9",
+  "updated_at": "2026-10-24T14:54:44.998Z",
+  "stages": {
+    "executor": {
+      "status": "succeeded",
+      "actor": "sol-executor",
+      "attempts": 1,
+      "started_at": "2026-10-24T14:16:04.673Z",
+      "completed_at": "2026-10-24T14:21:17.031Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-68KR/20261024T141457108Z-ca94b8c9/evidence.json"
+    },
+    "reporter": {
+      "status": "succeeded",
+      "actor": "gemma26-reporter",
+      "attempts": 1,
+      "started_at": "2026-10-24T14:24:40.084Z",
+      "completed_at": "2026-10-24T14:25:47.992Z",
+      "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-68kr-20261024T141457Z-f92253d9-result.md"
+    },
+    "integrate": {
+      "status": "running",
+      "actor": "gemma26-reporter",
+      "attempts": 3,
+      "started_at": "2026-10-24T14:54:44.998Z",
+      "completed_at": null,
+      "artifact_ref": null,
+      "repos": {
+        "project": {
+          "status": "failed",
+          "commit": null,
+          "merged_at": null,
+          "error": "git commit failed: test: error: unknown option '--reserve'; FAIL  |unit| tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる; Test Files  2 failed | 167 passed (169); Tests  3 failed | 2601 passed (2604)"
+        }
+      }
+    }
+  },
+  "artifacts": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/pjr-68kr-20261024T141457Z-f92253d9-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-68kr-20261024T141457Z-f92253d9-result.md"
+  }
+}
