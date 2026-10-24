@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-23T23:35:42Z"
+  completed_at: "2026-10-24T01:20:57Z"
+  conclusion: "specdojo 0.4.4 を npm に公開した（latest）。PR #20 と、CHANGELOG を main の内容に合わせる PR #21 を merge commit で main へ取り込み、v0.4.4 のタグで npm の公開と GitHub Pages の更新が通った。npm から入れた 0.4.4 で、init --catalog small の直後の specdojo build、kata_authority での rulebook-authoring の起票、オーケストレーターの本文の修正を確かめた"
   derived_from:
     - PJR-Y6DG
 ---
