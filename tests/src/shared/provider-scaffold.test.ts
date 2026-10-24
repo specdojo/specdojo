@@ -280,6 +280,42 @@ describe("specdojoPackageRootDir", () => {
       "agy-gpt-oss-executor": "gpt-oss-120b-medium",
     });
   });
+
+  it("ships Codex agent definitions that do not use retired or migration models", async () => {
+    const packageRoot = specdojoPackageRootDir();
+    const agentsDir = path.join(packageRoot, "templates", "codex", "agents");
+    const fileNames = (await readdir(agentsDir)).filter((name) => name.endsWith(".toml")).sort();
+
+    expect(fileNames).toEqual([
+      "codex-executor.toml",
+      "codex-expert-executor.toml",
+      "codex-expert-review-executor.toml",
+      "codex-review-executor.toml",
+      "specdojo-orchestrator.toml",
+    ]);
+
+    const agentModels: Record<string, string> = {};
+    for (const fileName of fileNames) {
+      const content = await readFile(path.join(agentsDir, fileName), "utf8");
+      const match = /^model\s*=\s*"([^"]+)"/m.exec(content);
+      expect(match).not.toBeNull();
+      const model = match![1]!;
+      agentModels[fileName] = model;
+
+      // 根拠: learn.chatgpt.com/docs/models。提供終了モデルと移行用 gpt-5.6-* を禁止する。
+      expect(model).not.toBe("gpt-5.4-mini");
+      expect(model).not.toBe("gpt-5.5");
+      expect(model).not.toMatch(/^gpt-5\.6/);
+    }
+
+    expect(agentModels).toEqual({
+      "codex-executor.toml": "gpt-6-luna",
+      "codex-expert-executor.toml": "gpt-6.1-sol",
+      "codex-expert-review-executor.toml": "gpt-6.1-sol",
+      "codex-review-executor.toml": "gpt-6-luna",
+      "specdojo-orchestrator.toml": "gpt-6.1-sol",
+    });
+  });
 });
 
 describe("listProviderTemplates", () => {

@@ -619,6 +619,8 @@ members:
 
 0.4.5 までの init が作った名簿（`terra-executor` などの `gpt-5.6-terra` の実体と `orch:terra`）は、init も scaffold も書き換えません。新しい名前へそろえる場合は、`.specdojo/agent-members.yaml` の `terra-*` を `luna-*`（`model: gpt-6-luna`）へ名前を変え、`sol-*` を加えるか `model` を `gpt-6.1-sol` にし、`aliases` の `codex-*` の向き先を合わせます。`package.json` は `config scaffold --provider codex` を実行すると `orch:luna` が加わります。不要になった `orch:terra` は手で消し、既存の `orch:sol` は上書きされないため `-m gpt-6.1-sol` へ手で直します。
 
+配布する `templates/codex/agents/*.toml` も名簿と同じく GPT-6 の 2 段構成（normal の `codex-executor`・`codex-review-executor` は `gpt-6-luna`、expert の `codex-expert-executor`・`codex-expert-review-executor` と `specdojo-orchestrator` は `gpt-6.1-sol`）にそろえています。既存の利用者の `.codex/agents/*.toml` は scaffold でも上書きされないため、`specdojo config scaffold --provider codex --force` で配布原本を再配置するか、各 `.codex/agents/*.toml` の `model`（`gpt-5.4-mini`・`gpt-5.5`・`gpt-5.6-terra`）を手動で `gpt-6-luna` / `gpt-6.1-sol` へ書き換えます。
+
 既存の利用者の 1 段の名簿（`aliases` も `model` も持たない member と、`--agent {nickname}` の `command_template`）は、変更しなくてもそのまま動きます。
 
 - `aliases` は省略でき、`model` を持たない member は従来どおり `command_params`（`by_proficiency` など）の `model` で起動します。member の `model` がある場合だけ、そちらが優先されます。
