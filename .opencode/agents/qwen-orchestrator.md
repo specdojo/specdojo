@@ -208,12 +208,12 @@ npx specdojo exec validate --project <project-id>
 - 統合の後に `src` が dist より新しくなると、次の run は始まる前に止まる。dist を作り直してから流す。
 - 記帳は `register ... --commit` で行う。登録簿の lifecycle のロックを取るため、実行中の run と取り合わない。
 - 個票の本文を書き換えて普通に commit するのは、統合中の run がないときだけにする（`.git/index.lock` を確かめる）。commit に失敗したら、index に載ったファイルを残さない。残ると次の run の checkpoint が止まる。
-- 保護された設定（agent の定義・名簿・`exec-defaults.yaml`・`package.json` など）は、executor が書き換えると統合の前に止まる。完了条件で「案を result に書く」と指示し、反映は利用者の承認のもと feature ブランチで行う。
+- 保護された設定（agent の定義・名簿・`exec-defaults.yaml`・`package.json` など）は、executor が書き換えると統合の前に止まる。register の完了条件では「案を個票の対応結果に書き、pipeline では報告の `handoff` にも書く」と指示する。「案を result に書く」は executor が result を直接書ける実行形式に限る。反映は利用者の承認のもと feature ブランチで行う。
 - プロジェクトの文書にオーケストレーター向けの運用メモがあれば、作業を始める前に読む。
 
 ## close の前の確かめ方
 
-- 完了条件を 1 項目ずつ、差分（`git show`）と result に照らして確かめる。親の検証が通っただけで close しない。
+- 完了条件を 1 項目ずつ、差分（`git show`）と個票の対応結果と result の両方に照らして確かめる。完了条件が求める記録を result だけで未達と判定せず、個票の対応結果にもあるかを確認する。親の検証が通っただけで close しない。
 - agent の「直した」「反映済み」という報告は、実物（ファイルの中身、生成物、コマンドの出力）で確かめる。agent は、権限で編集を拒まれたあとでも完了と報告することがある。
 - 完了条件にない変更（特に保護された設定や、利用者の環境に関わる設定）が入っていないかを確かめる。
 - runner や CLI の動きを変えた項目は、統合の後に実際の `exec run --register` を 1 回流して動作を確かめてから close する。生成物を変えた項目は、空のリポジトリで生成して確かめる。
@@ -237,8 +237,8 @@ npx specdojo exec validate --project <project-id>
 - 検証できる形で書く。完了条件は `exec plan` の入力になり、曖昧だと agent が意図と違う範囲を実装する。
 - 作業を終える前に流す検査（型検査・lint・単体テスト）と、通すべき親の検証を書く。
 - CHANGELOG は未公開の版の節に書き、公開済みの版の節を変えないと書く。
-- 保護された設定に触れる場合は、案を result に書き、反映は利用者が行うと書く。
-- 未決の点は `_UNDECIDED_` で残すか、executor に決めさせて理由を result に書かせるかを明記する。
+- 保護された設定に触れる場合、register の項目では案を個票の対応結果に書き、pipeline では報告の `handoff` にも書く。反映は利用者の承認のもとで行うと書く。「result に書く」は executor が result を直接書ける実行形式に限る。
+- 未決の点は `_UNDECIDED_` で残すか、executor に決めさせて理由を記録させるかを明記する。register の項目では個票の対応結果に書かせ、pipeline では報告の `handoff` にも書かせる。「result に書く」は executor が result を直接書ける実行形式に限る。
 - Markdown では、`*` や `_` を含む語（glob など）をコードの書式にする。コードの書式の中を空白で始めたり終えたりしない。
 
 ## agent の選び方
