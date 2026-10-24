@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-24T09:04:44Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
   derived_from:
     - PJR-CT6G
 ---
@@ -45,11 +46,16 @@ rulebook-authoring などの手本は、カタログに載っている成果物�
 
 | No  | 作業                                              | 担当 | 状態 | メモ   |
 | --- | ------------------------------------------------- | ---- | ---- | ------ |
-| 1   | kata の手本を --source で広く指定できるようにする | DEV  | open | v0.4.5 |
+| 1   | kata の手本を --source で広く指定できるようにする | DEV  | done | v0.4.5 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `register add` / `register update` に繰り返し可能な `--source` を追加し、個票 frontmatter の `sources` へ保存するようにした。2 個目以降の `--target` は互換入力として `sources` と同じ resolver へ渡し、新しく起票・更新する個票では `targets` の新規 kata ID と `sources` の手本を分けて記録する。
+- 手本は、`<repo>` が対象 project の `repos[].name` と一致すればプロダクトリポジトリのパス、そうでなく `/` または拡張子を含めばプロジェクトリポジトリのパス、残りを doc id と判定する。パスはファイル、ディレクトリ、glob を受け付け、起票時と plan 生成時の両方で存在と展開結果を検証する。
+- 展開後の手本は、重複除外後の合計を 100 ファイルまでとした。広すぎる glob による意図しない読み取り範囲と plan の肥大化を抑えつつ、複数の実例を比較する通常の authoring には十分な件数を確保するためである。超過時はパターンを狭めるよう理由を示して停止する。
+- カタログなしでも authoring plan を生成できるようにし、プロダクトリポジトリのパスは `$SPECDOJO_REPO_<NAME>/<path>` として plan に載せる。手本は `targets` に含めず読み取り専用とし、カタログ成果物で該当参照が `undecided` または未記入の場合だけ参照更新の対象にする。
+- [[specdojo:kata-guide|実践の型活用ガイド]]、[[specdojo:quick-start-guide|Quick Startガイド]]、[[specdojo:command-reference|CLIコマンドリファレンス]]、CHANGELOG を更新し、doc id・パス・プロダクトリポジトリ・glob・上限・カタログなし・互換入力を単体テストと統合テストへ追加した。
+- 統合後の `exec run --register` の通し確認は、統合前の executor sandbox では実施せず、PJR-JSEY の手順に従って runner または人が 1 回実施する。
 
 ## 5. 関連ドキュメント
 
