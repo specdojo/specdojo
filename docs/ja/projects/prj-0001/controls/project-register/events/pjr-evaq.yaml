@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_206682da6b3345ef85a52d7dc1f02464
+  ts: "2026-10-24T13:26:42Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: codex の agent の定義のモデルを GPT-6 に上げる
+    - field: description
+      from: ""
+      to: codex の agent の定義（本リポジトリの .codex/agents と配布する templates/codex/agents）のモデルが gpt-5.6-terra などのままで、GPT-6 の系統には terra がない。orch の script は -m でモデルを渡すため今は影響しないが、agent の定義だけで起動したときに古いモデルが使われる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-9482"]'
