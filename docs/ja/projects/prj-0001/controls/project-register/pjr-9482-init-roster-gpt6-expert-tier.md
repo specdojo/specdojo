@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-24T12:51:55Z"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-integration; rate limit fallback: sol-executor -> opus-executor at 2026-10-24T12:53:50.053Z"
   derived_from:
     - PJR-2ASZ
 ---
