@@ -1,0 +1,43 @@
+レビューは終わりました。判定は **`complete-with-findings`** で、Job Run の出力はそのまま統合して問題ありません。Run の状態は `succeeded` です。
+
+**評価結果の鮮度**
+- 対象 `sysd-orchestrator-agent-settings.md` について `grade list` を `--changed-only`・`--dependency-changed`・`--incomplete` の3通りで実行しました。いずれも何も出力されず、終了コードは 0 でした。評価結果は最新で、評価パイプラインも完了しています。
+
+**出力範囲（完了条件1）**
+- `e0ac744..d991ccb` で変わったのは9ファイルで、すべてこの Run の出力でした。
+  - 新規: evidence 4件、plan、result、Run JSON
+  - 変更: grade の criteria と results の2件
+- 対象外の変更は混入していません。
+
+**記録どうしの整合（完了条件2）**
+- Run JSON の state は `succeeded`、試行は1回で終了コード 0 です。evidence の command も終了コード 0 で、stderr は空です。
+- stdout には `selected=1 processed=1 completed_now=1 incomplete=0 exhausted=0` と出ており、`results.tsv` は1行（stage 1, `passed`, `needs-work`, 65, findings 22）でした。
+- サイドカーの値は `verdict: needs-work`、`score: 65`、`finding_counts` が major 18・minor 4 で計22件です。TSV と一致します。
+- `graded_by: flash-high-executor` は TSV の `agy-expert-executor` と名前が違いますが、`agent-members.yaml` で `agy-expert-executor` は `alias_of: flash-high-executor` と定義されているため矛盾はありません。
+- result の記述（1件を評価、未完了なし、`retry_exhausted` なし、`needs-work`/65）も上の記録と合っています。
+
+**Job 固有の確認事項**
+- 終了コード75（rate limit）や中断で残った段: なし
+- `failed` の段: なし
+- `retry_exhausted` の成果物: なし
+- Run は `partial` ではないため、`partial` 向けの確認は該当しません。
+- score と verdict の変化: 前回（10/22）も今回も `needs-work`/65 で変わっていません。変わったのは `content_hash` と `graded_at` だけでした。対象が1件しかないので、評価設定の見直しが必要な偏りがあるかは判断できません。
+- 未充足の done_criteria: 5件すべて `unsatisfied` で、理由の文面だけが書き換わっています。
+  - DC-001（vp-ba-requirements-completeness）。担当ロールは viewpoint 名から BA と推測しましたが、`roles` 欄は読んでいないので未確認です。
+  - DC-002: PO
+  - DC-003: ARC
+  - DC-004: QE
+  - DC-005: DEV と推測しましたが、`roles` 欄は読んでいないので未確認です。
+
+**finding が完了を妨げない理由と改善指示**
+- 22件の finding と未充足の done_criteria は成果物そのものの品質の話です。この Job は品質評価を実行して記録を更新するのが目的なので、Job の完了は妨げません。
+- 成果物の担当者は、Antigravity の扱い、OpenCode の permission の不整合、検証の観点を中心に修正を検討してください。
+
+**確認できなかった範囲**
+- `logs/grade/runs/per-document/.../results.tsv` の実ファイルは見ていません。stdout に出た内容で代わりに確認しました。
+- findings 本文は全22件を読んでおらず、件数の照合だけにとどめました。
+- verdict を記録する直前の鮮度の再確認は、最初の確認と同じ一連の作業の中で済ませたもので、別途やり直してはいません。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict: complete-with-findings。Job Run JBR-grade-deliverable-bcde62014538 は succeeded（終了コード 0、stderr は空、selected=1 processed=1 incomplete=0 exhausted=0）。差分は9ファイルですべて当該 Run の出力（evidence 4件・plan・result・Run JSON の新規と、grade の criteria/results の更新）で、対象外の変更はない。grade list の --changed-only / --dependency-changed / --incomplete は対象パスを出力せず、評価結果は最新。サイドカーは verdict needs-work、score 65、finding_counts は major 18・minor 4 の計22件で results.tsv と一致する。graded_by の flash-high-executor は agent-members.yaml で agy-expert-executor の alias_of として定義されており整合する。score と verdict は前回と同じで、更新は content_hash・graded_at と done_criteria の理由の文面だけ。done_criteria は DC-001〜DC-005 の5件すべてが unsatisfied（DC-002 は PO、DC-003 は ARC、DC-004 は QE。DC-001 は BA、DC-005 は DEV と viewpoint 名から推測、roles 欄は未確認）。failed・rate limit・retry_exhausted はない。finding は成果物の品質の問題で、Job の完了は妨げない。改善指示: sysd-orchestrator-agent-settings の担当者は Antigravity、OpenCode の permission、検証の観点の不足を修正すること。確認できなかった範囲: logs 配下の results.tsv の実ファイル（stdout で代替して確認）、findings 本文の全文（件数の照合のみ）、DC-001・DC-005 の roles 欄、verdict 記録直前の鮮度の再確認（最初の確認と同じ一連の作業の中で済ませたもの）。","validations":[{"command":"git diff --name-status e0ac74427b92965e3c33d5a20d58521d2586327a..d991ccb895577ac33b247ecfeb4420138c3eb537","status":"passed","summary":"9ファイルで、すべて当該 Job Run の出力"},{"command":"node dist/specdojo.js grade list --target deliverable --path docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md --changed-only","status":"passed","summary":"出力なし、exit 0（評価結果は最新）"},{"command":"node dist/specdojo.js grade list --target deliverable --path docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md --dependency-changed","status":"passed","summary":"出力なし、exit 0"},{"command":"node dist/specdojo.js grade list --target deliverable --path docs/ja/product/040-system-design/sysd-orchestrator-agent-settings.md --incomplete","status":"passed","summary":"出力なし、exit 0（評価パイプラインは完了）"}]}
+</specdojo_executor_evidence>
