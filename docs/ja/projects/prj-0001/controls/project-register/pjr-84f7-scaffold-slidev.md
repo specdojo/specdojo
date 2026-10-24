@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T22:23:40Z"
   due_on: "2026-10-31"
+  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-84F7 Slidev の kata を検証できるよう、scaffold で Slidev を選んで入れられるようにする
@@ -73,15 +74,21 @@ coderdojo-lessons-specdojo では、表示を確かめるために次を手で�
 
 ## 3. 作業内容
 
-| No  | 作業                                                          | 担当 | 状態 | メモ                               |
-| --- | ------------------------------------------------------------- | ---- | ---- | ---------------------------------- |
-| 1   | Slidev を入れるオプションの範囲（本体・テーマ・部品）を決める | DEV  | open | 利用者の手作業の内容は概要のとおり |
-| 2   | `init` と `config scaffold` にオプションを加える              | DEV  | open | 既存の設定は上書きしない           |
-| 3   | sample を `slidev build` で確かめる手順を文書に書く           | DEV  | open | -                                  |
+| No  | 作業                                                          | 担当 | 状態 | メモ                                             |
+| --- | ------------------------------------------------------------- | ---- | ---- | ------------------------------------------------ |
+| 1   | Slidev を入れるオプションの範囲（本体・テーマ・部品）を決める | DEV  | done | 本体・整形設定を対象、テーマ・部品は利用者が用意 |
+| 2   | `init` と `config scaffold` にオプションを加える              | DEV  | done | 既存の設定・依存を保持し、追加例を表示           |
+| 3   | sample を `slidev build` で確かめる手順を文書に書く           | DEV  | done | kata ガイドとコマンドリファレンスに記載          |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `init --slidev` / `config scaffold --slidev` を追加した。新規の `package.json` は作らず、存在する場合だけ `@slidev/cli`・`prettier-plugin-slidev`・`prettier` の不足する開発依存を、追加内容の表示後に加える。既存の dependencies / devDependencies の同名項目と版は保持する。
+- `.prettierrc` は未作成の場合にだけ追加する。別拡張子・`prettier.config.*`・`package.json` の `prettier` を含む既存設定と `.markdownlintignore` は `--force` でも保持し、手動で統合する設定例を表示する。`--dry-run` は書き込まない。lefthook との同時導入では、新規の ignore に agent 定義と Slidev の両方の除外を含める。
+- 整形と除外の既定パスは `docs/ja/specdojo/samples/**/*-slidev-sample.md` と `docs/ja/specdojo/templates/**/*-slidev-template.md` とした。報告元と同じく Slidev の kata だけへ parser を当て、通常の Markdown を巻き込まないための命名規約である。既存の `lsd-sample.md` などは、実パスを overrides と ignore に加える手順を案内した。
+- `init` は Dev Container preset が `full` の場合だけ Slidev の質問の既定を「はい」にする。`--yes --devcontainer --devcontainer-preset full` でも導入し、`--no-slidev` で解除できる。`full` の VS Code 拡張に `antfu.slidev` を追加し、他の preset は従来の構成を維持する。
+- [[specdojo:kata-guide|実践の型活用ガイド]] と [[specdojo:command-reference|コマンドリファレンス]] に導入・手動統合・sample のビルド・ブラウザ確認・template の検証用コピーを記載した。テーマと活動固有のコンポーネント・素材・追加依存は利用者が用意する。Playwright・Chromium・OS ライブラリ・日本語フォントは scaffold の対象外とした。
+- `tests/src/shared/slidev-scaffold.test.ts` を追加し、既存依存・設定の保持、追加前の表示、対象パス、再実行、dry-run、設定の別形式、入力不正を検証する。init / config / Dev Container の既存単体テストには CLI の有無・`full` の既定と解除・同時導入・拡張の対象を追加した。単体テスト・型検査・lint などの親検証は runner が実行する。
+- `CHANGELOG.md` の `Unreleased` に記載した。本リポジトリの保護された設定は変更していない。
 
 ## 5. 関連ドキュメント
 
