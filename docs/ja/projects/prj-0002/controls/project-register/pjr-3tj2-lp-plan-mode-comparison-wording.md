@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0002:pjr-3tj2-lp-plan-mode-comparison-wording
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0002:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: easy
   owner: UX
   registered_at: "2026-10-23T23:38:52Z"
+  completed_at: "2026-10-24T00:13:11Z"
+  conclusion: LP の plan モードとの対比で、状態の遷移の行の plan の欄を「状態管理なし」にし、冒頭の段落を「register は、1 件を早く仕上げる道具ではなく、…台帳です。AI ツールの plan モードは段取りの下書きとして、register と補い合います。」に直した（specdojo-lp の 6a6a287）
   derived_from:
     - PJR-0WFV
 ---
