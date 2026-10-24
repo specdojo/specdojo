@@ -2,6 +2,12 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [Unreleased]
+
+### 追加機能
+
+- kata authoring の手本を `register add` / `register update` の繰り返し可能な `--source` で指定できるようにしました。文書索引の doc id、プロジェクトリポジトリのファイル・ディレクトリ・glob、`repos` で宣言したプロダクトリポジトリの `<repo>:<path>` を使え、カタログがない project でも authoring plan を生成できます（PJR-ZV60）。
+
 ## [0.4.4] - 2026-10-24
 
 ### 変更

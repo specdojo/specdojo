@@ -213,6 +213,25 @@ export function resolveDeliverableByDocId(
   return matches[0];
 }
 
+/** Resolve a project-repository-relative file path to its catalog entry, if any. */
+export function findDeliverableByPath(
+  catalogPath: string,
+  targetPath: string,
+): ResolvedDeliverable | null {
+  const normalized = targetPath.replaceAll("\\", "/").replace(/^\/+/, "");
+  const matches = resolvedDeliverablesInCatalog(catalogPath).filter(
+    (target) => target.info.resolvedPath.replaceAll("\\", "/").replace(/^\/+/, "") === normalized,
+  );
+  if (matches.length > 1) {
+    throw new Error(
+      `ambiguous catalog deliverable target for path ${targetPath}: ${matches
+        .map((match) => match.localId)
+        .join(", ")}`,
+    );
+  }
+  return matches[0] ?? null;
+}
+
 // A kata may be declared by zero, one, or several deliverables. Only a unique declaration is
 // used as the maintenance plan's evidence context; otherwise the explicitly targeted kata remains
 // executable without selecting an arbitrary deliverable.

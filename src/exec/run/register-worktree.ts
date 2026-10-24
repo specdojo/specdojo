@@ -48,6 +48,7 @@ import {
 } from "../repo-trace.js";
 import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
 import { findResumableRegisterRun } from "../register-resume.js";
+import { isAuthoringApproach } from "../../kata/authoring.js";
 import {
   resolvePinnedRateLimitRunOptions,
   rateLimitRecoveryReason,
@@ -636,7 +637,9 @@ export async function runSingleRegisterItemWorktree(
       startedAt: new Date().toISOString(),
       stem,
       ...(item.approach ? { approach: item.approach } : {}),
-      ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
+      ...(item.targets && item.targets.length > 0
+        ? { targets: isAuthoringApproach(item.approach) ? item.targets.slice(0, 1) : item.targets }
+        : {}),
     });
     const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 

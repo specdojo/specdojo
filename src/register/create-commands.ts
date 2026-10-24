@@ -21,6 +21,7 @@ import type { RegisterAddFields, RegisterCommandDependencies } from "./command-t
 import { validateRegisterApproachTargetsForProject } from "./approach.js";
 import { normalizeDerivedFrom, validateDerivedFrom } from "./derivation.js";
 import { delegateExternalRegisterAdd } from "./external-project.js";
+import { isAuthoringApproach } from "../kata/authoring.js";
 
 function collectTarget(value: string, previous: string[] = []): string[] {
   return [...previous, value];
@@ -35,6 +36,21 @@ function normalizedTargets(values: string[] | undefined): string[] | undefined {
   }
   if (targets.length === 0) throw new Error("--target must contain a document id");
   return targets;
+}
+
+function normalizedSources(
+  values: string[] | undefined,
+  allowRemove = false,
+): string[] | undefined {
+  if (values === undefined) return undefined;
+  const sources = [...new Set(values.map((value) => value.trim()).filter(Boolean))];
+  if (sources.includes("-")) {
+    if (!allowRemove) throw new Error("--source - is only valid with register update");
+    if (sources.length !== 1) throw new Error("--source - cannot be combined with other sources");
+    return undefined;
+  }
+  if (sources.length === 0) throw new Error("--source must contain a reference");
+  return sources;
 }
 
 export function registerCreateCommands(
@@ -113,7 +129,12 @@ export function registerCreateCommands(
   addCmd.option("--approach <approach>", `Execution approach: ${APPROACHES.join(" | ")}`);
   addCmd.option(
     "--target <doc-id>",
-    "Target document id (repeatable; approach requires exactly one)",
+    "Target document id (repeatable; authoring accepts legacy exemplar targets after the first)",
+    collectTarget,
+  );
+  addCmd.option(
+    "--source <ref>",
+    "Read-only exemplar for *-authoring (repeatable: doc id, path, or <repo>:<path>)",
     collectTarget,
   );
   addCmd.option(
@@ -162,12 +183,21 @@ export function registerCreateCommands(
       if (opts.target?.some((target: string) => target.trim() === "-")) {
         throw new Error("--target - is only valid with register update");
       }
-      const targets = normalizedTargets(opts.target);
+      const rawTargets = normalizedTargets(opts.target);
+      const authoring = isAuthoringApproach(opts.approach);
+      const legacySources = authoring ? (rawTargets ?? []).slice(1) : [];
+      const targets = authoring ? rawTargets?.slice(0, 1) : rawTargets;
+      const explicitSources = normalizedSources(opts.source);
+      const sources =
+        legacySources.length > 0 || explicitSources
+          ? [...new Set([...legacySources, ...(explicitSources ?? [])])]
+          : undefined;
       validateRegisterApproachTargetsForProject({
         projectId: paths.projectId,
         ...(opts.approach !== undefined ? { approach: opts.approach } : {}),
-        ...(targets !== undefined ? { targets } : {}),
-        validateTargetsWithoutApproach: opts.target !== undefined,
+        ...(rawTargets !== undefined ? { targets: rawTargets } : {}),
+        ...(explicitSources !== undefined ? { sources: explicitSources } : {}),
+        validateTargetsWithoutApproach: opts.target !== undefined || opts.source !== undefined,
       });
 
       const fields: RegisterAddFields = {
@@ -184,6 +214,7 @@ export function registerCreateCommands(
         conclusion: opts.conclusion,
         ...(opts.approach !== undefined ? { approach: opts.approach as Approach } : {}),
         ...(targets !== undefined ? { targets } : {}),
+        ...(sources !== undefined ? { sources } : {}),
       };
       const templatePath = resolveSpecdojoTemplatePath(`pjr-${opts.type}-template.md`);
 
@@ -299,7 +330,12 @@ export function registerUpdateCommand(
   );
   updateCmd.option(
     "--target <doc-id>",
-    "Replace target document ids (repeatable; use - to remove)",
+    "Replace target document ids (repeatable; legacy authoring exemplars may follow; use - to remove)",
+    collectTarget,
+  );
+  updateCmd.option(
+    "--source <ref>",
+    "Replace read-only *-authoring exemplars (repeatable; use - to remove)",
     collectTarget,
   );
   updateCmd.option(
@@ -333,12 +369,13 @@ export function registerUpdateCommand(
         "autopilot",
         "approach",
         "target",
+        "source",
         "from",
         "topic",
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --from, --topic)",
+          "At least one field option must be specified (--title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --from, --topic)",
         );
       }
 
@@ -407,7 +444,34 @@ export function registerUpdateCommand(
           : opts.approach.trim() === "-"
             ? undefined
             : opts.approach.trim();
-      const nextTargets = opts.target === undefined ? item.targets : normalizedTargets(opts.target);
+      const authoring = isAuthoringApproach(nextApproach);
+      const providedTargets =
+        opts.target === undefined ? undefined : normalizedTargets(opts.target);
+      const providedLegacySources = authoring ? (providedTargets ?? []).slice(1) : [];
+      const nextTargets =
+        opts.target === undefined
+          ? authoring
+            ? item.targets?.slice(0, 1)
+            : item.targets
+          : authoring
+            ? providedTargets?.slice(0, 1)
+            : providedTargets;
+      const existingSources = [
+        ...(isAuthoringApproach(item.approach) ? (item.targets ?? []).slice(1) : []),
+        ...(item.sources ?? []),
+      ];
+      const explicitSources =
+        opts.source === undefined ? undefined : normalizedSources(opts.source, true);
+      const nextSources = authoring
+        ? opts.source !== undefined
+          ? [...new Set([...providedLegacySources, ...(explicitSources ?? [])])]
+          : providedLegacySources.length > 0
+            ? [...new Set(providedLegacySources)]
+            : [...new Set(existingSources)]
+        : opts.source !== undefined
+          ? explicitSources
+          : item.sources;
+      const normalizedNextSources = nextSources && nextSources.length > 0 ? nextSources : undefined;
       const nextDerivedFrom =
         opts.from === undefined
           ? item.derivedFrom
@@ -421,8 +485,14 @@ export function registerUpdateCommand(
         projectId: paths.projectId,
         ...(nextApproach !== undefined ? { approach: nextApproach } : {}),
         ...(nextTargets !== undefined ? { targets: nextTargets } : {}),
-        validateTargetsWithoutApproach: opts.target !== undefined,
+        ...(normalizedNextSources !== undefined ? { sources: normalizedNextSources } : {}),
+        validateTargetsWithoutApproach: opts.target !== undefined || opts.source !== undefined,
       });
+      const shouldUpdateTargets =
+        opts.target !== undefined ||
+        (authoring && opts.source !== undefined && (item.targets?.length ?? 0) > 1);
+      const shouldUpdateSources =
+        opts.source !== undefined || (authoring && providedLegacySources.length > 0);
       const approachTargetUpdates: RegisterItemFieldUpdates = {
         ...(opts.difficulty !== undefined
           ? {
@@ -434,9 +504,14 @@ export function registerUpdateCommand(
               approach: nextApproach === undefined ? REMOVE_REGISTER_ITEM_FIELD : nextApproach,
             }
           : {}),
-        ...(opts.target !== undefined
+        ...(shouldUpdateTargets
           ? {
               targets: nextTargets ?? REMOVE_REGISTER_ITEM_FIELD,
+            }
+          : {}),
+        ...(shouldUpdateSources
+          ? {
+              sources: normalizedNextSources ?? REMOVE_REGISTER_ITEM_FIELD,
             }
           : {}),
         ...(opts.from !== undefined
@@ -467,9 +542,13 @@ export function registerUpdateCommand(
         if (nextApproach === undefined) delete updated.approach;
         else updated.approach = nextApproach as Approach;
       }
-      if (opts.target !== undefined) {
+      if (shouldUpdateTargets) {
         if (nextTargets === undefined) delete updated.targets;
         else updated.targets = nextTargets;
+      }
+      if (shouldUpdateSources) {
+        if (normalizedNextSources === undefined) delete updated.sources;
+        else updated.sources = normalizedNextSources;
       }
       if (opts.from !== undefined) {
         if (nextDerivedFrom === undefined) delete updated.derivedFrom;

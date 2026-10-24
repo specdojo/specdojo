@@ -645,14 +645,16 @@ npx specdojo register add \
   --difficulty hard \
   --approach rulebook-authoring \
   --target <kata-authority>:<name>-rulebook \
-  --target <deliverable-doc-id>
+  --source <deliverable-doc-id>
 npx specdojo exec run \
   --project <project-id> \
   --register <PJR-ID> \
   --worktree
 ```
 
-1 件目の `--target` は新しい kata ID、2 件目以降は任意の手本成果物です。成果物も型もまだない初期立ち上げには `bootstrap` を使います。手本なしで kata だけを作る場合は 2 件目以降を省略します。recipe / sample / template では `approach` と ID の末尾を同じ種類へ置き換えます。
+`--target` は新しい kata ID、`--source` は任意の読み取り専用の手本です。`--source` は繰り返し指定でき、文書索引の doc id、プロジェクトリポジトリの相対パス、`repos` に宣言した `<repo>:<path>` を受け付けます。パスにはファイル、ディレクトリ、`*.md` などの glob を書けます。たとえば `--source docs/ja/lessons/01-chase/README.md` や `--source 'coderdojo-lessons:lessons/**/*.md'` の形です。カタログがない project でも使えますが、手本が見つからない場合と展開後に 100 ファイルを超える場合は停止します。互換性のため、2 個目以降の `--target` も手本として引き続き受け付けます。
+
+成果物も型もまだない初期立ち上げには `bootstrap` を使います。手本なしで kata だけを作る場合は `--source` を省略します。recipe / sample / template では `approach` と ID の末尾を同じ種類へ置き換えます。手本がカタログ成果物で該当参照が `undecided` または未記入の場合だけ参照を新しい kata ID へ更新し、カタログ外とプロダクトリポジトリの手本は変更しません。
 
 ### 3.10. 統合後にreviewのagentへ確かめさせる
 
