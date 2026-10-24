@@ -1,0 +1,9 @@
+個票の「対応結果」の表に 1 行追記しました(2026-10-25 08:55、PJR-84F7、`sonnet-executor`)。他のファイルは変更していません。検証は親 runner が実行します。
+
+対象の分割は、直近のコミット履歴から PJR-84F7 と判断しました。PJR-R1FB の次に PJR-84F7 が review へ進み、そのあとに統合しています。登録簿の `pjr-index.md` が worktree に無かったので、登録簿の状態は確認していません。
+
+日時は実行時点の JST、agent 名は直前の行と同じ `sonnet-executor` です。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に PJR-84F7 の行を追記した。他のファイルは未変更。","handoff":["対象の分割は git log から PJR-84F7(PJR-R1FB の次に統合)と判断した。pjr-index.md が worktree に無く、登録簿の状態は確認していない。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検査のため executor では実行しない"}]}
+</specdojo_executor_evidence>
