@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T22:23:40Z"
   due_on: "2026-10-31"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
 ---
 
 # PJR-84F7 Slidev の kata を検証できるよう、scaffold で Slidev を選んで入れられるようにする
@@ -89,6 +88,7 @@ coderdojo-lessons-specdojo では、表示を確かめるために次を手で�
 - [[specdojo:kata-guide|実践の型活用ガイド]] と [[specdojo:command-reference|コマンドリファレンス]] に導入・手動統合・sample のビルド・ブラウザ確認・template の検証用コピーを記載した。テーマと活動固有のコンポーネント・素材・追加依存は利用者が用意する。Playwright・Chromium・OS ライブラリ・日本語フォントは scaffold の対象外とした。
 - `tests/src/shared/slidev-scaffold.test.ts` を追加し、既存依存・設定の保持、追加前の表示、対象パス、再実行、dry-run、設定の別形式、入力不正を検証する。init / config / Dev Container の既存単体テストには CLI の有無・`full` の既定と解除・同時導入・拡張の対象を追加した。単体テスト・型検査・lint などの親検証は runner が実行する。
 - `CHANGELOG.md` の `Unreleased` に記載した。本リポジトリの保護された設定は変更していない。
+- 再開時に、前回の親検証で失敗した `tests/src/shared/workspace-scaffold.test.ts` の期待値を修正した。scaffold 対象を指定しなかった場合の案内に `--slidev` を含め、実装と一致させた。親検証の再実行は runner が行う。
 
 ## 5. 関連ドキュメント
 

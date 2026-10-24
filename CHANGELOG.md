@@ -4,6 +4,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+### 追加機能
+
+- `init --slidev` と `config scaffold --slidev` で、Slidev 本体・Prettier plugin と kata 用の整形・markdownlint 除外設定を追加できるようにしました。既存設定・依存は保持し、追加内容を表示します。`init` の Dev Container preset が `full` の場合は Slidev 導入を既定で選び、`--no-slidev` で解除できます。`full` の VS Code 拡張に `antfu.slidev` を追加しました（PJR-84F7）。
+
 ### 変更
 
 - `specdojo init --exec` が書く agent の名簿の雛形を、GPT-6 の系統と normal・expert の 2 段にそろえました。codex の normal は `gpt-6-luna` の `luna-executor`・`luna-review-executor`・`luna-reporter`、expert は `gpt-6.1-sol` の `sol-executor`・`sol-review-executor` です。claude には expert の `opus-executor`・`opus-review-executor` を加えました。別名 `claude-expert-executor`・`claude-expert-review-executor`・`codex-expert-executor`・`codex-expert-review-executor` を加え、`codex-executor` などの既存の別名は `luna-*` を指します。振り分けの表（`routing`）は hard を expert の別名、medium と easy と reporter を normal の別名にします。`init` と `config scaffold` が加える codex の起動スクリプトは `orch:sol`（`gpt-6.1-sol`）と `orch:luna`（`gpt-6-luna`）になり、`orch:terra` は作りません（PJR-9482）。

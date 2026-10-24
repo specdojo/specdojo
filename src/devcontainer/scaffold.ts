@@ -334,7 +334,11 @@ fi`);
   let vscodeExtensions: string[] = [];
   let extensionsFile: Record<string, unknown> | undefined;
   if (includesRecommended) {
-    vscodeExtensions = unique([...RECOMMENDED_VSCODE_EXTENSIONS, ...providerExtensions(providers)]);
+    vscodeExtensions = unique([
+      ...RECOMMENDED_VSCODE_EXTENSIONS,
+      ...providerExtensions(providers),
+      ...(full ? ["antfu.slidev"] : []),
+    ]);
     const customizations = (devcontainer.customizations ??= {});
     const vscode = (customizations.vscode ??= {});
     const existingExtensions = Array.isArray(vscode.extensions)
