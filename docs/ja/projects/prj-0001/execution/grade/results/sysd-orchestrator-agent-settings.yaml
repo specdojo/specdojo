@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 65
-graded_at: "2026-10-22T16:26:20.432Z"
+graded_at: "2026-10-24T16:04:19.894Z"
 graded_by: flash-high-executor
-content_hash: 183dd1bbd3cd9959599df54820091f50f07a4106b9c1060774380e44411fe310
+content_hash: 5bc67c61dcffba892c7f87ed038e2c5a3ee3ae47a4e1d9319fdf83492a33ad53
 source_hashes:
   catalog-entry: 0b2bb9de403e71d839ae0c4e92022d0dd078dc8bb24e52518333df0d5ce3da1c
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b

@@ -358,8 +358,31 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
   it("成果物 approach は schedule と同じテンプレートに DCT と個票の完了条件を載せる", async () => {
     const outPath = path.join(dir, "plan-with-item-approach.md");
+    // 対象検証の索引走査を temp 内へ閉じ込め、package 側への探索も fixture に限定する。
+    // schedule と共有する実テンプレートは必要なファイルだけを読み込む。
+    await mkdir(path.join(dir, ".specdojo"), { recursive: true });
+    await writeFile(
+      path.join(dir, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({ version: 1, projects: {} }),
+      "utf8",
+    );
+    for (const relativePath of [
+      "exec-templates/xep-common-conventions-template.md",
+      "exec-templates/xep-fully-guided-template.md",
+      "rulebooks/pjr-rulebook.md",
+    ]) {
+      const targetPath = path.join(dir, "docs/ja/specdojo", relativePath);
+      await mkdir(path.dirname(targetPath), { recursive: true });
+      await writeFile(
+        targetPath,
+        await readFile(path.join(specdojoSourceRoot, "docs/ja/specdojo", relativePath), "utf8"),
+        "utf8",
+      );
+    }
     const catalogPath = await writeCatalog();
     const ticket = await writeTicket();
+    process.env.SPECDOJO_PACKAGE_ROOT = dir;
+    process.chdir(dir);
     await generateRegisterPlan({
       executionPath: path.join(dir, "execution"),
       projectId: "prj-test",

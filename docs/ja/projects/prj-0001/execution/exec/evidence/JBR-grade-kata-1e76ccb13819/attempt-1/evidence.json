@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-1e76ccb13819",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-24T20:00:56.877Z",
+    "completed_at": "2026-10-24T20:04:14.672Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.dct-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-1e76ccb13819.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": ".../grade/results/specdojo.dct-rulebook.yaml       | 34 +++++++++++++++++-----\n 1 file changed, 26 insertions(+), 8 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-1e76ccb13819 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-1e76ccb13819/…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-1e76ccb13819 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-1e76ccb13819/results.tsv\nelse\n  grade_status=$?\n  cat logs/grade/runs/per-document/JBR-grade-kata-1e76ccb13819/results.tsv\n  if [ \"$grade_status\" -eq 2 ]; then\n    printf 'grade pipeline partial: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-1e76ccb13819' \"$grade_status\" >&2\n  else\n    printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-1e76ccb13819' \"$grade_status\" >&2\n  fi\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-1e76ccb13819/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-1e76ccb13819/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.4.5 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-1e76ccb13819 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=1 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-1e76ccb13819\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/specdojo/rulebooks/dct-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/dct-rulebook.md\ngrade pipeline complete: selected=1 processed=1 completed_now=1 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-1e76ccb13819/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-24T20:04:13Z\tdocs/ja/specdojo/rulebooks/dct-rulebook.md\t1\tpassed\t186\tneeds-work\t84\t8\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-1e76ccb13819/attempt-1/command.stdout.log",
+      "bytes": 1142,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-1e76ccb13819/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}
