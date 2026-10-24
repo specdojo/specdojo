@@ -24,13 +24,28 @@ rulebook-authoring などの手本は、カタログに載っている成果物�
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- v0.4.5 の範囲とする（2026-10-24、利用者が承認）。
+- `register add`・`register update` に、繰り返し指定できる `--source <ref>` を加え、`<種類>-authoring` の手本を指定できる。`<ref>` は次の 3 つの形を受け付ける。
+  - doc id（例: `prj-0001:lesson-plan`）。id の索引で解決できる文書。カタログに載っていなくてよい。
+  - プロジェクトリポジトリのリポジトリのルートからのパス（例: `docs/ja/lessons/01-chase/README.md`）。
+  - `<repo>:<path>`（例: `coderdojo-lessons:lessons/01-chase/README.md`）。`<repo>` は対象 project の `repos[].name`。
+- 3 つの形の見分け方を決め、result に書く（`<repo>` が `repos[].name` と一致すればプロダクトリポジトリのパス、そうでなく `/` や拡張子を含めばプロジェクトリポジトリのパス、それ以外は doc id、など）。見分けられない場合と、手本が見つからない場合は、起票と実行の時点で理由を示して止める。
+- パスにはディレクトリと、`*` などのパターンも書ける。展開した手本の件数に上限を設け（値と理由を result に書く）、超える場合は止める。
+- 手本は個票の frontmatter に記録し（項目の名前は既存の項目と整合をとって決め、schema に書く）、plan に手本のパス（プロダクトリポジトリは `$SPECDOJO_REPO_<NAME>` など、executor から読める形）を載せる。手本は読み取り専用とし、プロダクトリポジトリは変更せず、commit の対象にも入れない。
+- カタログがなくても `<種類>-authoring` を起票・実行できる。カタログの参照の付け替えは、手本がカタログに載っている成果物で、作った種類の参照が `undecided` か未記入のときだけ行う。
+- 今の `--target` の 2 つ目以降に doc id を書く形も、互換のために受け付け続け、`--source` と同じ扱いにする。
+- [[specdojo:kata-guide]]・[[specdojo:quick-start-guide]] の kata を作る節・コマンドリファレンスに、`--source` の書き方を書く。
+- 単体テストで、3 つの形の見分け方、パターンの展開と上限、カタログがない場合、互換の `--target` を確かめる。統合テストで、プロダクトリポジトリを `repos` で宣言しカタログを持たない一時のリポジトリで、プロダクトリポジトリのファイルを手本に rulebook を作る plan が作られ、手本のパスが載ることを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- register と exec の plan の生成を変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                              | 担当 | 状態 | メモ   |
+| --- | ------------------------------------------------- | ---- | ---- | ------ |
+| 1   | kata の手本を --source で広く指定できるようにする | DEV  | open | v0.4.5 |
 
 ## 4. 対応結果
 
@@ -38,4 +53,6 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- PJR-CT6G（kata を新しく作る approach の実装）
+- PJR-EKRW（利用者の kata の置き場所）
+- [[specdojo:kata-guide]]
