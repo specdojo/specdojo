@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-evaq-codex-agent-defs-gpt6
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-24T13:26:42Z"
+  completed_at: "2026-10-24T14:00:49Z"
+  conclusion: 配布する templates/codex/agents の model を、codex-executor・codex-review-executor は gpt-6-luna、codex-expert-executor・codex-expert-review-executor と specdojo-orchestrator は gpt-6.1-sol にした。外れた gpt-5.4-mini・gpt-5.5 と gpt-5.6 は残っていない。既存の利用者の書き換え方を codex の README に書いた
   derived_from:
     - PJR-9482
 ---
