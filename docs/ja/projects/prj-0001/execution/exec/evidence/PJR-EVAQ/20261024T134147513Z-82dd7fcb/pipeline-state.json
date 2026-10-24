@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-EVAQ",
   "run_id": "20261024T134147513Z-82dd7fcb",
-  "updated_at": "2026-10-24T13:56:32.108Z",
+  "updated_at": "2026-10-24T13:59:30.005Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-evaq-20261024T134147Z-a177984f-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "flash-high-executor",
       "attempts": 1,
       "started_at": "2026-10-24T13:56:32.108Z",
-      "completed_at": null,
+      "completed_at": "2026-10-24T13:59:30.005Z",
       "artifact_ref": null
     }
   },
