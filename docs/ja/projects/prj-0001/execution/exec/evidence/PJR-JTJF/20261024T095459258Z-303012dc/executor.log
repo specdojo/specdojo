@@ -1,0 +1,14 @@
+検査本体・単体テスト・開発文書を追加しました。
+
+- 検査: [check-src-imports-in-dependencies.mjs](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JTJF/tools/check-src-imports-in-dependencies.mjs)
+- テスト: [check-src-imports-in-dependencies.test.ts](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JTJF/tests/tools/check-src-imports-in-dependencies.test.ts)
+- 開発規則: [CONTRIBUTING.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JTJF/CONTRIBUTING.md)
+- 対応結果: [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JTJF/docs/ja/projects/prj-0001/controls/project-register/pjr-jtjf-src-imports-in-dependencies.md)
+
+現在の `src/` は検査を通過し、未宣言パッケージではファイル・行・パッケージ名を表示することも確認済みです。
+
+残る対応は、保護設定である `package.json` に `check:src-imports` を追加し、`check` から呼び出す配線です。`scp-SEC-002` に従い、対話型オーケストレーターによる agent 実行外での反映が必要です。
+
+<specdojo_executor_evidence>
+{"final_message":"src の実行時 import 検査、単体テスト、開発文書、個票を更新した。現在のソースと未宣言依存の失敗表示は確認済み。package.json から npm run check へ配線する変更だけは保護設定のため対話型オーケストレーターによる反映が必要。","validations":[{"command":"npx prettier --write tools/check-src-imports-in-dependencies.mjs tools/check-src-imports-in-dependencies.d.mts tests/tools/check-src-imports-in-dependencies.test.ts CONTRIBUTING.md docs/ja/projects/prj-0001/controls/project-register/pjr-jtjf-src-imports-in-dependencies.md","status":"passed","summary":"変更した JavaScript、TypeScript 宣言、テスト、Markdown を整形した。"},{"command":"node tools/check-src-imports-in-dependencies.mjs","status":"passed","summary":"現在の src の実行時 import はすべて dependencies または peerDependencies に宣言済み。"},{"command":"node --input-type=module -e 'import { findRuntimeImportViolations, formatRuntimeImportViolation } from \"./tools/check-src-imports-in-dependencies.mjs\"; const violations = findRuntimeImportViolations(\"import value from \\\"dev-only/subpath\\\";\", \"src/example.ts\", new Set()); if (violations.length !== 1) process.exit(1); const message = formatRuntimeImportViolation(violations[0]); if (!message.includes(\"src/example.ts\") || !message.includes(\"dev-only\")) process.exit(1); console.log(message);'","status":"passed","summary":"未宣言依存でファイル名、行、パッケージ名を含む違反を生成した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"カタログ検証は成功。既存の未配置成果物に関する警告のみ。"},{"command":"git diff --check -- CONTRIBUTING.md docs/ja/projects/prj-0001/controls/project-register/pjr-jtjf-src-imports-in-dependencies.md tests/tools/check-src-imports-in-dependencies.test.ts tools/check-src-imports-in-dependencies.d.mts tools/check-src-imports-in-dependencies.mjs","status":"passed","summary":"変更箇所に空白エラーなし。"},{"command":"npm run check","status":"requires_human","summary":"scp-SEC-002 により executor は package.json を変更できない。対話型オーケストレーターが check:src-imports script と check からの呼び出しを追加した後に実行する。"}]}
+</specdojo_executor_evidence>
