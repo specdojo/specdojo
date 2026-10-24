@@ -12,7 +12,7 @@ specdojo:
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-24T09:04:44Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  block_reason: "agent exited with non-zero code: parent validation failed: typecheck"
   derived_from:
     - PJR-CT6G
 ---
