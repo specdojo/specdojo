@@ -113,9 +113,10 @@ properties:
           Doc ids of the documents this task targets. Existing documents are resolvable via the
           doc index. For deliverable work, the first entry is the target deliverable and subsequent
           entries are reference materials the approach may modify or confirm. For *-authoring
-          register tasks, the first entry is an intentionally not-yet-existing kata id and
-          subsequent entries are read-only exemplar deliverables. Unresolvable reference materials
-          are omitted.
+          register tasks, the entry is an intentionally not-yet-existing kata id; read-only
+          exemplars are carried in the register item's sources and rendered as paths in the plan
+          body. Plans created before sources was introduced may retain exemplar doc ids after the
+          first target. Unresolvable reference materials are omitted.
 
       paths:
         type: array

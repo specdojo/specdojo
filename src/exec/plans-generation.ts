@@ -143,7 +143,7 @@ function buildEditPlanMarkdown(
       planOverrides?.authoring?.exemplars
         .map(
           (example) =>
-            `- \`${example.id}\`: ${example.name}（\`${example.path}\`、現在の参照: \`${example.currentReference}\`）`,
+            `- \`${example.id}\`: ${example.name}（\`${example.path}\`、${example.catalog ? "現在の参照" : "参照更新"}: \`${example.currentReference}\`）`,
         )
         .join("\n") || "- なし（kata だけを新規作成する）",
   };
@@ -262,6 +262,7 @@ export type AuthoringPlanFields = {
     name: string;
     path: string;
     currentReference: string;
+    catalog: boolean;
   }>;
 };
 

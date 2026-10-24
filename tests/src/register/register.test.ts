@@ -1038,10 +1038,12 @@ describe("renumberTicketContent — 個票本文の再採番", () => {
   });
 });
 
-describe("renumberReferences — 参照リンク・targets の doc id 置換", () => {
-  it("wikilink と targets に含まれる doc id を置き換え、changed を返す", () => {
+describe("renumberReferences — 参照リンク・targets・sources の doc id 置換", () => {
+  it("wikilink と targets・sources に含まれる doc id を置き換え、changed を返す", () => {
     const content = [
       "targets:",
+      "  - prj-0001:pjr-0137-register-id-uniqueness",
+      "sources:",
       "  - prj-0001:pjr-0137-register-id-uniqueness",
       "",
       "詳細は [[prj-0001:pjr-0137-register-id-uniqueness|一意性]] を参照。",

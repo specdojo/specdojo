@@ -107,6 +107,12 @@ Claude Code の設定ファイルは `CLAUDE_CONFIG_DIR=/home/node/.claude` に�
 
 Antigravity CLI（`agy`）は `post-create.sh` が `~/.local/bin` に導入し、`~/.config/antigravity`（`config.toml`）と `~/.gemini`（OAuth トークン `antigravity-cli/antigravity-oauth-token`、会話履歴、`mcp_config.json`、skills 用の `config/`）を名前付きボリューム（`specdojo-antigravity` / `specdojo-gemini`）で永続化します。コンテナ内では資格情報はキーリングではなく `~/.gemini` 配下のファイルに保存されるため（2026-09-21 に確認）、`ANTIGRAVITY_API_KEY` を渡す必要はありません。
 
+### 4.6. 配布コードの依存パッケージ
+
+npm パッケージとして配布される `src/` 由来のコードが実行時に読み込む外部パッケージは、ルートの `package.json` の `dependencies` または `peerDependencies` に宣言します。開発環境にだけ導入される `devDependencies` へ置くと、公開パッケージを導入した利用者の環境では読み込めません。Node.js 標準モジュールは `node:` 付きで読み込みます。
+
+型だけの import は実行時依存に含みません。テストや `tools/` だけが使うパッケージは、従来どおり `devDependencies` に置けます。`src/` に外部パッケージの import を追加した場合は、`npm run check` で依存宣言の検査まで通ることを確認してください。
+
 ## 5. npm への公開
 
 `main` への昇格と公開は別の操作です。昇格しただけでは何も公開されません。公開とサイトの更新は、`main` 上の commit に付けたタグの push で GitHub Actions が起動し、Trusted Publishing（OIDC）で npm へ登録します。ただし**そのままでは公開されません**。staged publishing を使っており、公開は maintainer の承認が要ります。

@@ -104,7 +104,7 @@ describe("kata authoring register integration", () => {
 
     const plan = readFileSync(planPath, "utf8");
     expect(plan).toContain("docs/ja/specdojo/rulebooks/customer/payment-rulebook.md");
-    expect(plan).toContain("手本の成果物は読み取り専用");
+    expect(plan).toContain("手本ファイルは読み取り専用");
     expect(plan).toContain("`undecided` または未記入なら");
 
     // The fake executor follows the generated plan's externally observable contract.
@@ -129,5 +129,68 @@ describe("kata authoring register integration", () => {
     expect(readFileSync(authoredPath, "utf8")).toContain("status: draft");
     expect(catalog.groups[0]?.deliverables?.[0]?.rulebook).toBe("customer:payment-rulebook");
     expect(validateDctDoc(catalog, catalogFile, undefined, root).errors).toEqual([]);
+  });
+
+  it("creates a plan from product-repository sources without a catalog", async () => {
+    root = mkdtempSync(join(tmpdir(), "specdojo-kata-authoring-product-source-"));
+    const sourceRoot = originalCwd;
+    const registerPath = join(root, "docs/ja/projects/prj-test/register");
+    const executionPath = join(root, "docs/ja/projects/prj-test/execution");
+    const productRoot = join(root, "product");
+    mkdirSync(join(root, ".specdojo"), { recursive: true });
+    mkdirSync(registerPath, { recursive: true });
+    mkdirSync(join(productRoot, "lessons"), { recursive: true });
+    writeFileSync(join(productRoot, "lessons/intro.md"), "# Intro\n", "utf8");
+    writeFileSync(
+      join(root, ".specdojo/specdojo.config.json"),
+      JSON.stringify({
+        version: 1,
+        kata_authority: "customer",
+        projects: { "prj-test": { repos: [{ name: "lessons", path: "product" }] } },
+      }),
+      "utf8",
+    );
+    writeFileSync(join(root, "package.json"), '{"name":"customer"}\n', "utf8");
+
+    process.env.SPECDOJO_PACKAGE_ROOT = sourceRoot;
+    process.chdir(root);
+    const paths: RegisterPaths = {
+      projectId: "prj-test",
+      projectRegisterPath: registerPath,
+      pjrIndexPath: join(registerPath, "pjr-index.md"),
+      generatedPath: join(registerPath, "generated"),
+      controlsGeneratedPath: join(root, "docs/ja/projects/prj-test/controls/generated"),
+      registerDateTimeZone: "UTC",
+    };
+    const item: PjrItem = {
+      id: "PJR-CD34",
+      status: "open",
+      title: "Author lesson rulebook",
+      description: "Create a reusable rulebook from a product repository lesson.",
+      type: "todo",
+      priority: "medium",
+      owner: "ARC",
+      registeredAt: "2026-10-24T00:00:00Z",
+      due: "-",
+      completedAt: "-",
+      conclusion: "-",
+      ticket: "-",
+      approach: "rulebook-authoring",
+      targets: ["customer:lesson-rulebook"],
+      sources: ["lessons:lessons/*.md"],
+    };
+
+    const { planPath } = await generateRegisterPlan({
+      executionPath,
+      projectId: "prj-test",
+      registerPaths: paths,
+      item,
+      stem: "pjr-cd34-product-source",
+    });
+
+    const plan = readFileSync(planPath, "utf8");
+    expect(plan).toContain("`$SPECDOJO_REPO_LESSONS/lessons/intro.md`");
+    expect(plan).toContain("カタログ外のため参照の付け替え対象外");
+    expect(plan).toContain("targets:\n    - customer:lesson-rulebook");
   });
 });

@@ -39,6 +39,9 @@ export type PjrItem = {
   // 個票が宣言する対象文書の doc id リスト。plan frontmatter の targets へ転記され、
   // target coverage 検証に使われる。宣言がない項目は undefined（検証 skip）。
   targets?: string[];
+  // kata authoring の読み取り専用の手本。doc id、project repository path、または
+  // `<repo>:<path>` を保持し、起票時と plan 生成時に展開・検証する。
+  sources?: string[];
   // この項目を起票する元になった register 項目。project 内は PJR-XXXX、project 間は
   // <project-id>:PJR-XXXX で保持し、派生先ビューと監査履歴へ展開する。
   derivedFrom?: string[];
@@ -112,6 +115,7 @@ export type RegisterItemFieldUpdates = {
   conclusion?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   approach?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   targets?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
+  sources?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   derived_from?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   autopilot?: "approved" | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
@@ -163,6 +167,7 @@ const SPECDOJO_KEY_ORDER = [
   "autopilot",
   "approach",
   "targets",
+  "sources",
 ];
 
 // ================================
@@ -330,6 +335,11 @@ export function readRegisterItemContent(
         (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
       )
     : undefined;
+  const sources = Array.isArray(fields.sources)
+    ? fields.sources.filter(
+        (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
+      )
+    : undefined;
   const approach = asString(fields.approach) as Approach | undefined;
   const derivedFrom = Array.isArray(fields.derived_from)
     ? fields.derived_from.filter(
@@ -359,6 +369,7 @@ export function readRegisterItemContent(
     ticket: ticketRefCell(filename),
     ...(approach ? { approach } : {}),
     ...(targets && targets.length > 0 ? { targets } : {}),
+    ...(sources && sources.length > 0 ? { sources } : {}),
     ...(derivedFrom && derivedFrom.length > 0 ? { derivedFrom } : {}),
     ...(autopilot ? { autopilot } : {}),
   };
@@ -494,6 +505,7 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
       : inlineCodeAnglePlaceholders(item.conclusion.trim()),
     ...(item.approach ? { approach: item.approach } : {}),
     ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
+    ...(item.sources && item.sources.length > 0 ? { sources: item.sources } : {}),
     ...(item.derivedFrom && item.derivedFrom.length > 0 ? { derived_from: item.derivedFrom } : {}),
     ...(item.autopilot ? { autopilot: item.autopilot } : {}),
   };

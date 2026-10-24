@@ -65,7 +65,9 @@ template は、記述する部分を _TODO_ などのプレースホルダとし
 
 要否は初回の `bootstrap` で判断します。`undecided` の型は、必要なら項目を省略したうえで必要な型を成果物と一緒に整備し、不要なら `not-needed` へ更新します。既存の型を廃止する、または `not-needed` を必要へ変更する場合は、成果物の実績・繰り返し発生したレビュー指摘・schema の表現範囲を根拠として rulebook frontmatter の宣言も同時に更新します。
 
-成果物と型を一組で初めて作るときは `bootstrap` を使います。成果物がすでにあり、そこから再利用可能な型だけを新しく起こすとき、または手本なしで型だけを作るときは `rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` を使います。authoring では手本の成果物本文を変更せず、該当参照が `undecided` または未記入の場合だけ新しい kata ID へ更新します。
+成果物と型を一組で初めて作るときは `bootstrap` を使います。成果物がすでにあり、そこから再利用可能な型だけを新しく起こすとき、または手本なしで型だけを作るときは `rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` を使います。authoring では `--target` に新しい kata ID、繰り返し可能な `--source` に読み取り専用の手本を指定します。手本は文書索引で解決できる doc id、プロジェクトリポジトリの相対パス、または project の `repos` に宣言した `<repo>:<path>` です。パスにはファイル、ディレクトリ、glob を指定できます。展開後の手本は重複を除いて 100 ファイルまでです。広すぎるパターンによる読み取り範囲と plan の肥大化を抑えるため、超過時は起票・実行を停止します。
+
+`<repo>` が `repos[].name` と一致する値はプロダクトリポジトリのパスとして扱います。それ以外で `/` または拡張子を含む値はプロジェクトリポジトリのパス、残りは doc id として文書索引で解決します。いずれの形も手本が見つからなければ停止します。成果物カタログは必須ではありません。手本がカタログ成果物で、その kata 参照が `undecided` または未記入の場合だけ新しい kata ID へ更新します。カタログ外とプロダクトリポジトリの手本は変更せず、参照も付け替えません。互換性のため、新しい kata ID に続く 2 個目以降の `--target` も `--source` と同じ手本として受け付けます。
 
 利用者が作る kata はリポジトリ単位の `kata_authority` を使い、`docs/ja/specdojo/{rulebooks,recipes,samples,templates}/<kata_authority>/` に置きます。たとえば `customer:payment-rulebook` の配置は `docs/ja/specdojo/rulebooks/customer/payment-rulebook.md` です。`specdojo:` は SpecDojo 本体専用であり、利用者リポジトリでは新規作成できません。これにより、同じリポジトリの複数 project で型を共有しながら、将来追加される同名の同梱 kata と衝突しません。
 

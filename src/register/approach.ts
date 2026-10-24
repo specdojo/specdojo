@@ -4,10 +4,16 @@ import { collectResolvedDeliverables, loadCatalogDocs } from "../catalog/build.j
 import { resolveBasePath } from "../catalog/paths.js";
 import { collectDocIndexEntries } from "../docs/doc-index.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import { getProjectCatalogPath, loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
+import {
+  getProjectCatalogPath,
+  loadConfig,
+  specdojoRootDir,
+  type SpecDojoProjectConfig,
+} from "../shared/specdojo-config.js";
 import { APPROACHES, type Approach } from "../shared/agent-types.js";
 import { load } from "../shared/yaml.js";
 import { assertAuthorableKataId, authoredKataExists, authoringKind } from "../kata/authoring.js";
+import { resolveAuthoringSources } from "./authoring-sources.js";
 
 const MAINTENANCE_TARGET_KIND: Partial<Record<Approach, string>> = {
   "rulebook-maintenance": "rulebook",
@@ -81,6 +87,8 @@ export type RegisterApproachValidationOptions = {
   catalogPath?: string;
   approach?: string;
   targets?: readonly string[];
+  sources?: readonly string[];
+  project?: SpecDojoProjectConfig;
   validateTargetsWithoutApproach?: boolean;
 };
 
@@ -90,6 +98,7 @@ export type RegisterApproachValidationOptions = {
 export function validateRegisterApproachTargets(opts: RegisterApproachValidationOptions): void {
   const approachText = opts.approach?.trim();
   const targets = [...new Set((opts.targets ?? []).map((target) => target.trim()).filter(Boolean))];
+  const sources = [...new Set((opts.sources ?? []).map((source) => source.trim()).filter(Boolean))];
   let approach: Approach | undefined;
 
   if (approachText !== undefined) {
@@ -110,6 +119,10 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
     }
   }
 
+  if (sources.length > 0 && !authoringKind(approach)) {
+    throw new Error("--source is only valid with a *-authoring approach");
+  }
+
   if (!approach && !opts.validateTargetsWithoutApproach) return;
   if (targets.length === 0) return;
 
@@ -125,7 +138,7 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
 
   const authoringTargetKind = authoringKind(approach);
   if (authoringTargetKind) {
-    const [kataId, ...exampleIds] = targets;
+    const [kataId, ...legacySources] = targets;
     if (!kataId) {
       throw new Error(`Approach "${approach}" requires the new kata id as the first --target`);
     }
@@ -135,24 +148,11 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
         `Kata id ${kataId} already exists; use ${authoringTargetKind}-maintenance instead`,
       );
     }
-    if (exampleIds.length === 0) return;
-    if (!opts.catalogPath) {
-      throw new Error(
-        `Approach "${approach}" requires catalog_path to resolve exemplar deliverables`,
-      );
-    }
-    const deliverableDocIds = catalogDeliverableDocIds(
-      opts.catalogPath,
-      opts.repoRoot,
-      opts.projectId,
-    );
-    for (const exampleId of exampleIds) {
-      if (!deliverableDocIds.has(exampleId)) {
-        throw new Error(
-          `Approach "${approach}" requires every --target after the first to be a catalog deliverable, but ${exampleId} is not one`,
-        );
-      }
-    }
+    const sourceRefs = [...new Set([...legacySources, ...sources])];
+    if (sourceRefs.length === 0) return;
+    const project =
+      opts.project ?? loadConfig(opts.repoRoot).config?.projects[opts.projectId] ?? {};
+    resolveAuthoringSources({ repoRoot: opts.repoRoot, project, sources: sourceRefs });
     return;
   }
 
@@ -193,6 +193,7 @@ export function validateRegisterApproachTargetsForProject(opts: {
   projectId: string;
   approach?: string;
   targets?: readonly string[];
+  sources?: readonly string[];
   validateTargetsWithoutApproach?: boolean;
 }): void {
   const repoRoot = specdojoRootDir();
@@ -208,6 +209,8 @@ export function validateRegisterApproachTargetsForProject(opts: {
     ...(catalogPath ? { catalogPath: resolve(repoRoot, catalogPath) } : {}),
     ...(opts.approach !== undefined ? { approach: opts.approach } : {}),
     ...(opts.targets !== undefined ? { targets: opts.targets } : {}),
+    ...(opts.sources !== undefined ? { sources: opts.sources } : {}),
+    project,
     ...(opts.validateTargetsWithoutApproach !== undefined
       ? { validateTargetsWithoutApproach: opts.validateTargetsWithoutApproach }
       : {}),

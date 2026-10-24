@@ -70,6 +70,21 @@ properties:
                   targets:
                     type: array
                     maxItems: 1
+      - if:
+          required:
+            - sources
+          properties:
+            sources: true
+        then:
+          required:
+            - approach
+          properties:
+            approach:
+              enum:
+                - rulebook-authoring
+                - recipe-authoring
+                - sample-authoring
+                - template-authoring
       - type: object
         required:
           - rulebook
@@ -199,9 +214,9 @@ properties:
           approach:
             $ref: "#/$defs/Approach"
             description: >
-              Execution approach. Authoring approaches use the first target as the new kata id
-              and any remaining targets as exemplar deliverables. Other approaches require one
-              compatible document id.
+              Execution approach. Authoring approaches use the target as the new kata id and
+              sources as read-only exemplars. For compatibility, additional targets are also
+              accepted as exemplar sources. Other approaches require one compatible document id.
 
           targets:
             type: array
@@ -217,6 +232,19 @@ properties:
               generation copies these into the plan frontmatter so that target
               coverage validation works for register-originated plans. Omit the
               key when the target documents are unknown or not applicable.
+
+          sources:
+            type: array
+            items:
+              type: string
+              minLength: 1
+            minItems: 1
+            uniqueItems: true
+            description: >
+              Read-only exemplars for a kata authoring approach. Each value is a document id, a
+              project-repository-relative path, or <repo>:<path> for a repository declared in
+              projects.<id>.repos. Paths may name files, directories, or glob patterns. Omit the
+              key when the authoring task has no exemplar.
 
 $defs:
   ItemType:

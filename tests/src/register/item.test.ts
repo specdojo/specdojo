@@ -222,6 +222,20 @@ describe("readRegisterItemContent — 個票からの一覧行の導出", () => 
     expect(parsed?.item.targets).toEqual(["prj-0001:cdfd-overview", "prj-0001:cdfd-check"]);
   });
 
+  it("個票の authoring sources を読み取る", () => {
+    const parsed = readRegisterItemContent(
+      buildItemFile([
+        ...MIGRATED_FIELDS,
+        "sources:",
+        "  - docs/ja/examples/*.md",
+        "  - product:lessons/",
+      ]),
+      "pjr-ab12-inventory-seed.md",
+    );
+
+    expect(parsed?.item.sources).toEqual(["docs/ja/examples/*.md", "product:lessons/"]);
+  });
+
   it("個票の approach を読み取る", () => {
     const parsed = readRegisterItemContent(
       buildItemFile([...MIGRATED_FIELDS, "approach: fully-guided"]),
@@ -471,6 +485,19 @@ describe("register-item-frontmatter schema — enum 検証", () => {
         },
       }),
     ).toBe(true);
+    expect(
+      validator({
+        specdojo: {
+          ...base,
+          approach: "rulebook-authoring",
+          targets: ["customer:new-rulebook"],
+          sources: ["doc-a", "product:docs/*.md"],
+        },
+      }),
+    ).toBe(true);
+    expect(validator({ specdojo: { ...base, targets: ["doc-a"], sources: ["doc-b"] } })).toBe(
+      false,
+    );
   });
 
   it("derived_from は project 内 ID と project 修飾 ID の配列だけを受け付ける", () => {

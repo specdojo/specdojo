@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_07e4c668c22449aa95f12db9fbeb7182
+  ts: "2026-10-24T09:54:10Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 配布するコードが dependencies にないパッケージを読み込んでも検査で気づけない
+    - field: description
+      from: ""
+      to: PJR-ZV60 で src が tinyglobby を読み込んだが devDependencies にしかなく、npm から入れたリポジトリで init などが落ちた。本リポジトリでは開発用の依存として入っているため、テストでも検証でも気づけなかった。src が読み込むパッケージがすべて dependencies にあることを npm run check で確かめる
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-ZV60"]'
+- v: 1
+  id: reg_b3475dd229654d18b12bf7592ec9695e
+  ts: "2026-10-24T09:55:00Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_07e4c668c22449aa95f12db9fbeb7182
+- v: 1
+  id: reg_34f7de19b98840499997214808daff2c
+  ts: "2026-10-24T10:11:22Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b3475dd229654d18b12bf7592ec9695e
+- v: 1
+  id: reg_f3b2851b73604a18a05549a20a6f0bf6
+  ts: "2026-10-24T10:14:56Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが今の develop で検査が通ることを確かめ、package.json は保護された設定のため利用者（indie）の承認でオーケストレーターが配線した（feature/prj-0001/check-src-imports）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: "src の静的・動的な読み込みと再 export を TypeScript の構文解析で調べ、dependencies・peerDependencies・node: の標準モジュール以外のパッケージを読み込んでいれば失敗する検査を加え、npm run check から流れるようにした。CONTRIBUTING.md に規則を書いた"
+  previous_event_id: reg_34f7de19b98840499997214808daff2c

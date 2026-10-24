@@ -9,6 +9,7 @@ import {
 } from "../shared/specdojo-config.js";
 
 export const MINIMUM_EXTERNAL_REGISTER_VERSION = "0.4.2";
+export const MINIMUM_EXTERNAL_SOURCE_VERSION = "0.4.5";
 
 export type ExternalRegisterAddOptions = {
   project?: string;
@@ -25,6 +26,7 @@ export type ExternalRegisterAddOptions = {
   conclusion: string;
   approach?: string;
   target?: string[];
+  source?: string[];
   from?: string[];
   id?: string;
   topic?: string;
@@ -86,6 +88,7 @@ export function buildExternalRegisterAddArgs(
   addValue(args, "--registered", opts.registered);
   addValue(args, "--approach", opts.approach);
   for (const target of opts.target ?? []) addValue(args, "--target", target);
+  for (const source of opts.source ?? []) addValue(args, "--source", source);
   for (const source of opts.from ?? []) {
     addValue(args, "--from", rewriteExternalDerivedFrom(source, alias, externalProject.project_id));
   }
@@ -107,8 +110,12 @@ function versionParts(version: string): [number, number, number] | undefined {
 }
 
 export function supportsExternalRegister(version: string): boolean {
+  return versionAtLeast(version, MINIMUM_EXTERNAL_REGISTER_VERSION);
+}
+
+function versionAtLeast(version: string, required: string): boolean {
   const actual = versionParts(version);
-  const minimum = versionParts(MINIMUM_EXTERNAL_REGISTER_VERSION);
+  const minimum = versionParts(required);
   if (!actual || !minimum) return false;
   for (let index = 0; index < actual.length; index += 1) {
     if (actual[index] !== minimum[index]) return actual[index] > minimum[index];
@@ -178,6 +185,12 @@ export function delegateExternalRegisterAdd(
     throw new Error(
       `External project ${alias} uses SpecDojo ${version || "with an unknown version"}; ` +
         `${MINIMUM_EXTERNAL_REGISTER_VERSION} or newer is required for cross-project register add.`,
+    );
+  }
+  if ((opts.source?.length ?? 0) > 0 && !versionAtLeast(version, MINIMUM_EXTERNAL_SOURCE_VERSION)) {
+    throw new Error(
+      `External project ${alias} uses SpecDojo ${version}; ` +
+        `${MINIMUM_EXTERNAL_SOURCE_VERSION} or newer is required for --source.`,
     );
   }
 

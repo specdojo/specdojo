@@ -235,7 +235,9 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
   async function writeAuthoringFixture(): Promise<void> {
     const templatesPath = path.join(dir, "docs", "ja", "specdojo", "exec-templates");
+    const deliverablesPath = path.join(dir, "docs", "test");
     await mkdir(templatesPath, { recursive: true });
+    await mkdir(deliverablesPath, { recursive: true });
     await mkdir(path.join(dir, ".specdojo"), { recursive: true });
     await writeFile(
       path.join(dir, ".specdojo", "specdojo.config.json"),
@@ -243,6 +245,21 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       "utf8",
     );
     await writeFile(path.join(dir, "package.json"), '{"name":"customer"}\n', "utf8");
+    await writeFile(
+      path.join(deliverablesPath, "overview.md"),
+      [
+        "---",
+        "specdojo:",
+        "  id: prj-test:overview",
+        "  type: project",
+        "  status: draft",
+        "---",
+        "",
+        "# Test Overview",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
     for (const filename of [
       "xep-common-conventions-template.md",
       "xep-rulebook-authoring-template.md",
@@ -505,7 +522,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     expect(content).toContain("docs/ja/specdojo/rulebooks/customer/test-rulebook.md");
     expect(content).toContain("specdojo:rulebook-authoring-standard");
     expect(content).toContain("`prj-test:overview`: Test Overview");
-    expect(content).toContain("手本の成果物は読み取り専用");
+    expect(content).toContain("手本ファイルは読み取り専用");
     expect(content).toContain("`undecided` または未記入");
     expect(content).toContain("すでに別の kata を指す場合は上書きせず");
   });

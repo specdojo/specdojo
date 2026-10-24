@@ -1,0 +1,14 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.4 typecheck
+> tsc -b --noEmit
+
+src/exec/run/register-core.ts(530,7): error TS2304: Cannot find name 'resolvedProvider'.
+src/exec/run/register-core.ts(530,7): error TS2304: Cannot find name 'resolvedProvider'.
+
+
+--- stderr ---

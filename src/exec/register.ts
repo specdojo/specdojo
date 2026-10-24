@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { extname, join, relative, resolve } from "node:path";
+import { basename, extname, join, relative, resolve } from "node:path";
 import {
   findRegisterItem,
   loadRegisterItems,
@@ -21,6 +21,7 @@ import {
 import { generateRegisterApproachPlan } from "./plans-generation.js";
 import {
   findUniqueDeliverableForKataTarget,
+  findDeliverableByPath,
   resolveDeliverableByDocId,
   type DeliverableInfo,
 } from "./plans-core.js";
@@ -41,7 +42,12 @@ import {
   stripTerminalControlSequences,
 } from "./shared.js";
 import { formatMarkdownFile } from "./format.js";
-import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
+import {
+  resolveAuthoringSources,
+  type ResolvedAuthoringSource,
+} from "../register/authoring-sources.js";
+import { repoEnvironmentVariableName } from "./task-repos.js";
 
 // ---------------------------------------------------------------------------
 // Item category
@@ -431,6 +437,32 @@ function indexedDocumentPath(targetId: string): string {
   return relative(repoRoot, resolve(repoRoot, withoutLine)).replace(/\\/g, "/");
 }
 
+function authoringSourcePlanPath(source: ResolvedAuthoringSource): string {
+  return source.repo ? `$${repoEnvironmentVariableName(source.repo)}/${source.path}` : source.path;
+}
+
+function catalogSource(
+  catalogPath: string | undefined,
+  projectId: string,
+  source: ResolvedAuthoringSource,
+): ReturnType<typeof resolveDeliverableByDocId> | null {
+  if (!catalogPath || source.repo) return null;
+  if (source.documentId) {
+    try {
+      return resolveDeliverableByDocId(catalogPath, projectId, source.documentId);
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message.startsWith("catalog deliverable target not found")
+      ) {
+        return null;
+      }
+      throw error;
+    }
+  }
+  return findDeliverableByPath(catalogPath, source.path);
+}
+
 export async function generateRegisterPlan(opts: {
   executionPath: string;
   projectId: string;
@@ -454,6 +486,7 @@ export async function generateRegisterPlan(opts: {
       ...(opts.catalogPath ? { catalogPath: opts.catalogPath } : {}),
       approach: item.approach,
       targets: item.targets,
+      sources: item.sources,
     });
     const [targetId] = item.targets ?? [];
     if (!targetId) throw new Error(`Register item ${item.id} approach requires a target.`);
@@ -465,20 +498,21 @@ export async function generateRegisterPlan(opts: {
     let refs: KataRefs | undefined;
     let authoring: Parameters<typeof generateRegisterApproachPlan>[0]["authoring"];
     if (newKataKind) {
-      const examples = (item.targets ?? []).slice(1).map((exampleId) => {
-        if (!opts.catalogPath) {
-          throw new Error(
-            `Register item ${item.id} approach requires catalog_path to resolve ${exampleId}.`,
-          );
-        }
-        const resolved = resolveDeliverableByDocId(
-          opts.catalogPath,
-          opts.projectId,
-          exampleId,
-        ).info;
-        const rulebookId = resolved.deliverable.rulebook;
+      const sourceRefs = [...(item.targets ?? []).slice(1), ...(item.sources ?? [])];
+      const project = loadConfig(specdojoRootDir()).config?.projects[opts.projectId] ?? {};
+      const resolvedSources = resolveAuthoringSources({
+        repoRoot: specdojoRootDir(),
+        project,
+        sources: sourceRefs,
+      });
+      const examples = resolvedSources.map((source) => {
+        const catalogEntry = catalogSource(opts.catalogPath, opts.projectId, source);
+        const resolved = catalogEntry?.info;
+        const rulebookId = resolved?.deliverable.rulebook;
         let currentReference: string;
-        if (newKataKind === "rulebook") {
+        if (!resolved) {
+          currentReference = "カタログ外のため参照の付け替え対象外";
+        } else if (newKataKind === "rulebook") {
           currentReference = rulebookId ?? "未記入";
         } else if (
           !rulebookId ||
@@ -493,11 +527,13 @@ export async function generateRegisterPlan(opts: {
             ? declaredReference.join(", ")
             : (declaredReference ?? "未記入");
         }
+        const planPath = authoringSourcePlanPath(source);
         return {
-          id: exampleId,
-          name: resolved.deliverable.name,
-          path: resolved.resolvedPath,
+          id: source.documentId ?? (source.repo ? `${source.repo}:${source.path}` : source.path),
+          name: resolved?.deliverable.name ?? basename(source.path),
+          path: planPath,
           currentReference,
+          catalog: resolved !== undefined,
         };
       });
       const exemplarExtension = extname(examples[0]?.path ?? "").slice(1);
@@ -546,7 +582,7 @@ export async function generateRegisterPlan(opts: {
       description: item.description,
       ...(item.owner && item.owner !== "-" && item.owner !== "_TODO_" ? { owner: item.owner } : {}),
       approach: item.approach,
-      targets: item.targets ?? [],
+      targets: targetId ? [targetId] : [],
       deliverable,
       ...(refs ? { refs } : {}),
       ...(authoring ? { authoring } : {}),

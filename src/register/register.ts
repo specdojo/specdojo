@@ -164,6 +164,7 @@ export type RegisterAddFields = {
   conclusion: string;
   approach?: Approach;
   targets?: string[];
+  sources?: string[];
   derivedFrom?: string[];
 };
 

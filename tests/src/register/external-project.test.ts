@@ -24,6 +24,7 @@ const baseOptions: ExternalRegisterAddOptions = {
   conclusion: "-",
   approach: "deliverable-edit",
   target: ["target-doc"],
+  source: ["docs/examples/*.md"],
   from: ["customer:PJR-SRC1", "prj-other:PJR-SRC2"],
   id: "PJR-NEW1",
   topic: "external-item",
@@ -74,6 +75,8 @@ describe("buildExternalRegisterAddArgs", () => {
       "deliverable-edit",
       "--target",
       "target-doc",
+      "--source",
+      "docs/examples/*.md",
       "--from",
       "prj-target:PJR-SRC1",
       "--from",
@@ -161,6 +164,23 @@ describe("delegateExternalRegisterAdd preconditions", () => {
     expect(run).toHaveBeenCalledTimes(1);
   });
 
+  it("stops after version inspection when --source is sent to a target older than 0.4.5", () => {
+    createFixture();
+    const run = vi.fn(() => ({
+      status: 0,
+      signal: null,
+      output: [null, "0.4.4\n", ""],
+      pid: 1,
+      stdout: "0.4.4\n",
+      stderr: "",
+    })) as unknown as Parameters<typeof delegateExternalRegisterAdd>[1];
+
+    expect(() => delegateExternalRegisterAdd(baseOptions, run)).toThrow(
+      "0.4.5 or newer is required for --source",
+    );
+    expect(run).toHaveBeenCalledTimes(1);
+  });
+
   it("inherits target output and propagates a failed target exit code", () => {
     createFixture();
     const runMock = vi
@@ -168,9 +188,9 @@ describe("delegateExternalRegisterAdd preconditions", () => {
       .mockReturnValueOnce({
         status: 0,
         signal: null,
-        output: [null, "0.4.2\n", ""],
+        output: [null, "0.4.5\n", ""],
         pid: 1,
-        stdout: "0.4.2\n",
+        stdout: "0.4.5\n",
         stderr: "",
       })
       .mockReturnValueOnce({

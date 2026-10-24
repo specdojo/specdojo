@@ -165,6 +165,18 @@ export function configuredProductRepos(
   return [];
 }
 
+/** Declared product repositories represented as their current in-place checkouts. */
+export function configuredProductCheckouts(schedulePath: string): ProductWorktree[] {
+  return configuredProductRepos(schedulePath).map((product) => ({
+    name: product.name,
+    repoRoot: product.repoRoot,
+    path: product.repoRoot,
+    branch: productIntegrationTarget(product),
+    created: false,
+    ...(product.integrationBranch ? { integrationBranch: product.integrationBranch } : {}),
+  }));
+}
+
 /**
  * Run-scoped `--integration-branch` values recorded in the run checkpoint (`integration_branches`).
  * Only explicit overrides are recorded, so a run without the option keeps resolving its targets

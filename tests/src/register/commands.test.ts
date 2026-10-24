@@ -20,6 +20,7 @@ const REGISTER_REL = "docs/ja/projects/prj-0001/controls/project-register";
 const CONFIG = {
   version: 1,
   current_project: "prj-0001",
+  kata_authority: "customer",
   projects: {
     "prj-0001": {
       base_path: "docs/ja/projects/prj-0001",
@@ -598,6 +599,46 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "requires a rulebook document target",
       );
       expect(existsSync(join(registerDir, "pjr-ab12-wrong-target.md"))).toBe(false);
+    });
+  });
+
+  it("add は --source と互換の追加 --target を sources に記録する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      writeApproachTargets(root);
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "rulebook を作る",
+        "--topic",
+        "author-rulebook",
+        "--id",
+        "PJR-AB12",
+        "--approach",
+        "rulebook-authoring",
+        "--target",
+        "customer:payment-rulebook",
+        "--target",
+        "deliverable-doc",
+        "--source",
+        "docs/ja/product/*.md",
+      ]);
+
+      const ticket = readFileSync(join(registerDir, "pjr-ab12-author-rulebook.md"), "utf8");
+      expect(ticket).toContain("  targets:\n    - customer:payment-rulebook");
+      expect(ticket).toContain("  sources:\n    - deliverable-doc\n    - docs/ja/product/*.md");
+      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toEqual(
+        expect.arrayContaining([
+          {
+            field: "sources",
+            from: "",
+            to: '["deliverable-doc","docs/ja/product/*.md"]',
+          },
+        ]),
+      );
     });
   });
 
@@ -1257,6 +1298,33 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
       const removed = readFileSync(ticketPath, "utf8");
       expect(removed).not.toContain("  approach:");
       expect(removed).not.toContain("  targets:");
+    });
+  });
+
+  it("update は authoring の sources を置換し、旧 target 手本を正規化する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      writeApproachTargets(root);
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: open",
+          "priority: high",
+          "approach: rulebook-authoring",
+          "targets:",
+          "  - customer:payment-rulebook",
+          "  - deliverable-doc",
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--source", "docs/ja/product/*.md"]);
+
+      const changed = readFileSync(ticketPath, "utf8");
+      expect(changed).toContain("  targets:\n    - customer:payment-rulebook");
+      expect(changed).not.toContain("    - deliverable-doc");
+      expect(changed).toContain("  sources:\n    - docs/ja/product/*.md");
     });
   });
 

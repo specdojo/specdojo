@@ -536,6 +536,7 @@ export function buildRegisterItemContent(opts: {
       ticket: "-",
       ...(opts.fields.approach ? { approach: opts.fields.approach } : {}),
       ...(opts.fields.targets ? { targets: opts.fields.targets } : {}),
+      ...(opts.fields.sources ? { sources: opts.fields.sources } : {}),
       ...(opts.fields.derivedFrom ? { derivedFrom: opts.fields.derivedFrom } : {}),
     }),
   );

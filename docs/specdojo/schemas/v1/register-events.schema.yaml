@@ -58,6 +58,7 @@ $defs:
           - block_reason
           - approach
           - targets
+          - sources
           - derived_from
           - autopilot
       from:
