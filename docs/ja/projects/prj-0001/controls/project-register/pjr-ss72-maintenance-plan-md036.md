@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ss72-maintenance-plan-md036
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-24T13:41:02Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-24T22:43:55Z"
+  conclusion: owner の role に当てはまる観点がないときの plan の値を、強調だけの段落ではなく箇条書きの 1 項目（- _MISSING_）にした。値の側で直したため、*-maintenance の 4 つの雛形すべてに効く。*-authoring の雛形も、手本がないときに同じ形にした
 ---
 
 # PJR-SS72 rulebook-maintenance の plan が markdownlint（MD036）で止まる

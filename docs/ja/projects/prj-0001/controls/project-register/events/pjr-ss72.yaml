@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_39fe348c8bf94e94b4846f812d0b015b
+- v: 1
+  id: reg_486fd0aa25c046f88241a2e1d548cc90
+  ts: "2026-10-24T22:43:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分と、カタログと pm-roles のない project で 8 種類の plan が MD036 に当たらないことを確かめる単体テストを確かめ、統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: owner の role に当てはまる観点がないときの plan の値を、強調だけの段落ではなく箇条書きの 1 項目（- _MISSING_）にした。値の側で直したため、*-maintenance の 4 つの雛形すべてに効く。*-authoring の雛形も、手本がないときに同じ形にした
+  previous_event_id: reg_c2ec6f4f41924e1db197f2e33ddc2ee6
