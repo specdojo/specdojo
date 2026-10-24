@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_048a659bccd949b399b028242460701b
+- v: 1
+  id: reg_f1ef885f8b524a4cb1d1259e24f92fab
+  ts: "2026-10-24T22:37:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが、2 つのテストのファイルの 60 件が 5.9 秒で通ること（直す前は 1 件で 24 秒）と、親の検証の test-unit が通ったことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: doc-index.test.ts の登録簿の参照のテストを、本リポジトリの docs の丸ごとのコピーから 3 文書の fixture に、register-plan-escape.test.ts の成果物の approach のテストを一時のリポジトリと最小のテンプレートに、remark の山括弧の検査のテストを固定の入力に置き換えた。製品のコードと時間の上限は変えていない
+  previous_event_id: reg_31d3e15822234a4387b0dd32e69ef4c3

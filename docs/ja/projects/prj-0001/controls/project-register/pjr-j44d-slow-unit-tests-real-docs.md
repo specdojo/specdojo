@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-j44d-slow-unit-tests-real-docs
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-24T22:18:14Z"
+  completed_at: "2026-10-24T22:37:38Z"
+  conclusion: doc-index.test.ts の登録簿の参照のテストを、本リポジトリの docs の丸ごとのコピーから 3 文書の fixture に、register-plan-escape.test.ts の成果物の approach のテストを一時のリポジトリと最小のテンプレートに、remark の山括弧の検査のテストを固定の入力に置き換えた。製品のコードと時間の上限は変えていない
   derived_from:
     - PJR-68KR
 ---
