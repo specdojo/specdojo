@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-68KR"]'
+- v: 1
+  id: reg_6c0455e7503f4f589f78c280d3c78785
+  ts: "2026-10-24T22:19:02Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_014312ffc2f04263891a908e95ad5c67
