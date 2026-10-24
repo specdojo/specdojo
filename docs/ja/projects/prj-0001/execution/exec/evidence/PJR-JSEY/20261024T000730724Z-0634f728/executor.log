@@ -1,0 +1,9 @@
+個票の「対応結果」の表に 1 行を追記しました。変更したのはこのファイルだけです。
+
+追記した行は `2026-10-24 09:10 | PJR-C95G | sonnet-executor` です。対象の分割には PJR-C95G を選びました。個票の完了条件にある項目のうち、`git log` で最も新しく統合されていたためです。
+
+`prettier --write` は変更なし（unchanged）でした。親の検証は指示どおり実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に 2026-10-24 09:10 / PJR-C95G / sonnet-executor の 1 行を追記した。変更は個票 1 ファイルのみ。","validations":[{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"整形差分なし"}]}
+</specdojo_executor_evidence>
