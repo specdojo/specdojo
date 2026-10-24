@@ -3,6 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { validateRegisterApproachTargets } from "../../../src/register/approach.js";
+import { MAX_AUTHORING_SOURCE_FILES } from "../../../src/register/authoring-sources.js";
 
 describe("validateRegisterApproachTargets", () => {
   let root: string;
@@ -221,7 +222,7 @@ describe("validateRegisterApproachTargets", () => {
         projectId: "prj-test",
         catalogPath,
         approach: "rulebook-authoring",
-        targets: ["example-repo:payment-rulebook", "deliverable-doc", "prj-test:uncreated"],
+        targets: ["example-repo:payment-rulebook", "deliverable-doc"],
       }),
     ).not.toThrow();
 
@@ -234,6 +235,61 @@ describe("validateRegisterApproachTargets", () => {
         targets: ["example-repo:payment-sample"],
       }),
     ).not.toThrow();
+  });
+
+  it("authoring source は doc id・project path・repo path を見分けて展開する", () => {
+    const productRoot = join(root, "product");
+    mkdirSync(join(root, "docs/ja/examples/nested"), { recursive: true });
+    mkdirSync(join(productRoot, "lessons"), { recursive: true });
+    writeFileSync(join(root, "docs/ja/examples/one.md"), "# One\n", "utf8");
+    writeFileSync(join(root, "docs/ja/examples/nested/two.md"), "# Two\n", "utf8");
+    writeFileSync(join(productRoot, "lessons/three.md"), "# Three\n", "utf8");
+
+    expect(() =>
+      validateRegisterApproachTargets({
+        repoRoot: root,
+        projectId: "prj-test",
+        approach: "rulebook-authoring",
+        targets: ["example-repo:payment-rulebook"],
+        sources: ["deliverable-doc", "docs/ja/examples/**/*.md", "product:lessons/"],
+        project: { repos: [{ name: "product", path: "product" }] },
+      }),
+    ).not.toThrow();
+  });
+
+  it("authoring source はカタログなしでも使え、見つからない手本は拒否する", () => {
+    const base = {
+      repoRoot: root,
+      projectId: "prj-test",
+      approach: "rulebook-authoring",
+      targets: ["example-repo:payment-rulebook"],
+    } as const;
+    expect(() =>
+      validateRegisterApproachTargets({ ...base, sources: ["deliverable-doc"] }),
+    ).not.toThrow();
+    expect(() => validateRegisterApproachTargets({ ...base, sources: ["missing-doc"] })).toThrow(
+      /not resolvable via the document index/,
+    );
+    expect(() =>
+      validateRegisterApproachTargets({ ...base, sources: ["docs/missing/*.md"] }),
+    ).toThrow(/did not match any files/);
+  });
+
+  it("authoring source の展開件数を 100 ファイルまでに制限する", () => {
+    const sourceDir = join(root, "examples");
+    mkdirSync(sourceDir, { recursive: true });
+    for (let index = 0; index <= MAX_AUTHORING_SOURCE_FILES; index += 1) {
+      writeFileSync(join(sourceDir, `${index}.md`), `# ${index}\n`, "utf8");
+    }
+    expect(() =>
+      validateRegisterApproachTargets({
+        repoRoot: root,
+        projectId: "prj-test",
+        approach: "rulebook-authoring",
+        targets: ["example-repo:payment-rulebook"],
+        sources: ["examples/*.md"],
+      }),
+    ).toThrow(/more than 100 files/);
   });
 
   it("authoring approach は authority・末尾・手本・既存 id を検証する", () => {
@@ -257,7 +313,7 @@ describe("validateRegisterApproachTargets", () => {
         ...base,
         targets: ["example-repo:payment-rulebook", "missing-doc"],
       }),
-    ).toThrow(/every --target after the first to be a catalog deliverable/);
+    ).toThrow(/not resolvable via the document index/);
 
     mkdirSync(join(root, "docs/ja/specdojo/rulebooks/example-repo"), { recursive: true });
     writeFileSync(

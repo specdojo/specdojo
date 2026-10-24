@@ -382,33 +382,34 @@ specdojo schedule strategy generate \
 
 主要オプション:
 
-| オプション                | 用途                                                          | 対象                                             |
-| ------------------------- | ------------------------------------------------------------- | ------------------------------------------------ |
-| `--to <PJR-ID>`           | 移動先の PJR-ID を指定する                                    | `renumber`                                       |
-| `--registered <datetime>` | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `add`                                            |
-| `--completed <datetime>`  | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻 | `close` / `reject`                               |
-| `--by <actor>`            | 名簿または予約一覧の actor を追記型 event に記録する          | `add` / 更新 / 遷移コマンド                      |
-| `--reason <text>`         | event の理由を記録（`wait` では `block_reason` も更新）       | `add` / 更新 / 遷移コマンド                      |
-| `--conclusion <text>`     | 終端時の結論を記録・更新（`update` では `-` で削除）          | `add` / `update` / 終端コマンド                  |
-| `--block-reason <text>`   | `waiting` の理由を更新（`-` で削除）                          | `update`                                         |
-| `--approach <approach>`   | 個票の進め方を指定（`update` では `-` で削除）                | `add` / `update`                                 |
-| `--target <doc-id>`       | 対象文書 ID を指定（繰り返し可、`update` では `-` で削除）    | `add` / `update`                                 |
-| `--topic <slug>`          | 個票ファイル名と文書 ID の論点部分を指定・更新する            | `add` / `update`                                 |
-| `--commit`                | `register lifecycle` 枠内で記帳・再生成・commitを行う         | `add` / `update` / `renumber` / 遷移             |
-| `-m, --message <message>` | `--commit` のcommitメッセージを上書きする                     | `add` / `update` / `renumber` / 遷移             |
-| `--dry-run`               | 書き込みを行わず変更対象を表示する                            | `add` / `update` / `renumber` / 遷移 / `migrate` |
-| `--since <date>`          | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）              | `history`                                        |
-| `--until <date>`          | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）              | `history`                                        |
-| `--id <PJR-ID...>`        | 出力する項目を限定する（空白・カンマ区切りで複数可）          | `history`                                        |
-| `--status-only`           | 追加・削除・状態遷移だけを出力する                            | `history`                                        |
-| `--limit <count>`         | 走査するコミット数の上限                                      | `history`                                        |
-| `--json`                  | イベントを JSON で出力する                                    | `history`                                        |
+| オプション                | 用途                                                                | 対象                                             |
+| ------------------------- | ------------------------------------------------------------------- | ------------------------------------------------ |
+| `--to <PJR-ID>`           | 移動先の PJR-ID を指定する                                          | `renumber`                                       |
+| `--registered <datetime>` | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻             | `add`                                            |
+| `--completed <datetime>`  | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `close` / `reject`                               |
+| `--by <actor>`            | 名簿または予約一覧の actor を追記型 event に記録する                | `add` / 更新 / 遷移コマンド                      |
+| `--reason <text>`         | event の理由を記録（`wait` では `block_reason` も更新）             | `add` / 更新 / 遷移コマンド                      |
+| `--conclusion <text>`     | 終端時の結論を記録・更新（`update` では `-` で削除）                | `add` / `update` / 終端コマンド                  |
+| `--block-reason <text>`   | `waiting` の理由を更新（`-` で削除）                                | `update`                                         |
+| `--approach <approach>`   | 個票の進め方を指定（`update` では `-` で削除）                      | `add` / `update`                                 |
+| `--target <doc-id>`       | 対象文書 ID を指定（繰り返し可、`update` では `-` で削除）          | `add` / `update`                                 |
+| `--source <ref>`          | kata authoring の手本を指定（繰り返し可、`update` では `-` で削除） | `add` / `update`                                 |
+| `--topic <slug>`          | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
+| `--commit`                | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
+| `-m, --message <message>` | `--commit` のcommitメッセージを上書きする                           | `add` / `update` / `renumber` / 遷移             |
+| `--dry-run`               | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
+| `--since <date>`          | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
+| `--until <date>`          | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
+| `--id <PJR-ID...>`        | 出力する項目を限定する（空白・カンマ区切りで複数可）                | `history`                                        |
+| `--status-only`           | 追加・削除・状態遷移だけを出力する                                  | `history`                                        |
+| `--limit <count>`         | 走査するコミット数の上限                                            | `history`                                        |
+| `--json`                  | イベントを JSON で出力する                                          | `history`                                        |
 
 `register add` は個票 Frontmatter の `registered_at`（起票日時）を、`register close` / `register reject` は `completed_at`（完了・却下日時）を自動記入します。値は UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で、OS / コンテナの `TZ` 環境変数には依存しません。`register reopen` は `completed_at` を削除します。
 
 `register` の `--by` は、project の `pm-members.yaml` にある人の nickname、`.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` だけを受け付けます。agent alias は実体名で event に記録し、未知の値は書き込み前に拒否します。省略時は `SpecDojo` です。決定・承認では `PO` などの Role code や予約 actor ではなく、本人の nickname を指定します。
 
-`--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は成果物カタログの doc id で解決するため、まだ文書がない成果物も指定できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring だけは、1 件目を新しい kata ID、2 件目以降を任意の手本成果物 ID とします。
+`--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は成果物カタログの doc id で解決するため、まだ文書がない成果物も指定できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring は `--target` を新しい kata ID、`--source` を 0 件以上の読み取り専用の手本とします。互換性のため、2 個目以降の `--target` も `--source` と同じ手本として扱います。
 
 `item_type: note` は `open` のまま更新する記録です。`register close` / `register reject` / `register defer` は終了コード 1 で拒否し、対応・回答・判断が必要な場合は `todo` / `question` / `decision` など目的に合う別の `item_type` で起票するよう案内します。本文の追記や修正には `register update` を使用できます。
 
@@ -418,9 +419,13 @@ specdojo schedule strategy generate \
 
 `register add --from <ID>` は、起票の元になった登録項目を個票 Frontmatter の `derived_from` へ記録します。`--from` は複数回指定でき、同じ project の項目は `PJR-XXXX`、別 project の項目は `<project-id>:PJR-XXXX` を使います。自己参照、未設定の project、存在しない項目は書き込み前に拒否します。別 project の項目は、その project の `integration_branch`（省略時は `project/<project-id>/develop`）の Git tree を読んで存在を確認します。`register update --from <ID>` は一覧を置換し、`--from -` で削除します。`register build` は `generated/pjr-derived-items.md` を生成し、元の項目から派生先を逆引きできるようにします。decision から todo を起票するときも、この関係を追跡先として使います。
 
-`external_projects` に宣言した別名を `register add --project <別名> --commit` へ渡すと、相手のリポジトリの `node_modules/.bin/specdojo` を起動し、宣言した実 project ID で起票します。相手の登録簿の形式、名簿、`integration_branch`、commit は相手の CLI に任せ、呼び出し元は相手のファイルを直接変更しません。`--from <別名>:PJR-XXXX` は相手へ `<実 project ID>:PJR-XXXX` として渡すため、相手の CLI が存在を検証し、`derived_from` にも実 project ID が残ります。
+`external_projects` に宣言した別名を `register add --project <別名> --commit` へ渡すと、相手のリポジトリの `node_modules/.bin/specdojo` を起動し、宣言した実 project ID で起票します。相手の登録簿の形式、名簿、`integration_branch`、commit は相手の CLI に任せ、呼び出し元は相手のファイルを直接変更しません。`--from <別名>:PJR-XXXX` は相手へ `<実 project ID>:PJR-XXXX` として渡すため、相手の CLI が存在を検証し、`derived_from` にも実 project ID が残ります。別 project への起票で `--source` を使う場合、相手の SpecDojo は 0.4.5 以上である必要があります。
 
-`register add --approach <approach> --target <doc-id>` は、個票 Frontmatter に進め方と対象を書きます。成果物を作成・修正する進め方は成果物カタログにある文書を、`rulebook-maintenance` などの保守の進め方は名前に対応する kata 種別を対象にし、対象は 1 件だけです。`rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` は、1 件目を新しい kata ID、2 件目以降を手本にするカタログ成果物 ID とします。新しい ID の authority、種類別の末尾、既存 ID との重複、手本の存在を起票時と実行時に検証します。既存 ID には対応する `*-maintenance` を使います。手本の該当参照が `undecided` または未記入なら同じ実行で新 ID へ更新し、別 ID または `not-needed` なら上書きせず result へ申し送ります。`approach` を指定しない `--target` は複数回指定でき、従来どおり変更網羅検証の対象宣言として使えます。`register update` でも同じ検証を行います。
+`register add --approach <approach> --target <doc-id>` は、個票 Frontmatter に進め方と対象を書きます。成果物を作成・修正する進め方は成果物カタログにある文書を、`rulebook-maintenance` などの保守の進め方は名前に対応する kata 種別を対象にし、対象は 1 件だけです。`rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` は `--target` に新しい kata ID、繰り返し可能な `--source` に手本を指定し、個票 Frontmatter の `sources` へ保存します。
+
+`--source` は次の順で解釈します。コロンの前が対象 project の `repos[].name` と一致すれば `<repo>:<path>`、一致せず値に `/` または拡張子があればプロジェクトリポジトリのパス、残りは文書索引で解決する doc id です。パスはファイル、ディレクトリ、glob を受け付けます。ディレクトリと glob はファイルへ展開し、重複を除いた合計が 100 件を超えると停止します。この上限は広すぎるパターンによる読み取り範囲と plan の肥大化を防ぐためです。プロダクトリポジトリの手本は plan に `$SPECDOJO_REPO_<NAME>/<path>` として載ります。カタログは必須ではなく、いずれの形も見つからなければ起票時と実行時に理由を示して停止します。
+
+新しい ID の authority、種類別の末尾、既存 ID との重複も起票時と実行時に検証します。既存 ID には対応する `*-maintenance` を使います。手本がカタログ成果物で、該当参照が `undecided` または未記入なら同じ実行で新 ID へ更新します。別 ID または `not-needed` なら上書きせず result へ申し送り、カタログ外とプロダクトリポジトリの手本は変更も参照更新もしません。互換性のため、新しい kata ID に続く 2 個目以降の `--target` も `--source` と同じ手本として受け付けます。`approach` を指定しない `--target` は複数回指定でき、従来どおり変更網羅検証の対象宣言として使えます。`register update` でも同じ検証を行います。
 
 kata authoring は register 専用です。Schedule の task は対象成果物を起点にするため、「新しい kata ID + 0 件以上の手本」という target 契約を損なわずに表現できません。strategy の phase に指定した場合は plan 生成時に停止します。
 

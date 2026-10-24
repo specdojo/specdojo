@@ -139,6 +139,6 @@ properties:
           minLength: 1
         minItems: 1
         description: >
-          Doc ids of the documents this task targets, carried with the same rules as the
-          plan frontmatter targets (first entry: target deliverable, then reference
-          materials the approach may modify or confirm).
+          Doc ids of the documents this task targets, carried with the same rules as the plan
+          frontmatter targets. Authoring results carry the new kata id; read-only exemplar sources
+          are described in the plan body instead of becoming change-coverage targets.
