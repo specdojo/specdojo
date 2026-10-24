@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-68KR",
   "run_id": "20261024T141457108Z-ca94b8c9",
-  "updated_at": "2026-10-24T14:54:44.998Z",
+  "updated_at": "2026-10-24T14:58:59.749Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-68kr-20261024T141457Z-f92253d9-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "gemma26-reporter",
       "attempts": 3,
       "started_at": "2026-10-24T14:54:44.998Z",
-      "completed_at": null,
+      "completed_at": "2026-10-24T14:58:59.749Z",
       "artifact_ref": null,
       "repos": {
         "project": {

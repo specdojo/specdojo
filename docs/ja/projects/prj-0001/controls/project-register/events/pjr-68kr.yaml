@@ -109,3 +109,16 @@
       from: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
       to: "-"
   previous_event_id: reg_bcdb22a05b044f6f9742bea75300b875
+- v: 1
+  id: reg_d8fd28c265e74eebb42f9da6d9d92429
+  ts: "2026-10-24T14:58:59Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0881b217412347409e98e0bfbf76e7a2
