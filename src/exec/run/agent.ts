@@ -206,6 +206,13 @@ artifacts required by the plan, but do not create or update the result file. Any
 that assigns result writing or lifecycle transitions to the agent belongs to the later reporter or
 runner stage and does not apply here.
 
+Put unresolved decisions, proposed protected-configuration changes, and next actions in the
+report's optional \`handoff\` array (up to 100 non-empty strings, each at most 4000 characters).
+For register tasks, also record them in the ticket's response/results section. If a completion
+condition asks for a note in the result, write it in both places instead of editing the result.
+The runner preserves \`handoff\` in the edit result's handoff section after the reporter stage.
+Use an empty array when there are no handoff notes. Reports without this field remain valid.
+
 The parent runner owns Git commits and repository configuration. Do not run git commit or change
 local, global, or system Git configuration, including user.name and user.email. A Git state change
 will stop the pipeline before validation, reporting, commit, or merge.
@@ -250,7 +257,7 @@ End the final response with exactly one machine-readable report using this envel
 Markdown fences around the JSON.
 
 <specdojo_executor_evidence>
-{"final_message":"concise outcome","validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]${targetCoverageExample}}
+{"final_message":"concise outcome","handoff":[],"validations":[{"command":"exact command","status":"passed|failed|not_run|not_applicable|requires_human","summary":"concise result or required human check","reason":"required when status is not_applicable"}]${targetCoverageExample}}
 </specdojo_executor_evidence>
 `;
 }

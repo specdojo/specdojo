@@ -13,7 +13,8 @@ import {
   scaffoldResult,
   updateResultStatus,
 } from "../../../src/exec/results.js";
-import type { ExecEvidence } from "../../../src/exec/evidence.js";
+import { buildExecutorEvidence, type ExecEvidence } from "../../../src/exec/evidence.js";
+import { evidenceForReporter } from "../../../src/exec/reporter.js";
 import { specdojoRootDir } from "../../../src/shared/specdojo-config.js";
 import { load as loadCompatibleYaml } from "../../../src/shared/yaml.js";
 
@@ -914,6 +915,65 @@ describe("scaffoldResult + updateResultStatus round-trip", () => {
     expect(content).toContain("対象 `test:doc-b` は未変更: 現行内容が完了条件を満たしていた。");
     expect(markdownlintErrors(content)).toEqual([]);
   });
+
+  it.each([{ handoff: [] }, { handoff: ["人が設定案を適用する。", "reporter の補足。"] }])(
+    "preserves executor handoff through reporter rendering with $handoff",
+    async ({ handoff: reporterHandoff }) => {
+      const { resultPath } = await scaffoldResult({
+        executionPath,
+        taskId: "prj-overview",
+        mode: "edit",
+        projectId: "prj-0001",
+        planRef: "exec/plans/prj-overview-plan.md",
+        agent: "pipeline-executor",
+        startedAt: "2026-08-10T07:00:00.000Z",
+      });
+      const frontmatter = readResultFrontmatterSnapshot(resultPath);
+      const { evidence } = buildExecutorEvidence({
+        taskId: "prj-overview",
+        runId: "handoff-run",
+        actor: "pipeline-executor",
+        status: "succeeded",
+        startedAt: "2026-08-10T07:00:00.000Z",
+        completedAt: "2026-08-10T07:01:00.000Z",
+        exitCode: 0,
+        attempts: 1,
+        stdout: `<specdojo_executor_evidence>${JSON.stringify({
+          final_message: "実装と個票を更新した。",
+          handoff: ["人が設定案を適用する。", "`depends_on` の判断は利用者に確認する。"],
+        })}</specdojo_executor_evidence>`,
+        stderr: "",
+        changes: [{ path: "docs/ticket.md", status: "M" }],
+        diffStat: "docs/ticket.md | 1 +",
+        logRefPath: "execution/exec/evidence/handoff-run/executor.log",
+      });
+      const selected = evidenceForReporter(evidence, {
+        repoRoot: executionPath,
+        worktreePath: executionPath,
+        executionPath,
+        resultPath,
+        factOptions: { specdojoConfig: null },
+      });
+      const output = {
+        schema_version: 1 as const,
+        mode: "edit" as const,
+        summary: ["実装を更新した。"],
+        changed_files: [{ path: "docs/ticket.md", summary: "設定案と判断を記録した。" }],
+        handoff: reporterHandoff,
+        approach: "個票の完了条件に従った。",
+      };
+      await renderReporterResult(resultPath, output, selected);
+      const first = readFileSync(resultPath, "utf8");
+      await renderReporterResult(resultPath, output, selected);
+      expect(readFileSync(resultPath, "utf8")).toBe(first);
+      const handoff = first.split("## 3. 申し送り")[1].split("## 4.")[0];
+      if (reporterHandoff.length > 0) expect(handoff).toContain("- reporter の補足。");
+      expect(handoff.match(/人が設定案を適用する。/gu)).toHaveLength(1);
+      expect(handoff).toContain("- `depends_on` の判断は利用者に確認する。");
+      expect(readResultFrontmatterSnapshot(resultPath)).toEqual(frontmatter);
+      expect(markdownlintErrors(first)).toEqual([]);
+    },
+  );
 
   it("adds requires_human validations to the result handoff mechanically", async () => {
     const { resultPath } = await scaffoldResult({

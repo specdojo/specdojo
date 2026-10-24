@@ -207,6 +207,16 @@ properties:
   final_message:
     type: string
     maxLength: 4000
+  handoff:
+    description: >
+      Redacted, bounded executor notes preserved mechanically in the edit result handoff after
+      the reporter stage. Optional for compatibility with existing reports and evidence.
+    type: array
+    maxItems: 100
+    items:
+      type: string
+      minLength: 1
+      maxLength: 4000
   block_reason:
     description: >
       Runner-derived failure or protection reason. Reporter prose never supplies this field.

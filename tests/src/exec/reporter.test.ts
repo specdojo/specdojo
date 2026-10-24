@@ -173,9 +173,11 @@ describe("reporter structured output", () => {
   });
 
   it("passes only plan, bounded evidence, and schema to the reporter", () => {
+    const input = evidence();
+    input.handoff = ["設定案の反映は人が行う。"];
     const prompt = buildReporterPrompt({
       plan: "# Plan\n\nDo the work.",
-      evidence: evidence(),
+      evidence: input,
       mode: "edit",
     });
 
@@ -186,6 +188,8 @@ describe("reporter structured output", () => {
     expect(prompt).toContain("the authoritative changed-file list");
     expect(prompt).toContain("identifier or field name");
     expect(prompt).toContain("`depends_on`");
+    expect(prompt).toContain("設定案の反映は人が行う。");
+    expect(prompt).toContain("The runner preserves evidence.handoff mechanically");
     expect(prompt).not.toContain("raw_diff");
     expect(prompt).not.toContain("executor log body");
   });
