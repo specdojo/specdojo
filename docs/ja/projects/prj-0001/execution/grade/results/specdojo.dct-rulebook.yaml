@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 84
-graded_at: "2026-10-02T21:47:57.413Z"
-graded_by: agy-expert-executor
-content_hash: 2565ef5da09bf68b49f17ab5b16f91fc4cc66e9a40342dfbc080eeb17a295946
+graded_at: "2026-10-24T20:04:11.544Z"
+graded_by: flash-high-executor
+content_hash: f240df6d9b42cf6aa02ebbc85d5f79326f60c61d69875d42f40eed820ff7aef2
 categories:
   purpose:
     score: 100
@@ -110,6 +110,7 @@ findings:
     line: 89
     anchor: "| `title`    | ○    | ドキュメント名              |"
     message: 「4. 推奨メタ項目」と「5.1. ルート構造」でトップレベルキーの定義が重複しており, 冗長であるため。
+    message_ja: 「4. 推奨メタ項目」と「5.1. ルート構造」でトップレベルキーの定義が重複しており, 冗長であるため。
   - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
@@ -118,34 +119,49 @@ findings:
     message: >-
       `groups` と `deliverables` はどちらか一方だけを持つと規定しているが、`dct.schema.yaml` は `anyOf` のため両方を持つ構造も検証に合格し, rulebook
       上の親・葉グループ境界を機械検証できないため。
+    message_ja: >-
+      `groups` と `deliverables` はどちらか一方だけを持つと規定しているが、`dct.schema.yaml` は `anyOf` のため両方を持つ構造も検証に合格し, rulebook
+      上の親・葉グループ境界を機械検証できないため。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 207
-    anchor: ""
-    message: ドメインの `base_path` について、スキーマ（`^/[^\s]+$`）および4章の表では絶対パスを必須としているが、6.6節では「絶対パスで記載することを推奨する」と任意に読める表現になっており矛盾しているため。
+    anchor: "- `viewpoint` には `pm-review-viewpoints.yaml` で定義された `vp-*` の ID を 1 つ記載する。"
+    message: ドメインの `base_path` について、スキーマ（`^/[^\\s]+$`）および4章の表では絶対パスを必須としているが、6.6節では「絶対パスで記載することを推奨する」と任意に読める表現になっており矛盾しているため。
+    message_ja: ドメインの `base_path` について、スキーマ（`^/[^\\s]+$`）および4章の表では絶対パスを必須としているが、6.6節では「絶対パスで記載することを推奨する」と任意に読める表現になっており矛盾しているため。
   - id: F004
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 225
-    anchor: "- どちらのパターンでも `groups[]` と `deliverables[]` の項目数に上限はない。テンプレートの1件は書式サンプルであり、実際に必要な数だけ記載する。"
+    anchor: >-
+      - 対象業務が単一で、成果物を業務の局面・処理内容ごとに複数項目へ分割する場合はパターンB（単一領域・複数項目）を用いる。このときは `_TERM_` を使わず、項目ごとに固定の `local_id` と
+      `done_criteria` を個別に記載する。
     message: >-
+      `min_size` は `type: template` でのみ使用可能と規定しているが、`dct.schema.yaml` は project の group と deliverable でも受理するため、禁止事項と
+      schema 検証結果が一致しないため。
+    message_ja: >-
       `min_size` は `type: template` でのみ使用可能と規定しているが、`dct.schema.yaml` は project の group と deliverable でも受理するため、禁止事項と
       schema 検証結果が一致しないため。
   - id: F005
     severity: major
     rule: vp-qe-kata-conformance
     line: 172
-    anchor: "- 参照先は同一カタログまたは他ドメインカタログに存在する `local_id` とし、ファイルパスや URL を混在させない。"
+    anchor: "- 直接依存する成果物の `local_id` を配列で記載する。依存がない場合は空配列 `[]` とする。"
     message: >-
+      `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
+      `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
+    message_ja: >-
       `sch-track-＜track＞` は対応する `sch-strategy-＜track＞` を `depends_on` に宣言すると規定しているが、`dct-project-management-template` の
       `sch-track-launch` は `depends_on: []` であり、生成元 `sch-strategy-launch` へのトレーサビリティが欠落しているため。
   - id: F006
     severity: major
     rule: vp-qe-kata-conformance
     line: 186
-    anchor: "- `evidence_refs` は成果物ごとの安定した調査入力であり、`approach: retrofit` の edit / review plan に「実装エビデンス」として展開される。"
+    anchor: ""
     message: >-
+      recipe・sample・template の要否と所在は rulebook Frontmatter を正本とすると定義している一方、既存の DCT template 群が本 rulebook を参照しているのに
+      `template` 宣言がなく、fully-guided の参照ハブから適用テンプレートを解決できないため。
+    message_ja: >-
       recipe・sample・template の要否と所在は rulebook Frontmatter を正本とすると定義している一方、既存の DCT template 群が本 rulebook を参照しているのに
       `template` 宣言がなく、fully-guided の参照ハブから適用テンプレートを解決できないため。
   - id: F007
@@ -154,9 +170,11 @@ findings:
     line: 89
     anchor: "| `title`    | ○    | ドキュメント名              |"
     message: 「推奨メタ項目」と「ルート構造」が同じトップレベルキーを連続して再掲し、両節の役割差を読み分けにくいため。
+    message_ja: 「推奨メタ項目」と「ルート構造」が同じトップレベルキーを連続して再掲し、両節の役割差を読み分けにくいため。
   - id: F008
     severity: minor
     rule: vp-ux-readability
     line: 102
     anchor: ""
     message: 「5.1」の空行と「5.3」の finding コメントがフィールド表を途中で分断し、`domain` 以降および `depends_on` 以降が列見出しに結び付かない表示になるため。
+    message_ja: 「5.1」の空行と「5.3」の finding コメントがフィールド表を途中で分断し、`domain` 以降および `depends_on` 以降が列見出しに結び付かない表示になるため。
