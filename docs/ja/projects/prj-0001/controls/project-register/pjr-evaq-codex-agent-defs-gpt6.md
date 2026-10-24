@@ -24,13 +24,22 @@ codex の agent の定義（本リポジトリの .codex/agents と配布する 
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- 次の版の範囲とする（2026-10-24、利用者が承認）。
+- 根拠: OpenAI の公式のモデルの一覧（<https://learn.chatgpt.com/docs/models>、2026-10-24 確認）。`gpt-5.4-mini` は 2026-08-31 に、`gpt-5.5` は 2026-10-14 に Codex（ChatGPT でのサインイン）から外れた。`gpt-5.6-terra` は移行のあいだだけ使える。GPT-6 の系統は `gpt-6-astra`・`gpt-6.1-sol`・`gpt-6-sol`・`gpt-6-luna`。
+- 配布する `templates/codex/agents/*.toml` のモデルを、名簿の雛形（PJR-9482）と同じ 2 段にそろえる。`codex-executor`・`codex-review-executor` は `gpt-6-luna`、`codex-expert-executor`・`codex-expert-review-executor` は `gpt-6.1-sol`、`specdojo-orchestrator` は `gpt-6.1-sol` とする。`model_reasoning_effort` は、モデルが受け付ける値にする（`gpt-6-luna` は Ultra を使わない）。
+- `specdojo-orchestrator.toml` を `npm run orchestrator:sync`（`tools/generate-orchestrator-wrappers.mjs`）が作っている場合は、生成の元のモデルの指定を直し、同期の検査が通るようにする。
+- 本リポジトリの `.codex/agents/*.toml` は保護された設定のため変えない。同じ内容に上げる変更案を result に書く（反映はオーケストレーター）。
+- [[specdojo:exec-config-guide]] と `templates/codex/README.md` の codex の agent の定義のモデルの記述を合わせ、既存の利用者が自分の `.codex/agents` を書き換える方法を書く。
+- 単体テストで、配布する codex の agent の定義のモデルが、外れたモデル（`gpt-5.4-mini`・`gpt-5.5`）と `gpt-5.6-*` を使っていないことを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                           | 担当 | 状態 | メモ |
+| --- | ---------------------------------------------- | ---- | ---- | ---- |
+| 1   | codex の agent の定義のモデルを GPT-6 に上げる | DEV  | open | -    |
 
 ## 4. 対応結果
 
@@ -38,4 +47,5 @@ _TODO_: 完了時に、実施内容・成果物・残課題を記載する。未
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- PJR-9482（名簿の雛形の GPT-6 と expert の 2 段）
+- [[specdojo:exec-config-guide]]
