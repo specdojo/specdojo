@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_58a944fe53d847afb347958c8cd52888
+  ts: "2026-10-21T22:58:31Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: exec run の親の検証に SPECDOJO_PROJECT が漏れ、テストが失敗する
+    - field: description
+      from: ""
+      to: SPECDOJO_PROJECT=prj-0002 のシェル（orchestrator launch の手順どおり）から exec run を流すと、親の検証の test-unit に環境変数が引き継がれ、テストが作る仮のリポジトリの設定に prj-0002 がないため Unknown project で 65 件が失敗する。runner の親の検証の環境またはテストの共通 setup で SPECDOJO_PROJECT を切り離す
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: "2026-10-31"

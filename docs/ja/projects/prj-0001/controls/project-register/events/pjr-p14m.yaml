@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f710fb3774ca417eaa23b0ded1b6448d
+  ts: "2026-10-21T13:19:32Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: project ごとに共有の親の検証を置き換えられるようにする
+    - field: description
+      from: ""
+      to: "`projects.<id>.run.parent_validations` は共有の exec-defaults の親の検証へ追記するだけで減らせない。文書と LP だけを変える prj-0002 の run で本体の全テスト（test-unit・test-integration など）が走らないよう、exec-defaults.yaml を複製せずに project ごとに共有の親の検証を置き換える、または除外できるようにする（prj-0002 の PJR-B3W9 から起票）"
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-21"
+    - field: due
+      from: ""
+      to: "2026-10-31"

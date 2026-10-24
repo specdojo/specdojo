@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_569ac007f0cf40498e454b0d8868d56b
+  ts: "2026-10-21T22:58:31Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 生成される登録簿の一覧で Markdown の記号をエスケープしていない
+    - field: description
+      from: ""
+      to: register build が個票の conclusion などを一覧の表へそのまま書くため、orch:* のような * を含む値が強調記号と解釈され、lint-md（MD037）が失敗する。PJR-SAZC の結論で起き、prj-0002 の PJR-0WFV の run が親の検証で止まった。一覧の生成で Markdown の記号をエスケープするか、コードの書式にする
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: "2026-10-31"
