@@ -9,7 +9,9 @@ specdojo:
   item_type: issue
   item_status: open
   priority: medium
+  owner: DEV
   registered_at: "2026-10-24T22:28:40Z"
+  due_on: "2026-10-31"
 ---
 
 # PJR-R1FB orchestrator が register の完了条件で executor の記録の書き先を誤る
