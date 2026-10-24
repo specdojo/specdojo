@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_13019a4a8bc84a2a8847f0d4cb14b8d9
+  ts: "2026-10-24T00:40:49Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: codex のオーケストレーターが存在しない Skill のファイルを探しにいく
+    - field: description
+      from: ""
+      to: npm run orch:sol:work で起動した codex が、渡されたオーケストレーターの本文を Skill の指示と受け取り、存在しない .agents/skills/specdojo-orchestrator/SKILL.md を読もうとして警告を出す。本文の冒頭に、この文書そのものが指示であり別のファイルを探さないことを書く
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-C50G"]'
