@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ef0827866fc74ea9ae868307c48e2b9b
+  ts: "2026-10-24T09:04:45Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata を作るときの手本を、カタログの外やプロダクトリポジトリのファイルからも指定できるようにする
+    - field: description
+      from: ""
+      to: rulebook-authoring などの手本は、カタログに載っている成果物の doc id でしか指定できず、カタログがないリポジトリや、成果物がプロダクトリポジトリにある場合に使えない。手本を --source で、doc id・プロジェクトリポジトリのパス・repo とパスの組（パターンを含む）で指定できるようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-CT6G"]'
