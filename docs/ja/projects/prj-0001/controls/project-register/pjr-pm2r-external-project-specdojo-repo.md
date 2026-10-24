@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-pm2r-external-project-specdojo-repo
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T13:41:22Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-24T14:44:25Z"
+  conclusion: external_projects の委譲で、相手に node_modules/.bin/specdojo がなく package.json の name が specdojo のときは、相手の dist/specdojo.js を Node で起動するようにした。未ビルドなら npm run build を案内して止まる。インストール済みの CLI を優先し、版の確かめは今のまま
 ---
 
 # PJR-PM2R external_projects で SpecDojo のリポジトリへ起票を任せられない
