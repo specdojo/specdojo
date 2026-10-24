@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5f8a1f6aa38e4096b4b5c1b23e509699
+  ts: "2026-10-24T22:23:41Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Slidev の kata を検証できるよう、scaffold で Slidev を選んで入れられるようにする
+    - field: description
+      from: ""
+      to: 利用者が Slidev の sample・template の kata を作るとき、SpecDojo を入れたリポジトリに Slidev がないとビルドして表示を確かめられない。init / config scaffold で Slidev と関連の設定を選んで入れられるようにする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"
