@@ -130,7 +130,7 @@ members:
     roles: []
     type: agent
     provider: codex
-    model: gpt-5.6-sol
+    model: gpt-6.1-sol
     effort: high
     mode: edit
     stage_role: executor
@@ -583,15 +583,41 @@ specdojo config scaffold --provider claude
 
 `specdojo init --exec` と `config scaffold` が配布する agent の名簿と定義は、実体と別名の 2 段構成です（0.4.0 から）。実体は model の系統と役割で名付け、provider・`model`・役割を持ちます。従来の名前は `aliases` で実体を指す別名として残します。claude と opencode の agent の定義は役割（executor・review executor・reporter）ごとの 1 ファイルで `model` を持たず、`command_params.by_mode` で mode から定義を選び、model は実体の `model` を `--model {model}` で渡します。
 
-| provider    | init が生成する実体                                               | 別名（従来の名前）                                                   | model の書き場所                                     |
-| ----------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------- |
-| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`    | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                           |
-| codex       | `terra-executor`・`terra-review-executor`・`terra-reporter`       | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（effort は `by_proficiency`）         |
-| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`       | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み） |
-| antigravity | `flash-executor`・`flash-review-executor`・`flash-reporter`       | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                  |
-| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter` | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                 |
+| provider    | init が生成する実体                                               | 別名（従来の名前）                                                   | model の書き場所                                            |
+| ----------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------- |
+| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`    | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                                  |
+| claude      | `opus-executor`・`opus-review-executor`（expert）                 | `claude-expert-executor`・`claude-expert-review-executor`            | 実体の `model`（`opus`）                                    |
+| codex       | `luna-executor`・`luna-review-executor`・`luna-reporter`          | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（`gpt-6-luna`、effort は `by_proficiency`）  |
+| codex       | `sol-executor`・`sol-review-executor`（expert）                   | `codex-expert-executor`・`codex-expert-review-executor`              | 実体の `model`（`gpt-6.1-sol`、effort は `by_proficiency`） |
+| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`       | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み）        |
+| antigravity | `flash-executor`・`flash-review-executor`・`flash-reporter`       | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                         |
+| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter` | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                        |
+
+claude と codex は normal と expert の 2 段を持ちます（0.4.6 から）。expert の実体には `proficiency: expert` を付けます。init が書く振り分けの表（`routing`）は、hard を expert の別名（`claude-expert-executor`・`codex-expert-executor`）、medium と easy を normal の別名にし、reporter はどの難易度でも normal の別名にします。expert の段がない provider（opencode・antigravity など）は、hard も normal の別名を使います。codex の reasoning effort は `by_proficiency` で normal が `medium`、expert が `high` で、`gpt-6-luna` は Max までしか受け付けないため Ultra を割り当てません。
 
 init は選んだ provider の実体だけを名簿へ書き、別名は向き先の実体が選ばれたものだけを残します。次の手順の案内（`--executor-by` / `--reporter-by`）には別名を示します。antigravity の `agent-members-snippet.yaml` は実体を `disabled: true` で配布するため、別名は末尾にコメントの例として置きます。別名は無効な member を指せないので、向き先の実体を有効にしたものだけを `aliases` へ写します。
+
+`gpt-6-astra` は雛形の既定に入れません。使う場合は、次のように実体を名簿へ足し、`--executor-by astra-executor` や `routing` で指名します。
+
+```yaml
+members:
+  - nickname: astra-executor
+    display_name: Codex Astra Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-6-astra
+    mode: edit
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: expert
+    priority: 1
+    persona: task-executor
+    scheduler_strategy: critical-first
+```
+
+0.4.5 までの init が作った名簿（`terra-executor` などの `gpt-5.6-terra` の実体と `orch:terra`）は、init も scaffold も書き換えません。新しい名前へそろえる場合は、`.specdojo/agent-members.yaml` の `terra-*` を `luna-*`（`model: gpt-6-luna`）へ名前を変え、`sol-*` を加えるか `model` を `gpt-6.1-sol` にし、`aliases` の `codex-*` の向き先を合わせます。`package.json` は `config scaffold --provider codex` を実行すると `orch:luna` が加わります。不要になった `orch:terra` は手で消し、既存の `orch:sol` は上書きされないため `-m gpt-6.1-sol` へ手で直します。
 
 既存の利用者の 1 段の名簿（`aliases` も `model` も持たない member と、`--agent {nickname}` の `command_template`）は、変更しなくてもそのまま動きます。
 

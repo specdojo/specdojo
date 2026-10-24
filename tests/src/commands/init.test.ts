@@ -306,18 +306,46 @@ describe("specdojo init", () => {
       const roster = loadMemberRoster(repo, config.projects["prj-1234"]);
       const executor = resolveAgentMember(roster, "codex-executor");
       const reporter = resolveAgentMember(roster, "codex-reporter");
+      const expertExecutor = resolveAgentMember(roster, "codex-expert-executor");
+      const expertReviewer = resolveAgentMember(roster, "codex-expert-review-executor");
       expect(executor).toMatchObject({
-        nickname: "terra-executor",
-        model: "gpt-5.6-terra",
+        nickname: "luna-executor",
+        model: "gpt-6-luna",
         stage_role: "executor",
+        proficiency: "normal",
       });
-      expect(reporter).toMatchObject({ nickname: "terra-reporter", stage_role: "reporter" });
+      expect(reporter).toMatchObject({
+        nickname: "luna-reporter",
+        model: "gpt-6-luna",
+        stage_role: "reporter",
+      });
+      expect(resolveAgentMember(roster, "codex-review-executor")).toMatchObject({
+        nickname: "luna-review-executor",
+        model: "gpt-6-luna",
+        mode: "review",
+      });
+      expect(expertExecutor).toMatchObject({
+        nickname: "sol-executor",
+        model: "gpt-6.1-sol",
+        mode: "edit",
+        proficiency: "expert",
+      });
+      expect(expertReviewer).toMatchObject({
+        nickname: "sol-review-executor",
+        model: "gpt-6.1-sol",
+        mode: "review",
+        proficiency: "expert",
+      });
+      const rosterFile = load(readFileSync(join(repo, ".specdojo/agent-members.yaml"), "utf8")) as {
+        members: Array<{ nickname: string; model?: string }>;
+      };
+      expect(rosterFile.members.some((member) => member.model?.includes("terra"))).toBe(false);
 
       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
       expect(defaults.pipeline?.parent_validations).toBeUndefined();
       expect(defaults.routing).toEqual({
         hard: {
-          executor_by: "codex-executor",
+          executor_by: "codex-expert-executor",
           reporter_by: "codex-reporter",
           on_rate_limit: "wait",
         },
@@ -335,14 +363,23 @@ describe("specdojo init", () => {
       expect(output.join("")).toContain(
         "Omitted pipeline.parent_validations: no supported npm scripts were found in package.json.",
       );
-      expect(resolveMemberCommand(defaults, executor!)).toContain("--model gpt-5.6-terra");
-      expect(resolveMemberCommand(defaults, reporter!)).toContain("codex exec");
+      expect(resolveMemberCommand(defaults, executor!)).toContain(
+        '--model gpt-6-luna -c model_reasoning_effort="medium"',
+      );
+      expect(resolveMemberCommand(defaults, expertExecutor!)).toContain(
+        '--model gpt-6.1-sol -c model_reasoning_effort="high"',
+      );
+      expect(resolveMemberCommand(defaults, expertReviewer!)).toContain("--model gpt-6.1-sol");
+      expect(resolveMemberCommand(defaults, reporter!)).toContain(
+        '--model gpt-6-luna -c model_reasoning_effort="medium"',
+      );
 
       const packageJson = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
         scripts: Record<string, string>;
       };
-      expect(packageJson.scripts["orch:sol"]).toContain("-m gpt-5.6-sol");
-      expect(packageJson.scripts["orch:terra"]).toContain("-m gpt-5.6-terra");
+      expect(packageJson.scripts["orch:sol"]).toContain("-m gpt-6.1-sol");
+      expect(packageJson.scripts["orch:luna"]).toContain("-m gpt-6-luna");
+      expect(packageJson.scripts["orch:terra"]).toBeUndefined();
       expect(packageJson.scripts["orch:codex"]).toBeUndefined();
       expect(output.join("")).toContain(
         "npx specdojo exec run --register <id> --executor-by codex-executor --reporter-by codex-reporter",
@@ -431,6 +468,8 @@ describe("specdojo init", () => {
         { nickname: "claude-executor", alias_of: "sonnet-executor" },
         { nickname: "claude-review-executor", alias_of: "sonnet-review-executor" },
         { nickname: "claude-reporter", alias_of: "sonnet-reporter" },
+        { nickname: "claude-expert-executor", alias_of: "opus-executor" },
+        { nickname: "claude-expert-review-executor", alias_of: "opus-review-executor" },
         { nickname: "opencode-executor", alias_of: "gemma-executor" },
         { nickname: "opencode-review-executor", alias_of: "gemma-review-executor" },
         { nickname: "opencode-reporter", alias_of: "gemma-reporter" },
@@ -458,9 +497,10 @@ describe("specdojo init", () => {
       expect(Object.keys(defaults.providers).sort()).toEqual(["claude", "copilot", "opencode"]);
       expect(defaults.routing).toMatchObject({
         hard: {
-          executor_by: "claude-executor",
+          executor_by: "claude-expert-executor",
           reporter_by: "claude-reporter",
           on_rate_limit: "wait",
+          // opencode には expert の段がないため、hard の代替も normal の別名を使う。
           fallback_executor_by: "opencode-executor",
           fallback_reporter_by: "opencode-reporter",
         },

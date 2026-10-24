@@ -2,6 +2,13 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [Unreleased]
+
+### 変更
+
+- `specdojo init --exec` が書く agent の名簿の雛形を、GPT-6 の系統と normal・expert の 2 段にそろえました。codex の normal は `gpt-6-luna` の `luna-executor`・`luna-review-executor`・`luna-reporter`、expert は `gpt-6.1-sol` の `sol-executor`・`sol-review-executor` です。claude には expert の `opus-executor`・`opus-review-executor` を加えました。別名 `claude-expert-executor`・`claude-expert-review-executor`・`codex-expert-executor`・`codex-expert-review-executor` を加え、`codex-executor` などの既存の別名は `luna-*` を指します。振り分けの表（`routing`）は hard を expert の別名、medium と easy と reporter を normal の別名にします。`init` と `config scaffold` が加える codex の起動スクリプトは `orch:sol`（`gpt-6.1-sol`）と `orch:luna`（`gpt-6-luna`）になり、`orch:terra` は作りません（PJR-9482）。
+- 既存の `.specdojo/agent-members.yaml`・`.specdojo/exec-defaults.yaml`・`package.json` は書き換えません。新しい名前へそろえる場合は、名簿の `terra-*` を `luna-*`（`model: gpt-6-luna`）へ、`sol-*` の `model` を `gpt-6.1-sol` へ変え、`aliases` の向き先を合わせます。`package.json` の `orch:terra` は `orch:luna`（`-m gpt-6-luna`）へ、`orch:sol` は `-m gpt-6.1-sol` へ手で直します。手順は exec 設定ガイドの `agent の名簿の 2 段構成と移行` にあります。
+
 ## [0.4.5] - 2026-10-24
 
 ### 追加機能

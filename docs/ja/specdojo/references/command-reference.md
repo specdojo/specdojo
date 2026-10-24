@@ -95,7 +95,7 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
 `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。
 
-`package.json` がある場合、provider ごとのオーケストレーター起動スクリプトも追加します。Claude Code は `orch:opus`・`orch:sonnet`、Codex は `orch:sol`（`gpt-5.6-sol`）・`orch:terra`（`gpt-5.6-terra`）、Antigravity は `orch:flash`（`gemini-3.8-flash-high`）、OpenCode は `orch:opencode` です。既存のスクリプトは `--force` を付けても上書きしません。
+`package.json` がある場合、provider ごとのオーケストレーター起動スクリプトも追加します。Claude Code は `orch:opus`・`orch:sonnet`、Codex は `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、Antigravity は `orch:flash`（`gemini-3.8-flash-high`）、OpenCode は `orch:opencode` です。既存のスクリプトは `--force` を付けても上書きしません。
 
 `antigravity` に限り `--global` を指定すると、`~/.gemini/antigravity-cli/settings.json` へ SpecDojo 用の permission rule を追記します。既存キー・既存 rule は保持し、実書き込み前に timestamp 付きバックアップを作ります。`--global` を省略した通常実行はユーザーディレクトリへ触れません。適用前は次の dry-run で追加 rule を確認してください。
 

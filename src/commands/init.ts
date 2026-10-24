@@ -488,35 +488,58 @@ function writeExecConfiguration(
     memberTemplate.aliases ?? [],
     new Set(members.map((member) => member.nickname)),
   );
+  // normal の段（medium・easy と全 reporter）と expert の段（hard）を provider ごとに選ぶ。
+  // expert の段がない provider（opencode・antigravity など）は hard も normal の段を使う。
   const pairs = providers.map((provider) => {
     const executor = members.find(
       (member) =>
-        member.provider === provider && member.stage_role === "executor" && member.mode === "edit",
+        member.provider === provider &&
+        member.stage_role === "executor" &&
+        member.mode === "edit" &&
+        member.proficiency !== "expert",
+    );
+    const expertExecutor = members.find(
+      (member) =>
+        member.provider === provider &&
+        member.stage_role === "executor" &&
+        member.mode === "edit" &&
+        member.proficiency === "expert",
     );
     const reporter = members.find(
-      (member) => member.provider === provider && member.stage_role === "reporter",
+      (member) =>
+        member.provider === provider &&
+        member.stage_role === "reporter" &&
+        member.proficiency !== "expert",
     );
     if (!executor || !reporter) {
       throw new Error(
         `init-agent-members.yaml must define an edit executor and reporter for ${provider}`,
       );
     }
+    const normalExecutor = preferredAgentName(executor, aliases);
     return {
-      executor: preferredAgentName(executor, aliases),
+      executor: normalExecutor,
+      hardExecutor: expertExecutor ? preferredAgentName(expertExecutor, aliases) : normalExecutor,
       reporter: preferredAgentName(reporter, aliases),
     };
   });
-  const route = (pairIndex: number, action: "stop" | "wait" | "fallback") => {
+  const route = (
+    pairIndex: number,
+    action: "stop" | "wait" | "fallback",
+    tier: "normal" | "expert" = "normal",
+  ) => {
+    const executorOf = (pair: (typeof pairs)[number]): string =>
+      tier === "expert" ? pair.hardExecutor : pair.executor;
     const resolvedIndex = Math.min(pairIndex, pairs.length - 1);
     const pair = pairs[resolvedIndex]!;
     const fallback = pairs.length > 1 ? pairs[(resolvedIndex + 1) % pairs.length] : undefined;
     return {
-      executor_by: pair.executor,
+      executor_by: executorOf(pair),
       reporter_by: pair.reporter,
       on_rate_limit: action === "fallback" && !fallback ? "stop" : action,
       ...(fallback
         ? {
-            fallback_executor_by: fallback.executor,
+            fallback_executor_by: executorOf(fallback),
             fallback_reporter_by: fallback.reporter,
           }
         : {}),
@@ -537,7 +560,7 @@ function writeExecConfiguration(
   const configuredDefaults: Record<string, unknown> = {
     ...commonDefaults,
     routing: {
-      hard: route(0, "wait"),
+      hard: route(0, "wait", "expert"),
       medium: route(1, "fallback"),
       easy: route(2, "fallback"),
     },

@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-24T12:51:55Z"
-  block_reason: "agent exited with non-zero code: parent validation failed: test-integration; rate limit fallback: sol-executor -> opus-executor at 2026-10-24T12:53:50.053Z"
   derived_from:
     - PJR-2ASZ
 ---
@@ -55,7 +54,7 @@ specdojo:
 - reasoning effort は雛形の `init-exec-defaults.yaml` の `by_proficiency`（normal は `medium`、expert は `high`）のまま。`gpt-6-luna` へ Ultra を渡さない。
 - `src/commands/init.ts` の振り分けの表は、hard を expert の別名（ない provider は normal の別名）、medium・easy と reporter を normal の別名にした。normal の executor と reporter は `proficiency: expert` 以外から選ぶ。
 - `src/shared/provider-scaffold.ts` の codex の `orch:*` を `orch:sol`（`gpt-6.1-sol`）と `orch:luna`（`gpt-6-luna`）にし、`orch:terra` は作らないようにした。既存のスクリプトは引き続き上書きしない。
-- 単体テスト（`tests/src/commands/init.test.ts`・`tests/src/shared/provider-scaffold.test.ts`）で、名簿の実体・別名・振り分けの表・`orch:*`、`command_template` の `{model}` と effort の組み立てを確かめる。
+- 単体テスト（`tests/src/commands/init.test.ts`・`tests/src/shared/provider-scaffold.test.ts`）で、名簿の実体・別名・振り分けの表・`orch:*`、`command_template` の `{model}` と effort の組み立てを確かめる。統合テスト `tests/src/commands/init-agent-roster.integration.test.ts` の別名の一覧にも expert の 4 つの別名を加えた。
 - 文書は `templates/claude/README.md`・`templates/codex/README.md`・[[specdojo:exec-config-guide]]（2 段の表、`gpt-6-astra` を足す例、0.4.5 までの名簿から移す手順）・command-reference・orchestrator-operation-guide の `init` の説明と CHANGELOG の `## [Unreleased]` を更新した。
 - 残課題: 本リポジトリの `.specdojo/agent-members.yaml` と `package.json` は保護された設定のため変えていない。オーケストレーターが反映する変更案は次のとおり。
   - `.specdojo/agent-members.yaml`: `sol-executor`・`sol-review-executor` の `model` を `gpt-6.1-sol` にする。`terra-executor`・`terra-review-executor`・`terra-reporter` を `luna-executor`・`luna-review-executor`・`luna-reporter`（`model: gpt-6-luna`）に名前を変え、`aliases` の `codex-executor`・`codex-review-executor`・`codex-reporter` の `alias_of` を `luna-*` にする。
