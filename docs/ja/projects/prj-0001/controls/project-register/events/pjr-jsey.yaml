@@ -1975,3 +1975,35 @@
       from: "-"
       to: "agent exited with non-zero code: parent validation failed: test-unit"
   previous_event_id: reg_27efc10a48b4453797a686ed8632a6f7
+- v: 1
+  id: reg_881a964c8ad049749c89cb95e00d5d97
+  ts: "2026-10-24T15:09:45Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_8e6a849d84bb4b059e34630ae53b3d87
+- v: 1
+  id: reg_a88eebdc10384db69070cea43cf41e05
+  ts: "2026-10-24T15:15:32Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_881a964c8ad049749c89cb95e00d5d97
