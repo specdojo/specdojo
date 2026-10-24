@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  block_reason: "agent exited with non-zero code: parent validation failed: test-unit"
   conclusion: PJR-ZV60 の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
 ---
 
