@@ -44,6 +44,16 @@ specdojo:
 | 依存事項 | なし                                                                                                                                                                                                                                                                                                   |
 | 完了条件 | カタログと pm-roles のない project で、`*-maintenance` の plan が markdownlint を通り、着手の checkpoint を通る。この条件を確かめる test がある                                                                                                                                                        |
 
+### 3.1. 完了条件（追記）
+
+- v0.4.6 の範囲とする（2026-10-24、利用者が承認）。上の表の完了条件を満たす。
+- `rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` と `<種類>-authoring` の plan の雛形のすべてで、観点や責務の欄が空のとき（`_MISSING_` になるとき）にも、markdownlint を通る形になる。どの雛形を直したかを result に書く。
+- 単体テストで、カタログと pm-roles のない project の `*-maintenance` の plan が markdownlint を通ることを確かめる。
+- plan の生成を変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
+
 ## 4. 対応結果
 
 _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。

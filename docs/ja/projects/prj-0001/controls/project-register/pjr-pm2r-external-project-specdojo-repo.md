@@ -44,6 +44,15 @@ specdojo:
 | 依存事項 | なし                                                                                                                                                  |
 | 完了条件 | 利用者のリポジトリから SpecDojo のリポジトリの project へ `register add --project <別名> --commit` で起票できる。または、制約と回避の手順が文書にある |
 
+### 3.1. 完了条件（追記）
+
+- v0.4.6 の範囲とする（2026-10-24、利用者が承認）。上の表の対応策のうち、実行ファイルの探し方を広げる方で直す（文書に制約を書くだけにはしない）。
+- 委譲の相手のリポジトリに `node_modules/.bin/specdojo` がなく、相手の `package.json` の `name` が `specdojo`（SpecDojo 自身のリポジトリ）で `dist/specdojo.js` がある場合は、`node <相手>/dist/specdojo.js` で起動する。`dist/specdojo.js` がない場合は、`npm run build` を案内して止まる。版の確かめ（0.4.2 以上）は今のまま行う。
+- 統合テストで、SpecDojo 自身のリポジトリに見立てた一時のリポジトリ（`name: specdojo` と `dist/specdojo.js` を持つ）へ、別の一時のリポジトリから起票できることを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
+
 ## 4. 対応結果
 
 _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。

@@ -44,6 +44,16 @@ specdojo:
 | 依存事項 | なし                                                                                                                                                                |
 | 完了条件 | 着手の checkpoint と待ち状態の記帳の commit が hook で失敗したとき、要約と `block_reason` に失敗した step の名前と error の行が出る。この条件を確かめる test がある |
 
+### 3.1. 完了条件（追記）
+
+- v0.4.6 の範囲とする（2026-10-24、利用者が承認）。上の表の完了条件を満たす。
+- 着手の checkpoint・待ち状態の記帳・統合の commit のすべてで、hook の失敗の要約に同じ処理（PJR-0EFN の処理）を使う。lefthook の summary で失敗の印が付いた step と、その step の最初の error の行を挙げる。
+- 単体テストで、成功した step（prettier など）の出力が先にあり、失敗した step（markdownlint など）が後にある hook の出力から、失敗した step が選ばれることを確かめる。
+- runner のコードを変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
+
 ## 4. 対応結果
 
 _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
