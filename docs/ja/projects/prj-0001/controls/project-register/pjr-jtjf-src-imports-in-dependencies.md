@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: review
   priority: high
   difficulty: medium
   owner: DEV
@@ -54,7 +54,12 @@ PJR-ZV60 で src が tinyglobby を読み込んだが devDependencies にしか�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容: TypeScript Compiler API で `src/` の静的 `import`、`export ... from`、動的 `import()` を解析する `tools/check-src-imports-in-dependencies.mjs` を追加した。型だけの読み込み、相対パス、`node:` 付き標準モジュールを除外し、それ以外のパッケージが `dependencies` または `peerDependencies` に無ければ、ファイル・行・パッケージ・元の specifier を示して失敗する。正規表現では TypeScript 構文上の型 import と実行時 import を正確に区別しにくいため、既存の開発依存である TypeScript の Compiler API を用いた。
+- 単体テスト: `tests/tools/check-src-imports-in-dependencies.test.ts` で、`dependencies` 相当、`peerDependencies` 相当、`node:` 付き標準モジュール、相対パス、型だけの読み込みが通り、開発時にしかないパッケージの静的 import・再 export・動的 import が違反になることと、エラー表示にファイル名とパッケージ名が含まれることを確認する。
+- 開発手順: `CONTRIBUTING.md` に、`src/` が実行時に読み込むパッケージは `dependencies` または `peerDependencies` に置き、`devDependencies` へ置かない規則を追記した。
+- `npm run check` への配線: executor による親実行設定の変更を禁じる [[sysd-cross-cutting-policy|SpecDojo システム設計横断ルール]] の `scp-SEC-002` に従い、保護設定の `package.json` は本実行では変更していない。対話型オーケストレーターが agent 実行外で、`scripts` に `"check:src-imports": "node tools/check-src-imports-in-dependencies.mjs"` を追加し、`check` の先頭から `npm run check:src-imports` を呼ぶ変更を確認・反映する必要がある。
+- 確認結果: `node tools/check-src-imports-in-dependencies.mjs` を現在のソースへ実行し、違反がないことを確認した。TypeScript の lint・型検査・単体テストを含む親検証は runner が実行する。
+- 再発防止: 上記の `package.json` 配線後は、`npm run check` が配布コードの未宣言実行時依存を検出する。
 
 ## 5. 関連ドキュメント
 

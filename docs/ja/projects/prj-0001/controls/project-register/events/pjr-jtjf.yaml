@@ -38,3 +38,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-ZV60"]'
+- v: 1
+  id: reg_b3475dd229654d18b12bf7592ec9695e
+  ts: "2026-10-24T09:55:00Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_07e4c668c22449aa95f12db9fbeb7182
+- v: 1
+  id: reg_34f7de19b98840499997214808daff2c
+  ts: "2026-10-24T10:11:22Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_b3475dd229654d18b12bf7592ec9695e
