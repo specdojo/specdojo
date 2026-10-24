@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cf63709269ab4309928de12636537972
+  ts: "2026-10-24T12:51:56Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 配布する名簿の雛形を GPT-6 と expert の 2 段にそろえる
+    - field: description
+      from: ""
+      to: 雛形の codex の実体は gpt-5.6-terra の terra だけで、expert の段（sol・opus）もない。codex は normal を gpt-6-luna の luna、expert を gpt-6.1-sol の sol、claude は normal を sonnet、expert を opus とし、codex-expert-executor と claude-expert-executor の別名を加える。init の振り分けの表と orch の script も合わせる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2ASZ"]'
