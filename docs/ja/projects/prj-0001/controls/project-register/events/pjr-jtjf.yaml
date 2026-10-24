@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_b3475dd229654d18b12bf7592ec9695e
+- v: 1
+  id: reg_f3b2851b73604a18a05549a20a6f0bf6
+  ts: "2026-10-24T10:14:56Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが今の develop で検査が通ることを確かめ、package.json は保護された設定のため利用者（indie）の承認でオーケストレーターが配線した（feature/prj-0001/check-src-imports）
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: "src の静的・動的な読み込みと再 export を TypeScript の構文解析で調べ、dependencies・peerDependencies・node: の標準モジュール以外のパッケージを読み込んでいれば失敗する検査を加え、npm run check から流れるようにした。CONTRIBUTING.md に規則を書いた"
+  previous_event_id: reg_34f7de19b98840499997214808daff2c

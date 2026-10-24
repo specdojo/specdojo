@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jtjf-src-imports-in-dependencies
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-24T09:54:09Z"
+  completed_at: "2026-10-24T10:14:56Z"
+  conclusion: "src の静的・動的な読み込みと再 export を TypeScript の構文解析で調べ、dependencies・peerDependencies・node: の標準モジュール以外のパッケージを読み込んでいれば失敗する検査を加え、npm run check から流れるようにした。CONTRIBUTING.md に規則を書いた"
   derived_from:
     - PJR-ZV60
 ---
