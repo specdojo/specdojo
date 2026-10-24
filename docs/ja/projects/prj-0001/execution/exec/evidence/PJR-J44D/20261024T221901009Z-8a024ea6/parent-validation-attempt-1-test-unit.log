@@ -1,0 +1,122 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.5 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-J44D
+
+Updated ticket status → ready: /tmp/specdojo-ticket-mjeqTY/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-MgcRD2/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-UQq1dX/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-XT9Wsj/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-0gDbnZ/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-uZxhpf/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+ ❯ tests/src/docs/doc-index.test.ts (28 tests | 1 failed) 46ms
+     × 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する 10ms
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Would move 1 agent member(s) from /tmp/specdojo-members-QKEtK3/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-QKEtK3/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-QKEtK3/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-QKEtK3/.specdojo/agent-members.yaml
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-24T22:28:03.754Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-24T22:27:04.095Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-24T22:27:04.609Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-Wr96b2/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-hrsESJ/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 144 passed (145)
+      Tests  1 failed | 2384 passed (2385)
+   Start at  07:26:37
+   Duration  37.95s (transform 3.03s, setup 596ms, import 22.11s, tests 33.58s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/docs/doc-index.test.ts > prj-0001 project register references > 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する
+AssertionError: expected { …(2) } to deeply equal { …(2) }
+
+- Expected
++ Received
+
+  {
+    "content": "# Register guide
+
+- [登録簿](docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md)
++ [登録簿](/docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md)
+  ",
+    "missingIds": [],
+  }
+
+ ❯ tests/src/docs/doc-index.test.ts:786:79
+    784|       }
+    785|       expect(wikilinkReferenceCount).toBe(2);
+    786|       expect(replaceDocIndexRefs(readFileSync(guidePath, "utf8"), inde…
+       |                                                                               ^
+    787|         content: `# Register guide\n\n[登録簿](${expectedPath})\n`,
+    788|         missingIds: [],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
