@@ -20,7 +20,7 @@ specdojo:
 
 ## 1. 概要
 
-v0.4.4 の範囲（EKRW・4J4A）を main へ昇格し、specdojo 0.4.4 を npm に公開する
+v0.4.4 の範囲（EKRW・4J4A・C95G）を main へ昇格し、specdojo 0.4.4 を npm に公開する
 
 ## 2. 完了条件
 

@@ -200,10 +200,28 @@ describe("validateDctDoc", () => {
       expect(result.errors.some((e) => e.includes("domain"))).toBe(true);
     });
 
-    it("groups が空配列の場合はエラーを返す", () => {
+    it("groups が空配列の場合は成果物がまだない領域として受理する", () => {
       const result = validateDctDoc(makeDoc({ groups: [] }), "/dummy/dct.yaml");
+      expect(result).toEqual({ ok: true, errors: [], warnings: [] });
+    });
+
+    it("groups がない場合はエラーを返す", () => {
+      const doc = { ...makeDoc() } as Record<string, unknown>;
+      delete doc.groups;
+
+      const result = validateDctDoc(doc as unknown as DctDoc, "/dummy/dct.yaml");
+
       expect(result.ok).toBe(false);
-      expect(result.errors.some((e) => e.includes("groups"))).toBe(true);
+      expect(result.errors).toContain("/dummy/dct.yaml: missing required field: groups");
+    });
+
+    it("groups が配列でない場合はエラーを返す", () => {
+      const doc = { ...makeDoc(), groups: "invalid" } as unknown as DctDoc;
+
+      const result = validateDctDoc(doc, "/dummy/dct.yaml");
+
+      expect(result.ok).toBe(false);
+      expect(result.errors).toContain("/dummy/dct.yaml: groups must be an array");
     });
 
     it("エラーメッセージにファイルパスが含まれる", () => {

@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_40488294837b41c49701b9ba4fcc8a74
+  ts: "2026-10-23T23:43:16Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: init の小さいカタログの空の groups で catalog build が止まり worktree の実行ができない
+    - field: description
+      from: ""
+      to: "init --catalog small が作るカタログのうち 15 個が成果物のない groups: [] になり、catalog build が空の groups をエラーにするため specdojo build が失敗する。worktree の準備が止まり、カタログを作ったリポジトリで exec run --register --worktree が実行できない。0.4.0 から公開中の 0.4.3 まで同じ"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-EKRW"]'
+- v: 1
+  id: reg_f9970ff2c5684fb5941be593bc95f1ea
+  ts: "2026-10-23T23:44:11Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_40488294837b41c49701b9ba4fcc8a74
+- v: 1
+  id: reg_2895a786bba3462a91b52b6bc85ec5e4
+  ts: "2026-10-23T23:53:01Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+  previous_event_id: reg_f9970ff2c5684fb5941be593bc95f1ea
+- v: 1
+  id: reg_1c1f69ada13c42698654cf76394056d0
+  ts: "2026-10-23T23:53:36Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration, typecheck"
+      to: "-"
+  previous_event_id: reg_2895a786bba3462a91b52b6bc85ec5e4
+- v: 1
+  id: reg_a59a5a2d8d394ac8b0be62928ef2d206
+  ts: "2026-10-24T00:04:55Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1c1f69ada13c42698654cf76394056d0
+- v: 1
+  id: reg_72fe620c9ab343aca3dee32dbdf15c36
+  ts: "2026-10-24T00:16:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが、0.4.3 の init --catalog small で作ったリポジトリで直した CLI の specdojo build が通ることを確かめ、統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: "成果物カタログ（type: project）の空の groups を受け付け、groups がない・配列でない場合のエラーは残した。init --catalog small の直後の specdojo build が通る"
+  previous_event_id: reg_a59a5a2d8d394ac8b0be62928ef2d206
