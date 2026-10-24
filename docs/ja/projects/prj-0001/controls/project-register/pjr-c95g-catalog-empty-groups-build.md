@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-c95g-catalog-empty-groups-build
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-23T23:43:14Z"
+  completed_at: "2026-10-24T00:16:18Z"
+  conclusion: "成果物カタログ（type: project）の空の groups を受け付け、groups がない・配列でない場合のエラーは残した。init --catalog small の直後の specdojo build が通る"
   derived_from:
     - PJR-EKRW
 ---

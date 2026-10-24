@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1c1f69ada13c42698654cf76394056d0
+- v: 1
+  id: reg_72fe620c9ab343aca3dee32dbdf15c36
+  ts: "2026-10-24T00:16:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが、0.4.3 の init --catalog small で作ったリポジトリで直した CLI の specdojo build が通ることを確かめ、統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: "成果物カタログ（type: project）の空の groups を受け付け、groups がない・配列でない場合のエラーは残した。init --catalog small の直後の specdojo build が通る"
+  previous_event_id: reg_a59a5a2d8d394ac8b0be62928ef2d206
