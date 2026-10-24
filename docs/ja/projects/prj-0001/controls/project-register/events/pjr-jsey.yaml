@@ -1946,3 +1946,16 @@
       from: "2026-10-24"
       to: "-"
   previous_event_id: reg_f1f7d36e36da487588115cfce48bcb26
+- v: 1
+  id: reg_27efc10a48b4453797a686ed8632a6f7
+  ts: "2026-10-24T15:00:52Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_477207ddd57041f48ff2add65f2f28c6
