@@ -617,7 +617,7 @@ members:
   # codex members
   #
 
-  - nickname: terra-executor
+  - nickname: luna-executor
     disabled: false
     priority: 2
     display_name: Codex Executor
@@ -625,7 +625,7 @@ members:
     roles: []
     type: agent
     provider: codex
-    model: gpt-5.6-terra
+    model: gpt-6-luna
     effort: medium
     mode: edit
     stage_role: executor
@@ -651,7 +651,7 @@ members:
     roles: []
     type: agent
     provider: codex
-    model: gpt-5.6-sol
+    model: gpt-6.1-sol
     effort: high
     mode: edit
     stage_role: executor
@@ -671,7 +671,7 @@ members:
       Codex CLI を使用する expert pipeline executor（edit）。複雑な分析・設計判断を伴う成果物編集と検証だけを担当し、result
       は更新しない。reasoning effort・sandboxはexec-defaultsのcommand
       templateで指定する。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
-  - nickname: terra-review-executor
+  - nickname: luna-review-executor
     disabled: false
     priority: 2
     display_name: Codex Review Executor
@@ -679,7 +679,7 @@ members:
     roles: []
     type: agent
     provider: codex
-    model: gpt-5.6-terra
+    model: gpt-6-luna
     effort: medium
     mode: review
     stage_role: executor
@@ -705,7 +705,7 @@ members:
     roles: []
     type: agent
     provider: codex
-    model: gpt-5.6-sol
+    model: gpt-6.1-sol
     effort: high
     mode: review
     stage_role: executor
@@ -723,7 +723,7 @@ members:
       Codex CLI を使用する高性能 pipeline executor（review）。複雑な多観点レビューを支援するが、成果物・result
       のいずれも変更しない（読み取り専用）。境界は plan の指示と specdojo CLI の commit
       許可リストで作る。最終判断は行わない。codexはnicknameによるagent選択を行わないため、専用の.codex/agents定義は持たない。
-  - nickname: terra-reporter
+  - nickname: luna-reporter
     disabled: false
     priority: 2
     display_name: Codex Reporter
@@ -731,7 +731,7 @@ members:
     roles: []
     type: agent
     provider: codex
-    model: gpt-5.6-terra
+    model: gpt-6-luna
     effort: medium
     stage_role: reporter
     proficiency: normal
@@ -1034,15 +1034,15 @@ aliases:
   - nickname: claude-reporter
     alias_of: sonnet-reporter
   - nickname: codex-executor
-    alias_of: terra-executor
+    alias_of: luna-executor
   - nickname: codex-expert-executor
     alias_of: sol-executor
   - nickname: codex-review-executor
-    alias_of: terra-review-executor
+    alias_of: luna-review-executor
   - nickname: codex-expert-review-executor
     alias_of: sol-review-executor
   - nickname: codex-reporter
-    alias_of: terra-reporter
+    alias_of: luna-reporter
   - nickname: agy-executor
     alias_of: flash-executor
   - nickname: agy-expert-executor
