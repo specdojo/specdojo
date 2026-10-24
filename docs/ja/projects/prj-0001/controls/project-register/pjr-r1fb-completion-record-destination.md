@@ -50,6 +50,16 @@ orchestrator の指示文は、完了条件で「result に書く」と指示さ
 | 依存事項 | 1・2 は指示文の SSOT を直し、各 provider の版へ同期する                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | 完了条件 | 1〜4 が入っている。3 で、executor の `handoff` が result の申し送りに載ることを確かめる test がある                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
+### 追記（2026-10-25、利用者が承認）
+
+- v0.4.6 の範囲とする。上の表の対応策 1〜4 を満たす。
+- 対応策 1・2（オーケストレーターの本文の「完了条件の書き方」・止まったときの対処・close の前の確かめ方）は、本文の正本 `.agents/specdojo-orchestrator.agent.md` が保護された設定のため、executor は直す文の案を result と個票の対応結果に書く。反映と 10 か所の写しへの同期はオーケストレーターが行う。
+- 対応策 3・4（executor の報告の形式に申し送りの欄を足し、reporter がそれを result の申し送りに載せる。register の plan の雛形の書き先の指示を合わせる）は executor が実装する。報告の形式を変えるときは、既存の executor の報告（欄がないもの）もそのまま受け付ける。
+- runner のコードを変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
+
 ## 4. 対応結果
 
 _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。

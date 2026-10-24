@@ -55,6 +55,22 @@ coderdojo-lessons-specdojo では、表示を確かめるために次を手で�
 - 以上を確かめる test がある。
 - テーマと活動固有のコンポーネント（例: `ScratchBlocks.vue`）の扱いを、scaffold の範囲か利用者の作業かに決め、文書に書いている。
 
+### 追記（2026-10-25、利用者が承認）
+
+- v0.4.6 の範囲とする。
+- Slidev は次の 2 つの部分に分けて入れる。
+  - リポジトリの設定: `init --slidev` と `config scaffold --slidev` で、`package.json` の devDependencies（`@slidev/cli`・`prettier-plugin-slidev` など）、`.prettierrc` の overrides（スライドのファイルにだけ `slidev` の parser を当てる）、`.markdownlintignore`（スライドのファイルの除外）を入れる。既定では入れない。当てるパスは、報告元が手で入れた構成（kata の Slidev のファイルだけに当てる形）を手本に決め、result と個票の対応結果に書く。
+  - Dev Container: preset の `full`（PJR-47S6）の VS Code 拡張の一覧に `antfu.slidev` を加える。`minimal` と `recommended` には加えない。
+- `init` で Dev Container の preset に `full` を選んだときは、`--slidev` の質問の既定を「はい」にする（`--yes --devcontainer --devcontainer-preset full` のときも入れる）。それ以外の既定は「いいえ」のまま。
+- 既存の `.prettierrc`・`.markdownlintignore`・`package.json` の項目は上書きしない。足りないものは追加する内容を表示して案内する。`package.json` の書き換えは lefthook（PJR-7H7N）と同じ扱いにする。
+- 本リポジトリの `package.json` などの保護された設定は変えない。
+- 文書化の範囲は [[specdojo:kata-guide]] と [[specdojo:command-reference]] とし、Slidev の kata を `slidev build` で確かめる手順と、テーマや活動固有のコンポーネントは利用者の作業とすることを書く。
+- 継続検討の PJR-2ZMY（文書の編集ツールの方針）とは、「Slidev は既定では入れず、`full` か `--slidev` のときだけ入れる」形で整合させる。
+- 単体テストで、`--slidev` の有無、`full` の preset の既定、既存のファイルを上書きしないことを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
+
 ## 3. 作業内容
 
 | No  | 作業                                                          | 担当 | 状態 | メモ                               |
