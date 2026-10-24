@@ -32,3 +32,29 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_39fe348c8bf94e94b4846f812d0b015b
+  ts: "2026-10-24T14:01:18Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_b0cb094ecff6497dac3dcbb75c268ad1
+- v: 1
+  id: reg_c2ec6f4f41924e1db197f2e33ddc2ee6
+  ts: "2026-10-24T14:13:53Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: "rate limit fallback: sol-executor -> opus-executor at 2026-10-24T14:02:44.437Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_39fe348c8bf94e94b4846f812d0b015b
