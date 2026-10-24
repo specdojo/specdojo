@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_c61afee5d0534a5b936e98a097c94c34
+  ts: "2026-10-24T23:14:35Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_5f8a1f6aa38e4096b4b5c1b23e509699
+- v: 1
+  id: reg_4ba24b9f557f4f4f9112531dbd9c1b6b
+  ts: "2026-10-24T23:28:25Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_c61afee5d0534a5b936e98a097c94c34
