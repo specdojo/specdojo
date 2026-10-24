@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2ef0b4814f504f2aa053b50f826320b4
+  ts: "2026-10-24T23:47:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: authoring の kata ができた後、register update が担当や期限の変更でも止まる
+    - field: description
+      from: ""
+      to: register update は変更しない approach と target も毎回検証し直すため、authoring の個票は kata ができた後、担当や期限だけを変える場合も「kata id already exists」で止まる。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"
