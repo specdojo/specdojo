@@ -32,3 +32,22 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_01cf57c107bf4edb9a0bf089cbba2127
+  ts: "2026-10-24T13:26:19Z"
+  action: reject
+  actor: indie
+  from_status: open
+  to_status: rejected
+  reason: 利用者（indie）の判断で、既存の PJR-6SQH と重なるため reject する。prj-0002 の develop に main（0.4.5）を取り込めば同じ問題は出なくなる
+  changes:
+    - field: status
+      from: open
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: PJR-6SQH（0.4.2）で、一覧・派生ビュー・PM ログの表のセルの強調の記号（アスタリスクとアンダースコア）をエスケープするよう直っている。素の URL は PJR-4J4A（0.4.4）で囲むようになった。prj-0002 で起きたのは、prj-0002 の作業ツリーの CLI が 0.4.2 より古いため
+  previous_event_id: reg_569ac007f0cf40498e454b0d8868d56b

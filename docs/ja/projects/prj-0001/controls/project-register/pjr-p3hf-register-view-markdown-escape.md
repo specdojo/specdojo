@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-p3hf-register-view-markdown-escape
   type: project
-  status: draft
+  status: deprecated
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: rejected
   priority: medium
   owner: DEV
   registered_at: "2026-10-21T22:58:31Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-24T13:26:19Z"
+  conclusion: PJR-6SQH（0.4.2）で、一覧・派生ビュー・PM ログの表のセルの強調の記号（アスタリスクとアンダースコア）をエスケープするよう直っている。素の URL は PJR-4J4A（0.4.4）で囲むようになった。prj-0002 で起きたのは、prj-0002 の作業ツリーの CLI が 0.4.2 より古いため
 ---
 
 # PJR-P3HF 生成される登録簿の一覧で Markdown の記号をエスケープしていない
