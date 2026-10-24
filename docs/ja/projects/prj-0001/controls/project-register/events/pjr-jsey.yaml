@@ -1808,3 +1808,19 @@
       from: PJR-CT6G の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
       to: PJR-EKRW の統合後も exec run --register が start から review まで通り、actor に実体名が記録された
   previous_event_id: reg_6c2315116b3644f7a344c8f30b42f6d1
+- v: 1
+  id: reg_5e1ed4386cc2484f8fda024ad16317eb
+  ts: "2026-10-24T00:07:14Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-C95G の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-24"
+      to: "-"
+  previous_event_id: reg_95edc143c198441788839f87a04cf1bb
