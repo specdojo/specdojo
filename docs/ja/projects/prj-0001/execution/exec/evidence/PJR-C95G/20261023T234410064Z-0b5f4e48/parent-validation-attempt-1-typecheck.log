@@ -1,0 +1,14 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.3 typecheck
+> tsc -b --noEmit
+
+tests/src/commands/build.integration.test.ts(121,29): error TS2304: Cannot find name 'readdirSync'.
+tests/src/commands/build.integration.test.ts(122,10): error TS7006: Parameter 'file' implicitly has an 'any' type.
+
+
+--- stderr ---
