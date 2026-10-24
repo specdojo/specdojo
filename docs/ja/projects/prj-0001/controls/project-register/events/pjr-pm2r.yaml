@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d5746cf7ad154ec1b434191d6d9337aa
+  ts: "2026-10-24T13:41:22Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: external\_projects で SpecDojo のリポジトリへ起票を任せられない
+    - field: description
+      from: ""
+      to: external\_projects の起票の委譲は相手の node\_modules/.bin/specdojo を呼ぶが、SpecDojo 自身のリポジトリには npm install 後もこの実行ファイルがないため、利用者のリポジトリから本家へ起票できない。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: "2026-10-31"
