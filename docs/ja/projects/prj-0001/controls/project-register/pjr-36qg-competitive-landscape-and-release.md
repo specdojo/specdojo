@@ -747,10 +747,10 @@ kata・登録簿・catalog／schedule・grade の接続は SpecDojo の特徴と
 
 参照した一次情報（2026-10-24 確認）:
 
-- [BMAD Method 公式の方式説明](https://www.bmadcode.com/method)
-- [BMAD Method 公式ドキュメント](https://docs.bmad-method.org/)
-- [AWS の AI-DLC 方法論の解説](https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/)
-- [AI-DLC Workflows 公式リポジトリ](https://github.com/awslabs/aidlc-workflows)
+- BMAD Method 公式の方式説明: <https://www.bmadcode.com/method>
+- BMAD Method 公式ドキュメント: <https://docs.bmad-method.org/>
+- AWS の AI-DLC 方法論の解説: <https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/>
+- AI-DLC Workflows 公式リポジトリ: <https://github.com/awslabs/aidlc-workflows>
 
 ## 4. 関連ドキュメント
 
