@@ -128,3 +128,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_7e8f5487462240978f0d20c9da749674
+- v: 1
+  id: reg_0b3041fd8e3340bcbdc3997113bee05d
+  ts: "2026-10-24T10:06:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが、カタログを持たずプロダクトリポジトリを宣言した一時のリポジトリで、--source にプロダクトリポジトリのパターンを書いて claude で流し、rulebook が作られ、プロダクトリポジトリが変わらないことを確かめた。そこで tinyglobby が dependencies にない不具合が見つかり、利用者（indie）の承認で依存を移した。統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: kata の手本を --source で、doc id・プロジェクトリポジトリのパス・repo とパスの組（パターンを含む）で指定できるようにした。カタログがなくても kata を作れ、付け替えは手本がカタログの成果物で参照が undecided のときだけ行う。--target の 2 つ目以降の手本も互換で受け付ける
+  previous_event_id: reg_21fa3303360b4f76a3d26b44078918f5

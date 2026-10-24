@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-zv60-kata-authoring-sources
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-24T09:04:44Z"
+  completed_at: "2026-10-24T10:06:55Z"
+  conclusion: kata の手本を --source で、doc id・プロジェクトリポジトリのパス・repo とパスの組（パターンを含む）で指定できるようにした。カタログがなくても kata を作れ、付け替えは手本がカタログの成果物で参照が undecided のときだけ行う。--target の 2 つ目以降の手本も互換で受け付ける
   derived_from:
     - PJR-CT6G
 ---
