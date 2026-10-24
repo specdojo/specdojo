@@ -48,10 +48,10 @@ CLI を直接操作する場合の代表フローは [遂行の技活用ガイ�
 | `orch:sonnet:work`  | Claude Code / `sonnet`                | `../worktrees/claude-work`（無ければ自動作成）  |
 | `orch:opus`         | Claude Code / `opus`                  | なし                                            |
 | `orch:opus:work`    | Claude Code / `opus`                  | `../worktrees/claude-work`（無ければ自動作成）  |
-| `orch:terra`        | Codex / `gpt-5.6-terra`               | なし                                            |
-| `orch:terra:work`   | Codex / `gpt-5.6-terra`               | `../worktrees/codex-work`（無ければ自動作成）   |
-| `orch:sol`          | Codex / `gpt-5.6-sol`                 | なし                                            |
-| `orch:sol:work`     | Codex / `gpt-5.6-sol`                 | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:luna`         | Codex / `gpt-6-luna`                  | なし                                            |
+| `orch:luna:work`    | Codex / `gpt-6-luna`                  | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:sol`          | Codex / `gpt-6.1-sol`                 | なし                                            |
+| `orch:sol:work`     | Codex / `gpt-6.1-sol`                 | `../worktrees/codex-work`（無ければ自動作成）   |
 | `orch:copilot`      | GitHub Copilot                        | なし                                            |
 | `orch:copilot:work` | GitHub Copilot                        | `../worktrees/copilot-work`（無ければ自動作成） |
 | `orch:qwen`         | OpenCode / Qwen 3.8                   | なし                                            |
@@ -82,7 +82,7 @@ npm run orch:opus
 npm run orch:sonnet:work
 ```
 
-frontier モデルは Claude Code が `opus`、Codex が `gpt-5.6-sol` に対応します。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使います。
+frontier モデルは Claude Code が `opus`、Codex が `gpt-6.1-sol` に対応します。通常運用はそれぞれ既定の `sonnet` / `gpt-6-luna` を使います。
 
 worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、そこから `specdojo orchestrator launch` を起動します。無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
 
