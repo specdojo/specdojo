@@ -61,3 +61,35 @@
       from: "-"
       to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > 成果物 approach は s…"
   previous_event_id: reg_afd160361a8f41bcaeeaab44aad4790a
+- v: 1
+  id: reg_a94905ad4c504b90999ea68390b46635
+  ts: "2026-10-24T14:45:24Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > 成果物 approach は s…"
+      to: "-"
+  previous_event_id: reg_26a00626fb7b409c8d030ae2193b94ba
+- v: 1
+  id: reg_bcdb22a05b044f6f9742bea75300b875
+  ts: "2026-10-24T14:49:15Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
+  previous_event_id: reg_a94905ad4c504b90999ea68390b46635
