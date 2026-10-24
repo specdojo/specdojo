@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: low
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-24T00:40:49Z"
+  completed_at: "2026-10-24T00:56:25Z"
+  conclusion: 同梱のオーケストレーターの本文の冒頭に、この文書そのものが指示の全体であり、同じ名前の Skill や agent の定義のファイルを別に探さないことを加え、10 か所の写しへ同期した
   derived_from:
     - PJR-C50G
 ---

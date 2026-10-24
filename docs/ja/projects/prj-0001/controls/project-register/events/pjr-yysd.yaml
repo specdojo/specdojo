@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-C50G"]'
+- v: 1
+  id: reg_b4d61cc8ab084d17aa70444e2ffd4021
+  ts: "2026-10-24T00:56:25Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: 利用者（indie）の承認でオーケストレーターが feature/prj-0001/orchestrator-no-skill-lookup で直し、develop へ取り込んだ（12168274a）。codex-work の作業ツリーで同じ本文を codex に渡して話しかけ、SKILL.md を探しにいかず、運用メモを読んで状況確認に進むことを確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: 同梱のオーケストレーターの本文の冒頭に、この文書そのものが指示の全体であり、同じ名前の Skill や agent の定義のファイルを別に探さないことを加え、10 か所の写しへ同期した
+  previous_event_id: reg_13019a4a8bc84a2a8847f0d4cb14b8d9
