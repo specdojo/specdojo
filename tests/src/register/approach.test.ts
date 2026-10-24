@@ -259,9 +259,9 @@ describe("validateRegisterApproachTargets", () => {
       }),
     ).toThrow(/every --target after the first to be a catalog deliverable/);
 
-    mkdirSync(join(root, "docs/ja/kata/rulebooks"), { recursive: true });
+    mkdirSync(join(root, "docs/ja/specdojo/rulebooks/example-repo"), { recursive: true });
     writeFileSync(
-      join(root, "docs/ja/kata/rulebooks/payment-rulebook.md"),
+      join(root, "docs/ja/specdojo/rulebooks/example-repo/payment-rulebook.md"),
       "---\nspecdojo:\n  id: example-repo:payment-rulebook\n  type: rulebook\n  status: draft\n---\n",
       "utf8",
     );

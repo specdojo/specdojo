@@ -35,11 +35,15 @@ SpecDojo は、成果物（プロダクトとプロジェクトの内容その�
 
 npm package が所有する型の文書は、package ごとの authority を ID に付けます。SpecDojo core は `specdojo:`、業界固有の variant package は `construction-dojo:` などを使用します。authority は論理IDにだけ含め、ファイル名には含めません。利用プロジェクトへコピーした標準文書を override する場合は同じ完全IDを維持し、独自文書を追加する場合は別IDを付けます。
 
+配置は SpecDojo core が `docs/ja/specdojo/<種類>s/<local-id>.<拡張子>`、それ以外が `docs/ja/specdojo/<種類>s/<authority>/<local-id>.<拡張子>` です。利用者リポジトリと variant package は同じ authority サブディレクトリ形式を使うため、育てた kata を ID とパスを変えずに package へ移せます。
+
 ### 1.1. npm package からの参照と eject
 
 SpecDojo core の rulebook / standard / recipe / sample / template は、npm package に同梱されたものを既定で参照します。プロジェクト固有の変更が必要な文書だけを利用リポジトリの同じ相対パスへ eject し、同じ完全 ID を維持して上書きします。
 
 文書 ID のインデックスは、利用リポジトリの `docs/` と、resolver が返す package ルート配下の上記 5 種別のディレクトリを別スコープとして走査します。同一スコープ内で同じ ID が複数のファイルにあればエラーです。利用リポジトリと package の間で同じ ID がある場合は正常な override として利用リポジトリ側を採用します。どちらにも存在しない ID は未解決のままです。
+
+0.4.4 では移行互換として旧 `docs/ja/kata/<種類>s/` も読みます。旧配置を見つけた場合は authority サブディレクトリへの移動を案内し、新旧に同じ ID がある場合は新配置を優先して警告します。
 
 package の探索では `node_modules` 全体を再帰走査せず、resolver が返した SpecDojo package の対象ディレクトリだけを読みます。この解決結果は CLI の wikilink とカタログ検証に使います。VitePress で package 側文書を配信するためのステージングは、docs サイトのビルド責務として別に扱います。
 

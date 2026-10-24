@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-EKRW",
+  "run_id": "20261023T144213831Z-3c46ff3c",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-23T14:42:13.831Z",
+    "completed_at": "2026-10-23T14:46:21.839Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ekrw.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ekrw-kata-authority-directory.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/kata-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/practice-system-composition-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/id-and-file-naming-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/recipe-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/sample-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/template-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/kata-staging.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/README.md",
+      "status": "M"
+    },
+    {
+      "path": "src/docs/doc-index.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/authoring.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/catalog/generate.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/docs/doc-index.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/kata-authoring.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/triggers.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/kata/command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/kata/kata.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/approach.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/kata-staging.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ekrw.yaml",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 28,
+    "summary": ".../controls/project-register/events/pjr-ekrw.yaml | 16 ++++\n .../pjr-ekrw-kata-authority-directory.md           |  3 +-\n .../pjr-ekrw-20261023T134941Z-79f8072f-plan.md     |  4 +\n docs/ja/specdojo/guides/docs-structure-guide.md    |  2 +-\n docs/ja/specdojo/guides/kata-guide.md              |  4 +-\n .../guides/practice-system-composition-guide.md    |  4 +\n docs/ja/specdojo/guides/quick-start-guide.md       |  2 +-\n docs/ja/specdojo/references/command-reference.md   |  2 +-\n .../references/specdojo-config-reference.md        |  2 +-\n .../standards/id-and-file-naming-standard.md       |  4 +\n .../standards/recipe-authoring-standard.md         |  6 +-\n .../standards/rulebook-authoring-standard.md       |  4 +-\n .../standards/sample-authoring-standard.md         |  8 +-\n .../standards/template-authoring-standard.md       |  6 +-\n packages/docs-site/.vitepress/kata-staging.ts      | 15 +++-\n packages/docs-site/README.md                       |  3 +-\n src/docs/doc-index.ts                              |  9 ++\n src/kata/authoring.ts                              | 98 ++++++++++++++++++----\n src/kata/command.ts                                | 78 +++++++++++------\n src/kata/kata.ts                                   | 59 ++++++++++---\n tests/src/catalog/generate.test.ts                 | 14 ++--\n tests/src/docs/doc-index.test.ts                   | 34 ++++++++\n tests/src/exec/kata-authoring.integration.test.ts  |  4 +-\n tests/src/exec/register-plan-escape.test.ts        | 18 ++--\n tests/src/grade/triggers.test.ts                   | 14 ++++\n tests/src/kata/command.test.ts                     | 47 ++++++++++-\n tests/src/kata/kata.test.ts                        | 44 ++++++++--\n tests/src/register/approach.test.ts                |  4 +-\n 28 files changed, 408 insertions(+), 100 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/events/pjr-ekrw.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-ekrw-kata-authority-directory.md docs/ja/projects/prj-0001/execution/exec/plans/pjr-ekrw-20261023T134941Z-79f8072f-plan.md docs/ja/specdojo/guides/docs-structure-guide.md docs/ja/specdojo/guides/kata-guide.md docs/ja/specdojo/guides/practice-system-composition-guide.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/references/comman…",
+      "status": "passed",
+      "summary": "変更対象を Prettier で整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "全カタログが成功しました。既存の別リポジトリ成果物不足に関する警告のみです。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーはありません。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.3 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EKRW/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EKRW/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EKRW/src/shared/specdojo-config.ts\n  1219:1  warning  File has too many lines (1087). Maximum allowed is 1000  max-lines\n\n✖ 35 problems (0 errors, 35 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.3 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.3 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.3 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EKRW\n\nWritten: lefthook.yml\nWritten: .markdownlint.jsonc\nWritten: .markdownlintignore\nWritten: tools/install-lefthook.mjs\nWritten: tools/specdojo-pre-commit.mjs\nPlanned package.json additions:\n{\n  \"scripts\": {\n    \"prepare\": \"node tools/install-lefthook.mjs\",\n    \"pre-commit\": \"lefthook run pre-commit\"\n  },\n  \"devDependencies\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.3 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.3 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EKRW/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EKRW/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.3 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.3 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.3 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EKRW\n\nRate limit detected for pinned agent pinned. Waiting until 2026-10-23T14:50:23.216Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-23T14:49:23.523Z.\nfallback complete\nConnection error detected for pinned agent primary-reporter. Falling back to fallback-reporte\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "kata maintenance fixture を実運用と同じ authority 配置へ修正し、前回の単体テスト失敗原因を解消しました。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EKRW/20261023T144213831Z-3c46ff3c/executor.log",
+      "bytes": 2431,
+      "truncated": false
+    }
+  ]
+}

@@ -146,7 +146,7 @@ specdojo config scaffold --workspace --force
 
 ### 2.1. kata
 
-`kata` は、利用リポジトリで作成・上書きした型（Kata）と npm package から参照中の型を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。`kata_authority` の kata は `docs/ja/kata/` からだけ解決し、`kata list` と `kata show` にも表示します。
+`kata` は、利用リポジトリで作成・上書きした型（Kata）と npm package から参照中の型を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。`kata_authority` の kata は `docs/ja/specdojo/<種類>s/<kata_authority>/` から解決し、`kata list` と `kata show` にも表示します。0.4.4 のあいだは旧 `docs/ja/kata/<種類>s/` も読み、新配置への移動案内を標準エラーへ出します。新旧に同じ ID があれば新配置を優先します。
 
 | コマンド         | 用途                                                    | 例                                               |
 | ---------------- | ------------------------------------------------------- | ------------------------------------------------ |

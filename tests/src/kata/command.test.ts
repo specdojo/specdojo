@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { Command } from "commander";
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   ejectKata,
   findKataResource,
@@ -150,7 +150,7 @@ describe("kata commands", () => {
     );
   });
 
-  it("lists and shows only this repository authority from docs/ja/kata", () => {
+  it("lists and shows only this repository authority from its authority subdirectory", () => {
     writeAt(
       repositoryRoot,
       ".specdojo/specdojo.config.json",
@@ -158,12 +158,12 @@ describe("kata commands", () => {
     );
     const localPath = writeAt(
       repositoryRoot,
-      "docs/ja/kata/rulebooks/payment-rulebook.md",
+      "docs/ja/specdojo/rulebooks/customer/payment-rulebook.md",
       markdown("customer:payment-rulebook", "customer"),
     );
     writeAt(
       repositoryRoot,
-      "docs/ja/kata/rulebooks/foreign-rulebook.md",
+      "docs/ja/specdojo/rulebooks/foreign/foreign-rulebook.md",
       markdown("foreign:foreign-rulebook", "foreign"),
     );
     writeAt(
@@ -179,6 +179,45 @@ describe("kata commands", () => {
     expect(findKataResource("customer:payment-rulebook", { roots: roots() }).resolvedPath).toBe(
       localPath,
     );
+  });
+
+  it("reads the legacy directory with guidance and prefers a duplicate canonical kata", () => {
+    writeAt(
+      repositoryRoot,
+      ".specdojo/specdojo.config.json",
+      JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
+    );
+    const legacyOnlyPath = writeAt(
+      repositoryRoot,
+      "docs/ja/kata/rulebooks/legacy-rulebook.md",
+      markdown("customer:legacy-rulebook", "legacy"),
+    );
+    writeAt(
+      repositoryRoot,
+      "docs/ja/kata/rulebooks/payment-rulebook.md",
+      markdown("customer:payment-rulebook", "legacy duplicate"),
+    );
+    const canonicalPath = writeAt(
+      repositoryRoot,
+      "docs/ja/specdojo/rulebooks/customer/payment-rulebook.md",
+      markdown("customer:payment-rulebook", "canonical"),
+    );
+    const warning = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+
+    const resources = listKataResources({ roots: roots() });
+    expect(
+      resources.filter((resource) => resource.id === "customer:payment-rulebook"),
+    ).toHaveLength(1);
+    expect(findKataResource("customer:payment-rulebook", { roots: roots() }).resolvedPath).toBe(
+      canonicalPath,
+    );
+    expect(findKataResource("customer:legacy-rulebook", { roots: roots() }).resolvedPath).toBe(
+      legacyOnlyPath,
+    );
+    const warnings = warning.mock.calls.flat().join("");
+    expect(warnings).toContain("legacy path");
+    expect(warnings).toContain("both");
+    warning.mockRestore();
   });
 
   it("reports same, modified, and package-missing ejected files", () => {

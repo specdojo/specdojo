@@ -239,6 +239,18 @@ describe("mergeDomainCatalogs", () => {
 });
 
 describe("buildCatalog", () => {
+  it("builds an empty domain catalog without errors", () => {
+    const catalogPath = makeCatalog({
+      "dct-architecture.yaml": dctWithGroups("architecture", []),
+    });
+
+    const { generated, errors } = buildCatalog(catalogPath);
+
+    expect(errors).toEqual([]);
+    expect(generated).toHaveLength(1);
+    expect(readFileSync(generated[0], "utf8")).toContain("# 成果物カタログ: architecture");
+  });
+
   it("emits one dct-<domain>.md per domain, merging split parts", () => {
     const catalogPath = makeCatalog({
       "dct-data-model-sales.yaml": dctYaml("data-model", ["sales-x"], {

@@ -1,0 +1,10 @@
+個票の「対応結果」の表に 1 行を追記しました。変更したのはこの個票だけです。検証は親 runner の実行結果を正とします。
+
+- **追記した行:** `2026-10-23 23:56 | PJR-EKRW | sonnet-executor`
+- **対象の分割:** 完了条件の一覧にある項目のうち、最新の統合は `PJR-EKRW` でした。git log で、`PJR-EKRW` の統合が表の最終行の `PJR-CT6G` より後だと確認しました。登録簿の本体ファイルは、この worktree では見つかりませんでした。
+- **日時:** 実行時点の UTC 14:56 を JST に換算しました。
+- **agent:** 表の直近の行と同じ `sonnet-executor` としました。
+
+<specdojo_executor_evidence>
+{"final_message":"個票の対応結果の表に PJR-EKRW の行（2026-10-23 23:56 JST, sonnet-executor）を追記した。他のファイルは変更していない。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist 検証のため executor では実行しない"}]}
+</specdojo_executor_evidence>

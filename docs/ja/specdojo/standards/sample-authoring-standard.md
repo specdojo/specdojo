@@ -9,13 +9,13 @@ specdojo:
 
 Sample Authoring Standard
 
-`docs/ja/specdojo/samples/` と `docs/ja/kata/samples/` 配下の各 `*-sample.(md|yaml|json)` が従うべき構成・記述ルール・禁止事項・運用ルールを定義します。Frontmatter（メタ情報）の規約は [document-metadata-standard.md](document-metadata-standard.md) を正本とし、本書では扱いません。
+`docs/ja/specdojo/samples/` 直下と `docs/ja/specdojo/samples/<authority>/` 配下の各 `*-sample.(md|yaml|json)` が従うべき構成・記述ルール・禁止事項・運用ルールを定義します。Frontmatter（メタ情報）の規約は [document-metadata-standard.md](document-metadata-standard.md) を正本とし、本書では扱いません。
 
 ## 1. 適用範囲
 
-- 対象: `docs/ja/specdojo/samples/` と `docs/ja/kata/samples/` 配下のすべての `*-sample.(md|yaml|json)`
+- 対象: `docs/ja/specdojo/samples/` 直下と `docs/ja/specdojo/samples/<authority>/` 配下のすべての `*-sample.(md|yaml|json)`
 - 目的: sample の構成・記述品質を統一し、粒度・文体・表の書き方を確認できる完成最小例を提供する
-- 一次根拠: 対応する `docs/ja/specdojo/rulebooks/` または `docs/ja/kata/rulebooks/` 配下の rulebook
+- 一次根拠: 対応する `docs/ja/specdojo/rulebooks/` 直下または `docs/ja/specdojo/rulebooks/<authority>/` 配下の rulebook
 - Frontmatter 規約の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - ファイル名・ID 規則: [docs-structure-guide.md](../guides/docs-structure-guide.md)
 
@@ -93,7 +93,7 @@ sample は実在プロジェクトの記録ではありません。記載値は�
 | 金森鉄子   | 60   | 女   | 店舗運営アドバイザー | 店舗運用、引継ぎ、障害時対応、継続運用の観点から助言する         | `operations-advisor`         | 金森金物店の店主。しっかり者で面倒見がよく、算野家を支援する               |
 | 春野さくら | 24   | 女   | 家族利用者代表       | 家族による店番や、子どもにも分かりやすい利用方法の観点を提供する | `family-user-representative` | 創太のいとこ。保育士で明るく優しい性格を持ち、子どもたちから親しまれている |
 
-人物名はこの共通人物台帳と物語文書だけで管理し、`docs/ja/specdojo/samples/` または `docs/ja/kata/samples/` 配下の sample には記載しません。各 sample では対象成果物に関係する人物だけを、次の識別方法で記述します。
+人物名はこの共通人物台帳と物語文書だけで管理し、`docs/ja/specdojo/samples/` 直下または `docs/ja/specdojo/samples/<authority>/` 配下の sample には記載しません。各 sample では対象成果物に関係する人物だけを、次の識別方法で記述します。
 
 - 本文、表の表示名、ステークホルダー名には「店主代表」「開発担当」「利用者代表」などの役割名を使用する。
 - Member や実行主体の安定識別子が必要な項目には、表に定義した役割ベースの `nickname` を使用する。

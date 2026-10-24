@@ -3,7 +3,12 @@ import { resolve } from "node:path";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { parsePracticeId, practiceLocalId } from "../shared/practice-id.js";
-import { authoredKataPath, configuredKataAuthority, type AuthoringKind } from "./authoring.js";
+import {
+  authoredKataPath,
+  configuredKataAuthority,
+  resolveAuthoredKataPathIfExists,
+  type AuthoringKind,
+} from "./authoring.js";
 import {
   resolveSpecdojoPathIfExists,
   resolveSpecdojoReferencePathIfExists,
@@ -45,11 +50,15 @@ const KIND_DIR: Record<KataKind, string> = {
 };
 
 function rulebookFsPath(rulebookId: string): string {
-  const relativePath = practiceRepoPath("rulebook", rulebookId, "md");
   const authority = parsePracticeId(rulebookId).authority;
   if (authority && authority !== "specdojo") {
-    return resolve(specdojoRootDir(), relativePath);
+    const rootDir = specdojoRootDir();
+    return (
+      resolveAuthoredKataPathIfExists(rulebookId, "rulebook", "md", rootDir)?.absolutePath ??
+      resolve(rootDir, practiceRepoPath("rulebook", rulebookId, "md", rootDir))
+    );
   }
+  const relativePath = practiceRepoPath("rulebook", rulebookId, "md");
   return (
     resolveSpecdojoPathIfExists(relativePath) ??
     specdojoResourceCandidates(relativePath).repositoryPath
@@ -109,8 +118,22 @@ function kataReferencePath(relativePath: string, id: string): string {
   return resolveSpecdojoReferencePathIfExists(relativePath) ?? relativePath;
 }
 
-function kataFsPath(relativePath: string, id: string): string {
-  if (!isSpecdojoResourceId(id)) return resolve(specdojoRootDir(), relativePath);
+function kataFsPath(kind: KataKind, relativePath: string, id: string): string {
+  if (!isSpecdojoResourceId(id)) {
+    const rootDir = specdojoRootDir();
+    const extension = relativePath.split(".").pop();
+    if (extension && ["md", "yaml", "yml", "json"].includes(extension)) {
+      return (
+        resolveAuthoredKataPathIfExists(
+          id,
+          kind,
+          extension as "md" | "yaml" | "yml" | "json",
+          rootDir,
+        )?.absolutePath ?? resolve(rootDir, relativePath)
+      );
+    }
+    return resolve(rootDir, relativePath);
+  }
   return (
     resolveSpecdojoPathIfExists(relativePath) ??
     specdojoResourceCandidates(relativePath).repositoryPath
@@ -146,9 +169,13 @@ export function resolveKataDocumentPathIfExists(
   const authority = parsePracticeId(id).authority;
   if (authority && authority !== "specdojo") {
     if (authority !== configuredKataAuthority(repositoryRoot)) return undefined;
-    const relativePath = practiceRepoPath(kind, id, extension, repositoryRoot);
-    const absolutePath = resolve(repositoryRoot, relativePath);
-    return existsSync(absolutePath) ? absolutePath : undefined;
+    if (!["md", "yaml", "yml", "json"].includes(extension)) return undefined;
+    return resolveAuthoredKataPathIfExists(
+      id,
+      kind,
+      extension as "md" | "yaml" | "yml" | "json",
+      repositoryRoot,
+    )?.absolutePath;
   }
   return resolveSpecdojoPathIfExists(practiceRepoPath(kind, id, extension, repositoryRoot), roots);
 }
@@ -176,7 +203,14 @@ function resolveRef(
     return MISSING;
   }
   if (primaryId) {
-    const relativePath = repoPath(kind, primaryId, declaredRefExt(kind, primaryId, ext));
+    const resolvedExt = declaredRefExt(kind, primaryId, ext);
+    const relativePath = !isSpecdojoResourceId(primaryId)
+      ? (resolveAuthoredKataPathIfExists(
+          primaryId,
+          kind,
+          resolvedExt as "md" | "yaml" | "yml" | "json",
+        )?.relativePath ?? repoPath(kind, primaryId, resolvedExt))
+      : repoPath(kind, primaryId, resolvedExt);
     return kataReferencePath(relativePath, primaryId);
   }
   return MISSING;
@@ -214,7 +248,10 @@ export function resolveKataRefs(
 
 // rulebook の repo 相対パス（先頭スラッシュ無し）。
 function rulebookRepoPath(rulebookId: string): string {
-  return practiceRepoPath("rulebook", rulebookId, "md");
+  return !isSpecdojoResourceId(rulebookId)
+    ? (resolveAuthoredKataPathIfExists(rulebookId, "rulebook", "md")?.relativePath ??
+        practiceRepoPath("rulebook", rulebookId, "md"))
+    : practiceRepoPath("rulebook", rulebookId, "md");
 }
 
 // 主 rulebook の frontmatter `includes` から、併せて適用する rulebook の宣言順・重複除去済み
@@ -297,7 +334,7 @@ export function declaredKata(rulebookId: string): DeclaredKata[] {
       out.push({
         kind,
         id,
-        fsPath: kataFsPath(relativePath, id),
+        fsPath: kataFsPath(kind, relativePath, id),
       });
     }
   };

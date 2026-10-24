@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_52d33478e65f47b8b035160b566f41eb
+  ts: "2026-10-23T13:47:59Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 利用者の kata の置き場所を authority ごとのディレクトリに直す
+    - field: description
+      from: ""
+      to: 0.4.3 では利用者の kata を docs/ja/kata の下に作るが、authority がディレクトリに出ず本体とも形が違う。PJR-8QT0 の決定に従い、docs/ja/specdojo の種類ごとのディレクトリの下の authority のサブディレクトリに置くよう直す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-8QT0"]'
+- v: 1
+  id: reg_bcaafdc5e6484c3eb89675c1e0ce6653
+  ts: "2026-10-23T13:49:42Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_52d33478e65f47b8b035160b566f41eb
+- v: 1
+  id: reg_07f76d6df486470ea053d5d7909aee24
+  ts: "2026-10-23T14:05:08Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
+  previous_event_id: reg_bcaafdc5e6484c3eb89675c1e0ce6653
+- v: 1
+  id: reg_24ade64bac1b460f81243371d91b35dd
+  ts: "2026-10-23T14:32:43Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-md, test-unit"
+      to: "-"
+  previous_event_id: reg_07f76d6df486470ea053d5d7909aee24
+- v: 1
+  id: reg_e382021cd702459d9200d46801775cab
+  ts: "2026-10-23T14:41:23Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_24ade64bac1b460f81243371d91b35dd
+- v: 1
+  id: reg_490fb106bbc644e99f4b58582c1865bd
+  ts: "2026-10-23T14:42:11Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_e382021cd702459d9200d46801775cab
+- v: 1
+  id: reg_c8df56a3e73848319a12a18e45d21f35
+  ts: "2026-10-23T14:53:30Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_490fb106bbc644e99f4b58582c1865bd
+- v: 1
+  id: reg_9fa1917cda594337ade768ff74756179
+  ts: "2026-10-23T15:02:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが一時のリポジトリで、rulebook-authoring の plan の置き場所、kata list の表示、古い置き場所の案内を確かめ、統合後の runner の動作を PJR-JSEY で確認した。2 回目の失敗は prj- で始まる authority のテストの手本が原因で、plan に指摘を書き足して直させた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: specdojo 以外の authority の kata の置き場所を docs/ja/specdojo/`<種類>s`/`<authority>`/ にした（core は種類のディレクトリの直下のまま）。0.4.4 のあいだは古い docs/ja/kata/ も読み、移すよう案内する。core の kata をたどる処理が authority のサブディレクトリを数えないようにした
+  previous_event_id: reg_c8df56a3e73848319a12a18e45d21f35

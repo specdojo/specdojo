@@ -336,7 +336,7 @@ npx specdojo config init
 
 `specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形は register だけを使える最小構成であり、project パスはリポジトリルートを基準とし、`run.worktree_base` はディレクトリ名から作る `../<リポジトリ名>-worktrees` を指します。例えば `app1-specdojo/` では `../app1-specdojo-worktrees` です。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。catalog、schedule、exec へ進むときに追加するキーと既定値は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] で確認できます。
 
-プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書は `app1-specdojo/docs/ja/projects/` に置きます。同梱の SpecDojo の型（Kata）は `app1-specdojo/docs/ja/specdojo/`、このリポジトリで新しく作る kata は `app1-specdojo/docs/ja/kata/` から解決します。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
+プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書は `app1-specdojo/docs/ja/projects/` に置きます。同梱の SpecDojo の型（Kata）は `app1-specdojo/docs/ja/specdojo/<種類>s/`、このリポジトリで新しく作る kata はその下の `<kata_authority>/` から解決します。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
 
 成果物と実装を常に同じ変更・履歴として扱う場合に限り、**同一リポジトリ構成**としてプロダクトリポジトリのルートで同じ初期化手順を実行できます。CLI は構成を強制しません。
 

@@ -30,7 +30,8 @@ kata からリンクされる guide / reference）のうち、利用リポジト
 `specdojo-kata-staging/` へ複製し、`/ja/specdojo/...` の URL で配信します。eject 済みの
 ファイルは利用リポジトリ側を採用し、package 側では上書きしません。ステージングは毎回作り直し、
 内部の `.gitignore` で Git 管理対象から外れるため、`kata install --all` を実行する必要は
-ありません。参照元の package は `SPECDOJO_PACKAGE_ROOT`、未指定なら workspace から辿った
+ありません。種類ディレクトリの authority サブディレクトリは core の同梱 kata ではないため、
+`specdojo` package からはステージングしません。参照元の package は `SPECDOJO_PACKAGE_ROOT`、未指定なら workspace から辿った
 `node_modules/specdojo` です。
 
 サイドバーは URL の範囲ごとに分かれ、`/ja/specdojo/` では SpecDojo 文書、

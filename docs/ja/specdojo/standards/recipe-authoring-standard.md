@@ -9,13 +9,13 @@ specdojo:
 
 Recipe Authoring Standard
 
-`docs/ja/specdojo/recipes/` と `docs/ja/kata/recipes/` 配下の各 `*-recipe.md` が従うべき章立て・記述ルール・禁止事項・運用ルールを定義します。成果物の構造・必須項目・禁止事項は対応する rulebook を正本とし、本書は「良い内容を書くための作り方」の記述方法を定義します。
+`docs/ja/specdojo/recipes/` 直下と `docs/ja/specdojo/recipes/<authority>/` 配下の各 `*-recipe.md` が従うべき章立て・記述ルール・禁止事項・運用ルールを定義します。成果物の構造・必須項目・禁止事項は対応する rulebook を正本とし、本書は「良い内容を書くための作り方」の記述方法を定義します。
 
 ## 1. 適用範囲
 
-- 対象: `docs/ja/specdojo/recipes/` と `docs/ja/kata/recipes/` 配下のすべての `*-recipe.md`
+- 対象: `docs/ja/specdojo/recipes/` 直下と `docs/ja/specdojo/recipes/<authority>/` 配下のすべての `*-recipe.md`
 - 目的: recipe の章構成・記述品質を統一し、書き手が良い内容を再現可能に作成できるようにする
-- 成果物構造の正本: 対応する `docs/ja/specdojo/rulebooks/` または `docs/ja/kata/rulebooks/` 配下の rulebook
+- 成果物構造の正本: 対応する `docs/ja/specdojo/rulebooks/` 直下または `docs/ja/specdojo/rulebooks/<authority>/` 配下の rulebook
 - Frontmatter 共通原則: [document-metadata-standard.md](document-metadata-standard.md)
 - 成果物 Frontmatter の構築: template の `frontmatter_template` から構築する（[document-metadata-standard.md](document-metadata-standard.md) の `生成物 Frontmatter 雛形`）。この手順を recipe 本文に複製しない。
 - 参照スキーマ: [recipe-frontmatter.schema.yaml](../../../specdojo/schemas/v1/recipe-frontmatter.schema.yaml)

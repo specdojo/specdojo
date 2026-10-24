@@ -496,9 +496,13 @@ export function validateDctDoc(
   }
   if (!doc.project_id) errors.push(`${filePath}: missing required field: project_id`);
   if (!doc.domain) errors.push(`${filePath}: missing required field: domain`);
-  if (!doc.groups || !Array.isArray(doc.groups) || doc.groups.length === 0) {
-    errors.push(`${filePath}: groups must be a non-empty array`);
+  if (!Object.hasOwn(doc, "groups")) {
+    errors.push(`${filePath}: missing required field: groups`);
+  } else if (!Array.isArray(doc.groups)) {
+    errors.push(`${filePath}: groups must be an array`);
   }
+
+  const groups = Array.isArray(doc.groups) ? doc.groups : [];
 
   const localIds = new Set<string>();
 
@@ -621,7 +625,7 @@ export function validateDctDoc(
     }
   }
 
-  if (doc.groups) collectIds(doc.groups);
+  collectIds(groups);
 
   const depLookup = knownLocalIds ?? localIds;
   const depScope = knownLocalIds ? "catalog" : "this file";
@@ -645,7 +649,7 @@ export function validateDctDoc(
     }
   }
 
-  if (doc.groups) checkDeps(doc.groups);
+  checkDeps(groups);
 
   return { ok: errors.length === 0, errors, warnings };
 }
