@@ -10,6 +10,10 @@ SpecDojo の利用者に影響する変更を記録します。
 - 配布する `templates/codex/agents/*.toml` のモデルを名簿の雛形と同じ GPT-6 の系統へ引き上げました。`codex-executor`・`codex-review-executor` は `gpt-6-luna`（`medium`）、`codex-expert-executor`・`codex-expert-review-executor` は `gpt-6.1-sol`（`high`）、`specdojo-orchestrator` は `gpt-6.1-sol`（`medium`）です。既存の `.codex/agents/*.toml` は上書きされないため、移行する場合は `specdojo config scaffold --provider codex --force` で再配置するか、各ファイルの `model` を手動で書き換えます（PJR-EVAQ）。
 - 既存の `.specdojo/agent-members.yaml`・`.specdojo/exec-defaults.yaml`・`package.json` は書き換えません。新しい名前へそろえる場合は、名簿の `terra-*` を `luna-*`（`model: gpt-6-luna`）へ、`sol-*` の `model` を `gpt-6.1-sol` へ変え、`aliases` の向き先を合わせます。`package.json` の `orch:terra` は `orch:luna`（`-m gpt-6-luna`）へ、`orch:sol` は `-m gpt-6.1-sol` へ手で直します。手順は exec 設定ガイドの `agent の名簿の 2 段構成と移行` にあります。
 
+### 不具合修正
+
+- owner の role に当てはまるレビュー観点がないとき（カタログや `pm-roles.yaml`・`pm-review-viewpoints.yaml` がない project など）、edit plan のレビュー観点の欄を `_MISSING_` だけの段落ではなく箇条書きの 1 項目（`- _MISSING_`）にしました。`rulebook-maintenance` などの kata の見直しの plan が、着手の checkpoint の commit で hook の markdownlint（MD036）に止められていました（PJR-SS72）。
+
 ## [0.4.5] - 2026-10-24
 
 ### 追加機能

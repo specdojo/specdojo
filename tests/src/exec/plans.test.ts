@@ -56,7 +56,7 @@ describe("ownerRoleFields", () => {
   it("owner 未設定の場合は全フィールドを MISSING にする", () => {
     const actual = ownerRoleFields(undefined, roleMapOf([]), vpMapOf([]));
 
-    expect(actual).toEqual({ label: "_MISSING_", note: "_MISSING_", viewpoints: "_MISSING_" });
+    expect(actual).toEqual({ label: "_MISSING_", note: "_MISSING_", viewpoints: "- _MISSING_" });
   });
 
   it("owner の責務（project_note）と該当 role の観点を値として返す", () => {
@@ -87,11 +87,11 @@ describe("ownerRoleFields", () => {
     expect(actual.viewpoints).toContain("- 目的・スコープとの整合:");
   });
 
-  it("該当 role の観点が無い場合は viewpoints を MISSING にする", () => {
+  it("該当 role の観点が無い場合は viewpoints を MISSING の箇条書き 1 項目にする", () => {
     const roles = roleMapOf([{ code: "DEV", name: "Developer", project_note: "note" }]);
     const actual = ownerRoleFields("DEV", roles, vpMapOf(PO_VIEWPOINTS));
 
-    expect(actual.viewpoints).toBe("_MISSING_");
+    expect(actual.viewpoints).toBe("- _MISSING_");
   });
 });
 
