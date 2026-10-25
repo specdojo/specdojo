@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: "XTE6 の統合後に exec run --register が review まで通り、executor の報告に completion_status: complete が入った"
+  completed_at: "2026-10-25T21:29:36Z"
+  conclusion: P14M・6WQY・K87Y統合後のexec run --registerがstartからreviewまで進み、親検証7件と統合が通った。
 ---
 
 # PJR-JSEY runner 変更後の exec run 動作を確かめる

@@ -2219,3 +2219,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_bc61d92b0558493580536934588ce027
+- v: 1
+  id: reg_15fa80218ffc4784a785eecb460041d9
+  ts: "2026-10-25T21:29:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 個票の2026-10-26 06:21 JST／PJR-K87Y／sol-executorの追記、eventの実体actor、result complete、親検証7件、統合commit c1244c193を実物で確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-26"
+    - field: conclusion
+      from: "XTE6 の統合後に exec run --register が review まで通り、executor の報告に completion_status: complete が入った"
+      to: P14M・6WQY・K87Y統合後のexec run --registerがstartからreviewまで進み、親検証7件と統合が通った。
+  previous_event_id: reg_22649382abc04cd48e200b5888bcecab
