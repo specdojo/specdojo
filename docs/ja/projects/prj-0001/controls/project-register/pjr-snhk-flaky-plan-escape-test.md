@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-snhk-flaky-plan-escape-test
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-25T03:20:41Z"
+  completed_at: "2026-10-25T03:31:14Z"
+  conclusion: 時間のほぼすべてがカタログ付きの 2 回目の generateRegisterPlan（約 1.5 秒）にかかると分かった。この test に限って上限を 30 秒へ広げ、設定全体と確かめる内容は変えていない
 ---
 
 # PJR-SNHK register-plan-escape の共通の規約の test が負荷で 5 秒の上限を超えて落ちる

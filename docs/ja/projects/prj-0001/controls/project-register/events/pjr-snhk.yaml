@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_9a3e013be4904544b6c04fcb9d299c96
+- v: 1
+  id: reg_9b827d79ac03434ea71eff5721b9cf58
+  ts: "2026-10-25T03:31:14Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分を完了条件に照らし、親の検証が通ったことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: 時間のほぼすべてがカタログ付きの 2 回目の generateRegisterPlan（約 1.5 秒）にかかると分かった。この test に限って上限を 30 秒へ広げ、設定全体と確かめる内容は変えていない
+  previous_event_id: reg_dd4515eb88ca4715b98d91bcac952edb
