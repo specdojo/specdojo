@@ -3,6 +3,8 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { resolveConfig } from "prettier";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { load } from "js-yaml";
+import { runLefthookScaffold } from "../../../src/shared/lefthook-scaffold.js";
 import { runSlidevScaffold, SLIDEV_KATA_PATTERNS } from "../../../src/shared/slidev-scaffold.js";
 
 let repoRoot: string;
@@ -71,7 +73,57 @@ describe("Slidev scaffold", () => {
     expect(readFileSync(join(repoRoot, ".markdownlintignore"), "utf8")).toBe(
       `${SLIDEV_KATA_PATTERNS.join("\n")}\n`,
     );
+    expect(load(readFileSync(join(repoRoot, ".markdownlint-cli2.yaml"), "utf8"))).toEqual({
+      config: { extends: ".markdownlintrc" },
+      overrides: [
+        {
+          filter: [...SLIDEV_KATA_PATTERNS],
+          combine: "merge",
+          config: { MD001: false, MD022: false, MD025: false, MD031: false, MD032: false },
+        },
+      ],
+    });
+    expect(readFileSync(join(repoRoot, ".markdownlintrc"), "utf8").startsWith("{")).toBe(true);
+    expect(output.join("")).toContain("FIRST in markdownlint-cli2 overrides");
+    expect(output.join("")).toContain("LAST in Prettier overrides");
   });
+
+  it("includes Slidev overrides when lefthook and Slidev are scaffolded together", async () => {
+    writeFileSync(join(repoRoot, "package.json"), '{"name":"fixture"}\n');
+    await runLefthookScaffold({
+      packageRoot: process.cwd(),
+      repoRoot,
+      config: { version: 1, projects: {} },
+      slidevKataPatterns: SLIDEV_KATA_PATTERNS,
+      force: false,
+      dryRun: false,
+    });
+    const cli2 = readFileSync(join(repoRoot, ".markdownlint-cli2.yaml"), "utf8");
+    await runSlidevScaffold({ repoRoot, dryRun: false });
+    expect(readFileSync(join(repoRoot, ".markdownlint-cli2.yaml"), "utf8")).toBe(cli2);
+    expect(load(cli2)).toMatchObject({
+      overrides: [{ filter: [...SLIDEV_KATA_PATTERNS], combine: "merge" }],
+    });
+    const ignore = readFileSync(join(repoRoot, ".markdownlintignore"), "utf8");
+    expect(ignore).toContain(".claude/agents/");
+    for (const pattern of SLIDEV_KATA_PATTERNS) expect(ignore).toContain(pattern);
+  });
+
+  it.each([".markdownlint-cli2.yaml", ".markdownlint-cli2.jsonc", ".markdownlint-cli2.cjs"])(
+    "keeps existing %s with broad overrides and displays the Slidev override to prepend",
+    async (file) => {
+      const content = '{"overrides":[{"filter":["**/*.md"],"config":{"MD025":true}}]}\n';
+      writeFileSync(join(repoRoot, file), content);
+      await runSlidevScaffold({ repoRoot, dryRun: false });
+      expect(readFileSync(join(repoRoot, file), "utf8")).toBe(content);
+      expect(output.join("")).toContain("FIRST in markdownlint-cli2 overrides");
+      expect(output.join("")).toContain("combine: merge");
+      expect(output.join("")).toContain("Merge any missing .markdownlint-cli2.yaml entries");
+      if (file !== ".markdownlint-cli2.yaml") {
+        expect(existsSync(join(repoRoot, ".markdownlint-cli2.yaml"))).toBe(false);
+      }
+    },
+  );
 
   it("keeps existing settings and dependencies byte for byte on repeated runs", async () => {
     const prettier =
@@ -136,6 +188,8 @@ describe("Slidev scaffold", () => {
       await runSlidevScaffold({ repoRoot, dryRun: true });
       expect(existsSync(join(repoRoot, ".prettierrc"))).toBe(false);
       expect(existsSync(join(repoRoot, ".markdownlintignore"))).toBe(false);
+      expect(existsSync(join(repoRoot, ".markdownlintrc"))).toBe(false);
+      expect(existsSync(join(repoRoot, ".markdownlint-cli2.yaml"))).toBe(false);
       expect(existsSync(join(repoRoot, "package.json"))).toBe(existing);
       if (existing)
         expect(readFileSync(join(repoRoot, "package.json"), "utf8")).toBe('{"name":"fixture"}\n');
@@ -159,6 +213,8 @@ describe("Slidev scaffold", () => {
       expect(readFileSync(join(repoRoot, "package.json"), "utf8")).toBe(content);
       expect(existsSync(join(repoRoot, ".prettierrc"))).toBe(false);
       expect(existsSync(join(repoRoot, ".markdownlintignore"))).toBe(false);
+      expect(existsSync(join(repoRoot, ".markdownlintrc"))).toBe(false);
+      expect(existsSync(join(repoRoot, ".markdownlint-cli2.yaml"))).toBe(false);
     },
   );
 });

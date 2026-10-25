@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_149cd06ea36e4e0bb20984f4598d3acb
+  ts: "2026-10-25T02:42:16Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 登録簿に項目がないと、担当者別と状態別の派生ビューが markdownlint の MD012 に当たる
+    - field: description
+      from: ""
+      to: 項目が 0 件のとき、pjr-views-by-owner.md と pjr-views-by-status.md の空の章に空行が続き、init 直後の生成物の commit が markdownlint の hook で止まる
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_ac430d5b26b6403db1348f63825720ea
+  ts: "2026-10-25T02:43:04Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_149cd06ea36e4e0bb20984f4598d3acb
+- v: 1
+  id: reg_e6521b9db12c4c23b329d4340c509568
+  ts: "2026-10-25T02:52:40Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
+  previous_event_id: reg_ac430d5b26b6403db1348f63825720ea
+- v: 1
+  id: reg_0a1f3a9d306f4060965779ac90f05fb1
+  ts: "2026-10-25T02:53:44Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
+      to: "-"
+  previous_event_id: reg_e6521b9db12c4c23b329d4340c509568
+- v: 1
+  id: reg_d8f6f2cb729849669f7be098935607a5
+  ts: "2026-10-25T02:57:54Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_0a1f3a9d306f4060965779ac90f05fb1
+- v: 1
+  id: reg_502afbc660b54da5891de2858962648e
+  ts: "2026-10-25T02:58:53Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_d8f6f2cb729849669f7be098935607a5
+- v: 1
+  id: reg_98791ffb32c54042a6ab0e42e716bbaa
+  ts: "2026-10-25T03:03:12Z"
+  action: wait
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_502afbc660b54da5891de2858962648e
+- v: 1
+  id: reg_c8c097c097d24f66bad85403086645b6
+  ts: "2026-10-25T03:05:05Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_98791ffb32c54042a6ab0e42e716bbaa
+- v: 1
+  id: reg_63bfe4fb6bd94258844752d0e6e3d07c
+  ts: "2026-10-25T03:11:11Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c8c097c097d24f66bad85403086645b6
+- v: 1
+  id: reg_79da2f7ecd584353b8eee9c41890e1f5
+  ts: "2026-10-25T03:12:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 空のリポジトリの init 直後の生成物が markdownlint-cli と markdownlint-cli2 で警告 0 件になり、本リポジトリの register build で差分が出ないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: 項目のない章には「該当なし」を書くようにし、項目が 0 件の登録簿の派生ビューが markdownlint を通るようにした
+  previous_event_id: reg_63bfe4fb6bd94258844752d0e6e3d07c

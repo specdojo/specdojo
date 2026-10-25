@@ -1167,7 +1167,7 @@ export function registerConfigCommands(program: Command): void {
             packageRoot: specdojoPackageRootDir(),
             repoRoot: specdojoRootDir(),
             config,
-            markdownlintIgnorePatterns: opts.slidev ? SLIDEV_KATA_PATTERNS : [],
+            slidevKataPatterns: opts.slidev ? SLIDEV_KATA_PATTERNS : [],
             force: !!opts.force,
             dryRun: !!opts.dryRun,
           });

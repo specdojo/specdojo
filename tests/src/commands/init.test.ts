@@ -83,6 +83,10 @@ describe("specdojo init", () => {
       };
       expect(!!pkg.devDependencies?.["@slidev/cli"]).toBe(expected);
       if (expected) {
+        expect(load(readFileSync(join(repo, ".markdownlint-cli2.yaml"), "utf8"))).toMatchObject({
+          config: { extends: ".markdownlintrc" },
+          overrides: [{ combine: "merge", config: { MD025: false } }],
+        });
         expect(readFileSync(join(repo, ".markdownlintignore"), "utf8")).toContain(
           "*-slidev-sample.md",
         );
@@ -329,7 +333,11 @@ describe("specdojo init", () => {
       await runInit({ yes: true, provider: "codex", lefthook: true });
 
       expect(existsSync(join(repo, "lefthook.yml"))).toBe(true);
-      expect(existsSync(join(repo, ".markdownlint.jsonc"))).toBe(true);
+      expect(existsSync(join(repo, ".markdownlint.jsonc"))).toBe(false);
+      expect(existsSync(join(repo, ".markdownlintrc"))).toBe(true);
+      expect(load(readFileSync(join(repo, ".markdownlint-cli2.yaml"), "utf8"))).toEqual({
+        config: { extends: ".markdownlintrc" },
+      });
       expect(existsSync(join(repo, ".markdownlintignore"))).toBe(true);
       expect(existsSync(join(repo, "tools/install-lefthook.mjs"))).toBe(true);
       expect(existsSync(join(repo, "tools/specdojo-pre-commit.mjs"))).toBe(true);

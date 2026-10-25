@@ -1,6 +1,7 @@
 import { relative, sep } from "node:path";
 import type { ExecDefaultsConfig, ProviderConcurrencyGate } from "../agent-config.js";
 import {
+  executorCompletionFailure,
   recordExecutorEvidence,
   recordParentValidationFailureOutput,
   recordReporterFailureOutput,
@@ -382,8 +383,10 @@ export async function runAgentPipeline(params: {
     productWorktrees: params.productWorktrees,
     rateLimitEvents: outcome.rateLimitEvents,
   });
+  const completionFailure =
+    outcome.result === "success" ? executorCompletionFailure(recorded.evidence) : undefined;
   const coverageFailure =
-    outcome.result === "success"
+    outcome.result === "success" && !completionFailure
       ? resumedTargetCoverageFailure({
           resumed: !!params.resumedExecutor,
           plan: planPrompt,
@@ -392,7 +395,8 @@ export async function runAgentPipeline(params: {
           initialChangeTargets: params.initialChangeTargets,
         })
       : undefined;
-  const executorResult: RunResult = coverageFailure ? "failure" : outcome.result;
+  const executorResult: RunResult =
+    completionFailure || coverageFailure ? "failure" : outcome.result;
   const evidenceRef = relative(cwd, recorded.evidencePath).split(sep).join("/");
   const executorCompletedAt = new Date().toISOString();
   state = updatePipelineStage(
@@ -402,7 +406,7 @@ export async function runAgentPipeline(params: {
       status:
         executorResult === "success"
           ? "succeeded"
-          : outcome.protectionBlock
+          : outcome.protectionBlock || completionFailure
             ? "blocked"
             : executorResult === "rate_limit"
               ? "rate_limited"
@@ -420,6 +424,7 @@ export async function runAgentPipeline(params: {
 
   if (executorResult !== "success") {
     const blockReason =
+      completionFailure ??
       coverageFailure ??
       (executorResult === "rate_limit"
         ? "executor rate limit reached"

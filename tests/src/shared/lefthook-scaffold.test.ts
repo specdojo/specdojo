@@ -1,7 +1,17 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  symlinkSync,
+  writeFileSync,
+} from "node:fs";
+import { spawnSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { load } from "js-yaml";
 import {
   renderLefthookConfig,
   runLefthookScaffold,
@@ -140,15 +150,116 @@ describe("lefthook scaffold", () => {
         dryRun: false,
       });
 
-      const config = JSON.parse(readFileSync(join(repoRoot, ".markdownlint.jsonc"), "utf8")) as {
+      const content = readFileSync(join(repoRoot, ".markdownlintrc"), "utf8");
+      expect(content.startsWith("{")).toBe(true);
+      expect(existsSync(join(repoRoot, ".markdownlint.jsonc"))).toBe(false);
+      const config = JSON.parse(content) as {
         MD013: boolean;
         MD041: boolean;
       };
       expect(config.MD013).toBe(false);
       expect(config.MD041).toBe(false);
+      expect(load(readFileSync(join(repoRoot, ".markdownlint-cli2.yaml"), "utf8"))).toEqual({
+        config: { extends: ".markdownlintrc" },
+      });
       expect(readFileSync(join(repoRoot, ".markdownlintignore"), "utf8")).toBe(
         ".claude/agents/\n.github/agents/\n.opencode/agents/\n",
       );
+      // Exercise the generated hook's actual markdownlint-cli entry point. MD013
+      // must be disabled, while ordinary Markdown errors must still be detected.
+      mkdirSync(join(repoRoot, "node_modules"));
+      symlinkSync(
+        join(packageRoot, "node_modules/markdownlint-cli"),
+        join(repoRoot, "node_modules/markdownlint-cli"),
+        "dir",
+      );
+      writeFileSync(join(repoRoot, "README.md"), `# Valid\n\n${"long line ".repeat(20).trim()}\n`);
+      const runHookLint = () =>
+        spawnSync(
+          process.execPath,
+          ["tools/specdojo-pre-commit.mjs", "markdownlint", "README.md"],
+          {
+            cwd: repoRoot,
+            encoding: "utf8",
+          },
+        );
+      const valid = runHookLint();
+      expect(valid.status, valid.stderr).toBe(0);
+      writeFileSync(join(repoRoot, "README.md"), "#Invalid heading\n");
+      const invalid = runHookLint();
+      expect(invalid.status).toBe(1);
+      expect(invalid.stderr).toContain("MD018");
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it.each([
+    ".markdownlint.jsonc",
+    ".markdownlint.json",
+    ".markdownlint.yaml",
+    ".markdownlint.yml",
+    ".markdownlintrc",
+    ".markdownlint-cli2.yaml",
+    ".markdownlint-cli2.yml",
+    ".markdownlint-cli2.jsonc",
+    ".markdownlint-cli2.cjs",
+    ".markdownlint-cli2.mjs",
+  ])("preserves existing %s even with force and shows missing settings", async (filename) => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-lefthook-existing-lint-"));
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      output.push(String(chunk));
+      return true;
+    });
+    try {
+      const original = '{"MD013":true}\n';
+      writeFileSync(join(repoRoot, filename), original);
+      await runLefthookScaffold({
+        packageRoot,
+        repoRoot,
+        config: configWithCatalog,
+        force: true,
+        dryRun: false,
+      });
+      expect(readFileSync(join(repoRoot, filename), "utf8")).toBe(original);
+      expect(output.join("")).toContain("Merge any missing");
+      expect(output.join("")).toContain("config:\n  extends: .markdownlintrc");
+      if (filename === ".markdownlintrc") {
+        expect(load(readFileSync(join(repoRoot, ".markdownlint-cli2.yaml"), "utf8"))).toEqual({
+          config: { extends: ".markdownlintrc" },
+        });
+      } else {
+        expect(existsSync(join(repoRoot, ".markdownlintrc"))).toBe(false);
+        if (!filename.startsWith(".markdownlint-cli2.")) {
+          expect(existsSync(join(repoRoot, ".markdownlint-cli2.yaml"))).toBe(false);
+          expect(output.join("")).toContain("Migrate its rules to .markdownlintrc");
+        }
+      }
+    } finally {
+      rmSync(repoRoot, { recursive: true, force: true });
+    }
+  });
+
+  it("previews both new configurations without writing during dry-run", async () => {
+    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-lefthook-lint-dry-"));
+    const output: string[] = [];
+    vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+      output.push(String(chunk));
+      return true;
+    });
+    try {
+      await runLefthookScaffold({
+        packageRoot,
+        repoRoot,
+        config: configWithCatalog,
+        force: false,
+        dryRun: true,
+      });
+      for (const file of [".markdownlintrc", ".markdownlint-cli2.yaml", ".markdownlintignore"]) {
+        expect(existsSync(join(repoRoot, file))).toBe(false);
+        expect(output.join("")).toContain(`[dry-run] would write: ${file}`);
+      }
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
     }

@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-xte6-executor-incomplete-report
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-25T01:32:57Z"
+  completed_at: "2026-10-25T02:02:23Z"
+  conclusion: executor の報告に completion_status を加え、incomplete なら親の検証と reporter の前で waiting に戻し、統合せず worktree を残すようにした。欄のない報告は完了として扱う
 ---
 
 # PJR-XTE6 executor が未完了と報告しても、正常終了と親の検証の通過で review になる
@@ -57,7 +59,14 @@ executor が作業を途中で止めて報告に「未完了」と書いても�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 報告に省略可能な `completion_status` を追加した。値は `complete` / `incomplete` とし、プロセスの終了コードと作業の完了を区別するため、この名前を選んだ。省略した既存報告は完了扱いとし、不正な値が指定された報告は未完了として扱う。
+- 未完了の場合は親検証・reporter の起動前に pipeline の executor を `blocked` とし、register の既存の失敗処理を通じて `waiting` に戻す。`final_message` の要旨を秘匿処理・文字数制限付きの `block_reason` に記録し、統合せず worktree と変更を残す。evidence の `stage.status` と `exit_code` は実際のプロセス結果を維持する。
+- `--resume --resume-from executor` と `--resume` の両方で再開可能とし、前回の理由・`handoff` と初回の部分変更を引き継ぐ。evidence 保存直後の中断でも未完了報告を reporter 再開へ誤認しない。
+- prompt に未完了時の申告と残作業の `handoff` 記載を追加し、[[specdojo:exec-config-guide]] と CHANGELOG の `Unreleased` を更新した。
+- 回帰テストを追加した。正常終了・親検証成功でも未完了なら block する機械判定、報告・schema の互換性、未完了での `waiting`・未統合・worktree 保持と両形式の再開、完了報告後の review・統合を対象とする。既存の欄なし報告の review 経路も維持した。
+- 検証の分担: typecheck・lint-ts・test-unit を含む親検証 7 種は、この pipeline の指定に従い親 runner が executor 終了後に実行する。executor 内では重複実行しない。
+- executor 内の検証: 変更ファイルの Prettier 整形、evidence schema に対する既存形式・完了・未完了の 3 種のデータ検査、カタログ検証、登録簿生成、`git diff --check` が成功した。カタログ検証は参照先文書が見つからない警告を出したが、終了コードは 0 だった。
+- 統合後の実 agent による確認は [[prj-0001:pjr-jsey-exec-run-split-smoke]]（PJR-JSEY）で行う。オーケストレーターが対象へ PJR-XTE6 を加え、`exec run --register` を 1 回実行して start から review までを確認してから close する。
 
 ## 5. 関連ドキュメント
 

@@ -1,7 +1,8 @@
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { runLefthookScaffold } from "../../../src/shared/lefthook-scaffold.js";
 import {
   assertResultMarkdownlint,
   type WorktreeOpsContext,
@@ -29,6 +30,32 @@ function fixture(result: string): {
 }
 
 describe("assertResultMarkdownlint", () => {
+  it("uses scaffolded .markdownlintrc rules for result checks", async () => {
+    const target = fixture(`# Result\n\n${"long result line ".repeat(20).trim()}\n`);
+    const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    try {
+      rmSync(join(target.root, ".markdownlint.yaml"));
+      await runLefthookScaffold({
+        packageRoot: process.cwd(),
+        repoRoot: target.root,
+        config: { version: 1, projects: {} },
+        force: false,
+        dryRun: false,
+      });
+      expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).not.toThrow();
+      writeFileSync(
+        join(target.context.executionPath, "exec/results/TASK-result.md"),
+        "#Invalid heading\n",
+      );
+      expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).toThrow(
+        /MD018/,
+      );
+    } finally {
+      stdout.mockRestore();
+      rmSync(target.root, { recursive: true, force: true });
+    }
+  });
+
   it("commit 前に result の Markdown 記法違反を明示的な理由で block する", () => {
     const target = fixture("# Result\n\n*asterisk* and _underscore_\n");
     try {

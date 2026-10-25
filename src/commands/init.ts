@@ -786,7 +786,7 @@ export async function runInit(
       packageRoot,
       repoRoot,
       config,
-      markdownlintIgnorePatterns: answers.slidev ? SLIDEV_KATA_PATTERNS : [],
+      slidevKataPatterns: answers.slidev ? SLIDEV_KATA_PATTERNS : [],
       force: false,
       dryRun,
     });

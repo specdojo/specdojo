@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { writeMarkdownlintConfigs } from "./markdownlint-scaffold.js";
 
 // Keep ordinary kata Markdown on the standard parser. Existing decks with other
 // names can be added to the displayed overrides and ignore patterns by the user.
@@ -91,6 +92,8 @@ export async function runSlidevScaffold(opts: {
       "Kept existing .markdownlintignore. Add any missing patterns above manually.\n",
     );
   }
+  process.stdout.write("Place the Slidev override LAST in Prettier overrides (last match wins).\n");
+  await writeMarkdownlintConfigs({ ...opts, slidevKataPatterns: SLIDEV_KATA_PATTERNS });
 
   // Preview all additions before the first write, including on a normal run.
   if (opts.dryRun) {

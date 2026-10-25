@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { writeMarkdownlintConfigs } from "./markdownlint-scaffold.js";
 import type { SpecDojoConfig } from "./specdojo-config.js";
 
 const REQUIRED_DEV_DEPENDENCIES = ["lefthook", "prettier", "markdownlint-cli"] as const;
@@ -9,27 +10,6 @@ const REQUIRED_SCRIPTS = {
   prepare: "node tools/install-lefthook.mjs",
   "pre-commit": "lefthook run pre-commit",
 } as const;
-
-const MARKDOWNLINT_CONFIG_FILES = [
-  ".markdownlint.jsonc",
-  ".markdownlint.json",
-  ".markdownlint.yaml",
-  ".markdownlint.yml",
-  ".markdownlintrc",
-] as const;
-
-const MARKDOWNLINT_CONFIG = `${JSON.stringify(
-  {
-    MD013: false,
-    MD024: false,
-    MD033: false,
-    MD036: false,
-    MD041: false,
-    MD060: false,
-  },
-  null,
-  2,
-)}\n`;
 
 const MARKDOWNLINT_IGNORE = [".claude/agents/", ".github/agents/", ".opencode/agents/", ""].join(
   "\n",
@@ -41,7 +21,7 @@ export interface RunLefthookScaffoldOptions {
   packageRoot: string;
   repoRoot: string;
   config: SpecDojoConfig;
-  markdownlintIgnorePatterns?: readonly string[];
+  slidevKataPatterns?: readonly string[];
   force: boolean;
   dryRun: boolean;
 }
@@ -220,32 +200,18 @@ async function writeScaffoldFile(
 }
 
 async function writeMarkdownlintScaffold(opts: RunLefthookScaffoldOptions): Promise<void> {
-  if (opts.markdownlintIgnorePatterns?.length) {
+  if (opts.slidevKataPatterns?.length) {
     process.stdout.write(
-      `Planned Slidev .markdownlintignore entries:\n${opts.markdownlintIgnorePatterns.join("\n")}\n`,
+      `Planned Slidev .markdownlintignore entries:\n${opts.slidevKataPatterns.join("\n")}\n`,
     );
   }
-  const existingConfig = MARKDOWNLINT_CONFIG_FILES.find((filename) =>
-    existsSync(path.join(opts.repoRoot, filename)),
-  );
-  if (existingConfig) {
-    process.stdout.write(`Skipped (markdownlint config already exists): ${existingConfig}\n`);
-  } else {
-    await writeScaffoldFile(
-      undefined,
-      path.join(opts.repoRoot, ".markdownlint.jsonc"),
-      ".markdownlint.jsonc",
-      MARKDOWNLINT_CONFIG,
-      { force: false, dryRun: opts.dryRun },
-    );
-  }
+  await writeMarkdownlintConfigs(opts);
 
   await writeScaffoldFile(
     undefined,
     path.join(opts.repoRoot, ".markdownlintignore"),
     ".markdownlintignore",
-    MARKDOWNLINT_IGNORE +
-      (opts.markdownlintIgnorePatterns ?? []).map((pattern) => `${pattern}\n`).join(""),
+    MARKDOWNLINT_IGNORE + (opts.slidevKataPatterns ?? []).map((pattern) => `${pattern}\n`).join(""),
     { force: false, dryRun: opts.dryRun },
   );
 }

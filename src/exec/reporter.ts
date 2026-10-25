@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join, relative, resolve, sep } from "node:path";
-import type { ExecEvidence } from "./evidence.js";
+import { executorCompletionFailure, type ExecEvidence } from "./evidence.js";
 import {
   PARENT_VALIDATION_PROJECT_REPO,
   failedParentValidationReason,
@@ -245,6 +245,11 @@ export function deriveReporterFacts(
             ? `executor exited with code ${evidence.stage.exit_code}`
             : "executor stage failed");
     return { outcome: "blocked", changed_files: changedFiles, block_reason: blockReason };
+  }
+
+  const completionFailure = executorCompletionFailure(evidence);
+  if (completionFailure) {
+    return { outcome: "blocked", changed_files: changedFiles, block_reason: completionFailure };
   }
 
   const validationFailure = failedParentValidationReason(evidence.validations);

@@ -32,3 +32,80 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_417602b2e77f4fd482638465769a5aea
+  ts: "2026-10-25T02:13:15Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3ad23a0a5cc34093850d7fc90474d88f
+- v: 1
+  id: reg_3d00e9ddd2144b04a22a87379af6c20e
+  ts: "2026-10-25T02:26:53Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_417602b2e77f4fd482638465769a5aea
+- v: 1
+  id: reg_06f159f5278445399fc5d2ab0377271b
+  ts: "2026-10-25T02:27:46Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-integration, test-unit"
+      to: "-"
+  previous_event_id: reg_3d00e9ddd2144b04a22a87379af6c20e
+- v: 1
+  id: reg_9fa16b92fcd546a7911f2eda395fb9b1
+  ts: "2026-10-25T02:36:18Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_06f159f5278445399fc5d2ab0377271b
+- v: 1
+  id: reg_cd4a146ebc0c42f0bb8b0ace2765578a
+  ts: "2026-10-25T02:39:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分を完了条件に照らし、空のリポジトリの生成物を markdownlint-cli2 0.24.0 と markdownlint-cli で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: init --lefthook は .markdownlintrc と、それを読む .markdownlint-cli2.yaml を作り、--slidev は cli2 の overrides の先頭に Slidev 用の規則を入れるようにした。hook と result の検査は .markdownlintignore で Slidev の kata を外す
+  previous_event_id: reg_9fa16b92fcd546a7911f2eda395fb9b1
