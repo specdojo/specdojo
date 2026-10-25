@@ -88,6 +88,11 @@ specdojo:
 - `docs/ja/specdojo/guides/quick-start-guide.md`、`docs/ja/specdojo/guides/ryu-guide.md`、`docs/ja/specdojo/guides/plan-result-lifecycle-guide.md`、`docs/ja/specdojo/references/command-reference.md`、`docs/ja/specdojo/rulebooks/pjr-rulebook.md`: 起票・更新・plan の生成手順と制約を更新。
 - `CHANGELOG.md` と本個票: 利用者向け変更と実施結果を記録。
 
+### 統合後の確認（2026-10-26）
+
+- 対象単体テスト 253 件と、カタログのない一時リポジトリでの起票から plan までの統合テスト 8 件が通った。親 runner の `lint-ts`・`lint-fm`・`lint-md`・`test-integration`・`validate-schema`・`typecheck`・`test-unit` もすべて `passed` だった。
+- plan 生成を変更した後の `PJR-JSEY` は start から review へ進み、親検証 7 件と統合 commit `c1244c193` が完了した。実体 actor は `sol-executor` だった。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-zjxq-register-approach-fields]]：成果物の approach の対象をカタログで解決すると決めた項目
