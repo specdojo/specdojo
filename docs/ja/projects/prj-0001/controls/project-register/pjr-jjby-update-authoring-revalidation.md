@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jjby-update-authoring-revalidation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T23:47:37Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T01:34:27Z"
+  conclusion: approach・target・source を変えない register update では approach と target を検証し直さないようにした。変える update と add は従来どおり検証する
 ---
 
 # PJR-JJBY authoring の kata ができた後、register update が担当や期限の変更でも止まる
