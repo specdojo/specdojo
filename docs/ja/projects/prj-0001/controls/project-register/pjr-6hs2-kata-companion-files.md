@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-6hs2-kata-companion-files
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T23:23:16Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T01:34:37Z"
+  conclusion: ID を持つ形式のファイルだけを kata として数え、同じ名前のファイルとディレクトリを付属のファイルとして eject で一緒に写すようにした
 ---
 
 # PJR-6HS2 kata のディレクトリにある付属のファイルが、別の kata として一覧に出る

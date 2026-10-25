@@ -84,3 +84,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_cdf4627b710846a8b0389dfced31b131
+- v: 1
+  id: reg_05df038c79284b09beb87703ffc0233f
+  ts: "2026-10-25T01:34:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 空のリポジトリで付属の CSS が一覧と kata status に出ないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: ID を持つ形式のファイルだけを kata として数え、同じ名前のファイルとディレクトリを付属のファイルとして eject で一緒に写すようにした
+  previous_event_id: reg_839a45600bc24d46aa691ebb7f25935c
