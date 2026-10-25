@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3ad23a0a5cc34093850d7fc90474d88f
+  ts: "2026-10-25T01:36:27Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: scaffold の markdownlint 設定のせいで、VS Code でファイルごとの規則を当てられない
+    - field: description
+      from: ""
+      to: init --lefthook が生成する .markdownlint.jsonc があると、VS Code の拡張（markdownlint-cli2）は .markdownlint-cli2.yaml の overrides を当てないため、Slidev のスライドなど一部のファイルにだけ別の規則を当てられない。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"
