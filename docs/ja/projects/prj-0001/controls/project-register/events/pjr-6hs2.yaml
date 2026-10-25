@@ -45,3 +45,16 @@
       from: open
       to: in-progress
   previous_event_id: reg_322c0cfa36374824af8654cd966a0ec6
+- v: 1
+  id: reg_f613bf93e8f84d368ddd20d7aa616b9e
+  ts: "2026-10-25T01:14:38Z"
+  action: review
+  actor: luna-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_43b55bc3292043b285a971e3c23f541d
