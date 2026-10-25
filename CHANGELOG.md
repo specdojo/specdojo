@@ -17,6 +17,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- executor の報告に省略可能な `completion_status`（`complete` / `incomplete`）を追加しました。未完了を申告した register 項目は終了コード 0 でも `waiting` となり、理由と残作業、worktree を保持して統合を止めます。`--resume --resume-from executor` で再開でき、欄のない既存報告は従来どおり扱います（PJR-XTE6）。
 - `kata list`・`kata status` の kata 候補と `kata eject` の ID 選択を `.md`・`.mdx`・`.yaml`・`.yml`・`.json` にそろえ、同名 CSS などを別の kata として扱わないようにしました。`kata eject`・`kata install --all` は同名の付属ファイルと同名ディレクトリ内の画像などもコピーし、`--dry-run`・`--force` をファイルごとに適用します。付属ファイルだけの差分も親 kata の `modified` に含めます（PJR-6HS2）。
 - `register update` で approach・target・source を変更しない場合、記録済みの組み合わせを再検証しないようにしました。authoring の kata が作成された後も、担当・期限・優先度などの更新を続けられます。approach 関連の値を変更する場合と `register add` では従来どおり検証します（PJR-JJBY）。
 - executor の報告に省略可能な `handoff`（申し送り）を追加し、reporter の処理後に runner が edit result の申し送りへ確実に転記するようにしました。register の plan も、result への記載を求める完了条件を個票の対応結果と報告の `handoff` に記録するようにしました。`handoff` のない既存の報告も引き続き受け付けます（PJR-R1FB）。

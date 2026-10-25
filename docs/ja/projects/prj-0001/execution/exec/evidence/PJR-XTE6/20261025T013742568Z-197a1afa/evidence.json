@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-XTE6",
+  "run_id": "20261025T013742568Z-197a1afa",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-25T01:38:53.435Z",
+    "completed_at": "2026-10-25T01:44:46.530Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xte6-executor-incomplete-report.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-evidence.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/evidence.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-state.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/reporter.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/run.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-xte6-executor-incomplete-report.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-evidence.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/evidence.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/reporter.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent-pipeline.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/evidence.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/pipeline-state.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-resume.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/reporter.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/run/run.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 18,
+    "summary": "CHANGELOG.md                                       |  1 +\n .../pjr-xte6-executor-incomplete-report.md         |  9 ++-\n docs/ja/specdojo/guides/exec-config-guide.md       |  3 +-\n docs/specdojo/schemas/v1/exec-evidence.schema.yaml |  8 +-\n src/exec/evidence.ts                               | 40 +++++++++-\n src/exec/pipeline-state.ts                         |  1 +\n src/exec/register-resume.ts                        | 15 +++-\n src/exec/reporter.ts                               |  7 +-\n src/exec/run/agent-pipeline.ts                     | 11 ++-\n src/exec/run/agent.ts                              |  8 +-\n src/exec/run/register-resume.ts                    |  1 +\n src/exec/run/register-worktree.ts                  |  3 +\n tests/src/exec/evidence.test.ts                    | 45 +++++++++++\n tests/src/exec/pipeline-state.test.ts              | 18 +++++\n .../exec/register-pipeline-e2e.integration.test.ts | 89 ++++++++++++++++++++++\n tests/src/exec/register-resume.test.ts             | 26 +++++++\n tests/src/exec/reporter.test.ts                    | 23 ++++++\n tests/src/exec/run/run.test.ts                     |  3 +\n 18 files changed, 296 insertions(+), 15 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --name-only -z | xargs -0 npx --no-install prettier --write",
+      "status": "passed",
+      "summary": "変更ファイルを整形しました。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/exec-evidence.schema.yaml --data 'tmp/pjr-xte6-checks/*.json'",
+      "status": "passed",
+      "summary": "既存形式・完了・未完了の3種類が適合しました。一時データは削除済みです。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。参照先文書の不在に関する警告があります。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の生成が成功しました。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーはありません。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor --reporter-by opencode-reporter",
+      "status": "requires_human",
+      "summary": "統合後、オーケストレーターが PJR-JSEY を準備し、実 agent で動作確認する必要があります。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XTE6/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XTE6/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XTE6/src/shared/specdojo-config.ts\n  1219:1  warning  File has too many lines (1095). Maximum allowed is 1000  max-lines\n\n✖ 35 problems (0 errors, 35 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XTE6\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.5 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XTE6/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XTE6/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.5 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-XTE6\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-YzilD1/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-mxkGYK/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-JkJTa0/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-f6CDUO/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "未完了報告で waiting に戻し、統合を止めて worktree と残作業を保持する処理を実装しました。再開・互換性の回帰テスト、schema、prompt、ガイド、CHANGELOG、個票を更新しました。",
+  "handoff": [
+    "欄名は `completion_status`、値は `complete` / `incomplete` とし、プロセス終了と作業完了を区別しました。省略した既存報告は完了扱いです。理由は個票にも記録しました。",
+    "親検証7種は指定に従い親 runner に委ねています。result は編集していません。",
+    "統合後は PJR-JSEY の対象へ PJR-XTE6 を追加し、実 agent による動作確認を行ってから close してください。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-XTE6/20261025T013742568Z-197a1afa/executor.log",
+      "bytes": 2031,
+      "truncated": false
+    }
+  ]
+}
