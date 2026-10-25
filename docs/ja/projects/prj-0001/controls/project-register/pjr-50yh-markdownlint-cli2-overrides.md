@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-25T01:36:26Z"
   due_on: "2026-10-31"
-  block_reason: "parent validation failed: test-integration, test-unit"
 ---
 
 # PJR-50YH scaffold の markdownlint 設定のせいで、VS Code でファイルごとの規則を当てられない

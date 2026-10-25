@@ -103,16 +103,35 @@ npm install
 ```
 
 scaffold が加えるのは `@slidev/cli`・`prettier-plugin-slidev`・`prettier` の開発依存と、スライドだけを
-整形する Prettier overrides、markdownlint の除外です。既存の依存の版は変えません。既存の整形設定・
-ignore は保持するため、表示された追加例を確認し、足りない設定を手で統合してから整形・commit してください。
+整形する Prettier overrides、markdownlint の基本設定と Slidev 用の CLI2 overrides、CLI 用の除外です。
+既存の依存の版は変えません。既存の設定・ignore は保持するため、表示された追加例を確認し、
+足りない設定を手で統合してから整形・commit してください。
 
 既定の対象は `docs/ja/specdojo/samples/**/*-slidev-sample.md` と
 `docs/ja/specdojo/templates/**/*-slidev-template.md` です。たとえば利用者の `kata_authority` が
 `edu-scratch` なら、sample は `docs/ja/specdojo/samples/edu-scratch/lesson-slidev-sample.md` に置きます。
-別名の `lsd-sample.md` や旧配置の kata は、実際のパスを Prettier overrides の `files` と
-`.markdownlintignore` の両方に追加してください。通常の Markdown として整形するとページ区切り直後の
+別名の `lsd-sample.md` や旧配置の kata は、実際のパスを Prettier overrides の `files`、
+`.markdownlint-cli2.yaml` の `overrides.filter`、`.markdownlintignore` の 3 か所に追加してください。
+通常の Markdown として整形するとページ区切り直後の
 設定が本文に変わる場合があるため、Slidev のファイルだけに `slidev` parser と
 `prettier-plugin-slidev` を当てます。設定方法は [公式 plugin の説明](https://github.com/slidevjs/prettier-plugin) に従っています。
+
+markdownlint の基本設定は `.markdownlintrc`（先頭が `{` の JSON）に置きます。commit hook と
+`exec run` の result 検査は markdownlint-cli のままで、この基本設定と `.markdownlintignore` を読みます。
+Slidev の kata は ignore で対象外にします。VS Code の markdownlint 拡張と CLI2 は
+`.markdownlintignore` を読まないため、`.markdownlint-cli2.yaml` の `config.extends` から
+`.markdownlintrc` を読み、Slidev 用の規則で検査します。スライドごとの見出しレベル・H1 とページ区切りに
+隣接するブロックを許すため、基本設定に加えて `MD001`・`MD022`・`MD025`・`MD031`・`MD032` を外します。
+
+CLI2 の overrides は最初の一致だけを使うため Slidev 用を先頭に置き、`filter` に対象 glob、
+`combine: merge`、`config` に規則を指定します。Prettier は後の一致を優先するため Slidev 用を末尾に置きます。
+通常の文書に対する規則は基本設定に残してください。
+
+旧 scaffold の `.markdownlint.jsonc` などがある場合は、規則を JSON の `.markdownlintrc` に移し、
+旧 `.markdownlint.*` を取り除き、CLI2 の `config.extends` を設定します。先頭にコメントを書くと
+markdownlint-cli が JSON として読めません。親ディレクトリの `.markdownlint.*` も確認してください。
+既存設定は `--force` でも自動移行しないため、表示された例を手で統合します。具体的な設定例と移行手順は
+[[specdojo:command-reference|コマンドリファレンス]] の `config scaffold --lefthook` の説明を参照してください。
 
 ### 4.1. sample のビルドと表示
 
