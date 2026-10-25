@@ -2177,3 +2177,19 @@
       from: R1FB と 84F7 の統合後に exec run --register が review まで通った。executor の handoff が result の申し送りに載った
       to: "XTE6 の統合後に exec run --register が review まで通り、executor の報告に completion_status: complete が入った"
   previous_event_id: reg_5e769c7347d5408d919cefb952d5b12c
+- v: 1
+  id: reg_4c72091401944d63b43d479029c7986c
+  ts: "2026-10-25T21:19:47Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-P14M・PJR-6WQY・PJR-K87Yの統合後にrunnerを再確認するため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-25"
+      to: "-"
+  previous_event_id: reg_2822cefcb9f14d46aa92d78feee08610
