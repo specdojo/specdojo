@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-xte6-executor-incomplete-report
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-25T01:32:57Z"
+  completed_at: "2026-10-25T02:02:23Z"
+  conclusion: executor の報告に completion_status を加え、incomplete なら親の検証と reporter の前で waiting に戻し、統合せず worktree を残すようにした。欄のない報告は完了として扱う
 ---
 
 # PJR-XTE6 executor が未完了と報告しても、正常終了と親の検証の通過で review になる
