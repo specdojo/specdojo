@@ -143,6 +143,11 @@ function relativeFiles(root: string): string[] {
   return filesBelow(root).map((filePath) => normalizeRelativePath(relative(root, filePath)));
 }
 
+const KATA_ID_EXTENSIONS = new Set([".md", ".mdx", ".yaml", ".yml", ".json"]);
+function isKataIdFile(filePath: string): boolean {
+  return KATA_ID_EXTENSIONS.has(extname(filePath).toLowerCase());
+}
+
 function enumerateConfig(
   config: ResourceKindConfig,
   roots: SpecdojoResolutionRoots,
@@ -150,7 +155,7 @@ function enumerateConfig(
   const { repositoryDir, bundledDir } = pathsForConfig(config, roots);
   const relativePaths = [
     ...new Set([...relativeFiles(repositoryDir), ...relativeFiles(bundledDir)]),
-  ];
+  ].filter(isKataIdFile);
   return relativePaths.sort().map((filePath) => {
     const repositoryPath = resolve(repositoryDir, filePath);
     const bundledPath = resolve(bundledDir, filePath);
@@ -187,30 +192,32 @@ function enumerateAuthoredResources(roots: SpecdojoResolutionRoots): KataResourc
     const legacyDir = legacyKataKindDirectory(kind);
     const resourcesFrom = (relativeDir: string): KataResource[] => {
       const absoluteDir = resolve(repositoryRoot, relativeDir);
-      return relativeFiles(absoluteDir).flatMap((filePath) => {
-        const resolvedPath = resolve(absoluteDir, filePath);
-        const id = resourceId(resolvedPath);
-        let authority: string | undefined;
-        try {
-          authority = parsePracticeId(id).authority;
-        } catch {
-          return [];
-        }
-        if (authority !== configuredAuthority) return [];
-        return [
-          {
-            id,
-            kind,
-            ejectable: false,
-            relativePath: normalizeRelativePath(join(relativeDir, filePath)),
-            repositoryPath: resolvedPath,
-            resolvedPath,
-            source: "repository" as const,
-            state: "ejected" as const,
-            difference: "-" as const,
-          },
-        ];
-      });
+      return relativeFiles(absoluteDir)
+        .filter(isKataIdFile)
+        .flatMap((filePath) => {
+          const resolvedPath = resolve(absoluteDir, filePath);
+          const id = resourceId(resolvedPath);
+          let authority: string | undefined;
+          try {
+            authority = parsePracticeId(id).authority;
+          } catch {
+            return [];
+          }
+          if (authority !== configuredAuthority) return [];
+          return [
+            {
+              id,
+              kind,
+              ejectable: false,
+              relativePath: normalizeRelativePath(join(relativeDir, filePath)),
+              repositoryPath: resolvedPath,
+              resolvedPath,
+              source: "repository" as const,
+              state: "ejected" as const,
+              difference: "-" as const,
+            },
+          ];
+        });
     };
 
     const canonical = resourcesFrom(canonicalDir);
