@@ -206,6 +206,7 @@ describe("specdojoPackageRootDir", () => {
     expect(opencodeOrchestrator).not.toContain('    "gh *": deny');
     expect(opencodeOrchestrator).toContain("  edit: allow");
     expect(opencodeOrchestrator).not.toContain('    ".specdojo/**": deny');
+    expect(opencodeOrchestrator).toContain("model: ollama-local/gemma4:31b-work-64k");
 
     const antigravity = JSON.parse(
       await readFile(
@@ -413,6 +414,33 @@ describe("buildProviderScaffoldPlan", () => {
       expect(plan.entries.map((entry) => entry.destinationRelPath)).not.toContain(
         ".specdojo/codex/rules/specdojo.rules",
       );
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("maps OpenCode agents to .opencode/agents and opencode.json to repository root", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const repoRoot = path.join(dir, "repo");
+      await mkdir(repoRoot, { recursive: true });
+
+      const plan = await buildProviderScaffoldPlan({
+        packageRoot: specdojoPackageRootDir(),
+        repoRoot,
+        provider: "opencode",
+      });
+
+      expect(plan.provider).toBe("opencode");
+      expect(plan.entries.map((entry) => entry.destinationRelPath)).toEqual([
+        ".opencode/agents/opencode-executor.md",
+        ".opencode/agents/opencode-reporter.md",
+        ".opencode/agents/opencode-review-executor.md",
+        ".opencode/agents/specdojo-orchestrator.md",
+        "opencode.json",
+      ]);
+      const opencodeJsonEntry = plan.entries.find((e) => e.destinationRelPath === "opencode.json");
+      expect(opencodeJsonEntry?.destinationPath).toBe(path.join(repoRoot, "opencode.json"));
     } finally {
       await rm(dir, { recursive: true, force: true });
     }
@@ -955,6 +983,83 @@ describe("runProviderScaffold", () => {
 
       const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
       expect(pkg.scripts["orch:opus"]).toBeUndefined();
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("scaffolds OpenCode settings with ollama-local connection and work-64k models into an empty repository", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const repoRoot = path.join(dir, "repo");
+      await mkdir(repoRoot, { recursive: true });
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+      await runProviderScaffold("opencode", {
+        packageRoot: specdojoPackageRootDir(),
+        repoRoot,
+        force: false,
+        dryRun: false,
+      });
+
+      expect(existsSync(path.join(repoRoot, "opencode.json"))).toBe(true);
+      expect(existsSync(path.join(repoRoot, ".opencode/agents/opencode-executor.md"))).toBe(true);
+      expect(existsSync(path.join(repoRoot, ".opencode/agents/specdojo-orchestrator.md"))).toBe(
+        true,
+      );
+
+      const opencodeJson = JSON.parse(
+        await readFile(path.join(repoRoot, "opencode.json"), "utf8"),
+      ) as {
+        provider: Record<
+          string,
+          { npm: string; options: { baseURL: string }; models: Record<string, unknown> }
+        >;
+        model: string;
+      };
+      expect(opencodeJson.provider["ollama-local"]).toBeDefined();
+      expect(opencodeJson.provider["ollama-local"]?.npm).toBe("@ai-sdk/openai-compatible");
+      expect(opencodeJson.provider["ollama-local"]?.options.baseURL).toBe(
+        "http://host.docker.internal:11434/v1",
+      );
+      expect(Object.keys(opencodeJson.provider["ollama-local"]?.models ?? {}).sort()).toEqual([
+        "gemma4:26b-work-64k",
+        "gemma4:31b-work-64k",
+        "qwen3.8:27b-work-64k",
+      ]);
+      expect(opencodeJson.model).toBe("ollama-local/gemma4:31b-work-64k");
+
+      const orchestrator = await readFile(
+        path.join(repoRoot, ".opencode/agents/specdojo-orchestrator.md"),
+        "utf8",
+      );
+      expect(orchestrator).toContain("model: ollama-local/gemma4:31b-work-64k");
+    } finally {
+      await rm(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("does not overwrite existing opencode.json without force", async () => {
+    const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
+    try {
+      const repoRoot = path.join(dir, "repo");
+      await mkdir(repoRoot, { recursive: true });
+      await writeFile(
+        path.join(repoRoot, "opencode.json"),
+        JSON.stringify({ custom: "preserved" }),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+      await runProviderScaffold("opencode", {
+        packageRoot: specdojoPackageRootDir(),
+        repoRoot,
+        force: false,
+        dryRun: false,
+      });
+
+      const opencodeJson = JSON.parse(await readFile(path.join(repoRoot, "opencode.json"), "utf8"));
+      expect(opencodeJson).toEqual({ custom: "preserved" });
     } finally {
       await rm(dir, { recursive: true, force: true });
     }

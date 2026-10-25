@@ -567,12 +567,14 @@ describe("specdojo init", () => {
       );
       expect(
         resolveMemberCommand(execDefaults, resolveAgentMember(loaded, "opencode-review-executor")!),
-      ).toBe("opencode run --agent opencode-review-executor --model ollama-local/gemma4:31b");
+      ).toBe(
+        "opencode run --agent opencode-review-executor --model ollama-local/gemma4:31b-work-64k",
+      );
       const opencodeReporter = resolveAgentMember(loaded, "opencode-reporter");
       expect(opencodeReporter?.nickname).toBe("gemma-reporter");
-      expect(opencodeReporter?.model).toBe("ollama-local/gemma4:26b");
+      expect(opencodeReporter?.model).toBe("ollama-local/gemma4:26b-work-64k");
       expect(resolveMemberCommand(execDefaults, opencodeReporter!)).toBe(
-        "opencode run --agent opencode-reporter --model ollama-local/gemma4:26b",
+        "opencode run --agent opencode-reporter --model ollama-local/gemma4:26b-work-64k",
       );
       const defaults = load(readFileSync(join(repo, ".specdojo/exec-defaults.yaml"), "utf8")) as {
         providers: Record<string, unknown>;
@@ -596,12 +598,13 @@ describe("specdojo init", () => {
           fallback_reporter_by: "copilot-reporter",
         },
       });
-      // 振り分けの表（medium）の reporter が 26b の実体を指すことを確かめる。
+      // 振り分けの表（medium）の reporter が 26b-work-64k の実体を指すことを確かめる。
       const mediumReporter = resolveAgentMember(loaded, defaults.routing.medium.reporter_by);
       expect(mediumReporter?.nickname).toBe("gemma-reporter");
-      expect(mediumReporter?.model).toBe("ollama-local/gemma4:26b");
+      expect(mediumReporter?.model).toBe("ollama-local/gemma4:26b-work-64k");
       expect(existsSync(join(repo, ".github/agents/specdojo-orchestrator.md"))).toBe(true);
       expect(existsSync(join(repo, ".specdojo/claude/settings.orchestrator.json"))).toBe(true);
+      expect(existsSync(join(repo, "opencode.json"))).toBe(true);
       const initializedPackage = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
         scripts: Record<string, string>;
       };

@@ -538,17 +538,17 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 
 agent が exec 実行時に読み込む provider 固有の設定（agent 定義・permission 設定）は、npm package 内の `templates/<provider>/` を配布原本とし、利用プロジェクトへコピーして使います。worktree 実行はコミット済み内容から worktree を作るため、コピーした設定は必ずコミットします。
 
-配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、`rules/` 配下 → `.<provider>/rules/`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
+配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、`rules/` 配下 → `.<provider>/rules/`、`opencode.json` → リポジトリ直下の `opencode.json`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
 
 | provider    | 配布内容                                                                                                                                              | 配置先                                 |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
 | claude      | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.orchestrator.json` / `settings.review.json` / `settings.report.json`         | `.claude/agents/`、`.specdojo/claude/` |
 | codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）、`rules/*.rules`（command rule）                                                              | `.codex/agents/`、`.codex/rules/`      |
-| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                             | `.opencode/agents/`                    |
+| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）、`opencode.json`（Ollama 接続・モデル設定）                                                 | `.opencode/agents/`、`opencode.json`   |
 | copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
 | antigravity | `orchestrator.md`、agent / provider 設定スニペット。`settings.global.json` は `--global` 用のマージ原本であり repository へは配置しない               | `.specdojo/antigravity/`               |
 
-導入手順とテンプレートに含めない手動設定（`opencode.json`、`.codex/config.toml` など）は各 `templates/<provider>/README.md` を参照します。
+導入手順と手動設定（`.codex/config.toml` や接続先 URL の調整、Modelfile によるローカル派生タグの作成など）は各 `templates/<provider>/README.md` を参照します。
 
 `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` には `--settings .specdojo/claude/settings.{mode}.json` を指定します。`--permission-mode bypassPermissions` は使いません（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します）。
 
@@ -585,15 +585,15 @@ specdojo config scaffold --provider claude
 
 `specdojo init --exec` と `config scaffold` が配布する agent の名簿と定義は、実体と別名の 2 段構成です（0.4.0 から）。実体は model の系統と役割で名付け、provider・`model`・役割を持ちます。従来の名前は `aliases` で実体を指す別名として残します。claude と opencode の agent の定義は役割（executor・review executor・reporter）ごとの 1 ファイルで `model` を持たず、`command_params.by_mode` で mode から定義を選び、model は実体の `model` を `--model {model}` で渡します。
 
-| provider    | init が生成する実体                                               | 別名（従来の名前）                                                   | model の書き場所                                            |
-| ----------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------- |
-| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`    | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                                  |
-| claude      | `opus-executor`・`opus-review-executor`（expert）                 | `claude-expert-executor`・`claude-expert-review-executor`            | 実体の `model`（`opus`）                                    |
-| codex       | `luna-executor`・`luna-review-executor`・`luna-reporter`          | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（`gpt-6-luna`、effort は `by_proficiency`）  |
-| codex       | `sol-executor`・`sol-review-executor`（expert）                   | `codex-expert-executor`・`codex-expert-review-executor`              | 実体の `model`（`gpt-6.1-sol`、effort は `by_proficiency`） |
-| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`       | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み）        |
-| antigravity | `flash-executor`・`flash-review-executor`・`flash-reporter`       | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                         |
-| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter` | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                        |
+| provider    | init が生成する実体                                                                                                   | 別名（従来の名前）                                                   | model の書き場所                                                        |
+| ----------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`                                                        | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                                              |
+| claude      | `opus-executor`・`opus-review-executor`（expert）                                                                     | `claude-expert-executor`・`claude-expert-review-executor`            | 実体の `model`（`opus`）                                                |
+| codex       | `luna-executor`・`luna-review-executor`・`luna-reporter`                                                              | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（`gpt-6-luna`、effort は `by_proficiency`）              |
+| codex       | `sol-executor`・`sol-review-executor`（expert）                                                                       | `codex-expert-executor`・`codex-expert-review-executor`              | 実体の `model`（`gpt-6.1-sol`、effort は `by_proficiency`）             |
+| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`、`qwen-executor`・`qwen-review-executor`・`qwen-reporter` | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み、原則 `*-work-64k`） |
+| antigravity | `flash-executor`・`flash-review-executor`・`flash-reporter`                                                           | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                                     |
+| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter`                                                     | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                                    |
 
 claude と codex は normal と expert の 2 段を持ちます（0.4.6 から）。expert の実体には `proficiency: expert` を付けます。init が書く振り分けの表（`routing`）は、hard を expert の別名（`claude-expert-executor`・`codex-expert-executor`）、medium と easy を normal の別名にし、reporter はどの難易度でも normal の別名にします。expert の段がない provider（opencode・antigravity など）は、hard も normal の別名を使います。codex の reasoning effort は `by_proficiency` で normal が `medium`、expert が `high` で、`gpt-6-luna` は Max までしか受け付けないため Ultra を割り当てません。
 

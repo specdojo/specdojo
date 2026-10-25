@@ -1,0 +1,28 @@
+PJR-MB92「OpenCode scaffold に Ollama 接続設定と work-64k モデル設定を補う」の対応を完了しました。
+
+### 実施内容の概要
+
+1. **`opencode.json` の scaffold 配置マッピング追加**
+   - [`src/shared/provider-scaffold.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/src/shared/provider-scaffold.ts) を修正し、`templates/opencode/opencode.json` をリポジトリルート直下の `opencode.json` に配置するマッピング規則を追加しました（既存ファイルがある場合は上書きせずスキップ）。
+
+2. **OpenCode 接続設定テンプレートの新規作成**
+   - [`templates/opencode/opencode.json`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/templates/opencode/opencode.json) を作成し、provider `ollama-local`（`@ai-sdk/openai-compatible`、`baseURL: "http://host.docker.internal:11434/v1"`、`apiKey: [REDACTED] 64k を確保するローカル派生モデルタグ（`gemma4:31b-work-64k`、`gemma4:26b-work-64k`、`qwen3.8:27b-work-64k`）、デフォルトモデル `ollama-local/gemma4:31b-work-64k` を定義しました。
+
+3. **配布エージェント定義および名簿雛形のモデル ID 整合**
+   - [`templates/opencode/agents/specdojo-orchestrator.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/templates/opencode/agents/specdojo-orchestrator.md) の `model` を `ollama-local/gemma4:31b-work-64k` に更新しました。
+   - [`templates/init-agent-members.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/templates/init-agent-members.yaml) の `gemma-executor`、`gemma-review-executor` を `ollama-local/gemma4:31b-work-64k`、`gemma-reporter` を `ollama-local/gemma4:26b-work-64k` に更新し、Qwen 系の実体 member（`qwen-executor`、`qwen-review-executor`、`qwen-reporter`、モデル: `ollama-local/qwen3.8:27b-work-64k`）を追加しました。
+
+4. **利用ドキュメントの更新**
+   - [`templates/opencode/README.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/templates/opencode/README.md) および [`docs/ja/specdojo/guides/exec-config-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/docs/ja/specdojo/guides/exec-config-guide.md) を更新し、`opencode.json` の配布・配置規則、Modelfile と `ollama create` による `*-work-64k` 派生タグ作成手順（公式配布タグではないことの明記）、接続先設定手順（Docker Desktop / Linux ホスト / リモート）、既存環境の修正手順を記載しました。
+
+5. **単体テストの追加・更新**
+   - [`tests/src/shared/provider-scaffold.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/tests/src/shared/provider-scaffold.test.ts) に、空リポジトリへの `opencode.json` および `.opencode/agents/*.md` 生成テスト、生成された `ollama-local` / `*-work-64k` の設定内容検証、既存 `opencode.json` が上書きされない保護テストを追加しました。
+   - [`tests/src/commands/init.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/tests/src/commands/init.test.ts) を更新し、init 実行時に `opencode.json` が配置されること、および解決されるモデルが `*-work-64k` であることを検証しました。
+
+6. **CHANGELOG および登録簿個票の更新**
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/CHANGELOG.md) の `## [Unreleased]` に変更内容を追記しました。
+   - 個票 [`docs/ja/projects/prj-0001/controls/project-register/pjr-mb92-opencode-scaffold-ollama-work-64k.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/docs/ja/projects/prj-0001/controls/project-register/pjr-mb92-opencode-scaffold-ollama-work-64k.md) の「## 4. 対応結果」に実施内容・検証結果・申し送り事項を記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"OpenCode scaffold への opencode.json（ollama-local）配置、work-64k モデル設定整合、派生タグ作成手順および既存環境修正手順の文書化、テスト追加を完了した","handoff":["本リポジトリ自身の保護された設定（.specdojo/agent-members.yaml、ルートの opencode.json）について、現在本リポジトリは Mac Apple Silicon のローカル Ollama 環境に合わせた *-mlx-work-64k タグ（gemma4:31b-mlx-work-64k 等）を使用している。配布テンプレートは環境非依存の *-work-64k を標準としているため、本リポジトリの設定は保護方針に従い変更せず維持している。本リポジトリの設定変更が必要な場合は利用者の承認のもとで反映すること。","実ホスト上の Ollama で ollama create gemma4:31b-work-64k -f Modelfile 等を実行して派生タグを用意し、curl による OpenAI 互換エンドポイント疎通および opencode run による実接続確認を行うこと。"],"validations":[{"command":"npx prettier --write src/shared/provider-scaffold.ts templates/opencode/opencode.json templates/opencode/agents/specdojo-orchestrator.md templates/init-agent-members.yaml templates/opencode/README.md docs/ja/specdojo/guides/exec-config-guide.md tests/src/commands/init.test.ts tests/src/shared/provider-scaffold.test.ts CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-mb92-opencode-scaffold-ollama-work-64k.md","status":"passed","summary":"変更した TypeScript、JSON、YAML、Markdown ファイルを整形した"},{"command":"git diff --check","status":"passed","summary":"git diff の空白エラーなし"},{"command":"curl http://host.docker.internal:11434/v1/chat/completions","status":"requires_human","summary":"ホスト側 Ollama 稼働および派生タグ *-work-64k に対する opencode run の実接続・推論確認"}]}
+</specdojo_executor_evidence>

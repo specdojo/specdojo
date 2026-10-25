@@ -42,6 +42,7 @@ export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = 
 //   templates/<provider>/agents/**        -> .<provider>/agents/**   （--agent の自動発見位置）
 //   templates/<provider>/rules/**         -> .<provider>/rules/**    （command rule の自動発見位置）
 //   templates/<provider>/README.md        -> コピーしない（配布原本の説明書）
+//   templates/opencode/opencode.json      -> opencode.json           （リポジトリ直下の接続・モデル設定）
 //   templates/<provider>/ 配下のその他    -> .specdojo/<provider>/** （--settings 等で明示参照）
 // Copilot の orchestrator だけは native の探索先 .github/agents/ に同梱 wrapper を配置する。
 // ユーザーディレクトリ設定は PROVIDER_GLOBAL_SETTINGS で明示し、--global 時だけマージする。
@@ -152,9 +153,11 @@ export async function buildProviderScaffoldPlan(opts: {
     }
 
     const destinationRelPath =
-      relFile.startsWith("agents/") || relFile.startsWith("rules/")
-        ? `.${provider}/${relFile}`
-        : `.specdojo/${provider}/${relFile}`;
+      provider === "opencode" && relFile === "opencode.json"
+        ? "opencode.json"
+        : relFile.startsWith("agents/") || relFile.startsWith("rules/")
+          ? `.${provider}/${relFile}`
+          : `.specdojo/${provider}/${relFile}`;
     entries.push({
       sourcePath: path.join(templateDir, ...relFile.split("/")),
       destinationPath: path.join(repoRoot, ...destinationRelPath.split("/")),

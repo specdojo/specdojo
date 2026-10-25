@@ -38,3 +38,29 @@
     - field: derived_from
       from: ""
       to: '["PJR-2ASZ"]'
+- v: 1
+  id: reg_bded216219374ca9896aa400bab26f41
+  ts: "2026-10-25T09:15:51Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_6b49310019214bc48a68f511cb096475
+- v: 1
+  id: reg_1b088d5073004237b10cc7aef11a7861
+  ts: "2026-10-25T09:42:29Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_bded216219374ca9896aa400bab26f41

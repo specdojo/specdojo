@@ -6,6 +6,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- OpenCode の scaffold でローカル Ollama の接続・モデル設定を含む `opencode.json`（provider: `ollama-local`）をリポジトリ直下に配置するようにしました。配布する名簿の雛形・agent 定義・接続設定のモデル指定を整合させ、Gemma および Qwen は文脈長 64k を確保するローカル派生タグ（`*-work-64k`）を標準としました。派生タグ作成手順、接続先設定手順、既存環境の修正手順を OpenCode テンプレートの README および設定ガイドに追記しました（PJR-MB92）。
 - `devcontainer scaffold` で生成する `devcontainer.json` の雛形に `shutdownAction: "none"` を追加し、VS Code などのクライアント切断時にコンテナが停止しないようにしました。既存環境の修正手順を常時稼働ホスト運用ガイドに追記しました（PJR-TVGA）。
 
 ## [0.4.6] - 2026-10-25
