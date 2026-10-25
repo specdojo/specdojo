@@ -280,6 +280,42 @@ describe("specdojoPackageRootDir", () => {
       "agy-gpt-oss-executor": "gpt-oss-120b-medium",
     });
   });
+
+  it("ships Codex agent definitions that do not use retired or migration models", async () => {
+    const packageRoot = specdojoPackageRootDir();
+    const agentsDir = path.join(packageRoot, "templates", "codex", "agents");
+    const fileNames = (await readdir(agentsDir)).filter((name) => name.endsWith(".toml")).sort();
+
+    expect(fileNames).toEqual([
+      "codex-executor.toml",
+      "codex-expert-executor.toml",
+      "codex-expert-review-executor.toml",
+      "codex-review-executor.toml",
+      "specdojo-orchestrator.toml",
+    ]);
+
+    const agentModels: Record<string, string> = {};
+    for (const fileName of fileNames) {
+      const content = await readFile(path.join(agentsDir, fileName), "utf8");
+      const match = /^model\s*=\s*"([^"]+)"/m.exec(content);
+      expect(match).not.toBeNull();
+      const model = match![1]!;
+      agentModels[fileName] = model;
+
+      // 根拠: learn.chatgpt.com/docs/models。提供終了モデルと移行用 gpt-5.6-* を禁止する。
+      expect(model).not.toBe("gpt-5.4-mini");
+      expect(model).not.toBe("gpt-5.5");
+      expect(model).not.toMatch(/^gpt-5\.6/);
+    }
+
+    expect(agentModels).toEqual({
+      "codex-executor.toml": "gpt-6-luna",
+      "codex-expert-executor.toml": "gpt-6.1-sol",
+      "codex-expert-review-executor.toml": "gpt-6.1-sol",
+      "codex-review-executor.toml": "gpt-6-luna",
+      "specdojo-orchestrator.toml": "gpt-6.1-sol",
+    });
+  });
 });
 
 describe("listProviderTemplates", () => {
@@ -724,9 +760,9 @@ describe("runProviderScaffold", () => {
       provider: "codex",
       scripts: {
         "orch:sol":
-          'specdojo orchestrator launch --provider codex -- -m gpt-5.6-sol "$(cat .specdojo/codex/orchestrator.md)"',
-        "orch:terra":
-          'specdojo orchestrator launch --provider codex -- -m gpt-5.6-terra "$(cat .specdojo/codex/orchestrator.md)"',
+          'specdojo orchestrator launch --provider codex -- -m gpt-6.1-sol "$(cat .specdojo/codex/orchestrator.md)"',
+        "orch:luna":
+          'specdojo orchestrator launch --provider codex -- -m gpt-6-luna "$(cat .specdojo/codex/orchestrator.md)"',
       },
       legacy: "orch:codex",
     },
@@ -802,8 +838,9 @@ describe("runProviderScaffold", () => {
 
       const pkg = JSON.parse(await readFile(path.join(repoRoot, "package.json"), "utf8"));
       expect(pkg.scripts["orch:codex"]).toBe("custom codex");
-      expect(pkg.scripts["orch:sol"]).toContain("-m gpt-5.6-sol");
-      expect(pkg.scripts["orch:terra"]).toContain("-m gpt-5.6-terra");
+      expect(pkg.scripts["orch:sol"]).toContain("-m gpt-6.1-sol");
+      expect(pkg.scripts["orch:luna"]).toContain("-m gpt-6-luna");
+      expect(pkg.scripts["orch:terra"]).toBeUndefined();
     } finally {
       await rm(dir, { recursive: true, force: true });
     }

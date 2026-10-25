@@ -41,6 +41,7 @@ export interface RunLefthookScaffoldOptions {
   packageRoot: string;
   repoRoot: string;
   config: SpecDojoConfig;
+  markdownlintIgnorePatterns?: readonly string[];
   force: boolean;
   dryRun: boolean;
 }
@@ -219,6 +220,11 @@ async function writeScaffoldFile(
 }
 
 async function writeMarkdownlintScaffold(opts: RunLefthookScaffoldOptions): Promise<void> {
+  if (opts.markdownlintIgnorePatterns?.length) {
+    process.stdout.write(
+      `Planned Slidev .markdownlintignore entries:\n${opts.markdownlintIgnorePatterns.join("\n")}\n`,
+    );
+  }
   const existingConfig = MARKDOWNLINT_CONFIG_FILES.find((filename) =>
     existsSync(path.join(opts.repoRoot, filename)),
   );
@@ -238,7 +244,8 @@ async function writeMarkdownlintScaffold(opts: RunLefthookScaffoldOptions): Prom
     undefined,
     path.join(opts.repoRoot, ".markdownlintignore"),
     ".markdownlintignore",
-    MARKDOWNLINT_IGNORE,
+    MARKDOWNLINT_IGNORE +
+      (opts.markdownlintIgnorePatterns ?? []).map((pattern) => `${pattern}\n`).join(""),
     { force: false, dryRun: opts.dryRun },
   );
 }

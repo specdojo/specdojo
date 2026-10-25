@@ -89,7 +89,95 @@ template は、記述する部分を _TODO_ などのプレースホルダとし
 
 型そのものの種別と型全体での位置づけは [型の構成ガイド](practice-system-composition-guide.md) を正本とします。
 
-## 4. 関連ドキュメント
+## 4. Slidev の kata を検証する
+
+スライドの sample・template を作る場合、SpecDojo を入れたリポジトリにも Slidev の実行環境を
+用意すると、kata をビルドして確かめられます。新規導入は `specdojo init --slidev`、既存リポジトリへの
+追加は次のコマンドを使います。`init` は Dev Container の `full` を選んだ場合だけ導入の既定が「はい」です。
+オプションの詳細は [[specdojo:command-reference|コマンドリファレンス]] を参照してください。
+
+```bash
+specdojo config scaffold --slidev --dry-run
+specdojo config scaffold --slidev
+npm install
+```
+
+scaffold が加えるのは `@slidev/cli`・`prettier-plugin-slidev`・`prettier` の開発依存と、スライドだけを
+整形する Prettier overrides、markdownlint の除外です。既存の依存の版は変えません。既存の整形設定・
+ignore は保持するため、表示された追加例を確認し、足りない設定を手で統合してから整形・commit してください。
+
+既定の対象は `docs/ja/specdojo/samples/**/*-slidev-sample.md` と
+`docs/ja/specdojo/templates/**/*-slidev-template.md` です。たとえば利用者の `kata_authority` が
+`edu-scratch` なら、sample は `docs/ja/specdojo/samples/edu-scratch/lesson-slidev-sample.md` に置きます。
+別名の `lsd-sample.md` や旧配置の kata は、実際のパスを Prettier overrides の `files` と
+`.markdownlintignore` の両方に追加してください。通常の Markdown として整形するとページ区切り直後の
+設定が本文に変わる場合があるため、Slidev のファイルだけに `slidev` parser と
+`prettier-plugin-slidev` を当てます。設定方法は [公式 plugin の説明](https://github.com/slidevjs/prettier-plugin) に従っています。
+
+### 4.1. sample のビルドと表示
+
+テーマの選定とインストールは利用者の作業です。scaffold は `slidev-theme-neversink` などのテーマを
+選びません。sample の先頭の Slidev frontmatter の `theme` に合わせて開発依存を追加します。
+たとえば `theme: default` を使う場合は次のようにします。
+
+```bash
+npm install --save-dev @slidev/theme-default
+./node_modules/.bin/slidev build docs/ja/specdojo/samples/edu-scratch/lesson-slidev-sample.md --out "$PWD/tmp/slidev-dist"
+./node_modules/.bin/slidev docs/ja/specdojo/samples/edu-scratch/lesson-slidev-sample.md
+```
+
+`build` の終了コードが 0 であることを確認し、表示されたローカル URL をブラウザで開いて、ページ区切り・
+レイアウト・日本語・コンポーネントを確認します。CLI の引数は [Slidev 公式 CLI リファレンス](https://sli.dev/builtin/cli) を参照してください。
+SSH / Dev Container 越しに開く場合は、開発サーバーのコマンドに `--remote` を加え、ポート 3030 を転送します。
+`tmp/` は検証用の出力先なので、利用者の `.gitignore` に `/tmp/` を追加して管理対象から外してください。
+
+### 4.2. 活動固有の部品と template
+
+`ScratchBlocks.vue` などの活動固有のコンポーネント、`scratchblocks` などの追加依存、画像・
+スタイル・setup は利用者がプロダクトリポジトリから用意します。部品に依存する場合は、sample を
+`tmp/slidev-check/slides.md` にコピーし、同じ活動の `components/`・`public/` などをその横へ配置して、
+相対参照を再現したうえで `./node_modules/.bin/slidev build tmp/slidev-check/slides.md --out "$PWD/tmp/slidev-dist"`
+を実行します。template はプレースホルダを埋めた検証用コピーで同じ手順を使い、kata の原本を保持します。
+
+PNG / PDF の書き出しに使う Playwright・Chromium、その OS ライブラリと日本語フォントは scaffold に
+含みません。`slidev export` も行う場合は利用者が追加してください。ビルドとブラウザでの表示確認を先に行います。
+
+## 5. kata の付属ファイル
+
+`kata list` と `kata status` は、ID を読める形式（`.md`・`.mdx`・`.yaml`・`.yml`・`.json`）だけを
+kata として表示します。この形式で ID の宣言がない場合は、従来どおりファイル名を ID とします。
+CSS・画像など、それ以外の形式は独立した kata として表示しません。
+
+付属ファイルは、kata と同じディレクトリに、最後の拡張子を除いた名前をそろえて置きます。
+たとえば `lsd-sample.md` には `lsd-sample.css` を付けられます。複数の画像や部品は、同じ名前の
+ディレクトリ `lsd-sample/` 以下にまとめられます。`generated/` 以下は対象外です。
+ID を読める 5 形式のファイルは、同じ名前やディレクトリ内にあっても別の kata として扱い、
+親 kata の付属ファイルには含めません。frontmatter に付属ファイルを宣言する必要はありません。
+
+```text
+samples/
+  lsd-sample.md
+  lsd-sample.css
+  lsd-sample/
+    images/
+      example.png
+```
+
+`specdojo kata eject --id <id>` は、同梱 kata とその付属ファイルを同じ相対パスへコピーします。
+`--dry-run` では付属ファイルも 1 ファイルずつ表示し、書き込みません。既存ファイルはそれぞれ
+`skip` となり、`--force` を付けた場合に上書きします。kata 本体が既存でも、未配置の付属ファイルは
+コピーします。`kata install --all` も同じ規則で付属ファイルをコピーします。
+
+コピー後に kata を別の場所で使う場合は、相対参照が保たれるよう付属ファイルも一緒に配置します。
+Slidev の全ページに効かせる CSS は、検証用の `slides.md` の横へコピーするときに
+`lsd-sample.css` を `style.css` にします。`kata eject` 自体は名前を変えません。
+
+`kata status` は、eject 済みの kata 本体と付属ファイルをまとめて package と比較します。
+付属ファイルだけの変更・追加・欠落も、親 kata の行を `modified` として表示します。
+kata 本体が package にない場合は `package-missing`、package から参照中の場合は `-` です。
+利用者の `kata_authority` に属する独自 kata の差分は、従来どおり `-` です。
+
+## 6. 関連ドキュメント
 
 - [実践の進め方ガイド](ryu-guide.md): `approach` の選び方・一覧、参照の共通原則、メンテナンス・review への適用
 - [型の構成ガイド](practice-system-composition-guide.md): 実践の型を含む型（Kata）の種別と役割

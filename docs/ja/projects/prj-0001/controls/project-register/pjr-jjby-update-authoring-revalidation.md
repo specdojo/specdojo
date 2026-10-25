@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-jjby-update-authoring-revalidation
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T23:47:37Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T01:34:27Z"
+  conclusion: approach・target・source を変えない register update では approach と target を検証し直さないようにした。変える update と add は従来どおり検証する
 ---
 
 # PJR-JJBY authoring の kata ができた後、register update が担当や期限の変更でも止まる
@@ -44,9 +46,22 @@ specdojo:
 | 依存事項 | なし                                                                                                                                                                             |
 | 完了条件 | authoring の kata ができた後も、担当・期限などだけを変える `register update` が通る。approach や target を変える update では、従来どおり検証される。これらを確かめる test がある |
 
+### 追記（2026-10-25、利用者が承認）
+
+- v0.4.6 の範囲とする。対応策は前者（`--approach`・`--target`・`--source` を変えない update では、approach と target を検証し直さない）を採る。
+- `register add` と、`--approach`・`--target`・`--source` のいずれかを指定した update では、従来どおり検証する。
+- `exec plan`・`exec run` の実行前の検証（authoring の「新しい kata ID がまだない」）は変えない。
+- 回避のために approach を外した利用者向けに、外した approach と target を update で戻す手順が使えるかを確かめ、個票の対応結果と報告の `handoff` に書く。kata ができた後に authoring の approach を戻すことが検証で止まる場合は、その扱いも書く。
+- 単体テストで、kata ができた後の担当・期限・優先度だけの update が通ること、approach・target・source を変える update では検証されることを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
+
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+update では `--approach`・`--target`・`--source` のいずれも指定されない場合、既存値での approach・target 検証を省略するようにした。担当・期限・優先度などの更新は通り、3項目のいずれかを指定した update は従来どおり検証する。`register add` および `exec plan` / `exec run` の実行前検証は変更していない。
+
+単体テストでは、すでに存在する kata ID を持つ authoring 個票について、担当・期限・優先度の更新が通ること、source を明示して変更する更新が「kata id already exists」で拒否されることを確認する。approach を外した回避済み個票へ元の authoring approach と既存 kata target を戻す操作も、この検証により同じ理由で拒否される。作成済み kata の新規 authoring を再開する用途では `*-maintenance` を使う。対象以外の未解決事項はない。
 
 ## 5. 関連ドキュメント
 

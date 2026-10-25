@@ -1,0 +1,28 @@
+カタログと pm-roles のない project で、`*-maintenance` の plan のレビュー観点の欄が markdownlint（MD036）に止められないようにしました。ここで実行した `npx prettier --check` は通っています。typecheck・lint・単体テスト・統合テストは指示どおりこの場では実行していないので、親 runner の検証で確かめる必要があります。
+
+**原因**: `ownerRoleFields`（`src/exec/plans-core.ts`）は、owner の role に当てはまる観点がないと `viewpoints` を `_MISSING_` だけで返していました。雛形では `_OWNER_ROLE_VIEWPOINTS_` が単独の段落に置かれているため、強調だけの段落になって MD036 に違反していました。
+
+**修正**:
+- 観点がないとき（owner 未設定のときも含む）は、`viewpoints` を箇条書きの 1 項目 `- _MISSING_` で返すようにしました。
+- 雛形は変えず値の側で直したので、`_OWNER_ROLE_VIEWPOINTS_` を使う雛形すべてに効きます。対象は 4 つの `xep-*-maintenance-template.md` と、`xep-template.md`・`xep-freeform-template.md`・`xep-fully-guided-template.md`・`xep-recipe-guided-template.md`・`xep-retrofit-template.md`・`xep-bootstrap-template.md` です。
+- `<種類>-authoring` の雛形 4 つは変えていません。観点・責務の欄がなく、単独の段落になる `_AUTHORING_EXEMPLARS_` は手本がないとき `- なし（kata だけを新規作成する）` を返すので、もともと MD036 に違反しないためです。
+
+**テスト**:
+- `tests/src/exec/register-plan-escape.test.ts` にテストを 8 件加えました。カタログと pm-roles のない project で、4 種類の `*-maintenance` と 4 種類の `*-authoring` の plan を作り、次の 2 点を確かめます。
+  - MD036 違反がないこと。
+  - `_MISSING_` だけの行がないこと。
+- 修正を一時的に戻すと、`*-maintenance` の 4 件が失敗します。修正を入れ直すと通ることも確かめました。
+- `tests/src/exec/plans.test.ts` の `ownerRoleFields` の期待値を新しい形に直しました。対象の 2 ファイル（103 件）は通っています。
+
+ほかに、CHANGELOG の `## [Unreleased]` に「不具合修正」の節を作って記載し、個票の「対応結果」の節を書きました。`tmp/pjr-ss72-edit-test.py` は作業用のスクリプトで、削除の許可が出なかったので残っています（`tmp/` は commit されません）。統合の後に `exec run --register` を 1 回流して確かめる作業（PJR-JSEY）は、runner と人の担当として残っています。
+
+変更したファイル:
+- `src/exec/plans-core.ts`
+- `tests/src/exec/plans.test.ts`
+- `tests/src/exec/register-plan-escape.test.ts`
+- `CHANGELOG.md`
+- `docs/ja/projects/prj-0001/controls/project-register/pjr-ss72-maintenance-plan-md036.md`
+
+<specdojo_executor_evidence>
+{"final_message":"ownerRoleFields now returns `- _MISSING_` (a list item) instead of a bare `_MISSING_` paragraph when no viewpoints apply, so every edit plan template that uses _OWNER_ROLE_VIEWPOINTS_ passes markdownlint MD036. Authoring templates needed no change (_AUTHORING_EXEMPLARS_ already falls back to a list item). Added 8 regression tests (4 maintenance + 4 authoring approaches, no catalog/pm-roles) that lint generated plans for MD036; verified the maintenance tests fail without the fix. Updated ownerRoleFields unit test expectations, CHANGELOG Unreleased, and the PJR-SS72 ticket result section.","validations":[{"command":"npx vitest run tests/src/exec/register-plan-escape.test.ts tests/src/exec/plans.test.ts","status":"passed","summary":"103 tests passed; with the fix temporarily reverted, the 4 maintenance MD036 tests failed as expected"},{"command":"npx prettier --check src/exec/plans-core.ts tests/src/exec/plans.test.ts tests/src/exec/register-plan-escape.test.ts CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-ss72-maintenance-plan-md036.md","status":"passed","summary":"All matched files use Prettier code style"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"not run","reason":"Changes under docs/ja/projects/ are limited to a register ticket; no catalog files were changed, and the plan does not require catalog validation"}]}
+</specdojo_executor_evidence>

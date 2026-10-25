@@ -8,6 +8,8 @@ import type { RateLimitRecoveryEvent } from "./run/shared.js";
 const MAX_LOG_BYTES = 64 * 1024;
 const MAX_CHANGE_FILES = 1_000;
 const MAX_FINAL_MESSAGE_LENGTH = 4_000;
+const MAX_HANDOFF_ITEMS = 100;
+const MAX_HANDOFF_LENGTH = 4_000;
 const MAX_DIFF_SUMMARY_LENGTH = 4_000;
 const MAX_VALIDATIONS = 50;
 const MAX_VALIDATION_COMMAND_LENGTH = 500;
@@ -58,6 +60,8 @@ export type ExecEvidence = {
   /** Runner-recorded pinned-agent rate-limit/connection recovery history for this stage. */
   rate_limit_events?: RateLimitRecoveryEvent[];
   final_message: string;
+  /** Executor notes preserved mechanically in the edit result handoff. Optional for legacy evidence. */
+  handoff?: string[];
   /** Runner-derived failure/protection reason. Present only when the executor did not succeed. */
   block_reason?: string;
   command?: {
@@ -162,6 +166,7 @@ export type RecordParentValidationFailureOutputInput = {
 
 type ExecutorReport = {
   final_message?: unknown;
+  handoff?: unknown;
   validations?: unknown;
   target_coverage?: unknown;
 };
@@ -210,6 +215,7 @@ function executorBlockReason(status: ExecEvidence["stage"]["status"], stderr: st
 
 export function parseExecutorReport(stdout: string): {
   finalMessage: string;
+  handoff: string[];
   validations: EvidenceValidation[];
   targetCoverage: EvidenceTargetCoverage[];
 } {
@@ -276,8 +282,15 @@ export function parseExecutorReport(stdout: string): {
   }
 
   const fallback = stdout.replace(REPORT_PATTERN, "").trim();
+  const handoff = Array.isArray(report.handoff)
+    ? report.handoff
+        .slice(0, MAX_HANDOFF_ITEMS)
+        .map((item) => boundedText(item, MAX_HANDOFF_LENGTH))
+        .filter(Boolean)
+    : [];
   return {
     finalMessage: boundedText(report.final_message ?? fallback, MAX_FINAL_MESSAGE_LENGTH),
+    handoff,
     validations,
     targetCoverage,
   };
@@ -520,6 +533,7 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
       ...(report.targetCoverage.length > 0 ? { target_coverage: report.targetCoverage } : {}),
       ...(input.rateLimitEvents?.length ? { rate_limit_events: input.rateLimitEvents } : {}),
       final_message: report.finalMessage,
+      ...(report.handoff.length > 0 ? { handoff: report.handoff } : {}),
       ...(input.status === "succeeded"
         ? {}
         : { block_reason: executorBlockReason(input.status, input.stderr) }),

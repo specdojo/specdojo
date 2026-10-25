@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-pm2r-external-project-specdojo-repo
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T13:41:22Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-24T14:44:25Z"
+  conclusion: external_projects の委譲で、相手に node_modules/.bin/specdojo がなく package.json の name が specdojo のときは、相手の dist/specdojo.js を Node で起動するようにした。未ビルドなら npm run build を案内して止まる。インストール済みの CLI を優先し、版の確かめは今のまま
 ---
 
 # PJR-PM2R external_projects で SpecDojo のリポジトリへ起票を任せられない
@@ -44,9 +46,21 @@ specdojo:
 | 依存事項 | なし                                                                                                                                                  |
 | 完了条件 | 利用者のリポジトリから SpecDojo のリポジトリの project へ `register add --project <別名> --commit` で起票できる。または、制約と回避の手順が文書にある |
 
+### 3.1. 完了条件（追記）
+
+- v0.4.6 の範囲とする（2026-10-24、利用者が承認）。上の表の対応策のうち、実行ファイルの探し方を広げる方で直す（文書に制約を書くだけにはしない）。
+- 委譲の相手のリポジトリに `node_modules/.bin/specdojo` がなく、相手の `package.json` の `name` が `specdojo`（SpecDojo 自身のリポジトリ）で `dist/specdojo.js` がある場合は、`node <相手>/dist/specdojo.js` で起動する。`dist/specdojo.js` がない場合は、`npm run build` を案内して止まる。版の確かめ（0.4.2 以上）は今のまま行う。
+- 統合テストで、SpecDojo 自身のリポジトリに見立てた一時のリポジトリ（`name: specdojo` と `dist/specdojo.js` を持つ）へ、別の一時のリポジトリから起票できることを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
+
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `src/register/external-project.ts` の CLI 解決を拡張した。インストール済みの CLI を優先し、存在しない場合に相手の `package.json` の `name` が `specdojo` なら、`process.execPath` と相手の `dist/specdojo.js` で版の確認と起票を行う。未ビルドの場合は `npm run build` を案内して、起票前に停止する。
+- 単体テストに、Node.js に渡す引数、インストール済み CLI の優先、未ビルド時の停止、別パッケージの除外、既存の版の条件を追加した。統合テストには、`name: specdojo` と `dist/specdojo.js` を持ち、`node_modules/.bin/specdojo` のない一時リポジトリへの起票を追加した。相手の統合ブランチへの 1 件の commit と呼び出し元が変わらないことを検証する。
+- [[specdojo:command-reference|CLI コマンドリファレンス]]・[[specdojo:specdojo-config-reference|設定リファレンス]]・[[specdojo:register-operation-guide|登録簿運用ガイド]] に起動方法とビルドの前提を追記し、CHANGELOG の Unreleased に記載した。
+- executor で Prettier 整形、本体のビルド、登録簿の派生ビュー生成、カタログ検証が通った。カタログ検証は未作成の成果物に関する警告を出したが、終了コードは 0。型検査、lint、単体テスト・統合テスト、schema 検査の成否は、executor 終了後に実行する親 runner の evidence を正とする。統合後の実 agent による確認は PJR-JSEY で行う。
 
 ## 5. 関連ドキュメント
 

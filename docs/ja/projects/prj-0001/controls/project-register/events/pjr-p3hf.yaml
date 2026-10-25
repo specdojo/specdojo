@@ -1,0 +1,53 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_569ac007f0cf40498e454b0d8868d56b
+  ts: "2026-10-21T22:58:31Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 生成される登録簿の一覧で Markdown の記号をエスケープしていない
+    - field: description
+      from: ""
+      to: register build が個票の conclusion などを一覧の表へそのまま書くため、orch:* のような * を含む値が強調記号と解釈され、lint-md（MD037）が失敗する。PJR-SAZC の結論で起き、prj-0002 の PJR-0WFV の run が親の検証で止まった。一覧の生成で Markdown の記号をエスケープするか、コードの書式にする
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_01cf57c107bf4edb9a0bf089cbba2127
+  ts: "2026-10-24T13:26:19Z"
+  action: reject
+  actor: indie
+  from_status: open
+  to_status: rejected
+  reason: 利用者（indie）の判断で、既存の PJR-6SQH と重なるため reject する。prj-0002 の develop に main（0.4.5）を取り込めば同じ問題は出なくなる
+  changes:
+    - field: status
+      from: open
+      to: rejected
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: PJR-6SQH（0.4.2）で、一覧・派生ビュー・PM ログの表のセルの強調の記号（アスタリスクとアンダースコア）をエスケープするよう直っている。素の URL は PJR-4J4A（0.4.4）で囲むようになった。prj-0002 で起きたのは、prj-0002 の作業ツリーの CLI が 0.4.2 より古いため
+  previous_event_id: reg_569ac007f0cf40498e454b0d8868d56b

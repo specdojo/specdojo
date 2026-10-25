@@ -48,3 +48,48 @@
       from: _TODO_
       to: "2026-10-31"
   previous_event_id: reg_35ecebf2cc0c4682a4daaf0e005a6295
+- v: 1
+  id: reg_edfc0a6c493f40aeaa9439ef02719ecc
+  ts: "2026-10-24T23:28:46Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7f05f833c8d74f2aba3c0f1e4c6ffe31
+- v: 1
+  id: reg_fa65eadfa6c242d4a3b03ece5869c948
+  ts: "2026-10-24T23:41:18Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_edfc0a6c493f40aeaa9439ef02719ecc
+- v: 1
+  id: reg_8fa39017d72043e2b45728dd0d53da35
+  ts: "2026-10-25T00:00:20Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 対応策 1〜4 と test を差分で確かめ、JSEY で handoff が result に載ることを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: executor の報告に handoff を加え result の申し送りへ転記し、plan の雛形とオーケストレーターの本文の書き先を個票の対応結果と handoff に合わせた
+  previous_event_id: reg_fa65eadfa6c242d4a3b03ece5869c948

@@ -1,0 +1,32 @@
+配布する名簿の雛形を、GPT-6 と normal・expert の 2 段にそろえました。対象の 2 つのテストファイル（51 件）、雛形の schema 検証、Prettier の確認は通っています。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` などの全体の検査は指示どおり実行しておらず、このあと runner が実行します。
+
+**変更したもの**
+- **`templates/init-agent-members.yaml`**
+  - claude: normal の `sonnet-*` はそのままです。expert として `opus-executor`・`opus-review-executor` を加えました。
+  - codex: `terra-*` を外し、normal を `luna-*`（`gpt-6-luna`）、expert を `sol-executor`・`sol-review-executor`（`gpt-6.1-sol`）にしました。
+  - expert の実体には `proficiency: expert` を付けました。
+  - 別名は `claude-expert-*` と `codex-expert-*` を加え、`codex-executor`・`codex-review-executor`・`codex-reporter` は `luna-*` に向けました。既存の別名の名前は変えていません。
+- **`src/commands/init.ts`**: 振り分けの表を、hard は expert の別名、medium・easy・reporter は normal の別名にしました。opencode・antigravity のように expert の段がない provider は、hard も normal の別名を使います。
+- **`src/shared/provider-scaffold.ts`**: codex の起動スクリプトを `orch:sol`（`gpt-6.1-sol`）と `orch:luna`（`gpt-6-luna`）にし、`orch:terra` は作らないようにしました。既存のスクリプトは今までどおり上書きしません。
+- **テスト**（`tests/src/commands/init.test.ts`、`tests/src/shared/provider-scaffold.test.ts`）: 名簿の実体と別名、振り分けの表、`orch:*`、`{model}` と effort の組み立てを確かめるようにしました。
+- **文書**
+  - `templates/claude/README.md`・`templates/codex/README.md` を新しい 2 段に合わせました。
+  - `exec-config-guide.md` に 2 段の表、`gpt-6-astra` を足す例、0.4.5 までの名簿からの書き換え方を加えました。
+  - `command-reference.md` と `orchestrator-operation-guide.md` の init の説明を直しました。
+  - `CHANGELOG.md` に `## [Unreleased]` を新しく作りました。
+- **個票**: 対応結果の節を書きました。ステータスの項目は変えていません。
+
+effort の設定は変えていません。雛形の設定では normal が `medium`、expert が `high` になるため、`gpt-6-luna` に Ultra が渡ることはありません。
+
+**本リポジトリの設定（保護された設定のため変えていません。オーケストレーターが反映します）**
+- `.specdojo/agent-members.yaml`: `sol-*` の `model` を `gpt-6.1-sol` にし、`terra-*` を `luna-*`（`gpt-6-luna`）に名前を変え、`codex-executor`・`codex-review-executor`・`codex-reporter` の向き先を `luna-*` に合わせます。
+- `package.json`: `orch:sol`・`orch:sol:work` の `-m` を `gpt-6.1-sol` にし、`orch:terra`・`orch:terra:work` を `orch:luna`・`orch:luna:work`（`-m gpt-6-luna`）に置き換えます。
+
+**残したもの**
+- 配布するオーケストレーターの定義 `templates/codex/agents/specdojo-orchestrator.toml` は `gpt-5.6-terra` のままです。`orch:*` は `-m` でモデルを指定するので、起動するモデルには影響しません。
+- codex の subagent の定義（`templates/codex/agents/*.toml`）の `model` は、利用者が調整する項目なので変えていません。
+- `sysd-orchestrator-agent-settings.md` と運用ガイドにある本リポジトリの `orch:*` の表は、上の設定を反映するときに合わせて直す必要があります。
+
+<specdojo_executor_evidence>
+{"final_message":"Aligned the distributed roster template with GPT-6 and normal/expert tiers: luna (gpt-6-luna) and sol (gpt-6.1-sol) for codex, opus as the claude expert, and codex-expert-* / claude-expert-* aliases. Init routing now sends hard to the expert aliases and medium/easy/reporter to the normal aliases (unchanged for providers without an expert tier). Codex orch scripts are orch:sol and orch:luna, and orch:terra is no longer created. Updated tests, provider READMEs, exec-config-guide, command-reference, orchestrator-operation-guide, CHANGELOG [Unreleased], and the ticket's 対応結果 section. The repo's protected .specdojo/agent-members.yaml and package.json are unchanged; the proposed changes are in the ticket.","validations":[{"command":"npx vitest run tests/src/commands/init.test.ts tests/src/shared/provider-scaffold.test.ts","status":"passed","summary":"2 files, 51 tests passed"},{"command":"npm run -s validate:schema:file -- --schema docs/specdojo/schemas/v1/agent-members.schema.yaml --data templates/init-agent-members.yaml","status":"passed","summary":"templates/init-agent-members.yaml: valid"},{"command":"npx prettier --check docs/ja/specdojo/guides/exec-config-guide.md docs/ja/projects/prj-0001/controls/project-register/pjr-9482-init-roster-gpt6-expert-tier.md CHANGELOG.md templates/codex/README.md templates/claude/README.md","status":"passed","summary":"All matched files use Prettier code style (changed TS/YAML files were also formatted with prettier --write)"}]}
+</specdojo_executor_evidence>

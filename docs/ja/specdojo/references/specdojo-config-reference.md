@@ -87,6 +87,8 @@ SpecDojo Configuration Reference
 
 別名は `[a-z0-9-]+` とし、ローカルの `projects` の ID と重ねられません。`path` は存在するディレクトリでなければならず、絶対パスは使えません。起票時は相手の `node_modules/.bin/specdojo` を使うため、相手に SpecDojo 0.4.2 以上が必要です。`orchestrator launch` は `repos` に加えて、宣言したすべての外部リポジトリにも provider 別の編集許可を付けます。
 
+相手に `node_modules/.bin/specdojo` がなく、相手の `package.json` の `name` が `specdojo` の場合は、呼び出し元と同じ Node.js で `node <相手>/dist/specdojo.js` を起動します。SpecDojo 自身のリポジトリを指定する場合は、相手で `npm install` と `npm run build` を実行してください。`dist/specdojo.js` がなければ `npm run build` を案内して停止します。CLI の版はこの起動方法でも 0.4.2 以上が必要です。
+
 ## 3. projectのパスキー
 
 `projects.<project-id>` に指定するキーです。`base_path` 以外の表中のパスは、`base_path` があればそこからの相対パス、無ければリポジトリルートからの相対パスとして解決します。

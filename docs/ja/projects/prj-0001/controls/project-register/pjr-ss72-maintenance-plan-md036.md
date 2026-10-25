@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-ss72-maintenance-plan-md036
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-24T13:41:02Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-24T22:43:55Z"
+  conclusion: owner の role に当てはまる観点がないときの plan の値を、強調だけの段落ではなく箇条書きの 1 項目（- _MISSING_）にした。値の側で直したため、*-maintenance の 4 つの雛形すべてに効く。*-authoring の雛形も、手本がないときに同じ形にした
 ---
 
 # PJR-SS72 rulebook-maintenance の plan が markdownlint（MD036）で止まる
@@ -44,9 +46,23 @@ specdojo:
 | 依存事項 | なし                                                                                                                                                                                                                                                                                                   |
 | 完了条件 | カタログと pm-roles のない project で、`*-maintenance` の plan が markdownlint を通り、着手の checkpoint を通る。この条件を確かめる test がある                                                                                                                                                        |
 
+### 3.1. 完了条件（追記）
+
+- v0.4.6 の範囲とする（2026-10-24、利用者が承認）。上の表の完了条件を満たす。
+- `rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` と `<種類>-authoring` の plan の雛形のすべてで、観点や責務の欄が空のとき（`_MISSING_` になるとき）にも、markdownlint を通る形になる。どの雛形を直したかを result に書く。
+- 単体テストで、カタログと pm-roles のない project の `*-maintenance` の plan が markdownlint を通ることを確かめる。
+- plan の生成を変えるため、統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
+
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 原因: `ownerRoleFields`（`src/exec/plans-core.ts`）が、owner の role に当てはまる観点がないときに `viewpoints` を `_MISSING_` だけで返していた。雛形では `_OWNER_ROLE_VIEWPOINTS_` が単独の段落に置かれるため、強調だけの段落になって MD036 に違反していた。
+- 解決内容: 観点がないとき（owner 未設定も含む）の `viewpoints` を箇条書きの 1 項目 `- _MISSING_` にした。雛形は変えず、値の側で直したため、`_OWNER_ROLE_VIEWPOINTS_` を使うすべての edit plan の雛形（`xep-rulebook-maintenance-template.md`・`xep-recipe-maintenance-template.md`・`xep-sample-maintenance-template.md`・`xep-template-maintenance-template.md` のほか、`xep-template.md`・`xep-freeform-template.md`・`xep-fully-guided-template.md`・`xep-recipe-guided-template.md`・`xep-retrofit-template.md`・`xep-bootstrap-template.md`）に効く。
+- `<種類>-authoring` の雛形（`xep-rulebook-authoring-template.md`・`xep-recipe-authoring-template.md`・`xep-sample-authoring-template.md`・`xep-template-authoring-template.md`）は観点・責務の欄を持たない。単独の段落になる `_AUTHORING_EXEMPLARS_` は、手本がないときに `- なし（kata だけを新規作成する）` を返すので、もともと MD036 に違反しない。変更していない。
+- 確認結果: `tests/src/exec/register-plan-escape.test.ts` に、カタログと pm-roles のない project で 4 種類の `*-maintenance` と 4 種類の `*-authoring` の plan を生成し、MD036 違反がないことと `_MISSING_` だけの行がないことを確かめるテストを加えた。修正を一時的に戻すと `*-maintenance` の 4 件が失敗し、修正を戻すと通ることを確かめた。`tests/src/exec/plans.test.ts` の `ownerRoleFields` の期待値も新しい形に直した。
+- 再発防止策: 上のテストが、観点がないときの plan の markdownlint 適合を検査し続ける。統合の後に `exec run --register` を 1 回流して動作を確かめる（PJR-JSEY）。この作業は runner と人が行う。
 
 ## 5. 関連ドキュメント
 

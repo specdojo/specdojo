@@ -481,13 +481,15 @@ export function registerUpdateCommand(
         itemId: item.id,
         derivedFrom: nextDerivedFrom,
       });
-      validateRegisterApproachTargetsForProject({
-        projectId: paths.projectId,
-        ...(nextApproach !== undefined ? { approach: nextApproach } : {}),
-        ...(nextTargets !== undefined ? { targets: nextTargets } : {}),
-        ...(normalizedNextSources !== undefined ? { sources: normalizedNextSources } : {}),
-        validateTargetsWithoutApproach: opts.target !== undefined || opts.source !== undefined,
-      });
+      if (opts.approach !== undefined || opts.target !== undefined || opts.source !== undefined) {
+        validateRegisterApproachTargetsForProject({
+          projectId: paths.projectId,
+          ...(nextApproach !== undefined ? { approach: nextApproach } : {}),
+          ...(nextTargets !== undefined ? { targets: nextTargets } : {}),
+          ...(normalizedNextSources !== undefined ? { sources: normalizedNextSources } : {}),
+          validateTargetsWithoutApproach: opts.target !== undefined || opts.source !== undefined,
+        });
+      }
       const shouldUpdateTargets =
         opts.target !== undefined ||
         (authoring && opts.source !== undefined && (item.targets?.length ?? 0) > 1);
