@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: medium
   difficulty: hard
   owner: DEV
@@ -56,15 +56,35 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                                         | 担当 | 状態 | メモ                                    |
-| --- | ------------------------------------------------------------ | ---- | ---- | --------------------------------------- |
-| 1   | 置き場所と rulebook を個票に記録するオプションと項目を決める | DEV  | open | 名前と理由を対応結果に書く              |
-| 2   | 起票の検証と plan の生成を、カタログなしの解決に対応させる   | DEV  | open | カタログのある project の動きは変えない |
-| 3   | 文書と test を足す                                           | DEV  | open | 統合テストで起票から plan までを通す    |
+| No  | 作業                                                         | 担当 | 状態 | メモ                                             |
+| --- | ------------------------------------------------------------ | ---- | ---- | ------------------------------------------------ |
+| 1   | 置き場所と rulebook を個票に記録するオプションと項目を決める | DEV  | done | 名前と理由を対応結果に記載                       |
+| 2   | 起票の検証と plan の生成を、カタログなしの解決に対応させる   | DEV  | done | カタログ優先を維持し、明示指定時だけ補完         |
+| 3   | 文書と test を足す                                           | DEV  | done | 7 種の起票から plan 生成と指定の更新・削除を確認 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `register add`・`register update` に `--target-path` と `--target-rulebook` を追加し、個票の `target_path` と `target_rulebook` に保存する。対象 ID は既存の `targets` を維持し、`target_` 接頭辞で対象成果物の指定であることを示した。個票自身の規約を表す `specdojo.rulebook` と混同しない名前にした。更新・削除は監査イベントにも記録する。
+- 既存文書は生成済み索引の鮮度に依存せず ID 索引を収集し、配置と frontmatter の `specdojo.rulebook` を使う。個票の明示パス・rulebook が既存文書と違う場合は拒否する。別文書の上書きや共有 rulebook の意図しない切り替えを防ぐためであり、自動でどちらかに上書きしない。新規文書はパスと rulebook の両方を必須とする。
+- カタログに対象がある場合は従来の宣言を優先し、kata 不足の新しい検証も適用しない。対象がカタログ外の場合はパスと rulebook を両方明示したときだけカタログなしの解決を使う。指定がない場合の従来エラーと、`cross-deliverable-dedup` のカタログ必須は維持した。
+- recipe・sample・template は rulebook frontmatter から辿り、`not-needed` は plan の参照一覧から除外する。`fully-guided` の必要な一式、`recipe-guided` の recipe などの不足を起票・更新時に名前付きで拒否する。パスは相対指定、リポジトリ内への閉包、シンボリックリンク経由の逸脱、既存ファイルの ID 衝突を検証する。
+- カタログなしの `bootstrap` は明示パス、新規 rulebook ID、設定の `kata_authority` を必須とする。既存 rulebook は拒否する。既存の共有規約を bootstrap が書き換えることを防ぎ、通常改訂と区別するためである。`<authority>:<stem>-rulebook` から同じ名前部分の `-recipe`・`-sample`・`-template` を導出する。ID と配置を再生成時にも一定に保つための命名であり、`docs/ja/specdojo/<kind>s/<authority>/<stem>-<kind>.md` の未作成候補を plan に示す。既存 ID・パスの衝突は拒否し、成果物への `specdojo.id` と `specdojo.rulebook`、rulebook への kata 参照の記入を指示する。
+- カタログなしの `finalize`・`bootstrap-finalize` は既存文書だけを受け付け、個票の完了条件から確認チェック表を作る。確定対象は前者が成果物、後者が成果物と frontmatter から辿った kata 一式であり、複数 sample も列挙する。カタログなしの完了基準は個票の完了条件と rulebook と明記し、`retrofit` の調査入力となる実装パスは個票に明記する運用とした。
+- [[specdojo:quick-start-guide]]、[[specdojo:command-reference]]、[[specdojo:ryu-guide]]、[[specdojo:plan-result-lifecycle-guide]] と登録簿の rulebook、CHANGELOG の Unreleased を更新した。`upsert-rulebook` の差分更新手順に従い、記述標準、類似の project overview・pm members の rulebook、成果物リファレンスを確認した。スキルの参照する `docs-contents-guide.md` は存在せず、現行の成果物リファレンスで目的を確認した。登録簿の sample は `not-needed` 宣言のため対象外。
+- 変更に対する単体テスト 253 件、7 種の approach の起票から plan 生成までと明示指定の更新・削除の CLI 統合テスト 8 件、変更ファイルの ESLint・Prettier・Markdown 検査、追加フィールドの schema 検証、カタログ検証を実施した。カタログ検証は成功し、未作成成果物などへの警告のみ。ESLint はエラーなしで、既存の大きな CLI 関数に関する行数警告 4 件。登録簿の派生ビュー生成と `git diff --check` も成功。`lint-ts`・`lint-fm`・`lint-md`・`typecheck`・`test-unit`・`test-integration`・`validate-schema` の全体検証は指定どおり親 runner が実施する。
+- 統合後の実 agent による `exec run --register` は sandbox 内で実施できないため、orchestrator が PJR-JSEY で確認する。保護設定の変更案、実装上の未決事項はない。result は後続 reporter が記入する。
+
+### 変更ファイル
+
+- `src/register/deliverable-target.ts`: カタログなしの解決、kata の検証、bootstrap の配置を追加。
+- `src/catalog/document-target.ts`、`src/exec/plans-core.ts`: 成果物 ID とカタログの解決を、register と exec の両方から使える catalog モジュールへ移動。従来の再帰走査と plan の除外を維持。
+- `src/register/approach.ts`、`src/register/create-commands.ts`: 起票・更新のオプションと事前検証を追加。
+- `src/register/item.ts`、`src/register/command-types.ts`、`src/register/core.ts`、`src/register/events.ts`: 個票の読み書きと監査イベントに対象パス・rulebook を反映。
+- `src/exec/register.ts`、`src/exec/plans-generation.ts`: kata の参照と未作成状態、個票の完了基準、確定チェック表と対象を plan へ展開。
+- `docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml`、`docs/specdojo/schemas/v1/register-events.schema.yaml`: 対象指定と履歴のフィールドを追加。
+- `tests/src/register/catalogless-target.test.ts`、`tests/src/exec/catalogless-register.integration.test.ts`: 既存・新規文書、同梱 kata・YAML 文書、入力拒否、互換性と 7 種の CLI 経路を検証。
+- `docs/ja/specdojo/guides/quick-start-guide.md`、`docs/ja/specdojo/guides/ryu-guide.md`、`docs/ja/specdojo/guides/plan-result-lifecycle-guide.md`、`docs/ja/specdojo/references/command-reference.md`、`docs/ja/specdojo/rulebooks/pjr-rulebook.md`: 起票・更新・plan の生成手順と制約を更新。
+- `CHANGELOG.md` と本個票: 利用者向け変更と実施結果を記録。
 
 ## 5. 関連ドキュメント
 

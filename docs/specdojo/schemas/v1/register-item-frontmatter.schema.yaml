@@ -85,6 +85,28 @@ properties:
                 - recipe-authoring
                 - sample-authoring
                 - template-authoring
+      - if:
+          anyOf:
+            - required: [target_path]
+              properties:
+                target_path: true
+            - required: [target_rulebook]
+              properties:
+                target_rulebook: true
+        then:
+          required: [approach]
+          properties:
+            approach:
+              enum:
+                [
+                  fully-guided,
+                  recipe-guided,
+                  freeform,
+                  retrofit,
+                  bootstrap,
+                  finalize,
+                  bootstrap-finalize,
+                ]
       - type: object
         required:
           - rulebook
@@ -226,12 +248,22 @@ properties:
             minItems: 1
             description: >
               Doc ids of documents this register item targets. Deliverable targets
-              used with an approach are resolved via the project catalog so that
+              used with an approach prefer the project catalog; target_path and target_rulebook or existing frontmatter allow catalog-less resolution so that
               not-yet-created deliverables can be selected; kata and standalone
               targets are resolved via the doc index. When present, exec plan
               generation copies these into the plan frontmatter so that target
               coverage validation works for register-originated plans. Omit the
               key when the target documents are unknown or not applicable.
+
+          target_path:
+            type: string
+            minLength: 1
+            description: Repository-relative deliverable path for catalog-less resolution.
+
+          target_rulebook:
+            type: string
+            minLength: 1
+            description: Deliverable rulebook id; bootstrap requires a new id under kata_authority.
 
           sources:
             type: array

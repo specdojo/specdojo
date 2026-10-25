@@ -13,6 +13,7 @@ import {
 import { APPROACHES, type Approach } from "../shared/agent-types.js";
 import { load } from "../shared/yaml.js";
 import { assertAuthorableKataId, authoredKataExists, authoringKind } from "../kata/authoring.js";
+import { CATALOG_LESS_APPROACHES, resolveRegisterDeliverableTarget } from "./deliverable-target.js";
 import { resolveAuthoringSources } from "./authoring-sources.js";
 
 const MAINTENANCE_TARGET_KIND: Partial<Record<Approach, string>> = {
@@ -88,6 +89,8 @@ export type RegisterApproachValidationOptions = {
   approach?: string;
   targets?: readonly string[];
   sources?: readonly string[];
+  targetPath?: string;
+  targetRulebook?: string;
   project?: SpecDojoProjectConfig;
   validateTargetsWithoutApproach?: boolean;
 };
@@ -117,6 +120,13 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
     if (kind && targets.length < 1) {
       throw new Error(`Approach "${approach}" requires the new kata id as the first --target`);
     }
+  }
+
+  if (
+    (opts.targetPath !== undefined || opts.targetRulebook !== undefined) &&
+    (!approach || !CATALOG_LESS_APPROACHES.includes(approach))
+  ) {
+    throw new Error("--target-path and --target-rulebook require a supported deliverable approach");
   }
 
   if (sources.length > 0 && !authoringKind(approach)) {
@@ -172,6 +182,20 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
     return;
   }
 
+  if (CATALOG_LESS_APPROACHES.includes(approach)) {
+    if (
+      opts.catalogPath &&
+      !catalogDeliverableDocIds(opts.catalogPath, opts.repoRoot, opts.projectId).has(targetId) &&
+      !(opts.targetPath && opts.targetRulebook)
+    ) {
+      throw new Error(
+        `Approach "${approach}" requires a deliverable document from the project catalog, but ${targetId} is not a catalog deliverable`,
+      );
+    }
+    resolveRegisterDeliverableTarget({ ...opts, approach, targetId });
+    return;
+  }
+
   if (!opts.catalogPath) {
     throw new Error(
       `Approach "${approach}" requires a deliverable target, but catalog_path is not configured for project ${opts.projectId}`,
@@ -194,6 +218,8 @@ export function validateRegisterApproachTargetsForProject(opts: {
   approach?: string;
   targets?: readonly string[];
   sources?: readonly string[];
+  targetPath?: string;
+  targetRulebook?: string;
   validateTargetsWithoutApproach?: boolean;
 }): void {
   const repoRoot = specdojoRootDir();
@@ -211,6 +237,8 @@ export function validateRegisterApproachTargetsForProject(opts: {
     ...(opts.targets !== undefined ? { targets: opts.targets } : {}),
     ...(opts.sources !== undefined ? { sources: opts.sources } : {}),
     project,
+    ...(opts.targetPath !== undefined ? { targetPath: opts.targetPath } : {}),
+    ...(opts.targetRulebook !== undefined ? { targetRulebook: opts.targetRulebook } : {}),
     ...(opts.validateTargetsWithoutApproach !== undefined
       ? { validateTargetsWithoutApproach: opts.validateTargetsWithoutApproach }
       : {}),

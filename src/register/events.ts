@@ -36,6 +36,8 @@ export const REGISTER_EVENT_FIELDS = [
   "approach",
   "targets",
   "sources",
+  "target_path",
+  "target_rulebook",
   "derived_from",
   "autopilot",
 ] as const;
@@ -124,6 +126,8 @@ export function registerEventFieldValues(
     block_reason: parsed.blockReason,
     approach: item.approach ?? CELL_NONE,
     targets: item.targets ? JSON.stringify(item.targets) : CELL_NONE,
+    target_path: item.targetPath ?? CELL_NONE,
+    target_rulebook: item.targetRulebook ?? CELL_NONE,
     sources: item.sources ? JSON.stringify(item.sources) : CELL_NONE,
     derived_from: item.derivedFrom ? JSON.stringify(item.derivedFrom) : CELL_NONE,
     autopilot: item.autopilot ?? CELL_NONE,

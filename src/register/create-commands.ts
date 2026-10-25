@@ -126,6 +126,8 @@ export function registerCreateCommands(
     "-",
   );
   addCmd.option("--conclusion <text>", "Conclusion or resolution summary", "-");
+  addCmd.option("--target-path <path>", "Repository-relative deliverable file path");
+  addCmd.option("--target-rulebook <doc-id>", "Deliverable rulebook id (new id for bootstrap)");
   addCmd.option("--approach <approach>", `Execution approach: ${APPROACHES.join(" | ")}`);
   addCmd.option(
     "--target <doc-id>",
@@ -195,6 +197,10 @@ export function registerCreateCommands(
       validateRegisterApproachTargetsForProject({
         projectId: paths.projectId,
         ...(opts.approach !== undefined ? { approach: opts.approach } : {}),
+        ...(opts.targetPath !== undefined ? { targetPath: opts.targetPath.trim() } : {}),
+        ...(opts.targetRulebook !== undefined
+          ? { targetRulebook: opts.targetRulebook.trim() }
+          : {}),
         ...(rawTargets !== undefined ? { targets: rawTargets } : {}),
         ...(explicitSources !== undefined ? { sources: explicitSources } : {}),
         validateTargetsWithoutApproach: opts.target !== undefined || opts.source !== undefined,
@@ -214,6 +220,10 @@ export function registerCreateCommands(
         conclusion: opts.conclusion,
         ...(opts.approach !== undefined ? { approach: opts.approach as Approach } : {}),
         ...(targets !== undefined ? { targets } : {}),
+        ...(opts.targetPath !== undefined ? { targetPath: opts.targetPath.trim() } : {}),
+        ...(opts.targetRulebook !== undefined
+          ? { targetRulebook: opts.targetRulebook.trim() }
+          : {}),
         ...(sources !== undefined ? { sources } : {}),
       };
       const templatePath = resolveSpecdojoTemplatePath(`pjr-${opts.type}-template.md`);
@@ -324,6 +334,11 @@ export function registerUpdateCommand(
     "--autopilot <approval>",
     "Night orchestrator approval: approved, or - to revoke",
   );
+  updateCmd.option("--target-path <path>", "Replace deliverable path; use - to remove");
+  updateCmd.option(
+    "--target-rulebook <doc-id>",
+    "Replace deliverable rulebook id; use - to remove",
+  );
   updateCmd.option(
     "--approach <approach>",
     `Update execution approach (${APPROACHES.join(" | ")}; use - to remove)`,
@@ -370,6 +385,8 @@ export function registerUpdateCommand(
         "approach",
         "target",
         "source",
+        "targetPath",
+        "targetRulebook",
         "from",
         "topic",
       ].some((key) => opts[key] !== undefined);
@@ -438,6 +455,18 @@ export function registerUpdateCommand(
               autopilot:
                 opts.autopilot === "-" ? REMOVE_REGISTER_ITEM_FIELD : ("approved" as const),
             };
+      const nextTargetPath =
+        opts.targetPath === undefined
+          ? item.targetPath
+          : opts.targetPath.trim() === "-"
+            ? undefined
+            : opts.targetPath.trim();
+      const nextTargetRulebook =
+        opts.targetRulebook === undefined
+          ? item.targetRulebook
+          : opts.targetRulebook.trim() === "-"
+            ? undefined
+            : opts.targetRulebook.trim();
       const nextApproach =
         opts.approach === undefined
           ? item.approach
@@ -481,9 +510,17 @@ export function registerUpdateCommand(
         itemId: item.id,
         derivedFrom: nextDerivedFrom,
       });
-      if (opts.approach !== undefined || opts.target !== undefined || opts.source !== undefined) {
+      if (
+        opts.approach !== undefined ||
+        opts.target !== undefined ||
+        opts.source !== undefined ||
+        opts.targetPath !== undefined ||
+        opts.targetRulebook !== undefined
+      ) {
         validateRegisterApproachTargetsForProject({
           projectId: paths.projectId,
+          ...(nextTargetPath !== undefined ? { targetPath: nextTargetPath } : {}),
+          ...(nextTargetRulebook !== undefined ? { targetRulebook: nextTargetRulebook } : {}),
           ...(nextApproach !== undefined ? { approach: nextApproach } : {}),
           ...(nextTargets !== undefined ? { targets: nextTargets } : {}),
           ...(normalizedNextSources !== undefined ? { sources: normalizedNextSources } : {}),
@@ -496,6 +533,12 @@ export function registerUpdateCommand(
       const shouldUpdateSources =
         opts.source !== undefined || (authoring && providedLegacySources.length > 0);
       const approachTargetUpdates: RegisterItemFieldUpdates = {
+        ...(opts.targetPath !== undefined
+          ? { target_path: nextTargetPath ?? REMOVE_REGISTER_ITEM_FIELD }
+          : {}),
+        ...(opts.targetRulebook !== undefined
+          ? { target_rulebook: nextTargetRulebook ?? REMOVE_REGISTER_ITEM_FIELD }
+          : {}),
         ...(opts.difficulty !== undefined
           ? {
               difficulty: opts.difficulty === "-" ? REMOVE_REGISTER_ITEM_FIELD : opts.difficulty,
@@ -539,6 +582,14 @@ export function registerUpdateCommand(
       if (opts.autopilot !== undefined) {
         if (opts.autopilot === "-") delete updated.autopilot;
         else updated.autopilot = "approved";
+      }
+      if (opts.targetPath !== undefined) {
+        if (nextTargetPath === undefined) delete updated.targetPath;
+        else updated.targetPath = nextTargetPath;
+      }
+      if (opts.targetRulebook !== undefined) {
+        if (nextTargetRulebook === undefined) delete updated.targetRulebook;
+        else updated.targetRulebook = nextTargetRulebook;
       }
       if (opts.approach !== undefined) {
         if (nextApproach === undefined) delete updated.approach;

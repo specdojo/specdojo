@@ -473,34 +473,46 @@ specdojo schedule strategy generate \
 
 主要オプション:
 
-| オプション                | 用途                                                                | 対象                                             |
-| ------------------------- | ------------------------------------------------------------------- | ------------------------------------------------ |
-| `--to <PJR-ID>`           | 移動先の PJR-ID を指定する                                          | `renumber`                                       |
-| `--registered <datetime>` | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻             | `add`                                            |
-| `--completed <datetime>`  | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `close` / `reject`                               |
-| `--by <actor>`            | 名簿または予約一覧の actor を追記型 event に記録する                | `add` / 更新 / 遷移コマンド                      |
-| `--reason <text>`         | event の理由を記録（`wait` では `block_reason` も更新）             | `add` / 更新 / 遷移コマンド                      |
-| `--conclusion <text>`     | 終端時の結論を記録・更新（`update` では `-` で削除）                | `add` / `update` / 終端コマンド                  |
-| `--block-reason <text>`   | `waiting` の理由を更新（`-` で削除）                                | `update`                                         |
-| `--approach <approach>`   | 個票の進め方を指定（`update` では `-` で削除）                      | `add` / `update`                                 |
-| `--target <doc-id>`       | 対象文書 ID を指定（繰り返し可、`update` では `-` で削除）          | `add` / `update`                                 |
-| `--source <ref>`          | kata authoring の手本を指定（繰り返し可、`update` では `-` で削除） | `add` / `update`                                 |
-| `--topic <slug>`          | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
-| `--commit`                | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
-| `-m, --message <message>` | `--commit` のcommitメッセージを上書きする                           | `add` / `update` / `renumber` / 遷移             |
-| `--dry-run`               | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
-| `--since <date>`          | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
-| `--until <date>`          | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
-| `--id <PJR-ID...>`        | 出力する項目を限定する（空白・カンマ区切りで複数可）                | `history`                                        |
-| `--status-only`           | 追加・削除・状態遷移だけを出力する                                  | `history`                                        |
-| `--limit <count>`         | 走査するコミット数の上限                                            | `history`                                        |
-| `--json`                  | イベントを JSON で出力する                                          | `history`                                        |
+| オプション                   | 用途                                                                | 対象                                             |
+| ---------------------------- | ------------------------------------------------------------------- | ------------------------------------------------ |
+| `--to <PJR-ID>`              | 移動先の PJR-ID を指定する                                          | `renumber`                                       |
+| `--registered <datetime>`    | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻             | `add`                                            |
+| `--completed <datetime>`     | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `close` / `reject`                               |
+| `--by <actor>`               | 名簿または予約一覧の actor を追記型 event に記録する                | `add` / 更新 / 遷移コマンド                      |
+| `--reason <text>`            | event の理由を記録（`wait` では `block_reason` も更新）             | `add` / 更新 / 遷移コマンド                      |
+| `--conclusion <text>`        | 終端時の結論を記録・更新（`update` では `-` で削除）                | `add` / `update` / 終端コマンド                  |
+| `--block-reason <text>`      | `waiting` の理由を更新（`-` で削除）                                | `update`                                         |
+| `--approach <approach>`      | 個票の進め方を指定（`update` では `-` で削除）                      | `add` / `update`                                 |
+| `--target <doc-id>`          | 対象文書 ID を指定（繰り返し可、`update` では `-` で削除）          | `add` / `update`                                 |
+| `--target-path <path>`       | 成果物のリポジトリ相対パス（`update` は `-` で削除）                | `add` / `update`                                 |
+| `--target-rulebook <doc-id>` | 成果物の rulebook ID（`update` は `-` で削除）                      | `add` / `update`                                 |
+| `--source <ref>`             | kata authoring の手本を指定（繰り返し可、`update` では `-` で削除） | `add` / `update`                                 |
+| `--topic <slug>`             | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
+| `--commit`                   | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
+| `-m, --message <message>`    | `--commit` のcommitメッセージを上書きする                           | `add` / `update` / `renumber` / 遷移             |
+| `--dry-run`                  | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
+| `--since <date>`             | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
+| `--until <date>`             | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
+| `--id <PJR-ID...>`           | 出力する項目を限定する（空白・カンマ区切りで複数可）                | `history`                                        |
+| `--status-only`              | 追加・削除・状態遷移だけを出力する                                  | `history`                                        |
+| `--limit <count>`            | 走査するコミット数の上限                                            | `history`                                        |
+| `--json`                     | イベントを JSON で出力する                                          | `history`                                        |
 
 `register add` は個票 Frontmatter の `registered_at`（起票日時）を、`register close` / `register reject` は `completed_at`（完了・却下日時）を自動記入します。値は UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で、OS / コンテナの `TZ` 環境変数には依存しません。`register reopen` は `completed_at` を削除します。
 
 `register` の `--by` は、project の `pm-members.yaml` にある人の nickname、`.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` だけを受け付けます。agent alias は実体名で event に記録し、未知の値は書き込み前に拒否します。省略時は `SpecDojo` です。決定・承認では `PO` などの Role code や予約 actor ではなく、本人の nickname を指定します。
 
-`--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は成果物カタログの doc id で解決するため、まだ文書がない成果物も指定できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring は `--target` を新しい kata ID、`--source` を 0 件以上の読み取り専用の手本とします。互換性のため、2 個目以降の `--target` も `--source` と同じ手本として扱います。
+`--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は、成果物カタログを優先して doc id を解決します。カタログがなくても、既存文書は文書索引と frontmatter から、新規文書は明示したパスと rulebook から解決できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring は `--target` を新しい kata ID、`--source` を 0 件以上の読み取り専用の手本とします。互換性のため、2 個目以降の `--target` も `--source` と同じ手本として扱います。
+
+カタログなしで使える成果物の approach は `fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize` です。`cross-deliverable-dedup` はカタログが必要です。
+
+- 新規文書には `--target-path <リポジトリ相対パス>` と `--target-rulebook <rulebook-id>` を指定します。個票の `target_path` と `target_rulebook` に保存されます。既存文書は `--target` の ID を索引で引き、パスと `specdojo.rulebook` を使います。明示指定と既存文書が矛盾した場合は停止します。
+- パスはリポジトリ外、外を指すシンボリックリンク、別の ID を持つ既存ファイルを受け付けません。更新時も同じ検証を行い、`--target-path -`・`--target-rulebook -` で各指定を削除できます。
+- recipe・sample・template は rulebook frontmatter から解決します。`not-needed` の型は plan に列挙しません。`fully-guided` に必要な一式や `recipe-guided` の recipe がないときは、不足した型を示して起票を拒否します。
+- `bootstrap` はパスと新しい rulebook ID の両方、および設定の `kata_authority` が必須です。既存 rulebook は拒否します。`<authority>:<stem>-rulebook` から `<authority>:<stem>-recipe`・`-sample`・`-template` を導出し、`docs/ja/specdojo/<kind>s/<authority>/<stem>-<kind>.md` の未作成候補を plan に載せます。既存 ID・パスとの衝突も拒否します。
+- `finalize`・`bootstrap-finalize` は未作成の成果物を拒否します。個票の完了条件をチェック表にし、前者は成果物、後者は成果物と frontmatter から辿った kata 一式を確定対象にします。
+- カタログなしの plan は、カタログの `done_criteria` がないことを明示し、個票の完了条件と rulebook を使います。`retrofit` の実装調査入力は個票にパスを明記します。
+- カタログ設定済みで対象が未登録の場合、パスと rulebook を両方明示した場合だけカタログなしと同じ解決を使います。未指定なら従来のエラーで停止します。カタログにある対象ではカタログの宣言を優先します。
 
 `item_type: note` は `open` のまま更新する記録です。`register close` / `register reject` / `register defer` は終了コード 1 で拒否し、対応・回答・判断が必要な場合は `todo` / `question` / `decision` など目的に合う別の `item_type` で起票するよう案内します。本文の追記や修正には `register update` を使用できます。
 
@@ -530,7 +542,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 `register migrate` は旧形式の登録簿データを現行形式へ移す一度限りの移行コマンドです。追跡対象だった `pjr-index.md` の表を個票 Frontmatter へ移し、旧日時を UTC へ変換し、個票内の `register_events` を `events/pjr-XXXX.yaml` へ分離します。イベントがまだない項目は、利用可能な Git 履歴を項目別イベントファイルへ変換します。event ID は commit・項目 ID・変更内容から決定的に生成するため、再実行で重複しません。
 
-`register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`derived_from` です。
+`register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`sources`、`target_path`、`target_rulebook`、`derived_from` です。
 
 各書き込みコマンドは現在値を個票へ、event を項目別イベントファイルへ反映します。同じ現在値になる操作の再実行では event を追加しません。`register build` は個票とイベントファイルの対応、event の schema、ID 一意性、時刻順、直前イベント参照、状態連鎖、最新 event と現在値の一致を検証します。
 

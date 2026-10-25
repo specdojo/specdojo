@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- カタログのない project でも、既存文書の索引・frontmatter、または個票の `--target-path`・`--target-rulebook` から成果物の approach plan を作れるようにしました。`fully-guided` などの kata 不足は起票時に検証し、`bootstrap` の未作成 kata と `finalize` 系の個票からのチェック表にも対応します。`cross-deliverable-dedup` は引き続きカタログが必要です（PJR-6WQY）。
+
 - `projects.<id>.run.parent_validations_exclude` で、共有 `exec-defaults.yaml` の親検証から ID と実行先が一致する検証を project ごとに除外できるようにしました。除外後に既存の `parent_validations` を追記し、指定のない project の検証は維持します。未知の ID、共有一覧にない組の除外、重複する組は agent 起動前にエラーになります（PJR-P14M）。
 
 ### 不具合修正

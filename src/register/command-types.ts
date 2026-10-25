@@ -36,6 +36,8 @@ export type RegisterAddFields = {
   approach?: Approach;
   targets?: string[];
   sources?: string[];
+  targetPath?: string;
+  targetRulebook?: string;
   derivedFrom?: string[];
 };
 
