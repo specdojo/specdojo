@@ -1328,6 +1328,62 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("既存 authoring kata があっても通常項目の update は通し、approach 関連の変更は検証する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      const kataDir = join(root, "docs/ja/specdojo/templates/customer");
+      mkdirSync(kataDir, { recursive: true });
+      writeFileSync(
+        join(kataDir, "existing.md"),
+        [
+          "---",
+          "specdojo:",
+          "  id: customer:existing-template",
+          "  type: template",
+          "  status: draft",
+          "---",
+          "",
+          "# Existing",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: open",
+          "priority: high",
+          "approach: template-authoring",
+          "targets:",
+          "  - customer:existing-template",
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--owner",
+        "BA",
+        "--due",
+        "2026-10-31",
+        "--priority",
+        "low",
+      ]);
+      expect(readFileSync(ticketPath, "utf8")).toContain("  owner: BA");
+      expect(readFileSync(ticketPath, "utf8")).toContain('  due_on: "2026-10-31"');
+
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      await runRegister(["update", "--id", "PJR-AB12", "--source", "docs/ja/product/*.md"]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+        "Kata id customer:existing-template already exists",
+      );
+    });
+  });
+
   it("update は derived_from を変更・削除できる", async () => {
     await withRepo(async ({ registerDir }) => {
       for (const id of ["PJR-AB12", "PJR-CD34", "PJR-EF56"]) {

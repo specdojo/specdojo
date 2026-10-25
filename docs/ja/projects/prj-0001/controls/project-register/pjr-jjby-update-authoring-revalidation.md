@@ -57,7 +57,9 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+update では `--approach`・`--target`・`--source` のいずれも指定されない場合、既存値での approach・target 検証を省略するようにした。担当・期限・優先度などの更新は通り、3項目のいずれかを指定した update は従来どおり検証する。`register add` および `exec plan` / `exec run` の実行前検証は変更していない。
+
+単体テストでは、すでに存在する kata ID を持つ authoring 個票について、担当・期限・優先度の更新が通ること、source を明示して変更する更新が「kata id already exists」で拒否されることを確認する。approach を外した回避済み個票へ元の authoring approach と既存 kata target を戻す操作も、この検証により同じ理由で拒否される。作成済み kata の新規 authoring を再開する用途では `*-maintenance` を使う。対象以外の未解決事項はない。
 
 ## 5. 関連ドキュメント
 
