@@ -63,21 +63,22 @@ scaffold が ollama-local の接続設定を生成せず、provider が見つか
 
 - 実施内容:
   - `src/shared/provider-scaffold.ts` を修正し、`templates/opencode/opencode.json` をリポジトリルート直下の `opencode.json` に配置するマッピング規則を追加した（既存ファイルがある場合は上書きせずスキップ）。
-  - `templates/opencode/opencode.json` を新規追加し、provider `ollama-local`（`@ai-sdk/openai-compatible`、`baseURL: "http://host.docker.internal:11434/v1"`、`apiKey: "not-needed"`）と文脈長 64k を確保するローカル派生タグ（`gemma4:31b-work-64k`、`gemma4:26b-work-64k`、`qwen3.8:27b-work-64k`）、デフォルトモデル `ollama-local/gemma4:31b-work-64k` を定義した。
-  - `templates/opencode/agents/specdojo-orchestrator.md` の `model` を `ollama-local/gemma4:31b-work-64k` に更新した。
-  - `templates/init-agent-members.yaml` の `gemma-executor`、`gemma-review-executor` を `ollama-local/gemma4:31b-work-64k`、`gemma-reporter` を `ollama-local/gemma4:26b-work-64k` に更新し、Qwen 系の実体 member（`qwen-executor`、`qwen-review-executor`、`qwen-reporter`、モデル: `ollama-local/qwen3.8:27b-work-64k`）を追加した。
-  - `templates/opencode/README.md` および `docs/ja/specdojo/guides/exec-config-guide.md` に、`opencode.json` の配布・配置規則、Modelfile と `ollama create` による `*-work-64k` 派生タグ作成手順（公式配布タグではないことの明記）、接続先設定手順（devcontainer/ホスト/リモート）、既存環境の修正手順を記載した。
+  - 利用者の追加指示に従い、配布設定のモデル指定を `*-mlx-work-64k` に統一した。
+  - `templates/opencode/opencode.json` を新規追加し、provider `ollama-local`（`@ai-sdk/openai-compatible`、`baseURL: "http://host.docker.internal:11434/v1"`、`apiKey: "not-needed"`）とローカル派生タグ（`gemma4:31b-mlx-work-64k`、`gemma4:26b-mlx-work-64k`、`qwen3.8:27b-mlx-work-64k`）、デフォルトモデル `ollama-local/gemma4:31b-mlx-work-64k` を定義した。
+  - `templates/opencode/agents/specdojo-orchestrator.md` の `model` を `ollama-local/gemma4:31b-mlx-work-64k` に更新した。
+  - `templates/init-agent-members.yaml` の `gemma-executor`、`gemma-review-executor` を `ollama-local/gemma4:31b-mlx-work-64k`、`gemma-reporter` を `ollama-local/gemma4:26b-mlx-work-64k` に更新し、Qwen 系の実体 member（`qwen-executor`、`qwen-review-executor`、`qwen-reporter`、モデル: `ollama-local/qwen3.8:27b-mlx-work-64k`）を追加した。
+  - `templates/opencode/README.md` および `docs/ja/specdojo/guides/exec-config-guide.md` に、`opencode.json` の配布・配置規則、Modelfile と `ollama create` による `*-mlx-work-64k` 派生タグ作成手順（公式配布タグではないことの明記）、接続先設定手順（devcontainer/ホスト/リモート）、既存環境の修正手順を記載した。
   - 単体テスト `tests/src/shared/provider-scaffold.test.ts` および `tests/src/commands/init.test.ts` にテストを追加・更新し、空リポジトリへの scaffold 生成、`opencode.json` の生成内容、既存設定の上書き防止、init 時のモデル ID 解決を検証した。
   - `CHANGELOG.md` の `## [Unreleased]` に変更内容を追記した。
 - 検証結果:
   - scaffold により空リポジトリに `opencode.json` および `.opencode/agents/*.md` が正しく配置され、既存の `opencode.json` が上書きされないことを単体テストで確認した。
-  - `init` コマンドで opencode を選んだ際、名簿および振り分け設定のモデルが `*-work-64k`（`ollama-local/gemma4:31b-work-64k`、`ollama-local/gemma4:26b-work-64k`）として解決されることを単体テストで確認した。
-  - 実機ホスト上の Ollama プロセスとの実接続およびモデル推論テストは、agent sandbox 外の実ホスト操作と Ollama 稼働が必要となるため、人の確認事項（requires_human）として申し送りに記録した。
+  - `init` コマンドで opencode を選んだ際、名簿および振り分け設定のモデルが `*-mlx-work-64k`（`ollama-local/gemma4:31b-mlx-work-64k`、`ollama-local/gemma4:26b-mlx-work-64k`）として解決されることを単体テストで確認した。
+  - 実機ホスト上の Ollama プロセスとの実接続およびモデル推論テストは、agent sandbox 外の実ホスト操作と Ollama 稼働が必要となるため、人の確認事項（`requires_human`）として申し送りに記録した。
 - 再発防止策:
-  - provider の配布テンプレート追加時は、agent 定義だけでなく provider 固有のルート設定ファイル（`opencode.json` 等）の要否と scaffold 配置規則を同時に確認・整備する。
-- 申し送り（handoff）:
-  - 本リポジトリ自身の保護された設定（`.specdojo/agent-members.yaml`、ルートの `opencode.json`）について、現在本リポジトリは Mac Apple Silicon のローカル Ollama 環境に合わせた `*-mlx-work-64k` タグ（`gemma4:31b-mlx-work-64k` 等）を使用している。配布テンプレートは環境非依存の `*-work-64k` を標準としているため、本リポジトリの設定は保護方針に従い変更せず維持している。本リポジトリの設定変更が必要な場合は利用者の承認のもとで反映する。
-  - 実ホスト上の Ollama で `ollama create gemma4:31b-work-64k -f Modelfile` 等を実行して派生タグを用意し、`curl` による OpenAI 互換エンドポイント疎通および `opencode run` による実接続確認を行うこと。
+  - provider の配布テンプレート追加時は、agent 定義だけでなく provider 固有のルート設定ファイル（`opencode.json` 等）の要否と scaffold 配置規則を同時に確認・整備する。また派生モデルを利用する場合は、利用環境の実態（MLX 対応など）に合わせたモデル指定と作成手順を整合させる。
+- 申し送り（`handoff`）:
+  - 配布する名簿・agent・接続設定のモデル ID を `gemma4:31b-mlx-work-64k`・`gemma4:26b-mlx-work-64k`・`qwen3.8:27b-mlx-work-64k` に統一した。本リポジトリ自身の保護された設定（`.specdojo/agent-members.yaml`、ルートの `opencode.json`）のモデル指定とも整合している。
+  - 統合後、オーケストレーターが一時ディレクトリで生成した OpenCode 設定を使い、`opencode run` で上記3モデルの実接続・短い応答を確認すること。未登録のモデルがある場合は推測で成功扱いせず記録すること。
 
 ## 5. 関連ドキュメント
 

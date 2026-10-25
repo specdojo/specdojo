@@ -167,7 +167,7 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/gemma4:31b-work-64k
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: edit
     stage_role: executor
     capabilities: [web_search]
@@ -181,7 +181,7 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/gemma4:31b-work-64k
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: review
     stage_role: executor
     capabilities: [web_search]
@@ -195,7 +195,7 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/gemma4:26b-work-64k
+    model: ollama-local/gemma4:26b-mlx-work-64k
     mode: report
     stage_role: reporter
     capabilities: []
@@ -210,7 +210,7 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/qwen3.8:27b-work-64k
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
     mode: edit
     stage_role: executor
     capabilities: [web_search]
@@ -224,7 +224,7 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/qwen3.8:27b-work-64k
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
     mode: review
     stage_role: executor
     capabilities: [web_search]
@@ -238,7 +238,7 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/qwen3.8:27b-work-64k
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
     mode: report
     stage_role: reporter
     capabilities: []
