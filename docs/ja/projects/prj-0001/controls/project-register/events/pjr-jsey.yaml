@@ -2116,3 +2116,19 @@
       from: PJR-SS72 と PJR-68KR の統合後も exec run --register が start から review まで通った。途中の 2 回の停止は単体テストの時間切れで、PJR-J44D で直した
       to: R1FB と 84F7 の統合後に exec run --register が review まで通った。executor の handoff が result の申し送りに載った
   previous_event_id: reg_dd25ff73373d43aaa697e6b1e671a281
+- v: 1
+  id: reg_a3860f0f027a453aaedef4f6dc2fc679
+  ts: "2026-10-25T01:55:08Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: XTE6 の統合後に runner の動作を確かめる
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-25"
+      to: "-"
+  previous_event_id: reg_b3dc89077c0045868ee97a05fc665cc8
