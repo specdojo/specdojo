@@ -90,6 +90,10 @@ register 実行は exec events を記録しないため、schedule の Ready・C
 
 worktree の checkpoint 作成時に root の index に staged 変更がある場合、checkpoint 対象の plan、result、event、登録簿記帳と重なるパスだけを停止理由にします。重ならない staged 変更はパスを警告へ表示して保持したまま実行を続けます。checkpoint または register の runner commit が失敗した場合も、runner が対象にしたパスだけを unstage し、無関係な staged 変更は変更しません。
 
+grade の結果・完了条件・未完了段のサイドカー（`execution_path/grade/results/`、`criteria/`、`pipeline/`）の未コミット変更も checkpoint に含めます。worktree は分岐前の評価結果を読み取り、更新したサイドカーを統合します。分岐後に root で同じサイドカーが更新された場合は、古い評価で上書きしないよう統合を止めます。両側の評価対象と内容を照合してから再開してください。
+
+schedule の review 前の評価は、同じ package の `grade run` を起動します。最新の評価結果は再利用し、必要な評価では選択済み review agent の実体名と起動設定を引き継ぎます。開発用スクリプトの配置は不要です。失敗時は対象文書と理由を review plan に示し、review が評価結果の鮮度・利用可否を判断します。`viewpoints_path` がない project では同梱の `specdojo:pm-review-viewpoints` を参照し、固有の差分が必要なら設定したパスへ `exec scaffold --project <id>` で雛形を生成します。
+
 register 実行の場所は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選びます。設定がない既存リポジトリは互換性のため in-place のままです。CLI の `--worktree` / `--in-place` は設定を上書きし、両方を同時に指定するとエラーになります。
 
 通常は、失敗時の変更を隔離でき、`--resume` / `--force-restart` を使える worktree を選びます。worktree の準備時間が作業時間に見合わない、変更対象が小さく、失敗時に作業ツリーへ残る差分をその場で整理できる場合だけ `--in-place` を使います。in-place では `--resume` / `--force-restart` / `--join` と `--parallel` は使えません。`--register-commit` は in-place だけで意味を持ち、worktree は常に checkpoint と統合 commit を作ります。

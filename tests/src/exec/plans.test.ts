@@ -595,11 +595,9 @@ describe("review plan templates", () => {
       const source = readFileSync(path, "utf8");
       const formatted = await format(source, { parser: "markdown" });
 
-      expect(formatted, template).toContain(
-        "| --- | ------ | ------------ | -------- |\n_DONE_CRITERIA_ROWS_",
-      );
+      expect(formatted, template).toContain("| --- | --- | --- | --- |\n_DONE_CRITERIA_ROWS_");
       expect(formatted, template).not.toContain(
-        "| --- | ------ | ------------ | -------- |\n\n_DONE_CRITERIA_ROWS_",
+        "| --- | --- | --- | --- |\n\n_DONE_CRITERIA_ROWS_",
       );
     }
   });
@@ -1227,8 +1225,8 @@ describe("generateSinglePlan", () => {
       });
 
       const plan = readFileSync(outPath, "utf8");
-      expect(plan).toContain("| --- | ------ | ------------ | -------- |\n| DC-001 |");
-      expect(plan).not.toContain("| --- | ------ | ------------ | -------- |\n\n| DC-001 |");
+      expect(plan).toContain("| --- | --- | --- | --- |\n| DC-001 |");
+      expect(plan).not.toContain("| --- | --- | --- | --- |\n\n| DC-001 |");
       expect(plan).toContain("### プロジェクトコンテキスト");
       expect(plan).toContain("- [[test:prj-overview]]");
       // review は grade の評価結果を入力にする。評価対象と対象種別を plan に展開する。

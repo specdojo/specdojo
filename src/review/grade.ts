@@ -2,6 +2,7 @@ import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { gitEnvironment } from "../shared/git-environment.js";
+import { fileURLToPath } from "node:url";
 import type { GradeResult } from "../shared/grade-result.js";
 import {
   gradeContentHash,
@@ -36,8 +37,6 @@ export type ReviewGradeInvoke = (
   args: readonly string[],
   cwd: string,
 ) => Promise<{ exitCode: number; stderr: string }>;
-
-export const REVIEW_GRADE_SCRIPT = join("tools", "grade", "run-per-document.sh");
 
 function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
@@ -100,29 +99,19 @@ export function reviewGradeFreshness(opts: {
 
 /**
  * Decide whether the runner grades the subject before the review plan is written. A fresh grade is
- * reused; an unresolved subject or a repository without the grade pipeline cannot be graded.
+ * reused; an unresolved subject cannot be graded.
  */
 export function decideReviewGradeAction(opts: {
   freshness: ReviewGradeFreshness;
-  scriptAvailable: boolean;
   dryRun: boolean;
 }): ReviewGradeAction {
-  const { freshness, scriptAvailable, dryRun } = opts;
+  const { freshness, dryRun } = opts;
   if (freshness.state === "fresh") return { run: false, outcome: { action: "skipped" } };
   if (freshness.state === "unresolved") {
     return { run: false, outcome: { action: "not-run", detail: freshness.reason } };
   }
   if (dryRun)
     return { run: false, outcome: { action: "not-run", detail: "dry-run のため実行しない" } };
-  if (!scriptAvailable) {
-    return {
-      run: false,
-      outcome: {
-        action: "not-run",
-        detail: `grade の実行スクリプトがリポジトリにない: ${REVIEW_GRADE_SCRIPT.split("\\").join("/")}`,
-      },
-    };
-  }
   return { run: true };
 }
 
@@ -140,9 +129,12 @@ export function reviewGradeArgs(opts: {
   projectId: string;
   target: ReviewGradeTarget;
   subjectPath: string;
+  by?: string;
+  execDefaultsPath?: string;
 }): string[] {
   const args = [
-    REVIEW_GRADE_SCRIPT.split("\\").join("/"),
+    "grade",
+    "run",
     "--run-id",
     opts.runId,
     "--project",
@@ -153,6 +145,8 @@ export function reviewGradeArgs(opts: {
   // kata の対象範囲は --kind で決まる。評価対象の種類を問わず受け付けるよう all を渡す。
   if (opts.target === "kata") args.push("--kind", "all");
   args.push("--path", opts.subjectPath);
+  if (opts.by) args.push("--by", opts.by);
+  if (opts.execDefaultsPath) args.push("--exec-defaults", opts.execDefaultsPath);
   return args;
 }
 
@@ -195,6 +189,8 @@ export async function ensureReviewGrade(opts: {
   dryRun: boolean;
   now?: Date;
   invoke?: ReviewGradeInvoke;
+  by?: string;
+  execDefaultsPath?: string;
 }): Promise<ReviewGradeOutcome> {
   const freshness = reviewGradeFreshness({
     subjectPath: opts.subjectPath,
@@ -203,7 +199,6 @@ export async function ensureReviewGrade(opts: {
   });
   const decision = decideReviewGradeAction({
     freshness,
-    scriptAvailable: existsSync(join(opts.repoRoot, REVIEW_GRADE_SCRIPT)),
     dryRun: opts.dryRun,
   });
   if (!decision.run) return decision.outcome;
@@ -214,19 +209,30 @@ export async function ensureReviewGrade(opts: {
     projectId: opts.projectId,
     target: opts.target,
     subjectPath: opts.subjectPath,
+    by: opts.by,
+    execDefaultsPath: opts.execDefaultsPath,
   });
   const invoke = opts.invoke ?? defaultInvoke;
   try {
-    const { exitCode, stderr } = await invoke("bash", args, opts.repoRoot);
+    // Resolve the entrypoint from this package, never from the consumer repository.
+    const javascript = fileURLToPath(new URL("../specdojo.js", import.meta.url));
+    const entryArgs = existsSync(javascript)
+      ? [javascript]
+      : ["--import", "tsx", fileURLToPath(new URL("../specdojo.ts", import.meta.url))];
+    const { exitCode, stderr } = await invoke(
+      process.execPath,
+      [...entryArgs, ...args],
+      opts.repoRoot,
+    );
     if (exitCode === 0) return { action: "executed", runId };
     const reason = lastLine(stderr);
     return {
       action: "failed",
       runId,
-      detail: `exit ${exitCode}${reason ? `: ${reason}` : ""}`,
+      detail: `${opts.subjectPath}: exit ${exitCode}${reason ? `: ${reason}` : ""}`,
     };
   } catch (error) {
-    return { action: "failed", runId, detail: errorMessage(error) };
+    return { action: "failed", runId, detail: `${opts.subjectPath}: ${errorMessage(error)}` };
   }
 }
 

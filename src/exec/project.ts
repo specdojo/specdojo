@@ -11,6 +11,7 @@ import {
   specdojoRootDir,
 } from "../shared/specdojo-config.js";
 import { type ResolvedProjectPaths } from "./types.js";
+import { commonViewpointsPath } from "../review/plan.js";
 
 function projectBaseDir(): string {
   return specdojoRootDir();
@@ -97,7 +98,9 @@ export function resolveProjectPaths(opts: { project?: string }): ResolvedProject
       executionPath: resolveProjectRelative(baseDir, getProjectExecutionPath(project)),
       catalogPath: catalogPath ? resolveProjectRelative(baseDir, catalogPath) : undefined,
       rolesPath: rolesPath ? resolveProjectRelative(baseDir, rolesPath) : undefined,
-      viewpointsPath: viewpointsPath ? resolveProjectRelative(baseDir, viewpointsPath) : undefined,
+      viewpointsPath: viewpointsPath
+        ? resolveProjectRelative(baseDir, viewpointsPath)
+        : commonViewpointsPath(),
       projectContext: getProjectContext(project),
     };
   }

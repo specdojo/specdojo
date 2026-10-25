@@ -96,3 +96,19 @@
       from: "-"
       to: "executor rate limit reached; rate limit wait: sol-executor resumed at 2026-10-25T19:31:00.269Z"
   previous_event_id: reg_8fc783b545554ec58c4a8449184ea95b
+- v: 1
+  id: reg_ac9dd3879de3471690208e3fc10ca6ba
+  ts: "2026-10-25T20:52:02Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor rate limit reached; rate limit wait: sol-executor resumed at 2026-10-25T19:31:00.269Z"
+      to: "-"
+  previous_event_id: reg_009a26e7e7854fd1ae3ea8920ba409ea

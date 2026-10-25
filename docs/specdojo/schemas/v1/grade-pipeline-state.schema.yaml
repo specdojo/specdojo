@@ -31,7 +31,7 @@ properties:
     enum: [kata, deliverable]
   document:
     type: string
-    pattern: "^docs/.+\\.md$"
+    pattern: "^(?!/).+\\.md$"
   content_hash:
     type: string
     pattern: "^[a-f0-9]{64}$"
