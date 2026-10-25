@@ -19,7 +19,7 @@ specdojo:
 
 ## 1. 概要
 
-成果物を作る・直す・確定する approach（`fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize`）は、対象を成果物カタログ（DCT）で解決するため、`catalog_path` のない project では起票の時点で止まる。カタログのない project でも、これらの approach で成果物を作れるようにする。
+カタログのない project でも、作るファイルの置き場所と rulebook を個票に指定するか、既存の文書の frontmatter から辿ることで、fully-guided・recipe-guided・freeform・retrofit・bootstrap・finalize・bootstrap-finalize の plan を作れるようにする
 
 - 起きたこと: 利用者の project（coderdojo-lessons-specdojo の prj-0001）で、カタログのないまま `fully-guided` の todo を dry-run すると、`Approach "fully-guided" requires a deliverable target, but catalog_path is not configured for project prj-0001` で止まった（2026-10-25）。
 - 今の決まり: [[prj-0001:pjr-zjxq-register-approach-fields|PJR-ZJXQ]] で、成果物を作る・直す approach の対象はカタログで解決すると決めた。まだ文書のない成果物も対象にするためである。plan はカタログの成果物の項目から、作るファイルの置き場所、名前・概要・依存先、種類と rulebook、`done_criteria` を読む（`src/exec/plans-generation.ts`）。`finalize`・`bootstrap-finalize` の人の plan は、`done_criteria` のチェック表と確定対象の一覧を作る。

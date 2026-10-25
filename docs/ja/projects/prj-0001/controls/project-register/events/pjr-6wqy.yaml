@@ -35,3 +35,16 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_c04f099378ad4dcf9c9e3dceb495fbb8
+  ts: "2026-10-25T05:20:42Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: description
+      from: 成果物を作る・直す・確定する approach（`fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize`）は、対象を成果物カタログ（DCT）で解決するため、`catalog_path` のない project では起票の時点で止まる。カタログのない project でも、これらの approach で成果物を作れるようにする。
+      to: カタログのない project でも、作るファイルの置き場所と rulebook を個票に指定するか、既存の文書の frontmatter から辿ることで、fully-guided・recipe-guided・freeform・retrofit・bootstrap・finalize・bootstrap-finalize の plan を作れるようにする
+  previous_event_id: reg_e356ea39f64749e6a3d2117c888f5fa9
