@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_a9d12b015f7949a6b2dc696b4ca9ae13
+- v: 1
+  id: reg_f6652d606020406baf6522bccf73303f
+  ts: "2026-10-25T14:31:57Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合差分・個票・result と実際の生成設定を確認し、3モデルすべての opencode run が CONNECTION_OK を返したため close。利用者が承認済み。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: OpenCode scaffold の ollama-local 接続設定を補い、配布する Gemma 31B・26B と Qwen 27B のモデル ID を *-mlx-work-64k に統一した。空リポジトリの生成設定と既存設定保護、3モデルの実接続・短い推論応答、親の検証7項目を確認した。
+  previous_event_id: reg_7c6b3aa081d6462cb73a77e8753d45f1

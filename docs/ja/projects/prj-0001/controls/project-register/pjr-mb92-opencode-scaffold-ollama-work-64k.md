@@ -7,12 +7,14 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-25T08:41:08Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T14:31:57Z"
+  conclusion: OpenCode scaffold の ollama-local 接続設定を補い、配布する Gemma 31B・26B と Qwen 27B のモデル ID を *-mlx-work-64k に統一した。空リポジトリの生成設定と既存設定保護、3モデルの実接続・短い推論応答、親の検証7項目を確認した。
   derived_from:
     - PJR-2ASZ
 ---
