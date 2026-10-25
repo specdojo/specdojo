@@ -32,3 +32,29 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_304b5f23d8d24ab0829376f4c55b7208
+  ts: "2026-10-25T14:44:44Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_58a944fe53d847afb347958c8cd52888
+- v: 1
+  id: reg_89e6bdf3531a4c2c8c3baf6ad8f3f891
+  ts: "2026-10-25T15:02:22Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_304b5f23d8d24ab0829376f4c55b7208

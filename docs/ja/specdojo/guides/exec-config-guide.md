@@ -779,6 +779,8 @@ runner は agent の各試行前後でファイル内容を比較し、差分が
 
 agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。除去対象は`src/shared/git-environment.ts`の`GIT_LOCAL_ENV_VARS`を正本とします。Vitestの全3設定も共通setupを使ってtest module読込前に同じ変数をworkerから除去するため、Git hook経由で`npm test`が起動されても、テストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
 
+Vitestの共通setupは、シェルから継承した`SPECDOJO_PROJECT`も除去します。これにより、orchestratorの対象projectがテストfixtureの設定に存在しなくても、unit・integrationのworkerとその子プロセスはfixture側の設定からprojectを解決できます。project選択を検証するテスト自身がsetupの後に設定する`SPECDOJO_PROJECT`は有効です。
+
 TypeScriptのテスト・tool・本体コードが`spawnSync`、`spawn`、`execFileSync`、`execFile`でGitを直接起動する箇所は、AST検査により`gitEnvironment()`から作った`env`だけを許可します。`env: process.env`や単なる`env`プロパティは隔離済みとは扱いません。shell scriptとnpm scriptのGit起動はこのAST検査の対象外ですが、現状のhook経路はVitest setupを必ず通り、hookから直接Gitを起動するテスト用scriptはありません。今後その経路を追加する場合は、入口で`GIT_LOCAL_ENV_VARS`相当を除去する専用検査を追加します。
 
 executor / reporter pipelineのexecutor promptは、commitとrepository設定を親runnerが所有することを明記し、`git commit`およびlocal / global / system configの変更（`user.name` / `user.email`を含む）を禁止します。fixture commitに使うテスト用identityはVitest workerと子プロセスの環境変数だけへ注入し、fixtureを含むrepositoryのlocal configへは書き込みません。
