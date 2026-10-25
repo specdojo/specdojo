@@ -1,0 +1,12 @@
+
+> specdojo@0.4.6 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-62391cd0b9f3 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=1 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-62391cd0b9f3
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/rulebooks/pjr-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/pjr-rulebook.md
+grade pipeline complete: selected=1 processed=1 completed_now=1 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-62391cd0b9f3/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-25T20:04:36Z	docs/ja/specdojo/rulebooks/pjr-rulebook.md	1	passed	208	needs-work	82	6	agy-expert-executor	machine	none		
