@@ -2,6 +2,12 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [Unreleased]
+
+### 不具合修正
+
+- `devcontainer scaffold` で生成する `devcontainer.json` の雛形に `shutdownAction: "none"` を追加し、VS Code などのクライアント切断時にコンテナが停止しないようにしました。既存環境の修正手順を常時稼働ホスト運用ガイドに追記しました（PJR-TVGA）。
+
 ## [0.4.6] - 2026-10-25
 
 ### 追加機能

@@ -1123,7 +1123,7 @@ npx specdojo devcontainer scaffold --workspace-name app1-workspace
 
 `.devcontainer/` が既に存在する場合は何も書き込まず、置き換える場合だけ `--force` を指定します。上書き前や初回生成前は `--dry-run` で対象ファイルを確認してください。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存してコンテナ再作成後も利用できるようにし、ホストの認証情報・秘密鍵・`.env` を直接マウントしません。認証は生成したコンテナ内で利用者が必要なときに行い、自動ログインはしません。
 
-生成する `devcontainer.json` は `${localWorkspaceFolder}/..` を、ホスト側の親ディレクトリ名に合わせた `/workspaces/<親名>` へマウントし、`workspaceFolder` をその中の `${localWorkspaceFolderBasename}` へ向けます。例えば `app1-workspace/app1-specdojo` で scaffold すると、作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成の `repos` と `worktree_base` はプロジェクトリポジトリの外にあるため、親ディレクトリを共有することでプロダクトリポジトリと exec の worktree をコンテナから利用できます。`post-create.sh` はマウントした親ディレクトリ配下の Git リポジトリと worktree を `safe.directory` の対象にします。親ディレクトリ内のその他のファイルもコンテナから見えるため、コンテナへ公開しないファイルは同じ親ディレクトリに置かないでください。
+生成する `devcontainer.json` は `${localWorkspaceFolder}/..` を、ホスト側の親ディレクトリ名に合わせた `/workspaces/<親名>` へマウントし、`workspaceFolder` をその中の `${localWorkspaceFolderBasename}` へ向けます。例えば `app1-workspace/app1-specdojo` で scaffold すると、作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成の `repos` と `worktree_base` はプロジェクトリポジトリの外にあるため、親ディレクトリを共有することでプロダクトリポジトリと exec の worktree をコンテナから利用できます。`post-create.sh` はマウントした親ディレクトリ配下の Git リポジトリと worktree を `safe.directory` の対象にします。親ディレクトリ内のその他のファイルもコンテナから見えるため、コンテナへ公開しないファイルは同じ親ディレクトリに置かないでください。また、`shutdownAction: "none"` を指定してエディタ切断時もコンテナを即時停止させず、バックグラウンド処理や tmux セッションを維持できるようにします。
 
 親名には英数字・`.`・`_`・`-` だけを使用できます。空白、`/`、制御文字などを含む場合は、意図しないパスへ置換せずエラーにします。必要なら `--workspace-name <name>` で有効な名前を指定してください。`specdojo init --devcontainer` でも同じオプションを指定できます。コンテナ内で作った Git worktree は作成時の絶対パスを記録するため、ホスト側の親ディレクトリ名を変えて `.devcontainer/` を作り直す場合は、`--workspace-name` に以前の名前を指定してコンテナ内のパスを保ってください。
 
