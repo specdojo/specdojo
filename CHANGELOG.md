@@ -10,6 +10,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- 登録簿に項目が 1 件もないとき、`register build` が生成する担当者別と状態別の派生ビューの空の章で空行が連続し、markdownlint の `MD012` に当たる問題を直しました。項目のない章には「該当なし」を書きます。項目がある場合の生成物は変わりません（PJR-ZG0A）。
 - 同梱のオーケストレーターの本文で、register の完了条件の記録の書き先を「個票の対応結果」と報告の `handoff` にし、close の前に result だけでなく個票の対応結果も確かめるようにしました（PJR-R1FB）。
 - `specdojo init --exec` が書く agent の名簿の雛形を、GPT-6 の系統と normal・expert の 2 段にそろえました。codex の normal は `gpt-6-luna` の `luna-executor`・`luna-review-executor`・`luna-reporter`、expert は `gpt-6.1-sol` の `sol-executor`・`sol-review-executor` です。claude には expert の `opus-executor`・`opus-review-executor` を加えました。別名 `claude-expert-executor`・`claude-expert-review-executor`・`codex-expert-executor`・`codex-expert-review-executor` を加え、`codex-executor` などの既存の別名は `luna-*` を指します。振り分けの表（`routing`）は hard を expert の別名、medium と easy と reporter を normal の別名にします。`init` と `config scaffold` が加える codex の起動スクリプトは `orch:sol`（`gpt-6.1-sol`）と `orch:luna`（`gpt-6-luna`）になり、`orch:terra` は作りません（PJR-9482）。
 - 配布する `templates/codex/agents/*.toml` のモデルを名簿の雛形と同じ GPT-6 の系統へ引き上げました。`codex-executor`・`codex-review-executor` は `gpt-6-luna`（`medium`）、`codex-expert-executor`・`codex-expert-review-executor` は `gpt-6.1-sol`（`high`）、`specdojo-orchestrator` は `gpt-6.1-sol`（`medium`）です。既存の `.codex/agents/*.toml` は上書きされないため、移行する場合は `specdojo config scaffold --provider codex --force` で再配置するか、各ファイルの `model` を手動で書き換えます（PJR-EVAQ）。
