@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-MB92",
+  "run_id": "20261025T091548791Z-7c588854",
+  "stage": {
+    "role": "executor",
+    "actor": "flash-high-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-25T09:17:08.238Z",
+    "completed_at": "2026-10-25T09:29:56.676Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-mb92.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-mb92-opencode-scaffold-ollama-work-64k.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-agent-members.yaml",
+      "status": "M"
+    },
+    {
+      "path": "templates/opencode/README.md",
+      "status": "M"
+    },
+    {
+      "path": "templates/opencode/agents/specdojo-orchestrator.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/provider-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/opencode/opencode.json",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-mb92.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-mb92-opencode-scaffold-ollama-work-64k.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/provider-scaffold.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/init-agent-members.yaml",
+      "status": "M"
+    },
+    {
+      "path": "templates/opencode/README.md",
+      "status": "M"
+    },
+    {
+      "path": "templates/opencode/agents/specdojo-orchestrator.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/init.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/provider-scaffold.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "templates/opencode/opencode.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 11,
+    "summary": "CHANGELOG.md                                       |   1 +\n .../controls/project-register/events/pjr-mb92.yaml |   2 +-\n .../pjr-mb92-opencode-scaffold-ollama-work-64k.md  |  18 ++-\n docs/ja/specdojo/guides/exec-config-guide.md       |  24 ++--\n src/shared/provider-scaffold.ts                    |   9 +-\n templates/init-agent-members.yaml                  |  49 +++++++-\n templates/opencode/README.md                       | 132 ++++++++++++++++++---\n templates/opencode/agents/specdojo-orchestrator.md |   2 +-\n tests/src/commands/init.test.ts                    |  13 +-\n tests/src/shared/provider-scaffold.test.ts         | 105 ++++++++++++++++\n 10 files changed, 315 insertions(+), 40 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write src/shared/provider-scaffold.ts templates/opencode/opencode.json templates/opencode/agents/specdojo-orchestrator.md templates/init-agent-members.yaml templates/opencode/README.md docs/ja/specdojo/guides/exec-config-guide.md tests/src/commands/init.test.ts tests/src/shared/provider-scaffold.test.ts CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-mb92-opencode-scaffold-ollama-work-64k.md",
+      "status": "passed",
+      "summary": "変更した TypeScript、JSON、YAML、Markdown ファイルを整形した"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "git diff の空白エラーなし"
+    },
+    {
+      "source": "executor",
+      "command": "curl http://host.docker.internal:11434/v1/chat/completions",
+      "status": "requires_human",
+      "summary": "ホスト側 Ollama 稼働および派生タグ *-work-64k に対する opencode run の実接続・推論確認"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/src/shared/specdojo-config.ts\n  1219:1  warning  File has too many lines (1095). Maximum allowed is 1000  max-lines\n\n✖ 35 problems (0 errors, 35 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.6 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.6 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-aofi5R/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-dDbrK8/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-BBdsCX/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-eBIsnw/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "OpenCode scaffold への opencode.json（ollama-local）配置、work-64k モデル設定整合、派生タグ作成手順および既存環境修正手順の文書化、テスト追加を完了した",
+  "completion_status": "complete",
+  "handoff": [
+    "本リポジトリ自身の保護された設定（.specdojo/agent-members.yaml、ルートの opencode.json）について、現在本リポジトリは Mac Apple Silicon のローカル Ollama 環境に合わせた *-mlx-work-64k タグ（gemma4:31b-mlx-work-64k 等）を使用している。配布テンプレートは環境非依存の *-work-64k を標準としているため、本リポジトリの設定は保護方針に従い変更せず維持している。本リポジトリの設定変更が必要な場合は利用者の承認のもとで反映すること。",
+    "実ホスト上の Ollama で ollama create gemma4:31b-work-64k -f Modelfile 等を実行して派生タグを用意し、curl による OpenAI 互換エンドポイント疎通および opencode run による実接続確認を行うこと。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-MB92/20261025T091548791Z-7c588854/executor.log",
+      "bytes": 6017,
+      "truncated": false
+    }
+  ]
+}
