@@ -62,7 +62,14 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `src/kata/command.ts` の既存の拡張子フィルターを一覧・status に維持し、eject の ID 候補にも適用した。同名 CSS が kata の ID と衝突して eject を曖昧にする経路を除いた。対象形式は `.md`・`.mdx`・`.yaml`・`.yml`・`.json` とし、ID 未宣言時のファイル名へのフォールバックも維持した。
+- 付属ファイルは同一ディレクトリで最後の拡張子を除いた名前が一致するものと、同名ディレクトリ以下のファイルとした。画像・コンポーネントをひとまとめに配布し、相対参照を保てるため、同名ディレクトリも対象に含めた。`generated/` と ID を読める 5 形式は付属ファイルから除外し、後者は独立した kata として扱う。
+- `kata eject` は本体と付属ファイルを一緒にコピーする。既存ファイルの `skip`、`--force` の上書き、`--dry-run` の表示と書き込み抑止をファイルごとに適用する。本体を `skip` した場合も、欠けている付属ファイルはコピーする。`kata install --all` もこの規則を共有し、同じ付属パスは 1 回だけコピーする。
+- `kata status` は、eject 済み本体に対応する付属ファイルの内容・構成を package と比較し、付属ファイルだけの変更・追加・欠落も親 kata の `modified` として表示する。付属ファイルの独立行は作らない。package から参照中、本体が package にない場合、利用者の authority の独自 kata は従来の判定を維持した。
+- `tests/src/kata/command.test.ts` に、5 形式の ID 解決、ID 未宣言時の互換性、一覧・status の付属ファイル除外、利用者 authority と旧配置、同名 CSS を伴う eject、バイナリの保持、同名ディレクトリ、対象外ファイル、ファイルごとの上書き保護、dry-run、付属ファイルだけの差分、install の重複除去と CLI 出力の回帰テストを追加した。
+- [[specdojo:kata-guide|実践の型活用ガイド]] に付属ファイルの配置・命名・eject・status の規則と Slidev 用 CSS の配置時の名前変更を記載した。[[specdojo:command-reference|コマンドリファレンス]] の eject の説明を更新し、`CHANGELOG.md` の `[Unreleased]` に PJR-6HS2 の修正を記載した。
+- 変更ファイルの Prettier 整形、カタログ検証、登録簿の派生ビュー生成が成功した。カタログ検証は別リポジトリの `docs/ja/product/` の文書が存在しないことによる `based_on` の警告を出すが、終了コードは 0 であり、本タスクでは対象外の文書を変更しない。
+- 検証結果は executor evidence と親 runner の evidence に記録する。`lint-ts`・`lint-fm`・`lint-md`・`typecheck`・`test-unit`・`test-integration`・`validate-schema` は本 pipeline の指定に従って親 runner が実行する。result への転記と親検証の最終結果の記録は reporter / runner が担当する。
 
 ## 5. 関連ドキュメント
 

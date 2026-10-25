@@ -1,0 +1,7 @@
+付属ファイルを ID 選択から除外し、eject/install で一緒にコピーするよう修正しました。付属ファイルの差分は親 kata の `modified` に反映します。回帰テスト、ガイド、CHANGELOG、個票を更新しました。
+
+整形・カタログ検証・登録簿生成は成功しました。型検査・lint・テストは親 runner が実行します。
+
+<specdojo_executor_evidence>
+{"final_message":"src/kata/command.ts の付属ファイル処理を修正し、tests/src/kata/command.test.ts に回帰テストを追加。kata-guide.md、command-reference.md、CHANGELOG.md、PJR-6HS2 個票を更新した。","handoff":["同名ディレクトリ以下も付属ファイルに含めた。画像・部品をまとめて配布し、相対参照を保持するため。`generated/` と ID を読める 5 形式は除外し、後者は独立した kata として扱う。個票の対応結果にも記録済み。","付属ファイルだけの変更・追加・欠落は、eject 済みの親 kata の `modified` にまとめる。独立行は表示しない。個票の対応結果にも記録済み。","親 runner が指定された型検査・lint・単体／結合テスト・schema 検証を実行し、reporter / runner が result に実施内容と検証結果を記録する。","カタログ検証は終了コード 0。参照先の `docs/ja/product/` 文書が存在しないことによる `based_on` の警告がある。"],"validations":[{"command":"npx prettier --check src/kata/command.ts tests/src/kata/command.test.ts docs/ja/specdojo/guides/kata-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-6hs2-kata-companion-files.md CHANGELOG.md","status":"passed","summary":"変更した 6 ファイルの整形を確認。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"カタログ検証成功。参照先文書の不在に関する警告あり。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビュー生成成功。"},{"command":"git diff --check","status":"passed","summary":"差分の空白エラーなし。"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"個別 YAML schema 検証は適用外。","reason":"変更した YAML / YML ファイルがないため。"}]}
+</specdojo_executor_evidence>
