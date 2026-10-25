@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: indie
   registered_at: "2026-10-25T14:16:35Z"
+  block_reason: "parent validation failed: lint-ts, test-unit"
 ---
 
 # PJR-K87Y gradeの単一文書評価パイプライン（run-per-document.sh相当）をspecdojoコマンド本体へ統合する
