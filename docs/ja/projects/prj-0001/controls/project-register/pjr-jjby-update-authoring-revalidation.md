@@ -44,6 +44,17 @@ specdojo:
 | 依存事項 | なし                                                                                                                                                                             |
 | 完了条件 | authoring の kata ができた後も、担当・期限などだけを変える `register update` が通る。approach や target を変える update では、従来どおり検証される。これらを確かめる test がある |
 
+### 追記（2026-10-25、利用者が承認）
+
+- v0.4.6 の範囲とする。対応策は前者（`--approach`・`--target`・`--source` を変えない update では、approach と target を検証し直さない）を採る。
+- `register add` と、`--approach`・`--target`・`--source` のいずれかを指定した update では、従来どおり検証する。
+- `exec plan`・`exec run` の実行前の検証（authoring の「新しい kata ID がまだない」）は変えない。
+- 回避のために approach を外した利用者向けに、外した approach と target を update で戻す手順が使えるかを確かめ、個票の対応結果と報告の `handoff` に書く。kata ができた後に authoring の approach を戻すことが検証で止まる場合は、その扱いも書く。
+- 単体テストで、kata ができた後の担当・期限・優先度だけの update が通ること、approach・target・source を変える update では検証されることを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
+
 ## 4. 対応結果
 
 _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。

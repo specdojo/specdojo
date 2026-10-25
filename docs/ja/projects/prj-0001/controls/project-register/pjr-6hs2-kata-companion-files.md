@@ -47,6 +47,19 @@ specdojo:
 | 依存事項 | [[prj-0001:pjr-84f7-scaffold-slidev]]（Slidev の kata の検証）                                                                                                                                                                                                                                                                           |
 | 完了条件 | 付属のファイルが別の kata として一覧と `kata status` に出ない。`kata eject` で kata と付属のファイルが一緒に写る。これらを確かめる test がある                                                                                                                                                                                           |
 
+### 追記（2026-10-25、利用者が承認）
+
+- v0.4.6 の範囲とする。対応策は 1（ID を持つ形式のファイルだけを kata として数える）を採る。frontmatter の項目は増やさない。
+- kata として数えるのは、ID を読める形式（`.md`・`.mdx`・`.yaml`・`.yml`・`.json`）のファイルとする。それ以外のファイルは一覧と `kata status` に kata として出さない。
+- 付属のファイルは、kata と同じディレクトリにあり、拡張子を除いた名前が kata のファイルと同じもの（例: `lsd-sample.md` に対する `lsd-sample.css`）とする。kata と同じ名前のディレクトリの下のファイル（例: `lsd-sample/` の下の画像）も付属のファイルに含めるかは executor が決め、理由を個票の対応結果と報告の `handoff` に書く。
+- `kata eject` は、kata と付属のファイルを一緒に写す。既存のファイルは `--force` がない限り上書きしない。`--dry-run` では付属のファイルも表示し、書き込まない。
+- `kata status` で、付属のファイルだけが package と違う場合の扱いを決め、個票の対応結果と報告の `handoff` に書く。
+- [[specdojo:kata-guide]] に、付属のファイルの置き方（名前の付け方と eject での扱い）を書く。
+- 単体テストで、付属のファイルが一覧と `kata status` に出ないこと、`kata eject` で一緒に写ること、ID を持つ形式のファイルは従来どおり kata として数えることを確かめる。
+- 作業を終える前に、`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` を実行して通す。
+- 親の検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）が通る。
+- CHANGELOG の `## [Unreleased]` の節に書く（なければ作る）。
+
 ## 4. 対応結果
 
 _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
