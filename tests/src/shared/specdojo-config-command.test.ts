@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { load } from "js-yaml";
 import { resolveCatalogPath } from "../../../src/catalog/catalog.js";
 import {
   registerConfigCommands,
@@ -84,10 +85,57 @@ describe("config onboarding commands", () => {
       await runConfigCommand(["scaffold", "--provider", "codex"]);
 
       expect(existsSync(join(repo, ".codex", "agents", "codex-executor.toml"))).toBe(true);
+      expect(existsSync(join(repo, ".prettierrc"))).toBe(false);
+      expect(existsSync(join(repo, ".markdownlintignore"))).toBe(false);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
   });
+
+  it.each([false, true])(
+    "scaffolds Slidev through config and keeps settings (lefthook: %s)",
+    async (lefthook) => {
+      const repo = mkdtempSync(join(tmpdir(), "specdojo-config-slidev-"));
+      const output: string[] = [];
+      vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+        output.push(String(chunk));
+        return true;
+      });
+      try {
+        mkdirSync(join(repo, ".git"));
+        writeFileSync(join(repo, "package.json"), '{"name":"fixture"}\n');
+        process.chdir(repo);
+        if (lefthook) await runConfigCommand(["init"]);
+        const flags = lefthook ? ["--slidev", "--lefthook"] : ["--slidev"];
+        await runConfigCommand(["scaffold", ...flags, "--dry-run"]);
+        expect(existsSync(join(repo, ".prettierrc"))).toBe(false);
+        expect(existsSync(join(repo, ".markdownlintrc"))).toBe(false);
+        expect(existsSync(join(repo, ".markdownlint-cli2.yaml"))).toBe(false);
+        expect(readFileSync(join(repo, "package.json"), "utf8")).toBe('{"name":"fixture"}\n');
+
+        await runConfigCommand(["scaffold", ...flags]);
+        expect(existsSync(join(repo, ".prettierrc"))).toBe(true);
+        expect(readFileSync(join(repo, "package.json"), "utf8")).toContain('"@slidev/cli"');
+        expect(load(readFileSync(join(repo, ".markdownlint-cli2.yaml"), "utf8"))).toMatchObject({
+          config: { extends: ".markdownlintrc" },
+          overrides: [{ combine: "merge", config: { MD025: false } }],
+        });
+        writeFileSync(join(repo, ".prettierrc"), '{"tabWidth":4}\n');
+        writeFileSync(join(repo, ".markdownlintignore"), "custom/\n");
+        writeFileSync(join(repo, ".markdownlintrc"), '{"MD013":true}\n');
+        const cli2 = 'overrides:\n  - filter: ["**/*.md"]\n    config: {MD025: true}\n';
+        writeFileSync(join(repo, ".markdownlint-cli2.yaml"), cli2);
+        await runConfigCommand(["scaffold", ...flags, "--force"]);
+        expect(readFileSync(join(repo, ".prettierrc"), "utf8")).toBe('{"tabWidth":4}\n');
+        expect(readFileSync(join(repo, ".markdownlintignore"), "utf8")).toBe("custom/\n");
+        expect(readFileSync(join(repo, ".markdownlintrc"), "utf8")).toBe('{"MD013":true}\n');
+        expect(readFileSync(join(repo, ".markdownlint-cli2.yaml"), "utf8")).toBe(cli2);
+        expect(output.join("")).toContain("Merge the overrides above manually");
+      } finally {
+        rmSync(repo, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("scaffolds agent member snippets with the protected registry name and guidance", async () => {
     const repo = mkdtempSync(join(tmpdir(), "specdojo-config-scaffold-"));

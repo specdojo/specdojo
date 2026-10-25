@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2ef0b4814f504f2aa053b50f826320b4
+  ts: "2026-10-24T23:47:38Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: authoring の kata ができた後、register update が担当や期限の変更でも止まる
+    - field: description
+      from: ""
+      to: register update は変更しない approach と target も毎回検証し直すため、authoring の個票は kata ができた後、担当や期限だけを変える場合も「kata id already exists」で止まる。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_22be8ecf802e4b46a669ba4b802bdbd6
+  ts: "2026-10-25T01:06:17Z"
+  action: start
+  actor: luna-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2ef0b4814f504f2aa053b50f826320b4
+- v: 1
+  id: reg_65cc45e5f25846dba830770ac79c85e7
+  ts: "2026-10-25T01:18:57Z"
+  action: review
+  actor: luna-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_22be8ecf802e4b46a669ba4b802bdbd6
+- v: 1
+  id: reg_b9cbd78c35f849b8933cc3f23bb9019f
+  ts: "2026-10-25T01:34:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と test を完了条件に照らして確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: approach・target・source を変えない register update では approach と target を検証し直さないようにした。変える update と add は従来どおり検証する
+  previous_event_id: reg_65cc45e5f25846dba830770ac79c85e7

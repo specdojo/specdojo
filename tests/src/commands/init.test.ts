@@ -3,7 +3,13 @@ import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { load } from "js-yaml";
-import { collectInitAnswers, runInit, type InitPrompter } from "../../../src/commands/init.js";
+import { Command } from "commander";
+import {
+  collectInitAnswers,
+  registerInitCommand,
+  runInit,
+  type InitPrompter,
+} from "../../../src/commands/init.js";
 import { loadExecDefaultsConfig, resolveMemberCommand } from "../../../src/exec/agent-config.js";
 import {
   loadMemberRoster,
@@ -31,6 +37,72 @@ function createRepo(prefix: string): string {
 }
 
 describe("specdojo init", () => {
+  it.each([
+    { preset: "minimal", answer: "", expected: false, defaultPrompt: "y/N" },
+    { preset: "recommended", answer: "", expected: false, defaultPrompt: "y/N" },
+    { preset: "full", answer: "", expected: true, defaultPrompt: "Y/n" },
+    { preset: "full", answer: "no", expected: false, defaultPrompt: "Y/n" },
+    { preset: "minimal", answer: "yes", expected: true, defaultPrompt: "y/N" },
+  ])(
+    "uses the Slidev default for $preset and accepts '$answer'",
+    async ({ preset, answer, expected, defaultPrompt }) => {
+      const prompts: string[] = [];
+      const answers = ["", "", "", "", "", "", "", "yes", preset, "", answer];
+      const prompter: InitPrompter = {
+        async question(prompt) {
+          prompts.push(prompt);
+          return answers.shift() ?? "";
+        },
+        close() {},
+      };
+      await expect(collectInitAnswers({}, prompter)).resolves.toMatchObject({ slidev: expected });
+      expect(prompts.at(-1)).toBe(`Set up Slidev for kata? [${defaultPrompt}]: `);
+    },
+  );
+
+  it.each([
+    { flags: [], expected: false },
+    { flags: ["--slidev"], expected: true },
+    { flags: ["--devcontainer", "--devcontainer-preset", "minimal"], expected: false },
+    { flags: ["--devcontainer", "--devcontainer-preset", "recommended"], expected: false },
+    { flags: ["--devcontainer", "--devcontainer-preset", "full"], expected: true },
+    { flags: ["--devcontainer", "--devcontainer-preset", "full", "--no-slidev"], expected: false },
+    { flags: ["--slidev", "--lefthook"], expected: true },
+  ])("scaffolds Slidev only when selected by CLI flags $flags", async ({ flags, expected }) => {
+    const repo = createRepo("specdojo-init-slidev-");
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      const program = new Command();
+      registerInitCommand(program);
+      await program.parseAsync(["init", "--yes", "--provider", "none", ...flags], { from: "user" });
+      expect(process.exitCode).toBeUndefined();
+      expect(existsSync(join(repo, ".prettierrc"))).toBe(expected);
+      const pkg = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
+        devDependencies?: Record<string, string>;
+      };
+      expect(!!pkg.devDependencies?.["@slidev/cli"]).toBe(expected);
+      if (expected) {
+        expect(load(readFileSync(join(repo, ".markdownlint-cli2.yaml"), "utf8"))).toMatchObject({
+          config: { extends: ".markdownlintrc" },
+          overrides: [{ combine: "merge", config: { MD025: false } }],
+        });
+        expect(readFileSync(join(repo, ".markdownlintignore"), "utf8")).toContain(
+          "*-slidev-sample.md",
+        );
+      } else {
+        expect(existsSync(join(repo, ".markdownlintignore"))).toBe(false);
+      }
+      if (flags.includes("--lefthook")) {
+        expect(readFileSync(join(repo, ".markdownlintignore"), "utf8")).toContain(
+          ".claude/agents/",
+        );
+      }
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("collects the interactive choices in the documented order without prompting for catalog", async () => {
     const answers = [
       "prj-1234",
@@ -66,8 +138,9 @@ describe("specdojo init", () => {
       catalog: undefined,
       devcontainer: false,
       lefthook: false,
+      slidev: false,
     });
-    expect(prompts).toHaveLength(9);
+    expect(prompts).toHaveLength(10);
     expect(prompts.some((prompt) => prompt.includes("Deliverables catalog"))).toBe(false);
     expect(closed).toBe(true);
   });
@@ -107,8 +180,9 @@ describe("specdojo init", () => {
       catalog: "small",
       devcontainer: false,
       lefthook: false,
+      slidev: false,
     });
-    expect(prompts).toHaveLength(9);
+    expect(prompts).toHaveLength(10);
     expect(prompts.some((prompt) => prompt.includes("Deliverables catalog"))).toBe(false);
     expect(closed).toBe(true);
   });
@@ -128,11 +202,12 @@ describe("specdojo init", () => {
       devcontainer: true,
       devcontainerPreset: "recommended",
     });
-    expect(prompts.at(-2)).toBe(
+    expect(prompts.at(-3)).toBe(
       "Dev Container preset (minimal, recommended, full) [recommended]: ",
     );
-    expect(prompts.at(-1)).toBe("Create Git hooks with lefthook? [y/N]: ");
-    expect(prompts).toHaveLength(10);
+    expect(prompts.at(-2)).toBe("Create Git hooks with lefthook? [y/N]: ");
+    expect(prompts.at(-1)).toBe("Set up Slidev for kata? [y/N]: ");
+    expect(prompts).toHaveLength(11);
   });
 
   it("interprets all Dev Container preset values and keeps none as a minimal alias", async () => {
@@ -227,6 +302,7 @@ describe("specdojo init", () => {
       catalog: undefined,
       devcontainer: false,
       lefthook: false,
+      slidev: false,
     });
     expect(prompts.filter((prompt) => prompt.startsWith("Project ID"))).toHaveLength(2);
     expect(prompts.filter((prompt) => prompt.startsWith("Project name"))).toHaveLength(1);
@@ -257,7 +333,11 @@ describe("specdojo init", () => {
       await runInit({ yes: true, provider: "codex", lefthook: true });
 
       expect(existsSync(join(repo, "lefthook.yml"))).toBe(true);
-      expect(existsSync(join(repo, ".markdownlint.jsonc"))).toBe(true);
+      expect(existsSync(join(repo, ".markdownlint.jsonc"))).toBe(false);
+      expect(existsSync(join(repo, ".markdownlintrc"))).toBe(true);
+      expect(load(readFileSync(join(repo, ".markdownlint-cli2.yaml"), "utf8"))).toEqual({
+        config: { extends: ".markdownlintrc" },
+      });
       expect(existsSync(join(repo, ".markdownlintignore"))).toBe(true);
       expect(existsSync(join(repo, "tools/install-lefthook.mjs"))).toBe(true);
       expect(existsSync(join(repo, "tools/specdojo-pre-commit.mjs"))).toBe(true);
@@ -306,18 +386,46 @@ describe("specdojo init", () => {
       const roster = loadMemberRoster(repo, config.projects["prj-1234"]);
       const executor = resolveAgentMember(roster, "codex-executor");
       const reporter = resolveAgentMember(roster, "codex-reporter");
+      const expertExecutor = resolveAgentMember(roster, "codex-expert-executor");
+      const expertReviewer = resolveAgentMember(roster, "codex-expert-review-executor");
       expect(executor).toMatchObject({
-        nickname: "terra-executor",
-        model: "gpt-5.6-terra",
+        nickname: "luna-executor",
+        model: "gpt-6-luna",
         stage_role: "executor",
+        proficiency: "normal",
       });
-      expect(reporter).toMatchObject({ nickname: "terra-reporter", stage_role: "reporter" });
+      expect(reporter).toMatchObject({
+        nickname: "luna-reporter",
+        model: "gpt-6-luna",
+        stage_role: "reporter",
+      });
+      expect(resolveAgentMember(roster, "codex-review-executor")).toMatchObject({
+        nickname: "luna-review-executor",
+        model: "gpt-6-luna",
+        mode: "review",
+      });
+      expect(expertExecutor).toMatchObject({
+        nickname: "sol-executor",
+        model: "gpt-6.1-sol",
+        mode: "edit",
+        proficiency: "expert",
+      });
+      expect(expertReviewer).toMatchObject({
+        nickname: "sol-review-executor",
+        model: "gpt-6.1-sol",
+        mode: "review",
+        proficiency: "expert",
+      });
+      const rosterFile = load(readFileSync(join(repo, ".specdojo/agent-members.yaml"), "utf8")) as {
+        members: Array<{ nickname: string; model?: string }>;
+      };
+      expect(rosterFile.members.some((member) => member.model?.includes("terra"))).toBe(false);
 
       const defaults = loadExecDefaultsConfig(join(repo, ".specdojo/exec-defaults.yaml"));
       expect(defaults.pipeline?.parent_validations).toBeUndefined();
       expect(defaults.routing).toEqual({
         hard: {
-          executor_by: "codex-executor",
+          executor_by: "codex-expert-executor",
           reporter_by: "codex-reporter",
           on_rate_limit: "wait",
         },
@@ -335,14 +443,23 @@ describe("specdojo init", () => {
       expect(output.join("")).toContain(
         "Omitted pipeline.parent_validations: no supported npm scripts were found in package.json.",
       );
-      expect(resolveMemberCommand(defaults, executor!)).toContain("--model gpt-5.6-terra");
-      expect(resolveMemberCommand(defaults, reporter!)).toContain("codex exec");
+      expect(resolveMemberCommand(defaults, executor!)).toContain(
+        '--model gpt-6-luna -c model_reasoning_effort="medium"',
+      );
+      expect(resolveMemberCommand(defaults, expertExecutor!)).toContain(
+        '--model gpt-6.1-sol -c model_reasoning_effort="high"',
+      );
+      expect(resolveMemberCommand(defaults, expertReviewer!)).toContain("--model gpt-6.1-sol");
+      expect(resolveMemberCommand(defaults, reporter!)).toContain(
+        '--model gpt-6-luna -c model_reasoning_effort="medium"',
+      );
 
       const packageJson = JSON.parse(readFileSync(join(repo, "package.json"), "utf8")) as {
         scripts: Record<string, string>;
       };
-      expect(packageJson.scripts["orch:sol"]).toContain("-m gpt-5.6-sol");
-      expect(packageJson.scripts["orch:terra"]).toContain("-m gpt-5.6-terra");
+      expect(packageJson.scripts["orch:sol"]).toContain("-m gpt-6.1-sol");
+      expect(packageJson.scripts["orch:luna"]).toContain("-m gpt-6-luna");
+      expect(packageJson.scripts["orch:terra"]).toBeUndefined();
       expect(packageJson.scripts["orch:codex"]).toBeUndefined();
       expect(output.join("")).toContain(
         "npx specdojo exec run --register <id> --executor-by codex-executor --reporter-by codex-reporter",
@@ -398,13 +515,17 @@ describe("specdojo init", () => {
     });
     try {
       process.chdir(repo);
-      await runInit({ yes: true, provider: "codex", exec: true, dryRun: true });
+      const packageBefore = readFileSync(join(repo, "package.json"), "utf8");
+      await runInit({ yes: true, provider: "codex", exec: true, slidev: true, dryRun: true });
 
       expect(readFileSync(join(repo, ".specdojo/specdojo.config.json"), "utf8")).toBe(
         '{"keep":true}\n',
       );
       expect(existsSync(join(repo, ".specdojo/agent-members.yaml"))).toBe(false);
       expect(existsSync(join(repo, ".gitignore"))).toBe(false);
+      expect(existsSync(join(repo, ".prettierrc"))).toBe(false);
+      expect(existsSync(join(repo, ".markdownlintignore"))).toBe(false);
+      expect(readFileSync(join(repo, "package.json"), "utf8")).toBe(packageBefore);
       expect(output.join("")).toContain("Skipped (already exists): .specdojo/specdojo.config.json");
       expect(output.join("")).toContain("[dry-run] would write: .specdojo/agent-members.yaml");
     } finally {
@@ -431,6 +552,8 @@ describe("specdojo init", () => {
         { nickname: "claude-executor", alias_of: "sonnet-executor" },
         { nickname: "claude-review-executor", alias_of: "sonnet-review-executor" },
         { nickname: "claude-reporter", alias_of: "sonnet-reporter" },
+        { nickname: "claude-expert-executor", alias_of: "opus-executor" },
+        { nickname: "claude-expert-review-executor", alias_of: "opus-review-executor" },
         { nickname: "opencode-executor", alias_of: "gemma-executor" },
         { nickname: "opencode-review-executor", alias_of: "gemma-review-executor" },
         { nickname: "opencode-reporter", alias_of: "gemma-reporter" },
@@ -458,9 +581,10 @@ describe("specdojo init", () => {
       expect(Object.keys(defaults.providers).sort()).toEqual(["claude", "copilot", "opencode"]);
       expect(defaults.routing).toMatchObject({
         hard: {
-          executor_by: "claude-executor",
+          executor_by: "claude-expert-executor",
           reporter_by: "claude-reporter",
           on_rate_limit: "wait",
+          // opencode には expert の段がないため、hard の代替も normal の別名を使う。
           fallback_executor_by: "opencode-executor",
           fallback_reporter_by: "opencode-reporter",
         },

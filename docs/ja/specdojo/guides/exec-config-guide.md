@@ -130,7 +130,7 @@ members:
     roles: []
     type: agent
     provider: codex
-    model: gpt-5.6-sol
+    model: gpt-6.1-sol
     effort: high
     mode: edit
     stage_role: executor
@@ -507,13 +507,13 @@ specdojo exec run --project <project-id> --task <task-id> \
 
 executor の出力は、そのまま reporter へ渡さずに run 単位の evidence へ整形して保存します。保存先は `<execution_path>/exec/evidence/<task-id>/<run-id>/` です。
 
-| ファイル                                                              | 内容                                                                                          |
-| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| `evidence.json`                                                       | stage の実行結果、変更ファイル一覧、diff サマリ、検証結果、最終メッセージ、失敗理由、ログ参照 |
-| `executor.log`                                                        | executor の標準出力・標準エラーの抜粋（人が調査するための参照先）                             |
-| `reporter-attempt-<n>.stdout.log` / `reporter-attempt-<n>.stderr.log` | 失敗した reporter の形式試行ごとの stdout / stderr（秘匿処理後の生出力）                      |
-| `parent-validation-attempt-<n>-<id>.log`                              | 失敗した親検証の stdout / stderr（秘匿処理後の出力）                                          |
-| `pipeline-state.json`                                                 | executor / reporter の状態・actor・試行回数・成果物参照                                       |
+| ファイル                                                              | 内容                                                                                                    |
+| --------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `evidence.json`                                                       | stage の実行結果、変更ファイル一覧、diff サマリ、検証結果、最終メッセージ、申し送り、失敗理由、ログ参照 |
+| `executor.log`                                                        | executor の標準出力・標準エラーの抜粋（人が調査するための参照先）                                       |
+| `reporter-attempt-<n>.stdout.log` / `reporter-attempt-<n>.stderr.log` | 失敗した reporter の形式試行ごとの stdout / stderr（秘匿処理後の生出力）                                |
+| `parent-validation-attempt-<n>-<id>.log`                              | 失敗した親検証の stdout / stderr（秘匿処理後の出力）                                                    |
+| `pipeline-state.json`                                                 | executor / reporter の状態・actor・試行回数・成果物参照                                                 |
 
 引き渡しの方針は次のとおりです。
 
@@ -524,10 +524,12 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 - reporter が非ゼロ終了または形式エラーで失敗した場合、同じ reporter stage 内の各形式試行を `reporter-attempt-<n>.stdout.log` と `reporter-attempt-<n>.stderr.log` に保存します。同じ run を resume して再度失敗した場合は、直近の失敗内容でこれらのファイルと `log_refs` を置き換えます。
 - 親検証は失敗時だけ出力を保存し、成功時は要約だけを記録します。失敗ログは `parent-validation-output` として `log_refs` から参照します。同じ run の resume や統合段の再検証では attempt 番号を増やして新しいログを追加し、以前の失敗ログを上書きしません。親検証の要約は 1,000 文字以内で先頭と末尾を残すため、末尾に出る失敗ケース名と件数を evidence から確認できます。
 - evidence ディレクトリは Git の管理対象です。成功して統合された run のログは履歴に残り、失敗中の worktree では未コミットのまま保持されます。`--force-restart` などで worktree を破棄すると未コミットログも失われるため、必要な調査を先に行います。既知パターンは保存前に秘匿しますが、未知形式の秘密が残る可能性を考慮し、ログを外部共有する前に内容を確認します。
-- executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`）を出します。`validations[].status` は `passed` / `failed` / `not_run` / `not_applicable` / `requires_human` のいずれかです。`not_applicable` はリポジトリが検査の適用条件を満たさない場合に使い、`reason` へ理由を必ず記録します。`requires_human` は、実 agent CLI の起動、利用枠や課金を伴う操作、認証情報やホスト側の操作など、agent の sandbox から実行できない確認だけに使います。実行できるが省略した検証には使わず、`not_run` として記録します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
+- executor が構造化した最終報告を返す場合は、標準出力に `<specdojo_executor_evidence>` タグで JSON（`final_message`・`validations`・省略可能な `completion_status`・`handoff`）を出します。`validations[].status` は `passed` / `failed` / `not_run` / `not_applicable` / `requires_human` のいずれかです。`not_applicable` はリポジトリが検査の適用条件を満たさない場合に使い、`reason` へ理由を必ず記録します。`requires_human` は、実 agent CLI の起動、利用枠や課金を伴う操作、認証情報やホスト側の操作など、agent の sandbox から実行できない確認だけに使います。実行できるが省略した検証には使わず、`not_run` として記録します。タグが無い場合は標準出力の残りを最終メッセージとして扱います。
 - `pipeline.parent_validations` には `validate-schema`（`npm run validate:schema`）、`typecheck`（`npm run typecheck`）、`test-unit`（`npm run test:unit`）、`test-integration`（`npm run test:integration`）、`lint-ts`（`npm run lint:ts`）、`lint-fm`（`npm run lint:fm`）、`lint-md`（`npm run lint:md`）、`build`（`npm run build`）、`format-check`（`npm run format:check`）を指定できます。親 runner は executor の成功後・reporter の起動前に、指定順で固定 argv の検証を実行します。
 - executor prompt には設定済み ID と対応コマンドを明示します。executor はそのコマンドや対象限定版を sandbox 内で実行せず、executor evidence の validations にも含めなくてよいものとします。親 runner の結果は `source: runner` と許可リスト `id` 付きで同じ `validations` 配列へ保存します。executor が同じ検査を `not_run` または `not_applicable` として含めた場合も、同じリポジトリで実行された親 runner の結果を正とします。これにより sandbox 内で成立しない検証を親へ移した場合も二重実行せず、executor の重複報告で run を止めません。
 - result の `changed_files` のパスは evidence の `changes` から、execution の evidence、project register とその派生ビュー、当該 result という runner 管理記録を除いて runner が機械生成します。除外後の変更一覧だけを reporter へ渡し、edit の変更説明は evidence のパスと対にして受け取ります。runner はパスで突き合わせるため、説明の順序は問いません。説明が不足したパスには Git の変更メタデータ（追加・変更・削除・名前の変更、行数）を記録し、変更ファイルが多い場合（50 件超）はディレクトリごとに集約して記録します。evidence にないパスの説明は捨てます。`outcome` と `block_reason` は stage の状態・終了コード・保護機構が保存した理由・executor / 親 runner の検証から機械生成します。reporter の JSON Schema は文章項目と対応づけ用のパスだけを受け付け、いずれかの検証が failed または `not_run` なら、reporter の文章にかかわらず機械判定は blocked です。ただし、executor が `not_run` または `not_applicable` と記録したコマンドを、親 runner が同じリポジトリで同じコマンドとして実行し成功していれば、親 runner の結果を正として executor の報告を無視します。さらに、`npm run <name>` に対応する script がない、`npx <package>` の package が `dependencies` / `devDependencies` にない、検査の対象となる種類の変更ファイルがない、または SpecDojo サブコマンドの設定上の適用条件を満たさないことを runner が機械的に確定できる場合、その `not_run` は block せず、edit result の申し送りへ「適用外の検証（runner の判定）」として追記します。変更ファイル種別で判定する対応は共通規約の検査表を正本とし、`validate:schema:file` は `*.yaml` / `*.yml`、Prettier は `*.md` / `*.ts` / `*.js` / `*.json` / `*.yaml` / `*.yml`、markdownlint は `*.md` の変更がある場合だけ適用対象とします。rename は変更前後の両方を見て、プロダクトリポジトリのコマンドはそのリポジトリの変更だけで判定します。`typecheck` など、この対応に含まれない検査の判定は変更しません。SpecDojo の起動形は `specdojo <subcommand>`、`npx specdojo <subcommand>`、ソース／配布済み CLI の直接起動を認識し、`catalog validate` は対象 project の `catalog_path` で判定します。対象 project は、コマンドの `--project <id>`、run の対象 project（runner が execution path に一致する project を設定から特定したもの）、`current_project` の順に決めます。別の project が `catalog_path` を持っていても、run の対象 project に `catalog_path` がなければ適用外です。対象 project に `catalog_path` があっても、executor の変更（runner 管理記録を除き、rename は変更前後の両方を見ます）が `docs/ja/projects/` 配下に及ばない run では、plan の共通規約の検証表と同じく適用外とし、executor の `not_applicable` も受理します。変更が及ぶ run では従来どおり適用対象です。また、`<repo>:<path>` を引数に含むコマンド、`--prefix <repo>` 付きのコマンド、または `$SPECDOJO_REPO_<NAME>` / `${SPECDOJO_REPO_<NAME>}` を含むコマンドは、対象 project が `repos` で宣言したそのプロダクトリポジトリの `package.json` で script と依存を判定します（`--prefix` はリポジトリ名か設定の `path` と一致するものを対象にします）。設定が読めない、対象 project を特定できない、または適用条件を未定義のサブコマンドは機械的な救済をせず、通常の `not_run` として扱います。executor の failed は親 runner の成功や適用外判定で打ち消しません。`npm run check` のように npm script を `&&` でつないだだけの合成コマンドを executor が `not_run` とした場合は、対象リポジトリの `package.json` の script を展開し、構成する各コマンドが同じリポジトリの親検証か executor 自身の検証で通っていれば満たされたものとして扱います。`npm test` は、`npm run test:unit` と `npm run test:integration` の両方が通っていれば満たされたものとします。構成するコマンドの script の中身と同じコマンドを executor が直接実行して通した場合も満たします（`tsx` の起動の書き方の違いはそろえて比べます）。任意のシェルを含む script は展開しません。理由付きの `not_applicable` は block の理由にせず、runner が edit result の申し送りへ「適用外の検証: `<コマンド>`（<理由>）」として機械的に追記します。ただし、理由がない場合、変更ファイル種別を含む適用条件を満たした `npm run <name>` の script が存在する場合、または同条件を満たした `npx <package>` の package が `dependencies` / `devDependencies` に存在する場合は誤申告として blocked にします。SpecDojo サブコマンドは package の有無だけでは反証せず、既知の適用条件を設定から判定します。適用条件が未定義なら理由付きの agent の申告に従います。`specdojo index build`（`npx specdojo index build`・`node --import tsx src/specdojo.ts index build` などの起動形を含みます）は runner が担う検証です。出力先の `.specdojo/doc-index.json` は agent が書き込めず、index は worktree の準備と統合の前に runner が再生成するため、executor への指示では実行も記録もしないよう伝えます。executor が `not_run` / `not_applicable` と記録しても block の理由にせず、`not_run` の場合は edit result の申し送りへ「runner が担う検証: `<コマンド>`（<理由>）」として追記します。runner の再生成が失敗した場合は worktree の準備で run が止まるか、runner の検証の失敗として block するため、満たしたものとは扱いません。executor の failed は救済せず、ほかの SpecDojo サブコマンドの `not_run` の扱いも変えません。executor の `requires_human` は block の理由にせず、runner が edit result の申し送りへ「人の確認が必要: `<コマンド>`（<要約>）」として機械的に追記します。項目は review へ進み、人が確認してから close します。
+- `completion_status` は作業の完了状態を示す省略可能な欄で、値は `complete` / `incomplete` です。欄のない既存の報告は `complete` として扱います。値が指定されていてこの 2 値に合わない場合は、安全側に倒して `incomplete` として保存します。executor は計画の作業を終えられなかった場合、`incomplete` とし、理由を `final_message`、残作業を `handoff` に書きます。終了コード 0 や親検証の成功では未完了の申告を上書きしません。`exec run --register` は親検証・reporter を起動する前に停止し、項目を `waiting` にして、秘匿処理・文字数制限を適用した `final_message` の要旨を `block_reason` に記録します。worktree 実行では変更と evidence を残し、統合しません。pipeline の executor は `blocked`、evidence の `stage.status` と `exit_code` は実際のプロセス結果のままとします。`--resume --resume-from executor`（または `--resume`）で再開でき、前回の理由と `handoff`、途中の変更を executor に引き継ぎます。完了を申告し直し、必要な検証を通過してから review・統合へ進みます。
+- `handoff` は executor が申し送る判断の理由、保護された設定の変更案、次のアクションなどの文字列配列です。先頭 100 件、各 4,000 文字までを秘匿処理して evidence に保存し、空文字列や文字列以外の要素は除外します。省略した既存の報告・evidence も有効です。reporter にはこの欄も渡し、edit result の「申し送り」には runner が reporter の補足と合わせて機械的に転記します。同一の文字列は重複させず、reporter が省略しても executor の記録は残します。register の完了条件が result への記録を求める場合、pipeline の executor は個票の対応結果と報告の `handoff` の両方に書きます。close の前には個票の対応結果と result の両方を確認します。
 - reporter の出力は JSON Schema で厳格に検証します。形式不正のときは同じ plan と evidence のまま reporter だけを最大 3 回再実行し、executor は再実行しません。
 - reporter stage の再開では、現在の設定 ID と一致する親検証が保存済み evidence にそろっている場合だけ executor evidence を再利用します。`{ id, repo }` を使う場合は、ID とリポジトリの組が一致することを求めます。再実行時も同じ割り当てで、各リポジトリの worktree を `cwd` にします。保存済みの親検証がすべて成功していれば再実行しません。`failed` / `not_run` があれば、親 runner が現在の worktree で固定許可リストの親検証を再実行し、同じ ID の結果を evidence 上で置換してから reporter へ渡します。過去の親検証ログは置換せず、新しい失敗ログだけを追加します。executor 由来の検証は再実行・置換しません。設定 ID が変わった、または結果が欠けている場合、Schedule 実行は新しい executor run としてやり直し、register 実行は明示的な再実行を促して再開を拒否します。
 - result の frontmatter は runner が scaffold した内容を保ち、本文は検証済みの reporter 文章と evidence 由来の事実を組み合わせて runner が描画します。reporter はファイルを書きません。
@@ -583,15 +585,43 @@ specdojo config scaffold --provider claude
 
 `specdojo init --exec` と `config scaffold` が配布する agent の名簿と定義は、実体と別名の 2 段構成です（0.4.0 から）。実体は model の系統と役割で名付け、provider・`model`・役割を持ちます。従来の名前は `aliases` で実体を指す別名として残します。claude と opencode の agent の定義は役割（executor・review executor・reporter）ごとの 1 ファイルで `model` を持たず、`command_params.by_mode` で mode から定義を選び、model は実体の `model` を `--model {model}` で渡します。
 
-| provider    | init が生成する実体                                               | 別名（従来の名前）                                                   | model の書き場所                                     |
-| ----------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------- |
-| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`    | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                           |
-| codex       | `terra-executor`・`terra-review-executor`・`terra-reporter`       | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（effort は `by_proficiency`）         |
-| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`       | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み） |
-| antigravity | `flash-executor`・`flash-review-executor`・`flash-reporter`       | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                  |
-| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter` | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                 |
+| provider    | init が生成する実体                                               | 別名（従来の名前）                                                   | model の書き場所                                            |
+| ----------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------- |
+| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`    | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                                  |
+| claude      | `opus-executor`・`opus-review-executor`（expert）                 | `claude-expert-executor`・`claude-expert-review-executor`            | 実体の `model`（`opus`）                                    |
+| codex       | `luna-executor`・`luna-review-executor`・`luna-reporter`          | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（`gpt-6-luna`、effort は `by_proficiency`）  |
+| codex       | `sol-executor`・`sol-review-executor`（expert）                   | `codex-expert-executor`・`codex-expert-review-executor`              | 実体の `model`（`gpt-6.1-sol`、effort は `by_proficiency`） |
+| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`       | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み）        |
+| antigravity | `flash-executor`・`flash-review-executor`・`flash-reporter`       | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                         |
+| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter` | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                        |
+
+claude と codex は normal と expert の 2 段を持ちます（0.4.6 から）。expert の実体には `proficiency: expert` を付けます。init が書く振り分けの表（`routing`）は、hard を expert の別名（`claude-expert-executor`・`codex-expert-executor`）、medium と easy を normal の別名にし、reporter はどの難易度でも normal の別名にします。expert の段がない provider（opencode・antigravity など）は、hard も normal の別名を使います。codex の reasoning effort は `by_proficiency` で normal が `medium`、expert が `high` で、`gpt-6-luna` は Max までしか受け付けないため Ultra を割り当てません。
 
 init は選んだ provider の実体だけを名簿へ書き、別名は向き先の実体が選ばれたものだけを残します。次の手順の案内（`--executor-by` / `--reporter-by`）には別名を示します。antigravity の `agent-members-snippet.yaml` は実体を `disabled: true` で配布するため、別名は末尾にコメントの例として置きます。別名は無効な member を指せないので、向き先の実体を有効にしたものだけを `aliases` へ写します。
+
+`gpt-6-astra` は雛形の既定に入れません。使う場合は、次のように実体を名簿へ足し、`--executor-by astra-executor` や `routing` で指名します。
+
+```yaml
+members:
+  - nickname: astra-executor
+    display_name: Codex Astra Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-6-astra
+    mode: edit
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: expert
+    priority: 1
+    persona: task-executor
+    scheduler_strategy: critical-first
+```
+
+0.4.5 までの init が作った名簿（`terra-executor` などの `gpt-5.6-terra` の実体と `orch:terra`）は、init も scaffold も書き換えません。新しい名前へそろえる場合は、`.specdojo/agent-members.yaml` の `terra-*` を `luna-*`（`model: gpt-6-luna`）へ名前を変え、`sol-*` を加えるか `model` を `gpt-6.1-sol` にし、`aliases` の `codex-*` の向き先を合わせます。`package.json` は `config scaffold --provider codex` を実行すると `orch:luna` が加わります。不要になった `orch:terra` は手で消し、既存の `orch:sol` は上書きされないため `-m gpt-6.1-sol` へ手で直します。
+
+配布する `templates/codex/agents/*.toml` も名簿と同じく GPT-6 の 2 段構成（normal の `codex-executor`・`codex-review-executor` は `gpt-6-luna`、expert の `codex-expert-executor`・`codex-expert-review-executor` と `specdojo-orchestrator` は `gpt-6.1-sol`）にそろえています。既存の利用者の `.codex/agents/*.toml` は scaffold でも上書きされないため、`specdojo config scaffold --provider codex --force` で配布原本を再配置するか、各 `.codex/agents/*.toml` の `model`（`gpt-5.4-mini`・`gpt-5.5`・`gpt-5.6-terra`）を手動で `gpt-6-luna` / `gpt-6.1-sol` へ書き換えます。
 
 既存の利用者の 1 段の名簿（`aliases` も `model` も持たない member と、`--agent {nickname}` の `command_template`）は、変更しなくてもそのまま動きます。
 

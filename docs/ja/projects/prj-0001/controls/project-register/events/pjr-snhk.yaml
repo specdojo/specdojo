@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bca148676f524a988bcaf226e4818e56
+  ts: "2026-10-25T03:20:41Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register-plan-escape の共通の規約の test が負荷で 5 秒の上限を超えて落ちる
+    - field: description
+      from: ""
+      to: 単体テストで最も遅い 1 件（単独で約 1.5〜1.9 秒）が、親の検証やキャッシュのない worktree では 5 秒を超え、ZG0A と 50YH の統合を繰り返し止めた。原因を調べて速くするか、上限を広げる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_9a3e013be4904544b6c04fcb9d299c96
+  ts: "2026-10-25T03:21:31Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_bca148676f524a988bcaf226e4818e56
+- v: 1
+  id: reg_dd4515eb88ca4715b98d91bcac952edb
+  ts: "2026-10-25T03:30:21Z"
+  action: review
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_9a3e013be4904544b6c04fcb9d299c96
+- v: 1
+  id: reg_9b827d79ac03434ea71eff5721b9cf58
+  ts: "2026-10-25T03:31:14Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分を完了条件に照らし、親の検証が通ったことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: 時間のほぼすべてがカタログ付きの 2 回目の generateRegisterPlan（約 1.5 秒）にかかると分かった。この test に限って上限を 30 秒へ広げ、設定全体と確かめる内容は変えていない
+  previous_event_id: reg_dd4515eb88ca4715b98d91bcac952edb

@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_cf63709269ab4309928de12636537972
+  ts: "2026-10-24T12:51:56Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 配布する名簿の雛形を GPT-6 と expert の 2 段にそろえる
+    - field: description
+      from: ""
+      to: 雛形の codex の実体は gpt-5.6-terra の terra だけで、expert の段（sol・opus）もない。codex は normal を gpt-6-luna の luna、expert を gpt-6.1-sol の sol、claude は normal を sonnet、expert を opus とし、codex-expert-executor と claude-expert-executor の別名を加える。init の振り分けの表と orch の script も合わせる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-2ASZ"]'
+- v: 1
+  id: reg_d5cac965539d46f3897fb47f31756a27
+  ts: "2026-10-24T12:52:47Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_cf63709269ab4309928de12636537972
+- v: 1
+  id: reg_d638b7a7b35041b88969367eb1b54b7e
+  ts: "2026-10-24T13:05:38Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-integration; rate limit fallback: sol-executor -> opus-executor at 2026-10-24T12:53:50.053Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-integration; rate limit fallback: sol-executor -> opus-executor at 2026-10-24T12:53:50.053Z"
+  previous_event_id: reg_d5cac965539d46f3897fb47f31756a27
+- v: 1
+  id: reg_c33756611fe544d0bbf1bf88ec766d29
+  ts: "2026-10-24T13:06:19Z"
+  action: start
+  actor: opus-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-integration; rate limit fallback: sol-executor -> opus-executor at 2026-10-24T12:53:50.053Z"
+      to: "-"
+  previous_event_id: reg_d638b7a7b35041b88969367eb1b54b7e
+- v: 1
+  id: reg_938bc0e1bbdd496a9e0074257de37e1a
+  ts: "2026-10-24T13:16:45Z"
+  action: review
+  actor: opus-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_c33756611fe544d0bbf1bf88ec766d29
+- v: 1
+  id: reg_982768766d154045b5a1e4ac8b626308
+  ts: "2026-10-24T13:18:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが一時のリポジトリで init（claude と codex）を流し、名簿の実体と別名、振り分けの表、orch の script を確かめた。codex の上限のため 2 回目以降は opus で流した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: 配布する名簿の雛形を、claude は sonnet（normal）と opus（expert）、codex は luna（gpt-6-luna、normal）と sol（gpt-6.1-sol、expert）の 2 段にし、codex-expert-executor・claude-expert-executor などの別名を加えた。init の振り分けの表は hard を expert、medium と easy を normal にし、codex の orch は orch:sol と orch:luna にした。既存の利用者の名簿と package.json は書き換えない
+  previous_event_id: reg_938bc0e1bbdd496a9e0074257de37e1a

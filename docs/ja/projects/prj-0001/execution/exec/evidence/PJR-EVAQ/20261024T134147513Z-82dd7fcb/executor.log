@@ -1,0 +1,24 @@
+PJR-EVAQ「codex の agent の定義のモデルを GPT-6 に上げる」の executor stage 対応を完了しました。
+
+### 実施内容
+
+1. **配布用 Codex agent 定義のモデル更新**:
+   - [`templates/codex/agents/codex-executor.toml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAQ/templates/codex/agents/codex-executor.toml): `gpt-6-luna`（`model_reasoning_effort = "medium"`）
+   - [`templates/codex/agents/codex-review-executor.toml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAQ/templates/codex/agents/codex-review-executor.toml): `gpt-6-luna`（`model_reasoning_effort = "medium"`）
+   - [`templates/codex/agents/codex-expert-executor.toml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAQ/templates/codex/agents/codex-expert-executor.toml): `gpt-6.1-sol`（`model_reasoning_effort = "high"`）
+   - [`templates/codex/agents/codex-expert-review-executor.toml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAQ/templates/codex/agents/codex-expert-review-executor.toml): `gpt-6.1-sol`（`model_reasoning_effort = "high"`）
+   - [`templates/codex/agents/specdojo-orchestrator.toml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAQ/templates/codex/agents/specdojo-orchestrator.toml): `gpt-6.1-sol`（`model_reasoning_effort = "medium"`）
+2. **オーケストレーター同期の検証**:
+   - `npm run lint:orchestrator-sync` を実行し、同期検査がパスすることを確認しました。
+3. **単体テストの追加**:
+   - [`tests/src/shared/provider-scaffold.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAQ/tests/src/shared/provider-scaffold.test.ts) に、配布用 Codex agent 定義が提供終了モデル（`gpt-5.4-mini`、`gpt-5.5`）および移行用モデル（`gpt-5.6-*`）を使用せず、GPT-6 系（`gpt-6-luna`、`gpt-6.1-sol`）を使用していることを検証するテストを追加しました。
+4. **ドキュメント・利用者の更新手順の記載**:
+   - [`templates/codex/README.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAQ/templates/codex/README.md) に配布 subagent のモデル一覧表と既存利用者が `.codex/agents` を更新する手順を追加しました。
+   - [`docs/ja/specdojo/guides/exec-config-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAQ/docs/ja/specdojo/guides/exec-config-guide.md) に配布 subagent のモデルと既存利用者が更新する手順を反映しました。
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAQ/CHANGELOG.md) の `## [Unreleased]` に変更内容を追記しました。
+5. **個票の更新**:
+   - [`docs/ja/projects/prj-0001/controls/project-register/pjr-evaq-codex-agent-defs-gpt6.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAQ/docs/ja/projects/prj-0001/controls/project-register/pjr-evaq-codex-agent-defs-gpt6.md) の作業内容（done）と対応結果を記録しました。本リポジトリの `.codex/agents/*.toml` は保護設定のため変更せず、反映案を残課題として明記しています。
+
+<specdojo_executor_evidence>
+{"final_message":"配布用 templates/codex/agents/*.toml のモデルを名簿の雛形と同じ GPT-6 系（gpt-6-luna / gpt-6.1-sol）にそろえ、単体テスト・exec-config-guide・templates/codex/README.md・CHANGELOG・個票を更新しました。本リポジトリの .codex/agents/*.toml は保護設定のため変更せず、反映案を残課題として個票へ記載しました。","validations":[{"command":"npm run lint:orchestrator-sync","status":"passed","summary":"orchestrator body sync: OK (10 targets)"}]}
+</specdojo_executor_evidence>

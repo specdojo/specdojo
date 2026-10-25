@@ -821,6 +821,8 @@ export function finalizeResultSectionsForDeliverable(
 
 // owner ロール視点の記述ガイドを構成するデータ値。prose ラベルや見出しは
 // テンプレート側（言語別 docs/<lang>/.../exec-templates）に置き、ここでは値のみを供給する。
+const MISSING_VIEWPOINTS = `- ${MISSING}`;
+
 export type OwnerRoleFields = {
   // owner の Role code（role 名が pm-roles.yaml にあれば `code（name）` 形式）。
   label: string;
@@ -833,6 +835,8 @@ export type OwnerRoleFields = {
 // owner の Role code から、pm-roles.yaml の責務（project_note）と
 // pm-review-viewpoints.yaml の該当 role 観点を取り出す。owner 未設定や情報欠落時は
 // 他のプレースホルダと同様に MISSING を返し、表示構造はテンプレート側に委ねる。
+// ただし viewpoints はテンプレートで単独の段落に置かれるため、欠落時も箇条書きの
+// 1 項目（`- _MISSING_`）にする。強調だけの段落は markdownlint MD036 に違反する（PJR-SS72）。
 export function ownerRoleFields(
   owner: string | undefined,
   roleMap: Map<string, RoleDefinition>,
@@ -840,7 +844,7 @@ export function ownerRoleFields(
   rulebook?: string,
 ): OwnerRoleFields {
   if (!owner) {
-    return { label: MISSING, note: MISSING, viewpoints: MISSING };
+    return { label: MISSING, note: MISSING, viewpoints: MISSING_VIEWPOINTS };
   }
 
   const role = roleMap.get(owner);
@@ -854,7 +858,7 @@ export function ownerRoleFields(
   const viewpoints =
     roleViewpoints.length > 0
       ? roleViewpoints.map((vp) => `- ${vp.title}: ${vp.check}`).join("\n")
-      : MISSING;
+      : MISSING_VIEWPOINTS;
 
   return { label, note, viewpoints };
 }

@@ -9,6 +9,7 @@ import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./agent-types.
 import { runProviderScaffold, specdojoPackageRootDir } from "./provider-scaffold.js";
 import { runWorkspaceScaffold } from "./workspace-scaffold.js";
 import { runLefthookScaffold } from "./lefthook-scaffold.js";
+import { runSlidevScaffold, SLIDEV_KATA_PATTERNS } from "./slidev-scaffold.js";
 import {
   ensureGitignore,
   formatGitignoreReport,
@@ -1107,7 +1108,7 @@ export function registerConfigCommands(program: Command): void {
 
   cfg
     .command("scaffold")
-    .description("Scaffold provider settings, a VS Code multi-root workspace, or Git hooks")
+    .description("Scaffold provider settings, a VS Code multi-root workspace, Git hooks, or Slidev")
     .option(
       "--provider <name>",
       "Provider template to copy (antigravity|claude|codex|copilot|opencode)",
@@ -1118,6 +1119,7 @@ export function registerConfigCommands(program: Command): void {
       false,
     )
     .option("--lefthook", "Generate pre-commit hooks for SpecDojo repositories", false)
+    .option("--slidev", "Set up Slidev and formatting for kata", false)
     .option(
       "--project <id>",
       "Target project ID for workspace scaffolding (defaults to current_project)",
@@ -1131,8 +1133,10 @@ export function registerConfigCommands(program: Command): void {
     )
     .action(async (opts) => {
       try {
-        if (!opts.provider && !opts.workspace && !opts.lefthook) {
-          throw new Error("Specify --provider <name>, --workspace, or --lefthook to scaffold.");
+        if (!opts.provider && !opts.workspace && !opts.lefthook && !opts.slidev) {
+          throw new Error(
+            "Specify --provider <name>, --workspace, --lefthook, or --slidev to scaffold.",
+          );
         }
         if (opts.global && !opts.provider) {
           throw new Error("--global requires --provider antigravity");
@@ -1163,9 +1167,13 @@ export function registerConfigCommands(program: Command): void {
             packageRoot: specdojoPackageRootDir(),
             repoRoot: specdojoRootDir(),
             config,
+            slidevKataPatterns: opts.slidev ? SLIDEV_KATA_PATTERNS : [],
             force: !!opts.force,
             dryRun: !!opts.dryRun,
           });
+        }
+        if (opts.slidev) {
+          await runSlidevScaffold({ repoRoot: specdojoRootDir(), dryRun: !!opts.dryRun });
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);

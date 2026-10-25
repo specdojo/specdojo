@@ -2,6 +2,31 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [0.4.6] - 2026-10-25
+
+### 追加機能
+
+- `init --slidev` と `config scaffold --slidev` で、Slidev 本体・Prettier plugin と kata 用の整形・markdownlint 除外設定を追加できるようにしました。既存設定・依存は保持し、追加内容を表示します。`init` の Dev Container preset が `full` の場合は Slidev 導入を既定で選び、`--no-slidev` で解除できます。`full` の VS Code 拡張に `antfu.slidev` を追加しました（PJR-84F7）。
+
+### 変更
+
+- 同梱のオーケストレーターの本文で、register の完了条件の記録の書き先を「個票の対応結果」と報告の `handoff` にし、close の前に result だけでなく個票の対応結果も確かめるようにしました（PJR-R1FB）。
+- `specdojo init --exec` が書く agent の名簿の雛形を、GPT-6 の系統と normal・expert の 2 段にそろえました。codex の normal は `gpt-6-luna` の `luna-executor`・`luna-review-executor`・`luna-reporter`、expert は `gpt-6.1-sol` の `sol-executor`・`sol-review-executor` です。claude には expert の `opus-executor`・`opus-review-executor` を加えました。別名 `claude-expert-executor`・`claude-expert-review-executor`・`codex-expert-executor`・`codex-expert-review-executor` を加え、`codex-executor` などの既存の別名は `luna-*` を指します。振り分けの表（`routing`）は hard を expert の別名、medium と easy と reporter を normal の別名にします。`init` と `config scaffold` が加える codex の起動スクリプトは `orch:sol`（`gpt-6.1-sol`）と `orch:luna`（`gpt-6-luna`）になり、`orch:terra` は作りません（PJR-9482）。
+- 配布する `templates/codex/agents/*.toml` のモデルを名簿の雛形と同じ GPT-6 の系統へ引き上げました。`codex-executor`・`codex-review-executor` は `gpt-6-luna`（`medium`）、`codex-expert-executor`・`codex-expert-review-executor` は `gpt-6.1-sol`（`high`）、`specdojo-orchestrator` は `gpt-6.1-sol`（`medium`）です。既存の `.codex/agents/*.toml` は上書きされないため、移行する場合は `specdojo config scaffold --provider codex --force` で再配置するか、各ファイルの `model` を手動で書き換えます（PJR-EVAQ）。
+- 既存の `.specdojo/agent-members.yaml`・`.specdojo/exec-defaults.yaml`・`package.json` は書き換えません。新しい名前へそろえる場合は、名簿の `terra-*` を `luna-*`（`model: gpt-6-luna`）へ、`sol-*` の `model` を `gpt-6.1-sol` へ変え、`aliases` の向き先を合わせます。`package.json` の `orch:terra` は `orch:luna`（`-m gpt-6-luna`）へ、`orch:sol` は `-m gpt-6.1-sol` へ手で直します。手順は exec 設定ガイドの `agent の名簿の 2 段構成と移行` にあります。
+
+### 不具合修正
+
+- 登録簿に項目が 1 件もないとき、`register build` が生成する担当者別と状態別の派生ビューの空の章で空行が連続し、markdownlint の `MD012` に当たる問題を直しました。項目のない章には「該当なし」を書きます。項目がある場合の生成物は変わりません（PJR-ZG0A）。
+- `init --lefthook` と `config scaffold --lefthook` の基本設定を `.markdownlintrc` に変更し、これを読み込む `.markdownlint-cli2.yaml` も生成するようにしました。VS Code で CLI2 のファイル別 overrides が効き、`--slidev` は kata の glob に Slidev 用の規則を当てます。commit hook と result 検査は markdownlint-cli を使い続けます。既存設定は保持し、追加例と移行手順を案内します（PJR-50YH）。
+- executor の報告に省略可能な `completion_status`（`complete` / `incomplete`）を追加しました。未完了を申告した register 項目は終了コード 0 でも `waiting` となり、理由と残作業、worktree を保持して統合を止めます。`--resume --resume-from executor` で再開でき、欄のない既存報告は従来どおり扱います（PJR-XTE6）。
+- `kata list`・`kata status` の kata 候補と `kata eject` の ID 選択を `.md`・`.mdx`・`.yaml`・`.yml`・`.json` にそろえ、同名 CSS などを別の kata として扱わないようにしました。`kata eject`・`kata install --all` は同名の付属ファイルと同名ディレクトリ内の画像などもコピーし、`--dry-run`・`--force` をファイルごとに適用します。付属ファイルだけの差分も親 kata の `modified` に含めます（PJR-6HS2）。
+- `register update` で approach・target・source を変更しない場合、記録済みの組み合わせを再検証しないようにしました。authoring の kata が作成された後も、担当・期限・優先度などの更新を続けられます。approach 関連の値を変更する場合と `register add` では従来どおり検証します（PJR-JJBY）。
+- executor の報告に省略可能な `handoff`（申し送り）を追加し、reporter の処理後に runner が edit result の申し送りへ確実に転記するようにしました。register の plan も、result への記載を求める完了条件を個票の対応結果と報告の `handoff` に記録するようにしました。`handoff` のない既存の報告も引き続き受け付けます（PJR-R1FB）。
+- `external_projects` で SpecDojo 自身のリポジトリへ起票できるようにしました。相手に `node_modules/.bin/specdojo` がなく、`package.json` の `name` が `specdojo` の場合は `node <相手>/dist/specdojo.js` を使います。未ビルドの場合は `npm run build` を案内して停止します（PJR-PM2R）。
+- 着手の checkpoint・待ち状態の記帳・統合の commit が hook で失敗したとき、空白を含む step 名（`lint Markdown documentation` など）でも、成功した Prettier の step ではなく、失敗印の付いた step と最初の error の行を要約するようにしました。checkpoint の失敗要約を補足説明より前に置き、`block_reason` にも原因を残します（PJR-68KR）。
+- owner の role に当てはまるレビュー観点がないとき（カタログや `pm-roles.yaml`・`pm-review-viewpoints.yaml` がない project など）、edit plan のレビュー観点の欄を `_MISSING_` だけの段落ではなく箇条書きの 1 項目（`- _MISSING_`）にしました。`rulebook-maintenance` などの kata の見直しの plan が、着手の checkpoint の commit で hook の markdownlint（MD036）に止められていました（PJR-SS72）。
+
 ## [0.4.5] - 2026-10-24
 
 ### 追加機能

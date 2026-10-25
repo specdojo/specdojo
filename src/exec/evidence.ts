@@ -8,6 +8,8 @@ import type { RateLimitRecoveryEvent } from "./run/shared.js";
 const MAX_LOG_BYTES = 64 * 1024;
 const MAX_CHANGE_FILES = 1_000;
 const MAX_FINAL_MESSAGE_LENGTH = 4_000;
+const MAX_HANDOFF_ITEMS = 100;
+const MAX_HANDOFF_LENGTH = 4_000;
 const MAX_DIFF_SUMMARY_LENGTH = 4_000;
 const MAX_VALIDATIONS = 50;
 const MAX_VALIDATION_COMMAND_LENGTH = 500;
@@ -58,7 +60,11 @@ export type ExecEvidence = {
   /** Runner-recorded pinned-agent rate-limit/connection recovery history for this stage. */
   rate_limit_events?: RateLimitRecoveryEvent[];
   final_message: string;
-  /** Runner-derived failure/protection reason. Present only when the executor did not succeed. */
+  /** Task completion, independent of process exit status. Absent legacy reports imply complete. */
+  completion_status?: "complete" | "incomplete";
+  /** Executor notes preserved mechanically in the edit result handoff. Optional for legacy evidence. */
+  handoff?: string[];
+  /** Runner-derived reason for process failure, protection, or incomplete work. */
   block_reason?: string;
   command?: {
     shell: string;
@@ -162,6 +168,8 @@ export type RecordParentValidationFailureOutputInput = {
 
 type ExecutorReport = {
   final_message?: unknown;
+  completion_status?: unknown;
+  handoff?: unknown;
   validations?: unknown;
   target_coverage?: unknown;
 };
@@ -210,6 +218,8 @@ function executorBlockReason(status: ExecEvidence["stage"]["status"], stderr: st
 
 export function parseExecutorReport(stdout: string): {
   finalMessage: string;
+  completionStatus?: ExecEvidence["completion_status"];
+  handoff: string[];
   validations: EvidenceValidation[];
   targetCoverage: EvidenceTargetCoverage[];
 } {
@@ -276,11 +286,38 @@ export function parseExecutorReport(stdout: string): {
   }
 
   const fallback = stdout.replace(REPORT_PATTERN, "").trim();
+  const handoff = Array.isArray(report.handoff)
+    ? report.handoff
+        .slice(0, MAX_HANDOFF_ITEMS)
+        .map((item) => boundedText(item, MAX_HANDOFF_LENGTH))
+        .filter(Boolean)
+    : [];
   return {
     finalMessage: boundedText(report.final_message ?? fallback, MAX_FINAL_MESSAGE_LENGTH),
+    ...(report.completion_status !== undefined
+      ? {
+          completionStatus:
+            report.completion_status === "complete"
+              ? ("complete" as const)
+              : ("incomplete" as const),
+        }
+      : {}),
+    handoff,
     validations,
     targetCoverage,
   };
+}
+
+/** A successful process or validation batch cannot override an explicit incomplete report. */
+export function executorCompletionFailure(
+  evidence: Pick<ExecEvidence, "completion_status" | "final_message">,
+): string | undefined {
+  if (evidence.completion_status !== "incomplete") return undefined;
+  const detail = boundedText(evidence.final_message, MAX_VALIDATION_SUMMARY_LENGTH);
+  return boundedText(
+    detail ? `executor reported incomplete: ${detail}` : "executor reported incomplete",
+    MAX_VALIDATION_SUMMARY_LENGTH,
+  );
 }
 
 function normalizedEvidencePath(value: string): string | null {
@@ -520,9 +557,18 @@ export function buildExecutorEvidence(input: BuildExecutorEvidenceInput): {
       ...(report.targetCoverage.length > 0 ? { target_coverage: report.targetCoverage } : {}),
       ...(input.rateLimitEvents?.length ? { rate_limit_events: input.rateLimitEvents } : {}),
       final_message: report.finalMessage,
-      ...(input.status === "succeeded"
-        ? {}
-        : { block_reason: executorBlockReason(input.status, input.stderr) }),
+      ...(report.completionStatus ? { completion_status: report.completionStatus } : {}),
+      ...(report.handoff.length > 0 ? { handoff: report.handoff } : {}),
+      ...(input.status !== "succeeded"
+        ? { block_reason: executorBlockReason(input.status, input.stderr) }
+        : report.completionStatus === "incomplete"
+          ? {
+              block_reason: executorCompletionFailure({
+                completion_status: "incomplete",
+                final_message: report.finalMessage,
+              }),
+            }
+          : {}),
       log_refs: [
         {
           kind: "agent-output-excerpt",

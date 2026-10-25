@@ -750,7 +750,7 @@ export function renderEditReporterBody(
     "",
     reporterBulletList(
       [
-        ...output.handoff,
+        ...new Set([...output.handoff, ...(evidence.handoff ?? [])]),
         ...unchangedTargetNotes,
         ...notApplicableValidationNotes,
         ...runnerOwnedValidationNotes,

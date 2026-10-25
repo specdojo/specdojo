@@ -18,9 +18,9 @@ export const ORCHESTRATOR_NPM_SCRIPTS: Record<string, Record<string, string>> = 
   },
   codex: {
     "orch:sol":
-      'specdojo orchestrator launch --provider codex -- -m gpt-5.6-sol "$(cat .specdojo/codex/orchestrator.md)"',
-    "orch:terra":
-      'specdojo orchestrator launch --provider codex -- -m gpt-5.6-terra "$(cat .specdojo/codex/orchestrator.md)"',
+      'specdojo orchestrator launch --provider codex -- -m gpt-6.1-sol "$(cat .specdojo/codex/orchestrator.md)"',
+    "orch:luna":
+      'specdojo orchestrator launch --provider codex -- -m gpt-6-luna "$(cat .specdojo/codex/orchestrator.md)"',
   },
   antigravity: {
     "orch:flash":

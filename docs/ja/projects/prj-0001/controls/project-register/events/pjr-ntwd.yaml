@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_a3c1d7c0442a4aca95c02e98fc7c2223
+  ts: "2026-10-25T03:46:04Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.4.6 を公開する
+    - field: description
+      from: ""
+      to: 0.4.6 の範囲（9482・EVAQ・SS72・PM2R・68KR・J44D・R1FB・84F7・JJBY・6HS2・XTE6・50YH・ZG0A・SNHK）を main へ昇格し、npm へ公開する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-25"
+- v: 1
+  id: reg_28f33b4e10904eb78bffbc37ac4accc3
+  ts: "2026-10-25T03:46:24Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: due
+      from: "2026-10-25"
+      to: "-"
+  previous_event_id: reg_a3c1d7c0442a4aca95c02e98fc7c2223

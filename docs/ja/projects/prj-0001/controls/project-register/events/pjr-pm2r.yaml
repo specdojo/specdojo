@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d5746cf7ad154ec1b434191d6d9337aa
+  ts: "2026-10-24T13:41:22Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: external\_projects で SpecDojo のリポジトリへ起票を任せられない
+    - field: description
+      from: ""
+      to: external\_projects の起票の委譲は相手の node\_modules/.bin/specdojo を呼ぶが、SpecDojo 自身のリポジトリには npm install 後もこの実行ファイルがないため、利用者のリポジトリから本家へ起票できない。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_924bcdbff7ac4c1d9a7f880b12c18c03
+  ts: "2026-10-24T14:30:03Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d5746cf7ad154ec1b434191d6d9337aa
+- v: 1
+  id: reg_671d49b6c3894fc3a2f1b9dc77516df4
+  ts: "2026-10-24T14:42:34Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_924bcdbff7ac4c1d9a7f880b12c18c03
+- v: 1
+  id: reg_98d1e54a196d4b17a9c7f4c8bb7f7b7f
+  ts: "2026-10-24T14:44:25Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・単体テスト・統合テスト（SpecDojo 自身のリポジトリに見立てた一時のリポジトリへの起票）と親の検証を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: external_projects の委譲で、相手に node_modules/.bin/specdojo がなく package.json の name が specdojo のときは、相手の dist/specdojo.js を Node で起動するようにした。未ビルドなら npm run build を案内して止まる。インストール済みの CLI を優先し、版の確かめは今のまま
+  previous_event_id: reg_671d49b6c3894fc3a2f1b9dc77516df4

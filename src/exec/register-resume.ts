@@ -51,6 +51,11 @@ export type RegisterResumeLookup =
 
 function executorResumeHandoff(evidence?: ExecEvidence): string[] {
   if (!evidence) return [];
+  if (evidence.completion_status === "incomplete") {
+    return [evidence.block_reason || evidence.final_message, ...(evidence.handoff ?? [])].filter(
+      (note) => note.trim(),
+    );
+  }
   const failedParentValidations = evidence.validations
     .filter((validation) => validation.source === "runner" && validation.status === "failed")
     .map((validation) => {
@@ -139,13 +144,16 @@ export function selectResumableRegisterRun(
     return a.runId < b.runId ? -1 : a.runId > b.runId ? 1 : 0;
   });
   const latest = ordered[candidates.length - 1];
-  // The earliest rate-limited executor attempt is the stable lower bound for every later resume.
+  // The earliest interrupted or incomplete attempt is the stable lower bound for later resumes.
   // Rejected protection-block changes are intentionally excluded; the handoff requires removing
   // them before resume. `attempt_changes` also excludes runner lifecycle changes that predated the
   // executor invocation.
   const firstAttemptEvidence = ordered
     .map((candidate) => candidate.executorEvidence ?? candidate.evidence)
-    .find((evidence) => evidence?.stage.status === "rate_limited");
+    .find(
+      (evidence) =>
+        evidence?.stage.status === "rate_limited" || evidence?.completion_status === "incomplete",
+    );
   const initialChanges = [
     ...new Set(
       (firstAttemptEvidence?.attempt_changes ?? firstAttemptEvidence?.changes ?? [])
@@ -167,10 +175,11 @@ export function selectResumableRegisterRun(
     handoff: executorResumeHandoff(candidate.executorEvidence ?? candidate.evidence),
   });
 
-  // rate limit または保護機構の block で打ち切られた executor は、evidence が記録されていても
+  // 未完了の申告、rate limit または保護機構の block で打ち切られた executor は、evidence が記録されていても
   // 作業を完了していない。reporter へ進めず、申し送りを反映できるよう既存 worktree 上で
   // executor を再開する。通常のプロセス失敗は failed のまま区別し、再開対象にしない。
   if (
+    (latest.executorEvidence ?? latest.evidence)?.completion_status === "incomplete" ||
     latest.state.stages.executor.status === "rate_limited" ||
     latest.state.stages.executor.status === "blocked"
   ) {

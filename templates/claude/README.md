@@ -48,6 +48,8 @@ providers:
 
 `.specdojo/agent-members.yaml` は実体と別名の 2 段で書く。実体は model の系統で名付け（`sonnet-executor`・`opus-executor` など）、`model` に `sonnet` / `opus` を持つ。従来の名前（`claude-executor`・`claude-expert-executor` など）は `aliases` で実体を指す別名にする。
 
+`specdojo init --exec` は claude を 2 段で書く。normal の段は `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`（別名 `claude-executor`・`claude-review-executor`・`claude-reporter`）、expert の段は `proficiency: expert` の `opus-executor`・`opus-review-executor`（別名 `claude-expert-executor`・`claude-expert-review-executor`）である。振り分けの表（`routing`）は hard を expert の別名、medium・easy と reporter を normal の別名にする。
+
 ```yaml
 members:
   - nickname: opus-executor

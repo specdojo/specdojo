@@ -318,8 +318,9 @@ export function summarizeGitHookFailure(output: string): string {
   // parallel: true の lefthook は成功した step の出力も並べるため、最初の step 見出しが
   // 失敗した step とは限らない。末尾の summary で失敗印（🥊 など）が付いた step を優先する。
   const failedSteps = lines
-    .map((line) => line.match(/^(?:🥊|✗|✘|✕|❌)️?\s*([^\s(]+)/u)?.[1])
-    .filter((name): name is string => name !== undefined && name !== "lefthook");
+    // step 名には空白や括弧を含む description も使われる。末尾の所要時間だけを除く。
+    .map((line) => line.match(/^(?:🥊|✗|✘|✕|❌)️?\s*(.+?)(?:\s+\([\d.]+\s+seconds?\))?$/u)?.[1])
+    .filter((name): name is string => name !== undefined && !/^lefthook(?:\s|$)/u.test(name));
   const selected =
     stepHeaders.find((header) => failedSteps.includes(header.step)) ?? stepHeaders[0];
   const step = selected?.step ?? failedSteps[0] ?? "";

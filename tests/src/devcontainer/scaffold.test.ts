@@ -236,12 +236,20 @@ describe("runDevcontainerScaffold", () => {
       const aptFeature = json.features["ghcr.io/rocker-org/devcontainer-features/apt-packages:1"];
       expect(aptFeature?.packages?.split(",") ?? []).toEqual(aptPackages);
       expect(json.customizations?.vscode?.extensions?.length > 0).toBe(recommended);
+      expect(json.customizations?.vscode?.extensions?.includes("antfu.slidev") ?? false).toBe(
+        preset === "full",
+      );
       expect(json.containerEnv.OLLAMA_BASE_URL !== undefined).toBe(ollama);
       expect(json.containerEnv.LOCAL_OPENAI_BASE_URL !== undefined).toBe(ollama);
       expect(json.postAttachCommand === "sudo service cron start").toBe(cron);
       expect(
         json.mounts.includes("source=repo-specdojo-gh,target=/home/node/.config/gh,type=volume"),
       ).toBe(recommended);
+
+      if (recommended) {
+        const extensions = JSON.parse(String(findWriteCall("extensions.json")[1]));
+        expect(extensions.recommendations.includes("antfu.slidev")).toBe(preset === "full");
+      }
       expect(
         writeFileMock.mock.calls.some(([file]) => String(file).endsWith("extensions.json")),
       ).toBe(recommended);

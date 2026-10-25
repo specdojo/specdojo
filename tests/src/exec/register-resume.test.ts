@@ -126,6 +126,32 @@ function makeRoster(members: ProjectMember[]): MemberRoster {
 }
 
 describe("selectResumableRegisterRun", () => {
+  it.each(["blocked", "running", "succeeded"] as const)(
+    "resumes an incomplete executor with partial changes and handoff from %s",
+    (executorStatus) => {
+      const state = makeState({ executorStatus });
+      const evidence = makeEvidence(state.run_id);
+      evidence.completion_status = "incomplete";
+      evidence.block_reason = "executor reported incomplete: 実装途中";
+      evidence.handoff = ["残りの処理を追加する"];
+      for (const options of [{}, { resumeFrom: "executor" as const }]) {
+        expect(
+          selectResumableRegisterRun(
+            [makeCandidate({ state, executorEvidence: evidence, evidence })],
+            options,
+          ),
+        ).toMatchObject({
+          kind: "resumable",
+          target: {
+            stage: "executor",
+            initialChanges: ["docs/sample.md"],
+            handoff: [evidence.block_reason, ...evidence.handoff],
+          },
+        });
+      }
+    },
+  );
+
   it("run が1件も無い場合は理由つきで再開不可を返す", () => {
     const actual = selectResumableRegisterRun([]);
 

@@ -20,6 +20,8 @@ import { registerExecCommands } from "../../../src/exec/exec.js";
 import { registerRegisterCommands } from "../../../src/register/register.js";
 import { registerConfigCommands } from "../../../src/shared/specdojo-config.js";
 import { gitEnvironment } from "../../../src/exec/worktree.js";
+import { readSpecdojoFields } from "../../../src/register/item.js";
+import { MARKDOWN_HOOK_ERROR, MARKDOWN_HOOK_FAILURE } from "../../helpers/git-hook-output.js";
 
 // PJR-TNDH: `exec run --register` を executor/reporter パイプラインで実行する E2E 検証。
 // register 項目は agent_pipeline を持たないため、--executor-by / --reporter-by の明示指定だけで
@@ -242,6 +244,20 @@ if (role === "executor") {
     process.stderr.write("rate limit reached\\n");
     process.exit(75);
   }
+  if (nickname === "exec-incomplete" && !existsSync("docs/incomplete-artifact.md")) {
+    writeFileSync("docs/incomplete-artifact.md", "# partial implementation\\n", "utf8");
+    process.stdout.write("<specdojo_executor_evidence>" + JSON.stringify({
+      completion_status: "incomplete",
+      final_message: "未完了。残りの処理とテストが必要です。",
+      handoff: ["残りの処理とテストを実装する"],
+      validations: [{ command: "npm run test:integration", status: "not_run", summary: "親に委ねる" }],
+    }) + "</specdojo_executor_evidence>\\n");
+    process.exit(0);
+  }
+  if (nickname === "exec-incomplete") {
+    if (!prompt.includes("残りの処理とテストを実装する")) throw new Error("resume handoff missing");
+    writeFileSync("docs/incomplete-artifact.md", "# completed implementation\\n", "utf8");
+  }
   if (nickname === "exec-parent-validation-fail") {
     const ticket = "${REGISTER_REL}/pjr-ab12-pipeline-test.md";
     writeFileSync(
@@ -273,7 +289,9 @@ if (role === "executor") {
   process.stdout.write(
     "<specdojo_executor_evidence>" +
       JSON.stringify({
+        ...(nickname === "exec-2" || nickname === "exec-incomplete" ? { completion_status: "complete" } : {}),
         final_message: "pipeline-artifact.md を更新した。",
+        ...(nickname === "exec-incomplete" ? { target_coverage: [{ target: "docs/incomplete-artifact.md", status: "changed", path: "docs/incomplete-artifact.md", reason: "" }] } : {}),
         validations: [{ command: "npm test", status: "passed", summary: "全テスト成功。" }],
       }) +
       "</specdojo_executor_evidence>\\n",
@@ -515,6 +533,17 @@ function withRepo(fn: (fixture: Fixture) => Promise<void> | void): Promise<void>
         [
           "version: 1",
           "members:",
+          "  - nickname: exec-incomplete",
+          "    display_name: exec-incomplete",
+          "    email: null",
+          "    roles: []",
+          "    type: agent",
+          "    provider: opencode",
+          "    mode: edit",
+          "    stage_role: executor",
+          "    capabilities: []",
+          "    proficiency: normal",
+          "    priority: 99",
           "  - nickname: exec-1",
           "    display_name: exec-1",
           "    email: null",
@@ -693,6 +722,133 @@ afterEach(() => {
 });
 
 describe("exec run --register executor/reporter pipeline (E2E)", () => {
+  it.each([false, true])(
+    "keeps incomplete work waiting without integration and resumes from executor (explicit=%s)",
+    { timeout: 120_000 },
+    async (explicit) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const args = [
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ];
+        await runExec([...args, "--executor-by", "exec-incomplete", "--reporter-by", "report-1"]);
+        expect(process.exitCode).toBe(1);
+        const ticketPath = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+        const ticket = readFileSync(ticketPath, "utf8");
+        expect(ticket).toContain("item_status: waiting");
+        expect(ticket).toContain("未完了。残りの処理とテストが必要です。");
+        expect(readSpecdojoFields(ticket).block_reason).toBe(
+          "executor reported incomplete: 未完了。残りの処理とテストが必要です。",
+        );
+        expect(existsSync(join(root, "docs/incomplete-artifact.md"))).toBe(false);
+        const worktree = execWorktreePath(root);
+        expect(worktree).not.toBeNull();
+        expect(readFileSync(join(worktree!, "docs/incomplete-artifact.md"), "utf8")).toContain(
+          "partial implementation",
+        );
+        const evidenceDir = join(worktree!, EXECUTION_REL, "exec", "evidence", "PJR-AB12");
+        const runId = readdirSync(evidenceDir)[0]!;
+        const evidence = JSON.parse(
+          readFileSync(join(evidenceDir, runId, "evidence.json"), "utf8"),
+        );
+        expect(evidence).toMatchObject({
+          completion_status: "incomplete",
+          stage: { status: "succeeded", exit_code: 0 },
+        });
+        const state = JSON.parse(
+          readFileSync(join(evidenceDir, runId, "pipeline-state.json"), "utf8"),
+        );
+        expect(state.stages.executor.status).toBe("blocked");
+        expect(state.stages.reporter.status).toBe("pending");
+        expect(
+          evidence.validations.every(
+            (validation: { source: string }) => validation.source !== "runner",
+          ),
+        ).toBe(true);
+        await runExec([...args, "--resume", ...(explicit ? ["--resume-from", "executor"] : [])]);
+        expect(process.exitCode ?? 0).toBe(0);
+        expect(readFileSync(ticketPath, "utf8")).toContain("item_status: review");
+        expect(readFileSync(join(root, "docs/incomplete-artifact.md"), "utf8")).toContain(
+          "completed implementation",
+        );
+        expect(execWorktreePath(root)).toBeNull();
+      });
+    },
+  );
+
+  it(
+    "keeps the failed checkpoint step and first error in the summary and block reason",
+    { timeout: 120_000 },
+    async () => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const stdout: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          stdout.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const hookPath = join(root, ".git", "hooks", "pre-commit");
+        writeFileSync(
+          hookPath,
+          [
+            "#!/bin/sh",
+            // checkpoint だけを拒否し、root の wait commit は通す。
+            'case "$(git branch --show-current)" in',
+            "exec/*)",
+            "cat <<'HOOK_OUTPUT' >&2",
+            MARKDOWN_HOOK_FAILURE,
+            "HOOK_OUTPUT",
+            "exit 1",
+            ";;",
+            "esac",
+            "exit 0",
+            "",
+          ].join("\n"),
+          "utf8",
+        );
+        chmodSync(hookPath, 0o755);
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        const expected = `lint Markdown documentation: ${MARKDOWN_HOOK_ERROR}`;
+        const waitingTicket = readFileSync(
+          join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md"),
+          "utf8",
+        );
+        expect(waitingTicket).toContain("item_status: waiting");
+        expect(readSpecdojoFields(waitingTicket).block_reason).toContain(
+          `checkpoint failed: Checkpoint commit failed: ${expected}`,
+        );
+        expect(stdout.join("")).toContain(expected);
+        expect(stdout.join("")).not.toContain(
+          "format documentation and configuration: Checking formatting",
+        );
+      });
+    },
+  );
+
   it(
     "resolves per-item --executor-by assignments in dry-run and rejects assignments outside the target",
     { timeout: 30_000 },
@@ -1076,8 +1232,9 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             // から環境変数付きで exec された場合だけ統合 commit を落とす（task commit は通す）。
             `if [ -f '${rejectMarker}' ] && [ "$SPECDOJO_TEST_MERGE_COMMIT" = "1" ]; then`,
             "  printf '\\033[31m╭── hook output ──╮\\033[0m\\n' >&2",
-            "  printf '┃ typecheck ❯\\n' >&2",
-            "  printf '┃ src/demo.ts(1,1): error TS2322: merge hook rejected\\n' >&2",
+            "  cat <<'HOOK_OUTPUT' >&2",
+            MARKDOWN_HOOK_FAILURE,
+            "HOOK_OUTPUT",
             "  printf '╰─────────────────╯\\n' >&2",
             "  exit 1",
             "fi",
@@ -1126,7 +1283,7 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           "utf8",
         );
         expect(waitingTicket).toContain("item_status: waiting");
-        expect(waitingTicket).toContain("typecheck: src/demo.ts(1,1): error TS2322");
+        expect(waitingTicket).toContain(`lint Markdown documentation: ${MARKDOWN_HOOK_ERROR}`);
         expect(waitingTicket).not.toContain("\u001b[31m");
         expect(waitingTicket).not.toContain("╭── hook output");
 

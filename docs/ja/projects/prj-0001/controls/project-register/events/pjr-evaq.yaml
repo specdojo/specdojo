@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_206682da6b3345ef85a52d7dc1f02464
+  ts: "2026-10-24T13:26:42Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: codex の agent の定義のモデルを GPT-6 に上げる
+    - field: description
+      from: ""
+      to: codex の agent の定義（本リポジトリの .codex/agents と配布する templates/codex/agents）のモデルが gpt-5.6-terra などのままで、GPT-6 の系統には terra がない。orch の script は -m でモデルを渡すため今は影響しないが、agent の定義だけで起動したときに古いモデルが使われる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-9482"]'
+- v: 1
+  id: reg_f951f923147c499d94bee4f4e9e42436
+  ts: "2026-10-24T13:41:50Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_206682da6b3345ef85a52d7dc1f02464
+- v: 1
+  id: reg_1dcd31e77247497ba249cbcb3abf12f5
+  ts: "2026-10-24T13:59:29Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f951f923147c499d94bee4f4e9e42436
+- v: 1
+  id: reg_bb9bee10427e42b883c90d69bf07dcf2
+  ts: "2026-10-24T14:00:49Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが雛形のモデルと effort、同期の検査を確かめた。本リポジトリの .codex/agents は保護された設定のため、利用者の承認を得てオーケストレーターが別に反映する
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: 配布する templates/codex/agents の model を、codex-executor・codex-review-executor は gpt-6-luna、codex-expert-executor・codex-expert-review-executor と specdojo-orchestrator は gpt-6.1-sol にした。外れた gpt-5.4-mini・gpt-5.5 と gpt-5.6 は残っていない。既存の利用者の書き換え方を codex の README に書いた
+  previous_event_id: reg_1dcd31e77247497ba249cbcb3abf12f5

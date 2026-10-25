@@ -109,3 +109,16 @@
       from: "-"
       to: 本リポジトリの orch:* と orch:*:work を orchestrator launch 経由にした。:work は open-agent-worktree.sh が本体の場所を launch へ渡し、worktree の中からも repos の path が本体の隣へ解ける。prj-0002 では LP と assets のリポジトリへの --add-dir と編集の許可が付く
   previous_event_id: reg_3fa14bcf479a44719e472ac45da99e8b
+- v: 1
+  id: reg_4baa2f62faf8441ca6e835092dfad4c6
+  ts: "2026-10-21T22:58:09Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: done
+  reason: 生成される一覧で orch:* の * が強調記号と解釈され lint-md（MD037）が失敗するため、script 名をコードの書式にする。内容は変えない
+  changes:
+    - field: conclusion
+      from: 本リポジトリの orch:* と orch:*:work を orchestrator launch 経由にした。:work は open-agent-worktree.sh が本体の場所を launch へ渡し、worktree の中からも repos の path が本体の隣へ解ける。prj-0002 では LP と assets のリポジトリへの --add-dir と編集の許可が付く
+      to: 本リポジトリの `orch:*` と `orch:*:work` を orchestrator launch 経由にした。`:work` は open-agent-worktree.sh が本体の場所を launch へ渡し、worktree の中からも repos の path が本体の隣へ解ける。prj-0002 では LP と assets のリポジトリへの --add-dir と編集の許可が付く
+  previous_event_id: reg_09582cbe3af34446a7de4db920cf4189

@@ -1,6 +1,6 @@
 name = "codex-expert-executor"
 description = "複雑な分析・設計判断を伴う SpecDojo pipeline の executor subagent。成果物の編集と検証だけを行う。"
-model = "gpt-5.5"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 sandbox_mode = "workspace-write"
 developer_instructions = """

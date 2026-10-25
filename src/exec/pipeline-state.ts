@@ -375,6 +375,7 @@ export function loadPipelineResumeCheckpoint(input: {
       statePath,
       executorEvidence: evidence,
       ...(evidence.stage.status === "succeeded" &&
+      evidence.completion_status !== "incomplete" &&
       (state.stages.executor.status === "succeeded" || state.stages.executor.status === "running")
         ? { evidence }
         : {}),

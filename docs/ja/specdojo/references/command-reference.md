@@ -38,16 +38,16 @@ project の解決順序と設定は [遂行の技活用ガイド](../guides/waza
 
 ## 2. init / config / project
 
-| コマンド                 | 用途                                                        | 例                                          |
-| ------------------------ | ----------------------------------------------------------- | ------------------------------------------- |
-| `init`                   | project から agent 実行までを質問式で初期設定する           | `specdojo init`                             |
-| `config init`            | `specdojo.config.json` と `.gitignore` を個別に用意する     | `specdojo config init`                      |
-| `config migrate-members` | agent 定義を保護設定へ移す                                  | `specdojo config migrate-members --dry-run` |
-| `config scaffold`        | provider、VS Code ワークスペース、Git hook を個別に配置する | `specdojo config scaffold --lefthook`       |
-| `project list`           | 登録済み project を表示する                                 | `specdojo project list`                     |
+| コマンド                 | 用途                                                                | 例                                          |
+| ------------------------ | ------------------------------------------------------------------- | ------------------------------------------- |
+| `init`                   | project から agent 実行までを質問式で初期設定する                   | `specdojo init`                             |
+| `config init`            | `specdojo.config.json` と `.gitignore` を個別に用意する             | `specdojo config init`                      |
+| `config migrate-members` | agent 定義を保護設定へ移す                                          | `specdojo config migrate-members --dry-run` |
+| `config scaffold`        | provider、VS Code ワークスペース、Git hook、Slidev を個別に配置する | `specdojo config scaffold --slidev`         |
+| `project list`           | 登録済み project を表示する                                         | `specdojo project list`                     |
 
 `init` は対話できる端末で、project ID と名前、register、人の nickname と表示名、複数指定可能な
-provider、exec、Dev Container、Git hook の順に質問します。Dev Container を選んだ場合だけ、続けて `minimal` / `recommended` / `full` の preset を質問します（既定は `recommended`）。Git hook は既定では作りません。成果物カタログは対話では質問せず、`--catalog <size>` を
+provider、exec、Dev Container、Git hook、Slidev の順に質問します。Dev Container を選んだ場合だけ、続けて `minimal` / `recommended` / `full` の preset を質問します（既定は `recommended`）。Git hook は既定では作りません。Slidev の質問は `full` を選んだ場合だけ既定が「はい」、それ以外は「いいえ」です。成果物カタログは対話では質問せず、`--catalog <size>` を
 明示した場合にだけ作成します。既存ファイルは上書きせず、スキップしたパスを表示します。`--dry-run` は
 予定だけを表示し、ファイルや `package.json` を変更しません。各回答は質問の直後に検証され、誤りの理由を
 表示して同じ質問だけをやり直します。それまでの回答は保持されます。`--exec` を選んだのに provider が
@@ -56,24 +56,30 @@ provider、exec、Dev Container、Git hook の順に質問します。Dev Contai
 
 非対話環境では質問せず、次の主要オプションと既定値を使います。
 
-| オプション                     | 用途                                                                      | 既定値          |
-| ------------------------------ | ------------------------------------------------------------------------- | --------------- |
-| `--yes`                        | 質問せず既定値と指定済みオプションで実行する                              | -               |
-| `--project <id>`               | project ID                                                                | `prj-0001`      |
-| `--name <name>`                | project の表示名                                                          | `My Project`    |
-| `--no-register`                | register を作らない                                                       | register を作る |
-| `--nickname <nickname>`        | 人の名簿に書く nickname                                                   | `owner`         |
-| `--display-name <name>`        | 人の名簿に書く表示名                                                      | `Project Owner` |
-| `--provider <names>`           | provider をカンマ区切りで指定する                                         | `codex`         |
-| `--exec`                       | executor / reporter の名簿と起動設定を作る                                | 作らない        |
-| `--catalog <size>`             | `small` / `medium` / `large` の成果物カタログを作る（対話では質問しない） | 作らない        |
-| `--devcontainer`               | 選んだ provider の Dev Container を作る                                   | 作らない        |
-| `--lefthook`                   | commit 前の文書・SpecDojo 検査を行う Git hook を作る                      | 作らない        |
-| `--devcontainer-preset <name>` | Dev Container の preset（`minimal` / `recommended` / `full`）を選ぶ       | `recommended`   |
-| `--workspace-name <name>`      | Dev Container 内で使う親ディレクトリ名                                    | ホスト側の親名  |
-| `--dry-run`                    | 作成・変更予定だけを表示する                                              | 書き込む        |
+| オプション                     | 用途                                                                      | 既定値                |
+| ------------------------------ | ------------------------------------------------------------------------- | --------------------- |
+| `--yes`                        | 質問せず既定値と指定済みオプションで実行する                              | -                     |
+| `--project <id>`               | project ID                                                                | `prj-0001`            |
+| `--name <name>`                | project の表示名                                                          | `My Project`          |
+| `--no-register`                | register を作らない                                                       | register を作る       |
+| `--nickname <nickname>`        | 人の名簿に書く nickname                                                   | `owner`               |
+| `--display-name <name>`        | 人の名簿に書く表示名                                                      | `Project Owner`       |
+| `--provider <names>`           | provider をカンマ区切りで指定する                                         | `codex`               |
+| `--exec`                       | executor / reporter の名簿と起動設定を作る                                | 作らない              |
+| `--catalog <size>`             | `small` / `medium` / `large` の成果物カタログを作る（対話では質問しない） | 作らない              |
+| `--devcontainer`               | 選んだ provider の Dev Container を作る                                   | 作らない              |
+| `--lefthook`                   | commit 前の文書・SpecDojo 検査を行う Git hook を作る                      | 作らない              |
+| `--slidev`                     | Slidev 本体と kata 用の整形・検査設定を追加する                           | `full` の場合だけ追加 |
+| `--no-slidev`                  | `full` を選んだ場合も Slidev の追加を解除する                             | -                     |
+| `--devcontainer-preset <name>` | Dev Container の preset（`minimal` / `recommended` / `full`）を選ぶ       | `recommended`         |
+| `--workspace-name <name>`      | Dev Container 内で使う親ディレクトリ名                                    | ホスト側の親名        |
+| `--dry-run`                    | 作成・変更予定だけを表示する                                              | 書き込む              |
 
 `--devcontainer-preset none` は後方互換のため受け付け、`minimal` と同じ構成として扱います。
+`init --yes --devcontainer --devcontainer-preset full` は Slidev も追加します。Dev Container の
+`full` は VS Code 拡張 `antfu.slidev` も含み、`minimal` / `recommended` は含みません。
+拡張の選択とリポジトリの npm・整形設定は独立しているため、`--no-slidev` は拡張を外しません。
+`devcontainer scaffold --preset full` 単体では npm・整形設定を変更しません。
 
 `init` が作る `.specdojo/agent-members.yaml` と `.specdojo/exec-defaults.yaml` は、選択した
 provider だけを含みます。親 runner の検証は、対応する `package.json` の npm script が存在する
@@ -95,7 +101,7 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
 `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。
 
-`package.json` がある場合、provider ごとのオーケストレーター起動スクリプトも追加します。Claude Code は `orch:opus`・`orch:sonnet`、Codex は `orch:sol`（`gpt-5.6-sol`）・`orch:terra`（`gpt-5.6-terra`）、Antigravity は `orch:flash`（`gemini-3.8-flash-high`）、OpenCode は `orch:opencode` です。既存のスクリプトは `--force` を付けても上書きしません。
+`package.json` がある場合、provider ごとのオーケストレーター起動スクリプトも追加します。Claude Code は `orch:opus`・`orch:sonnet`、Codex は `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、Antigravity は `orch:flash`（`gemini-3.8-flash-high`）、OpenCode は `orch:opencode` です。既存のスクリプトは `--force` を付けても上書きしません。
 
 `antigravity` に限り `--global` を指定すると、`~/.gemini/antigravity-cli/settings.json` へ SpecDojo 用の permission rule を追記します。既存キー・既存 rule は保持し、実書き込み前に timestamp 付きバックアップを作ります。`--global` を省略した通常実行はユーザーディレクトリへ触れません。適用前は次の dry-run で追加 rule を確認してください。
 
@@ -106,8 +112,65 @@ specdojo config scaffold --provider antigravity --global
 
 `--force` はリポジトリ内の scaffold ファイルだけを上書きし、グローバル設定の既存項目は上書きしません。従来の `exec scaffold --provider antigravity` でも同じ `--global` / `--dry-run` の挙動を利用できます。
 
-`config scaffold --lefthook` は、利用リポジトリに `lefthook.yml`、`.markdownlint.jsonc`、
-`.markdownlintignore`、依存なしで起動できる `tools/install-lefthook.mjs` と
+`config scaffold --slidev` は、`@slidev/cli`・`prettier-plugin-slidev`・`prettier` の不足する
+devDependencies を表示してから `package.json` へ追加し、未作成なら `.prettierrc` と
+`.markdownlintignore`、基本設定の `.markdownlintrc`、VS Code 向けの `.markdownlint-cli2.yaml` を作ります。
+既存の dependencies / devDependencies の同名項目は維持し、
+`package.json` がない場合は追加例だけを表示します。依存のインストールは利用者が `npm install` で行います。
+
+```bash
+specdojo init --yes --slidev
+# 初期設定済みのリポジトリに追加する場合
+specdojo config scaffold --slidev --dry-run
+specdojo config scaffold --slidev
+npm install
+```
+
+既定で整形・検査設定の対象にするのは、次の Slidev 用命名の kata だけです。
+
+- `docs/ja/specdojo/samples/**/*-slidev-sample.md`
+- `docs/ja/specdojo/templates/**/*-slidev-template.md`
+
+Prettier の overrides 内で `parser: slidev` と plugin を指定します。同じパスを
+`.markdownlint-cli2.yaml` の `overrides` では Slidev 用の規則で検査し、`.markdownlintignore` では
+markdownlint-cli の対象外にします。通常の Markdown には基本設定を当てます。
+既存の `lsd-sample.md` など別名のスライドは、実際のパスを Prettier の `files`、CLI2 の `filter`、
+ignore の 3 か所にそろえて追加してください。
+markdownlint-cli2 は最初に一致した override だけを使うため Slidev 用を先頭に、Prettier は後の一致が
+優先されるため Slidev 用を末尾に置きます。CLI2 の追加例は次の形です。
+
+```yaml
+config:
+  extends: .markdownlintrc
+overrides:
+  - filter:
+      - docs/ja/specdojo/samples/**/*-slidev-sample.md
+      - docs/ja/specdojo/templates/**/*-slidev-template.md
+    combine: merge
+    config:
+      MD001: false
+      MD022: false
+      MD025: false
+      MD031: false
+      MD032: false
+```
+
+スライドごとの見出しレベル・H1 と、ページ区切りやページごとの frontmatter に隣接する見出し・
+コード・リストを許すため、この 5 規則を外します。ほかの規則は基本設定を引き継ぎます。
+`.prettierrc`（別拡張子や `prettier.config.*`、`package.json` の `prettier` 設定を含む）と
+`.markdownlintignore`、既存の `.markdownlint.*`・`.markdownlintrc`・`.markdownlint-cli2.*` は
+`--force` を付けても保持し、手で統合する設定例を表示します。既存の設定と競合する場合は新規設定も
+自動作成せず、不足する設定と移行方法を表示します。
+`--lefthook --slidev` の同時指定では、新規の ignore に agent 定義とスライドの両方の除外を含めます。
+`--dry-run` は内容を表示するだけで書き込みません。指定しなければ Slidev の依存・設定は追加しません。
+
+テーマと活動固有のコンポーネント・素材は利用者が用意します。kata の sample を
+`./node_modules/.bin/slidev build <sample.md> --out "$PWD/tmp/slidev-dist"` で検証する手順と、
+テーマ・部品の配置方法は [[specdojo:kata-guide|実践の型活用ガイド]] の「Slidev の kata を検証する」を参照してください。
+
+`config scaffold --lefthook`（`init --lefthook` も同様）は、利用リポジトリに `lefthook.yml`、
+`.markdownlintrc`、`.markdownlint-cli2.yaml`、`.markdownlintignore`、
+依存なしで起動できる `tools/install-lefthook.mjs` と
 `tools/specdojo-pre-commit.mjs` を生成します。pre-commit では staged の Markdown と YAML だけを
 Prettier で整形し、staged の Markdown だけを markdownlint で検査します。
 また、`.specdojo/specdojo.config.json` の `project_register_path` 配下に staged の変更がある project では
@@ -132,6 +195,30 @@ devDependencies は `--force` を指定しても保持します。`package.json`
 `node tools/install-lefthook.mjs` を実行してください。hook 内から Git を呼ぶ入口は `GIT_DIR` などの
 repository-local 環境変数を除いてから staged files を調べます。
 
+生成する設定と道具の対応は次のとおりです。CLI2 本体は開発依存に追加しません。
+
+| 設定                      | 読む道具と役割                                                                                                                    |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `.markdownlintrc`         | markdownlint-cli（commit hook と exec run の result 検査）が読む基本設定。`MD013: false` などを指定した、先頭が `{` の JSON       |
+| `.markdownlint-cli2.yaml` | VS Code の markdownlint 拡張と markdownlint-cli2 用。`config.extends` で `.markdownlintrc` を読み、`overrides` でファイル別に調整 |
+| `.markdownlintignore`     | markdownlint-cli 用。agent 定義や Slidev の kata を hook・result 検査の対象外にする。CLI2 と VS Code の拡張は読まない             |
+
+以前の scaffold が生成した `.markdownlint.jsonc` などが残っていると、VS Code で CLI2 の
+`overrides` が効きません。既存リポジトリは次の手順で移行してください。
+
+1. `.markdownlint.jsonc` / `.json` / `.yaml` / `.yml` の既存規則を `.markdownlintrc` に移します。
+   YAML は JSON に変換し、コメントを除いて、ファイルの先頭を `{` にします。
+   既存の `.markdownlintrc` があれば規則を統合します。
+2. 移した旧 `.markdownlint.*` を取り除きます。対象ファイルの親ディレクトリにある設定も確認してください。
+3. 既存の `.markdownlint-cli2.*` があればそのファイルへ、なければ `.markdownlint-cli2.yaml` へ、
+   上例の `config.extends: .markdownlintrc` を設定します。相対パスは CLI2 設定ファイルからの位置に合わせます。
+   `--slidev` が表示した override は先頭に統合します。
+4. Prettier の Slidev override は末尾へ置き、`.markdownlintignore` と CLI2 の `filter` を同じ glob にそろえます。
+   VS Code でスライドと通常の文書を開き、hook と result 検査でも基本設定が効くことを確認してください。
+
+scaffold は `--force` でもこの移行を自動実行しません。Slidev のビルド・表示の検証手順は
+[[specdojo:kata-guide|実践の型活用ガイド]] を参照してください。
+
 `config scaffold --workspace` は、`.specdojo/specdojo.config.json` の `repos` 宣言から VS Code のマルチルートワークスペース（`<project-id>.code-workspace`）をリポジトリルートに生成します。`folders` にはプロジェクトリポジトリ（`.`）と各プロダクトリポジトリ（`repos[].path`）を宣言順に並べ、別リポジトリ構成でも 1 つの VS Code ウィンドウでプロジェクトとプロダクトを同時に開けます。`--project <id>` で対象 project を指定でき、省略時は `current_project` を使います。既存のファイルは `--force` を指定しない限り上書きしません。`repos` が宣言されていない project ではエラーになります。`--dry-run` は書き込まず予定の内容だけを表示します。
 
 ```bash
@@ -148,13 +235,13 @@ specdojo config scaffold --workspace --force
 
 `kata` は、利用リポジトリで作成・上書きした型（Kata）と npm package から参照中の型を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。`kata_authority` の kata は `docs/ja/specdojo/<種類>s/<kata_authority>/` から解決し、`kata list` と `kata show` にも表示します。0.4.4 のあいだは旧 `docs/ja/kata/<種類>s/` も読み、新配置への移動案内を標準エラーへ出します。新旧に同じ ID があれば新配置を優先します。
 
-| コマンド         | 用途                                                    | 例                                               |
-| ---------------- | ------------------------------------------------------- | ------------------------------------------------ |
-| `kata list`      | kata を解決元と eject 可否つきで一覧表示                | `specdojo kata list --all`                       |
-| `kata show <id>` | 解決順序に従って kata の内容を表示                      | `specdojo kata show specdojo:pjr-rulebook`       |
-| `kata status`    | 参照中 / eject 済みと package 原本との差分を表示        | `specdojo kata status --kind template`           |
-| `kata eject`     | package の 1 ファイルを利用リポジトリの正準パスへコピー | `specdojo kata eject --id specdojo:pjr-rulebook` |
-| `kata install`   | eject 可能な全種別を利用リポジトリへコピー              | `specdojo kata install --all --dry-run`          |
+| コマンド         | 用途                                             | 例                                               |
+| ---------------- | ------------------------------------------------ | ------------------------------------------------ |
+| `kata list`      | kata を解決元と eject 可否つきで一覧表示         | `specdojo kata list --all`                       |
+| `kata show <id>` | 解決順序に従って kata の内容を表示               | `specdojo kata show specdojo:pjr-rulebook`       |
+| `kata status`    | 参照中 / eject 済みと package 原本との差分を表示 | `specdojo kata status --kind template`           |
+| `kata eject`     | package の kata と付属ファイルを正準パスへコピー | `specdojo kata eject --id specdojo:pjr-rulebook` |
+| `kata install`   | eject 可能な全種別を利用リポジトリへコピー       | `specdojo kata install --all --dry-run`          |
 
 主要オプション:
 
@@ -170,6 +257,10 @@ specdojo config scaffold --workspace --force
 `list` は既定で eject できる種別だけを表示します。`EJECTABLE` 列が `no` の `exec-template` と `schema` は `--all` または `--kind exec-template` のように種別を指定したときに表示します。これらの ID は frontmatter を持たないためファイル名由来（`xep-template`、`dct-plan.schema`）になり、`specdojo:` の接頭辞が付きません。`show` は種別を問わず参照できます。
 
 `eject` と `install --all` は既存ファイルを `--force` なしで上書きせず、`skip` として表示します。CLI と同じバージョンで使う必要がある `exec-templates` と `schemas` は個別 eject の対象外で、指定すると参照固定である旨を表示して終了コード 1 で終わります。`install --all` は docs サイト配信やオフライン運用向けの明示的な全量取得であり、通常のセットアップ導線では使用しません。
+
+付属ファイルは一覧の kata に数えず、`eject`・`install --all` で本体と一緒にコピーします。
+付属ファイルだけの差分も、eject 済みの親 kata の `modified` に含めます。対象形式と付属ファイルの
+命名・配置・dry-run の詳細は [[specdojo:kata-guide|実践の型活用ガイド]] の「kata の付属ファイル」を参照してください。
 
 ## 3. catalog / deliverable
 
@@ -433,7 +524,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 別 project への `register add` は `--commit` が必須です。対象 project の登録簿に未 commit 変更がある場合、または統合ブランチがローカルに存在しない場合は、何も書き込まず終了コード 1 で停止します。元の worktree とブランチは変更しません。`close`、`reject` など別 project の状態遷移は受け付けず、対象 project の worktree での実行を案内します。
 
-別リポジトリへの起票も `--commit` が必須です。相手のリポジトリ、`node_modules/.bin/specdojo`、0.4.2 以上の版のいずれかを確認できない場合は、相手を変更せず停止します。相手の起票が失敗した場合は相手の標準出力・標準エラー出力と終了コードをそのまま引き継ぎ、push は行いません。外部 project の `close` などの状態遷移は委譲しないため、案内された相手のリポジトリで実行してください。
+別リポジトリへの起票も `--commit` が必須です。起動する CLI は相手の `node_modules/.bin/specdojo` を優先します。これがなく、相手の `package.json` の `name` が `specdojo` の場合は、呼び出し元と同じ Node.js で `node <相手>/dist/specdojo.js` を起動します。SpecDojo 自身の clone では、先に `npm install` と `npm run build` を実行してください。`dist/specdojo.js` がない場合は `npm run build` を案内して停止します。相手のリポジトリ、起動する CLI、0.4.2 以上の版のいずれかを確認できない場合は、相手を変更せず停止します。相手の起票が失敗した場合は相手の標準出力・標準エラー出力と終了コードをそのまま引き継ぎ、push は行いません。外部 project の `close` などの状態遷移は委譲しないため、案内された相手のリポジトリで実行してください。
 
 一覧・派生ビューの「登録日」「完了日」は、保存した日時を config の `run.register_date_timezone`（IANA タイムゾーン名、既定 `UTC`）へ変換して導出する表示値です。
 

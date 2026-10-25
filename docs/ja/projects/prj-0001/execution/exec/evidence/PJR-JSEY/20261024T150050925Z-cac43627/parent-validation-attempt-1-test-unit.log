@@ -1,0 +1,125 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.5 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-JSEY
+
+Updated ticket status → ready: /tmp/specdojo-ticket-ChJcZ9/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-3DYrhV/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-LkCmlO/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-fVlVAy/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-9gnF8h/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-z3ZicE/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+ ❯ tests/src/docs/doc-index.test.ts (28 tests | 1 failed) 21513ms
+     × 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する 21478ms
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+ ❯ tests/src/exec/register-plan-escape.test.ts (32 tests | 1 failed) 8359ms
+     × 成果物 approach は schedule と同じテンプレートに DCT と個票の完了条件を載せる 5249ms
+Would move 1 agent member(s) from /tmp/specdojo-members-r0gwEe/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-r0gwEe/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-r0gwEe/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-r0gwEe/.specdojo/agent-members.yaml
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-24T15:08:24.783Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-24T15:07:25.243Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-24T15:07:25.747Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-lF6CyH/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-ynIne6/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  2 failed | 143 passed (145)
+      Tests  2 failed | 2383 passed (2385)
+   Start at  00:06:30
+   Duration  77.26s (transform 4.63s, setup 872ms, import 33.83s, tests 90.55s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/docs/doc-index.test.ts > prj-0001 project register references > 個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する
+Error: Test timed out in 20000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/docs/doc-index.test.ts:696:3
+    694|
+    695| describe("prj-0001 project register references", () => {
+    696|   it("個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する", () => {
+       |   ^
+    697|     const sourceRoot = process.cwd();
+    698|     const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-register-ref…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > 成果物 approach は schedule と同じテンプレートに DCT と個票の完了条件を載せる
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/exec/register-plan-escape.test.ts:359:3
+    357|   });
+    358|
+    359|   it("成果物 approach は schedule と同じテンプレートに DCT と個票の完了条件を載せる", async () =…
+       |   ^
+    360|     const outPath = path.join(dir, "plan-with-item-approach.md");
+    361|     const catalogPath = await writeCatalog();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

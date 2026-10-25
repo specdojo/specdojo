@@ -13,7 +13,7 @@ specdojo:
   registered_at: "2026-10-12T09:10:37Z"
   due_on: "2026-10-31"
   completed_at: "2026-10-20T23:04:20Z"
-  conclusion: 本リポジトリの orch:* と orch:*:work を orchestrator launch 経由にした。:work は open-agent-worktree.sh が本体の場所を launch へ渡し、worktree の中からも repos の path が本体の隣へ解ける。prj-0002 では LP と assets のリポジトリへの --add-dir と編集の許可が付く
+  conclusion: 本リポジトリの `orch:*` と `orch:*:work` を orchestrator launch 経由にした。`:work` は open-agent-worktree.sh が本体の場所を launch へ渡し、worktree の中からも repos の path が本体の隣へ解ける。prj-0002 では LP と assets のリポジトリへの --add-dir と編集の許可が付く
 ---
 
 # PJR-SAZC 本リポジトリの orch:* の script を orchestrator launch 経由にする
