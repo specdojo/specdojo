@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ac9dd3879de3471690208e3fc10ca6ba
+- v: 1
+  id: reg_5e6bebb54c3346b1a154388d76026c61
+  ts: "2026-10-25T21:39:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 個票・差分・result、親検証7件、JSEY実行、実agentの評価サイドカーと再開スキップ、ensureReviewGradeの実行/再利用、空の利用先へのtarball導入を確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-26"
+    - field: conclusion
+      from: "-"
+      to: 単一文書gradeをCLI本体へ統合し、配布版・実agent評価・レビュー前grade・runner統合後の動作を確認した。
+  previous_event_id: reg_306403b7c5bd4c6dbb727bb97cdd7aa9

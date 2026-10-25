@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-k87y-integrate-grade-run-per-document
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: indie
   registered_at: "2026-10-25T14:16:35Z"
+  completed_at: "2026-10-25T21:39:12Z"
+  conclusion: 単一文書gradeをCLI本体へ統合し、配布版・実agent評価・レビュー前grade・runner統合後の動作を確認した。
 ---
 
 # PJR-K87Y gradeの単一文書評価パイプライン（run-per-document.sh相当）をspecdojoコマンド本体へ統合する
