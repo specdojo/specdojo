@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: high
   owner: DEV
   registered_at: "2026-10-25T02:42:15Z"
+  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
 ---
 
 # PJR-ZG0A 登録簿に項目がないと、担当者別と状態別の派生ビューが markdownlint の MD012 に当たる

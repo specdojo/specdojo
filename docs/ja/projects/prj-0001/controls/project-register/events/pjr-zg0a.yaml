@@ -45,3 +45,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_149cd06ea36e4e0bb20984f4598d3acb
+- v: 1
+  id: reg_e6521b9db12c4c23b329d4340c509568
+  ts: "2026-10-25T02:52:40Z"
+  action: wait
+  actor: sonnet-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
+  previous_event_id: reg_ac430d5b26b6403db1348f63825720ea
