@@ -48,3 +48,16 @@
       from: 成果物を作る・直す・確定する approach（`fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize`）は、対象を成果物カタログ（DCT）で解決するため、`catalog_path` のない project では起票の時点で止まる。カタログのない project でも、これらの approach で成果物を作れるようにする。
       to: カタログのない project でも、作るファイルの置き場所と rulebook を個票に指定するか、既存の文書の frontmatter から辿ることで、fully-guided・recipe-guided・freeform・retrofit・bootstrap・finalize・bootstrap-finalize の plan を作れるようにする
   previous_event_id: reg_e356ea39f64749e6a3d2117c888f5fa9
+- v: 1
+  id: reg_1c20bf563f82465f815c66e08ed345bb
+  ts: "2026-10-25T16:04:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c04f099378ad4dcf9c9e3dceb495fbb8
