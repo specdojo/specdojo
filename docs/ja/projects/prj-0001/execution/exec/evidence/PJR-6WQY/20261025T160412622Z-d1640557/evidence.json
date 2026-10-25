@@ -1,0 +1,331 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-6WQY",
+  "run_id": "20261025T160412622Z-d1640557",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-25T16:05:12.529Z",
+    "completed_at": "2026-10-25T16:23:07.037Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6wqy-catalog-less-deliverable-approach.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-events.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/document-target.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/deliverable-target.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/catalogless-register.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/catalogless-target.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-6wqy-catalog-less-deliverable-approach.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/plan-result-lifecycle-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-events.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/catalog/document-target.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/register/deliverable-target.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/catalogless-register.integration.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/catalogless-target.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 22,
+    "summary": "CHANGELOG.md                                       |   2 +\n .../pjr-6wqy-catalog-less-deliverable-approach.md  |  32 ++++--\n .../specdojo/guides/plan-result-lifecycle-guide.md |   4 +-\n docs/ja/specdojo/guides/quick-start-guide.md       |  24 ++++-\n docs/ja/specdojo/guides/ryu-guide.md               |  12 +++\n docs/ja/specdojo/references/command-reference.md   |  60 +++++++-----\n docs/ja/specdojo/rulebooks/pjr-rulebook.md         |  50 +++++-----\n .../schemas/v1/register-events.schema.yaml         |   2 +\n .../v1/register-item-frontmatter.schema.yaml       |  34 ++++++-\n src/exec/plans-core.ts                             | 109 +++------------------\n src/exec/plans-generation.ts                       |  34 ++++++-\n src/exec/register.ts                               |  80 +++++++++++++--\n src/register/approach.ts                           |  28 ++++++\n src/register/command-types.ts                      |   2 +\n src/register/core.ts                               |   2 +\n src/register/create-commands.ts                    |  53 +++++++++-\n src/register/events.ts                             |   4 +\n src/register/item.ts                               |  12 +++\n 18 files changed, 380 insertions(+), 164 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.unit.config.ts tests/src/register/catalogless-target.test.ts tests/src/exec/plans.test.ts tests/src/register/item.test.ts tests/src/register/approach.test.ts tests/src/register/commands.test.ts tests/src/exec/register-plan-escape.test.ts",
+      "status": "passed",
+      "summary": "6ファイル、253件成功。既存カタログ経由の互換性、同梱kata、YAML文書、入力拒否を含む。"
+    },
+    {
+      "source": "executor",
+      "command": "npx vitest run --config vitest.integration.config.ts tests/src/exec/catalogless-register.integration.test.ts",
+      "status": "passed",
+      "summary": "8件成功。一時リポジトリで7種の起票からplan生成、対象指定の更新・削除を検証。"
+    },
+    {
+      "source": "executor",
+      "command": "npx eslint src/catalog/document-target.ts src/register/deliverable-target.ts src/exec/plans-core.ts src/exec/register.ts src/exec/plans-generation.ts src/register/approach.ts src/register/item.ts src/register/core.ts src/register/create-commands.ts src/register/command-types.ts src/register/events.ts tests/src/register/catalogless-target.test.ts tests/src/exec/catalogless-register.integration.test.ts",
+      "status": "passed",
+      "summary": "エラーなし。大きなCLI関数に関する行数警告4件。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-6wqy-catalog-less-deliverable-approach.md docs/ja/specdojo/guides/{quick-start-guide,ryu-guide,plan-result-lifecycle-guide}.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/rulebooks/pjr-rulebook.md docs/specdojo/schemas/v1/{register-item-frontmatter,register-events}.schema.yaml src/catalog/document-target.ts src/register/{deliverable-target,approach,item,core,create-commands,command-ty…",
+      "status": "passed",
+      "summary": "変更ファイルの整形成功。個票の最終追記もPrettierで整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-6wqy-catalog-less-deliverable-approach.md docs/ja/specdojo/guides/quick-start-guide.md docs/ja/specdojo/guides/ryu-guide.md docs/ja/specdojo/guides/plan-result-lifecycle-guide.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "passed",
+      "summary": "変更Markdownの検査成功。個票の最終追記後も単独で再検査済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml --data tmp/pjr-6wqy/register-item.yaml",
+      "status": "passed",
+      "summary": "新しい対象指定を含む個票frontmatterがvalid。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data tmp/pjr-6wqy/register-events.yaml",
+      "status": "passed",
+      "summary": "新しい対象指定の変更イベントがvalid。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検証成功。未作成成果物などへの警告のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿とcontrolsの派生ビュー生成成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor",
+      "status": "requires_human",
+      "summary": "統合後にorchestratorが実agentで確認する。sandbox内では実agentの起動・使用枠消費を伴う検証を実施しない。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WQY/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WQY/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WQY/src/shared/specdojo-config.ts\n  1220:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 35 problems (0 errors, 35 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WQY\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.6 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WQY/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WQY/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.6 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-6WQY\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-DGnqyK/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-G2yLCk/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-qLfdyM/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-TuqqTR/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "カタログなしの成果物解決、起票・更新オプション、kata不足・パス検証、bootstrapとfinalize系のplan生成を実装。schema、利用手順、CHANGELOG、個票を更新し、単体253件・統合8件が成功。resultは編集していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "`--target-path`／`target_path` と `--target-rulebook`／`target_rulebook` を採用した。対象成果物の指定であることを明示し、個票自身の `specdojo.rulebook` と区別するため。既存文書と明示指定の不一致は拒否する。カタログ登録済みの対象は従来の宣言を優先し、未登録の対象は両指定がある場合だけ補完する。個票の対応結果にも記録済み。",
+    "カタログなしの bootstrap は既存 rulebook を拒否する。共有規約の意図しない改変を防ぐため。`<authority>:<stem>-rulebook` から同じ名前部分の recipe・sample・template ID を導出し、`docs/ja/specdojo/<kind>s/<authority>/<stem>-<kind>.md` を未作成候補とする。命名の再現性を保つための判断で、個票にも記録済み。",
+    "カタログなしの完了基準は個票の完了条件と rulebook。finalize系は既存文書だけを対象にし、bootstrap-finalizeでは複数sampleを含むkata一式を列挙する。retrofitの実装調査パスは個票に明記する運用とした。個票にも記録済み。",
+    "統合後、orchestratorがPJR-JSEYで実 agentによる `exec run --register` を確認する。全体の型・lint・単体・統合・schema検証は指定どおり親 runnerへ委譲。実装上の未決事項と保護設定の変更案はない。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-6WQY/20261025T160412622Z-d1640557/executor.log",
+      "bytes": 5757,
+      "truncated": false
+    }
+  ]
+}

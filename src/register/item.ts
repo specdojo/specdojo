@@ -42,6 +42,8 @@ export type PjrItem = {
   // kata authoring の読み取り専用の手本。doc id、project repository path、または
   // `<repo>:<path>` を保持し、起票時と plan 生成時に展開・検証する。
   sources?: string[];
+  targetPath?: string;
+  targetRulebook?: string;
   // この項目を起票する元になった register 項目。project 内は PJR-XXXX、project 間は
   // <project-id>:PJR-XXXX で保持し、派生先ビューと監査履歴へ展開する。
   derivedFrom?: string[];
@@ -116,6 +118,8 @@ export type RegisterItemFieldUpdates = {
   approach?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   targets?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   sources?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
+  target_path?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  target_rulebook?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   derived_from?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   autopilot?: "approved" | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
@@ -168,6 +172,8 @@ const SPECDOJO_KEY_ORDER = [
   "approach",
   "targets",
   "sources",
+  "target_path",
+  "target_rulebook",
 ];
 
 // ================================
@@ -368,6 +374,10 @@ export function readRegisterItemContent(
     conclusion: asString(fields.conclusion) ?? CELL_NONE,
     ticket: ticketRefCell(filename),
     ...(approach ? { approach } : {}),
+    ...(asString(fields.target_path) ? { targetPath: asString(fields.target_path) } : {}),
+    ...(asString(fields.target_rulebook)
+      ? { targetRulebook: asString(fields.target_rulebook) }
+      : {}),
     ...(targets && targets.length > 0 ? { targets } : {}),
     ...(sources && sources.length > 0 ? { sources } : {}),
     ...(derivedFrom && derivedFrom.length > 0 ? { derivedFrom } : {}),
@@ -504,6 +514,8 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
       ? null
       : inlineCodeAnglePlaceholders(item.conclusion.trim()),
     ...(item.approach ? { approach: item.approach } : {}),
+    ...(item.targetPath ? { target_path: item.targetPath } : {}),
+    ...(item.targetRulebook ? { target_rulebook: item.targetRulebook } : {}),
     ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
     ...(item.sources && item.sources.length > 0 ? { sources: item.sources } : {}),
     ...(item.derivedFrom && item.derivedFrom.length > 0 ? { derived_from: item.derivedFrom } : {}),
