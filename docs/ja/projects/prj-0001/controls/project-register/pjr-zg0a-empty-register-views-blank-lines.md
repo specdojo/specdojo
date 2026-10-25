@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-zg0a-empty-register-views-blank-lines
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-25T02:42:15Z"
+  completed_at: "2026-10-25T03:12:17Z"
+  conclusion: 項目のない章には「該当なし」を書くようにし、項目が 0 件の登録簿の派生ビューが markdownlint を通るようにした
 ---
 
 # PJR-ZG0A 登録簿に項目がないと、担当者別と状態別の派生ビューが markdownlint の MD012 に当たる

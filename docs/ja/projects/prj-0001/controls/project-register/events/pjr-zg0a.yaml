@@ -154,3 +154,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_c8c097c097d24f66bad85403086645b6
+- v: 1
+  id: reg_79da2f7ecd584353b8eee9c41890e1f5
+  ts: "2026-10-25T03:12:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 空のリポジトリの init 直後の生成物が markdownlint-cli と markdownlint-cli2 で警告 0 件になり、本リポジトリの register build で差分が出ないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: 項目のない章には「該当なし」を書くようにし、項目が 0 件の登録簿の派生ビューが markdownlint を通るようにした
+  previous_event_id: reg_63bfe4fb6bd94258844752d0e6e3d07c
