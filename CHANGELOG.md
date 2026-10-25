@@ -4,6 +4,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+### 追加機能
+
+- `projects.<id>.run.parent_validations_exclude` で、共有 `exec-defaults.yaml` の親検証から ID と実行先が一致する検証を project ごとに除外できるようにしました。除外後に既存の `parent_validations` を追記し、指定のない project の検証は維持します。未知の ID、共有一覧にない組の除外、重複する組は agent 起動前にエラーになります（PJR-P14M）。
+
 ### 不具合修正
 
 - OpenCode の scaffold でローカル Ollama の接続・モデル設定を含む `opencode.json`（provider: `ollama-local`）をリポジトリ直下に配置するようにしました。配布する名簿の雛形・agent 定義・接続設定のモデル指定を整合させ、Gemma および Qwen は文脈長 64k を確保するローカル派生タグ（`*-mlx-work-64k`）を標準としました。派生タグ作成手順、接続先設定手順、既存環境の修正手順を OpenCode テンプレートの README および設定ガイドに追記しました（PJR-MB92）。

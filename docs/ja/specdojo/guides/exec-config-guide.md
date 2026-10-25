@@ -262,6 +262,36 @@ rate_limit_policy:
 
 この例では共有 defaults の検証は両 project に適用され、`specdojo-lp` の 2 件は `prj-0002` の run だけに適用されます。`prj-0001` は `specdojo-lp` を `repos` に持たなくても影響を受けません。共有側と project 側に同じ ID・同じ `repo` の組を書くと、合成後の重複として agent 起動前にエラーになります。project 固有の検証も親 runner が固定 argv で実行し、evidence には `source: runner` と実行先の `repo` が記録されます。
 
+共有 defaults の検証を減らす場合は、`projects.<id>.run.parent_validations_exclude` に除外する検証を指定します。たとえば共有一覧が `lint-fm`・`lint-md`・`lint-ts`・`typecheck`・`test-unit`・`test-integration`・`validate-schema` の場合、文書と LP を扱う `prj-0002` だけで本体の検証を外す設定は次のとおりです。`exec-defaults.yaml` の複製は不要です。
+
+```json
+{
+  "projects": {
+    "prj-0001": {
+      "run": { "exec_defaults": ".specdojo/exec-defaults.yaml" }
+    },
+    "prj-0002": {
+      "repos": [{ "name": "specdojo-lp", "path": "../specdojo-lp" }],
+      "run": {
+        "exec_defaults": ".specdojo/exec-defaults.yaml",
+        "parent_validations_exclude": [
+          "lint-ts",
+          "typecheck",
+          "test-unit",
+          "test-integration",
+          "validate-schema"
+        ],
+        "parent_validations": [{ "id": "typecheck", "repo": "specdojo-lp" }]
+      }
+    }
+  }
+}
+```
+
+有効な一覧は「共有 defaults から除外 → project の追加」の順で求めます。この例の `prj-0002` では `lint-fm`・`lint-md`・`specdojo-lp` の `typecheck` だけが実行され、`prj-0001` の 7 件は変わりません。除外を省略するか `[]` にすると従来の追記動作を保ちます。検証以外の共有 defaults の設定も保持します。
+
+除外の要素も ID または `{ id, repo }` です。ID だけなら `repo: project` と同じで、同じ ID のプロダクトリポジトリ向け検証は除外しません。除外先は共有一覧に存在する ID と実行先の組に限り、project の追加一覧からは除外しません。未知の ID、不正な要素、共有一覧に存在しない組の除外、除外一覧内または最終一覧内の組の重複は、agent 起動前に設定エラーになります。除外前の共有一覧自体も検証するため、除外で不正な共有設定を隠すことはできません。除外した組を追加一覧で末尾に戻すことはできます。
+
 `wait` の待機中は、同一 worktree と register / pipeline の状態を別 run から保護するため project の実行ロックを保持します。register worktree の `--join` 実行は共有枠の範囲で引き続き動作できます。wait / fallback の再開時刻と切替元・切替先は pipeline state と executor evidence に記録されます。
 
 ### 5.1. register の難易度別振り分け
