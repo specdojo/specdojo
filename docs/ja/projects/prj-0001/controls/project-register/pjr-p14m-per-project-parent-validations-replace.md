@@ -37,14 +37,21 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                           | 担当 | 状態 | メモ             |
-| --- | ------------------------------ | ---- | ---- | ---------------- |
-| 1   | 指定の場所と形を設計する       | DEV  | open | 置き換えか除外か |
-| 2   | 実装し、テストと文書を更新する | DEV  | open | -                |
+| No  | 作業                           | 担当 | 状態 | メモ                                                                     |
+| --- | ------------------------------ | ---- | ---- | ------------------------------------------------------------------------ |
+| 1   | 指定の場所と形を設計する       | DEV  | done | `run.parent_validations_exclude` による ID と実行先の組の除外を採用      |
+| 2   | 実装し、テストと文書を更新する | DEV  | done | 設定読込・型・schema・回帰テスト・ガイド・リファレンス・未公開の変更履歴 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- 指定は `projects.<id>.run.parent_validations_exclude` とし、値は許可リストの ID または `{ id, repo }` の配列とした。共有の `pipeline.parent_validations` から一致する ID と実行先の組を除外し、残りの順序を保った後に既存の `run.parent_validations` を指定順で追記する。省略または `[]` は従来どおりとする。
+- 置き換えではなく除外にした理由は、共有 defaults を複製せずに本体のテストなど必要な検証だけを外せて、共有側に新設された検証を引き続き継承できるためである。ID だけの指定は `repo: project` と同じとし、別リポジトリの同名検証には一致させない。
+- 設定読込で共有一覧と除外一覧を検証し、未知の ID、共有一覧に存在しない組の除外、除外一覧内および最終一覧内の組の重複、不正な要素を agent 起動前にエラーにする。共有一覧に存在しない組を project の追記分に書いても除外は許可しない。除外済みの組を追記分で末尾へ戻すことは許可する。
+- `src/exec/agent-config.ts`・`src/shared/specdojo-config.ts` と config schema を更新した。単体テストに prj-0002 の検証を `lint-fm`・`lint-md`・`{ id: typecheck, repo: specdojo-lp }` だけにし、同じ defaults を参照する prj-0001 の 7 件が変わらない例を追加した。省略・空配列・worktree パス・実行先の一致・順序・不正設定も検証する。CLI の統合テストには不正設定時に agent・worktree・登録簿更新へ進まないことの確認を追加した。
+- [[specdojo:exec-config-guide|exec設定ガイド]] と [[specdojo:specdojo-config-reference|specdojo.config.jsonリファレンス]] に設定例・解決順・互換性・エラー条件を記載し、`CHANGELOG.md` の `Unreleased` に追加した。公開済みの版の節、`.specdojo/` の設定、登録簿一覧・本個票のステータス項目、result は変更していない。
+- 検証: 変更ファイルの Prettier 整形・検査、`git diff --check`、変更した config schema による既存 `.specdojo/specdojo.config.json` の検証、`register build` は成功した。hook の `node --import tsx tools/catalog-validate-if-configured.mjs` も終了コード 0 だったが、変更対象外の未作成成果物に対する `based_on` 検証の警告を出した。`lint-ts`・`lint-fm`・`lint-md`・`typecheck`・`test-unit`・`test-integration`・`validate-schema` はこの pipeline の親 runner が executor 終了後に実行するため、sandbox では重複実行せず、実結果を後段で確認する。
+- 申し送り: 統合後の `exec run --register` による実動作確認はホスト側で必要。運用メモに従い PJR-JSEY の確認対象へ PJR-P14M を加えて 1 回実行し、成功を確認してから close する。実 agent CLI の起動を伴うため executor sandbox では実行しない。
+- 申し送り: prj-0002 への設定適用は PJR-B3W9 で行う。除外対象は適用時の共有一覧に実在する ID と実行先の組を指定する。本項目では `.specdojo/` の変更は提案・適用とも行わない。
 
 ## 5. 関連ドキュメント
 
