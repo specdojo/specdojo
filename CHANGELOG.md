@@ -17,6 +17,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- `register update` で approach・target・source を変更しない場合、記録済みの組み合わせを再検証しないようにしました。authoring の kata が作成された後も、担当・期限・優先度などの更新を続けられます。approach 関連の値を変更する場合と `register add` では従来どおり検証します（PJR-JJBY）。
 - executor の報告に省略可能な `handoff`（申し送り）を追加し、reporter の処理後に runner が edit result の申し送りへ確実に転記するようにしました。register の plan も、result への記載を求める完了条件を個票の対応結果と報告の `handoff` に記録するようにしました。`handoff` のない既存の報告も引き続き受け付けます（PJR-R1FB）。
 - `external_projects` で SpecDojo 自身のリポジトリへ起票できるようにしました。相手に `node_modules/.bin/specdojo` がなく、`package.json` の `name` が `specdojo` の場合は `node <相手>/dist/specdojo.js` を使います。未ビルドの場合は `npm run build` を案内して停止します（PJR-PM2R）。
 - 着手の checkpoint・待ち状態の記帳・統合の commit が hook で失敗したとき、空白を含む step 名（`lint Markdown documentation` など）でも、成功した Prettier の step ではなく、失敗印の付いた step と最初の error の行を要約するようにしました。checkpoint の失敗要約を補足説明より前に置き、`block_reason` にも原因を残します（PJR-68KR）。
