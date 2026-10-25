@@ -55,6 +55,12 @@ specdojo:
 - 申し送り: 統合後の `exec run --register` による実動作確認はホスト側で必要。運用メモに従い PJR-JSEY の確認対象へ PJR-P14M を加えて 1 回実行し、成功を確認してから close する。実 agent CLI の起動を伴うため executor sandbox では実行しない。
 - 申し送り: prj-0002 への設定適用は PJR-B3W9 で行う。除外対象は適用時の共有一覧に実在する ID と実行先の組を指定する。本項目では `.specdojo/` の変更は提案・適用とも行わない。
 
+### 統合後の確認（2026-10-26）
+
+- `PJR-P14M` の evidence で `lint-ts`・`lint-fm`・`lint-md`・`test-integration`・`validate-schema`・`typecheck`・`test-unit` がすべて `passed` であることを確認した。
+- 統合後に `PJR-JSEY` を `codex-expert-executor` と `gemma-reporter` で実行した。start から review、親検証 7 件、統合 commit `c1244c193` まで通った。実体 actor は `sol-executor` だった。
+- `.specdojo/` の設定は変更されていない。prj-0002 への適用は [[prj-0002:pjr-b3w9-exec-defaults|PJR-B3W9]] の範囲に残す。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0002:pjr-b3w9-exec-defaults]]: 本項目を必要とした項目。ここでの実装の後に prj-0002 の設定へ適用する。

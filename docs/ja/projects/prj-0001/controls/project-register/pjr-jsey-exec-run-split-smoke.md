@@ -83,6 +83,11 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。統合後は今回の result・event・統合コミットを照合し、実体 actor が記録されていることを確認する。
 
+### 統合後の確認（2026-10-26）
+
+- `PJR-JSEY` の start と review の event は、どちらも実体 actor `sol-executor` を記録した。結果文書は `complete`、親の検証 7 件はすべて `passed` で、統合 commit `c1244c193` まで完了した。
+- executor が変更した本文は本個票だけだった。runner が生成した plan・result・evidence と状態イベントを確認した。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-3w2n-exec-run-split-shared]]

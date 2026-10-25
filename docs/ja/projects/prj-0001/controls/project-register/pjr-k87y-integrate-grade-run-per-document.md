@@ -65,6 +65,14 @@ exec run のレビュー前 grade 実行（`ensureReviewGrade`）が外部スク
 - 配布版の実 agent による `grade run` と review 前 grade の通し実行はホスト側で確認する。この sandbox では Node の子プロセス起動が `EPERM` となるため、固定応答 adapter により評価・保存・再開を検証した。クリーンな環境での npm による依存解決・導入もホスト側で確認する。親 runner が関連テストと静的検査を実施する。
 - ネイティブ経路は単段と機械 reporter を対象とする。開発用シェルの実験的な 3 段構成は移植せず、日本語 finding の表示用翻訳は既存の `translation-plan` / `localize` を利用する。保護設定の変更は不要である。
 
+### 統合後の確認（2026-10-26）
+
+- 再開後の `PJR-K87Y` の親検証 7 件（`lint-ts`・`lint-fm`・`lint-md`・`test-integration`・`validate-schema`・`typecheck`・`test-unit`）はすべて `passed` となり、統合 commit `1d6e58f4b` まで完了した。保護設定の変更はなかった。
+- 統合後の `PJR-JSEY` は start から review、親検証 7 件、統合 commit `c1244c193` まで通った。event の実体 actor は `sol-executor` だった。
+- 一時 worktree で `ntp-rulebook.md` 1 文書を実 agent `sol-review-executor` で評価し、grade サイドカーに actor・結果・content hash が保存されたことを確認した。同じ run-id の再実行は `resumed complete` と表示され、再評価しなかった。対象文書への評価結果 `needs-work` は文書品質の判定であり、CLI の実行失敗ではない。
+- 同じ一時 worktree の評価用 fixture で `ensureReviewGrade` を呼び、同梱 CLI 経由の実 agent 評価が `executed`、結果保存後の再呼び出しが `skipped` となることを確認した。grade の生成物は一時 worktree に隔離した。
+- `npm pack` の tarball を空の利用先へ `npm install --offline` で導入し、その利用先で `npx specdojo grade run --help` が起動した。
+
 ## 5. 関連ドキュメント
 
 - [[specdojo:command-reference]]
