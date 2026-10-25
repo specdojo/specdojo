@@ -31,7 +31,7 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 | No  | 作業                        | 担当 | 状態 | メモ                              |
 | --- | --------------------------- | ---- | ---- | --------------------------------- |
-| 1   | 対応結果の表に 1 行追記する | DEV  | open | runner 変更の統合ごとに再実行する |
+| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-K87Y の統合後の実行を記録した |
 
 ## 4. 対応結果
 
@@ -76,6 +76,11 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-10-25 00:03 | PJR-68KR | sonnet-executor        |
 | 2026-10-25 08:55 | PJR-84F7 | sonnet-executor        |
 | 2026-10-25 10:57 | PJR-XTE6 | sonnet-executor        |
+| 2026-10-26 06:21 | PJR-K87Y | sol-executor           |
+
+今回の確認対象は、対象一覧のうち最新の統合コミット `1d6e58f4b`（2026-10-26 06:17 JST）を持つ PJR-K87Y とした。同個票の `item_status` は `review` である。今回の実行の `pipeline-state.json` に記録された executor の actor は `sol-executor` である。
+
+申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。統合後は今回の result・event・統合コミットを照合し、実体 actor が記録されていることを確認する。
 
 ## 5. 関連ドキュメント
 
