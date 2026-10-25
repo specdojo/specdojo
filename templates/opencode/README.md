@@ -13,10 +13,10 @@ specdojo:
 
 ## 2. 構成
 
-| パス            | 利用プロジェクトでの配置先 | 説明                                                                    |
-| --------------- | -------------------------- | ----------------------------------------------------------------------- |
-| `agents/*.md`   | `.opencode/agents/`        | agent 定義。パス単位の `edit` とコマンド許可リストの `bash` を含む正本  |
-| `opencode.json` | `opencode.json`            | Ollama の接続設定（provider: `ollama-local`）と `*-work-64k` モデル設定 |
+| パス            | 利用プロジェクトでの配置先 | 説明                                                                        |
+| --------------- | -------------------------- | --------------------------------------------------------------------------- |
+| `agents/*.md`   | `.opencode/agents/`        | agent 定義。パス単位の `edit` とコマンド許可リストの `bash` を含む正本      |
+| `opencode.json` | `opencode.json`            | Ollama の接続設定（provider: `ollama-local`）と `*-mlx-work-64k` モデル設定 |
 
 配布する role は、成果物編集と検証を担う `opencode-executor`、成果物を変更せずレビューする `opencode-review-executor`、入力された evidence から構造化結果だけを返す `opencode-reporter`、対話型で操作を代行する `specdojo-orchestrator` を含みます。
 
@@ -46,41 +46,41 @@ specdojo config scaffold --provider opencode
            report: { agent: opencode-reporter }
    ```
 
-2. `.specdojo/agent-members.yaml` を実体と別名の 2 段で書く。実体は model の系統で名付け（`gemma-executor`・`qwen-executor` など）、`model` に `opencode.json` の provider 名を含む ID（`ollama-local/gemma4:31b-work-64k`、`ollama-local/gemma4:26b-work-64k`、`ollama-local/qwen3.8:27b-work-64k` など）を持つ。従来の名前（`opencode-executor` など）は `aliases` で実体を指す別名にする。
+2. `.specdojo/agent-members.yaml` を実体と別名の 2 段で書く。実体は model の系統で名付け（`gemma-executor`・`qwen-executor` など）、`model` に `opencode.json` の provider 名を含む ID（`ollama-local/gemma4:31b-mlx-work-64k`、`ollama-local/gemma4:26b-mlx-work-64k`、`ollama-local/qwen3.8:27b-mlx-work-64k` など）を持つ。従来の名前（`opencode-executor` など）は `aliases` で実体を指す別名にする。
 3. `opencode.json` の接続先（`baseURL`）を利用環境に合わせて確認・調整する（「接続先の設定手順」を参照）。
-4. Ollama で文脈長 64k の派生モデルタグ（`*-work-64k`）を作成する（「派生タグ作成手順」を参照）。
+4. Ollama で文脈長 64k の派生モデルタグ（`*-mlx-work-64k`）を作成する（「派生タグ作成手順」を参照）。
 5. コピーしたファイルをコミットする。worktree はコミット済み内容から作られるため、未コミットだと agent 実行時に設定が読めない。
 
-## 4. 派生タグ作成手順（`*-work-64k`）
+## 4. 派生タグ作成手順（`*-mlx-work-64k`）
 
-SpecDojo のタスク実行では、rulebook・recipe・依存成果物・対象成果物をまとめて読み込むため、公式モデルの既定文脈長（2k〜32k）では作業セットが収まらず agent が終了する場合があります。そのため、Gemma および Qwen では原則として文脈長を 64k（`65536`）に広げた派生タグ（`*-work-64k`）を使用します。
+SpecDojo のタスク実行では、rulebook・recipe・依存成果物・対象成果物をまとめて読み込むため、公式モデルの既定文脈長（2k〜32k）では作業セットが収まらず agent が終了する場合があります。そのため、Gemma および Qwen では原則として文脈長を 64k（`65536`）に広げた派生タグ（`*-mlx-work-64k`）を使用します。
 
 > [!IMPORTANT]
-> `*-work-64k` は公式配布タグ（`ollama pull` で直接取得できるタグ）ではありません。公式のベースモデルから利用者の手元で作成するローカル派生タグです。公式配布タグとして扱わないでください。
+> `*-mlx-work-64k` は公式配布タグ（`ollama pull` で直接取得できるタグ）ではありません。公式のベースモデルから利用者の手元で作成するローカル派生タグです。公式配布タグとして扱わないでください。
 
 ### 作成コマンド例
 
 ```bash
 # 1. 公式ベースモデルの取得
-ollama pull gemma4:31b
-ollama pull gemma4:26b
-ollama pull qwen3.8:27b
+ollama pull gemma4:31b-mlx
+ollama pull gemma4:26b-mlx
+ollama pull qwen3.8:27b-mlx
 
 # 2. Modelfile の作成と派生タグの登録
 # Gemma 4 31B:
-echo -e "FROM gemma4:31b\nPARAMETER num_ctx 65536" > Modelfile.gemma31b
-ollama create gemma4:31b-work-64k -f Modelfile.gemma31b
+echo -e "FROM gemma4:31b-mlx\nPARAMETER num_ctx 65536" > Modelfile.gemma31b
+ollama create gemma4:31b-mlx-work-64k -f Modelfile.gemma31b
 
 # Gemma 4 26B:
-echo -e "FROM gemma4:26b\nPARAMETER num_ctx 65536" > Modelfile.gemma26b
-ollama create gemma4:26b-work-64k -f Modelfile.gemma26b
+echo -e "FROM gemma4:26b-mlx\nPARAMETER num_ctx 65536" > Modelfile.gemma26b
+ollama create gemma4:26b-mlx-work-64k -f Modelfile.gemma26b
 
 # Qwen 3.8 27B:
-echo -e "FROM qwen3.8:27b\nPARAMETER num_ctx 65536" > Modelfile.qwen27b
-ollama create qwen3.8:27b-work-64k -f Modelfile.qwen27b
+echo -e "FROM qwen3.8:27b-mlx\nPARAMETER num_ctx 65536" > Modelfile.qwen27b
+ollama create qwen3.8:27b-mlx-work-64k -f Modelfile.qwen27b
 ```
 
-Mac の Apple シリコン環境で Ollama 公式の mlx 版（`gemma4:31b-mlx` 等）を使う場合は、`FROM gemma4:31b-mlx` のように指定して派生タグを作成し、名簿や `opencode.json` のモデル名を合わせてください。
+Linux や Windows などの非 MLX 環境で標準のベースモデル（`gemma4:31b` 等）を使う場合は、`FROM gemma4:31b` を指定した Modelfile から同様に `*-mlx-work-64k` タグを作成するか、`opencode.json` と名簿のモデル名を環境に合わせて変更してください。
 
 作成後の確認:
 
@@ -104,19 +104,19 @@ scaffold で生成される `opencode.json` は、devcontainer からホスト�
         "apiKey": "not-needed"
       },
       "models": {
-        "gemma4:31b-work-64k": {
-          "name": "Gemma 4 31B Work (64k)"
+        "gemma4:31b-mlx-work-64k": {
+          "name": "Gemma 4 31B MLX Work (64k)"
         },
-        "gemma4:26b-work-64k": {
-          "name": "Gemma 4 26B Work (64k)"
+        "gemma4:26b-mlx-work-64k": {
+          "name": "Gemma 4 26B MLX Work (64k)"
         },
-        "qwen3.8:27b-work-64k": {
-          "name": "Qwen3.8 27B Work (64k)"
+        "qwen3.8:27b-mlx-work-64k": {
+          "name": "Qwen3.8 27B MLX Work (64k)"
         }
       }
     }
   },
-  "model": "ollama-local/gemma4:31b-work-64k"
+  "model": "ollama-local/gemma4:31b-mlx-work-64k"
 }
 ```
 
@@ -133,7 +133,7 @@ curl http://host.docker.internal:11434/v1/chat/completions \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer not-needed" \
   -d '{
-    "model": "gemma4:26b-work-64k",
+    "model": "gemma4:26b-mlx-work-64k",
     "messages": [{"role": "user", "content": "疎通確認"}],
     "max_tokens": 16,
     "stream": false
@@ -144,16 +144,16 @@ curl http://host.docker.internal:11434/v1/chat/completions \
 
 `specdojo config scaffold` および `specdojo init` は、既存の `opencode.json` や `.specdojo/agent-members.yaml` を既定では上書きしません。
 
-既に OpenCode 設定を導入済みのプロジェクトで、接続設定や `*-work-64k` モデル指定へ移行する場合は、以下の手順を手動で実施します。
+既に OpenCode 設定を導入済みのプロジェクトで、接続設定や `*-mlx-work-64k` モデル指定へ移行する場合は、以下の手順を手動で実施します。
 
 1. **`opencode.json` の作成・更新**:
-   リポジトリ直下に `opencode.json` がない場合は作成し、既存の `opencode.json` がある場合は `provider.ollama-local` と `*-work-64k` モデル定義を追加します。
+   リポジトリ直下に `opencode.json` がない場合は作成し、既存の `opencode.json` がある場合は `provider.ollama-local` と `*-mlx-work-64k` モデル定義を追加します。
 2. **`.specdojo/agent-members.yaml` のモデル更新**:
-   各 member の `model` を `ollama-local/gemma4:31b-work-64k`、`ollama-local/gemma4:26b-work-64k`、`ollama-local/qwen3.8:27b-work-64k` に更新します。
+   各 member の `model` を `ollama-local/gemma4:31b-mlx-work-64k`、`ollama-local/gemma4:26b-mlx-work-64k`、`ollama-local/qwen3.8:27b-mlx-work-64k` に更新します。
 3. **`.opencode/agents/specdojo-orchestrator.md` の更新**:
-   オーケストレーターの agent 定義がある場合は、frontmatter の `model` を `ollama-local/gemma4:31b-work-64k` に更新します。
+   オーケストレーターの agent 定義がある場合は、frontmatter の `model` を `ollama-local/gemma4:31b-mlx-work-64k` に更新します。
 4. **派生モデルの作成**:
-   手元の Ollama で「派生タグ作成手順」に従い `*-work-64k` タグを作成します。
+   手元の Ollama で「派生タグ作成手順」に従い `*-mlx-work-64k` タグを作成します。
 
 ## 7. カスタマイズ
 

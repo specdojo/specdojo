@@ -206,7 +206,7 @@ describe("specdojoPackageRootDir", () => {
     expect(opencodeOrchestrator).not.toContain('    "gh *": deny');
     expect(opencodeOrchestrator).toContain("  edit: allow");
     expect(opencodeOrchestrator).not.toContain('    ".specdojo/**": deny');
-    expect(opencodeOrchestrator).toContain("model: ollama-local/gemma4:31b-work-64k");
+    expect(opencodeOrchestrator).toContain("model: ollama-local/gemma4:31b-mlx-work-64k");
 
     const antigravity = JSON.parse(
       await readFile(
@@ -988,7 +988,7 @@ describe("runProviderScaffold", () => {
     }
   });
 
-  it("scaffolds OpenCode settings with ollama-local connection and work-64k models into an empty repository", async () => {
+  it("scaffolds OpenCode settings with ollama-local connection and mlx-work-64k models into an empty repository", async () => {
     const dir = await mkdtemp(path.join(tmpdir(), "specdojo-test-"));
     try {
       const repoRoot = path.join(dir, "repo");
@@ -1023,17 +1023,17 @@ describe("runProviderScaffold", () => {
         "http://host.docker.internal:11434/v1",
       );
       expect(Object.keys(opencodeJson.provider["ollama-local"]?.models ?? {}).sort()).toEqual([
-        "gemma4:26b-work-64k",
-        "gemma4:31b-work-64k",
-        "qwen3.8:27b-work-64k",
+        "gemma4:26b-mlx-work-64k",
+        "gemma4:31b-mlx-work-64k",
+        "qwen3.8:27b-mlx-work-64k",
       ]);
-      expect(opencodeJson.model).toBe("ollama-local/gemma4:31b-work-64k");
+      expect(opencodeJson.model).toBe("ollama-local/gemma4:31b-mlx-work-64k");
 
       const orchestrator = await readFile(
         path.join(repoRoot, ".opencode/agents/specdojo-orchestrator.md"),
         "utf8",
       );
-      expect(orchestrator).toContain("model: ollama-local/gemma4:31b-work-64k");
+      expect(orchestrator).toContain("model: ollama-local/gemma4:31b-mlx-work-64k");
     } finally {
       await rm(dir, { recursive: true, force: true });
     }

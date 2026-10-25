@@ -1,7 +1,7 @@
 ---
 description: SpecDojo 対話型オーケストレーター。会話から意図を読み取り、specdojo register / exec などを提案→承認→実行で代行する。
 mode: primary
-model: ollama-local/gemma4:31b-work-64k
+model: ollama-local/gemma4:31b-mlx-work-64k
 temperature: 0.2
 permission:
   read:
