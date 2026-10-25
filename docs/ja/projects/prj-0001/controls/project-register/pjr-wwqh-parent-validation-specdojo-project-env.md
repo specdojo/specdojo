@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-21T22:58:30Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T15:51:35Z"
+  conclusion: 共通テスト setup で継承した SPECDOJO_PROJECT を除去し、別 project 環境で単体・統合テストが通ることを確認した。
 ---
 
 # PJR-WWQH exec run の親の検証に `SPECDOJO_PROJECT` が漏れ、テストが失敗する
