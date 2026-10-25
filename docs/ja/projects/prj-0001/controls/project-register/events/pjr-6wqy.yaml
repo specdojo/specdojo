@@ -74,3 +74,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_1c20bf563f82465f815c66e08ed345bb
+- v: 1
+  id: reg_2736849ce9934a728ff03e3b9652f9c6
+  ts: "2026-10-25T21:30:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 個票・差分・resultと対象単体253件・統合8件・親検証7件を照合し、統合後のPJR-JSEY実行もreviewまで通過した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-26"
+    - field: conclusion
+      from: "-"
+      to: カタログなしの7種の成果物approachについて、起票・対象解決・plan生成を実装した。
+  previous_event_id: reg_d9a881c27a914ee1b7b0033fd64cc11b

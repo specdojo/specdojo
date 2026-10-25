@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-6wqy-catalog-less-deliverable-approach
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-25T05:11:58Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T21:30:18Z"
+  conclusion: カタログなしの7種の成果物approachについて、起票・対象解決・plan生成を実装した。
 ---
 
 # PJR-6WQY 成果物カタログがなくても fully-guided などで成果物を作れるようにする
