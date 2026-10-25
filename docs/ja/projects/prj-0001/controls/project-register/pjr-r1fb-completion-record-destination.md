@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-r1fb-completion-record-destination
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T22:28:40Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T00:00:20Z"
+  conclusion: executor の報告に handoff を加え result の申し送りへ転記し、plan の雛形とオーケストレーターの本文の書き先を個票の対応結果と handoff に合わせた
 ---
 
 # PJR-R1FB orchestrator が register の完了条件で executor の記録の書き先を誤る
