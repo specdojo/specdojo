@@ -184,13 +184,13 @@ specdojo config scaffold --workspace --force
 
 `kata` は、利用リポジトリで作成・上書きした型（Kata）と npm package から参照中の型を確認・取得します。対象種別は rulebook / standard / recipe / sample / template です。同じ正準パスにファイルがある場合は利用リポジトリ側を優先します。`kata_authority` の kata は `docs/ja/specdojo/<種類>s/<kata_authority>/` から解決し、`kata list` と `kata show` にも表示します。0.4.4 のあいだは旧 `docs/ja/kata/<種類>s/` も読み、新配置への移動案内を標準エラーへ出します。新旧に同じ ID があれば新配置を優先します。
 
-| コマンド         | 用途                                                    | 例                                               |
-| ---------------- | ------------------------------------------------------- | ------------------------------------------------ |
-| `kata list`      | kata を解決元と eject 可否つきで一覧表示                | `specdojo kata list --all`                       |
-| `kata show <id>` | 解決順序に従って kata の内容を表示                      | `specdojo kata show specdojo:pjr-rulebook`       |
-| `kata status`    | 参照中 / eject 済みと package 原本との差分を表示        | `specdojo kata status --kind template`           |
-| `kata eject`     | package の 1 ファイルを利用リポジトリの正準パスへコピー | `specdojo kata eject --id specdojo:pjr-rulebook` |
-| `kata install`   | eject 可能な全種別を利用リポジトリへコピー              | `specdojo kata install --all --dry-run`          |
+| コマンド         | 用途                                             | 例                                               |
+| ---------------- | ------------------------------------------------ | ------------------------------------------------ |
+| `kata list`      | kata を解決元と eject 可否つきで一覧表示         | `specdojo kata list --all`                       |
+| `kata show <id>` | 解決順序に従って kata の内容を表示               | `specdojo kata show specdojo:pjr-rulebook`       |
+| `kata status`    | 参照中 / eject 済みと package 原本との差分を表示 | `specdojo kata status --kind template`           |
+| `kata eject`     | package の kata と付属ファイルを正準パスへコピー | `specdojo kata eject --id specdojo:pjr-rulebook` |
+| `kata install`   | eject 可能な全種別を利用リポジトリへコピー       | `specdojo kata install --all --dry-run`          |
 
 主要オプション:
 
@@ -206,6 +206,10 @@ specdojo config scaffold --workspace --force
 `list` は既定で eject できる種別だけを表示します。`EJECTABLE` 列が `no` の `exec-template` と `schema` は `--all` または `--kind exec-template` のように種別を指定したときに表示します。これらの ID は frontmatter を持たないためファイル名由来（`xep-template`、`dct-plan.schema`）になり、`specdojo:` の接頭辞が付きません。`show` は種別を問わず参照できます。
 
 `eject` と `install --all` は既存ファイルを `--force` なしで上書きせず、`skip` として表示します。CLI と同じバージョンで使う必要がある `exec-templates` と `schemas` は個別 eject の対象外で、指定すると参照固定である旨を表示して終了コード 1 で終わります。`install --all` は docs サイト配信やオフライン運用向けの明示的な全量取得であり、通常のセットアップ導線では使用しません。
+
+付属ファイルは一覧の kata に数えず、`eject`・`install --all` で本体と一緒にコピーします。
+付属ファイルだけの差分も、eject 済みの親 kata の `modified` に含めます。対象形式と付属ファイルの
+命名・配置・dry-run の詳細は [[specdojo:kata-guide|実践の型活用ガイド]] の「kata の付属ファイル」を参照してください。
 
 ## 3. catalog / deliverable
 

@@ -54,6 +54,8 @@ export type KataCopyResult = {
   action: "copy" | "overwrite" | "skip";
 };
 
+export type KataEjectResult = KataCopyResult & { companions: KataCopyResult[] };
+
 type ResourceKindConfig =
   | { kind: KataResourceKind; relativeDir: string; ejectable: true }
   | { kind: "exec-template" | "schema"; relativeDir: string; ejectable: false };
@@ -148,14 +150,46 @@ function isKataIdFile(filePath: string): boolean {
   return KATA_ID_EXTENSIONS.has(extname(filePath).toLowerCase());
 }
 
+// ID を読める形式は独立した kata とし、付属ファイルの候補からも除く。
+function companionPaths(filePath: string, files: string[]): string[] {
+  const stem = basename(filePath, extname(filePath));
+  const directory = dirname(filePath);
+  const companionDirectory = normalizeRelativePath(join(directory, stem)) + "/";
+  return files.filter(
+    (candidate) =>
+      !isKataIdFile(candidate) &&
+      ((dirname(candidate) === directory && basename(candidate, extname(candidate)) === stem) ||
+        candidate.startsWith(companionDirectory)),
+  );
+}
+
+function sameCompanions(
+  filePath: string,
+  repositoryDir: string,
+  bundledDir: string,
+  repositoryFiles: string[],
+  bundledFiles: string[],
+): boolean {
+  const repositoryCompanions = companionPaths(filePath, repositoryFiles);
+  const bundledCompanions = companionPaths(filePath, bundledFiles);
+  return (
+    repositoryCompanions.length === bundledCompanions.length &&
+    repositoryCompanions.every(
+      (companion, index) =>
+        companion === bundledCompanions[index] &&
+        sameContents(resolve(repositoryDir, companion), resolve(bundledDir, companion)),
+    )
+  );
+}
+
 function enumerateConfig(
   config: ResourceKindConfig,
   roots: SpecdojoResolutionRoots,
 ): KataResource[] {
   const { repositoryDir, bundledDir } = pathsForConfig(config, roots);
-  const relativePaths = [
-    ...new Set([...relativeFiles(repositoryDir), ...relativeFiles(bundledDir)]),
-  ].filter(isKataIdFile);
+  const repositoryFiles = relativeFiles(repositoryDir);
+  const bundledFiles = relativeFiles(bundledDir);
+  const relativePaths = [...new Set([...repositoryFiles, ...bundledFiles])].filter(isKataIdFile);
   return relativePaths.sort().map((filePath) => {
     const repositoryPath = resolve(repositoryDir, filePath);
     const bundledPath = resolve(bundledDir, filePath);
@@ -175,7 +209,8 @@ function enumerateConfig(
       state: hasRepositoryFile ? "ejected" : "referenced",
       difference: hasRepositoryFile
         ? hasBundledFile
-          ? sameContents(repositoryPath, bundledPath)
+          ? sameContents(repositoryPath, bundledPath) &&
+            sameCompanions(filePath, repositoryDir, bundledDir, repositoryFiles, bundledFiles)
             ? "same"
             : "modified"
           : "package-missing"
@@ -321,14 +356,27 @@ function bundledResources(
 ): BundledResource[] {
   return configs.flatMap((config) => {
     const { repositoryDir, bundledDir } = pathsForConfig(config, roots);
-    return relativeFiles(bundledDir).map((filePath) => ({
-      id: resourceId(resolve(bundledDir, filePath)),
-      config,
-      relativePath: normalizeRelativePath(join(config.relativeDir, filePath)),
-      sourcePath: resolve(bundledDir, filePath),
-      destinationPath: resolve(repositoryDir, filePath),
-    }));
+    return relativeFiles(bundledDir)
+      .filter(isKataIdFile)
+      .map((filePath) => ({
+        id: resourceId(resolve(bundledDir, filePath)),
+        config,
+        relativePath: normalizeRelativePath(join(config.relativeDir, filePath)),
+        sourcePath: resolve(bundledDir, filePath),
+        destinationPath: resolve(repositoryDir, filePath),
+      }));
   });
+}
+
+function bundledCompanions(resource: BundledResource): BundledResource[] {
+  const sourceDir = dirname(resource.sourcePath);
+  const filePaths = companionPaths(basename(resource.sourcePath), relativeFiles(sourceDir));
+  return filePaths.map((filePath) => ({
+    ...resource,
+    relativePath: normalizeRelativePath(join(dirname(resource.relativePath), filePath)),
+    sourcePath: resolve(sourceDir, filePath),
+    destinationPath: resolve(dirname(resource.destinationPath), filePath),
+  }));
 }
 
 function selectBundledById(resources: BundledResource[], id: string): BundledResource {
@@ -373,22 +421,29 @@ function copyBundledResource(
 export function ejectKata(
   id: string,
   options: { dryRun?: boolean; force?: boolean; roots?: SpecdojoResolutionRoots } = {},
-): KataCopyResult {
+): KataEjectResult {
   const resource = selectBundledById(bundledResources(RESOURCE_KINDS, options.roots ?? {}), id);
   if (!resource.config.ejectable) {
     throw new Error(
       `Cannot eject ${resource.config.kind} '${resource.id}': ${resource.config.relativeDir} is tied to the installed SpecDojo version and must remain package-referenced.`,
     );
   }
-  return copyBundledResource(resource, options);
+  const result = copyBundledResource(resource, options);
+  const companions = bundledCompanions(resource).map((companion) =>
+    copyBundledResource(companion, options),
+  );
+  return { ...result, companions };
 }
 
 export function installAllKata(
   options: { dryRun?: boolean; force?: boolean; roots?: SpecdojoResolutionRoots } = {},
 ): KataCopyResult[] {
-  return bundledResources(EJECTABLE_KINDS, options.roots ?? {}).map((resource) =>
-    copyBundledResource(resource, options),
-  );
+  const resources = bundledResources(EJECTABLE_KINDS, options.roots ?? {}).flatMap((resource) => [
+    resource,
+    ...bundledCompanions(resource),
+  ]);
+  const uniqueResources = new Map(resources.map((resource) => [resource.relativePath, resource]));
+  return [...uniqueResources.values()].map((resource) => copyBundledResource(resource, options));
 }
 
 function printCommandError(error: unknown): void {
@@ -467,10 +522,10 @@ export function registerKataCommands(program: Command): void {
     .option("--force", "Overwrite an existing repository file", false)
     .action((opts) => {
       try {
-        printCopyResult(
-          ejectKata(opts.id, { dryRun: opts.dryRun, force: opts.force }),
-          opts.dryRun,
-        );
+        const result = ejectKata(opts.id, { dryRun: opts.dryRun, force: opts.force });
+        for (const file of [result, ...result.companions]) {
+          printCopyResult(file, opts.dryRun);
+        }
       } catch (error) {
         printCommandError(error);
       }
