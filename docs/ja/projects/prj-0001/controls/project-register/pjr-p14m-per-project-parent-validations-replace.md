@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-p14m-per-project-parent-validations-replace
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: DEV
   registered_at: "2026-10-21T13:19:31Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T21:29:58Z"
+  conclusion: projectごとの親検証除外を実装し、共有設定の継承とprj-0002向けの絞り込みをテストで確認した。
 ---
 
 # PJR-P14M project ごとに共有の親の検証を置き換えられるようにする
