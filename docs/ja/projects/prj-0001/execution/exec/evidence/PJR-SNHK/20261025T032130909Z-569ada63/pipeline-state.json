@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-SNHK",
   "run_id": "20261025T032130909Z-569ada63",
-  "updated_at": "2026-10-25T03:27:31.628Z",
+  "updated_at": "2026-10-25T03:30:21.888Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-snhk-20261025T032130Z-849d558d-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sonnet-executor",
       "attempts": 1,
       "started_at": "2026-10-25T03:27:31.628Z",
-      "completed_at": null,
+      "completed_at": "2026-10-25T03:30:21.888Z",
       "artifact_ref": null
     }
   },
