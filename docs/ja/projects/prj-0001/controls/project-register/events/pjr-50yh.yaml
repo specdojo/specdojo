@@ -32,3 +32,32 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_417602b2e77f4fd482638465769a5aea
+  ts: "2026-10-25T02:13:15Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3ad23a0a5cc34093850d7fc90474d88f
+- v: 1
+  id: reg_3d00e9ddd2144b04a22a87379af6c20e
+  ts: "2026-10-25T02:26:53Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-integration, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-integration, test-unit"
+  previous_event_id: reg_417602b2e77f4fd482638465769a5aea
