@@ -64,3 +64,35 @@
       from: "-"
       to: "parent validation failed: lint-ts, test-unit"
   previous_event_id: reg_cde76542467949a5bd49b44870c4ae0c
+- v: 1
+  id: reg_8fc783b545554ec58c4a8449184ea95b
+  ts: "2026-10-25T16:36:21Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, test-unit"
+      to: "-"
+  previous_event_id: reg_4a24ae196728423ab8fb729111132cef
+- v: 1
+  id: reg_009a26e7e7854fd1ae3ea8920ba409ea
+  ts: "2026-10-25T19:31:03Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor rate limit reached; rate limit wait: sol-executor resumed at 2026-10-25T19:31:00.269Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor rate limit reached; rate limit wait: sol-executor resumed at 2026-10-25T19:31:00.269Z"
+  previous_event_id: reg_8fc783b545554ec58c4a8449184ea95b
