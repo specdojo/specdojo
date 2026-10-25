@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f01ad2e319034c99a529504f5fdcd769
+  ts: "2026-10-25T08:40:41Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が報告した scaffold の設定不足を、担当 DEV・期限 2026-10-31 で追跡するため起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer scaffold の shutdownAction を補う
+    - field: description
+      from: ""
+      to: scaffold の devcontainer 雛形に shutdownAction がない。none を明示し、空のリポジトリで生成結果を確認する。既存環境の修正手順も記載する。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"
