@@ -37,6 +37,7 @@ specdojo:
 - markdownlint-cli は、`.markdownlintrc` が `{` で始まるときだけ JSON として読む。先頭にコメントを書くと設定が読まれない。
 - markdownlint-cli2 の `overrides` は、最初に一致した 1 つだけを使う。prettier の `overrides` は、後のものを優先する。Slidev 用の設定は、cli2 では先頭、prettier では末尾に置く必要がある。
 - Slidev のスライドは中身ではなくパスで見分けるしかないため、利用者の project では名前の決まり（`lsd-` で始める）を作った。3 つの設定（`.markdownlint-cli2.yaml`・`.prettierrc`・`.markdownlintignore`）を同じ glob にそろえ、名前・glob・順番を commit の前に確かめる検査（`tools/check-slidev-files.mjs`）を加えた。
+- その後、利用者の project は、本家の `--slidev` の決まり（`*-slidev-sample.md`・`*-slidev-template.md`）にそろえた（kata の ID は `lsd-slidev-rulebook`・`lsd-slidev-sample`・`lsd-slidev-template`）。上の 3 つの設定と検査も同じ glob を使う。
 
 ## 2. 影響範囲
 
@@ -64,4 +65,4 @@ _TODO_: 解決内容、確認結果、再発防止策を記載する。未解決
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-84f7-scaffold-slidev]]：Slidev を選んで入れる scaffold
-- 報告元: 利用者の project（coderdojo-lessons-specdojo の prj-0001）。設定は commit `12976eb`・`a2495b9`
+- 報告元: 利用者の project（coderdojo-lessons-specdojo の prj-0001）。設定は commit `12976eb`・`a2495b9`、本家の決まりへの改名は `2c7c92b`
