@@ -7,18 +7,19 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: medium
   owner: indie
   registered_at: "2026-10-25T14:16:35Z"
+  block_reason: "parent validation failed: lint-ts, test-unit"
 ---
 
 # PJR-K87Y gradeの単一文書評価パイプライン（run-per-document.sh相当）をspecdojoコマンド本体へ統合する
 
 ## 1. 概要
 
-exec run のレビュー前 grade 実行（ensureReviewGrade）が外部スクリプト tools/grade/run-per-document.sh に依存しているため、specdojo grade run サブコマンドとして CLI 本体へ統合する。あわせて今回のマルチリポジトリ運用で確認された関連課題（1. ensureReviewGrade から grade plan -> agent run -> grade apply のネイティブ実行とエージェント自動選択/引き継ぎ、2. dist/grade/targets.js の project.repos マルチリポジトリ相対パス ../ 許容、3. ワークツリー分岐前の grade 結果/criteria サイドカーのチェックポイント対象化、4. exec scaffold --project 時の pm-review-viewpoints.yaml 参照先 standards/ -> defaults/ 修正および viewpoints_path 未設定時の specdojo:pm-review-viewpoints フォールバック、5. xrp-review-*-template.md の done_criteria 表で発生する markdownlint MD060 警告の解消）を解消する。
+exec run のレビュー前 grade 実行（`ensureReviewGrade`）が外部スクリプト `tools/grade/run-per-document.sh` に依存しているため、`specdojo grade run` サブコマンドとして CLI 本体へ統合する。あわせて今回のマルチリポジトリ運用で確認された関連課題（1. `ensureReviewGrade` から grade plan -> agent run -> grade apply のネイティブ実行とエージェント自動選択/引き継ぎ、2. `dist/grade/targets.js` の `project.repos` マルチリポジトリ相対パス `../` 許容、3. ワークツリー分岐前の grade 結果/criteria サイドカーのチェックポイント対象化、4. `exec scaffold --project` 時の `pm-review-viewpoints.yaml` 参照先 `standards/` -> `defaults/` 修正および `viewpoints_path` 未設定時の `specdojo:pm-review-viewpoints` フォールバック、5. `xrp-*-template.md` の `done_criteria` 表で発生する markdownlint MD060 警告の解消）を解消する。
 
 ## 2. 完了条件
 
@@ -33,16 +34,36 @@ exec run のレビュー前 grade 実行（ensureReviewGrade）が外部スク�
 
 ## 3. 作業内容
 
-| No  | 作業                                                       | 担当  | 状態 | メモ |
-| --- | ---------------------------------------------------------- | ----- | ---- | ---- |
-| 1   | grade の単一文書パイプラインを CLI に統合する              | indie | open | -    |
-| 2   | review 前 grade と複数リポジトリのパス解決を対応する       | indie | open | -    |
-| 3   | サイドカーの checkpoint と観点 scaffold を修正する         | indie | open | -    |
-| 4   | review template の MD060、配布版と runner の動作を確かめる | indie | open | -    |
+| No  | 作業                                                       | 担当  | 状態       | メモ                                                  |
+| --- | ---------------------------------------------------------- | ----- | ---------- | ----------------------------------------------------- |
+| 1   | grade の単一文書パイプラインを CLI に統合する              | indie | done       | 単段・再開・実体 actor の保存を実装                   |
+| 2   | review 前 grade と複数リポジトリのパス解決を対応する       | indie | done       | package 内 CLI の起動と宣言済み製品パスの解決         |
+| 3   | サイドカーの checkpoint と観点 scaffold を修正する         | indie | done       | 分岐・統合時の保持、共通観点へのフォールバック        |
+| 4   | review template の MD060、配布版と runner の動作を確かめる | indie | 確認引継ぎ | 配布版検証済み。親検証と統合後の実 agent 確認へ引継ぎ |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+### 実施内容・成果物
+
+- `src/grade/command-run.ts`・`run.ts` を追加し、対象探索、文書ごとの plan、agent 実行、marker の機械変換、grade apply を CLI 本体で連携した。kata / deliverable、`--kind`、繰り返しの `--path`、`--run-id`、`--dry-run`、単段、再開を扱う。選択は run ごとに固定し、文書・観点・比較リファレンス・完了条件・突き合わせ先の変更と結果の置換を検出する。apply 直後の中断も保存済み評価日時と実体 actor で復旧し、完了段を再適用しない。project 単位の排他制御と失敗理由の保存を追加した。
+- `src/shared/agent-plan.ts` に既存の `agent run` の実行機能を共通化した。名簿の有効な review executor（または旧形式 review agent）を priority 順に選び、別名を実体名へ解決する。`src/review/grade.ts` と schedule の準備処理は同じ package の `grade run` を使い、選択した actor と起動設定を引き継ぐ。最新結果を再利用し、失敗時は対象文書と理由を review plan に記録する。
+- `src/grade/targets.ts` と plan / apply / pipeline state / inspection の関連処理を更新した。宣言済み `project.repos` の `../` を解決し、宣言外・パス逸脱・範囲外 symlink を拒否する。pipeline state の schema も製品リポジトリの相対パスに対応した。
+- `src/exec/grade-checkpoint.ts` と schedule / register / worktree の準備・再開・統合処理を更新した。grade の results / criteria / pipeline の変更と削除を checkpoint に含める。分岐後に root で更新されたサイドカーは、統合前に差分を検出して上書きを止める。
+- `src/exec/commands.ts`・`project.ts` と grade の観点解決を更新した。scaffold は `defaults/pm-review-viewpoints.yaml` から差分雛形を生成し、`viewpoints_path` 未設定時は同梱の `specdojo:pm-review-viewpoints` を参照する。
+- review plan の 9 テンプレートの完了条件表を compact 形式にそろえた。MD060 を無効化せず、テンプレートと展開後の表の検査を追加した。grade / review / scaffold / checkpoint の回帰テスト、[[specdojo:command-reference|コマンドリファレンス]]、[[specdojo:exec-operation-guide|exec 運用ガイド]]、[[specdojo:review-guide|レビューガイド]]、`CHANGELOG.md` の `Unreleased` を更新した。
+
+### 検証結果
+
+- `npm run build`、`npm run check:src-imports`、変更ファイルの Prettier 整形、`git diff --check` を実行した。
+- `npm pack` の tarball を空のディレクトリにオフラインで導入し、配布版 CLI の `grade run --help` と dry-run を確認した。固定応答 adapter を使い、導入した package の native pipeline で実体 actor、サイドカー生成、完了段のスキップ、中断後の再開、製品リポジトリの完了条件サイドカー、パス逸脱・symlink の拒否を確認した。開発用シェルは tarball に不要である。
+- 製品リポジトリを指す `../product/doc.md` の未完了 state を `npm run validate:schema:file` で検査した。`catalog validate --project prj-0001` は成功した（既存の未作成成果物に対する警告あり）。
+- unit / integration test、TypeScript lint・型検査、Markdown・frontmatter lint、schema の全件検査は、指定された親 runner の検証に委ねる。executor は重複実行していない。
+
+### 申し送り
+
+- 統合後、[[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]] に従い、PJR-JSEY の確認対象へ PJR-K87Y を追加し、実際の `exec run --register PJR-JSEY` で start から review、実体 actor の記録、checkpoint と統合を確認する。sandbox で実 agent CLI の起動と利用枠消費を伴う確認はできないため、`requires_human` として引き継ぐ。
+- 配布版の実 agent による `grade run` と review 前 grade の通し実行はホスト側で確認する。sandbox では子プロセスの標準出力を取得できず、固定応答 adapter により評価・保存・再開を検証した。親 runner が関連テストと静的検査を実施する。
+- ネイティブ経路は単段と機械 reporter を対象とする。開発用シェルの実験的な 3 段構成は移植せず、日本語 finding の表示用翻訳は既存の `translation-plan` / `localize` を利用する。保護設定の変更は不要である。
 
 ## 5. 関連ドキュメント
 
