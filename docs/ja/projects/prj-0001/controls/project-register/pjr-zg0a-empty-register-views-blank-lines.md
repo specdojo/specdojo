@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: high
   owner: DEV
   registered_at: "2026-10-25T02:42:15Z"
-  block_reason: "parent validation failed: test-unit"
 ---
 
 # PJR-ZG0A 登録簿に項目がないと、担当者別と状態別の派生ビューが markdownlint の MD012 に当たる

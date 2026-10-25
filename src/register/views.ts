@@ -76,7 +76,9 @@ export function injectViewSlots(content: string, slots: Record<string, string>):
 
 // グループ（状態別・優先度別・担当者別など）を `### <chapter>.<n>. <label>` 見出し付きの
 // テーブル群へ整形する。章見出しラベルは template 側が持つため、ここでは番号と値のみ扱う。
+// 項目がない場合は空文字列を差し込むと前後の空行が重なり MD012 に当たるため、「該当なし」を書く。
 function renderGroupedTables(groups: ViewGroup[], chapter: number, heading: TableHeading): string {
+  if (groups.length === 0) return "該当なし";
   return groups
     .map((group, index) =>
       [

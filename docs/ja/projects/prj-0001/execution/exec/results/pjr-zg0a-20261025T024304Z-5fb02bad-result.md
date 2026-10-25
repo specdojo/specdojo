@@ -4,14 +4,13 @@ specdojo:
   type: exec-result
   task_id: PJR-ZG0A
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-zg0a-20261025T024304Z-5fb02bad-plan.md
   started_at: "2026-10-25T02:43:04.045Z"
-  completed_at: "2026-10-25T03:03:09.646Z"
+  completed_at: "2026-10-25T03:08:32.569Z"
   agent: sonnet-executor
-  block_reason: "parent validation failed: test-unit"
 ---
 
 # Edit Result

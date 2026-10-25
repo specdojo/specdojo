@@ -1,0 +1,10 @@
+項目が 0 件の登録簿でも、担当者別・状態別の派生ビューが `MD012` に当たらないように直しました。新しい test は通りました。親 runner の検証(`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` など)は、プランの指示どおり私は実行していません。
+
+- **原因と修正**: 原因は、`src/register/views.ts` の `renderGroupedTables` が、グループが 0 件のときに空文字列を返していたことです。これが章見出しの後の空行と重なっていました。0 件のときは「該当なし」を返すようにしました。項目がある場合の出力は変えていません。
+- **「該当なし」を書いた理由**: 空行を詰めるだけだと、見出しの後に何も無い章になり、生成漏れと区別できません。個票の対応結果にもこの理由を書きました。
+- **test**: `tests/src/register/empty-views.test.ts` を追加しました。0 件の登録簿で全派生ビューを生成し、本リポジトリの依存の markdownlint で `MD012` の違反が無いことを確かめます。
+- **その他の更新**: `CHANGELOG.md` の `## [Unreleased]` の「変更」に追記しました。個票の対応結果も更新しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"`renderGroupedTables` が 0 件のグループで「該当なし」を返すようにして、`MD012` を解消した。0 件の登録簿の全派生ビューを markdownlint で確かめる test を追加し、CHANGELOG と個票の対応結果を更新した。","handoff":["項目のない章には、空にせず「該当なし」と書くことにした。章が空のままだと生成漏れと区別できないため。理由は個票の対応結果にも記載済み。","項目がある場合の生成物は変えていない。本リポジトリでの `register build` の差分なしは親 runner の検証で確認されたい。"],"validations":[{"command":"npx vitest run tests/src/register/empty-views.test.ts","status":"passed","summary":"追加した test が 1 件通った"},{"command":"npm run typecheck","status":"not_run","summary":"親 runner が実行する検証のため、executor では実行していない","reason":"pipeline.parent_validations 相当の allowlist 検証は親 runner が実行する"}]}
+</specdojo_executor_evidence>
