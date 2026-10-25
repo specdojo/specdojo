@@ -2,17 +2,19 @@
 specdojo:
   id: prj-0001:pjr-tvga-devcontainer-scaffold-shutdown-action
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-25T08:40:40Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T09:44:01Z"
+  conclusion: 'shutdownAction: "none" を devcontainer の雛形へ反映し、空リポジトリでの生成結果、既存環境の修正手順、親の検証7項目の成功を確認した。利用者の指示により、ホストでの切断動作確認は close の条件としない。'
 ---
 
 # PJR-TVGA devcontainer scaffold の shutdownAction を補う
