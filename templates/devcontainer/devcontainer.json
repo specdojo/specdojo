@@ -5,6 +5,7 @@
   "init": true,
   "workspaceMount": "source=${localWorkspaceFolder}/..,target=/workspaces/__SPECDOJO_WORKSPACE_NAME__,type=bind,consistency=cached",
   "workspaceFolder": "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
+  "shutdownAction": "none",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": false,
