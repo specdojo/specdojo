@@ -205,6 +205,18 @@ flowchart LR
 - 判断根拠の記録: 参照した文書・しなかった文書とその理由を成果物または result に残します（特に `recipe-guided` / `freeform`）。後から実践の型を整備する材料になります。
 - 判定基準の優先: `done_criteria` と grade 結果が判定基準を示す場合はそれらを優先します。本原則は、判定基準だけでは読み取れない「どこまで参照に照らすか」を補います。
 
+### 1.4. 成果物カタログなしで進める
+
+register からの `fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize` は、カタログなしでも使えます。既存成果物は `--target <doc-id>` を文書索引で引き、frontmatter の `specdojo.rulebook` を起点に kata を辿ります。新規成果物は `register add`・`register update` の `--target-path` と `--target-rulebook` にパスと rulebook ID を明示します。個票へ保存する名前は `target_path` と `target_rulebook` です。既存文書と指定が矛盾した場合は停止します。
+
+カタログの `done_criteria` はないため、個票の完了条件と rulebook を完了基準にします。`fully-guided` には `not-needed` を除く kata 一式、`recipe-guided` には recipe が必要で、不足すると起票時に停止します。`retrofit` では調べる実装のパスを個票に明記します。
+
+`bootstrap` は kata の不足を許容し、パスと新規 rulebook ID、設定の `kata_authority` を必須とします。既存 rulebook は拒否します。rulebook ID の `-rulebook` より前の部分を共通の名前にして recipe・sample・template の ID を導出し、`docs/ja/specdojo/<kind>s/<kata_authority>/` の未作成候補を plan に載せます。作成した rulebook は成果物の `specdojo.rulebook` に記入します。
+
+`finalize` と `bootstrap-finalize` の対象は既存文書だけです。個票の完了条件をチェック表にし、`finalize` は成果物、`bootstrap-finalize` は成果物と frontmatter から辿る kata 一式を人が確定します。
+
+`cross-deliverable-dedup` はカタログの成果物群を対象にするため、引き続きカタログが必要です。カタログ設定済みの対象は従来の宣言を優先し、未登録の対象に限りパスと rulebook を両方明示した場合だけ上記の解決を使います。具体的な起票例は [[specdojo:quick-start-guide]]、オプションは [[specdojo:command-reference]] を参照してください。
+
 ## 2. 実践の型メンテナンスの進め方
 
 `rulebook-maintenance` / `recipe-maintenance` / `sample-maintenance` / `template-maintenance` は、通常の成果物作業とは参照の向きが逆になる進め方です。作成・更新かレビューかを `mode`（`edit` / `review`）で表す点は他の `approach` と同じです。

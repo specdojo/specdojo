@@ -58,3 +58,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_304b5f23d8d24ab0829376f4c55b7208
+- v: 1
+  id: reg_84c6568c107d4c7b9304294dd2b8d5dd
+  ts: "2026-10-25T15:51:35Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run --register の worktree 経路で実装・統合し、差分と個票・result を確認。親検証7項目と SPECDOJO_PROJECT=prj-0002 での単体2470件・統合223件が通過した。runner 本体の変更はない。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-26"
+    - field: conclusion
+      from: "-"
+      to: 共通テスト setup で継承した SPECDOJO_PROJECT を除去し、別 project 環境で単体・統合テストが通ることを確認した。
+  previous_event_id: reg_89e6bdf3531a4c2c8c3baf6ad8f3f891

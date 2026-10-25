@@ -125,6 +125,47 @@ describe("specdojo-config.schema.yaml", () => {
     ).toBe(false);
   });
 
+  it("accepts exclusions alongside additions and accepts an empty exclusion list", () => {
+    for (const exclusions of [
+      [],
+      ["test-unit", "test-integration", { id: "typecheck", repo: "project" }],
+      [{ id: "typecheck", repo: "specdojo-lp" }],
+    ]) {
+      expect(
+        validate({
+          version: 1,
+          projects: {
+            "prj-0002": {
+              run: {
+                parent_validations_exclude: exclusions,
+                parent_validations: [{ id: "typecheck", repo: "specdojo-lp" }],
+              },
+            },
+          },
+        }),
+      ).toBe(true);
+    }
+  });
+
+  it.each(
+    [
+      null,
+      "test-unit",
+      ["arbitrary-command"],
+      ["test-unit", "test-unit"],
+      [{ id: "test-unit" }],
+      [{ id: "typecheck", repo: "App1" }],
+      [{ id: "typecheck", repo: "project", command: "npm run evil" }],
+    ].map((exclusions) => ({ exclusions })),
+  )("rejects invalid exclusion entries: %j", ({ exclusions }) => {
+    expect(
+      validate({
+        version: 1,
+        projects: { "prj-0002": { run: { parent_validations_exclude: exclusions } } },
+      }),
+    ).toBe(false);
+  });
+
   it("accepts only protected repository-relative agent member paths", () => {
     expect(
       validate({

@@ -14,6 +14,7 @@ import type { AgentLimitKind } from "./limit.js";
 import type { Proficiency } from "./types.js";
 import {
   resolveParentValidationConcurrency,
+  resolveParentValidationAssignments,
   resolveParentValidationDefinitions,
   type ParentValidationEntry,
 } from "./parent-validation.js";
@@ -507,11 +508,14 @@ function loadLegacyRateLimitPolicy(executionPath?: string): RateLimitPolicy | un
   return undefined;
 }
 
-function projectParentValidations(executionPath?: string): ParentValidationEntry[] {
-  if (!executionPath) return [];
+function projectParentValidationOverrides(executionPath?: string): {
+  append?: ParentValidationEntry[];
+  exclude?: ParentValidationEntry[];
+} {
+  if (!executionPath) return {};
 
   const { config } = loadConfig();
-  if (!config) return [];
+  if (!config) return {};
   const rootDir = specdojoRootDir();
   const targetExecutionPath = resolve(executionPath);
   const normalizedTarget = targetExecutionPath.replaceAll("\\", "/");
@@ -527,18 +531,21 @@ function projectParentValidations(executionPath?: string): ParentValidationEntry
       !isAbsolute(configuredExecutionPath) &&
       normalizedTarget.endsWith(`/${normalizedConfigured.replace(/^\.\//, "")}`);
     if (resolvedExecutionPath !== targetExecutionPath && !isProjectWorktreePath) continue;
-    const entries = (project.run as { parent_validations?: unknown } | undefined)
-      ?.parent_validations;
-    if (entries === undefined) return [];
-    if (!Array.isArray(entries)) {
-      throw new Error(
-        `Invalid .specdojo/specdojo.config.json: projects.${projectId}.run.parent_validations must be an array`,
-      );
+    for (const key of ["parent_validations", "parent_validations_exclude"] as const) {
+      const entries = project.run?.[key];
+      if (entries !== undefined && !Array.isArray(entries)) {
+        throw new Error(
+          `Invalid .specdojo/specdojo.config.json: projects.${projectId}.run.${key} must be an array`,
+        );
+      }
     }
-    return entries as ParentValidationEntry[];
+    return {
+      append: project.run?.parent_validations,
+      exclude: project.run?.parent_validations_exclude,
+    };
   }
 
-  return [];
+  return {};
 }
 
 export function loadExecDefaultsConfig(
@@ -562,15 +569,31 @@ export function loadExecDefaultsConfig(
     if (legacyPolicy) defaults.rate_limit_policy = legacyPolicy;
   }
 
-  const additionalParentValidations = projectParentValidations(executionPath);
-  if (additionalParentValidations.length > 0) {
+  const overrides = projectParentValidationOverrides(executionPath);
+  if (overrides.exclude?.length || overrides.append?.length) {
+    const sharedEntries = defaults.pipeline?.parent_validations ?? [];
+    // Validate the shared list before filtering so an exclusion cannot hide invalid defaults.
+    const sharedAssignments = resolveParentValidationAssignments(sharedEntries);
+    const sharedLabels = new Set(sharedAssignments.map(({ label }) => label));
+    const excludedLabels = new Set(
+      resolveParentValidationAssignments(overrides.exclude).map(({ label }) => label),
+    );
+    for (const label of excludedLabels) {
+      if (!sharedLabels.has(label)) {
+        throw new Error(
+          `Invalid run.parent_validations_exclude: ${label} is not present in shared pipeline.parent_validations`,
+        );
+      }
+    }
     defaults = {
       ...defaults,
       pipeline: {
         ...defaults.pipeline,
         parent_validations: [
-          ...(defaults.pipeline?.parent_validations ?? []),
-          ...additionalParentValidations,
+          ...sharedEntries.filter(
+            (_, index) => !excludedLabels.has(sharedAssignments[index].label),
+          ),
+          ...(overrides.append ?? []),
         ],
       },
     };

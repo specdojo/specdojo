@@ -124,13 +124,14 @@ project の `integration_branch` は、`repos[].integration_branch` とは別の
 
 `projects.<project-id>.run` に指定します。これらのパスは `base_path` の影響を受けず、リポジトリルート基準です。
 
-| キー                     | 既定値         | 役割・利用箇所                                                                                                               |
-| ------------------------ | -------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| `exec_defaults`          | なし           | provider、権限、リトライなどを定義する exec defaults ファイルです。agent を起動する `exec run` が参照します。                |
-| `agent_config`           | なし           | `exec_defaults` の旧キーです。互換目的でのみ利用し、新しい設定では `exec_defaults` を使います。                              |
-| `parent_validations`     | `[]`           | この project だけで追加する親 runner の検証です。`exec_defaults` の `pipeline.parent_validations` の後ろへ指定順に加えます。 |
-| `worktree_base`          | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。                        |
-| `register_date_timezone` | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。                       |
+| キー                         | 既定値         | 役割・利用箇所                                                                                                               |
+| ---------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `exec_defaults`              | なし           | provider、権限、リトライなどを定義する exec defaults ファイルです。agent を起動する `exec run` が参照します。                |
+| `agent_config`               | なし           | `exec_defaults` の旧キーです。互換目的でのみ利用し、新しい設定では `exec_defaults` を使います。                              |
+| `parent_validations`         | `[]`           | この project だけで追加する親 runner の検証です。`exec_defaults` の `pipeline.parent_validations` の後ろへ指定順に加えます。 |
+| `parent_validations_exclude` | `[]`           | 共有の `pipeline.parent_validations` から除外する ID と実行先の組です。除外後に `parent_validations` を追記します。          |
+| `worktree_base`              | `../worktrees` | `exec run --worktree` / `--auto` と `exec trial` が作る worktree の親です。リポジトリ外を指定します。                        |
+| `register_date_timezone`     | `UTC`          | 登録簿の「登録日」「完了日」を日時から暦日へ変換する IANA タイムゾーン名です。例は `Asia/Tokyo` です。                       |
 
 `parent_validations` の要素は、共有 defaults と同じく検証 ID、または `{ "id": "<id>", "repo": "<repo>" }` です。共有 defaults を複製せず、プロダクトリポジトリを持つ project だけに検証を追加できます。たとえば `prj-0002` だけで `specdojo-lp` の型と lint を検査する設定は次のとおりです。
 
@@ -151,7 +152,27 @@ project の `integration_branch` は、`repos[].integration_branch` とは別の
 }
 ```
 
-有効な一覧は「共有 defaults の `pipeline.parent_validations` → project の `run.parent_validations`」の順です。同じ ID と実行先の組が両方にある場合は重複として agent 起動前にエラーになります。`run.parent_validations` を省略した project には共有 defaults だけが適用されるため、`repos` を持たない別 project はプロダクトリポジトリ向けの追加検証に影響されません。許可される ID と実行結果の記録は [[specdojo:exec-config-guide|exec設定ガイド]] を参照してください。
+除外を指定しない場合、有効な一覧は「共有 defaults の `pipeline.parent_validations` → project の `run.parent_validations`」の順です。同じ ID と実行先の組が両方にある場合は重複として agent 起動前にエラーになります。追加も除外も省略した project には共有 defaults だけが適用されるため、`repos` を持たない別 project はプロダクトリポジトリ向けの追加検証に影響されません。許可される ID と実行結果の記録は [[specdojo:exec-config-guide|exec設定ガイド]] を参照してください。
+
+共有検証を減らす場合は `run.parent_validations_exclude` を指定します。要素の形式は `parent_validations` と同じです。有効な一覧は「共有の `pipeline.parent_validations` から除外 → `run.parent_validations` を追記」の順になり、共有一覧の残りと追記分の順序を保ちます。除外を省略するか `[]` にした project は従来どおりです。共有 defaults のほかの設定や、別 project の検証は変わりません。
+
+たとえば共有一覧が `lint-fm`・`lint-md`・`lint-ts`・`typecheck`・`test-unit`・`test-integration`・`validate-schema` の場合、`prj-0002` の `run` を次のようにすると、`lint-fm`・`lint-md` と `specdojo-lp` の `typecheck` だけが有効になります。`repos` は上の例と同じ宣言を使います。
+
+```json
+{
+  "exec_defaults": ".specdojo/exec-defaults.yaml",
+  "parent_validations_exclude": [
+    "lint-ts",
+    "typecheck",
+    "test-unit",
+    "test-integration",
+    "validate-schema"
+  ],
+  "parent_validations": [{ "id": "typecheck", "repo": "specdojo-lp" }]
+}
+```
+
+除外の ID だけの指定は `{ "id": "<id>", "repo": "project" }` と同じで、同じ ID の別リポジトリ向け検証には一致しません。未知の ID、不正な要素、共有一覧に存在しない ID と実行先の組の除外、除外一覧内または最終一覧内の組の重複は agent 起動前に設定エラーになります。除外前の共有一覧自体も検証します。除外は project の追加分には適用せず、除外した組を `parent_validations` で末尾に戻すことはできます。共有 defaults に新しく追加された検証は、除外に指定しない限り継承します。
 
 `config init` は一般既定の `../worktrees` ではなく、実行したリポジトリのディレクトリ名から作る `../<リポジトリ名>-worktrees` を `worktree_base` へ明示します。例えば `app1-specdojo/` で実行した場合は `../app1-specdojo-worktrees` です。
 

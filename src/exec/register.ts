@@ -1,3 +1,7 @@
+import {
+  resolveRegisterDeliverableTarget,
+  type RegisterDeliverableTarget,
+} from "../register/deliverable-target.js";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, extname, join, relative, resolve } from "node:path";
 import {
@@ -463,6 +467,55 @@ function catalogSource(
   return findDeliverableByPath(catalogPath, source.path);
 }
 
+function cataloglessPlanFields(
+  resolved: RegisterDeliverableTarget,
+  item: PjrItem,
+  targetId: string,
+  ticketPath: string | null,
+): { targets: string[]; conditions: string } {
+  let targets = [targetId];
+  let conditionsText = "";
+  if (resolved.catalogless) {
+    conditionsText =
+      "カタログの `done_criteria` はない。個票の完了条件と rulebook を完了基準とする。";
+    if (item.approach === "bootstrap") {
+      targets = [targetId, ...(resolved.kataIds ?? [])];
+      conditionsText += `\n\n成果物の frontmatter に \`specdojo.id: ${targetId}\` と \`specdojo.rulebook: ${resolved.info.deliverable.rulebook}\` を記入する。未作成の kata は次の ID とパスで整備し、recipe・sample・template の ID を rulebook frontmatter に宣言する。不要な型は作らず \`not-needed\` と宣言する。\n\n`;
+      conditionsText += (resolved.kataIds ?? [])
+        .map((id, index) => {
+          const kind = (["rulebook", "recipe", "sample", "template"] as const)[index];
+          return `- \`${id}\`: \`${kind ? resolved.refs?.[kind] : ""}\`（未作成 / missing）`;
+        })
+        .join("\n");
+    } else {
+      conditionsText += `\n\n成果物の frontmatter に \`specdojo.id: ${targetId}\` と \`specdojo.rulebook: ${resolved.info.deliverable.rulebook}\` を維持・記入する。`;
+    }
+    if (item.approach === "finalize" || item.approach === "bootstrap-finalize") {
+      if (item.approach === "bootstrap-finalize") targets = [targetId, ...(resolved.kataIds ?? [])];
+      const conditions = registerCompletionConditions(item, ticketPath);
+      const checklist = conditions
+        .split(/\r?\n/)
+        .filter((line) => line.trim())
+        .map((line) => {
+          const text = line.replace(/^\s*(?:[-*+]\s+(?:\[[ xX]\]\s*)?|\d+\.\s*)/, "");
+          return `- [ ] ${text}`;
+        })
+        .join("\n");
+      conditionsText += `\n\n### 人による確定のチェック表\n\n${checklist}\n\n### 確定対象\n\n- [ ] 成果物: \`${resolved.info.resolvedPath}\``;
+      if (item.approach === "bootstrap-finalize") {
+        conditionsText +=
+          "\n" +
+          (resolved.kataTargets ?? [])
+            .map(({ id, path }) => `- [ ] \`${id}\`: \`${path}\`（frontmatter から辿った kata）`)
+            .join("\n");
+      }
+      conditionsText +=
+        "\n\n人が各条件と確定対象を確認する。agent は成果物の `status` を `ready` へ変更しない。";
+    }
+  }
+  return { targets, conditions: conditionsText };
+}
+
 export async function generateRegisterPlan(opts: {
   executionPath: string;
   projectId: string;
@@ -487,6 +540,8 @@ export async function generateRegisterPlan(opts: {
       approach: item.approach,
       targets: item.targets,
       sources: item.sources,
+      targetPath: item.targetPath,
+      targetRulebook: item.targetRulebook,
     });
     const [targetId] = item.targets ?? [];
     if (!targetId) throw new Error(`Register item ${item.id} approach requires a target.`);
@@ -496,6 +551,8 @@ export async function generateRegisterPlan(opts: {
     ] as keyof KataRefs | undefined;
     let deliverable: DeliverableInfo | null = null;
     let refs: KataRefs | undefined;
+    let cataloglessConditions = "";
+    let planTargets = [targetId];
     let authoring: Parameters<typeof generateRegisterApproachPlan>[0]["authoring"];
     if (newKataKind) {
       const sourceRefs = [...(item.targets ?? []).slice(1), ...(item.sources ?? [])];
@@ -562,12 +619,20 @@ export async function generateRegisterPlan(opts: {
         : { rulebook: MISSING, recipe: MISSING, sample: MISSING, template: MISSING };
       refs = { ...refs, [maintenanceKind]: indexedDocumentPath(targetId) };
     } else {
-      if (!opts.catalogPath) {
-        throw new Error(
-          `Register item ${item.id} approach requires catalog_path to resolve ${targetId}.`,
-        );
-      }
-      deliverable = resolveDeliverableByDocId(opts.catalogPath, opts.projectId, targetId).info;
+      const resolved = resolveRegisterDeliverableTarget({
+        repoRoot: specdojoRootDir(),
+        projectId: opts.projectId,
+        catalogPath: opts.catalogPath,
+        approach: item.approach,
+        targetId,
+        targetPath: item.targetPath,
+        targetRulebook: item.targetRulebook,
+      });
+      deliverable = resolved.info;
+      refs = resolved.refs;
+      const fields = cataloglessPlanFields(resolved, item, targetId, ticketPath);
+      planTargets = fields.targets;
+      cataloglessConditions = fields.conditions;
     }
 
     const planPath = await generateRegisterApproachPlan({
@@ -582,11 +647,12 @@ export async function generateRegisterPlan(opts: {
       description: item.description,
       ...(item.owner && item.owner !== "-" && item.owner !== "_TODO_" ? { owner: item.owner } : {}),
       approach: item.approach,
-      targets: targetId ? [targetId] : [],
+      targets: planTargets,
       deliverable,
       ...(refs ? { refs } : {}),
       ...(authoring ? { authoring } : {}),
       additionalConditions: [
+        cataloglessConditions,
         registerCompletionConditions(item, ticketPath),
         registerAutopilotConstraints(item),
       ]

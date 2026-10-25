@@ -166,9 +166,22 @@ $defs:
         type: string
       parent_validations:
         description: >-
-          Parent-runner validations appended, in order, to pipeline.parent_validations from this
-          project's exec_defaults file. A plain ID targets the project repository; { id, repo }
-          targets project or a product repository declared by this project.
+          Parent-runner validations appended, in order, after parent_validations_exclude removes
+          matching entries from pipeline.parent_validations in this project's exec_defaults file.
+          A plain ID targets the project repository; { id, repo } targets project or a product
+          repository declared by this project. Duplicate ID/repository pairs in the effective list
+          are rejected before agent launch.
+        type: array
+        uniqueItems: true
+        items:
+          $ref: "#/$defs/ParentValidation"
+      parent_validations_exclude:
+        description: >-
+          Remove these ID/repository pairs from shared pipeline.parent_validations before appending
+          this project's parent_validations. Omitted or [] preserves the shared list. A plain ID
+          matches only the project repository, equivalently { id, repo: project }. Every exclusion
+          must exist in the shared list; missing entries and duplicate pairs are configuration
+          errors checked by the CLI before agent launch. Other projects are unaffected.
         type: array
         uniqueItems: true
         items:

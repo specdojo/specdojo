@@ -55,26 +55,28 @@ Project Register Documentation Rules
 
 個票には `register-item-frontmatter.schema.yaml` が定義する次の項目を置く。未定の担当、期限、完了日時、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
 
-| 項目            | 説明                                         | 必須 |
-| --------------- | -------------------------------------------- | ---- |
-| `id`            | `<project-id>:pjr-XXXX-<topic>`              | ○    |
-| `type`          | `project`                                    | ○    |
-| `status`        | 文書成熟度。`draft` / `ready` / `deprecated` | ○    |
-| `rulebook`      | `specdojo:pjr-rulebook`                      | ○    |
-| `part_of`       | `<project-id>:pjr-index` を要素に持つ配列    | ○    |
-| `item_type`     | 登録項目の分類                               | ○    |
-| `item_status`   | 登録項目の処理状態                           | ○    |
-| `priority`      | 対応優先度                                   | ○    |
-| `difficulty`    | agent 振り分け用の作業難易度                 | 任意 |
-| `owner`         | 主担当者または役割                           | 任意 |
-| `registered_at` | 起票日時                                     | 任意 |
-| `due_on`        | 対応期限または判断期限                       | 任意 |
-| `completed_at`  | 完了・却下・決定日時                         | 条件 |
-| `block_reason`  | `waiting` へ遷移した直近の理由               | 任意 |
-| `conclusion`    | 終端時の結論要約                             | 任意 |
-| `derived_from`  | 起票の元になった登録項目 ID の配列           | 任意 |
-| `approach`      | 対象を作成・修正するときの進め方             | 任意 |
-| `targets`       | 変更対象文書の doc id リスト                 | 任意 |
+| 項目              | 説明                                             | 必須 |
+| ----------------- | ------------------------------------------------ | ---- |
+| `id`              | `<project-id>:pjr-XXXX-<topic>`                  | ○    |
+| `type`            | `project`                                        | ○    |
+| `status`          | 文書成熟度。`draft` / `ready` / `deprecated`     | ○    |
+| `rulebook`        | `specdojo:pjr-rulebook`                          | ○    |
+| `part_of`         | `<project-id>:pjr-index` を要素に持つ配列        | ○    |
+| `item_type`       | 登録項目の分類                                   | ○    |
+| `item_status`     | 登録項目の処理状態                               | ○    |
+| `priority`        | 対応優先度                                       | ○    |
+| `difficulty`      | agent 振り分け用の作業難易度                     | 任意 |
+| `owner`           | 主担当者または役割                               | 任意 |
+| `registered_at`   | 起票日時                                         | 任意 |
+| `due_on`          | 対応期限または判断期限                           | 任意 |
+| `completed_at`    | 完了・却下・決定日時                             | 条件 |
+| `block_reason`    | `waiting` へ遷移した直近の理由                   | 任意 |
+| `conclusion`      | 終端時の結論要約                                 | 任意 |
+| `derived_from`    | 起票の元になった登録項目 ID の配列               | 任意 |
+| `approach`        | 対象を作成・修正するときの進め方                 | 任意 |
+| `target_path`     | カタログなしで作成する成果物のリポジトリ相対パス | 任意 |
+| `target_rulebook` | 対象成果物の rulebook ID                         | 任意 |
+| `targets`         | 変更対象文書の doc id リスト                     | 任意 |
 
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority`、`difficulty` の値は schema の enum だけを使用する。`difficulty` は `hard` / `medium` / `easy` のいずれかとし、省略時は従来の agent 自動選択を使う。
@@ -138,12 +140,16 @@ Project Register Documentation Rules
 - 関連ドキュメントには、判断根拠、変更対象、影響先、追跡先のうち該当する文書を記載する。
 - 実行中に問題や後続作業を見つけて別の登録項目を起票するときは、起票元を `derived_from` に必ず記録する。decision から todo を起票する場合も同じ関係を使い、decision 本文へ追跡先を重複記載しない。既存本文の追跡先は移行のために書き換えない。
 - 本項目の実施において確実に変更する対象文書が分かっている場合は、その文書 ID を Frontmatter の `targets` 配列へ宣言する。宣言した `targets` は agent 実行時の変更網羅検証（target coverage）に用いられる。未知の場合や対象を固定しない場合は宣言を省略する。
-- `approach` を宣言する場合、`targets` は 1 件だけ必須とする。`fully-guided`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`cross-deliverable-dedup`・`finalize`・`bootstrap-finalize` の対象は成果物カタログにある成果物の doc id とし、まだ文書がない成果物もカタログで解決する。`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` の対象は、名前に対応する種別の kata の doc id とし、文書索引で解決する。対応する正本で解決できない ID や、`approach` と種別が合わない対象は使用しない。
+- `approach` を宣言する場合、`targets` は 1 件だけ必須とする。成果物の対象はカタログを優先して解決する。`cross-deliverable-dedup` はカタログを必須とする。それ以外の成果物の approach（`fully-guided`・`recipe-guided`・`freeform`・`bootstrap`・`retrofit`・`finalize`・`bootstrap-finalize`）は、カタログなしでも既存文書の索引と `specdojo.rulebook`、または個票の `target_path` と `target_rulebook` から解決できる。新規文書は両フィールドを必須とし、リポジトリ外のパスや別文書との衝突、既存文書と指定の不一致は認めない。カタログ設定済みで対象が未登録の場合も両フィールドがある場合だけ同じ解決を使う。`rulebook-maintenance`・`recipe-maintenance`・`sample-maintenance`・`template-maintenance` の対象は、名前に対応する種別の kata の doc id とし、文書索引で解決する。対応する正本で解決できない ID や、`approach` と種別が合わない対象は使用しない。
+
+- カタログなしの完了基準は個票の完了条件と rulebook とする。recipe・sample・template は rulebook frontmatter から辿り、`not-needed` のものを対象に含めない。`fully-guided` の必要な一式、`recipe-guided` の recipe が不足する場合は起票・更新を拒否する。
+- カタログなしの `bootstrap` は `target_path`、新しい `target_rulebook`、設定の `kata_authority` を必須とする。既存 rulebook を再利用しない。rulebook の名前部分から recipe・sample・template の ID を導出し、`docs/ja/specdojo/<kind>s/<kata_authority>/` に配置する候補を plan へ示す。成果物には新しい `specdojo.rulebook` を記録する。
+- `finalize`・`bootstrap-finalize` は既存成果物だけを対象にし、カタログなしでは個票の完了条件を確認チェック表にする。後者は成果物と frontmatter から辿る kata 一式を確定対象とする。
 
 ### 5.2. 構造化フィールドと生成
 
 - 新しい項目は `register add` で作成し、個票の Frontmatter に初期値を書き込む。全 type で個票を省略しない。
-- 担当・期限・結論・topic・`derived_from`・`approach`・`targets` などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。`register add` と `register update` では、起票元に繰り返し指定できる `--from`、進め方に `--approach`、対象に繰り返し指定できる `--target` を使う。起票元、`approach`、対象を削除するときは、それぞれ `--from -`、`--approach -`、`--target -` を指定する。待機理由は `register wait --reason` で記録し、誤った現在値を手動補正するときは `register update --block-reason -` で削除する。
+- 担当・期限・結論・topic・`derived_from`・`approach`・`targets` などを変更するときは `register update`、処理状態を変えるときは状態遷移コマンドを使用する。`register add` と `register update` では、起票元に繰り返し指定できる `--from`、進め方に `--approach`、対象に繰り返し指定できる `--target`、成果物の配置と rulebook に `--target-path` と `--target-rulebook` を使う。配置と rulebook の明示指定もそれぞれ `-` で削除できる。起票元、`approach`、対象を削除するときは、それぞれ `--from -`、`--approach -`、`--target -` を指定する。待機理由は `register wait --reason` で記録し、誤った現在値を手動補正するときは `register update --block-reason -` で削除する。
 - `register build` は個票を読み取り、一覧・派生ビューを再生成する。`generated/pjr-derived-items.md` では `derived_from` を逆引きし、元の項目から派生先を辿れるようにする。一覧を編集して個票へ反映する経路はない。
 - `register add`、状態遷移、`register update`、`register renumber` は現在値を個票へ、イベントを対応する項目別ログへ記録する。`--by` で actor、`--reason` で理由を明示でき、省略時は予約 actor の `SpecDojo` を記録する。
 - `--by` に指定できるのは、project の `pm-members.yaml` にある人の nickname、repository の `.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` に限る。agent の alias は実体の nickname に解決して記録し、名簿にも予約一覧にもない値は書き込み前に拒否する。

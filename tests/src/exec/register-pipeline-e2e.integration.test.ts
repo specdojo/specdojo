@@ -722,6 +722,78 @@ afterEach(() => {
 });
 
 describe("exec run --register executor/reporter pipeline (E2E)", () => {
+  it.each([
+    {
+      run: { parent_validations_exclude: ["arbitrary-command"] },
+      error: "Unknown parent validation id",
+    },
+    {
+      run: { parent_validations_exclude: ["test-unit"] },
+      error: "test-unit is not present in shared pipeline.parent_validations",
+    },
+    {
+      run: { parent_validations: [{ id: "test-integration", repo: "project" }] },
+      error: "Duplicate parent validation id",
+    },
+    {
+      run: {
+        parent_validations_exclude: ["test-integration"],
+        parent_validations: ["lint-md", { id: "lint-md", repo: "project" }],
+      },
+      error: "Duplicate parent validation id",
+    },
+  ])(
+    "rejects invalid effective parent validations before starting agents: %j",
+    async ({ run, error }) => {
+      await withRepo(async ({ root, worktreeBase }) => {
+        const stdout: string[] = [];
+        vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+          stdout.push(String(chunk));
+          return true;
+        });
+        vi.spyOn(process.stderr, "write").mockImplementation(() => true);
+        const ticketPath = join(root, REGISTER_REL, "pjr-ab12-pipeline-test.md");
+        const ticketBefore = readFileSync(ticketPath, "utf8");
+        const headBefore = git(root, "rev-parse", "HEAD");
+        writeFileSync(
+          join(root, ".specdojo", "specdojo.config.json"),
+          JSON.stringify({
+            ...CONFIG,
+            projects: {
+              test: { ...CONFIG.projects.test, run: { ...CONFIG.projects.test.run, ...run } },
+            },
+          }),
+        );
+        writeFileSync(
+          join(root, "fake-agent.mjs"),
+          'import { writeFileSync } from "node:fs"; writeFileSync("agent-launched", "unexpected"); process.exit(1);\n',
+        );
+
+        await runExec([
+          "run",
+          "--project",
+          "test",
+          "--register",
+          "PJR-AB12",
+          "--executor-by",
+          "exec-1",
+          "--reporter-by",
+          "report-1",
+          "--worktree",
+          "--worktree-base",
+          worktreeBase,
+        ]);
+
+        expect(process.exitCode).toBe(1);
+        expect(stdout.join("")).toContain(error);
+        expect(existsSync(join(root, "agent-launched"))).toBe(false);
+        expect(execWorktreePath(root)).toBeNull();
+        expect(readFileSync(ticketPath, "utf8")).toBe(ticketBefore);
+        expect(git(root, "rev-parse", "HEAD")).toBe(headBefore);
+      });
+    },
+  );
+
   it.each([false, true])(
     "keeps incomplete work waiting without integration and resumes from executor (explicit=%s)",
     { timeout: 120_000 },
