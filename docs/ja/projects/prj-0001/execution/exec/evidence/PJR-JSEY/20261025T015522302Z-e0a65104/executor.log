@@ -1,0 +1,10 @@
+個票の対応結果の表に 1 行を追記しました。変更したのは `pjr-jsey-exec-run-split-smoke.md` だけです。検査は実行していません。lint、typecheck、テストなどの親の検証は runner が実行します。
+
+追記した行は `2026-10-25 10:57 | PJR-XTE6 | sonnet-executor` です。
+
+- **対象の分割:** `git log --merges` で見て、最も新しく統合された項目は PJR-XTE6(10:54 JST)でした。完了条件の一覧に含まれていて、前回の PJR-84F7(08:55)より新しいです。登録簿 `pjr-index.md` は、このワークツリーに無かったため状態を確認できていません。統合されたことは `git log --merges` だけで判断しました。
+- **日時:** 10:57 は作業時刻(10:56 JST)から丸めた値です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-XTE6 の行(2026-10-25 10:57 JST, sonnet-executor)を追記した。他のファイルは変更していない。","handoff":["対象の分割は git log --merges で最新の統合だった PJR-XTE6 と判断した。登録簿 pjr-index.md はこのワークツリーに無く、状態は未確認。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlisted 検証のため executor では実行していない。"}]}
+</specdojo_executor_evidence>

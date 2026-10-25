@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
@@ -75,6 +75,7 @@ exec-run.ts の分割（PJR-3W2N・PJR-2JFM・PJR-GBPX）の統合ごとに、�
 | 2026-10-24 18:58 | PJR-ZV60   | sonnet-executor        |
 | 2026-10-25 00:03 | PJR-68KR   | sonnet-executor        |
 | 2026-10-25 08:55 | PJR-84F7   | sonnet-executor        |
+| 2026-10-25 10:57 | PJR-XTE6   | sonnet-executor        |
 
 ## 5. 関連ドキュメント
 
