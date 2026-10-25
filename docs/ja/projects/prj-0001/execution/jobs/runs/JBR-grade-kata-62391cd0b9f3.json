@@ -7,7 +7,7 @@
   "trigger": "routine",
   "scheduled_at": "2026-10-25T20:00:00.000Z",
   "created_at": "2026-10-25T20:00:53.632Z",
-  "updated_at": "2026-10-25T20:07:01.795Z",
+  "updated_at": "2026-10-25T20:11:40.634Z",
   "state": "succeeded",
   "inputs": {
     "period": "2026-W44",
@@ -60,5 +60,12 @@
       "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-62391cd0b9f3/attempt-1/evidence.json",
       "exit_code": 0
     }
-  ]
+  ],
+  "review": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/JBR-grade-kata-62391cd0b9f3-review-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-kata-62391cd0b9f3-review-result.md",
+    "branch": "exec/prj-0001-JBR-grade-kata-62391cd0b9f3",
+    "verdict": "complete-with-findings",
+    "reviewed_at": "2026-10-25T20:11:40.634Z"
+  }
 }
