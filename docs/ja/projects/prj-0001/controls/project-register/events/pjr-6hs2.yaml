@@ -1,0 +1,34 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_322c0cfa36374824af8654cd966a0ec6
+  ts: "2026-10-24T23:23:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata のディレクトリにある付属のファイルが、別の kata として一覧に出る
+    - field: description
+      from: ""
+      to: kata list と kata status は kata のディレクトリのファイルをすべて kata として数えるため、sample に付けた CSS などの付属のファイルが、ファイル名を ID とする別の kata（status では package-missing）として表示される。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"
