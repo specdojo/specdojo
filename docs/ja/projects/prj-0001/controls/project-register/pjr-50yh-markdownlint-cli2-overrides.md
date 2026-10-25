@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-25T01:36:26Z"
   due_on: "2026-10-31"
-  block_reason: "parent validation failed: test-integration, test-unit"
 ---
 
 # PJR-50YH scaffold の markdownlint 設定のせいで、VS Code でファイルごとの規則を当てられない
@@ -80,7 +79,43 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 作業内容
+
+- 承認済みの対応策 1 を実装した。`init --lefthook` / `config scaffold --lefthook` は、先頭が `{` の
+  JSON の `.markdownlintrc` と、`config.extends: .markdownlintrc` の `.markdownlint-cli2.yaml` を生成する。
+  基本の 6 規則（`MD013`・`MD024`・`MD033`・`MD036`・`MD041`・`MD060`）は従来どおり無効とする。
+- `--slidev` は、Prettier と ignore と同じ `*-slidev-sample.md` / `*-slidev-template.md` の glob を
+  CLI2 の先頭の override の `filter` に設定し、`combine: merge` で基本設定を引き継ぐ。
+  Slidev 単独でも、設定がなければ `.markdownlintrc` と `.markdownlint-cli2.yaml` を生成する。
+- Slidev 用に追加で外す規則と理由は次のとおり。
+  - `MD001`: スライドのレイアウトごとに見出しレベルを選べるようにする。
+  - `MD022`: ページ区切り・ページごとの frontmatter に隣接する見出しを許す。
+  - `MD025`: ページごとの H1 を許す。
+  - `MD031`・`MD032`: ページ区切りに隣接するコードブロック・リストを許す。
+- commit hook と result の検査は markdownlint-cli を使い続け、`.markdownlintrc` と
+  `.markdownlintignore` を読む。Slidev の kata は hook・result 検査では除外し、VS Code では
+  CLI2 の Slidev 用規則で検査する。
+- 既存の `.markdownlint.*`・`.markdownlintrc`・`.markdownlint-cli2.*` は `--force` でも保持する。
+  旧設定や CLI2 独自の設定がある場合は、競合する新規設定を自動作成せず、足りない内容と移行案を表示する。
+  既存の `.markdownlintrc` だけがある場合は、その規則を保持して CLI2 の参照設定を追加する。
+- [[specdojo:kata-guide|実践の型活用ガイド]] と [[specdojo:command-reference|コマンドリファレンス]] に
+  各設定を読む道具、CLI2 は先頭・Prettier は末尾という順序、旧設定からの移行手順を記載した。
+  `CHANGELOG.md` の Unreleased に変更を記録した。
+
+### 確認結果と再発防止
+
+- 変更した Markdown・TypeScript を `npx prettier --write` で整形し、`git diff --check` は成功した。
+  hook に合わせて `node --import tsx tools/catalog-validate-if-configured.mjs` を実行し、終了コード 0。
+  今回変更していないカタログの `based_on` 参照先の文書不足による警告は出るが、検証エラーはない。
+- 単体テストを追加・更新した。生成物の JSON の先頭、CLI2 の `config.extends`・`filter`・`combine`・規則、
+  lefthook と Slidev の同時指定、既存設定の保持、dry-run、設定の統合順序の案内を確認する。
+  生成した hook の markdownlint 入口と result の検査を実際に呼ぶ回帰テストでは、長い行を許し、
+  `MD018` の違反は検出することを確認する。
+- 型検査・TypeScript lint・Markdown lint・frontmatter lint・単体テスト・統合テスト・schema 検査は、
+  この pipeline の指定により親 runner が実行する。executor 内では重複実行しない。
+- markdownlint-cli2 は依存にないため、個票で承認されたとおり実行検査は追加せず、生成内容を単体テストで検証する。
+- 本リポジトリの保護された設定と `package.json`、登録簿の一覧・ステータス、result は変更していない。
+  result には後続の reporter / runner が、実施内容・変更ファイル・親検証の結果と申し送りを記入する。
 
 ## 5. 関連ドキュメント
 

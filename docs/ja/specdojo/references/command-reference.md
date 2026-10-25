@@ -114,7 +114,8 @@ specdojo config scaffold --provider antigravity --global
 
 `config scaffold --slidev` は、`@slidev/cli`・`prettier-plugin-slidev`・`prettier` の不足する
 devDependencies を表示してから `package.json` へ追加し、未作成なら `.prettierrc` と
-`.markdownlintignore` を作ります。既存の dependencies / devDependencies の同名項目は維持し、
+`.markdownlintignore`、基本設定の `.markdownlintrc`、VS Code 向けの `.markdownlint-cli2.yaml` を作ります。
+既存の dependencies / devDependencies の同名項目は維持し、
 `package.json` がない場合は追加例だけを表示します。依存のインストールは利用者が `npm install` で行います。
 
 ```bash
@@ -130,11 +131,36 @@ npm install
 - `docs/ja/specdojo/samples/**/*-slidev-sample.md`
 - `docs/ja/specdojo/templates/**/*-slidev-template.md`
 
-Prettier の overrides 内で `parser: slidev` と plugin を指定し、同じパスを markdownlint の
-対象外にします。通常の Markdown は対象にしません。既存の `lsd-sample.md` など別名のスライドは、
-実際のパスを overrides と ignore の両方に追加してください。
+Prettier の overrides 内で `parser: slidev` と plugin を指定します。同じパスを
+`.markdownlint-cli2.yaml` の `overrides` では Slidev 用の規則で検査し、`.markdownlintignore` では
+markdownlint-cli の対象外にします。通常の Markdown には基本設定を当てます。
+既存の `lsd-sample.md` など別名のスライドは、実際のパスを Prettier の `files`、CLI2 の `filter`、
+ignore の 3 か所にそろえて追加してください。
+markdownlint-cli2 は最初に一致した override だけを使うため Slidev 用を先頭に、Prettier は後の一致が
+優先されるため Slidev 用を末尾に置きます。CLI2 の追加例は次の形です。
+
+```yaml
+config:
+  extends: .markdownlintrc
+overrides:
+  - filter:
+      - docs/ja/specdojo/samples/**/*-slidev-sample.md
+      - docs/ja/specdojo/templates/**/*-slidev-template.md
+    combine: merge
+    config:
+      MD001: false
+      MD022: false
+      MD025: false
+      MD031: false
+      MD032: false
+```
+
+スライドごとの見出しレベル・H1 と、ページ区切りやページごとの frontmatter に隣接する見出し・
+コード・リストを許すため、この 5 規則を外します。ほかの規則は基本設定を引き継ぎます。
 `.prettierrc`（別拡張子や `prettier.config.*`、`package.json` の `prettier` 設定を含む）と
-`.markdownlintignore` は `--force` を付けても保持し、手で統合する設定例を表示します。
+`.markdownlintignore`、既存の `.markdownlint.*`・`.markdownlintrc`・`.markdownlint-cli2.*` は
+`--force` を付けても保持し、手で統合する設定例を表示します。既存の設定と競合する場合は新規設定も
+自動作成せず、不足する設定と移行方法を表示します。
 `--lefthook --slidev` の同時指定では、新規の ignore に agent 定義とスライドの両方の除外を含めます。
 `--dry-run` は内容を表示するだけで書き込みません。指定しなければ Slidev の依存・設定は追加しません。
 
@@ -142,8 +168,9 @@ Prettier の overrides 内で `parser: slidev` と plugin を指定し、同じ�
 `./node_modules/.bin/slidev build <sample.md> --out "$PWD/tmp/slidev-dist"` で検証する手順と、
 テーマ・部品の配置方法は [[specdojo:kata-guide|実践の型活用ガイド]] の「Slidev の kata を検証する」を参照してください。
 
-`config scaffold --lefthook` は、利用リポジトリに `lefthook.yml`、`.markdownlint.jsonc`、
-`.markdownlintignore`、依存なしで起動できる `tools/install-lefthook.mjs` と
+`config scaffold --lefthook`（`init --lefthook` も同様）は、利用リポジトリに `lefthook.yml`、
+`.markdownlintrc`、`.markdownlint-cli2.yaml`、`.markdownlintignore`、
+依存なしで起動できる `tools/install-lefthook.mjs` と
 `tools/specdojo-pre-commit.mjs` を生成します。pre-commit では staged の Markdown と YAML だけを
 Prettier で整形し、staged の Markdown だけを markdownlint で検査します。
 また、`.specdojo/specdojo.config.json` の `project_register_path` 配下に staged の変更がある project では
@@ -167,6 +194,30 @@ devDependencies は `--force` を指定しても保持します。`package.json`
 成功扱いで skip します。primary worktree で `npm install`、または既存の `prepare` を保持した場合は
 `node tools/install-lefthook.mjs` を実行してください。hook 内から Git を呼ぶ入口は `GIT_DIR` などの
 repository-local 環境変数を除いてから staged files を調べます。
+
+生成する設定と道具の対応は次のとおりです。CLI2 本体は開発依存に追加しません。
+
+| 設定                      | 読む道具と役割                                                                                                                    |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `.markdownlintrc`         | markdownlint-cli（commit hook と exec run の result 検査）が読む基本設定。`MD013: false` などを指定した、先頭が `{` の JSON       |
+| `.markdownlint-cli2.yaml` | VS Code の markdownlint 拡張と markdownlint-cli2 用。`config.extends` で `.markdownlintrc` を読み、`overrides` でファイル別に調整 |
+| `.markdownlintignore`     | markdownlint-cli 用。agent 定義や Slidev の kata を hook・result 検査の対象外にする。CLI2 と VS Code の拡張は読まない             |
+
+以前の scaffold が生成した `.markdownlint.jsonc` などが残っていると、VS Code で CLI2 の
+`overrides` が効きません。既存リポジトリは次の手順で移行してください。
+
+1. `.markdownlint.jsonc` / `.json` / `.yaml` / `.yml` の既存規則を `.markdownlintrc` に移します。
+   YAML は JSON に変換し、コメントを除いて、ファイルの先頭を `{` にします。
+   既存の `.markdownlintrc` があれば規則を統合します。
+2. 移した旧 `.markdownlint.*` を取り除きます。対象ファイルの親ディレクトリにある設定も確認してください。
+3. 既存の `.markdownlint-cli2.*` があればそのファイルへ、なければ `.markdownlint-cli2.yaml` へ、
+   上例の `config.extends: .markdownlintrc` を設定します。相対パスは CLI2 設定ファイルからの位置に合わせます。
+   `--slidev` が表示した override は先頭に統合します。
+4. Prettier の Slidev override は末尾へ置き、`.markdownlintignore` と CLI2 の `filter` を同じ glob にそろえます。
+   VS Code でスライドと通常の文書を開き、hook と result 検査でも基本設定が効くことを確認してください。
+
+scaffold は `--force` でもこの移行を自動実行しません。Slidev のビルド・表示の検証手順は
+[[specdojo:kata-guide|実践の型活用ガイド]] を参照してください。
 
 `config scaffold --workspace` は、`.specdojo/specdojo.config.json` の `repos` 宣言から VS Code のマルチルートワークスペース（`<project-id>.code-workspace`）をリポジトリルートに生成します。`folders` にはプロジェクトリポジトリ（`.`）と各プロダクトリポジトリ（`repos[].path`）を宣言順に並べ、別リポジトリ構成でも 1 つの VS Code ウィンドウでプロジェクトとプロダクトを同時に開けます。`--project <id>` で対象 project を指定でき、省略時は `current_project` を使います。既存のファイルは `--force` を指定しない限り上書きしません。`repos` が宣言されていない project ではエラーになります。`--dry-run` は書き込まず予定の内容だけを表示します。
 
