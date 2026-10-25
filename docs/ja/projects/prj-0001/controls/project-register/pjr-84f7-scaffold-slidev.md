@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-84f7-scaffold-slidev
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-24T22:23:40Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T00:00:30Z"
+  conclusion: init と config scaffold に --slidev を加え、full の preset では既定で入れるようにした。既存の設定は上書きしない
 ---
 
 # PJR-84F7 Slidev の kata を検証できるよう、scaffold で Slidev を選んで入れられるようにする
