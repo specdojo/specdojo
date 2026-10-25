@@ -74,11 +74,16 @@ scaffold が ollama-local の接続設定を生成せず、provider が見つか
   - scaffold により空リポジトリに `opencode.json` および `.opencode/agents/*.md` が正しく配置され、既存の `opencode.json` が上書きされないことを単体テストで確認した。
   - `init` コマンドで opencode を選んだ際、名簿および振り分け設定のモデルが `*-mlx-work-64k`（`ollama-local/gemma4:31b-mlx-work-64k`、`ollama-local/gemma4:26b-mlx-work-64k`）として解決されることを単体テストで確認した。
   - 実機ホスト上の Ollama プロセスとの実接続およびモデル推論テストは、agent sandbox 外の実ホスト操作と Ollama 稼働が必要となるため、人の確認事項（`requires_human`）として申し送りに記録した。
+  - 統合後、オーケストレーターが空の Git リポジトリで OpenCode の scaffold を実行し、生成された `opencode.json` が配布原本と一致すること、およびモデル3件が `*-mlx-work-64k` であることを確認した。再度 scaffold を実行しても既存の `opencode.json` が変更されないことを確認した。
+  - 生成された接続設定を変更せず、ツールを全拒否した検証用 agent を一時ディレクトリに追加して `opencode run --pure --dir <一時ディレクトリ> --agent connection-probe --model ollama-local/<モデル> --format json` を実行した。
+  - `gemma4:31b-mlx-work-64k`・`gemma4:26b-mlx-work-64k`・`qwen3.8:27b-mlx-work-64k` の全3モデルが終了コード0で `CONNECTION_OK` を返した。Ollama への実接続と短い推論応答を確認できたため、上記の実接続に関する人の確認事項は解消した。
+  - 最新 run の evidence で、親の検証7項目（lint-ts・lint-fm・lint-md・test-integration・validate-schema・typecheck・test-unit）がすべて成功していることを確認した。
 - 再発防止策:
   - provider の配布テンプレート追加時は、agent 定義だけでなく provider 固有のルート設定ファイル（`opencode.json` 等）の要否と scaffold 配置規則を同時に確認・整備する。また派生モデルを利用する場合は、利用環境の実態（MLX 対応など）に合わせたモデル指定と作成手順を整合させる。
 - 申し送り（`handoff`）:
   - 配布する名簿・agent・接続設定のモデル ID を `gemma4:31b-mlx-work-64k`・`gemma4:26b-mlx-work-64k`・`qwen3.8:27b-mlx-work-64k` に統一した。本リポジトリ自身の保護された設定（`.specdojo/agent-members.yaml`、ルートの `opencode.json`）のモデル指定とも整合している。
   - 統合後、オーケストレーターが一時ディレクトリで生成した OpenCode 設定を使い、`opencode run` で上記3モデルの実接続・短い応答を確認すること。未登録のモデルがある場合は推測で成功扱いせず記録すること。
+  - 上記の統合後確認はオーケストレーターが実施済み。3モデルすべてで成功し、実接続に関する未確認事項はない。
 
 ## 5. 関連ドキュメント
 
