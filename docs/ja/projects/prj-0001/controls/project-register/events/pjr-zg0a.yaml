@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_ac430d5b26b6403db1348f63825720ea
+  ts: "2026-10-25T02:43:04Z"
+  action: start
+  actor: sonnet-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_149cd06ea36e4e0bb20984f4598d3acb
