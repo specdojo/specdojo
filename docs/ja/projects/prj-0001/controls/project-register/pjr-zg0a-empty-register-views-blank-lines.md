@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-25T02:42:15Z"
-  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
+  block_reason: "parent validation failed: test-unit"
 ---
 
 # PJR-ZG0A 登録簿に項目がないと、担当者別と状態別の派生ビューが markdownlint の MD012 に当たる
@@ -57,7 +57,10 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 解決内容: `src/register/views.ts` の `renderGroupedTables` が、グループが 0 件のとき空文字列ではなく「該当なし」を返すようにした。空文字列が章見出しの後の空行と重なり、`MD012` に当たっていた。項目がある場合の出力は変えていない。
+- 「該当なし」を書く理由: 章の本文が空のままだと、見出しの直後に何も無い章になり、読み手が生成漏れと区別できない。空行を詰めるだけより、項目が無いことを明示する方が意図が伝わる。
+- 確認結果: `tests/src/register/empty-views.test.ts` を追加した。項目が 0 件の登録簿で全派生ビュー（一覧・状態別・優先度別・担当者別・派生項目・PM ログ）を生成し、本リポジトリの依存の markdownlint で `MD012` の違反が無いことを確かめる。優先度別・派生項目・PM ログは固定の表を持つため元から通る。
+- 再発防止策: 上記の test。CHANGELOG の `## [Unreleased]` に追記した。
 
 ## 5. 関連ドキュメント
 

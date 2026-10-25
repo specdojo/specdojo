@@ -9,9 +9,9 @@ specdojo:
   origin: register
   plan_ref: exec/plans/pjr-zg0a-20261025T024304Z-5fb02bad-plan.md
   started_at: "2026-10-25T02:43:04.045Z"
-  completed_at: "2026-10-25T02:49:20.713Z"
+  completed_at: "2026-10-25T02:57:51.566Z"
   agent: sonnet-executor
-  block_reason: "integrate failed: project: git commit failed: test: error: unknown option '--reserve'; FAIL  /unit/ tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず…"
+  block_reason: "parent validation failed: test-unit"
 ---
 
 # Edit Result
