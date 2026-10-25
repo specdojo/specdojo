@@ -178,6 +178,24 @@ describe("pipeline state", () => {
         ?.evidence,
     ).toEqual(evidence(taskId, runId));
 
+    // A crash after evidence persistence must never recover incomplete work as reporter input.
+    for (const status of ["succeeded", "running"] as const) {
+      state = updatePipelineStage(state, "executor", { status }, state.updated_at);
+      writePipelineState(location.path, state);
+      const incomplete: ExecEvidence = {
+        ...evidence(taskId, runId),
+        completion_status: "incomplete",
+      };
+      writeFileSync(evidencePath, JSON.stringify(incomplete), "utf8");
+      const checkpoint = loadPipelineResumeCheckpoint({
+        worktreePath: root,
+        stateRef: location.ref,
+        taskId,
+      });
+      expect(checkpoint?.executorEvidence).toEqual(incomplete);
+      expect(checkpoint?.evidence).toBeUndefined();
+    }
+
     writeFileSync(evidencePath, `${JSON.stringify(evidence(taskId, "different-run"))}\n`, "utf8");
     expect(
       loadPipelineResumeCheckpoint({ worktreePath: root, stateRef: location.ref, taskId })

@@ -505,6 +505,7 @@ export async function resumeSingleRegisterItemWorktree(
         resultScaffold,
         agentResult: outcome.runResult,
         stderr: outcome.blockReason ?? "",
+        runnerBlockReason: outcome.blockReason,
         actor: executor.candidate.actor,
         bookkeepingPaths: bookkeepingPaths(),
         pipelineStatePath: resolve(worktree.path, outcome.stateRef),

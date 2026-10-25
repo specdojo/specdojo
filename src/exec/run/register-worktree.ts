@@ -731,6 +731,7 @@ export async function runSingleRegisterItemWorktree(
   let stderr = "";
   // pipeline 実行のみ run state を持つ。統合段の記録先として Phase 3 へ渡す。
   let pipelineStatePath: string | undefined;
+  let pipelineBlockReason: string | undefined;
   let transitionReason: string | undefined;
   let completionActor = actor;
   if (pipelineAgents) {
@@ -776,6 +777,7 @@ export async function runSingleRegisterItemWorktree(
     });
     agentResult = pipelineOutcome.runResult;
     stderr = pipelineOutcome.blockReason ?? "";
+    pipelineBlockReason = pipelineOutcome.blockReason;
     pipelineStatePath = resolve(worktree.path, pipelineOutcome.stateRef);
     transitionReason = rateLimitRecoveryReason(pipelineOutcome.rateLimitEvents) || undefined;
   } else {
@@ -816,6 +818,7 @@ export async function runSingleRegisterItemWorktree(
       actor: completionActor,
       bookkeepingPaths,
       pipelineStatePath,
+      runnerBlockReason: pipelineBlockReason,
       transitionReason,
     });
 

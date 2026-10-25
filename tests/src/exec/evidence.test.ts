@@ -18,6 +18,45 @@ const Ajv2020 = Ajv2020Module.default;
 const addFormats = addFormatsModule.default;
 
 describe("executor evidence", () => {
+  it.each([undefined, "complete", "incomplete", null, "invalid"])(
+    "preserves task completion independently of the process result: %s",
+    (completionStatus) => {
+      const { evidence } = buildExecutorEvidence({
+        taskId: "PJR-TEST",
+        runId: "run-1",
+        actor: "executor",
+        status: "succeeded",
+        startedAt: "2026-10-25T00:00:00Z",
+        completedAt: "2026-10-25T00:01:00Z",
+        exitCode: 0,
+        attempts: 1,
+        stdout: `<specdojo_executor_evidence>${JSON.stringify({
+          completion_status: completionStatus,
+          final_message: "未完了。残作業あり。 api_key=do-not-store",
+          handoff: ["残りのテストを実装する"],
+        })}</specdojo_executor_evidence>`,
+        stderr: "",
+        changes: [],
+        diffStat: "",
+        logRefPath: "executor.log",
+      });
+      const incomplete = completionStatus !== undefined && completionStatus !== "complete";
+      expect(evidence.stage).toMatchObject({ status: "succeeded", exit_code: 0 });
+      expect(evidence.completion_status).toBe(
+        completionStatus === undefined ? undefined : incomplete ? "incomplete" : "complete",
+      );
+      if (incomplete) {
+        expect(evidence.block_reason).toContain(
+          "executor reported incomplete: 未完了。残作業あり。",
+        );
+        expect(evidence.block_reason).not.toContain("do-not-store");
+      } else {
+        expect(evidence.block_reason).toBeUndefined();
+      }
+      expect(evidence.handoff).toEqual(["残りのテストを実装する"]);
+    },
+  );
+
   it("parses the bounded executor report and redacts credentials", () => {
     const stdout = [
       "tool chatter",
@@ -293,6 +332,12 @@ describe("executor evidence", () => {
     expect(validate(evidence), JSON.stringify(validate.errors)).toBe(true);
     const { handoff: _handoff, ...legacy } = evidence;
     expect(validate(legacy), JSON.stringify(validate.errors)).toBe(true);
+    for (const completion_status of ["complete", "incomplete"]) {
+      expect(validate({ ...evidence, completion_status }), JSON.stringify(validate.errors)).toBe(
+        true,
+      );
+    }
+    expect(validate({ ...evidence, completion_status: "unknown" })).toBe(false);
     for (const handoff of [[""], ["x".repeat(4_001)], Array(101).fill("note"), "note"]) {
       expect(validate({ ...evidence, handoff })).toBe(false);
     }

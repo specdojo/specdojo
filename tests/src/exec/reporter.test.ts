@@ -66,6 +66,29 @@ const validReviewOutput = {
 } as const;
 
 describe("reporter structured output", () => {
+  it.each([undefined, "complete", "incomplete"] as const)(
+    "honors completion status despite successful process and parent validations: %s",
+    (completionStatus) => {
+      const input = evidence();
+      input.completion_status = completionStatus;
+      input.final_message = "未完了。実装の残りがある。";
+      input.validations = [
+        {
+          source: "runner",
+          id: "test-unit",
+          command: "npm run test:unit",
+          status: "passed",
+          summary: "ok",
+        },
+      ];
+      const facts = deriveReporterFacts(input);
+      expect(facts.outcome).toBe(completionStatus === "incomplete" ? "blocked" : "complete");
+      if (completionStatus === "incomplete") {
+        expect(facts.block_reason).toContain(input.final_message);
+      }
+    },
+  );
+
   it("accepts the strict edit shape, unwraps code fences, and rejects additional properties", () => {
     expect(parseReporterOutput(JSON.stringify(validEditOutput), "edit").output).toEqual(
       validEditOutput,
