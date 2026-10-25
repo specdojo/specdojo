@@ -32,3 +32,16 @@
     - field: due
       from: ""
       to: "2026-10-25"
+- v: 1
+  id: reg_28f33b4e10904eb78bffbc37ac4accc3
+  ts: "2026-10-25T03:46:24Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: due
+      from: "2026-10-25"
+      to: "-"
+  previous_event_id: reg_a3c1d7c0442a4aca95c02e98fc7c2223

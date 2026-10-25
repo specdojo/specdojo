@@ -11,7 +11,7 @@ specdojo:
   priority: high
   owner: DEV
   registered_at: "2026-10-25T03:46:04Z"
-  due_on: "2026-10-25"
+  due_on: null
 ---
 
 # PJR-NTWD v0.4.6 を公開する
