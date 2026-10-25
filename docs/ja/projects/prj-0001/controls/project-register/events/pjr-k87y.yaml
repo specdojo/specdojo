@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9b4b0888e41042818c7739be5a70b1c0
+  ts: "2026-10-25T14:16:36Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: gradeの単一文書評価パイプライン（run-per-document.sh相当）をspecdojoコマンド本体へ統合する
+    - field: description
+      from: ""
+      to: exec run のレビュー前 grade 実行（ensureReviewGrade）が外部スクリプト tools/grade/run-per-document.sh に依存しているため、specdojo grade run サブコマンドとして CLI 本体へ統合する。あわせて今回のマルチリポジトリ運用で確認された関連課題（1. ensureReviewGrade から grade plan -> agent run -> grade apply のネイティブ実行とエージェント自動選択/引き継ぎ、2. dist/grade/targets.js の project.repos マルチリポジトリ相対パス ../ 許容、3. ワークツリー分岐前の grade 結果/criteria サイドカーのチェックポイント対象化、4. exec scaffold --project 時の pm-review-viewpoints.yaml 参照先 standards/ -> defaults/ 修正および viewpoints\_path 未設定時の specdojo:pm-review-viewpoints フォールバック、5. xrp-review-\*-template.md の done\_criteria 表で発生する markdownlint MD060 警告の解消）を解消する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: indie
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: _TODO_
