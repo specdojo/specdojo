@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_6b49310019214bc48a68f511cb096475
+  ts: "2026-10-25T08:41:09Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が報告した接続設定不足と work-64k の利用方針を、担当 DEV・期限 2026-10-31 で追跡するため起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: OpenCode scaffold に Ollama 接続設定と work-64k モデル設定を補う
+    - field: description
+      from: ""
+      to: scaffold が ollama-local の接続設定を生成せず、provider が見つからない。接続・モデル設定を補い、gemma・qwen は原則 `*-work-64k` を使う。派生タグ作成と既存環境の修正手順を整える。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+    - field: derived_from
+      from: ""
+      to: '["PJR-2ASZ"]'
