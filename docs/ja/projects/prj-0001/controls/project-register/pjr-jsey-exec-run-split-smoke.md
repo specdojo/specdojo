@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: PJR-SS72 と PJR-68KR の統合後も exec run --register が start から review まで通った。途中の 2 回の停止は単体テストの時間切れで、PJR-J44D で直した
+  completed_at: "2026-10-25T00:00:08Z"
+  conclusion: R1FB と 84F7 の統合後に exec run --register が review まで通った。executor の handoff が result の申し送りに載った
 ---
 
 # PJR-JSEY exec-run.ts の分割後に runner の動作を確かめる
