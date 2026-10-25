@@ -35,3 +35,16 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_507a28fa6ac747919b106b91f93e7d57
+  ts: "2026-10-25T15:46:30Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f710fb3774ca417eaa23b0ded1b6448d
