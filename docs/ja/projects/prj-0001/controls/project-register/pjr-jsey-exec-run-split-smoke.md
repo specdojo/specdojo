@@ -7,12 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  conclusion: R1FB と 84F7 の統合後に exec run --register が review まで通った。executor の handoff が result の申し送りに載った
+  completed_at: "2026-10-25T02:02:08Z"
+  conclusion: "XTE6 の統合後に exec run --register が review まで通り、executor の報告に completion_status: complete が入った"
 ---
 
 # PJR-JSEY exec-run.ts の分割後に runner の動作を確かめる

@@ -2158,3 +2158,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_2c7c8e2ca1a44bceb4acdefc05f181dd
+- v: 1
+  id: reg_2822cefcb9f14d46aa92d78feee08610
+  ts: "2026-10-25T02:02:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 統合後の runner の動作を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: R1FB と 84F7 の統合後に exec run --register が review まで通った。executor の handoff が result の申し送りに載った
+      to: "XTE6 の統合後に exec run --register が review まで通り、executor の報告に completion_status: complete が入った"
+  previous_event_id: reg_5e769c7347d5408d919cefb952d5b12c
