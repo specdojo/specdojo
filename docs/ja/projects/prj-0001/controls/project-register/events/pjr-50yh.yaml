@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_06f159f5278445399fc5d2ab0377271b
+- v: 1
+  id: reg_cd4a146ebc0c42f0bb8b0ace2765578a
+  ts: "2026-10-25T02:39:17Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分を完了条件に照らし、空のリポジトリの生成物を markdownlint-cli2 0.24.0 と markdownlint-cli で確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: init --lefthook は .markdownlintrc と、それを読む .markdownlint-cli2.yaml を作り、--slidev は cli2 の overrides の先頭に Slidev 用の規則を入れるようにした。hook と result の検査は .markdownlintignore で Slidev の kata を外す
+  previous_event_id: reg_9fa16b92fcd546a7911f2eda395fb9b1

@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-50yh-markdownlint-cli2-overrides
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-25T01:36:26Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-25T02:39:17Z"
+  conclusion: init --lefthook は .markdownlintrc と、それを読む .markdownlint-cli2.yaml を作り、--slidev は cli2 の overrides の先頭に Slidev 用の規則を入れるようにした。hook と result の検査は .markdownlintignore で Slidev の kata を外す
 ---
 
 # PJR-50YH scaffold の markdownlint 設定のせいで、VS Code でファイルごとの規則を当てられない
