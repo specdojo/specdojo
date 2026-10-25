@@ -2,7 +2,7 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
-## [Unreleased]
+## [0.4.6] - 2026-10-25
 
 ### 追加機能
 
@@ -10,7 +10,6 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
-- 登録簿に項目が 1 件もないとき、`register build` が生成する担当者別と状態別の派生ビューの空の章で空行が連続し、markdownlint の `MD012` に当たる問題を直しました。項目のない章には「該当なし」を書きます。項目がある場合の生成物は変わりません（PJR-ZG0A）。
 - 同梱のオーケストレーターの本文で、register の完了条件の記録の書き先を「個票の対応結果」と報告の `handoff` にし、close の前に result だけでなく個票の対応結果も確かめるようにしました（PJR-R1FB）。
 - `specdojo init --exec` が書く agent の名簿の雛形を、GPT-6 の系統と normal・expert の 2 段にそろえました。codex の normal は `gpt-6-luna` の `luna-executor`・`luna-review-executor`・`luna-reporter`、expert は `gpt-6.1-sol` の `sol-executor`・`sol-review-executor` です。claude には expert の `opus-executor`・`opus-review-executor` を加えました。別名 `claude-expert-executor`・`claude-expert-review-executor`・`codex-expert-executor`・`codex-expert-review-executor` を加え、`codex-executor` などの既存の別名は `luna-*` を指します。振り分けの表（`routing`）は hard を expert の別名、medium と easy と reporter を normal の別名にします。`init` と `config scaffold` が加える codex の起動スクリプトは `orch:sol`（`gpt-6.1-sol`）と `orch:luna`（`gpt-6-luna`）になり、`orch:terra` は作りません（PJR-9482）。
 - 配布する `templates/codex/agents/*.toml` のモデルを名簿の雛形と同じ GPT-6 の系統へ引き上げました。`codex-executor`・`codex-review-executor` は `gpt-6-luna`（`medium`）、`codex-expert-executor`・`codex-expert-review-executor` は `gpt-6.1-sol`（`high`）、`specdojo-orchestrator` は `gpt-6.1-sol`（`medium`）です。既存の `.codex/agents/*.toml` は上書きされないため、移行する場合は `specdojo config scaffold --provider codex --force` で再配置するか、各ファイルの `model` を手動で書き換えます（PJR-EVAQ）。
@@ -18,6 +17,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 不具合修正
 
+- 登録簿に項目が 1 件もないとき、`register build` が生成する担当者別と状態別の派生ビューの空の章で空行が連続し、markdownlint の `MD012` に当たる問題を直しました。項目のない章には「該当なし」を書きます。項目がある場合の生成物は変わりません（PJR-ZG0A）。
 - `init --lefthook` と `config scaffold --lefthook` の基本設定を `.markdownlintrc` に変更し、これを読み込む `.markdownlint-cli2.yaml` も生成するようにしました。VS Code で CLI2 のファイル別 overrides が効き、`--slidev` は kata の glob に Slidev 用の規則を当てます。commit hook と result 検査は markdownlint-cli を使い続けます。既存設定は保持し、追加例と移行手順を案内します（PJR-50YH）。
 - executor の報告に省略可能な `completion_status`（`complete` / `incomplete`）を追加しました。未完了を申告した register 項目は終了コード 0 でも `waiting` となり、理由と残作業、worktree を保持して統合を止めます。`--resume --resume-from executor` で再開でき、欄のない既存報告は従来どおり扱います（PJR-XTE6）。
 - `kata list`・`kata status` の kata 候補と `kata eject` の ID 選択を `.md`・`.mdx`・`.yaml`・`.yml`・`.json` にそろえ、同名 CSS などを別の kata として扱わないようにしました。`kata eject`・`kata install --all` は同名の付属ファイルと同名ディレクトリ内の画像などもコピーし、`--dry-run`・`--force` をファイルごとに適用します。付属ファイルだけの差分も親 kata の `modified` に含めます（PJR-6HS2）。
