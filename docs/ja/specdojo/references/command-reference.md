@@ -757,11 +757,12 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 `grade` は kata（rulebook / recipe / sample / template）または成果物を、review と同じ共通 viewpoint・category rubric で継続評価します。agent に直接ファイル探索やスコア計算をさせず、plan 生成と反映を分離します。
 
-v0.3.0 の `grade` は試験的な機能です。npm package で利用できるのは `grade list` / `plan` / `apply` / `validate` / `result` などの部品で、通しの実行を担う `grade run` はありません。`tools/grade/run-per-document.sh` は SpecDojo 本体リポジトリの開発用であり、npm package には含まれません。成果物を `--target deliverable` で評価するには、対象 project に `catalog_path` を設定する必要があります。
+`grade run` は npm package から利用でき、`list` と同じ対象選択、文書ごとの plan 生成、agent 実行、marker の機械変換と `apply` を単段で実行します。成果物を `--target deliverable` で評価するには、対象 project に `catalog_path` を設定する必要があります。`viewpoints_path` 未設定時は同梱の `specdojo:pm-review-viewpoints` を使います。
 
 | コマンド                 | 用途                                                           |
 | ------------------------ | -------------------------------------------------------------- |
 | `grade list`             | 選択した文書のパスを1行1件で出力し、plan は保存しない          |
+| `grade run`              | 文書ごとに評価と反映を実行し、同じ run を再開する              |
 | `grade plan`             | 1文書ごとに executor / reporter の評価 plan を保存する         |
 | `grade apply`            | executor の申告を GradeSubmission へ機械変換して正本を反映する |
 | `grade translation-plan` | 正本の英語 finding から日本語表示用の翻訳 plan を作る          |
@@ -771,6 +772,10 @@ v0.3.0 の `grade` は試験的な機能です。npm package で利用できる�
 | `grade migrate`          | インライン grade / finding をサイドカーへ一括移行する          |
 
 ```bash
+specdojo grade run --target kata --kind rulebook --run-id quality-check --dry-run
+specdojo grade run --target kata --path <document.md> --run-id quality-check --by <executor-nickname>
+# 同じコマンドを再実行すると完了済み文書を飛ばし、未完了文書から再開する
+specdojo grade run --target deliverable --project prj-0001 --changed-only --run-id deliverable-check
 specdojo grade plan --target kata --changed-only --project prj-0001
 # 評価対象・参考資料・比較リファレンスを plan へ埋め込む
 specdojo grade plan --target kata --changed-only --embed-documents --project prj-0001
@@ -786,6 +791,14 @@ specdojo grade apply --target kata --path <document.md> \
   --analysis-from <executor-output.txt> --by <executor-nickname>
 specdojo grade validate --target kata --project prj-0001
 ```
+
+`grade run` の `--run-id` は必須です。選択文書と完了状況を `execution_path/grade/generated/runs/<run-id>/run.json` へ保存し、同じ引数での再実行では完了済み文書を再適用しません。選択は初回に固定するため、`--changed-only` で実行中に文書が選択から外れても再開できます。対象内容、観点、完了条件、突き合わせ先、引数が変わった場合や保存済み結果が置き換わった場合は、新しい run ID を使います。`--work-dir` で保存先を変更できます。`--limit` は初回の選択件数を制限します。
+
+`--by`（別名 `--stage-1-executor`）を省略すると、名簿の有効な review executor を既存の priority 規則で選びます。該当しなければ旧形式の review agent を選びます。別名で指定してもサイドカーの `graded_by` と run 記録には実体名を残します。`--exec-defaults` で起動設定を引き継げます。`--dry-run` は選択と actor を表示し、agent の起動とファイル更新を行いません。同一 project の grade 実行は排他制御します。
+
+ネイティブ経路は `--stages 1` と機械 reporter を扱います。`--reference` と `--embed-documents` は plan に反映し、`--kind` は kata の `rulebook` / `recipe` / `sample` / `template` / `all`（既定）を選びます。失敗した文書と理由は run 記録に残し、終了コード 1 を返します。`--max-stage-failures`（既定 3）に達するまでは未完了段を再開できます。日本語 finding の表示用翻訳は `translation-plan` / `localize` で別途行います。開発用シェルの実験的な 3 段構成は CLI の対象外です。
+
+宣言済み `project.repos` 配下の Markdown は、プロジェクトリポジトリから `../product/docs/document.md` のように指定できます。宣言外のリポジトリや symlink による範囲外への参照は拒否します。
 
 `--target` は `kata` または `deliverable` です。`--path` は繰り返し指定でき、明示した Markdown 文書だけを対象にします。ただし、パス要素に `generated` を含む生成文書と `trash` を含む退避済み文書は自動探索から除外し、`--path` で明示した場合も入力エラーとして拒否します。`--changed-only` は grade result サイドカーの `content_hash` と現在の成果物ファイル全体の SHA-256 を比較します。`grade apply` はサイドカーだけを更新するため、評価結果の書き込み自体で成果物が変更扱いになることはありません。
 
@@ -840,7 +853,7 @@ finding の忠実性照合では、message に限り、Unicode の正準等価�
 
 移行期間中は `--analysis-from` を省略し `--from` だけを指定する従来の1段構成も受理します。既存の保存済み plan や GradeSubmission を適用するための互換経路であり、新しく生成した plan では `--analysis-from` を指定します。旧 GradeSubmission の `graded_by` も入力互換性のため受理しますが、記録には使いません。
 
-複数対象は、生成された executor plan を順に処理し、executor 応答を保存して直ちに `grade apply --path <document> --analysis-from <executor-output>` で反映します。agent 起動は `agent run`、応答の保存と受け渡しは呼び出し側が担い、`grade` は plan の生成と結果の検証・反映に限定されます。この単位で処理すると、後続文書が失敗しても適用済みの grade は保持されます。保存済み executor plan は `exec trial` などで同じ入力を複数 agent へ渡す用途にも利用できます。
+複数対象は、生成された executor plan を順に処理し、executor 応答を保存して直ちに `grade apply --path <document> --analysis-from <executor-output>` 相当の処理で反映します。`grade run` がこの連携を担い、後続文書が失敗しても適用済みの grade を保持します。部品ごとに実行する場合は、`agent run` で起動した応答の保存と受け渡しを呼び出し側が担います。保存済み executor plan は `exec trial` などで同じ入力を複数 agent へ渡す用途にも利用できます。
 
 ### 8.1. npm package で 1 文書を評価する
 

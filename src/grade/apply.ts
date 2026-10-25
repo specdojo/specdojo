@@ -681,8 +681,12 @@ export function validateGradeSubmission(
 
 // 詳細ファイルは成果物ごとに1件で、再評価のたびに上書きする。時点の記録は git 履歴が担う。
 // grade 本体と同じ方式であり、実行ごとにファイルを増やすと最新の評価を判別できなくなる。
-export function doneCriteriaDetailPath(criteriaDirectory: string, documentPath: string): string {
-  const absolute = resolveSafeMarkdownPath(documentPath);
+export function doneCriteriaDetailPath(
+  criteriaDirectory: string,
+  documentPath: string,
+  project?: string,
+): string {
+  const absolute = resolveSafeMarkdownPath(documentPath, specdojoRootDir(), project);
   const directory = resolveSafeRepositoryPath(criteriaDirectory, "criteria directory");
   return join(
     directory,
@@ -732,13 +736,13 @@ export function applyGradeSubmission(opts: {
     ? createGradeSourceContext(opts.project, specdojoRootDir())
     : undefined;
   for (const input of opts.submission.documents) {
-    const absolute = resolveSafeMarkdownPath(input.path);
+    const absolute = resolveSafeMarkdownPath(input.path, specdojoRootDir(), opts.project);
     const rel = repoRelativePath(absolute);
     const current = readFileSync(absolute, "utf8");
     const definitions = opts.doneCriteriaByPath?.get(rel);
     const detailPath =
       definitions && input.done_criteria && opts.criteriaDirectory
-        ? doneCriteriaDetailPath(opts.criteriaDirectory, absolute)
+        ? doneCriteriaDetailPath(opts.criteriaDirectory, absolute, opts.project)
         : undefined;
     if (definitions && input.done_criteria && !detailPath) {
       throw new Error(`${rel}: criteriaDirectory is required to record done_criteria`);
@@ -816,7 +820,9 @@ export function applyGradeSubmission(opts: {
         path: rel,
         target: opts.target,
         rubric: rubric.id,
-        ...(opts.reference ? { reference: resolveGradeReferenceId(opts.reference) } : {}),
+        ...(opts.reference
+          ? { reference: resolveGradeReferenceId(opts.reference, opts.project) }
+          : {}),
         verdict: summary.verdict,
         score: summary.score,
         graded_at: gradedAt,

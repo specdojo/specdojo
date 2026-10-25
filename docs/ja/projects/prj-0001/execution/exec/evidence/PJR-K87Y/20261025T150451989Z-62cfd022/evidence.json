@@ -1,0 +1,524 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-K87Y",
+  "run_id": "20261025T150451989Z-62cfd022",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-25T15:06:14.376Z",
+    "completed_at": "2026-10-25T15:37:24.681Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-k87y-integrate-grade-run-per-document.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-freeform-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-retrofit-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-sample-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-inspect.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/grade-checkpoint.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/agent-plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/helpers/grade-run-fixture.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/review-template-table.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/scaffold-viewpoints.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/run.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-k87y-integrate-grade-run-per-document.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-freeform-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-retrofit-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-sample-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-inspect.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/grade-checkpoint.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/agent-plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/helpers/grade-run-fixture.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/review-template-table.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/scaffold-viewpoints.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/run.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 44,
+    "summary": "CHANGELOG.md                                       |   5 +\n .../pjr-k87y-integrate-grade-run-per-document.md   |  36 ++++--\n .../exec-templates/xrp-freeform-template.md        |   4 +-\n .../exec-templates/xrp-fully-guided-template.md    |   4 +-\n .../exec-templates/xrp-recipe-guided-template.md   |   4 +-\n .../xrp-recipe-maintenance-template.md             |   4 +-\n .../exec-templates/xrp-retrofit-template.md        |   4 +-\n .../xrp-rulebook-maintenance-template.md           |   4 +-\n .../xrp-sample-maintenance-template.md             |   4 +-\n .../xrp-template-maintenance-template.md           |   4 +-\n docs/ja/specdojo/exec-templates/xrp-template.md    |   4 +-\n docs/ja/specdojo/guides/exec-operation-guide.md    |   4 +\n docs/ja/specdojo/guides/review-guide.md            |   4 +-\n docs/ja/specdojo/references/command-reference.md   |  17 ++-\n .../schemas/v1/grade-pipeline-state.schema.yaml    |   2 +-\n src/commands/agent.ts                              | 136 ++-------------------\n src/exec/commands.ts                               |  13 +-\n src/exec/project.ts                                |   5 +-\n src/exec/run/lifecycle-commands.ts                 |   2 +\n src/exec/run/register-resume.ts                    |   1 +\n src/exec/run/register-state.ts                     |   6 +-\n src/exec/run/register-worktree.ts                  |   6 +-\n src/exec/run/schedule-prepare.ts                   |  11 +-\n src/exec/worktree-command.ts                       |   9 +-\n src/exec/worktree-ops-merge.ts                     |  28 +++++\n src/grade/apply.ts                                 |  16 ++-\n src/grade/command-inspect.ts                       |   3 +-\n src/grade/grade.ts                                 |   2 +\n src/grade/markdown.ts                              |   6 +-\n src/grade/pipeline-state.ts                        |  15 ++-\n src/grade/plan.ts                                  |  13 +-\n src/grade/target-discovery.ts                      |   2 +-\n src/grade/targets.ts                               |  59 ++++++---\n src/review/grade.ts                                |  44 ++++---\n tests/src/exec/worktree-ops.integration.test.ts    |  38 +++++-\n tests/src/review/grade.test.ts                     |  82 +++++++++----\n 36 files changed, 351 insertions(+), 250 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "変更後の CLI をビルドできた。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言を確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "xargs -d '\\n' npx --no-install prettier --check < tmp/pjr-k87y-pack/changed-files.txt",
+      "status": "passed",
+      "summary": "変更した全ファイルの整形確認に成功した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm pack --ignore-scripts --cache tmp/pjr-k87y-pack/cache --pack-destination tmp/pjr-k87y-pack --json > tmp/pjr-k87y-pack/pack.json",
+      "status": "passed",
+      "summary": "ビルド済みの配布 tarball を生成した。"
+    },
+    {
+      "source": "executor",
+      "command": "npm ci --prefix tmp/pjr-k87y-pack/consumer --cache tmp/pjr-k87y-pack/cache --offline --ignore-scripts --no-audit --no-fund",
+      "status": "passed",
+      "summary": "空の導入先に tarball と実行時依存をオフライン導入した。"
+    },
+    {
+      "source": "executor",
+      "command": "npx --offline --cache ../cache specdojo grade run --help",
+      "status": "passed",
+      "summary": "導入先で npm package の grade run を利用できた。dry-run も確認した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tmp/pjr-k87y-pack/native-smoke.ts",
+      "status": "passed",
+      "summary": "配布版と固定応答 adapter で actor、保存、完了段スキップ、apply直後を含む中断復旧、製品パス、範囲外参照拒否、完了条件サイドカーを確認した。一時ファイルは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml --data tmp/pjr-k87y-pack/product-pipeline-state.json",
+      "status": "passed",
+      "summary": "製品リポジトリの相対パスを持つ未完了 state が schema に適合した。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "成功。既存の未作成成果物に対する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo grade run --project prj-0001 --target kata --kind rulebook --run-id pjr-k87y-host-smoke --limit 1",
+      "status": "requires_human",
+      "summary": "実 agent CLI と利用枠消費を伴う通し確認はホスト側で実施する。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree",
+      "status": "requires_human",
+      "summary": "統合後、運用メモに従って確認対象を追加・再開し、実 runner の動作を確認する。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.4.6 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\nd by a pattern. Modules under src/shared must not import other src features    no-restricted-imports\n  13:1  error  '../exec/run/agent.js' import is restricted from being used by a pattern. Modules under src/shared must not import other src features     no-restricted-imports\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y/src/shared/specdojo-config.ts\n  1219:1  warning  File has too many lines (1095). Maximum allowed is 1000  max-lines\n\n✖ 41 problems (4 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.6 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.6 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.4.6 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y\n\n ❯ tests/src/exec/plans.test.ts (71 tests | 2 failed) 817ms\n     × Prettier 保存後も完了条件テーブルと行プレースホルダの間に空行を入れない 17ms\n     × review plan の完了条件テーブルは区切り行の直後に DC 行を出力する 47ms\nUpdated ticket status → ready: /tmp/specdojo-ticket-5s8D2S/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-krr2x5/pjr-0001-topic.md\nUpdated ticket \n… output omitted …\n認`、`判断根拠`、`未充足事項・改善指示`、`approach に応じた確認`、`decision` である。`decision` の `verdict` は必ず上表の値で埋める。\n+\n\n ❯ tests/src/exec/plans.test.ts:1230:20\n    1228|\n    1229|       const plan = readFileSync(outPath, \"utf8\");\n    1230|       expect(plan).toContain(\"| --- | ------ | ------------ | --------…\n       |                    ^\n    1231|       expect(plan).not.toContain(\"| --- | ------ | ------------ | ----…\n    1232|       expect(plan).toContain(\"### プロジェクトコンテキスト\");\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯"
+    }
+  ],
+  "final_message": "grade run の単段評価・再開、review 前のネイティブ実行、複数リポジトリのパス制限、サイドカーの checkpoint、観点フォールバック、MD060 対応を実装し、個票を更新した。result は編集していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "統合後、運用メモに従って PJR-JSEY の確認対象へ PJR-K87Y を追加し、実際の `exec run --register PJR-JSEY` で start から review、実体 actor、checkpoint と統合を確認する。",
+    "実 agent による配布版 `grade run` と review 前 grade の通し実行をホスト側で確認する。sandbox では子プロセスの標準出力を取得できず、固定応答 adapter で評価・保存・再開を検証した。",
+    "ネイティブ経路は単段と機械 reporter を対象とする。実験的な3段構成は移植せず、表示用翻訳は既存の translation-plan / localize を利用する。保護設定の変更は不要。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-K87Y/20261025T150451989Z-62cfd022/executor.log",
+      "bytes": 3722,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-K87Y/20261025T150451989Z-62cfd022/parent-validation-attempt-1-lint-ts.log",
+      "bytes": 8240,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-K87Y/20261025T150451989Z-62cfd022/parent-validation-attempt-1-test-unit.log",
+      "bytes": 25859,
+      "truncated": false
+    }
+  ]
+}

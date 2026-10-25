@@ -41,7 +41,7 @@ describe("CLI generation verb taxonomy", () => {
     expect(subcommandNames(program, "exec")).not.toContain("build");
   });
 
-  it("registers the grade list/plan/apply/validate workflow", () => {
+  it("registers the grade list/plan/apply/validate/run workflow", () => {
     const program = new Command();
     registerGradeCommand(program);
 
@@ -55,6 +55,7 @@ describe("CLI generation verb taxonomy", () => {
       "result",
       "state",
       "migrate",
+      "run",
     ]);
     const apply = program.commands
       .find((command) => command.name() === "grade")
@@ -100,7 +101,7 @@ describe("CLI generation verb taxonomy", () => {
     const grade = program.commands.find((command) => command.name() === "grade");
 
     for (const command of (grade?.commands ?? []).filter((command) =>
-      ["list", "plan", "apply", "validate"].includes(command.name()),
+      ["list", "plan", "apply", "validate", "run"].includes(command.name()),
     )) {
       const longs = command.options.map((option) => option.long);
       expect(longs).toEqual(

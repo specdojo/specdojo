@@ -23,6 +23,7 @@ import {
   reviewGradeSubject,
 } from "../plans.js";
 import { ensureReviewGrade } from "../../review/grade.js";
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { type ReviewGradeOutcome } from "../../review/grade.js";
 import { isResultUnfilled, readResultFrontmatterSnapshot, scaffoldResult } from "../results.js";
 import { worktreeNameFromTaskId, type ExecWorktree } from "../worktree.js";
@@ -34,6 +35,7 @@ import {
   pinnedExecutor,
   pinnedReporter,
   resolveAgentOverride,
+  resolveExecDefaultsPath,
   resolvePinnedRateLimitRunOptions,
   resolveTaskPhaseContext,
   selectCandidates,
@@ -99,6 +101,8 @@ export async function gradeBeforeReviewPlan(params: {
   catalogPath: string | undefined;
   repoRoot: string;
   dryRun: boolean;
+  by?: string;
+  execDefaultsPath?: string;
 }): Promise<ReviewGradeOutcome | undefined> {
   const { task, projectId } = params;
   if ((task.mode ?? "edit") !== "review" || !projectId) return undefined;
@@ -115,6 +119,8 @@ export async function gradeBeforeReviewPlan(params: {
     target: subject.target,
     repoRoot: params.repoRoot,
     dryRun: params.dryRun,
+    by: params.by,
+    execDefaultsPath: params.execDefaultsPath,
   });
   const summary =
     outcome.action === "skipped"
@@ -150,7 +156,7 @@ export async function prepareSingleTask(
   pipelineResume?: { stage?: AgentStageRole; stateRef?: string },
   rateLimitOverrides: Pick<
     RunOpts,
-    "onRateLimit" | "fallbackExecutorBy" | "fallbackReporterBy"
+    "onRateLimit" | "fallbackExecutorBy" | "fallbackReporterBy" | "execDefaults" | "agentConfig"
   > = {},
 ): Promise<PreparedTask | RunResult | "deferred"> {
   const mode = task.mode ?? "edit";
@@ -320,6 +326,8 @@ export async function prepareSingleTask(
     catalogPath: planGenPaths.catalogPath,
     repoRoot,
     dryRun,
+    by: agentCandidates[0]?.actor,
+    execDefaultsPath: resolveExecDefaultsPath(rateLimitOverrides, schedulePath),
   });
 
   // Plans are generated on demand here; `exec refresh` does not manage them.
@@ -453,6 +461,7 @@ export async function prepareSingleTask(
     join(executionPath, "exec", "plans", `${task.id}-plan.md`),
     resultPath,
     claimEventPath,
+    ...gradeCheckpointPaths({ repoRoot, executionPath }),
   ];
   const checkpointFailureLogPath = pipelineRunId
     ? integrateLogPath(

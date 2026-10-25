@@ -47,7 +47,7 @@ export function discoverGradeTargets(
   validateGradeTargetFilters(opts);
   let candidates: string[];
   if (opts.paths && opts.paths.length > 0) {
-    candidates = opts.paths.map((path) => resolveSafeMarkdownPath(path, rootDir));
+    candidates = opts.paths.map((path) => resolveSafeMarkdownPath(path, rootDir, opts.project));
     const generated = candidates.find((path) => isGeneratedGradeTarget(path, rootDir));
     if (generated) {
       throw new Error(

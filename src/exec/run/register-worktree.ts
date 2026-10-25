@@ -1,3 +1,4 @@
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { qualifyTaskId, randomHex } from "../shared.js";
@@ -658,7 +659,10 @@ export async function runSingleRegisterItemWorktree(
       ticketPath,
       supersededPaths,
     );
-    const checkpointPaths = checkpointRel.map((rel) => resolve(repoRoot, rel));
+    const checkpointPaths = [
+      ...checkpointRel.map((rel) => resolve(repoRoot, rel)),
+      ...gradeCheckpointPaths({ repoRoot, executionPath }),
+    ];
     const checkpointFailureLogPath = pipelineRunId
       ? integrateLogPath(
           pipelineStateLocation({

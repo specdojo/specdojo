@@ -1,0 +1,73 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "grade run、review連携、製品パス解決、checkpoint、観点scaffold、9テンプレート、ガイド・個票を確認・修正しました。前回検証の依存方向違反とテスト期待値を修正し、配布版スモークも成功しました。全件テスト・lint・型検査は親runner、実agentの通し実行はホスト側で未検証です。resultは編集していません。",
+  "handoff": [
+    "親runnerで指定された7検査を実施してください。前回失敗したモジュール依存方向、CLI一覧、表テンプレートの期待値は修正済みです。追加した起動設定引き継ぎ・明示project・別文書grade保持の回帰テストも親検証で確認してください。",
+    "統合後、PJR-JSEYの確認対象へPJR-K87Yを追加し、実際のexec runでstartからreview、実体actor、checkpointと統合を確認してください。",
+    "実agentによるgrade runとreview前gradeの通し実行はホスト側で確認してください。sandboxではNodeの子プロセス起動がEPERMとなるため、固定応答adapterで評価・保存・再開を検証しました。配布検証はtarball展開と既存ローカル依存の参照によるため、クリーンなnpm導入もホスト側で確認してください。"
+  ],
+  "validations": [
+    {
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "最終ソースの配布ビルド成功。"
+    },
+    {
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時依存の宣言検査成功。"
+    },
+    {
+      "command": "npx prettier --write \"${grade_format_files[@]}\"",
+      "status": "passed",
+      "summary": "変更したソース・テスト・文書・schemaを整形。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog検査成功。既存の未作成成果物に対する警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "command": "npm pack --ignore-scripts --pack-destination tmp --cache tmp/pjr-k87y-npm-cache --json",
+      "status": "passed",
+      "summary": "最終ビルドからtarballを生成。"
+    },
+    {
+      "command": "node tmp/pjr-k87y-consumer/node_modules/specdojo/dist/specdojo.js grade run --help",
+      "status": "passed",
+      "summary": "展開した配布版CLIのサブコマンドと引数を確認。"
+    },
+    {
+      "command": "node node_modules/specdojo/dist/specdojo.js grade run --target kata --kind rulebook --path docs/ja/specdojo/rulebooks/example-rulebook.md --project test --run-id cli-package-dry --by grader-alias --dry-run",
+      "status": "passed",
+      "summary": "一時利用先をcwdとして実行し、対象選択と実体actorを確認。"
+    },
+    {
+      "command": "node --import tsx tmp/pjr-k87y-package-smoke.mjs",
+      "status": "passed",
+      "summary": "配布版を固定応答adapterで検証。サイドカー生成、完了段スキップ、中断復旧、明示projectの製品文書と完了条件、パス逸脱・symlink拒否を確認。一時ファイルは削除済み。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml --data tmp/pjr-k87y-pipeline-state.json",
+      "status": "passed",
+      "summary": "../を含む製品文書の未完了stateがschemaに適合。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree",
+      "status": "requires_human",
+      "summary": "統合後の実agent・利用枠を伴うrunner動作確認。grade runとreview前gradeの通し実行もホスト側で確認が必要。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

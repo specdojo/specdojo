@@ -80,10 +80,10 @@ export function scoreDocument(
 
 // 比較リファレンスは ID で保存する。パスで保存すると文書を移動したときに参照が壊れる。
 // 引数にはパスと ID のどちらも渡せる。パスの場合は Frontmatter の id を読み取る。
-export function resolveGradeReferenceId(pathOrId: string): string {
+export function resolveGradeReferenceId(pathOrId: string, project?: string): string {
   const trimmed = pathOrId.trim();
   if (!trimmed.endsWith(".md")) return trimmed;
-  const absolute = resolveSafeMarkdownPath(trimmed);
+  const absolute = resolveSafeMarkdownPath(trimmed, specdojoRootDir(), project);
   const document = parseMarkdown(readFileSync(absolute, "utf8"), repoRelativePath(absolute));
   const metadata = document.data.specdojo;
   if (!isRecord(metadata) || typeof metadata.id !== "string" || metadata.id.length === 0) {
@@ -215,7 +215,7 @@ export function validateGradeResultForDocument(opts: {
   target: GradeTarget;
   project?: string;
 }): string[] {
-  const absolute = resolveSafeMarkdownPath(opts.path);
+  const absolute = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.project);
   const rel = repoRelativePath(absolute);
   const content = readFileSync(absolute, "utf8");
   const result = readGradeResultForDocument({ documentPath: rel, project: opts.project });
@@ -252,7 +252,7 @@ export function migrateInlineGrades(opts: {
   const rootDir = specdojoRootDir();
   const candidates =
     opts.paths && opts.paths.length > 0
-      ? opts.paths.map((path) => resolveSafeMarkdownPath(path, rootDir))
+      ? opts.paths.map((path) => resolveSafeMarkdownPath(path, rootDir, opts.project))
       : [
           ...(opts.target !== "deliverable"
             ? discoverGradeTargets({ target: "kata", project: opts.project }, rootDir)

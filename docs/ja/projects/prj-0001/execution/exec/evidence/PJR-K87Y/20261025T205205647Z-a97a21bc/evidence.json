@@ -1,0 +1,420 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-K87Y",
+  "run_id": "20261025T205205647Z-a97a21bc",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-25T20:52:05.647Z",
+    "completed_at": "2026-10-25T21:04:13.733Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-k87y.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-k87y-integrate-grade-run-per-document.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-freeform-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-retrofit-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-sample-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-inspect.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/exec/grade-checkpoint.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/agent-plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/helpers/grade-run-fixture.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/review-template-table.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/scaffold-viewpoints.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/run.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-k87y-integrate-grade-run-per-document.md",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/specdojo.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/cli-verb-taxonomy.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/agent-plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/agent-plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/run.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 49,
+    "summary": "CHANGELOG.md                                       |   3 +\n .../controls/project-register/events/pjr-k87y.yaml |  16 +++\n .../pjr-k87y-integrate-grade-run-per-document.md   |  16 +--\n .../exec-templates/xrp-freeform-template.md        |   4 +-\n .../exec-templates/xrp-fully-guided-template.md    |   4 +-\n .../exec-templates/xrp-recipe-guided-template.md   |   4 +-\n .../xrp-recipe-maintenance-template.md             |   4 +-\n .../exec-templates/xrp-retrofit-template.md        |   4 +-\n .../xrp-rulebook-maintenance-template.md           |   4 +-\n .../xrp-sample-maintenance-template.md             |   4 +-\n .../xrp-template-maintenance-template.md           |   4 +-\n docs/ja/specdojo/exec-templates/xrp-template.md    |   4 +-\n docs/ja/specdojo/guides/exec-operation-guide.md    |   4 +\n docs/ja/specdojo/guides/review-guide.md            |   4 +-\n docs/ja/specdojo/references/command-reference.md   |  17 ++-\n .../schemas/v1/grade-pipeline-state.schema.yaml    |   2 +-\n src/commands/agent.ts                              | 136 ++-------------------\n src/exec/commands.ts                               |  13 +-\n src/exec/project.ts                                |   5 +-\n src/exec/run/lifecycle-commands.ts                 |   2 +\n src/exec/run/register-resume.ts                    |   1 +\n src/exec/run/register-state.ts                     |   6 +-\n src/exec/run/register-worktree.ts                  |   6 +-\n src/exec/run/schedule-prepare.ts                   |  11 +-\n src/exec/worktree-command.ts                       |   9 +-\n src/exec/worktree-ops-merge.ts                     |  48 +++++++-\n src/grade/apply.ts                                 |  16 ++-\n src/grade/command-inspect.ts                       |   3 +-\n src/grade/grade.ts                                 |   5 +-\n src/grade/markdown.ts                              |   8 +-\n src/grade/pipeline-state.ts                        |  15 ++-\n src/grade/plan.ts                                  |  16 ++-\n src/grade/target-discovery.ts                      |   2 +-\n src/grade/targets.ts                               |  68 ++++++++---\n src/review/grade.ts                                |  44 ++++---\n src/specdojo.ts                                    |   6 +-\n tests/src/cli-verb-taxonomy.test.ts                |   5 +-\n tests/src/exec/plans.test.ts                       |  10 +-\n tests/src/exec/worktree-ops.integration.test.ts    |  47 ++++++-\n tests/src/review/grade.test.ts                     |  82 +++++++++----\n 40 files changed, 396 insertions(+), 266 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "最終ソースの配布ビルド成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時依存の宣言検査成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write \"${grade_format_files[@]}\"",
+      "status": "passed",
+      "summary": "変更したソース・テスト・文書・schemaを整形。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog検査成功。既存の未作成成果物に対する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm pack --ignore-scripts --pack-destination tmp --cache tmp/pjr-k87y-npm-cache --json",
+      "status": "passed",
+      "summary": "最終ビルドからtarballを生成。"
+    },
+    {
+      "source": "executor",
+      "command": "node tmp/pjr-k87y-consumer/node_modules/specdojo/dist/specdojo.js grade run --help",
+      "status": "passed",
+      "summary": "展開した配布版CLIのサブコマンドと引数を確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node node_modules/specdojo/dist/specdojo.js grade run --target kata --kind rulebook --path docs/ja/specdojo/rulebooks/example-rulebook.md --project test --run-id cli-package-dry --by grader-alias --dry-run",
+      "status": "passed",
+      "summary": "一時利用先をcwdとして実行し、対象選択と実体actorを確認。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tmp/pjr-k87y-package-smoke.mjs",
+      "status": "passed",
+      "summary": "配布版を固定応答adapterで検証。サイドカー生成、完了段スキップ、中断復旧、明示projectの製品文書と完了条件、パス逸脱・symlink拒否を確認。一時ファイルは削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml --data tmp/pjr-k87y-pipeline-state.json",
+      "status": "passed",
+      "summary": "../を含む製品文書の未完了stateがschemaに適合。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree",
+      "status": "requires_human",
+      "summary": "統合後の実agent・利用枠を伴うrunner動作確認。grade runとreview前gradeの通し実行もホスト側で確認が必要。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y/src/shared/specdojo-config.ts\n  1220:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.6 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.6 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.6 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-K87Y\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-10-25T21:08:23.133Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-25T21:07:23.416Z.\nfallback c\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "final_message": "grade run、review連携、製品パス解決、checkpoint、観点scaffold、9テンプレート、ガイド・個票を確認・修正しました。前回検証の依存方向違反とテスト期待値を修正し、配布版スモークも成功しました。全件テスト・lint・型検査は親runner、実agentの通し実行はホスト側で未検証です。resultは編集していません。",
+  "completion_status": "complete",
+  "handoff": [
+    "親runnerで指定された7検査を実施してください。前回失敗したモジュール依存方向、CLI一覧、表テンプレートの期待値は修正済みです。追加した起動設定引き継ぎ・明示project・別文書grade保持の回帰テストも親検証で確認してください。",
+    "統合後、PJR-JSEYの確認対象へPJR-K87Yを追加し、実際のexec runでstartからreview、実体actor、checkpointと統合を確認してください。",
+    "実agentによるgrade runとreview前gradeの通し実行はホスト側で確認してください。sandboxではNodeの子プロセス起動がEPERMとなるため、固定応答adapterで評価・保存・再開を検証しました。配布検証はtarball展開と既存ローカル依存の参照によるため、クリーンなnpm導入もホスト側で確認してください。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-K87Y/20261025T205205647Z-a97a21bc/executor.log",
+      "bytes": 4201,
+      "truncated": false
+    }
+  ]
+}

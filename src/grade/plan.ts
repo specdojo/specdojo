@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { basename, extname, join } from "node:path";
 import { dump } from "../shared/yaml.js";
 import {
@@ -220,7 +221,7 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
   embedding: GradePlanEmbedding;
 } {
   const rubric = assertRubric(opts.viewpoints);
-  const absolute = resolveSafeMarkdownPath(opts.path);
+  const absolute = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.projectId);
   const rel = repoRelativePath(absolute);
   const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
@@ -237,7 +238,9 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
     repoRelativePath(resolveSafeRepositoryPath(reference, "reference")),
   );
   const referenceExample = opts.referenceExample
-    ? repoRelativePath(resolveSafeMarkdownPath(opts.referenceExample))
+    ? repoRelativePath(
+        resolveSafeMarkdownPath(opts.referenceExample, specdojoRootDir(), opts.projectId),
+      )
     : undefined;
   const embedding = gradePlanEmbedding({
     requested: opts.embedDocuments ?? false,
@@ -441,7 +444,7 @@ export function renderGradeReporterPlan(opts: {
   doneCriteria?: GradeDoneCriterion[];
 }): string {
   const rubric = assertRubric(opts.viewpoints);
-  const absolute = resolveSafeMarkdownPath(opts.path);
+  const absolute = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.projectId);
   const rel = repoRelativePath(absolute);
   const document = parseMarkdown(readFileSync(absolute, "utf8"), rel);
   const metadata = document.data.specdojo as Record<string, unknown>;
@@ -593,11 +596,11 @@ export function writeGradePlans(opts: {
   mkdirSync(outputDirectory, { recursive: true });
   const kataReferences = loadKataReferences();
   const referenceExamples = opts.referenceExampleCandidates.flatMap((candidate) => {
-    const parsed = parseGradeReferenceExample(candidate, opts.target);
+    const parsed = parseGradeReferenceExample(candidate, opts.target, opts.projectId);
     return parsed ? [parsed] : [];
   });
   return opts.paths.map((path) => {
-    const absolute = resolveSafeMarkdownPath(path);
+    const absolute = resolveSafeMarkdownPath(path, specdojoRootDir(), opts.projectId);
     const output = join(outputDirectory, gradePlanFilename(absolute));
     const reporterOutput = join(outputDirectory, gradeReporterPlanFilename(absolute));
     const referenceExample =
@@ -605,6 +608,7 @@ export function writeGradePlans(opts: {
       selectGradeReferenceExampleFromCatalog({
         target: opts.target,
         path: absolute,
+        project: opts.projectId,
         candidates: referenceExamples,
         random: opts.random,
       });
@@ -612,7 +616,7 @@ export function writeGradePlans(opts: {
     const rendered = renderGradePlanWithEmbedding({
       target: opts.target,
       path: absolute,
-      references: resolveGradeReferencePathsFromCatalog(absolute, kataReferences),
+      references: resolveGradeReferencePathsFromCatalog(absolute, kataReferences, opts.projectId),
       referenceExample,
       viewpoints: opts.viewpoints,
       projectId: opts.projectId,

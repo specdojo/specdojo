@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: high
   difficulty: medium
   owner: indie
   registered_at: "2026-10-25T14:16:35Z"
-  block_reason: "executor rate limit reached; rate limit wait: sol-executor resumed at 2026-10-25T19:31:00.269Z"
 ---
 
 # PJR-K87Y gradeの単一文書評価パイプライン（run-per-document.sh相当）をspecdojoコマンド本体へ統合する
@@ -46,23 +45,24 @@ exec run のレビュー前 grade 実行（`ensureReviewGrade`）が外部スク
 ### 実施内容・成果物
 
 - `src/grade/command-run.ts`・`run.ts` を追加し、対象探索、文書ごとの plan、agent 実行、marker の機械変換、grade apply を CLI 本体で連携した。kata / deliverable、`--kind`、繰り返しの `--path`、`--run-id`、`--dry-run`、単段、再開を扱う。選択は run ごとに固定し、文書・観点・比較リファレンス・完了条件・突き合わせ先の変更と結果の置換を検出する。apply 直後の中断も保存済み評価日時と実体 actor で復旧し、完了段を再適用しない。project 単位の排他制御と失敗理由の保存を追加した。
-- `src/shared/agent-plan.ts` に既存の `agent run` の実行機能を共通化した。名簿の有効な review executor（または旧形式 review agent）を priority 順に選び、別名を実体名へ解決する。`src/review/grade.ts` と schedule の準備処理は同じ package の `grade run` を使い、選択した actor と起動設定を引き継ぐ。最新結果を再利用し、失敗時は対象文書と理由を review plan に記録する。
-- `src/grade/targets.ts` と plan / apply / pipeline state / inspection の関連処理を更新した。宣言済み `project.repos` の `../` を解決し、宣言外・パス逸脱・範囲外 symlink を拒否する。pipeline state の schema も製品リポジトリの相対パスに対応した。
-- `src/exec/grade-checkpoint.ts` と schedule / register / worktree の準備・再開・統合処理を更新した。grade の results / criteria / pipeline の変更と削除を checkpoint に含める。分岐後に root で更新されたサイドカーは、統合前に差分を検出して上書きを止める。
+- `src/exec/agent-plan.ts` に既存の `agent run` の実行機能を共通化した。`src/shared/agent-plan.ts` は実行機能の型だけを定義し、`src/specdojo.ts` から grade へ実装を渡すことでモジュールの依存方向を維持する。名簿の有効な review executor（または旧形式 review agent）を priority 順に選び、別名を実体名へ解決する。`src/review/grade.ts` と schedule の準備処理は同じ package の `grade run` を使い、選択した actor と起動設定を引き継ぐ。`--exec-defaults` の CLI 引数も実行処理へ明示的に渡す。最新結果を再利用し、失敗時は対象文書と理由を review plan に記録する。
+- `src/grade/targets.ts` と plan / apply / pipeline state / inspection の関連処理を更新した。宣言済み `project.repos` の `../` を解決し、宣言外・パス逸脱・範囲外 symlink を拒否する。現在選択中の project と `--project` が異なる場合も、対象と比較リファレンスを指定した project の宣言で解決する。pipeline state の schema も製品リポジトリの相対パスに対応した。
+- `src/exec/grade-checkpoint.ts` と schedule / register / worktree の準備・再開・統合処理を更新した。grade の results / criteria / pipeline の変更と削除を checkpoint に含める。分岐後に root で更新された同じサイドカーは、統合前に差分を検出して上書きを止める。exec branch が変更しない別文書の grade は root に保持したまま統合する。
 - `src/exec/commands.ts`・`project.ts` と grade の観点解決を更新した。scaffold は `defaults/pm-review-viewpoints.yaml` から差分雛形を生成し、`viewpoints_path` 未設定時は同梱の `specdojo:pm-review-viewpoints` を参照する。
 - review plan の 9 テンプレートの完了条件表を compact 形式にそろえた。MD060 を無効化せず、テンプレートと展開後の表の検査を追加した。grade / review / scaffold / checkpoint の回帰テスト、[[specdojo:command-reference|コマンドリファレンス]]、[[specdojo:exec-operation-guide|exec 運用ガイド]]、[[specdojo:review-guide|レビューガイド]]、`CHANGELOG.md` の `Unreleased` を更新した。
 
 ### 検証結果
 
-- `npm run build`、`npm run check:src-imports`、変更ファイルの Prettier 整形、`git diff --check` を実行した。
-- `npm pack` の tarball を空のディレクトリにオフラインで導入し、配布版 CLI の `grade run --help` と dry-run を確認した。固定応答 adapter を使い、導入した package の native pipeline で実体 actor、サイドカー生成、完了段のスキップ、中断後の再開、製品リポジトリの完了条件サイドカー、パス逸脱・symlink の拒否を確認した。開発用シェルは tarball に不要である。
+- `npm run build`、`npm run check:src-imports`、変更ファイルの Prettier 整形、`git diff --check` を実行した。hook の catalog 検査と `register build --project prj-0001` も実行した。
+- `npm pack --ignore-scripts --pack-destination tmp --cache tmp/pjr-k87y-npm-cache --json` の tarball を空の利用先ディレクトリへ展開し、実行時依存は既存のローカル導入を参照させて、配布版 CLI の `grade run --help` と dry-run を確認した。固定応答 adapter を使い、導入した package の native pipeline で実体 actor、サイドカー生成、完了段のスキップ、apply 直後の中断からの復旧、現在選択中と異なる project の製品リポジトリの評価・完了条件サイドカー・失敗後の再開、パス逸脱・symlink の拒否を確認した。開発用シェルと `src/` は tarball に含まれない。
 - 製品リポジトリを指す `../product/doc.md` の未完了 state を `npm run validate:schema:file` で検査した。`catalog validate --project prj-0001` は成功した（既存の未作成成果物に対する警告あり）。
 - unit / integration test、TypeScript lint・型検査、Markdown・frontmatter lint、schema の全件検査は、指定された親 runner の検証に委ねる。executor は重複実行していない。
+- 再開時に前回の親検証ログを確認し、共通モジュールから exec への依存方向違反、grade サブコマンド一覧の期待値、完了条件表の区切り行の期待値を修正した。起動設定引数の受け渡しと、現在選択中と異なる project の製品パスを扱う回帰テストも追加・拡充した。これらのテストの実行結果は今回の親検証で確定する。
 
 ### 申し送り
 
 - 統合後、[[prj-0001:pm-orchestrator-playbook|オーケストレーター運用メモ]] に従い、PJR-JSEY の確認対象へ PJR-K87Y を追加し、実際の `exec run --register PJR-JSEY` で start から review、実体 actor の記録、checkpoint と統合を確認する。sandbox で実 agent CLI の起動と利用枠消費を伴う確認はできないため、`requires_human` として引き継ぐ。
-- 配布版の実 agent による `grade run` と review 前 grade の通し実行はホスト側で確認する。sandbox では子プロセスの標準出力を取得できず、固定応答 adapter により評価・保存・再開を検証した。親 runner が関連テストと静的検査を実施する。
+- 配布版の実 agent による `grade run` と review 前 grade の通し実行はホスト側で確認する。この sandbox では Node の子プロセス起動が `EPERM` となるため、固定応答 adapter により評価・保存・再開を検証した。クリーンな環境での npm による依存解決・導入もホスト側で確認する。親 runner が関連テストと静的検査を実施する。
 - ネイティブ経路は単段と機械 reporter を対象とする。開発用シェルの実験的な 3 段構成は移植せず、日本語 finding の表示用翻訳は既存の `translation-plan` / `localize` を利用する。保護設定の変更は不要である。
 
 ## 5. 関連ドキュメント
