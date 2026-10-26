@@ -48,3 +48,16 @@
       from: easy
       to: hard
   previous_event_id: reg_8524b92326664dac84c9cd34fac201e1
+- v: 1
+  id: reg_605c5fb2fd884ef49acbcfe2b4ec27d6
+  ts: "2026-10-26T13:18:45Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_99d0e6b672994d0aa79f8ad845b6b22a
