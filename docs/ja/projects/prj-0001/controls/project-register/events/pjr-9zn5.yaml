@@ -77,3 +77,35 @@
       from: "-"
       to: "executor reported incomplete: 生成物の .vitepress 配下への集約、配信処理、Git 除外テンプレート、文書、回帰テスト、個票を更新した。既存の履歴リンク検査違反が未解消のため未完了。"
   previous_event_id: reg_605c5fb2fd884ef49acbcfe2b4ec27d6
+- v: 1
+  id: reg_af82f73eddf04014999b4b830608458c
+  ts: "2026-10-26T13:42:49Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor reported incomplete: 生成物の .vitepress 配下への集約、配信処理、Git 除外テンプレート、文書、回帰テスト、個票を更新した。既存の履歴リンク検査違反が未解消のため未完了。"
+      to: "-"
+  previous_event_id: reg_2f0a311e32f042668bec7db9789d03ab
+- v: 1
+  id: reg_70d9a88c71254c17aec5288e5b33ef5d
+  ts: "2026-10-26T13:57:33Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-unit"
+  previous_event_id: reg_af82f73eddf04014999b4b830608458c
