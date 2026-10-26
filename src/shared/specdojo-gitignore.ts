@@ -36,6 +36,10 @@ export const DEFAULT_GITIGNORE_PATTERNS = [
   "docs/**/generated/*",
   "!docs/**/generated/.gitkeep",
   "docs/**/execution/exec/.locks/",
+  "/.vitepress/dist/",
+  "/.vitepress/cache/",
+  "/.vitepress/mermaid/",
+  "/.vitepress/kata-staging/",
 ] as const;
 
 // repo-root 相対の posix パスへ正規化する。リポジトリ外（絶対パス・`..`）や root 自身は

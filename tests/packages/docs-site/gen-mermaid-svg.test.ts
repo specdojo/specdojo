@@ -53,7 +53,7 @@ async function setupMermaidCacheFixture(): Promise<MermaidCacheFixture> {
   const originalCp = await vi.importActual<typeof ChildProcessModule>("node:child_process");
   const directory = originalFs.mkdtempSync(join(tmpdir(), "specdojo-mermaid-cache-"));
   const rootDir = join(directory, "docs");
-  const outDir = join(directory, "public/mermaid");
+  const outDir = join(directory, ".vitepress/mermaid");
   const mdPath = join(rootDir, "ja/test.md");
   originalFs.mkdirSync(join(rootDir, "ja"), { recursive: true });
   originalFs.mkdirSync(outDir, { recursive: true });
@@ -131,6 +131,31 @@ describe("Mermaid SVG generation cache", () => {
   afterEach(() => {
     fixture?.cleanup();
     fixture = undefined;
+  });
+
+  it("既定の出力先を workspace の .vitepress/mermaid にし public を変更しない", async () => {
+    fixture = await setupMermaidCacheFixture();
+    const workspace = join(fixture.rootDir, "..");
+    const oldRoot = process.env.SPECDOJO_DOCS_ROOT;
+    process.env.SPECDOJO_DOCS_ROOT = workspace;
+    try {
+      mkdirSync(join(workspace, "public"));
+      writeFileSync(join(workspace, "public/user.svg"), "user asset");
+      const mod = await fixture.loadModule();
+      mod.generateMermaidSvgs();
+      const output = join(workspace, ".vitepress/mermaid");
+      const manifest = JSON.parse(
+        readFileSync(join(output, ".manifest.json"), "utf8"),
+      ) as ManifestFile;
+      const hash = manifest.files["ja/test.md"].hashes[0];
+      expect(existsSync(join(output, `${hash}.svg`))).toBe(true);
+      expect(readFileSync(join(workspace, "public/user.svg"), "utf8")).toBe("user asset");
+      expect(existsSync(join(workspace, "public/mermaid"))).toBe(false);
+      expect(fixture.renderedSvgs).toEqual([join(output, `${hash}.svg`)]);
+    } finally {
+      if (oldRoot === undefined) delete process.env.SPECDOJO_DOCS_ROOT;
+      else process.env.SPECDOJO_DOCS_ROOT = oldRoot;
+    }
   });
 
   it("redraws SVG when mermaid-cli version or config changes, reuses otherwise", async () => {
@@ -260,7 +285,7 @@ describe("Mermaid SVG generation basics", () => {
   it("removes a missing Markdown entry from the manifest without throwing", () => {
     const directory = mkdtempSync(join(tmpdir(), "specdojo-mermaid-missing-"));
     const rootDir = join(directory, "docs");
-    const outDir = join(directory, "public/mermaid");
+    const outDir = join(directory, ".vitepress/mermaid");
     const mdPath = join(rootDir, "ja/removed.md");
     const hash = "1234abcd";
     mkdirSync(outDir, { recursive: true });
@@ -292,7 +317,7 @@ describe("Mermaid SVG generation basics", () => {
   it("ignores generated Markdown and removes any stale manifest entry", () => {
     const directory = mkdtempSync(join(tmpdir(), "specdojo-mermaid-generated-"));
     const rootDir = join(directory, "docs");
-    const outDir = join(directory, "public/mermaid");
+    const outDir = join(directory, ".vitepress/mermaid");
     const mdPath = join(rootDir, "ja/generated/invalid.md");
     mkdirSync(join(rootDir, "ja/generated"), { recursive: true });
     mkdirSync(outDir, { recursive: true });

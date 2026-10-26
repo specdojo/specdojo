@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   difficulty: hard
   owner: indie
   registered_at: "2026-10-26T12:48:16Z"
-  block_reason: "parent validation failed: test-unit"
 ---
 
 # PJR-9ZN5 @specdojo/docs-siteが生成するpublic/mermaid等を.vitepress配下に集約する
@@ -47,6 +46,7 @@ specdojo:
 - eject 済み文書は利用側を優先し、起動時に古いステージングを作り直す。dev では利用側文書の編集・追加・削除を同期し、eject 文書を削除した場合は同梱文書へ戻す。`@/src/...` などのコードスニペットも利用側の元ファイルを解決する。旧配置の `public/mermaid/` と `specdojo-kata-staging/` は自動削除しない。
 - `config init` の `.gitignore` テンプレートに `/.vitepress/dist/`・`/.vitepress/cache/`・`/.vitepress/mermaid/`・`/.vitepress/kata-staging/` を追加した。既存内容の追記方式を維持し、利用者の `.vitepress/config.mts` や theme は除外しない。本リポジトリの `.gitignore`、`packages/docs-site/README.md`、[[specdojo:docs-editing-guide]] も新配置へ合わせた。
 - 回帰テストを追加した。Mermaid の既定出力先と利用者の public ファイル保持、dev の SVG middleware、client build の SVG のみの出力と SSR build の重複出力防止、ステージングと eject 優先・同期・削除時の復元・再起動時の掃除、実 Git による生成物だけの除外を対象とする。unit / integration・本体型検査・lint・全体 schema 検査は指定された親 runner に委ねた。`npm run check` は親検証と重複するため executor では実行せず、それ以外の依存宣言・catalog・履歴リンク検査を個別に実行した。
+- 親検証の失敗を受けた再開対応: `mermaid-assets.test.ts` のテストを非同期にし、Vite の各フック呼び出しを `await` するよう修正した。`specdojo-gitignore.test.ts` の Git 起動2箇所へ `gitEnvironment()` を渡し、親プロセスの Git 固有環境変数から fixture を隔離した。これにより、前回の Promise 未処理5件と Git 環境隔離違反2件の原因を修正した。lint と unit test の再判定は親 runner が行う。
 - 検証済み: `npm --prefix packages/docs-site run typecheck`、変更ファイルの Prettier 整形、`npm run check:src-imports`、`node --import tsx tools/catalog-validate-if-configured.mjs`、`node --import tsx src/specdojo.ts register build`、register events のファイル単位 schema 検査。Markdown 検査は指定された親 runner に委ねた。catalog 検査は既存の未作成成果物の警告を伴って成功した。runner が引き継ぎ時に追記した event は検証のみ行い、executor は変更していない。
 - 配布物の確認: 再開後に `npm pack --ignore-scripts` で docs-site の tarball を作り、新規の利用リポジトリへ展開した。外部依存は導入済みのものを共有し、同梱文書は最小の specdojo package fixture、Mermaid は既知の SVG を cache に投入して確認した。`mermaid` と `build` が通り、manifest の新配置、SVG の dist 同梱、同梱ページの公開 URL、wikilink、eject 優先、コードスニペット、public ファイル保持、Git の生成物除外と設定ファイルの追跡対象維持を確認した。HTTP 待受を使わない VitePress の実サーバでも、実 watcher による文書の編集・追加・削除、eject 削除時の同梱文書への復元、更新後の Markdown 変換を確認した。この確認は通常の npm install や実 SVG の描画・HTTP 取得を代替しない。
 - 前回の blocker は解消済み: `pjr-e6qa-release-v0-4-7.md` の外部 URL 2件は再開時点で autolink に修正されており、再実行した `npm run validate:history-links` は成功した。本タスクでは当該ファイルを変更していない。
