@@ -9,7 +9,9 @@ specdojo:
   item_type: todo
   item_status: open
   priority: high
+  owner: BA
   registered_at: "2026-10-26T11:13:25Z"
+  due_on: "2026-10-31"
 ---
 
 # PJR-E6QA v0.4.7 を公開する

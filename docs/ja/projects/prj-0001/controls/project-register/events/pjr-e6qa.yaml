@@ -32,3 +32,19 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_d7ca57d1cc014b32ba28161d4eb90bad
+  ts: "2026-10-26T11:33:23Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が公開作業の担当と期限を指定した
+  changes:
+    - field: owner
+      from: _TODO_
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-10-31"
+  previous_event_id: reg_437c42bcbb0f448aad7e76cb3785a699
