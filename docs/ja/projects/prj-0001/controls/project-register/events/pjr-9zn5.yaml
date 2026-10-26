@@ -35,3 +35,16 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_99d0e6b672994d0aa79f8ad845b6b22a
+  ts: "2026-10-26T13:13:32Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: VitePress のページ走査と静的配信を保ちながら生成先を移す設計判断が必要なため
+  changes:
+    - field: difficulty
+      from: easy
+      to: hard
+  previous_event_id: reg_8524b92326664dac84c9cd34fac201e1

@@ -9,7 +9,7 @@ specdojo:
   item_type: todo
   item_status: open
   priority: medium
-  difficulty: easy
+  difficulty: hard
   owner: indie
   registered_at: "2026-10-26T12:48:16Z"
 ---
