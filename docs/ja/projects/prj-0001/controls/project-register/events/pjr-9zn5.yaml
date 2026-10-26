@@ -61,3 +61,19 @@
       from: open
       to: in-progress
   previous_event_id: reg_99d0e6b672994d0aa79f8ad845b6b22a
+- v: 1
+  id: reg_2f0a311e32f042668bec7db9789d03ab
+  ts: "2026-10-26T13:35:54Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor reported incomplete: 生成物の .vitepress 配下への集約、配信処理、Git 除外テンプレート、文書、回帰テスト、個票を更新した。既存の履歴リンク検査違反が未解消のため未完了。"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor reported incomplete: 生成物の .vitepress 配下への集約、配信処理、Git 除外テンプレート、文書、回帰テスト、個票を更新した。既存の履歴リンク検査違反が未解消のため未完了。"
+  previous_event_id: reg_605c5fb2fd884ef49acbcfe2b4ec27d6
