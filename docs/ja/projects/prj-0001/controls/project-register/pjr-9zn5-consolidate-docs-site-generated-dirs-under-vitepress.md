@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: indie
   registered_at: "2026-10-26T12:48:16Z"
+  completed_at: "2026-10-26T22:07:47Z"
+  conclusion: 生成物を .vitepress 配下へ集約し、既存 URL、eject 優先、Git 除外を維持した。全体検査と通常導入した配布版の描画・build・dev・HTTP を確認した。
 ---
 
 # PJR-9ZN5 @specdojo/docs-siteが生成するpublic/mermaid等を.vitepress配下に集約する
