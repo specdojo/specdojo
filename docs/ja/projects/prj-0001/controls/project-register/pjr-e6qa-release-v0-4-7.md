@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-e6qa-release-v0-4-7
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: BA
   registered_at: "2026-10-26T11:13:25Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-26T13:04:01Z"
+  conclusion: "PR #24 で main へ昇格し、v0.4.7 を npm に公開した。npm latest、タグの workflow、npm からの導入と init を確認した。"
 ---
 
 # PJR-E6QA v0.4.7 を公開する
