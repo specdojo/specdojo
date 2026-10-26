@@ -45,7 +45,7 @@ PJR-6WQY・P14M・K87Y・MB92・TVGA を v0.4.7 として検証し、main へ昇
 - ルートと 3 package の `npm ci --offline` が通った。クリーンな一時 worktree の `npm run check` は 177 テストファイル、2,775 テストを通過した。
 - v0.4.7 の tarball を空の一時リポジトリへ入れた。`init` で `shutdownAction: none` と `ollama-local` の Gemma・Qwen `*-mlx-work-64k` モデルを確認した。`register add` と、Codex executor・Gemma reporter による `exec run --register` が統合まで通り、個票が `review` へ進んだ。
 - 利用者が PR #24 を merge し、`main` の merge commit `2e9f3279829718cbeb4251f6f156c052c349828f` を指す `v0.4.7` タグを push した。npm の公開候補も利用者が承認した。
-- npm registry の `latest` は `0.4.7`。タグから起動した [npm 公開 workflow](https://github.com/specdojo/specdojo/actions/runs/40324618919) と [文書サイトの workflow](https://github.com/specdojo/specdojo/actions/runs/40324618934) は成功した。
+- npm registry の `latest` は `0.4.7`。タグから起動した npm 公開 workflow <https://github.com/specdojo/specdojo/actions/runs/40324618919> と文書サイトの workflow <https://github.com/specdojo/specdojo/actions/runs/40324618934> は成功した。
 - npm registry から `specdojo@0.4.7` を空の一時リポジトリへ新規導入し、CLI の版表示が `0.4.7` であることと `init` の完了を確認した。
 
 ## 5. 関連ドキュメント
