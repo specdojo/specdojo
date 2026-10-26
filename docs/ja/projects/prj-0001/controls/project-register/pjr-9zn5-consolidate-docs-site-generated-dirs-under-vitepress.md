@@ -32,12 +32,12 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                                    | 担当  | 状態 | メモ                                                                                                |
-| --- | --------------------------------------- | ----- | ---- | --------------------------------------------------------------------------------------------------- |
-| 1   | 生成先と VitePress の配信方法を設計する | indie | done | 閲覧用ツリーを `srcDir` にして走査対象を限定した                                                    |
-| 2   | Mermaid と kata の生成・配信を変更する  | indie | done | SVG の専用配信、eject 優先、dev の文書同期を実装した                                                |
-| 3   | `.gitignore` の生成内容と案内を更新する | indie | done | 生成ディレクトリだけを除外し、既存の設定と利用者の設定ファイルを保持する                            |
-| 4   | テストと空の利用リポジトリで確認する    | indie | done | 配布物の build・dev の実 watcher・Git 除外を確認済み。実描画・通常導入・HTTP はホスト確認へ申し送る |
+| No  | 作業                                    | 担当  | 状態 | メモ                                                                               |
+| --- | --------------------------------------- | ----- | ---- | ---------------------------------------------------------------------------------- |
+| 1   | 生成先と VitePress の配信方法を設計する | indie | done | 閲覧用ツリーを `srcDir` にして走査対象を限定した                                   |
+| 2   | Mermaid と kata の生成・配信を変更する  | indie | done | SVG の専用配信、eject 優先、dev の文書同期を実装した                               |
+| 3   | `.gitignore` の生成内容と案内を更新する | indie | done | 生成ディレクトリだけを除外し、既存の設定と利用者の設定ファイルを保持する           |
+| 4   | テストと空の利用リポジトリで確認する    | indie | done | 親検証、全体検査、通常導入した配布物の実描画・build・dev・HTTP・Git 除外を確認した |
 
 ## 4. 対応結果
 
@@ -50,9 +50,11 @@ specdojo:
 - 検証済み: `npm --prefix packages/docs-site run typecheck`、変更ファイルの Prettier 整形、`npm run check:src-imports`、`node --import tsx tools/catalog-validate-if-configured.mjs`、`node --import tsx src/specdojo.ts register build`、register events のファイル単位 schema 検査。Markdown 検査は指定された親 runner に委ねた。catalog 検査は既存の未作成成果物の警告を伴って成功した。runner が引き継ぎ時に追記した event は検証のみ行い、executor は変更していない。
 - 配布物の確認: 再開後に `npm pack --ignore-scripts` で docs-site の tarball を作り、新規の利用リポジトリへ展開した。外部依存は導入済みのものを共有し、同梱文書は最小の specdojo package fixture、Mermaid は既知の SVG を cache に投入して確認した。`mermaid` と `build` が通り、manifest の新配置、SVG の dist 同梱、同梱ページの公開 URL、wikilink、eject 優先、コードスニペット、public ファイル保持、Git の生成物除外と設定ファイルの追跡対象維持を確認した。HTTP 待受を使わない VitePress の実サーバでも、実 watcher による文書の編集・追加・削除、eject 削除時の同梱文書への復元、更新後の Markdown 変換を確認した。この確認は通常の npm install や実 SVG の描画・HTTP 取得を代替しない。
 - 前回の blocker は解消済み: `pjr-e6qa-release-v0-4-7.md` の外部 URL 2件は再開時点で autolink に修正されており、再実行した `npm run validate:history-links` は成功した。本タスクでは当該ファイルを変更していない。
-- ホスト環境への申し送り: `npm --prefix packages/docs-site run docs:build` は Chromium 起動時の `Operation not permitted`、配布物の `dev` は `listen EPERM` で sandbox 内の実行が止まった。ホストで `npm run docs:build` と、tarball を通常の npm install で導入した空の利用リポジトリの `build`・`dev`・`mermaid` を再確認し、実 SVG の描画、HTTP 取得と文書更新を確認する。
-- 保護設定の変更案: ルート `package.json` の `scripts` にある `docs:rebuild:mermaid` は旧配置を削除するため、親 runner または人間が `rm -f .vitepress/mermaid/*.svg && npm run docs:build:mermaid` へ変更する。executor は保護設定を編集していない。
-- 実装と sandbox 内の確認は完了した。ホスト制約の確認は `requires_human` として申し送る。result と登録簿の状態遷移は pipeline の reporter / runner が担当し、executor は個票のステータス項目を変更していない。
+- 保護設定の反映: 利用者の承認後、ルート `package.json` の `docs:rebuild:mermaid` を `rm -f .vitepress/mermaid/*.svg && npm run docs:build:mermaid` へ変更した。feature ブランチの commit `971ca627b` を `develop` へ統合した（`b6064620f`）。依存定義は変更していない。
+- 統合後の検証（2026-10-27、specdojo-orchestrator）: `b6064620f` のクリーンな worktree で `npm run check` が成功した（178 テストファイル、2,781 テスト）。実 Chromium を指定した本リポジトリの `npm run docs:build` も成功した（84.34 秒）。既存の SVG は生成キャッシュとして再利用した。
+- 通常導入した配布物の確認: CLI と docs-site の tarball を空の Git リポジトリへ `npm install --prefer-online` で導入した。最初の cache 優先の導入では `ajv@^8.20.0` と `@types/estree@1.0.9` が `ETARGET` になったが、registry への直接照会で両版の存在を確認し、メタデータ再取得後の通常導入は成功した。
+- 配布版の実環境検証: `mermaid` で新しい SVG を実 Chromium から `.vitepress/mermaid/` へ生成した。`build` が成功し（9.16 秒）、SVG の dist 同梱、package 同梱ページ、eject 済み文書の優先、wikilink、利用者の public ファイル保持を確認した。旧ルートの生成ディレクトリを新たに作らず、生成物だけが Git の除外対象になることも確かめた。
+- 配布版の `dev` を HTTP 待受付きで起動し、base を含む Mermaid URL の HTTP 200 と SVG 本文、元の Markdown を更新した後のステージング同期と変換後ページへの反映を確認した。検証用サーバは停止済み。sandbox からの申し送りはすべて確認でき、残る確認事項はない。
 
 ## 5. 関連ドキュメント
 
