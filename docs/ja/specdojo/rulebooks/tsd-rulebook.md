@@ -2,7 +2,7 @@
 specdojo:
   id: specdojo:tsd-rulebook
   type: rulebook
-  status: draft
+  status: ready
   sample: specdojo:tsd-sample
   template: not-needed
 ---
