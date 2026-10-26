@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: hard
   owner: indie
   registered_at: "2026-10-26T12:48:16Z"
-  block_reason: "parent validation failed: test-unit"
 ---
 
 # PJR-9ZN5 @specdojo/docs-siteが生成するpublic/mermaid等を.vitepress配下に集約する
