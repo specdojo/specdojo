@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: waiting
   priority: medium
   difficulty: hard
   owner: indie
   registered_at: "2026-10-26T12:48:16Z"
+  block_reason: "executor reported incomplete: 生成物の .vitepress 配下への集約、配信処理、Git 除外テンプレート、文書、回帰テスト、個票を更新した。既存の履歴リンク検査違反が未解消のため未完了。"
 ---
 
 # PJR-9ZN5 @specdojo/docs-siteが生成するpublic/mermaid等を.vitepress配下に集約する
