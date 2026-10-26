@@ -90,7 +90,7 @@
     "docs:generate": "node --import tsx src/specdojo.ts build",
     "docs:dev": "npm run docs:generate && npm --prefix packages/docs-site run docs:dev",
     "docs:build:mermaid": "npm --prefix packages/docs-site run docs:build:mermaid",
-    "docs:rebuild:mermaid": "rm -f public/mermaid/*.svg && npm run docs:build:mermaid",
+    "docs:rebuild:mermaid": "rm -f .vitepress/mermaid/*.svg && npm run docs:build:mermaid",
     "docs:build": "npm run docs:generate && npm --prefix packages/docs-site run docs:build",
     "lint:fm": "node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail",
     "validate:schema:job-run": "node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --schema docs/specdojo/schemas/v1/job-run.schema.yaml --data \"docs/ja/**/execution/jobs/runs/*.json\" --allow-empty",
