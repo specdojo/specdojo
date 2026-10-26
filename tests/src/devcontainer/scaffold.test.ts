@@ -47,6 +47,7 @@ describe("runDevcontainerScaffold", () => {
               "source=${localWorkspaceFolder}/..,target=/workspaces/__SPECDOJO_WORKSPACE_NAME__,type=bind,consistency=cached",
             workspaceFolder:
               "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
+            shutdownAction: "none",
             features: {},
             mounts: ["source=specdojo-git,target=/home/node/.config/git,type=volume"],
             containerEnv: {},
@@ -157,6 +158,7 @@ describe("runDevcontainerScaffold", () => {
       "source=${localWorkspaceFolder}/..,target=/workspaces/app1-workspace,type=bind,consistency=cached",
     );
     expect(json.workspaceFolder).toBe("/workspaces/app1-workspace/${localWorkspaceFolderBasename}");
+    expect(json.shutdownAction).toBe("none");
     expect(json.features).not.toHaveProperty(
       "ghcr.io/rocker-org/devcontainer-features/apt-packages:1",
     );
@@ -299,6 +301,7 @@ describe("runDevcontainerScaffold", () => {
       "source=${localWorkspaceFolder}/..,target=/workspaces/app1-workspace,type=bind,consistency=cached",
     );
     expect(json.workspaceFolder).toBe("/workspaces/app1-workspace/${localWorkspaceFolderBasename}");
+    expect(json.shutdownAction).toBe("none");
     const script = String(findWriteCall("post-create.sh")[1]);
     expect(script).toContain('WORKSPACE_PARENT="$(dirname "$WORKSPACE_DIR")"');
     expect(script).toContain('SAFE_DIRECTORY_SCOPE="${WORKSPACE_PARENT}/*"');
@@ -328,6 +331,7 @@ describe("runDevcontainerScaffold", () => {
               "source=${localWorkspaceFolder}/..,target=/workspaces/__SPECDOJO_WORKSPACE_NAME__,type=bind,consistency=cached",
             workspaceFolder:
               "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
+            shutdownAction: "none",
             features: {},
             mounts: [],
             containerEnv: {},
@@ -1247,6 +1251,45 @@ describe("runDevcontainerScaffold", () => {
       expect(tmuxContent).toContain(
         'echo "Check the location on the host terminal with: dirname \\"\\$(command -v docker)\\"" >&2',
       );
+    });
+  });
+
+  describe("shutdownAction configuration", () => {
+    it("should generate devcontainer.json with shutdownAction set to none using the template", async () => {
+      const actualFs = await vi.importActual<typeof fs>("node:fs");
+      const devcontainerTemplate = actualFs.readFileSync(
+        path.join(process.cwd(), "templates/devcontainer/devcontainer.json"),
+        "utf8",
+      );
+      const postCreateTemplate = actualFs.readFileSync(
+        path.join(process.cwd(), "templates/devcontainer/post-create.sh"),
+        "utf8",
+      );
+      readFileMock.mockImplementation(async (p) => {
+        const file = String(p);
+        if (file.endsWith("devcontainer.json")) return Promise.resolve(devcontainerTemplate);
+        if (file.endsWith("post-create.sh")) return Promise.resolve(postCreateTemplate);
+        if (file.endsWith("specdojo-tmux.sh.sample")) {
+          return Promise.resolve("#!/usr/bin/env bash\necho sample");
+        }
+        return Promise.resolve("");
+      });
+
+      await runDevcontainerScaffold({
+        packageRoot,
+        repoRoot,
+        providers: [],
+        editors: [],
+        ollama: false,
+        cron: false,
+        tmux: false,
+        force: false,
+        dryRun: false,
+      });
+
+      const jsonCall = findWriteCall("devcontainer.json");
+      const json = JSON.parse(String(jsonCall[1]));
+      expect(json.shutdownAction).toBe("none");
     });
   });
 });

@@ -59,6 +59,8 @@ $defs:
           - approach
           - targets
           - sources
+          - target_path
+          - target_rulebook
           - derived_from
           - autopilot
       from:

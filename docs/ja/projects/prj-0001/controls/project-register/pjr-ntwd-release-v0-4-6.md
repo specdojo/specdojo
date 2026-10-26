@@ -7,11 +7,13 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-25T03:46:04Z"
   due_on: null
+  completed_at: "2026-10-25T04:23:52Z"
+  conclusion: "PR #23 で main へ昇格し、v0.4.6（fbf3a8754）のタグから npm へ公開した。npm の dist-tag latest は 0.4.6"
 ---
 
 # PJR-NTWD v0.4.6 を公開する

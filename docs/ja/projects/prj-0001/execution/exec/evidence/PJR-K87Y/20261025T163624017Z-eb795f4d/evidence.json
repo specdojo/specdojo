@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-K87Y",
+  "run_id": "20261025T163624017Z-eb795f4d",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "rate_limited",
+    "started_at": "2026-10-25T16:36:24.017Z",
+    "completed_at": "2026-10-25T19:31:02.142Z",
+    "exit_code": 1,
+    "attempts": 2
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-k87y.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-k87y-integrate-grade-run-per-document.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-freeform-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-fully-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-guided-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-recipe-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-retrofit-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-rulebook-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-sample-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template-maintenance-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xrp-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/review-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/grade-pipeline-state.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/commands/agent.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/lifecycle-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-resume.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/register-worktree.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/run/schedule-prepare.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/worktree-ops-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/command-inspect.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/pipeline-state.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/target-discovery.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/targets.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/review/grade.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/worktree-ops.integration.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/review/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/grade-checkpoint.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/command-run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/grade/run.ts",
+      "status": "??"
+    },
+    {
+      "path": "src/shared/agent-plan.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/helpers/grade-run-fixture.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/review-template-table.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/scaffold-viewpoints.test.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/grade/run.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [],
+  "diff_summary": {
+    "files_changed": 45,
+    "summary": "CHANGELOG.md                                       |   3 +\n .../controls/project-register/events/pjr-k87y.yaml |  16 +++\n .../pjr-k87y-integrate-grade-run-per-document.md   |   3 +-\n .../exec-templates/xrp-freeform-template.md        |   4 +-\n .../exec-templates/xrp-fully-guided-template.md    |   4 +-\n .../exec-templates/xrp-recipe-guided-template.md   |   4 +-\n .../xrp-recipe-maintenance-template.md             |   4 +-\n .../exec-templates/xrp-retrofit-template.md        |   4 +-\n .../xrp-rulebook-maintenance-template.md           |   4 +-\n .../xrp-sample-maintenance-template.md             |   4 +-\n .../xrp-template-maintenance-template.md           |   4 +-\n docs/ja/specdojo/exec-templates/xrp-template.md    |   4 +-\n docs/ja/specdojo/guides/exec-operation-guide.md    |   4 +\n docs/ja/specdojo/guides/review-guide.md            |   4 +-\n docs/ja/specdojo/references/command-reference.md   |  17 ++-\n .../schemas/v1/grade-pipeline-state.schema.yaml    |   2 +-\n src/commands/agent.ts                              | 136 ++-------------------\n src/exec/commands.ts                               |  13 +-\n src/exec/project.ts                                |   5 +-\n src/exec/run/lifecycle-commands.ts                 |   2 +\n src/exec/run/register-resume.ts                    |   1 +\n src/exec/run/register-state.ts                     |   6 +-\n src/exec/run/register-worktree.ts                  |   6 +-\n src/exec/run/schedule-prepare.ts                   |  11 +-\n src/exec/worktree-command.ts                       |   9 +-\n src/exec/worktree-ops-merge.ts                     |  28 +++++\n src/grade/apply.ts                                 |  16 ++-\n src/grade/command-inspect.ts                       |   3 +-\n src/grade/grade.ts                                 |   2 +\n src/grade/markdown.ts                              |   6 +-\n src/grade/pipeline-state.ts                        |  15 ++-\n src/grade/plan.ts                                  |  13 +-\n src/grade/target-discovery.ts                      |   2 +-\n src/grade/targets.ts                               |  59 ++++++---\n src/review/grade.ts                                |  44 ++++---\n tests/src/exec/worktree-ops.integration.test.ts    |  38 +++++-\n tests/src/review/grade.test.ts                     |  82 +++++++++----\n 37 files changed, 338 insertions(+), 244 deletions(-)"
+  },
+  "validations": [],
+  "rate_limit_events": [
+    {
+      "action": "wait",
+      "trigger": "rate_limit",
+      "from_actor": "sol-executor",
+      "to_actor": "sol-executor",
+      "resume_at": "2026-10-25T19:31:00.000Z",
+      "resumed_at": "2026-10-25T19:31:00.269Z"
+    }
+  ],
+  "final_message": "",
+  "block_reason": "executor rate limit reached",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-K87Y/20261025T163624017Z-eb795f4d/executor.log",
+      "bytes": 22109,
+      "truncated": false
+    }
+  ]
+}

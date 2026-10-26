@@ -45,3 +45,22 @@
       from: "2026-10-25"
       to: "-"
   previous_event_id: reg_a3c1d7c0442a4aca95c02e98fc7c2223
+- v: 1
+  id: reg_414f74f2a3784db097e92e53ec921a9b
+  ts: "2026-10-25T04:23:52Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: npm の 0.4.6 を空のリポジトリへ入れ、init --exec --lefthook --slidev と specdojo build が通ることを確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: "PR #23 で main へ昇格し、v0.4.6（fbf3a8754）のタグから npm へ公開した。npm の dist-tag latest は 0.4.6"
+  previous_event_id: reg_28f33b4e10904eb78bffbc37ac4accc3

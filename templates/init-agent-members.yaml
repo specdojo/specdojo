@@ -167,7 +167,7 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/gemma4:31b
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: edit
     stage_role: executor
     capabilities: [web_search]
@@ -181,7 +181,7 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/gemma4:31b
+    model: ollama-local/gemma4:31b-mlx-work-64k
     mode: review
     stage_role: executor
     capabilities: [web_search]
@@ -195,7 +195,50 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/gemma4:26b
+    model: ollama-local/gemma4:26b-mlx-work-64k
+    mode: report
+    stage_role: reporter
+    capabilities: []
+    proficiency: normal
+    priority: 3
+    persona: execution-reporter
+    scheduler_strategy: fifo
+
+  - nickname: qwen-executor
+    display_name: OpenCode Qwen Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
+    mode: edit
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: normal
+    priority: 3
+    persona: task-executor
+    scheduler_strategy: critical-first
+  - nickname: qwen-review-executor
+    display_name: OpenCode Qwen Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
+    mode: review
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: normal
+    priority: 3
+    persona: multi-viewpoint-reviewer
+    scheduler_strategy: fifo
+  - nickname: qwen-reporter
+    display_name: OpenCode Qwen Reporter
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
     mode: report
     stage_role: reporter
     capabilities: []

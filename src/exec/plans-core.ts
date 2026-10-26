@@ -1,3 +1,15 @@
+import {
+  deliverableDocId,
+  loadPlanCatalogDocs as loadCatalogDocs,
+} from "../catalog/document-target.js";
+import type { DeliverableInfo, ResolvedDeliverable } from "../catalog/document-target.js";
+export {
+  deliverableDocId,
+  resolveDeliverableByDocId,
+  loadPlanCatalogDocs as loadCatalogDocs,
+} from "../catalog/document-target.js";
+export type { DeliverableInfo, ResolvedDeliverable } from "../catalog/document-target.js";
+
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import { load } from "../shared/yaml.js";
@@ -6,7 +18,7 @@ import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "../
 import type { KataRefs } from "../kata/kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
 import { isDctPlanFileName } from "../catalog/plan.js";
-import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
+import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
 import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "../shared/practice-id.js";
 import { MISSING } from "../shared/plan-templates.js";
 export {
@@ -34,11 +46,6 @@ import type { ReviewGradeOutcome, ReviewGradeTarget } from "../review/grade.js";
 // ---------------------------------------------------------------------------
 
 export type PlanTask = ReadyTaskView & { mode: TaskMode };
-
-export type DeliverableInfo = {
-  deliverable: DctDeliverableItem;
-  resolvedPath: string;
-};
 
 export function execDocId(projectId: string, prefix: "xep" | "xrp", localBase: string): string {
   const localId = `${prefix}-${localBase.toLowerCase()}`;
@@ -125,37 +132,6 @@ export function findDeliverableInfo(catalogPath: string, localId: string): Deliv
   return null;
 }
 
-export type ResolvedDeliverable = {
-  domain: string;
-  localId: string;
-  // Filename slug for ad-hoc plans. `local_id` is unique project-wide (catalog
-  // validate warns otherwise), so the bare local_id is used.
-  slug: string;
-  info: DeliverableInfo;
-};
-
-export function loadCatalogDocs(catalogPath: string): DctDoc[] {
-  if (!catalogPath || !existsSync(catalogPath)) return [];
-  // Catalog scans walk subdirectories, so agent judgment plans (plans/dct-plan-*.yaml)
-  // must be excluded; they share the dct- prefix but carry no catalog structure.
-  const files = listFilesRecursive(catalogPath)
-    .filter((f) => {
-      const name = f.split("/").pop() ?? "";
-      return /^dct-.+\.ya?ml$/i.test(name) && !isDctPlanFileName(name);
-    })
-    .sort();
-
-  const docs: DctDoc[] = [];
-  for (const filePath of files) {
-    try {
-      docs.push(load(readFileSync(filePath, "utf8")) as DctDoc);
-    } catch {
-      continue;
-    }
-  }
-  return docs;
-}
-
 function resolvedDeliverablesInCatalog(catalogPath: string): ResolvedDeliverable[] {
   const deliverables: ResolvedDeliverable[] = [];
   const visit = (sections: DctSection[], parentBase: string, domain: string): void => {
@@ -179,38 +155,6 @@ function resolvedDeliverablesInCatalog(catalogPath: string): ResolvedDeliverable
     visit(doc.groups, resolveBasePath("", doc.base_path), doc.domain);
   }
   return deliverables;
-}
-
-// Register targets use document IDs rather than schedule local_ids. Resolve the document ID
-// back to its catalog entry so register-originated approach plans can share schedule rendering.
-export function resolveDeliverableByDocId(
-  catalogPath: string,
-  projectId: string,
-  targetId: string,
-): ResolvedDeliverable {
-  const matches = resolvedDeliverablesInCatalog(catalogPath).filter((target) => {
-    const docId = deliverableDocId(
-      projectId,
-      target.info.deliverable.local_id,
-      target.info.resolvedPath,
-    );
-    return (
-      targetId === docId ||
-      targetId === target.localId ||
-      targetId === qualifiedDocId(projectId, target.localId)
-    );
-  });
-  if (matches.length === 0) {
-    throw new Error(`catalog deliverable target not found for document id: ${targetId}`);
-  }
-  if (matches.length > 1) {
-    throw new Error(
-      `ambiguous catalog deliverable target for document id ${targetId}: ${matches
-        .map((match) => match.localId)
-        .join(", ")}`,
-    );
-  }
-  return matches[0];
 }
 
 /** Resolve a project-repository-relative file path to its catalog entry, if any. */
@@ -425,7 +369,7 @@ export function gradeResultRef(projectId: string, subjectPath: string): string {
 // 既存文書の編集、宣言済みパスへの新規作成、前提確認が必要な状態を推測せず判別できる。
 export function kataRefState(refPath: string): "existing" | "missing" | "unresolved" {
   if (refPath === MISSING) return "unresolved";
-  return existsSync(join(specdojoRootDir(), refPath)) ? "existing" : "missing";
+  return existsSync(resolve(specdojoRootDir(), refPath)) ? "existing" : "missing";
 }
 
 // 対象成果物の depends_on を、依存先 doc の [[id]] 参照の入れ子リストで提示する。
@@ -592,31 +536,6 @@ const TARGET_REF_KINDS: Partial<Record<Approach, readonly (keyof KataRefs)[]>> =
 
 function qualifiedDocId(projectId: string, localId: string): string {
   return projectId ? `${projectId}:${localId}` : localId;
-}
-
-// 成果物の doc id は、既存文書では frontmatter を正本とする。author 前など文書が
-// 未作成の場合は配置規約に従い、product 配下だけをローカル ID、projects 配下を含む
-// その他の配置を従来どおり project 修飾 ID とする。
-export function deliverableDocId(
-  projectId: string,
-  localId: string,
-  resolvedPath: string | undefined,
-): string {
-  if (resolvedPath) {
-    const absolutePath = resolve(specdojoRootDir(), resolvedPath);
-    if (existsSync(absolutePath)) {
-      try {
-        const id = readSpecdojoNamespace(readFileSync(absolutePath, "utf8")).id;
-        if (typeof id === "string" && id.trim()) return id.trim();
-      } catch {
-        // 読み取り不能・不正 frontmatter は配置によるフォールバックへ進む。
-      }
-    }
-
-    const normalizedPath = resolvedPath.replaceAll("\\", "/").replace(/^\/+/, "");
-    if (/^docs\/[a-z]{2}\/product(?:\/|$)/.test(normalizedPath)) return localId;
-  }
-  return qualifiedDocId(projectId, localId);
 }
 
 // タスクが対象とする文書の doc id リスト。先頭は対象成果物（配置に対応する doc id）、

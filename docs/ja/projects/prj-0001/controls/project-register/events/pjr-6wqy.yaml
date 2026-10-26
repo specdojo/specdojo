@@ -1,0 +1,95 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e356ea39f64749e6a3d2117c888f5fa9
+  ts: "2026-10-25T05:11:58Z"
+  action: add
+  actor: SpecDojo
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 成果物カタログがなくても fully-guided などで成果物を作り直せるようにする
+    - field: description
+      from: ""
+      to: カタログのない project でも、作るファイルの置き場所と rulebook を個票に指定するか、既存の文書の frontmatter から辿ることで、fully-guided・recipe-guided・freeform・retrofit の plan を作れるようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_c04f099378ad4dcf9c9e3dceb495fbb8
+  ts: "2026-10-25T05:20:42Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: fields updated
+  changes:
+    - field: description
+      from: 成果物を作る・直す・確定する approach（`fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize`）は、対象を成果物カタログ（DCT）で解決するため、`catalog_path` のない project では起票の時点で止まる。カタログのない project でも、これらの approach で成果物を作れるようにする。
+      to: カタログのない project でも、作るファイルの置き場所と rulebook を個票に指定するか、既存の文書の frontmatter から辿ることで、fully-guided・recipe-guided・freeform・retrofit・bootstrap・finalize・bootstrap-finalize の plan を作れるようにする
+  previous_event_id: reg_e356ea39f64749e6a3d2117c888f5fa9
+- v: 1
+  id: reg_1c20bf563f82465f815c66e08ed345bb
+  ts: "2026-10-25T16:04:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_c04f099378ad4dcf9c9e3dceb495fbb8
+- v: 1
+  id: reg_d9a881c27a914ee1b7b0033fd64cc11b
+  ts: "2026-10-25T16:33:35Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_1c20bf563f82465f815c66e08ed345bb
+- v: 1
+  id: reg_2736849ce9934a728ff03e3b9652f9c6
+  ts: "2026-10-25T21:30:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 個票・差分・resultと対象単体253件・統合8件・親検証7件を照合し、統合後のPJR-JSEY実行もreviewまで通過した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-26"
+    - field: conclusion
+      from: "-"
+      to: カタログなしの7種の成果物approachについて、起票・対象解決・plan生成を実装した。
+  previous_event_id: reg_d9a881c27a914ee1b7b0033fd64cc11b

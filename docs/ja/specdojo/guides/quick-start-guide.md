@@ -554,7 +554,7 @@ risk は必要なら `exec run --register` で軽減策を実行できます。n
 
 ### 3.6. 成果物を作る・直す
 
-**こんなとき:** 成果物カタログにある 1 文書を、利用できる kata の整備状況に合う進め方で作成・更新したいとき。
+**こんなとき:** 1 文書を、利用できる kata の整備状況に合う進め方で作成・更新したいとき。
 
 | `approach`      | 選ぶ状況                                                         |
 | --------------- | ---------------------------------------------------------------- |
@@ -578,7 +578,23 @@ npx specdojo exec run \
   --worktree
 ```
 
-`recipe-guided` または `retrofit` を使う場合は、上の `--approach fully-guided` を選んだ値へ置き換えます。`--target` には成果物カタログで解決できる成果物の doc id を 1 件だけ指定します。カタログの `done_criteria` と個票の完了条件が、どちらも plan に入ります。
+`recipe-guided`・`freeform`・`retrofit` を使う場合は、上の `--approach fully-guided` を選んだ値へ置き換えます。`--target` は成果物の doc id を 1 件指定します。カタログにある対象は従来どおりカタログの `done_criteria` と個票の完了条件を使います。
+
+カタログがない場合、既存文書は文書索引からパスと frontmatter の `specdojo.rulebook` を辿れます。これから作る文書は、次のようにリポジトリ相対のパスと rulebook ID を個票に保存します。
+
+```bash
+npx specdojo register add \
+  --project <project-id> --type todo \
+  --title "文書を実践の型に沿って作る" --topic create-document \
+  --approach fully-guided --target <deliverable-doc-id> \
+  --target-path docs/ja/product/example.md \
+  --target-rulebook <kata-authority>:example-rulebook
+npx specdojo exec plan --project <project-id> --register <PJR-ID>
+```
+
+`--target-rulebook` の rulebook と、そこから参照する必要な kata は先に用意します。`fully-guided` は `not-needed` と宣言された型を除く一式、`recipe-guided` は recipe が必要です。不足する型は起票時に名前を示して停止します。個票の「完了条件」を具体化してから実行してください。カタログなしの完了基準は個票の完了条件と rulebook です。`retrofit` では調べる実装のパスも個票に明記します。
+
+パスと rulebook は `register update --target-path <path> --target-rulebook <doc-id>` で更新でき、それぞれ `-` で削除できます。既存文書のパスや `specdojo.rulebook` と指定が食い違う場合は停止します。カタログ設定済みで対象が未登録の場合は、この 2 つを明示したときだけ同じ解決を使います。
 
 ### 3.7. 成果物とkataを一組で作る
 
@@ -599,6 +615,10 @@ npx specdojo exec run \
   --register <PJR-ID> \
   --worktree
 ```
+
+カタログなしの `bootstrap` では、上の起票に `--target-path docs/ja/product/example.md --target-rulebook <kata-authority>:example-rulebook` を追加し、設定ファイルに `kata_authority` を指定します。新しい rulebook ID が必要で、既存 ID は受け付けません。plan は `docs/ja/specdojo/<kind>s/<kata-authority>/example-<kind>.md` に未作成の kata を示し、成果物の `specdojo.rulebook` と rulebook の kata 参照を記入するよう指示します。
+
+`finalize`・`bootstrap-finalize` は既存文書だけを対象にできます。カタログなしでは個票の完了条件をチェック表にし、人が成果物を確定します。`bootstrap-finalize` は frontmatter から辿る kata 一式も確定対象です。`cross-deliverable-dedup` は成果物群を扱うためカタログが必要です。
 
 `bootstrap` は初期整備用です。既に信頼できる kata が揃っている成果物の通常改訂には `fully-guided` を使います。
 

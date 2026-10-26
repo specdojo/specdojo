@@ -103,7 +103,9 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
-    _IMPLEMENTATION_EVIDENCE_: implementationEvidence(deliverable),
+    _IMPLEMENTATION_EVIDENCE_: deliverable?.catalogless
+      ? "個票に指定された実装のパスを読み取り専用の調査入力とする。パスが未指定なら実装反映の前に個票へ明記する。"
+      : implementationEvidence(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,
@@ -121,7 +123,9 @@ function buildEditPlanMarkdown(
     _OWNER_ROLE_LABEL_: ownerRole.label,
     _OWNER_ROLE_NOTE_: ownerRole.note,
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
-    _DONE_CRITERIA_GOALS_: doneCriteriaGoals(criteria, task.owner),
+    _DONE_CRITERIA_GOALS_: deliverable?.catalogless
+      ? "カタログの `done_criteria` はない。個票の完了条件と rulebook を完了基準とする。"
+      : doneCriteriaGoals(criteria, task.owner),
     _DONE_CRITERIA_CHECKLIST_: doneCriteriaChecklist(criteria),
     _DONE_CRITERIA_ITEMS_: doneCriteriaItems(criteria),
     _GRADE_FINDINGS_: gradeFindingsText(
@@ -147,12 +151,28 @@ function buildEditPlanMarkdown(
         )
         .join("\n") || "- なし（kata だけを新規作成する）",
   };
-  const body = expandTemplate(template, values);
+  const effectiveTemplate = deliverable?.catalogless
+    ? template
+        .split("\n")
+        .filter(
+          (line) =>
+            !(["recipe", "sample", "template"] as const).some(
+              (kind) => refs[kind] === MISSING && line.includes(`_${kind.toUpperCase()}_REF_`),
+            ),
+        )
+        .join("\n")
+    : template;
+  let body = expandTemplate(effectiveTemplate, values);
+  if (deliverable?.catalogless && task.approach === "retrofit") {
+    body = body.replace("成果物カタログの `evidence_refs` から展開した", "個票に明記する");
+  }
   if (!planOverrides?.additionalConditions) return body;
   const section = [
     "## 個票の追加完了条件",
     "",
-    "成果物カタログの `done_criteria` に加え、登録簿の個票が定める次の条件も満たす。",
+    deliverable?.catalogless
+      ? "個票が定める次の条件と rulebook を満たす。"
+      : "成果物カタログの `done_criteria` に加え、登録簿の個票が定める次の条件も満たす。",
     "",
     planOverrides.additionalConditions.trim(),
     "",
@@ -311,7 +331,11 @@ async function writeTaskPlan(
     );
   }
   const planTask: PlanTask = { ...task, mode };
-  if (task.approach === "retrofit" && implementationEvidence(deliverable) === MISSING) {
+  if (
+    task.approach === "retrofit" &&
+    !deliverable?.catalogless &&
+    implementationEvidence(deliverable) === MISSING
+  ) {
     throw new Error(
       `Task ${task.id} uses approach: retrofit but the target deliverable has no evidence_refs.`,
     );

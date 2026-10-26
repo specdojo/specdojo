@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f01ad2e319034c99a529504f5fdcd769
+  ts: "2026-10-25T08:40:41Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者が報告した scaffold の設定不足を、担当 DEV・期限 2026-10-31 で追跡するため起票
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: devcontainer scaffold の shutdownAction を補う
+    - field: description
+      from: ""
+      to: scaffold の devcontainer 雛形に shutdownAction がない。none を明示し、空のリポジトリで生成結果を確認する。既存環境の修正手順も記載する。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_e2bf35edba5f4acda4c6ce4005c7de80
+  ts: "2026-10-25T08:55:03Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f01ad2e319034c99a529504f5fdcd769
+- v: 1
+  id: reg_e2704615f7ed45419c1ef4c42139a08e
+  ts: "2026-10-25T09:14:11Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_e2bf35edba5f4acda4c6ce4005c7de80
+- v: 1
+  id: reg_60a30f5e23324e718c3bf5b2b59b7d2b
+  ts: "2026-10-25T09:44:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: exec run の統合差分・個票の対応結果・result と evidence を確認して close。利用者が shutdownAction の反映をもって完了としてよいと指示したため、ホストの切断確認は不要とする。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: 'shutdownAction: "none" を devcontainer の雛形へ反映し、空リポジトリでの生成結果、既存環境の修正手順、親の検証7項目の成功を確認した。利用者の指示により、ホストでの切断動作確認は close の条件としない。'
+  previous_event_id: reg_e2704615f7ed45419c1ef4c42139a08e

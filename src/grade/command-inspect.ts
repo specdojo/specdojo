@@ -16,6 +16,7 @@ import {
 import { migrateInlineGrades, validateGradeResultForDocument } from "./markdown.js";
 import { readGradeResultForDocument } from "./result.js";
 import { repoRelativePath, resolveSafeMarkdownPath } from "./targets.js";
+import { specdojoRootDir } from "../shared/specdojo-config.js";
 
 export function registerGradeInspectionCommands(grade: Command): void {
   addSelection(
@@ -56,7 +57,7 @@ export function registerGradeInspectionCommands(grade: Command): void {
     .option("--project <projectId>", "Project id in specdojo.config.json")
     .action((options) => {
       try {
-        const absolute = resolveSafeMarkdownPath(options.path);
+        const absolute = resolveSafeMarkdownPath(options.path, specdojoRootDir(), options.project);
         const rel = repoRelativePath(absolute);
         const result = readGradeResultForDocument({ documentPath: rel, project: options.project });
         if (result) process.stdout.write(`${JSON.stringify(result)}\n`);

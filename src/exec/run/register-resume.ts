@@ -313,6 +313,7 @@ export async function resumeSingleRegisterItemWorktree(
   const bookkeepingPaths = (): string[] =>
     registerBookkeepingPaths({
       repoRoot,
+      executionPath,
       registerPaths,
       planPath: resolve(repoRoot, artifacts.planRef),
       resultPath: resolve(repoRoot, artifacts.resultRef),

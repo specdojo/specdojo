@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9b4b0888e41042818c7739be5a70b1c0
+  ts: "2026-10-25T14:16:36Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: gradeの単一文書評価パイプライン（run-per-document.sh相当）をspecdojoコマンド本体へ統合する
+    - field: description
+      from: ""
+      to: exec run のレビュー前 grade 実行（ensureReviewGrade）が外部スクリプト tools/grade/run-per-document.sh に依存しているため、specdojo grade run サブコマンドとして CLI 本体へ統合する。あわせて今回のマルチリポジトリ運用で確認された関連課題（1. ensureReviewGrade から grade plan -> agent run -> grade apply のネイティブ実行とエージェント自動選択/引き継ぎ、2. dist/grade/targets.js の project.repos マルチリポジトリ相対パス ../ 許容、3. ワークツリー分岐前の grade 結果/criteria サイドカーのチェックポイント対象化、4. exec scaffold --project 時の pm-review-viewpoints.yaml 参照先 standards/ -> defaults/ 修正および viewpoints\_path 未設定時の specdojo:pm-review-viewpoints フォールバック、5. xrp-review-\*-template.md の done\_criteria 表で発生する markdownlint MD060 警告の解消）を解消する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: indie
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_cde76542467949a5bd49b44870c4ae0c
+  ts: "2026-10-25T15:03:01Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9b4b0888e41042818c7739be5a70b1c0
+- v: 1
+  id: reg_4a24ae196728423ab8fb729111132cef
+  ts: "2026-10-25T15:46:11Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-unit"
+  previous_event_id: reg_cde76542467949a5bd49b44870c4ae0c
+- v: 1
+  id: reg_8fc783b545554ec58c4a8449184ea95b
+  ts: "2026-10-25T16:36:21Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, test-unit"
+      to: "-"
+  previous_event_id: reg_4a24ae196728423ab8fb729111132cef
+- v: 1
+  id: reg_009a26e7e7854fd1ae3ea8920ba409ea
+  ts: "2026-10-25T19:31:03Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "executor rate limit reached; rate limit wait: sol-executor resumed at 2026-10-25T19:31:00.269Z"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "executor rate limit reached; rate limit wait: sol-executor resumed at 2026-10-25T19:31:00.269Z"
+  previous_event_id: reg_8fc783b545554ec58c4a8449184ea95b
+- v: 1
+  id: reg_ac9dd3879de3471690208e3fc10ca6ba
+  ts: "2026-10-25T20:52:02Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "executor rate limit reached; rate limit wait: sol-executor resumed at 2026-10-25T19:31:00.269Z"
+      to: "-"
+  previous_event_id: reg_009a26e7e7854fd1ae3ea8920ba409ea
+- v: 1
+  id: reg_306403b7c5bd4c6dbb727bb97cdd7aa9
+  ts: "2026-10-25T21:17:12Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_ac9dd3879de3471690208e3fc10ca6ba
+- v: 1
+  id: reg_5e6bebb54c3346b1a154388d76026c61
+  ts: "2026-10-25T21:39:12Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 個票・差分・result、親検証7件、JSEY実行、実agentの評価サイドカーと再開スキップ、ensureReviewGradeの実行/再利用、空の利用先へのtarball導入を確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-26"
+    - field: conclusion
+      from: "-"
+      to: 単一文書gradeをCLI本体へ統合し、配布版・実agent評価・レビュー前grade・runner統合後の動作を確認した。
+  previous_event_id: reg_306403b7c5bd4c6dbb727bb97cdd7aa9

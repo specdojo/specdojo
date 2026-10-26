@@ -2177,3 +2177,64 @@
       from: R1FB と 84F7 の統合後に exec run --register が review まで通った。executor の handoff が result の申し送りに載った
       to: "XTE6 の統合後に exec run --register が review まで通り、executor の報告に completion_status: complete が入った"
   previous_event_id: reg_5e769c7347d5408d919cefb952d5b12c
+- v: 1
+  id: reg_4c72091401944d63b43d479029c7986c
+  ts: "2026-10-25T21:19:47Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-P14M・PJR-6WQY・PJR-K87Yの統合後にrunnerを再確認するため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-25"
+      to: "-"
+  previous_event_id: reg_2822cefcb9f14d46aa92d78feee08610
+- v: 1
+  id: reg_bc61d92b0558493580536934588ce027
+  ts: "2026-10-25T21:20:12Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_4c72091401944d63b43d479029c7986c
+- v: 1
+  id: reg_22649382abc04cd48e200b5888bcecab
+  ts: "2026-10-25T21:28:33Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_bc61d92b0558493580536934588ce027
+- v: 1
+  id: reg_15fa80218ffc4784a785eecb460041d9
+  ts: "2026-10-25T21:29:36Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 個票の2026-10-26 06:21 JST／PJR-K87Y／sol-executorの追記、eventの実体actor、result complete、親検証7件、統合commit c1244c193を実物で確認した。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-26"
+    - field: conclusion
+      from: "XTE6 の統合後に exec run --register が review まで通り、executor の報告に completion_status: complete が入った"
+      to: P14M・6WQY・K87Y統合後のexec run --registerがstartからreviewまで進み、親検証7件と統合が通った。
+  previous_event_id: reg_22649382abc04cd48e200b5888bcecab

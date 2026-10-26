@@ -1,6 +1,6 @@
 {
   "name": "specdojo",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "A dojo for Spec-Dō, the way of specification: decide with a register, write specs and designs with kata, and keep sharpening them with AI.",
   "license": "MIT",
   "author": "naoji3x",

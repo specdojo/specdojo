@@ -89,7 +89,7 @@ scaffold は、常時稼働ホストへの接続と tmux セッションの維�
 
 `devcontainer.json` の `appPort` や `forwardPorts` で開発サーバなどの公開ポートを設定している場合は、接続用エイリアスに `LocalForward` の行が含まれます。開発サーバのポートを増やしたときは、`~/.ssh/config` の tmux 接続用エイリアスにも `LocalForward <ポート> 127.0.0.1:<ポート>` を追加してください。
 
-生成される `devcontainer.json` は `remoteEnv` で `/home/node/.local/bin`（利用者が別の場合は `/home/<remoteUser>/.local/bin`）を `PATH` の先頭に追加するため、コンテナ作成後に開く端末や VS Code のターミナルでも `~/.local/bin` に入った Claude Code などの CLI がそのまま利用できます。
+生成される `devcontainer.json` は `remoteEnv` で `/home/node/.local/bin`（利用者が別の場合は `/home/<remoteUser>/.local/bin`）を `PATH` の先頭に追加するため、コンテナ作成後に開く端末や VS Code のターミナルでも `~/.local/bin` に入った Claude Code などの CLI がそのまま利用できます。また、`shutdownAction: "none"` を設定しているため、VS Code などのクライアントを切断したりウィンドウを閉じたりしてもコンテナが停止せず、tmux セッションやバックグラウンド処理を維持できます。
 
 ### 2.2. 生成した Dev Container をホストで実地確認する
 
@@ -224,6 +224,20 @@ v0.4.0 などで生成した Dev Container 環境では、`devcontainer.json` �
 ```
 
 コンテナ内の利用者が `node` 以外の場合は、`/home/<remoteUser>/.local/bin` に合わせてください。
+
+### 6.4. クライアント切断時にコンテナが停止する
+
+以前のバージョンで生成した Dev Container 環境では、`devcontainer.json` に `shutdownAction` が指定されていないため、VS Code などのクライアントを切断した際にコンテナが自動的に停止し、コンテナ内で実行中の tmux セッションやバックグラウンド処理が中断することがあります。
+
+既存の環境を修正するには、`.devcontainer/devcontainer.json` に `"shutdownAction": "none"` を追加してください。
+
+```json
+  "workspaceFolder": "/workspaces/<親名>/<リポジトリ名>",
+  "shutdownAction": "none",
+  "init": true,
+```
+
+設定の反映には Dev Container の再起動（VS Code で「Rebuild Container」または `devcontainer up`）を行ってください。なお、切断後もコンテナが停止しない実際の動作確認は、Docker daemon が稼働しているホスト環境（または Dev Container CLI が動作する実環境）で行う必要があります。
 
 ## 7. 運用上のセキュリティ
 

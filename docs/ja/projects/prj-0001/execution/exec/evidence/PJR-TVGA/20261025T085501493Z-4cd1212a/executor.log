@@ -1,0 +1,19 @@
+PJR-TVGA「devcontainer scaffold の shutdownAction を補う」の対応を完了しました。
+
+### 実施内容
+
+1. **雛形への `shutdownAction: "none"` 追加**:
+   - `templates/devcontainer/devcontainer.json` に `"shutdownAction": "none"` を追加しました。
+2. **利用ガイドおよびリファレンスの更新**:
+   - `docs/ja/specdojo/guides/remote-host-development-guide.md` の 2.1 節および新設した 6.4 節に、`shutdownAction: "none"` の挙動および既存環境への追加・再起動手順を追記しました。
+   - `docs/ja/specdojo/references/command-reference.md` に `shutdownAction: "none"` について追記しました。
+3. **テストの追加と拡充**:
+   - `tests/src/devcontainer/scaffold.test.ts` に、雛形から生成される `devcontainer.json` に `shutdownAction: "none"` が設定されることを検証するテストケースを追加しました。
+4. **CHANGELOG の更新**:
+   - `CHANGELOG.md` の `## [Unreleased]` 不具合修正節に本改修内容を記載しました（公開済みの版は変更せず）。
+5. **個票の更新**:
+   - `docs/ja/projects/prj-0001/controls/project-register/pjr-tvga-devcontainer-scaffold-shutdown-action.md` の対応結果セクションに解決内容、確認結果、再発防止策を記入しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"devcontainer scaffold の雛形へ shutdownAction: \"none\" を追加し、空リポジトリでの生成結果確認、ガイドへの既存環境修正手順追記、単体テスト追加、CHANGELOG(Unreleased) 追記、および個票対応結果の更新を完了しました。","handoff":["VS Code やエディタ切断時にコンテナが実際に停止しないことの実機確認は、Docker daemon とクライアント環境が揃ったホスト実機環境で行う必要があります。"],"validations":[{"command":"node -e 'import { mkdtempSync, mkdirSync, readFileSync, rmSync } from \"node:fs\"; import { tmpdir } from \"node:os\"; import { join } from \"node:path\"; import { execFileSync } from \"node:child_process\"; const tempRoot = mkdtempSync(join(tmpdir(), \"specdojo-cli-scaffold-\")); const repoDir = join(tempRoot, \"empty-repo\"); mkdirSync(repoDir, { recursive: true }); execFileSync(\"git\", [\"init\"], { cwd: repoDir, stdio: \"ignore\" }); try { execFileSync(join(process.cwd(), \"node_modules/.bin/tsx\"), [join(process.cwd(), \"src/specdojo.ts\"), \"devcontainer\", \"scaffold\"], { cwd: repoDir, stdio: \"ignore\" }); const content = JSON.parse(readFileSync(join(repoDir, \".devcontainer\", \"devcontainer.json\"), \"utf8\")); if (content.shutdownAction !== \"none\") throw new Error(\"shutdownAction is \" + content.shutdownAction); } finally { rmSync(tempRoot, { recursive: true, force: true }); }'","status":"passed","summary":"空のGitリポジトリで devcontainer scaffold を実行し、生成された devcontainer.json に shutdownAction: \"none\" が設定されることを確認"}]}
+</specdojo_executor_evidence>

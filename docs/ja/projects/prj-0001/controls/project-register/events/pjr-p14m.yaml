@@ -35,3 +35,48 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_507a28fa6ac747919b106b91f93e7d57
+  ts: "2026-10-25T15:46:30Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f710fb3774ca417eaa23b0ded1b6448d
+- v: 1
+  id: reg_2f909958682841dbaca731bfff7a8f84
+  ts: "2026-10-25T16:03:35Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_507a28fa6ac747919b106b91f93e7d57
+- v: 1
+  id: reg_49906378546943b6837f8e8c1f3efae0
+  ts: "2026-10-25T21:29:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 個票・差分・resultを照合し、親検証7件と統合後のPJR-JSEY実行を確認した。.specdojo設定は変更していない。prj-0002への適用はPJR-B3W9に残す。
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-26"
+    - field: conclusion
+      from: "-"
+      to: projectごとの親検証除外を実装し、共有設定の継承とprj-0002向けの絞り込みをテストで確認した。
+  previous_event_id: reg_2f909958682841dbaca731bfff7a8f84

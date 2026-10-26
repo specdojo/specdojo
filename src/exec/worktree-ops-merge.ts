@@ -8,6 +8,7 @@ import {
 } from "../register/event-merge.js";
 import { displayIdFromRegisterEventFilename, REGISTER_EVENTS_DIRNAME } from "../register/events.js";
 import { displayIdFromTicketFilename } from "../register/item.js";
+import { isGradeCheckpointPath } from "./grade-checkpoint.js";
 import {
   appendGitFailureLog,
   gitOutput,
@@ -248,7 +249,7 @@ export function mergeWorktreeIntoCurrent(params: {
   let lockDir = "";
   let released: RootWorkingCopy[] = [];
   let merged = false;
-  const releasePaths = (params.releaseRootPaths ?? []).map((path) =>
+  let releasePaths = (params.releaseRootPaths ?? []).map((path) =>
     repoRelative(context.repoRoot, path),
   );
   const releasePathSet = new Set(releasePaths);
@@ -259,6 +260,51 @@ export function mergeWorktreeIntoCurrent(params: {
         lockTimeoutMs: DEFAULT_LOCK_TIMEOUT_MS,
         lockStaleMs: DEFAULT_LOCK_STALE_MS,
       });
+      // Canonical grades may have been refreshed in the root after branching. Release only
+      // the checkpoint copies; refuse to discard a newer root-side evaluation.
+      const gradePaths = releasePaths.filter((path) =>
+        isGradeCheckpointPath(path, repoRelative(context.repoRoot, context.executionPath)),
+      );
+      if (gradePaths.length > 0) {
+        const base = gitOutput(context.repoRoot, ["merge-base", "HEAD", worktree.branch]).trim();
+        const branchPaths = new Set(
+          zeroSeparatedPaths(context.repoRoot, [
+            "diff",
+            "--no-renames",
+            "--name-only",
+            "-z",
+            `${base}..${worktree.branch}`,
+          ]),
+        );
+        // A grade for a different document may have appeared while the task was running.
+        // Leave such root-side work in place; only release grades this branch will merge.
+        const gradePathSet = new Set(gradePaths);
+        releasePaths = releasePaths.filter(
+          (path) => !gradePathSet.has(path) || branchPaths.has(path),
+        );
+        const sharedGradePaths = gradePaths.filter((path) => branchPaths.has(path));
+        if (sharedGradePaths.length > 0) {
+          const checkpoint = gitOutput(context.repoRoot, [
+            "rev-list",
+            "--reverse",
+            "--first-parent",
+            `${base}..${worktree.branch}`,
+          ])
+            .trim()
+            .split("\n")[0];
+          if (!checkpoint) throw new Error("Cannot identify grade checkpoint before merge");
+          for (const path of sharedGradePaths) {
+            const expected = gitResult(context.repoRoot, ["show", `${checkpoint}:${path}`]);
+            const absolute = resolve(context.repoRoot, path);
+            const current = existsSync(absolute) ? readFileSync(absolute, "utf8") : undefined;
+            if ((expected.status === 0 ? expected.stdout : undefined) !== current) {
+              throw new Error(
+                `Grade sidecar changed after checkpoint; reconcile before merge: ${path}`,
+              );
+            }
+          }
+        }
+      }
       released = releaseRootWorkingCopies(context.repoRoot, releasePaths);
     }
     const dirty = commitTargetPaths(context, worktree, taskId);

@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_437c42bcbb0f448aad7e76cb3785a699
+  ts: "2026-10-26T11:13:25Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: v0.4.7 のリリース準備を開始する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.4.7 を公開する
+    - field: description
+      from: ""
+      to: PJR-6WQY・P14M・K87Y・MB92・TVGA を v0.4.7 として検証し、main へ昇格して npm に公開する。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-26"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_d7ca57d1cc014b32ba28161d4eb90bad
+  ts: "2026-10-26T11:33:23Z"
+  action: update
+  actor: indie
+  from_status: open
+  to_status: open
+  reason: 利用者が公開作業の担当と期限を指定した
+  changes:
+    - field: owner
+      from: _TODO_
+      to: BA
+    - field: due
+      from: _TODO_
+      to: "2026-10-31"
+  previous_event_id: reg_437c42bcbb0f448aad7e76cb3785a699

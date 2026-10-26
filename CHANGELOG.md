@@ -2,6 +2,22 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [0.4.7] - 2026-10-26
+
+### 追加機能
+
+- カタログのない project でも、既存文書の索引・frontmatter、または個票の `--target-path`・`--target-rulebook` から成果物の approach plan を作れるようにしました。`fully-guided` などの kata 不足は起票時に検証し、`bootstrap` の未作成 kata と `finalize` 系の個票からのチェック表にも対応します。`cross-deliverable-dedup` は引き続きカタログが必要です（PJR-6WQY）。
+
+- `projects.<id>.run.parent_validations_exclude` で、共有 `exec-defaults.yaml` の親検証から ID と実行先が一致する検証を project ごとに除外できるようにしました。除外後に既存の `parent_validations` を追記し、指定のない project の検証は維持します。未知の ID、共有一覧にない組の除外、重複する組は agent 起動前にエラーになります（PJR-P14M）。
+
+- npm package に `specdojo grade run` を追加しました。文書の選択、評価 plan、名簿に基づく agent 実行、marker の機械変換とサイドカー反映を単段で実行し、同じ `--run-id` で未完了の文書だけを再開します。`--by` の別名は実体名で記録し、`--dry-run` で選択と actor を確認できます（PJR-K87Y）。
+
+### 不具合修正
+
+- review 前の grade を CLI 本体で実行し、開発用の `tools/grade/run-per-document.sh` への依存を解消しました。宣言済み `project.repos` の相対パスを grade で扱い、grade 結果・完了条件サイドカーを worktree 分岐前の checkpoint に含めます。`exec scaffold --project` の共通観点を `defaults/` から解決し、観点未設定時は同梱定義を使います。review plan の完了条件表を MD060 に適合させました（PJR-K87Y）。
+- OpenCode の scaffold でローカル Ollama の接続・モデル設定を含む `opencode.json`（provider: `ollama-local`）をリポジトリ直下に配置するようにしました。配布する名簿の雛形・agent 定義・接続設定のモデル指定を整合させ、Gemma および Qwen は文脈長 64k を確保するローカル派生タグ（`*-mlx-work-64k`）を標準としました。派生タグ作成手順、接続先設定手順、既存環境の修正手順を OpenCode テンプレートの README および設定ガイドに追記しました（PJR-MB92）。
+- `devcontainer scaffold` で生成する `devcontainer.json` の雛形に `shutdownAction: "none"` を追加し、VS Code などのクライアント切断時にコンテナが停止しないようにしました。既存環境の修正手順を常時稼働ホスト運用ガイドに追記しました（PJR-TVGA）。
+
 ## [0.4.6] - 2026-10-25
 
 ### 追加機能

@@ -1,3 +1,4 @@
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { basename, dirname, resolve } from "node:path";
 import {
@@ -225,6 +226,7 @@ export function registerTransitionPaths(
 // runner 管理パスとして扱う。この集合を失敗時の wait commit、merge 前の root 解放で使う。
 export function registerBookkeepingPaths(params: {
   repoRoot: string;
+  executionPath: string;
   registerPaths: RegisterPaths;
   planPath: string;
   resultPath: string;
@@ -238,7 +240,9 @@ export function registerBookkeepingPaths(params: {
     resultPath,
     worktreeStatusPaths(repoRoot),
     ticketPath,
-  ).map((path) => resolve(repoRoot, path));
+  )
+    .map((path) => resolve(repoRoot, path))
+    .concat(gradeCheckpointPaths(params));
 }
 
 // root の登録簿派生ビュー（pjr-index / generated）は非追跡の生成物で、merge や複製では更新され

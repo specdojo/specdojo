@@ -22,6 +22,65 @@ import {
 } from "../../../src/exec/agent-config.js";
 import { runParentValidations } from "../../../src/exec/parent-validation.js";
 
+function withProjectParentValidationOverrides(
+  run: Record<string, unknown>,
+  check: (paths: { defaults: string; project1: string; project2: string; root: string }) => void,
+  shared: unknown[] = [
+    "lint-fm",
+    "lint-md",
+    "lint-ts",
+    "typecheck",
+    "test-unit",
+    "test-integration",
+    "validate-schema",
+  ],
+): void {
+  const root = mkdtempSync(join(tmpdir(), "specdojo-project-parent-validation-exclude-"));
+  const originalCwd = process.cwd();
+  try {
+    const configDir = join(root, ".specdojo");
+    const defaults = join(configDir, "exec-defaults.yaml");
+    mkdirSync(configDir, { recursive: true });
+    mkdirSync(join(root, "specdojo-lp"));
+    writeFileSync(
+      defaults,
+      JSON.stringify({
+        pipeline: { parent_validations: shared, parent_validation_concurrency: 2 },
+      }),
+    );
+    writeFileSync(
+      join(configDir, "specdojo.config.json"),
+      JSON.stringify({
+        version: 1,
+        current_project: "prj-0001",
+        projects: {
+          "prj-0001": {
+            base_path: "docs/prj-0001",
+            execution_path: "execution",
+            run: { exec_defaults: ".specdojo/exec-defaults.yaml" },
+          },
+          "prj-0002": {
+            base_path: "docs/prj-0002",
+            execution_path: "execution",
+            repos: [{ name: "specdojo-lp", path: "specdojo-lp" }],
+            run: { exec_defaults: ".specdojo/exec-defaults.yaml", ...run },
+          },
+        },
+      }),
+    );
+    process.chdir(root);
+    check({
+      defaults,
+      project1: join(root, "docs/prj-0001/execution"),
+      project2: join(root, "docs/prj-0002/execution"),
+      root,
+    });
+  } finally {
+    process.chdir(originalCwd);
+    rmSync(root, { recursive: true, force: true });
+  }
+}
+
 describe("parent validation config", () => {
   it("loads allowlisted IDs and rejects unknown IDs", () => {
     const root = mkdtempSync(join(tmpdir(), "specdojo-parent-validation-config-"));
@@ -157,6 +216,167 @@ describe("parent validation config", () => {
       process.chdir(originalCwd);
       rmSync(resolve(root), { recursive: true, force: true });
     }
+  });
+
+  it("excludes main-product checks only for prj-0002 before appending LP checks", () => {
+    withProjectParentValidationOverrides(
+      {
+        parent_validations_exclude: [
+          "lint-ts",
+          "typecheck",
+          "test-unit",
+          "test-integration",
+          "validate-schema",
+        ],
+        parent_validations: [{ id: "typecheck", repo: "specdojo-lp" }],
+      },
+      ({ defaults, project1, project2, root }) => {
+        const unchanged = loadExecDefaultsConfig(defaults, project1);
+        const expected = ["lint-fm", "lint-md", { id: "typecheck", repo: "specdojo-lp" }];
+        expect(loadExecDefaultsConfig(defaults, project2).pipeline).toEqual({
+          parent_validations: expected,
+          parent_validation_concurrency: 2,
+        });
+        expect(
+          loadExecDefaultsConfig(
+            defaults,
+            join(root, "worktrees/PJR-TEST/project/docs/prj-0002/execution"),
+          ).pipeline?.parent_validations,
+        ).toEqual(expected);
+        expect(loadExecDefaultsConfig(defaults, project1)).toEqual(unchanged);
+        expect(unchanged.pipeline?.parent_validations).toEqual([
+          "lint-fm",
+          "lint-md",
+          "lint-ts",
+          "typecheck",
+          "test-unit",
+          "test-integration",
+          "validate-schema",
+        ]);
+        expect(loadExecDefaultsConfig(defaults)).toEqual(unchanged);
+      },
+    );
+  });
+
+  it.each([{}, { parent_validations_exclude: [] }])(
+    "preserves shared checks and append behavior with %j",
+    (overrides) => {
+      withProjectParentValidationOverrides(
+        { ...overrides, parent_validations: ["lint-md"] },
+        ({ defaults, project2 }) => {
+          expect(loadExecDefaultsConfig(defaults, project2).pipeline?.parent_validations).toEqual([
+            "test-unit",
+            "lint-md",
+          ]);
+        },
+        ["test-unit"],
+      );
+    },
+  );
+
+  it.each([
+    { shared: ["typecheck"], exclude: [{ id: "typecheck", repo: "project" }] },
+    { shared: [{ id: "typecheck", repo: "project" }], exclude: ["typecheck"] },
+  ])("treats strings and explicit project assignments equally: %j", ({ shared, exclude }) => {
+    withProjectParentValidationOverrides(
+      { parent_validations_exclude: exclude },
+      ({ defaults, project2 }) => {
+        expect(loadExecDefaultsConfig(defaults, project2).pipeline?.parent_validations).toEqual([]);
+      },
+      shared,
+    );
+  });
+
+  it("matches exclusions by repository and allows appending a removed pair again", () => {
+    withProjectParentValidationOverrides(
+      {
+        parent_validations_exclude: [{ id: "typecheck", repo: "specdojo-lp" }],
+        parent_validations: [{ id: "typecheck", repo: "specdojo-lp" }],
+      },
+      ({ defaults, project2 }) => {
+        expect(loadExecDefaultsConfig(defaults, project2).pipeline?.parent_validations).toEqual([
+          "typecheck",
+          "lint-md",
+          { id: "typecheck", repo: "specdojo-lp" },
+        ]);
+      },
+      [{ id: "typecheck", repo: "specdojo-lp" }, "typecheck", "lint-md"],
+    );
+  });
+
+  it("keeps product checks when excluding the same plain ID in the project repository", () => {
+    withProjectParentValidationOverrides(
+      { parent_validations_exclude: ["typecheck"] },
+      ({ defaults, project2 }) => {
+        expect(loadExecDefaultsConfig(defaults, project2).pipeline?.parent_validations).toEqual([
+          { id: "typecheck", repo: "specdojo-lp" },
+        ]);
+      },
+      ["typecheck", { id: "typecheck", repo: "specdojo-lp" }],
+    );
+  });
+
+  it.each([
+    { run: { parent_validations_exclude: "test-unit" }, error: /must be an array/ },
+    { run: { parent_validations_exclude: null }, error: /must be an array/ },
+    {
+      run: { parent_validations_exclude: ["arbitrary-command"] },
+      error: /Unknown parent validation id/,
+    },
+    {
+      run: { parent_validations: ["arbitrary-command"] },
+      error: /Unknown parent validation id/,
+    },
+    {
+      run: { parent_validations_exclude: ["build"] },
+      error: /run\.parent_validations_exclude: build is not present in shared/,
+    },
+    {
+      run: { parent_validations_exclude: [{ id: "typecheck", repo: "specdojo-lp" }] },
+      error: /specdojo-lp:typecheck is not present in shared/,
+    },
+    {
+      run: { parent_validations_exclude: ["lint-md", { id: "lint-md", repo: "project" }] },
+      error: /Duplicate parent validation id/,
+    },
+    {
+      run: {
+        parent_validations_exclude: [{ id: "lint-md", repo: "project", command: "evil" }],
+      },
+      error: /unknown key/,
+    },
+    {
+      run: { parent_validations_exclude: ["test-unit"], parent_validations: ["lint-md"] },
+      error: /Duplicate parent validation id/,
+    },
+    {
+      run: {
+        parent_validations_exclude: ["test-unit"],
+        parent_validations: ["build", { id: "build", repo: "project" }],
+      },
+      error: /Duplicate parent validation id/,
+    },
+    {
+      run: { parent_validations_exclude: ["build"], parent_validations: ["build"] },
+      error: /build is not present in shared/,
+    },
+  ])("rejects invalid project overrides before returning defaults: %j", ({ run, error }) => {
+    withProjectParentValidationOverrides(run, ({ defaults, project2 }) => {
+      expect(() => loadExecDefaultsConfig(defaults, project2)).toThrow(error);
+    });
+  });
+
+  it.each([
+    { shared: ["arbitrary-command"], exclude: ["arbitrary-command"], error: /Unknown/ },
+    { shared: ["lint-md", "lint-md"], exclude: ["lint-md"], error: /Duplicate/ },
+  ])("does not hide invalid shared defaults with exclusions: %j", ({ shared, exclude, error }) => {
+    withProjectParentValidationOverrides(
+      { parent_validations_exclude: exclude },
+      ({ defaults, project2 }) => {
+        expect(() => loadExecDefaultsConfig(defaults, project2)).toThrow(error);
+      },
+      shared,
+    );
   });
 });
 

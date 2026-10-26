@@ -473,34 +473,46 @@ specdojo schedule strategy generate \
 
 主要オプション:
 
-| オプション                | 用途                                                                | 対象                                             |
-| ------------------------- | ------------------------------------------------------------------- | ------------------------------------------------ |
-| `--to <PJR-ID>`           | 移動先の PJR-ID を指定する                                          | `renumber`                                       |
-| `--registered <datetime>` | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻             | `add`                                            |
-| `--completed <datetime>`  | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `close` / `reject`                               |
-| `--by <actor>`            | 名簿または予約一覧の actor を追記型 event に記録する                | `add` / 更新 / 遷移コマンド                      |
-| `--reason <text>`         | event の理由を記録（`wait` では `block_reason` も更新）             | `add` / 更新 / 遷移コマンド                      |
-| `--conclusion <text>`     | 終端時の結論を記録・更新（`update` では `-` で削除）                | `add` / `update` / 終端コマンド                  |
-| `--block-reason <text>`   | `waiting` の理由を更新（`-` で削除）                                | `update`                                         |
-| `--approach <approach>`   | 個票の進め方を指定（`update` では `-` で削除）                      | `add` / `update`                                 |
-| `--target <doc-id>`       | 対象文書 ID を指定（繰り返し可、`update` では `-` で削除）          | `add` / `update`                                 |
-| `--source <ref>`          | kata authoring の手本を指定（繰り返し可、`update` では `-` で削除） | `add` / `update`                                 |
-| `--topic <slug>`          | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
-| `--commit`                | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
-| `-m, --message <message>` | `--commit` のcommitメッセージを上書きする                           | `add` / `update` / `renumber` / 遷移             |
-| `--dry-run`               | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
-| `--since <date>`          | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
-| `--until <date>`          | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
-| `--id <PJR-ID...>`        | 出力する項目を限定する（空白・カンマ区切りで複数可）                | `history`                                        |
-| `--status-only`           | 追加・削除・状態遷移だけを出力する                                  | `history`                                        |
-| `--limit <count>`         | 走査するコミット数の上限                                            | `history`                                        |
-| `--json`                  | イベントを JSON で出力する                                          | `history`                                        |
+| オプション                   | 用途                                                                | 対象                                             |
+| ---------------------------- | ------------------------------------------------------------------- | ------------------------------------------------ |
+| `--to <PJR-ID>`              | 移動先の PJR-ID を指定する                                          | `renumber`                                       |
+| `--registered <datetime>`    | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻             | `add`                                            |
+| `--completed <datetime>`     | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `close` / `reject`                               |
+| `--by <actor>`               | 名簿または予約一覧の actor を追記型 event に記録する                | `add` / 更新 / 遷移コマンド                      |
+| `--reason <text>`            | event の理由を記録（`wait` では `block_reason` も更新）             | `add` / 更新 / 遷移コマンド                      |
+| `--conclusion <text>`        | 終端時の結論を記録・更新（`update` では `-` で削除）                | `add` / `update` / 終端コマンド                  |
+| `--block-reason <text>`      | `waiting` の理由を更新（`-` で削除）                                | `update`                                         |
+| `--approach <approach>`      | 個票の進め方を指定（`update` では `-` で削除）                      | `add` / `update`                                 |
+| `--target <doc-id>`          | 対象文書 ID を指定（繰り返し可、`update` では `-` で削除）          | `add` / `update`                                 |
+| `--target-path <path>`       | 成果物のリポジトリ相対パス（`update` は `-` で削除）                | `add` / `update`                                 |
+| `--target-rulebook <doc-id>` | 成果物の rulebook ID（`update` は `-` で削除）                      | `add` / `update`                                 |
+| `--source <ref>`             | kata authoring の手本を指定（繰り返し可、`update` では `-` で削除） | `add` / `update`                                 |
+| `--topic <slug>`             | 個票ファイル名と文書 ID の論点部分を指定・更新する                  | `add` / `update`                                 |
+| `--commit`                   | `register lifecycle` 枠内で記帳・再生成・commitを行う               | `add` / `update` / `renumber` / 遷移             |
+| `-m, --message <message>`    | `--commit` のcommitメッセージを上書きする                           | `add` / `update` / `renumber` / 遷移             |
+| `--dry-run`                  | 書き込みを行わず変更対象を表示する                                  | `add` / `update` / `renumber` / 遷移 / `migrate` |
+| `--since <date>`             | 対象コミットの開始日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
+| `--until <date>`             | 対象コミットの終了日（`YYYY-MM-DD`、当日を含む）                    | `history`                                        |
+| `--id <PJR-ID...>`           | 出力する項目を限定する（空白・カンマ区切りで複数可）                | `history`                                        |
+| `--status-only`              | 追加・削除・状態遷移だけを出力する                                  | `history`                                        |
+| `--limit <count>`            | 走査するコミット数の上限                                            | `history`                                        |
+| `--json`                     | イベントを JSON で出力する                                          | `history`                                        |
 
 `register add` は個票 Frontmatter の `registered_at`（起票日時）を、`register close` / `register reject` は `completed_at`（完了・却下日時）を自動記入します。値は UTC の RFC 3339・秒精度（例: `2026-08-09T14:08:51Z`）で、OS / コンテナの `TZ` 環境変数には依存しません。`register reopen` は `completed_at` を削除します。
 
 `register` の `--by` は、project の `pm-members.yaml` にある人の nickname、`.specdojo/agent-members.yaml` にある agent の nickname または alias、予約 actor の `SpecDojo`・`specdojo-orchestrator`・`night-orchestrator` だけを受け付けます。agent alias は実体名で event に記録し、未知の値は書き込み前に拒否します。省略時は `SpecDojo` です。決定・承認では `PO` などの Role code や予約 actor ではなく、本人の nickname を指定します。
 
-`--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は成果物カタログの doc id で解決するため、まだ文書がない成果物も指定できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring は `--target` を新しい kata ID、`--source` を 0 件以上の読み取り専用の手本とします。互換性のため、2 個目以降の `--target` も `--source` と同じ手本として扱います。
+`--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は、成果物カタログを優先して doc id を解決します。カタログがなくても、既存文書は文書索引と frontmatter から、新規文書は明示したパスと rulebook から解決できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring は `--target` を新しい kata ID、`--source` を 0 件以上の読み取り専用の手本とします。互換性のため、2 個目以降の `--target` も `--source` と同じ手本として扱います。
+
+カタログなしで使える成果物の approach は `fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize` です。`cross-deliverable-dedup` はカタログが必要です。
+
+- 新規文書には `--target-path <リポジトリ相対パス>` と `--target-rulebook <rulebook-id>` を指定します。個票の `target_path` と `target_rulebook` に保存されます。既存文書は `--target` の ID を索引で引き、パスと `specdojo.rulebook` を使います。明示指定と既存文書が矛盾した場合は停止します。
+- パスはリポジトリ外、外を指すシンボリックリンク、別の ID を持つ既存ファイルを受け付けません。更新時も同じ検証を行い、`--target-path -`・`--target-rulebook -` で各指定を削除できます。
+- recipe・sample・template は rulebook frontmatter から解決します。`not-needed` の型は plan に列挙しません。`fully-guided` に必要な一式や `recipe-guided` の recipe がないときは、不足した型を示して起票を拒否します。
+- `bootstrap` はパスと新しい rulebook ID の両方、および設定の `kata_authority` が必須です。既存 rulebook は拒否します。`<authority>:<stem>-rulebook` から `<authority>:<stem>-recipe`・`-sample`・`-template` を導出し、`docs/ja/specdojo/<kind>s/<authority>/<stem>-<kind>.md` の未作成候補を plan に載せます。既存 ID・パスとの衝突も拒否します。
+- `finalize`・`bootstrap-finalize` は未作成の成果物を拒否します。個票の完了条件をチェック表にし、前者は成果物、後者は成果物と frontmatter から辿った kata 一式を確定対象にします。
+- カタログなしの plan は、カタログの `done_criteria` がないことを明示し、個票の完了条件と rulebook を使います。`retrofit` の実装調査入力は個票にパスを明記します。
+- カタログ設定済みで対象が未登録の場合、パスと rulebook を両方明示した場合だけカタログなしと同じ解決を使います。未指定なら従来のエラーで停止します。カタログにある対象ではカタログの宣言を優先します。
 
 `item_type: note` は `open` のまま更新する記録です。`register close` / `register reject` / `register defer` は終了コード 1 で拒否し、対応・回答・判断が必要な場合は `todo` / `question` / `decision` など目的に合う別の `item_type` で起票するよう案内します。本文の追記や修正には `register update` を使用できます。
 
@@ -530,7 +542,7 @@ kata authoring は register 専用です。Schedule の task は対象成果物�
 
 `register migrate` は旧形式の登録簿データを現行形式へ移す一度限りの移行コマンドです。追跡対象だった `pjr-index.md` の表を個票 Frontmatter へ移し、旧日時を UTC へ変換し、個票内の `register_events` を `events/pjr-XXXX.yaml` へ分離します。イベントがまだない項目は、利用可能な Git 履歴を項目別イベントファイルへ変換します。event ID は commit・項目 ID・変更内容から決定的に生成するため、再実行で重複しません。
 
-`register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`derived_from` です。
+`register history` は `events/pjr-XXXX.yaml` を読み、個票単位の追加（`added`）と変更（`updated`）を発生順に出力します。event 導入前または未移行の期間だけ Git 履歴を読み、削除（`removed`）を含む従来の履歴と統合します。event は発生日時・actor・action・reason・遷移前後状態・変更フィールドを保持するため、複数遷移を1コミットへまとめても粒度を失いません。比較対象は登録項目一覧の列と `block_reason`、`approach`、`targets`、`sources`、`target_path`、`target_rulebook`、`derived_from` です。
 
 各書き込みコマンドは現在値を個票へ、event を項目別イベントファイルへ反映します。同じ現在値になる操作の再実行では event を追加しません。`register build` は個票とイベントファイルの対応、event の schema、ID 一意性、時刻順、直前イベント参照、状態連鎖、最新 event と現在値の一致を検証します。
 
@@ -745,11 +757,12 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 `grade` は kata（rulebook / recipe / sample / template）または成果物を、review と同じ共通 viewpoint・category rubric で継続評価します。agent に直接ファイル探索やスコア計算をさせず、plan 生成と反映を分離します。
 
-v0.3.0 の `grade` は試験的な機能です。npm package で利用できるのは `grade list` / `plan` / `apply` / `validate` / `result` などの部品で、通しの実行を担う `grade run` はありません。`tools/grade/run-per-document.sh` は SpecDojo 本体リポジトリの開発用であり、npm package には含まれません。成果物を `--target deliverable` で評価するには、対象 project に `catalog_path` を設定する必要があります。
+`grade run` は npm package から利用でき、`list` と同じ対象選択、文書ごとの plan 生成、agent 実行、marker の機械変換と `apply` を単段で実行します。成果物を `--target deliverable` で評価するには、対象 project に `catalog_path` を設定する必要があります。`viewpoints_path` 未設定時は同梱の `specdojo:pm-review-viewpoints` を使います。
 
 | コマンド                 | 用途                                                           |
 | ------------------------ | -------------------------------------------------------------- |
 | `grade list`             | 選択した文書のパスを1行1件で出力し、plan は保存しない          |
+| `grade run`              | 文書ごとに評価と反映を実行し、同じ run を再開する              |
 | `grade plan`             | 1文書ごとに executor / reporter の評価 plan を保存する         |
 | `grade apply`            | executor の申告を GradeSubmission へ機械変換して正本を反映する |
 | `grade translation-plan` | 正本の英語 finding から日本語表示用の翻訳 plan を作る          |
@@ -759,6 +772,10 @@ v0.3.0 の `grade` は試験的な機能です。npm package で利用できる�
 | `grade migrate`          | インライン grade / finding をサイドカーへ一括移行する          |
 
 ```bash
+specdojo grade run --target kata --kind rulebook --run-id quality-check --dry-run
+specdojo grade run --target kata --path <document.md> --run-id quality-check --by <executor-nickname>
+# 同じコマンドを再実行すると完了済み文書を飛ばし、未完了文書から再開する
+specdojo grade run --target deliverable --project prj-0001 --changed-only --run-id deliverable-check
 specdojo grade plan --target kata --changed-only --project prj-0001
 # 評価対象・参考資料・比較リファレンスを plan へ埋め込む
 specdojo grade plan --target kata --changed-only --embed-documents --project prj-0001
@@ -774,6 +791,14 @@ specdojo grade apply --target kata --path <document.md> \
   --analysis-from <executor-output.txt> --by <executor-nickname>
 specdojo grade validate --target kata --project prj-0001
 ```
+
+`grade run` の `--run-id` は必須です。選択文書と完了状況を `execution_path/grade/generated/runs/<run-id>/run.json` へ保存し、同じ引数での再実行では完了済み文書を再適用しません。選択は初回に固定するため、`--changed-only` で実行中に文書が選択から外れても再開できます。対象内容、観点、完了条件、突き合わせ先、引数が変わった場合や保存済み結果が置き換わった場合は、新しい run ID を使います。`--work-dir` で保存先を変更できます。`--limit` は初回の選択件数を制限します。
+
+`--by`（別名 `--stage-1-executor`）を省略すると、名簿の有効な review executor を既存の priority 規則で選びます。該当しなければ旧形式の review agent を選びます。別名で指定してもサイドカーの `graded_by` と run 記録には実体名を残します。`--exec-defaults` で起動設定を引き継げます。`--dry-run` は選択と actor を表示し、agent の起動とファイル更新を行いません。同一 project の grade 実行は排他制御します。
+
+ネイティブ経路は `--stages 1` と機械 reporter を扱います。`--reference` と `--embed-documents` は plan に反映し、`--kind` は kata の `rulebook` / `recipe` / `sample` / `template` / `all`（既定）を選びます。失敗した文書と理由は run 記録に残し、終了コード 1 を返します。`--max-stage-failures`（既定 3）に達するまでは未完了段を再開できます。日本語 finding の表示用翻訳は `translation-plan` / `localize` で別途行います。開発用シェルの実験的な 3 段構成は CLI の対象外です。
+
+宣言済み `project.repos` 配下の Markdown は、プロジェクトリポジトリから `../product/docs/document.md` のように指定できます。宣言外のリポジトリや symlink による範囲外への参照は拒否します。
 
 `--target` は `kata` または `deliverable` です。`--path` は繰り返し指定でき、明示した Markdown 文書だけを対象にします。ただし、パス要素に `generated` を含む生成文書と `trash` を含む退避済み文書は自動探索から除外し、`--path` で明示した場合も入力エラーとして拒否します。`--changed-only` は grade result サイドカーの `content_hash` と現在の成果物ファイル全体の SHA-256 を比較します。`grade apply` はサイドカーだけを更新するため、評価結果の書き込み自体で成果物が変更扱いになることはありません。
 
@@ -828,7 +853,7 @@ finding の忠実性照合では、message に限り、Unicode の正準等価�
 
 移行期間中は `--analysis-from` を省略し `--from` だけを指定する従来の1段構成も受理します。既存の保存済み plan や GradeSubmission を適用するための互換経路であり、新しく生成した plan では `--analysis-from` を指定します。旧 GradeSubmission の `graded_by` も入力互換性のため受理しますが、記録には使いません。
 
-複数対象は、生成された executor plan を順に処理し、executor 応答を保存して直ちに `grade apply --path <document> --analysis-from <executor-output>` で反映します。agent 起動は `agent run`、応答の保存と受け渡しは呼び出し側が担い、`grade` は plan の生成と結果の検証・反映に限定されます。この単位で処理すると、後続文書が失敗しても適用済みの grade は保持されます。保存済み executor plan は `exec trial` などで同じ入力を複数 agent へ渡す用途にも利用できます。
+複数対象は、生成された executor plan を順に処理し、executor 応答を保存して直ちに `grade apply --path <document> --analysis-from <executor-output>` 相当の処理で反映します。`grade run` がこの連携を担い、後続文書が失敗しても適用済みの grade を保持します。部品ごとに実行する場合は、`agent run` で起動した応答の保存と受け渡しを呼び出し側が担います。保存済み executor plan は `exec trial` などで同じ入力を複数 agent へ渡す用途にも利用できます。
 
 ### 8.1. npm package で 1 文書を評価する
 
@@ -1123,7 +1148,7 @@ npx specdojo devcontainer scaffold --workspace-name app1-workspace
 
 `.devcontainer/` が既に存在する場合は何も書き込まず、置き換える場合だけ `--force` を指定します。上書き前や初回生成前は `--dry-run` で対象ファイルを確認してください。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存してコンテナ再作成後も利用できるようにし、ホストの認証情報・秘密鍵・`.env` を直接マウントしません。認証は生成したコンテナ内で利用者が必要なときに行い、自動ログインはしません。
 
-生成する `devcontainer.json` は `${localWorkspaceFolder}/..` を、ホスト側の親ディレクトリ名に合わせた `/workspaces/<親名>` へマウントし、`workspaceFolder` をその中の `${localWorkspaceFolderBasename}` へ向けます。例えば `app1-workspace/app1-specdojo` で scaffold すると、作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成の `repos` と `worktree_base` はプロジェクトリポジトリの外にあるため、親ディレクトリを共有することでプロダクトリポジトリと exec の worktree をコンテナから利用できます。`post-create.sh` はマウントした親ディレクトリ配下の Git リポジトリと worktree を `safe.directory` の対象にします。親ディレクトリ内のその他のファイルもコンテナから見えるため、コンテナへ公開しないファイルは同じ親ディレクトリに置かないでください。
+生成する `devcontainer.json` は `${localWorkspaceFolder}/..` を、ホスト側の親ディレクトリ名に合わせた `/workspaces/<親名>` へマウントし、`workspaceFolder` をその中の `${localWorkspaceFolderBasename}` へ向けます。例えば `app1-workspace/app1-specdojo` で scaffold すると、作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成の `repos` と `worktree_base` はプロジェクトリポジトリの外にあるため、親ディレクトリを共有することでプロダクトリポジトリと exec の worktree をコンテナから利用できます。`post-create.sh` はマウントした親ディレクトリ配下の Git リポジトリと worktree を `safe.directory` の対象にします。親ディレクトリ内のその他のファイルもコンテナから見えるため、コンテナへ公開しないファイルは同じ親ディレクトリに置かないでください。また、`shutdownAction: "none"` を指定してエディタ切断時もコンテナを即時停止させず、バックグラウンド処理や tmux セッションを維持できるようにします。
 
 親名には英数字・`.`・`_`・`-` だけを使用できます。空白、`/`、制御文字などを含む場合は、意図しないパスへ置換せずエラーにします。必要なら `--workspace-name <name>` で有効な名前を指定してください。`specdojo init --devcontainer` でも同じオプションを指定できます。コンテナ内で作った Git worktree は作成時の絶対パスを記録するため、ホスト側の親ディレクトリ名を変えて `.devcontainer/` を作り直す場合は、`--workspace-name` に以前の名前を指定してコンテナ内のパスを保ってください。
 

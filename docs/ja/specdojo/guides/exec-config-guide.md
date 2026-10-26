@@ -262,6 +262,36 @@ rate_limit_policy:
 
 この例では共有 defaults の検証は両 project に適用され、`specdojo-lp` の 2 件は `prj-0002` の run だけに適用されます。`prj-0001` は `specdojo-lp` を `repos` に持たなくても影響を受けません。共有側と project 側に同じ ID・同じ `repo` の組を書くと、合成後の重複として agent 起動前にエラーになります。project 固有の検証も親 runner が固定 argv で実行し、evidence には `source: runner` と実行先の `repo` が記録されます。
 
+共有 defaults の検証を減らす場合は、`projects.<id>.run.parent_validations_exclude` に除外する検証を指定します。たとえば共有一覧が `lint-fm`・`lint-md`・`lint-ts`・`typecheck`・`test-unit`・`test-integration`・`validate-schema` の場合、文書と LP を扱う `prj-0002` だけで本体の検証を外す設定は次のとおりです。`exec-defaults.yaml` の複製は不要です。
+
+```json
+{
+  "projects": {
+    "prj-0001": {
+      "run": { "exec_defaults": ".specdojo/exec-defaults.yaml" }
+    },
+    "prj-0002": {
+      "repos": [{ "name": "specdojo-lp", "path": "../specdojo-lp" }],
+      "run": {
+        "exec_defaults": ".specdojo/exec-defaults.yaml",
+        "parent_validations_exclude": [
+          "lint-ts",
+          "typecheck",
+          "test-unit",
+          "test-integration",
+          "validate-schema"
+        ],
+        "parent_validations": [{ "id": "typecheck", "repo": "specdojo-lp" }]
+      }
+    }
+  }
+}
+```
+
+有効な一覧は「共有 defaults から除外 → project の追加」の順で求めます。この例の `prj-0002` では `lint-fm`・`lint-md`・`specdojo-lp` の `typecheck` だけが実行され、`prj-0001` の 7 件は変わりません。除外を省略するか `[]` にすると従来の追記動作を保ちます。検証以外の共有 defaults の設定も保持します。
+
+除外の要素も ID または `{ id, repo }` です。ID だけなら `repo: project` と同じで、同じ ID のプロダクトリポジトリ向け検証は除外しません。除外先は共有一覧に存在する ID と実行先の組に限り、project の追加一覧からは除外しません。未知の ID、不正な要素、共有一覧に存在しない組の除外、除外一覧内または最終一覧内の組の重複は、agent 起動前に設定エラーになります。除外前の共有一覧自体も検証するため、除外で不正な共有設定を隠すことはできません。除外した組を追加一覧で末尾に戻すことはできます。
+
 `wait` の待機中は、同一 worktree と register / pipeline の状態を別 run から保護するため project の実行ロックを保持します。register worktree の `--join` 実行は共有枠の範囲で引き続き動作できます。wait / fallback の再開時刻と切替元・切替先は pipeline state と executor evidence に記録されます。
 
 ### 5.1. register の難易度別振り分け
@@ -538,17 +568,17 @@ executor の出力は、そのまま reporter へ渡さずに run 単位の evid
 
 agent が exec 実行時に読み込む provider 固有の設定（agent 定義・permission 設定）は、npm package 内の `templates/<provider>/` を配布原本とし、利用プロジェクトへコピーして使います。worktree 実行はコミット済み内容から worktree を作るため、コピーした設定は必ずコミットします。
 
-配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、`rules/` 配下 → `.<provider>/rules/`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
+配置規則は provider 名から機械的に決まります（`agents/` 配下 → `.<provider>/agents/`、`rules/` 配下 → `.<provider>/rules/`、`opencode.json` → リポジトリ直下の `opencode.json`、それ以外のファイル → `.specdojo/<provider>/`、`README.md` はコピーしません）。provider ごとの配布内容は次のとおりです。
 
 | provider    | 配布内容                                                                                                                                              | 配置先                                 |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
 | claude      | `agents/*.md`（役割ごとの agent 定義）、`settings.edit.json` / `settings.orchestrator.json` / `settings.review.json` / `settings.report.json`         | `.claude/agents/`、`.specdojo/claude/` |
 | codex       | `agents/*.toml`（親 Codex が spawn する subagent 定義）、`rules/*.rules`（command rule）                                                              | `.codex/agents/`、`.codex/rules/`      |
-| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）                                                                                             | `.opencode/agents/`                    |
+| opencode    | `agents/*.md`（permission frontmatter 込みの agent 定義）、`opencode.json`（Ollama 接続・モデル設定）                                                 | `.opencode/agents/`、`opencode.json`   |
 | copilot     | `agent-members-snippet.yaml`（agent 定義）と `exec-defaults-snippet.yaml`（`providers.copilot` の command template・rate limit 検出）の参照スニペット | `.specdojo/copilot/`                   |
 | antigravity | `orchestrator.md`、agent / provider 設定スニペット。`settings.global.json` は `--global` 用のマージ原本であり repository へは配置しない               | `.specdojo/antigravity/`               |
 
-導入手順とテンプレートに含めない手動設定（`opencode.json`、`.codex/config.toml` など）は各 `templates/<provider>/README.md` を参照します。
+導入手順と手動設定（`.codex/config.toml` や接続先 URL の調整、Modelfile によるローカル派生タグの作成など）は各 `templates/<provider>/README.md` を参照します。
 
 `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` には `--settings .specdojo/claude/settings.{mode}.json` を指定します。`--permission-mode bypassPermissions` は使いません（`.claude/settings.json` の `disableBypassPermissionsMode: "disable"` で起動自体を拒否します）。
 
@@ -585,15 +615,15 @@ specdojo config scaffold --provider claude
 
 `specdojo init --exec` と `config scaffold` が配布する agent の名簿と定義は、実体と別名の 2 段構成です（0.4.0 から）。実体は model の系統と役割で名付け、provider・`model`・役割を持ちます。従来の名前は `aliases` で実体を指す別名として残します。claude と opencode の agent の定義は役割（executor・review executor・reporter）ごとの 1 ファイルで `model` を持たず、`command_params.by_mode` で mode から定義を選び、model は実体の `model` を `--model {model}` で渡します。
 
-| provider    | init が生成する実体                                               | 別名（従来の名前）                                                   | model の書き場所                                            |
-| ----------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------- |
-| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`    | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                                  |
-| claude      | `opus-executor`・`opus-review-executor`（expert）                 | `claude-expert-executor`・`claude-expert-review-executor`            | 実体の `model`（`opus`）                                    |
-| codex       | `luna-executor`・`luna-review-executor`・`luna-reporter`          | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（`gpt-6-luna`、effort は `by_proficiency`）  |
-| codex       | `sol-executor`・`sol-review-executor`（expert）                   | `codex-expert-executor`・`codex-expert-review-executor`              | 実体の `model`（`gpt-6.1-sol`、effort は `by_proficiency`） |
-| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`       | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み）        |
-| antigravity | `flash-executor`・`flash-review-executor`・`flash-reporter`       | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                         |
-| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter` | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                        |
+| provider    | init が生成する実体                                                                                                   | 別名（従来の名前）                                                   | model の書き場所                                                            |
+| ----------- | --------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| claude      | `sonnet-executor`・`sonnet-review-executor`・`sonnet-reporter`                                                        | `claude-executor`・`claude-review-executor`・`claude-reporter`       | 実体の `model`（`sonnet`）                                                  |
+| claude      | `opus-executor`・`opus-review-executor`（expert）                                                                     | `claude-expert-executor`・`claude-expert-review-executor`            | 実体の `model`（`opus`）                                                    |
+| codex       | `luna-executor`・`luna-review-executor`・`luna-reporter`                                                              | `codex-executor`・`codex-review-executor`・`codex-reporter`          | 実体の `model`（`gpt-6-luna`、effort は `by_proficiency`）                  |
+| codex       | `sol-executor`・`sol-review-executor`（expert）                                                                       | `codex-expert-executor`・`codex-expert-review-executor`              | 実体の `model`（`gpt-6.1-sol`、effort は `by_proficiency`）                 |
+| opencode    | `gemma-executor`・`gemma-review-executor`・`gemma-reporter`、`qwen-executor`・`qwen-review-executor`・`qwen-reporter` | `opencode-executor`・`opencode-review-executor`・`opencode-reporter` | 実体の `model`（`opencode.json` の provider 名込み、原則 `*-mlx-work-64k`） |
+| antigravity | `flash-executor`・`flash-review-executor`・`flash-reporter`                                                           | `agy-executor`・`agy-review-executor`・`agy-reporter`                | 実体の `model`（推論強度を含む ID）                                         |
+| copilot     | `copilot-executor`・`copilot-review-executor`・`copilot-reporter`                                                     | なし（`--model auto` で model を自動選択するため系統で名付けない）   | `command_template` の `--model auto`                                        |
 
 claude と codex は normal と expert の 2 段を持ちます（0.4.6 から）。expert の実体には `proficiency: expert` を付けます。init が書く振り分けの表（`routing`）は、hard を expert の別名（`claude-expert-executor`・`codex-expert-executor`）、medium と easy を normal の別名にし、reporter はどの難易度でも normal の別名にします。expert の段がない provider（opencode・antigravity など）は、hard も normal の別名を使います。codex の reasoning effort は `by_proficiency` で normal が `medium`、expert が `high` で、`gpt-6-luna` は Max までしか受け付けないため Ultra を割り当てません。
 
@@ -778,6 +808,8 @@ runner は agent の各試行前後でファイル内容を比較し、差分が
 保護対象の候補はパスの固定定義で分類し、実際に block する対象は `agentProtectedConfigPaths()` で確定します。`.specdojo/doc-index.json` は `index build` が再生成し commit しない既知の生成物なので、リポジトリの ignore 規則にも一致する場合だけ除外します。判定には `git check-ignore --no-index` を使い、過去に追跡されていた worktree でも生成物として扱います。任意の ignore 対象を除外すると、agent が `.gitignore` と新規設定を同時に作って回避できるため、除外は既知の生成物の固定リストに限定します。Git による判定が失敗した場合や ignore 規則から外れた場合は除外せず、保護側へ倒します。agent 前後の snapshot と commit 前の再検査はこの判定を共有します。`pm-members.yaml` は schema により人間だけを受け付ける通常成果物なので、この保護対象には含めません。
 
 agentと親検証の子プロセスを起動する際は、`gitEnvironment()`で`GIT_DIR`、`GIT_WORK_TREE`、`GIT_COMMON_DIR`、index・object・replace関連のrepository固有環境変数を除去します。除去対象は`src/shared/git-environment.ts`の`GIT_LOCAL_ENV_VARS`を正本とします。Vitestの全3設定も共通setupを使ってtest module読込前に同じ変数をworkerから除去するため、Git hook経由で`npm test`が起動されても、テストfixtureはcwdの一時repositoryを参照し、linked worktreeのgitdirや共有configを参照しません。
+
+Vitestの共通setupは、シェルから継承した`SPECDOJO_PROJECT`も除去します。これにより、orchestratorの対象projectがテストfixtureの設定に存在しなくても、unit・integrationのworkerとその子プロセスはfixture側の設定からprojectを解決できます。project選択を検証するテスト自身がsetupの後に設定する`SPECDOJO_PROJECT`は有効です。
 
 TypeScriptのテスト・tool・本体コードが`spawnSync`、`spawn`、`execFileSync`、`execFile`でGitを直接起動する箇所は、AST検査により`gitEnvironment()`から作った`env`だけを許可します。`env: process.env`や単なる`env`プロパティは隔離済みとは扱いません。shell scriptとnpm scriptのGit起動はこのAST検査の対象外ですが、現状のhook経路はVitest setupを必ず通り、hookから直接Gitを起動するテスト用scriptはありません。今後その経路を追加する場合は、入口で`GIT_LOCAL_ENV_VARS`相当を除去する専用検査を追加します。
 
