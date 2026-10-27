@@ -1,0 +1,93 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "依存制御の実装と完了条件を再確認し、型 import の lint 違反を修正しました。build・CLI smoke・schema・catalog・register build は成功しました。親の7検証は runner が実行します。",
+  "handoff": [
+    "設計判断: `depends_on` のグラフ検証と実行判定を `src/register/dependency.ts` に集約し、register・exec・夜間 queue で共有した。project 修飾 ID をキーに DFS で未存在参照・自己参照・循環を検出し、add/update は変更予定値を反映して書き込み前に検証する。別 project は `derived_from` と同じローカル統合ブランチを参照する。",
+    "前回の親検証で失敗した型 import を修正済み。`lint-ts`・`lint-fm`・`lint-md`・`test-integration`・`validate-schema`・`typecheck`・`test-unit` は指示どおり重複実行していない。最終結果は後続の runner が記録する。catalog 検証は未作成文書に関する警告付きで成功した。",
+    "個票の対応結果を更新した。result と runner の evidence は編集していない。統合後は運用メモに従い、実 agent の利用枠を使う PJR-JSEY の動作確認を行う。"
+  ],
+  "validations": [
+    {
+      "command": "python3 -",
+      "status": "passed",
+      "summary": "stdin スクリプトで累積変更の成果物33ファイルを列挙し、Prettier を適用した。"
+    },
+    {
+      "command": "npx --no-install prettier --write tests/src/register/dependency.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-6rvj-register-depends-on.md",
+      "status": "passed",
+      "summary": "最終追記後の整形が成功した。"
+    },
+    {
+      "command": "npm run build",
+      "status": "passed",
+      "summary": "本体の TypeScript コンパイルと build が成功した。"
+    },
+    {
+      "command": "node --import ./tmp/pjr-6rvj-skip-env.mjs tmp/pjr-6rvj-smoke.mjs",
+      "status": "passed",
+      "summary": "隔離した登録簿で依存の記帳、未存在参照・自己参照・循環の拒否、直接実行停止、一覧・逆引き、依存削除を確認した。一時ファイルは削除済み。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml --data tmp/pjr-6rvj-smoke/item.yaml",
+      "status": "passed",
+      "summary": "依存を含む個票 frontmatter が schema に適合した。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data tmp/pjr-6rvj-smoke/events.yaml",
+      "status": "passed",
+      "summary": "依存の追加 event が schema に適合した。"
+    },
+    {
+      "command": "node --import ./tmp/pjr-6rvj-skip-env.mjs --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "hook の catalog 検証が成功した。未作成文書に関する警告あり。"
+    },
+    {
+      "command": "node --import ./tmp/pjr-6rvj-skip-env.mjs --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿の検証と一覧・逆引きビューの生成が成功した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    }
+  ],
+  "target_coverage": [
+    {"target":"CHANGELOG.md","status":"changed","path":"CHANGELOG.md"},
+    {"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-6rvj-register-depends-on.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-6rvj-register-depends-on.md"},
+    {"target":"docs/ja/specdojo/guides/register-operation-guide.md","status":"changed","path":"docs/ja/specdojo/guides/register-operation-guide.md"},
+    {"target":"docs/ja/specdojo/references/command-reference.md","status":"changed","path":"docs/ja/specdojo/references/command-reference.md"},
+    {"target":"docs/ja/specdojo/rulebooks/pjr-rulebook.md","status":"changed","path":"docs/ja/specdojo/rulebooks/pjr-rulebook.md"},
+    {"target":"docs/ja/specdojo/templates/pjr-index-template.md","status":"changed","path":"docs/ja/specdojo/templates/pjr-index-template.md"},
+    {"target":"docs/specdojo/schemas/v1/register-events.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/register-events.schema.yaml"},
+    {"target":"docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml"},
+    {"target":"src/commands/night-orchestrator.ts","status":"changed","path":"src/commands/night-orchestrator.ts"},
+    {"target":"src/exec/run/register-core.ts","status":"changed","path":"src/exec/run/register-core.ts"},
+    {"target":"src/exec/run/register-mode.ts","status":"changed","path":"src/exec/run/register-mode.ts"},
+    {"target":"src/exec/run/register-resume.ts","status":"changed","path":"src/exec/run/register-resume.ts"},
+    {"target":"src/exec/run/register-worktree.ts","status":"changed","path":"src/exec/run/register-worktree.ts"},
+    {"target":"src/register/command-types.ts","status":"changed","path":"src/register/command-types.ts"},
+    {"target":"src/register/core.ts","status":"changed","path":"src/register/core.ts"},
+    {"target":"src/register/create-commands.ts","status":"changed","path":"src/register/create-commands.ts"},
+    {"target":"src/register/derivation.ts","status":"changed","path":"src/register/derivation.ts"},
+    {"target":"src/register/event-merge.ts","status":"changed","path":"src/register/event-merge.ts"},
+    {"target":"src/register/events.ts","status":"changed","path":"src/register/events.ts"},
+    {"target":"src/register/external-project.ts","status":"changed","path":"src/register/external-project.ts"},
+    {"target":"src/register/item.ts","status":"changed","path":"src/register/item.ts"},
+    {"target":"src/register/maintenance-commands.ts","status":"changed","path":"src/register/maintenance-commands.ts"},
+    {"target":"src/register/register.ts","status":"changed","path":"src/register/register.ts"},
+    {"target":"src/register/renumber.ts","status":"changed","path":"src/register/renumber.ts"},
+    {"target":"src/register/views.ts","status":"changed","path":"src/register/views.ts"},
+    {"target":"tests/src/register/commands.test.ts","status":"changed","path":"tests/src/register/commands.test.ts"},
+    {"target":"tests/src/register/event-merge.test.ts","status":"changed","path":"tests/src/register/event-merge.test.ts"},
+    {"target":"tests/src/register/external-project.test.ts","status":"changed","path":"tests/src/register/external-project.test.ts"},
+    {"target":"tests/src/register/item.test.ts","status":"changed","path":"tests/src/register/item.test.ts"},
+    {"target":"tests/src/register/register.test.ts","status":"changed","path":"tests/src/register/register.test.ts"},
+    {"target":"docs/ja/specdojo/templates/pjr-dependent-items-template.md","status":"changed","path":"docs/ja/specdojo/templates/pjr-dependent-items-template.md"},
+    {"target":"src/register/dependency.ts","status":"changed","path":"src/register/dependency.ts"},
+    {"target":"tests/src/register/dependency.test.ts","status":"changed","path":"tests/src/register/dependency.test.ts"}
+  ]
+}
+</specdojo_executor_evidence>

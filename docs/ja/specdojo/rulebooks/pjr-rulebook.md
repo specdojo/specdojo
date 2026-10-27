@@ -73,6 +73,7 @@ Project Register Documentation Rules
 | `block_reason`    | `waiting` へ遷移した直近の理由                   | 任意 |
 | `conclusion`      | 終端時の結論要約                                 | 任意 |
 | `derived_from`    | 起票の元になった登録項目 ID の配列               | 任意 |
+| `depends_on`      | 実行前に完了しているべき先行の登録項目 ID の配列 | 任意 |
 | `approach`        | 対象を作成・修正するときの進め方                 | 任意 |
 | `target_path`     | カタログなしで作成する成果物のリポジトリ相対パス | 任意 |
 | `target_rulebook` | 対象成果物の rulebook ID                         | 任意 |
@@ -82,7 +83,10 @@ Project Register Documentation Rules
 - `item_type`、`item_status`、`priority`、`difficulty` の値は schema の enum だけを使用する。`difficulty` は `hard` / `medium` / `easy` のいずれかとし、省略時は従来の agent 自動選択を使う。
 - `block_reason` は `waiting` 中の直近の待機・失敗理由、`conclusion` は終端時の結論として用途を分ける。`register wait --reason` は前者だけを更新し、`waiting` 以外へ遷移すると現在値から削除する。削除前の理由は項目別イベントログの変更前の値に残す。
 - Frontmatter の構造化フィールドを本文や生成一覧へ手作業で複製しない。
-- `derived_from` は同じ project の元項目を `PJR-XXXX`、別 project の元項目を `<project-id>:PJR-XXXX` で記録する。自己参照や存在しない項目は使用しない。別 project が設定にない場合は書式だけを検証し、設定された後に存在確認できるよう project 修飾を維持する。
+- `derived_from` は同じ project の元項目を `PJR-XXXX`、別 project の元項目を `<project-id>:PJR-XXXX` で記録する。自己参照や存在しない項目は使用しない。未設定の project は拒否する。別 project の存在確認は、その project のローカル統合ブランチを正とする。
+- `depends_on` は実行順序、`derived_from` は起票の由来を表す。両者を相互に推測・転記しない。参照書式と別 project の存在確認は `derived_from` と同じ規則を使い、存在しない ID、自己参照、project をまたぐ循環を記帳前と `register build` で拒否する。
+- `register add` / `update` の `--depends-on <ID>` は反復指定でき、一覧を置換する。`--depends-on -` は依存を削除し、ほかの ID と併用しない。変更は event に記録する。
+- すべての先行項目が `done` / `decided` のときだけ実行を許可する。`rejected` / `deferred` は依存を満たさない。直接の `exec run --register` は未完了の先行 ID と状態を示して停止し、routine の sweep（`--register-filter`）と夜間 queue は理由を記録して対象を飛ばす。依存を理由に状態を自動で `waiting` へ変更しない。
 
 ### 3.1. 日時と日付の使い分け
 
@@ -115,16 +119,17 @@ Project Register Documentation Rules
 
 ### 4.2. 生成一覧と派生ビュー
 
-| 生成物                               | 内容                 | 編集可否 |
-| ------------------------------------ | -------------------- | -------- |
-| `generated/pjr-index.md`             | 全個票の一覧         | 不可     |
-| `generated/pjr-views-by-status.md`   | 状態別の補助一覧     | 不可     |
-| `generated/pjr-views-by-priority.md` | 優先度別の補助一覧   | 不可     |
-| `generated/pjr-views-by-owner.md`    | 担当者別の補助一覧   | 不可     |
-| `generated/pjr-derived-items.md`     | 元項目と派生先の一覧 | 不可     |
-| `controls/generated/pm-*.md`         | type 別の管理ビュー  | 不可     |
+| 生成物                               | 内容                                 | 編集可否 |
+| ------------------------------------ | ------------------------------------ | -------- |
+| `generated/pjr-index.md`             | `depends_on` を含む全個票の一覧      | 不可     |
+| `generated/pjr-views-by-status.md`   | 状態別の補助一覧                     | 不可     |
+| `generated/pjr-views-by-priority.md` | 優先度別の補助一覧                   | 不可     |
+| `generated/pjr-views-by-owner.md`    | 担当者別の補助一覧                   | 不可     |
+| `generated/pjr-derived-items.md`     | 元項目と派生先の一覧                 | 不可     |
+| `generated/pjr-dependent-items.md`   | 先行項目から後続項目を逆引きする一覧 | 不可     |
+| `controls/generated/pm-*.md`         | type 別の管理ビュー                  | 不可     |
 
-- 一覧の標準列は ID、ステータス、タイトル、説明、分類、優先度、担当、登録日、期限、完了日、結論、個票とする。
+- 一覧の標準列は ID、ステータス、タイトル、説明、分類、優先度、担当、登録日、期限、完了日、結論、個票、`depends_on` とする。
 - タイトルは個票の H1、説明は個票本文、その他の列は個票 Frontmatter から生成する。
 - 登録日と完了日の列は、`registered_at` / `completed_at` をプロジェクトの登録日タイムゾーンへ変換した暦日として生成する。
 - 生成ビューに独自の詳細情報や手作業の修正を追加しない。修正は個票に行い、`register build` を再実行する。

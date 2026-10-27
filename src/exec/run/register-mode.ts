@@ -1,3 +1,4 @@
+import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { join } from "node:path";
 import { loadExecDefaultsConfig, ProviderConcurrencyGate } from "../agent-config.js";
 import { activateResolvedProjectPaths, resolveProjectPaths } from "../project.js";
@@ -68,15 +69,30 @@ export async function runRegisterMode(opts: RunOpts): Promise<void> {
         limit: opts.registerLimit,
       })
     : undefined;
+  const registerPaths = resolveRegisterPaths({ project: projectId });
   const selectedIds = selectionFilter
     ? selectRegisterItems(
-        loadRegisterItems(resolveRegisterPaths({ project: projectId })).map((view) => view.item),
-        selectionFilter,
-      ).map((item) => item.id)
+        loadRegisterItems(registerPaths).map((view) => view.item),
+        { ...selectionFilter, limit: undefined },
+      )
+        .filter((item) => {
+          const reason = registerDependencyBlockReason(registerPaths, item);
+          if (reason) process.stdout.write(`Skipping ${item.id}: ${reason}\n`);
+          return !reason;
+        })
+        .slice(0, selectionFilter.limit)
+        .map((item) => item.id)
     : undefined;
   const { ids, duplicates } = selectedIds
     ? { ids: selectedIds, duplicates: [] }
     : parseRegisterIds(opts.register);
+  if (!selectionFilter) {
+    for (const id of ids) {
+      const target = resolveRegisterRunTarget(projectId, id);
+      const reason = registerDependencyBlockReason(target.registerPaths, target.item);
+      if (reason) throw new Error(`Cannot run ${id}: ${reason}`);
+    }
+  }
   const executorSelection = parseRegisterExecutorSelection(opts.executorBy, ids);
   if (ids.length === 0) {
     process.stdout.write("No matching register items.\n");

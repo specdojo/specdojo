@@ -148,6 +148,7 @@ describe("rebuildRegisterTicketFromEvents", () => {
       { field: "approach", from: "-", to: "fully-guided" },
       { field: "targets", from: "-", to: '["deliverable-doc"]' },
       { field: "derived_from", from: "-", to: '["PJR-AB12"]' },
+      { field: "depends_on", from: "-", to: '["PJR-CD34"]' },
       { field: "autopilot", from: "-", to: "approved" },
       { field: "title", from: "Sample", to: "Renamed" },
     ]);
@@ -162,6 +163,7 @@ describe("rebuildRegisterTicketFromEvents", () => {
     expect(rebuilt.appliedFields).toEqual([
       "approach",
       "autopilot",
+      "depends_on",
       "derived_from",
       "difficulty",
       "due",
@@ -176,6 +178,7 @@ describe("rebuildRegisterTicketFromEvents", () => {
       approach: "fully-guided",
       targets: ["deliverable-doc"],
       derived_from: ["PJR-AB12"],
+      depends_on: ["PJR-CD34"],
       autopilot: "approved",
     });
     expect(rebuilt.content).toContain("# PJR-0ABC Sample");

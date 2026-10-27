@@ -607,6 +607,115 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("depends_on を add/update で置換・削除し、event と history に記録する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      for (const id of ["PJR-CD34", "PJR-EF56"]) {
+        const filename = `${id.toLowerCase()}-topic.md`;
+        const content = buildTicket(id, ["item_status: open", "priority: high"]);
+        writeFileSync(join(registerDir, filename), content);
+        writeInitialEvent(registerDir, id, filename, content);
+      }
+      const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "順序あり",
+        "--topic",
+        "dependent",
+        "--id",
+        "PJR-AB12",
+        "--depends-on",
+        "PJR-CD34",
+        "--depends-on",
+        "PJR-EF56",
+      ]);
+      const ticketPath = join(registerDir, "pjr-ab12-dependent.md");
+      expect(readFileSync(ticketPath, "utf8")).toContain(
+        "  depends_on:\n    - PJR-CD34\n    - PJR-EF56",
+      );
+      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toContainEqual({
+        field: "depends_on",
+        from: "",
+        to: '["PJR-CD34","PJR-EF56"]',
+      });
+      await runRegister(["update", "--id", "PJR-AB12", "--depends-on", "PJR-EF56"]);
+      await runRegister(["update", "--id", "PJR-AB12", "--depends-on", "-"]);
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("depends_on:");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "depends_on",
+        from: '["PJR-EF56"]',
+        to: "-",
+      });
+      await runRegister(["build"]);
+      expect(process.exitCode).toBeUndefined();
+      stdout.mockClear();
+      await runRegister(["history", "--id", "PJR-AB12"]);
+      expect(stdout.mock.calls.flat().join("")).toContain("depends_on");
+    });
+  });
+
+  it.each([
+    ["PJR-ZZ99", "Depends-on item not found"],
+    ["PJR-AB12", "cannot depend on itself"],
+  ])("不正な --depends-on %s を書き込み前に拒否する", async (ref, message) => {
+    await withRepo(async ({ registerDir }) => {
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "依存",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "dependency",
+        "--depends-on",
+        ref,
+      ]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.flat().join("")).toContain(message);
+      expect(existsSync(join(registerDir, "pjr-ab12-dependency.md"))).toBe(false);
+      expect(existsSync(registerEventFilePath(registerDir, "PJR-AB12"))).toBe(false);
+    });
+  });
+
+  it("循環する update を拒否し、手編集の循環も build で拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      for (const id of ["PJR-AB12", "PJR-CD34"]) {
+        const filename = `${id.toLowerCase()}-topic.md`;
+        const content = buildTicket(id, [
+          "item_status: open",
+          "priority: high",
+          ...(id === "PJR-AB12" ? ["depends_on: [PJR-CD34]"] : []),
+        ]);
+        writeFileSync(join(registerDir, filename), content);
+        writeInitialEvent(registerDir, id, filename, content);
+      }
+      const path = join(registerDir, "pjr-cd34-topic.md");
+      const before = readFileSync(path, "utf8");
+      const eventsBefore = readFileSync(registerEventFilePath(registerDir, "PJR-CD34"), "utf8");
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      await runRegister(["update", "--id", "PJR-CD34", "--depends-on", "PJR-AB12"]);
+      expect(process.exitCode).toBe(1);
+      expect(readFileSync(path, "utf8")).toBe(before);
+      expect(readFileSync(registerEventFilePath(registerDir, "PJR-CD34"), "utf8")).toBe(
+        eventsBefore,
+      );
+      writeFileSync(
+        path,
+        before.replace("  item_status: open", "  item_status: open\n  depends_on: [PJR-AB12]"),
+      );
+      process.exitCode = undefined;
+      stderr.mockClear();
+      await runRegister(["build"]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.flat().join("")).toContain("depends_on cycle");
+    });
+  });
+
   it("add は存在しない --from と自己参照を拒否する", async () => {
     await withRepo(async ({ registerDir }) => {
       const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);

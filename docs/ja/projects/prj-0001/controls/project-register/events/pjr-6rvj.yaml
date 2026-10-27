@@ -67,3 +67,32 @@
       from: "-"
       to: "parent validation failed: lint-ts"
   previous_event_id: reg_cf7f2f8a5dcb4b45bec2881e928079fb
+- v: 1
+  id: reg_98e0b8a065484f968bd4ee8275b25591
+  ts: "2026-10-27T23:22:53Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts"
+      to: "-"
+  previous_event_id: reg_2e8ecaf97f2148e18a64e0114cf7acc4
+- v: 1
+  id: reg_3b40c97e65c0411296d3980f3d24552d
+  ts: "2026-10-27T23:33:11Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_98e0b8a065484f968bd4ee8275b25591

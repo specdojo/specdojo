@@ -1,3 +1,4 @@
+import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -553,6 +554,16 @@ export async function runSingleRegisterItemWorktree(
   const { projectId, schedulePath, executionPath, repoRoot, worktreeBase } = context;
   const wtContext = { repoRoot, schedulePath, executionPath };
   const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+  const dependencyReason = registerDependencyBlockReason(registerPaths, item);
+  if (dependencyReason)
+    return {
+      id: item.id,
+      title: item.title,
+      outcome: "skipped",
+      transition: "none",
+      commit: "skipped",
+      reason: dependencyReason,
+    };
   // 状態遷移の書き込み先（登録項目の正本）。commit 対象に必ず含める。
   const ticketPath = ticketPathFromItem(item, registerPaths.projectRegisterPath);
   requireRunnableRegisterItem(item);
@@ -596,6 +607,18 @@ export async function runSingleRegisterItemWorktree(
       }
     | RegisterItemSummary
   > => {
+    // Recheck after acquiring the lifecycle lock: dependencies may change while waiting.
+    const current = resolveRegisterRunTarget(projectId, pjrId);
+    const reason = registerDependencyBlockReason(current.registerPaths, current.item);
+    if (reason)
+      return {
+        id: item.id,
+        title: item.title,
+        outcome: "skipped",
+        transition: "none",
+        commit: "skipped",
+        reason,
+      };
     // executor が成功した run の worktree を、全体再実行が破棄しないよう保護する。
     // discardStaleExecWorktree は worktree と exec ブランチを強制削除するため、未コミットの
     // executor 成果が失われる。この場合は何も壊さずに中断し、再開か明示的な破棄を促す。

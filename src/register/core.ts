@@ -364,6 +364,7 @@ export function formatTableRow(item: PjrDisplayItem): string {
     item.completed,
     item.conclusion,
     item.ticket,
+    item.dependsOn?.join(", ") || CELL_NONE,
   ]
     .map(toCell)
     .map(inlineCodeAnglePlaceholders);
@@ -540,6 +541,7 @@ export function buildRegisterItemContent(opts: {
       ...(opts.fields.targetRulebook ? { targetRulebook: opts.fields.targetRulebook } : {}),
       ...(opts.fields.sources ? { sources: opts.fields.sources } : {}),
       ...(opts.fields.derivedFrom ? { derivedFrom: opts.fields.derivedFrom } : {}),
+      ...(opts.fields.dependsOn ? { dependsOn: opts.fields.dependsOn } : {}),
     }),
   );
 }

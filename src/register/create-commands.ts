@@ -6,6 +6,7 @@ import { APPROACHES, type Approach } from "../shared/agent-types.js";
 import { appendRegisterEvent, buildRegisterEvent, registerEventFilePath } from "./events.js";
 import { nowUtcTimestamp } from "./date.js";
 import {
+  readRegisterItemContent,
   CELL_NONE,
   CELL_TODO,
   REMOVE_REGISTER_ITEM_FIELD,
@@ -19,6 +20,7 @@ import {
 import { resolveSpecdojoTemplatePath } from "../docs/template-resolution.js";
 import type { RegisterAddFields, RegisterCommandDependencies } from "./command-types.js";
 import { validateRegisterApproachTargetsForProject } from "./approach.js";
+import { normalizeDependsOn, validateRegisterDependencies } from "./dependency.js";
 import { normalizeDerivedFrom, validateDerivedFrom } from "./derivation.js";
 import { delegateExternalRegisterAdd } from "./external-project.js";
 import { isAuthoringApproach } from "../kata/authoring.js";
@@ -144,6 +146,11 @@ export function registerCreateCommands(
     "Register item this item derives from (repeatable)",
     collectTarget,
   );
+  addCmd.option(
+    "--depends-on <item-id>",
+    "Predecessor item ID (repeatable; use - to remove)",
+    collectTarget,
+  );
   addCmd.option("--id <id>", "Display ID (e.g., PJR-0061); auto-incremented if omitted");
   addCmd.option(
     "--topic <topic>",
@@ -241,6 +248,7 @@ export function registerCreateCommands(
         derivedFrom,
       });
       if (derivedFrom !== undefined) fields.derivedFrom = derivedFrom;
+      fields.dependsOn = normalizeDependsOn(opts.dependsOn);
 
       const ticketPath = join(paths.projectRegisterPath, ticketFilename);
       const content = buildRegisterItemContent({
@@ -250,6 +258,9 @@ export function registerCreateCommands(
         fields,
         templatePath,
       });
+      const dependencyItem = readRegisterItemContent(content, ticketFilename)?.item;
+      if (!dependencyItem) throw new Error(`Failed to read item ${displayId}`);
+      validateRegisterDependencies(paths, dependencyItem);
       const addEvent = buildRegisterEvent({
         afterContent: content,
         filename: ticketFilename,
@@ -359,6 +370,11 @@ export function registerUpdateCommand(
     collectTarget,
   );
   updateCmd.option(
+    "--depends-on <item-id>",
+    "Replace predecessor IDs (repeatable; use - to remove)",
+    collectTarget,
+  );
+  updateCmd.option(
     "--topic <topic>",
     "Update the topic slug in the ticket filename and document ID",
   );
@@ -388,11 +404,12 @@ export function registerUpdateCommand(
         "targetPath",
         "targetRulebook",
         "from",
+        "dependsOn",
         "topic",
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --from, --topic)",
+          "At least one field option must be specified (--title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --from, --depends-on, --topic)",
         );
       }
 
@@ -501,6 +518,9 @@ export function registerUpdateCommand(
           ? explicitSources
           : item.sources;
       const normalizedNextSources = nextSources && nextSources.length > 0 ? nextSources : undefined;
+      const nextDependsOn =
+        opts.dependsOn === undefined ? item.dependsOn : normalizeDependsOn(opts.dependsOn);
+      validateRegisterDependencies(paths, { ...item, dependsOn: nextDependsOn });
       const nextDerivedFrom =
         opts.from === undefined
           ? item.derivedFrom
@@ -533,6 +553,9 @@ export function registerUpdateCommand(
       const shouldUpdateSources =
         opts.source !== undefined || (authoring && providedLegacySources.length > 0);
       const approachTargetUpdates: RegisterItemFieldUpdates = {
+        ...(opts.dependsOn !== undefined
+          ? { depends_on: nextDependsOn ?? REMOVE_REGISTER_ITEM_FIELD }
+          : {}),
         ...(opts.targetPath !== undefined
           ? { target_path: nextTargetPath ?? REMOVE_REGISTER_ITEM_FIELD }
           : {}),
@@ -606,6 +629,10 @@ export function registerUpdateCommand(
       if (opts.from !== undefined) {
         if (nextDerivedFrom === undefined) delete updated.derivedFrom;
         else updated.derivedFrom = nextDerivedFrom;
+      }
+      if (opts.dependsOn !== undefined) {
+        if (nextDependsOn === undefined) delete updated.dependsOn;
+        else updated.dependsOn = nextDependsOn;
       }
       const currentTopic = view.ticketFilename
         ? ticketTopicFromFilename(opts.id, view.ticketFilename)

@@ -4,6 +4,10 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ## [Unreleased]
 
+### 追加機能
+
+- 登録項目の実行順序を `depends_on` と `register add` / `update --depends-on` で指定できるようにしました。参照先・自己参照・循環を検証し、先行項目が `done` / `decided` になるまで直接実行を停止、sweep・夜間 queue を理由付きでスキップします。一覧の依存列と後続項目の逆引きビューも追加しました（PJR-6RVJ）。
+
 ### 変更
 
 - `@specdojo/docs-site` が生成するファイルを `.vitepress/` の下にまとめました。Mermaid の SVG と manifest は `.vitepress/mermaid/`、kata のステージングは `.vitepress/kata-staging/` に出力し、ビルド結果には SVG だけを含めます。利用者の `public/` は変更しません。package 同梱の文書は `/ja/specdojo/...` で公開し、eject 済みの文書は利用リポジトリ側を優先します。`config init` が生成する `.gitignore` に `/.vitepress/dist/`・`/.vitepress/cache/`・`/.vitepress/mermaid/`・`/.vitepress/kata-staging/` を追加しました。旧配置の `public/mermaid/` と `specdojo-kata-staging/` は自動では削除しないため、不要になったら削除してください（PJR-9ZN5）。

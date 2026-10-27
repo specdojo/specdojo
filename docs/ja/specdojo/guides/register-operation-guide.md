@@ -303,6 +303,20 @@ specdojo register update \
 
 ### 2.4. 派生ビューの扱い
 
+起票の由来は `derived_from`、実行前に完了しているべき先行項目は `depends_on` に記録します。由来だけでは実行順序を制限しません。
+
+```bash
+specdojo register add --type todo --title "後続の作業" --depends-on PJR-AB12 --depends-on prj-0002:PJR-CD34
+specdojo register update --id PJR-EF56 --depends-on PJR-AB12
+specdojo register update --id PJR-EF56 --depends-on -
+```
+
+`--depends-on` は反復指定でき、update では一覧を置換します。`-` 単独で削除し、変更は event に残ります。参照の書式と project 間の存在確認は `derived_from` と同じで、別 project は設定とローカル統合ブランチを必要とします。記帳前と `register build` で存在しない ID、自己参照、循環（project 間も含む）を拒否します。
+
+先行項目がすべて `done` / `decided` になるまで、直接の `exec run --register` は先行 ID と状態を表示して停止します。`rejected` / `deferred` でも進めません。routine の sweep（`--register-filter`）は理由を出力して飛ばし、夜間 orchestrator はスキップ理由を朝報告にも記録します。スキップは件数上限を消費せず、個票を自動で `waiting` へ変更しません。同じ queue 内の先行項目を待って自動再選択はしないため、先行の完了後に次の sweep / 夜間実行で後続を選びます。
+
+一覧の `depends_on` 列で先行項目を確認でき、`generated/pjr-dependent-items.md` では先行項目から後続項目を逆引きできます。
+
 登録項目一覧と派生ビューは、個票を入力として `register build` で生成します。
 
 ```bash

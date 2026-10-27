@@ -39,6 +39,7 @@ export const REGISTER_EVENT_FIELDS = [
   "target_path",
   "target_rulebook",
   "derived_from",
+  "depends_on",
   "autopilot",
 ] as const;
 
@@ -130,6 +131,7 @@ export function registerEventFieldValues(
     target_rulebook: item.targetRulebook ?? CELL_NONE,
     sources: item.sources ? JSON.stringify(item.sources) : CELL_NONE,
     derived_from: item.derivedFrom ? JSON.stringify(item.derivedFrom) : CELL_NONE,
+    depends_on: item.dependsOn ? JSON.stringify(item.dependsOn) : CELL_NONE,
     autopilot: item.autopilot ?? CELL_NONE,
   };
 }

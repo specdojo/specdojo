@@ -1,3 +1,4 @@
+import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { existsSync, readFileSync } from "node:fs";
 import { basename } from "node:path";
 import {
@@ -408,6 +409,16 @@ export async function runSingleRegisterItem(
 ): Promise<RegisterItemSummary> {
   const { projectId, schedulePath, executionPath, repoRoot } = context;
   const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+  const dependencyReason = registerDependencyBlockReason(registerPaths, item);
+  if (dependencyReason)
+    return {
+      id: item.id,
+      title: item.title,
+      outcome: "skipped",
+      transition: "none",
+      commit: "skipped",
+      reason: dependencyReason,
+    };
   // 状態遷移の書き込み先（登録項目の正本）。commit 対象に必ず含める。
   const ticketPath = ticketPathFromItem(item, registerPaths.projectRegisterPath);
   requireRunnableRegisterItem(item);

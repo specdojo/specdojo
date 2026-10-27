@@ -119,12 +119,12 @@ function renumberDerivedFromReferences(
   toId: string,
 ): { content: string; changed: boolean } {
   const parsed = readRegisterItemContent(content, filename);
-  if (!parsed?.item.derivedFrom) return { content, changed: false };
+  if (!parsed) return { content, changed: false };
   const docId = readSpecdojoFields(content).id;
   const referencingProjectId =
     typeof docId === "string" && docId.includes(":") ? docId.split(":", 1)[0] : undefined;
   let changed = false;
-  const derivedFrom = parsed.item.derivedFrom.map((ref) => {
+  const rewrite = (ref: string): string => {
     if (referencingProjectId === sourceProjectId && ref === fromId) {
       changed = true;
       return toId;
@@ -134,9 +134,17 @@ function renumberDerivedFromReferences(
       return `${sourceProjectId}:${toId}`;
     }
     return ref;
-  });
+  };
+  const derivedFrom = parsed.item.derivedFrom?.map(rewrite);
+  const dependsOn = parsed.item.dependsOn?.map(rewrite);
   return changed
-    ? { content: applyRegisterItemFields(content, { derived_from: derivedFrom }), changed }
+    ? {
+        content: applyRegisterItemFields(content, {
+          ...(derivedFrom ? { derived_from: derivedFrom } : {}),
+          ...(dependsOn ? { depends_on: dependsOn } : {}),
+        }),
+        changed,
+      }
     : { content, changed };
 }
 

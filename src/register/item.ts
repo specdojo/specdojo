@@ -47,6 +47,7 @@ export type PjrItem = {
   // この項目を起票する元になった register 項目。project 内は PJR-XXXX、project 間は
   // <project-id>:PJR-XXXX で保持し、派生先ビューと監査履歴へ展開する。
   derivedFrom?: string[];
+  dependsOn?: string[];
   // 人が完了条件を確認し、夜間 orchestrator の実行対象として承認した印。
   autopilot?: "approved";
 };
@@ -121,6 +122,7 @@ export type RegisterItemFieldUpdates = {
   target_path?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   target_rulebook?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   derived_from?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
+  depends_on?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   autopilot?: "approved" | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
 
@@ -168,6 +170,7 @@ const SPECDOJO_KEY_ORDER = [
   "block_reason",
   "conclusion",
   "derived_from",
+  "depends_on",
   "autopilot",
   "approach",
   "targets",
@@ -352,6 +355,11 @@ export function readRegisterItemContent(
         (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
       )
     : undefined;
+  const dependsOn = Array.isArray(fields.depends_on)
+    ? fields.depends_on.filter(
+        (value): value is string => typeof value === "string" && value.trim() !== "",
+      )
+    : undefined;
   const autopilot = fields.autopilot === "approved" ? "approved" : undefined;
   const difficulty = asString(fields.difficulty) as RegisterDifficulty | undefined;
 
@@ -381,6 +389,7 @@ export function readRegisterItemContent(
     ...(targets && targets.length > 0 ? { targets } : {}),
     ...(sources && sources.length > 0 ? { sources } : {}),
     ...(derivedFrom && derivedFrom.length > 0 ? { derivedFrom } : {}),
+    ...(dependsOn && dependsOn.length > 0 ? { dependsOn } : {}),
     ...(autopilot ? { autopilot } : {}),
   };
 
@@ -519,6 +528,7 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
     ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
     ...(item.sources && item.sources.length > 0 ? { sources: item.sources } : {}),
     ...(item.derivedFrom && item.derivedFrom.length > 0 ? { derived_from: item.derivedFrom } : {}),
+    ...(item.dependsOn && item.dependsOn.length > 0 ? { depends_on: item.dependsOn } : {}),
     ...(item.autopilot ? { autopilot: item.autopilot } : {}),
   };
 }
