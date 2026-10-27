@@ -504,6 +504,8 @@ specdojo schedule strategy generate \
 
 `--approach` を指定する場合、通常は `--target` が 1 件だけ必須です。成果物を作成・修正する approach の対象は、成果物カタログを優先して doc id を解決します。カタログがなくても、既存文書は文書索引と frontmatter から、新規文書は明示したパスと rulebook から解決できます。kata maintenance の対象は文書索引で解決し、approach に対応する kata 種別との一致も書き込み前に検証します。kata authoring は `--target` を新しい kata ID、`--source` を 0 件以上の読み取り専用の手本とします。互換性のため、2 個目以降の `--target` も `--source` と同じ手本として扱います。
 
+`sample-maintenance` は `type` を見ず、対象 `id` の末尾が `-sample` かどうかで判定します。利用者の authority の sample も同じ規則です。recipe・template・rulebook の maintenance は従来どおり `type` の一致を検証します。sample の `type` の規約は [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を参照してください。
+
 カタログなしで使える成果物の approach は `fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize` です。`cross-deliverable-dedup` はカタログが必要です。
 
 - 新規文書には `--target-path <リポジトリ相対パス>` と `--target-rulebook <rulebook-id>` を指定します。個票の `target_path` と `target_rulebook` に保存されます。既存文書は `--target` の ID を索引で引き、パスと `specdojo.rulebook` を使います。明示指定と既存文書が矛盾した場合は停止します。

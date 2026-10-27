@@ -430,6 +430,86 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it.each(["project", "sample"])(
+    "add / update は type: %s の sample を保守対象にでき、誤った対象では記帳しない",
+    async (type) => {
+      await withRepo(async ({ root, registerDir }) => {
+        writeApproachTargets(root);
+        const sampleDir = join(root, "docs/ja/kata/samples");
+        mkdirSync(sampleDir, { recursive: true });
+        writeFileSync(
+          join(sampleDir, "example-sample.md"),
+          `---\nspecdojo:\n  id: customer:example-sample\n  type: ${type}\n  status: draft\n  rulebook: none\n---\n\n# Sample\n`,
+          "utf8",
+        );
+        vi.spyOn(process.stdout, "write").mockReturnValue(true);
+        const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+        const addArgs = [
+          "add",
+          "--type",
+          "todo",
+          "--title",
+          "sample を直す",
+          "--topic",
+          "edit-sample",
+          "--id",
+          "PJR-AB12",
+          "--approach",
+          "sample-maintenance",
+          "--target",
+          "customer:example-sample",
+        ];
+        const ticketPath = join(registerDir, "pjr-ab12-edit-sample.md");
+
+        await runRegister([...addArgs, "--dry-run"]);
+        expect(process.exitCode).not.toBe(1);
+        expect(existsSync(ticketPath)).toBe(false);
+        await runRegister(addArgs);
+        expect(process.exitCode).not.toBe(1);
+        expect(readFileSync(ticketPath, "utf8")).toContain("  approach: sample-maintenance");
+
+        await runRegister([
+          "update",
+          "--id",
+          "PJR-AB12",
+          "--approach",
+          "rulebook-maintenance",
+          "--target",
+          "specdojo:example-rulebook",
+        ]);
+        expect(process.exitCode).not.toBe(1);
+        await runRegister([
+          "update",
+          "--id",
+          "PJR-AB12",
+          "--approach",
+          "sample-maintenance",
+          "--target",
+          "customer:example-sample",
+        ]);
+        expect(process.exitCode).not.toBe(1);
+        const before = readFileSync(ticketPath, "utf8");
+        const eventsBefore = readEvents(registerDir, "PJR-AB12");
+        expect(before).toContain("  targets:\n    - customer:example-sample");
+
+        await runRegister(["update", "--id", "PJR-AB12", "--target", "deliverable-doc"]);
+        expect(process.exitCode).toBe(1);
+        expect(readFileSync(ticketPath, "utf8")).toBe(before);
+        expect(readEvents(registerDir, "PJR-AB12")).toEqual(eventsBefore);
+
+        process.exitCode = undefined;
+        const invalidAddArgs = addArgs.map((arg) => (arg === "PJR-AB12" ? "PJR-CD34" : arg));
+        await runRegister([...invalidAddArgs.slice(0, -1), "specdojo:example-rulebook"]);
+        expect(process.exitCode).toBe(1);
+        expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+          "requires a sample document target",
+        );
+        expect(existsSync(join(registerDir, "pjr-cd34-edit-sample.md"))).toBe(false);
+        expect(readEvents(registerDir, "PJR-AB12")).toEqual(eventsBefore);
+      });
+    },
+  );
+
   it("add は DCT にある未作成成果物の doc id を target にできる", async () => {
     await withRepo(async ({ root, registerDir }) => {
       writeApproachTargets(root);

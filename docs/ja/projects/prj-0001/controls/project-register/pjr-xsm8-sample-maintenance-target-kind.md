@@ -82,7 +82,28 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+### 4.1. 実施内容
+
+- `src/register/approach.ts` の `sample-maintenance` だけを、文書索引での存在確認と `id` の末尾 `-sample` による種類の検証へ変更した。recipe・template・rulebook の `type` による検証は維持した。
+- `tests/src/register/approach.test.ts` に成果物の `type`・旧 `type: sample`・YAML・利用者 authority の旧配置と新配置・誤対象・未解決 ID の回帰ケースを追加した。`tests/src/register/commands.test.ts` で add / update の成功と誤対象による個票・イベントの書き込み前拒否を、`tests/src/exec/register-plan-escape.test.ts` で sample の個票からの plan 生成をカバーした。
+- [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] を正本として `type` の原則と sample の命名による識別を記載し、sample 記述標準・ID 命名標準・実践体系構成ガイド・コマンドリファレンスから参照した。
+- sample 5 件の `type` だけを変更した。CDFD 2 件は `flow`、ステークホルダー登録簿は `project`、STSD と非推奨 CSTD は `data` とした。`cstd-sample` の `deprecated` を含む他の Frontmatter と本文は維持した。
+- `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` の `sample` 列挙値は残し、非推奨の理由と互換性のため保持する旨をコメントに記載した。`CHANGELOG.md` に未公開の節を新設し、判定修正と `type` の原則を記載した。
+
+### 4.2. 確認結果
+
+- 実リポジトリの `specdojo:tsd-sample` と `specdojo:tsd-index-sample` を対象とする `register add --dry-run` は、どちらも終了コード 0 で成功した。
+- 一時プロジェクトで同じ CLI のコマンド登録と引数解析を使用し、TSD 2 件と利用者 authority の旧 `type: sample` について dry-run・add・update・`exec plan --register` の経路を確認した。成果物を誤って指定した add / update は拒否され、update 前後の個票とイベントが同一であることも確認した。一時データは削除した。
+- schema をコンパイルし、変更した sample 5 件の新しい `type` と、それぞれを旧 `type: sample` としたメタ情報が検証を通ることを確認した。`npm run validate:schema:file` による利用者 authority の旧 `type: sample` の検証も成功した。
+- カタログ検証は成功した。未作成の成果物に対する既存の `based_on` 検証警告は残るが、エラーはない。
+- Prettier による変更ファイルの整形と、`register build` による登録簿の派生ビュー生成が成功した。typecheck・TypeScript lint・単体テスト・結合テスト・Markdown lint・Frontmatter lint・全体 schema 検証は、指定された親 runner の検証に委ねる。
+
+### 4.3. 判断と申し送り
+
+- _ASSUMPTION_: 現行の [[specdojo:cstd-rulebook|非推奨 CSTD rulebook]] は移行方針だけを持ち、推奨 Frontmatter 表はない。非推奨化前（`7b28add7d` の親）の指定は現在の成果物スキーマに存在しない `domain` だったため、現行 rulebook が移行先とする [[specdojo:stsd-rulebook|STSD rulebook]] の `data` を採用した。レビューではこの根拠で `cstd-sample` の `type` を確認する。
+- 完了条件 10 に従い、範囲外の `src/docs/yaml-pages.ts:32,90`（YAML の表示用 Markdown の型と、`samples/` 配下から `type: sample` を導出する処理）、`tests/src/docs/yaml-pages.test.ts:28,81`（同じ型を期待するテスト）は変更していない。生成済みの `docs/ja/specdojo/samples/generated/*.md` も同処理で `type: sample` を持つ。次の保守項目で表示用メタ情報の扱いを検討する。`src/register/deliverable-target.ts:153,166` は sample の `type` 検証を除外しており、今回の原則と整合するため変更不要とした。`tests/src/kata/command.test.ts:113` と `tests/src/kata/kata.test.ts:582,608` の旧 `type: sample` fixture も互換性確認として保持した。
+- sample 作業手順の `npm run docs:build` は内部で書き込み禁止の文書索引生成を実行し、子プロセスの起動も sandbox で制限されるため、ホスト側での確認を申し送る。指定された親検証は runner が実行し、結果を result に記載する。
+- register の実装変更を含むため、統合後は [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用手順]] の 5.1 に従い PJR-JSEY で動作確認する。
 
 ## 5. 関連ドキュメント
 

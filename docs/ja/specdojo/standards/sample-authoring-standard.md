@@ -105,6 +105,7 @@ sample は実在プロジェクトの記録ではありません。記載値は�
 
 - ファイル名は `<prefix>-sample.md` / `<prefix>-sample.yaml` / `<prefix>-sample.json` とし、対応 rulebook の `target_format` に合わせる。
 - `target_format` が未記載の場合は markdown を対象とみなす。
+- [[specdojo:document-metadata-standard|ドキュメントメタ情報標準]] に従い、`type` は見本にする成果物の type とする。sample であることは `id` とファイル名の `-sample` で表す。
 - Markdown の場合、H1 はファイル内で 1 つだけとし、`id` / `type` / `status` / `rulebook` を含む Frontmatter を先頭に置く。
 - YAML / JSON の場合、対応 rulebook が定める先頭メタ項目・ルートキー・必須キーを満たす。
 

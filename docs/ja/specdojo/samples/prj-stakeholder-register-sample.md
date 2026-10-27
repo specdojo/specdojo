@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:prj-stakeholder-register-sample
-  type: sample
+  type: project
   status: ready
   rulebook: specdojo:prj-stakeholder-register-rulebook
   based_on:

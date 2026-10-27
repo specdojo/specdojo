@@ -2,6 +2,16 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [Unreleased]
+
+### 変更
+
+- sample の `type` は見本にする成果物の種類とし、sample の識別は `id` とファイル名の `-sample` で行う原則を明文化しました。同梱 sample 5 件の `type` を揃え、既存の `type: sample` は互換性のためスキーマで許容します（PJR-XSM8）。
+
+### 不具合修正
+
+- `register add` / `update` の `sample-maintenance` が成果物の `type` を持つ sample を拒否する問題を修正しました。索引で対象を解決し、`id` の末尾 `-sample` で判定します（PJR-XSM8）。
+
 ## [0.4.7] - 2026-10-26
 
 ### 追加機能
