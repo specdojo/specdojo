@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_98e0b8a065484f968bd4ee8275b25591
+- v: 1
+  id: reg_585414555fb844dea9f6f618efad91c2
+  ts: "2026-10-27T23:42:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件、循環の拒否と実行停止の実地確認、JSEY の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: depends_on を追加した。add/update の --depends-on、未存在・自己参照・循環の検証、先行が未終端の項目の実行停止と sweep・夜間 queue のスキップ、一覧の列と逆引きビューを実装した
+  previous_event_id: reg_3b40c97e65c0411296d3980f3d24552d

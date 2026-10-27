@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-6rvj-register-depends-on
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   registered_at: "2026-10-27T23:00:16Z"
+  completed_at: "2026-10-27T23:42:22Z"
+  conclusion: depends_on を追加した。add/update の --depends-on、未存在・自己参照・循環の検証、先行が未終端の項目の実行停止と sweep・夜間 queue のスキップ、一覧の列と逆引きビューを実装した
   derived_from:
     - PJR-NJJ7
 ---
