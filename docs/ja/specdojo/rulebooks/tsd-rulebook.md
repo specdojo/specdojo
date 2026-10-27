@@ -3,6 +3,7 @@ specdojo:
   id: specdojo:tsd-rulebook
   type: rulebook
   status: ready
+  recipe: specdojo:tsd-recipe
   sample: specdojo:tsd-sample
   template: not-needed
 ---
