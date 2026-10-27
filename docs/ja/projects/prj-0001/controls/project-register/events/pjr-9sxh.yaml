@@ -41,3 +41,16 @@
     - field: targets
       from: ""
       to: '["specdojo:tsd-index-sample"]'
+- v: 1
+  id: reg_f561584b0d88413fa62c0d104dd2d636
+  ts: "2026-10-27T12:44:49Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ece3746eb59146feb3f0a77eaf0bc285
