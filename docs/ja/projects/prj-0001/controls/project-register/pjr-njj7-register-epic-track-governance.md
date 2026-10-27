@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-njj7-register-epic-track-governance
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-10-27T22:48:37Z"
+  completed_at: "2026-10-27T22:54:16Z"
+  conclusion: 案 C を採用。register を業務の起点とし、track ごとに新しい type の epic を起票して子 todo でカタログ・sch-strategy・sch-track を作り schedule で流す
 ---
 
 # PJR-NJJ7 register を業務の起点とし、track の仕事を epic 型で管理する
