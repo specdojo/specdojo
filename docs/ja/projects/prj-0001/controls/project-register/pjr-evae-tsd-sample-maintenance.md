@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-10-27T12:39:06Z"
+  block_reason: "parent validation failed: lint-md, test-unit"
   approach: sample-maintenance
   targets:
     - specdojo:tsd-sample
