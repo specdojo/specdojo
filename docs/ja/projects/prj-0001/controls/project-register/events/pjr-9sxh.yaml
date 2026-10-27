@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ece3746eb59146feb3f0a77eaf0bc285
+  ts: "2026-10-27T12:39:20Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: TSD の rulebook の見直しに sample を合わせるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: tsd-index-sample を新しい tsd-index-rulebook に合わせて見直す
+    - field: description
+      from: ""
+      to: tsd-index-sample を、見直した tsd-index-rulebook の技術スタック一覧の列（区分、採用技術、担当責務、版・正本、適用範囲）と参照の要件に合わせて見直す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: sample-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:tsd-index-sample"]'
