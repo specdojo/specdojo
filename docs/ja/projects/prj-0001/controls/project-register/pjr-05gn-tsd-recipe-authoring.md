@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-05gn-tsd-recipe-authoring
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   owner: ARC
   registered_at: "2026-10-27T11:26:51Z"
+  completed_at: "2026-10-27T14:12:01Z"
+  conclusion: tsd-recipe を作成し、tsd-rulebook の recipe に宣言した。template は作らない
   approach: recipe-authoring
   targets:
     - specdojo:tsd-recipe

@@ -70,3 +70,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_18865d9fd4a34a3b8964d0fd39dc0404
+- v: 1
+  id: reg_64e7017845e1437c8c599768a6cf2dc5
+  ts: "2026-10-27T14:12:01Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・親の検証・docs:build を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-27"
+    - field: conclusion
+      from: "-"
+      to: tsd-recipe を作成し、tsd-rulebook の recipe に宣言した。template は作らない
+  previous_event_id: reg_0ef4fc36dfd045fe9fd5da88a4f5409c
