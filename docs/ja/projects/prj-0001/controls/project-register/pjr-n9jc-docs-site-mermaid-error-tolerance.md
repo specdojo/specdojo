@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-n9jc-docs-site-mermaid-error-tolerance
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-27T14:12:43Z"
+  completed_at: "2026-10-27T15:43:44Z"
+  conclusion: dev は構文エラーの図を警告して飛ばし、build はすべての図を処理してからまとめて失敗するようにした
   derived_from:
     - PJR-EVAE
 ---

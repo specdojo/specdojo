@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_4ab6d7b3d37c49a7b8d4146454952d8e
+- v: 1
+  id: reg_789727eff9ba4721a37f3f6e124d0b97
+  ts: "2026-10-27T15:43:44Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・親の検証・本物の mermaid-cli での動作・docs:build を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: dev は構文エラーの図を警告して飛ばし、build はすべての図を処理してからまとめて失敗するようにした
+  previous_event_id: reg_d88ae588ca38461092a9953ad1ee4619
