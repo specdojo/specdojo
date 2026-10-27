@@ -107,6 +107,15 @@ specdojo:
 - sample 作業手順の `npm run docs:build` は内部で書き込み禁止の文書索引生成を実行し、子プロセスの起動も sandbox で制限されるため、ホスト側での確認を申し送る。指定された親検証は runner が実行し、結果を result に記載する。
 - register の実装変更を含むため、統合後は [[prj-0001:pm-orchestrator-playbook|オーケストレーター運用手順]] の 5.1 に従い PJR-JSEY で動作確認する。
 
+### 4.4. 統合後の検証（specdojo-orchestrator、2026-10-27）
+
+- 統合後に dist を再構築し、`specdojo:tsd-sample` と `specdojo:tsd-index-sample` を対象とする `register add --approach sample-maintenance --dry-run` が成功することを確認した。`specdojo:tsd-rulebook` を対象にすると、`-sample` で終わらない ID としてエラーで止まることも確認した。
+- 親の検証 7 件（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）の通過を evidence で確認した。
+- 申し送りの `npm run docs:build` を本リポジトリで実行し、成功した（117 秒、dead link なし）。
+- result の申し送りに reporter が写した Markdown リンクが残り `npm run validate:history-links` が失敗したため、パス表記に直した（`84b23943f`）。修正後は成功した。
+- [[prj-0001:pjr-jsey-exec-run-split-smoke]] を claude-executor で実行し、start から review まで通り、event の actor に `sonnet-executor` が記録された。同 run の親の検証 7 件も通過した。
+- 範囲外の申し送り（YAML の sample の表示用ページの `type: sample`）は [[prj-0001:pjr-0d0t-yaml-pages-sample-type]] として起票した。
+
 ## 5. 関連ドキュメント
 
 - [[prj-0001:pjr-05gn-tsd-recipe-authoring]]
