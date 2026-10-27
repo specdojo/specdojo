@@ -11,13 +11,7 @@ import {
   FLATTENED_GROUP_TEXTS,
 } from "./sidebar-config";
 import type { SidebarItem } from "./sidebar-config";
-import type { Plugin } from "vite";
-import {
-  generateMermaidSvgs,
-  generateMermaidSvgsForFile,
-  mermaidSvgId,
-  shouldGenerateMermaidForFile,
-} from "../src/gen-mermaid-svg";
+import { mermaidSvgId } from "../src/gen-mermaid-svg";
 import {
   STAGED_PACKAGE_DEAD_LINK_PATTERNS,
   stageBundledKata,
@@ -25,6 +19,7 @@ import {
 } from "./kata-staging";
 import { scanLocaleSidebar } from "./locale-sidebar";
 import { mermaidAssets } from "./mermaid-assets";
+import { mermaidSvgAutoGenerate } from "./mermaid-auto-generate";
 import { resolveExecRecordWikilink, rewriteExecRecordMarkdownHref } from "./exec-record-links";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
@@ -278,116 +273,6 @@ const specdojoItems = {
 
 // GitHub Pages の公開パス: https://specdojo.github.io/specdojo/
 const base = "/specdojo/";
-
-const mermaidSvgAutoGenerate = (): Plugin => {
-  let timer: NodeJS.Timeout | undefined;
-  let running = false;
-  let pending = false;
-  const pendingFiles = new Set<string>();
-  let isSsrBuild = false;
-
-  const run = (reason: string) => {
-    if (running) {
-      pending = true;
-      return;
-    }
-
-    running = true;
-    try {
-      if (pendingFiles.size > 0) {
-        const files = [...pendingFiles];
-        pendingFiles.clear();
-        console.log(`[mermaid] generating svgs for ${files.length} file(s) (${reason})`);
-        for (const file of files) {
-          try {
-            generateMermaidSvgsForFile(file, {
-              rootDir: SITE_CONTENT_ROOT,
-              outDir: MERMAID_OUT_DIR,
-            });
-          } catch (error) {
-            console.error(`[mermaid] failed to generate SVGs for ${file}`, error);
-          }
-        }
-      } else {
-        console.log(`[mermaid] generating svgs (${reason})`);
-        generateMermaidSvgs({
-          rootDir: SITE_CONTENT_ROOT,
-          outDir: MERMAID_OUT_DIR,
-        });
-      }
-    } finally {
-      running = false;
-      if (pending) {
-        pending = false;
-        run("pending");
-      }
-    }
-  };
-
-  const schedule = (reason: string, delayMs = 250) => {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => run(reason), delayMs);
-  };
-
-  const scheduleFile = (file: string, reason: string, delayMs = 250) => {
-    pendingFiles.add(file);
-    schedule(reason, delayMs);
-  };
-
-  const shouldHandle = (file: string): boolean => {
-    return shouldGenerateMermaidForFile(file, SITE_CONTENT_ROOT);
-  };
-
-  return {
-    name: "mermaid-svg-auto-generate",
-
-    configResolved(config) {
-      // VitePress build は client build と SSR build を連続実行するため、
-      // buildStart が2回呼ばれる。SVG生成は1回で十分なので SSR 側はスキップする。
-      isSsrBuild = Boolean(config.build?.ssr);
-    },
-
-    buildStart() {
-      if (isSsrBuild) return;
-      run("buildStart");
-    },
-
-    configureServer(server) {
-      schedule("startup", 0);
-
-      // 元の docs の変更を閲覧用ツリーへ反映し、以後は VitePress の通常の HMR に任せる。
-      server.watcher.add(CONTENT_ROOT);
-      for (const event of ["add", "change", "unlink"] as const) {
-        server.watcher.on(event, (file) => {
-          const relative = path.relative(CONTENT_ROOT, file);
-          if (relative && !relative.startsWith("..") && !path.isAbsolute(relative)) {
-            kataStaging.syncFile(file);
-          }
-        });
-      }
-
-      server.watcher.on("add", (file) => {
-        if (!shouldHandle(file)) return;
-        scheduleFile(file, "md:add");
-      });
-
-      server.watcher.on("unlink", (file) => {
-        if (!shouldHandle(file)) return;
-        scheduleFile(file, "md:unlink");
-      });
-    },
-
-    handleHotUpdate(ctx) {
-      if (!shouldHandle(ctx.file)) return;
-
-      // Markdown の再描画より先に SVG を用意したいので同期的に実行
-      pendingFiles.add(ctx.file);
-      run("hotUpdate");
-      ctx.server.ws.send({ type: "full-reload" });
-      return [];
-    },
-  };
-};
 
 /**
  * 追加したいロケールはここに足すだけでOK
@@ -1229,7 +1114,15 @@ export default defineConfig({
 
   vite: {
     publicDir: path.join(WORKSPACE_ROOT, "public"),
-    plugins: [mermaidSvgAutoGenerate(), mermaidAssets(MERMAID_OUT_DIR, base)],
+    plugins: [
+      mermaidSvgAutoGenerate({
+        rootDir: SITE_CONTENT_ROOT,
+        outDir: MERMAID_OUT_DIR,
+        contentRoot: CONTENT_ROOT,
+        syncFile: (file) => kataStaging.syncFile(file),
+      }),
+      mermaidAssets(MERMAID_OUT_DIR, base),
+    ],
     build: {
       // 最大のチャンクはローカル検索インデックス（@localSearchIndex*）で、
       // 検索モーダルを開いたときだけ動的 import される遅延ロード対象。
