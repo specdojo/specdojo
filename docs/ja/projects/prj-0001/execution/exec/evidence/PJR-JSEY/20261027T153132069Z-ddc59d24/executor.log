@@ -1,0 +1,10 @@
+個票の「対応結果」の表に 1 行を追記し、確認対象の説明文を更新しました。変更したのは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。
+
+- **追記した行:** `2026-10-28 00:31` / `PJR-8NWR` / `sonnet-executor`。
+- **確認対象の根拠:** 対象一覧のうち最新の統合コミットは `11e3ab587`(2026-10-28 00:29 JST)の PJR-8NWR でした。
+- **agent の根拠:** `sonnet-executor` は start event の actor です。日時は start event の時刻(15:31:33Z)を JST にしたものです。
+- **検証:** この個票に対する Prettier の整形検査は通りました。親 runner が実行する 7 検証は executor では実行していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果表に PJR-8NWR（最新統合 11e3ab587）の行を追記し、確認対象の説明文を更新した。変更は個票のみ。","handoff":["親 runner の 7 検証、reporter の result 記入、統合、review 遷移は後続段で確認する。","確認対象は PJR-8NWR（統合コミット 11e3ab587、2026-10-28 00:29 JST）とした。日時は start event の時刻（15:31:33Z）から JST 00:31 とした。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"整形に問題なし"}]}
+</specdojo_executor_evidence>
