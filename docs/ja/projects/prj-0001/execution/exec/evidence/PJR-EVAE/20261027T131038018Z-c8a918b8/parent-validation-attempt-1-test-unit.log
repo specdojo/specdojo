@@ -1,0 +1,226 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.7 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE
+
+ ❯ tests/src/grade/grade.test.ts (69 tests | 4 failed) 59872ms
+     × resolves declared and reverse-linked Kata references 15301ms
+     × uses the given reference instead of selecting one 12814ms
+     × reports no reference when candidates are empty 13289ms
+     × carries severity by the canonical English message, not the Japanese display text 9456ms
+Updated ticket status → ready: /tmp/specdojo-ticket-50xOxY/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-AAfo0q/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-XrekXp/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-ElYAaP/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-jNHRTu/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-JDKZfO/pjr-0001-topic.md
+ ❯ tests/src/register/commands.test.ts (64 tests | 5 failed) 209868ms
+     × scaffold は generated 配下の一覧を作成し、追跡対象の参照ページは作らない 5986ms
+     × add は個票を作成し、構造化フィールドを frontmatter へ書く（表へ行を追記しない） 5299ms
+     × add は approach と target を検証して個票へ書く 18599ms
+     × add / update は type: project の sample を保守対象にでき、誤った対象では記帳しない 85156ms
+     × add / update は type: sample の sample を保守対象にでき、誤った対象では記帳しない 83317ms
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-4foRrH/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-4foRrH/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-4foRrH/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-4foRrH/.specdojo/agent-members.yaml
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: ../product/document.md actor=actual-grader
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-27T13:27:38.809Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-27T13:26:39.081Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-27T13:26:39.302Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-QAIIcu/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-CjY58o/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  2 failed | 150 passed (152)
+      Tests  9 failed | 2550 passed (2559)
+   Start at  22:21:36
+   Duration  317.93s (transform 43.44s, setup 6.21s, import 192.48s, tests 355.43s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 9 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/grade/grade.test.ts > grade plan > resolves declared and reverse-linked Kata references
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/grade/grade.test.ts:1288:3
+    1286|   });
+    1287|
+    1288|   it("resolves declared and reverse-linked Kata references", () => {
+       |   ^
+    1289|     const references = resolveGradeReferencePaths("docs/ja/specdojo/sa…
+    1290|     expect(references).toEqual(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯
+
+ FAIL  tests/src/grade/grade.test.ts > grade plan > uses the given reference instead of selecting one
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/grade/grade.test.ts:1437:3
+    1435|   });
+    1436|
+    1437|   it("uses the given reference instead of selecting one", () => {
+       |   ^
+    1438|     const directory = mkdtempSync(join(tmpdir(), "specdojo-grade-plan-…
+    1439|     try {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯
+
+ FAIL  tests/src/grade/grade.test.ts > grade plan > reports no reference when candidates are empty
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/grade/grade.test.ts:1460:3
+    1458|   });
+    1459|
+    1460|   it("reports no reference when candidates are empty", () => {
+       |   ^
+    1461|     // 候補を渡さない場合はリファレンスなしになる。CLI はこの結果を見て警告する。
+    1462|     try {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯
+
+ FAIL  tests/src/grade/grade.test.ts > grade done_criteria for deliverables > carries severity by the canonical English message, not the Japanese display text
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/grade/grade.test.ts:1996:3
+    1994|   });
+    1995|
+    1996|   it("carries severity by the canonical English message, not the Japan…
+       |   ^
+    1997|     const directory = "logs/grade-canonical-message-test";
+    1998|     const documentPath = `${directory}/example-doc.md`;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯
+
+ FAIL  tests/src/register/commands.test.ts > register CLI — 個票 frontmatter への読み書き > scaffold は generated 配下の一覧を作成し、追跡対象の参照ページは作らない
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/register/commands.test.ts:295:3
+    293|   });
+    294|
+    295|   it("scaffold は generated 配下の一覧を作成し、追跡対象の参照ページは作らない", async () => {
+       |   ^
+    296|     await withRepo(async ({ registerDir }) => {
+    297|       vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯
+
+ FAIL  tests/src/register/commands.test.ts > register CLI — 個票 frontmatter への読み書き > add は個票を作成し、構造化フィールドを frontmatter へ書く（表へ行を追記しない）
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/register/commands.test.ts:309:3
+    307|   });
+    308|
+    309|   it("add は個票を作成し、構造化フィールドを frontmatter へ書く（表へ行を追記しない）", async () => {
+       |   ^
+    310|     await withRepo(async ({ registerDir }) => {
+    311|       writeFileSync(join(registerDir, "pjr-index.md"), buildIndex([]),…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯
+
+ FAIL  tests/src/register/commands.test.ts > register CLI — 個票 frontmatter への読み書き > add は approach と target を検証して個票へ書く
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/register/commands.test.ts:400:3
+    398|   });
+    399|
+    400|   it("add は approach と target を検証して個票へ書く", async () => {
+       |   ^
+    401|     await withRepo(async ({ root, registerDir }) => {
+    402|       writeApproachTargets(root);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯
+
+ FAIL  tests/src/register/commands.test.ts > register CLI — 個票 frontmatter への読み書き > add / update は type: project の sample を保守対象にでき、誤った対象では記帳しない
+ FAIL  tests/src/register/commands.test.ts > register CLI — 個票 frontmatter への読み書き > add / update は type: sample の sample を保守対象にでき、誤った対象では記帳しない
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/register/commands.test.ts:433:33
+    431|   });
+    432|
+    433|   it.each(["project", "sample"])(
+       |                                 ^
+    434|     "add / update は type: %s の sample を保守対象にでき、誤った対象では記帳しない",
+    435|     async (type) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯
+
