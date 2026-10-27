@@ -4,32 +4,31 @@ specdojo:
   type: exec-result
   task_id: PJR-EVAE
   mode: edit
-  status: blocked
+  status: complete
   project_id: prj-0001
   origin: register
   plan_ref: exec/plans/pjr-evae-20261027T131038Z-cd540a5d-plan.md
   started_at: "2026-10-27T13:10:41.025Z"
-  completed_at: "2026-10-27T13:43:01.355Z"
+  completed_at: "2026-10-27T13:48:35.303Z"
   agent: flash-high-executor
   approach: sample-maintenance
   targets:
     - specdojo:tsd-sample
-  block_reason: "parent validation failed: test-unit"
 ---
 
 # Edit Result
 
 ## 1. 実施内容
 
-- tsd-sample を新しい `tsd-rulebook` および `sample-authoring-standard` に合わせて見直し、PostgreSQL と Prisma のデータベース詳細定義として再構成しました。
-- Frontmatter の `type` を `architecture` に変更し、`part_of` に `specdojo:tsd-index-sample` を設定しました。
-- rulebook の要件に基づき、採用技術の設定、動作確認の手順（確認対象・実行場所・期待結果・失敗時の確認先）、および技術的制約やトラブルシューティングのセクションを追加しました。
-- MD031 lint エラーの解消および Prettier によるフォーマット適用を行い、`CHANGELOG.md` の更新も完了しました。
+- tsd-sample を新しい `tsd-rulebook` および `sample-authoring-standard` に合わせて、PostgreSQL と Prisma のデータベース詳細定義として再構成しました。
+- フロントマターの `type` を `architecture` へ変更し、`part_of` に `specdojo:tsd-index-sample` を追加しました。
+- rulebook の要件に従い、採用技術の設定、動作確認手順（確認対象、実行場所、期待結果、失敗時の確認先）、および技術的な制約やトラブルシューティングの節を追加しました。
+- `CHANGELOG.md` を更新し、`docs/ja/specdojo/samples/tsd-sample.md` の変更内容を記録しました。
 
 ## 2. 変更ファイル
 
 - `CHANGELOG.md`: 未公開の版の節に、`tsd-sample` の見直しに関する変更内容を追記しました。
-- `docs/ja/specdojo/samples/tsd-sample.md`: 技術スタックの一覧形式から、`tsd-rulebook` の構成に従った技術領域の詳細定義（概要、前提条件、採用設定、動作確認、制約・トラブルシューティング）へと全面的に書き換えました。題材は PostgreSQL と Prisma を使用しています。
+- `docs/ja/specdojo/samples/tsd-sample.md`: `tsd-rulebook` の構成に準拠した完成例として再構成しました。具体的には、技術スタックのインベントリから、PostgreSQL / Prisma の詳細定義へと変更し、環境の前提条件、採用設定、動作確認手順、および制約事項を記載しました。
 
 ## 3. 申し送り
 
@@ -42,4 +41,4 @@ specdojo:
 
 ## 4. 進め方と実践の型の適用
 
-既存の `tsd-sample.md` を読み込み、`finding` で指摘された構造的・内容的な不備を `tsd-rulebook` および `sample-authoring-standard` に基づいて解消しました。具体的には、インデックス形式から詳細定義形式への変換、動作確認手順の追加、技術的制約の明示、および frontmatter の修正を行いました。
+rulebook の定義に従い、既存の `tsd-sample` を技術スタックの一覧から、特定の技術領域（PostgreSQL / Prisma）の詳細定義へと作り直しました。`sample-authoring-standard` に則り、動作確認手順や技術的制約を含めることで、完成例としての責務を果たしています。
