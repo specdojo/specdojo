@@ -67,7 +67,12 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- 個票 3.2 の方針どおり、dev は図ごとの失敗を警告して継続し、build と Mermaid 単独生成は全ファイル・全ブロックを処理した後に集約エラーで失敗する実装にした。警告と集約エラーには文書パス・図の番号・ハッシュ・エラーの要点を含める。方針との差異、未解決の判断事項、保護設定の変更提案はない。
+- `packages/docs-site/src/gen-mermaid-svg.ts` にエラー処理モードを追加した。失敗時の途中生成 SVG と一時ファイルを削除し、manifest のハッシュ一覧には成功した図だけを残す。一部失敗した文書には `hasErrors` を記録してファイル単位の cache を無効にし、正常な図の SVG は再利用しながら失敗した図を再試行する。全図失敗した文書の manifest エントリと、参照されなくなった古い SVG は除去する。Markdown が存在しない場合の警告・スキップは維持した。
+- Vite の Mermaid 生成 plugin を `packages/docs-site/.vitepress/mermaid-auto-generate.ts` に切り出し、`config.mts` から参照する。`configResolved` の command で dev と build を判別し、起動時の全走査・watcher・HMR で適切なモードを指定する。切り出しにより、サイト全体を立ち上げずに実際の plugin フックを単体テストできるようにした。
+- `tests/packages/docs-site/gen-mermaid-svg.test.ts` に、dev の起動・文書追加・HMR、同一文書内と別文書の正常な図の生成継続、複数ファイル・複数ブロックのエラー集約、途中生成 SVG の除去、部分失敗した文書の再試行、修正後の再生成、SSR の二重生成防止のテストを追加した。既存のファイル不在テストには警告の検証を追加した。テストの実行結果は親 runner の `test-unit` 検証で確定する。
+- `packages/docs-site/README.md` に dev / build / Mermaid 単独生成の失敗時の扱い、cache と再生成の動作を記載し、`CHANGELOG.md` の未公開の版に修正を記録した。公開済みの版は変更していない。
+- executor の検証: `npm --prefix packages/docs-site run typecheck`、変更ファイルの Prettier 整形、`node --import tsx tools/catalog-validate-if-configured.mjs`、`node --import tsx src/specdojo.ts register build`、`git diff --check` は成功した。カタログ検証には既存の未作成成果物への警告がある。`lint-ts`・`lint-fm`・`lint-md`・`test-integration`・`validate-schema`・`typecheck`・`test-unit` は指定された親 runner が実行する。result の記入と状態遷移は reporter / runner に委ねる。
 
 ## 5. 関連ドキュメント
 
