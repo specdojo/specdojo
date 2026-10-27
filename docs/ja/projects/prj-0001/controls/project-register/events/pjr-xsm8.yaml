@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_698d0dc44ffc4cffb0567d7631a40bf6
+  ts: "2026-10-27T11:31:27Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: tsd-sample の見直しの起票で検出したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: sample-maintenance の起票が sample の type 判定で止まる
+    - field: description
+      from: ""
+      to: register add の sample-maintenance は対象の frontmatter の type が sample であることを求めるが、同梱の sample 100 件のうち 95 件は見本の成果物の type（project など）を使うため起票できない。sample の判定を ID の末尾か置き場所に揃える。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-05GN"]'

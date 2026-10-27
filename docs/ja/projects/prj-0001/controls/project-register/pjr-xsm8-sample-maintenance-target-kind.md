@@ -1,0 +1,50 @@
+---
+specdojo:
+  id: prj-0001:pjr-xsm8-sample-maintenance-target-kind
+  type: project
+  status: draft
+  rulebook: specdojo:pjr-rulebook
+  part_of:
+    - prj-0001:pjr-index
+  item_type: issue
+  item_status: open
+  priority: high
+  difficulty: medium
+  owner: DEV
+  registered_at: "2026-10-27T11:31:27Z"
+  derived_from:
+    - PJR-05GN
+---
+
+# PJR-XSM8 sample-maintenance の起票が sample の type 判定で止まる
+
+## 1. 課題内容
+
+register add の sample-maintenance は対象の frontmatter の type が sample であることを求めるが、同梱の sample 100 件のうち 95 件は見本の成果物の type（project など）を使うため起票できない。sample の判定を ID の末尾か置き場所に揃える。
+
+## 2. 影響範囲
+
+| 観点         | 影響   |
+| ------------ | ------ |
+| スコープ     | _TODO_ |
+| スケジュール | _TODO_ |
+| コスト       | _TODO_ |
+| 品質         | _TODO_ |
+| 関係者       | _TODO_ |
+
+## 3. 対応方針
+
+| 項目     | 内容   |
+| -------- | ------ |
+| 原因     | _TODO_ |
+| 対応策   | _TODO_ |
+| 依存事項 | _TODO_ |
+| 完了条件 | _TODO_ |
+
+## 4. 対応結果
+
+_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+
+## 5. 関連ドキュメント
+
+- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
