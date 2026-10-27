@@ -112,3 +112,16 @@
       from: "parent validation failed: test-unit"
       to: "-"
   previous_event_id: reg_944ec5074a5b4622ac13a0b4fe4472bd
+- v: 1
+  id: reg_abd53875e3394120af165acf145d9a9f
+  ts: "2026-10-27T15:29:23Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_44ca58c27ecc4f0caf6b293b332a965f
