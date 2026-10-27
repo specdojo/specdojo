@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_33a670687927454cabd42515e173e467
+  ts: "2026-10-27T22:58:19Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-NJJ7 の決定のフォローアップとして起票するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register に epic の type を追加する
+    - field: description
+      from: ""
+      to: schema・個票のテンプレート・register の各コマンドで epic を扱い、exec run --register の対象から外す。子 todo を --from でたどる一覧を出す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-NJJ7"]'
