@@ -51,7 +51,17 @@ specdojo:
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+[[specdojo:tsd-recipe|技術領域別 TSD 作成レシピ]] を `draft` で新規作成した。[[specdojo:recipe-authoring-standard|Recipe 記述標準]] の章構成に沿い、一冊・分冊の判断、採用値・推奨値・任意設定・未決事項の区別、段階的な動作確認、秘密情報の見分け方、継続利用と復旧を作業順に具体化した。[[specdojo:tsd-rulebook|TSD 作成ルール]] の変更は frontmatter の `recipe: specdojo:tsd-recipe` 追加だけとし、`CHANGELOG.md` の未公開の版へ変更を記載した。
+
+手本として [[prj-0001:tsd-ollama|Ollama 技術スタック定義]]、[[prj-0001:tsd-ollama-opencode|Ollama の opencode 接続定義]]、[[prj-0001:tsd-home-mac-dev-server-usage|ホーム Mac 開発サーバの日常運用]] を読み、共通する実行場所・設定反映・確認の流れと、初期構築・接続・日常利用の差を一般化した。固有の製品、モデル、OS、ポート、容量、並列数は必須条件にしていない。
+
+参照と手本についての申し送り:
+
+- 手本 3 件は成果物カタログに登録済みで、`rulebook` は既に `specdojo:tsd-rulebook` を指している。recipe 参照の正本である同 rulebook の未記入フィールドを更新したため、カタログと手本の参照値は変更していない。`tsd-index-rulebook` の `recipe: not-needed`、sample、template も個票の範囲外として変更していない。
+- 接続手本の設定例は `gemma4:e4b-mlx-light-8k` を登録する一方、接続確認要求では `gemma4:e4b-light-8k` を使う。どちらが対象環境で正しいかは本タスクで判断せず、手本を変更していない。recipe には登録・選択・確認要求の識別子を照合する手順を設けた。手本の保守時に対象環境の登録名を確認する。
+- 基盤手本はモデル一覧 API の応答で常駐と環境変数反映まで確認できるとするが、応答だけでは個別設定の有効値を確定できない。recipe では疎通と有効値確認を分けた。手本の保守時には対象プロセスの有効値を確認する方法を見直す。
+
+Prettier による変更 4 ファイルの整形、`node --import tsx src/specdojo.ts register build --project prj-0001`、`node --import tsx tools/catalog-validate-if-configured.mjs`、`git diff --check` は成功した。カタログ検査は既存の未作成文書について `based_on` を検証できない警告を出すが、終了コードは 0 だった。手本 3 件、sample、`tsd-index-rulebook`、result に差分がないことも確認した。`npm run lint:md`・`npm run lint:fm` などの指定された検査は親 runner が実行し、result は後続の reporter が記入する。
 
 ## 5. 関連ドキュメント
 
