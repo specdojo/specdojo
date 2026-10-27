@@ -125,3 +125,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_44ca58c27ecc4f0caf6b293b332a965f
+- v: 1
+  id: reg_51625dba76d746508314161197b6bc6f
+  ts: "2026-10-27T15:43:33Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・親の検証・JSEY を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: project.repos のリポジトリの文書の grade の結果を results/`<repo 名>`/`<文書 ID>.yaml` に分けて保存するようにした
+  previous_event_id: reg_abd53875e3394120af165acf145d9a9f

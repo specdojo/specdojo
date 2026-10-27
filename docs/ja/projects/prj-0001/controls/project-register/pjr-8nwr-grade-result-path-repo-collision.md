@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-8nwr-grade-result-path-repo-collision
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-27T13:26:19Z"
+  completed_at: "2026-10-27T15:43:33Z"
+  conclusion: project.repos のリポジトリの文書の grade の結果を results/`<repo 名>`/`<文書 ID>.yaml` に分けて保存するようにした
 ---
 
 # PJR-8NWR grade の結果ファイルが別リポジトリの同じ ID の文書で重なる
