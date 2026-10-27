@@ -13,6 +13,8 @@ specdojo:
   registered_at: "2026-10-27T22:58:44Z"
   derived_from:
     - PJR-NJJ7
+  depends_on:
+    - PJR-WAGY
 ---
 
 # PJR-AB1Y ガイドを register を起点とする構成へ書き換える

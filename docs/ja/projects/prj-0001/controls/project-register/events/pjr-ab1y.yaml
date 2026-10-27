@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-NJJ7"]'
+- v: 1
+  id: reg_2aadbcc138f6498fae2ca911bfbb88a8
+  ts: "2026-10-27T23:34:35Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 実装に合わせてガイドを書くため
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-WAGY"]'
+  previous_event_id: reg_e0d83a4c5842485482c709c584d769d2
