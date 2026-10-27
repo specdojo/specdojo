@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-EVAE"]'
+- v: 1
+  id: reg_4ab6d7b3d37c49a7b8d4146454952d8e
+  ts: "2026-10-27T14:43:43Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_d51b766e1c4e4cef9a69bd0e1c432ed0
