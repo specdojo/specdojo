@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_d51b766e1c4e4cef9a69bd0e1c432ed0
+  ts: "2026-10-27T14:12:43Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: TSD の kata の見直しの確認で検出したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Mermaid の構文エラーで docs:dev と docs:build が止まる
+    - field: description
+      from: ""
+      to: "@specdojo/docs-site の gen-mermaid-svg.ts は、ファイルがない場合以外の図の生成のエラーを投げ直すため、1 つの図の構文エラーで dev サーバーとビルドが止まる。エラーの図を警告して飛ばし、ほかのページを表示できるようにする。ビルドで失敗として扱うかは対応時に決める。"
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-EVAE"]'
