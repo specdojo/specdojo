@@ -62,6 +62,7 @@ $defs:
           - target_path
           - target_rulebook
           - derived_from
+          - depends_on
           - autopilot
       from:
         type: string

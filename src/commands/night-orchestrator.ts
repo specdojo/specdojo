@@ -1,3 +1,4 @@
+import { registerDependencyBlockReason } from "../register/dependency.js";
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
@@ -241,7 +242,24 @@ export function registerNightOrchestratorCommand(orchestrator: Command): void {
         const items = loadRegisterItems(resolveRegisterPaths({ project: projectId })).map(
           (view) => view.item,
         );
-        const selected = selectApprovedNightItems(items, maxItems);
+        const registerPaths = resolveRegisterPaths({ project: projectId });
+        const dependencyOutcomes: NightRunOutcome[] = [];
+        const dependencyItems: PjrItem[] = [];
+        const selected = selectApprovedNightItems(items, Number.MAX_SAFE_INTEGER)
+          .filter((item) => {
+            const reason = registerDependencyBlockReason(registerPaths, item);
+            if (!reason) return true;
+            process.stdout.write(`[night] skipping ${item.id}: ${reason}\n`);
+            dependencyItems.push(item);
+            dependencyOutcomes.push({
+              id: item.id,
+              outcome: "skipped",
+              transition: "none",
+              reason,
+            });
+            return false;
+          })
+          .slice(0, maxItems);
         process.stdout.write(
           `[night] approved queue (${selected.length}/${maxItems}): ${selected.map((item) => item.id).join(", ") || "none"}\n`,
         );
@@ -250,12 +268,25 @@ export function registerNightOrchestratorCommand(orchestrator: Command): void {
         const startedAt = opts.scheduledAt
           ? new Date(opts.scheduledAt).toISOString()
           : new Date().toISOString();
-        const outcomes: NightRunOutcome[] = [];
+        const outcomes: NightRunOutcome[] = [...dependencyOutcomes];
         const approvalIssues = new Map<string, string>();
         let consecutiveFailures = 0;
         let stopReason: string | undefined;
         for (let offset = 0; offset < selected.length; offset += parallel) {
-          const wave = selected.slice(offset, offset + parallel);
+          const current = new Map(
+            loadRegisterItems(registerPaths).map((view) => [view.id, view.item]),
+          );
+          const wave = selected.slice(offset, offset + parallel).filter((item) => {
+            const reason = registerDependencyBlockReason(
+              registerPaths,
+              current.get(item.id) ?? item,
+            );
+            if (!reason) return true;
+            outcomes.push({ id: item.id, outcome: "skipped", transition: "none", reason });
+            process.stdout.write(`[night] skipping ${item.id}: ${reason}\n`);
+            return false;
+          });
+          if (wave.length === 0) continue;
           const [command, args] = cliInvocation([
             "exec",
             "run",
@@ -335,7 +366,7 @@ export function registerNightOrchestratorCommand(orchestrator: Command): void {
             projectId,
             startedAt,
             completedAt,
-            selected,
+            selected: [...dependencyItems, ...selected],
             outcomes,
             approvalIssues,
             ...(stopReason ? { stopReason } : {}),

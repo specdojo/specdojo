@@ -1,3 +1,4 @@
+import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { type ExecDefaultsConfig } from "../agent-config.js";
@@ -237,6 +238,16 @@ export async function resumeSingleRegisterItemWorktree(
 ): Promise<RegisterItemSummary> {
   const { projectId, schedulePath, executionPath, repoRoot } = context;
   const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+  const dependencyReason = registerDependencyBlockReason(registerPaths, item);
+  if (dependencyReason)
+    return {
+      id: item.id,
+      title: item.title,
+      outcome: "skipped",
+      transition: "none",
+      commit: "skipped",
+      reason: dependencyReason,
+    };
   const ticketPath = ticketPathFromItem(item, registerPaths.projectRegisterPath);
   requireRunnableRegisterItem(item);
 
@@ -330,6 +341,17 @@ export async function resumeSingleRegisterItemWorktree(
     transitionReason: string,
   ): Promise<RegisterItemSummary | null> => {
     const start = (): RegisterItemSummary | null => {
+      const current = resolveRegisterRunTarget(projectId, pjrId);
+      const reason = registerDependencyBlockReason(current.registerPaths, current.item);
+      if (reason)
+        return {
+          id: item.id,
+          title: item.title,
+          outcome: "skipped",
+          transition: "none",
+          commit: "skipped",
+          reason,
+        };
       if (
         !spawnRegisterTransition(
           projectId,

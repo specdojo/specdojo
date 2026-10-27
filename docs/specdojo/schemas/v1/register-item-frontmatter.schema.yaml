@@ -226,6 +226,19 @@ properties:
               same project and <project-id>:PJR-XXXX for an item in another project. Omit the key
               when the item was not derived from another register item.
 
+          depends_on:
+            type: array
+            items:
+              oneOf:
+                - $ref: "#/$defs/LocalRegisterItemRef"
+                - $ref: "#/$defs/QualifiedRegisterItemRef"
+            minItems: 1
+            uniqueItems: true
+            description: >
+              Predecessor register item IDs. Execution requires every predecessor to be done or
+              decided; rejected and deferred do not satisfy a dependency. References use the
+              same local or project-qualified syntax as derived_from. Cycles are forbidden.
+
           autopilot:
             type: string
             const: approved

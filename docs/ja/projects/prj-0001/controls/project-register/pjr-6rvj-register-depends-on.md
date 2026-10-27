@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: medium
   registered_at: "2026-10-27T23:00:16Z"
-  block_reason: "parent validation failed: lint-ts"
   derived_from:
     - PJR-NJJ7
 ---
@@ -58,7 +57,9 @@ specdojo:
 - 実行許可はすべての先行項目が `done` / `decided` の場合だけとした。`rejected` / `deferred` を含む未充足の依存では、直接実行は ID と状態を示して停止し、sweep・夜間 queue は理由を出力して飛ばす。夜間の朝報告にも理由を保存する。状態を自動で `waiting` に変えず、スキップを選択件数上限へ数えない。先行完了後の後続項目は次回の queue 選択で拾う。
 - 一覧末尾へ `depends_on` 列を追加し、`generated/pjr-dependent-items.md` で先行項目から後続項目を逆引きできるようにした。既存の一覧の先頭 12 列と旧一覧の読み取り互換は維持した。
 - 単体テストは参照先不在・自己参照・循環、project 間の循環とブランチ不在、8 状態の先行判定、直接実行・worktree・resume・sweep・夜間朝報告、記帳・event・history の往復、schema、一覧・逆引き、再採番、外部 add と event 復元を対象に追加・更新した。
+- executor 再開時に前回の変更と完了条件を再確認し、親の `lint-ts` が検出した `tests/src/register/dependency.test.ts` の型 import 違反を修正した。動的な `import()` 型注釈を型専用の名前空間 import へ置き換え、mock が元の module を読み込む動作は維持した。親の 7 検証の最終結果は後続の runner が記録する。
 - 検証: `npm run build`、隔離した登録簿を使う CLI smoke、個票・event の `validate:schema:file`、`catalog validate --project prj-0001`、`register build --project prj-0001` が成功した。catalog には未作成文書に関する既存警告がある。CLI 検証では `.env` の読み込みを preload で無効にした。Prettier を変更ファイルへ適用した。
+- 再開時の検証: build、隔離 CLI smoke（依存の記帳・未存在参照／自己参照／循環の拒否・未完了先行による直接実行停止・一覧／逆引き・依存削除）、依存を含む個票と event の schema 検証、hook の catalog 検証、project の register build、差分の空白検査が成功した。Prettier は累積変更の成果物 33 ファイルへ適用した。検証用の一時ファイルは片付け、result・runner の evidence・状態遷移は変更していない。
 - 申し送り: 親の `lint-ts`・`lint-fm`・`lint-md`・`test-integration`・`validate-schema`・`typecheck`・`test-unit` は sandbox で重複実行せず、後続の runner に委ねる。統合後は [[prj-0001:pm-orchestrator-playbook|運用メモ]] に従い、実 agent の利用枠を使う PJR-JSEY の動作確認を行う。
 - result は executor/reporter pipeline の責務分離に従って編集していない。上記の設計判断と検証・申し送りは executor evidence の `handoff` にも記載し、reporter と runner が result へ反映する。
 

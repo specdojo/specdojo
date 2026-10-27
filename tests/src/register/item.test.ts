@@ -500,31 +500,34 @@ describe("register-item-frontmatter schema — enum 検証", () => {
     );
   });
 
-  it("derived_from は project 内 ID と project 修飾 ID の配列だけを受け付ける", () => {
-    const validator = buildValidator(
-      "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
-    );
-    const base = {
-      id: "prj-0001:pjr-ab12-inventory-seed",
-      type: "project",
-      status: "draft",
-      rulebook: "specdojo:pjr-rulebook",
-      part_of: ["prj-0001:pjr-index"],
-      item_type: "todo",
-      item_status: "open",
-      priority: "medium",
-    };
+  it.each(["derived_from", "depends_on"])(
+    "%s は project 内 ID と project 修飾 ID の配列だけを受け付ける",
+    (field) => {
+      const validator = buildValidator(
+        "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      );
+      const base = {
+        id: "prj-0001:pjr-ab12-inventory-seed",
+        type: "project",
+        status: "draft",
+        rulebook: "specdojo:pjr-rulebook",
+        part_of: ["prj-0001:pjr-index"],
+        item_type: "todo",
+        item_status: "open",
+        priority: "medium",
+      };
 
-    expect(
-      validator({
-        specdojo: { ...base, derived_from: ["PJR-CD34", "prj-0002:PJR-EF56"] },
-      }),
-    ).toBe(true);
-    expect(validator({ specdojo: { ...base, derived_from: ["PJR-CD34", "PJR-CD34"] } })).toBe(
-      false,
-    );
-    expect(validator({ specdojo: { ...base, derived_from: ["pjr-cd34"] } })).toBe(false);
-  });
+      expect(
+        validator({
+          specdojo: { ...base, [field]: ["PJR-CD34", "prj-0002:PJR-EF56"] },
+        }),
+      ).toBe(true);
+      expect(validator({ specdojo: { ...base, [field]: ["PJR-CD34", "PJR-CD34"] } })).toBe(false);
+      expect(validator({ specdojo: { ...base, [field]: ["pjr-cd34"] } })).toBe(false);
+      expect(validator({ specdojo: { ...base, [field]: [] } })).toBe(false);
+      expect(validator({ specdojo: { ...base, [field]: "PJR-CD34" } })).toBe(false);
+    },
+  );
 
   it("autopilot は approved だけを受け付ける", () => {
     const validator = buildValidator(

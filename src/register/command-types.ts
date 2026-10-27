@@ -39,6 +39,7 @@ export type RegisterAddFields = {
   targetPath?: string;
   targetRulebook?: string;
   derivedFrom?: string[];
+  dependsOn?: string[];
 };
 
 export type BuildScope = "register" | "controls" | "all";

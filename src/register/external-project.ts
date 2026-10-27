@@ -28,6 +28,7 @@ export type ExternalRegisterAddOptions = {
   target?: string[];
   source?: string[];
   from?: string[];
+  dependsOn?: string[];
   id?: string;
   topic?: string;
   by?: string;
@@ -91,6 +92,13 @@ export function buildExternalRegisterAddArgs(
   for (const source of opts.source ?? []) addValue(args, "--source", source);
   for (const source of opts.from ?? []) {
     addValue(args, "--from", rewriteExternalDerivedFrom(source, alias, externalProject.project_id));
+  }
+  for (const predecessor of opts.dependsOn ?? []) {
+    addValue(
+      args,
+      "--depends-on",
+      rewriteExternalDerivedFrom(predecessor, alias, externalProject.project_id),
+    );
   }
   addValue(args, "--id", opts.id);
   addValue(args, "--topic", opts.topic);

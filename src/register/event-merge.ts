@@ -193,12 +193,13 @@ function fieldUpdateFromChange(change: RegisterEventChange): RegisterItemFieldUp
         return undefined;
       }
     }
+    case "depends_on":
     case "derived_from": {
-      if (isUnset) return { derived_from: REMOVE_REGISTER_ITEM_FIELD };
+      if (isUnset) return { [change.field]: REMOVE_REGISTER_ITEM_FIELD };
       try {
         const parsed = JSON.parse(value) as unknown;
         return Array.isArray(parsed) && parsed.every((ref) => typeof ref === "string")
-          ? { derived_from: parsed }
+          ? { [change.field]: parsed }
           : undefined;
       } catch {
         return undefined;

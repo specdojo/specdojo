@@ -37,6 +37,21 @@ const baseOptions: ExternalRegisterAddOptions = {
 };
 
 describe("buildExternalRegisterAddArgs", () => {
+  it("forwards dependency IDs and rewrites the external project alias", () => {
+    const args = buildExternalRegisterAddArgs(
+      "customer",
+      { path: "../target", project_id: "prj-target" },
+      { ...baseOptions, dependsOn: ["customer:PJR-AB12", "PJR-CD34"] },
+    );
+    const start = args.indexOf("--depends-on");
+    expect(args.slice(start, start + 4)).toEqual([
+      "--depends-on",
+      "prj-target:PJR-AB12",
+      "--depends-on",
+      "PJR-CD34",
+    ]);
+  });
+
   it("forwards add options and rewrites the selected alias in --from", () => {
     expect(
       buildExternalRegisterAddArgs(

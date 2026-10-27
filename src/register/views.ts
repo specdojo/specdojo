@@ -207,11 +207,12 @@ function markdownLink(label: string, fromDirectory: string, targetPath: string):
 function generateDerivedItemsFile(
   paths: RegisterPaths,
   items: readonly RegisterItemView[],
+  relationField: "derivedFrom" | "dependsOn" = "derivedFrom",
 ): string {
   const sourceDocs = new Map(
     items.flatMap((view) => (view.ticketPath ? [[view.id, view.ticketPath] as const] : [])),
   );
-  const rows = collectDerivedRegisterRelations(paths, items).map((relation) => {
+  const rows = collectDerivedRegisterRelations(paths, items, relationField).map((relation) => {
     const sourcePath = sourceDocs.get(relation.sourceId);
     const sourceCell = sourcePath
       ? markdownLink(relation.sourceId, paths.generatedPath, sourcePath)
@@ -233,11 +234,18 @@ function generateDerivedItemsFile(
   });
   const table = [
     "<!-- prettier-ignore -->",
-    "| 元の項目 | 派生先 | 分類 | ステータス | タイトル |",
+    relationField === "dependsOn"
+      ? "| 先行項目 | 後続項目 | 分類 | ステータス | タイトル |"
+      : "| 元の項目 | 派生先 | 分類 | ステータス | タイトル |",
     "| --- | --- | --- | --- | --- |",
     ...rows,
   ].join("\n");
-  const template = loadViewTemplate("pjr-derived-items-template.md", paths.projectId);
+  const template = loadViewTemplate(
+    relationField === "dependsOn"
+      ? "pjr-dependent-items-template.md"
+      : "pjr-derived-items-template.md",
+    paths.projectId,
+  );
   return injectViewSlots(template, { "derived-items": table });
 }
 
@@ -300,6 +308,10 @@ export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope
       {
         path: join(paths.generatedPath, "pjr-derived-items.md"),
         content: generateDerivedItemsFile(paths, itemViews),
+      },
+      {
+        path: join(paths.generatedPath, "pjr-dependent-items.md"),
+        content: generateDerivedItemsFile(paths, itemViews, "dependsOn"),
       },
     );
   }
