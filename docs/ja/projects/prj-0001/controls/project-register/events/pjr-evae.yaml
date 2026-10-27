@@ -118,3 +118,16 @@
       from: "parent validation failed: test-unit"
       to: "-"
   previous_event_id: reg_a12e5fbafeb241a5bfdc940e0feccecd
+- v: 1
+  id: reg_c8bfa6f6c25f4cf09b5185b55bc5d3f6
+  ts: "2026-10-27T13:48:45Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_38706f622ccb4dd99cd0204c8f5fba8f
