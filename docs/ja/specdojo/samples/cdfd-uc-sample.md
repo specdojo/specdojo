@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:cdfd-uc-sample
-  type: sample
+  type: flow
   status: draft
   rulebook: specdojo:cdfd-uc-rulebook
   based_on:

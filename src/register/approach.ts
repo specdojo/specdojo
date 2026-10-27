@@ -173,6 +173,15 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
     if (!indexedPath) {
       throw new Error(`Target document id is not resolvable via the document index: ${targetId}`);
     }
+    // sample は見本にする成果物の type を持つため、種類は ID の命名で判定する。
+    if (expectedKind === "sample") {
+      if (!targetId.endsWith("-sample")) {
+        throw new Error(
+          `Approach "${approach}" requires a sample document target with an id ending in -sample: ${targetId}`,
+        );
+      }
+      return;
+    }
     const actualKind = targetDocumentType(resolvedIndexPath(opts.repoRoot, indexedPath));
     if (actualKind !== expectedKind) {
       throw new Error(

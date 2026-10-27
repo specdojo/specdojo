@@ -20,7 +20,7 @@ properties:
             enum:
               # SpecDojo基盤文書（専用スキーマを持たないもの）
               - template # 文書テンプレート（雛形）
-              - sample # 記述例
+              - sample # 非推奨。sample は成果物の type を使い、ID の -sample で識別する。既存文書との互換性のため保持。
               # プロジェクト文書
               - project # プロジェクト文書全般
               # プロダクト仕様文書

@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:stsd-sample
-  type: sample
+  type: data
   status: draft
   rulebook: specdojo:stsd-rulebook
   based_on:

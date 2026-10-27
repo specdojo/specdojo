@@ -185,6 +185,71 @@ describe("validateRegisterApproachTargets", () => {
     ).not.toThrow();
   });
 
+  it.each([
+    ["specdojo", "project", "docs/ja/specdojo/samples", "md"],
+    ["specdojo", "sample", "docs/ja/specdojo/samples", "md"],
+    ["specdojo", "project", "docs/ja/specdojo/samples", "yaml"],
+    ["example-repo", "project", "docs/ja/kata/samples", "md"],
+    ["example-repo", "sample", "docs/ja/kata/samples", "md"],
+    ["example-repo", "project", "docs/ja/specdojo/samples/example-repo", "md"],
+  ])(
+    "sample-maintenance は %s の type: %s を持つ %s の %s sample を受け付ける",
+    (authority, type, directory, extension) => {
+      const id = `${authority}:example-sample`;
+      mkdirSync(join(root, directory), { recursive: true });
+      const metadata = `id: ${id}\ntype: ${type}\nstatus: draft\n`;
+      const content =
+        extension === "md"
+          ? `---\nspecdojo:\n${metadata.replace(/^(.+)$/gm, "  $1")}---\n\n# Sample\n`
+          : metadata;
+      writeFileSync(join(root, directory, `example-sample.${extension}`), content, "utf8");
+
+      expect(() =>
+        validateRegisterApproachTargets({
+          repoRoot: root,
+          projectId: "prj-test",
+          approach: "sample-maintenance",
+          targets: [id],
+        }),
+      ).not.toThrow();
+    },
+  );
+
+  it.each([
+    "deliverable-doc",
+    "specdojo:example-rulebook",
+    "specdojo:example-recipe",
+    "specdojo:example-template",
+    "specdojo:example-sample-copy",
+  ])("sample-maintenance は末尾が -sample でない %s を拒否する", (target) => {
+    // ファイル名・配置・type が sample でも、ID の末尾を満たさなければ拒否する。
+    mkdirSync(join(root, "docs/ja/specdojo/samples"), { recursive: true });
+    writeFileSync(
+      join(root, "docs/ja/specdojo/samples/example-sample.md"),
+      "---\nspecdojo:\n  id: specdojo:example-sample-copy\n  type: sample\n  status: draft\n---\n",
+      "utf8",
+    );
+    expect(() =>
+      validateRegisterApproachTargets({
+        repoRoot: root,
+        projectId: "prj-test",
+        approach: "sample-maintenance",
+        targets: [target],
+      }),
+    ).toThrow(/requires a sample document target with an id ending in -sample/);
+  });
+
+  it("sample-maintenance は -sample で終わっても索引で解決できない ID を拒否する", () => {
+    expect(() =>
+      validateRegisterApproachTargets({
+        repoRoot: root,
+        projectId: "prj-test",
+        approach: "sample-maintenance",
+        targets: ["specdojo:missing-sample"],
+      }),
+    ).toThrow(/not resolvable via the document index/);
+  });
+
   it("approach には解決可能な target を 1 件だけ要求する", () => {
     expect(() =>
       validateRegisterApproachTargets({
