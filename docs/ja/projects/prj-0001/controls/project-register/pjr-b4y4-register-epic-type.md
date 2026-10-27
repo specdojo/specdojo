@@ -7,10 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: high
   difficulty: hard
   registered_at: "2026-10-27T22:58:19Z"
+  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-NJJ7
 ---
@@ -42,15 +43,24 @@ schema・個票のテンプレート・register の各コマンドで epic を�
 
 | No  | 作業                                                  | 担当     | 状態 | メモ |
 | --- | ----------------------------------------------------- | -------- | ---- | ---- |
-| 1   | schema・テンプレート・記帳のコマンドに `epic` を追加  | executor | open | -    |
-| 2   | 実行の対象から外す判定を実装する                      | executor | open | -    |
-| 3   | epic ごとの子項目のビューを追加する                   | executor | open | -    |
-| 4   | rulebook・ガイド・command-reference・CHANGELOG を更新 | executor | open | -    |
-| 5   | 単体テストを追加し、検査を通す                        | executor | open | -    |
+| 1   | schema・テンプレート・記帳のコマンドに `epic` を追加  | executor | done | -    |
+| 2   | 実行の対象から外す判定を実装する                      | executor | done | -    |
+| 3   | epic ごとの子項目のビューを追加する                   | executor | done | -    |
+| 4   | rulebook・ガイド・command-reference・CHANGELOG を更新 | executor | done | -    |
+| 5   | 単体テストを追加し、検査を通す                        | executor | done | -    |
 
 ## 4. 対応結果
 
--
+- `epic` を個票・event の schema と register の分類に追加し、todo と同じ状態遷移・通常終端 `done`・例外終端 `rejected` / `deferred` を使用する。type の event は個票 schema の共通 enum を参照する。
+- track のフィールド名は `track` とした。timeline の既存キーと一致させ、実行対象文書の `targets` と区別できるため。epic で必須、他 type では指定不可とし、add・update・build で検証する。`--track` で設定・置換し、削除は認めない。`timeline_path`（既定 `timeline`）にある `tml-index.yaml` を既存の読み取り処理で検証し、定義済み track に限定する。timeline がなければ形式だけを検証して保持し、schedule を使わない子 todo の分解も可能にする。
+- 個票テンプレートは指定された六つの節を追加した。子項目の状態を本文へ重複保存せず、`--from` が記録する `derived_from` を再利用し、`generated/pjr-epic-items.md` に epic ごとの直接の子、type、現在の状態を表示する。既存の派生関係の収集を使って別 project の子も識別し、子がない epic も残す。孫の再帰集計・状態の自動集約・自動 close は行わず、人が子と schedule を材料に判断する。
+- `track` を個票の読み書き・update・topic 変更・追記イベント・統合時のイベント再適用・外部 project 起票への引き渡しに対応させた。close・reject・defer・reopen は既存の共通処理を使用する。
+- 実行対象の既存の許可リストを維持し、epic の直接実行は type と「実行対象外」を示すエラーで停止する。filter と夜間 queue も除外する。夜間の承認対象も既存どおり todo・issue に限定する。
+- pjr-rulebook、register-operation-guide、command-reference、状態遷移設計、一覧テンプレート、CHANGELOG の Unreleased を更新した。
+- schema・track の記帳と定義検証・終了と再開・イベント再適用・直接実行拒否・filter / 夜間 queue 除外・直接の子と状態の表示について単体テストを追加した。親検証 7 件（typecheck・lint-ts・lint-fm・lint-md・validate-schema・test-unit・test-integration）は executor で重複実行せず、runner の結果を正とする。
+- executor の検証: 変更ファイルの Prettier 整形、変更 Markdown の markdownlint、生成した epic 個票と event の `validate:schema:file`、`register build --project prj-0001`、hook と同じ catalog 検証が成功した。catalog 検証は未作成成果物に関する `based_on` の警告を出したが、終了コードは 0。親検証 7 件の判定は runner が追記する。
+- 統合後の確認は pm-orchestrator-playbook の runner・register・exec の変更時の手順に従い、オーケストレーターが PJR-JSEY の確認対象へ PJR-B4Y4 を加えて `claude-executor` で実行する。start から review までと event の actor を確認する。実 agent CLI の起動と使用枠を伴うため、executor sandbox では実施せず申し送る。
+- 保護された設定の変更案（未適用）: `.agents/specdojo-orchestrator.agent.md` の type 表へ `epic`（用途: track ごとの仕事の着手・完了を管理、通常終端: `done`）の行を加える。本文に「`--track` で track を指定し、具体的な作業は `--from <epic-id>` の子 todo に分解する。epic 自体を実行せず、夜間も飛ばし、子項目と schedule を材料に人が close を判断する」を加える。利用者の承認後に SSOT を編集し、`npm run orchestrator:sync` で配布用ラッパーを同期する。今回は agent 定義・ラッパーを編集していない。
 
 ## 5. 関連ドキュメント
 
