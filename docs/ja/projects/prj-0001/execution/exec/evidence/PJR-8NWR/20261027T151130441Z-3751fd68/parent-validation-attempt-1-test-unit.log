@@ -1,0 +1,135 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.7 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8NWR
+
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-27T15:17:57.388Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-27T15:16:57.641Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-27T15:16:57.851Z.
+fallback reporter complete
+Updated ticket status → ready: /tmp/specdojo-ticket-FOZWp5/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-mBd6U1/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-0FkyW5/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-4YRphP/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-5Qw2Hp/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-logYR5/pjr-0001-topic.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: ../product/document.md actor=actual-grader
+graded: ../api-checkout/document.md actor=actual-grader
+graded: ../web-checkout/document.md actor=actual-grader
+resumed complete: ../api-checkout/document.md
+graded: document.md actor=actual-grader
+resumed complete: ../web-checkout/document.md
+resumed complete: ../api-checkout/document.md
+resumed complete: document.md
+resumed complete: ../web-checkout/document.md
+before
+  
+  
+docs/selected.md
+Wrote agent stdout: /tmp/specdojo-agent-command-DnTneX/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-Wj88kX/outputs/partial.txt
+Would move 1 agent member(s) from /tmp/specdojo-members-AMgiPL/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-AMgiPL/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-AMgiPL/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-AMgiPL/.specdojo/agent-members.yaml
+ ❯ tests/src/grade/repo-results.test.ts (5 tests | 1 failed) 66ms
+     × uses repository names for sibling worktrees instead of the main checkout paths 8ms
+
+ Test Files  1 failed | 152 passed (153)
+      Tests  1 failed | 2590 passed (2591)
+   Start at  00:16:34
+   Duration  47.30s (transform 3.16s, setup 610ms, import 23.34s, tests 51.39s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+rate limit; retry-after: 60 seconds
+reporter failedrate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+problem
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/grade/repo-results.test.ts > grade results across repositories > uses repository names for sibling worktrees instead of the main checkout paths
+Error: Invalid .specdojo/specdojo.config.json (/tmp/specdojo-grade-repos-FXUTMw/project/.specdojo/specdojo.config.json):
+  - projects.test.repos[1].path "../web-checkout" does not exist (resolved to /tmp/specdojo-grade-repos-FXUTMw/web)
+ ❯ loadConfig src/shared/specdojo-config.ts:998:11
+    996|   const configErrors = [...repoErrors, ...externalProjectErrors];
+    997|   if (configErrors.length > 0) {
+    998|     throw new Error(
+       |           ^
+    999|       `Invalid .specdojo/specdojo.config.json (${configPath}):\n` +
+    1000|         configErrors.map((message) => `  - ${message}`).join("\n"),
+ ❯ gradeResultPathForDocument src/shared/grade-result.ts:114:22
+ ❯ tests/src/grade/repo-results.test.ts:206:9
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

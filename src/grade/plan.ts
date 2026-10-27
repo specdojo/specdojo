@@ -15,7 +15,7 @@ import {
   type GradeViewpointInput,
   type MarkdownDocument,
 } from "./core.js";
-import { gradeResultPath, readGradeResult, readGradeResultForDocument } from "./result.js";
+import { gradeResultPathForDocument, readGradeResult } from "./result.js";
 import {
   assertRubric,
   loadKataReferences,
@@ -228,9 +228,12 @@ function renderGradePlanWithEmbedding(opts: RenderGradePlanOptions): {
   const viewpoints = agentViewpoints(opts.viewpoints, opts.target, metadata);
   const documentId = typeof metadata.id === "string" ? metadata.id : rel;
   const priorFindings =
-    (opts.resultsDirectory
-      ? readGradeResult(gradeResultPath(opts.resultsDirectory, documentId))
-      : readGradeResultForDocument({ documentPath: rel, project: opts.projectId })
+    readGradeResult(
+      gradeResultPathForDocument({
+        documentPath: absolute,
+        project: opts.projectId,
+        resultsDirectory: opts.resultsDirectory,
+      }),
     )?.findings ?? [];
   const taskHash = createHash("sha256").update(rel).digest("hex").slice(0, 12).toUpperCase();
   const taskId = `GRADE-${opts.target.toUpperCase()}-${taskHash}`;

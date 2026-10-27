@@ -254,7 +254,7 @@ specdojo:
 
 ### 6.2. 継続品質評価（`grade`）
 
-Markdown 文書の最新の継続品質評価は、プロジェクトの `<execution_path>/grade/results/<doc-id>.yaml` にサイドカーとして記録します。成果物の Frontmatter と本文には grade や finding を書き込みません。サイドカーは最新状態のスナップショットであり、`specdojo grade apply` は文書 ID ごとの同じファイルを冪等に上書きします。履歴は Job Run と evidence、合意形成は review result が担います。成果物の現在品質を参照するときは、サイドカーの `content_hash` が現在のファイル全体と一致することを確認します。
+Markdown 文書の最新の継続品質評価は、プロジェクトの `<execution_path>/grade/results/` 配下にサイドカーとして記録します。本リポジトリの文書は `<doc-id>.yaml`、`project.repos` に宣言したリポジトリの文書は `<repo 名>/<doc-id>.yaml` に保存し、`<repo 名>` には `repos[].name`、ファイル名には文書 ID の `:` を `.` に置き換えた値を使います。成果物の Frontmatter と本文には grade や finding を書き込みません。サイドカーは最新状態のスナップショットであり、`specdojo grade apply` は同じリポジトリ・文書 ID のファイルを冪等に上書きします。履歴は Job Run と evidence、合意形成は review result が担います。成果物の現在品質を参照するときは、サイドカーの `content_hash` が現在のファイル全体と一致することを確認します。
 
 | 項目                | 意味                                                                                 |
 | ------------------- | ------------------------------------------------------------------------------------ |

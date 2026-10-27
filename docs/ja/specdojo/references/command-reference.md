@@ -759,6 +759,8 @@ specdojo exec trial adopt --project prj-0001 --comparison <comparison-id> --tria
 
 `grade` は kata（rulebook / recipe / sample / template）または成果物を、review と同じ共通 viewpoint・category rubric で継続評価します。agent に直接ファイル探索やスコア計算をさせず、plan 生成と反映を分離します。
 
+評価結果の正本は YAML サイドカーに保存します。本リポジトリの文書は `<execution_path>/grade/results/<文書 ID>.yaml`、`project.repos` に宣言したリポジトリの文書は `<execution_path>/grade/results/<repo 名>/<文書 ID>.yaml` です。ファイル名では ID の `:` を `.` に置き換え、`<repo 名>` には `repos[].name`（`--source <repo>:<path>` と同じ名前）を使います。同じ ID の文書が別のリポジトリにあっても、保存先と前回結果の読み込みを分離します。`grade plan`、`apply`、`run` の再開、結果表示・検証・翻訳、dashboard はこの配置を使います。本リポジトリの既存結果は従来の場所で読み取れます。旧配置の直下に保存されたプロダクトリポジトリの結果は自動では流用せず、再評価してリポジトリ別の結果を作成します。
+
 `grade run` は npm package から利用でき、`list` と同じ対象選択、文書ごとの plan 生成、agent 実行、marker の機械変換と `apply` を単段で実行します。成果物を `--target deliverable` で評価するには、対象 project に `catalog_path` を設定する必要があります。`viewpoints_path` 未設定時は同梱の `specdojo:pm-review-viewpoints` を使います。
 
 | コマンド                 | 用途                                                           |

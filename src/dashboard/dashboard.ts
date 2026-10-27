@@ -1,9 +1,9 @@
-import { mkdirSync, existsSync, readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { mkdirSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Command } from "commander";
 import type { ExecEventV1, StateSnapshot } from "../exec/types.js";
 import { toArtifactPath } from "../shared/artifact-path.js";
-import { readJson } from "../shared/fs.js";
+import { listFilesRecursive, readJson } from "../shared/fs.js";
 import { readAllEventFiles } from "../exec/events.js";
 import {
   getProjectExecutionPath,
@@ -554,11 +554,10 @@ function renderDailyRoutineSection(paths: DashboardPaths): string[] {
 
 export function readDashboardGradeResults(resultsPath: string): GradeResult[] {
   if (!existsSync(resultsPath)) return [];
-  return readdirSync(resultsPath)
-    .filter((name) => name.endsWith(".yaml") || name.endsWith(".yml"))
+  return listFilesRecursive(resultsPath)
+    .filter((path) => path.endsWith(".yaml") || path.endsWith(".yml"))
     .sort()
-    .flatMap((name) => {
-      const path = join(resultsPath, name);
+    .flatMap((path) => {
       try {
         return [parseGradeResult(readFileSync(path, "utf8"), path)];
       } catch {

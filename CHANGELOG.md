@@ -17,6 +17,7 @@ SpecDojo の利用者に影響する変更を記録します。
 - plan に展開する grade の finding の `anchor` と本文を、バッククォートを含む場合も壊れないインラインコードで囲むようにしました。引用元に Markdown リンクがあっても、生成した plan が `validate:history-links` に失敗しません（PJR-H988）。
 - `@specdojo/docs-site` の Mermaid 図に構文エラーがあっても、`dev` は対象文書とエラーを警告してほかの図とページの生成を続けるようにしました。`build` と `mermaid` は全図を処理し、失敗した図をまとめて報告してから失敗します。失敗した図の SVG を cache に残さず、修正後の変更検知で再生成します（PJR-N9JC）。
 - `register add` / `update` の `sample-maintenance` が成果物の `type` を持つ sample を拒否する問題を修正しました。索引で対象を解決し、`id` の末尾 `-sample` で判定します（PJR-XSM8）。
+- `project.repos` の文書の grade 結果を `results/<repo 名>/<文書 ID>.yaml` に分離し、別リポジトリの同じ ID による上書きと前回結果の誤参照を修正しました。plan・apply・run の再開・dashboard なども同じ配置を使い、本リポジトリの既存結果の保存先は維持します（PJR-8NWR）。
 
 ## [0.4.7] - 2026-10-26
 
