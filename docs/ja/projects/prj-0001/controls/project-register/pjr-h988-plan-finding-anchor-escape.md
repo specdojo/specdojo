@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-h988-plan-finding-anchor-escape
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-27T14:12:30Z"
+  completed_at: "2026-10-27T15:43:20Z"
+  conclusion: plan に書く finding の anchor と本文をインラインコードで書き出し、Markdown リンクを含んでも履歴リンクの検査を通るようにした
   derived_from:
     - PJR-EVAE
 ---
