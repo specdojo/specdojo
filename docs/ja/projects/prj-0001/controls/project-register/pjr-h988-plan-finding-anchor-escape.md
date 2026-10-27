@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: in-progress
+  item_status: waiting
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-27T14:12:30Z"
+  block_reason: "parent validation failed: lint-ts"
   derived_from:
     - PJR-EVAE
 ---
@@ -61,7 +62,15 @@ src/exec/plans-core.ts と src/exec/plans-storage.ts は finding の anchor を�
 
 ## 4. 対応結果
 
-_TODO_: 解決内容、確認結果、再発防止策を記載する。未解決の場合は `-` とする。
+- `src/exec/plans-grade-findings.ts` に finding の共通の書き出し処理を追加し、`plans-core.ts` と `plans-storage.ts` の両経路から利用するようにした。`anchor` は従来の JSON 表記を保ったままインラインコードで囲むため、引用符・バックスラッシュ・改行を含む元の文字列を引き続き読み取れる。
+- 本文にも同じ処理を適用した。リンクだけを個別に置換すると、参照形式のリンクや本文中のコードとの組み合わせを取りこぼすため、`gradeFindingDisplayMessage` が選んだ本文全体をインラインコードで囲む方式を採用した。本文の改行は空白へ置き換え、前後の空白を除去して、finding を箇条書きの 1 行に収める。
+- インラインコードの区切りは、値に含まれる最長の連続バッククォートより 1 文字長くした。本文の端がバッククォートの場合は、表示時に除去される空白を区切りの内側に置き、区切りとの結合を防ぐ。
+- 登録簿の経路では、判定情報に続く本文が短いと、箇条書き全体が Markdown の参照リンク定義として解釈される場合もあった。共通処理で判定情報の角括弧をエスケープし、表示を保ったままこの解釈を防いだ。
+- `tests/src/exec/plans-grade-findings.test.ts` に両経路の回帰テストを 22 件追加した。通常の文字列、Markdown リンク、参照形式のリンク、バッククォート、`|`、引用符、改行、日本語の表示本文を対象とする。生成直後と Prettier 整形後の双方で、履歴リンク検査と markdownlint を通り、Markdown の構文木から元の `anchor` の JSON 表記と本文を読み取れることを確認する。
+- 共通処理から問題のある引用を含む finding 9 件を通常・登録簿の両レイアウトに展開した一時 plan を生成し、生成直後と Prettier 整形後の双方で `npm run validate:history-links -- --data tmp/pjr-h988-findings-smoke.md` と markdownlint が通ることを確認した。一時ファイルは検証後に削除した。
+- `npm run validate:history-links` は既存履歴 2,742 ファイルで成功した。変更した Markdown の markdownlint、Prettier 整形、`npm run check:src-imports`、カタログ検査も成功した。カタログ検査は未作成文書に関する警告のみでエラーはない。登録簿一覧を書き換えずに生成を検査するため、`register build --project prj-0001 --dry-run` を実行し成功した。
+- 単体テスト・統合テスト・型検査・TypeScript lint・frontmatter lint・全体の Markdown lint・schema 検査は、pipeline の指定に従い親 runner で実行する。
+- `CHANGELOG.md` の未公開版の不具合修正に記載した。既存の plan / result、登録簿一覧、個票のステータスは変更していない。result は executor / reporter pipeline の reporter と runner が記入する。
 
 ## 5. 関連ドキュメント
 
