@@ -34,13 +34,10 @@ import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from "./types.js
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "../catalog/types.js";
 import type { ReviewViewpoint } from "../review/types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
-import {
-  gradeFindingDisplayMessage,
-  gradeResultPathForDocument,
-  readGradeResultForDocument,
-} from "../shared/grade-result.js";
+import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
 import { renderReviewGradeSummary, reviewGradeFreshness } from "../review/grade.js";
 import type { ReviewGradeOutcome, ReviewGradeTarget } from "../review/grade.js";
+import { planGradeFindingText } from "./plans-grade-findings.js";
 
 // Internal types
 // ---------------------------------------------------------------------------
@@ -287,10 +284,7 @@ export function gradeFindingsText(projectId: string, targetPath: string): string
     const result = readGradeResultForDocument({ documentPath: targetPath, project: projectId });
     if (!result || result.findings.length === 0) return "- なし";
     return result.findings
-      .map(
-        (finding) =>
-          `- ${finding.id} [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${gradeFindingDisplayMessage(finding)}`,
-      )
+      .map((finding) => `- ${finding.id} ${planGradeFindingText(finding)}`)
       .join("\n");
   } catch {
     return "- なし";

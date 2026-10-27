@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: easy
   owner: DEV
   registered_at: "2026-10-27T14:12:30Z"
-  block_reason: "parent validation failed: lint-ts"
   derived_from:
     - PJR-EVAE
 ---
@@ -70,6 +69,7 @@ src/exec/plans-core.ts と src/exec/plans-storage.ts は finding の anchor を�
 - 共通処理から問題のある引用を含む finding 9 件を通常・登録簿の両レイアウトに展開した一時 plan を生成し、生成直後と Prettier 整形後の双方で `npm run validate:history-links -- --data tmp/pjr-h988-findings-smoke.md` と markdownlint が通ることを確認した。一時ファイルは検証後に削除した。
 - `npm run validate:history-links` は既存履歴 2,742 ファイルで成功した。変更した Markdown の markdownlint、Prettier 整形、`npm run check:src-imports`、カタログ検査も成功した。カタログ検査は未作成文書に関する警告のみでエラーはない。登録簿一覧を書き換えずに生成を検査するため、`register build --project prj-0001 --dry-run` を実行し成功した。
 - 単体テスト・統合テスト・型検査・TypeScript lint・frontmatter lint・全体の Markdown lint・schema 検査は、pipeline の指定に従い親 runner で実行する。
+- 再開時に前回の親検証で検出された TypeScript lint エラーを修正した。回帰テストの `vi.importActual` の型引数を `typeof import("node:fs")` から既存の import を参照する `typeof fs` に変更し、`consistent-type-imports` に従う形にした。回帰テストの動作は変わらない。親検証は再開後の runner で再実行する。
 - `CHANGELOG.md` の未公開版の不具合修正に記載した。既存の plan / result、登録簿一覧、個票のステータスは変更していない。result は executor / reporter pipeline の reporter と runner が記入する。
 
 ## 5. 関連ドキュメント

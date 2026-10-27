@@ -4,12 +4,9 @@ import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { nowUtcIsoSeconds, randomHex, tsForFilenameUtc } from "./shared.js";
 import type { Approach, TaskMode, TaskOrigin } from "./types.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import {
-  gradeFindingDisplayMessage,
-  gradeResultPathForDocument,
-  readGradeResultForDocument,
-} from "../shared/grade-result.js";
+import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
 import { lookupDocIndex } from "../docs/doc-index.js";
+import { planGradeFindingText } from "./plans-grade-findings.js";
 
 export function archivePlan(
   opts: { executionPath: string; slug: string; delete?: boolean },
@@ -176,9 +173,7 @@ export function registerGradeFindingsText(projectId: string, ticketPath: string)
         );
         break;
       }
-      lines.push(
-        `  - [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${gradeFindingDisplayMessage(finding)}`,
-      );
+      lines.push(`  - ${planGradeFindingText(finding)}`);
       findingCount++;
     }
     docCount++;
