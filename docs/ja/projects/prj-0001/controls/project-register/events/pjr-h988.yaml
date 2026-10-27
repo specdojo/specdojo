@@ -38,3 +38,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-EVAE"]'
+- v: 1
+  id: reg_e77d3d7331bd402d9770828bef4e0470
+  ts: "2026-10-27T14:17:48Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_056708ad6dd24d7dbabc07619d9519a4
+- v: 1
+  id: reg_0770ac27744a4a508acc8f8162388034
+  ts: "2026-10-27T14:30:59Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts"
+  previous_event_id: reg_e77d3d7331bd402d9770828bef4e0470
