@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-10-27T15:43:08Z"
   conclusion: PJR-H988 と PJR-8NWR の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
 ---
 
