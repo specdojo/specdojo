@@ -79,8 +79,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-10-26 06:21 | PJR-K87Y | sol-executor           |
 | 2026-10-27 21:35 | PJR-XSM8 | sonnet-executor        |
 | 2026-10-28 00:31 | PJR-8NWR | sonnet-executor        |
+| 2026-10-28 08:36 | PJR-6RVJ | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最新の統合コミット `11e3ab587`（2026-10-28 00:29 JST）を持つ PJR-8NWR とした。実行した agent は、start の event に記録された actor `sonnet-executor` である。
+今回の確認対象は、対象一覧のうち最新の統合コミット `5f10e9cb8`（2026-10-28 08:33 JST）を持つ PJR-6RVJ とした。実行した agent は、start の event に記録された actor `sonnet-executor` である。
 
 申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
