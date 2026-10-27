@@ -6,6 +6,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- `@specdojo/docs-site` が生成するファイルを `.vitepress/` の下にまとめました。Mermaid の SVG と manifest は `.vitepress/mermaid/`、kata のステージングは `.vitepress/kata-staging/` に出力し、ビルド結果には SVG だけを含めます。利用者の `public/` は変更しません。package 同梱の文書は `/ja/specdojo/...` で公開し、eject 済みの文書は利用リポジトリ側を優先します。`config init` が生成する `.gitignore` に `/.vitepress/dist/`・`/.vitepress/cache/`・`/.vitepress/mermaid/`・`/.vitepress/kata-staging/` を追加しました。旧配置の `public/mermaid/` と `specdojo-kata-staging/` は自動では削除しないため、不要になったら削除してください（PJR-9ZN5）。
 - 技術領域別の TSD を作成する `specdojo:tsd-recipe` を追加し、`tsd-rulebook` から参照するようにしました。一冊・分冊の判断、採用値と未決事項の整理、段階的な動作確認、秘密情報の扱いを作業順に辿れます（PJR-05GN）。
 - `specdojo:tsd-sample` を新しい `tsd-rulebook` に合わせて見直しました。駄菓子屋きぬや販売管理システムのデータベース詳細定義（PostgreSQL / Prisma）を題材とし、対象環境・前提条件、採用設定、導入手順、動作確認、制約・トラブルシュートを満たす完成例に再構成しました（PJR-EVAE）。
 - `specdojo:tsd-index-sample` を新しい `tsd-index-rulebook` に合わせて見直しました。技術スタック一覧に版・正本と適用範囲の列を設け、開発・検証・文書化・運用の技術区分と必須・任意の区別を追加し、詳細 TSD サンプルへのリンクを整備しました（PJR-9SXH）。
