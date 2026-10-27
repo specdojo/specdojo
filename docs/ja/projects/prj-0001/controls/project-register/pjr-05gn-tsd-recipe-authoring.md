@@ -53,7 +53,7 @@ specdojo:
 
 [[specdojo:tsd-recipe|技術領域別 TSD 作成レシピ]] を `draft` で新規作成した。[[specdojo:recipe-authoring-standard|Recipe 記述標準]] の章構成に沿い、一冊・分冊の判断、採用値・推奨値・任意設定・未決事項の区別、段階的な動作確認、秘密情報の見分け方、継続利用と復旧を作業順に具体化した。[[specdojo:tsd-rulebook|TSD 作成ルール]] の変更は frontmatter の `recipe: specdojo:tsd-recipe` 追加だけとし、`CHANGELOG.md` の未公開の版へ変更を記載した。
 
-手本として [[prj-0001:tsd-ollama|Ollama 技術スタック定義]]、[[prj-0001:tsd-ollama-opencode|Ollama の opencode 接続定義]]、[[prj-0001:tsd-home-mac-dev-server-usage|ホーム Mac 開発サーバの日常運用]] を読み、共通する実行場所・設定反映・確認の流れと、初期構築・接続・日常利用の差を一般化した。固有の製品、モデル、OS、ポート、容量、並列数は必須条件にしていない。
+手本として [[tsd-ollama|Ollama 技術スタック定義]]、[[tsd-ollama-opencode|Ollama の opencode 接続定義]]、[[tsd-home-mac-dev-server-usage|ホーム Mac 開発サーバの日常運用]] を読み、共通する実行場所・設定反映・確認の流れと、初期構築・接続・日常利用の差を一般化した。固有の製品、モデル、OS、ポート、容量、並列数は必須条件にしていない。
 
 参照と手本についての申し送り:
 
