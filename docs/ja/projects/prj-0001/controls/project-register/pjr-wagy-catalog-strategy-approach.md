@@ -13,6 +13,8 @@ specdojo:
   registered_at: "2026-10-27T22:58:31Z"
   derived_from:
     - PJR-NJJ7
+  depends_on:
+    - PJR-B4Y4
 ---
 
 # PJR-WAGY カタログと strategy を作るための approach を追加する
