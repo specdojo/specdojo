@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_1dd3b407831349eab1811a9d9234db76
+  ts: "2026-10-27T14:13:10Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: TSD の kata の見直しの確認で検出したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: tsd-ollama-opencode のモデルのタグの食い違いを直す
+    - field: description
+      from: ""
+      to: tsd-ollama-opencode は設定例で gemma4:e4b-mlx-light-8k を登録する一方、接続確認の要求では gemma4:e4b-light-8k を使っている。対象環境での正しい登録名を確かめ、どちらかに揃える。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: low
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-05GN"]'
