@@ -1,0 +1,324 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.7 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8NWR
+
+ ❯ tests/src/grade/grade.test.ts (69 tests | 1 failed) 828ms
+     × excludes trashed deliverables for every selection mode and rejects explicit selection 11ms
+Updated ticket status → ready: /tmp/specdojo-ticket-x9NLIc/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-lILH5t/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-XU3CRI/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-6R0zLQ/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-1athFL/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-mqR9S4/pjr-0001-topic.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+before
+  
+  
+docs/selected.md
+ ❯ tests/src/grade/triggers.test.ts (20 tests | 12 failed) 95ms
+     × selects a deliverable whose dependency content differs from the recorded hash 7ms
+     × selects a deliverable whose result predates dependency hash tracking 6ms
+     × does not select a deliverable when only the dependency was re-graded 3ms
+       × does not select a deliverable whose content and sources are unchanged 6ms
+       × selects a graded deliverable whose result has no source hashes 3ms
+       × selects an unchanged deliverable when a member definition changes 5ms
+       × selects an unchanged deliverable when a dependency changes 5ms
+       × selects a deliverable only when its own catalog entry changes 5ms
+       × selects results graded with an older rubric or without a rubric record 3ms
+       × does not select documents without a stored grade 4ms
+     × should detect kata rulebook updated 3ms
+     × should detect unreviewed documents 7ms
+Would move 1 agent member(s) from /tmp/specdojo-members-nRvauB/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-nRvauB/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-nRvauB/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-nRvauB/.specdojo/agent-members.yaml
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: ../product/document.md actor=actual-grader
+graded: ../api-checkout/document.md actor=actual-grader
+graded: ../web-checkout/document.md actor=actual-grader
+resumed complete: ../api-checkout/document.md
+graded: document.md actor=actual-grader
+resumed complete: ../web-checkout/document.md
+resumed complete: ../api-checkout/document.md
+resumed complete: document.md
+resumed complete: ../web-checkout/document.md
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-27T14:43:09.220Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-27T14:42:09.484Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-27T14:42:09.698Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-1HlcZC/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-wmZmwx/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  2 failed | 151 passed (153)
+      Tests  13 failed | 2551 passed (2564)
+   Start at  23:41:34
+   Duration  50.08s (transform 3.38s, setup 612ms, import 22.44s, tests 56.65s, environment 8ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/grade/grade.test.ts > grade target filters > excludes trashed deliverables for every selection mode and rejects explicit selection
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ gradeResultPathForDocument src/shared/grade-result.ts:132:7
+ ❯ readGradeResultForDocument src/shared/grade-result.ts:187:26
+ ❯ src/grade/target-discovery.ts:151:20
+ ❯ discoverGradeTargets src/grade/target-discovery.ts:141:17
+ ❯ tests/src/grade/grade.test.ts:224:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > selects a deliverable whose dependency content differs from the recorded hash
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ writeDeliverableResult tests/src/grade/triggers.test.ts:99:23
+ ❯ tests/src/grade/triggers.test.ts:129:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > selects a deliverable whose result predates dependency hash tracking
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ writeDeliverableResult tests/src/grade/triggers.test.ts:99:23
+ ❯ tests/src/grade/triggers.test.ts:140:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > does not select a deliverable when only the dependency was re-graded
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ writeDeliverableResult tests/src/grade/triggers.test.ts:99:23
+ ❯ tests/src/grade/triggers.test.ts:151:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > changed-only with comparison sources > does not select a deliverable whose content and sources are unchanged
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ writeDeliverableResult tests/src/grade/triggers.test.ts:99:23
+ ❯ recordGradeWithCurrentSources tests/src/grade/triggers.test.ts:200:7
+ ❯ tests/src/grade/triggers.test.ts:228:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > changed-only with comparison sources > selects a graded deliverable whose result has no source hashes
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ writeDeliverableResult tests/src/grade/triggers.test.ts:99:23
+ ❯ tests/src/grade/triggers.test.ts:234:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > changed-only with comparison sources > selects an unchanged deliverable when a member definition changes
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ writeDeliverableResult tests/src/grade/triggers.test.ts:99:23
+ ❯ recordGradeWithCurrentSources tests/src/grade/triggers.test.ts:200:7
+ ❯ tests/src/grade/triggers.test.ts:240:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > changed-only with comparison sources > selects an unchanged deliverable when a dependency changes
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ writeDeliverableResult tests/src/grade/triggers.test.ts:99:23
+ ❯ recordGradeWithCurrentSources tests/src/grade/triggers.test.ts:200:7
+ ❯ tests/src/grade/triggers.test.ts:248:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > changed-only with comparison sources > selects a deliverable only when its own catalog entry changes
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ writeDeliverableResult tests/src/grade/triggers.test.ts:99:23
+ ❯ recordGradeWithCurrentSources tests/src/grade/triggers.test.ts:200:7
+ ❯ tests/src/grade/triggers.test.ts:257:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > rubric-outdated > selects results graded with an older rubric or without a rubric record
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ writeDeliverableResult tests/src/grade/triggers.test.ts:99:23
+ ❯ tests/src/grade/triggers.test.ts:310:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > rubric-outdated > does not select documents without a stored grade
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ writeDeliverableResult tests/src/grade/triggers.test.ts:99:23
+ ❯ tests/src/grade/triggers.test.ts:319:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > should detect kata rulebook updated
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ tests/src/grade/triggers.test.ts:363:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/13]⎯
+
+ FAIL  tests/src/grade/triggers.test.ts > grade triggers > should detect unreviewed documents
+Error: grade commands require .specdojo/specdojo.config.json
+ ❯ resolveGradeResultsDirectory src/shared/grade-result.ts:84:22
+     82| ): string {
+     83|   const { config } = loadConfig(rootDir);
+     84|   if (!config) throw new Error("grade commands require .specdojo/specd…
+       |                      ^
+     85|   const projectId =
+     86|     projectOption?.trim() || config.current_project || Object.keys(con…
+ ❯ gradeResultPathForDocument src/shared/grade-result.ts:132:7
+ ❯ readGradeResultForDocument src/shared/grade-result.ts:187:26
+ ❯ src/grade/target-discovery.ts:151:20
+ ❯ discoverGradeTargets src/grade/target-discovery.ts:141:17
+ ❯ tests/src/grade/triggers.test.ts:417:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/13]⎯
+

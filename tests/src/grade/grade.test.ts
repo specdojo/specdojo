@@ -182,6 +182,21 @@ describe("grade target filters", () => {
     const trashedPath = join(directory, "docs/ja/product/trash/retired.md");
     mkdirSync(catalogRoot, { recursive: true });
     mkdirSync(join(directory, "docs/ja/product/trash"), { recursive: true });
+    mkdirSync(join(directory, ".specdojo"), { recursive: true });
+    writeFileSync(
+      join(directory, ".specdojo/specdojo.config.json"),
+      JSON.stringify({
+        version: 1,
+        current_project: "prj-0001",
+        projects: {
+          "prj-0001": {
+            base_path: "docs/ja/projects/prj-0001",
+            catalog_path: "010-deliverables-catalog",
+            execution_path: "execution",
+          },
+        },
+      }),
+    );
     writeFileSync(currentPath, markdown, "utf8");
     writeFileSync(trashedPath, markdown, "utf8");
     writeFileSync(

@@ -30,7 +30,7 @@ import {
 import { applicableDoneCriteria, deterministicResults, gradePlanFilename } from "./plan.js";
 import {
   gradeContentHash,
-  gradeResultPath,
+  gradeResultPathForDocument,
   markdownDocumentId,
   readGradeResult,
   writeGradeResult,
@@ -749,7 +749,11 @@ export function applyGradeSubmission(opts: {
     }
     if (opts.resultsDirectory) {
       const documentId = markdownDocumentId(current, rel);
-      const resultPath = gradeResultPath(opts.resultsDirectory, documentId);
+      const resultPath = gradeResultPathForDocument({
+        documentPath: absolute,
+        project: opts.project,
+        resultsDirectory: opts.resultsDirectory,
+      });
       const previous = readGradeResult(resultPath);
       const document = parseMarkdown(current, rel);
       const agentResults = preserveStoredFindingSeverities(previous, input.viewpoints);

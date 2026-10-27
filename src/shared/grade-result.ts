@@ -1,8 +1,13 @@
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
+import { isAbsolute, join, relative, resolve, sep } from "node:path";
 import { load } from "./yaml.js";
-import { getProjectExecutionPath, loadConfig, specdojoRootDir } from "./specdojo-config.js";
+import {
+  getProjectExecutionPath,
+  loadConfig,
+  resolveRepoRoot,
+  specdojoRootDir,
+} from "./specdojo-config.js";
 
 export type StoredGradeTarget = "kata" | "deliverable";
 export type StoredGradeSeverity = "blocker" | "major" | "minor" | "note";
@@ -75,7 +80,7 @@ export function resolveGradeResultsDirectory(
   projectOption?: string,
   rootDir = specdojoRootDir(),
 ): string {
-  const { config } = loadConfig();
+  const { config } = loadConfig(rootDir);
   if (!config) throw new Error("grade commands require .specdojo/specdojo.config.json");
   const projectId =
     projectOption?.trim() || config.current_project || Object.keys(config.projects)[0] || "";
@@ -101,12 +106,32 @@ export function gradeResultPathForDocument(opts: {
   documentPath: string;
   project?: string;
   rootDir?: string;
+  resultsDirectory?: string;
 }): string {
   const rootDir = opts.rootDir ?? specdojoRootDir();
   const absolute = resolve(rootDir, opts.documentPath);
   const content = readFileSync(absolute, "utf8");
+  const { config } = loadConfig(rootDir);
+  const projectId =
+    opts.project?.trim() || config?.current_project || Object.keys(config?.projects ?? {})[0];
+  const project = projectId ? config?.projects[projectId] : undefined;
+  const documentRealPath = realpathSync(absolute);
+  // 宣言済み repo の実体で判定し、相対・絶対パスや worktree の配置によらず同じ場所を使う。
+  const repo = (project?.repos ?? [])
+    .map((entry) => {
+      const root = resolveRepoRoot(rootDir, entry);
+      return { name: entry.name, root: existsSync(root) ? realpathSync(root) : root };
+    })
+    .sort((a, b) => b.root.length - a.root.length)
+    .find(({ root }) => {
+      const rel = relative(root, documentRealPath);
+      return rel !== ".." && !rel.startsWith(`..${sep}`) && !isAbsolute(rel);
+    });
+  const resultsDirectory = opts.resultsDirectory
+    ? resolve(rootDir, opts.resultsDirectory)
+    : resolveGradeResultsDirectory(opts.project, rootDir);
   return gradeResultPath(
-    resolveGradeResultsDirectory(opts.project, rootDir),
+    repo ? join(resultsDirectory, repo.name) : resultsDirectory,
     markdownDocumentId(content, opts.documentPath),
   );
 }

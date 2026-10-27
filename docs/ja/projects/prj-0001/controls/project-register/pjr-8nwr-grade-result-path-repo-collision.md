@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-27T13:26:19Z"
-  block_reason: "parent validation failed: test-unit"
 ---
 
 # PJR-8NWR grade の結果ファイルが別リポジトリの同じ ID の文書で重なる
@@ -79,11 +78,12 @@ grade の結果は results/`<文書 ID>.yaml` に保存され、ID はプロダ�
 - `tests/src/grade/run.test.ts` に、同じ ID の 3 文書のうち 1 件が中断しても、再開時は完了済み結果を保持し、失敗した文書だけを再実行するテストを追加した。
 - [[specdojo:command-reference|コマンドリファレンス]] に保存先・互換性・旧配置のプロダクト結果の扱いを記載し、[[specdojo:document-metadata-standard|ドキュメントメタデータ標準]] のサイドカー配置も揃えた。`CHANGELOG.md` の未公開版の不具合修正へ PJR-8NWR を追記した。
 - 前回の親検証で報告された dashboard の未使用 import を削除した。`grade.test.ts` と `triggers.test.ts` の一時ディレクトリに正規の `.specdojo/specdojo.config.json` を置き、指定した root の設定を読む実装にテストを合わせた。`triggers.test.ts` の旧設定 YAML を JSON に置き換え、実際の設定形式に揃えた。
+- 再開後の親検証で失敗した兄弟 worktree のテストは、`api` のパス解決時に `web` が未作成だった。設定の読み込みでは宣言した全リポジトリの存在を検証するため、両方の worktree と文書を作成してから保存先を検証する順序に修正した。
 
 ### 4.2. 確認結果と申し送り
 
 - 型検査・TypeScript lint・単体テスト・結合テスト・frontmatter lint・Markdown lint・スキーマの全体検証は、pipeline の親 runner が executor 終了後に実施する。追加した回帰テストも親の単体テストの対象であり、executor 内では重複実行しない。
-- 変更した Markdown・TypeScript 全 13 ファイルの Prettier 整形と `git diff --check` は成功した。hook と同じ `node --import tsx tools/catalog-validate-if-configured.mjs` も終了コード 0 で成功した。未作成成果物の `based_on` の検証対象が見つからない警告が出るが、検証エラーはない。全体の lint・単体テストの再検証結果は親 runner が追記する。
+- 変更した Markdown・TypeScript 全 13 ファイルの Prettier 整形と `git diff --check` は成功した。hook と同じ `node --import tsx tools/catalog-validate-if-configured.mjs` と `node --import tsx src/specdojo.ts register build` も終了コード 0 で成功した。カタログ検証では未作成成果物の `based_on` の検証対象が見つからない警告が出るが、検証エラーはない。登録簿の生成物はコミット対象外である。全体の lint・単体テストの再検証結果は親 runner が追記する。
 - 再開時点から存在した runner 管理のイベント YAML の差分についても、`npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-8nwr.yaml` で検証し、成功した。イベントファイル自体は executor では編集していない。
 - 旧配置の直下にあるプロダクトリポジトリの結果は、別文書との取り違えを防ぐため自動では流用しない。既存のプロダクト結果がある利用環境では、新しい run ID で再評価してリポジトリ別の結果を作成する。本リポジトリの既存結果は移動せず引き続き読める。
 - 登録簿の行と個票の状態項目は変更していない。親検証の成否を確認してから、runner と人間が後続の状態遷移を行う。

@@ -22,7 +22,7 @@ import { discoverGradeTargets } from "./target-discovery.js";
 import { applicableDoneCriteria, deterministicResults } from "./plan.js";
 import {
   gradeContentHash,
-  gradeResultPath,
+  gradeResultPathForDocument,
   markdownDocumentId,
   readGradeResultForDocument,
   resolveGradeResultsDirectory,
@@ -342,7 +342,12 @@ export function migrateInlineGrades(opts: {
       findings,
       ...(isRecord(legacyGrade.done_criteria) ? { done_criteria: legacyGrade.done_criteria } : {}),
     };
-    const resultPath = gradeResultPath(resultsDirectory, documentId);
+    const resultPath = gradeResultPathForDocument({
+      documentPath: absolute,
+      project: opts.project,
+      rootDir,
+      resultsDirectory,
+    });
     if (writeGradeResult(resultPath, result, opts.dryRun)) {
       changed.push(repoRelativePath(resultPath));
     }
