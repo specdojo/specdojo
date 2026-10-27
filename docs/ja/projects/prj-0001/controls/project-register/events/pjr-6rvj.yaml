@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_f6dbaec01b9f42a2882ccf5dd0ded4f3
+  ts: "2026-10-27T23:00:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-NJJ7 のフォローアップの順番を記録するため、利用者の提案に基づき起票する
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register の項目に順番の依存（depends\_on）を追加する
+    - field: description
+      from: ""
+      to: 個票の frontmatter に depends\_on を足し、先行の項目が終端でなければ exec run --register・routine の sweep・夜間の queue で実行を飛ばす。存在しない ID・自己参照・循環を検証し、一覧と逆引きのビューに出す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-NJJ7"]'
