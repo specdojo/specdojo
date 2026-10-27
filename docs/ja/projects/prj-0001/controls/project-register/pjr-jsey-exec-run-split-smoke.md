@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: done
+  item_status: open
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
-  completed_at: "2026-10-25T21:29:36Z"
   conclusion: P14M・6WQY・K87Y統合後のexec run --registerがstartからreviewまで進み、親検証7件と統合が通った。
 ---
 

@@ -2238,3 +2238,19 @@
       from: "XTE6 の統合後に exec run --register が review まで通り、executor の報告に completion_status: complete が入った"
       to: P14M・6WQY・K87Y統合後のexec run --registerがstartからreviewまで進み、親検証7件と統合が通った。
   previous_event_id: reg_22649382abc04cd48e200b5888bcecab
+- v: 1
+  id: reg_844872ab5e544ecaa1480b3a22f8b05d
+  ts: "2026-10-27T12:29:20Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-XSM8 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-26"
+      to: "-"
+  previous_event_id: reg_15fa80218ffc4784a785eecb460041d9
