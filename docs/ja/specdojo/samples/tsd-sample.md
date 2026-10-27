@@ -85,7 +85,7 @@ graph LR
 
   Tablet -->|HTTPS / 443| App
   App --> PrismaClient
-  PrismaClient -->|TCP / SSL (Port 5432)| PG
+  PrismaClient -->|"TCP / SSL (Port 5432)"| PG
   PG --- Volume
 ```
 
