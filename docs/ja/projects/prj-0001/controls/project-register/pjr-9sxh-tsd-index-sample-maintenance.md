@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-9sxh-tsd-index-sample-maintenance
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   owner: ARC
   registered_at: "2026-10-27T12:39:20Z"
+  completed_at: "2026-10-27T13:09:45Z"
+  conclusion: tsd-index-sample を新しい tsd-index-rulebook に合わせ、tsd-sample の題材を PostgreSQL の詳細定義に決めた
   approach: sample-maintenance
   targets:
     - specdojo:tsd-index-sample
