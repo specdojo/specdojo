@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_468f8f2897cc4d8eba08b371845d58fe
+  ts: "2026-10-27T11:26:51Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: TSD の rulebook の見直しに続き、recipe を整備するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: tsd-recipe を作る
+    - field: description
+      from: ""
+      to: 見直した tsd-rulebook に沿って、技術領域ごとの TSD を書く手順を recipe にする。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: recipe-authoring
+    - field: targets
+      from: ""
+      to: '["specdojo:tsd-recipe"]'
+    - field: sources
+      from: ""
+      to: '["docs/ja/product/030-architecture/020-infrastructure/tsd-ollama.md","docs/ja/product/030-architecture/020-infrastructure/tsd-ollama-opencode.md","docs/ja/product/030-architecture/020-infrastructure/tsd-home-mac-dev-server-usage.md"]'
