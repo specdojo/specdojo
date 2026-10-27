@@ -1,0 +1,39 @@
+
+> specdojo@0.4.7 build
+> node -e "require('node:fs').rmSync('dist', { recursive: true, force: true })" && tsc -p tsconfig.build.json && node -e "require('node:fs').chmodSync('dist/specdojo.js', 0o755)"
+
+run_id=JBR-grade-kata-acc00784e321 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-acc00784e321
+stage=1 executor=agy-expert-executor reporter=machine reference=none
+translation_by=gemma26-translator
+document start: docs/ja/specdojo/recipes/tsd-recipe.md
+document complete: docs/ja/specdojo/recipes/tsd-recipe.md
+document start: docs/ja/specdojo/rulebooks/tsd-index-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/tsd-index-rulebook.md
+document start: docs/ja/specdojo/rulebooks/tsd-rulebook.md
+document complete: docs/ja/specdojo/rulebooks/tsd-rulebook.md
+document start: docs/ja/specdojo/samples/cdfd-sample.md
+document complete: docs/ja/specdojo/samples/cdfd-sample.md
+document start: docs/ja/specdojo/samples/cdfd-uc-sample.md
+document complete: docs/ja/specdojo/samples/cdfd-uc-sample.md
+document start: docs/ja/specdojo/samples/cstd-sample.md
+document complete: docs/ja/specdojo/samples/cstd-sample.md
+document start: docs/ja/specdojo/samples/prj-stakeholder-register-sample.md
+document complete: docs/ja/specdojo/samples/prj-stakeholder-register-sample.md
+document start: docs/ja/specdojo/samples/stsd-sample.md
+document complete: docs/ja/specdojo/samples/stsd-sample.md
+document start: docs/ja/specdojo/samples/tsd-index-sample.md
+document complete: docs/ja/specdojo/samples/tsd-index-sample.md
+document start: docs/ja/specdojo/samples/tsd-sample.md
+document complete: docs/ja/specdojo/samples/tsd-sample.md
+grade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-acc00784e321/results.tsv
+recorded_at	document	stage	status	duration_seconds	verdict	score	findings	executor	reporter	reference	consecutive_failures	max_failures
+2026-10-27T20:03:22Z	docs/ja/specdojo/recipes/tsd-recipe.md	1	passed	128	pass	100	0	agy-expert-executor	machine	none		
+2026-10-27T20:05:16Z	docs/ja/specdojo/rulebooks/tsd-index-rulebook.md	1	passed	112	pass	100	0	agy-expert-executor	machine	none		
+2026-10-27T20:07:41Z	docs/ja/specdojo/rulebooks/tsd-rulebook.md	1	passed	143	pass	100	1	agy-expert-executor	machine	none		
+2026-10-27T20:11:46Z	docs/ja/specdojo/samples/cdfd-sample.md	1	passed	243	pass	95	3	agy-expert-executor	machine	none		
+2026-10-27T20:13:56Z	docs/ja/specdojo/samples/cdfd-uc-sample.md	1	passed	128	pass	94	3	agy-expert-executor	machine	none		
+2026-10-27T20:17:34Z	docs/ja/specdojo/samples/cstd-sample.md	1	passed	217	pass	100	0	agy-expert-executor	machine	none		
+2026-10-27T20:20:32Z	docs/ja/specdojo/samples/prj-stakeholder-register-sample.md	1	passed	176	needs-work	76	13	agy-expert-executor	machine	none		
+2026-10-27T20:22:33Z	docs/ja/specdojo/samples/stsd-sample.md	1	passed	119	pass	95	2	agy-expert-executor	machine	none		
+2026-10-27T20:24:01Z	docs/ja/specdojo/samples/tsd-index-sample.md	1	passed	86	pass	100	0	agy-expert-executor	machine	none		
+2026-10-27T20:26:17Z	docs/ja/specdojo/samples/tsd-sample.md	1	passed	134	pass	100	0	agy-expert-executor	machine	none		
