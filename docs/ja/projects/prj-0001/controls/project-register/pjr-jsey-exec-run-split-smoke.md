@@ -77,12 +77,13 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-10-25 08:55 | PJR-84F7 | sonnet-executor        |
 | 2026-10-25 10:57 | PJR-XTE6 | sonnet-executor        |
 | 2026-10-26 06:21 | PJR-K87Y | sol-executor           |
+| 2026-10-27 21:35 | PJR-XSM8 | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最新の統合コミット `1d6e58f4b`（2026-10-26 06:17 JST）を持つ PJR-K87Y とした。同個票の `item_status` は `review` である。今回の実行の `pipeline-state.json` に記録された executor の actor は `sol-executor` である。
+今回の確認対象は、対象一覧のうち最新の統合コミット `2b53f391f`（2026-10-27 21:27 JST）を持つ PJR-XSM8 とした。実行した agent は、start の event に記録された actor `sonnet-executor` である。
 
-申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。統合後は今回の result・event・統合コミットを照合し、実体 actor が記録されていることを確認する。
+申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
-### 統合後の確認（2026-10-26）
+### 前回の統合後の確認（2026-10-26）
 
 - `PJR-JSEY` の start と review の event は、どちらも実体 actor `sol-executor` を記録した。結果文書は `complete`、親の検証 7 件はすべて `passed` で、統合 commit `c1244c193` まで完了した。
 - executor が変更した本文は本個票だけだった。runner が生成した plan・result・evidence と状態イベントを確認した。
