@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/tsd-index-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: pass
-score: 99
-graded_at: "2026-10-09T21:23:41.906Z"
-graded_by: agy-expert-executor
-content_hash: 0993745f5b8329f24a08b0ba3058c1d53c74b1b654efe38e9929ff952d51dcd8
+score: 100
+graded_at: "2026-10-27T20:05:14.213Z"
+graded_by: flash-high-executor
+content_hash: 1997573912cf2227a3363e4090f41ef229aad85b0778b56e0a6a5f93a2760bf2
 categories:
   purpose:
     score: 100
@@ -21,7 +21,7 @@ categories:
   architecture:
     score: 100
   usability:
-    score: 92
+    score: 100
   implementation:
     score: 100
   quality:
@@ -60,8 +60,8 @@ viewpoints:
     level: 4
     score: 100
   vp-arc-conciseness:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-dev-implementation-readiness:
     level: 4
     score: 100
@@ -101,16 +101,6 @@ viewpoints:
 finding_counts:
   blocker: 0
   major: 0
-  minor: 1
+  minor: 0
   note: 0
-findings:
-  - id: F001
-    severity: minor
-    rule: vp-arc-conciseness
-    line: 17
-    anchor: "`tsd-index` と `tsd-<term>` の関係："
-    message: >-
-      The principles in Section 1 heavily overlap with the prohibitions in Section 7, and the division of
-      responsibilities with 'tsd-＜term＞' is repeatedly stated throughout the document; please consolidate these points
-      to improve conciseness.
-    message_ja: セクション 1 の原則はセクション 7 の禁止事項と大きく重複しており、'tsd-＜term＞' との責任分担が文書全体を通して繰り返し述べられています。簡潔さを向上させるために、これらの点を統合してください。
+findings: []
