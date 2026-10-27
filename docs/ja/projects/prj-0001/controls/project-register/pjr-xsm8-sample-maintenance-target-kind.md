@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-xsm8-sample-maintenance-target-kind
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-27T11:31:27Z"
+  completed_at: "2026-10-27T12:38:41Z"
+  conclusion: sample-maintenance の判定を ID の末尾 -sample に改め、sample の type は見本にする成果物の type とする原則を document-metadata-standard を正本に定めた
   derived_from:
     - PJR-05GN
 ---

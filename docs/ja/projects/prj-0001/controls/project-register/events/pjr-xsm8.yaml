@@ -64,3 +64,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_109b4ed730104ce68753457e03c82df0
+- v: 1
+  id: reg_3a0916ea59794a16a0c437a87649587d
+  ts: "2026-10-27T12:38:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・dry-run・docs:build・JSEY を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-27"
+    - field: conclusion
+      from: "-"
+      to: sample-maintenance の判定を ID の末尾 -sample に改め、sample の type は見本にする成果物の type とする原則を document-metadata-standard を正本に定めた
+  previous_event_id: reg_b975cdcdefda46d69b0df16fa64c5e09
