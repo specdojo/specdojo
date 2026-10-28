@@ -134,6 +134,8 @@ npx specdojo register close --project <project-id> --id <PJR-XXXX> \
 
 `epic` は `--track <track>` で担う track を指定して起票し、具体的な作業は `--from <epic-id>` を付けた子 todo に分解する。epic 自体は `exec run --register` で実行せず、夜間の実行でも飛ばされる。子項目の状態は `register build` が生成する epic ごとのビューで確かめ、子項目と schedule を材料に人が close を判断する。
 
+順番のある項目は `--depends-on <PJR-XXXX>`（繰り返し指定できる）で先に終わっているべき項目を記録する。起票の由来を表す `--from`（`derived_from`）とは別の意味で、どちらかで他方を兼ねない。先行の項目がすべて `done` / `decided` になるまで、`exec run --register` は止まり、夜間の実行では飛ばされる。状態は自動では `waiting` にならない。外すときは `--depends-on -` を指定する。後続の項目は一覧の `depends_on` 列と `generated/pjr-dependent-items.md` で確かめる。
+
 `note` は終端させず、`open` のまま新しい事実・知見を追記する。close / reject / defer の対象にしない。対応や判断が必要になった場合は、目的に合う別の type で起票し、note は参照元として残す（`pjr-rulebook` の type 別の扱い）。
 
 ## 実践の型（kata）の扱い
