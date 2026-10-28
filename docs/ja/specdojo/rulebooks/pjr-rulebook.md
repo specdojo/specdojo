@@ -21,7 +21,7 @@ Project Register Documentation Rules
 
 ## 1. 全体方針
 
-- TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘の全登録項目は、それぞれ 1 件の個票を持つ。
+- epic、TODO、要確認事項、リスク、課題、変更要求、決定事項、備忘の全登録項目は、それぞれ 1 件の個票を持つ。
 - 個票 Frontmatter の現在値は、分類、処理状態、優先度、担当、日付、結論、起票元の唯一の正本である。
 - `events/pjr-XXXX.yaml` は、起票・状態遷移・更新を追う監査履歴の正本である。現在値の再計算には使わず、個票の現在値との整合を検証する。
 - 個票の H1 と本文は、それぞれタイトルと説明・根拠・経緯・対応内容の正本である。
@@ -55,30 +55,33 @@ Project Register Documentation Rules
 
 個票には `register-item-frontmatter.schema.yaml` が定義する次の項目を置く。未定の担当、期限、完了日時、結論は表用のプレースホルダを保存せず、該当キーを省略する（期限なしだけは `due_on: null`）。
 
-| 項目              | 説明                                             | 必須 |
-| ----------------- | ------------------------------------------------ | ---- |
-| `id`              | `<project-id>:pjr-XXXX-<topic>`                  | ○    |
-| `type`            | `project`                                        | ○    |
-| `status`          | 文書成熟度。`draft` / `ready` / `deprecated`     | ○    |
-| `rulebook`        | `specdojo:pjr-rulebook`                          | ○    |
-| `part_of`         | `<project-id>:pjr-index` を要素に持つ配列        | ○    |
-| `item_type`       | 登録項目の分類                                   | ○    |
-| `item_status`     | 登録項目の処理状態                               | ○    |
-| `priority`        | 対応優先度                                       | ○    |
-| `difficulty`      | agent 振り分け用の作業難易度                     | 任意 |
-| `owner`           | 主担当者または役割                               | 任意 |
-| `registered_at`   | 起票日時                                         | 任意 |
-| `due_on`          | 対応期限または判断期限                           | 任意 |
-| `completed_at`    | 完了・却下・決定日時                             | 条件 |
-| `block_reason`    | `waiting` へ遷移した直近の理由                   | 任意 |
-| `conclusion`      | 終端時の結論要約                                 | 任意 |
-| `derived_from`    | 起票の元になった登録項目 ID の配列               | 任意 |
-| `depends_on`      | 実行前に完了しているべき先行の登録項目 ID の配列 | 任意 |
-| `approach`        | 対象を作成・修正するときの進め方                 | 任意 |
-| `target_path`     | カタログなしで作成する成果物のリポジトリ相対パス | 任意 |
-| `target_rulebook` | 対象成果物の rulebook ID                         | 任意 |
-| `targets`         | 変更対象文書の doc id リスト                     | 任意 |
+| 項目              | 説明                                             | 必須        |
+| ----------------- | ------------------------------------------------ | ----------- |
+| `id`              | `<project-id>:pjr-XXXX-<topic>`                  | ○           |
+| `type`            | `project`                                        | ○           |
+| `status`          | 文書成熟度。`draft` / `ready` / `deprecated`     | ○           |
+| `rulebook`        | `specdojo:pjr-rulebook`                          | ○           |
+| `part_of`         | `<project-id>:pjr-index` を要素に持つ配列        | ○           |
+| `item_type`       | 登録項目の分類                                   | ○           |
+| `track`           | epic が担う track。ほかの type では指定しない    | epic で必須 |
+| `item_status`     | 登録項目の処理状態                               | ○           |
+| `priority`        | 対応優先度                                       | ○           |
+| `difficulty`      | agent 振り分け用の作業難易度                     | 任意        |
+| `owner`           | 主担当者または役割                               | 任意        |
+| `registered_at`   | 起票日時                                         | 任意        |
+| `due_on`          | 対応期限または判断期限                           | 任意        |
+| `completed_at`    | 完了・却下・決定日時                             | 条件        |
+| `block_reason`    | `waiting` へ遷移した直近の理由                   | 任意        |
+| `conclusion`      | 終端時の結論要約                                 | 任意        |
+| `derived_from`    | 起票の元になった登録項目 ID の配列               | 任意        |
+| `depends_on`      | 実行前に完了しているべき先行の登録項目 ID の配列 | 任意        |
+| `approach`        | 対象を作成・修正するときの進め方                 | 任意        |
+| `target_path`     | カタログなしで作成する成果物のリポジトリ相対パス | 任意        |
+| `target_rulebook` | 対象成果物の rulebook ID                         | 任意        |
+| `targets`         | 変更対象文書の doc id リスト                     | 任意        |
 
+- `epic` は track ごとの大きな仕事を表し、自身は実行しない。`track` は英小文字・数字・ハイフンの識別子とし、先頭は英小文字または数字にする。`tml-index.yaml` がある場合、定義済みの track を指定する。ない場合も識別子を保持できる。
+- `register add --type epic --track <track>` で起票し、`register update --track <track>` で変更する。epic の `track` は削除できない。変更はイベントに残す。
 - `status` は文書成熟度、`item_status` は処理状態であり、同じ状態軸として扱わない。
 - `item_type`、`item_status`、`priority`、`difficulty` の値は schema の enum だけを使用する。`difficulty` は `hard` / `medium` / `easy` のいずれかとし、省略時は従来の agent 自動選択を使う。
 - `block_reason` は `waiting` 中の直近の待機・失敗理由、`conclusion` は終端時の結論として用途を分ける。`register wait --reason` は前者だけを更新し、`waiting` 以外へ遷移すると現在値から削除する。削除前の理由は項目別イベントログの変更前の値に残す。
@@ -113,6 +116,8 @@ Project Register Documentation Rules
 | 末尾 | 関連ドキュメント | ○    | 根拠、影響先、追跡先を文書 ID で示す   |
 
 - H1 は `PJR-XXXX <タイトル>` 形式とする。
+- `epic` は概要、範囲（track と domain）、完了の判断の基準、子項目、対応結果、関連ドキュメントを持つ。範囲には domain と境界、完了の基準には子項目と schedule を確認する判断条件、対応結果には人が完了を判断した根拠を記録する。
+- 子 todo は `--from <epic-id>` で起票する。`derived_from` を逆引きした epic 別ビューは直接の子を type と状態付きで表示し、子がない epic も表示する。別 project の子は project 修飾 ID で識別する。孫を再帰的に含めず、状態の自動集約や自動 close は行わない。
 - type 固有の構成は `todo` の概要・完了条件・作業内容・対応結果など、各 type 用テンプレートに従う。
 - ID、分類、処理状態、優先度、担当、期限、完了日時は本文へ重複記載せず、Frontmatter を参照する。
 - 終端前に未確定の結果・結論がある場合は、`-` または共通ラベルを用い、確定済みの記述と混在させない。
@@ -126,6 +131,7 @@ Project Register Documentation Rules
 | `generated/pjr-views-by-priority.md` | 優先度別の補助一覧                   | 不可     |
 | `generated/pjr-views-by-owner.md`    | 担当者別の補助一覧                   | 不可     |
 | `generated/pjr-derived-items.md`     | 元項目と派生先の一覧                 | 不可     |
+| `generated/pjr-epic-items.md`        | epic ごとの直接の子項目と状態        | 不可     |
 | `generated/pjr-dependent-items.md`   | 先行項目から後続項目を逆引きする一覧 | 不可     |
 | `controls/generated/pm-*.md`         | type 別の管理ビュー                  | 不可     |
 
@@ -171,6 +177,7 @@ Project Register Documentation Rules
 
 | `item_type`      | 通常終端  | 遷移条件                                                               | `conclusion` に残す内容      |
 | ---------------- | --------- | ---------------------------------------------------------------------- | ---------------------------- |
+| `epic`           | `done`    | 子項目と schedule を材料に、track の完了基準を満たすと人が判断した     | 判断の根拠と残課題           |
 | `todo`           | `done`    | 個票に記載した完了条件をすべて満たした                                 | 実施内容と完了を確認した根拠 |
 | `question`       | `decided` | 問いへの回答を確認し、後続作業の要否を判断できる                       | 確定した回答                 |
 | `decision`       | `decided` | 選択肢、採択理由、影響を記録し、必要な承認を得た                       | 決定内容                     |
@@ -180,7 +187,8 @@ Project Register Documentation Rules
 | `change-request` | `done`    | 採択した変更を対象へ反映し、必要な確認を終えた                         | 反映内容と確認結果           |
 
 - `question` / `decision` の通常終端に `done` を使わず、回答・決定が確定したことを示す `decided` を使う。
-- `todo` / `risk` / `issue` / `change-request` の通常終端に `decided` を使わず、対応または追跡が完了したことを示す `done` を使う。
+- `epic` / `todo` / `risk` / `issue` / `change-request` の通常終端に `decided` を使わず、対応または追跡が完了したことを示す `done` を使う。
+- `epic` は todo と同じ処理状態と例外終端（`rejected` / `deferred`）を使用する。`exec run --register` の実行対象にはせず、filter と夜間 queue も飛ばす。具体的な作業は子 todo で実行する。
 - `note` の `open` は未対応を意味しない。内容を継続して更新できる、生きている記録であることを示す。
 - `note` から対応・回答・判断が必要になった場合は、`todo` / `question` / `decision` など目的に合う別項目を起票し、note 自体は `open` のまま参照元として保持する。
 - `note` の内容が陳腐化または置換された場合は、その事実と参照先を本文へ追記する。`done` / `decided` / `rejected` / `deferred` へ遷移させて閉じない。

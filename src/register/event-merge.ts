@@ -161,6 +161,8 @@ function fieldUpdateFromChange(change: RegisterEventChange): RegisterItemFieldUp
   switch (change.field) {
     case "type":
       return isUnset ? undefined : { item_type: value };
+    case "track":
+      return { track: isUnset ? REMOVE_REGISTER_ITEM_FIELD : value };
     case "priority":
       return isUnset ? undefined : { priority: value };
     case "difficulty":

@@ -6,6 +6,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- register に track ごとの仕事を管理する `epic` type と個票テンプレートを追加しました。`add` / `update --track` で担当 track を記録・検証し、`--from` でつないだ子項目と状態を epic 別ビューに表示します。epic 自体は `exec run --register`・filter・夜間 queue の実行対象から外し、完了は子項目と schedule を材料に人が判断します（PJR-B4Y4）。
+
 - 登録項目の実行順序を `depends_on` と `register add` / `update --depends-on` で指定できるようにしました。参照先・自己参照・循環を検証し、先行項目が `done` / `decided` になるまで直接実行を停止、sweep・夜間 queue を理由付きでスキップします。一覧の依存列と後続項目の逆引きビューも追加しました（PJR-6RVJ）。
 
 ### 変更

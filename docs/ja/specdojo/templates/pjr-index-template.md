@@ -42,6 +42,7 @@ Project Register
 - [[pjr-views-by-owner|台帳ビュー（担当者別）]]
 - [[pjr-derived-items|登録項目の派生関係]]
 - [[_PROJECT_ID_:pjr-dependent-items|登録項目の実行依存]]
+- [[_PROJECT_ID_:pjr-epic-items|epic ごとの子項目]]
 
 ### 2.2. controls 全体の派生管理ビュー
 

@@ -475,6 +475,7 @@ specdojo schedule strategy generate \
 
 | オプション                   | 用途                                                                | 対象                                             |
 | ---------------------------- | ------------------------------------------------------------------- | ------------------------------------------------ |
+| `--track <track>`            | epic が担う track（epic で必須、update で置換、削除不可）           | `add` / `update`                                 |
 | `--to <PJR-ID>`              | 移動先の PJR-ID を指定する                                          | `renumber`                                       |
 | `--registered <datetime>`    | 起票日時（タイムゾーン付き RFC 3339）。省略時は実行時刻             | `add`                                            |
 | `--completed <datetime>`     | 完了・却下日時（タイムゾーン付き RFC 3339）。省略時は実行時刻       | `close` / `reject`                               |
@@ -515,6 +516,8 @@ specdojo schedule strategy generate \
 - `finalize`・`bootstrap-finalize` は未作成の成果物を拒否します。個票の完了条件をチェック表にし、前者は成果物、後者は成果物と frontmatter から辿った kata 一式を確定対象にします。
 - カタログなしの plan は、カタログの `done_criteria` がないことを明示し、個票の完了条件と rulebook を使います。`retrofit` の実装調査入力は個票にパスを明記します。
 - カタログ設定済みで対象が未登録の場合、パスと rulebook を両方明示した場合だけカタログなしと同じ解決を使います。未指定なら従来のエラーで停止します。カタログにある対象ではカタログの宣言を優先します。
+
+`register add --type epic --track <track>` は track ごとの仕事を起票します。type は `epic` / `todo` / `question` / `risk` / `issue` / `change-request` / `decision` / `note` です。epic は todo と同じ状態を使い、通常終端は `done`、例外終端は `rejected` / `deferred` です。track は Frontmatter の `track` に保存し、`update --track` で置換します。英小文字・数字・ハイフン（先頭は英小文字か数字）の識別子が必須で、削除やほかの type への指定は拒否します。project の `timeline_path`（既定 `timeline`）に `tml-index.yaml` があるときは、add・update・build で track の定義を検証します。子 todo は `register add --type todo --from <epic-id>` で関連付けます。`register build` は `generated/pjr-epic-items.md` に epic ごとの直接の子項目と状態を表示し、別 project の子を project 修飾 ID で識別します。子のない epic も表示し、孫の再帰表示や epic の自動 close は行いません。完了は子項目と schedule を材料に人が判断します。
 
 `item_type: note` は `open` のまま更新する記録です。`register close` / `register reject` / `register defer` は終了コード 1 で拒否し、対応・回答・判断が必要な場合は `todo` / `question` / `decision` など目的に合う別の `item_type` で起票するよう案内します。本文の追記や修正には `register update` を使用できます。
 
@@ -700,7 +703,7 @@ specdojo exec run --project prj-0001 --register PJR-0012 --worktree --resume --r
 specdojo exec run --project prj-0001 --job job-weekly-report --input period=2026-W32
 ```
 
-`--register` は指定した個票の項目を実行します。`--register-filter` は `--register-types` / `--register-priorities` / `--register-statuses` のカンマ区切り条件と、正の整数の `--register-limit` で項目を選びます。条件省略時は open かつ実行可能な type が対象です。いずれも実行対象になる type は `todo` / `issue` / `change-request` / `question` / `risk` で、`decision` / `note` は対象外です。実行場所の既定は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選び、未設定時は互換性のため in-place です。`--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。worktree モードは成果物の変更を隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--post-review` または `run.register_post_review: true` を指定すると、merge back の後に完了判定を行い、todo / issue を自動 close できます。`--parallel <n>` は worktree モードでのみ指定できます。
+`--register` は指定した個票の項目を実行します。`--register-filter` は `--register-types` / `--register-priorities` / `--register-statuses` のカンマ区切り条件と、正の整数の `--register-limit` で項目を選びます。条件省略時は open かつ実行可能な type が対象です。いずれも実行対象になる type は `todo` / `issue` / `change-request` / `question` / `risk` で、`epic` / `decision` / `note` は対象外です。実行場所の既定は `.specdojo/exec-defaults.yaml` の `run.register_execution`（`worktree` / `in-place`）で選び、未設定時は互換性のため in-place です。`--worktree` / `--in-place` は設定を上書きし、同時指定はエラーになります。worktree モードは成果物の変更を隔離し、状態遷移（`start` / `review` / `waiting`）を直列化したうえで、成功時に merge back します。`--post-review` または `run.register_post_review: true` を指定すると、merge back の後に完了判定を行い、todo / issue を自動 close できます。`--parallel <n>` は worktree モードでのみ指定できます。
 
 `--integration-branch <repo>=<branch>` は、register の worktree モードで、その run に限ってプロダクトリポジトリ `<repo>` の統合先を上書きします。複数リポジトリにはオプションを繰り返します。`<repo>` は `repos[].name` に宣言済みで、`<branch>` はそのリポジトリに存在する有効なローカルブランチでなければならず、リモートブランチの取得やローカルブランチの作成は行いません。同じ `<repo>` の重複、宣言にないリポジトリ、空の値は register の状態を変える前に拒否します。統合先の優先順位は「run の指定 → `repos[].integration_branch` → そのリポジトリの現在のブランチ」です。指定しない run の挙動は従来と変わりません。
 

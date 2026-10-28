@@ -1,0 +1,97 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "epic 対応を確認し、前回の失敗原因だったタイトル未展開と共通 schema の track 未対応を修正しました。sandbox 内の検証は成功し、親検証7件の再実行は runner に委ねます。",
+  "handoff": [
+    "設計判断: フィールド名は既存 timeline と一致する `track` とし、epic で必須、他 type では指定不可とした。`tml-index.yaml` がある場合は定義済み track を検証し、ない場合は識別子の形式だけ検証する。schedule を使わない子 todo の分解も可能にするためである。",
+    "設計判断: 子項目は `--from` が保存する `derived_from` を逆引きし、epic ごとの直接の子・type・状態を表示する。別 project の子も識別し、子のない epic も表示する。孫の再帰集計や自動 close は行わず、人が子項目と schedule を材料に完了を判断する。",
+    "再開時の修正: テンプレートのタイトルを `_EPIC_TITLE_` に修正し、生成した H1 と読み取ったタイトルの単体テストを補強した。共通成果物 schema にも `track` を許可し、個票 schema の `$defs/Track` を共有して形式の不一致を防いだ。単体テストを含む親検証7件は runner が再実行する。",
+    "保護された設定の変更案（未適用）: `.agents/specdojo-orchestrator.agent.md` の type 表に epic（track ごとの仕事の着手・完了を管理、通常終端 done）を追加する。本文には `--track`、`--from <epic-id>` による子 todo への分解、epic の直接実行・夜間実行からの除外、人による close 判断を記載する。利用者の承認後に SSOT を編集し、`npm run orchestrator:sync` でラッパーを同期する。",
+    "統合後は pm-orchestrator-playbook に従い、オーケストレーターが PJR-JSEY の確認対象へ PJR-B4Y4 を追加し、`claude-executor` で start から review までと event の actor を確認する。実 agent CLI と使用枠を伴うため sandbox 外で実施する。"
+  ],
+  "validations": [
+    {
+      "command": "xargs -0 npx prettier --write < tmp/pjr-b4y4-format-files",
+      "status": "passed",
+      "summary": "累積変更の成果物・ソース・テスト30ファイルを整形。"
+    },
+    {
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-b4y4-register-epic-type.md",
+      "status": "passed",
+      "summary": "検証結果を追記した個票の整形を確認。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml --data tmp/pjr-b4y4-fixtures/frontmatter.yaml",
+      "status": "passed",
+      "summary": "生成した epic 個票の frontmatter が適合。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml --data tmp/pjr-b4y4-fixtures/frontmatter.yaml",
+      "status": "passed",
+      "summary": "同じ生成個票が共通成果物 schema にも適合。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data tmp/pjr-b4y4-fixtures/events.yaml",
+      "status": "passed",
+      "summary": "epic の type・track を含む生成 event が適合。"
+    },
+    {
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint tmp/pjr-b4y4-fixtures/pjr-ab12-business.md tmp/pjr-b4y4-fixtures/generated/pjr-epic-items.md",
+      "status": "passed",
+      "summary": "生成した epic 個票と子項目ビューに違反なし。一時ファイルは削除済み。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿と epic 別ビューを含む派生ビューの生成に成功。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。未作成文書の `based_on` に関する警告あり。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor",
+      "status": "requires_human",
+      "summary": "統合後に確認対象を追記・再開して実施する。実 agent CLI の起動と使用枠が必要。"
+    }
+  ],
+  "target_coverage": [
+    {"target":"CHANGELOG.md","status":"changed","path":"CHANGELOG.md"},
+    {"target":"docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md","status":"changed","path":"docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md"},
+    {"target":"docs/ja/projects/prj-0001/controls/project-register/pjr-b4y4-register-epic-type.md","status":"changed","path":"docs/ja/projects/prj-0001/controls/project-register/pjr-b4y4-register-epic-type.md"},
+    {"target":"docs/ja/specdojo/guides/register-operation-guide.md","status":"changed","path":"docs/ja/specdojo/guides/register-operation-guide.md"},
+    {"target":"docs/ja/specdojo/references/command-reference.md","status":"changed","path":"docs/ja/specdojo/references/command-reference.md"},
+    {"target":"docs/ja/specdojo/rulebooks/pjr-rulebook.md","status":"changed","path":"docs/ja/specdojo/rulebooks/pjr-rulebook.md"},
+    {"target":"docs/ja/specdojo/templates/pjr-index-template.md","status":"changed","path":"docs/ja/specdojo/templates/pjr-index-template.md"},
+    {"target":"docs/specdojo/schemas/v1/register-events.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/register-events.schema.yaml"},
+    {"target":"docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml"},
+    {"target":"src/exec/register.ts","status":"changed","path":"src/exec/register.ts"},
+    {"target":"src/register/command-types.ts","status":"changed","path":"src/register/command-types.ts"},
+    {"target":"src/register/core.ts","status":"changed","path":"src/register/core.ts"},
+    {"target":"src/register/create-commands.ts","status":"changed","path":"src/register/create-commands.ts"},
+    {"target":"src/register/event-merge.ts","status":"changed","path":"src/register/event-merge.ts"},
+    {"target":"src/register/events.ts","status":"changed","path":"src/register/events.ts"},
+    {"target":"src/register/external-project.ts","status":"changed","path":"src/register/external-project.ts"},
+    {"target":"src/register/item.ts","status":"changed","path":"src/register/item.ts"},
+    {"target":"src/register/maintenance-commands.ts","status":"changed","path":"src/register/maintenance-commands.ts"},
+    {"target":"src/register/views.ts","status":"changed","path":"src/register/views.ts"},
+    {"target":"tests/src/commands/night-orchestrator.test.ts","status":"changed","path":"tests/src/commands/night-orchestrator.test.ts"},
+    {"target":"tests/src/exec/register.test.ts","status":"changed","path":"tests/src/exec/register.test.ts"},
+    {"target":"tests/src/register/commands.test.ts","status":"changed","path":"tests/src/register/commands.test.ts"},
+    {"target":"tests/src/register/event-merge.test.ts","status":"changed","path":"tests/src/register/event-merge.test.ts"},
+    {"target":"tests/src/register/external-project.test.ts","status":"changed","path":"tests/src/register/external-project.test.ts"},
+    {"target":"tests/src/register/register.test.ts","status":"changed","path":"tests/src/register/register.test.ts"},
+    {"target":"docs/ja/specdojo/templates/pjr-epic-items-template.md","status":"changed","path":"docs/ja/specdojo/templates/pjr-epic-items-template.md"},
+    {"target":"docs/ja/specdojo/templates/pjr-epic-template.md","status":"changed","path":"docs/ja/specdojo/templates/pjr-epic-template.md"},
+    {"target":"src/register/epic.ts","status":"changed","path":"src/register/epic.ts"},
+    {"target":"tests/src/register/epic.test.ts","status":"changed","path":"tests/src/register/epic.test.ts"},
+    {"target":"docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml","status":"changed","path":"docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml"}
+  ]
+}
+</specdojo_executor_evidence>

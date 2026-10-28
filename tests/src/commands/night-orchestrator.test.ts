@@ -34,6 +34,7 @@ describe("night orchestrator", () => {
         item("PJR-AB13"),
         item("PJR-AB14", { autopilot: "approved", type: "decision" }),
         item("PJR-AB15", { autopilot: "approved", status: "waiting" }),
+        item("PJR-AB17", { autopilot: "approved", type: "epic", track: "business" }),
         item("PJR-AB16", { autopilot: "approved", type: "issue" }),
       ],
       10,

@@ -14,6 +14,7 @@ export const MINIMUM_EXTERNAL_SOURCE_VERSION = "0.4.5";
 export type ExternalRegisterAddOptions = {
   project?: string;
   type: string;
+  track?: string;
   title: string;
   description: string;
   priority: string;
@@ -85,6 +86,7 @@ export function buildExternalRegisterAddArgs(
     "--conclusion",
     opts.conclusion,
   ];
+  addValue(args, "--track", opts.track);
   addValue(args, "--difficulty", opts.difficulty);
   addValue(args, "--registered", opts.registered);
   addValue(args, "--approach", opts.approach);

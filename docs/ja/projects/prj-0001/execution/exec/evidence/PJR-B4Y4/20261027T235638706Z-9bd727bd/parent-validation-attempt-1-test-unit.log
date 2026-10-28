@@ -1,0 +1,144 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.7 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B4Y4
+
+ ❯ tests/src/register/epic.test.ts (10 tests | 1 failed) 424ms
+     × track を読み書きし、type / track のイベントが schema に適合する 18ms
+Updated ticket status → ready: /tmp/specdojo-ticket-6kC9Na/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-poCPt8/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Du6rpw/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-aoB4e0/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-2CIpfn/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-jF2bCY/pjr-0001-topic.md
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-28T00:04:00.419Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-28T00:03:00.813Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-28T00:03:01.076Z.
+fallback reporter complete
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+before
+  
+  
+docs/selected.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: ../product/document.md actor=actual-grader
+graded: ../api-checkout/document.md actor=actual-grader
+graded: ../web-checkout/document.md actor=actual-grader
+resumed complete: ../api-checkout/document.md
+graded: document.md actor=actual-grader
+resumed complete: ../web-checkout/document.md
+resumed complete: ../api-checkout/document.md
+resumed complete: document.md
+resumed complete: ../web-checkout/document.md
+Wrote agent stdout: /tmp/specdojo-agent-command-BeQG1G/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-xbLp3Z/outputs/partial.txt
+Would move 1 agent member(s) from /tmp/specdojo-members-kNXpzV/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-kNXpzV/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-kNXpzV/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-kNXpzV/.specdojo/agent-members.yaml
+
+ Test Files  1 failed | 154 passed (155)
+      Tests  1 failed | 2640 passed (2641)
+   Start at  09:02:38
+   Duration  50.54s (transform 3.53s, setup 676ms, import 25.50s, tests 53.71s, environment 9ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+reporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+problem
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/register/epic.test.ts > epic > track を読み書きし、type / track のイベントが schema に適合する
+AssertionError: expected { id: 'PJR-AB12', …(12) } to match object { type: 'epic', …(2) }
+(10 matching properties omitted from actual)
+
+- Expected
++ Received
+
+  {
+-   "title": "業務 | 整備",
++   "title": "業務 \\| 整備",
+    "track": "business",
+    "type": "epic",
+  }
+
+ ❯ tests/src/register/epic.test.ts:45:25
+     43|     const content = ticket();
+     44|     const parsed = readRegisterItemContent(content, filename)!;
+     45|     expect(parsed.item).toMatchObject({
+       |                         ^
+     46|       type: "epic",
+     47|       track: "business",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

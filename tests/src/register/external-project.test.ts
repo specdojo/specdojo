@@ -37,6 +37,16 @@ const baseOptions: ExternalRegisterAddOptions = {
 };
 
 describe("buildExternalRegisterAddArgs", () => {
+  it("forwards an epic's track to the target CLI", () => {
+    const args = buildExternalRegisterAddArgs(
+      "customer",
+      { path: "../target", project_id: "prj-target" },
+      { ...baseOptions, type: "epic", track: "business" },
+    );
+    const start = args.indexOf("--track");
+    expect(args.slice(start, start + 2)).toEqual(["--track", "business"]);
+  });
+
   it("forwards dependency IDs and rewrites the external project alias", () => {
     const args = buildExternalRegisterAddArgs(
       "customer",

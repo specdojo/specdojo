@@ -23,6 +23,7 @@ export type RegisterItemView = {
 
 export type RegisterAddFields = {
   type: string;
+  track?: string;
   title: string;
   description: string;
   priority: string;
