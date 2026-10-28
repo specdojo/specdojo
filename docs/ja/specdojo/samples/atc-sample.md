@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:atc-sample
-  type: project
+  type: test
   status: draft
   rulebook: specdojo:atc-rulebook
   relations:

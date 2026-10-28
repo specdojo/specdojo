@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:bes-index-rulebook
   type: rulebook
+  deliverable_type: requirement
   status: draft
   target_format: markdown
   recipe: undecided
@@ -43,13 +44,13 @@ Business Event Specification Index (BES Index) Documentation Rules
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目         | 説明                               | 必須 |
-| ------------ | ---------------------------------- | ---- |
-| `id`         | ドキュメントID（例: `bes-index`）  | ○    |
-| `type`       | `project` を推奨（メタ仕様に従う） | ○    |
-| `status`     | `draft` / `ready` / `deprecated`   | ○    |
-| `rulebook`   | `specdojo:bes-index-rulebook`      | 任意 |
-| `supersedes` | 置き換え関係（古仕様→新仕様）      | 任意 |
+| 項目         | 説明                              | 必須 |
+| ------------ | --------------------------------- | ---- |
+| `id`         | ドキュメントID（例: `bes-index`） | ○    |
+| `type`       | `requirement` 固定                | ○    |
+| `status`     | `draft` / `ready` / `deprecated`  | ○    |
+| `rulebook`   | `specdojo:bes-index-rulebook`     | 任意 |
+| `supersedes` | 置き換え関係（古仕様→新仕様）     | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 

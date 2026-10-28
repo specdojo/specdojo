@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:imp-test-rulebook
   type: rulebook
+  deliverable_type: project
   status: draft
   recipe: undecided
   sample: specdojo:imp-test-sample

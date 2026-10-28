@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:ifd-sample
-  type: project
+  type: architecture
   status: draft
   rulebook: specdojo:ifd-mermaid-rulebook
 ---

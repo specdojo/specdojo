@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:ntp-sample
-  type: project
+  type: test
   status: draft
   rulebook: specdojo:ntp-rulebook
 ---

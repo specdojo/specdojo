@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:bds-sample
-  type: project
+  type: ui
   status: draft
   rulebook: specdojo:bds-rulebook
 ---

@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:otp-index-rulebook
   type: rulebook
+  deliverable_type: operations
   status: draft
   recipe: undecided
   sample: specdojo:otp-index-sample
@@ -40,7 +41,7 @@ Operations Transition Plan Documentation Rules
 
 | id | `otp-index` | ○ |
 
-| type | `migration` 固定 | ○ |
+| type | `operations` 固定 | ○ |
 | title | `運用切替計画: 全体` | ○ |
 
 | status | `draft` / `ready` / `deprecated` | ○ |

@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:cld-rulebook
   type: rulebook
+  deliverable_type: data
   status: draft
   recipe: undecided
   sample: specdojo:cld-sample
@@ -50,7 +51,7 @@ specdojo:
 | ---- | ------------------------------ | ---- |
 | id   | 分類一覧ID（例：cll-xxx-xxxx） | ○    |
 
-| type | `domain` 固定 | ○ |
+| type | `data` 固定 | ○ |
 | title | 分類一覧名 | ○ |
 | status | `draft` / `ready` / `deprecated` | ○ |
 | supersedes | 置き換え関係（旧仕様→新仕様） | 任意 |

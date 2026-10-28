@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:sysd-rulebook
   type: rulebook
+  deliverable_type: architecture
   status: draft
   target_format: markdown
   template: not-needed

@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:dct-index-rulebook
   type: rulebook
+  deliverable_type: project
   status: draft
   target_format: yaml
   recipe: not-needed

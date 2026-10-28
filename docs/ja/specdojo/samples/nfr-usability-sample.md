@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:nfr-usability-sample
-  type: project
+  type: requirement
   status: draft
   rulebook: specdojo:nfr-usability-rulebook
 ---

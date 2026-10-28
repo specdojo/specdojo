@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:cxd-rulebook
   type: rulebook
+  deliverable_type: architecture
   status: draft
   recipe: undecided
   sample: specdojo:cxd-sample

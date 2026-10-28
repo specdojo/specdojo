@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:pjr-rulebook
   type: rulebook
+  deliverable_type: project
   status: ready
   target_format: markdown
   recipe: not-needed

@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:sysd-critical-flows-sample
-  type: project
+  type: architecture
   status: draft
   rulebook: specdojo:sysd-critical-flows-rulebook
 ---

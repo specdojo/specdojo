@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:cdsd-rulebook
   type: rulebook
+  deliverable_type: data
   status: draft
   recipe: undecided
   sample: specdojo:cdsd-sample
@@ -24,7 +25,7 @@ Conceptual Data Stores Definition (CDSD) Documentation Rules
 | 項目 | 説明                                   | 必須 |
 | ---- | -------------------------------------- | ---- |
 | id   | 概念データストア一覧ID (cdsl-xxx-xxxx) | ○    |
-| type | `domain` 固定                          | ○    |
+| type | `data` 固定                            | ○    |
 
 | title | 概念データストア一覧名 | ○ |
 | status | `draft`/`ready`/`deprecated` | ○ |
@@ -33,7 +34,7 @@ Conceptual Data Stores Definition (CDSD) Documentation Rules
 ### 1.1 ID規約
 
 - 概念データストア一覧IDは正規表現 `^cdsl-[a-z0-9-]+$` に合致する一意IDを用いる。
-- `type: data` は業務ドメイン仕様であることを示す。画面やAPI仕様（`screen`/`api`）とは別ドキュメントで管理する。
+- `type: data` は業務ドメイン仕様であることを示す。画面やAPI仕様（`ui`/`api`）とは別ドキュメントで管理する。
 
 ## 2. 記述ルール
 

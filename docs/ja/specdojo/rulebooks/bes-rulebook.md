@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:bes-rulebook
   type: rulebook
+  deliverable_type: requirement
   status: draft
   recipe: undecided
   sample: specdojo:bes-sample
@@ -56,7 +57,7 @@ Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` �
 | ---- | --------------------------------- | ---- |
 | id   | BES ID（例: `bes-sale-checkout`） | ○    |
 
-| type | `domain` 固定 | ○ |
+| type | `requirement` 固定 | ○ |
 | title | 業務イベント名（例: 業務イベント: 会計確定（販売）） | ○ |
 | status | `draft`/`ready`/`deprecated` | ○ |
 | based_on | 根拠となる仕様ID（BEL/UIS/BPS 等） | 任意 |
@@ -65,7 +66,7 @@ Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` �
 ### 3.1 ID規約
 
 - BES ID は `bes-...` の形式を推奨します（例: `bes-sale-checkout`）。
-- `type: data` は業務ドメイン仕様であることを示します。
+- `type: requirement` は機能・業務イベントの要件であることを示します。
 
 ## 4. 本文テンプレ（最小）
 
@@ -97,7 +98,7 @@ BES の責務は次に **限定** し、各項目を見出しとしてこの順�
 ---
 
 id: bes-sale-checkout
-type: data
+type: requirement
 title: 業務イベント: 会計確定（販売）
 status: draft
 part_of: []

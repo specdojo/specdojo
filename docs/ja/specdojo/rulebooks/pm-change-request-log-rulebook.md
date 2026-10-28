@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:pm-change-request-log-rulebook
   type: rulebook
+  deliverable_type: project
   status: draft
   sample: specdojo:pm-change-request-log-sample
   template: specdojo:pm-change-request-log-template

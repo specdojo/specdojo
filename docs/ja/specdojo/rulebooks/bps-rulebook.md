@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:bps-rulebook
   type: rulebook
+  deliverable_type: flow
   status: draft
   target_format: markdown
   recipe: specdojo:bps-recipe

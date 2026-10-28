@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:utc-index-sample
-  type: project
+  type: test
   status: draft
   rulebook: specdojo:utc-index-rulebook
 ---

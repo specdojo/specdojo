@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:pm-roles-rulebook
   type: rulebook
+  deliverable_type: project
   status: ready
   target_format: yaml
   recipe: specdojo:pm-roles-recipe
