@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_5a0accfa16da4989987317d23d84b61c
+  ts: "2026-10-28T11:17:12Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: skill の共通形式が広がったため、PJR-JSWE の結論の見直しを利用者と検討したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: agent skills の扱いを見直す（SpecDojo の skill の配布と外部の skill の利用）
+    - field: description
+      from: ""
+      to: plan・result・git を契約とし Kata を知識の正本とする中心は保ったまま、SpecDojo が配る skill の範囲と生成の仕組み、外部の skill を使う条件（一覧・記録・版の固定）、既存の 3 件の skill の扱いを決める
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-JSWE"]'
