@@ -7,7 +7,7 @@
   "trigger": "routine",
   "scheduled_at": "2026-10-28T16:00:00.000Z",
   "created_at": "2026-10-28T16:00:54.009Z",
-  "updated_at": "2026-10-28T16:31:36.317Z",
+  "updated_at": "2026-10-28T16:41:33.187Z",
   "state": "succeeded",
   "inputs": {
     "period": "2026-W44",
@@ -54,5 +54,12 @@
       "evidence_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-deliverable-c1e4826d0f46/attempt-1/evidence.json",
       "exit_code": 0
     }
-  ]
+  ],
+  "review": {
+    "plan_ref": "docs/ja/projects/prj-0001/execution/exec/plans/JBR-grade-deliverable-c1e4826d0f46-review-plan.md",
+    "result_ref": "docs/ja/projects/prj-0001/execution/exec/results/JBR-grade-deliverable-c1e4826d0f46-review-result.md",
+    "branch": "exec/prj-0001-JBR-grade-deliverable-c1e4826d0f46",
+    "verdict": "complete-with-findings",
+    "reviewed_at": "2026-10-28T16:41:33.187Z"
+  }
 }
