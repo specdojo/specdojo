@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: ARC
   registered_at: "2026-09-30T11:39:31Z"
-  block_reason: grade による外出し前後の比較は agent を起動するため、codex の sandbox では実行できない。比較の実行者（orchestrator など）を決めてから再開する
 ---
 
 # PJR-B7DG rulebook から削除した例が sample に含まれるかの確認と grade による比較

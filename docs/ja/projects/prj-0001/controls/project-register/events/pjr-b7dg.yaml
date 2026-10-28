@@ -90,3 +90,19 @@
       from: "agent exited with non-zero code: 外出し後の `grade` による比較（finding の記録）が sandbox の承認待ちにより実行できず、プランの完了条件を満たせていないため。"
       to: grade による外出し前後の比較は agent を起動するため、codex の sandbox では実行できない。比較の実行者（orchestrator など）を決めてから再開する
   previous_event_id: reg_39042ca1d7234f7f9ee6f84787ed604a
+- v: 1
+  id: reg_972104c9af55442ea1053d138bba5d54
+  ts: "2026-10-28T09:37:51Z"
+  action: review
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: review
+  reason: grade の比較を記録し、残りは sample の作り直し（PJR-2W38）の扱いの判断のみとなったため
+  changes:
+    - field: status
+      from: waiting
+      to: review
+    - field: block_reason
+      from: grade による外出し前後の比較は agent を起動するため、codex の sandbox では実行できない。比較の実行者（orchestrator など）を決めてから再開する
+      to: "-"
+  previous_event_id: reg_33fe9b9c4e544e81ba860954dab92e8e
