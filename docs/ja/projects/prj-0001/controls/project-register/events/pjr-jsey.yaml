@@ -2543,3 +2543,19 @@
       from: PJR-B4Y4 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
       to: PJR-WAGY の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
   previous_event_id: reg_22e9c26d81e046088a839ee065578d1e
+- v: 1
+  id: reg_5000babfd4cb476eba4d6fc727f0dd48
+  ts: "2026-10-28T11:00:06Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-484B の統合後の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-28"
+      to: "-"
+  previous_event_id: reg_5b0a7a153c3341f5ab37adac3b7c6bd7
