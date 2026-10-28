@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-0qw0-result-markdownlint-default-config
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: medium
   registered_at: "2026-10-28T22:11:04Z"
+  completed_at: "2026-10-28T22:49:08Z"
+  conclusion: 設定がない場合は result の commit 前検査に SpecDojo の基本規則（MD013・MD024・MD033・MD036・MD041・MD060 を無効）を使い、既存設定を優先する。init と config init は .markdownlint.yaml を上書きせずに生成する。空のリポジトリで init の生成と、設定なしでの exec run --register の review までの通過を確認した
   derived_from:
     - PJR-FMJ5
 ---
