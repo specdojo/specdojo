@@ -63,3 +63,16 @@
       from: "-"
       to: '["PJR-RYK8"]'
   previous_event_id: reg_b4adecb5c4b9448da5354bc1bfe55171
+- v: 1
+  id: reg_f340e3a6aa114a0dafc476e6f610771f
+  ts: "2026-10-28T10:07:58Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: YAML の type は PJR-484B で入れる rulebook の宣言と照合に合わせて直すため
+  changes:
+    - field: depends_on
+      from: '["PJR-RYK8"]'
+      to: '["PJR-484B"]'
+  previous_event_id: reg_b373e1724efe4b179edcdf4ef054ffd0

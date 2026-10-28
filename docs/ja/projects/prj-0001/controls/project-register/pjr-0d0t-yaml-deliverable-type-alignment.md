@@ -15,7 +15,7 @@ specdojo:
   derived_from:
     - PJR-XSM8
   depends_on:
-    - PJR-RYK8
+    - PJR-484B
 ---
 
 # PJR-0D0T YAML の成果物の type を原則に沿った値にそろえる
