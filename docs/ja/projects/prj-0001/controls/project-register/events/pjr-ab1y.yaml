@@ -51,3 +51,16 @@
       from: "-"
       to: '["PJR-WAGY"]'
   previous_event_id: reg_e0d83a4c5842485482c709c584d769d2
+- v: 1
+  id: reg_03bb1705647f4a2e8d71056d4e28522b
+  ts: "2026-10-28T00:52:58Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2aadbcc138f6498fae2ca911bfbb88a8
