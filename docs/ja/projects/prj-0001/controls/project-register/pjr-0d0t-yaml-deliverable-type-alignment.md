@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-0d0t-yaml-deliverable-type-alignment
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: low
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-27T12:32:57Z"
+  completed_at: "2026-10-28T12:39:53Z"
+  conclusion: bdd を data、ifx-cmd・ifx-msg を api、gl を glossary にそろえ、旧値は置き換え先を示してエラーにした。YAML の検証でも rulebook の宣言と照合し、表示用ページは YAML の type を引き継ぐ
   derived_from:
     - PJR-XSM8
   depends_on:

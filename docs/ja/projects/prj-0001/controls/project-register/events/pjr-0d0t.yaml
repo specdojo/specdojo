@@ -166,3 +166,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_bc1c2656473e4b21914d1ca3c6a028d0
+- v: 1
+  id: reg_65d26b62eb484919b6845ba8233c6535
+  ts: "2026-10-28T12:39:53Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件、docs:build と生成ページの実物、JSEY の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: bdd を data、ifx-cmd・ifx-msg を api、gl を glossary にそろえ、旧値は置き換え先を示してエラーにした。YAML の検証でも rulebook の宣言と照合し、表示用ページは YAML の type を引き継ぐ
+  previous_event_id: reg_8341520f81624c94914e1b18ee91f6bb
