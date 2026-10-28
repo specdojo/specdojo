@@ -365,25 +365,36 @@ describe("pipeline state", () => {
   });
 
   // PJR-6RN3: 再開前の統合先の取り込みから、統合済みのリポジトリを除外するために使う。
-  it("lists only repositories recorded as merged or unchanged as integrated", () => {
+  it("lists repositories whose integration handling completed, including branch-only", () => {
     const created = createPipelineState({
       taskId: "PJR-AB12",
       runId: "run-1",
       updatedAt: "2026-08-10T07:00:00Z",
     });
-    const records: Array<[string, "merged" | "unchanged" | "failed" | "pending"]> = [
-      ["app1", "merged"],
-      ["app2", "unchanged"],
-      ["app3", "failed"],
-      ["project", "pending"],
-    ];
+    const records: Array<[string, "merged" | "unchanged" | "branch-only" | "failed" | "pending"]> =
+      [
+        ["app1", "merged"],
+        ["app2", "unchanged"],
+        ["app3", "failed"],
+        ["app4", "branch-only"],
+        ["project", "pending"],
+      ];
     const state = records.reduce(
       (current, [repo, status]) =>
         updatePipelineRepoIntegration(current, repo, { status }, "2026-08-10T07:01:00Z"),
       created,
     );
 
-    expect([...integratedRepoNames(state)]).toEqual(["app1", "app2"]);
+    expect([...integratedRepoNames(state)]).toEqual(["app1", "app2", "app4"]);
+    const schema = load(readFileSync(schemaPath(), "utf8")) as Record<string, unknown>;
+    const ajv = new Ajv2020({ allErrors: true, strict: false });
+    addFormats(ajv);
+    const validate = ajv.compile(schema);
+    expect(validate(state), JSON.stringify(validate.errors)).toBe(true);
+    const { root } = setup();
+    const statePath = join(root, "pipeline-state.json");
+    writePipelineState(statePath, state);
+    expect(readPipelineState(statePath)).toEqual(state);
     expect(integratedRepoNames(created).size).toBe(0);
   });
 

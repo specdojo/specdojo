@@ -1,0 +1,152 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "branch-only 統合方式の実装・テスト・文書を再確認し、前回失敗した設定リファレンスの表を修正しました。executor 検証は成功し、親検証 7 件は runner に委ねます。",
+  "handoff": [
+    "設計判断は個票の対応結果に記録済み。`repos[].integration_strategy` は `merge` が既定。`branch-only` は commit 後に統合先へ merge せず exec branch を保持する。push・PR 作成は実装せず、利用者がプロダクト側で行う。",
+    "成功後は全 worktree を撤去し、`branch-only` の exec branch は変更の有無によらず保持する。失敗時は worktree と branch を保持する。再開時は統合先を自動で取り込まず、新規実行時に保持済み branch があれば削除せず停止する。",
+    "プロジェクト側は通常どおり `review` へ進む。生成する result には未統合状態・exec branch 名・trace key を記録する。これはプロダクト側 PR の完了を意味しない。reporter / runner は実施内容・変更ファイル・検証結果と設計判断を result に反映する。",
+    "累積変更には設定・schema・統合処理・再開・撤去・trace と、それらの unit / integration / register pipeline E2E テストを含む。今回、`integration_strategy` の説明行を project 設定の表から repos の表へ移し、MD056 の原因だった列数を修正した。前回の親検証は lint-md 以外の 6 件が成功。今回の親検証 7 件は runner が実行する。",
+    "統合後の実 agent CLI による運用確認は、運用メモに従い PJR-JSEY の対象へ PJR-EXH2 を追加して実施する。保護設定の変更と未解決の設計判断はない。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write docs/ja/specdojo/references/specdojo-config-reference.md docs/ja/projects/prj-0001/controls/project-register/pjr-exh2-product-repo-branch-only-integration.md",
+      "status": "passed",
+      "summary": "今回修正した文書を整形した。"
+    },
+    {
+      "command": "git diff --name-only -z -- '*.ts' '*.md' '*.yaml' ':!docs/ja/projects/prj-0001/controls/project-register/events/**' | xargs -0 npx prettier --check",
+      "status": "passed",
+      "summary": "累積変更の成果物 20 ファイルが整形規約に適合。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/specdojo-config.schema.yaml --data tmp/pjr-exh2-resume-validation/config.json",
+      "status": "passed",
+      "summary": "方式省略・merge・branch-only を含む設定が適合。一時ファイルは削除済み。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/pipeline-state.schema.yaml --data tmp/pjr-exh2-resume-validation/pipeline-state.json",
+      "status": "passed",
+      "summary": "branch-only 状態を含む pipeline state が適合。一時ファイルは削除済み。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。既存の参照先文書不足などの警告あり。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "登録簿と調整文書の派生ビュー生成に成功。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md"
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-exh2-product-repo-branch-only-integration.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-exh2-product-repo-branch-only-integration.md"
+    },
+    {
+      "target": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md"
+    },
+    {
+      "target": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md"
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/pipeline-state.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/pipeline-state.schema.yaml"
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml"
+    },
+    {
+      "target": "src/exec/pipeline-state.ts",
+      "status": "changed",
+      "path": "src/exec/pipeline-state.ts"
+    },
+    {
+      "target": "src/exec/repo-integration-sync.ts",
+      "status": "changed",
+      "path": "src/exec/repo-integration-sync.ts"
+    },
+    {
+      "target": "src/exec/repo-integration.ts",
+      "status": "changed",
+      "path": "src/exec/repo-integration.ts"
+    },
+    {
+      "target": "src/exec/repo-trace.ts",
+      "status": "changed",
+      "path": "src/exec/repo-trace.ts"
+    },
+    {
+      "target": "src/exec/task-repos.ts",
+      "status": "changed",
+      "path": "src/exec/task-repos.ts"
+    },
+    {
+      "target": "src/exec/worktree.ts",
+      "status": "changed",
+      "path": "src/exec/worktree.ts"
+    },
+    {
+      "target": "src/shared/specdojo-config.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-config.ts"
+    },
+    {
+      "target": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts",
+      "status": "changed",
+      "path": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts"
+    },
+    {
+      "target": "tests/src/exec/pipeline-state.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/pipeline-state.test.ts"
+    },
+    {
+      "target": "tests/src/exec/register-pipeline-e2e.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/register-pipeline-e2e.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/repo-trace.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/repo-trace.test.ts"
+    },
+    {
+      "target": "tests/src/exec/task-repos.integration.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/task-repos.integration.test.ts"
+    },
+    {
+      "target": "tests/src/exec/task-repos.test.ts",
+      "status": "changed",
+      "path": "tests/src/exec/task-repos.test.ts"
+    },
+    {
+      "target": "tests/src/shared/specdojo-config-repos.test.ts",
+      "status": "changed",
+      "path": "tests/src/shared/specdojo-config-repos.test.ts"
+    }
+  ]
+}
+</specdojo_executor_evidence>

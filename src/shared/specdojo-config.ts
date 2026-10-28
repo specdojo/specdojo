@@ -88,6 +88,8 @@ export type SpecDojoRepoConfig = {
   path: string;
   /** Branch exec integrates into. Omit to use the repository's current branch. */
   integration_branch?: string;
+  /** Local merge commit (default), or retain the exec branch for product-side PR review. */
+  integration_strategy?: "merge" | "branch-only";
   setup?: SpecDojoRepoSetup;
 };
 
@@ -453,7 +455,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-const REPO_KEYS = new Set(["name", "path", "integration_branch", "setup"]);
+const REPO_KEYS = new Set(["name", "path", "integration_branch", "integration_strategy", "setup"]);
 const REPO_SETUP_KEYS = new Set(["install", "build"]);
 const EXTERNAL_PROJECT_KEYS = new Set(["path", "project_id"]);
 
@@ -606,6 +608,14 @@ export function validateProjectRepos(
       !isOmittedOrNonEmptyString(repo.integration_branch)
     ) {
       errors.push(`${at}.integration_branch must be a non-empty string when present`);
+    }
+
+    if (
+      repo.integration_strategy !== undefined &&
+      repo.integration_strategy !== "merge" &&
+      repo.integration_strategy !== "branch-only"
+    ) {
+      errors.push(`${at}.integration_strategy must be "merge" or "branch-only" when present`);
     }
 
     const setup = repo.setup;

@@ -344,7 +344,10 @@ function initProductRepository(path: string, name: string): void {
   git(path, "commit", "--quiet", "-m", "initial");
 }
 
-function enableProductRepositories(root: string): ProductFixture {
+function enableProductRepositories(
+  root: string,
+  strategy?: "merge" | "branch-only",
+): ProductFixture {
   const app1 = `${root}-app1`;
   const app2 = `${root}-app2`;
   initProductRepository(app1, "app1");
@@ -361,7 +364,12 @@ function enableProductRepositories(root: string): ProductFixture {
       test: {
         ...CONFIG.projects.test,
         repos: [
-          { name: "app1", path: repoPath(app1), setup: { install: false, build: false } },
+          {
+            name: "app1",
+            path: repoPath(app1),
+            ...(strategy ? { integration_strategy: strategy } : {}),
+            setup: { install: false, build: false },
+          },
           {
             name: "app2",
             path: repoPath(app2),
@@ -1417,14 +1425,15 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
   // PJR-69VP: プロジェクトリポジトリ 1 つとプロダクトリポジトリ 2 つ（app2 は integration_branch を
   // 宣言）で、1 つの項目が 3 つのリポジトリを変更する run が、worktree の作成から統合・trace の
   // 記録・撤去まで通ることを確かめる。
-  it(
-    "changes three repositories in one item and integrates them with the qualified Refs and the trace",
+  it.each([undefined, "branch-only"] as const)(
+    "changes three repositories with app1 strategy %s and records the qualified Refs and the trace",
     { timeout: 120_000 },
-    async () => {
+    async (strategy) => {
       await withRepo(async ({ root, worktreeBase }) => {
         vi.spyOn(process.stdout, "write").mockImplementation(() => true);
         vi.spyOn(process.stderr, "write").mockImplementation(() => true);
-        const products = enableProductRepositories(root);
+        const products = enableProductRepositories(root, strategy);
+        const app1Before = git(products.app1, "rev-parse", products.targets.app1);
 
         try {
           await runExec([
@@ -1455,7 +1464,17 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
             "# project artifact\n",
           );
 
-          const app1Merge = expectIntegratedProduct(products.app1, products.targets.app1, "app1");
+          let app1Merge: string | null = null;
+          if (strategy === "branch-only") {
+            expect(git(products.app1, "rev-parse", products.targets.app1)).toBe(app1Before);
+            expect(git(products.app1, "branch", "--list", EXEC_BRANCH)).toContain(EXEC_BRANCH);
+            expect(git(products.app1, "show", `${EXEC_BRANCH}:src/feature.ts`)).toContain("app1");
+            expect(git(products.app1, "log", "-1", "--format=%B", EXEC_BRANCH)).toContain(
+              `Refs: ${TRACE_KEY}`,
+            );
+          } else {
+            app1Merge = expectIntegratedProduct(products.app1, products.targets.app1, "app1");
+          }
           const app2Merge = expectIntegratedProduct(products.app2, products.targets.app2, "app2");
 
           // プロジェクト側は merge commit 1 件で、修飾した Refs を持つ（PJR-30SW）。
@@ -1469,22 +1488,29 @@ describe("exec run --register executor/reporter pipeline (E2E)", () => {
           const result = readRootResult(root);
           expect(result).toContain("status: complete");
           expect(result).toMatch(/^## \d+\. トレーサビリティ$/m);
-          expect(result).toContain(`\`${app1Merge}\``);
+          if (app1Merge) expect(result).toContain(`\`${app1Merge}\``);
+          else {
+            expect(result).toContain(`\`${EXEC_BRANCH}\``);
+            expect(result).toContain(`\`${TRACE_KEY}\``);
+            expect(result).toContain("not applicable (not integrated)");
+            expect(result).toContain("`branch-only` の行は未統合です");
+          }
           expect(result).toContain(`\`${app2Merge}\``);
           expect(result).toContain(`\`${products.targets.app2}\``);
 
           const integrate = readIntegrateState(root);
           expect(integrate.status).toBe("succeeded");
           expect(integrateRepoStatuses(root)).toEqual({
-            app1: "merged",
+            app1: strategy === "branch-only" ? "branch-only" : "merged",
             app2: "merged",
             project: "merged",
           });
 
-          // 全リポジトリの worktree と exec branch が撤去される。
+          // 全 worktree と project branch は撤去され、branch-only の product branch は残る。
           expect(existsSync(join(worktreeBase, TASK_DIR_NAME))).toBe(false);
           expect(execWorktreePath(root)).toBeNull();
           expect(git(root, "branch", "--list", EXEC_BRANCH)).toBe("");
+          expect(git(products.app2, "branch", "--list", EXEC_BRANCH)).toBe("");
         } finally {
           rmSync(products.app1, { recursive: true, force: true });
           rmSync(products.app2, { recursive: true, force: true });

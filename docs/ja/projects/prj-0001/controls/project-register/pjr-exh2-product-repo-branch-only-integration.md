@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: review
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T08:54:11Z"
   due_on: "2026-10-31"
-  block_reason: "parent validation failed: lint-md"
 ---
 
 # PJR-EXH2 プロダクトリポジトリを merge せず exec branch を残す統合方式を選べるようにする
@@ -35,14 +34,23 @@ specdojo:
 
 ## 3. 作業内容
 
-| No  | 作業                           | 担当 | 状態 | メモ |
-| --- | ------------------------------ | ---- | ---- | ---- |
-| 1   | 方式の設定と振る舞いを設計する | DEV  | open | -    |
-| 2   | 実装し、テストと文書を更新する | DEV  | open | -    |
+| No  | 作業                           | 担当 | 状態 | メモ                                                              |
+| --- | ------------------------------ | ---- | ---- | ----------------------------------------------------------------- |
+| 1   | 方式の設定と振る舞いを設計する | DEV  | done | `merge`（既定）と `branch-only`、撤去・記帳・再開の扱いを決定     |
+| 2   | 実装し、テストと文書を更新する | DEV  | done | 設定・runner・trace・schema・統合テスト・ガイド・CHANGELOG を更新 |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+- `repos[].integration_strategy` に `merge` / `branch-only` を追加した。省略時は既存のローカル merge commit を維持する。CLI と設定 schema の両方で不正値を拒否する。
+- `branch-only` は runner が exec branch に commit した後、統合先へ merge せず保持する。プロダクト側のレビューで統合判断するため、統合先との競合や統合先 checkout の変更は検査せず、exec worktree の未 commit 変更は従来どおり停止理由にする。
+- 設計時の未決事項は次のとおり決定した。push・PR 作成（`gh` を含む）は認証情報と外部への操作を伴うため実装せず、利用者が必要な承認のもとプロダクト側で行う。成功後は commit 済みの変更を branch で保全できるため全 worktree を撤去し、`branch-only` の branch は変更の有無によらず残す。失敗時は従来どおり worktree と branch を保持する。
+- プロジェクト側はタスク成果のレビューへ進めるため、通常どおり `review` へ遷移し、記帳と result を統合する。プロダクト側の PR の承認・merge 完了を表す遷移ではない。生成する result の trace 表には `branch-only`（未統合）、exec branch 名、trace key と `not applicable (not integrated)` を記録し、merge SHA を捏造しない。register 項目の commit の `Refs: <project-id>:<item-id>` は従来どおり保持する。
+- pipeline state に `branch-only` を追加し、再開時もプロダクトの統合先を exec worktree へ自動で取り込まない。同じ項目の新規実行で保持済み branch を残骸として強制削除しないよう停止する。再開するか、プロダクト側の作業完了後に branch を退避・削除する。既存の prune も未統合 branch を削除しない。
+- [[specdojo:specdojo-config-reference|設定リファレンス]] と [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] に設定方法・統合順序・撤去・再開・手動 PR 作成を追記し、CHANGELOG の Unreleased に記録した。
+- 設定値と schema、state の保存・読込、result の記載、方式の混在、競合、変更なし、再開、撤去後と prune 後の branch 保持をテストに追加した。register pipeline の E2E は既存の既定方式に加えて `branch-only` でも、統合先不変・commit と Refs・result・`review` 遷移・worktree 撤去を確認する構成にした。
+- 検証: 整形・設定と state の schema 検証・カタログ検証・登録簿の派生ビュー生成を executor で実施し、すべて成功した。カタログ検証は既存の参照先文書不足などの警告を出したが、終了コードは 0 だった。型検査・lint・unit / integration test など親検証 7 件は pipeline の指定に従い runner に委ねる。result 自体は executor では編集しない。
+- 再開対応: 前回の親検証は `lint-md` のみ失敗し、残り 6 件は成功した。設定リファレンスで `integration_strategy` が project 設定の表に誤配置されていたため、`repos` の表へ移して 4 列の行に修正した。再開後も親検証 7 件は runner に委ねる。
+- 申し送り: 上記の設計判断と実装・検証内容を reporter / runner が result に反映する。統合後の実 agent CLI の運用確認は [[prj-0001:pjr-jsey-exec-run-split-smoke|PJR-JSEY]] で行う。保護された設定の変更は不要。未解決の設計判断はない。
 
 ## 5. 関連ドキュメント
 

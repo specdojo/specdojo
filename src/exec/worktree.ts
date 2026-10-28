@@ -63,6 +63,8 @@ export type ProductWorktree = {
   created: boolean;
   /** Declared `integration_branch`; undefined means the repository's current branch. */
   integrationBranch?: string;
+  /** Omitted means the conventional local merge commit. */
+  integrationStrategy?: "merge" | "branch-only";
 };
 
 export type RegisteredWorktree = {
