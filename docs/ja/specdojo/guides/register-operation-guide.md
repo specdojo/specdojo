@@ -35,8 +35,8 @@ Register Operation Guide
 - 個票の Frontmatter は現在値、`events/pjr-XXXX.yaml` は変更履歴の正本です。Git は両者の保存・配布・レビューを担いますが、コミット粒度を業務イベントの粒度として扱いません。
 - 文書 ID `<project-id>:pjr-index` の解決先は `project-register/generated/pjr-index.md` です。`controls/**/generated/` はdoc-indexの限定的な走査対象であり、一覧自身を `[[id]]` で参照できます。
 - 一覧と、状態別・優先度別・担当者別などの派生ビューは `generated/` 配下に生成される派生物であり、直接編集しません。
-- 立ち上げ時は、未整理の問題・判断を `issue` / `question` / `decision` で記録し、合意した成果物カタログの作成を `todo` で追跡できます。
-- 成果物カタログと依存関係に基づく計画済みの作業へ移った後は schedule で管理し、登録簿との二重管理をしません。進行中に発生した計画外の単発対応・調査・判断は、引き続き登録簿で追跡します（[exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照してください）。
+- 立ち上げ時は、未整理の問題・判断を `issue` / `question` / `decision` で記録し、track ごとの `epic` を起票して子 todo でカタログや strategy を作成できます。
+- register が起点と完了の判断を持ち、途中の進み具合は schedule が持ちます。成果物タスクの進捗は schedule の依存グラフで管理し、個々の成果物タスクを登録簿に二重管理しません。進行中に発生した計画外の単発対応・調査・判断は、引き続き登録簿で追跡します（[exec運用ガイド](exec-operation-guide.md) の `実行経路の使い分け` を参照してください）。
 
 関連ドキュメントの関係は次のとおりです。
 
@@ -72,8 +72,7 @@ specdojo register scaffold --project <project-id>
 
 逆に、次の事項は登録しません。
 
-- 計画済みの成果物作成・レビュー・確定の作業（schedule のタスクとして管理する）
-- 成果物カタログへ定義し、Scheduleへ展開済みの作業（立ち上げ時の個票は結論を残して完了する）
+- schedule に展開された個々の成果物タスク（途中の進み具合は schedule で管理し、登録簿には二重管理しない。track 全体の着手承認と完了判断は `epic` で管理する）
 - その場で完了し、後から追跡する必要がないもの
 
 登録は `register add` で行います。ID は省略すると自動採番されます。
