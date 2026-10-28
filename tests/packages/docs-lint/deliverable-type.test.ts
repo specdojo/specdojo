@@ -171,16 +171,17 @@ describe("Markdown deliverable type matching in the frontmatter plugin", () => {
     ]);
   });
 
-  it("leaves rulebook:none and YAML display pages outside matching", async () => {
+  it("checks YAML display pages and leaves rulebook:none outside matching", async () => {
     const root = workspace();
     expect(await messages(root, document("project", "none"))).toEqual([]);
+    rulebook(root, "specdojo:example-rulebook", "data");
     expect(
       await messages(
         root,
         document("sample") + "\n<!-- specdojo:generated-by=yaml-pages -->\n",
         "docs/ja/specdojo/samples/generated/example.md",
       ),
-    ).toEqual([]);
+    ).toEqual([expect.stringContaining('Set type to "data"')]);
   });
 
   it("still checks generated Markdown that is not a YAML display page", async () => {

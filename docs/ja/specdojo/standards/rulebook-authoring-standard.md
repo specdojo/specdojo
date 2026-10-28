@@ -51,7 +51,7 @@ Rulebook Authoring Standard
 
 - `target_format` が未記載の場合は markdown を対象とみなす。
 - `deliverable_type` は format・成熟度によらず全 rulebook に必要とする。index は扱う内容で分類し、`project` はプロジェクトの管理文書に限る。Mermaid など `includes` で適用される記法部品も、扱う成果物の種別を宣言する。
-- `lint:fm` は Markdown 成果物・sample・テンプレートの生成物 Frontmatter（`frontmatter_template`）を、主 rulebook の宣言と照合する。テンプレート自身の `type: template` は照合しない。宣言との不一致、宣言欠落、参照の解決不能・曖昧さはエラーとし、不一致には宣言値を示す。YAML データと `generated/` 配下の表示用ページはこの照合の対象外とする。
+- `lint:fm` は Markdown 成果物・sample・テンプレートの生成物 Frontmatter（`frontmatter_template`）を、主 rulebook の宣言と照合する。テンプレート自身の `type: template` は照合しない。宣言との不一致、宣言欠落、参照の解決不能・曖昧さはエラーとし、不一致には宣言値を示す。YAML 成果物・sample とテンプレートの `metadata_template` は YAML schema 検証時に同じ宣言と照合し、外部形式の `x-spec-meta` も対象とする。構造検証を省略する指示でも照合は省略しない。YAML の表示用ページは正本の `type` を引き継ぎ、`lint:fm` の照合対象とする。
 - `recipe` / `sample` / `template` は要否と所在の正本であり、`undecided` は要否未判断、項目省略は必要だが未整備、完全 ID は必要かつ整備済み、`not-needed` は不要を表す。
 - 完全 ID は `fully-guided` / `recipe-guided` の plan 生成で参照先パスの解決に使う（rulebook を参照ハブとする）。命名規約に従う場合も明示的に宣言し、宣言された参照先ファイルが存在しないと `exec validate` が警告する。`sample` の拡張子は `target_format` に従う。
 - 同じ rulebook 系統に複数の完成例がある場合、`sample` を ID 配列で宣言する。配列の先頭を既定例として使う。

@@ -48,12 +48,14 @@ Glossary Documentation Rules
 
 YAML ファイルの先頭に、以下のメタデータ（ルートキー）を持たせることを推奨する。
 
-| 項目   | 説明                               | 必須 |
-| ------ | ---------------------------------- | ---- |
-| id     | 用語集ID（`gl-...`）               | ○    |
-| title  | 用語集名（例: 用語集: 在庫・調達） | ○    |
-| locale | 言語（例: `ja` / `en`）            | ○    |
-| status | `draft` / `ready` / `deprecated`   | 任意 |
+| 項目     | 説明                               | 必須 |
+| -------- | ---------------------------------- | ---- |
+| id       | 用語集ID（`gl-...`）               | ○    |
+| type     | `glossary` 固定                    | ○    |
+| rulebook | `specdojo:gl-rulebook`             | ○    |
+| title    | 用語集名（例: 用語集: 在庫・調達） | ○    |
+| locale   | 言語（例: `ja` / `en`）            | ○    |
+| status   | `draft` / `ready` / `deprecated`   | 任意 |
 
 ## 5. 本文要件
 

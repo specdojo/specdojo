@@ -29,7 +29,7 @@ export interface YamlPagesResult {
 
 interface YamlPageMeta {
   id: string;
-  type: "sample" | "template" | "project";
+  type?: string;
   status: "draft" | "ready" | "deprecated";
   rulebook: string;
 }
@@ -87,13 +87,9 @@ function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta & { titl
   const rawId = readMeta("id");
   const id = typeof rawId === "string" && DOC_ID_RE.test(rawId) ? rawId : fileBase;
 
-  // type は deliverable-frontmatter スキーマの enum に収まるよう配置パスから決める
-  // （YAML 側の type は "domain" 等スキーマ外の値を取りうる）。
-  const type = yamlRelPath.includes("/samples/")
-    ? "sample"
-    : yamlRelPath.includes("/templates/")
-      ? "template"
-      : "project";
+  // 分類は配置パスから推測せず正本の値を引き継ぐ。欠落・旧値は YAML 検証で扱う。
+  const rawType = readMeta("type");
+  const type = typeof rawType === "string" ? rawType : undefined;
 
   const rawStatus = readMeta("status");
   const status =
@@ -111,14 +107,25 @@ function deriveMeta(yamlRelPath: string, content: string): YamlPageMeta & { titl
   const title =
     typeof rawTitle === "string" && rawTitle.trim() !== "" ? rawTitle.trim() : undefined;
 
-  return { id, type, status, rulebook, ...(title ? { title } : {}) };
+  return {
+    id,
+    ...(type !== undefined ? { type } : {}),
+    status,
+    rulebook,
+    ...(title ? { title } : {}),
+  };
 }
 
 // 表示ページの Markdown を組み立てる。YAML 本文はコードブロックで埋め込み、
 // 本文中のバッククォート連続より長いフェンスを使って壊れないようにする。
 export function renderYamlPage(yamlRelPath: string, content: string): string {
   const { title, ...meta } = deriveMeta(yamlRelPath, content);
-  const frontmatter = dump({ specdojo: meta }, { lineWidth: -1 }).trimEnd();
+  // ジョブ定義・評価記録など、成果物の type を持たない YAML も索引に含まれる。
+  // その表示ページは成果物メタ情報を宣言せず、正本の型検証に委ねる。
+  const header =
+    meta.type === undefined
+      ? []
+      : ["---", dump({ specdojo: meta }, { lineWidth: -1 }).trimEnd(), "---", ""];
   const fileName = posix.basename(yamlRelPath);
   const heading = title ?? fileName;
   const note = `> このページは \`${yamlRelPath}\` から生成された表示用ページです。正本は YAML ファイルであり、このページは再生成できます。`;
@@ -133,10 +140,7 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
   }
   if (isDctTemplateCatalog(yamlRelPath, parsed)) {
     return [
-      "---",
-      frontmatter,
-      "---",
-      "",
+      ...header,
       `# ${heading}`,
       "",
       note,
@@ -155,10 +159,7 @@ export function renderYamlPage(yamlRelPath: string, content: string): string {
   const body = content.endsWith("\n") ? content : `${content}\n`;
 
   return [
-    "---",
-    frontmatter,
-    "---",
-    "",
+    ...header,
     `# ${heading}`,
     "",
     note,

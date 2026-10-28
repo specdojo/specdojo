@@ -50,7 +50,7 @@ ESIL 側の `spec_ref: ifx-api-...` は、このEAPISのID（およびファイ�
 
 - `openapi`
 - `info`（`title`を含む）
-- `x-spec-meta`（`id`, `type`, `status` を含む）
+- `x-spec-meta`（`id`, `type`, `status`, `rulebook` を含む）
 - `servers`（少なくとも1つ）
 - `paths`（少なくとも1つ）
 
@@ -63,6 +63,7 @@ ESIL 側の `spec_ref: ifx-api-...` は、このEAPISのID（およびファイ�
 
 | id | API仕様ID（`ifx-api-...`）、ESILの `spec_ref` と対応 | ○ |
 | type | `api` 固定 | ○ |
+| rulebook | `specdojo:ifx-api-rulebook` | ○ |
 | status | `draft` / `ready` / `deprecated` | ○ |
 | based_on | 根拠となる他仕様のIDリスト（例: `["ifx-api-auth"]`） | 任意 |
 

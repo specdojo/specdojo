@@ -4,10 +4,18 @@ type: object
 additionalProperties: false
 required:
   - id
+  - type
+  - rulebook
   - title
   - locale
   - terms
 properties:
+  type:
+    type: string
+    const: glossary
+  rulebook:
+    type: string
+    pattern: "^((?:[a-z][a-z0-9-]*:)?[a-z0-9][a-z0-9-]*-rulebook|none)$"
   id:
     type: string
     pattern: "^([a-z0-9-]+:)?gl-[a-z0-9-]+$"
