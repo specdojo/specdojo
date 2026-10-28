@@ -1,6 +1,6 @@
 ---
 specdojo:
-  id: prj-0001:pjr-0d0t-yaml-pages-sample-type
+  id: prj-0001:pjr-0d0t-yaml-deliverable-type-alignment
   type: project
   status: draft
   rulebook: specdojo:pjr-rulebook
@@ -9,18 +9,20 @@ specdojo:
   item_type: todo
   item_status: open
   priority: low
-  difficulty: easy
+  difficulty: medium
   owner: DEV
   registered_at: "2026-10-27T12:32:57Z"
   derived_from:
     - PJR-XSM8
+  depends_on:
+    - PJR-RYK8
 ---
 
-# PJR-0D0T YAML の sample の表示用ページに type: sample を付けない
+# PJR-0D0T YAML の成果物の type を原則に沿った値にそろえる
 
 ## 1. 概要
 
-src/docs/yaml-pages.ts は samples/ 配下の YAML から生成する表示用ページに type: sample を付ける。PJR-XSM8 で sample は見本にする成果物の type を持つと定めたため、元の YAML の type を引き継ぐようにし、テストと生成済みページを合わせる。
+bdd の domain を data、ifx-cmd・ifx-msg の command・message を api にするなど、YAML の type を成果物の type の値にそろえ、schema・rulebook・テンプレート・sample を直す。古い値はエラーにし、置き換え先を示す。YAML の表示用ページは YAML の type を引き継ぐ
 
 ## 2. 完了条件
 

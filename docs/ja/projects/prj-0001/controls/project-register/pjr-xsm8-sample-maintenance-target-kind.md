@@ -114,7 +114,7 @@ specdojo:
 - 申し送りの `npm run docs:build` を本リポジトリで実行し、成功した（117 秒、dead link なし）。
 - result の申し送りに reporter が写した Markdown リンクが残り `npm run validate:history-links` が失敗したため、パス表記に直した（`84b23943f`）。修正後は成功した。
 - [[prj-0001:pjr-jsey-exec-run-split-smoke]] を claude-executor で実行し、start から review まで通り、event の actor に `sonnet-executor` が記録された。同 run の親の検証 7 件も通過した。
-- 範囲外の申し送り（YAML の sample の表示用ページの `type: sample`）は [[prj-0001:pjr-0d0t-yaml-pages-sample-type]] として起票した。
+- 範囲外の申し送り（YAML の sample の表示用ページの `type: sample`）は [[prj-0001:pjr-0d0t-yaml-deliverable-type-alignment]] として起票した。
 
 ## 5. 関連ドキュメント
 
