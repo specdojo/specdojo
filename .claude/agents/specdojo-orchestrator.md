@@ -92,15 +92,16 @@ catalog へ進む段階になったら、`.specdojo/specdojo.config.json` へ `c
 
 type は次のように使い分ける。
 
-| type             | 用途                           | 終端状態  |
-| ---------------- | ------------------------------ | --------- |
-| `issue`          | 解決すべき問題。原因調査を伴う | `done`    |
-| `decision`       | 選択肢から方針を決める         | `decided` |
-| `todo`           | 実施する作業                   | `done`    |
-| `question`       | 判断を保留し、後で決める       | `decided` |
-| `risk`           | 将来の不確実性                 | `done`    |
-| `change-request` | 合意済み範囲の変更要求         | `done`    |
-| `note`           | 記録として残す観測・分析       | なし      |
+| type             | 用途                               | 終端状態  |
+| ---------------- | ---------------------------------- | --------- |
+| `issue`          | 解決すべき問題。原因調査を伴う     | `done`    |
+| `decision`       | 選択肢から方針を決める             | `decided` |
+| `todo`           | 実施する作業                       | `done`    |
+| `question`       | 判断を保留し、後で決める           | `decided` |
+| `risk`           | 将来の不確実性                     | `done`    |
+| `change-request` | 合意済み範囲の変更要求             | `done`    |
+| `note`           | 記録として残す観測・分析           | なし      |
+| `epic`           | track ごとの仕事の着手と完了の管理 | `done`    |
 
 起票では `--title` と `--description` を具体的に書く。`--description` は一覧へ出るため、後から見て内容が分かる文にする。`--topic` を省くとタイトルの英数字の部分から導出される。タイトルが日本語の場合は、内容を表す英語の `--topic`（小文字・ハイフン区切り。例: `payment-scope`）を渡す。
 
@@ -129,6 +130,8 @@ npx specdojo register close --project <project-id> --id <PJR-XXXX> \
 `-m` の本文には、commit メッセージの方針（「なぜ」と `Refs: <project-id>:<PJR-XXXX>`）を守って書く。`register add` / `update` / `reject` / `defer` / `reopen` も同じく `--commit` を使う。
 
 `decision` と `question` は `--status decided` を付ける。close の前に個票の `決定内容` / `承認` を埋める。
+
+`epic` は `--track <track>` で担う track を指定して起票し、具体的な作業は `--from <epic-id>` を付けた子 todo に分解する。epic 自体は `exec run --register` で実行せず、夜間の実行でも飛ばされる。子項目の状態は `register build` が生成する epic ごとのビューで確かめ、子項目と schedule を材料に人が close を判断する。
 
 `note` は終端させず、`open` のまま新しい事実・知見を追記する。close / reject / defer の対象にしない。対応や判断が必要になった場合は、目的に合う別の type で起票し、note は参照元として残す（`pjr-rulebook` の type 別の扱い）。
 

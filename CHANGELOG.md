@@ -14,6 +14,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 変更
 
+- 配布するオーケストレーターの指示（`templates/` の各環境向け）の type の表に `epic` を加え、track を指定して起票し、子 todo へ分解し、epic 自体は実行しない扱いを書き足しました。
 - `@specdojo/docs-site` が生成するファイルを `.vitepress/` の下にまとめました。Mermaid の SVG と manifest は `.vitepress/mermaid/`、kata のステージングは `.vitepress/kata-staging/` に出力し、ビルド結果には SVG だけを含めます。利用者の `public/` は変更しません。package 同梱の文書は `/ja/specdojo/...` で公開し、eject 済みの文書は利用リポジトリ側を優先します。`config init` が生成する `.gitignore` に `/.vitepress/dist/`・`/.vitepress/cache/`・`/.vitepress/mermaid/`・`/.vitepress/kata-staging/` を追加しました。旧配置の `public/mermaid/` と `specdojo-kata-staging/` は自動では削除しないため、不要になったら削除してください（PJR-9ZN5）。
 - 技術領域別の TSD を作成する `specdojo:tsd-recipe` を追加し、`tsd-rulebook` から参照するようにしました。一冊・分冊の判断、採用値と未決事項の整理、段階的な動作確認、秘密情報の扱いを作業順に辿れます（PJR-05GN）。
 - `specdojo:tsd-sample` を新しい `tsd-rulebook` に合わせて見直しました。駄菓子屋きぬや販売管理システムのデータベース詳細定義（PostgreSQL / Prisma）を題材とし、対象環境・前提条件、採用設定、導入手順、動作確認、制約・トラブルシュートを満たす完成例に再構成しました（PJR-EVAE）。
