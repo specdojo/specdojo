@@ -1,0 +1,10 @@
+個票の「対応結果」の表に、PJR-0D0T の行を 1 行追記しました。親の検証は親 runner の実行に任せたため、ここでは実行していません。
+
+- **追記した行:** `2026-10-28 21:30 | PJR-0D0T | sonnet-executor`。日時は実行時点の JST です。
+- **確認対象の選定:** 対象一覧のうち最も新しく統合されたものを、git log で調べました。PJR-0D0T の統合コミットは `6f0856eec`(2026-10-28 21:03 JST)で、直前に追記済みだった PJR-484B(`887622abb`、19:54 JST)より新しいため、PJR-0D0T を選びました。
+- **本文の修正:** 個票の本文にあった「今回の確認対象は PJR-484B」という記述を、PJR-0D0T と `6f0856eec` に書き換えました。
+- **変更範囲:** 変更したのは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-0D0T の行を追記し、本文の確認対象の記述も更新した。変更は個票 1 ファイルのみ。","handoff":["確認対象は、対象一覧のうち最新の統合コミット 6f0856eec(2026-10-28 21:03 JST)を持つ PJR-0D0T とした。","event の actor の確認、親の検証 7 件、reporter の result 記入、統合、review 遷移は後続段で確認する。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する allowlist の検証のため、executor では実行しない。"}]}
+</specdojo_executor_evidence>
