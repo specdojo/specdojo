@@ -30,6 +30,71 @@ function fixture(result: string): {
 }
 
 describe("assertResultMarkdownlint", () => {
+  it("accepts a long Japanese result without config and still rejects notation errors", () => {
+    const target = fixture(
+      `# Result\n\n${"日本語の長い行を含む result の検査です。".repeat(20)}\n`,
+    );
+    try {
+      rmSync(join(target.root, ".markdownlint.yaml"));
+      expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).not.toThrow();
+      writeFileSync(
+        join(target.context.executionPath, "exec/results/TASK-result.md"),
+        "#Invalid heading\n",
+      );
+      expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).toThrow(
+        /MD018/,
+      );
+    } finally {
+      rmSync(target.root, { recursive: true, force: true });
+    }
+  });
+
+  it.each([
+    ".markdownlint.yaml",
+    ".markdownlint.yml",
+    ".markdownlint.json",
+    ".markdownlint.jsonc",
+    ".markdownlintrc",
+  ])("prioritizes explicit MD013 in %s over SpecDojo defaults", (filename) => {
+    const target = fixture(
+      `# Result\n\n${"日本語の長い行を含む result の検査です。".repeat(20)}\n`,
+    );
+    try {
+      rmSync(join(target.root, ".markdownlint.yaml"));
+      writeFileSync(join(target.root, filename), '{"MD013": true}\n');
+      expect(() => assertResultMarkdownlint(target.context, target.worktree, "TASK")).toThrow(
+        /MD013/,
+      );
+    } finally {
+      rmSync(target.root, { recursive: true, force: true });
+    }
+  });
+
+  it("preserves markdownlint-cli's inherited .markdownlintrc settings", () => {
+    const target = fixture(
+      `# Result\n\n${"日本語の長い行を含む result の検査です。".repeat(20)}\n`,
+    );
+    const child = join(target.root, "child");
+    try {
+      rmSync(join(target.root, ".markdownlint.yaml"));
+      writeFileSync(join(target.root, ".markdownlintrc"), '{"MD013":true}\n');
+      mkdirSync(join(child, "execution/exec/results"), { recursive: true });
+      writeFileSync(
+        join(child, "execution/exec/results/TASK-result.md"),
+        readFileSync(join(target.root, "execution/exec/results/TASK-result.md")),
+      );
+      expect(() =>
+        assertResultMarkdownlint(
+          { ...target.context, repoRoot: child, executionPath: join(child, "execution") },
+          { ...target.worktree, path: child },
+          "TASK",
+        ),
+      ).toThrow(/MD013/);
+    } finally {
+      rmSync(target.root, { recursive: true, force: true });
+    }
+  });
+
   it("uses scaffolded .markdownlintrc rules for result checks", async () => {
     const target = fixture(`# Result\n\n${"long result line ".repeat(20).trim()}\n`);
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);

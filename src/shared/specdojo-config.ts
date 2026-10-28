@@ -9,6 +9,7 @@ import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./agent-types.
 import { runProviderScaffold, specdojoPackageRootDir } from "./provider-scaffold.js";
 import { runWorkspaceScaffold } from "./workspace-scaffold.js";
 import { runLefthookScaffold } from "./lefthook-scaffold.js";
+import { ensureMarkdownlintConfig } from "./markdownlint-config.js";
 import { runSlidevScaffold, SLIDEV_KATA_PATTERNS } from "./slidev-scaffold.js";
 import {
   ensureGitignore,
@@ -1058,12 +1059,17 @@ export function registerConfigCommands(program: Command): void {
     .command("init")
     .description(
       "Create .specdojo/specdojo.config.json template (does not overwrite existing) " +
-        "and add the lines excluding specdojo outputs to .gitignore",
+        "and initialize .gitignore and markdownlint settings",
     )
-    .option("--dry-run", "Show the planned config and .gitignore lines without writing", false)
+    .option(
+      "--dry-run",
+      "Show the planned config, .gitignore and markdownlint settings without writing",
+      false,
+    )
     .action((opts: { dryRun?: boolean }) => {
       const dryRun = !!opts.dryRun;
       const { configPath, config } = loadConfig();
+      ensureMarkdownlintConfig(specdojoRootDir(), dryRun);
       if (config) {
         process.stdout.write(`Already exists: ${configPath}\n`);
         writeGitignoreForConfig(config, dryRun);

@@ -19,6 +19,10 @@ import { recordProtectedConfigBlockAcrossRepos } from "./protection-handoff.js";
 import { assertNoPendingProductChanges, productIntegrationTarget } from "./task-repos.js";
 import { specdojoPackageRootDir } from "../shared/package-paths.js";
 import {
+  DEFAULT_MARKDOWNLINT_CONFIG,
+  hasMarkdownlintConfig,
+} from "../shared/markdownlint-config.js";
+import {
   repoRelative,
   stageCommitTargets,
   worktreeStatusPaths as statusPaths,
@@ -565,7 +569,12 @@ export function assertResultMarkdownlint(
     return;
   }
 
-  const result = spawnSync(executable, [resultRel], {
+  // Only supply defaults when markdownlint-cli has no repository configuration.
+  // --disable is followed by -- so the result path is not consumed as a rule name.
+  const args = hasMarkdownlintConfig(worktree.path)
+    ? [resultRel]
+    : ["--disable", ...Object.keys(DEFAULT_MARKDOWNLINT_CONFIG), "--", resultRel];
+  const result = spawnSync(executable, args, {
     cwd: worktree.path,
     encoding: "utf8",
     env: gitEnvironment(),

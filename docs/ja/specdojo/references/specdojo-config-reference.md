@@ -29,6 +29,12 @@ SpecDojo Configuration Reference
 
 `npx specdojo config init` は、register を開始できる次の最小構成を生成します。catalog や schedule の未使用キーは生成しません。
 
+あわせて、markdownlint の設定がなければリポジトリ直下に `.markdownlint.yaml` を生成します。
+MD013・MD024・MD033・MD036・MD041・MD060 を無効にし、日本語の長い行や SpecDojo の文書構成を許容します。
+既存設定は上書きしません。既存リポジトリでは `config init --dry-run` で確認してから再実行すると追加できます。
+exec の result の commit 前検査にも、利用リポジトリに設定がないときは同じ基本規則が適用されます。
+設定の優先順位と hook / CLI2 の配置は [[specdojo:command-reference|CLIコマンドリファレンス]] を参照してください。
+
 ```json
 {
   "version": 1,

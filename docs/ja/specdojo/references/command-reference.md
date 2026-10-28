@@ -101,6 +101,20 @@ provider 設定、登録簿作成の順に次のコマンドを案内します�
 書き込まず、予定の内容だけを表示します。`config scaffold` の `--provider` には
 `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定でき、`--dry-run` と `--force` も利用できます。
 
+通常の `init` と `config init` は、markdownlint の設定がなければリポジトリ直下に
+`.markdownlint.yaml` を作成します。SpecDojo の文書規約に合わせて MD013（行長）、MD024（見出しの重複）、
+MD033（HTML）、MD036（強調だけの行）、MD041（先頭の H1）、MD060（表の列幅）を無効にします。
+それ以外は markdownlint の既定の規則を使います。既存の `.markdownlint.*`・`.markdownlintrc`・
+`.markdownlint-cli2.*` は保持し、競合する設定は追加しません。`--dry-run` は設定を書き込みません。
+`init --lefthook` / `--slidev` では、後述の `.markdownlintrc` と CLI2 設定の配置を使います。
+
+既存リポジトリでは `specdojo config init --dry-run` を確認してから `specdojo config init` を再実行すると、
+SpecDojo の設定ファイルが既にあっても markdownlint の不足設定を追加できます。既存の規則を変更する場合は
+利用側で編集してください。特に MD013 が有効な場合、長い行を許容するには `MD013: false` を設定します。
+exec の result の commit 前検査は markdownlint-cli が読む利用リポジトリの設定（親ディレクトリの
+`.markdownlintrc` を含む）を優先し、設定がなければ上記の6規則だけをコマンド引数で無効にします。
+フォールバック用ファイルは利用リポジトリに作りません。CLI2 専用設定はこの検査では読みません。
+
 `package.json` がある場合、provider ごとのオーケストレーター起動スクリプトも追加します。Claude Code は `orch:opus`・`orch:sonnet`、Codex は `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、Antigravity は `orch:flash`（`gemini-3.8-flash-high`）、OpenCode は `orch:opencode` です。既存のスクリプトは `--force` を付けても上書きしません。
 
 `antigravity` に限り `--global` を指定すると、`~/.gemini/antigravity-cli/settings.json` へ SpecDojo 用の permission rule を追記します。既存キー・既存 rule は保持し、実書き込み前に timestamp 付きバックアップを作ります。`--global` を省略した通常実行はユーザーディレクトリへ触れません。適用前は次の dry-run で追加 rule を確認してください。

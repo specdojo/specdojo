@@ -17,6 +17,7 @@ import {
   runLefthookScaffold,
 } from "../../../src/shared/lefthook-scaffold.js";
 import type { SpecDojoConfig } from "../../../src/shared/specdojo-config.js";
+import { ensureMarkdownlintConfig } from "../../../src/shared/markdownlint-config.js";
 
 const packageRoot = process.cwd();
 
@@ -136,63 +137,78 @@ describe("lefthook scaffold", () => {
     }
   });
 
-  it("creates markdownlint rules and excludes generated agent definitions", async () => {
-    const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-lefthook-markdownlint-"));
-    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
-    try {
-      writeFileSync(join(repoRoot, "package.json"), '{"name":"fixture"}\n', "utf8");
+  it.each([false, true])(
+    "uses document rules and excludes agent definitions (existing init YAML: %s)",
+    async (initYaml) => {
+      const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-lefthook-markdownlint-"));
+      vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+      try {
+        writeFileSync(join(repoRoot, "package.json"), '{"name":"fixture"}\n', "utf8");
+        if (initYaml) ensureMarkdownlintConfig(repoRoot, false);
 
-      await runLefthookScaffold({
-        packageRoot,
-        repoRoot,
-        config: configWithCatalog,
-        force: false,
-        dryRun: false,
-      });
+        await runLefthookScaffold({
+          packageRoot,
+          repoRoot,
+          config: configWithCatalog,
+          force: false,
+          dryRun: false,
+        });
 
-      const content = readFileSync(join(repoRoot, ".markdownlintrc"), "utf8");
-      expect(content.startsWith("{")).toBe(true);
-      expect(existsSync(join(repoRoot, ".markdownlint.jsonc"))).toBe(false);
-      const config = JSON.parse(content) as {
-        MD013: boolean;
-        MD041: boolean;
-      };
-      expect(config.MD013).toBe(false);
-      expect(config.MD041).toBe(false);
-      expect(load(readFileSync(join(repoRoot, ".markdownlint-cli2.yaml"), "utf8"))).toEqual({
-        config: { extends: ".markdownlintrc" },
-      });
-      expect(readFileSync(join(repoRoot, ".markdownlintignore"), "utf8")).toBe(
-        ".claude/agents/\n.github/agents/\n.opencode/agents/\n",
-      );
-      // Exercise the generated hook's actual markdownlint-cli entry point. MD013
-      // must be disabled, while ordinary Markdown errors must still be detected.
-      mkdirSync(join(repoRoot, "node_modules"));
-      symlinkSync(
-        join(packageRoot, "node_modules/markdownlint-cli"),
-        join(repoRoot, "node_modules/markdownlint-cli"),
-        "dir",
-      );
-      writeFileSync(join(repoRoot, "README.md"), `# Valid\n\n${"long line ".repeat(20).trim()}\n`);
-      const runHookLint = () =>
-        spawnSync(
-          process.execPath,
-          ["tools/specdojo-pre-commit.mjs", "markdownlint", "README.md"],
-          {
-            cwd: repoRoot,
-            encoding: "utf8",
-          },
+        const content = readFileSync(
+          join(repoRoot, initYaml ? ".markdownlint.yaml" : ".markdownlintrc"),
+          "utf8",
         );
-      const valid = runHookLint();
-      expect(valid.status, valid.stderr).toBe(0);
-      writeFileSync(join(repoRoot, "README.md"), "#Invalid heading\n");
-      const invalid = runHookLint();
-      expect(invalid.status).toBe(1);
-      expect(invalid.stderr).toContain("MD018");
-    } finally {
-      rmSync(repoRoot, { recursive: true, force: true });
-    }
-  });
+        if (!initYaml) expect(content.startsWith("{")).toBe(true);
+        expect(existsSync(join(repoRoot, ".markdownlint.jsonc"))).toBe(false);
+        const config = load(content) as {
+          MD013: boolean;
+          MD041: boolean;
+        };
+        expect(config.MD013).toBe(false);
+        expect(config.MD041).toBe(false);
+        if (initYaml) {
+          expect(existsSync(join(repoRoot, ".markdownlintrc"))).toBe(false);
+          expect(existsSync(join(repoRoot, ".markdownlint-cli2.yaml"))).toBe(false);
+        } else {
+          expect(load(readFileSync(join(repoRoot, ".markdownlint-cli2.yaml"), "utf8"))).toEqual({
+            config: { extends: ".markdownlintrc" },
+          });
+        }
+        expect(readFileSync(join(repoRoot, ".markdownlintignore"), "utf8")).toBe(
+          ".claude/agents/\n.github/agents/\n.opencode/agents/\n",
+        );
+        // Exercise the generated hook's actual markdownlint-cli entry point. MD013
+        // must be disabled, while ordinary Markdown errors must still be detected.
+        mkdirSync(join(repoRoot, "node_modules"));
+        symlinkSync(
+          join(packageRoot, "node_modules/markdownlint-cli"),
+          join(repoRoot, "node_modules/markdownlint-cli"),
+          "dir",
+        );
+        writeFileSync(
+          join(repoRoot, "README.md"),
+          `# Valid\n\n${"long line ".repeat(20).trim()}\n`,
+        );
+        const runHookLint = () =>
+          spawnSync(
+            process.execPath,
+            ["tools/specdojo-pre-commit.mjs", "markdownlint", "README.md"],
+            {
+              cwd: repoRoot,
+              encoding: "utf8",
+            },
+          );
+        const valid = runHookLint();
+        expect(valid.status, valid.stderr).toBe(0);
+        writeFileSync(join(repoRoot, "README.md"), "#Invalid heading\n");
+        const invalid = runHookLint();
+        expect(invalid.status).toBe(1);
+        expect(invalid.stderr).toContain("MD018");
+      } finally {
+        rmSync(repoRoot, { recursive: true, force: true });
+      }
+    },
+  );
 
   it.each([
     ".markdownlint.jsonc",

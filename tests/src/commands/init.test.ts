@@ -37,6 +37,30 @@ function createRepo(prefix: string): string {
 }
 
 describe("specdojo init", () => {
+  it("creates minimal markdownlint settings without lefthook and preserves them on rerun", async () => {
+    const repo = createRepo("specdojo-init-markdownlint-");
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    try {
+      process.chdir(repo);
+      await runInit({ yes: true, provider: "none", dryRun: true });
+      expect(existsSync(join(repo, ".markdownlint.yaml"))).toBe(false);
+      await runInit({ yes: true, provider: "none" });
+      expect(load(readFileSync(join(repo, ".markdownlint.yaml"), "utf8"))).toEqual({
+        MD013: false,
+        MD024: false,
+        MD033: false,
+        MD036: false,
+        MD041: false,
+        MD060: false,
+      });
+      writeFileSync(join(repo, ".markdownlint.yaml"), "MD013: true\n");
+      await runInit({ yes: true, provider: "none" });
+      expect(readFileSync(join(repo, ".markdownlint.yaml"), "utf8")).toBe("MD013: true\n");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it.each([
     { preset: "minimal", answer: "", expected: false, defaultPrompt: "y/N" },
     { preset: "recommended", answer: "", expected: false, defaultPrompt: "y/N" },
@@ -93,6 +117,9 @@ describe("specdojo init", () => {
       } else {
         expect(existsSync(join(repo, ".markdownlintignore"))).toBe(false);
       }
+      expect(existsSync(join(repo, ".markdownlint.yaml"))).toBe(
+        !expected && !flags.includes("--lefthook"),
+      );
       if (flags.includes("--lefthook")) {
         expect(readFileSync(join(repo, ".markdownlintignore"), "utf8")).toContain(
           ".claude/agents/",
@@ -528,6 +555,7 @@ describe("specdojo init", () => {
       expect(readFileSync(join(repo, "package.json"), "utf8")).toBe(packageBefore);
       expect(output.join("")).toContain("Skipped (already exists): .specdojo/specdojo.config.json");
       expect(output.join("")).toContain("[dry-run] would write: .specdojo/agent-members.yaml");
+      expect(existsSync(join(repo, ".markdownlint.yaml"))).toBe(false);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }

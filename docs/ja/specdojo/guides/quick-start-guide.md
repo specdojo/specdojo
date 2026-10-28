@@ -336,6 +336,15 @@ npx specdojo config init
 
 `specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形は register だけを使える最小構成であり、project パスはリポジトリルートを基準とし、`run.worktree_base` はディレクトリ名から作る `../<リポジトリ名>-worktrees` を指します。例えば `app1-specdojo/` では `../app1-specdojo-worktrees` です。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。catalog、schedule、exec へ進むときに追加するキーと既定値は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] で確認できます。
 
+通常の `init` と `config init` は、markdownlint の設定がなければリポジトリ直下に
+`.markdownlint.yaml` も作ります。日本語の長い行などを許容するため、MD013・MD024・MD033・MD036・MD041・MD060
+を無効にし、ほかの記法検査は維持します。既存の設定は上書きしません。既存の利用リポジトリでも
+`npx specdojo config init --dry-run` で確認してから `npx specdojo config init` を再実行すると、
+不足する設定を追加できます。設定がないままでも、exec の result の commit 前検査は同じ基本規則を使います。
+既存設定で MD013 が有効ならその指定を優先するため、長い行を許容する場合は利用側の設定で
+`MD013: false` を指定してください。CLI2 と hook の設定の関係は
+[[specdojo:command-reference|CLIコマンドリファレンス]] を参照してください。
+
 プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書は `app1-specdojo/docs/ja/projects/` に置きます。同梱の SpecDojo の型（Kata）は `app1-specdojo/docs/ja/specdojo/<種類>s/`、このリポジトリで新しく作る kata はその下の `<kata_authority>/` から解決します。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
 
 成果物と実装を常に同じ変更・履歴として扱う場合に限り、**同一リポジトリ構成**としてプロダクトリポジトリのルートで同じ初期化手順を実行できます。CLI は構成を強制しません。
@@ -363,8 +372,11 @@ npm install
 markdownlint で検査します。対象 project の `project_register_path` 配下を変更した場合は
 `register build`、`catalog_path` 配下を変更した場合は `catalog validate` も実行します。
 `catalog_path` がない構成には catalog の検査を生成せず、時間のかかるテストも pre-commit には
-含めません。SpecDojo の文書が通る `.markdownlint.jsonc` と、provider の agent 定義を検査から外す
-`.markdownlintignore` も生成します。既存の markdownlint 設定と ignore は `--force` を付けても保持します。
+含めません。設定がなければ、同じ基本規則の `.markdownlintrc` と VS Code 向けの
+`.markdownlint-cli2.yaml`、provider の agent 定義を検査から外す `.markdownlintignore` も生成します。
+`init --lefthook` / `--slidev` もこの配置を使います。既存の `.markdownlint.yaml` などの設定と ignore は
+`--force` を付けても保持します。CLI2 の overrides を使う場合は
+[[specdojo:command-reference|CLIコマンドリファレンス]] の手順で既存設定を `.markdownlintrc` に移してください。
 `lefthook.yml` と `tools/` の既存ファイルは `--force` なしでは上書きしません。
 必要な npm script と devDependencies は書き込み前に表示し、同名の既存項目は `--force` を付けても
 保持します。linked worktree または `node_modules` がない環境では installer が安全に skip するため、
