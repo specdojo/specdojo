@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_91fe2eafd971407d83228bbb8f2e541f
+  ts: "2026-10-28T12:06:35Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 同じテストの時間切れが 2 日で 3 回起き、実行のやり直しが続いたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: MD060 の review テンプレートのテストが負荷で 5 秒の上限を超える
+    - field: description
+      from: ""
+      to: tests/src/exec/review-template-table.test.ts の MD060 のテストが、親の検証の負荷で 5.0〜5.7 秒かかり時間切れになる。PJR-EVAE・PJR-484B・PJR-0D0T の実行で落ち、そのたびに親の検証をやり直した
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
