@@ -12,7 +12,7 @@ specdojo:
   difficulty: medium
   owner: DEV
   registered_at: "2026-10-27T12:32:57Z"
-  block_reason: "parent validation failed: lint-fm, test-unit"
+  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-XSM8
   depends_on:
@@ -46,6 +46,7 @@ bdd の domain を data、ifx-cmd・ifx-msg の command・message を api にす
 | 2   | 古い値のエラーと照合の拡張を実装する                  | executor | done | YAML schema 検証に主 rulebook との照合を追加                |
 | 3   | yaml-pages が YAML の type を引き継ぐようにする       | executor | done | 配置パスからの分類を削除                                    |
 | 4   | CHANGELOG を更新し、テストを足す                      | executor | done | 移行手順と全11件の表示ページ・検証の回帰テストを追加        |
+| 5   | 再開時の親検証失敗を修正する                          | executor | done | 型を持たない YAML の表示ページと索引再走査を修正            |
 
 ## 4. 対応結果
 
@@ -57,6 +58,9 @@ bdd の domain を data、ifx-cmd・ifx-msg の command・message を api にす
 - 親 runner が typecheck・lint-ts・lint-md・lint-fm・test-unit・test-integration・validate-schema の7件を実行する。executor は同じ検査を重ねて実行せず、個別 schema 検証・整形・hook の補足検証を担当する。
 - executor 検証結果: YAML sample 全11件・ifx-cmd テンプレート・既存 gl の modeline 検証は成功した。外部形式の3件とテンプレートもメタ情報の照合を実行している。ifx-cmd の schema には `metadata_template.type: api` も定義し、テンプレートと sample の直接 schema 検証も成功した。
 - executor 検証結果: Prettier 整形、変更 Markdown の markdownlint、YAML 表示ページの再生成（91件更新・50件変更なし・他生成器の19件を保持）、登録簿ビュー生成、prj-0001 のカタログ検証が成功した。CLI の補足検証は `.env` を読み込まないよう dotenv の読み込み処理を無効にして実施した。カタログ検証には未作成文書への参照警告があるが、エラーはない。result の編集と親7検査の結果記録は後続 reporter・runner に引き継ぐ。
+- 再開時の修正・設計判断: 前回の親 `lint:fm` は、ジョブ定義・ルーチン定義・評価記録など成果物の `type` を持たない YAML の表示ページ74件で失敗した。これらも表示先と本文は維持し、成果物 Frontmatter を付けずに生成する。正本が持つ `type` の継承と、配置パスによる分類を補わない原則を両立させるためである。この例外をメタ情報標準に記載し、旧生成ページの更新・冪等性の回帰テストを追加した。成果物の型の欠落は正本 YAML の schema・宣言照合が検出する。
+- 再開時の修正: sample 全11件の照合テストは、各ファイルで rulebook 索引を作り直して5秒の制限を超えていた。検証 CLI と同様に checker を共有し、索引構築を1回にした。制限時間は変更していない。
+- 再開時の executor 検証結果: sample 全11件・テンプレート・既存 gl の modeline 検証、および bdd・gl・ifx-cmd の直接 schema 検証が成功した。表示ページは77件更新・64件変更なし・他生成器の19件を保持し、ジョブ定義と評価記録の表示ページに不完全な Frontmatter が残っていないことを確認した。登録簿ビュー生成・カタログ検証も成功した（未作成成果物の参照警告のみ）。Prettier・変更 Markdown の markdownlint も成功し、親7検査の再実行と result への反映は runner・reporter が担当する。
 
 ## 5. 関連ドキュメント
 
