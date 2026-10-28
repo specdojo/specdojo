@@ -15,6 +15,7 @@ import { load } from "../shared/yaml.js";
 import { assertAuthorableKataId, authoredKataExists, authoringKind } from "../kata/authoring.js";
 import { CATALOG_LESS_APPROACHES, resolveRegisterDeliverableTarget } from "./deliverable-target.js";
 import { resolveAuthoringSources } from "./authoring-sources.js";
+import { isPlanningApproach, validatePlanningTarget } from "./planning.js";
 
 const MAINTENANCE_TARGET_KIND: Partial<Record<Approach, string>> = {
   "rulebook-maintenance": "rulebook",
@@ -135,6 +136,19 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
 
   if (!approach && !opts.validateTargetsWithoutApproach) return;
   if (targets.length === 0) return;
+
+  if (isPlanningApproach(approach)) {
+    validatePlanningTarget({
+      repoRoot: opts.repoRoot,
+      approach,
+      target: targets[0],
+      project:
+        opts.project ??
+        loadConfig(opts.repoRoot).config?.projects[opts.projectId] ??
+        (opts.catalogPath ? { catalog_path: opts.catalogPath } : {}),
+    });
+    return;
+  }
 
   const entries = collectDocIndexEntries(resolve(opts.repoRoot, "docs"), opts.repoRoot);
   if (!approach) {

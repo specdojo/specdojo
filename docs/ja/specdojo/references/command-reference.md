@@ -444,7 +444,7 @@ specdojo schedule strategy generate \
 | `catalog-scaffold.md` | `dct-<domain>.yaml` が未作成のドメインと `catalog scaffold` 実行コマンド |
 | `timeline.json`       | 後続コマンドが読む機械可読サマリー                                       |
 
-`depends_on` の未定義参照・循環、`depends_on` と `order` の矛盾、track id の重複を検出した場合は、生成物を書き込まずに終了コード 1 で停止します。`catalog_status` と実カタログの有無が食い違う場合は警告のみを出します。カタログの突き合わせはファイル名ではなく各 `dct-*.yaml` の `domain` 値で行うため、1 ドメインが複数ファイルに分割されていても検出できます。
+`depends_on` の未定義参照・循環、`depends_on` と `order` の矛盾、track id の重複を検出した場合は、生成物を書き込まずに終了コード 1 で停止します。`catalog_status` と実カタログの有無が食い違う場合は警告のみを出します。`project_register_path` がある場合、`catalog-planning` の todo を domain ごとに読み、`done` が一件でもあればその domain を `primary`、着手中（`in-progress` / `waiting` / `review`）なら `draft`、`open` だけなら `not_started` と導きます。`rejected` / `deferred` は導出から除外します。対象 todo がない domain は従来の手書き値を使います。複数 domain の track は全 domain が `primary` なら着手可能とし、一部だけ進んでいれば `draft` とします。手書きの値との差は警告し、`tml-index.yaml` は変更しません。todo を reopen した場合も次回 build で再計算します。`timeline.json` の `track_catalog_status` は導出後の track 別状態です。strategy 生成も同じ導出を使います。カタログの突き合わせはファイル名ではなく各 `dct-*.yaml` の `domain` 値で行うため、1 ドメインが複数ファイルに分割されていても検出できます。
 
 `timeline_path` は未設定の場合、プロジェクト直下の `timeline` を既定とします。記述ルールは [タイムライン作成ルール](../rulebooks/tml-rulebook.md)、生成フローと運用タイミングは [Timeline設計ガイド](../guides/timeline-design-guide.md)、トラックの標準構成と実行順序は [トラック設計ガイド](../guides/track-design-guide.md) を参照します。
 
@@ -484,7 +484,7 @@ specdojo schedule strategy generate \
 | `--conclusion <text>`        | 終端時の結論を記録・更新（`update` では `-` で削除）                | `add` / `update` / 終端コマンド                  |
 | `--block-reason <text>`      | `waiting` の理由を更新（`-` で削除）                                | `update`                                         |
 | `--approach <approach>`      | 個票の進め方を指定（`update` では `-` で削除）                      | `add` / `update`                                 |
-| `--target <doc-id>`          | 対象文書 ID を指定（繰り返し可、`update` では `-` で削除）          | `add` / `update`                                 |
+| `--target <target>`          | 対象文書 ID を指定（繰り返し可、`update` では `-` で削除）          | `add` / `update`                                 |
 | `--target-path <path>`       | 成果物のリポジトリ相対パス（`update` は `-` で削除）                | `add` / `update`                                 |
 | `--target-rulebook <doc-id>` | 成果物の rulebook ID（`update` は `-` で削除）                      | `add` / `update`                                 |
 | `--source <ref>`             | kata authoring の手本を指定（繰り返し可、`update` では `-` で削除） | `add` / `update`                                 |
@@ -530,6 +530,21 @@ specdojo schedule strategy generate \
 `register add` / `update` の `--depends-on <ID>` は、起票の由来を示す `derived_from` と区別して、先行項目を `depends_on` に記録します。反復指定で一覧を設定・置換し、`--depends-on -` 単独で削除します。書式と別 project の存在確認は `--from` と同じです。存在しない ID、自己参照、project 間を含む循環を記帳前と `register build` で拒否し、変更を event に記録します。実行はすべての先行項目が `done` / `decided` の場合だけ許可し、`rejected` / `deferred` では進めません。直接の `exec run --register` は未完了の先行 ID と状態を表示して停止し、routine の sweep（`--register-filter`）と夜間 queue は対象を飛ばして理由を出力します。夜間の理由は朝報告にも残し、状態を自動で `waiting` に変えません。スキップは件数上限に数えません。先行完了後の再選択は次回の実行で行います。`generated/pjr-index.md` の `depends_on` 列と、逆引きビュー `generated/pjr-dependent-items.md` で関係を確認できます。
 
 `external_projects` に宣言した別名を `register add --project <別名> --commit` へ渡すと、相手のリポジトリの `node_modules/.bin/specdojo` を起動し、宣言した実 project ID で起票します。相手の登録簿の形式、名簿、`integration_branch`、commit は相手の CLI に任せ、呼び出し元は相手のファイルを直接変更しません。`--from <別名>:PJR-XXXX` は相手へ `<実 project ID>:PJR-XXXX` として渡すため、相手の CLI が存在を検証し、`derived_from` にも実 project ID が残ります。別 project への起票で `--source` を使う場合、相手の SpecDojo は 0.4.5 以上である必要があります。
+
+カタログ・strategy を作る register 専用の approach は、文書 ID の代わりに作業単位を指定します。実行時の project を対象範囲とするため、未作成の文書や物理分割された domain も一つの todo で扱えます。`--source`・`--target-path`・`--target-rulebook` は使用しません。
+
+```bash
+specdojo register add --project prj-0001 --type todo --from PJR-AB12 \
+  --title "カタログを作る" --topic catalog-planning \
+  --approach catalog-planning --target domain:data-model
+specdojo register add --project prj-0001 --type todo --from PJR-AB12 \
+  --title "strategy を作る" --topic strategy-planning \
+  --approach strategy-planning --target track:data-model
+```
+
+- `catalog-planning`: `catalog_path` が必要です。plan は既存カタログと DCT の kata・domain ごとの template を参照し、`catalog plan prompt` に沿った agent の判定、`catalog plan scaffold --from`、`catalog plan validate`、`catalog scaffold --plan`、`catalog validate` を完了条件として展開します。上流資料が不足する場合は `--input` で明示し、未確定事項を推測で補いません。
+- `strategy-planning`: `catalog_path` と `schedule_path` が必要です。timeline がある場合は定義済み track に限定します。timeline がない場合は strategy の明示 scope を使います。plan は既存カタログと Schedule の kata を参照し、`sch-strategy-<track>.yaml` の `scope.catalogs`・`approach_rules` の intent・担当の宣言、`schedule strategy generate`、`schedule build --track` の成功を完了条件として展開します。
+- 対象はそれぞれ `domain:<id>` / `track:<id>` の 1 件です。ID は英小文字・数字・ハイフン、先頭は英小文字または数字、最大 63 文字です。個票の追加完了条件も plan に取り込みます。両 approach を schedule の成果物タスクへ指定することはできません。
 
 `register add --approach <approach> --target <doc-id>` は、個票 Frontmatter に進め方と対象を書きます。成果物を作成・修正する進め方は成果物カタログにある文書を、`rulebook-maintenance` などの保守の進め方は名前に対応する kata 種別を対象にし、対象は 1 件だけです。`rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` は `--target` に新しい kata ID、繰り返し可能な `--source` に手本を指定し、個票 Frontmatter の `sources` へ保存します。
 

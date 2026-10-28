@@ -52,6 +52,8 @@ import {
   type ResolvedAuthoringSource,
 } from "../register/authoring-sources.js";
 import { repoEnvironmentVariableName } from "./task-repos.js";
+import { isPlanningApproach } from "../register/planning.js";
+import { planningPlanFields } from "./plans-planning.js";
 
 // ---------------------------------------------------------------------------
 // Item category
@@ -554,7 +556,19 @@ export async function generateRegisterPlan(opts: {
     let cataloglessConditions = "";
     let planTargets = [targetId];
     let authoring: Parameters<typeof generateRegisterApproachPlan>[0]["authoring"];
-    if (newKataKind) {
+    if (isPlanningApproach(item.approach)) {
+      const project = loadConfig(specdojoRootDir()).config?.projects[opts.projectId] ?? {};
+      const fields = planningPlanFields({
+        repoRoot: specdojoRootDir(),
+        projectId: opts.projectId,
+        project,
+        catalogPath: opts.catalogPath ?? "",
+        approach: item.approach,
+        target: targetId,
+      });
+      refs = fields.refs;
+      cataloglessConditions = fields.conditions;
+    } else if (newKataKind) {
       const sourceRefs = [...(item.targets ?? []).slice(1), ...(item.sources ?? [])];
       const project = loadConfig(specdojoRootDir()).config?.projects[opts.projectId] ?? {};
       const resolvedSources = resolveAuthoringSources({
