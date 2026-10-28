@@ -76,3 +76,32 @@
       from: '["PJR-RYK8"]'
       to: '["PJR-484B"]'
   previous_event_id: reg_b373e1724efe4b179edcdf4ef054ffd0
+- v: 1
+  id: reg_6c65193b45b64028b94ef6989d990a59
+  ts: "2026-10-28T11:12:25Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_f340e3a6aa114a0dafc476e6f610771f
+- v: 1
+  id: reg_aa63aafcff9040b6b3106741ceac5cab
+  ts: "2026-10-28T11:31:46Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-fm, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-fm, test-unit"
+  previous_event_id: reg_6c65193b45b64028b94ef6989d990a59
