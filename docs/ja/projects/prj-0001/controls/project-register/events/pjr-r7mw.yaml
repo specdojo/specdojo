@@ -38,3 +38,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-WAGY"]'
+- v: 1
+  id: reg_f0d41ce91c66451bbc7adc84aa09f1ca
+  ts: "2026-10-28T09:36:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: done
+  reason: 利用者の判断に沿って直し、timeline build の通過を確かめたため
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: data-flow-pdca の order を 4 にし、timeline build が通るようにした
+  previous_event_id: reg_963368edf4f34beda419c7a387d94e3b

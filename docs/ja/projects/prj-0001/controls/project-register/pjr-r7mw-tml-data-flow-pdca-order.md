@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-r7mw-tml-data-flow-pdca-order
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: open
+  item_status: done
   priority: medium
   difficulty: easy
   registered_at: "2026-10-28T00:45:33Z"
+  completed_at: "2026-10-28T09:36:22Z"
+  conclusion: data-flow-pdca の order を 4 にし、timeline build が通るようにした
   derived_from:
     - PJR-WAGY
 ---
