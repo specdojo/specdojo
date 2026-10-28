@@ -23,18 +23,29 @@ specdojo:
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- PJR-484B・0D0T・EXH2・WAGY・B4Y4・6RVJ・9ZN5・05GN・EVAE・9SXH・XSM8・H988・N9JC・8NWR がすべて `done` である。
+- `package.json` と `package-lock.json` の版が `0.5.0` で、`CHANGELOG.md` の `[Unreleased]` を `0.5.0` の節として日付を付けて確定している。
+- 破壊的変更を含むため、`CHANGELOG.md` の `0.5.0` の節の先頭に移行手順（rulebook への `deliverable_type` の追加、YAML の旧 type の置き換え、表示ページの再生成）をまとめている。
+- ルートと `packages/docs-lint`・`packages/docs-site`・`packages/vscode-specdojo` の `npm ci` が通り、クリーンな作業ツリーで `npm run check` が通る。
+- `npm pack` の配布物を空の Git リポジトリへ入れ、`init`、`register add`（`epic` と `--depends-on` を含む）、`exec run --register`、`lint:fm` の動作を確かめる。
+- 公開候補が PR の merge commit で `main` へ入り、その commit を指す `v0.5.0` タグから npm の公開 workflow が起動する。push・PR の merge・npm 公開の承認は利用者が行う。
+- 公開後に npm の `latest` が `0.5.0` であること、タグで起動した workflow の結果、npm から入れた版の動作を確かめる。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                 | 担当                  | 状態 | メモ |
+| --- | ------------------------------------ | --------------------- | ---- | ---- |
+| 1   | 版番号と変更履歴・移行手順を確定する | specdojo-orchestrator | open | -    |
+| 2   | 全体検証と配布物の試用を行う         | specdojo-orchestrator | open | -    |
+| 3   | PR を merge し、タグを push する     | BA                    | open | -    |
+| 4   | npm 公開を承認し、公開版を確かめる   | BA                    | open | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+-
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-484b-deliverable-type-declaration]]
+- [[prj-0001:pjr-0d0t-yaml-deliverable-type-alignment]]
+- [[prj-0001:pjr-e6qa-release-v0-4-7]]
