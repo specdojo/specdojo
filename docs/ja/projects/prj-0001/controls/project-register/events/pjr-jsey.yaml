@@ -2726,3 +2726,19 @@
       from: PJR-0D0T の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
       to: PJR-EXH2 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
   previous_event_id: reg_afb12e69ef0b4349b2373e2aef544977
+- v: 1
+  id: reg_2e1d908b956f4025894b8e5a68b71024
+  ts: "2026-10-28T22:36:35Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-0QW0 の統合後の動作確認
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-28"
+      to: "-"
+  previous_event_id: reg_c0a1ace57cf641e7a2a3d0f826017c54
