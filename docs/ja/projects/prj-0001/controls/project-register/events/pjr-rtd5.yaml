@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_53a6a360e10b40269d1edd4b6dc9d659
+  ts: "2026-10-28T10:31:43Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: 利用者との対話で、用途別のひな型の方針の論点と推奨を整理したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 用途別のひな型（スターター）の範囲と提供の形を決める
+    - field: description
+      from: ""
+      to: Next.js と Cloudflare、scratch-lesson、ランディングページなど用途別のひな型で onboarding のハードルを下げる。3 層の構成、追加の設定の渡し方、GitHub の template repository での提供、定期的な作り直し、複製後の初期化、セキュリティの自動チェックを決める
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-5TZS","PJR-DQ9E"]'
