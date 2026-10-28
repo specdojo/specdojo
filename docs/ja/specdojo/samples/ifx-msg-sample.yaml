@@ -7,8 +7,9 @@ info:
 
 x-spec-meta:
   id: specdojo:ifx-msg-sample
-  type: message
+  type: api
   status: draft
+  rulebook: specdojo:ifx-msg-rulebook
   based_on: []
 
 defaultContentType: application/json

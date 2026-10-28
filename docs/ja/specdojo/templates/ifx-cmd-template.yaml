@@ -10,7 +10,7 @@ title: 外部コマンド連携仕様テンプレート
 rulebook: none
 metadata_template:
   id: ifx-cmd-_TERM_
-  type: command
+  type: api
   status: draft
   title: _COMMAND_SPEC_TITLE_
   rulebook: specdojo:ifx-cmd-rulebook

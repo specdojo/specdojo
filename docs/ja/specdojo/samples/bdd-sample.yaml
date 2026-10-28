@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=../../../specdojo/schemas/v1/bdd.schema.yaml
 id: specdojo:bdd-sample
-type: domain
+type: data
 title: 業務データ辞書(main)
 status: draft
 rulebook: specdojo:bdd-rulebook

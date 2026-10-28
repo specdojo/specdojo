@@ -8,7 +8,7 @@ SpecDojo の利用者に影響する変更を記録します。
 
 - 成果物の `type` に `requirement`（機能・非機能要件・受入基準）と `glossary`（用語集）を追加し、`project` はプロジェクトの管理文書に限定しました。各 rulebook の `specdojo.deliverable_type` を必須とし、Markdown 成果物・sample・テンプレートの生成物 Frontmatter と `lint:fm` で照合します（PJR-484B）。
 - 既存の rulebook には、扱う成果物の `type` を `specdojo.deliverable_type` として追加してください。次に、その rulebook を参照する成果物・sample の `specdojo.type` と、テンプレートの `specdojo.frontmatter_template.specdojo.type` を宣言値に書き換えてください。テンプレート自身の `specdojo.type` は `template` のままにします。`lint:fm` を実行し、エラーに表示される宣言値にそろえてください。移行期間は設けず、従来の `project` や `sample` も宣言と違えばエラーにします。
-- YAML 成果物の `type` と、その表示用ページの移行は後続の PJR-0D0T で扱います。
+- YAML 成果物も rulebook の宣言と照合します（PJR-0D0T）。既存の bdd は `type: domain` を `data`、ifx-cmd は `command` を `api`、ifx-msg の `x-spec-meta.type` は `message` を `api` に変更してください。gl には `type: glossary` と `rulebook: specdojo:gl-rulebook` を追加し、OpenAPI / AsyncAPI の `x-spec-meta` と IF 一覧にも対応する `rulebook` を記載してください。YAML テンプレートの `metadata_template.type` も宣言値に合わせ、自身の `type: template` は維持します。`npm run validate:schema:yaml` を実行し、エラーに示された置き換え先へ修正してください。旧値は即時エラーとなり、`specdojo-schema: none` / `validate=false` でもメタ情報は検証します。最後に `specdojo yaml-pages build` で表示ページを再生成してください。表示ページは元 YAML の `type` を引き継ぎます。
 
 ### 追加機能
 

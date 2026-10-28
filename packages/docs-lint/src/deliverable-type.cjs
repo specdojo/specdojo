@@ -56,15 +56,15 @@ function buildRulebookIndex(workspaceRoot) {
 
 module.exports = function createDeliverableTypeChecker(workspaceRoot) {
   let index;
-  return function check(metadata, relativePath, source, hasArtifactSchema) {
-    // YAML display pages belong to the separate YAML type migration (PJR-0D0T).
-    if (
-      relativePath.split("/").includes("generated") &&
-      source.includes("<!-- specdojo:generated-by=yaml-pages -->")
-    )
-      return [];
+  return function check(metadata, relativePath, source, hasArtifactSchema, format = "markdown") {
+    const isYaml = format === "yaml";
+    const isRecord = (value) =>
+      value !== null && typeof value === "object" && !Array.isArray(value);
+    const isExternal = isYaml && isRecord(metadata?.["x-spec-meta"]);
+    if (isExternal) metadata = metadata["x-spec-meta"];
     // These documents may link to an artifact's rulebook, but have their own schemas/types.
     if (
+      !isYaml &&
       !hasArtifactSchema &&
       [
         "rulebook",
@@ -79,9 +79,32 @@ module.exports = function createDeliverableTypeChecker(workspaceRoot) {
     )
       return [];
     const isTemplate = metadata?.type === "template";
-    const target = isTemplate ? metadata.frontmatter_template?.specdojo : metadata;
+    const target = isTemplate
+      ? isYaml
+        ? metadata.metadata_template
+        : metadata.frontmatter_template?.specdojo
+      : metadata;
+    const field = isYaml
+      ? isTemplate
+        ? "metadata_template.type"
+        : isExternal
+          ? "x-spec-meta.type"
+          : "type"
+      : isTemplate
+        ? "specdojo.frontmatter_template.specdojo.type"
+        : "specdojo.type";
+    const replacements = { domain: "data", command: "api", message: "api" };
+    const replacement =
+      typeof target?.type === "string" && Object.hasOwn(replacements, target.type)
+        ? replacements[target.type]
+        : undefined;
+    const legacyErrors = replacement
+      ? [
+          `${field}: ${JSON.stringify(target.type)} is no longer supported. Set type to ${JSON.stringify(replacement)}.`,
+        ]
+      : [];
     const ref = target?.rulebook;
-    if (typeof ref !== "string" || ref === "none") return [];
+    if (typeof ref !== "string" || ref === "none") return legacyErrors;
 
     index ??= buildRulebookIndex(workspaceRoot);
     const candidates = ref.includes(":")
@@ -89,20 +112,22 @@ module.exports = function createDeliverableTypeChecker(workspaceRoot) {
       : [...index.entries()]
           .filter(([id]) => id === ref || id.endsWith(`:${ref}`))
           .flatMap(([, entries]) => entries);
-    const field = isTemplate ? "specdojo.frontmatter_template.specdojo.type" : "specdojo.type";
     if (candidates.length !== 1) {
       return [
+        ...legacyErrors,
         `${field}: rulebook ${ref} ${candidates.length ? "is ambiguous" : "was not found"}; cannot check deliverable_type.`,
       ];
     }
     const [{ metadata: rulebook, filePath }] = candidates;
     if (typeof rulebook.deliverable_type !== "string" || !rulebook.deliverable_type) {
       return [
+        ...legacyErrors,
         `Rulebook ${ref} (${filePath}) must declare deliverable_type before ${field} can be checked.`,
       ];
     }
-    if (target.type === rulebook.deliverable_type) return [];
+    if (target.type === rulebook.deliverable_type) return legacyErrors;
     return [
+      ...legacyErrors,
       `${field}: ${JSON.stringify(target.type) ?? "missing"} does not match rulebook ${ref}; declared deliverable_type is ${JSON.stringify(rulebook.deliverable_type)}. Set type to ${JSON.stringify(rulebook.deliverable_type)}.`,
     ];
   };
