@@ -49,6 +49,8 @@ const KNOWN_APPROACHES = [
   "recipe-guided",
   "freeform",
   "bootstrap",
+  "catalog-planning",
+  "strategy-planning",
   "rulebook-authoring",
   "recipe-authoring",
   "sample-authoring",

@@ -110,7 +110,7 @@ properties:
           minLength: 1
         minItems: 1
         description: >
-          Doc ids of the documents this task targets. Existing documents are resolvable via the
+          Document IDs, or domain:<id> / track:<id> for register planning approaches. Existing documents are resolvable via the
           doc index. For deliverable work, the first entry is the target deliverable and subsequent
           entries are reference materials the approach may modify or confirm. For *-authoring
           register tasks, the entry is an intentionally not-yet-existing kata id; read-only

@@ -134,8 +134,8 @@ export function registerCreateCommands(
   addCmd.option("--target-rulebook <doc-id>", "Deliverable rulebook id (new id for bootstrap)");
   addCmd.option("--approach <approach>", `Execution approach: ${APPROACHES.join(" | ")}`);
   addCmd.option(
-    "--target <doc-id>",
-    "Target document id (repeatable; authoring accepts legacy exemplar targets after the first)",
+    "--target <target>",
+    "Document id, domain:<id> for catalog-planning, or track:<id> for strategy-planning (repeatable)",
     collectTarget,
   );
   addCmd.option(
@@ -361,7 +361,7 @@ export function registerUpdateCommand(
     `Update execution approach (${APPROACHES.join(" | ")}; use - to remove)`,
   );
   updateCmd.option(
-    "--target <doc-id>",
+    "--target <target>",
     "Replace target document ids (repeatable; legacy authoring exemplars may follow; use - to remove)",
     collectTarget,
   );

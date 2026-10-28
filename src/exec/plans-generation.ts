@@ -10,6 +10,7 @@ import type { ReviewViewpoint } from "../review/types.js";
 import type { RoleDefinition } from "./role-types.js";
 import type { ReviewGradeOutcome } from "../review/grade.js";
 import { isAuthoringApproach, type AuthoringKind } from "../kata/authoring.js";
+import { isPlanningApproach } from "../register/planning.js";
 import {
   MISSING,
   applicableReviewCriteria,
@@ -170,9 +171,11 @@ function buildEditPlanMarkdown(
   const section = [
     "## 個票の追加完了条件",
     "",
-    deliverable?.catalogless
-      ? "個票が定める次の条件と rulebook を満たす。"
-      : "成果物カタログの `done_criteria` に加え、登録簿の個票が定める次の条件も満たす。",
+    isPlanningApproach(task.approach)
+      ? "次の生成手順・完了条件と、個票が定める追加条件を満たす。"
+      : deliverable?.catalogless
+        ? "個票が定める次の条件と rulebook を満たす。"
+        : "成果物カタログの `done_criteria` に加え、登録簿の個票が定める次の条件も満たす。",
     "",
     planOverrides.additionalConditions.trim(),
     "",
@@ -301,9 +304,12 @@ async function writeTaskPlan(
   },
 ): Promise<string> {
   const mode: TaskMode = task.mode ?? "edit";
-  if (isAuthoringApproach(task.approach) && override?.origin !== "register") {
+  if (
+    (isAuthoringApproach(task.approach) || isPlanningApproach(task.approach)) &&
+    override?.origin !== "register"
+  ) {
     throw new Error(
-      `Approach ${task.approach} is register-only because schedule targets cannot express a new kata id followed by exemplar deliverables`,
+      `Approach ${task.approach} is register-only because schedule targets cannot express its target contract`,
     );
   }
   const localId = task.local_id;

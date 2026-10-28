@@ -7,6 +7,7 @@ import {
   getProjectRolesPath,
   getProjectSchedulePath,
   getProjectTimelinePath,
+  getProjectRegisterPath,
   loadConfig,
   loadEnv,
   loadMemberRoster,
@@ -347,11 +348,13 @@ function registerScheduleStrategyCommands(sch: Command): void {
       if (!context.catalogPath) {
         throw new Error(`catalog_path not set for project '${context.projectId}'.`);
       }
+      const registerPath = getProjectRegisterPath(context.project);
       const result = generateStrategy({
         repoRoot: context.baseDir,
         schedulePath: context.schedulePath,
         catalogPath: context.catalogPath,
         timelinePath: context.timelinePath,
+        ...(registerPath ? { registerPath: resolve(context.baseDir, registerPath) } : {}),
         ...(context.rolesPath ? { rolesPath: context.rolesPath } : {}),
         projectId: context.projectId,
         track,

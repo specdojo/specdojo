@@ -1,6 +1,7 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { collectCatalogFilesByDomain } from "../shared/catalog-files.js";
+import { resolveTimelineCatalogStatus } from "../register/catalog-status.js";
 import {
   loadTimelineIndex,
   type CatalogStatus,
@@ -151,6 +152,7 @@ export function buildCatalogScaffoldPlans(
 export function buildTimeline(opts: {
   timelinePath: string;
   catalogPath: string | null;
+  registerPath?: string;
 }): TimelineBuildResult {
   const indexFile = join(opts.timelinePath, "tml-index.yaml");
   if (!existsSync(indexFile)) {
@@ -160,6 +162,10 @@ export function buildTimeline(opts: {
   const { index, errors: loadErrors } = loadTimelineIndex(indexFile);
   const errors = [...loadErrors];
   const warnings: string[] = [];
+
+  const derived = resolveTimelineCatalogStatus(index.tracks, opts.registerPath);
+  index.tracks = derived.tracks;
+  warnings.push(...derived.warnings);
 
   const structure = validateTimelineTracks(index.tracks);
   errors.push(...structure.errors);
@@ -206,7 +212,7 @@ export function renderTimelineOrderMarkdown(result: TimelineBuildResult): string
   lines.push("");
   lines.push(
     `この文書は \`tml-index.yaml\` から \`specdojo timeline build\` が生成した派生ビューです。` +
-      `直接編集せず、\`tml-index.yaml\` を更新してください。`,
+      `直接編集せず、計画は \`tml-index.yaml\`、カタログ作成の完了は register の todo に記録してください。`,
   );
 
   for (const wave of result.waves) {

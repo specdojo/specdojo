@@ -72,6 +72,8 @@ const PLAN_APPROACHES: readonly Approach[] = [
   "recipe-guided",
   "freeform",
   "bootstrap",
+  "catalog-planning",
+  "strategy-planning",
   "rulebook-authoring",
   "recipe-authoring",
   "sample-authoring",

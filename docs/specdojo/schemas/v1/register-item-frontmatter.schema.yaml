@@ -267,7 +267,8 @@ properties:
             description: >
               Execution approach. Authoring approaches use the target as the new kata id and
               sources as read-only exemplars. For compatibility, additional targets are also
-              accepted as exemplar sources. Other approaches require one compatible document id.
+              accepted as exemplar sources. Planning approaches require one domain:<id> or track:<id>
+              target. Other approaches require one compatible document id.
 
           targets:
             type: array
@@ -276,7 +277,7 @@ properties:
               minLength: 1
             minItems: 1
             description: >
-              Doc ids of documents this register item targets. Deliverable targets
+              Document IDs or planning units (domain:<id> for catalog-planning, track:<id> for strategy-planning). Deliverable targets
               used with an approach prefer the project catalog; target_path and target_rulebook or existing frontmatter allow catalog-less resolution so that
               not-yet-created deliverables can be selected; kata and standalone
               targets are resolved via the doc index. When present, exec plan
@@ -371,6 +372,8 @@ $defs:
       - recipe-guided
       - freeform
       - bootstrap
+      - catalog-planning
+      - strategy-planning
       - rulebook-authoring
       - recipe-authoring
       - sample-authoring
@@ -383,7 +386,7 @@ $defs:
       - template-maintenance
       - finalize
       - bootstrap-finalize
-    description: "Execution approach shared with src/shared/agent-types.ts."
+    description: "Execution approach shared with src/shared/agent-types.ts. catalog-planning and strategy-planning are register-only."
 
   Date:
     type: string

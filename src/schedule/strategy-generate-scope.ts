@@ -6,6 +6,7 @@ import type { DctDoc } from "../catalog/types.js";
 import { collectCatalogFilesByDomain } from "../shared/catalog-files.js";
 import { readYaml } from "../shared/fs.js";
 import { loadTimelineIndex } from "../shared/timeline-index.js";
+import { resolveTimelineCatalogStatus } from "../register/catalog-status.js";
 
 export type StrategyCatalogRef = {
   id: string;
@@ -48,6 +49,7 @@ export function resolveTrackScopeCatalogs(opts: {
   repoRoot: string;
   catalogPath: string;
   timelinePath: string;
+  registerPath?: string;
   track: string;
   existingStrategy?: Record<string, unknown> | null;
 }): ScopeResolution {
@@ -75,6 +77,9 @@ export function resolveTrackScopeCatalogs(opts: {
   const indexFile = join(timelinePath, "tml-index.yaml");
   if (existsSync(indexFile)) {
     const { index, errors: loadErrors } = loadTimelineIndex(indexFile);
+    const derived = resolveTimelineCatalogStatus(index.tracks, opts.registerPath);
+    index.tracks = derived.tracks;
+    warnings.push(...derived.warnings);
     if (loadErrors.length > 0) {
       warnings.push(`${basename(indexFile)}: ${loadErrors.join(" / ")}`);
     }
@@ -96,7 +101,7 @@ export function resolveTrackScopeCatalogs(opts: {
       if (plan.catalog_status !== "primary") {
         warnings.push(
           `timeline: track '${track}' の catalog_status は '${plan.catalog_status}'。` +
-            `strategy 生成では昇格させないため、確認後に人間が primary へ更新する。`,
+            `カタログ作成 todo の完了を確認して timeline build を実行する。todo がない domain は手書きの計画値を使う。`,
         );
       }
     } else {

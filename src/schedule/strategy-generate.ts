@@ -328,6 +328,7 @@ export function generateStrategy(opts: {
   schedulePath: string;
   catalogPath: string;
   timelinePath: string;
+  registerPath?: string;
   rolesPath?: string;
   projectId: string;
   track: string;
@@ -348,6 +349,7 @@ export function generateStrategy(opts: {
     repoRoot: opts.repoRoot,
     catalogPath: opts.catalogPath,
     timelinePath: opts.timelinePath,
+    registerPath: opts.registerPath,
     track: opts.track,
     existingStrategy: existing,
   });

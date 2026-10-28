@@ -32,7 +32,12 @@ export type StrategyProfile = {
 
 type StrategyProfileApproach = Exclude<
   Approach,
-  "rulebook-authoring" | "recipe-authoring" | "sample-authoring" | "template-authoring"
+  | "catalog-planning"
+  | "strategy-planning"
+  | "rulebook-authoring"
+  | "recipe-authoring"
+  | "sample-authoring"
+  | "template-authoring"
 >;
 
 const EXPERT_PIPELINE = { executor: "expert", reporter: "normal" } as const;
@@ -302,7 +307,7 @@ export const STRATEGY_PROFILES: Record<StrategyProfileApproach, StrategyProfile>
 export function profileFor(approach: Approach): StrategyProfile {
   if (!(approach in STRATEGY_PROFILES)) {
     throw new Error(
-      `Approach "${approach}" has no schedule strategy profile; kata authoring approaches are register-only`,
+      `Approach "${approach}" has no schedule strategy profile; kata authoring and planning approaches are register-only`,
     );
   }
   return STRATEGY_PROFILES[approach as StrategyProfileApproach];
