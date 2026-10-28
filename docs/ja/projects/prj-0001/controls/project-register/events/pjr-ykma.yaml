@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_bf1e5c21706141239089a6e7f1a6b351
+  ts: "2026-10-28T22:22:42Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: カタログの成果物に brief を設ける
+    - field: description
+      from: ""
+      to: 成果物の外から継続して渡す前提を dct の brief に書けるようにし、schedule と register の両経路の plan に入れる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-29"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-65DS"]'
+    - field: depends_on
+      from: ""
+      to: '["PJR-3MY5"]'
