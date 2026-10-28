@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_2b73d71097054b87820dc9aa5e42ff32
+  ts: "2026-10-28T10:07:40Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-RYK8 の決定のフォローアップとして起票するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 成果物の type に requirement と glossary を足し、rulebook の宣言と lint で照合する
+    - field: description
+      from: ""
+      to: schema に requirement と glossary を足し、rulebook 107 件の frontmatter に扱う成果物の type を宣言させる。Markdown の成果物・sample・テンプレートの type を宣言にそろえ、違えば lint でエラーにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-RYK8"]'
