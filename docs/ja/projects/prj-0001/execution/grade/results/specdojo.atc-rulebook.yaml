@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 77
-graded_at: "2026-10-02T21:08:45.958Z"
-graded_by: agy-expert-executor
-content_hash: d7a107e7f18839f4225da3c38989379bb18a0a3df5085b1b214c76c10ef6cec7
+graded_at: "2026-10-28T20:12:14.964Z"
+graded_by: flash-high-executor
+content_hash: 005b70c63212ff3595f3a7555a3ac87b3135e1a9620d5379b9444cc3c8728f8b
 categories:
   purpose:
     score: 88
@@ -113,6 +113,7 @@ findings:
     line: 1
     anchor: "# 受入テストカタログ 対象別 作成ルール"
     message: status が draft で recipe と template が undecided なのに、未決事項・ready 化の条件・判断者が本文に書かれていないため、未決論点と判断者を明記すること。
+    message_ja: status が draft で recipe と template が undecided なのに、未決事項・ready 化の条件・判断者が本文に書かれていないため、未決論点と判断者を明記すること。
   - id: F002
     severity: minor
     rule: vp-pm-dependency-risk
@@ -121,55 +122,67 @@ findings:
     message: >-
       対象ごとの根拠を本文のトレースだけに集めるよう定めているが、メタ情報標準が追跡関係の正本とする `relations.verifies`
       との関係が書かれていないため、上流の受入条件が変わったときの影響を追える仕組みを明記すること。
+    message_ja: >-
+      対象ごとの根拠を本文のトレースだけに集めるよう定めているが、メタ情報標準が追跡関係の正本とする `relations.verifies`
+      との関係が書かれていないため、上流の受入条件が変わったときの影響を追える仕組みを明記すること。
   - id: F003
     severity: minor
     rule: vp-pm-control-reporting
     line: 232
     anchor: "| トレースや証跡を持たないケースを恒久的に残す                               | SSOTとして成立しないため（暫定なら期限/条件を明記）                |"
     message: 暫定ケースの期限や判定保留条件を「明記」と求めるだけで、PJR など課題・リスクとしての転記先と担当 Role code が書かれていないため、報告先を明記すること。
+    message_ja: 暫定ケースの期限や判定保留条件を「明記」と求めるだけで、PJR など課題・リスクとしての転記先と担当 Role code が書かれていないため、報告先を明記すること。
   - id: F004
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 103
     anchor: "- 期待する利用者：PO/利用部門/QA/運用が、前提を把握できる内容にする"
     message: 想定読者を「PO/利用部門/QA/運用」と並べるだけで、ATC の作成者・確認者・受入合意者の Role code が書かれていないため、合意の主体を明記すること。
+    message_ja: 想定読者を「PO/利用部門/QA/運用」と並べるだけで、ATC の作成者・確認者・受入合意者の Role code が書かれていないため、合意の主体を明記すること。
   - id: F005
     severity: minor
     rule: vp-arc-technical-constraints
     line: 55
     anchor: Frontmatter は共通スキーマに従います（あわせてドキュメントのメタ情報の記述ルールも参照）。
     message: 参照スキーマを挙げているのに、作成した `atc-＜term＞` を検証する手順（lint や schema validate）が書かれておらず、表もスキーマの制約と一致していないため、検証手順を追記すること。
+    message_ja: 参照スキーマを挙げているのに、作成した `atc-＜term＞` を検証する手順（lint や schema validate）が書かれておらず、表もスキーマの制約と一致していないため、検証手順を追記すること。
   - id: F006
     severity: minor
     rule: vp-arc-conciseness
     line: 10
     anchor: 個別 ATC（`atc-<term>`）は、受入テストにおける SSOT の本体として、対象ごとの受入判断単位と責務を明確化し、
     message: 全体方針の最初の段落が冒頭の説明とほぼ同じ主張（SSOT の本体・受入判断の範囲・証跡への接続）を繰り返しているため、どちらかに統合すること。
+    message_ja: 全体方針の最初の段落が冒頭の説明とほぼ同じ主張（SSOT の本体・受入判断の範囲・証跡への接続）を繰り返しているため、どちらかに統合すること。
   - id: F007
     severity: major
     rule: vp-dev-implementation-readiness
     line: 204
     anchor: "##### 6.6.1.2. 条件・ケース表"
-    message: >-
-      条件・ケース表の列（`case_id`・条件・手順・期待値・観測点・環境/依存・トレース・優先度・実施形態・証跡）と各列の必須・任意が本文要件でも記述ガイドでも定義されておらず、サンプル章の例から推測するしかないため、列の定義を明記すること。
+    message: 条件・ケース表の列（`case_id`・条件・手順・期待値・観測点・環境/依存・トレース・優先度・実施形態・証跡）と各列の必須・任意が本文要件でも記述ガイドでも定義されておらず、サンプル章の例から推測するしかないため、列の定義を明記すること。
+    message_ja: 条件・ケース表の列（`case_id`・条件・手順・期待値・観測点・環境/依存・トレース・優先度・実施形態・証跡）と各列の必須・任意が本文要件でも記述ガイドでも定義されておらず、サンプル章の例から推測するしかないため、列の定義を明記すること。
   - id: F008
     severity: minor
     rule: vp-dev-testability
     line: 55
     anchor: Frontmatter は共通スキーマに従います（あわせてドキュメントのメタ情報の記述ルールも参照）。
     message: 作成した `atc-＜term＞` を確かめるコマンド（`npm run -s lint:md` や schema validate）と期待結果が書かれていないため、検証手順を追記すること。
+    message_ja: 作成した `atc-＜term＞` を確かめるコマンド（`npm run -s lint:md` や schema validate）と期待結果が書かれていないため、検証手順を追記すること。
   - id: F009
     severity: minor
     rule: vp-qe-verifiability
     line: 220
     anchor: 推奨：観点ごとのケース数は「代表（P0）→重要分岐（P0/P1）→重大リスク（P0）」の順で増やし、直積（全組合せ）を避ける
     message: 優先度（P0/P1）の定義と判断基準、およびケース表の「実施形態」列に使える値が定義されておらず、分類が正しいかを判定できないため、定義を明記すること。
+    message_ja: 優先度（P0/P1）の定義と判断基準、およびケース表の「実施形態」列に使える値が定義されておらず、分類が正しいかを判定できないため、定義を明記すること。
   - id: F010
     severity: major
     rule: vp-qe-omissions-consistency
     line: 64
     anchor: "| title      | 受入テストカタログ: <対象名>                                                     | ○    |"
     message: >-
+      推奨 Frontmatter 項目の表とサンプル章の Frontmatter が、禁止されている `title` を必須にし、スキーマ上必須の `rulebook` と `specdojo:`
+      名前空間が欠けており、メタ情報標準とスキーマに矛盾しているため修正すること。
+    message_ja: >-
       推奨 Frontmatter 項目の表とサンプル章の Frontmatter が、禁止されている `title` を必須にし、スキーマ上必須の `rulebook` と `specdojo:`
       名前空間が欠けており、メタ情報標準とスキーマに矛盾しているため修正すること。
   - id: F011
@@ -180,27 +193,34 @@ findings:
     message: >-
       禁止されている H5 見出し（本文198・204・284・288行目）を使い、山括弧のプレースホルダ（「観点:＜観点＞」「＜対象名＞」）をインラインコードで囲んでおらず、Markdown
       記述ルールに違反しているため修正すること。
+    message_ja: >-
+      禁止されている H5 見出し（本文198・204・284・288行目）を使い、山括弧のプレースホルダ（「観点:＜観点＞」「＜対象名＞」）をインラインコードで囲んでおらず、Markdown
+      記述ルールに違反しているため修正すること。
   - id: F012
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 受入テストカタログ 対象別 作成ルール"
     message: 指定サンプル `docs/ja/specdojo/samples/atc-sample.md` が、本ルールで定義した構成（見出し1〜6）および type (`test`) に準拠しておらず、整合性が取れていない。
+    message_ja: 指定サンプル `docs/ja/specdojo/samples/atc-sample.md` が、本ルールで定義した構成（見出し1〜6）および type (`test`) に準拠しておらず、整合性が取れていない。
   - id: F013
     severity: minor
     rule: vp-qe-kata-conformance
     line: 78
     anchor: "## 5. 本文構成（標準テンプレ）"
     message: 章の名前が「本文構成（標準テンプレ）」のままで、rulebook 作成標準の標準章名「本文要件」と一致していないため、標準に合わせること。
+    message_ja: 章の名前が「本文構成（標準テンプレ）」のままで、rulebook 作成標準の標準章名「本文要件」と一致していないため、標準に合わせること。
   - id: F014
     severity: minor
     rule: vp-ux-language-consistency
     line: 26
     anchor: TSP["tsp-index<br>テスト戦略・方針"]
     message: 位置づけの図の「テスト仕様-全体構成／テスト仕様-対象別／テストカタログ」がタイトルの「受入テストカタログ」と呼び方が揃っておらず、見出しの「観点:」と「観点：」も混在しているため統一すること。
+    message_ja: 位置づけの図の「テスト仕様-全体構成／テスト仕様-対象別／テストカタログ」がタイトルの「受入テストカタログ」と呼び方が揃っておらず、見出しの「観点:」と「観点：」も混在しているため統一すること。
   - id: F015
     severity: minor
     rule: vp-ops-release-readiness
     line: 1
     anchor: "# 受入テストカタログ 対象別 作成ルール"
     message: draft のまま recipe と template が undecided で、sample との不整合も未解消なのに、ready 化の条件と承認者が書かれていないため明記すること。
+    message_ja: draft のまま recipe と template が undecided で、sample との不整合も未解消なのに、ready 化の条件と承認者が書かれていないため明記すること。
