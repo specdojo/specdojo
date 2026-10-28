@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:etc-index-sample
-  type: project
+  type: test
   status: draft
   rulebook: specdojo:etc-index-rulebook
 ---

@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:dmd-index-rulebook
   type: rulebook
+  deliverable_type: data
   status: draft
   recipe: undecided
   sample: specdojo:dmd-index-sample
@@ -38,7 +39,7 @@ Data Migration Design Documentation Rules
 | 項目  | 説明                   | 必須 |
 | ----- | ---------------------- | ---- |
 | id    | `dmd-index`            | ○    |
-| type  | `migration` 固定       | ○    |
+| type  | `data` 固定            | ○    |
 | title | `データ移行設計: 全体` | ○    |
 
 | status | `draft` / `ready` / `deprecated` | ○ |

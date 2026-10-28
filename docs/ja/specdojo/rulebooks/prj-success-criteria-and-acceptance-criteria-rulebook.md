@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:prj-success-criteria-and-acceptance-criteria-rulebook
   type: rulebook
+  deliverable_type: project
   status: ready
   target_format: markdown
   recipe: specdojo:prj-success-criteria-and-acceptance-criteria-recipe

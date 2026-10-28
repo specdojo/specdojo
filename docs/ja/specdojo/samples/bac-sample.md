@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:bac-sample
-  type: project
+  type: requirement
   status: draft
   rulebook: specdojo:bac-rulebook
 ---

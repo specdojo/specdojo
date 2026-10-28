@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:prj-charter-rulebook
   type: rulebook
+  deliverable_type: project
   status: ready
   target_format: markdown
   recipe: specdojo:prj-charter-recipe

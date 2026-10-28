@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:nfr-index-rulebook
   type: rulebook
+  deliverable_type: requirement
   status: draft
   recipe: undecided
   sample: specdojo:nfr-index-sample
@@ -53,14 +54,14 @@ Non-Functional Requirements Index Documentation Rules
 
 Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml) / [document-metadata-standard.md](../standards/document-metadata-standard.md)）。
 
-| 項目       | 説明                                            | 必須 |
-| ---------- | ----------------------------------------------- | ---- |
-| id         | NFR Index ID（推奨: `nfr-index`）               | ○    |
-| type       | `architecture` など共通スキーマで許容される種別 | ○    |
-| title      | 非機能要件: インデックス                        | ○    |
-| status     | `draft` / `ready` / `deprecated`                | ○    |
-| based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可）    | 任意 |
-| supersedes | 置き換え関係（ID配列。未指定は `[]` 可）        | 任意 |
+| 項目       | 説明                                         | 必須 |
+| ---------- | -------------------------------------------- | ---- |
+| id         | NFR Index ID（推奨: `nfr-index`）            | ○    |
+| type       | `requirement` 固定                           | ○    |
+| title      | 非機能要件: インデックス                     | ○    |
+| status     | `draft` / `ready` / `deprecated`             | ○    |
+| based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可） | 任意 |
+| supersedes | 置き換え関係（ID配列。未指定は `[]` 可）     | 任意 |
 
 ### 4.2. 推奨ルール
 
@@ -139,7 +140,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ```yaml
 ---
 id: nfr-index
-type: architecture
+type: requirement
 title: 非機能要件: インデックス
 status: draft
 based_on: []

@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:cdfd-uc-rulebook
   type: rulebook
+  deliverable_type: flow
   status: draft
   target_format: markdown
   recipe: specdojo:cdfd-uc-recipe

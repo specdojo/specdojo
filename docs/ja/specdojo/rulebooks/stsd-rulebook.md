@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:stsd-rulebook
   type: rulebook
+  deliverable_type: data
   status: draft
   target_format: markdown
   recipe: specdojo:stsd-recipe

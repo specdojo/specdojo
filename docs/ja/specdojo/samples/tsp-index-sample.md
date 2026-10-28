@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:tsp-index-sample
-  type: project
+  type: test
   status: draft
   rulebook: specdojo:tsp-index-rulebook
 ---

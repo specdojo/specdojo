@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:br-rulebook
   type: rulebook
+  deliverable_type: rule
   status: draft
   recipe: undecided
   sample: specdojo:br-sample

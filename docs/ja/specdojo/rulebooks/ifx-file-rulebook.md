@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:ifx-file-rulebook
   type: rulebook
+  deliverable_type: api
   status: draft
   recipe: not-needed
   sample: specdojo:ifx-file-sample
@@ -60,7 +61,7 @@ ESIL 側の `spec_ref: ifx-file-...` は、このEFESのID（およびファイ�
 | キー     | 説明                                                       | 必須 |
 | -------- | ---------------------------------------------------------- | ---- |
 | id       | ファイル仕様ID（`ifx-file-...`）、ESILの `spec_ref` と対応 | ○    |
-| type     | `file` 固定                                                | ○    |
+| type     | `api` 固定                                                 | ○    |
 | status   | `draft` / `ready` / `deprecated`                           | ○    |
 | based_on | 根拠となる他仕様のIDリスト（例: `["ifx-api-auth"]`）       | 任意 |
 

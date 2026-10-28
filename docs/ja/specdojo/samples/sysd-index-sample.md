@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:sysd-index-sample
-  type: project
+  type: architecture
   status: draft
   rulebook: specdojo:sysd-index-rulebook
 ---

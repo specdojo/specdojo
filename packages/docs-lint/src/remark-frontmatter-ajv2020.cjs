@@ -11,6 +11,7 @@ function load(source, options = {}) {
 }
 const Ajv2020 = require("ajv/dist/2020").default;
 const addFormats = require("ajv-formats");
+const createDeliverableTypeChecker = require("./deliverable-type.cjs");
 
 // Markdown の frontmatter を、設定で指定したスキーマへマッピングして検証する Remark プラグイン。
 // `yaml.schemas` 形式（schemaPath: [glob...]）または `schemaRules` 形式を受け取り、先勝ちで適用する。
@@ -215,13 +216,13 @@ module.exports = function remarkFrontmatterAjv2020(options = {}) {
     );
   }
 
+  const workspaceRoot = options.workspaceRoot || process.cwd();
+  const checkDeliverableType = createDeliverableTypeChecker(workspaceRoot);
   return function transformer(tree, file) {
-    const workspaceRoot = options.workspaceRoot || process.cwd();
     const currentPath = file.path ? path.resolve(String(file.path)) : "";
     const relativePath = currentPath ? toPosix(path.relative(workspaceRoot, currentPath)) : "";
     const matched = selectRule(relativePath, schemas, schemaRules);
-    if (!matched) return;
-    const { schemaPath, requireFrontmatter } = matched;
+    const { schemaPath, requireFrontmatter } = matched || {};
 
     const source = String(file.value || "");
     const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
@@ -264,6 +265,23 @@ module.exports = function remarkFrontmatterAjv2020(options = {}) {
       return;
     }
 
+    // Templates are checked even when no schemaRules entry matches their own metadata.
+    const hasArtifactSchema = /(?:deliverable|register-item)-frontmatter\.schema\.yaml$/.test(
+      schemaPath || "",
+    );
+    for (const reason of checkDeliverableType(
+      data.specdojo,
+      relativePath,
+      source,
+      hasArtifactSchema,
+    )) {
+      file.message(
+        reason,
+        { start: { line: findKeyLine(frontmatterBody, "type"), column: 1 } },
+        "frontmatter-deliverable-type",
+      );
+    }
+    if (!matched) return;
     const { validate } = getValidator(workspaceRoot, schemaPath, strictMode);
     const valid = validate(data);
     if (valid) return;

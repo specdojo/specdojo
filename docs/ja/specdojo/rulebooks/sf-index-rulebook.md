@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:sf-index-rulebook
   type: rulebook
+  deliverable_type: requirement
   status: draft
   recipe: undecided
   sample: specdojo:sf-index-sample
@@ -33,12 +34,12 @@ System Functions Index Documentation Rules
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目     | 値                                                | 必須 |
-| -------- | ------------------------------------------------- | ---- |
-| id       | 一意なID                                          | ○    |
-| type     | project / spec / test / architecture / operations | ○    |
-| status   | draft / ready / deprecated                        | ○    |
-| rulebook | `sf-index-rulebook`                               | 任意 |
+| 項目     | 値                         | 必須 |
+| -------- | -------------------------- | ---- |
+| id       | 一意なID                   | ○    |
+| type     | `requirement` 固定         | ○    |
+| status   | draft / ready / deprecated | ○    |
+| rulebook | `sf-index-rulebook`        | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 

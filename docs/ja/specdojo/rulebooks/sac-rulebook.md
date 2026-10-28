@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:sac-rulebook
   type: rulebook
+  deliverable_type: requirement
   status: draft
   recipe: undecided
   sample: specdojo:sac-sample
@@ -57,7 +58,7 @@ Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` �
 | 項目       | 説明                                          | 必須 |
 | ---------- | --------------------------------------------- | ---- |
 | id         | 受入条件ID（`sac-...`）                       | ○    |
-| type       | `test` 固定                                   | ○    |
+| type       | `requirement` 固定                            | ○    |
 | title      | 受入条件名（例: システム受入条件: 性能）      | ○    |
 | status     | `draft`/`ready`/`deprecated`                  | ○    |
 | part_of    | 上位SAC ID（分割している場合）                | 任意 |
@@ -153,7 +154,7 @@ SAC は **Markdown** で「受入対象」と「シナリオ」を記述しま�
 ```yaml
 ---
 id: sac-performance
-type: test
+type: requirement
 title: システム受入条件: 性能
 status: draft
 part_of: []

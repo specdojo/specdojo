@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:stc-sample
-  type: project
+  type: test
   status: draft
   rulebook: specdojo:stc-rulebook
 ---

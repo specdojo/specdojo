@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:uis-sample
-  type: project
+  type: ui
   status: draft
   rulebook: specdojo:uis-rulebook
 ---

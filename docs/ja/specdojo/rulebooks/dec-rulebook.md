@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:dec-rulebook
   type: rulebook
+  deliverable_type: project
   status: draft
   target_format: markdown
   sample: specdojo:dec-sample

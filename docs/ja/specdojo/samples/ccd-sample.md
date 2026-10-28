@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:ccd-sample
-  type: project
+  type: data
   status: draft
   rulebook: specdojo:ccd-mermaid-rulebook
 ---

@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:nfr-index-sample
-  type: project
+  type: requirement
   status: draft
   rulebook: specdojo:nfr-index-rulebook
 ---

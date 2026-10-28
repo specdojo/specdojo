@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:dmd-sample
-  type: project
+  type: data
   status: draft
   rulebook: specdojo:dmd-rulebook
 ---

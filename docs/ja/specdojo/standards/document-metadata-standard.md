@@ -16,7 +16,7 @@ Markdown の Frontmatter と YAML・JSON の構造化メタデータに関する
 - 共通原則: Frontmatter を持つすべての Markdown ドキュメント
 - 独立 YAML データファイル向け規約: SpecDojo スキーマ（`docs/specdojo/schemas/v1/`）を持つ YAML 成果物（`dct-*.yaml` / `pm-*.yaml` / `sch-*.yaml` / `bdd-*.yaml` など）
 - JSON データファイル向け規約: SpecDojo が管理する JSON 文書、実行イベント、設定、インデックス、生成物
-- 成果物向け詳細規約: `project` / `flow` / `rule` / `data` / `ui` / `api` / `architecture` / `test` / `operations` / `template`
+- 成果物向け詳細規約: `project` / `requirement` / `glossary` / `flow` / `rule` / `data` / `ui` / `api` / `architecture` / `test` / `operations` / `template`
 - 成果物スキーマ: [deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 
 `rulebook` / `recipe` / `guide` / `reference` / `standard` / `philosophy` は専用スキーマを持つため、成果物向け詳細規約の対象外とします。それぞれの追加規約は次を正本とします。
@@ -36,9 +36,29 @@ Markdown の Frontmatter と YAML・JSON の構造化メタデータに関する
 - `id` は共通スキーマの `idRef` に従い、`^[a-z0-9][a-z0-9-:]*$` に一致させる。
 - npm package が所有する型（Kata）の文書の `id` は `<authority>:<local-id>` とし、SpecDojo core は `specdojo:` を使用する。これは Frontmatter の親キー `specdojo:` とは別に、ID値の所有元を表す namespace である。
 - `type` は各ドキュメント種別のスキーマに定義された値を使用する。
+- 成果物の `type` は次の意味で選び、準拠する rulebook の `specdojo.deliverable_type` を正本とする。index も扱う内容と同じ分類にする。
+
+| 値             | 意味                                                                         |
+| -------------- | ---------------------------------------------------------------------------- |
+| `project`      | プロジェクトの計画・体制・登録簿・進捗・管理ビュー（prj・pm・dct・tml など） |
+| `requirement`  | システム機能、業務イベントの要求、非機能要件、業務・システムの受入基準       |
+| `glossary`     | 用語と定義を管理する用語集                                                   |
+| `flow`         | 業務フロー・プロセス・概念データフロー                                       |
+| `rule`         | 業務の判断条件・規則                                                         |
+| `data`         | データ構造・概念モデル・状態・保管・データ移行設計                           |
+| `ui`           | 画面・帳票の仕様                                                             |
+| `api`          | API・コマンド・ファイル・メッセージなど外部 I/F の契約                       |
+| `architecture` | システム構成・設計・技術選定                                                 |
+| `test`         | テスト戦略・設計・ケース・実施計画                                           |
+| `operations`   | 運用設計・手順・本番切替・運用移管                                           |
+
+- `project` をプロダクト仕様の受け皿にしない。sample は見本にする成果物の `type` を使い、`id` とファイル名の `-sample` で識別する。`template` はテンプレート自身の種別であり、生成物の種別ではない。
+- `lint:fm` の frontmatter 検査では、Markdown 成果物・sample の `specdojo.type` と、テンプレートの `specdojo.frontmatter_template.specdojo.type` をそれぞれの `rulebook` の宣言と照合する。宣言と異なる値（従来の `project` や `sample` を含む）は即時エラーとし、宣言された置き換え先を表示する。`rulebook: none` は照合対象外とする。
+- 照合は主 rulebook の宣言を使い、`includes` はたどらない。rulebook は完全 ID で解決し、同じ ID のローカル文書を同梱文書より優先する。解決不能・曖昧・宣言欠落は検査エラーとする。未修飾 ID は一意に解決できる場合のみ許容する。
+- YAML の表示用ページ（`generated/` 配下）はこの Markdown の照合対象外とし、YAML データの `type` と表示用ページの移行は別に扱う。
 - 成果物として成り立つ文書の `type` は、中身の種類（`project` / `flow` / `data` など）を表す。成果物として成り立たない実践の型（rulebook / recipe / template など）の `type` は、その役割を表す。
 - sample は完成した成果物の最小例であり、Markdown・YAML・JSON とも、`type` には見本にする成果物の type を書く。sample であることは `id` とファイル名の `-sample`、`samples/` への配置、対応 rulebook の `sample` 宣言で表す。
-- sample のメタ情報と本文は成果物と同じ形式にし、文書索引で実物の成果物と衝突しないよう `id` を区別する。既存の `type: sample` は互換性のため許容するが、新規作成・更新では使用しない。
+- sample のメタ情報と本文は成果物と同じ形式にし、文書索引で実物の成果物と衝突しないよう `id` を区別する。既存の `type: sample` は schema 上の互換値として保持するが、新規作成・更新では使用しない。rulebook を持つ Markdown sample は宣言との照合でエラーになるため、宣言された成果物の type へ移行する。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 - ドキュメント名は Frontmatter ではなく本文先頭の H1 に記述する。
 - `specdojo:` 名前空間の対象は Markdown Frontmatter のみとする。独立 YAML データファイル（`dct-*.yaml` / `pm-*.yaml` / `sch-*.yaml` など）は Markdown ではなく他ツールとの同居も無いため、名前空間化せずトップレベルに項目を置く。

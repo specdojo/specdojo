@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:cstd-rulebook
   type: rulebook
+  deliverable_type: data
   status: deprecated
   recipe: not-needed
   sample: specdojo:cstd-sample

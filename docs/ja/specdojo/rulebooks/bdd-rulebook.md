@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:bdd-rulebook
   type: rulebook
+  deliverable_type: data
   status: draft
   target_format: yaml
   recipe: not-needed

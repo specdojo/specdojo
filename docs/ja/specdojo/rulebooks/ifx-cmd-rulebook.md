@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:ifx-cmd-rulebook
   type: rulebook
+  deliverable_type: api
   status: draft
   target_format: yaml
   recipe: specdojo:ifx-cmd-recipe

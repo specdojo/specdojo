@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:cnd-mermaid-rulebook
   type: rulebook
+  deliverable_type: architecture
   status: draft
   target_format: markdown
   recipe: undecided

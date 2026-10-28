@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:prj-issues-and-approach-rulebook
   type: rulebook
+  deliverable_type: project
   status: ready
   target_format: markdown
   recipe: specdojo:prj-issues-and-approach-recipe

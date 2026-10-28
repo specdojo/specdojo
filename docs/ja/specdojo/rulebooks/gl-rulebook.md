@@ -3,6 +3,7 @@ schema: docs/specdojo/schemas/v1/gl.schema.yaml
 specdojo:
   id: specdojo:gl-rulebook
   type: rulebook
+  deliverable_type: glossary
   status: draft
   target_format: yaml
   recipe: undecided

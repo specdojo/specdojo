@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:tsd-index-rulebook
   type: rulebook
+  deliverable_type: architecture
   status: ready
   recipe: not-needed
   sample: specdojo:tsd-index-sample
