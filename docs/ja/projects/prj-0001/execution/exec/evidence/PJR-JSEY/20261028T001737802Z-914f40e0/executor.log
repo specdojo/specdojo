@@ -1,0 +1,11 @@
+個票の対応結果の表に 1 行追記しました。ファイルを編集しただけで、検証コマンドは executor として実行していません。親 runner の検証結果が正です。
+
+- **追記した行:** 2026-10-28 09:18、PJR-B4Y4、`sonnet-executor`。
+- **確認対象の根拠:** `git log` で、対象一覧のうち最も新しい統合コミットは PJR-B4Y4 の `d72264691`（2026-10-28 09:16 JST）でした。
+- **agent 名:** `sonnet-executor` は、前回行と同じ名前を使った推定値です。start の event の actor は確認していません。
+- **本文の更新:** 表の下の説明文は、PJR-B4Y4 と `d72264691` に合わせて書き換えました。actor が実際は別名だった場合は、表と説明文の両方を直す必要があります。
+- **変更範囲:** 変更したのは個票 `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-B4Y4（最新の統合コミット d72264691、2026-10-28 09:18 JST、sonnet-executor）を追記し、説明文を更新した。個票以外は変更していない。","handoff":["agent 名 `sonnet-executor` は前回行と同じ名前を使った推定値で、start の event の actor は確認していない。actor が別名なら表と説明文を直す。","親 runner の 7 検証、reporter の result 記入、統合、`review` 遷移は後続段で確認する。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検証のため、executor では実行していない。"}]}
+</specdojo_executor_evidence>
