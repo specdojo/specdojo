@@ -96,3 +96,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_882c0076be984951a45dc4261fc5c708
+- v: 1
+  id: reg_425f7b68a65543acae6a5d4703fa130a
+  ts: "2026-10-28T11:12:03Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件、リポジトリ全体の lint:fm、JSEY の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: type に requirement と glossary を足し、rulebook 107 件に deliverable_type を宣言した。Markdown の sample 50 件を宣言にそろえ、lint:fm が成果物・sample・テンプレートの type を宣言と照合する
+  previous_event_id: reg_2364a24d617641dcb4b3ad13e1333aed

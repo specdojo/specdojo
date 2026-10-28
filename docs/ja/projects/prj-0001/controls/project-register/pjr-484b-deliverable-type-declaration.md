@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-484b-deliverable-type-declaration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-10-28T10:07:40Z"
+  completed_at: "2026-10-28T11:12:03Z"
+  conclusion: type に requirement と glossary を足し、rulebook 107 件に deliverable_type を宣言した。Markdown の sample 50 件を宣言にそろえ、lint:fm が成果物・sample・テンプレートの type を宣言と照合する
   derived_from:
     - PJR-RYK8
 ---
