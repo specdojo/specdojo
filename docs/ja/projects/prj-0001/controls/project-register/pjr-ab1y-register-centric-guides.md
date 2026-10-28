@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-ab1y-register-centric-guides
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: medium
   registered_at: "2026-10-27T22:58:44Z"
+  completed_at: "2026-10-28T01:12:30Z"
+  conclusion: register-operation・exec-operation・timeline-design・specdojo-overview・quick-start の 5 本を、register と epic を起点とし schedule を子とする構成へ書き換えた
   derived_from:
     - PJR-NJJ7
   depends_on:

@@ -77,3 +77,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_03bb1705647f4a2e8d71056d4e28522b
+- v: 1
+  id: reg_3778c74a095746d4a8a583f39eea64c8
+  ts: "2026-10-28T01:12:30Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件と docs:build の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: register-operation・exec-operation・timeline-design・specdojo-overview・quick-start の 5 本を、register と epic を起点とし schedule を子とする構成へ書き換えた
+  previous_event_id: reg_1b01abf09d8d4f80be3f24aa8188dc7d
