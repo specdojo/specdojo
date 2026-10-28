@@ -2,9 +2,19 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
-## [Unreleased]
+## [0.5.0] - 2026-10-29
 
-### 成果物 type の移行
+同梱パッケージは `@specdojo/docs-lint` 0.3.0 と `@specdojo/docs-site` 0.3.0 を同時に公開します。docs-lint 0.3.0 は、rulebook の `deliverable_type` と成果物の `type` の照合、YAML 成果物の旧 type のエラー化（下記の破壊的変更の PJR-484B・PJR-0D0T）を含みます。下記の移行手順の検査には docs-lint 0.3.0 が必要です。docs-site 0.3.0 は、生成物の `.vitepress/` への集約（PJR-9ZN5）と、Mermaid の構文エラーで生成を止めない変更（PJR-N9JC）を含みます。
+
+### 破壊的変更
+
+成果物の `type` を rulebook の宣言と照合するようにし、宣言と違う値や旧値は移行期間なしでエラーになります。次の順で移行してください。詳細は下記の各項目を参照してください。
+
+1. `specdojo` を 0.5.0、`@specdojo/docs-lint` を 0.3.0 に更新する（docs-site を使う場合は `@specdojo/docs-site` も 0.3.0 に更新する）。
+2. eject した rulebook に `specdojo.deliverable_type` を追加する。
+3. Markdown 成果物・sample・テンプレートの生成物 Frontmatter の `type` を宣言値に書き換え、`lint:fm` を通す。
+4. YAML 成果物の旧 type（`domain` / `command` / `message`）を置き換え、`validate:schema:yaml` を通す。
+5. `specdojo yaml-pages build` で表示ページを再生成する。
 
 - 成果物の `type` に `requirement`（機能・非機能要件・受入基準）と `glossary`（用語集）を追加し、`project` はプロジェクトの管理文書に限定しました。各 rulebook の `specdojo.deliverable_type` を必須とし、Markdown 成果物・sample・テンプレートの生成物 Frontmatter と `lint:fm` で照合します（PJR-484B）。
 - 既存の rulebook には、扱う成果物の `type` を `specdojo.deliverable_type` として追加してください。次に、その rulebook を参照する成果物・sample の `specdojo.type` と、テンプレートの `specdojo.frontmatter_template.specdojo.type` を宣言値に書き換えてください。テンプレート自身の `specdojo.type` は `template` のままにします。`lint:fm` を実行し、エラーに表示される宣言値にそろえてください。移行期間は設けず、従来の `project` や `sample` も宣言と違えばエラーにします。
