@@ -30,11 +30,11 @@ PJR-GWYJ で 52 件の rulebook から削除したサンプル章の要点が既
 
 ## 3. 作業内容
 
-| No  | 作業                                         | 担当 | 状態 | メモ                                                                               |
-| --- | -------------------------------------------- | ---- | ---- | ---------------------------------------------------------------------------------- |
-| 1   | 削除した例が sample に含まれるかの確認と記録 | ARC  | done | 50 件を判定した。雛形の sample 43 件は欠ける                                       |
-| 2   | 欠けている要点だけを sample へ反映する       | ARC  | open | otp・dmd の 2 件を反映した。雛形 43 件は判断待ち                                   |
-| 3   | grade による外出し前後の比較                 | QE   | open | 外出し前の値は記録した。外出し後の grade は executor の sandbox で実行できず未実施 |
+| No  | 作業                                         | 担当 | 状態 | メモ                                                         |
+| --- | -------------------------------------------- | ---- | ---- | ------------------------------------------------------------ |
+| 1   | 削除した例が sample に含まれるかの確認と記録 | ARC  | done | 50 件を判定した。雛形の sample 43 件は欠ける                 |
+| 2   | 欠けている要点だけを sample へ反映する       | ARC  | open | otp・dmd の 2 件を反映した。雛形 43 件は判断待ち             |
+| 3   | grade による外出し前後の比較                 | QE   | done | 既存の routine の評価から外出し後の値を取り、4.7. に記録した |
 
 ## 4. 対応結果
 
@@ -145,6 +145,23 @@ bash tools/grade/run-per-document.sh --run-id pjr-b7dg-dryrun --target kata --ki
 - 復元後に prettier・markdownlint・`npm run lint:fm`・`npm run validate:schema`・`npm run validate:catalog` が通過した。
 - 4.5. の otp・dmd の sample への追記は、利用者の判断（復元まで）に従い取り込まなかった。exec run の worktree は破棄した。
 - grade による外出し前後の比較（作業 3）は、sample の分離を進める段階で行う。
+
+### 4.7. 2026-10-28 の orchestrator による grade の比較
+
+- 外出しの後に残った rulebook（4.6. で復元しなかった 9 件）のうち、4.4. で外出し前の値を記録した `dmd`・`otp`・`ifx-cmd`・`tml` の 4 件を比べた。
+- 外出し後の値は、`rtn-grade-kata` が 2026-10-02 から 2026-10-09 に評価した grade result サイドカー（`execution/grade/results/specdojo.<id>.yaml`）から取った。4 件とも、外出しの commit（`f940b1b6`・`0d9d23f0a`、2026-09-30）の後に rulebook の変更はなく、評価は外出し後の本文に対するものである。agent を新たに起動する評価は行っていない。
+- finding の件数は、サイドカーの `findings` のうち `rule` が当該の観点のものを数えた。
+
+| rulebook           | `vp-qe-kata-conformance` 前 → 後 | `vp-arc-conciseness` 前 → 後  |
+| ------------------ | -------------------------------- | ----------------------------- |
+| `dmd-rulebook`     | level 2・1 件 → level 2・1 件    | level 4・0 件 → level 4・0 件 |
+| `otp-rulebook`     | level 2・1 件 → level 2・1 件    | level 4・0 件 → level 3・1 件 |
+| `ifx-cmd-rulebook` | level 2・1 件 → level 2・1 件    | level 4・0 件 → level 4・0 件 |
+| `tml-rulebook`     | level 2・1 件 → level 2・1 件    | level 3・1 件 → level 3・1 件 |
+
+- `vp-qe-kata-conformance` は 4 件とも変わらなかった。`vp-arc-conciseness` は `otp-rulebook` だけ level 4 から 3 に下がり、ほかは変わらなかった。外出しで rulebook が簡潔になった効果は、この 2 観点では見えなかった。
+- 前後で評価の条件が異なるため、差を外出しの効果とは断定できない。外出し前は `grade-rubric-v1`・`codex-expert-executor`、外出し後は `grade-rubric-v2`・`agy-expert-executor` である。
+- 取得に使ったコマンド: `python3` で各サイドカーの `viewpoints.<観点>.level` と `findings[].rule` を集計した。
 
 ## 5. 関連ドキュメント
 
