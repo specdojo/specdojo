@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3dbeb69686ad438092eb9ddea44d5c78
+  ts: "2026-10-28T12:06:50Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: VS Code の利用者へ onboarding の間口を広げたいという利用者の要望のため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: VS Code からオーケストレーターを使う手順を案内する
+    - field: description
+      from: ""
+      to: Copilot Chat の agent の選択、Claude Code の拡張での既定の agent の設定、Codex の拡張での使い方を、orchestrator-operation-guide・クイックスタート・templates/copilot/README.md に書き、onboarding の間口を広げる
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
