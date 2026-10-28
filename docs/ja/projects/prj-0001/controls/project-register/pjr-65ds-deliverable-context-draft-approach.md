@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-65ds-deliverable-context-draft-approach
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: high
   registered_at: "2026-10-28T22:17:19Z"
+  completed_at: "2026-10-28T22:18:20Z"
+  conclusion: 1-C と 2-B を採用。雛形→人が文脈を記入→draft→fully-guided→finalize とし、文脈は成果物内の _CONTEXT_、個票の入力（--input）、カタログの brief で渡す
   derived_from:
     - PJR-166T
 ---
