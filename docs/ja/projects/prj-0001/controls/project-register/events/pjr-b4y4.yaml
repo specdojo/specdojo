@@ -128,3 +128,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_d74d8b2881ae420298ffe559b3f08677
+- v: 1
+  id: reg_2ccad00d42ed4157bf36bd03384aea75
+  ts: "2026-10-28T00:24:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件、track の検証と個票の生成の実地確認、JSEY の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: epic の type を追加した。track の記帳と tml-index での検証、個票テンプレート、exec run --register と夜間 queue からの除外、epic ごとの子項目のビューを実装した。orchestrator の指示への反映案は対応結果に残した
+  previous_event_id: reg_d9b4374b133e4304a6ab77cdedf1e496

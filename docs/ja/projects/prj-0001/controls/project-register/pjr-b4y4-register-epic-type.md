@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-b4y4-register-epic-type
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: hard
   registered_at: "2026-10-27T22:58:19Z"
+  completed_at: "2026-10-28T00:24:39Z"
+  conclusion: epic の type を追加した。track の記帳と tml-index での検証、個票テンプレート、exec run --register と夜間 queue からの除外、epic ごとの子項目のビューを実装した。orchestrator の指示への反映案は対応結果に残した
   derived_from:
     - PJR-NJJ7
 ---
