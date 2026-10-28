@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_fd93c0ed2e4a45d29634c0b57a4eb51f
+- v: 1
+  id: reg_764f97c8e028436b9f8fa87043f9a610
+  ts: "2026-10-28T12:58:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分で MD060 の有効化と 18 入力の検査が保たれていることを確かめ、親の検証 7 件の通過と単独での実行時間を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: MD060 のテストを markdownlint の CLI の起動から同一プロセスの lint API に変え、検査の範囲を保ったまま負荷の下でも数十ミリ秒で終わるようにした
+  previous_event_id: reg_543a039c86544ce3857c54ec735031f9

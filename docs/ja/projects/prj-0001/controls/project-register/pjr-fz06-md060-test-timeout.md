@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-fz06-md060-test-timeout
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: issue
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   registered_at: "2026-10-28T12:06:34Z"
+  completed_at: "2026-10-28T12:58:18Z"
+  conclusion: MD060 のテストを markdownlint の CLI の起動から同一プロセスの lint API に変え、検査の範囲を保ったまま負荷の下でも数十ミリ秒で終わるようにした
 ---
 
 # PJR-FZ06 MD060 の review テンプレートのテストが負荷で 5 秒の上限を超える
