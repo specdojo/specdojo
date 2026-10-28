@@ -2707,3 +2707,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_ddb4a320db064cf38858ae3a9419b2ff
+- v: 1
+  id: reg_c0a1ace57cf641e7a2a3d0f826017c54
+  ts: "2026-10-28T14:25:59Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: start・review の event と親の検証 7 件の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: PJR-0D0T の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-EXH2 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_afb12e69ef0b4349b2373e2aef544977
