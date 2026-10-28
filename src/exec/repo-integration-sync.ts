@@ -284,6 +284,15 @@ export function syncTaskWorktreesWithIntegrationTargets(params: {
   const synced: IntegrationTargetSync[] = [];
   for (const product of params.worktree.repos ?? []) {
     const target = productIntegrationTarget(product);
+    if (product.integrationStrategy === "branch-only") {
+      synced.push({
+        repo: product.name,
+        target,
+        status: "skipped",
+        detail: "product-side review (branch-only)",
+      });
+      continue;
+    }
     if (params.integratedProducts?.has(product.name)) {
       synced.push({ repo: product.name, target, status: "skipped", detail: "already integrated" });
       continue;

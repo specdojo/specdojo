@@ -12,6 +12,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- `repos[].integration_strategy` に `branch-only` を指定すると、プロダクトをローカルで merge せず、commit 済みの exec branch を残してプロダクト側の PR レビューへ渡せるようにしました。既定は従来どおり `merge` です。成功後は worktree を撤去し、プロジェクト側は `review` へ進んで result に未統合・branch 名・trace key を記録します。push と PR 作成は行いません（PJR-EXH2）。
+
 - register の子 todo からカタログの判定・生成を行う `catalog-planning` と、scope・intent の宣言から strategy・track を生成する `strategy-planning` を追加しました。対象は `domain:<domain>` / `track:<track>` で指定します。`timeline build` と strategy 生成は、カタログ作成 todo の完了から `catalog_status` を導き、手書き計画との差を警告します（PJR-WAGY）。
 
 - register に track ごとの仕事を管理する `epic` type と個票テンプレートを追加しました。`add` / `update --track` で担当 track を記録・検証し、`--from` でつないだ子項目と状態を epic 別ビューに表示します。epic 自体は `exec run --register`・filter・夜間 queue の実行対象から外し、完了は子項目と schedule を材料に人が判断します（PJR-B4Y4）。

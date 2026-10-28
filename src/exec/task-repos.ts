@@ -37,6 +37,7 @@ export type ProductRepo = {
   name: string;
   repoRoot: string;
   integrationBranch?: string;
+  integrationStrategy?: SpecDojoRepoConfig["integration_strategy"];
   /** Run npm ci for tracked package-lock.json files. Defaults to true (same as the project). */
   install: boolean;
   /** Run `specdojo build` when the repository has a SpecDojo config. Defaults to true. */
@@ -136,6 +137,7 @@ export function resolveProductRepos(
       name: repo.name,
       repoRoot: resolveRepoRoot(rootDir, repo),
       ...(integrationBranch ? { integrationBranch } : {}),
+      ...(repo.integration_strategy ? { integrationStrategy: repo.integration_strategy } : {}),
       install: repo.setup?.install ?? true,
       build: repo.setup?.build ?? true,
     };
@@ -174,6 +176,7 @@ export function configuredProductCheckouts(schedulePath: string): ProductWorktre
     branch: productIntegrationTarget(product),
     created: false,
     ...(product.integrationBranch ? { integrationBranch: product.integrationBranch } : {}),
+    ...(product.integrationStrategy ? { integrationStrategy: product.integrationStrategy } : {}),
   }));
 }
 
@@ -296,6 +299,7 @@ function toProductWorktree(product: ProductRepo, worktree: ExecWorktree): Produc
     branch: worktree.branch,
     created: worktree.created,
     ...(product.integrationBranch ? { integrationBranch: product.integrationBranch } : {}),
+    ...(product.integrationStrategy ? { integrationStrategy: product.integrationStrategy } : {}),
   };
 }
 
@@ -403,7 +407,7 @@ export function productWorktreeRemovalBlockers(worktree: ExecWorktree): string[]
         `${product.name} has uncommitted changes: ${dirty.map((path) => `${product.name}:${path}`).join(", ")}`,
       );
     }
-    if (!isMergedIntoTarget(product)) {
+    if (product.integrationStrategy !== "branch-only" && !isMergedIntoTarget(product)) {
       blockers.push(
         `${product.name}: exec branch ${product.branch} is not merged into ${productIntegrationTarget(product)}`,
       );
@@ -419,22 +423,23 @@ export function removeProductWorktrees(params: {
   dryRun?: boolean;
 }): void {
   for (const product of params.worktree.repos ?? []) {
+    const deleteBranch = params.deleteBranch && product.integrationStrategy !== "branch-only";
     if (params.dryRun) {
       process.stdout.write(
         `[dry-run] git -C ${product.repoRoot} worktree remove --force ${product.path}\n`,
       );
-      if (params.deleteBranch) {
+      if (deleteBranch) {
         process.stdout.write(`[dry-run] git -C ${product.repoRoot} branch -d ${product.branch}\n`);
       }
       continue;
     }
     if (existsSync(product.path)) {
-      // Guards (clean + merged) already ran; leftovers are ignored/regenerable files.
+      // Guards (clean, and merged unless branch-only) already ran.
       gitOutput(product.repoRoot, ["worktree", "remove", "--force", product.path]);
     } else {
       gitResult(product.repoRoot, ["worktree", "prune"]);
     }
-    if (params.deleteBranch) {
+    if (deleteBranch) {
       // `-d` compares with the main checkout's HEAD, which may differ from integration_branch.
       // Use `-D` only for a branch verified to be merged into its integration target; otherwise
       // keep Git's safe `-d` so unintegrated product work is never deleted.
@@ -464,6 +469,20 @@ export function discardStaleProductWorktrees(
   products: readonly ProductRepo[],
   taskId: string,
 ): string[] {
+  // A retained branch is product-side review work, not abandoned scheduler residue.
+  // Check every product before removing anything, including a previous task's project worktree.
+  for (const product of products) {
+    if (
+      product.integrationStrategy === "branch-only" &&
+      existsSync(product.repoRoot) &&
+      execBranchExists(product.repoRoot, taskId)
+    ) {
+      throw new Error(
+        `${product.name}: retained exec branch exec/${worktreeNameFromTaskId(taskId)} already exists; ` +
+          `resume the existing run or finish product-side review and rename/remove the branch before a fresh run`,
+      );
+    }
+  }
   const discarded: string[] = [];
   for (const product of products) {
     if (!existsSync(product.repoRoot)) continue;

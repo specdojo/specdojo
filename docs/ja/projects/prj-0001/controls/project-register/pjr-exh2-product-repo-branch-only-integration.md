@@ -7,12 +7,11 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T08:54:11Z"
   due_on: "2026-10-31"
-  block_reason: "parent validation failed: lint-md"
 ---
 
 # PJR-EXH2 プロダクトリポジトリを merge せず exec branch を残す統合方式を選べるようにする
@@ -50,6 +49,7 @@ specdojo:
 - [[specdojo:specdojo-config-reference|設定リファレンス]] と [[specdojo:docs-structure-guide|ドキュメント構成ガイド]] に設定方法・統合順序・撤去・再開・手動 PR 作成を追記し、CHANGELOG の Unreleased に記録した。
 - 設定値と schema、state の保存・読込、result の記載、方式の混在、競合、変更なし、再開、撤去後と prune 後の branch 保持をテストに追加した。register pipeline の E2E は既存の既定方式に加えて `branch-only` でも、統合先不変・commit と Refs・result・`review` 遷移・worktree 撤去を確認する構成にした。
 - 検証: 整形・設定と state の schema 検証・カタログ検証・登録簿の派生ビュー生成を executor で実施し、すべて成功した。カタログ検証は既存の参照先文書不足などの警告を出したが、終了コードは 0 だった。型検査・lint・unit / integration test など親検証 7 件は pipeline の指定に従い runner に委ねる。result 自体は executor では編集しない。
+- 再開対応: 前回の親検証は `lint-md` のみ失敗し、残り 6 件は成功した。設定リファレンスで `integration_strategy` が project 設定の表に誤配置されていたため、`repos` の表へ移して 4 列の行に修正した。再開後も親検証 7 件は runner に委ねる。
 - 申し送り: 上記の設計判断と実装・検証内容を reporter / runner が result に反映する。統合後の実 agent CLI の運用確認は [[prj-0001:pjr-jsey-exec-run-split-smoke|PJR-JSEY]] で行う。保護された設定の変更は不要。未解決の設計判断はない。
 
 ## 5. 関連ドキュメント
