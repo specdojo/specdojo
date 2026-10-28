@@ -1,0 +1,40 @@
+I will wait for the background build task (`npm run docs:build`) to finish.
+`npm run docs:build` の完了を待機しています。
+引き続き `docs:build` の VitePress ビルド完了を待機しています。
+Mermaid SVG の生成と VitePress ビルドの完了を待機しています。
+Mermaid SVG 生成処理の完了を待機しています。
+引き続きビルドタスクの完了を待機しています。
+ビルド完了を待機しています。
+VitePress の HTML レンダリング完了を待機しています。
+ページレンダリングの完了を待機しています。
+レンダリング完了を待機しています。
+タスク **PJR-AB1Y「ガイドを register を起点とする構成へ書き換える」** の executor 作業が完了しました。
+
+### 実施内容
+
+1. [register-operation-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/docs/ja/specdojo/guides/register-operation-guide.md)
+   - 「1.1. 登録簿の位置づけ」において、「成果物カタログと依存関係に基づく計画済みの作業へ移った後は schedule で管理し、登録簿との二重管理をしません」を「register が起点と完了の判断を持ち、途中の進み具合は schedule が持ちます。成果物タスクの進捗は schedule の依存グラフで管理し、個々の成果物タスクを登録簿に二重管理しません」へ書き換えました。
+   - 「1.2. 登録の判断基準」においても、個々の成果物タスクは schedule で管理し、track 全体の着手承認と完了判断を `epic` で管理する関係性へ更新しました。
+
+2. [exec-operation-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/docs/ja/specdojo/guides/exec-operation-guide.md)
+   - 「1.2. 実行経路の使い分け」において、register と schedule を同格の 2 経路ではなく、register を親（業務の起点・着手承認・完了判断）、schedule を子（成果物カタログに基づく途中の進み具合・依存実行）とする階層関係として説明を刷新しました。
+   - 比較表の役割・典型用途、迷ったときの判断基準、および後続段落も親子関係に合わせて更新しました。
+
+3. [timeline-design-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/docs/ja/specdojo/guides/timeline-design-guide.md)
+   - 「3. 運用タイミング」の mermaid 図と更新契機表を、「`epic` の起票 → 子 todo でカタログ（`catalog-planning`） → strategy（`strategy-planning`） → sch-track → schedule」の流れに書き換えました。
+   - `timeline build` が register の `catalog-planning` todo の完了から `catalog_status` を導出する仕様（todo が `done` なら `primary`、着手中なら `draft`、`open` だけなら `not_started`、`tml-index.yaml` の手書き値は書き換えずに警告する仕様）を反映し、成果物インスタンス判定やアンチパターンの記述も整合させました。
+
+4. [specdojo-overview-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/docs/ja/specdojo/guides/specdojo-overview-guide.md) & [quick-start-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/docs/ja/specdojo/guides/quick-start-guide.md)
+   - overview ガイドの第 5 章「プロジェクトの基本的な流れ」の図と手順を「register / decision → track ごとの `epic` 起票 → 子 todo からカタログ・strategy 作成 → Schedule 展開・実行 → レビュー・確定・`epic` 完了」へ更新し、第 6 章の技のマトリクスでも register を親、schedule を子として説明をそろえました。
+   - quick-start ガイドの 3.14 章を「issueからdecision、epic、成果物カタログ・Scheduleへ進む」へ改題し、`register add --type epic --track launch` と子 todo（`--approach catalog-planning --target domain:project-definition`）の流れを導入し、register が起点と完了判断を持ち schedule が途中の進捗を持つ構成へ改めました。
+
+5. [pjr-ab1y-register-centric-guides.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/docs/ja/projects/prj-0001/controls/project-register/pjr-ab1y-register-centric-guides.md)
+   - 個票の作業内容の全項目を `done` に更新し、対応結果に詳細な実施内容と設計判断を記録しました。
+
+6. **整形・検証**
+   - 編集した Markdown ファイルに対して Prettier 整形を実施しました。
+   - `npm run docs:build`、`specdojo catalog validate`、`specdojo register build` を実行し、すべて正常終了（exit code 0）することを確認しました。親検証 7 件は親 runner に委ねます。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"PJR-NJJ7 の決定および PJR-B4Y4・PJR-WAGY の実装に合わせ、5 本のガイドを register と epic を起点とする構成へ書き換え、個票を更新しました。docs:build を含む検証が正常終了しています。","handoff":["設計判断: register-operation-guide の「登録簿の位置づけ」および「登録の判断基準」を、register が起点と完了の判断を持ち途中の進み具合は schedule が持つ構成へ改定しました。schedule のタスクと register を二重管理しない方針を親子の責務分担として整理しました。","設計判断: exec-operation-guide の「実行経路の使い分け」で、register（親: 業務起点・着手承認・完了判断・単発対応）と schedule（子: 成果物の依存実行・途中の進捗）の親子関係を明示し、表・判断基準・説明を改訂しました。","設計判断: timeline-design-guide の「運用タイミング」の図と表を「epic 起票 → 子 todo（catalog-planning）でカタログ作成 → timeline build による catalog_status 導出 → 子 todo（strategy-planning）で strategy 作成 → schedule build --track → schedule 実行 → epic 完了判断」へ改定しました。timeline build が register の todo 完了から primary を自動導出し、手書きの tml-index.yaml を保持・警告する仕様と整合させました。","設計判断: specdojo-overview-guide の基本的な流れ（第 5 章）と技のマトリクス（第 6 章）、および quick-start-guide（3.14 章・第 4 章）を上記 3 本とそろえ、先行タスク PJR-B4Y4・PJR-WAGY で実装されたコマンド体系（epic、--track、catalog-planning、strategy-planning、domain:<domain>、track:<track>）と完全に一致させました。","親検証 7 件（lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit）は親 runner に委ね、executor では npm run docs:build、specdojo catalog validate、specdojo register build、および Prettier 整形を実行して成功を確認しました。"],"validations":[{"command":"npm run docs:build","status":"passed","summary":"docs:generate と docs-site ビルドが正常終了 (exit code 0)"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"catalog validate が正常終了 (exit code 0)"},{"command":"node --import tsx src/specdojo.ts register build --project prj-0001","status":"passed","summary":"register build が正常終了 (exit code 0)"},{"command":"npx prettier --write docs/ja/specdojo/guides/*.md docs/ja/projects/prj-0001/controls/project-register/pjr-ab1y-register-centric-guides.md","status":"passed","summary":"Prettier 整形が正常終了 (exit code 0)"},{"command":"node --import tsx src/specdojo.ts catalog build --project prj-0001","reason":"dct-*.yaml の変更がないため","status":"not_applicable","summary":"dct-*.yaml の変更がないため非適用"},{"command":"node --import tsx src/specdojo.ts exec refresh --project prj-0001","reason":"sch-*.yaml の変更がないため","status":"not_applicable","summary":"sch-*.yaml の変更がないため非適用"}]}
+</specdojo_executor_evidence>

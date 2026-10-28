@@ -794,16 +794,17 @@ npx specdojo register add \
 
 どちらも別 project への起票では `--commit` が必須です。別リポジトリでは、相手に SpecDojo 0.4.2 以上と対象 project の統合ブランチが必要です。push は行わず、close などの状態遷移は対象 project の作業ツリーで行います。
 
-### 3.14. issueからdecision、todo、成果物カタログへ進む
+### 3.14. issueからdecision、epic、成果物カタログ・Scheduleへ進む
 
-プロジェクト立ち上げ時に、問題、判断、実施作業がまだ混在している場合は、次の順で具体化します。この流れは register の履歴を、発展手順の成果物カタログと Schedule へつなぐ橋渡しです。
+プロジェクト立ち上げ時に、問題、判断、実施作業がまだ混在している場合は、次の順で具体化します。register が起点と完了の判断を持ち、途中の進み具合は schedule が持ちます。
 
 ```text
 issue（何が問題か）
   -> decision（何を対象とするか）
-  -> todo（成果物カタログを作成する）
-  -> dct-<domain>.yaml
-  -> schedule
+  -> epic（track の仕事を起票する）
+  -> 子 todo（成果物カタログや strategy を作成する）
+  -> schedule（成果物タスクの実行と進捗）
+  -> epic を完了する（人が判断）
 ```
 
 ```bash
@@ -821,22 +822,32 @@ npx specdojo register add \
   --title "初期スコープと対象成果物を決定する" \
   --topic decide-initial-scope
 
-# チャット:「高優先度の todo『プロジェクト定義の成果物カタログを作成する』を起票して」
+# チャット:「launch トラックの epic を起票して」
+npx specdojo register add \
+  --project <project-id> \
+  --type epic \
+  --track launch \
+  --title "プロジェクト定義の仕様整備" \
+  --topic project-definition
+
+# チャット:「epic から子 todo『成果物カタログを作成する』を起票して」
 npx specdojo register add \
   --project <project-id> \
   --type todo \
-  --priority high \
+  --from <epic-id> \
   --title "プロジェクト定義の成果物カタログを作成する" \
-  --topic create-project-definition-catalog
+  --topic create-project-definition-catalog \
+  --approach catalog-planning \
+  --target domain:project-definition
 ```
 
-issue の調査結果を decision の選択肢へ、decision の結論を todo の完了条件へ引き継ぎます。decision は人が確定します。issue と todo は provider 未設定でも `exec plan --project <project-id> --register <PJR-ID>` で計画を確認でき、agent 設定後は `exec run --project <project-id> --register <PJR-ID> --worktree` で実行できます。
+issue の調査結果を decision の選択肢へ、decision の結論を track の `epic` とその子 todo へ引き継ぎます。decision は人が確定します。issue や子 todo は provider 未設定でも `exec plan --project <project-id> --register <PJR-ID>` で計画を確認でき、agent 設定後は `exec run --project <project-id> --register <PJR-ID> --worktree` で実行できます（`epic` 自体は実行対象外です）。
 
-すべての登録項目には type 別の個票が作られ、個票 Frontmatter が構造化フィールドの正本になります。個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。成果物カタログ作成の todo は、次章で `dct-<domain>.yaml` を作成・検証した後に完了させます。登録簿は立ち上げ時の課題・判断・作業履歴、成果物カタログは合意後の管理対象成果物の正本です。同じ計画済み作業を register と schedule の両方で継続管理しません。
+すべての登録項目には type 別の個票が作られ、個票 Frontmatter が構造化フィールドの正本になります。個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。成果物カタログ作成の todo は、次章で `dct-<domain>.yaml` を作成・検証した後に完了させます。todo の完了により `catalog_status` が `primary` と導出され、strategy 作成と Schedule への展開（`schedule build --track launch`）が可能になります。成果物タスクの途中の進捗は schedule の依存グラフで管理し、登録簿に個々の成果物タスクを二重管理しません。トラック完了時に人が `epic` を close します。
 
 ## 4. 発展: 成果物カタログからscheduleへ展開する
 
-この経路では、成果物カタログ（`dct-<domain>.yaml`）とトラック戦略（`sch-strategy-<track>.yaml`）から Schedule を生成し、依存関係に従ってタスクを実行します。
+この経路では、epic の子 todo から成果物カタログ（`dct-<domain>.yaml`）とトラック戦略（`sch-strategy-<track>.yaml`）を作成して Schedule を生成し、依存関係に従ってタスクを実行します。
 
 ### 4.1. 成果物カタログを作成する
 
