@@ -77,3 +77,16 @@
       from: "parent validation failed: lint-md"
       to: "-"
   previous_event_id: reg_3c66d135ca6a4461b6c71b318b370878
+- v: 1
+  id: reg_0e225996bfba4b6190fe9cf5e2194105
+  ts: "2026-10-28T14:12:52Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_13350f2feee349f5b6de97576eb84b16
