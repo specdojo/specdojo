@@ -2421,3 +2421,19 @@
       from: PJR-H988 と PJR-8NWR の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
       to: PJR-6RVJ の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
   previous_event_id: reg_0247d89bebf64cdbb6080e74a3c91164
+- v: 1
+  id: reg_e962a4930291464fb3e9be9ed5c64d56
+  ts: "2026-10-28T00:17:26Z"
+  action: reopen
+  actor: specdojo-orchestrator
+  from_status: done
+  to_status: open
+  reason: PJR-B4Y4 の統合後の動作確認のため
+  changes:
+    - field: status
+      from: done
+      to: open
+    - field: completed
+      from: "2026-10-28"
+      to: "-"
+  previous_event_id: reg_08190e5682394a4d91b237f0838ff9a9
