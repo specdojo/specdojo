@@ -1,0 +1,12 @@
+個票の「対応結果」の表に 1 行追記し、確認対象を PJR-0QW0 にしました。変更したファイルは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。
+
+- **追記した行:** `2026-10-29 07:38 | PJR-0QW0 | sonnet-executor`。
+- **確認対象の根拠:** git log で PJR-0QW0 の統合コミット `bf1092590`（2026-10-29 07:35）を確認しました。対象一覧のうち、これが最も新しい統合です。時刻は git log の表示を JST と見なして書いています。タイムゾーンは確認していません。
+- **本文の修正:** 今回の確認対象を述べる段落を、PJR-EXH2 から PJR-0QW0 と `bf1092590` に直しました。
+- **検査:** 変更した個票に対する `npx prettier --check` は通りました。親 runner が実行する 7 件の検証は実行していません。
+
+親の検証、reporter の result 記入、統合、`review` への遷移は後続段で確認します。start の event の actor が `sonnet-executor` かどうかも、同じく後続段の確認です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-0QW0 の行を追記し、確認対象の説明段落を更新した。変更ファイルは個票のみ。","handoff":["親 runner の 7 検証、reporter の result 記入、統合、review 遷移、start の event の actor が sonnet-executor であることは後続段で確認する。","日時 2026-10-29 07:38 は git log の表示を JST と見なして記載した。タイムゾーンは確認していない。"],"validations":[{"command":"npx prettier --check docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md","status":"passed","summary":"Prettier のスタイルに適合"}]}
+</specdojo_executor_evidence>
