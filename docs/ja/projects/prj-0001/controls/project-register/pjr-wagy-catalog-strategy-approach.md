@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-wagy-catalog-strategy-approach
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: hard
   registered_at: "2026-10-27T22:58:31Z"
+  completed_at: "2026-10-28T00:52:34Z"
+  conclusion: "catalog-planning と strategy-planning の approach を追加した。--target domain:/track: で対象を指し、plan に kata とカタログの参照と完了条件を展開する。timeline build と strategy 生成が register から catalog_status を導き、tml-index は書き換えない"
   derived_from:
     - PJR-NJJ7
   depends_on:

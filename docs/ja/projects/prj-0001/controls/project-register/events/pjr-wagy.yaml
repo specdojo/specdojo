@@ -77,3 +77,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_3082f2f044ef479c94b7ca5fb01bd6c7
+- v: 1
+  id: reg_84d62aa630fa467da79e75f3738ecda2
+  ts: "2026-10-28T00:52:34Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件、空のリポジトリでの流れの記録、approach の起票の実地確認、JSEY の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: "catalog-planning と strategy-planning の approach を追加した。--target domain:/track: で対象を指し、plan に kata とカタログの参照と完了条件を展開する。timeline build と strategy 生成が register から catalog_status を導き、tml-index は書き換えない"
+  previous_event_id: reg_80a41b172a8c4374a3ff70ce5319e58a
