@@ -1,0 +1,29 @@
+プロジェクト登録簿の項目 **PJR-4FP2「VS Code からオーケストレーターを使う手順を案内する」** に対応し、関連成果物の更新および個票の記録を完了しました。
+
+### 実施内容のまとめ
+
+1. **[orchestrator-operation-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4FP2/docs/ja/specdojo/guides/orchestrator-operation-guide.md)**:
+   - 「2.2. VS Code から使う」節を新設し、以下の 3 つの拡張機能での利用手順を記載しました。
+     - **GitHub Copilot Chat**: `npx specdojo config scaffold --provider copilot` 実行後、チャットパネルの agent 選択肢から `specdojo-orchestrator` を選択。
+     - **Claude Code 拡張**: `.claude/settings.local.json` の `agent` キーに `specdojo-orchestrator` を設定（共有の `settings.json` だと全セッションに波及するためローカル設定を推奨）。
+     - **Codex 拡張**: SSOT である `.agents/specdojo-orchestrator.agent.md` の本文をチャット開始時のプロンプトとして渡す運用を記載。
+   - 冒頭の「この文書で分かること」に「VS Code からの使い方」を追加しました。
+
+2. **[quick-start-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4FP2/docs/ja/specdojo/guides/quick-start-guide.md)**:
+   - 冒頭のオーケストレーター紹介箇所に、ターミナルだけでなく VS Code 拡張機能（Copilot Chat、Claude Code、Codex）からも利用できる旨と、オーケストレーター運用ガイドの「VS Code から使う」節への参照リンクを追加しました。
+
+3. **[templates/copilot/README.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4FP2/templates/copilot/README.md)**:
+   - 導入手順のステップ 5 に、VS Code の Copilot Chat から `specdojo-orchestrator` を選ぶ手順を追加しました。
+
+4. **個票 [pjr-4fp2-orchestrator-vscode-guide.md](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-4FP2/docs/ja/projects/prj-0001/controls/project-register/pjr-4fp2-orchestrator-vscode-guide.md)**:
+   - **作業内容**: No 1〜3 を `done` に更新しました。
+   - **対応結果**:
+     - **公式ドキュメント確認結果**:
+       - Claude Code: 公式リファレンス（<https://docs.anthropic.com/en/docs/claude-code/settings>）で `settings.json` の `agent` キーおよびスコープ優先順位（User → Shared Project → Local Project）を確認。
+       - Codex 拡張: VS Code Marketplace（<https://marketplace.visualstudio.com/items?itemName=openai.chatgpt>）などを確認し、名前付きカスタムエージェント定義（`.codex/agents/*.toml`）を選択して起動する機能は現時点で公式文書上に記載がなく「未確認」と明記。
+     - **exec defaults への影響確認**:
+       - `.specdojo/exec-defaults.yaml` の `providers.claude.command_template` では `--agent {agent}` をコマンドライン引数で明示（`edit`: `claude-executor`、`review`: `claude-review-executor`、`report`: `claude-reporter`）しているため、`settings.json` の `agent` キーの影響を受けないことを確認・記録。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"VS Code からオーケストレーターを使う手順を orchestrator-operation-guide、quick-start-guide、templates/copilot/README.md に追記し、公式文書調査および exec への影響確認結果を個票に記録しました。","handoff":[],"validations":[{"command":"npm run docs:build","status":"requires_human","summary":"docs:build requires host-side execution outside the agent sandbox"}]}
+</specdojo_executor_evidence>

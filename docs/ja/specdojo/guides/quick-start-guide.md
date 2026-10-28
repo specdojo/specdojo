@@ -27,7 +27,7 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 - register のtypeと状態遷移は [登録簿運用ガイド](register-operation-guide.md) を参照してください。
 - Scheduleの自動・手動実行は [Schedule実行運用ガイド](schedule-operation-guide.md)、agent設定は [exec設定ガイド](exec-config-guide.md) を参照してください。
 
-各コマンドには、設定済みのオーケストレーター（`specdojo-orchestrator`）へチャットで指示する場合の文言を `# チャット:` として併記します。オーケストレーターは指示を対応する `specdojo` サブコマンドへ変換し、状態を変える操作は実行前に内容を提示して承認を求めます。導入先での設定と起動方法は [オーケストレーター運用ガイド](orchestrator-operation-guide.md) を参照してください。`<project-id>` などのプレースホルダは実際の値に読み替えてください。
+各コマンドには、設定済みのオーケストレーター（`specdojo-orchestrator`）へチャットで指示する場合の文言を `# チャット:` として併記します。オーケストレーターは指示を対応する `specdojo` サブコマンドへ変換し、状態を変える操作は実行前に内容を提示して承認を求めます。オーケストレーターはターミナル（`npm run orch:<provider>`）だけでなく、VS Code の各種拡張機能（Copilot Chat、Claude Code、Codex）からも利用できます。導入先での設定と起動方法は [オーケストレーター運用ガイド](orchestrator-operation-guide.md)（VS Code からの利用は [VS Code から使う](orchestrator-operation-guide.md#22-vs-code-から使う) 節）を参照してください。`<project-id>` などのプレースホルダは実際の値に読み替えてください。
 
 ## 1. 10分で体験する — 仕様の判断台帳
 

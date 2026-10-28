@@ -17,7 +17,7 @@ Orchestrator Operation Guide
 
 **この文書で分かること**
 
-- オーケストレーターの位置づけ、起動用スクリプト、対話フロー、承認と安全の扱い、設定ファイルの構成
+- オーケストレーターの位置づけ、起動用スクリプト、VS Code からの使い方、対話フロー、承認と安全の扱い、設定ファイルの構成
 
 **次に読む文書**
 
@@ -108,6 +108,24 @@ npx specdojo config scaffold --provider antigravity --global
 ```
 
 分離環境が必要な場合は、追加の任意手順として `devcontainer scaffold` を利用できます。既存の `.devcontainer/` は上書きされず、provider の設定ディレクトリは名前付きボリュームへ保存されます。詳細は [CLIコマンドリファレンス](../references/command-reference.md) の `devcontainer` を参照してください。
+
+### 2.2. VS Code から使う
+
+VS Code の各種 AI 拡張機能からオーケストレーターを利用することもできます。拡張機能ごとの起動手順は次のとおりです。
+
+- **GitHub Copilot Chat**:
+  `npx specdojo config scaffold --provider copilot` を実行して設定を配置した後、VS Code の Copilot Chat パネルで agent の選択肢から `specdojo-orchestrator` を選びます（`.github/agents/specdojo-orchestrator.md` が読み込まれます）。
+- **Claude Code 拡張**:
+  設定（settings）の `agent` キーに `specdojo-orchestrator` を設定すると、セッションがオーケストレーターとして開始されます。共有の `.claude/settings.json` に書くとそのリポジトリを利用する全員のすべてのセッションが対象になるため、各自のローカル設定である `.claude/settings.local.json` に記述することを推奨します。
+
+  ```json
+  {
+    "agent": "specdojo-orchestrator"
+  }
+  ```
+
+- **Codex 拡張**:
+  Codex の VS Code 拡張（`Codex – OpenAI's coding agent`）にはエージェント選択の仕組みがないため、会話開始時に SSOT である `.agents/specdojo-orchestrator.agent.md` の本文を最初の指示（プロンプト）として渡して対話を開始します。
 
 ## 3. 対話の進め方
 
