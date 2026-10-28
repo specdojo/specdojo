@@ -28,18 +28,26 @@ scaffold・文脈の記入・draft・fully-guided・finalize の流れと、_CON
 
 ## 2. 完了条件
 
-- _TODO_: 完了と判断できる具体的な条件を記載する。
+- exec-operation-guide に、register 経由で雛形・文脈の記入・`draft`・`fully-guided`・`finalize` を個票に分け、`depends_on` でつないで流す手順を書く。
+- ryu-guide に、`draft` と `fully-guided` の使い分けと、文脈の置き場所（成果物内の `_CONTEXT_`、個票の `入力`、カタログの `brief`）の使い分けを書く。
+- `tsd-recipe` の「作成前に集める情報」を、集めた答えを `_CONTEXT_`・`--input`・`brief` のどこに書くかが分かる形に直す。
+- tsd を「静的サイトで主流の技術スタックで書く」と指示して作る例を、いずれかのガイドに載せる。
+- 変更した文書で `npm run lint:md` と `npm run lint:fm` が通る。
+- `CHANGELOG.md` の `## [Unreleased]` 節に追記する。`0.5.0` と公開済みの版の節は変えない。
+- 設計で決めることは executor が決め、理由を本個票の対応結果に書き、報告の `handoff` にも書く。保護された設定に触れる必要がある場合は、変更せずに案を本個票の対応結果と `handoff` に書く。
 
 ## 3. 作業内容
 
-| No  | 作業   | 担当   | 状態 | メモ |
-| --- | ------ | ------ | ---- | ---- |
-| 1   | _TODO_ | _TODO_ | open | -    |
+| No  | 作業                                         | 担当     | 状態 | メモ |
+| --- | -------------------------------------------- | -------- | ---- | ---- |
+| 1   | exec-operation-guide と ryu-guide を更新する | executor | open | -    |
+| 2   | tsd-recipe を更新し、例を載せる              | executor | open | -    |
 
 ## 4. 対応結果
 
-_TODO_: 完了時に、実施内容・成果物・残課題を記載する。未完了の場合は `-` とする。
+-
 
 ## 5. 関連ドキュメント
 
-- _TODO_: 根拠・影響先・追跡先を `[[doc-id]]` 形式で記載する。
+- [[prj-0001:pjr-65ds-deliverable-context-draft-approach]]
+- [[specdojo:ryu-guide]]
