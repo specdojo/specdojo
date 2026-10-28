@@ -35,3 +35,22 @@
     - field: derived_from
       from: ""
       to: '["PJR-0D0T"]'
+- v: 1
+  id: reg_f25d7b1cbe354e6a9b145c7b20880c9f
+  ts: "2026-10-28T10:07:12Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 利用者が推奨の 1-B と 2-B を選んで承認したため
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: 1-B と 2-B を採用。type に requirement と glossary を足し project は管理文書に限る。rulebook の frontmatter で扱う成果物の type を宣言し、成果物・sample・テンプレートの type を lint で照合する。古い値は移行期間なしでエラーにする
+  previous_event_id: reg_dbe9446beae6461aaf57fdd0e42f3be5

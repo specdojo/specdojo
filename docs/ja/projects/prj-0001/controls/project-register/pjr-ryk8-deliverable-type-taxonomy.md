@@ -2,14 +2,16 @@
 specdojo:
   id: prj-0001:pjr-ryk8-deliverable-type-taxonomy
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: decision
-  item_status: open
+  item_status: decided
   priority: medium
   registered_at: "2026-10-28T10:03:38Z"
+  completed_at: "2026-10-28T10:07:12Z"
+  conclusion: 1-B と 2-B を採用。type に requirement と glossary を足し project は管理文書に限る。rulebook の frontmatter で扱う成果物の type を宣言し、成果物・sample・テンプレートの type を lint で照合する。古い値は移行期間なしでエラーにする
   derived_from:
     - PJR-0D0T
 ---
