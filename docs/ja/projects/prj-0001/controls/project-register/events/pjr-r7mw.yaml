@@ -1,0 +1,40 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_963368edf4f34beda419c7a387d94e3b
+  ts: "2026-10-28T00:45:33Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-WAGY の確認で timeline build を流して見つけたため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: tml-index の data-flow-pdca の order が依存先と同じで timeline build が止まる
+    - field: description
+      from: ""
+      to: data-flow-pdca が depends\_on の data-flow と同じ order 3 を持ち、timeline build が order の矛盾で停止する。3ae6b0596（2026-09-15）で track を切り出したときからの不整合
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: easy
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-WAGY"]'
