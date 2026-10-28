@@ -1,0 +1,11 @@
+個票の「対応結果」の表に、PJR-EXH2 の行を追記しました。変更したのは個票だけです。
+
+- **追記した行**: 2026-10-28 23:15 JST、確認対象 PJR-EXH2、agent は sonnet-executor です。
+- **PJR-EXH2 を選んだ理由**: 対象一覧のうち最新の統合コミットが `fff3641cf`(23:13 JST)だったためです。前回の PJR-0D0T より新しくなっています。
+- **ほかに更新した箇所**: 表の下の説明文と、作業内容表のメモ欄を PJR-EXH2 に合わせて更新しました。
+- **実行した検証**: 実行していません。変更は Markdown の表への追記だけです。親 runner の検証 7 件は runner 側で走ります。
+- **後続段で確認する点**: start の event の actor が sonnet-executor であること、reporter の result 記入、統合、`review` 遷移は後続段で確認します。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-EXH2(最新の統合 fff3641cf)の行を追記し、説明文と作業内容メモを更新した。変更は個票のみ。","handoff":["親 runner の 7 検証、reporter の result 記入、統合、`review` 遷移、start の event の actor が sonnet-executor であることは後続段で確認する。"],"validations":[]}
+</specdojo_executor_evidence>
