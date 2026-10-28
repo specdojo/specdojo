@@ -2524,3 +2524,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_da8d56825b9f4494be603af4dd283394
+- v: 1
+  id: reg_5b0a7a153c3341f5ab37adac3b7c6bd7
+  ts: "2026-10-28T00:52:22Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: start・review の event と親の検証 7 件の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: PJR-B4Y4 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+      to: PJR-WAGY の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
+  previous_event_id: reg_22e9c26d81e046088a839ee065578d1e
