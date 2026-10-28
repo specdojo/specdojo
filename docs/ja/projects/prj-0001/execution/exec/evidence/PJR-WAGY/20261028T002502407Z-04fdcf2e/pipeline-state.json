@@ -2,7 +2,7 @@
   "schema_version": 1,
   "task_id": "PJR-WAGY",
   "run_id": "20261028T002502407Z-04fdcf2e",
-  "updated_at": "2026-10-28T00:41:05.494Z",
+  "updated_at": "2026-10-28T00:44:09.033Z",
   "stages": {
     "executor": {
       "status": "succeeded",
@@ -21,11 +21,11 @@
       "artifact_ref": "docs/ja/projects/prj-0001/execution/exec/results/pjr-wagy-20261028T002502Z-9ceee4cb-result.md"
     },
     "integrate": {
-      "status": "running",
+      "status": "succeeded",
       "actor": "sol-executor",
       "attempts": 1,
       "started_at": "2026-10-28T00:41:05.494Z",
-      "completed_at": null,
+      "completed_at": "2026-10-28T00:44:09.033Z",
       "artifact_ref": null
     }
   },
