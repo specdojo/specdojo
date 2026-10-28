@@ -38,3 +38,16 @@
     - field: derived_from
       from: ""
       to: '["PJR-FMJ5"]'
+- v: 1
+  id: reg_378015c4603b479ab1fe1e277e5a2dfa
+  ts: "2026-10-28T22:12:05Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_461a59e0beb144ff88526892e2bcac21
