@@ -107,6 +107,18 @@ properties:
                   finalize,
                   bootstrap-finalize,
                 ]
+      - if:
+          required: [item_type]
+          properties:
+            item_type:
+              const: epic
+        then:
+          required: [track]
+          properties:
+            track: true
+        else:
+          properties:
+            track: false
       - type: object
         required:
           - rulebook
@@ -149,6 +161,10 @@ properties:
           item_type:
             $ref: "#/$defs/ItemType"
             description: "Classification of the register item (list column: 分類)."
+
+          track:
+            $ref: "#/$defs/Track"
+            description: "Track governed by this epic; checked against tml-index.yaml when present."
 
           item_status:
             $ref: "#/$defs/ItemStatus"
@@ -292,10 +308,15 @@ properties:
               key when the authoring task has no exemplar.
 
 $defs:
+  Track:
+    type: string
+    pattern: "^[a-z0-9][a-z0-9-]*$"
+
   ItemType:
     type: string
     enum:
       - todo
+      - epic
       - question
       - risk
       - issue

@@ -7,11 +7,10 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: waiting
+  item_status: in-progress
   priority: high
   difficulty: hard
   registered_at: "2026-10-27T22:58:19Z"
-  block_reason: "parent validation failed: test-unit"
   derived_from:
     - PJR-NJJ7
 ---
@@ -59,6 +58,7 @@ schema・個票のテンプレート・register の各コマンドで epic を�
 - pjr-rulebook、register-operation-guide、command-reference、状態遷移設計、一覧テンプレート、CHANGELOG の Unreleased を更新した。
 - schema・track の記帳と定義検証・終了と再開・イベント再適用・直接実行拒否・filter / 夜間 queue 除外・直接の子と状態の表示について単体テストを追加した。親検証 7 件（typecheck・lint-ts・lint-fm・lint-md・validate-schema・test-unit・test-integration）は executor で重複実行せず、runner の結果を正とする。
 - 再開時に前回の単体テスト失敗 2 件を確認した。epic テンプレートのタイトルを生成処理が置換する `_EPIC_TITLE_` に修正し、生成した個票の H1 と読み取ったタイトルの検証を追加した。また、共通成果物 schema にも `track` を許可し、識別子の定義を個票 schema の `$defs/Track` に集約して参照する。個票と汎用の成果物検査で同じ形式を検証するためである。単体テストの再実行は親 runner が担当する。
+- 今回の再開では、親の単体テストで残ったタイトルの期待値の不一致を修正した。既存の `titleFromBody` は一覧用の値として `|` をエスケープするため、読み取り結果の期待値を `業務 \| 整備` とし、個票の H1 には `業務 | 整備` が残ることも確認する。既存の読み取り仕様は変更していない。生成個票が共通成果物 schema に適合する回帰テストも追加し、状態遷移設計の Mermaid 図の完了対象に epic を反映した。
 - 再開時の executor 検証: 変更ファイル 30 件の Prettier 整形、生成した epic 個票と子項目ビューの markdownlint、生成個票の個票用・共通成果物用 schema と event schema の `validate:schema:file`、`register build --project prj-0001`、hook と同じ catalog 検証、`git diff --check` が成功した。catalog 検証は未作成成果物に関する `based_on` の警告を出したが、終了コードは 0。ソースの lint・単体テストを含む親検証 7 件の判定は runner が追記する。
 - 統合後の確認は pm-orchestrator-playbook の runner・register・exec の変更時の手順に従い、オーケストレーターが PJR-JSEY の確認対象へ PJR-B4Y4 を加えて `claude-executor` で実行する。start から review までと event の actor を確認する。実 agent CLI の起動と使用枠を伴うため、executor sandbox では実施せず申し送る。
 - 保護された設定の変更案（未適用）: `.agents/specdojo-orchestrator.agent.md` の type 表へ `epic`（用途: track ごとの仕事の着手・完了を管理、通常終端: `done`）の行を加える。本文に「`--track` で track を指定し、具体的な作業は `--from <epic-id>` の子 todo に分解する。epic 自体を実行せず、夜間も飛ばし、子項目と schedule を材料に人が close を判断する」を加える。利用者の承認後に SSOT を編集し、`npm run orchestrator:sync` で配布用ラッパーを同期する。今回は agent 定義・ラッパーを編集していない。

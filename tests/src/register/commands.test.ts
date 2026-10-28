@@ -292,6 +292,205 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     process.exitCode = undefined;
   });
 
+  it("epic を track 付きで起票・更新・close し、子ビューと履歴を生成する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "epic",
+        "--title",
+        "track の仕事",
+        "--track",
+        "business",
+      ]);
+      const path = join(registerDir, "pjr-ab12-epic.md");
+      expect(readFileSync(path, "utf8")).toContain("track: business");
+      await runRegister(["update", "--id", "PJR-AB12", "--track", "implementation"]);
+      expect(readFileSync(path, "utf8")).toContain("track: implementation");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "track",
+        from: "business",
+        to: "implementation",
+      });
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--id",
+        "PJR-CD12",
+        "--topic",
+        "child",
+        "--title",
+        "子の作業",
+        "--from",
+        "PJR-AB12",
+      ]);
+      const externalRegisterDir = join(root, "docs/ja/projects/prj-0002/controls/project-register");
+      mkdirSync(externalRegisterDir, { recursive: true });
+      writeFileSync(
+        join(root, ".specdojo/specdojo.config.json"),
+        JSON.stringify({
+          ...CONFIG,
+          projects: {
+            ...CONFIG.projects,
+            "prj-0002": {
+              base_path: "docs/ja/projects/prj-0002",
+              project_register_path: "controls/project-register",
+            },
+          },
+        }),
+      );
+      writeFileSync(
+        join(externalRegisterDir, "pjr-ef12-topic.md"),
+        buildTicket("PJR-EF12", [
+          "item_status: waiting",
+          "priority: medium",
+          "derived_from: [prj-0001:PJR-AB12]",
+        ]).replace("prj-0001:", "prj-0002:"),
+      );
+      await runRegister(["build"]);
+      expect(process.exitCode).toBeUndefined();
+      const epicView = readFileSync(join(registerDir, "generated/pjr-epic-items.md"), "utf8");
+      expect(epicView).toContain("prj-0002:PJR-EF12");
+      expect(epicView).toContain("| todo | waiting |");
+      expect(readFileSync(join(registerDir, "generated/pjr-epic-items.md"), "utf8")).toContain(
+        "| todo | open | 子の作業 |",
+      );
+      await runRegister(["close", "--id", "PJR-AB12", "--conclusion", "人が完了を確認"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(path, "utf8")).toContain("item_status: done");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)).toMatchObject({
+        action: "close",
+        to_status: "done",
+      });
+    });
+  });
+
+  it.each(["reject", "defer"])("epic の %s と reopen を記帳できる", async (command) => {
+    await withRepo(async ({ registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "epic",
+        "--title",
+        "track の仕事",
+        "--track",
+        "business",
+      ]);
+      await runRegister([command, "--id", "PJR-AB12"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.to_status).toBe(
+        command === "reject" ? "rejected" : "deferred",
+      );
+      await runRegister(["reopen", "--id", "PJR-AB12"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(join(registerDir, "pjr-ab12-epic.md"), "utf8")).toContain(
+        "item_status: open",
+      );
+    });
+  });
+
+  it("epic の track 必須と type 制約を、書き込み前に検証する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      for (const args of [[], ["--track", "-"], ["--track", "Bad Track"]]) {
+        process.exitCode = undefined;
+        await runRegister([
+          "add",
+          "--type",
+          "epic",
+          "--id",
+          "PJR-AB12",
+          "--topic",
+          "epic",
+          "--title",
+          "x",
+          ...args,
+        ]);
+        expect(process.exitCode).toBe(1);
+        expect(existsSync(join(registerDir, "pjr-ab12-epic.md"))).toBe(false);
+      }
+      process.exitCode = undefined;
+      await runRegister(["add", "--type", "todo", "--title", "x", "--track", "business"]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.flat().join("")).toContain("only valid for epic");
+    });
+  });
+
+  it("tml-index の定義を add / update / build で検証し、削除・未定義 track を拒否する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      const timelineDir = join(root, "docs/ja/projects/prj-0001/custom-timeline");
+      mkdirSync(timelineDir, { recursive: true });
+      const config = structuredClone(CONFIG);
+      Object.assign(config.projects["prj-0001"], { timeline_path: "custom-timeline" });
+      writeFileSync(join(root, ".specdojo/specdojo.config.json"), JSON.stringify(config));
+      const timelinePath = join(timelineDir, "tml-index.yaml");
+      writeFileSync(
+        timelinePath,
+        "project_id: prj-0001\ntracks:\n  - track: business\n    domains: [business]\n    catalog_status: draft\n    order: 1\n    depends_on: []\n",
+      );
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "epic",
+        "--title",
+        "x",
+        "--track",
+        "unknown",
+      ]);
+      expect(process.exitCode).toBe(1);
+      expect(existsSync(join(registerDir, "pjr-ab12-epic.md"))).toBe(false);
+      process.exitCode = undefined;
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "epic",
+        "--title",
+        "x",
+        "--track",
+        "business",
+      ]);
+      expect(process.exitCode).toBeUndefined();
+      const ticketPath = join(registerDir, "pjr-ab12-epic.md");
+      const before = readFileSync(ticketPath, "utf8");
+      for (const track of ["unknown", "-"]) {
+        process.exitCode = undefined;
+        await runRegister(["update", "--id", "PJR-AB12", "--track", track]);
+        expect(process.exitCode).toBe(1);
+        expect(readFileSync(ticketPath, "utf8")).toBe(before);
+      }
+      process.exitCode = undefined;
+      writeFileSync(
+        timelinePath,
+        readFileSync(timelinePath, "utf8").replace("track: business", "track: renamed"),
+      );
+      await runRegister(["build"]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.flat().join("")).toContain('Undefined epic track "business"');
+    });
+  });
+
   it("scaffold は generated 配下の一覧を作成し、追跡対象の参照ページは作らない", async () => {
     await withRepo(async ({ registerDir }) => {
       vi.spyOn(process.stdout, "write").mockReturnValue(true);

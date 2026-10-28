@@ -262,6 +262,49 @@ function generateTypeFilterView(
     table: ["<!-- prettier-ignore -->", makeTable(filtered, heading)].join("\n"),
   });
 }
+
+function generateEpicItemsFile(paths: RegisterPaths, items: readonly RegisterItemView[]): string {
+  const relations = collectDerivedRegisterRelations(paths, items);
+  const groups = items
+    .filter((view) => view.item.type === "epic")
+    .map((epic, index) => {
+      const label = epic.ticketPath
+        ? markdownLink(epic.id, paths.generatedPath, epic.ticketPath)
+        : epic.id;
+      const children = relations.filter((relation) => relation.sourceId === epic.id);
+      const rows = children.map((child) => {
+        const id =
+          child.derivedProjectId === paths.projectId
+            ? child.derivedItem.id
+            : `${child.derivedProjectId}:${child.derivedItem.id}`;
+        return `| ${[
+          markdownLink(id, paths.generatedPath, child.derivedTicketPath),
+          child.derivedItem.type,
+          child.derivedItem.status,
+          child.derivedItem.title,
+        ]
+          .map(toCell)
+          .join(" | ")} |`;
+      });
+      return [
+        `### 1.${index + 1}. ${label} ${toCell(epic.item.title)}`,
+        "",
+        `track: ${toCell(epic.item.track ?? "-")} / ステータス: ${toCell(epic.item.status)}`,
+        "",
+        ...(rows.length === 0
+          ? ["子項目なし"]
+          : [
+              "<!-- prettier-ignore -->",
+              "| 子項目 | 分類 | ステータス | タイトル |",
+              "| --- | --- | --- | --- |",
+              ...rows,
+            ]),
+      ].join("\n");
+    });
+  return injectViewSlots(loadViewTemplate("pjr-epic-items-template.md", paths.projectId), {
+    "epic-items": groups.join("\n\n") || "該当なし",
+  });
+}
 export type BuildScope = "register" | "controls" | "all";
 export type ViewFile = { path: string; content: string };
 
@@ -312,6 +355,10 @@ export function generateDerivedViewFiles(paths: RegisterPaths, scope: BuildScope
       {
         path: join(paths.generatedPath, "pjr-dependent-items.md"),
         content: generateDerivedItemsFile(paths, itemViews, "dependsOn"),
+      },
+      {
+        path: join(paths.generatedPath, "pjr-epic-items.md"),
+        content: generateEpicItemsFile(paths, itemViews),
       },
     );
   }

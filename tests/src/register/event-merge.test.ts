@@ -184,6 +184,26 @@ describe("rebuildRegisterTicketFromEvents", () => {
     expect(rebuilt.content).toContain("# PJR-0ABC Sample");
   });
 
+  it("replays an epic track change from merge-target events", () => {
+    const update = event(4, "2026-09-28T04:00:00Z", "update", "waiting", "waiting", [
+      { field: "track", from: "business", to: "implementation" },
+    ]);
+    const content = ticket("waiting", "2026-10-01").replace(
+      "item_type: todo",
+      "item_type: epic\n  track: business",
+    );
+    const rebuilt = rebuildRegisterTicketFromEvents(
+      content,
+      [...base, update],
+      new Set([eventId(4)]),
+    );
+    expect(rebuilt.appliedFields).toEqual(["track"]);
+    expect(readSpecdojoFields(rebuilt.content)).toMatchObject({
+      item_type: "epic",
+      track: "implementation",
+    });
+  });
+
   it("keeps a later exec branch change of the same field", () => {
     const update = event(4, "2026-09-28T04:00:00Z", "update", "waiting", "waiting", [
       { field: "owner", from: "DEV", to: "PM" },

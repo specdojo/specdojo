@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-B4Y4",
+  "run_id": "20261028T000520472Z-41002671",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-28T00:05:20.472Z",
+    "completed_at": "2026-10-28T00:08:30.341Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-b4y4.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-b4y4-register-epic-type.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-index-template.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-events.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/command-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/create-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/event-merge.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/events.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/external-project.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/item.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/maintenance-commands.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/views.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/commands/night-orchestrator.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/commands.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/event-merge.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/external-project.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/register.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-epic-items-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/templates/pjr-epic-template.md",
+      "status": "??"
+    },
+    {
+      "path": "src/register/epic.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/register/epic.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/product/010-business-specs/020-data-model/stsd-register-entry.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-b4y4-register-epic-type.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/epic.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 31,
+    "summary": "CHANGELOG.md                                       |   2 +\n .../020-data-model/stsd-register-entry.md          |  65 +++----\n .../controls/project-register/events/pjr-b4y4.yaml |  18 +-\n .../pjr-b4y4-register-epic-type.md                 |   4 +-\n .../ja/specdojo/guides/register-operation-guide.md |  38 ++--\n docs/ja/specdojo/references/command-reference.md   |   5 +-\n docs/ja/specdojo/rulebooks/pjr-rulebook.md         |  60 ++++---\n docs/ja/specdojo/templates/pjr-index-template.md   |   1 +\n .../schemas/v1/deliverable-frontmatter.schema.yaml |   3 +\n .../schemas/v1/register-events.schema.yaml         |  17 ++\n .../v1/register-item-frontmatter.schema.yaml       |  21 +++\n src/exec/register.ts                               |   2 +-\n src/register/command-types.ts                      |   1 +\n src/register/core.ts                               |   1 +\n src/register/create-commands.ts                    |  12 +-\n src/register/event-merge.ts                        |   2 +\n src/register/events.ts                             |   2 +\n src/register/external-project.ts                   |   2 +\n src/register/item.ts                               |   6 +\n src/register/maintenance-commands.ts               |   2 +\n src/register/views.ts                              |  47 +++++\n tests/src/commands/night-orchestrator.test.ts      |   1 +\n tests/src/exec/register.test.ts                    |  11 +-\n tests/src/register/commands.test.ts                | 199 +++++++++++++++++++++\n tests/src/register/event-merge.test.ts             |  20 +++\n tests/src/register/external-project.test.ts        |  10 ++\n tests/src/register/register.test.ts                |   4 +-\n 27 files changed, 480 insertions(+), 76 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "git diff --name-only -z -- CHANGELOG.md docs/ja/product docs/ja/specdojo docs/specdojo src tests docs/ja/projects/prj-0001/controls/project-register/pjr-b4y4-register-epic-type.md | xargs -0 npx prettier --write docs/ja/specdojo/templates/pjr-epic-template.md docs/ja/specdojo/templates/pjr-epic-items-template.md src/register/epic.ts tests/src/register/epic.test.ts",
+      "status": "passed",
+      "summary": "累積変更30ファイルを整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-b4y4-register-epic-type.md",
+      "status": "passed",
+      "summary": "今回の修正内容を追記した個票を整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml --data tmp/pjr-b4y4-resume-TeHUYZ/frontmatter.yaml",
+      "status": "passed",
+      "summary": "生成した epic 個票の frontmatter が適合。一時データは検証後に削除済み。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml --data tmp/pjr-b4y4-resume-TeHUYZ/frontmatter.yaml",
+      "status": "passed",
+      "summary": "生成した epic 個票が共通成果物 schema にも適合。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data tmp/pjr-b4y4-resume-TeHUYZ/events.yaml",
+      "status": "passed",
+      "summary": "epic の type・track を含む生成イベントが適合。"
+    },
+    {
+      "source": "executor",
+      "command": "node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint tmp/pjr-b4y4-resume-TeHUYZ/pjr-ab12-business.md tmp/pjr-b4y4-resume-TeHUYZ/generated/pjr-epic-items.md",
+      "status": "passed",
+      "summary": "生成個票と子項目ビューを検査。パイプを含むタイトルも適切にエスケープされている。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "epic 別ビューを含む登録簿の生成に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード0。未作成成果物の `based_on` 検証に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec run --project prj-0001 --register PJR-JSEY --worktree --executor-by claude-executor",
+      "status": "requires_human",
+      "summary": "統合後に実 agent CLI と使用枠を使う動作確認が必要。事前に PJR-JSEY の確認対象へ PJR-B4Y4 を追加する。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B4Y4/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B4Y4/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B4Y4/src/shared/specdojo-config.ts\n  1220:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B4Y4\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.7 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B4Y4/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B4Y4/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.7 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-B4Y4\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-10-28T00:12:22.452Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-28T00:11:22.699Z.\nfallback c\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-b4y4-register-epic-type.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-b4y4-register-epic-type.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "changed",
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/templates/pjr-epic-template.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/templates/pjr-epic-template.md",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/register/epic.test.ts",
+      "status": "changed",
+      "path": "tests/src/register/epic.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "epic 対応を確認し、前回失敗したタイトルの期待値を既存のエスケープ仕様に合わせて修正しました。共通成果物 schema の回帰テストと状態遷移図も補完しました。executor 担当の検証は成功し、親検証7件は runner が実施します。",
+  "completion_status": "complete",
+  "handoff": [
+    "設計判断: フィールド名は既存の timeline と一致する `track` とし、epic で必須、他 type では指定不可とする。`tml-index.yaml` がある場合は定義済み track を検証し、ない場合は識別子の形式だけを検証する。個票 schema の `$defs/Track` を共通成果物 schema からも参照する。",
+    "設計判断: 子項目は既存の `derived_from` を逆引きし、`generated/pjr-epic-items.md` に直接の子と現在の状態を表示する。別 project の子と子がない epic も扱う。孫の再帰表示・状態の自動集約・自動 close は行わず、人が子項目と schedule から判断する。",
+    "保護された設定の変更案を個票の対応結果へ記録済み。利用者の承認後に `.agents/specdojo-orchestrator.agent.md` の type 表へ epic（track の着手・完了管理、通常終端 done）を追加し、`--track`・子 todo の `--from`・epic の実行除外・人による close 判断を説明する。その後 `npm run orchestrator:sync` でラッパーを同期する。本 executor では適用していない。",
+    "統合後は pm-orchestrator-playbook に従い、PJR-JSEY の確認対象に PJR-B4Y4 を加え、claude-executor で start から review までと event の actor を確認する。実 agent CLI と使用枠を伴うため、オーケストレーターへ申し送る。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-B4Y4/20261028T000520472Z-41002671/executor.log",
+      "bytes": 5749,
+      "truncated": false
+    }
+  ]
+}

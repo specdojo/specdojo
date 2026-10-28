@@ -127,19 +127,35 @@ SpecDojo 自身のリポジトリへ起票する場合も、同じように別�
 
 値の一覧と個票 frontmatter の定義は [プロジェクト登録簿 作成ルール](../rulebooks/pjr-rulebook.md) と `register-item-frontmatter.schema.yaml` を正本とします。各 type の意味と、迷ったときの判断基準は次のとおりです。
 
-| type             | 意味                                 | 迷ったとき                                                                                                  |
-| ---------------- | ------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| `todo`           | 実施が決まっている作業               | 変更判断を伴うなら `change-request`、外部待ちは `todo`/`issue` に登録し `register wait` で `waiting` にする |
-| `question`       | 回答・確認が必要な事項               | 共有だけでよいなら `note`、選択肢を決める判断なら `decision`                                                |
-| `risk`           | まだ顕在化していない懸念             | すでに発生している問題なら `issue`                                                                          |
-| `issue`          | 顕在化している問題                   | 未発生の懸念なら `risk`                                                                                     |
-| `change-request` | 成果物・仕様・計画に対する変更の要望 | 実施が確定済みの作業なら `todo`                                                                             |
-| `decision`       | 記録・追跡する意思決定               | 判断材料が足りず確認が先なら `question`                                                                     |
-| `note`           | 共有・備忘のための記録               | 回答や結論が必要なら `question`                                                                             |
+| type             | 意味                                   | 迷ったとき                                                                                                  |
+| ---------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `epic`           | track ごとの大きな仕事と着手・完了判断 | 具体的な作業は `--from` でつなぐ子 todo にする。epic 自体は実行しない                                       |
+| `todo`           | 実施が決まっている作業                 | 変更判断を伴うなら `change-request`、外部待ちは `todo`/`issue` に登録し `register wait` で `waiting` にする |
+| `question`       | 回答・確認が必要な事項                 | 共有だけでよいなら `note`、選択肢を決める判断なら `decision`                                                |
+| `risk`           | まだ顕在化していない懸念               | すでに発生している問題なら `issue`                                                                          |
+| `issue`          | 顕在化している問題                     | 未発生の懸念なら `risk`                                                                                     |
+| `change-request` | 成果物・仕様・計画に対する変更の要望   | 実施が確定済みの作業なら `todo`                                                                             |
+| `decision`       | 記録・追跡する意思決定                 | 判断材料が足りず確認が先なら `question`                                                                     |
+| `note`           | 共有・備忘のための記録                 | 回答や結論が必要なら `question`                                                                             |
 
 外部の対応・提供物への依存（外部待ち）には専用 type を設けない。対応が必要なら `todo` / `issue` として登録し、外部待ちで止まっている状態は `register wait` の `waiting` ステータスで表す。計画上の前提・制約・依存関係は `prj-assumptions-constraints-dependencies` 成果物へ整理する。
 
 type は派生ビューの生成と `exec run --register` の挙動（`agent実行・定期実行との連携` を参照）に影響するため、内容が変質した場合は `register update` で見直します。
+
+### 1.4. track の仕事を epic と子 todo で管理する
+
+epic は `track` を Frontmatter に持ち、子 todo と schedule の進捗を材料に、人が完了を判断します。`tml-index.yaml` がある場合は、定義済みの track だけを指定できます。timeline がない project でも track の識別子を保持できます。
+
+```bash
+specdojo register add --type epic --title "業務の仕様整備" --topic business-specs --track business
+specdojo register add --type todo --title "カタログを作成する" --topic business-catalog --from PJR-AB12
+specdojo register update --id PJR-AB12 --track business
+specdojo register build
+```
+
+`PJR-AB12` は作成した epic の ID に置き換えます。`--track` は epic で必須で、`update` では別の識別子に置換できます。削除（`--track -`）とほかの type への指定は拒否します。timeline の配置は project の `timeline_path` に従い、省略時は project 配下の `timeline/tml-index.yaml` を参照します。add・update・build で track を検証し、変更は event に記録します。
+
+`register build` は `generated/pjr-epic-items.md` に、epic ごとの直接の子項目とその type・現在の状態を表示します。別 project の子も project 修飾 ID で表示し、子がない epic も残します。孫は再帰的に表示しません。子の状態から epic を自動 close せず、完了基準を満たしたことを人が確認して `register close --id <epic-id> --conclusion "判断の根拠"` で `done` にします。`reject` / `defer` / `reopen` も todo と同じように使用できます。
 
 ## 2. 登録項目のライフサイクル
 
@@ -429,7 +445,7 @@ specdojo exec run --project <project-id> --register PJR-0012 --in-place
 specdojo exec run --project <project-id> --register PJR-0012 PJR-0013 --worktree --parallel 2
 ```
 
-- type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`decision` / `note` は実行対象外です。
+- type が `todo` / `issue` / `change-request` の項目は成果物・実装を変更する対応、`question` / `risk` の項目は調査して結論案を result に記録する対応になります。`epic` / `decision` / `note` は実行対象外です。
 - 状態は register の遷移（`in-progress` / `review` / `waiting`）で追跡され、agent は項目を終端化しません。成功後は人が内容を確認して `register close` します。
 - todo 個票に `approach` と `targets` を指定した場合、成果物カタログの `done_criteria` や kata 参照を取り込んだ schedule と共通の plan が生成されます（詳細は [exec運用ガイド](exec-operation-guide.md) の「register の todo から approach で成果物・kata を作る・直す手順」を参照してください）。
 - 個票 Frontmatter の `targets` に宣言した変更対象文書は、plan 生成時に直近の自動評価（grade）結果があれば `_GRADE_FINDINGS_` として plan に展開されます。`targets` がない場合は finding を展開しません。「関連ドキュメント」は根拠や参考への導線であり、そこに wikilink があるだけでは解消対象になりません。表示は最大10文書・各20件までに制限され、超過分はサイドカーを参照するよう促します。サイドカーがない場合は「finding なし」と表示されます。
@@ -463,7 +479,7 @@ specdojo register update --project <project-id> --id PJR-0012 \
   --autopilot - --by <approver> --reason "夜間 queue から除外"
 ```
 
-`autopilot: approved` は「現在の個票に書かれた完了条件」の承認です。夜間 orchestrator は印のある `open` の todo・issue だけを ID 順に選びます。decision、印のない項目、`waiting` の項目は実行しません。完了条件を変更した場合は一度承認を取り消し、変更後の条件を再確認して承認します。
+`autopilot: approved` は「現在の個票に書かれた完了条件」の承認です。夜間 orchestrator は印のある `open` の todo・issue だけを ID 順に選びます。epic、decision、印のない項目、`waiting` の項目は実行しません。完了条件を変更した場合は一度承認を取り消し、変更後の条件を再確認して承認します。
 
 夜間実行は `specdojo orchestrator night` が担います。worktree 隔離、post-review、自動 close / `waiting` への復帰を必須とし、件数、並列数、連続失敗停止、rate limit 時の fallback をオプションで制限します。承認範囲外の操作が必要になった失敗は、元項目を `derived_from` に持つ issue として起票します。結果は `execution/reports/night-orchestrator/` の朝報告 1 文書へ集約します。
 

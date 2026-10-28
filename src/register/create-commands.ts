@@ -23,6 +23,7 @@ import { validateRegisterApproachTargetsForProject } from "./approach.js";
 import { normalizeDependsOn, validateRegisterDependencies } from "./dependency.js";
 import { normalizeDerivedFrom, validateDerivedFrom } from "./derivation.js";
 import { delegateExternalRegisterAdd } from "./external-project.js";
+import { validateRegisterTrack } from "./epic.js";
 import { isAuthoringApproach } from "../kata/authoring.js";
 
 function collectTarget(value: string, previous: string[] = []): string[] {
@@ -111,6 +112,7 @@ export function registerCreateCommands(
   const addCmd = reg.command("add").description("Add a new item to pjr-index.md");
   addProjectOption(addCmd);
   addCmd.requiredOption("--type <type>", `Item type: ${VALID_TYPES.join(" | ")}`);
+  addCmd.option("--track <track>", "Track governed by an epic (required for epic)");
   addCmd.requiredOption("--title <title>", "Short title for the item");
   addCmd.option("--description <text>", "Description shown in the list", "_TODO_");
   addCmd.option("--priority <priority>", `Priority: ${VALID_PRIORITIES.join(" | ")}`, "medium");
@@ -213,7 +215,10 @@ export function registerCreateCommands(
         validateTargetsWithoutApproach: opts.target !== undefined || opts.source !== undefined,
       });
 
+      const track = opts.track?.trim();
+      validateRegisterTrack(paths.projectId, opts.type, track);
       const fields: RegisterAddFields = {
+        ...(track !== undefined ? { track } : {}),
         type: opts.type,
         title: opts.title,
         description: opts.description,
@@ -330,6 +335,7 @@ export function registerUpdateCommand(
   const updateCmd = reg.command("update").description("Update fields of a register item");
   addProjectOption(updateCmd);
   updateCmd.requiredOption("--id <id>", "Item ID (PJR-XXXX)");
+  updateCmd.option("--track <track>", "Replace the track governed by an epic");
   updateCmd.option("--title <title>", "Update title");
   updateCmd.option("--description <text>", "Update description");
   updateCmd.option("--priority <priority>", `Update priority: ${VALID_PRIORITIES.join(" | ")}`);
@@ -389,6 +395,7 @@ export function registerUpdateCommand(
       const item = view.item;
 
       const hasUpdates = [
+        "track",
         "title",
         "description",
         "priority",
@@ -409,7 +416,7 @@ export function registerUpdateCommand(
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --from, --depends-on, --topic)",
+          "At least one field option must be specified (--track, --title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --from, --depends-on, --topic)",
         );
       }
 
@@ -589,8 +596,11 @@ export function registerUpdateCommand(
           : {}),
       };
 
+      const track = opts.track === undefined ? item.track : opts.track.trim();
+      validateRegisterTrack(paths.projectId, item.type, track);
       const updated: PjrItem = {
         ...item,
+        ...(track !== undefined ? { track } : {}),
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
         ...(opts.priority !== undefined ? { priority: opts.priority } : {}),

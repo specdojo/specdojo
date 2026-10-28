@@ -747,6 +747,7 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
         join(paths.generatedPath, "pjr-views-by-owner.md"),
         join(paths.generatedPath, "pjr-derived-items.md"),
         join(paths.generatedPath, "pjr-dependent-items.md"),
+        join(paths.generatedPath, "pjr-epic-items.md"),
       ]);
       expect(existsSync(paths.pjrIndexPath)).toBe(false);
     });
@@ -827,7 +828,8 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
       for (const view of views.filter(
         (view) =>
           !view.path.endsWith("pjr-derived-items.md") &&
-          !view.path.endsWith("pjr-dependent-items.md"),
+          !view.path.endsWith("pjr-dependent-items.md") &&
+          !view.path.endsWith("pjr-epic-items.md"),
       )) {
         expect(view.content).toContain("`prefix-<term>-suffix`");
         expect(view.content).toContain("`Array<string>`");
