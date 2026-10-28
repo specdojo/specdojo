@@ -61,3 +61,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_6363ca449e0c4721845628df9a70851c
+- v: 1
+  id: reg_4e81d1c4ea2f4e57a573a84ba57b4edd
+  ts: "2026-10-28T12:27:19Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、Codex の記述を未確認と明記する修正を加え、親の検証 7 件と docs:build の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: orchestrator-operation-guide に VS Code から使う節（Copilot Chat の agent の選択、Claude Code の settings の agent キー、Codex の拡張で本文を渡す使い方）を足し、クイックスタートと Copilot の README から案内した
+  previous_event_id: reg_0e4653e4445d4e6d8ef02e9c126cbc8a

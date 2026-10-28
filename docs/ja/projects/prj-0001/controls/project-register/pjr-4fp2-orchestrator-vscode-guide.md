@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-4fp2-orchestrator-vscode-guide
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   difficulty: easy
   registered_at: "2026-10-28T12:06:49Z"
+  completed_at: "2026-10-28T12:27:18Z"
+  conclusion: orchestrator-operation-guide に VS Code から使う節（Copilot Chat の agent の選択、Claude Code の settings の agent キー、Codex の拡張で本文を渡す使い方）を足し、クイックスタートと Copilot の README から案内した
 ---
 
 # PJR-4FP2 VS Code からオーケストレーターを使う手順を案内する
