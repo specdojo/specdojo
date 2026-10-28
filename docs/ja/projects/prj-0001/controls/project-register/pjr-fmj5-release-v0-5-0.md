@@ -13,6 +13,8 @@ specdojo:
   owner: BA
   registered_at: "2026-10-28T21:40:56Z"
   due_on: "2026-10-31"
+  depends_on:
+    - PJR-0QW0
 ---
 
 # PJR-FMJ5 v0.5.0 を公開する

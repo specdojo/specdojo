@@ -35,3 +35,16 @@
     - field: due
       from: ""
       to: "2026-10-31"
+- v: 1
+  id: reg_df5cd5ba26614eddb9a3e75354141fce
+  ts: "2026-10-28T22:11:45Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 0.5.0 の試用で見つかった MD013 の問題を公開前に直すため
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-0QW0"]'
+  previous_event_id: reg_36b1dc8973a443b49f411729a8fab8ce
