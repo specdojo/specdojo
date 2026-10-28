@@ -1,0 +1,11 @@
+個票の「対応結果」の表に、PJR-WAGY の行(2026-10-28 09:47 JST、sonnet-executor)を1行追記しました。あわせて表の下の段落も、確認対象が PJR-WAGY であること(最新の統合コミット `31f545e17`、09:44 JST)に書き換えています。
+
+PJR-WAGY を選んだのは、対象一覧の中で最も新しく統合されていたからです。直近の git log で確認しました。
+
+変更したファイルは `docs/ja/projects/prj-0001/controls/project-register/pjr-jsey-exec-run-split-smoke.md` だけです。
+
+親 runner の検証7件(`lint-ts`・`lint-fm`・`lint-md`・`typecheck`・`test-unit`・`test-integration`・`validate-schema`)は、executor では実行していません。統合と `review` 遷移も未確認で、これらは後続段の確認事項です。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"個票の対応結果の表に PJR-WAGY の行（2026-10-28 09:47 JST、sonnet-executor）を追記し、確認対象の説明を更新した。個票以外は変更していない。","handoff":["確認対象は最新の統合コミット 31f545e17（2026-10-28 09:44 JST）を持つ PJR-WAGY とした。","親 runner の 7 検証、reporter の result 記入、統合、review 遷移、start の event の actor が sonnet-executor になっているかの確認は後続段で行う。"],"validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が実行する検証のため executor では実行しない。"}]}
+</specdojo_executor_evidence>

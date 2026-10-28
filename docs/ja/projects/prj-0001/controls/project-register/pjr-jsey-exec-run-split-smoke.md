@@ -7,7 +7,7 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: review
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
@@ -81,8 +81,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-10-28 00:31 | PJR-8NWR | sonnet-executor        |
 | 2026-10-28 08:36 | PJR-6RVJ | sonnet-executor        |
 | 2026-10-28 09:18 | PJR-B4Y4 | sonnet-executor        |
+| 2026-10-28 09:47 | PJR-WAGY | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最新の統合コミット `d72264691`（2026-10-28 09:16 JST）を持つ PJR-B4Y4 とした。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
+今回の確認対象は、対象一覧のうち最新の統合コミット `31f545e17`（2026-10-28 09:44 JST）を持つ PJR-WAGY とした。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
 
 申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
