@@ -38,3 +38,32 @@
     - field: derived_from
       from: ""
       to: '["PJR-RYK8"]'
+- v: 1
+  id: reg_d67b4899b16a4d6e8e9a7e25406409e9
+  ts: "2026-10-28T10:10:27Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_2b73d71097054b87820dc9aa5e42ff32
+- v: 1
+  id: reg_2e64add8d9194071920553c1b0974c87
+  ts: "2026-10-28T10:35:33Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_d67b4899b16a4d6e8e9a7e25406409e9
