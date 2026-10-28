@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-b7dg-rulebook-sample-coverage-check
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: ARC
   registered_at: "2026-09-30T11:39:31Z"
+  completed_at: "2026-10-28T09:42:45Z"
+  conclusion: 削除した例の有無を 50 件判定し、欠ける 43 件の rulebook は例を復元した。grade の外出し前後の比較では 2 観点に明確な差はなかった（評価条件は前後で異なる）。雛形の sample の作り直しは PJR-2W38 から必要なときに起票する
 ---
 
 # PJR-B7DG rulebook から削除した例が sample に含まれるかの確認と grade による比較
