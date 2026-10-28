@@ -31,7 +31,7 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 | No  | 作業                        | 担当 | 状態 | メモ                              |
 | --- | --------------------------- | ---- | ---- | --------------------------------- |
-| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-K87Y の統合後の実行を記録した |
+| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-484B の統合後の実行を記録した |
 
 ## 4. 対応結果
 
@@ -82,8 +82,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-10-28 08:36 | PJR-6RVJ | sonnet-executor        |
 | 2026-10-28 09:18 | PJR-B4Y4 | sonnet-executor        |
 | 2026-10-28 09:47 | PJR-WAGY | sonnet-executor        |
+| 2026-10-28 20:02 | PJR-484B | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最新の統合コミット `31f545e17`（2026-10-28 09:44 JST）を持つ PJR-WAGY とした。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
+今回の確認対象は、対象一覧のうち最新の統合コミット `887622abb`（2026-10-28 19:54 JST）を持つ PJR-484B とした。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
 
 申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
