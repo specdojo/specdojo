@@ -2,16 +2,18 @@
 specdojo:
   id: prj-0001:pjr-exh2-product-repo-branch-only-integration
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: medium
   owner: DEV
   registered_at: "2026-10-12T08:54:11Z"
   due_on: "2026-10-31"
+  completed_at: "2026-10-28T14:26:18Z"
+  conclusion: repos[].integration_strategy に merge / branch-only を追加した。branch-only では exec branch に commit して統合先へ merge せず branch を残し、result に未統合と branch 名・trace key を記録する。push と PR の作成は範囲外
 ---
 
 # PJR-EXH2 プロダクトリポジトリを merge せず exec branch を残す統合方式を選べるようにする

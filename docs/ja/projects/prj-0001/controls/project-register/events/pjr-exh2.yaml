@@ -90,3 +90,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_13350f2feee349f5b6de97576eb84b16
+- v: 1
+  id: reg_d54d1c4a58fa457e8eb583d82587fb84
+  ts: "2026-10-28T14:26:18Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件（branch-only の E2E を含む）と JSEY の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: repos[].integration_strategy に merge / branch-only を追加した。branch-only では exec branch に commit して統合先へ merge せず branch を残し、result に未統合と branch 名・trace key を記録する。push と PR の作成は範囲外
+  previous_event_id: reg_0e225996bfba4b6190fe9cf5e2194105
