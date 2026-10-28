@@ -125,7 +125,7 @@ VS Code の各種 AI 拡張機能からオーケストレーターを利用す�
   ```
 
 - **Codex 拡張**:
-  Codex の VS Code 拡張（`Codex – OpenAI's coding agent`）にはエージェント選択の仕組みがないため、会話開始時に SSOT である `.agents/specdojo-orchestrator.agent.md` の本文を最初の指示（プロンプト）として渡して対話を開始します。
+  Codex の VS Code 拡張（`Codex – OpenAI's coding agent`）で名前付きの agent の定義を選ぶ仕組みは、公式の文書では確かめられていません（2026-10 時点で未確認）。そのため、会話開始時に SSOT である `.agents/specdojo-orchestrator.agent.md` の本文を最初の指示（プロンプト）として渡して対話を開始します。
 
 ## 3. 対話の進め方
 
