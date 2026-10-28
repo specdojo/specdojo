@@ -33,7 +33,8 @@ specdojo config scaffold --provider copilot
 2. `.specdojo/copilot/agent-members-snippet.yaml` の member 定義をリポジトリ共通の `.specdojo/agent-members.yaml` の `members` へコピーし、使う場合は `disabled: false` にする。agent は project ごとの `pm-members.yaml` へ書かない。
 3. `copilot login` で認証する（premium request の課金が発生する）。
 4. `npm run orch:copilot` でオーケストレーターを起動できることを確認する。
-5. 最初のタスクで permission ログを確認し、`shell(...)` パターンのマッチ粒度が不足していれば `--allow-tool` を追記する。
+5. VS Code から使う場合は、Copilot Chat を開き、agent の選択肢から `specdojo-orchestrator` を選ぶ（`.github/agents/specdojo-orchestrator.md` が読み込まれます）。
+6. 最初のタスクで permission ログを確認し、`shell(...)` パターンのマッチ粒度が不足していれば `--allow-tool` を追記する。
 
 ## 4. カスタマイズ
 

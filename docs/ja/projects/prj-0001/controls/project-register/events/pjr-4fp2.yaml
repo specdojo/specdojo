@@ -35,3 +35,29 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_6363ca449e0c4721845628df9a70851c
+  ts: "2026-10-28T12:08:27Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3dbeb69686ad438092eb9ddea44d5c78
+- v: 1
+  id: reg_0e4653e4445d4e6d8ef02e9c126cbc8a
+  ts: "2026-10-28T12:24:04Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_6363ca449e0c4721845628df9a70851c
