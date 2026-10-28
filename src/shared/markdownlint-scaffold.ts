@@ -2,15 +2,7 @@ import { existsSync } from "node:fs";
 import { readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { dump } from "js-yaml";
-
-const BASE_CONFIG = {
-  MD013: false,
-  MD024: false,
-  MD033: false,
-  MD036: false,
-  MD041: false,
-  MD060: false,
-};
+import { DEFAULT_MARKDOWNLINT_CONFIG } from "./markdownlint-config.js";
 
 // Slide boundaries and per-slide frontmatter interrupt normal Markdown blocks.
 // Each slide may start with its own H1 or use a heading level chosen for its layout.
@@ -31,7 +23,7 @@ export async function writeMarkdownlintConfigs(opts: {
   const legacyConfigs = files.filter((file) => file.startsWith(".markdownlint."));
   const cli2Configs = files.filter((file) => file.startsWith(".markdownlint-cli2."));
   const hasRc = existsSync(path.join(opts.repoRoot, ".markdownlintrc"));
-  const rcContent = `${JSON.stringify(BASE_CONFIG, null, 2)}\n`;
+  const rcContent = `${JSON.stringify(DEFAULT_MARKDOWNLINT_CONFIG, null, 2)}\n`;
   const cli2Content = dump({
     config: { extends: ".markdownlintrc" },
     ...(opts.slidevKataPatterns?.length
