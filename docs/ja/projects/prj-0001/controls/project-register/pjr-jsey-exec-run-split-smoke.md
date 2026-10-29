@@ -7,11 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: in-progress
+  item_status: waiting
   priority: low
   owner: DEV
   registered_at: "2026-10-14T15:10:59Z"
   due_on: null
+  block_reason: "parent validation failed: lint-fm"
   conclusion: PJR-0QW0 の統合後、exec run --register が start から review まで通り、event の actor に sonnet-executor が記録された
 ---
 
@@ -31,7 +32,7 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 
 | No  | 作業                        | 担当 | 状態 | メモ                              |
 | --- | --------------------------- | ---- | ---- | --------------------------------- |
-| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-EXH2 の統合後の実行を記録した |
+| 1   | 対応結果の表に 1 行追記する | DEV  | done | PJR-3MY5 の統合後の実行を記録した |
 
 ## 4. 対応結果
 
@@ -86,8 +87,9 @@ runner・register・exec のコード変更を統合した後に exec run --regi
 | 2026-10-28 21:30 | PJR-0D0T | sonnet-executor        |
 | 2026-10-28 23:15 | PJR-EXH2 | sonnet-executor        |
 | 2026-10-29 07:38 | PJR-0QW0 | sonnet-executor        |
+| 2026-10-29 19:58 | PJR-3MY5 | sonnet-executor        |
 
-今回の確認対象は、対象一覧のうち最新の統合コミット `bf1092590`（2026-10-29 07:35 JST）を持つ PJR-0QW0 とした。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
+今回の確認対象は、対象一覧のうち最新の統合コミット `13976bd3c`（2026-10-29 19:54 JST）を持つ PJR-3MY5 とした。実行した agent は、sonnet-executor である（start の event の actor は後続段で確認する）。
 
 申し送り: executor 段階では表への追記までを実施した。親 runner の 7 検証（lint-ts・lint-fm・lint-md・typecheck・test-unit・test-integration・validate-schema）、reporter の result 記入、統合、`review` 遷移の完了は後続段で確認する。
 
