@@ -6,8 +6,8 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 85
-graded_at: "2026-09-30T21:04:06.325Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-29T20:03:53.402Z"
+graded_by: flash-high-executor
 content_hash: 7ed4d1ed408355e8ddc37e849bf46e0005ecffc0b94d8417f9430c8c284bdb05
 categories:
   purpose:
@@ -113,6 +113,7 @@ findings:
     line: 144
     anchor: "- 調査で確定できる不足情報は _TODO_:、意思決定待ちは _UNDECIDED_:、仮置き前提は _ASSUMPTION_: とします。"
     message: 本文129行では主要例外がない場合を許容しているのに, 主要例外を少なくとも一つ確認することを必須化しており, 例外なしのBPSが受入条件を満たせないため, 「存在する場合」または例外なしの結論を確認する条件へ修正してください。
+    message_ja: 本文129行では主要例外がない場合を許容しているのに, 主要例外を少なくとも一つ確認することを必須化しており, 例外なしのBPSが受入条件を満たせないため, 「存在する場合」または例外なしの結論を確認する条件へ修正してください。
   - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
@@ -121,17 +122,24 @@ findings:
     message: >-
       本文129行の「業務成果を変える例外がない」という有効な結論と, 「主要例外を少なくとも一つ」という条件が矛盾し, 深掘り手順と仕上げチェックにも同じ前提が残るため,
       主要例外がない場合の確認方法を各確認箇所で一貫させてください。
+    message_ja: >-
+      本文129行の「業務成果を変える例外がない」という有効な結論と, 「主要例外を少なくとも一つ」という条件が矛盾し, 深掘り手順と仕上げチェックにも同じ前提が残るため,
+      主要例外がない場合の確認方法を各確認箇所で一貫させてください。
   - id: F003
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 197
     anchor: "- 分岐から合流先または終了先をたどれ、正常終了と条件付き終了の業務成果が出力にある。"
     message: rulebookの完成判定で要求されているFrontmatterやファイル名の一致確認が、仕上げチェックから漏れているため追加してください。
+    message_ja: rulebookの完成判定で要求されているFrontmatterやファイル名の一致確認が、仕上げチェックから漏れているため追加してください。
   - id: F004
     severity: major
     rule: vp-qe-kata-conformance
     line: 144
     anchor: "- 調査で確定できる不足情報は _TODO_:、意思決定待ちは _UNDECIDED_:、仮置き前提は _ASSUMPTION_: とします。"
     message: >-
+      rulebookの「主要例外がない場合も確認範囲と結論を記載する」という規定に対し, recipeは主要例外を少なくとも一つ要求して誤った例外の創作を誘発するため,
+      rulebookに合わせて「主要例外がある場合」と「ない場合」の受入確認を分岐してください。
+    message_ja: >-
       rulebookの「主要例外がない場合も確認範囲と結論を記載する」という規定に対し, recipeは主要例外を少なくとも一つ要求して誤った例外の創作を誘発するため,
       rulebookに合わせて「主要例外がある場合」と「ない場合」の受入確認を分岐してください。

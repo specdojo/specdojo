@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 85
-graded_at: "2026-09-29T22:23:31.789Z"
-graded_by: codex-expert-executor
-content_hash: 77360ded3401e36dbfcb43292cfaecb4fe66caf39647ffcaadcd09fe06c3a167
+graded_at: "2026-10-29T20:46:48.495Z"
+graded_by: flash-high-executor
+content_hash: 292354ba25a6380859aeb078374c5148a58da11161f0f1c80ba8848afcef5987
 categories:
   purpose:
     score: 100
@@ -113,42 +113,49 @@ findings:
     line: 10
     anchor: "- 既存 CSTD の状態、イベント、条件は、同じ対象の STSD の「状態遷移図」と「遷移の説明」へ移します。"
     message: 移行作業をタスク化して完了判定するために、内容移行後の旧 CSTD ファイルを非推奨の誘導文として維持する条件、履歴保管または削除する条件、および各経路の完了状態を明記する必要がある。
+    message_ja: 移行作業をタスク化して完了判定するために、内容移行後の旧 CSTD ファイルを非推奨の誘導文として維持する条件、履歴保管または削除する条件、および各経路の完了状態を明記する必要がある。
   - id: F002
     severity: major
     rule: vp-pm-dependency-risk
     line: 11
     anchor: "- CDFD などの参照元は CSTD 参照を削除し、統合先の STSD だけを参照します。"
     message: CDFD 以外の依存先として残る生成済み成果物カタログを影響範囲に含めておらず、旧 CSTD を作成対象とする案内が下流計画へ混入するため、対象ページの除去または再生成を移行依存として明記する必要がある。
+    message_ja: CDFD 以外の依存先として残る生成済み成果物カタログを影響範囲に含めておらず、旧 CSTD を作成対象とする案内が下流計画へ混入するため、対象ページの除去または再生成を移行依存として明記する必要がある。
   - id: F003
     severity: minor
     rule: vp-ba-requirements-completeness
     line: 10
     anchor: "- 既存 CSTD の状態、イベント、条件は、同じ対象の STSD の「状態遷移図」と「遷移の説明」へ移します。"
     message: 既存 CSTD の移行要件に旧ファイルの残置、非推奨化、履歴保管、削除の選択条件と受入条件が含まれていないため、移行後に何が残るべきかを利用者が確認できる形で補う必要がある。
+    message_ja: 既存 CSTD の移行要件に旧ファイルの残置、非推奨化、履歴保管、削除の選択条件と受入条件が含まれていないため、移行後に何が残るべきかを利用者が確認できる形で補う必要がある。
   - id: F004
     severity: minor
     rule: vp-dev-implementation-readiness
     line: 10
     anchor: "- 既存 CSTD の状態、イベント、条件は、同じ対象の STSD の「状態遷移図」と「遷移の説明」へ移します。"
     message: 実際の変更作業に必要な出力状態として、移行済み CSTD をどの status・内容・配置で残すか、またはどの条件で除去するかを規定する必要がある。
+    message_ja: 実際の変更作業に必要な出力状態として、移行済み CSTD をどの status・内容・配置で残すか、またはどの条件で除去するかを規定する必要がある。
   - id: F005
     severity: major
     rule: vp-dev-change-impact
     line: 11
     anchor: "- CDFD などの参照元は CSTD 参照を削除し、統合先の STSD だけを参照します。"
     message: STSD 統合の変更影響に成果物カタログの生成元と生成済みページを含めていないため、旧 `cstd-_TERM_` の削除と STSD の概要・完了条件の更新対象を明示する必要がある。
+    message_ja: STSD 統合の変更影響に成果物カタログの生成元と生成済みページを含めていないため、旧 `cstd-_TERM_` の削除と STSD の概要・完了条件の更新対象を明示する必要がある。
   - id: F006
     severity: minor
     rule: vp-dev-testability
     line: 11
     anchor: "- CDFD などの参照元は CSTD 参照を削除し、統合先の STSD だけを参照します。"
     message: 移行後に旧 CSTD 参照が残っていないことと成果物カタログが再生成済みであることを確認する対象、検証コマンド、期待結果を明記する必要がある。
+    message_ja: 移行後に旧 CSTD 参照が残っていないことと成果物カタログが再生成済みであることを確認する対象、検証コマンド、期待結果を明記する必要がある。
   - id: F007
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 10
     anchor: "- 既存 CSTD の状態、イベント、条件は、同じ対象の STSD の「状態遷移図」と「遷移の説明」へ移します。"
     message: 既存 CSTD から内容を移すことだけが規定され、移行後の旧ファイルを削除するのか、履歴保管するのか、非推奨の誘導文として残すのかが未定義なため、各扱いの選択条件と完了状態を明記する必要がある。
+    message_ja: 既存 CSTD から内容を移すことだけが規定され、移行後の旧ファイルを削除するのか、履歴保管するのか、非推奨の誘導文として残すのかが未定義なため、各扱いの選択条件と完了状態を明記する必要がある。
   - id: F008
     severity: major
     rule: vp-qe-kata-conformance
@@ -158,15 +165,21 @@ findings:
       新規 CSTD を禁止して STSD へ統合する方針に反し、`templates/generated/dct-data-model-conceptual-template.md` は `cstd-_TERM_`
       を現行成果物として掲載し、`dct-data-model-dictionary-template.md` も STSD
       を状態一覧だけの成果物として掲載しているため、削除済み生成元に対応する旧生成ページを除去または再生成して成果物カタログの指示を統一する必要がある。
+    message_ja: >-
+      新規 CSTD を禁止して STSD へ統合する方針に反し、`templates/generated/dct-data-model-conceptual-template.md` は `cstd-_TERM_`
+      を現行成果物として掲載し、`dct-data-model-dictionary-template.md` も STSD
+      を状態一覧だけの成果物として掲載しているため、削除済み生成元に対応する旧生成ページを除去または再生成して成果物カタログの指示を統一する必要がある。
   - id: F009
     severity: major
     rule: vp-ops-release-readiness
     line: 9
     anchor: "- 新しい `cstd-<term>` は作成せず、`stsd-<term>` に状態一覧、状態遷移図、遷移の説明を記載します。"
     message: 非推奨化を公開・配布可能と判断する前に、旧 CSTD を現行成果物として掲載する生成済みカタログを除去または再生成し、後継 STSD の内容と一致することを公開前条件に含める必要がある。
+    message_ja: 非推奨化を公開・配布可能と判断する前に、旧 CSTD を現行成果物として掲載する生成済みカタログを除去または再生成し、後継 STSD の内容と一致することを公開前条件に含める必要がある。
   - id: F010
     severity: minor
     rule: vp-ops-operability
     line: 10
     anchor: "- 既存 CSTD の状態、イベント、条件は、同じ対象の STSD の「状態遷移図」と「遷移の説明」へ移します。"
     message: 継続保守で旧 CSTD や古い生成ページが再び現行文書と混在しないよう、旧ファイルの配置・状態と生成ページの除去または再生成手順を明記する必要がある。
+    message_ja: 継続保守で旧 CSTD や古い生成ページが再び現行文書と混在しないよう、旧ファイルの配置・状態と生成ページの除去または再生成手順を明記する必要がある。

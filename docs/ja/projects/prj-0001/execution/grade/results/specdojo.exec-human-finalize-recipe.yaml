@@ -6,9 +6,9 @@ target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 76
-graded_at: "2026-09-27T20:42:17.692Z"
-graded_by: agy-expert-executor
-content_hash: e00a3610d11d09f4abccbed34a2bb7828c31c4fa8d1b6ea48ff4ac7102708999
+graded_at: "2026-10-29T20:12:13.114Z"
+graded_by: flash-high-executor
+content_hash: b5737242e2a22d8e3550bd75769e1ce7fccb0015efbb5c06942e036badf904e6
 categories:
   purpose:
     score: 100
@@ -115,6 +115,7 @@ findings:
       8. `specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "<message>"` で完了を記録し、再度
       build して次の Ready を更新します。
     message: "`judgement: 承認` と `judgement: 差し戻し` の双方が同じ complete 操作へ到達して判定結果とタスク状態が対応しないため、各判定に対応する状態イベントと確認可能な終端状態を定義する必要がある。"
+    message_ja: "`judgement: 承認` と `judgement: 差し戻し` の双方が同じ complete 操作へ到達して判定結果とタスク状態が対応しないため、各判定に対応する状態イベントと確認可能な終端状態を定義する必要がある。"
   - id: F002
     severity: major
     rule: vp-qe-omissions-consistency
@@ -123,6 +124,7 @@ findings:
       8. `specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "<message>"` で完了を記録し、再度
       build して次の Ready を更新します。
     message: 差し戻し時に complete せずタスクを停止し、修正対象を再対応へ戻した後に再確認する手順がないため、未充足のまま後続タスクを Ready にしない状態遷移を追記する必要がある。
+    message_ja: 差し戻し時に complete せずタスクを停止し、修正対象を再対応へ戻した後に再確認する手順がないため、未充足のまま後続タスクを Ready にしない状態遷移を追記する必要がある。
   - id: F003
     severity: major
     rule: vp-qe-omissions-consistency
@@ -133,6 +135,9 @@ findings:
     message: >-
       完了 event 後に必要な `specdojo exec refresh —project ＜project-id＞` が手順から欠落し「再度 build」とだけ記載されているため、Ready
       更新の必須操作を完全なコマンドで明記する必要がある。
+    message_ja: >-
+      完了 event 後に必要な `specdojo exec refresh —project ＜project-id＞` が手順から欠落し「再度 build」とだけ記載されているため、Ready
+      更新の必須操作を完全なコマンドで明記する必要がある。
   - id: F004
     severity: major
     rule: vp-qe-kata-conformance
@@ -141,18 +146,21 @@ findings:
       8. `specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "<message>"` で完了を記録し、再度
       build して次の Ready を更新します。
     message: 差し戻し判定後も complete する適用方法では human finalize の否認ゲートを再現できないため、承認と差し戻しの実行手順を分けた再利用可能な recipe に修正する必要がある。
+    message_ja: 差し戻し判定後も complete する適用方法では human finalize の否認ゲートを再現できないため、承認と差し戻しの実行手順を分けた再利用可能な recipe に修正する必要がある。
   - id: F005
     severity: minor
     rule: vp-qe-kata-conformance
     line: 36
     anchor: "## 4. 各確認の進め方"
     message: 「各確認の進め方」が指示文だけで構成され、Recipe 記述標準が各章の書き方に求める書き手の問いを置いていないため、各確認で答えるべき具体的な問いを追加する必要がある。
+    message_ja: 「各確認の進め方」が指示文だけで構成され、Recipe 記述標準が各章の書き方に求める書き手の問いを置いていないため、各確認で答えるべき具体的な問いを追加する必要がある。
   - id: F006
     severity: minor
     rule: vp-qe-kata-conformance
     line: 79
-    anchor: "## 7. レビュー観点"
+    anchor: ""
     message: 「レビュー観点」が箇条書きであり、Recipe 記述標準が必須章に求める表形式になっていないため、観点と判定内容を対応付けた表へ修正する必要がある。
+    message_ja: 「レビュー観点」が箇条書きであり、Recipe 記述標準が必須章に求める表形式になっていないため、観点と判定内容を対応付けた表へ修正する必要がある。
   - id: F007
     severity: major
     rule: vp-ux-readability
@@ -161,6 +169,7 @@ findings:
       8. `specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "<message>"` で完了を記録し、再度
       build して次の Ready を更新します。
     message: 承認と差し戻しの分岐がないうえ「build」がどのコマンドを指すか示されておらず、読者が実行すべき状態イベントと次の Ready 更新操作を一意に選べないため、結果別の手順と完全なコマンドを明記する必要がある。
+    message_ja: 承認と差し戻しの分岐がないうえ「build」がどのコマンドを指すか示されておらず、読者が実行すべき状態イベントと次の Ready 更新操作を一意に選べないため、結果別の手順と完全なコマンドを明記する必要がある。
   - id: F008
     severity: major
     rule: vp-ux-language-consistency
@@ -169,5 +178,8 @@ findings:
       8. `specdojo exec complete --project <project-id> --task <task-id> --by <actor> --msg "<message>"` で完了を記録し、再度
       build して次の Ready を更新します。
     message: >-
+      本文行27では Ready 更新を `specdojo exec refresh` としているのに終了時だけ「build」と表記しており別操作と誤認させるため、操作名を `specdojo exec refresh`
+      に統一する必要がある。
+    message_ja: >-
       本文行27では Ready 更新を `specdojo exec refresh` としているのに終了時だけ「build」と表記しており別操作と誤認させるため、操作名を `specdojo exec refresh`
       に統一する必要がある。

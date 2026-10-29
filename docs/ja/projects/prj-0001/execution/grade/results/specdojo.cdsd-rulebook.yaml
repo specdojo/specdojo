@@ -5,10 +5,10 @@ path: docs/ja/specdojo/rulebooks/cdsd-rulebook.md
 target: kata
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 56
-graded_at: "2026-10-02T21:24:59.144Z"
-graded_by: agy-expert-executor
-content_hash: e9d81a8eb54f505a943356543d89418c1546b07407ee31ae1c053bf5d1cadea9
+score: 63
+graded_at: "2026-10-29T20:20:54.342Z"
+graded_by: flash-high-executor
+content_hash: 50166f309f46fa838c3fc1e9c9987ac97419648d2a4e19ae16f6e4ed4f2e5599
 categories:
   purpose:
     score: 50
@@ -19,13 +19,13 @@ categories:
   business:
     score: 58
   architecture:
-    score: 83
+    score: 92
   usability:
-    score: 75
+    score: 92
   implementation:
-    score: 50
+    score: 63
   quality:
-    score: 42
+    score: 50
   consistency:
     score: 25
 viewpoints:
@@ -57,8 +57,8 @@ viewpoints:
     level: 3
     score: 75
   vp-arc-technical-constraints:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-arc-conciseness:
     level: 4
     score: 100
@@ -66,8 +66,8 @@ viewpoints:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 2
-    score: 50
+    level: 3
+    score: 75
   vp-dev-change-impact:
     level: 2
     score: 50
@@ -75,8 +75,8 @@ viewpoints:
     level: 2
     score: 50
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
     level: 1
     score: 25
@@ -87,8 +87,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ux-language-consistency:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ops-release-readiness:
     level: 2
     score: 50
@@ -103,8 +103,8 @@ viewpoints:
     score: 100
 finding_counts:
   blocker: 0
-  major: 17
-  minor: 6
+  major: 13
+  minor: 8
   note: 0
 findings:
   - id: F001
@@ -113,6 +113,7 @@ findings:
     line: 1
     anchor: "# 概念データストア定義 作成ルール"
     message: 成果物の主要な目的と上位文書への参照、主要な定義と上位根拠との対応が不足しており、目的を果たすための具体的な基準が不十分である。
+    message_ja: 成果物の主要な目的と上位文書への参照、主要な定義と上位根拠との対応が不足しており、目的を果たすための具体的な基準が不十分である。
   - id: F002
     severity: major
     rule: vp-po-decision-readiness
@@ -121,129 +122,153 @@ findings:
     message: >-
       `status: draft`、`recipe: undecided`、`template: undecided` の解消に必要な判断事項、判断者、影響範囲、次アクションを明示しないと、PO が ready
       化の可否を判断できない。
+    message_ja: >-
+      `status: draft`、`recipe: undecided`、`template: undecided` の解消に必要な判断事項、判断者、影響範囲、次アクションを明示しないと、PO が ready
+      化の可否を判断できない。
   - id: F003
     severity: minor
     rule: vp-po-publication-accountability
     line: 1
     anchor: "# 概念データストア定義 作成ルール"
     message: 公開対象、公開前確認、および最終承認を担う人間の Role code がないため, draft 文書を誰が公開可能と判断するか明示する必要がある。
+    message_ja: 公開対象、公開前確認、および最終承認を担う人間の Role code がないため, draft 文書を誰が公開可能と判断するか明示する必要がある。
   - id: F004
     severity: major
     rule: vp-pm-plan-feasibility
     line: 12
     anchor: "## 1. メタデータ"
-    message: "`type` の必須値が line 27 の `domain` と line 36 の `data` で矛盾し、完了チェックリストもないため、作成作業を確定した完了条件までタスク化できない。"
+    message: >-
+      Although the inconsistency in the `type` metadata value has been resolved, the document still lacks a completion
+      checklist, acceptance criteria, work units, and assigned Role codes, preventing task decomposition with verifiable
+      completion conditions.
+    message_ja: "`type` メタデータの値の不整合は解決されましたが、ドキュメントには完了チェックリスト、受け入れ基準、作業単位、および割り当てられた Role コードが不足しており、検証可能な完了条件を伴うタスクの分解ができない状態です。"
   - id: F005
     severity: minor
     rule: vp-pm-dependency-risk
     line: 30
     anchor: "- 仕様間（BDD／SLL／CCD／用語集）で名称の整合性を保つ。"
     message: BDD、SLL、CCD、用語集との整合を要求しているが、文書識別子、参照先、変更時に確認する項目がなく、依存先への影響を追跡できない。
+    message_ja: BDD、SLL、CCD、用語集との整合を要求しているが、文書識別子、参照先、変更時に確認する項目がなく、依存先への影響を追跡できない。
   - id: F006
     severity: major
     rule: vp-pm-control-reporting
     line: 1
     anchor: "# 概念データストア定義 作成ルール"
     message: 進捗、課題、リスク、変更要求、決定記録へ転記すべき事項の分離、PJR 転記候補、報告先、担当 Role code が記述されていない。
+    message_ja: 進捗、課題、リスク、変更要求、決定記録へ転記すべき事項の分離、PJR 転記候補、報告先、担当 Role code が記述されていない。
   - id: F007
     severity: major
     rule: vp-ba-business-value
     line: 1
     anchor: "# 概念データストア定義 作成ルール"
     message: 主要な定義がどの対象者のどの業務課題や期待価値に応えるか、放置時の影響、成功基準や判断理由の記述が不足している。
+    message_ja: 主要な定義がどの対象者のどの業務課題や期待価値に応えるか、放置時の影響、成功基準や判断理由の記述が不足している。
   - id: F008
     severity: major
     rule: vp-ba-requirements-completeness
     line: 12
     anchor: "## 1. メタデータ"
-    message: 必須メタデータ `type` の許容値が `domain` と `data` に分かれているため、利用者が満たすべき要件と受入条件を一意に確認できない。
+    message: >-
+      Although the conflicting `type` values were unified to `data`, the rulebook still lacks explicit acceptance
+      criteria, clear scope boundaries (in-scope vs. out-of-scope), and properly structured tables, preventing users
+      from unambiguously verifying requirements.
+    message_ja: >-
+      `type` 値の競合は `data` に統一されましたが、ルールブックには依然として明示的な受け入れ基準、明確なスコープ境界（スコープ内 vs
+      スコープ外）、および適切に構造化されたテーブルが不足しており、ユーザーが要件を曖昧さなく検証することを妨げています。
   - id: F009
     severity: minor
     rule: vp-ba-stakeholder-clarity
     line: 5
     anchor: 本ドキュメントは、業務分析・要求定義・システム設計のために **概念データストア定義を記述する標準ルール** です。
     message: 利用工程だけでなく、概念データストア定義の作成者、業務確認者、最終合意者を Role code で明示する必要がある。
+    message_ja: 利用工程だけでなく、概念データストア定義の作成者、業務確認者、最終合意者を Role code で明示する必要がある。
   - id: F010
-    severity: major
+    severity: minor
     rule: vp-arc-technical-constraints
-    line: 17
-    anchor: "| type | `domain` 固定                          | ○    |"
-    message: メタデータ表では `type` を `domain` 固定とする一方、ID規約では `data` を指定しており、schema や生成処理が採用すべき値を決定できない。
+    line: 12
+    anchor: "## 1. メタデータ"
+    message: >-
+      Although the conflict between `domain` and `data` in the `type` metadata was resolved, technical constraints such
+      as schema references, external dependencies, and validation procedures are still missing.
+    message_ja: "`type` メタデータにおける `domain` と `data` の競合は解消されましたが、スキーマ参照、外部依存関係、および検証手順などの技術的な制約がまだ不足しています。"
   - id: F011
-    severity: major
+    severity: minor
     rule: vp-dev-implementation-readiness
-    line: 17
-    anchor: "| type | `domain` 固定                          | ○    |"
-    message: メタデータ `type` の指定が `domain` 固定（line 27）と `data`（line 36）で矛盾しており、作成者や生成処理が正しい front-matter を実装できない。
+    line: 12
+    anchor: "## 1. メタデータ"
+    message: >-
+      Although the conflict regarding `type: data` has been resolved allowing the front-matter to be implemented,
+      specific inputs, file placement paths, and completion conditions necessary for implementation remain unspecified.
+    message_ja: "`type: data` に関する競合は解消され、フロントマターの実装が可能になりましたが、実装に必要な特定の入力、ファイルの配置パス、および完了条件が未規定のままです。"
   - id: F012
     severity: major
     rule: vp-dev-change-impact
     line: 30
     anchor: "- 仕様間（BDD／SLL／CCD／用語集）で名称の整合性を保つ。"
     message: ルール変更時に BDD、SLL、CCD、用語集、指定サンプル、schema・生成処理のどれを同期更新するか定義されておらず、既存成果物への変更影響を管理できない。
+    message_ja: ルール変更時に BDD、SLL、CCD、用語集、指定サンプル、schema・生成処理のどれを同期更新するか定義されておらず、既存成果物への変更影響を管理できない。
   - id: F013
     severity: major
     rule: vp-dev-testability
     line: 12
     anchor: "## 1. メタデータ"
-    message: schema、lint、生成または手動チェックの手順と期待結果がなく、さらに `type` の正解値が矛盾しているため、変更後の合否を再現可能に検証できない。
+    message: >-
+      Although the conflicting `type` value has been resolved, there are still no verification procedures, validation
+      commands (lint, schema), or expected results specified to test conformance.
+    message_ja: 競合する `type` 値は解消されましたが、適合性をテストするための検証手順、検証コマンド（lint, schema）、または期待される結果がまだ指定されていません。
   - id: F014
-    severity: major
-    rule: vp-qe-verifiability
-    line: 17
-    anchor: "| type | `domain` 固定                          | ○    |"
-    message: メタデータ項目 `type` の指定値について、表（line 27）と説明文（line 36）で矛盾があり、正誤判定が不能である。
-  - id: F015
     severity: major
     rule: vp-qe-verifiability
     line: 12
     anchor: "## 1. メタデータ"
     message: メタデータ表と標準列表がそれぞれ空行で分断され、Markdown の表として成立しないため、必須項目と標準列を表に基づいて検証できない。
-  - id: F016
+    message_ja: メタデータ表と標準列表がそれぞれ空行で分断され、Markdown の表として成立しないため、必須項目と標準列を表に基づいて検証できない。
+  - id: F015
     severity: major
     rule: vp-qe-omissions-consistency
     line: 1
     anchor: "# 概念データストア定義 作成ルール"
     message: 「位置づけ」節および「禁止事項」節が欠落しており、成果物の役割定義と制約事項の提示が不十分である。
-  - id: F017
+    message_ja: 「位置づけ」節および「禁止事項」節が欠落しており、成果物の役割定義と制約事項の提示が不十分である。
+  - id: F016
     severity: major
     rule: vp-qe-omissions-consistency
     line: 12
     anchor: "## 1. メタデータ"
     message: 空行により `title`、`status`、`supersedes` がメタデータ表から外れ、同様に標準列の5項目も表から外れているため、必須キーと必須列の定義が構造上欠落している。
-  - id: F018
+    message_ja: 空行により `title`、`status`、`supersedes` がメタデータ表から外れ、同様に標準列の5項目も表から外れているため、必須キーと必須列の定義が構造上欠落している。
+  - id: F017
     severity: major
     rule: vp-qe-kata-conformance
     line: 1
     anchor: "# 概念データストア定義 作成ルール"
     message: 指定されているサンプル `specdojo:cdsd-sample` が、本ルールで定義した標準列（データストア名、対応プロセス等）を一切使用しておらず、整合性が完全に欠如している。
-  - id: F019
+    message_ja: 指定されているサンプル `specdojo:cdsd-sample` が、本ルールで定義した標準列（データストア名、対応プロセス等）を一切使用しておらず、整合性が完全に欠如している。
+  - id: F018
     severity: minor
     rule: vp-ux-readability
     line: 1
     anchor: "# 概念データストア定義 作成ルール"
     message: 「位置づけ」の記述がないため、初見の読者がプロジェクトのどのタイミングで、どのような目的で本書を扱うべきか把握しにくい。
-  - id: F020
+    message_ja: 「位置づけ」の記述がないため、初見の読者がプロジェクトのどのタイミングで、どのような目的で本書を扱うべきか把握しにくい。
+  - id: F019
     severity: minor
     rule: vp-ux-readability
     line: 12
     anchor: "## 1. メタデータ"
     message: メタデータ表と標準列表の途中に空行があり、後半の行が表として表示されないため, 項目同士の対応関係を読み取りにくい。
-  - id: F021
-    severity: major
-    rule: vp-ux-language-consistency
-    line: 17
-    anchor: "| type | `domain` 固定                          | ○    |"
-    message: メタデータの `type` 項目の値について、「domain」と「data」という異なる表記が混在しており、統一されていない。
-  - id: F022
+    message_ja: メタデータ表と標準列表の途中に空行があり、後半の行が表として表示されないため, 項目同士の対応関係を読み取りにくい。
+  - id: F020
     severity: major
     rule: vp-ops-release-readiness
     line: 1
     anchor: "# 概念データストア定義 作成ルール"
     message: "`draft` から `ready` へ移行する条件、`undecided` の recipe・template を確定する手順、承認者、公開前確認項目がなく、リリース可否を判断できない。"
-  - id: F023
+    message_ja: "`draft` から `ready` へ移行する条件、`undecided` の recipe・template を確定する手順、承認者、公開前確認項目がなく、リリース可否を判断できない。"
+  - id: F021
     severity: minor
     rule: vp-ops-operability
     line: 20
     anchor: "| status | `draft`/`ready`/`deprecated` | ○ |"
     message: "`status` と `supersedes` の値だけで、ルール変更時のサンプル同期、履歴記録、問い合わせ先、非互換変更への対応手順が定義されていない。"
+    message_ja: "`status` と `supersedes` の値だけで、ルール変更時のサンプル同期、履歴記録、問い合わせ先、非互換変更への対応手順が定義されていない。"
