@@ -15,13 +15,13 @@ async function lint(body: string, metadata = "specdojo:\n  status: draft") {
 describe("context marker in document lint", () => {
   it.each([
     ["ready", true],
-    ["draft", false],
-    ["deprecated", false],
+    ["draft", undefined],
+    ["deprecated", undefined],
   ])("reports %s with fatal=%s without a content schema", async (status, fatal) => {
     const file = await lint("_CONTEXT_: 技術を選定する。", `specdojo:\n  status: ${status}`);
     expect(file.messages).toHaveLength(1);
+    expect(file.messages[0].fatal).toBe(fatal);
     expect(file.messages[0]).toMatchObject({
-      fatal,
       source: "context-marker",
       ruleId: "unresolved-context",
       line: 8,
@@ -30,20 +30,20 @@ describe("context marker in document lint", () => {
   });
 
   it.each(["specdojo: {}", "status: ready", "specdojo: null", "specdojo: [ready]"])(
-    "warns when specdojo.status is not ready: %s",
+    "reports info when specdojo.status is not ready: %s",
     async (metadata) => {
       const file = await lint("_CONTEXT_: 指示。", metadata);
       expect(file.messages).toHaveLength(1);
-      expect(file.messages[0].fatal).toBe(false);
+      expect(file.messages[0].fatal).toBeUndefined();
     },
   );
 
-  it("warns without frontmatter and does not throw for malformed YAML", async () => {
+  it("reports info without frontmatter and does not throw for malformed YAML", async () => {
     const processor = remark().use(remarkFrontmatter).use(remarkMdContent, {});
     for (const value of ["_CONTEXT_: 指示。", "---\nspecdojo: [\n---\n\n_CONTEXT_: 指示。"]) {
       const file = await processor.process(value);
       expect(file.messages).toHaveLength(1);
-      expect(file.messages[0].fatal).toBe(false);
+      expect(file.messages[0].fatal).toBeUndefined();
     }
   });
 
@@ -59,7 +59,7 @@ describe("context marker in document lint", () => {
       ].join("\n"),
     );
     expect(file.messages).toHaveLength(3);
-    expect(file.messages.every((message) => message.fatal === false)).toBe(true);
+    expect(file.messages.every((message) => message.fatal === undefined)).toBe(true);
   });
 
   it("ignores documentation, code examples, headings, tables and other markers", async () => {
