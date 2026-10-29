@@ -1,6 +1,6 @@
 {
   "name": "@specdojo/docs-lint",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Markdown plugins and document validation commands for SpecDojo projects.",
   "license": "MIT",
   "author": "naoji3x",
