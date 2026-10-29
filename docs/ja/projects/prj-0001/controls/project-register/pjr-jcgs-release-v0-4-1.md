@@ -7,10 +7,12 @@ specdojo:
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: open
+  item_status: done
   priority: high
   owner: DEV
   registered_at: "2026-10-19T22:11:27Z"
+  completed_at: "2026-10-21T11:34:17Z"
+  conclusion: "specdojo 0.4.1 を npm に公開した（latest）。PR #17 を merge commit で main へ取り込み、v0.4.1 のタグで npm の公開と GitHub Pages の更新が通った。npm から入れた 0.4.1 で init・推奨 preset・振り分けの表・difficulty 付きの起票を確かめた"
   derived_from:
     - PJR-HZW3
 ---

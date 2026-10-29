@@ -4,14 +4,17 @@ import { specdojoRootDir } from "../shared/specdojo-config.js";
 import { nowUtcIsoSeconds, randomHex, tsForFilenameUtc } from "./shared.js";
 import type { Approach, TaskMode, TaskOrigin } from "./types.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import {
-  gradeFindingDisplayMessage,
-  gradeResultPathForDocument,
-  readGradeResultForDocument,
-} from "../shared/grade-result.js";
+import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
 import { lookupDocIndex } from "../docs/doc-index.js";
+import { planGradeFindingText } from "./plans-grade-findings.js";
 
-export function archivePlan(opts: { executionPath: string; slug: string; delete?: boolean }): {
+export function archivePlan(
+  opts: { executionPath: string; slug: string; delete?: boolean },
+  dependencies: {
+    now?: () => string;
+    randomHex?: (bytes: number) => string;
+  } = {},
+): {
   from: string;
   to?: string;
   deleted: boolean;
@@ -27,8 +30,16 @@ export function archivePlan(opts: { executionPath: string; slug: string; delete?
 
   const doneDir = join(plansDir, "done");
   mkdirSync(doneDir, { recursive: true });
-  const stamp = tsForFilenameUtc(nowUtcIsoSeconds());
-  const to = join(doneDir, `${opts.slug}-${stamp}-${randomHex(2)}-plan.md`);
+  const now = dependencies.now ?? nowUtcIsoSeconds;
+  const makeRandomHex = dependencies.randomHex ?? randomHex;
+  const stamp = tsForFilenameUtc(now());
+  const base = `${opts.slug}-${stamp}-${makeRandomHex(4)}`;
+  let sequence = 0;
+  let to = join(doneDir, `${base}-plan.md`);
+  while (existsSync(to)) {
+    sequence += 1;
+    to = join(doneDir, `${base}-${sequence}-plan.md`);
+  }
   renameSync(from, to);
   return { from, to, deleted: false };
 }
@@ -61,6 +72,12 @@ const PLAN_APPROACHES: readonly Approach[] = [
   "recipe-guided",
   "freeform",
   "bootstrap",
+  "catalog-planning",
+  "strategy-planning",
+  "rulebook-authoring",
+  "recipe-authoring",
+  "sample-authoring",
+  "template-authoring",
   "retrofit",
   "cross-deliverable-dedup",
   "rulebook-maintenance",
@@ -158,9 +175,7 @@ export function registerGradeFindingsText(projectId: string, ticketPath: string)
         );
         break;
       }
-      lines.push(
-        `  - [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${gradeFindingDisplayMessage(finding)}`,
-      );
+      lines.push(`  - ${planGradeFindingText(finding)}`);
       findingCount++;
     }
     docCount++;

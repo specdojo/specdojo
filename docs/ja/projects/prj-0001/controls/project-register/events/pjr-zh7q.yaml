@@ -1,0 +1,175 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_3a705df15cc148f898086a106f767895
+  ts: "2026-10-22T12:42:33Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 推奨 preset に gh を加え、agent の push と gh の書き込み操作を止める
+    - field: description
+      from: ""
+      to: 推奨 preset に gh を入れ、ログイン情報を名前付きボリュームに残す。コンテナの中でログインすると同じ利用者で動く agent からも認証が使えるため、配布する agent の権限設定に git push と gh の書き込み操作を止める規則を加え、ガイドに注意を書く
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-EN6M"]'
+- v: 1
+  id: reg_66160cf0b0ab4b68ab464db46a3f5f45
+  ts: "2026-10-22T12:43:20Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_3a705df15cc148f898086a106f767895
+- v: 1
+  id: reg_e1bcdfdef9ea40a2b018dbffbc31cbfa
+  ts: "2026-10-22T12:59:29Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_66160cf0b0ab4b68ab464db46a3f5f45
+- v: 1
+  id: reg_6674da9a7b3b43869f24ef9dc5c1c9ae
+  ts: "2026-10-22T13:02:33Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_e1bcdfdef9ea40a2b018dbffbc31cbfa
+- v: 1
+  id: reg_2cc7858da83447578d4491fc85464b73
+  ts: "2026-10-22T13:17:27Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_6674da9a7b3b43869f24ef9dc5c1c9ae
+- v: 1
+  id: reg_d589fa9b8d304dbb8b5fcda758a00664
+  ts: "2026-10-22T13:18:01Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_2cc7858da83447578d4491fc85464b73
+- v: 1
+  id: reg_7717510ebb1243488dc12f73ea0a341a
+  ts: "2026-10-22T13:34:31Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: 'integrate failed: project: git commit failed: test: if (!process.send) throw new Error("Expected worker to be run in node:child_process");; FAIL  /integration/ tests/src/exec/register-resume.integrati…'
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: 'integrate failed: project: git commit failed: test: if (!process.send) throw new Error("Expected worker to be run in node:child_process");; FAIL  /integration/ tests/src/exec/register-resume.integrati…'
+  previous_event_id: reg_d589fa9b8d304dbb8b5fcda758a00664
+- v: 1
+  id: reg_05adbd7c56ae436caaa1edec8e17a8d2
+  ts: "2026-10-22T13:36:00Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: integration resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: 'integrate failed: project: git commit failed: test: if (!process.send) throw new Error("Expected worker to be run in node:child_process");; FAIL  /integration/ tests/src/exec/register-resume.integrati…'
+      to: "-"
+  previous_event_id: reg_7717510ebb1243488dc12f73ea0a341a
+- v: 1
+  id: reg_990523ba585445769878af97da2475e5
+  ts: "2026-10-22T13:38:42Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_05adbd7c56ae436caaa1edec8e17a8d2
+- v: 1
+  id: reg_d960638ddae7463fb466461867b7cc5f
+  ts: "2026-10-22T14:09:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 1 回目の統合でオーケストレーターに executor 用の設定が渡っていたため、利用者（indie）の承認で完了条件を補って直した。オーケストレーターが設定の中身と起動の指定を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: 推奨 preset に gh とログイン情報の名前付きボリュームを加えた。配布する executor と reporter の権限設定で git push と gh を全面的に止め、オーケストレーターには専用の settings.orchestrator.json を渡して gh の読み取りだけを許し、書き込みと git push を止めた。保護された設定の編集は禁じない
+  previous_event_id: reg_990523ba585445769878af97da2475e5

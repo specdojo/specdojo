@@ -11,13 +11,11 @@ import {
 import * as path from "node:path";
 
 // package 参照中（eject していない）の kata は利用リポジトリの docs/ 配下に存在しない。
-// VitePress の srcDir は 1 つしか指定できないため、ビルド前に package 側の kata を
-// srcDir（呼び出し元 workspace）配下のステージングへ複製し、rewrites で公開 URL
-// （/ja/specdojo/...）へ写像する。
-//
-// ステージング先はドット始まりにしない。VitePress のページ走査（tinyglobby）は
-// ドット始まりのディレクトリを辿らないため、`.specdojo/` などに置くとページにならない。
-export const KATA_STAGING_DIR_NAME = "specdojo-kata-staging";
+// VitePress の srcDir は 1 つしか指定できないため、ビルド前に利用側 docs と package 側文書を
+// ステージングへ重ね、ここを srcDir にする。
+// workspace を srcDir にしたままでは `.vitepress/**` の走査除外でページが欠ける。
+// srcDir 自体を切り替えればドットディレクトリの走査や symlink に頼る必要がない。
+export const KATA_STAGING_DIR_NAME = ".vitepress/kata-staging";
 
 // 複製対象は package が同梱する docs/ja/specdojo 全体とする。eject できる kata（rulebook /
 // standard / recipe / sample / template）だけを複製すると、standard などが相対 Markdown
@@ -33,12 +31,14 @@ const PACKAGE_NAME = "specdojo";
 export const STAGED_PACKAGE_DEAD_LINK_PATTERNS: readonly RegExp[] = [/^(\.\/)?(\.\.\/)+product\//];
 
 export type KataStagingResult = {
-  // ステージングのルート（workspace 直下）。複製した kata が無い場合は undefined。
-  stagingRoot: string | undefined;
+  // VitePress の srcDir として使う、workspace の .vitepress 配下の閲覧用ツリー。
+  stagingRoot: string;
   // kata の参照元 package ルート。解決できない、または workspace 自身の場合は undefined。
   packageRoot: string | undefined;
   staged: number;
   ejected: number;
+  // dev で利用側 docs の変更・追加・削除を反映する。削除時は同梱文書へ戻す。
+  syncFile: (file: string) => void;
 };
 
 function readPackageName(packageJsonPath: string): string | undefined {
@@ -91,15 +91,37 @@ function relativeFilesBelow(root: string): string[] {
   if (!existsSync(root)) return [];
   const files: string[] = [];
   const visit = (current: string): void => {
+    const relativeDirectory = path.relative(root, current).split(path.sep).join("/");
+    const coreKataDirectory = new Set([
+      "rulebooks",
+      "standards",
+      "recipes",
+      "samples",
+      "templates",
+    ]).has(relativeDirectory);
     for (const entry of readdirSync(current, { withFileTypes: true })) {
       if (entry.name === "generated") continue;
       const absolutePath = path.join(current, entry.name);
-      if (entry.isDirectory()) visit(absolutePath);
-      else if (entry.isFile()) files.push(path.relative(root, absolutePath));
+      if (entry.isDirectory()) {
+        // core package の種類ディレクトリ直下だけを同梱 kata として扱う。
+        // authority サブディレクトリは利用者・variant 所有のためステージングしない。
+        if (!coreKataDirectory) visit(absolutePath);
+      } else if (entry.isFile()) files.push(path.relative(root, absolutePath));
     }
   };
   visit(root);
   return files.sort();
+}
+
+function copyDocs(source: string, destination: string): void {
+  if (!existsSync(source)) return;
+  mkdirSync(destination, { recursive: true });
+  for (const entry of readdirSync(source, { withFileTypes: true })) {
+    const from = path.join(source, entry.name);
+    const to = path.join(destination, entry.name);
+    if (entry.isDirectory()) copyDocs(from, to);
+    else if (entry.isFile()) copyFileSync(from, to);
+  }
 }
 
 // package 側の kata をステージングへ複製する。前回のステージングは毎回作り直し、
@@ -108,17 +130,21 @@ function relativeFilesBelow(root: string): string[] {
 export function stageBundledKata(workspaceRoot: string): KataStagingResult {
   const stagingRoot = path.join(workspaceRoot, KATA_STAGING_DIR_NAME);
   rmSync(stagingRoot, { recursive: true, force: true });
+  mkdirSync(path.join(stagingRoot, "docs"), { recursive: true });
+  const workspaceDocs = path.join(workspaceRoot, "docs");
+  copyDocs(workspaceDocs, path.join(stagingRoot, "docs"));
 
   const packageRoot = resolveKataPackageRoot(workspaceRoot);
-  if (!packageRoot)
-    return { stagingRoot: undefined, packageRoot: undefined, staged: 0, ejected: 0 };
+  const bundledFiles = new Map<string, string>();
 
   let staged = 0;
   let ejected = 0;
   for (const relativeDir of KATA_RELATIVE_DIRS) {
+    if (!packageRoot) break;
     const bundledDir = path.join(packageRoot, relativeDir);
     const repositoryDir = path.join(workspaceRoot, relativeDir);
     for (const file of relativeFilesBelow(bundledDir)) {
+      bundledFiles.set(path.join(relativeDir, file), path.join(bundledDir, file));
       if (existsSync(path.join(repositoryDir, file))) {
         ejected += 1;
         continue;
@@ -130,18 +156,26 @@ export function stageBundledKata(workspaceRoot: string): KataStagingResult {
     }
   }
 
-  if (staged === 0) {
-    rmSync(stagingRoot, { recursive: true, force: true });
-    return { stagingRoot: undefined, packageRoot, staged, ejected };
-  }
-
   // 利用リポジトリの .gitignore を書き換えずに Git 管理対象から外す。
   writeFileSync(
     path.join(stagingRoot, ".gitignore"),
     "# @specdojo/docs-site が生成するステージング。Git 管理しない。\n*\n",
     "utf8",
   );
-  return { stagingRoot, packageRoot, staged, ejected };
+  const syncFile = (file: string): void => {
+    const relativePath = path.relative(workspaceRoot, file);
+    const withinDocs = path.relative(workspaceDocs, file);
+    if (withinDocs === "" || withinDocs.startsWith("..") || path.isAbsolute(withinDocs)) return;
+    const destination = path.join(stagingRoot, relativePath);
+    const source = existsSync(file) ? file : bundledFiles.get(relativePath);
+    if (source) {
+      mkdirSync(path.dirname(destination), { recursive: true });
+      copyFileSync(source, destination);
+    } else {
+      rmSync(destination, { force: true });
+    }
+  };
+  return { stagingRoot, packageRoot, staged, ejected, syncFile };
 }
 
 // doc-index の package 側 kata エントリ（例: "node_modules/specdojo/docs/ja/specdojo/..."）を

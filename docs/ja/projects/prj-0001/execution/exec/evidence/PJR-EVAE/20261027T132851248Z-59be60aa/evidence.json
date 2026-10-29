@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-EVAE",
+  "run_id": "20261027T132851248Z-59be60aa",
+  "stage": {
+    "role": "executor",
+    "actor": "flash-high-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-27T13:28:51.248Z",
+    "completed_at": "2026-10-27T13:37:45.101Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-evae.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-evae-tsd-sample-maintenance.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/tsd-sample.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-evae.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-evae-tsd-sample-maintenance.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/tsd-sample.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 4,
+    "summary": "CHANGELOG.md                                       |   1 +\n .../controls/project-register/events/pjr-evae.yaml |  16 ++\n .../pjr-evae-tsd-sample-maintenance.md             |  30 ++-\n docs/ja/specdojo/samples/tsd-sample.md             | 262 +++++++++++++++++++--\n 4 files changed, 280 insertions(+), 29 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --modeline docs/ja/projects/prj-0001/controls/project-register/events/pjr-evae.yaml",
+      "status": "passed",
+      "summary": "valid: docs/ja/projects/prj-0001/controls/project-register/events/pjr-evae.yaml"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --check CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/events/pjr-evae.yaml docs/ja/projects/prj-0001/controls/project-register/pjr-evae-tsd-sample-maintenance.md docs/ja/specdojo/samples/tsd-sample.md",
+      "status": "passed",
+      "summary": "all changed files use prettier code style"
+    },
+    {
+      "source": "executor",
+      "command": "tsx src/specdojo.ts catalog validate",
+      "status": "passed",
+      "summary": "catalog validate passed"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo register build",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "pjr-index.md was not changed"
+    },
+    {
+      "source": "executor",
+      "command": "specdojo exec refresh",
+      "status": "not_applicable",
+      "summary": "",
+      "reason": "sch-*.yaml was not changed"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE/src/shared/specdojo-config.ts\n  1220:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.7 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.7 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EVAE\n\nRate limit detected for pinned agent pinned. Waiting until 2026-10-27T13:47:56.288Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-27T13:46:56.610Z.\nfallback complete\nConnection error detected for pinned agent primary-reporter. Falling back to fallback-reporte\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "specdojo:tsd-sample",
+      "status": "changed",
+      "path": "docs/ja/specdojo/samples/tsd-sample.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "tsd-sample を新しい tsd-rulebook および sample-authoring-standard に合わせて見直し、PostgreSQL / Prisma のデータベース詳細定義として再構成しました。MD031 lint エラーおよび Prettier フォーマットを解消し、CHANGELOG.md と個票の対応結果を更新しました。",
+  "completion_status": "complete",
+  "handoff": [
+    "finding F017 では ID の tsd-<term> 形式への変更が指摘されていましたが、個票完了条件 3（id は変えない）に従い specdojo:tsd-sample を維持しています。",
+    "tsd-index-sample.md との記述に齟齬はありません（題材の PostgreSQL / Prisma、関連記述と完全に整合しています）。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EVAE/20261027T132851248Z-59be60aa/executor.log",
+      "bytes": 5904,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-EVAE/20261027T132851248Z-59be60aa/parent-validation-attempt-1-test-unit.log",
+      "bytes": 5267,
+      "truncated": false
+    }
+  ]
+}

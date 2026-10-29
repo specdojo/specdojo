@@ -1,0 +1,13 @@
+lefthook scaffold を実装しました。
+
+- `init --lefthook` と `config scaffold --lefthook` を追加
+- Prettier・markdownlint・register build・catalog validate の hook を生成
+- 既存ファイル、npm script、依存関係を保護
+- linked worktree／依存未導入時の安全な skip を実装
+- 単体・統合テスト、利用者向け文書、CHANGELOG、個票を更新
+- `register build`、`catalog validate`、構文・整形検査は成功
+- result は executor の指示どおり未編集です
+
+<specdojo_executor_evidence>
+{"final_message":"利用者向け lefthook scaffold、テスト、文書更新を完了した","validations":[{"command":"npx prettier --write <変更した Markdown・TypeScript・JavaScript ファイル>","status":"passed","summary":"変更ファイルを整形した"},{"command":"node --check templates/lefthook/tools/install-lefthook.mjs && node --check templates/lefthook/tools/specdojo-pre-commit.mjs","status":"passed","summary":"生成用の依存不要 JavaScript 入口に構文エラーがない"},{"command":"node templates/lefthook/tools/install-lefthook.mjs","status":"passed","summary":"linked worktree を検出して安全に終了した"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の派生ビューを正常に生成した"},{"command":"node --import tsx src/specdojo.ts catalog validate","status":"passed","summary":"全カタログが検証成功した。既存の未配置文書に関する `based_on` 警告のみ"},{"command":"git diff --check","status":"passed","summary":"空白エラーは検出されなかった"}]}
+</specdojo_executor_evidence>

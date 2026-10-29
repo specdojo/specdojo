@@ -6,9 +6,9 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 59
-graded_at: "2026-10-20T16:24:55.570Z"
+graded_at: "2026-10-22T16:07:53.366Z"
 graded_by: flash-high-executor
-content_hash: c3421e8fa99172c4556a348fbabff12fd78caa5ac5f03534b69f17bfd2c4b2f2
+content_hash: 6223d7ac29194eeff2a98bc69bf009978d032c8d20d47c395797af538883213f
 source_hashes:
   catalog-entry: 96771efcf3e024d9fb20aeddf6f7dddd2f730c5d82b00edc8908ca1599996b17
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
@@ -142,11 +142,7 @@ findings:
     severity: major
     rule: vp-po-decision-readiness
     line: 122
-    anchor: >-
-      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
-      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
-      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
-      プロファイルで権限を分離する。
+    anchor: ""
     message: 自動実行で `bypassPermissions` を使用する方針と、176行目で同モードを禁止する方針が併存し、承認対象となる標準権限モードが一意でない。
     message_ja: 自動実行で `bypassPermissions` を使用する方針と、176行目で同モードを禁止する方針が併存し、承認対象となる標準権限モードが一意でない。
   - id: F004
@@ -167,18 +163,14 @@ findings:
     severity: minor
     rule: vp-pm-dependency-risk
     line: 269
-    anchor: ""
+    anchor: "実際のファイル: [exec-defaults.yaml](../../../../.specdojo/exec-defaults.yaml)"
     message: "`provider_signal.kind` の共通モデルを親設計の limit 表へ委ねているが、`sysd-agent-settings.md` に該当表がなく、後続実装が依存すべき正本を特定できない。"
     message_ja: "`provider_signal.kind` の共通モデルを親設計の limit 表へ委ねているが、`sysd-agent-settings.md` に該当表がなく、後続実装が依存すべき正本を特定できない。"
   - id: F007
     severity: major
     rule: vp-pm-control-reporting
     line: 122
-    anchor: >-
-      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
-      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
-      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
-      プロファイルで権限を分離する。
+    anchor: ""
     message: 無人実行の権限方針が矛盾しているにもかかわらず、未決事項、PJR 転記候補、解決担当、判断期限として管理されていない。
     message_ja: 無人実行の権限方針が矛盾しているにもかかわらず、未決事項、PJR 転記候補、解決担当、判断期限として管理されていない。
   - id: F008
@@ -217,11 +209,7 @@ findings:
     severity: major
     rule: vp-arc-cross-document-consistency
     line: 122
-    anchor: >-
-      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
-      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
-      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
-      プロファイルで権限を分離する。
+    anchor: ""
     message: >-
       `permissionMode` の説明は「自動実行では `bypassPermissions` を使用」と定める一方、176行目と `.claude/settings.json`
       は同モードを禁止しており、無人実行の安全境界を一意に実装できないため、採用モードと権限制御を実設定に合わせて統一する必要がある。
@@ -232,36 +220,31 @@ findings:
     severity: minor
     rule: vp-arc-cross-document-consistency
     line: 269
-    anchor: ""
+    anchor: "実際のファイル: [exec-defaults.yaml](../../../../.specdojo/exec-defaults.yaml)"
     message: 参照先の親設計 `sysd-agent-settings.md` に limit の共通モデル表が存在せず、`provider_signal.kind` の写像先を追跡できないため、実在する正本への参照に修正する必要がある。
     message_ja: 参照先の親設計 `sysd-agent-settings.md` に limit の共通モデル表が存在せず、`provider_signal.kind` の写像先を追跡できないため、実在する正本への参照に修正する必要がある。
   - id: F014
     severity: major
     rule: vp-arc-technical-constraints
     line: 122
-    anchor: >-
-      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
-      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
-      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
-      プロファイルで権限を分離する。
+    anchor: ""
     message: "`bypassPermissions` を自動実行の標準とする記述と禁止する記述が両立せず、mode 別 settings がどの権限モードで評価されるか確定できない。"
     message_ja: "`bypassPermissions` を自動実行の標準とする記述と禁止する記述が両立せず、mode 別 settings がどの権限モードで評価されるか確定できない。"
   - id: F015
     severity: minor
     rule: vp-arc-conciseness
     line: 181
-    anchor: ""
+    anchor: >-
+      `-p`（print mode）と `--agent <name>` を組み合わせることで、`.claude/agents/<name>.md`
+      に定義されたシステムプロンプト・ツール・モデルを使って確認ダイアログなしの自動実行を実現する。`--permission-mode bypassPermissions` は使わない（`.claude/settings.json`
+      の `disableBypassPermissionsMode: "disable"` で起動自体を拒否する）。
     message: 5人分の `pm-members.yaml` 例は8.2〜8.5節とエージェント一覧のモデル・tools・用途・責務を再掲しているため、選択規則に必要な最小例へ縮約し、完全な定義は実ファイル参照へ委ねるべきである。
     message_ja: 5人分の `pm-members.yaml` 例は8.2〜8.5節とエージェント一覧のモデル・tools・用途・責務を再掲しているため、選択規則に必要な最小例へ縮約し、完全な定義は実ファイル参照へ委ねるべきである。
   - id: F016
     severity: major
     rule: vp-dev-implementation-readiness
     line: 122
-    anchor: >-
-      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
-      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
-      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
-      プロファイルで権限を分離する。
+    anchor: ""
     message: >-
       自動実行の `permissionMode` が `bypassPermissions`、禁止、`auto` の三通りに分かれており、実装者が command template と mode 別 settings
       の正しい組合せを確定できない。
@@ -272,14 +255,14 @@ findings:
     severity: minor
     rule: vp-dev-change-impact
     line: 88
-    anchor: ""
+    anchor: "## 6. `.claude/settings.json` 設定"
     message: モデルエイリアスが自動的に最新モデルへ変わる一方、挙動・料金・権限機能への影響、対応 CLI バージョン、確認・切戻し先が示されていない。
     message_ja: モデルエイリアスが自動的に最新モデルへ変わる一方、挙動・料金・権限機能への影響、対応 CLI バージョン、確認・切戻し先が示されていない。
   - id: F018
     severity: major
     rule: vp-dev-testability
     line: 302
-    anchor: ""
+    anchor: 並列数とモデル tier に応じて1タスクあたりの予算上限を設定することを推奨する。
     message: 文書末尾までに対象ファイル別の検証コマンド、期待結果、失敗条件、対応テストがなく、実装・設定変更後の pass / fail を判定できない。
     message_ja: 文書末尾までに対象ファイル別の検証コマンド、期待結果、失敗条件、対応テストがなく、実装・設定変更後の pass / fail を判定できない。
   - id: F019
@@ -293,25 +276,21 @@ findings:
     severity: major
     rule: vp-qe-done-criteria
     line: 122
-    anchor: >-
-      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
-      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
-      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
-      プロファイルで権限を分離する。
+    anchor: ""
     message: 無人実行で `bypassPermissions` を使用する記述と禁止する記述が両立しておらず、安全方針を承認できる一意な設計になっていない。
     message_ja: 無人実行で `bypassPermissions` を使用する記述と禁止する記述が両立しておらず、安全方針を承認できる一意な設計になっていない。
   - id: F021
     severity: major
     rule: vp-qe-done-criteria
     line: 302
-    anchor: ""
+    anchor: 並列数とモデル tier に応じて1タスクあたりの予算上限を設定することを推奨する。
     message: 文書末尾までに設計制約ごとのテスト、設定検証、レビュー方法および対応するテスト資産への参照がなく、テスト設計・検証観点の参照として利用できない。
     message_ja: 文書末尾までに設計制約ごとのテスト、設定検証、レビュー方法および対応するテスト資産への参照がなく、テスト設計・検証観点の参照として利用できない。
   - id: F022
     severity: major
     rule: vp-qe-verifiability
     line: 302
-    anchor: ""
+    anchor: 並列数とモデル tier に応じて1タスクあたりの予算上限を設定することを推奨する。
     message: >-
       agent 選定、mode 別 settings、権限境界、command template 展開、limit 正規化について、期待状態・失敗条件・確認手順・対応テストを示す検証表がなく、設計どおりかを pass / fail
       判定できない。
@@ -322,50 +301,42 @@ findings:
     severity: major
     rule: vp-qe-omissions-consistency
     line: 122
-    anchor: >-
-      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
-      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
-      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
-      プロファイルで権限を分離する。
+    anchor: ""
     message: '`bypassPermissions` を自動実行で使用するとする記述が, 同文書176行目の禁止方針および実設定の `disableBypassPermissionsMode: "disable"` と矛盾している。'
     message_ja: '`bypassPermissions` を自動実行で使用するとする記述が, 同文書176行目の禁止方針および実設定の `disableBypassPermissionsMode: "disable"` と矛盾している。'
   - id: F024
     severity: major
     rule: vp-qe-omissions-consistency
     line: 302
-    anchor: ""
+    anchor: 並列数とモデル tier に応じて1タスクあたりの予算上限を設定することを推奨する。
     message: rulebook が子設計に求める「検証観点・関連文書」がなく、設定制約ごとの検証方法、テスト設計、横断ルール、運用文書への導線が欠落している。
     message_ja: rulebook が子設計に求める「検証観点・関連文書」がなく、設定制約ごとの検証方法、テスト設計、横断ルール、運用文書への導線が欠落している。
   - id: F025
     severity: minor
     rule: vp-ux-readability
     line: 64
-    anchor: "| ----------------- | ---------------------------------------- | ---------------------------- |"
+    anchor: "| 方式              | 用途                                     | 設定方法                     |"
     message: 「2種類の認証方式」と説明している直後の表に3方式を列挙しており、長期 OAuth Token を独立方式と数えるか派生方式と扱うかを統一する必要がある。
     message_ja: 「2種類の認証方式」と説明している直後の表に3方式を列挙しており、長期 OAuth Token を独立方式と数えるか派生方式と扱うかを統一する必要がある。
   - id: F026
     severity: major
     rule: vp-ux-readability
     line: 122
-    anchor: >-
-      member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy
-      構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化
-      result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings`
-      プロファイルで権限を分離する。
+    anchor: ""
     message: 自動実行では `bypassPermissions` を使用すると説明した後、176行目で同モードを禁止し、292行目では別の `auto` を使用しているため、標準の権限モードが判別できない。
     message_ja: 自動実行では `bypassPermissions` を使用すると説明した後、176行目で同モードを禁止し、292行目では別の `auto` を使用しているため、標準の権限モードが判別できない。
   - id: F027
     severity: minor
     rule: vp-ux-user-flow
     line: 302
-    anchor: ""
+    anchor: 並列数とモデル tier に応じて1タスクあたりの予算上限を設定することを推奨する。
     message: 文書末尾に検証観点・関連文書の集約がなく、将来の貢献者が設定変更後に参照すべきテスト、横断ルール、運用手順へ迷わず到達できない。
     message_ja: 文書末尾に検証観点・関連文書の集約がなく、将来の貢献者が設定変更後に参照すべきテスト、横断ルール、運用手順へ迷わず到達できない。
   - id: F028
     severity: minor
     rule: vp-ux-language-consistency
     line: 64
-    anchor: "| ----------------- | ---------------------------------------- | ---------------------------- |"
+    anchor: "| 方式              | 用途                                     | 設定方法                     |"
     message: 認証方式を「2種類」と呼びながら表では Claude サブスク、Anthropic API Key、長期 OAuth Token の3行を並列に扱っているため、分類とラベルを一致させる必要がある。
     message_ja: 認証方式を「2種類」と呼びながら表では Claude サブスク、Anthropic API Key、長期 OAuth Token の3行を並列に扱っているため、分類とラベルを一致させる必要がある。
   - id: F029
@@ -379,7 +350,7 @@ findings:
     severity: minor
     rule: vp-ops-operability
     line: 302
-    anchor: ""
+    anchor: 並列数とモデル tier に応じて1タスクあたりの予算上限を設定することを推奨する。
     message: 継続更新、Claude CLI 互換性確認、設定変更管理、問い合わせ、障害対応について、担当 Role code と OPD / OPR への参照がない。
     message_ja: 継続更新、Claude CLI 互換性確認、設定変更管理、問い合わせ、障害対応について、担当 Role code と OPD / OPR への参照がない。
 done_criteria:

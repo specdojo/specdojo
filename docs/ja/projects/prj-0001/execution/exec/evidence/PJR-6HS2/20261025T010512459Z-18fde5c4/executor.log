@@ -1,0 +1,7 @@
+作業は未完了です。`src/kata/command.ts` で kata 一覧に含める拡張子を `.md`・`.mdx`・`.yaml`・`.yml`・`.json` に絞る変更だけを行いました。
+
+個票が求める `kata eject` の付属ファイル対応、単体テスト、ガイド、CHANGELOG、個票の対応結果は未対応です。検査も実行していません。完了報告として扱わないでください。
+
+<specdojo_executor_evidence>
+{"final_message":"未完了。kata 一覧の拡張子フィルターのみ変更しました。eject・テスト・文書更新が残っています。","handoff":["作業を再開し、付属ファイルの eject と dry-run 表示、テスト、kata guide、CHANGELOG、個票の対応結果を完了してください。"],"validations":[{"command":"npm run typecheck","status":"not_run","summary":"pipeline parent validation に委ねる。"},{"command":"npm run lint:ts","status":"not_run","summary":"pipeline parent validation に委ねる。"},{"command":"npm run test:unit","status":"not_run","summary":"pipeline parent validation に委ねる。"}]}
+</specdojo_executor_evidence>

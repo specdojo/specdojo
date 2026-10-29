@@ -1,0 +1,146 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_aef121859cd54d8f891c445d91fe128a
+  ts: "2026-10-27T13:26:19Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: grade の仕様の確認で、利用者の指摘から検出したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: grade の結果ファイルが別リポジトリの同じ ID の文書で重なる
+    - field: description
+      from: ""
+      to: grade の結果は results/`<文書 ID>.yaml` に保存され、ID はプロダクトリポジトリの成果物では project の修飾を持たない。project.repos の複数のリポジトリや本リポジトリに同じ ID の文書があると、結果が黙って上書きされ、plan も別の文書の前回の結果を読む。repos のリポジトリの文書は results/`<repo 名>`/`<ID>.yaml` に分けて保存する。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_8433d2d0048c41758c65b7750f1198be
+  ts: "2026-10-27T14:31:27Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_aef121859cd54d8f891c445d91fe128a
+- v: 1
+  id: reg_e8df5e1f29614122aca10a149a9d3e6e
+  ts: "2026-10-27T14:43:15Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: lint-ts, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: lint-ts, test-unit"
+  previous_event_id: reg_8433d2d0048c41758c65b7750f1198be
+- v: 1
+  id: reg_1f33887aec324e2ca6bd5c9d60bb66ff
+  ts: "2026-10-27T15:11:28Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-ts, test-unit"
+      to: "-"
+  previous_event_id: reg_e8df5e1f29614122aca10a149a9d3e6e
+- v: 1
+  id: reg_944ec5074a5b4622ac13a0b4fe4472bd
+  ts: "2026-10-27T15:18:50Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_1f33887aec324e2ca6bd5c9d60bb66ff
+- v: 1
+  id: reg_44ca58c27ecc4f0caf6b293b332a965f
+  ts: "2026-10-27T15:19:53Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_944ec5074a5b4622ac13a0b4fe4472bd
+- v: 1
+  id: reg_abd53875e3394120af165acf145d9a9f
+  ts: "2026-10-27T15:29:23Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_44ca58c27ecc4f0caf6b293b332a965f
+- v: 1
+  id: reg_51625dba76d746508314161197b6bc6f
+  ts: "2026-10-27T15:43:33Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・親の検証・JSEY を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: project.repos のリポジトリの文書の grade の結果を results/`<repo 名>`/`<文書 ID>.yaml` に分けて保存するようにした
+  previous_event_id: reg_abd53875e3394120af165acf145d9a9f

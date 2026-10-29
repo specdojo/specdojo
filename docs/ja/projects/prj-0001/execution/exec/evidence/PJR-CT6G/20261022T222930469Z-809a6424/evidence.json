@@ -1,0 +1,484 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-CT6G",
+  "run_id": "20261022T222930469Z-809a6424",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-22T22:30:32.680Z",
+    "completed_at": "2026-10-22T22:43:29.208Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ct6g.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ct6g-kata-authoring-approach-impl.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/kata-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/recipe-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/sample-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/template-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-common.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-plan-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/strategy.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/agent-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/kata/command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/kata/kata.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/approach.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/item.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-recipe-authoring-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-rulebook-authoring-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-sample-authoring-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-template-authoring-template.md",
+      "status": "??"
+    },
+    {
+      "path": "src/kata/authoring.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/kata-authoring.integration.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ct6g-kata-authoring-approach-impl.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-structure-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-config-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/kata-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/ryu-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/specdojo-config-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/recipe-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/sample-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/template-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-common.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/exec-plan-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/specdojo-config.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-core.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-generation.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/plans-storage.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/register.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/results.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/exec/strategy.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/command.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/kata/kata.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/register/approach.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/agent-types.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-config.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/docs/specdojo/schemas/specdojo-config-schema.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/plans.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/kata/command.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/kata/kata.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/approach.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/register/item.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-config.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-recipe-authoring-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-rulebook-authoring-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-sample-authoring-template.md",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/specdojo/exec-templates/xep-template-authoring-template.md",
+      "status": "??"
+    },
+    {
+      "path": "src/kata/authoring.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/src/exec/kata-authoring.integration.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 44,
+    "summary": "CHANGELOG.md                                       |  1 +\n .../pjr-ct6g-kata-authoring-approach-impl.md       |  7 ++-\n docs/ja/specdojo/guides/docs-structure-guide.md    |  2 +-\n docs/ja/specdojo/guides/exec-config-guide.md       | 20 +++---\n docs/ja/specdojo/guides/kata-guide.md              |  4 ++\n docs/ja/specdojo/guides/quick-start-guide.md       | 35 +++++++++--\n docs/ja/specdojo/guides/ryu-guide.md               | 22 +++++--\n docs/ja/specdojo/references/command-reference.md   |  8 ++-\n .../references/specdojo-config-reference.md        |  3 +\n .../standards/recipe-authoring-standard.md         | 18 +++---\n .../standards/rulebook-authoring-standard.md       |  6 +-\n .../standards/sample-authoring-standard.md         |  4 +-\n .../standards/template-authoring-standard.md       |  4 +-\n docs/specdojo/schemas/v1/exec-common.schema.yaml   |  6 ++\n .../schemas/v1/exec-plan-frontmatter.schema.yaml   |  9 ++-\n .../v1/register-item-frontmatter.schema.yaml       | 24 ++++++--\n .../schemas/v1/specdojo-config.schema.yaml         |  4 ++\n src/exec/core.ts                                   |  4 ++\n src/exec/plans-core.ts                             | 11 +++-\n src/exec/plans-generation.ts                       | 36 +++++++++++\n src/exec/plans-storage.ts                          |  4 ++\n src/exec/register.ts                               | 71 ++++++++++++++++++++--\n src/exec/results.ts                                |  6 +-\n src/exec/strategy.ts                               |  4 ++\n src/kata/command.ts                                | 62 +++++++++++++++++--\n src/kata/kata.ts                                   | 28 +++++++--\n src/register/approach.ts                           | 40 +++++++++++-\n src/shared/agent-types.ts                          |  4 ++\n src/shared/specdojo-config.ts                      | 56 +++++++++++++++++\n .../schemas/specdojo-config-schema.test.ts         |  5 ++\n tests/src/exec/plans.test.ts                       | 57 +++++++++++++----\n tests/src/exec/register-plan-escape.test.ts        | 55 +++++++++++++++++\n tests/src/kata/command.test.ts                     | 25 ++++++++\n tests/src/kata/kata.test.ts                        | 37 +++++++++++\n tests/src/register/approach.test.ts                | 63 +++++++++++++++++++\n tests/src/register/item.test.ts                    | 11 +++-\n tests/src/shared/specdojo-config.test.ts           | 23 ++++++-\n 37 files changed, 697 insertions(+), 82 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "全カタログが OK。既存の未作成成果物に関する warning のみ。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx -e \"await Promise.all([import('./src/kata/authoring.ts'), import('./src/kata/command.ts'), import('./src/kata/kata.ts'), import('./src/register/approach.ts'), import('./src/exec/plans-generation.ts'), import('./src/exec/register.ts'), import('./src/shared/specdojo-config.ts')]); console.log('module imports ok')\"",
+      "status": "passed",
+      "summary": "変更した主要モジュールを正常に読み込めた。"
+    },
+    {
+      "source": "executor",
+      "command": "node --input-type=module -e \"import {readFileSync} from 'node:fs'; import {load} from 'js-yaml'; for (const p of ['docs/specdojo/schemas/v1/exec-common.schema.yaml','docs/specdojo/schemas/v1/exec-plan-frontmatter.schema.yaml','docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml','docs/specdojo/schemas/v1/specdojo-config.schema.yaml']) load(readFileSync(p,'utf8')); console.log('changed yaml parses ok')\"",
+      "status": "passed",
+      "summary": "変更した4つの YAML スキーマを正常に解析できた。"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-ct6g-kata-authoring-approach-impl.md",
+      "status": "passed",
+      "summary": "個票の最終更新は整形済み。その他の変更対象も実装時に整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白エラーは検出されなかった。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo exec run --project prj-0001 --register PJR-JSEY --worktree",
+      "status": "requires_human",
+      "summary": "統合後、実エージェント CLI を使用した一巡確認が必要。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.2 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G/src/shared/specdojo-config.ts\n  1219:1  warning  File has too many lines (1081). Maximum allowed is 1000  max-lines\n\n✖ 35 problems (0 errors, 35 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.4.2 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail\n\n\n\u001b[4m\u001b[31mdocs/ja/product/010-business-specs/010-data-flow/cdfd-action.md\u001b[39m\u001b[24m\n \u001b[31merror\u001b[39m \u001b[1mCannot process file\u001b[22m\n  \u001b[1m[cause]\u001b[22m:\n    Error: strict mode: missing type \"array\" for keyword \"maxItems\" at \"file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G/docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml#/properti\n… output omitted …\n(/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G/packages/docs-lint/node_modules/ajv/lib/compile/validate/index.ts:124:7)\n    at KeywordCxt.subschema (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G/packages/docs-lint/node_modules/ajv/lib/compile/validate/index.ts:500:5)\n    at applyPropertySchema (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G/packages/docs-lint/node_modules/ajv/lib/vocabularies/applicator/properties.ts:45:11)\n\n\u001b[31m✖\u001b[39m 1004 errors"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.2 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.2 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.2 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.2 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.2 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "failed",
+      "summary": "exit 2: > specdojo@0.4.2 typecheck\n> tsc -b --noEmit\n\nsrc/schedule/strategy-profiles.ts(232,14): error TS2739: Type '{ bootstrap: { approach: \"bootstrap\"; phase_sets: string[]; finalize_approach: \"bootstrap-finalize\"; }; retrofit: { approach: \"retrofit\"; phase_sets: string[]; finalize_approach: \"finalize\"; }; ... 9 more ...; \"bootstrap-finalize\": { ...; }; }' is missing the following properties from type 'Record<\"fully-guided\" | \"recipe-guided\" | \"freeform\" | \"bootstrap\" | \"rulebook-au\n… output omitted …\nase_sets: string[]; finalize_approach: \"finalize\"; }; ... 9 more ...; \"bootstrap-finalize\": { ...; }; }' is missing the following properties from type 'Record<\"fully-guided\" | \"recipe-guided\" | \"freeform\" | \"bootstrap\" | \"rulebook-authoring\" | \"recipe-authoring\" | \"sample-authoring\" | \"template-authoring\" | \"retrofit\" | \"cross-deliverable-dedup\" | ... 5 more ... | \"bootstrap-finalize\", StrategyProfile>': \"rulebook-authoring\", \"recipe-authoring\", \"sample-authoring\", \"template-authoring\""
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.4.2 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-CT6G\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-DNZBBk/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-GFXuTU/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-kVfEIi/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-Iwp2hV/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\n  32|   ) {\n     33|     throw new Error(`Unsupported SpecDojo resource path: ${relativePat…\n       |           ^\n     34|   }\n     35|   return normalized;\n ❯ specdojoResourceCandidates src/shared/template-resolution.ts:42:22\n ❯ resolveSpecdojoPathIfExists src/shared/template-resolution.ts:53:43\n ❯ resolveSpecdojoReferencePathIfExists src/shared/template-resolution.ts:105:20\n ❯ resolveKataRefs src/kata/kata.ts:162:10\n ❯ tests/src/kata/kata.test.ts:90:14\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯"
+    }
+  ],
+  "final_message": "4種類の kata authoring、`kata_namespace`、複数対象契約、カタログ参照更新と関連テストを実装した。result と登録簿状態は未変更。",
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-CT6G/20261022T222930469Z-809a6424/executor.log",
+      "bytes": 2409,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-CT6G/20261022T222930469Z-809a6424/parent-validation-attempt-1-lint-fm.log",
+      "bytes": 1048560,
+      "truncated": true
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-CT6G/20261022T222930469Z-809a6424/parent-validation-attempt-1-typecheck.log",
+      "bytes": 1524,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-CT6G/20261022T222930469Z-809a6424/parent-validation-attempt-1-test-unit.log",
+      "bytes": 5874,
+      "truncated": false
+    }
+  ]
+}

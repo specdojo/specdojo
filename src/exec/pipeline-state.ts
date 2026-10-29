@@ -26,9 +26,11 @@ export type PipelineStageState = {
 // - merged: 統合先へ merge 済み（`commit` は統合先の merge commit。プロジェクトは state 自体を
 //   含む merge commit になるため null）
 // - unchanged: exec branch に commit が無く、統合する変更が無い
+// - branch-only: commit 済みの exec branch をプロダクト側の review 用に保持（merge しない）
 // - pending: 未統合
 // - failed: 事前検査または merge に失敗した
-export type PipelineRepoIntegrationStatus = "pending" | "merged" | "unchanged" | "failed";
+export type PipelineRepoIntegrationStatus =
+  "pending" | "merged" | "unchanged" | "branch-only" | "failed";
 
 export type PipelineRepoIntegrationState = {
   status: PipelineRepoIntegrationStatus;
@@ -179,6 +181,7 @@ function isRepoIntegrationState(value: unknown): value is PipelineRepoIntegratio
     (repo.status === "pending" ||
       repo.status === "merged" ||
       repo.status === "unchanged" ||
+      repo.status === "branch-only" ||
       repo.status === "failed") &&
     (typeof repo.commit === "string" || repo.commit === null) &&
     (typeof repo.merged_at === "string" || repo.merged_at === null) &&
@@ -299,14 +302,19 @@ export function updatePipelineRepoIntegration(
 }
 
 /**
- * Names of the repositories recorded as integrated (`merged` or `unchanged`) under
+ * Names of repositories whose handling completed (`merged`, `unchanged` or `branch-only`) under
  * `stages.integrate.repos`. A state without per-repository records yields an empty set.
  */
 export function integratedRepoNames(state: PipelineState): Set<string> {
   const repos = state.stages.integrate?.repos ?? {};
   return new Set(
     Object.entries(repos)
-      .filter(([, entry]) => entry.status === "merged" || entry.status === "unchanged")
+      .filter(
+        ([, entry]) =>
+          entry.status === "merged" ||
+          entry.status === "unchanged" ||
+          entry.status === "branch-only",
+      )
       .map(([name]) => name),
   );
 }
@@ -375,6 +383,7 @@ export function loadPipelineResumeCheckpoint(input: {
       statePath,
       executorEvidence: evidence,
       ...(evidence.stage.status === "succeeded" &&
+      evidence.completion_status !== "incomplete" &&
       (state.stages.executor.status === "succeeded" || state.stages.executor.status === "running")
         ? { evidence }
         : {}),

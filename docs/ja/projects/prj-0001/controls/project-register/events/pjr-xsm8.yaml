@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_698d0dc44ffc4cffb0567d7631a40bf6
+  ts: "2026-10-27T11:31:27Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: tsd-sample の見直しの起票で検出したため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: sample-maintenance の起票が sample の type 判定で止まる
+    - field: description
+      from: ""
+      to: register add の sample-maintenance は対象の frontmatter の type が sample であることを求めるが、同梱の sample 100 件のうち 95 件は見本の成果物の type（project など）を使うため起票できない。sample の判定を ID の末尾か置き場所に揃える。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-05GN"]'
+- v: 1
+  id: reg_109b4ed730104ce68753457e03c82df0
+  ts: "2026-10-27T12:09:48Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_698d0dc44ffc4cffb0567d7631a40bf6
+- v: 1
+  id: reg_b975cdcdefda46d69b0df16fa64c5e09
+  ts: "2026-10-27T12:27:12Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_109b4ed730104ce68753457e03c82df0
+- v: 1
+  id: reg_3a0916ea59794a16a0c437a87649587d
+  ts: "2026-10-27T12:38:41Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・dry-run・docs:build・JSEY を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-27"
+    - field: conclusion
+      from: "-"
+      to: sample-maintenance の判定を ID の末尾 -sample に改め、sample の type は見本にする成果物の type とする原則を document-metadata-standard を正本に定めた
+  previous_event_id: reg_b975cdcdefda46d69b0df16fa64c5e09

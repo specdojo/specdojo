@@ -20,6 +20,7 @@ import {
   type TransientGitRetryNotice,
 } from "../../../src/exec/worktree.js";
 import { sanitizeRegisterConclusion } from "../../../src/exec/register.js";
+import { MARKDOWN_HOOK_ERROR, MARKDOWN_HOOK_FAILURE } from "../../helpers/git-hook-output.js";
 
 describe("transient git failure retry", () => {
   const dubiousOwnership =
@@ -438,6 +439,32 @@ describe("describeGitProcessFailure", () => {
 });
 
 describe("summarizeGitHookFailure", () => {
+  it.each(["🥊", "✗", "✘", "✕", "❌"])(
+    "selects the full step description marked with %s after a successful Prettier step",
+    (marker) => {
+      const output = MARKDOWN_HOOK_FAILURE.replace(
+        "🥊 lint Markdown documentation",
+        `\u001b[31m${marker} lint Markdown documentation\u001b[0m`,
+      );
+      expect(summarizeGitHookFailure(output)).toBe(
+        `lint Markdown documentation: ${MARKDOWN_HOOK_ERROR}`,
+      );
+    },
+  );
+
+  it.each(["", " (0.94 seconds)"])(
+    "preserves parentheses in step descriptions with timing suffix %j",
+    (timing) => {
+      const output = MARKDOWN_HOOK_FAILURE.replaceAll(
+        "lint Markdown documentation",
+        "lint Markdown documentation (strict)",
+      ).replace("(strict) (0.94 seconds)", `(strict)${timing}`);
+      expect(summarizeGitHookFailure(output)).toBe(
+        `lint Markdown documentation (strict): ${MARKDOWN_HOOK_ERROR}`,
+      );
+    },
+  );
+
   it("keeps the failed step and first error while removing terminal decoration", () => {
     const output = [
       "\u001b[31m╭──────── hook output ────────╮\u001b[0m",

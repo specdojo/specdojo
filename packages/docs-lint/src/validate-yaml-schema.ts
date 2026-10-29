@@ -2,6 +2,7 @@
 
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
+import { createRequire } from "node:module";
 import { load } from "./yaml.js";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
@@ -10,6 +11,25 @@ import { globFilesSync } from "./glob-files.js";
 import { resolveSpecdojoAssetPath } from "./specdojo-package.js";
 
 type JsonObject = Record<string, unknown>;
+
+const require = createRequire(import.meta.url);
+const createDeliverableTypeChecker = require("./deliverable-type.cjs") as (
+  root: string,
+) => (
+  metadata: unknown,
+  path: string,
+  source: string,
+  hasArtifactSchema: boolean,
+  format: "yaml",
+) => string[];
+const checkDeliverableType = createDeliverableTypeChecker(process.cwd());
+
+function validateMetadata(filePath: string, data: unknown): boolean {
+  if (!/\.ya?ml$/i.test(filePath)) return true;
+  const errors = checkDeliverableType(data, filePath, "", true, "yaml");
+  for (const error of errors) console.error(`${filePath}: ${error}`);
+  return errors.length === 0;
+}
 
 type YamlSchemaModelineInfo = {
   schemaRef?: string;
@@ -147,6 +167,7 @@ function validateFiles(schemaPath: string, files: string[]): boolean {
   let hasError = false;
   for (const filePath of files) {
     const data = load(readFileSync(resolve(filePath), "utf8")) as JsonObject;
+    if (!validateMetadata(filePath, data)) hasError = true;
     const valid = validate(data);
     if (valid) {
       console.log(`${filePath}: valid`);
@@ -188,7 +209,13 @@ function validateByModeline(patterns: string[]): boolean {
   let hasError = false;
 
   for (const filePath of files) {
-    const info = parseYamlSchemaModeline(readFileSync(resolve(filePath), "utf8"));
+    const content = readFileSync(resolve(filePath), "utf8");
+    const info = parseYamlSchemaModeline(content);
+    // External schemas and template placeholders may skip structural validation,
+    // but never skip the rulebook's metadata contract.
+    if (info.directive || !info.schemaRef) {
+      if (!validateMetadata(filePath, load(content))) hasError = true;
+    }
     if (info.directive?.mode === "none") {
       if (!info.directive.reason) {
         console.error(`${filePath}: specdojo-schema none requires reason=<reason>`);

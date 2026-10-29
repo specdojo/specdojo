@@ -81,8 +81,9 @@ $defs:
     required: [status, commit, merged_at]
     properties:
       status:
+        # branch-only is successful handling without a merge; commit and merged_at stay null.
         type: string
-        enum: [pending, merged, unchanged, failed]
+        enum: [pending, merged, unchanged, branch-only, failed]
       # Merge commit on the integration target. Null for the project repository (the merge commit
       # contains this state) and for repositories that are not merged.
       commit:

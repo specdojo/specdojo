@@ -9,14 +9,14 @@ specdojo:
 
 Template Authoring Standard
 
-`docs/ja/specdojo/templates/` 配下の成果物テンプレートが従うべき構成・プレースホルダ規約・禁止事項・運用ルールを定義します。プレースホルダを埋めた結果が満たすべき Frontmatter 規約は [document-metadata-standard.md](document-metadata-standard.md) を正本とし、本書では雛形側の記述方法を定義します。
+`docs/ja/specdojo/templates/` 直下と `docs/ja/specdojo/templates/<authority>/` 配下の成果物テンプレートが従うべき構成・プレースホルダ規約・禁止事項・運用ルールを定義します。プレースホルダを埋めた結果が満たすべき Frontmatter 規約は [document-metadata-standard.md](document-metadata-standard.md) を正本とし、本書では雛形側の記述方法を定義します。
 
 ## 1. 適用範囲
 
-- 対象: `docs/ja/specdojo/templates/` 配下のすべての成果物テンプレート `*-template.(md|yaml)`
+- 対象: `docs/ja/specdojo/templates/` 直下と `docs/ja/specdojo/templates/<authority>/` 配下のすべての成果物テンプレート `*-template.(md|yaml)`
 - 対象外: `docs/ja/specdojo/exec-templates/` 配下の plan / result 生成用内部テンプレート。rulebook から宣言される実践の型ではなく、生成処理が消費する実行基盤の部品として [plan/result ライフサイクルガイド](../guides/plan-result-lifecycle-guide.md) に従う
 - 目的: テンプレートの構成・プレースホルダ記法を統一し、同じ rulebook 系統の成果物へ再利用できる雛形を提供する
-- 成果物の意味要件の正本: 対応する `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
+- 成果物の意味要件の正本: 対応する `docs/ja/specdojo/rulebooks/` 直下または `docs/ja/specdojo/rulebooks/<authority>/` 配下の rulebook
 - 見出し・キー・記入欄の骨組みの正本: rulebook frontmatter が文書 ID で宣言する template
 - 完成後の Frontmatter 規約の正本: [document-metadata-standard.md](document-metadata-standard.md)
 - ファイル名・ID 規則: [docs-structure-guide.md](../guides/docs-structure-guide.md)
@@ -26,7 +26,7 @@ Template Authoring Standard
 - ファイル名は `<prefix>-template.md` / `<prefix>-template.yaml` とし、対応 rulebook の `target_format` に合わせる。
 - Markdown テンプレートは、対応 rulebook の本文要件を満たす見出し構成を持つ。見出しの順序と記入欄は template を正本とし、rulebook 本文へ同じ骨組みを転載しない。
 - YAML テンプレートは、対象成果物のルートキー・必須キー・型を雛形として示す。
-- テンプレートファイル自身の Frontmatter も `specdojo:` 名前空間配下に実値で記述する（`specdojo.id: specdojo:<prefix>-template`、`specdojo.type: template`、`specdojo.status: draft`）。生成物の Frontmatter は自身 Frontmatter とは別に表現する。Markdown 成果物テンプレートは、[document-metadata-standard.md](document-metadata-standard.md) の `テンプレート自身のメタ情報と生成物 Frontmatter の分離` に従い、`specdojo:` 配下の `frontmatter_template` フィールドに `specdojo:` ラッパー込みの生成物 Frontmatter を記述する。
+- テンプレートファイル自身の Frontmatter も `specdojo:` 名前空間配下に実値で記述する。`specdojo.id` は同梱なら `specdojo:<prefix>-template`、利用者作成なら `<kata_authority>:<prefix>-template` とし、`specdojo.type: template`、`specdojo.status: draft` を記述する。生成物の Frontmatter は自身 Frontmatter とは別に表現する。Markdown 成果物テンプレートは、[document-metadata-standard.md](document-metadata-standard.md) の `テンプレート自身のメタ情報と生成物 Frontmatter の分離` に従い、`specdojo:` 配下の `frontmatter_template` フィールドに `specdojo:` ラッパー込みの生成物 Frontmatter を記述する。
 - YAML テンプレートも自身のメタ情報（`id` / `type` / `status` / `title` / `rulebook`）をトップレベルに実値で記述する。YAML catalog（`dct-*`）を除き、生成物のメタ情報はトップレベルの `metadata_template` フィールドに記述する（[document-metadata-standard.md](document-metadata-standard.md) の `生成物メタ情報雛形（metadata_template）`）。
 
 ## 3. プレースホルダ規約

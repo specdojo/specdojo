@@ -8,7 +8,7 @@ export function registerDevcontainerCommands(program: Command): void {
 
   dc.command("scaffold")
     .description("Scaffold .devcontainer/ configuration for the repository")
-    .option("--preset <name>", "Apply a bundled preset (available: recommended)")
+    .option("--preset <name>", "Apply a bundled preset (minimal|recommended|full)")
     .option(
       "--provider <names>",
       "Comma-separated list of agent providers to install (e.g. claude,codex,opencode,antigravity)",

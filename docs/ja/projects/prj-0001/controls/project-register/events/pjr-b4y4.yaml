@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_33a670687927454cabd42515e173e467
+  ts: "2026-10-27T22:58:19Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-NJJ7 の決定のフォローアップとして起票するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: register に epic の type を追加する
+    - field: description
+      from: ""
+      to: schema・個票のテンプレート・register の各コマンドで epic を扱い、exec run --register の対象から外す。子 todo を --from でたどる一覧を出す
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-NJJ7"]'
+- v: 1
+  id: reg_feccdfe3099844d79fbf16c8c90151a3
+  ts: "2026-10-27T23:42:45Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_33a670687927454cabd42515e173e467
+- v: 1
+  id: reg_b954ccc3e162432a867d77e48959ccbe
+  ts: "2026-10-27T23:56:03Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_feccdfe3099844d79fbf16c8c90151a3
+- v: 1
+  id: reg_b5fd3c6285054863882c0938925c8485
+  ts: "2026-10-27T23:56:36Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_b954ccc3e162432a867d77e48959ccbe
+- v: 1
+  id: reg_3954bede0f3c4d3090b7e5b93e77513a
+  ts: "2026-10-28T00:04:41Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "parent validation failed: test-unit"
+  previous_event_id: reg_b5fd3c6285054863882c0938925c8485
+- v: 1
+  id: reg_d74d8b2881ae420298ffe559b3f08677
+  ts: "2026-10-28T00:05:17Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_3954bede0f3c4d3090b7e5b93e77513a
+- v: 1
+  id: reg_d9b4374b133e4304a6ab77cdedf1e496
+  ts: "2026-10-28T00:16:03Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d74d8b2881ae420298ffe559b3f08677
+- v: 1
+  id: reg_2ccad00d42ed4157bf36bd03384aea75
+  ts: "2026-10-28T00:24:39Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件、track の検証と個票の生成の実地確認、JSEY の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: epic の type を追加した。track の記帳と tml-index での検証、個票テンプレート、exec run --register と夜間 queue からの除外、epic ごとの子項目のビューを実装した。orchestrator の指示への反映案は対応結果に残した
+  previous_event_id: reg_d9b4374b133e4304a6ab77cdedf1e496

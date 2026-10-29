@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:mtp-rulebook
   type: rulebook
+  deliverable_type: test
   status: draft
   recipe: undecided
   sample: specdojo:mtp-sample
@@ -56,7 +57,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | 項目       | 説明                                         | 必須 |
 | ---------- | -------------------------------------------- | ---- |
 | id         | MTP ID（`mtp-index` または `mtp-<term>`）    | ○    |
-| type       | `migration` 固定                             | ○    |
+| type       | `test` 固定                                  | ○    |
 | title      | 移行テスト計画: <対象名>                     | ○    |
 | status     | `draft` / `ready` / `deprecated`             | ○    |
 | based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可） | 任意 |
@@ -203,7 +204,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ```yaml
 ---
 id: mtp-index
-type: project
+type: test
 title: 移行テスト計画: 全体
 status: draft
 based_on: []
@@ -283,7 +284,7 @@ supersedes: []
 ```yaml
 ---
 id: mtp-cutover-rehearsal
-type: project
+type: test
 title: 移行テスト計画: カットオーバーリハーサル
 status: draft
 based_on:

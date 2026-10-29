@@ -25,6 +25,7 @@ export const REGISTER_EVENT_FIELDS = [
   "title",
   "description",
   "type",
+  "track",
   "priority",
   "difficulty",
   "owner",
@@ -35,7 +36,11 @@ export const REGISTER_EVENT_FIELDS = [
   "block_reason",
   "approach",
   "targets",
+  "sources",
+  "target_path",
+  "target_rulebook",
   "derived_from",
+  "depends_on",
   "autopilot",
 ] as const;
 
@@ -113,6 +118,7 @@ export function registerEventFieldValues(
     title: item.title,
     description: item.description,
     type: item.type,
+    track: item.track ?? CELL_NONE,
     priority: item.priority,
     difficulty: item.difficulty ?? CELL_NONE,
     owner: item.owner,
@@ -123,7 +129,11 @@ export function registerEventFieldValues(
     block_reason: parsed.blockReason,
     approach: item.approach ?? CELL_NONE,
     targets: item.targets ? JSON.stringify(item.targets) : CELL_NONE,
+    target_path: item.targetPath ?? CELL_NONE,
+    target_rulebook: item.targetRulebook ?? CELL_NONE,
+    sources: item.sources ? JSON.stringify(item.sources) : CELL_NONE,
     derived_from: item.derivedFrom ? JSON.stringify(item.derivedFrom) : CELL_NONE,
+    depends_on: item.dependsOn ? JSON.stringify(item.dependsOn) : CELL_NONE,
     autopilot: item.autopilot ?? CELL_NONE,
   };
 }

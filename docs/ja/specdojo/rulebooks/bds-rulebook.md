@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:bds-rulebook
   type: rulebook
+  deliverable_type: ui
   status: draft
   recipe: undecided
   sample: specdojo:bds-sample
@@ -48,7 +49,7 @@ Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` �
 | ---- | ------------------- | ---- |
 | id   | 帳票ID（`bds-...`） | ○    |
 
-| type | `domain` 固定 | ○ |
+| type | `ui` 固定 | ○ |
 | title | 帳票名 | ○ |
 
 | status | `draft`/`ready`/`deprecated` | ○ |
@@ -58,7 +59,7 @@ Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` �
 ### 4.1 ID規約
 
 - BDS の `id` は正規表現 `^bds-[a-z0-9-]+$` に合致する一意IDを使用します。
-- `type: data` は業務ドメイン仕様（業務側の合意対象）であることを示します。
+- `type: ui` は帳票の利用者向け仕様であることを示します。
 
 ## 5. 本文構成（標準テンプレ）
 
@@ -153,7 +154,7 @@ Frontmatter は `docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml` �
 ```markdown
 ---
 id: bds-daily-sales-summary
-type: data
+type: ui
 title: 日次売上サマリ
 status: draft
 part_of: []

@@ -4,8 +4,11 @@ import { dirname, join, relative } from "node:path";
 import type { Command } from "commander";
 import { dump, load } from "../shared/yaml.js";
 import { runScaffold, type ProjectSize } from "../catalog/scaffold.js";
-import { runDevcontainerScaffold } from "../devcontainer/scaffold.js";
+import { runDevcontainerScaffold, type DevcontainerPreset } from "../devcontainer/scaffold.js";
 import { runProviderScaffold } from "../shared/provider-scaffold.js";
+import { runLefthookScaffold } from "../shared/lefthook-scaffold.js";
+import { ensureMarkdownlintConfig } from "../shared/markdownlint-config.js";
+import { runSlidevScaffold, SLIDEV_KATA_PATTERNS } from "../shared/slidev-scaffold.js";
 import { generateDerivedViewFiles, type RegisterPaths } from "../register/register.js";
 import {
   defaultWorktreeBase,
@@ -49,6 +52,8 @@ export type InitOptions = {
   exec?: boolean;
   catalog?: string;
   devcontainer?: boolean;
+  lefthook?: boolean;
+  slidev?: boolean;
   devcontainerPreset?: string;
   workspaceName?: string;
   dryRun?: boolean;
@@ -64,7 +69,9 @@ export type InitAnswers = {
   exec: boolean;
   catalog?: ProjectSize;
   devcontainer: boolean;
-  devcontainerPreset?: "recommended";
+  lefthook: boolean;
+  slidev: boolean;
+  devcontainerPreset?: DevcontainerPreset;
 };
 
 export interface InitPrompter {
@@ -118,11 +125,16 @@ function parseCatalog(value: string | undefined): ProjectSize | undefined {
   throw new Error(`Invalid catalog size: ${value}. Must be small, medium, large, or none`);
 }
 
-function parseDevcontainerPreset(value: string | undefined): "recommended" | undefined {
+function parseDevcontainerPreset(value: string | undefined): DevcontainerPreset | undefined {
   const normalized = value?.trim().toLowerCase();
-  if (!normalized || normalized === "none" || normalized === "-") return undefined;
-  if (normalized === "recommended") return normalized;
-  throw new Error(`Invalid Dev Container preset: ${value}. Must be recommended or none`);
+  if (!normalized) return undefined;
+  if (normalized === "none" || normalized === "-") return "minimal";
+  if (normalized === "minimal" || normalized === "recommended" || normalized === "full") {
+    return normalized;
+  }
+  throw new Error(
+    `Invalid Dev Container preset: ${value}. Must be minimal, recommended, full, or none`,
+  );
 }
 
 function validateProjectId(projectId: string): string {
@@ -205,6 +217,8 @@ export async function collectInitAnswers(
       exec: !!options.exec,
       catalog: parseCatalog(options.catalog),
       devcontainer,
+      lefthook: !!options.lefthook,
+      slidev: options.slidev ?? (devcontainer && devcontainerPreset === "full"),
       ...(devcontainerPreset ? { devcontainerPreset } : {}),
     });
     for (const [label, used] of [
@@ -217,6 +231,8 @@ export async function collectInitAnswers(
       ["exec=no", !options.exec],
       ["catalog=none", !options.catalog],
       ["devcontainer=no", !options.devcontainer],
+      ["lefthook=no", !options.lefthook],
+      [`slidev=${answers.slidev ? "yes" : "no"}`, options.slidev === undefined],
       ["devcontainer-preset=recommended", devcontainer && options.devcontainerPreset === undefined],
     ] as const) {
       if (used) process.stdout.write(`Using default: ${label}\n`);
@@ -233,6 +249,7 @@ export async function collectInitAnswers(
     const providerDefault = options.provider?.trim() || DEFAULTS.providers.join(",");
     const execDefault = !!options.exec;
     const devcontainerDefault = !!options.devcontainer;
+    const lefthookDefault = !!options.lefthook;
     const explicitDevcontainerPreset = parseDevcontainerPreset(options.devcontainerPreset);
     const providerPrompt = `Orchestrator providers (${PROVIDERS.join(", ")}) [${providerDefault}]: `;
     const projectId = await promptUntilValid(
@@ -284,10 +301,21 @@ export async function collectInitAnswers(
       devcontainer && options.devcontainerPreset === undefined
         ? await promptUntilValid(
             prompter,
-            "Add the recommended Dev Container settings? [Y/n]: ",
-            (answer) => (parseBoolean(answer, true) ? "recommended" : undefined),
+            "Dev Container preset (minimal, recommended, full) [recommended]: ",
+            (answer) => parseDevcontainerPreset(answer.trim() || "recommended")!,
           )
         : explicitDevcontainerPreset;
+    const lefthook = await promptUntilValid(
+      prompter,
+      `Create Git hooks with lefthook? [${lefthookDefault ? "Y/n" : "y/N"}]: `,
+      (answer) => parseBoolean(answer, lefthookDefault),
+    );
+    const slidevDefault = options.slidev ?? (devcontainer && devcontainerPreset === "full");
+    const slidev = await promptUntilValid(
+      prompter,
+      `Set up Slidev for kata? [${slidevDefault ? "Y/n" : "y/N"}]: `,
+      (answer) => parseBoolean(answer, slidevDefault),
+    );
     return validateAnswers({
       projectId,
       projectName,
@@ -298,6 +326,8 @@ export async function collectInitAnswers(
       exec,
       catalog,
       devcontainer,
+      lefthook,
+      slidev,
       ...(devcontainerPreset ? { devcontainerPreset } : {}),
     });
   } finally {
@@ -471,35 +501,58 @@ function writeExecConfiguration(
     memberTemplate.aliases ?? [],
     new Set(members.map((member) => member.nickname)),
   );
+  // normal の段（medium・easy と全 reporter）と expert の段（hard）を provider ごとに選ぶ。
+  // expert の段がない provider（opencode・antigravity など）は hard も normal の段を使う。
   const pairs = providers.map((provider) => {
     const executor = members.find(
       (member) =>
-        member.provider === provider && member.stage_role === "executor" && member.mode === "edit",
+        member.provider === provider &&
+        member.stage_role === "executor" &&
+        member.mode === "edit" &&
+        member.proficiency !== "expert",
+    );
+    const expertExecutor = members.find(
+      (member) =>
+        member.provider === provider &&
+        member.stage_role === "executor" &&
+        member.mode === "edit" &&
+        member.proficiency === "expert",
     );
     const reporter = members.find(
-      (member) => member.provider === provider && member.stage_role === "reporter",
+      (member) =>
+        member.provider === provider &&
+        member.stage_role === "reporter" &&
+        member.proficiency !== "expert",
     );
     if (!executor || !reporter) {
       throw new Error(
         `init-agent-members.yaml must define an edit executor and reporter for ${provider}`,
       );
     }
+    const normalExecutor = preferredAgentName(executor, aliases);
     return {
-      executor: preferredAgentName(executor, aliases),
+      executor: normalExecutor,
+      hardExecutor: expertExecutor ? preferredAgentName(expertExecutor, aliases) : normalExecutor,
       reporter: preferredAgentName(reporter, aliases),
     };
   });
-  const route = (pairIndex: number, action: "stop" | "wait" | "fallback") => {
+  const route = (
+    pairIndex: number,
+    action: "stop" | "wait" | "fallback",
+    tier: "normal" | "expert" = "normal",
+  ) => {
+    const executorOf = (pair: (typeof pairs)[number]): string =>
+      tier === "expert" ? pair.hardExecutor : pair.executor;
     const resolvedIndex = Math.min(pairIndex, pairs.length - 1);
     const pair = pairs[resolvedIndex]!;
     const fallback = pairs.length > 1 ? pairs[(resolvedIndex + 1) % pairs.length] : undefined;
     return {
-      executor_by: pair.executor,
+      executor_by: executorOf(pair),
       reporter_by: pair.reporter,
       on_rate_limit: action === "fallback" && !fallback ? "stop" : action,
       ...(fallback
         ? {
-            fallback_executor_by: fallback.executor,
+            fallback_executor_by: executorOf(fallback),
             fallback_reporter_by: fallback.reporter,
           }
         : {}),
@@ -520,7 +573,7 @@ function writeExecConfiguration(
   const configuredDefaults: Record<string, unknown> = {
     ...commonDefaults,
     routing: {
-      hard: route(0, "wait"),
+      hard: route(0, "wait", "expert"),
       medium: route(1, "fallback"),
       easy: route(2, "fallback"),
     },
@@ -722,13 +775,27 @@ export async function runInit(
       preset: answers.devcontainerPreset,
       providers: answers.providers,
       editors: [],
-      ollama: answers.providers.includes("opencode"),
+      ollama: false,
       cron: false,
-      tmux: true,
+      tmux: false,
       force: false,
       dryRun,
     });
   }
+  if (answers.lefthook) {
+    await runLefthookScaffold({
+      packageRoot,
+      repoRoot,
+      config,
+      slidevKataPatterns: answers.slidev ? SLIDEV_KATA_PATTERNS : [],
+      force: false,
+      dryRun,
+    });
+  }
+  if (answers.slidev) {
+    await runSlidevScaffold({ repoRoot, dryRun });
+  }
+  if (!answers.lefthook && !answers.slidev) ensureMarkdownlintConfig(repoRoot, dryRun);
 
   const firstProvider = answers.providers[0];
   const script =
@@ -770,9 +837,12 @@ export function registerInitCommand(program: Command): void {
     .option("--exec", "Configure executor and reporter agents", false)
     .option("--catalog <size>", "Create a deliverables catalog (small|medium|large)")
     .option("--devcontainer", "Create a Dev Container for the selected providers", false)
+    .option("--lefthook", "Create pre-commit hooks for SpecDojo repositories", false)
+    .option("--slidev", "Set up Slidev and formatting for kata (default with full preset)")
+    .option("--no-slidev", "Skip Slidev setup, including with the full preset")
     .option(
       "--devcontainer-preset <name>",
-      "Apply a Dev Container preset when creating it (recommended|none)",
+      "Apply a Dev Container preset when creating it (minimal|recommended|full; none aliases minimal)",
     )
     .option(
       "--workspace-name <name>",

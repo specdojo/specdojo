@@ -10,7 +10,7 @@ import type {
   DctValidationResult,
 } from "./types.js";
 import { isDctCatalogFileName } from "./types.js";
-import { declaredIncludes, declaredKata } from "../kata/kata.js";
+import { declaredIncludes, declaredKata, resolveKataDocumentPathIfExists } from "../kata/kata.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
 import { flattenTemplateFrontmatter } from "../docs/template-frontmatter.js";
 import { specdojoRootDir } from "../shared/specdojo-config.js";
@@ -25,7 +25,6 @@ import {
   resolveSpecdojoPath,
   resolveSpecdojoPathIfExists,
   specdojoDirectoryPaths,
-  specdojoResourceCandidates,
 } from "../docs/template-resolution.js";
 
 type CatalogKataKind = "rulebook" | "recipe" | "sample" | "template";
@@ -40,14 +39,12 @@ const CATALOG_KATA_DIRS: Record<CatalogKataKind, string> = {
 };
 
 function declaredKataCandidates(repoRoot: string, kind: CatalogKataKind, id: string): string[] {
-  const localId = id.includes(":") ? id.split(":").slice(1).join(":") : id;
   const extensions = kind === "rulebook" || kind === "recipe" ? ["md"] : ["md", "yaml", "json"];
-  return extensions.map((extension) => {
-    const relativePath = `docs/ja/specdojo/${CATALOG_KATA_DIRS[kind]}/${localId}.${extension}`;
-    return (
-      resolveSpecdojoPathIfExists(relativePath, { repositoryRoot: repoRoot }) ??
-      specdojoResourceCandidates(relativePath, { repositoryRoot: repoRoot }).repositoryPath
-    );
+  return extensions.flatMap((extension) => {
+    const resolved = resolveKataDocumentPathIfExists(kind, id, extension, {
+      repositoryRoot: repoRoot,
+    });
+    return resolved ? [resolved] : [];
   });
 }
 
@@ -499,9 +496,13 @@ export function validateDctDoc(
   }
   if (!doc.project_id) errors.push(`${filePath}: missing required field: project_id`);
   if (!doc.domain) errors.push(`${filePath}: missing required field: domain`);
-  if (!doc.groups || !Array.isArray(doc.groups) || doc.groups.length === 0) {
-    errors.push(`${filePath}: groups must be a non-empty array`);
+  if (!Object.hasOwn(doc, "groups")) {
+    errors.push(`${filePath}: missing required field: groups`);
+  } else if (!Array.isArray(doc.groups)) {
+    errors.push(`${filePath}: groups must be an array`);
   }
+
+  const groups = Array.isArray(doc.groups) ? doc.groups : [];
 
   const localIds = new Set<string>();
 
@@ -624,7 +625,7 @@ export function validateDctDoc(
     }
   }
 
-  if (doc.groups) collectIds(doc.groups);
+  collectIds(groups);
 
   const depLookup = knownLocalIds ?? localIds;
   const depScope = knownLocalIds ? "catalog" : "this file";
@@ -648,7 +649,7 @@ export function validateDctDoc(
     }
   }
 
-  if (doc.groups) checkDeps(doc.groups);
+  checkDeps(groups);
 
   return { ok: errors.length === 0, errors, warnings };
 }

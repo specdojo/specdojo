@@ -1,0 +1,121 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.5 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-84F7
+
+Updated ticket status → ready: /tmp/specdojo-ticket-rZP4v0/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-wWXx7I/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Af8lwy/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-hv4kSQ/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-TgS8KY/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-mOucIS/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+Would move 1 agent member(s) from /tmp/specdojo-members-deMeyg/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-deMeyg/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-deMeyg/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-deMeyg/.specdojo/agent-members.yaml
+ ❯ tests/src/shared/workspace-scaffold.test.ts (10 tests | 1 failed) 15ms
+     × fails if neither --provider nor --workspace is specified 5ms
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-24T23:28:00.876Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-24T23:27:01.193Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-24T23:27:01.480Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-fa0jkf/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-x9R0vA/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 145 passed (146)
+      Tests  1 failed | 2411 passed (2412)
+   Start at  08:26:33
+   Duration  38.91s (transform 3.04s, setup 621ms, import 22.12s, tests 35.40s, environment 9ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/shared/workspace-scaffold.test.ts > config scaffold CLI command > fails if neither --provider nor --workspace is specified
+AssertionError: expected 'Specify --provider <name>, --workspac…' to contain 'Specify --provider <name>, --workspac…'
+
+- Expected
++ Received
+
+- Specify --provider <name>, --workspace, or --lefthook to scaffold.
++ Specify --provider <name>, --workspace, --lefthook, or --slidev to scaffold.
++
+
+ ❯ tests/src/shared/workspace-scaffold.test.ts:270:31
+    268|       await runConfigCommand(["scaffold"]);
+    269|       expect(process.exitCode).toBe(1);
+    270|       expect(stderr.join("")).toContain(
+       |                               ^
+    271|         "Specify --provider <name>, --workspace, or --lefthook to scaf…
+    272|       );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

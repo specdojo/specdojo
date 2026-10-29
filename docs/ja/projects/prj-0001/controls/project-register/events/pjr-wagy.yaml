@@ -1,0 +1,98 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_908722cfc3c94181a1a3eac259a5d2ee
+  ts: "2026-10-27T22:58:32Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: PJR-NJJ7 の決定のフォローアップとして起票するため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: カタログと strategy を作るための approach を追加する
+    - field: description
+      from: ""
+      to: 子 todo からカタログの判定と生成（catalog plan・scaffold --plan）と schedule strategy generate を流せるようにし、todo の close から catalog\_status を導く
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-28"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-NJJ7"]'
+- v: 1
+  id: reg_7364036bd53943bfbda0b265f0ad3a4d
+  ts: "2026-10-27T23:34:19Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: epic の実装を前提にするため
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-B4Y4"]'
+  previous_event_id: reg_908722cfc3c94181a1a3eac259a5d2ee
+- v: 1
+  id: reg_3082f2f044ef479c94b7ca5fb01bd6c7
+  ts: "2026-10-28T00:25:03Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_7364036bd53943bfbda0b265f0ad3a4d
+- v: 1
+  id: reg_80a41b172a8c4374a3ff70ce5319e58a
+  ts: "2026-10-28T00:44:08Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_3082f2f044ef479c94b7ca5fb01bd6c7
+- v: 1
+  id: reg_84d62aa630fa467da79e75f3738ecda2
+  ts: "2026-10-28T00:52:34Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 完了条件を差分・対応結果と照合し、親の検証 7 件、空のリポジトリでの流れの記録、approach の起票の実地確認、JSEY の通過を確かめたため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: "catalog-planning と strategy-planning の approach を追加した。--target domain:/track: で対象を指し、plan に kata とカタログの参照と完了条件を展開する。timeline build と strategy 生成が register から catalog_status を導き、tml-index は書き換えない"
+  previous_event_id: reg_80a41b172a8c4374a3ff70ce5319e58a

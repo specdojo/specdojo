@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0aeafe8876c84de09c7ffd9dc13edbab
+  ts: "2026-10-21T22:09:06Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: plan の名前の末尾の乱数が短く、同じ秒に作ると名前がぶつかることがある
+    - field: description
+      from: ""
+      to: plan と in-place の stem、イベントの名前の末尾の乱数が 2 バイト（16 進 4 桁）しかなく、同じ slug で同じ秒に 2 回作ると 6 万 5 千分の 1 の確率でぶつかる。PJR-T30J の検証で単体テストが 1 回落ちた
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T30J"]'
+- v: 1
+  id: reg_6e80df87af5e49738a8afc79e620c938
+  ts: "2026-10-21T22:38:40Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0aeafe8876c84de09c7ffd9dc13edbab
+- v: 1
+  id: reg_e8da31359e934e60ad5b7aed54df41b6
+  ts: "2026-10-21T22:53:36Z"
+  action: wait
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-ts, test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-ts, test-unit"
+  previous_event_id: reg_6e80df87af5e49738a8afc79e620c938
+- v: 1
+  id: reg_24084ff592b241b589c0ce406a201710
+  ts: "2026-10-21T23:05:51Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-ts, test-unit"
+      to: "-"
+  previous_event_id: reg_e8da31359e934e60ad5b7aed54df41b6
+- v: 1
+  id: reg_b5eac90baec14ac0b509c48dcd206b23
+  ts: "2026-10-21T23:19:51Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_24084ff592b241b589c0ce406a201710
+- v: 1
+  id: reg_3af46cbceab54d4eab9f8aac8b90e2c3
+  ts: "2026-10-21T23:27:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: agy の 1 回目の実装が lint とテストで止まったため codex で最初からやり直した。オーケストレーターが差分・親の検証を確かめ、統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: plan・in-place の stem・イベントの名前の末尾の乱数を 4 バイトにし、それでもぶつかったときは連番を付けるようにした。既存の 4 桁の名前と新しい名前の両方を読める。テストは乱数と時刻を差し替えて決定的に確かめる
+  previous_event_id: reg_b5eac90baec14ac0b509c48dcd206b23

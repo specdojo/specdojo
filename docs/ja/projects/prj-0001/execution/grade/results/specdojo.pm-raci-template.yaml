@@ -3,44 +3,99 @@ version: 1
 document: specdojo:pm-raci-template
 path: docs/ja/specdojo/templates/pm-raci-template.md
 target: kata
-rubric: grade-rubric-v1
-verdict: needs-work
-score: 80
-graded_at: "2026-09-06T12:14:53.908Z"
-graded_by: gemma-expert-executor
+rubric: grade-rubric-v2
+verdict: pass
+score: 100
+graded_at: "2026-10-22T20:34:11.502Z"
+graded_by: flash-high-executor
 content_hash: 52fb222dea6ef9515eafd6df41d51f45bab596a07b7f06ca1468eb1fa5e398e5
 categories:
-  consistency:
-    score: 75
-  usability:
-    score: 92
+  purpose:
+    score: 100
+  operations:
+    score: 100
+  planning:
+    score: 100
+  business:
+    score: 100
   architecture:
     score: 100
+  usability:
+    score: 100
+  implementation:
+    score: 100
   quality:
-    score: 63
+    score: 100
+  consistency:
+    score: 100
 viewpoints:
-  vp-arc-cross-document-consistency:
-    level: 2
-    score: 50
+  vp-po-purpose-alignment:
+    level: 4
+    score: 100
+  vp-po-decision-readiness:
+    level: 4
+    score: 100
+  vp-po-publication-accountability:
+    level: 4
+    score: 100
+  vp-pm-plan-feasibility:
+    level: 4
+    score: 100
+  vp-pm-dependency-risk:
+    level: 4
+    score: 100
+  vp-pm-control-reporting:
+    level: 4
+    score: 100
+  vp-ba-business-value:
+    level: 4
+    score: 100
+  vp-ba-requirements-completeness:
+    level: 4
+    score: 100
+  vp-ba-stakeholder-clarity:
+    level: 4
+    score: 100
+  vp-arc-technical-constraints:
+    level: 4
+    score: 100
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-arc-single-responsibility:
     level: 4
     score: 100
+  vp-dev-implementation-readiness:
+    level: 4
+    score: 100
+  vp-dev-change-impact:
+    level: 4
+    score: 100
+  vp-dev-testability:
+    level: 4
+    score: 100
   vp-qe-verifiability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-qe-omissions-consistency:
     level: 4
     score: 100
   vp-qe-kata-conformance:
-    level: 2
-    score: 50
+    level: 4
+    score: 100
   vp-ux-readability:
-    level: 3
-    score: 75
+    level: 4
+    score: 100
   vp-ux-language-consistency:
+    level: 4
+    score: 100
+  vp-ops-release-readiness:
+    level: 4
+    score: 100
+  vp-ops-operability:
+    level: 4
+    score: 100
+  vp-ops-agent-boundary:
     level: 4
     score: 100
   vp-arc-document-structure:

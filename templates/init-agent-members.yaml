@@ -4,12 +4,19 @@
 # aliases whose target member was selected.
 #
 # The roster has two levels (PJR-ZM1K):
-#   members : concrete agents named after the model family (sonnet-executor, terra-executor, ...).
+#   members : concrete agents named after the model family (sonnet-executor, luna-executor, ...).
 #             Each member carries the provider, model, and role. The model version is written
 #             only in `model`, so replacing a model touches one place.
 #   aliases : the earlier names (claude-executor, codex-executor, ...). Each alias points at a
 #             concrete member, so Jobs, routines, documents, and user settings keep working.
 # Events and results record the concrete member name, so the model that actually ran is kept.
+#
+# Claude and Codex have two tiers (PJR-9482):
+#   normal : sonnet (claude) and gpt-6-luna (codex). Medium/easy items and every reporter use it.
+#   expert : opus (claude) and gpt-6.1-sol (codex), marked with `proficiency: expert`.
+#            Hard items use it through the claude-expert-* and codex-expert-* aliases.
+# The reasoning effort comes from exec-defaults.yaml (providers.codex.command_params.by_proficiency:
+# normal -> medium, expert -> high). gpt-6-luna accepts up to Max, so it never receives Ultra.
 version: 1
 members:
   - nickname: sonnet-executor
@@ -55,13 +62,42 @@ members:
     persona: execution-reporter
     scheduler_strategy: fifo
 
-  - nickname: terra-executor
-    display_name: Codex Terra Executor
+  - nickname: opus-executor
+    display_name: Claude Opus Executor
+    email: null
+    roles: []
+    type: agent
+    provider: claude
+    model: opus
+    mode: edit
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: expert
+    priority: 2
+    persona: task-executor
+    scheduler_strategy: critical-first
+  - nickname: opus-review-executor
+    display_name: Claude Opus Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: claude
+    model: opus
+    mode: review
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: expert
+    priority: 2
+    persona: multi-viewpoint-reviewer
+    scheduler_strategy: fifo
+
+  - nickname: luna-executor
+    display_name: Codex Luna Executor
     email: null
     roles: []
     type: agent
     provider: codex
-    model: gpt-5.6-terra
+    model: gpt-6-luna
     mode: edit
     stage_role: executor
     capabilities: [web_search]
@@ -69,13 +105,13 @@ members:
     priority: 1
     persona: task-executor
     scheduler_strategy: critical-first
-  - nickname: terra-review-executor
-    display_name: Codex Terra Review Executor
+  - nickname: luna-review-executor
+    display_name: Codex Luna Review Executor
     email: null
     roles: []
     type: agent
     provider: codex
-    model: gpt-5.6-terra
+    model: gpt-6-luna
     mode: review
     stage_role: executor
     capabilities: [web_search]
@@ -83,18 +119,46 @@ members:
     priority: 1
     persona: multi-viewpoint-reviewer
     scheduler_strategy: fifo
-  - nickname: terra-reporter
-    display_name: Codex Terra Reporter
+  - nickname: luna-reporter
+    display_name: Codex Luna Reporter
     email: null
     roles: []
     type: agent
     provider: codex
-    model: gpt-5.6-terra
+    model: gpt-6-luna
     stage_role: reporter
     capabilities: []
     proficiency: normal
     priority: 1
     persona: execution-reporter
+    scheduler_strategy: fifo
+  - nickname: sol-executor
+    display_name: Codex Sol Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-6.1-sol
+    mode: edit
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: expert
+    priority: 1
+    persona: task-executor
+    scheduler_strategy: critical-first
+  - nickname: sol-review-executor
+    display_name: Codex Sol Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: codex
+    model: gpt-6.1-sol
+    mode: review
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: expert
+    priority: 1
+    persona: multi-viewpoint-reviewer
     scheduler_strategy: fifo
 
   - nickname: gemma-executor
@@ -131,7 +195,50 @@ members:
     roles: []
     type: agent
     provider: opencode
-    model: ollama-local/gemma4:31b-mlx-work-64k
+    model: ollama-local/gemma4:26b-mlx-work-64k
+    mode: report
+    stage_role: reporter
+    capabilities: []
+    proficiency: normal
+    priority: 3
+    persona: execution-reporter
+    scheduler_strategy: fifo
+
+  - nickname: qwen-executor
+    display_name: OpenCode Qwen Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
+    mode: edit
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: normal
+    priority: 3
+    persona: task-executor
+    scheduler_strategy: critical-first
+  - nickname: qwen-review-executor
+    display_name: OpenCode Qwen Review Executor
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
+    mode: review
+    stage_role: executor
+    capabilities: [web_search]
+    proficiency: normal
+    priority: 3
+    persona: multi-viewpoint-reviewer
+    scheduler_strategy: fifo
+  - nickname: qwen-reporter
+    display_name: OpenCode Qwen Reporter
+    email: null
+    roles: []
+    type: agent
+    provider: opencode
+    model: ollama-local/qwen3.8:27b-mlx-work-64k
     mode: report
     stage_role: reporter
     capabilities: []
@@ -230,12 +337,20 @@ aliases:
     alias_of: sonnet-review-executor
   - nickname: claude-reporter
     alias_of: sonnet-reporter
+  - nickname: claude-expert-executor
+    alias_of: opus-executor
+  - nickname: claude-expert-review-executor
+    alias_of: opus-review-executor
   - nickname: codex-executor
-    alias_of: terra-executor
+    alias_of: luna-executor
   - nickname: codex-review-executor
-    alias_of: terra-review-executor
+    alias_of: luna-review-executor
   - nickname: codex-reporter
-    alias_of: terra-reporter
+    alias_of: luna-reporter
+  - nickname: codex-expert-executor
+    alias_of: sol-executor
+  - nickname: codex-expert-review-executor
+    alias_of: sol-review-executor
   - nickname: opencode-executor
     alias_of: gemma-executor
   - nickname: opencode-review-executor

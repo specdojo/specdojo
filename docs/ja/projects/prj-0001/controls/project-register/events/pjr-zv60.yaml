@@ -1,0 +1,149 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ef0827866fc74ea9ae868307c48e2b9b
+  ts: "2026-10-24T09:04:45Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata を作るときの手本を、カタログの外やプロダクトリポジトリのファイルからも指定できるようにする
+    - field: description
+      from: ""
+      to: rulebook-authoring などの手本は、カタログに載っている成果物の doc id でしか指定できず、カタログがないリポジトリや、成果物がプロダクトリポジトリにある場合に使えない。手本を --source で、doc id・プロジェクトリポジトリのパス・repo とパスの組（パターンを含む）で指定できるようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-24"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-CT6G"]'
+- v: 1
+  id: reg_c72658acfd7548169b4dcee8040a02ec
+  ts: "2026-10-24T09:05:30Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ef0827866fc74ea9ae868307c48e2b9b
+- v: 1
+  id: reg_47bb329726464e7596a5e75a117083f4
+  ts: "2026-10-24T09:23:00Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_c72658acfd7548169b4dcee8040a02ec
+- v: 1
+  id: reg_125ef112b4674cf2a1436052be546791
+  ts: "2026-10-24T09:23:33Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_47bb329726464e7596a5e75a117083f4
+- v: 1
+  id: reg_2c1786e59e754f49b799d9aff3df15eb
+  ts: "2026-10-24T09:36:43Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: typecheck"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: typecheck"
+  previous_event_id: reg_125ef112b4674cf2a1436052be546791
+- v: 1
+  id: reg_7e8f5487462240978f0d20c9da749674
+  ts: "2026-10-24T09:37:21Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: typecheck"
+      to: "-"
+  previous_event_id: reg_2c1786e59e754f49b799d9aff3df15eb
+- v: 1
+  id: reg_21fa3303360b4f76a3d26b44078918f5
+  ts: "2026-10-24T09:48:10Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_7e8f5487462240978f0d20c9da749674
+- v: 1
+  id: reg_0b3041fd8e3340bcbdc3997113bee05d
+  ts: "2026-10-24T10:06:55Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが、カタログを持たずプロダクトリポジトリを宣言した一時のリポジトリで、--source にプロダクトリポジトリのパターンを書いて claude で流し、rulebook が作られ、プロダクトリポジトリが変わらないことを確かめた。そこで tinyglobby が dependencies にない不具合が見つかり、利用者（indie）の承認で依存を移した。統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-24"
+    - field: conclusion
+      from: "-"
+      to: kata の手本を --source で、doc id・プロジェクトリポジトリのパス・repo とパスの組（パターンを含む）で指定できるようにした。カタログがなくても kata を作れ、付け替えは手本がカタログの成果物で参照が undecided のときだけ行う。--target の 2 つ目以降の手本も互換で受け付ける
+  previous_event_id: reg_21fa3303360b4f76a3d26b44078918f5

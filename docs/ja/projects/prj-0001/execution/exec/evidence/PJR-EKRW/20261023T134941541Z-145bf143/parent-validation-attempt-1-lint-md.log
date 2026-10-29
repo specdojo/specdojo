@@ -1,0 +1,16 @@
+parent validation: lint-md
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.3 lint:md
+> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'
+
+
+
+--- stderr ---
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-index.md:704:220 error MD034/no-bare-urls Bare URL used [Context: "https://specdojo.org）。PR"]
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-owner.md:415:220 error MD034/no-bare-urls Bare URL used [Context: "https://specdojo.org）。PR"]
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-priority.md:22:220 error MD034/no-bare-urls Bare URL used [Context: "https://specdojo.org）。PR"]
+docs/ja/projects/prj-0001/controls/project-register/generated/pjr-views-by-status.md:113:220 error MD034/no-bare-urls Bare URL used [Context: "https://specdojo.org）。PR"]

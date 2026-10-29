@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_ece3746eb59146feb3f0a77eaf0bc285
+  ts: "2026-10-27T12:39:20Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: TSD の rulebook の見直しに sample を合わせるため
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: tsd-index-sample を新しい tsd-index-rulebook に合わせて見直す
+    - field: description
+      from: ""
+      to: tsd-index-sample を、見直した tsd-index-rulebook の技術スタック一覧の列（区分、採用技術、担当責務、版・正本、適用範囲）と参照の要件に合わせて見直す。
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: ARC
+    - field: registered
+      from: ""
+      to: "2026-10-27"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: approach
+      from: ""
+      to: sample-maintenance
+    - field: targets
+      from: ""
+      to: '["specdojo:tsd-index-sample"]'
+- v: 1
+  id: reg_f561584b0d88413fa62c0d104dd2d636
+  ts: "2026-10-27T12:44:49Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_ece3746eb59146feb3f0a77eaf0bc285
+- v: 1
+  id: reg_b741059b29724fd59d9d1b53d16a57e4
+  ts: "2026-10-27T12:58:54Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_f561584b0d88413fa62c0d104dd2d636
+- v: 1
+  id: reg_6f2c14b4a60f40678565b65f1c54be07
+  ts: "2026-10-27T13:09:45Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが完了条件・親の検証・docs:build を確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-27"
+    - field: conclusion
+      from: "-"
+      to: tsd-index-sample を新しい tsd-index-rulebook に合わせ、tsd-sample の題材を PostgreSQL の詳細定義に決めた
+  previous_event_id: reg_b741059b29724fd59d9d1b53d16a57e4

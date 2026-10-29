@@ -21,17 +21,23 @@ const originalPackageRoot = process.env.SPECDOJO_PACKAGE_ROOT;
 const specdojoSourceRoot = specdojoRootDir();
 
 function loadMarkdownlintConfig(): Record<string, unknown> {
-  const configPath = path.join(specdojoRootDir(), ".markdownlint.yaml");
+  const configPath = path.join(specdojoSourceRoot, ".markdownlint.yaml");
   const parsed = load(readFileSync(configPath, "utf8"));
   return typeof parsed === "object" && parsed !== null ? (parsed as Record<string, unknown>) : {};
 }
 
-function emphasisViolations(content: string): string[] {
+function ruleViolations(content: string, ruleNames: readonly string[]): string[] {
   const results = lint({ strings: { doc: content }, config: loadMarkdownlintConfig() });
   return (results.doc ?? [])
-    .filter((issue) => (issue.ruleNames ?? []).some((n) => n === "MD049" || n === "MD050"))
-    .map((issue) => (issue.ruleNames ?? []).join("/"));
+    .filter((issue) => (issue.ruleNames ?? []).some((n) => ruleNames.includes(n)))
+    .map((issue) => `${issue.lineNumber}: ${(issue.ruleNames ?? []).join("/")}`);
 }
+
+function emphasisViolations(content: string): string[] {
+  return ruleViolations(content, ["MD049", "MD050"]).map((issue) => issue.replace(/^\d+: /, ""));
+}
+
+const KATA_KINDS = ["rulebook", "recipe", "sample", "template"] as const;
 
 describe("escapeMarkdownInline", () => {
   it("アンダースコア入り識別子を code span で包んで強調記号化を防ぐ", () => {
@@ -81,6 +87,12 @@ describe("inlineCodeAnglePlaceholders", () => {
 
     expect(once).toBe("`dct-<domain>.yaml` と `<phase>`.");
     expect(inlineCodeAnglePlaceholders(once)).toBe(once);
+  });
+
+  it("HTTP(S) autolink は山括弧プレースホルダとしてコード化しない", () => {
+    const value = "homepage は <https://specdojo.org>。";
+
+    expect(inlineCodeAnglePlaceholders(value)).toBe(value);
   });
 });
 
@@ -188,9 +200,15 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
   async function writeKataFixture(): Promise<void> {
     const templatesPath = path.join(dir, "docs", "ja", "specdojo", "exec-templates");
-    const rulebooksPath = path.join(dir, "docs", "ja", "specdojo", "rulebooks");
+    const rulebooksPath = path.join(dir, "docs", "ja", "specdojo", "rulebooks", "customer");
     await mkdir(templatesPath, { recursive: true });
     await mkdir(rulebooksPath, { recursive: true });
+    await mkdir(path.join(dir, ".specdojo"), { recursive: true });
+    await writeFile(
+      path.join(dir, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
+      "utf8",
+    );
     for (const filename of [
       "xep-common-conventions-template.md",
       "xep-rulebook-maintenance-template.md",
@@ -209,7 +227,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       [
         "---",
         "specdojo:",
-        "  id: prj-test:test-rulebook",
+        "  id: customer:test-rulebook",
         "  type: rulebook",
         "  status: draft",
         "---",
@@ -219,6 +237,49 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       ].join("\n"),
       "utf8",
     );
+  }
+
+  async function writeAuthoringFixture(): Promise<void> {
+    const templatesPath = path.join(dir, "docs", "ja", "specdojo", "exec-templates");
+    const deliverablesPath = path.join(dir, "docs", "test");
+    await mkdir(templatesPath, { recursive: true });
+    await mkdir(deliverablesPath, { recursive: true });
+    await mkdir(path.join(dir, ".specdojo"), { recursive: true });
+    await writeFile(
+      path.join(dir, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
+      "utf8",
+    );
+    await writeFile(path.join(dir, "package.json"), '{"name":"customer"}\n', "utf8");
+    await writeFile(
+      path.join(deliverablesPath, "overview.md"),
+      [
+        "---",
+        "specdojo:",
+        "  id: prj-test:overview",
+        "  type: project",
+        "  status: draft",
+        "---",
+        "",
+        "# Test Overview",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    for (const filename of [
+      "xep-common-conventions-template.md",
+      "xep-rulebook-authoring-template.md",
+      "xep-recipe-authoring-template.md",
+    ]) {
+      await writeFile(
+        path.join(templatesPath, filename),
+        await readFile(
+          path.join(specdojoSourceRoot, "docs", "ja", "specdojo", "exec-templates", filename),
+          "utf8",
+        ),
+        "utf8",
+      );
+    }
   }
 
   it("アンダースコア入り識別子や _TODO_ を含む項目でも MD049/MD050 違反を出さない", async () => {
@@ -297,8 +358,31 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
   it("成果物 approach は schedule と同じテンプレートに DCT と個票の完了条件を載せる", async () => {
     const outPath = path.join(dir, "plan-with-item-approach.md");
+    // 対象検証の索引走査を temp 内へ閉じ込め、package 側への探索も fixture に限定する。
+    // schedule と共有する実テンプレートは必要なファイルだけを読み込む。
+    await mkdir(path.join(dir, ".specdojo"), { recursive: true });
+    await writeFile(
+      path.join(dir, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({ version: 1, projects: {} }),
+      "utf8",
+    );
+    for (const relativePath of [
+      "exec-templates/xep-common-conventions-template.md",
+      "exec-templates/xep-fully-guided-template.md",
+      "rulebooks/pjr-rulebook.md",
+    ]) {
+      const targetPath = path.join(dir, "docs/ja/specdojo", relativePath);
+      await mkdir(path.dirname(targetPath), { recursive: true });
+      await writeFile(
+        targetPath,
+        await readFile(path.join(specdojoSourceRoot, "docs/ja/specdojo", relativePath), "utf8"),
+        "utf8",
+      );
+    }
     const catalogPath = await writeCatalog();
     const ticket = await writeTicket();
+    process.env.SPECDOJO_PACKAGE_ROOT = dir;
+    process.chdir(dir);
     await generateRegisterPlan({
       executionPath: path.join(dir, "execution"),
       projectId: "prj-test",
@@ -380,42 +464,48 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
     }
   });
 
-  it("approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる", async () => {
-    const referencePath = "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md";
-    const plainOutPath = path.join(dir, "plan-plain.md");
-    await generateRegisterPlan({
-      executionPath: path.join(dir, "execution"),
-      projectId: "prj-test",
-      registerPaths: makeRegisterPaths(),
-      item: makeItem(),
-      stem: "xep-pjr-plain",
-      outPath: plainOutPath,
-    });
-    const approachOutPath = path.join(dir, "plan-approach.md");
-    await generateRegisterPlan({
-      executionPath: path.join(dir, "execution"),
-      projectId: "prj-test",
-      catalogPath: await writeCatalog(),
-      registerPaths: makeRegisterPaths(),
-      item: makeItem({ approach: "fully-guided", targets: ["prj-test:overview"] }),
-      stem: "xep-pjr-approach",
-      outPath: approachOutPath,
-    });
+  // generateRegisterPlan を 2 回呼ぶ。カタログ付きの 2 回目が約 1.5 秒かかり、単独で約 1.6 秒、
+  // 変換キャッシュがない負荷時は 6.5 秒を観測した（PJR-SNHK）。既定の 5 秒に余裕がないため、この test に限って 30 秒へ広げる。
+  it(
+    "approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる",
+    { timeout: 30_000 },
+    async () => {
+      const referencePath = "docs/ja/specdojo/exec-templates/xep-common-conventions-template.md";
+      const plainOutPath = path.join(dir, "plan-plain.md");
+      await generateRegisterPlan({
+        executionPath: path.join(dir, "execution"),
+        projectId: "prj-test",
+        registerPaths: makeRegisterPaths(),
+        item: makeItem(),
+        stem: "xep-pjr-plain",
+        outPath: plainOutPath,
+      });
+      const approachOutPath = path.join(dir, "plan-approach.md");
+      await generateRegisterPlan({
+        executionPath: path.join(dir, "execution"),
+        projectId: "prj-test",
+        catalogPath: await writeCatalog(),
+        registerPaths: makeRegisterPaths(),
+        item: makeItem({ approach: "fully-guided", targets: ["prj-test:overview"] }),
+        stem: "xep-pjr-approach",
+        outPath: approachOutPath,
+      });
 
-    for (const outPath of [plainOutPath, approachOutPath]) {
-      const content = await readFile(outPath, "utf8");
-      expect(content, outPath).toContain(`共通の規約の詳細 \`${referencePath}\` を読み`);
-      expect(content, outPath).toContain("`[[id|title]]` 形式");
-      expect(content, outPath).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
-      expect(content, outPath).not.toContain("| 変更したファイル");
-      expect(content, outPath).not.toContain("plan-essentials:");
-    }
-  });
+      for (const outPath of [plainOutPath, approachOutPath]) {
+        const content = await readFile(outPath, "utf8");
+        expect(content, outPath).toContain(`共通の規約の詳細 \`${referencePath}\` を読み`);
+        expect(content, outPath).toContain("`[[id|title]]` 形式");
+        expect(content, outPath).not.toContain("全件を1回だけ実行して対象限定の実行を省く");
+        expect(content, outPath).not.toContain("| 変更したファイル");
+        expect(content, outPath).not.toContain("plan-essentials:");
+      }
+    },
+  );
 
   it("kata maintenance approach は指定した kata id を直接の編集対象にする", async () => {
     const outPath = path.join(dir, "plan-with-kata-approach.md");
     await writeKataFixture();
-    const catalogPath = await writeCatalog("prj-test:test-rulebook");
+    const catalogPath = await writeCatalog("customer:test-rulebook");
     const ticket = await writeTicket();
     process.env.SPECDOJO_PACKAGE_ROOT = dir;
     process.chdir(dir);
@@ -426,7 +516,7 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
       registerPaths: makeRegisterPaths(),
       item: makeItem({
         approach: "rulebook-maintenance",
-        targets: ["prj-test:test-rulebook"],
+        targets: ["customer:test-rulebook"],
         ticket,
       }),
       stem: "xep-pjr-test",
@@ -437,10 +527,200 @@ describe("generateRegisterPlan の Markdown 安全性", () => {
 
     expect(content).toContain("origin: register");
     expect(content).toContain("approach: rulebook-maintenance");
-    expect(content).toContain("targets:\n    - prj-test:test-rulebook");
-    expect(content).toContain("docs/ja/specdojo/rulebooks/test-rulebook.md");
+    expect(content).toContain("targets:\n    - customer:test-rulebook");
+    expect(content).toContain("docs/ja/specdojo/rulebooks/customer/test-rulebook.md");
     expect(content).toContain("register-specific criterion is satisfied");
   });
+
+  it.each(["project", "sample"])(
+    "sample-maintenance の個票から type: %s の sample の plan を生成する",
+    async (type) => {
+      await writeKataFixture();
+      const templatesPath = path.join(dir, "docs/ja/specdojo/exec-templates");
+      await writeFile(
+        path.join(templatesPath, "xep-sample-maintenance-template.md"),
+        await readFile(
+          path.join(
+            specdojoSourceRoot,
+            "docs/ja/specdojo/exec-templates/xep-sample-maintenance-template.md",
+          ),
+          "utf8",
+        ),
+        "utf8",
+      );
+      const samplePath = "docs/ja/kata/samples/test-sample.md";
+      await mkdir(path.dirname(path.join(dir, samplePath)), { recursive: true });
+      await writeFile(
+        path.join(dir, samplePath),
+        `---\nspecdojo:\n  id: customer:test-sample\n  type: ${type}\n  status: draft\n  rulebook: customer:test-rulebook\n---\n\n# Test Sample\n`,
+        "utf8",
+      );
+      const ticket = await writeTicket();
+      process.env.SPECDOJO_PACKAGE_ROOT = dir;
+      process.chdir(dir);
+      const outPath = path.join(dir, "sample-plan.md");
+      await generateRegisterPlan({
+        executionPath: path.join(dir, "execution"),
+        projectId: "prj-test",
+        registerPaths: makeRegisterPaths(),
+        item: makeItem({
+          approach: "sample-maintenance",
+          targets: ["customer:test-sample"],
+          ticket,
+        }),
+        stem: "xep-pjr-sample",
+        outPath,
+      });
+      const content = await readFile(outPath, "utf8");
+      expect(content).toContain("origin: register");
+      expect(content).toContain("approach: sample-maintenance");
+      expect(content).toContain("targets:\n    - customer:test-sample");
+      expect(content).toContain(samplePath);
+      expect(content).toContain("register-specific criterion is satisfied");
+    },
+  );
+
+  it("kata authoring approach は新規 id、配置、標準、手本、参照更新条件を plan に載せる", async () => {
+    const outPath = path.join(dir, "plan-with-authoring-approach.md");
+    await writeAuthoringFixture();
+    const catalogPath = await writeCatalog("undecided");
+    process.env.SPECDOJO_PACKAGE_ROOT = dir;
+    process.chdir(dir);
+
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      catalogPath,
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({
+        approach: "rulebook-authoring",
+        targets: ["customer:test-rulebook", "prj-test:overview"],
+      }),
+      stem: "xep-pjr-authoring",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+    expect(content).toContain("approach: rulebook-authoring");
+    expect(content).toContain("docs/ja/specdojo/rulebooks/customer/test-rulebook.md");
+    expect(content).toContain("specdojo:rulebook-authoring-standard");
+    expect(content).toContain("`prj-test:overview`: Test Overview");
+    expect(content).toContain("手本ファイルは読み取り専用");
+    expect(content).toContain("`undecided` または未記入");
+    expect(content).toContain("すでに別の kata を指す場合は上書きせず");
+  });
+
+  it("recipe authoring は手本 rulebook の not-needed を未判断として扱わない", async () => {
+    const outPath = path.join(dir, "plan-with-recipe-authoring-approach.md");
+    await writeAuthoringFixture();
+    const rulebooksPath = path.join(dir, "docs", "ja", "specdojo", "rulebooks");
+    await mkdir(rulebooksPath, { recursive: true });
+    await writeFile(
+      path.join(rulebooksPath, "test-rulebook.md"),
+      [
+        "---",
+        "specdojo:",
+        "  id: specdojo:test-rulebook",
+        "  type: rulebook",
+        "  status: draft",
+        "  recipe: not-needed",
+        "---",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    const catalogPath = await writeCatalog("specdojo:test-rulebook");
+    process.env.SPECDOJO_PACKAGE_ROOT = dir;
+    process.chdir(dir);
+
+    await generateRegisterPlan({
+      executionPath: path.join(dir, "execution"),
+      projectId: "prj-test",
+      catalogPath,
+      registerPaths: makeRegisterPaths(),
+      item: makeItem({
+        approach: "recipe-authoring",
+        targets: ["customer:test-recipe", "prj-test:overview"],
+      }),
+      stem: "xep-pjr-recipe-authoring",
+      outPath,
+    });
+
+    const content = await readFile(outPath, "utf8");
+    expect(content).toContain("現在の参照: `not-needed`");
+    expect(content).toContain("`not-needed` も意図的な判断として上書きしない");
+  });
+
+  async function writeNoCatalogKataFixture(): Promise<void> {
+    const templatesPath = path.join(dir, "docs", "ja", "specdojo", "exec-templates");
+    await mkdir(templatesPath, { recursive: true });
+    await mkdir(path.join(dir, ".specdojo"), { recursive: true });
+    await writeFile(
+      path.join(dir, ".specdojo", "specdojo.config.json"),
+      JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
+      "utf8",
+    );
+    await writeFile(path.join(dir, "package.json"), '{"name":"customer"}\n', "utf8");
+    const filenames = ["xep-common-conventions-template.md"];
+    for (const kind of KATA_KINDS) {
+      filenames.push(`xep-${kind}-maintenance-template.md`, `xep-${kind}-authoring-template.md`);
+      const kataDir = path.join(dir, "docs", "ja", "specdojo", `${kind}s`, "customer");
+      await mkdir(kataDir, { recursive: true });
+      await writeFile(
+        path.join(kataDir, `test-${kind}.md`),
+        [
+          "---",
+          "specdojo:",
+          `  id: customer:test-${kind}`,
+          `  type: ${kind}`,
+          "  status: draft",
+          "---",
+          "",
+          `# Test ${kind}`,
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+    }
+    for (const filename of filenames) {
+      await writeFile(
+        path.join(templatesPath, filename),
+        await readFile(
+          path.join(specdojoSourceRoot, "docs", "ja", "specdojo", "exec-templates", filename),
+          "utf8",
+        ),
+        "utf8",
+      );
+    }
+  }
+
+  it.each(KATA_KINDS.flatMap((kind) => [`${kind}-maintenance`, `${kind}-authoring`] as const))(
+    "カタログと pm-roles のない project の %s plan は MD036 違反を出さない",
+    async (approach) => {
+      const outPath = path.join(dir, `plan-${approach}.md`);
+      await writeNoCatalogKataFixture();
+      const kind = approach.split("-")[0];
+      const target = approach.endsWith("-authoring")
+        ? `customer:new-${kind}`
+        : `customer:test-${kind}`;
+      process.env.SPECDOJO_PACKAGE_ROOT = dir;
+      process.chdir(dir);
+
+      await generateRegisterPlan({
+        executionPath: path.join(dir, "execution"),
+        projectId: "prj-test",
+        registerPaths: makeRegisterPaths(),
+        item: makeItem({ approach, targets: [target], owner: "BA" }),
+        stem: `xep-pjr-${approach}`,
+        outPath,
+      });
+
+      const content = await readFile(outPath, "utf8");
+      expect(content).toContain(`approach: ${approach}`);
+      expect(content).not.toMatch(/^_MISSING_$/m);
+      expect(ruleViolations(content, ["MD036"])).toEqual([]);
+    },
+  );
 
   it("個票が targets を宣言していなければ plan frontmatter に targets が含まれない", async () => {
     const outPath = path.join(dir, "plan-without-targets.md");

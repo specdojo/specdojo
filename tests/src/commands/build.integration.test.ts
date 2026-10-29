@@ -4,6 +4,7 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  readdirSync,
   rmSync,
   symlinkSync,
   writeFileSync,
@@ -13,8 +14,8 @@ import { join, resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { generateWorktreeArtifacts, gitEnvironment } from "../../../src/exec/worktree.js";
 
-// project を 2 つ持つ checkout で、生成物（git 管理外の generated/）が無い状態から
-// `specdojo build`（--project なし）が通ることを、実 CLI の子プロセスで確認する。
+// 生成物（git 管理外の generated/）が無い状態から `specdojo build`（--project なし）が
+// 通ることを、実 CLI の子プロセスで確認する。
 
 // Vitest はリポジトリ直下を cwd にして実行される。
 const REPO_ROOT = resolve(process.cwd());
@@ -66,13 +67,13 @@ function createTwoProjectFixture(): string {
   return root;
 }
 
-function runBuild(cwd: string): SpawnSyncReturns<string> {
+function runCli(cwd: string, args: string[]): SpawnSyncReturns<string> {
   return spawnSync(
     process.execPath,
     [
       join(REPO_ROOT, "node_modules", ".bin", "tsx"),
       join(REPO_ROOT, "src", "specdojo.ts"),
-      "build",
+      ...args,
     ],
     {
       cwd,
@@ -82,7 +83,57 @@ function runBuild(cwd: string): SpawnSyncReturns<string> {
   );
 }
 
+function runBuild(cwd: string): SpawnSyncReturns<string> {
+  return runCli(cwd, ["build"]);
+}
+
 describe("specdojo build without --project", () => {
+  it(
+    "builds immediately after init creates a small catalog with empty domains",
+    { timeout: 120_000 },
+    () => {
+      const root = mkdtempSync(join(tmpdir(), "specdojo-build-small-catalog-"));
+      tempDirs.push(root);
+      const initializedGit = spawnSync("git", ["init", "--quiet"], {
+        cwd: root,
+        encoding: "utf8",
+        env: gitEnvironment(),
+      });
+      expect(initializedGit.status, initializedGit.stderr).toBe(0);
+      writeFileSync(
+        join(root, "package.json"),
+        `${JSON.stringify({ name: "fixture", private: true, scripts: {} }, null, 2)}\n`,
+        "utf8",
+      );
+      symlinkSync(join(REPO_ROOT, "node_modules"), join(root, "node_modules"), "dir");
+
+      const initialized = runCli(root, [
+        "init",
+        "--yes",
+        "--provider",
+        "claude",
+        "--exec",
+        "--catalog",
+        "small",
+      ]);
+      expect(initialized.status, initialized.stderr || initialized.stdout).toBe(0);
+
+      const catalogPath = join(root, "docs/ja/projects/prj-0001/010-deliverables-catalog");
+      const emptyCatalogs = readdirSync(catalogPath).filter(
+        (file) =>
+          /^dct-.+\.yaml$/.test(file) &&
+          file !== "dct-index.yaml" &&
+          readFileSync(join(catalogPath, file), "utf8").includes("groups: []"),
+      );
+      expect(emptyCatalogs.length).toBeGreaterThan(0);
+
+      const result = runBuild(root);
+
+      expect(result.status, result.stderr || result.stdout).toBe(0);
+      expect(result.stderr).not.toContain("groups must be a non-empty array");
+    },
+  );
+
   it(
     "builds every project's register so index build succeeds from a clean checkout",
     { timeout: 120_000 },

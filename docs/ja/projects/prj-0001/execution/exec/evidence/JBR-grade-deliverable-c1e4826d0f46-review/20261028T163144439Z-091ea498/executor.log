@@ -1,0 +1,53 @@
+Run `JBR-grade-deliverable-c1e4826d0f46` を `complete-with-findings` と判定しました。この Run は統合できます。評価結果は最新で、8件すべてが成功しています。ただし、Job Run の result に報告漏れが1点あります。私は何も変更しておらず、review result の記入は reporter が行います。
+
+## 評価結果の確認
+- **鮮度（`E-01`）**: `grade list --target deliverable --project prj-0001` を `--changed-only` と `--dependency-changed` で実行し、どちらも出力なし・exit 0 でした。verdict を決める直前にもう一度実行し、同じ結果でした。`--rubric-outdated` も出力なしです。最新でない評価結果はありません。
+- **評価の完了（`E-02`）**: `--incomplete` と `grade state --exhausted` も出力なし・exit 0 でした。`grade-unavailable` には当たりません。
+
+## 判断根拠
+- **差分の範囲**: `13498bba..748cdb0c` の差分は23ファイルで、すべてこの Job Run の出力です。
+  - 内訳は evidence 4件、plan、result、Run JSON、done_criteria 8件、評価結果 8件です。
+  - 評価対象の文書（`docs/ja/product/**`）には変更がありません。ほかの対象外の変更もありません。
+- **記録どうしの整合**: Run の状態、evidence、result の記述は互いに一致しています。
+  - Run JSON は `succeeded` で、attempt 1 の exit_code は 0 です。evidence でも command は `passed` / exit 0、stderr は空、pipeline-state の executor と reporter はどちらも `succeeded` でした。
+  - stdout には `selected=8 processed=8 completed_now=8 incomplete=0 exhausted=0` とあります。`results.tsv` の8行はすべて stage 1 が `passed` でした。
+  - 終了コード75や中断、`failed`、`retry_exhausted` はありません。Run が `partial` ではないので、再試行の記録を確かめる必要もありません。
+- **score の変化**: 8件とも verdict は `needs-work`、score は 62〜71 です。前回から変わったのは次の2件で、残り6件は score が同じで `graded_at` だけが更新されました。
+  - `tsd-index`: 59 → 71。content_hash は変わっていません。
+  - `stsd-register-entry`: 68 → 67、minor の finding が 8 → 9。文書が更新されたため content_hash も変わっています。
+- **`graded_by` の表記**: `flash-high-executor` と記録されています。`.specdojo/agent-members.yaml` で `agy-expert-executor` が `flash-high-executor` の別名と定義されているので、矛盾ではありません。
+- **未充足の done_criteria と担当ロール**:
+
+| 成果物 | 充足 | 未充足（担当ロール） |
+| --- | --- | --- |
+| `stsd-register-entry` | 0/5 | DC-001〜005（BA, PO, ARC, QE, DEV） |
+| `tsd-index` | 0/5 | DC-001〜005（BA, PO, ARC, QE, DEV） |
+| `tsd-ollama-opencode` | 0/5 | DC-001〜005（BA, PO, ARC, QE, DEV） |
+| `tsd-omlx` | 0/5 | DC-001〜005（BA, PO, ARC, QE, DEV） |
+| `tsd-home-mac-dev-server` | 1/5 | DC-002〜005（PO, ARC, QE, DEV） |
+| `tsd-home-mac-dev-server-usage` | 1/5 | DC-001〜004（BA, PO, ARC, QE） |
+| `tsd-omlx-opencode` | 1/5 | DC-001〜004（BA, PO, ARC, QE） |
+| `tsd-ollama` | 1/5 | DC-001〜004（BA, PO, ARC, QE）。DC-005 は今回 unsatisfied → satisfied |
+
+## 未充足事項・改善指示
+1. **result の報告漏れ**: Job は、未充足の done_criteria がある成果物と担当ロールを特定するよう求めています。result は「各 .yaml に記録されている」と書くだけで、どれも特定していません。verdict と score に偏りがあるかの判断も書かれていません。上の表の内容を reporter の出力に含めるよう、reporter（gemma-reporter）の指示を見直してください。
+2. **result の変更ファイル一覧の漏れ**: 一覧に evidence 4件、plan、result 自身が入っていません。軽微な不足です。
+3. **評価の揺れ**: 文書が変わっていないのに判定が動いた件が2つあります（`tsd-ollama` の DC-005、`tsd-index` の score +12）。同じ executor の別名による再評価なので、評価のばらつきの可能性があります。これがほかの run でも続くなら、評価設定を見直してください。
+4. **verdict の偏り**: 8件すべてが `needs-work` で、全文書で QE の DC-004（テストフレームワーク・CI/CD の参照）が未充足です。設定の偏りというより、インフラ系 TSD に対して基準が合っていない可能性があります。done_criteria が担当ロールに合っているかを確かめてください。
+
+上の4点はどれも記録と報告の品質の問題です。Run の出力そのもの、評価結果の鮮度、Run の完了状態には影響しないため、統合は止めません。
+
+## approach に応じた確認
+Job の確認事項（rate limit・中断、`failed`、`partial`、`retry_exhausted`、score の偏り、未充足 DC の担当ロール）はすべて確認し、結果は上に書いたとおりです。選ばれた成果物は8件なので no-op ではありません。
+
+## 確認できなかった範囲
+- runner の作業ディレクトリにある `results.tsv` の現物は確認していません。evidence の stdout に出力された内容を使いました。
+- 個々の finding が妥当かどうかは、review の範囲外なので再評価していません。
+- lint・test 系の検査は親 runner が実行するので、私は実行していません。
+
+## decision
+- verdict: `complete-with-findings`
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict: complete-with-findings。Run JBR-grade-deliverable-c1e4826d0f46 は succeeded（exit 0、evidence の stage 1 は8件とも passed、終了コード75・中断・failed・retry_exhausted なし）。13498bba..748cdb0c の差分23ファイルはすべて当該 Job Run の出力（evidence 4、plan、result、Run JSON、done_criteria 8、評価結果サイドカー 8）で、評価対象文書（docs/ja/product/**）の変更や対象外の変更はない。鮮度確認: grade list --changed-only / --dependency-changed / --incomplete / --rubric-outdated と grade state --exhausted はすべて出力なし・exit 0。verdict 確定直前の再確認も同じ。score の変化: tsd-index 59→71（content_hash 不変）、stsd-register-entry 68→67（文書更新あり、minor finding 8→9）、残り6件は同じ score。graded_by の flash-high-executor は agy-expert-executor の別名（agent-members.yaml）なので矛盾ではない。8件とも needs-work（62〜71）。未充足 DC: stsd-register-entry / tsd-index / tsd-ollama-opencode / tsd-omlx は DC-001〜005（BA, PO, ARC, QE, DEV）。tsd-home-mac-dev-server は DC-002〜005（PO, ARC, QE, DEV）。tsd-home-mac-dev-server-usage / tsd-omlx-opencode / tsd-ollama は DC-001〜004（BA, PO, ARC, QE）。tsd-ollama の DC-005 は今回 satisfied に変化。finding: (1) Job Run result が未充足 DC の成果物と担当ロールを特定しておらず、verdict の偏りの判断もない (2) result の変更ファイル一覧に evidence・plan・result が入っていない (3) content_hash 不変のまま tsd-ollama DC-005 と tsd-index の score が変化しており、評価のばらつきの可能性 (4) 全件 needs-work で、全文書で QE の DC-004 が未充足。インフラ系 TSD に対し done_criteria が合っていない可能性。いずれも統合は止めない。確認できなかった範囲: runner の作業ディレクトリの results.tsv 現物（evidence の stdout を使用）。finding の妥当性の再評価は review の範囲外。lint・test は親 runner が実行。","handoff":["reporter（gemma-reporter）の Job 解析指示を見直す: 未充足 done_criteria の成果物と担当ロールの特定、および verdict・score の偏りの判断を result に含めるようにする。","content_hash が変わっていないのに判定が動いた件（tsd-ollama の DC-005 が unsatisfied→satisfied、tsd-index の score 59→71）が今後の run でも続く場合は、評価のばらつきとして評価設定の見直しを検討する。","インフラ系 TSD 8件すべてで QE の DC-004（テストフレームワーク・CI/CD の参照）が未充足。done_criteria が担当ロールに合っているかを確かめる。"],"validations":[{"command":"git diff --stat 13498bba363f3a0f4e186d9e6cb92446a2d66424..748cdb0ce39328951102b180291658390eb0b1c2","status":"passed","summary":"23ファイル。すべて Job Run の出力で、対象外の変更なし"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --changed-only","status":"passed","summary":"出力なし・exit 0（verdict 確定直前の再実行も同じ）"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --dependency-changed","status":"passed","summary":"出力なし・exit 0（verdict 確定直前の再実行も同じ）"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --incomplete","status":"passed","summary":"出力なし・exit 0"},{"command":"node dist/specdojo.js grade list --target deliverable --project prj-0001 --rubric-outdated","status":"passed","summary":"出力なし・exit 0"},{"command":"node dist/specdojo.js grade state --target deliverable --project prj-0001 --exhausted","status":"passed","summary":"出力なし・exit 0"}]}
+</specdojo_executor_evidence>

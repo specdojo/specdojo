@@ -17,7 +17,7 @@ Orchestrator Operation Guide
 
 **この文書で分かること**
 
-- オーケストレーターの位置づけ、起動用スクリプト、対話フロー、承認と安全の扱い、設定ファイルの構成
+- オーケストレーターの位置づけ、起動用スクリプト、VS Code からの使い方、対話フロー、承認と安全の扱い、設定ファイルの構成
 
 **次に読む文書**
 
@@ -48,10 +48,10 @@ CLI を直接操作する場合の代表フローは [遂行の技活用ガイ�
 | `orch:sonnet:work`  | Claude Code / `sonnet`                | `../worktrees/claude-work`（無ければ自動作成）  |
 | `orch:opus`         | Claude Code / `opus`                  | なし                                            |
 | `orch:opus:work`    | Claude Code / `opus`                  | `../worktrees/claude-work`（無ければ自動作成）  |
-| `orch:terra`        | Codex / `gpt-5.6-terra`               | なし                                            |
-| `orch:terra:work`   | Codex / `gpt-5.6-terra`               | `../worktrees/codex-work`（無ければ自動作成）   |
-| `orch:sol`          | Codex / `gpt-5.6-sol`                 | なし                                            |
-| `orch:sol:work`     | Codex / `gpt-5.6-sol`                 | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:luna`         | Codex / `gpt-6-luna`                  | なし                                            |
+| `orch:luna:work`    | Codex / `gpt-6-luna`                  | `../worktrees/codex-work`（無ければ自動作成）   |
+| `orch:sol`          | Codex / `gpt-6.1-sol`                 | なし                                            |
+| `orch:sol:work`     | Codex / `gpt-6.1-sol`                 | `../worktrees/codex-work`（無ければ自動作成）   |
 | `orch:copilot`      | GitHub Copilot                        | なし                                            |
 | `orch:copilot:work` | GitHub Copilot                        | `../worktrees/copilot-work`（無ければ自動作成） |
 | `orch:qwen`         | OpenCode / Qwen 3.8                   | なし                                            |
@@ -65,7 +65,7 @@ Antigravity CLI（`agy`）はファイル定義の agent を持たないため�
 
 Antigravity で使えるモデル ID は `agy models` で確認してください。配布時点の既定値は、agy 1.3.5 で提供される `gemini-3.8-flash-high` です。
 
-`specdojo init` と `config scaffold` が利用者の `package.json` へ追加するスクリプトは、Claude Code が `orch:opus`・`orch:sonnet`、Codex が `orch:sol`・`orch:terra`、Antigravity が `orch:flash`、OpenCode が `orch:opencode` です。Codex と Antigravity のスクリプトは、名前に対応するモデルを起動コマンドで明示します。
+`specdojo init` と `config scaffold` が利用者の `package.json` へ追加するスクリプトは、Claude Code が `orch:opus`・`orch:sonnet`、Codex が `orch:sol`（`gpt-6.1-sol`）・`orch:luna`（`gpt-6-luna`）、Antigravity が `orch:flash`、OpenCode が `orch:opencode` です。Codex と Antigravity のスクリプトは、名前に対応するモデルを起動コマンドで明示します。
 
 0.4.0 以前に作った `orch:codex`・`orch:agy` は自動では削除・上書きされません。`config scaffold --provider codex` または `config scaffold --provider antigravity` を再実行して新しいスクリプトを追加し、新しい名前で起動できることを確認してから、旧スクリプトを `package.json` から削除してください。
 
@@ -82,7 +82,7 @@ npm run orch:opus
 npm run orch:sonnet:work
 ```
 
-frontier モデルは Claude Code が `opus`、Codex が `gpt-5.6-sol` に対応します。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使います。
+frontier モデルは Claude Code が `opus`、Codex が `gpt-6.1-sol` に対応します。通常運用はそれぞれ既定の `sonnet` / `gpt-6-luna` を使います。
 
 worktree 付きは、全 CLI で `tools/worktree/open-agent-worktree.sh` を通して固定名の worktree を使い、そこから `specdojo orchestrator launch` を起動します。無ければ起動時に作成します。ブランチは `worktree/<name>`、配置は `../worktrees/<name>` です。既存 worktree のブランチが一致しない場合は agent を起動しません。Claude Code の `--worktree` はブランチ名と配置を他の CLI に揃えられないため使用しません。
 
@@ -108,6 +108,24 @@ npx specdojo config scaffold --provider antigravity --global
 ```
 
 分離環境が必要な場合は、追加の任意手順として `devcontainer scaffold` を利用できます。既存の `.devcontainer/` は上書きされず、provider の設定ディレクトリは名前付きボリュームへ保存されます。詳細は [CLIコマンドリファレンス](../references/command-reference.md) の `devcontainer` を参照してください。
+
+### 2.2. VS Code から使う
+
+VS Code の各種 AI 拡張機能からオーケストレーターを利用することもできます。拡張機能ごとの起動手順は次のとおりです。
+
+- **GitHub Copilot Chat**:
+  `npx specdojo config scaffold --provider copilot` を実行して設定を配置した後、VS Code の Copilot Chat パネルで agent の選択肢から `specdojo-orchestrator` を選びます（`.github/agents/specdojo-orchestrator.md` が読み込まれます）。
+- **Claude Code 拡張**:
+  設定（settings）の `agent` キーに `specdojo-orchestrator` を設定すると、セッションがオーケストレーターとして開始されます。共有の `.claude/settings.json` に書くとそのリポジトリを利用する全員のすべてのセッションが対象になるため、各自のローカル設定である `.claude/settings.local.json` に記述することを推奨します。
+
+  ```json
+  {
+    "agent": "specdojo-orchestrator"
+  }
+  ```
+
+- **Codex 拡張**:
+  Codex の VS Code 拡張（`Codex – OpenAI's coding agent`）で名前付きの agent の定義を選ぶ仕組みは、公式の文書では確かめられていません（2026-10 時点で未確認）。そのため、会話開始時に SSOT である `.agents/specdojo-orchestrator.agent.md` の本文を最初の指示（プロンプト）として渡して対話を開始します。
 
 ## 3. 対話の進め方
 

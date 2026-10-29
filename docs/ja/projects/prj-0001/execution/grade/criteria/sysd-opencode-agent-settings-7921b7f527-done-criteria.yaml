@@ -2,9 +2,9 @@
 id: sysd-opencode-agent-settings-grade-criteria
 document: sysd-opencode-agent-settings
 path: docs/ja/product/040-system-design/sysd-opencode-agent-settings.md
-graded_at: "2026-10-11T16:29:58.328Z"
-graded_by: agy-expert-executor
-content_hash: 6e1d7d6cdacbea0f8b5042901d4e8a88096dd00eb27591882b1765e062f3d871
+graded_at: "2026-10-22T16:20:42.089Z"
+graded_by: flash-high-executor
+content_hash: 401d8004e7ba269c7c5aff84b68f6ba4898f288a4a0465c7799d3d2f3fd7ba17
 summary:
   satisfied: 1
   unsatisfied: 4
@@ -16,16 +16,14 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: >-
-      Missing references to business requirements or upstream specifications to confirm alignment of adoption rationale
-      and constraints.
+    reason: Lacks alignment with business requirements/PRD, problem definition, and explicit scope boundaries.
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: Design policy cannot be approved due to lack of alignment with business requirements and absent approval criteria.
+    reason: Decision criteria, approval conditions, and impact scope for PO judgment are missing.
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
@@ -38,7 +36,7 @@ criteria:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: Verification steps lack execution commands, expected outputs, pass/fail criteria, and references to test design.
+    reason: Test design, verifiable acceptance criteria, and specific verification commands are missing.
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
@@ -46,5 +44,5 @@ criteria:
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
     reason: >-
-      Discrepancies with actual configuration files and inadequate verification steps prevent using this document as an
-      implementation baseline.
+      Discrepancies in member nicknames, conflicting review permissions, and template mismatches prevent direct
+      implementation.

@@ -381,7 +381,7 @@ VS Code でプロジェクトリポジトリとプロダクトリポジトリを
 
 プロダクト文書は実装と同期して改訂するため、`app1/docs/ja/product/` に置きます。README、ソースコードから生成する API リファレンス、パッケージ利用者向けの手順など、コードと同じ revision で読む付属文書も `app1/` に置きます。
 
-`app1-specdojo/` には `docs/ja/projects/` と `docs/ja/specdojo/` を置きます。前者はプロジェクト固有の目的、判断、計画、実行記録、後者は運用に使う philosophy / standard / rulebook / recipe / sample / template などの型です。この境界により、プロダクトの内容と同じ revision が必要な文書は `app1/`、SpecDojo の記帳と再利用可能な型は `app1-specdojo/` の履歴に残ります。
+`app1-specdojo/` には `docs/ja/projects/` と `docs/ja/specdojo/` を置きます。前者はプロジェクト固有の目的・判断・計画・実行記録、後者は SpecDojo が配布する型と、種類ディレクトリ配下の authority サブディレクトリに置く利用者作成の rulebook / recipe / sample / template です。この境界により、プロダクトの内容と同じ revision が必要な文書は `app1/`、SpecDojo の記帳と再利用可能な型は `app1-specdojo/` の履歴に残ります。
 
 プロダクト文書の catalog `base_path` を別リポジトリへ解決する機能と、[[prj-0001:pjr-xkks-grade-sidecar|PJR-XKKS grade result のサイドカー化]] で定める成果物へ書き込まない grade 運用は、プロダクト文書を成果物として管理する場合の前提です。exec はプロダクト文書をファイルとして変更・統合できますが、catalog・grade・doc index の対象にはしません。
 
@@ -527,13 +527,15 @@ app1-specdojo-worktrees/
 
 統合は次の順序で行います。
 
-1. 全リポジトリで commit 対象を commit し、merge できるかを事前に検査する。1つでも統合できないリポジトリがあれば、どのリポジトリも統合しない。
-2. 宣言順にプロダクトの exec branch を統合先ブランチへ merge commit で統合する。プロダクト側の commit と merge commit には `Refs: <project-id>:<item-id>` を付ける（register 項目の場合）。
-3. 統合後のプロダクトの trace key と commit snapshot を、プロジェクト側の result 本文へ記録する。
+1. 全リポジトリで commit 対象を commit し、merge するリポジトリでは merge 可否、`branch-only` では exec worktree に未 commit の変更が無いことを事前に検査する。1つでも検査に失敗したリポジトリがあれば、どのリポジトリも統合しない。
+2. 宣言順にプロダクトを処理する。`repos[].integration_strategy` が `merge`（既定）の場合は exec branch を統合先ブランチへ merge commit で統合し、`branch-only` の場合は merge せず exec branch を保持する。プロダクト側の commit と merge commit には `Refs: <project-id>:<item-id>` を付ける（register 項目の場合）。
+3. プロダクトの trace key、exec branch 名、状態、統合先の commit snapshot を、プロジェクト側の result 本文へ記録する（register 項目の場合）。`branch-only` は未統合と明示し、統合先の snapshot と PR は `not applicable` とする。
 4. プロジェクトの exec branch を `app1-specdojo/` の統合先ブランチへ統合する。
-5. 全リポジトリの統合後に、全リポジトリの worktree と exec branch をまとめて撤去する。
+5. 処理成功後に全リポジトリの worktree を撤去する。`merge` の exec branch とプロジェクトの exec branch は削除し、`branch-only` の exec branch は変更の有無によらず残す。
 
-ソースを先に統合することで、プロダクトの統合を SpecDojo 側の統合成否から切り離します。プロジェクト側の記帳（`review` への遷移と result）は、プロダクトがすべて統合された後にだけ統合先へ入ります。
+ソースを先に処理することで、プロダクトの処理を SpecDojo 側の統合成否から切り離します。プロジェクト側の記帳（`review` への遷移と result）は、全プロダクトが merge 済み・変更なし・`branch-only` の保持のいずれかになった後に統合先へ入ります。`review` は SpecDojo のタスク成果を確認する段階であり、プロダクト側の PR が merge 済みであることを意味しません。
+
+PR レビューを必須にするプロダクトは、[[specdojo:specdojo-config-reference|設定リファレンス]] の `repos` で `"integration_strategy": "branch-only"` を選びます。統合先への merge 可否や統合先 checkout の未 commit 変更は、そのリポジトリの事前検査を妨げません。runner は push と PR 作成（`gh` を含む）を実装せず、利用者が必要な承認のもと、保持された branch を push してプロダクト側で PR を作ります。squash merge では `Refs:` を commit メッセージに残してください。未統合の branch は `exec worktree prune` でも削除しません。同じ項目を新規実行する際に保持済み branch があると停止するため、既存 run を再開するか、プロダクト側の作業を終えて branch を退避・削除します。
 
 ### 10.7. 複数リポジトリの統合の失敗と再開
 
@@ -545,10 +547,10 @@ app1-specdojo-worktrees/
 | n 番目のプロダクトの統合 | 1〜n-1 番目のプロダクトだけ統合済み          | 項目を `waiting` とし、統合済みのプロダクトを飛ばして n 番目から再開する    |
 | プロジェクトの統合       | 全プロダクトが統合済み、プロジェクトは未統合 | 項目を `waiting` とし、プロダクトを再統合せずプロジェクトの統合だけ再開する |
 
-- リポジトリ別の状態（`pending` / `merged` / `unchanged` / `failed`）は、run の `pipeline-state.json` の `stages.integrate.repos` に記録します。失敗の詳細は同じ run の `integrate.log` に残ります。
+- リポジトリ別の状態（`pending` / `merged` / `unchanged` / `branch-only` / `failed`）は、run の `pipeline-state.json` の `stages.integrate.repos` に記録します。失敗の詳細は同じ run の `integrate.log` に残ります。
 - `block_reason` には、失敗したリポジトリ、統合済みのリポジトリ、未統合のリポジトリを記録します。
 - 失敗後も全リポジトリの worktree と exec branch を保持します。原因を解消した後、`exec run --register <item-id> --worktree --resume` で統合段から再開します。agent は再実行しません。
-- 再開の前に、runner は未統合のリポジトリにだけ統合先の最新を取り込みます。`stages.integrate.repos` で統合済み（`merged` / `unchanged`）のプロダクトは取り込まず、exec branch に merge commit を作りません。
+- 再開の前に、runner は未統合のリポジトリにだけ統合先の最新を取り込みます。`stages.integrate.repos` で統合済み（`merged` / `unchanged`）または方式が `branch-only` のプロダクトは取り込まず、exec branch に merge commit を作りません。
 - 再開時は、統合先へ取り込み済みのプロダクトを merge し直さず、最初の統合で作った merge commit を result の trace 表へ記録します。
 
-一部のリポジトリだけが統合済みの状態は完了ではないため、`review` へ進めません。統合を打ち切る場合、統合済みのプロダクトの変更を残すか revert するかは、通常の統合後の判断として人が決めます。自動的に履歴を巻き戻しません。
+`branch-only` の保持はそのリポジトリの処理完了とします。これを除き、一部のリポジトリだけが統合済みの状態は完了ではないため、`review` へ進めません。統合を打ち切る場合、統合済みのプロダクトの変更を残すか revert するかは、通常の統合後の判断として人が決めます。自動的に履歴を巻き戻しません。

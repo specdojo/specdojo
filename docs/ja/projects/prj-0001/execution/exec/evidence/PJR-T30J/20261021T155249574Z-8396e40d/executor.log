@@ -1,0 +1,19 @@
+8 モジュールのうち、1 つの機能だけが使っていた `yaml-schema-modeline` を `src/kata/` へ移しました。ほかの 7 つは `src/shared/` に残しています。kata の単体テスト（41 件）は通りました。`npm run typecheck`・`npm run lint:ts`・`npm run test:unit` は sandbox では実行していません。これらは親 runner の検証結果を待つ状態です。
+
+- **移したもの:** `src/shared/yaml-schema-modeline.ts` を `git mv` で `src/kata/yaml-schema-modeline.ts` へ移し、`src/kata/kata.ts` の import を `./yaml-schema-modeline.js` に直しました。ほかに使っているところはないため、公開している API と CLI の動きは変わりません。CHANGELOG には書いていません。
+- **残した理由:**
+  - `catalog-paths`・`template-resolution`・`schedule-paths`・`random`・`specdojo-gitignore` は、使う機能は 1 つですが、`src/shared/` 内の別のモジュールも使っています。機能のディレクトリへ移すと `src/shared/` から機能を import することになり、`no-restricted-imports` に違反するため残しました。
+  - `catalog-render` は catalog と docs が使い、`schedule-index` は dashboard・exec・grade が使っています。
+- **3 つ以上の機能をまたぐ循環:**
+  - 循環は schedule → dashboard → exec → schedule と schedule → dashboard → routine → exec → schedule の 2 組でした。2 つの機能どうしの循環はありません。
+  - どちらも `schedule/strategy-generate-scope.ts` から `dashboard/timeline-build.ts` への import 1 か所を通るので、ここを外せば 2 組とも解消する見込みです。
+  - この項目ではほどかず、起票案を個票の残課題に書きました。
+- **個票:** 作業内容の表の状態を `done` にし、対応結果に利用元の表・実施内容・循環の表・残課題を書きました。frontmatter の `item_status` は変えていません。
+
+循環は tmp/ に置いたスクリプト `tmp/cycles.mjs`（コミット対象外）で数えました。`src/shared/`・`src/commands/`・`src/specdojo.ts` を除き、機能単位の import グラフで閉路を探す方法です。
+
+`git mv` を使ったため、移動は index に登録された状態です。`events/pjr-t30j.yaml` の変更と evidence ディレクトリは作業前からあったもので、触っていません。
+
+<specdojo_executor_evidence>
+{"final_message":"`src/shared/` の 8 モジュールの利用元を数え、kata だけが使う `yaml-schema-modeline` を `src/kata/` へ移して import を直した。残りの 7 つは `src/shared/` 内の別モジュールか 2 つ以上の機能が使うため残した。3 つ以上の機能をまたぐ循環は 2 組（schedule→dashboard→exec→schedule、schedule→dashboard→routine→exec→schedule）で、どちらも `schedule/strategy-generate-scope.ts` → `dashboard/timeline-build.ts` を通る。この項目ではほどかず、起票案と合わせて個票の対応結果に書いた。","validations":[{"command":"npx vitest run tests/src/kata","status":"passed","summary":"2 files / 41 tests passed after moving yaml-schema-modeline into src/kata"},{"command":"npx prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-t30j-shared-scope-and-multi-feature-cycles.md src/kata/kata.ts src/kata/yaml-schema-modeline.ts","status":"passed","summary":"formatted ticket table; TS files unchanged"},{"command":"specdojo catalog validate","status":"not_applicable","summary":"no catalog change","reason":"changes under docs/ja/projects/ are limited to a project-register ticket; no catalog or deliverable files were changed"}]}
+</specdojo_executor_evidence>

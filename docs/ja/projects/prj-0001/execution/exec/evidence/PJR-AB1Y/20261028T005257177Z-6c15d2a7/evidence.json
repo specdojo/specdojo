@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-AB1Y",
+  "run_id": "20261028T005257177Z-6c15d2a7",
+  "stage": {
+    "role": "executor",
+    "actor": "flash-high-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-28T00:53:53.344Z",
+    "completed_at": "2026-10-28T01:04:59.328Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-ab1y.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ab1y-register-centric-guides.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-ab1y-register-centric-guides.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/exec-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/quick-start-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/register-operation-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/specdojo-overview-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/timeline-design-guide.md",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 7,
+    "summary": ".../pjr-ab1y-register-centric-guides.md            | 17 ++++--\n docs/ja/specdojo/guides/exec-operation-guide.md    | 31 +++++-----\n docs/ja/specdojo/guides/quick-start-guide.md       | 33 ++++++----\n .../ja/specdojo/guides/register-operation-guide.md |  7 +--\n docs/ja/specdojo/guides/specdojo-overview-guide.md | 32 +++++-----\n docs/ja/specdojo/guides/timeline-design-guide.md   | 70 ++++++++++++----------\n 6 files changed, 106 insertions(+), 84 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "passed",
+      "summary": "docs:generate と docs-site ビルドが正常終了 (exit code 0)"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog validate --project prj-0001",
+      "status": "passed",
+      "summary": "catalog validate が正常終了 (exit code 0)"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build --project prj-0001",
+      "status": "passed",
+      "summary": "register build が正常終了 (exit code 0)"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write docs/ja/specdojo/guides/*.md docs/ja/projects/prj-0001/controls/project-register/pjr-ab1y-register-centric-guides.md",
+      "status": "passed",
+      "summary": "Prettier 整形が正常終了 (exit code 0)"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts catalog build --project prj-0001",
+      "status": "not_applicable",
+      "summary": "dct-*.yaml の変更がないため非適用",
+      "reason": "dct-*.yaml の変更がないため"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts exec refresh --project prj-0001",
+      "status": "not_applicable",
+      "summary": "sch-*.yaml の変更がないため非適用",
+      "reason": "sch-*.yaml の変更がないため"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/src/shared/specdojo-config.ts\n  1220:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.7 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.7 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-AB1Y\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-8GWXkZ/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-c8aad2/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-NB0B67/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-ObgZzC/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "PJR-NJJ7 の決定および PJR-B4Y4・PJR-WAGY の実装に合わせ、5 本のガイドを register と epic を起点とする構成へ書き換え、個票を更新しました。docs:build を含む検証が正常終了しています。",
+  "completion_status": "complete",
+  "handoff": [
+    "設計判断: register-operation-guide の「登録簿の位置づけ」および「登録の判断基準」を、register が起点と完了の判断を持ち途中の進み具合は schedule が持つ構成へ改定しました。schedule のタスクと register を二重管理しない方針を親子の責務分担として整理しました。",
+    "設計判断: exec-operation-guide の「実行経路の使い分け」で、register（親: 業務起点・着手承認・完了判断・単発対応）と schedule（子: 成果物の依存実行・途中の進捗）の親子関係を明示し、表・判断基準・説明を改訂しました。",
+    "設計判断: timeline-design-guide の「運用タイミング」の図と表を「epic 起票 → 子 todo（catalog-planning）でカタログ作成 → timeline build による catalog_status 導出 → 子 todo（strategy-planning）で strategy 作成 → schedule build --track → schedule 実行 → epic 完了判断」へ改定しました。timeline build が register の todo 完了から primary を自動導出し、手書きの tml-index.yaml を保持・警告する仕様と整合させました。",
+    "設計判断: specdojo-overview-guide の基本的な流れ（第 5 章）と技のマトリクス（第 6 章）、および quick-start-guide（3.14 章・第 4 章）を上記 3 本とそろえ、先行タスク PJR-B4Y4・PJR-WAGY で実装されたコマンド体系（epic、--track、catalog-planning、strategy-planning、domain:<domain>、track:<track>）と完全に一致させました。",
+    "親検証 7 件（lint-ts, lint-fm, lint-md, test-integration, validate-schema, typecheck, test-unit）は親 runner に委ね、executor では npm run docs:build、specdojo catalog validate、specdojo register build、および Prettier 整形を実行して成功を確認しました。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-AB1Y/20261028T005257177Z-6c15d2a7/executor.log",
+      "bytes": 8195,
+      "truncated": false
+    }
+  ]
+}

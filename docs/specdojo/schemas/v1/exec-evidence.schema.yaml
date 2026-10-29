@@ -207,9 +207,25 @@ properties:
   final_message:
     type: string
     maxLength: 4000
+  completion_status:
+    description: >
+      Executor-reported task completion, independent of process status. Omitted legacy reports
+      imply complete. Incomplete tasks must not proceed to integration.
+    type: string
+    enum: [complete, incomplete]
+  handoff:
+    description: >
+      Redacted, bounded executor notes preserved mechanically in the edit result handoff after
+      the reporter stage. Optional for compatibility with existing reports and evidence.
+    type: array
+    maxItems: 100
+    items:
+      type: string
+      minLength: 1
+      maxLength: 4000
   block_reason:
     description: >
-      Runner-derived failure or protection reason. Reporter prose never supplies this field.
+      Runner-derived failure, protection, or incomplete-work reason. Reporter prose never supplies this field.
     type: string
     minLength: 1
     maxLength: 1000

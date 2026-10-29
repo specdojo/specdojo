@@ -184,6 +184,18 @@ describe("extractBlockReason", () => {
     expect(prompt).toContain("`depends_on`");
   });
 
+  it("result への記録を個票と handoff へ振り分ける", () => {
+    const prompt = buildExecutorPrompt("# Plan\n");
+
+    expect(prompt).toContain("report's optional `handoff` array");
+    expect(prompt).toContain("write it in both places instead of editing the result");
+    expect(prompt).toContain("Reports without this field remain valid");
+    expect(prompt).toContain('"handoff":[]');
+    expect(prompt).toContain('"completion_status":"complete|incomplete"');
+    expect(prompt).toContain("If you stop with unfinished work, use `incomplete`");
+    expect(prompt).toContain("list the remaining work in `handoff`");
+  });
+
   it("requires_human を sandbox 外で人が行う確認だけに限定する", () => {
     const prompt = buildExecutorPrompt("# Plan\n");
 

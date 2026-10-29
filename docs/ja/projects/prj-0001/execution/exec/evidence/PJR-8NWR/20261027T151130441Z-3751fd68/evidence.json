@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-8NWR",
+  "run_id": "20261027T151130441Z-3751fd68",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-27T15:11:30.441Z",
+    "completed_at": "2026-10-27T15:14:12.736Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-8nwr.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-8nwr-grade-result-path-repo-collision.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/apply.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/markdown.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/grade/plan.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/grade-result.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/run.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/triggers.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/repo-results.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-8nwr-grade-result-path-repo-collision.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "src/dashboard/dashboard.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/grade.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/triggers.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/grade/repo-results.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 14,
+    "summary": "CHANGELOG.md                                       |  1 +\n .../controls/project-register/events/pjr-8nwr.yaml | 16 ++++++\n .../pjr-8nwr-grade-result-path-repo-collision.md   | 11 ++--\n docs/ja/specdojo/references/command-reference.md   |  2 +\n .../standards/document-metadata-standard.md        |  2 +-\n src/dashboard/dashboard.ts                         | 11 ++--\n src/grade/apply.ts                                 |  8 ++-\n src/grade/markdown.ts                              |  9 +++-\n src/grade/plan.ts                                  | 11 ++--\n src/shared/grade-result.ts                         | 35 ++++++++++--\n tests/src/grade/grade.test.ts                      | 15 ++++++\n tests/src/grade/run.test.ts                        | 63 ++++++++++++++++++++++\n tests/src/grade/triggers.test.ts                   | 18 +++++--\n 13 files changed, 174 insertions(+), 28 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-8nwr-grade-result-path-repo-collision.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/standards/document-metadata-standard.md src/dashboard/dashboard.ts src/grade/apply.ts src/grade/markdown.ts src/grade/plan.ts src/shared/grade-result.ts tests/src/grade/run.test.ts tests/src/grade/repo-results.test.ts tests/src/grade/grade.test.ts tests/src/grade/triggers.test.ts",
+      "status": "passed",
+      "summary": "変更対象の Markdown・TypeScript 全 13 ファイルを整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。未作成成果物の `based_on` 検証対象が見つからない警告はあるが、検証エラーなし。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-8nwr.yaml",
+      "status": "passed",
+      "summary": "再開前から存在する runner 管理のイベント YAML はスキーマに適合。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8NWR/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8NWR/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8NWR/src/shared/specdojo-config.ts\n  1220:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8NWR\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.7 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8NWR/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8NWR/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.7 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "failed",
+      "summary": "exit 1: > specdojo@0.4.7 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-8NWR\n\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint\nRate limit detected for pinned agent pinned. Waiting until 2026-10-27T15:17:57.388Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-27T15:16:57.641Z.\nfallback c\n… output omitted …\nspecdojo-config.ts:998:11\n    996|   const configErrors = [...repoErrors, ...externalProjectErrors];\n    997|   if (configErrors.length > 0) {\n    998|     throw new Error(\n       |           ^\n    999|       `Invalid .specdojo/specdojo.config.json (${configPath}):\\n` +\n    1000|         configErrors.map((message) => `  - ${message}`).join(\"\\n\"),\n ❯ gradeResultPathForDocument src/shared/grade-result.ts:114:22\n ❯ tests/src/grade/repo-results.test.ts:206:9\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-8nwr-grade-result-path-repo-collision.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-8nwr-grade-result-path-repo-collision.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md",
+      "reason": ""
+    },
+    {
+      "target": "src/dashboard/dashboard.ts",
+      "status": "changed",
+      "path": "src/dashboard/dashboard.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/grade/apply.ts",
+      "status": "changed",
+      "path": "src/grade/apply.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/grade/markdown.ts",
+      "status": "changed",
+      "path": "src/grade/markdown.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/grade/plan.ts",
+      "status": "changed",
+      "path": "src/grade/plan.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/grade-result.ts",
+      "status": "changed",
+      "path": "src/shared/grade-result.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/grade/run.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/run.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/grade/repo-results.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/repo-results.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/grade/grade.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/grade.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/grade/triggers.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/triggers.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "reason": ""
+    }
+  ],
+  "final_message": "grade 結果のリポジトリ別保存・参照を実装し、前回の lint エラーと単体テスト失敗の原因を修正。回帰テスト・個票・説明文書を更新。sandbox 内の検証は成功し、親 runner の再検証へ引き継ぐ。",
+  "completion_status": "complete",
+  "handoff": [
+    "旧配置の results 直下にあるプロダクトリポジトリの結果は自動流用しない。該当環境では新しい run ID で再評価し、リポジトリ別の結果を作成する。本リポジトリの既存結果は従来の場所で読み取れる。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-8NWR/20261027T151130441Z-3751fd68/executor.log",
+      "bytes": 3722,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-8NWR/20261027T151130441Z-3751fd68/parent-validation-attempt-1-test-unit.log",
+      "bytes": 5885,
+      "truncated": false
+    }
+  ]
+}

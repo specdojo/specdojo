@@ -1,0 +1,111 @@
+前回失敗したテスト fixture の作成順を修正しました。整形・カタログ・登録簿生成・スキーマ検証は成功しています。単体テストなどの全体検証は親 runner が実行します。
+
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "リポジトリ別の grade 結果保存・参照の実装と回帰テストを確認し、兄弟 worktree fixture の作成順に起因する前回の失敗を修正した。個票の対応結果も更新した。",
+  "handoff": [
+    "単体テストを含む指定の全体検証は親 runner が実施し、結果へ反映する。executor では重複実行していない。",
+    "旧配置のプロダクトリポジトリの結果は自動流用しない。既存結果のある利用環境では、新しい run ID で再評価してリポジトリ別の結果を作成する。本リポジトリの既存結果は従来どおり読める。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-8nwr-grade-result-path-repo-collision.md docs/ja/specdojo/references/command-reference.md docs/ja/specdojo/standards/document-metadata-standard.md src/dashboard/dashboard.ts src/grade/apply.ts src/grade/markdown.ts src/grade/plan.ts src/shared/grade-result.ts tests/src/grade/grade.test.ts tests/src/grade/run.test.ts tests/src/grade/triggers.test.ts tests/src/grade/repo-results.test.ts",
+      "status": "passed",
+      "summary": "変更対象の Markdown・TypeScript 全 13 ファイルを整形した。個票の最終追記後も再整形済み。"
+    },
+    {
+      "command": "npx prettier --check docs/ja/projects/prj-0001/controls/project-register/events/pjr-8nwr.yaml",
+      "status": "passed",
+      "summary": "既存の runner 管理イベント差分の整形を確認した。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。未作成成果物の参照に関する既存の警告はあるが、検証エラーはない。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "終了コード 0。登録簿と controls の派生ビューを生成した。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-8nwr.yaml",
+      "status": "passed",
+      "summary": "既存の runner 管理イベント差分はスキーマに適合した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "空白・差分形式の問題はない。"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-8nwr-grade-result-path-repo-collision.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-8nwr-grade-result-path-repo-collision.md"
+    },
+    {
+      "target": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md"
+    },
+    {
+      "target": "src/dashboard/dashboard.ts",
+      "status": "changed",
+      "path": "src/dashboard/dashboard.ts"
+    },
+    {
+      "target": "tests/src/grade/grade.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/grade.test.ts"
+    },
+    {
+      "target": "tests/src/grade/triggers.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/triggers.test.ts"
+    },
+    {
+      "target": "tests/src/grade/repo-results.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/repo-results.test.ts"
+    },
+    {
+      "target": "src/shared/grade-result.ts",
+      "status": "changed",
+      "path": "src/shared/grade-result.ts"
+    },
+    {
+      "target": "src/grade/apply.ts",
+      "status": "changed",
+      "path": "src/grade/apply.ts"
+    },
+    {
+      "target": "src/grade/markdown.ts",
+      "status": "changed",
+      "path": "src/grade/markdown.ts"
+    },
+    {
+      "target": "src/grade/plan.ts",
+      "status": "changed",
+      "path": "src/grade/plan.ts"
+    },
+    {
+      "target": "tests/src/grade/run.test.ts",
+      "status": "changed",
+      "path": "tests/src/grade/run.test.ts"
+    },
+    {
+      "target": "docs/ja/specdojo/references/command-reference.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/references/command-reference.md"
+    },
+    {
+      "target": "CHANGELOG.md",
+      "status": "changed",
+      "path": "CHANGELOG.md"
+    }
+  ]
+}
+</specdojo_executor_evidence>

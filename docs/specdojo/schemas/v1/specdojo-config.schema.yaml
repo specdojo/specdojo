@@ -18,10 +18,23 @@ properties:
     description: Repository-wide protected agent registry path.
     type: string
     pattern: "^(?!.*(?:^|/)\\.\\.(?:/|$))\\.specdojo/.+\\.ya?ml$"
+  kata_authority:
+    description: Repository-wide authority used by locally authored kata.
+    type: string
+    pattern: "^(?!prj-)(?!specdojo$)[a-z][a-z0-9-]*$"
   projects:
     type: object
     additionalProperties:
       $ref: "#/$defs/Project"
+  external_projects:
+    description: >-
+      Project registers hosted by other repositories, keyed by a local alias. Aliases must not
+      collide with a local project id.
+    type: object
+    propertyNames:
+      pattern: "^[a-z0-9-]+$"
+    additionalProperties:
+      $ref: "#/$defs/ExternalProject"
 $defs:
   NonEmptyString:
     type: string
@@ -57,6 +70,11 @@ $defs:
     properties:
       base_path:
         type: string
+      integration_branch:
+        description: >-
+          Branch that receives direct project-register commits. Defaults to
+          project/<project-id>/develop.
+        $ref: "#/$defs/NonEmptyString"
       catalog_path:
         type: string
       schedule_path:
@@ -90,6 +108,22 @@ $defs:
           $ref: "#/$defs/Repo"
       run:
         $ref: "#/$defs/Run"
+  ExternalProject:
+    type: object
+    additionalProperties: false
+    required:
+      - path
+      - project_id
+    properties:
+      path:
+        description: External repository root, relative to the SpecDojo root.
+        type: string
+        pattern: "\\S"
+        not:
+          pattern: "^(/|[A-Za-z]:[\\\\/])"
+      project_id:
+        description: Project id understood by SpecDojo in the external repository.
+        $ref: "#/$defs/NonEmptyString"
   Repo:
     type: object
     additionalProperties: false
@@ -114,6 +148,11 @@ $defs:
       integration_branch:
         description: Branch exec integrates into. Omit to use the repository's current branch.
         $ref: "#/$defs/NonEmptyString"
+      integration_strategy:
+        description: Local merge commit (default), or retain the exec branch for product-side PR review.
+        type: string
+        enum: [merge, branch-only]
+        default: merge
       setup:
         description: Whether exec installs dependencies and builds in the repository worktree.
         type: object
@@ -132,9 +171,22 @@ $defs:
         type: string
       parent_validations:
         description: >-
-          Parent-runner validations appended, in order, to pipeline.parent_validations from this
-          project's exec_defaults file. A plain ID targets the project repository; { id, repo }
-          targets project or a product repository declared by this project.
+          Parent-runner validations appended, in order, after parent_validations_exclude removes
+          matching entries from pipeline.parent_validations in this project's exec_defaults file.
+          A plain ID targets the project repository; { id, repo } targets project or a product
+          repository declared by this project. Duplicate ID/repository pairs in the effective list
+          are rejected before agent launch.
+        type: array
+        uniqueItems: true
+        items:
+          $ref: "#/$defs/ParentValidation"
+      parent_validations_exclude:
+        description: >-
+          Remove these ID/repository pairs from shared pipeline.parent_validations before appending
+          this project's parent_validations. Omitted or [] preserves the shared list. A plain ID
+          matches only the project repository, equivalently { id, repo: project }. Every exclusion
+          must exist in the shared list; missing entries and duplicate pairs are configuration
+          errors checked by the CLI before agent launch. Other projects are unaffected.
         type: array
         uniqueItems: true
         items:

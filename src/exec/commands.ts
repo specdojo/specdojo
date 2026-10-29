@@ -48,7 +48,7 @@ import {
 } from "./plans.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "../shared/provider-scaffold.js";
 import { generateRegisterPlan, normalizePjrId, resolveRegisterRunTarget } from "./register.js";
-import { scaffoldViewpoints } from "../review/plan.js";
+import { commonViewpointsPath, scaffoldViewpoints } from "../review/plan.js";
 import {
   registerCycleCommand,
   registerResumeCommand,
@@ -623,14 +623,7 @@ export function registerExecCommands(program: Command): void {
       if (!project) throw new Error(`Unknown project: ${projectId}`);
 
       const baseDir = specdojoRootDir();
-      const commonPath = join(
-        baseDir,
-        "docs",
-        "ja",
-        "specdojo",
-        "standards",
-        "pm-review-viewpoints.yaml",
-      );
+      const commonPath = commonViewpointsPath();
 
       const viewpointsRel = getProjectViewpointsPath(project);
       if (viewpointsRel) {
@@ -648,7 +641,7 @@ export function registerExecCommands(program: Command): void {
         }
       } else {
         process.stdout.write(
-          `viewpoints_path not set for project '${projectId}'. Add it to specdojo.config.json.\n`,
+          `viewpoints_path not set for project '${projectId}'; using specdojo:pm-review-viewpoints (${commonPath}).\n`,
         );
       }
     } catch (error) {

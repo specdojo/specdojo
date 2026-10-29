@@ -30,6 +30,16 @@ export type StrategyProfile = {
   finalize_approach: Extract<Approach, "finalize" | "bootstrap-finalize">;
 };
 
+type StrategyProfileApproach = Exclude<
+  Approach,
+  | "catalog-planning"
+  | "strategy-planning"
+  | "rulebook-authoring"
+  | "recipe-authoring"
+  | "sample-authoring"
+  | "template-authoring"
+>;
+
 const EXPERT_PIPELINE = { executor: "expert", reporter: "normal" } as const;
 const NORMAL_PIPELINE = { executor: "normal", reporter: "normal" } as const;
 
@@ -229,7 +239,7 @@ export const AUTHOR_PHASE_SETS: string[] = [
 
 // approach -> profile. Every author profile ends with refine-pass, a review pass and the human
 // finalize pass, so a cross-deliverable pass can always be placed before refine-pass.
-export const STRATEGY_PROFILES: Record<Approach, StrategyProfile> = {
+export const STRATEGY_PROFILES: Record<StrategyProfileApproach, StrategyProfile> = {
   bootstrap: {
     approach: "bootstrap",
     phase_sets: ["bootstrap-pass", "refine-pass", "retrofit-review-pass", "finalize-pass"],
@@ -295,7 +305,12 @@ export const STRATEGY_PROFILES: Record<Approach, StrategyProfile> = {
 };
 
 export function profileFor(approach: Approach): StrategyProfile {
-  return STRATEGY_PROFILES[approach];
+  if (!(approach in STRATEGY_PROFILES)) {
+    throw new Error(
+      `Approach "${approach}" has no schedule strategy profile; kata authoring and planning approaches are register-only`,
+    );
+  }
+  return STRATEGY_PROFILES[approach as StrategyProfileApproach];
 }
 
 // Serializable phase entry for sch-strategy.schema.yaml.

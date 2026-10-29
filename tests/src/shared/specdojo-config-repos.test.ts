@@ -65,6 +65,33 @@ describe("validateProjectRepos", () => {
     expect(validateProjectRepos("prj-0001", {}, ["prj-0001"], root)).toEqual([]);
   });
 
+  it.each(["merge", "branch-only"])("accepts integration_strategy %s", (strategy) => {
+    expect(
+      validateProjectRepos(
+        "prj-0001",
+        withRepos([{ name: "app1", path: "../app1", integration_strategy: strategy }]),
+        ["prj-0001"],
+        root,
+      ),
+    ).toEqual([]);
+  });
+
+  it.each(["squash", "", null, false, 1, {}])(
+    "rejects invalid integration_strategy %j",
+    (strategy) => {
+      expect(
+        validateProjectRepos(
+          "prj-0001",
+          withRepos([{ name: "app1", path: "../app1", integration_strategy: strategy }]),
+          ["prj-0001"],
+          root,
+        ),
+      ).toEqual([
+        'projects.prj-0001.repos[0].integration_strategy must be "merge" or "branch-only" when present',
+      ]);
+    },
+  );
+
   it("rejects a name outside [a-z0-9-] and names the offending entry", () => {
     const errors = validateProjectRepos(
       "prj-0001",

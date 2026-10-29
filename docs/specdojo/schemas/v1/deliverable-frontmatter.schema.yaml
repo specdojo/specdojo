@@ -1,5 +1,20 @@
 $schema: "https://json-schema.org/draft/2020-12/schema"
 title: Deliverables Front Matter
+$defs:
+  deliverableType:
+    type: string
+    enum:
+      - project # プロジェクトの管理文書
+      - requirement # システム機能・非機能要件・受入基準
+      - glossary # 用語集
+      - flow # 業務フロー・プロセス仕様
+      - rule # 業務ルール仕様
+      - data # データ仕様
+      - ui # 画面・帳票仕様
+      - api # API・外部 I/F 仕様
+      - architecture # アーキテクチャ設計
+      - test # テスト仕様・設計
+      - operations # 運用設計・手順
 # SpecDojo が所有する frontmatter は `specdojo:` 名前空間配下に置く。
 # トップレベルは第三者ツール（VitePress 等）のキーを許容するため制限しない。
 type: object
@@ -16,22 +31,12 @@ properties:
           - rulebook
         properties:
           type:
-            type: string
-            enum:
-              # SpecDojo基盤文書（専用スキーマを持たないもの）
-              - template # 文書テンプレート（雛形）
-              - sample # 記述例
-              # プロジェクト文書
-              - project # プロジェクト文書全般
-              # プロダクト仕様文書
-              - flow # 業務フロー・プロセス仕様
-              - rule # 業務ルール仕様
-              - data # データ仕様
-              - ui # 画面・帳票仕様
-              - api # API・外部I/F仕様
-              - architecture # アーキテクチャ設計
-              - test # テスト仕様・設計
-              - operations # 運用設計・手順
+            anyOf:
+              - $ref: "#/$defs/deliverableType"
+              - type: string
+                enum:
+                  - template # テンプレート自身のメタ情報
+                  - sample # 非推奨。rulebook を持つ sample は宣言された成果物 type に移行する。
             description: "仕様の種別（rulebook/guide/standard は各専用スキーマを使用）"
           rulebook:
             $ref: "./common-frontmatter.schema.yaml#/$defs/rulebookRef"
@@ -60,6 +65,9 @@ properties:
           item_type:
             $ref: "./register-item-frontmatter.schema.yaml#/$defs/ItemType"
             description: "プロジェクト登録項目の種別。pjr-*-template で使用する。"
+          track:
+            $ref: "./register-item-frontmatter.schema.yaml#/$defs/Track"
+            description: "epic が担う track。定義の検証は register コマンドが行う。"
           item_status:
             $ref: "./register-item-frontmatter.schema.yaml#/$defs/ItemStatus"
             description: "登録項目の処理状態。文書成熟度の status とは別の状態軸。"

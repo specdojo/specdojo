@@ -9,13 +9,13 @@ specdojo:
 
 Recipe Authoring Standard
 
-`docs/ja/specdojo/recipes/` 配下の各 `*-recipe.md` が従うべき章立て・記述ルール・禁止事項・運用ルールを定義します。成果物の構造・必須項目・禁止事項は対応する rulebook を正本とし、本書は「良い内容を書くための作り方」の記述方法を定義します。
+`docs/ja/specdojo/recipes/` 直下と `docs/ja/specdojo/recipes/<authority>/` 配下の各 `*-recipe.md` が従うべき章立て・記述ルール・禁止事項・運用ルールを定義します。成果物の構造・必須項目・禁止事項は対応する rulebook を正本とし、本書は「良い内容を書くための作り方」の記述方法を定義します。
 
 ## 1. 適用範囲
 
-- 対象: `docs/ja/specdojo/recipes/` 配下のすべての `*-recipe.md`
+- 対象: `docs/ja/specdojo/recipes/` 直下と `docs/ja/specdojo/recipes/<authority>/` 配下のすべての `*-recipe.md`
 - 目的: recipe の章構成・記述品質を統一し、書き手が良い内容を再現可能に作成できるようにする
-- 成果物構造の正本: 対応する `docs/ja/specdojo/rulebooks/<prefix>-rulebook.md`
+- 成果物構造の正本: 対応する `docs/ja/specdojo/rulebooks/` 直下または `docs/ja/specdojo/rulebooks/<authority>/` 配下の rulebook
 - Frontmatter 共通原則: [document-metadata-standard.md](document-metadata-standard.md)
 - 成果物 Frontmatter の構築: template の `frontmatter_template` から構築する（[document-metadata-standard.md](document-metadata-standard.md) の `生成物 Frontmatter 雛形`）。この手順を recipe 本文に複製しない。
 - 参照スキーマ: [recipe-frontmatter.schema.yaml](../../../specdojo/schemas/v1/recipe-frontmatter.schema.yaml)
@@ -36,13 +36,13 @@ Recipe Authoring Standard
 - `type` は `recipe` 固定とする。
 - 対応する成果物の根拠を示すため、`rulebook` と `sample`（存在する場合）を記載する。
 
-| 項目     | 必須 | 説明                                     |
-| -------- | ---- | ---------------------------------------- |
-| id       | ○    | `specdojo:<prefix>-recipe` 形式の一意 ID |
-| type     | ○    | `recipe` 固定                            |
-| status   | ○    | `draft` / `ready` / `deprecated`         |
-| rulebook | ○    | 構造の正本となる rulebook の完全 ID      |
-| sample   | 任意 | 粒度・文体の参照となる sample の完全 ID  |
+| 項目     | 必須 | 説明                                                                                             |
+| -------- | ---- | ------------------------------------------------------------------------------------------------ |
+| id       | ○    | 同梱は `specdojo:<prefix>-recipe`、利用者作成は `<kata_authority>:<prefix>-recipe` 形式の一意 ID |
+| type     | ○    | `recipe` 固定                                                                                    |
+| status   | ○    | `draft` / `ready` / `deprecated`                                                                 |
+| rulebook | ○    | 構造の正本となる rulebook の完全 ID                                                              |
+| sample   | 任意 | 粒度・文体の参照となる sample の完全 ID                                                          |
 
 ## 4. 標準章構成（`*-recipe.md`）
 

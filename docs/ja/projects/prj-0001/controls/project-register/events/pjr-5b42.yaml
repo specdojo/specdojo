@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_0db6282410d247e2bf4b2e8c9d8c28c0
+  ts: "2026-10-22T11:11:15Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 別のリポジトリの project の登録簿へ起票できるようにする
+    - field: description
+      from: ""
+      to: PJR-W93C は同じリポジトリの中の project に限られる。設定で別のリポジトリの project を別名付きで宣言し、register add でその別名を指定すると、相手のリポジトリの specdojo を起動して起票させる。project ID の衝突を別名で避け、orchestrator launch で相手のリポジトリへの編集を許可する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-W93C"]'
+- v: 1
+  id: reg_d9945065d8bb45bf85e59cd0f51faf2b
+  ts: "2026-10-22T12:26:24Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_0db6282410d247e2bf4b2e8c9d8c28c0
+- v: 1
+  id: reg_57efb39100b0487a9b791164d79019bc
+  ts: "2026-10-22T12:41:22Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d9945065d8bb45bf85e59cd0f51faf2b
+- v: 1
+  id: reg_03b4ff6678f44a82bf017332b88e5a7e
+  ts: "2026-10-22T12:51:27Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・統合テスト・親の検証を確かめ、一時のリポジトリから npm の 0.4.2 を入れた別のリポジトリへ起票できることを試し、統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: 設定の external_projects に別名ごとに相手のリポジトリのパス（相対）と project ID を宣言し、register add --project `<別名>` --commit で相手のリポジトリの specdojo（0.4.2 以上）に起票を任せるようにした。--from `<別名>`:PJR-XXXX は相手の project ID に変換して渡し、orchestrator launch は宣言したリポジトリにも編集を許可する。状態遷移は対象外
+  previous_event_id: reg_57efb39100b0487a9b791164d79019bc

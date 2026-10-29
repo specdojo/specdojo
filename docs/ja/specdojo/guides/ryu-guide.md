@@ -42,7 +42,7 @@ SpecDojo は道場のメタファーとして、進め方（`approach`）を「R
 
 ### 1.1. approach の選び方
 
-進め方は、まずタスクの目的で分かれ、通常の成果物作成・更新では実践の型の整備状況でさらに分かれます。`fully-guided` / `recipe-guided` / `freeform` は実践の型をどこまで基準にするかを表します。`retrofit` は実装先行時の現在動作調査、`bootstrap` / `cross-deliverable-dedup`・各 `*-maintenance`・`finalize` 系は、それぞれの目的に応じて選ぶ進め方です。
+進め方は、まずタスクの目的で分かれ、通常の成果物作成・更新では実践の型の整備状況でさらに分かれます。`fully-guided` / `recipe-guided` / `freeform` は実践の型をどこまで基準にするかを表します。`retrofit` は実装先行時の現在動作調査、`bootstrap` / `cross-deliverable-dedup`・各 `*-authoring`・各 `*-maintenance`・`finalize` 系は、それぞれの目的に応じて選ぶ進め方です。
 
 ```mermaid
 flowchart TD
@@ -56,6 +56,7 @@ flowchart TD
   FF --> W
   P -->|"実装先行の成果物を反映・新設"| RF["retrofit<br/>実装 → 成果物"]
   P -->|"成果物と実践の型を新規に一括整備"| BS["bootstrap"]
+  P -->|"既存成果物から実践の型だけを新規作成"| AU["各 authoring<br/>成果物 → 新しい実践の型"]
   P -->|"成果物群の重複を整理"| DD["cross-deliverable-dedup"]
   P -->|"実践の型を見直す"| MT["各 maintenance<br/>成果物 → 実践の型"]
   P -->|"human が確定する"| FIN["finalize / bootstrap-finalize<br/>status を ready へ昇格"]
@@ -65,7 +66,7 @@ flowchart TD
 
 ### 1.2. approach 一覧
 
-`approach` は、目的に応じて「成果物の作成・更新」「初期整備・実装反映・横断整理」「実践の型のメンテナンス」「human による確定」の4種に分けられます。以下の表にある edit / review は plan テンプレート、result は実行記録のテンプレートです。テンプレートには各 `approach` で行う具体的な手順が定義されています。mode や execution に対応する専用テンプレートがない場合のフォールバック規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
+`approach` は、目的に応じて「成果物の作成・更新」「初期整備・実装反映・横断整理」「実践の型の新規作成」「実践の型のメンテナンス」「human による確定」の5種に分けられます。以下の表にある edit / review は plan テンプレート、result は実行記録のテンプレートです。テンプレートには各 `approach` で行う具体的な手順が定義されています。mode や execution に対応する専用テンプレートがない場合のフォールバック規則は [plan/resultライフサイクルガイド](plan-result-lifecycle-guide.md) を参照してください。
 
 #### 1.2.1. 成果物の作成・更新
 
@@ -123,7 +124,20 @@ flowchart LR
 
 `retrofit` では、実装を現在動作（AS-IS）の根拠、既存成果物・決定記録・プロジェクトコンテキストを意図された仕様の根拠、`done_criteria` を成果物が満たすべき目的として扱います。三者が一致すれば成果物へ反映し、実装が意図された仕様と異なる場合は実装へ無条件に合わせず、乖離と修正対象候補を result に記録します。実装から確認できない目的・業務判断・将来方針は推測しません。
 
-#### 1.2.3. 実践の型のメンテナンス
+#### 1.2.3. 実践の型の新規作成
+
+既存成果物を読み取り専用の手本として、指定した種類の kata だけを新規作成します。`--target` の先頭は新しい kata ID、後続は任意の手本成果物です。
+
+| `approach`           | 作る対象 | 対応テンプレート                                             |
+| -------------------- | -------- | ------------------------------------------------------------ |
+| `rulebook-authoring` | rulebook | [edit](../exec-templates/xep-rulebook-authoring-template.md) |
+| `recipe-authoring`   | recipe   | [edit](../exec-templates/xep-recipe-authoring-template.md)   |
+| `sample-authoring`   | sample   | [edit](../exec-templates/xep-sample-authoring-template.md)   |
+| `template-authoring` | template | [edit](../exec-templates/xep-template-authoring-template.md) |
+
+authoring は register 専用です。Schedule の成果物単位の target では新しい kata ID と複数の手本を区別できないため、strategy profile は用意しません。
+
+#### 1.2.4. 実践の型のメンテナンス
 
 通常の成果物作業とは参照の向きを逆にし、成果物や review result を根拠として対象の実践の型を見直します。
 
@@ -150,7 +164,7 @@ flowchart LR
 
 rulebook frontmatter で `not-needed` と宣言された型はメンテナンス対象ではなく、strategy へ対応する `*-maintenance` フェーズを生成しません。作成が必要になった場合は、先に要否判断の根拠と rulebook frontmatter の宣言を更新します。
 
-#### 1.2.4. human による確定
+#### 1.2.5. human による確定
 
 `execution: human` と組み合わせ、確認対象の `status` を `ready` へ昇格する確定プロファイルです。`ready` への昇格は human のみが行えます。
 
@@ -190,6 +204,18 @@ flowchart LR
 - 根拠のない具体化の禁止: `freeform` を除き、ファイルパス・コマンド・設定値など実装や設定の実態を示す記述を新たに書き加える場合、参照範囲の文書（rulebook / recipe / `depends_on` 成果物・プロジェクトコンテキスト、`retrofit` では `evidence_refs`）で裏付けが取れる場合に限ります。既存記述が曖昧・不完全でも、裏付けが無ければ完成度を上げる目的だけで断定的に具体化しません。裏付けの無い箇所は _TODO_ / _ASSUMPTION_ として論点を残します。品質上の根拠不足は grade が該当 viewpoint の level と finding で評価し、review はその評価を付け直しません。
 - 判断根拠の記録: 参照した文書・しなかった文書とその理由を成果物または result に残します（特に `recipe-guided` / `freeform`）。後から実践の型を整備する材料になります。
 - 判定基準の優先: `done_criteria` と grade 結果が判定基準を示す場合はそれらを優先します。本原則は、判定基準だけでは読み取れない「どこまで参照に照らすか」を補います。
+
+### 1.4. 成果物カタログなしで進める
+
+register からの `fully-guided`・`recipe-guided`・`freeform`・`retrofit`・`bootstrap`・`finalize`・`bootstrap-finalize` は、カタログなしでも使えます。既存成果物は `--target <doc-id>` を文書索引で引き、frontmatter の `specdojo.rulebook` を起点に kata を辿ります。新規成果物は `register add`・`register update` の `--target-path` と `--target-rulebook` にパスと rulebook ID を明示します。個票へ保存する名前は `target_path` と `target_rulebook` です。既存文書と指定が矛盾した場合は停止します。
+
+カタログの `done_criteria` はないため、個票の完了条件と rulebook を完了基準にします。`fully-guided` には `not-needed` を除く kata 一式、`recipe-guided` には recipe が必要で、不足すると起票時に停止します。`retrofit` では調べる実装のパスを個票に明記します。
+
+`bootstrap` は kata の不足を許容し、パスと新規 rulebook ID、設定の `kata_authority` を必須とします。既存 rulebook は拒否します。rulebook ID の `-rulebook` より前の部分を共通の名前にして recipe・sample・template の ID を導出し、`docs/ja/specdojo/<kind>s/<kata_authority>/` の未作成候補を plan に載せます。作成した rulebook は成果物の `specdojo.rulebook` に記入します。
+
+`finalize` と `bootstrap-finalize` の対象は既存文書だけです。個票の完了条件をチェック表にし、`finalize` は成果物、`bootstrap-finalize` は成果物と frontmatter から辿る kata 一式を人が確定します。
+
+`cross-deliverable-dedup` はカタログの成果物群を対象にするため、引き続きカタログが必要です。カタログ設定済みの対象は従来の宣言を優先し、未登録の対象に限りパスと rulebook を両方明示した場合だけ上記の解決を使います。具体的な起票例は [[specdojo:quick-start-guide]]、オプションは [[specdojo:command-reference]] を参照してください。
 
 ## 2. 実践の型メンテナンスの進め方
 

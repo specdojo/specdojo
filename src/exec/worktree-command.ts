@@ -1,3 +1,4 @@
+import { gradeCheckpointPaths } from "./grade-checkpoint.js";
 import { spawn } from "node:child_process";
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
@@ -322,7 +323,12 @@ async function prepare(opts: CommonOpts): Promise<void> {
       context,
       worktreeTaskId,
       base,
-      checkpointPaths: [planPath, resultPath, lockedState.claimEventPath],
+      checkpointPaths: [
+        planPath,
+        resultPath,
+        lockedState.claimEventPath,
+        ...gradeCheckpointPaths(context),
+      ],
       commitMessage: `exec(${opts.task}): prepare execution`,
       products,
     });
@@ -481,6 +487,7 @@ function merge(opts: MergeOpts): void {
     join(context.executionPath, "exec", "plans", `${opts.task}-plan.md`),
     join(context.executionPath, "exec", "results", `${opts.task}-result.md`),
     ...(claimEventPath ? [claimEventPath] : []),
+    ...gradeCheckpointPaths(context),
   ];
   mergeWorktreeIntoCurrent({
     context,

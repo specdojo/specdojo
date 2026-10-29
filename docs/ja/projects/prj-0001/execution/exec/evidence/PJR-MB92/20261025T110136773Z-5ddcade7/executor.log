@@ -1,0 +1,24 @@
+PJR-MB92「OpenCode scaffold に Ollama 接続設定と work-64k モデル設定を補う」について、利用者の追加指示（配布設定・名簿・ガイド・テストのモデル ID をローカル派生タグ `*-mlx-work-64k` に統一する）に対応しました。
+
+### 実施内容
+
+1. **OpenCode 配布設定の更新**:
+   - [`templates/opencode/opencode.json`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/templates/opencode/opencode.json) における provider `ollama-local` のモデル定義を `gemma4:31b-mlx-work-64k`、`gemma4:26b-mlx-work-64k`、`qwen3.8:27b-mlx-work-64k` に更新し、デフォルトモデルを `ollama-local/gemma4:31b-mlx-work-64k` に統一しました。
+   - [`templates/opencode/agents/specdojo-orchestrator.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/templates/opencode/agents/specdojo-orchestrator.md) の `model` を `ollama-local/gemma4:31b-mlx-work-64k` に更新しました。
+
+2. **名簿雛形の更新**:
+   - [`templates/init-agent-members.yaml`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/templates/init-agent-members.yaml) の `gemma-executor`、`gemma-review-executor` を `ollama-local/gemma4:31b-mlx-work-64k`、`gemma-reporter` を `ollama-local/gemma4:26b-mlx-work-64k` に更新し、`qwen-executor`、`qwen-review-executor`、`qwen-reporter` を `ollama-local/qwen3.8:27b-mlx-work-64k` に統一しました。
+
+3. **ドキュメント・利用手順の更新**:
+   - [`templates/opencode/README.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/templates/opencode/README.md) および [`docs/ja/specdojo/guides/exec-config-guide.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/docs/ja/specdojo/guides/exec-config-guide.md) のモデル指定、Modelfile による派生タグ作成手順（公式配布タグではないことの明記）、curl 疎通確認、既存環境修正手順を `*-mlx-work-64k` に統一しました。
+
+4. **テストの更新と検証**:
+   - [`tests/src/commands/init.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/tests/src/commands/init.test.ts) および [`tests/src/shared/provider-scaffold.test.ts`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/tests/src/shared/provider-scaffold.test.ts) の期待値を `*-mlx-work-64k` に更新し、単体テストが正常に通過することを確認しました。
+
+5. **変更履歴・個票の更新**:
+   - [`CHANGELOG.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/CHANGELOG.md) の `## [Unreleased]` を `*-mlx-work-64k` に更新しました。
+   - 個票 [`docs/ja/projects/prj-0001/controls/project-register/pjr-mb92-opencode-scaffold-ollama-work-64k.md`](file:///workspaces/specdojo-workspace/worktrees/prj-0001-PJR-MB92/docs/ja/projects/prj-0001/controls/project-register/pjr-mb92-opencode-scaffold-ollama-work-64k.md) の「## 4. 対応結果」に実施内容・検証結果・申し送り事項を記録しました。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"OpenCode scaffold・名簿雛形・README・設定ガイド・テストのモデル指定を *-mlx-work-64k に統一完了","handoff":["配布する名簿・agent・接続設定のモデル ID を gemma4:31b-mlx-work-64k、gemma4:26b-mlx-work-64k、qwen3.8:27b-mlx-work-64k に統一した。本リポジトリ自身の保護された設定（.specdojo/agent-members.yaml、ルートの opencode.json）のモデル指定とも整合している。","統合後、オーケストレーターが一時ディレクトリで生成した OpenCode 設定を使い、opencode run で上記3モデルの実接続・短い応答を確認すること。未登録のモデルがある場合は推測で成功扱いせず記録すること。"],"validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-mb92-opencode-scaffold-ollama-work-64k.md docs/ja/specdojo/guides/exec-config-guide.md templates/init-agent-members.yaml templates/opencode/README.md templates/opencode/agents/specdojo-orchestrator.md templates/opencode/opencode.json tests/src/commands/init.test.ts tests/src/shared/provider-scaffold.test.ts","status":"passed","summary":"Prettier による変更ファイルの整形と検査が正常終了"},{"command":"npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/agent-members.schema.yaml --data templates/init-agent-members.yaml","status":"passed","summary":"templates/init-agent-members.yaml のスキーマ検証が正常終了"},{"command":"npm run lint:orchestrator-sync","status":"passed","summary":"オーケストレーター同期検査が正常終了"},{"command":"opencode run --agent opencode-executor --model ollama-local/gemma4:31b-mlx-work-64k","status":"requires_human","summary":"ホスト側 Ollama 稼働および派生タグ *-mlx-work-64k（gemma4:31b-mlx-work-64k、gemma4:26b-mlx-work-64k、qwen3.8:27b-mlx-work-64k）に対する opencode run の実接続・短い応答確認（統合後オーケストレーター実施）"},{"command":"specdojo catalog validate","status":"not_applicable","reason":"prj-0001 は catalog_path を設定しておらず変更対象もカタログ外のため"}]}
+</specdojo_executor_evidence>

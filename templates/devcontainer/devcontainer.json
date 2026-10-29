@@ -5,16 +5,14 @@
   "init": true,
   "workspaceMount": "source=${localWorkspaceFolder}/..,target=/workspaces/__SPECDOJO_WORKSPACE_NAME__,type=bind,consistency=cached",
   "workspaceFolder": "/workspaces/__SPECDOJO_WORKSPACE_NAME__/${localWorkspaceFolderBasename}",
+  "shutdownAction": "none",
   "features": {
     "ghcr.io/devcontainers/features/common-utils:2": {
       "installZsh": false,
       "upgradePackages": false
     }
   },
-  "mounts": [
-    "source=specdojo-git,target=/home/node/.config/git,type=volume",
-    "source=specdojo-gh,target=/home/node/.config/gh,type=volume"
-  ],
+  "mounts": ["source=specdojo-git,target=/home/node/.config/git,type=volume"],
   "containerEnv": {
     "GIT_CONFIG_GLOBAL": "/home/node/.config/git/config"
   },

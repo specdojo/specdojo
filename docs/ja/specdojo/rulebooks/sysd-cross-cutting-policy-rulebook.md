@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:sysd-cross-cutting-policy-rulebook
   type: rulebook
+  deliverable_type: architecture
   status: draft
   sample: specdojo:sysd-cross-cutting-policy-sample
 ---
@@ -64,14 +65,14 @@ SYSD-CCP は、以下を目的とする。
 
 Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml) / [document-metadata-standard.md](../standards/document-metadata-standard.md)）。
 
-| 項目       | 説明                                              | 必須 |
-| ---------- | ------------------------------------------------- | ---- |
-| id         | SYSD-CCP ID（推奨: `sysd-cross-cutting-policy`）  | ○    |
-| type       | `architecture` など、共通スキーマで許容される種別 | ○    |
-| title      | システム設計: 横断ルール                          | ○    |
-| status     | `draft` / `ready` / `deprecated`                  | ○    |
-| based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可）      | 任意 |
-| supersedes | 置き換え関係（ID配列。未指定は `[]` 可）          | 任意 |
+| 項目       | 説明                                             | 必須 |
+| ---------- | ------------------------------------------------ | ---- |
+| id         | SYSD-CCP ID（推奨: `sysd-cross-cutting-policy`） | ○    |
+| type       | `architecture` 固定                              | ○    |
+| title      | システム設計: 横断ルール                         | ○    |
+| status     | `draft` / `ready` / `deprecated`                 | ○    |
+| based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可）     | 任意 |
+| supersedes | 置き換え関係（ID配列。未指定は `[]` 可）         | 任意 |
 
 ### 4.2. 推奨ルール
 

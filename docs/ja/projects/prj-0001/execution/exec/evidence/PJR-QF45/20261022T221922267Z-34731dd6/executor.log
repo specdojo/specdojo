@@ -1,0 +1,13 @@
+executor 範囲の変更を完了しました。
+
+- Mermaid の既定を ELK に変更し、`Noto Color Emoji` を追加：[mermaid-config.json](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QF45/packages/docs-site/mermaid-config.json)
+- devcontainer に絵文字フォントを追加：[Dockerfile](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QF45/.devcontainer/Dockerfile)
+- `architecture`・`block` 図の書き方を追記：[docs-editing-guide.md](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-QF45/docs/ja/specdojo/guides/docs-editing-guide.md)
+- CHANGELOG と個票の対応結果を更新
+- Mermaid 12.0.0 のパーサーで追加例を確認済みです。辺ラベル非対応と組み込みアイコン5種は[公式 architecture 仕様](https://mermaid.js.org/syntax/architecture)とも照合しました。
+
+保護対象の `.github/workflows/deploy.yml` は未変更です。オーケストレーター側で `fonts-noto-cjk` のインストール行へ `fonts-noto-color-emoji` を追加し、その後に実描画を確認してください。
+
+<specdojo_executor_evidence>
+{"final_message":"Mermaid の既定を ELK に変更し、絵文字フォント、作図ガイド、CHANGELOG、個票を更新した。保護対象の deploy workflow への絵文字フォント追加と実描画確認はオーケストレーターへの申し送りとした。","validations":[{"command":"npx prettier --write packages/docs-site/mermaid-config.json docs/ja/specdojo/guides/docs-editing-guide.md CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-qf45-mermaid-elk-layout.md","status":"passed","summary":"変更した Markdown と JSON は整形済み。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検証に成功。既存の参照先欠落に関する警告のみ。"},{"command":"git diff --check","status":"passed","summary":"空白エラーなし。"},{"command":"npm run validate:schema:file","status":"not_applicable","summary":"対象となる YAML ファイルの変更なし。","reason":"変更対象に *.yaml または *.yml が含まれないため。"},{"command":"npm run docs:rebuild:mermaid","status":"requires_human","summary":"保護対象 workflow へのフォント追加と devcontainer 再ビルド後、Chromium を使った SVG 描画確認が必要。"}]}
+</specdojo_executor_evidence>

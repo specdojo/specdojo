@@ -24,6 +24,7 @@ export type PjrItem = {
   title: string;
   description: string;
   type: string;
+  track?: string;
   priority: string;
   // executor / reporter pipeline の振り分けに使う作業難易度。未指定なら従来の自動選択。
   difficulty?: RegisterDifficulty;
@@ -33,14 +34,21 @@ export type PjrItem = {
   completedAt: string;
   conclusion: string;
   ticket: string;
-  // approach を持つ項目は targets 1 件と組み合わせ、起票・更新時に対象種別を検証する。
+  // 通常の approach は target 1 件、authoring は新規 kata ID と任意の手本を組み合わせ、
+  // 起票・更新時に対象種別を検証する。
   approach?: Approach;
   // 個票が宣言する対象文書の doc id リスト。plan frontmatter の targets へ転記され、
   // target coverage 検証に使われる。宣言がない項目は undefined（検証 skip）。
   targets?: string[];
+  // kata authoring の読み取り専用の手本。doc id、project repository path、または
+  // `<repo>:<path>` を保持し、起票時と plan 生成時に展開・検証する。
+  sources?: string[];
+  targetPath?: string;
+  targetRulebook?: string;
   // この項目を起票する元になった register 項目。project 内は PJR-XXXX、project 間は
   // <project-id>:PJR-XXXX で保持し、派生先ビューと監査履歴へ展開する。
   derivedFrom?: string[];
+  dependsOn?: string[];
   // 人が完了条件を確認し、夜間 orchestrator の実行対象として承認した印。
   autopilot?: "approved";
 };
@@ -66,6 +74,7 @@ export const VALID_STATUSES = [
 
 export const VALID_TYPES = [
   "todo",
+  "epic",
   "question",
   "risk",
   "issue",
@@ -100,6 +109,7 @@ export const REMOVE_REGISTER_ITEM_FIELD = Symbol("remove-register-item-field");
 // 個票 frontmatter が持つ登録項目フィールド。値 null は「キーを削除する」を意味する。
 export type RegisterItemFieldUpdates = {
   item_type?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  track?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   item_status?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   priority?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   difficulty?: RegisterDifficulty | typeof REMOVE_REGISTER_ITEM_FIELD;
@@ -111,7 +121,11 @@ export type RegisterItemFieldUpdates = {
   conclusion?: string | null | typeof REMOVE_REGISTER_ITEM_FIELD;
   approach?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   targets?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
+  sources?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
+  target_path?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
+  target_rulebook?: string | typeof REMOVE_REGISTER_ITEM_FIELD;
   derived_from?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
+  depends_on?: string[] | typeof REMOVE_REGISTER_ITEM_FIELD;
   autopilot?: "approved" | typeof REMOVE_REGISTER_ITEM_FIELD;
 };
 
@@ -149,6 +163,7 @@ const SPECDOJO_KEY_ORDER = [
   "part_of",
   "based_on",
   "item_type",
+  "track",
   "item_status",
   "priority",
   "difficulty",
@@ -159,9 +174,13 @@ const SPECDOJO_KEY_ORDER = [
   "block_reason",
   "conclusion",
   "derived_from",
+  "depends_on",
   "autopilot",
   "approach",
   "targets",
+  "sources",
+  "target_path",
+  "target_rulebook",
 ];
 
 // ================================
@@ -194,15 +213,72 @@ export function ticketRefCell(filename: string): string {
   return `[${filename.replace(/\.md$/, "")}](./${filename})`;
 }
 
-// 表セルへ埋め込むために1行化し、列区切りの `|` をエスケープする。
-// すでにエスケープ済みの `\|` は再エスケープせず、複数回の呼び出しに対して冪等にする。
+// Markdown のコードスパン。コードとして明示された内容は、表セルでも著者の記法を保持する。
+const MARKDOWN_CODE_SPAN = /(`+)[\s\S]*?\1/g;
+
+// URL の囲みを適用しない Markdown の範囲。コードスパン、山括弧、リンク（shortcut / reference
+// link を含む）は著者がすでに選んだ記法として保持する。
+const MARKDOWN_URL_PROTECTED_SPAN =
+  /(`+)[\s\S]*?\1|<[^<>\r\n]*>|!?\[[^\]\r\n]*\](?:\([^\r\n)]*\)|\[[^\]\r\n]*\])?/g;
+
+// 全角の閉じ括弧・句読点と半角の閉じ括弧は URL の直後に続く本文として扱う。
+// ASCII の句読点は query に使えるため一度 URL 候補へ含め、末尾にあるものだけ戻す。
+const BARE_HTTP_URL = /https?:\/\/[^\s<>"'`）］｝〉》」』】〕〗〙〛。、，！？；：…)\]}]+/g;
+const TRAILING_ASCII_URL_PUNCTUATION = /[.,;:!?]+$/;
+
+function encloseBareHttpUrls(text: string): string {
+  const encloseSegment = (segment: string): string =>
+    segment.replace(BARE_HTTP_URL, (candidate) => {
+      const trailing = candidate.match(TRAILING_ASCII_URL_PUNCTUATION)?.[0] ?? "";
+      const url = trailing ? candidate.slice(0, -trailing.length) : candidate;
+      return url ? `<${url}>${trailing}` : candidate;
+    });
+
+  let result = "";
+  let lastIndex = 0;
+  for (const match of text.matchAll(MARKDOWN_URL_PROTECTED_SPAN)) {
+    const start = match.index ?? 0;
+    result += encloseSegment(text.slice(lastIndex, start));
+    result += match[0];
+    lastIndex = start + match[0].length;
+  }
+  return result + encloseSegment(text.slice(lastIndex));
+}
+
+// コードスパン外の未エスケープな強調記号をエスケープする。
+// 記号の直前に偶数個のバックスラッシュがある場合は Markdown 上で未エスケープなので、
+// バックスラッシュを 1 個加える。奇数個なら既にエスケープ済みとして保持する。
+function escapeTableCellEmphasis(text: string): string {
+  const escapeSegment = (segment: string): string =>
+    segment.replace(/(?<!\\)((?:\\\\)*)[*_]/g, (match) => {
+      return `${match.slice(0, -1)}\\${match.slice(-1)}`;
+    });
+
+  let result = "";
+  let lastIndex = 0;
+  // URL 内の `*` / `_` は URL の一部なので変えない。bare URL はこの処理より先に
+  // autolink 化されるが、Markdown link のリンク先にある URL も同じ規則で保持する。
+  const protectedSpan = new RegExp(`${MARKDOWN_CODE_SPAN.source}|${BARE_HTTP_URL.source}`, "g");
+  for (const match of text.matchAll(protectedSpan)) {
+    const start = match.index ?? 0;
+    result += escapeSegment(text.slice(lastIndex, start));
+    result += match[0];
+    lastIndex = start + match[0].length;
+  }
+  return result + escapeSegment(text.slice(lastIndex));
+}
+
+// 表セルへ埋め込むために1行化し、素の HTTP(S) URL を autolink にしてから、列区切りの
+// `|` と強調記号の `*` / `_` をエスケープする。既存コードスパン、Markdown link、
+// autolink、エスケープ済みの記号は保持し、複数回の呼び出しに対して冪等にする。
 export function toCell(text: string): string {
   if (typeof text !== "string") return "";
-  return text
+  const normalized = text
     .replace(/\r?\n/g, " ")
     .replace(/\s+/g, " ")
     .replace(/(?<!\\)((\\\\)*)\|/g, "$1\\|")
     .trim();
+  return escapeTableCellEmphasis(encloseBareHttpUrls(normalized));
 }
 
 // H1（`# PJR-XXXX タイトル`）からタイトルを導出する。表示 ID の接頭辞は取り除く。
@@ -236,9 +312,9 @@ export function descriptionFromBody(body: string): string {
   }
   if (paragraph.length === 0) return CELL_TODO;
 
-  const text = toCell(paragraph.join(" "));
+  const text = paragraph.join(" ");
   if (text.startsWith(CELL_TODO)) return CELL_TODO;
-  return text;
+  return toCell(text);
 }
 
 // ================================
@@ -272,10 +348,20 @@ export function readRegisterItemContent(
         (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
       )
     : undefined;
+  const sources = Array.isArray(fields.sources)
+    ? fields.sources.filter(
+        (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
+      )
+    : undefined;
   const approach = asString(fields.approach) as Approach | undefined;
   const derivedFrom = Array.isArray(fields.derived_from)
     ? fields.derived_from.filter(
         (entry): entry is string => typeof entry === "string" && entry.trim() !== "",
+      )
+    : undefined;
+  const dependsOn = Array.isArray(fields.depends_on)
+    ? fields.depends_on.filter(
+        (value): value is string => typeof value === "string" && value.trim() !== "",
       )
     : undefined;
   const autopilot = fields.autopilot === "approved" ? "approved" : undefined;
@@ -287,6 +373,7 @@ export function readRegisterItemContent(
     title: titleFromBody(body, id),
     description: descriptionFromBody(body),
     type: asString(fields.item_type) ?? CELL_TODO,
+    ...(asString(fields.track) ? { track: asString(fields.track) } : {}),
     priority: asString(fields.priority) ?? "medium",
     ...(difficulty ? { difficulty } : {}),
     owner: asString(fields.owner) ?? CELL_TODO,
@@ -300,8 +387,14 @@ export function readRegisterItemContent(
     conclusion: asString(fields.conclusion) ?? CELL_NONE,
     ticket: ticketRefCell(filename),
     ...(approach ? { approach } : {}),
+    ...(asString(fields.target_path) ? { targetPath: asString(fields.target_path) } : {}),
+    ...(asString(fields.target_rulebook)
+      ? { targetRulebook: asString(fields.target_rulebook) }
+      : {}),
     ...(targets && targets.length > 0 ? { targets } : {}),
+    ...(sources && sources.length > 0 ? { sources } : {}),
     ...(derivedFrom && derivedFrom.length > 0 ? { derivedFrom } : {}),
+    ...(dependsOn && dependsOn.length > 0 ? { dependsOn } : {}),
     ...(autopilot ? { autopilot } : {}),
   };
 
@@ -434,9 +527,14 @@ export function registerItemFieldsFromItem(item: PjrItem): RegisterItemFieldUpda
     conclusion: isPlaceholderCell(item.conclusion)
       ? null
       : inlineCodeAnglePlaceholders(item.conclusion.trim()),
+    ...(item.track ? { track: item.track } : {}),
     ...(item.approach ? { approach: item.approach } : {}),
+    ...(item.targetPath ? { target_path: item.targetPath } : {}),
+    ...(item.targetRulebook ? { target_rulebook: item.targetRulebook } : {}),
     ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
+    ...(item.sources && item.sources.length > 0 ? { sources: item.sources } : {}),
     ...(item.derivedFrom && item.derivedFrom.length > 0 ? { derived_from: item.derivedFrom } : {}),
+    ...(item.dependsOn && item.dependsOn.length > 0 ? { depends_on: item.dependsOn } : {}),
     ...(item.autopilot ? { autopilot: item.autopilot } : {}),
   };
 }

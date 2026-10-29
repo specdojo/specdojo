@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_23c83fdb58fb4191b6d4c276ba94eb5c
+  ts: "2026-10-22T22:18:08Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: Mermaid の既定のレイアウトを ELK に切り替え、図の絵文字の文字化けを直す
+    - field: description
+      from: ""
+      to: Mermaid 12 で ELK が同梱され既定になったが、docs-site の mermaid-config.json が dagre を明示している。ELK に切り替え、ノードの絵文字が文字化けする問題を直す。中心に集める図の描き方（architecture 図）も docs の書き方の文書に書く
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-23"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_bd271311a32348af96d72e0d1d105e22
+  ts: "2026-10-22T22:19:32Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_23c83fdb58fb4191b6d4c276ba94eb5c
+- v: 1
+  id: reg_96cb03e9de08416d99b26fb356577d2f
+  ts: "2026-10-22T22:28:34Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_bd271311a32348af96d72e0d1d105e22
+- v: 1
+  id: reg_ca5db2370d004c54a6c2b469aa45f149
+  ts: "2026-10-22T23:24:58Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターがコンテナに絵文字のフォントを入れて cdfd-overview を描き、ELK の直角の配線と、ノードの絵文字（📝・✅・🔍 など）が表示されることを確かめた。workflow のフォントの追加は保護された設定のため、利用者（indie）の承認でオーケストレーターが反映した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-23"
+    - field: conclusion
+      from: "-"
+      to: docs-site の Mermaid の既定のレイアウトを ELK にし、fontFamily と devcontainer・GitHub Pages のビルドに絵文字のフォントを加えた。図の大きさの目安と、architecture 図・block 図の使い分けを docs-editing-guide に書いた
+  previous_event_id: reg_96cb03e9de08416d99b26fb356577d2f

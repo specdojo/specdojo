@@ -58,9 +58,17 @@ npx specdojo devcontainer scaffold --provider claude,codex --preset recommended 
 npx specdojo devcontainer scaffold --provider claude,codex --preset recommended
 ```
 
-`recommended` preset は、端末版 Emacs と Vim（既存設定を上書きしない雛形）、tmux、SpecDojo の文書作業向け VS Code 拡張をまとめて追加します。拡張は Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML で、選択した provider の拡張もその provider の分だけ追加します。Markdown と YAML は保存時に Prettier で整形し、主要な SpecDojo YAML を `docs/specdojo/schemas/v1/` の schema へ関連付けます。同じ拡張は `.vscode/extensions.json` の recommendation にも追加されます。
+用途に合わせて、provider とは別に次の preset を選びます。
 
-既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。preset を使わない場合、Ollama 接続、コンテナ内の cron、コンテナ内の tmux が必要なときだけ `--ollama`、`--cron`、`--tmux` を追加します。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、tmux を含めない個別指定も選べます。
+| preset        | 内容                                                                                                                                                 |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `minimal`     | 選んだ provider の CLI と SpecDojo の動作に必要な最小構成。preset を省略した場合と同じ。                                                             |
+| `recommended` | `minimal` に GitHub CLI（`gh`）、端末版 Emacs と Vim、tmux、SpecDojo の文書作業向け VS Code 拡張・設定を追加する。                                   |
+| `full`        | `recommended` に ripgrep、fd、fzf、yq、shellcheck、shfmt、Ollama 接続、cron を追加する。fd は `fd-find` package から `fd` コマンドとして利用できる。 |
+
+`recommended` / `full` のエディタ設定は既存設定を上書きしません。VS Code 拡張は Git Graph、markdownlint、YAML、Prettier、remark、Markdown All in One、Code Spell Checker、EditorConfig、Error Lens、Even Better TOML で、選択した provider の拡張もその provider の分だけ追加します。Markdown と YAML は保存時に Prettier で整形し、主要な SpecDojo YAML を `docs/specdojo/schemas/v1/` の schema へ関連付けます。同じ拡張は `.vscode/extensions.json` の recommendation にも追加されます。
+
+既存の `.devcontainer/` は通常実行では上書きしません。置き換える場合だけ `--force` を指定します。生成設定は provider の設定ディレクトリを名前付きボリュームへ保存し、ホストの認証情報・秘密鍵・`.env` は既定でマウントしません。GitHub へのログインは自動では行わないため、利用者が必要なときだけコンテナ内で `gh auth login` を実行します。認証は同じリポジトリのコンテナを作り直しても名前付き volume に残りますが、同じ利用者で動く agent からも見えます。このため配布する agent 権限では `git push` と `gh` の書き込みを拒否します。pipeline executor・review executor・reporter は読み取りを含む全 `gh` を拒否し、対話型オーケストレーターは役割別設定を持てる Claude Code と OpenCode でだけ `gh pr view`・`gh run view` などの読み取りを許可します。Codex と Antigravity は権限が役割共通のため全 `gh` を拒否します。preset に個別の `--ollama`・`--cron`・`--tmux`・`--editor` を加えることもできます。本書の構成図のようにホスト側の tmux でコンテナ自体を包む場合、tmux を含めない `minimal` も選べます。
 
 生成する `devcontainer.json` は、利用リポジトリ単体ではなく、その親ディレクトリをホスト側と同じ名前の `/workspaces/<親名>` へマウントします。例えば `app1-workspace/app1-specdojo` の作業ディレクトリは `/workspaces/app1-workspace/app1-specdojo` です。別リポジトリ構成では `repos` の参照先（例: `../app1`）と `worktree_base`（例: `../app1-specdojo-worktrees`）が利用リポジトリの外にあるためです。これらの Git リポジトリと worktree は `safe.directory` の対象になります。一方、同じ親ディレクトリに置いたその他のファイルもコンテナから見えるため、秘密情報などコンテナへ公開しないファイルは別の場所へ置いてください。
 
@@ -81,7 +89,7 @@ scaffold は、常時稼働ホストへの接続と tmux セッションの維�
 
 `devcontainer.json` の `appPort` や `forwardPorts` で開発サーバなどの公開ポートを設定している場合は、接続用エイリアスに `LocalForward` の行が含まれます。開発サーバのポートを増やしたときは、`~/.ssh/config` の tmux 接続用エイリアスにも `LocalForward <ポート> 127.0.0.1:<ポート>` を追加してください。
 
-生成される `devcontainer.json` は `remoteEnv` で `/home/node/.local/bin`（利用者が別の場合は `/home/<remoteUser>/.local/bin`）を `PATH` の先頭に追加するため、コンテナ作成後に開く端末や VS Code のターミナルでも `~/.local/bin` に入った Claude Code などの CLI がそのまま利用できます。
+生成される `devcontainer.json` は `remoteEnv` で `/home/node/.local/bin`（利用者が別の場合は `/home/<remoteUser>/.local/bin`）を `PATH` の先頭に追加するため、コンテナ作成後に開く端末や VS Code のターミナルでも `~/.local/bin` に入った Claude Code などの CLI がそのまま利用できます。また、`shutdownAction: "none"` を設定しているため、VS Code などのクライアントを切断したりウィンドウを閉じたりしてもコンテナが停止せず、tmux セッションやバックグラウンド処理を維持できます。
 
 ### 2.2. 生成した Dev Container をホストで実地確認する
 
@@ -216,6 +224,20 @@ v0.4.0 などで生成した Dev Container 環境では、`devcontainer.json` �
 ```
 
 コンテナ内の利用者が `node` 以外の場合は、`/home/<remoteUser>/.local/bin` に合わせてください。
+
+### 6.4. クライアント切断時にコンテナが停止する
+
+以前のバージョンで生成した Dev Container 環境では、`devcontainer.json` に `shutdownAction` が指定されていないため、VS Code などのクライアントを切断した際にコンテナが自動的に停止し、コンテナ内で実行中の tmux セッションやバックグラウンド処理が中断することがあります。
+
+既存の環境を修正するには、`.devcontainer/devcontainer.json` に `"shutdownAction": "none"` を追加してください。
+
+```json
+  "workspaceFolder": "/workspaces/<親名>/<リポジトリ名>",
+  "shutdownAction": "none",
+  "init": true,
+```
+
+設定の反映には Dev Container の再起動（VS Code で「Rebuild Container」または `devcontainer up`）を行ってください。なお、切断後もコンテナが停止しない実際の動作確認は、Docker daemon が稼働しているホスト環境（または Dev Container CLI が動作する実環境）で行う必要があります。
 
 ## 7. 運用上のセキュリティ
 

@@ -1,3 +1,4 @@
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { type Command } from "commander";
@@ -368,6 +369,7 @@ export function prepareScheduleIntegrationResume(params: {
     join(executionPath, "exec", "plans", `${task.id}-plan.md`),
     resultPath,
     ...(claimEventPath ? [claimEventPath] : []),
+    ...gradeCheckpointPaths({ repoRoot, executionPath }),
   ];
 
   return {

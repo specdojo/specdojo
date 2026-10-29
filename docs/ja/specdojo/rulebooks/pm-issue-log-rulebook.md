@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:pm-issue-log-rulebook
   type: rulebook
+  deliverable_type: project
   status: draft
   sample: specdojo:pm-issue-log-sample
   template: specdojo:pm-issue-log-template

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { mkdtemp, rm } from "node:fs/promises";
+import { mkdtemp, rm, mkdir, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { dump } from "js-yaml";
@@ -114,7 +114,6 @@ describe("decideReviewGradeAction", () => {
   it("評価結果が最新なら grade を再実行せず既存の結果を使う", () => {
     const actual = decideReviewGradeAction({
       freshness: fresh,
-      scriptAvailable: true,
       dryRun: false,
     });
 
@@ -129,7 +128,7 @@ describe("decideReviewGradeAction", () => {
       { state: "unreadable", sidecarPath: SIDECAR_PATH, reason: "bad" } as ReviewGradeFreshness,
     ],
   ])("評価結果が %s なら grade を実行する", (_state, freshness) => {
-    const actual = decideReviewGradeAction({ freshness, scriptAvailable: true, dryRun: false });
+    const actual = decideReviewGradeAction({ freshness, dryRun: false });
 
     expect(actual).toEqual({ run: true });
   });
@@ -137,7 +136,6 @@ describe("decideReviewGradeAction", () => {
   it("評価対象を解決できない場合は理由を残して実行しない", () => {
     const actual = decideReviewGradeAction({
       freshness: { state: "unresolved", reason: "評価対象が存在しない: a.md" },
-      scriptAvailable: true,
       dryRun: false,
     });
 
@@ -147,26 +145,12 @@ describe("decideReviewGradeAction", () => {
     });
   });
 
-  it("dry-run と実行スクリプト不在では実行しない", () => {
-    const dryRun = decideReviewGradeAction({
-      freshness: stale,
-      scriptAvailable: true,
-      dryRun: true,
-    });
-    const noScript = decideReviewGradeAction({
-      freshness: stale,
-      scriptAvailable: false,
-      dryRun: false,
-    });
-
-    expect(dryRun).toEqual({
+  it("dry-run では実行せず、通常は外部スクリプトなしで実行する", () => {
+    expect(decideReviewGradeAction({ freshness: stale, dryRun: true })).toEqual({
       run: false,
       outcome: { action: "not-run", detail: "dry-run のため実行しない" },
     });
-    expect(noScript.run === false && noScript.outcome).toEqual({
-      action: "not-run",
-      detail: "grade の実行スクリプトがリポジトリにない: tools/grade/run-per-document.sh",
-    });
+    expect(decideReviewGradeAction({ freshness: stale, dryRun: false })).toEqual({ run: true });
   });
 });
 
@@ -180,7 +164,8 @@ describe("reviewGradeArgs", () => {
     });
 
     expect(actual).toEqual([
-      "tools/grade/run-per-document.sh",
+      "grade",
+      "run",
       "--run-id",
       "review-T-1-20260928T000000Z",
       "--project",
@@ -214,6 +199,59 @@ describe("reviewGradeRunId", () => {
 });
 
 describe("ensureReviewGrade", () => {
+  it("runs the packaged CLI without tools/grade and forwards the selected actor", async () => {
+    const root = await mkdtemp(path.join(tmpdir(), "specdojo-review-native-"));
+    const previous = process.cwd();
+    try {
+      await mkdir(path.join(root, ".specdojo"));
+      await writeFile(
+        path.join(root, ".specdojo/specdojo.config.json"),
+        JSON.stringify({
+          version: 1,
+          current_project: "test",
+          projects: { test: { execution_path: "execution" } },
+        }),
+      );
+      await writeFile(
+        path.join(root, "subject.md"),
+        "---\nspecdojo:\n  id: test:subject\n---\n\n# Subject\n",
+      );
+      process.chdir(root);
+      const invoke = vi.fn().mockResolvedValue({ exitCode: 0, stderr: "" });
+      const outcome = await ensureReviewGrade({
+        taskId: "T-1",
+        projectId: "test",
+        subjectPath: "subject.md",
+        target: "deliverable",
+        repoRoot: root,
+        dryRun: false,
+        by: "grader-alias",
+        invoke,
+      });
+      expect(outcome.action).toBe("executed");
+      expect(invoke).toHaveBeenCalledWith(
+        process.execPath,
+        expect.arrayContaining(["grade", "run", "--by", "grader-alias", "--path", "subject.md"]),
+        root,
+      );
+      invoke.mockResolvedValueOnce({ exitCode: 1, stderr: "agent failed\n" });
+      expect(
+        await ensureReviewGrade({
+          taskId: "T-1",
+          projectId: "test",
+          subjectPath: "subject.md",
+          target: "deliverable",
+          repoRoot: root,
+          dryRun: false,
+          invoke,
+        }),
+      ).toMatchObject({ action: "failed", detail: "subject.md: exit 1: agent failed" });
+    } finally {
+      process.chdir(previous);
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
   it("評価対象が存在しない場合は grade を起動せず理由を返す", async () => {
     const root = await mkdtemp(path.join(tmpdir(), "specdojo-review-grade-"));
     try {

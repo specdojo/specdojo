@@ -18,6 +18,45 @@ const Ajv2020 = Ajv2020Module.default;
 const addFormats = addFormatsModule.default;
 
 describe("executor evidence", () => {
+  it.each([undefined, "complete", "incomplete", null, "invalid"])(
+    "preserves task completion independently of the process result: %s",
+    (completionStatus) => {
+      const { evidence } = buildExecutorEvidence({
+        taskId: "PJR-TEST",
+        runId: "run-1",
+        actor: "executor",
+        status: "succeeded",
+        startedAt: "2026-10-25T00:00:00Z",
+        completedAt: "2026-10-25T00:01:00Z",
+        exitCode: 0,
+        attempts: 1,
+        stdout: `<specdojo_executor_evidence>${JSON.stringify({
+          completion_status: completionStatus,
+          final_message: "未完了。残作業あり。 api_key=do-not-store",
+          handoff: ["残りのテストを実装する"],
+        })}</specdojo_executor_evidence>`,
+        stderr: "",
+        changes: [],
+        diffStat: "",
+        logRefPath: "executor.log",
+      });
+      const incomplete = completionStatus !== undefined && completionStatus !== "complete";
+      expect(evidence.stage).toMatchObject({ status: "succeeded", exit_code: 0 });
+      expect(evidence.completion_status).toBe(
+        completionStatus === undefined ? undefined : incomplete ? "incomplete" : "complete",
+      );
+      if (incomplete) {
+        expect(evidence.block_reason).toContain(
+          "executor reported incomplete: 未完了。残作業あり。",
+        );
+        expect(evidence.block_reason).not.toContain("do-not-store");
+      } else {
+        expect(evidence.block_reason).toBeUndefined();
+      }
+      expect(evidence.handoff).toEqual(["残りのテストを実装する"]);
+    },
+  );
+
   it("parses the bounded executor report and redacts credentials", () => {
     const stdout = [
       "tool chatter",
@@ -31,6 +70,7 @@ describe("executor evidence", () => {
 
     expect(parseExecutorReport(stdout)).toEqual({
       finalMessage: "done; api_key=[REDACTED]",
+      handoff: [],
       validations: [
         {
           source: "executor",
@@ -42,6 +82,27 @@ describe("executor evidence", () => {
       targetCoverage: [],
     });
     expect(redactSensitiveText("Authorization: Bearer abc.def.ghi")).not.toContain("abc.def.ghi");
+  });
+
+  it("bounds and redacts handoff notes while ignoring invalid or absent handoff fields", () => {
+    const report = (handoff: unknown) =>
+      parseExecutorReport(
+        `<specdojo_executor_evidence>${JSON.stringify({ handoff })}</specdojo_executor_evidence>`,
+      );
+    expect(report(["  次の確認: api_key=do-not-store  ", null, 42, {}, " "]).handoff).toEqual([
+      "次の確認: api_key=[REDACTED]",
+    ]);
+    for (const handoff of [undefined, null, "note", {}]) {
+      expect(report(handoff).handoff).toEqual([]);
+    }
+    const bounded = report(Array.from({ length: 101 }, () => "あ".repeat(4_001))).handoff;
+    expect(bounded).toHaveLength(100);
+    expect(bounded.every((note) => note.length === 4_000 && note.endsWith("…"))).toBe(true);
+    expect(parseExecutorReport("legacy output").handoff).toEqual([]);
+    expect(
+      parseExecutorReport("<specdojo_executor_evidence>{oops}</specdojo_executor_evidence>")
+        .handoff,
+    ).toEqual([]);
   });
 
   it("accepts a requires_human validation in executor evidence", () => {
@@ -188,6 +249,7 @@ describe("executor evidence", () => {
       "<specdojo_executor_evidence>",
       JSON.stringify({
         final_message: "artifact updated",
+        handoff: ["設定の案: api_key=do-not-store"],
         validations: [
           { command: "npm test", status: "passed", summary: "ok" },
           {
@@ -231,6 +293,7 @@ describe("executor evidence", () => {
     expect(evidence.attempt_changes).toEqual([{ path: "artifact.md", status: "M" }]);
     expect(evidence.diff_summary.files_changed).toBe(1);
     expect(evidence.final_message).toBe("artifact updated");
+    expect(evidence.handoff).toEqual(["設定の案: api_key=[REDACTED]"]);
     expect(evidence.validations).toEqual([
       { source: "executor", command: "npm test", status: "passed", summary: "ok" },
       {
@@ -267,6 +330,17 @@ describe("executor evidence", () => {
     addFormats(ajv);
     const validate = ajv.compile(schema);
     expect(validate(evidence), JSON.stringify(validate.errors)).toBe(true);
+    const { handoff: _handoff, ...legacy } = evidence;
+    expect(validate(legacy), JSON.stringify(validate.errors)).toBe(true);
+    for (const completion_status of ["complete", "incomplete"]) {
+      expect(validate({ ...evidence, completion_status }), JSON.stringify(validate.errors)).toBe(
+        true,
+      );
+    }
+    expect(validate({ ...evidence, completion_status: "unknown" })).toBe(false);
+    for (const handoff of [[""], ["x".repeat(4_001)], Array(101).fill("note"), "note"]) {
+      expect(validate({ ...evidence, handoff })).toBe(false);
+    }
     expect(
       validate({
         ...evidence,

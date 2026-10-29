@@ -18,7 +18,7 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 **この文書で分かること**
 
 - question の起票から decision、仕様書の更新、change-request による修正までを記帳する流れ
-- CLI の初期設定と、register / schedule / routine の使い分け
+- CLI の初期設定と、register のユースケース別の使い方
 - issue / decision / todo から成果物カタログと Schedule へ展開する手順
 - npm package の kata を参照し、必要なものだけ eject する方法
 
@@ -27,7 +27,7 @@ SpecDojo CLI の初期設定から始め、register で課題と判断を整理�
 - register のtypeと状態遷移は [登録簿運用ガイド](register-operation-guide.md) を参照してください。
 - Scheduleの自動・手動実行は [Schedule実行運用ガイド](schedule-operation-guide.md)、agent設定は [exec設定ガイド](exec-config-guide.md) を参照してください。
 
-各コマンドには、設定済みのオーケストレーター（`specdojo-orchestrator`）へチャットで指示する場合の文言を `# チャット:` として併記します。オーケストレーターは指示を対応する `specdojo` サブコマンドへ変換し、状態を変える操作は実行前に内容を提示して承認を求めます。導入先での設定と起動方法は [オーケストレーター運用ガイド](orchestrator-operation-guide.md) を参照してください。`<project-id>` などのプレースホルダは実際の値に読み替えてください。
+各コマンドには、設定済みのオーケストレーター（`specdojo-orchestrator`）へチャットで指示する場合の文言を `# チャット:` として併記します。オーケストレーターは指示を対応する `specdojo` サブコマンドへ変換し、状態を変える操作は実行前に内容を提示して承認を求めます。オーケストレーターはターミナル（`npm run orch:<provider>`）だけでなく、VS Code の各種拡張機能（Copilot Chat、Claude Code、Codex）からも利用できます。導入先での設定と起動方法は [オーケストレーター運用ガイド](orchestrator-operation-guide.md)（VS Code からの利用は [VS Code から使う](orchestrator-operation-guide.md#22-vs-code-から使う) 節）を参照してください。`<project-id>` などのプレースホルダは実際の値に読み替えてください。
 
 ## 1. 10分で体験する — 仕様の判断台帳
 
@@ -68,14 +68,15 @@ Your display name [Project Owner]: 店主
 Orchestrator providers (...) [codex]: claude        <- 使う AI ツールを 1 つ選ぶ
 Delegate work to agents (exec)? [y/N]:              <- Enter（実戦は後で設定する）
 Create a Dev Container? [y/N]: y                    <- y（Dev Container を作る。使わない場合は Enter）
-Add the recommended Dev Container settings? [Y/n]:  <- Enter（推奨 preset を入れる）
+Dev Container preset (minimal, recommended, full) [recommended]:  <- Enter（推奨 preset を選ぶ）
+Create Git hooks with lefthook? [y/N]:               <- Enter（この体験では作らない）
 ```
 
 入力が不正な場合は理由が表示され、同じ質問だけがもう一度表示されます。たとえば provider に
 `claud` と入力すると、利用可能な provider の一覧に続いて provider の質問だけが再表示されます。
 それまでに答えた project や名簿の内容を入力し直す必要はありません。
 
-Dev Container を作る質問に `y`、推奨 preset に Enter（既定の「はい」）と答えると、tmux・Emacs・Vim・推奨の VS Code 拡張と設定・`.vscode/extensions.json` が入った環境が生成されます。作成したコンテナは、VS Code の「コンテナーで再度開く」または `devcontainer up` で開けます（詳しい説明は [[specdojo:remote-host-development-guide]] を参照）。Dev Container を使わずに手元の環境で進めたい場合は、Dev Container の質問に Enter または `n`（いいえ）と答えて先へ進めます。この 10 分の体験は記帳だけで進められるため、コンテナを開かずにそのままホスト環境で続けて構いません。
+Dev Container を作る質問に `y`、preset に Enter と答えると、既定の `recommended` が選ばれ、tmux・Emacs・Vim・推奨の VS Code 拡張と設定・`.vscode/extensions.json` が入った環境が生成されます。作成したコンテナは、VS Code の「コンテナーで再度開く」または `devcontainer up` で開けます（詳しい説明は [[specdojo:remote-host-development-guide]] を参照）。Dev Container を使わずに手元の環境で進めたい場合は、Dev Container の質問に Enter または `n`（いいえ）と答えて先へ進めます。この 10 分の体験は記帳だけで進められるため、コンテナを開かずにそのままホスト環境で続けて構いません。
 
 登録簿は `docs/ja/projects/prj-0001/controls/project-register/` に作られます。オーケストレーターで進める場合は、終了時に表示される `npm run orch:<provider>` で起動します。成果物カタログは対話では作られません。成果物の構成が定まったら、[[#41-成果物カタログを作成する|成果物カタログを作成する]] に従って `catalog_path` を設定し、`catalog scaffold` で追加してください。
 
@@ -227,7 +228,7 @@ npx specdojo init
 ```
 
 `specdojo init` は、project ID と名前、人の nickname と表示名、利用する agent provider、
-exec・Dev Container の要否を順に質問し、Dev Container を選んだ場合だけ推奨 preset を入れるか（既定は「はい」）を続けて質問します。成果物カタログは対話では質問せず、`--catalog <size>` を
+exec・Dev Container・Git hook の要否を順に質問し、Dev Container を選んだ場合だけ `minimal` / `recommended` / `full` の preset（既定は `recommended`）を続けて質問します。Git hook は既定では作りません。成果物カタログは対話では質問せず、`--catalog <size>` を
 明示した場合にだけ初期化時に作成します。選択に応じて設定、登録簿、人と
 agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`、exec の起動設定を
 作成します。exec の親検証は、対応する npm script が `package.json` にあるものだけを設定し、
@@ -236,7 +237,7 @@ agent の名簿、provider の scaffold、`package.json` の `orch:<provider>`�
 それまでの回答は保持します。非対話環境や `--yes` では再質問せず、不正な指定をエラーとして終了します。
 
 CI や標準入力が端末でない環境では質問しません。次のようにオプションだけで同じ初期設定を
-行えます。`--devcontainer` を指定した場合は既定で推奨 preset（tmux・Emacs・Vim・推奨の VS Code 拡張と設定）が入ります（preset を使わない場合は `--devcontainer-preset none` を指定します）。省略値は画面に表示されます。
+行えます。`--devcontainer` を指定した場合は既定で `recommended` preset（tmux・Emacs・Vim・推奨の VS Code 拡張と設定）が入ります。CLI と最低限だけにする場合は `--devcontainer-preset minimal` を指定します。従来の `none` も `minimal` と同じ意味で受け付けます。省略値は画面に表示されます。
 
 ```bash
 npx specdojo init --yes \
@@ -247,6 +248,7 @@ npx specdojo init --yes \
   --provider claude,codex \
   --exec \
   --devcontainer \
+  --lefthook \
   --dry-run
 ```
 
@@ -334,7 +336,16 @@ npx specdojo config init
 
 `specdojo config init` は `.specdojo/specdojo.config.json` が存在しない場合に雛形を作成し、既存ファイルは上書きしません。雛形は register だけを使える最小構成であり、project パスはリポジトリルートを基準とし、`run.worktree_base` はディレクトリ名から作る `../<リポジトリ名>-worktrees` を指します。例えば `app1-specdojo/` では `../app1-specdojo-worktrees` です。作成された設定を開き、対象プロジェクトの ID と各パスを実際の名前に合わせてください。catalog、schedule、exec へ進むときに追加するキーと既定値は [[specdojo:specdojo-config-reference|SpecDojo設定リファレンス]] で確認できます。
 
-プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書と SpecDojo の型（Kata）は `app1-specdojo/docs/ja/projects/` と `app1-specdojo/docs/ja/specdojo/` に置きます。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
+通常の `init` と `config init` は、markdownlint の設定がなければリポジトリ直下に
+`.markdownlint.yaml` も作ります。日本語の長い行などを許容するため、MD013・MD024・MD033・MD036・MD041・MD060
+を無効にし、ほかの記法検査は維持します。既存の設定は上書きしません。既存の利用リポジトリでも
+`npx specdojo config init --dry-run` で確認してから `npx specdojo config init` を再実行すると、
+不足する設定を追加できます。設定がないままでも、exec の result の commit 前検査は同じ基本規則を使います。
+既存設定で MD013 が有効ならその指定を優先するため、長い行を許容する場合は利用側の設定で
+`MD013: false` を指定してください。CLI2 と hook の設定の関係は
+[[specdojo:command-reference|CLIコマンドリファレンス]] を参照してください。
+
+プロダクト文書は `app1/docs/ja/product/`、プロジェクト文書は `app1-specdojo/docs/ja/projects/` に置きます。同梱の SpecDojo の型（Kata）は `app1-specdojo/docs/ja/specdojo/<種類>s/`、このリポジトリで新しく作る kata はその下の `<kata_authority>/` から解決します。現行実装では1つの項目で両リポジトリを自動統合できないため、プロダクト文書や実装も変更する項目は分けるか、人が統合を管理します。詳細は [ドキュメント構成ガイド](docs-structure-guide.md) の `別リポジトリ構成` を参照してください。
 
 成果物と実装を常に同じ変更・履歴として扱う場合に限り、**同一リポジトリ構成**としてプロダクトリポジトリのルートで同じ初期化手順を実行できます。CLI は構成を強制しません。
 
@@ -347,6 +358,29 @@ npx specdojo config scaffold --provider <name>
 
 `<name>` には `antigravity`、`claude`、`codex`、`copilot`、`opencode` を指定します。従来の
 `specdojo exec scaffold --provider <name>` も互換入口として利用できます。
+
+commit 前に文書と SpecDojo の入力を検査する場合は、生成予定と `package.json` への追加内容を
+dry-run で確認してから lefthook を配置します。
+
+```bash
+npx specdojo config scaffold --lefthook --dry-run
+npx specdojo config scaffold --lefthook
+npm install
+```
+
+生成した hook は、変更した Markdown と YAML だけを Prettier で整形し、変更した Markdown だけを
+markdownlint で検査します。対象 project の `project_register_path` 配下を変更した場合は
+`register build`、`catalog_path` 配下を変更した場合は `catalog validate` も実行します。
+`catalog_path` がない構成には catalog の検査を生成せず、時間のかかるテストも pre-commit には
+含めません。設定がなければ、同じ基本規則の `.markdownlintrc` と VS Code 向けの
+`.markdownlint-cli2.yaml`、provider の agent 定義を検査から外す `.markdownlintignore` も生成します。
+`init --lefthook` / `--slidev` もこの配置を使います。既存の `.markdownlint.yaml` などの設定と ignore は
+`--force` を付けても保持します。CLI2 の overrides を使う場合は
+[[specdojo:command-reference|CLIコマンドリファレンス]] の手順で既存設定を `.markdownlintrc` に移してください。
+`lefthook.yml` と `tools/` の既存ファイルは `--force` なしでは上書きしません。
+必要な npm script と devDependencies は書き込み前に表示し、同名の既存項目は `--force` を付けても
+保持します。linked worktree または `node_modules` がない環境では installer が安全に skip するため、
+primary worktree で `npm install` または `node tools/install-lefthook.mjs` を実行してください。
 
 Antigravity CLI を無人実行する場合は、先に dry-run でユーザー設定へ追加する permission rule を確認し、明示的に適用します。このグローバル設定は利用者のすべてのリポジトリに効きます。通常の scaffold はユーザーディレクトリへ触れません。
 
@@ -362,7 +396,15 @@ npx specdojo devcontainer scaffold --provider <name> --preset recommended --dry-
 npx specdojo devcontainer scaffold --provider <name> --preset recommended
 ```
 
-Dev Container の `<name>` には `antigravity`、`claude`、`codex`、`opencode` を指定します。`--preset recommended` を指定すると、tmux・Emacs・Vim・推奨の VS Code 拡張と設定がまとめて設定されます。既存の `.devcontainer/` は通常実行では上書きされません。生成設定は provider の設定ディレクトリを名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。preset を使わない場合、Ollama 接続、cron、tmux は必要な場合だけ `--ollama`、`--cron`、`--tmux` で個別に足せます。詳しい説明は [[specdojo:remote-host-development-guide]] を参照してください。
+Dev Container の `<name>` には `antigravity`、`claude`、`codex`、`opencode` を指定します。`--preset recommended` を指定すると、`gh`・tmux・Emacs・Vim・推奨の VS Code 拡張と設定がまとめて設定されます。既存の `.devcontainer/` は通常実行では上書きされません。生成設定は provider の設定ディレクトリと `gh` の認証を名前付きボリュームに保存し、ホストの認証情報・秘密鍵・`.env` はマウントしません。GitHub へのログインは必要なときに利用者がコンテナ内で行います。preset を使わない場合は `gh` の導入と認証 volume を行わず、Ollama 接続、cron、tmux は必要な場合だけ `--ollama`、`--cron`、`--tmux` で個別に足せます。詳しい説明は [[specdojo:remote-host-development-guide]] を参照してください。
+
+| preset        | 内容                                                                                                                                                 |
+| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `minimal`     | 選んだ provider の CLI と SpecDojo の動作に必要な最小構成。preset を省略した場合と同じ。                                                             |
+| `recommended` | `minimal` に `gh`、Emacs、Vim、tmux、文書作業向けの VS Code 拡張・設定を追加する。                                                                   |
+| `full`        | `recommended` に ripgrep、fd、fzf、yq、shellcheck、shfmt、Ollama 接続、cron を追加する。fd は `fd-find` package から `fd` コマンドとして利用できる。 |
+
+`--ollama`・`--cron`・`--tmux`・`--editor` はどの preset にも個別に追加できます。詳しい説明は [[specdojo:remote-host-development-guide]] を参照してください。
 
 設定したプロジェクトを確認します。
 
@@ -396,119 +438,428 @@ npx specdojo kata status --kind rulebook
 
 CLI と同じバージョンで使う `exec-template` と `schema` は npm package 参照固定であり、eject できません。`kata install --all` は docs サイト配信やオフライン運用で全量コピーするときの選択肢で、通常の導入では実行しません。
 
-## 3. registerで課題と判断を整理する
+## 3. registerをユースケース別に使う
 
-プロジェクトの開始時点では、解決すべき問題、判断が必要な事項、実施する作業が混在しています。まず register に個票として記録し、issue → decision → todo の順に具体化します。
+register は、後から追跡したい問題・判断・作業を個票として残す入口です。この章では、よくある状況ごとに「こんなとき」「チャットでの頼み方」「コマンド」を並べます。type の詳しい選び方と状態遷移は [登録簿運用ガイド](register-operation-guide.md)、approach と実行 pipeline の詳細は [exec運用ガイド](exec-operation-guide.md) を参照してください。複数の機能を組み合わせたシナリオから読みたい場合は [[specdojo:use-case-guide|ユースケース別ガイド]] へ進んでください。
 
-```text
-issue（何が問題か）
-  -> decision（何を対象とするか）
-  -> todo（成果物カタログを作成する）
-  -> dct-<domain>.yaml
-  -> schedule
-```
-
-### 3.1. 登録簿を用意する
-
-`.specdojo/specdojo.config.json` の `project_register_path` を設定し、登録簿を初期生成します。
+初期設定で register を作らなかった場合は、先に `.specdojo/specdojo.config.json` の `project_register_path` を設定して登録簿を用意します。
 
 ```bash
 # チャット:「<project-id> の登録簿を用意して」
 npx specdojo register scaffold --project <project-id>
 ```
 
-### 3.2. issue、decision、todoを登録する
+コマンドの `<project-id>`、`<PJR-ID>`、`<deliverable-doc-id>`、`<kata-doc-id>` は実際の値に置き換えます。`register add` が表示した `PJR-XXXX` を、続く `exec run` で使います。起票と同時に commit まで行う必要がある場合は `register add` に `--commit` を付けます。
 
-次の例では、初期スコープと必要な成果物が未確定な状態から、成果物カタログを作成する作業までを3つの個票で追跡します。コマンドはまとめて示していますが、実運用では issue の調査結果を受けて decision を起票し、決定後に todo を起票します。
+### 3.1. 作業を起票してAIに任せる
+
+**こんなとき:** 完了条件を書ける作業を todo として追跡し、難しさに合う agent へ安全に任せたいとき。
+
+`difficulty` は agent の能力や作業範囲から選びます。`exec run` は `.specdojo/exec-defaults.yaml` の `routing` に同じ難しさの設定があれば、その executor・reporter・rate limit 対応を使います。`--executor-by` などをコマンドで指定した場合は、その指定が優先されます。
+
+| `difficulty` | 目安                                             | 振り分け                                        |
+| ------------ | ------------------------------------------------ | ----------------------------------------------- |
+| `hard`       | 設計判断、広い影響範囲、複数ファイルの難しい変更 | `routing.hard`。推論力の高い agent を割り当てる |
+| `medium`     | 手順と完了条件が明確な通常の実装・文書変更       | `routing.medium`。標準の executor を割り当てる  |
+| `easy`       | 範囲が狭く、機械的で、失敗時の影響が小さい変更   | `routing.easy`。軽量な executor を割り当てる    |
 
 ```bash
-# 1. 解決すべき問題を記録する
-# チャット:「issue を起票して。タイトルは『初期スコープと必要成果物が未確定』、個票あり、topic は clarify-initial-scope」
+# チャット:「中くらいの難しさの todo『検索結果の空表示を直す』を起票して、worktree で agent に任せて」
+npx specdojo register add \
+  --project <project-id> \
+  --type todo \
+  --title "検索結果の空表示を直す" \
+  --topic fix-empty-search-result \
+  --difficulty medium
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree
+```
+
+成功すると個票は `review` になります。成果物と result を人が確認した後、`register close` で完了させます。
+
+### 3.2. 問題を調べて直す
+
+**こんなとき:** 症状は分かっているが、原因や直し方を調べる必要があるとき。issue の個票へ問題、影響、原因、対応結果を残します。
+
+```bash
+# チャット:「issue『CSV 出力で文字化けする』を起票して、難しさ hard で調査と修正を任せて」
+npx specdojo register add \
+  --project <project-id> \
+  --type issue \
+  --title "CSV 出力で文字化けする" \
+  --topic csv-encoding \
+  --difficulty hard
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree
+```
+
+原因調査だけで終えず、個票の完了条件に再現条件、修正範囲、検証方法を書いてから実行します。
+
+### 3.3. 決めることを残す
+
+**こんなとき:** まだ答えがない論点を question として残したいとき、または選択肢・採択理由を decision として記録したいとき。
+
+```bash
+# チャット:「question『支払い方法をどこまで扱うか』を起票して」
+npx specdojo register add \
+  --project <project-id> \
+  --type question \
+  --title "支払い方法をどこまで扱うか" \
+  --topic payment-scope
+
+# チャット:「decision『初期リリースの支払い方法を決める』を起票して」
+npx specdojo register add \
+  --project <project-id> \
+  --type decision \
+  --title "初期リリースの支払い方法を決める" \
+  --topic decide-payment-methods
+```
+
+question から decision、仕様書への反映、後日の変更までを一度通す場合は [[#1-10分で体験する--仕様の判断台帳|1. 10分で体験する — 仕様の判断台帳]] の流れを使います。decision は agent に判断させる実行対象ではなく、人が選択肢と理由を確認して `register close` します。
+
+### 3.4. 合意した範囲を変える
+
+**こんなとき:** 決定済みの仕様、スコープ、成果物へ変更を加え、理由と影響を追跡したいとき。
+
+```bash
+# チャット:「change-request『交通系電子マネーを支払い方法に加える』を起票して、影響を確認して反映して」
+npx specdojo register add \
+  --project <project-id> \
+  --type change-request \
+  --title "交通系電子マネーを支払い方法に加える" \
+  --topic add-ic-card-payment \
+  --difficulty medium
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree
+```
+
+個票の `変更要求`、`影響評価`、`審査・決定` を埋め、元の decision や仕様書を参照できるようにします。
+
+### 3.5. リスクと気づきを残す
+
+**こんなとき:** 発生前に対応を追跡するなら risk、対応や判断を要求しない観察記録なら note として残したいとき。
+
+```bash
+# チャット:「risk『移行日に旧端末が残る』を起票して」
+npx specdojo register add \
+  --project <project-id> \
+  --type risk \
+  --title "移行日に旧端末が残る" \
+  --topic legacy-terminal-on-migration \
+  --priority high
+
+# チャット:「note『検証環境では朝に負荷が上がる』を記録して」
+npx specdojo register add \
+  --project <project-id> \
+  --type note \
+  --title "検証環境では朝に負荷が上がる" \
+  --topic morning-load-observation
+```
+
+risk は必要なら `exec run --register` で軽減策を実行できます。note は `open` のまま追記する記録で、close や agent 実行の対象にはしません。対応が必要になったら、note を元に todo や issue を起票します。
+
+### 3.6. 成果物を作る・直す
+
+**こんなとき:** 1 文書を、利用できる kata の整備状況に合う進め方で作成・更新したいとき。
+
+| `approach`      | 選ぶ状況                                                         |
+| --------------- | ---------------------------------------------------------------- |
+| `fully-guided`  | rulebook・recipe・sample・template が揃い、すべてを基準に進める  |
+| `recipe-guided` | recipe を主な手順として使い、ほかの kata が未整備でも進める      |
+| `retrofit`      | 先にある実装や現行動作を調べ、その証拠から成果物を作成・更新する |
+
+```bash
+# チャット:「成果物 <deliverable-doc-id> を fully-guided で直す todo を起票して、agent に任せて」
+npx specdojo register add \
+  --project <project-id> \
+  --type todo \
+  --title "対象成果物を実践の型に沿って改訂する" \
+  --topic revise-deliverable \
+  --difficulty hard \
+  --approach fully-guided \
+  --target <deliverable-doc-id>
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree
+```
+
+`recipe-guided`・`freeform`・`retrofit` を使う場合は、上の `--approach fully-guided` を選んだ値へ置き換えます。`--target` は成果物の doc id を 1 件指定します。カタログにある対象は従来どおりカタログの `done_criteria` と個票の完了条件を使います。
+
+カタログがない場合、既存文書は文書索引からパスと frontmatter の `specdojo.rulebook` を辿れます。これから作る文書は、次のようにリポジトリ相対のパスと rulebook ID を個票に保存します。
+
+```bash
+npx specdojo register add \
+  --project <project-id> --type todo \
+  --title "文書を実践の型に沿って作る" --topic create-document \
+  --approach fully-guided --target <deliverable-doc-id> \
+  --target-path docs/ja/product/example.md \
+  --target-rulebook <kata-authority>:example-rulebook
+npx specdojo exec plan --project <project-id> --register <PJR-ID>
+```
+
+`--target-rulebook` の rulebook と、そこから参照する必要な kata は先に用意します。`fully-guided` は `not-needed` と宣言された型を除く一式、`recipe-guided` は recipe が必要です。不足する型は起票時に名前を示して停止します。個票の「完了条件」を具体化してから実行してください。カタログなしの完了基準は個票の完了条件と rulebook です。`retrofit` では調べる実装のパスも個票に明記します。
+
+パスと rulebook は `register update --target-path <path> --target-rulebook <doc-id>` で更新でき、それぞれ `-` で削除できます。既存文書のパスや `specdojo.rulebook` と指定が食い違う場合は停止します。カタログ設定済みで対象が未登録の場合は、この 2 つを明示したときだけ同じ解決を使います。
+
+### 3.7. 成果物とkataを一組で作る
+
+**こんなとき:** プロジェクトの初期立ち上げで、成果物だけでなく、その成果物を繰り返し作るための rulebook・recipe・sample・template も同じ実行で初期整備したいとき。
+
+```bash
+# チャット:「成果物 <deliverable-doc-id> と必要な kata 一式を bootstrap で作る todo を起票して、agent に任せて」
+npx specdojo register add \
+  --project <project-id> \
+  --type todo \
+  --title "成果物と実践の型を初期整備する" \
+  --topic bootstrap-deliverable-kata \
+  --difficulty hard \
+  --approach bootstrap \
+  --target <deliverable-doc-id>
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree
+```
+
+カタログなしの `bootstrap` では、上の起票に `--target-path docs/ja/product/example.md --target-rulebook <kata-authority>:example-rulebook` を追加し、設定ファイルに `kata_authority` を指定します。新しい rulebook ID が必要で、既存 ID は受け付けません。plan は `docs/ja/specdojo/<kind>s/<kata-authority>/example-<kind>.md` に未作成の kata を示し、成果物の `specdojo.rulebook` と rulebook の kata 参照を記入するよう指示します。
+
+`finalize`・`bootstrap-finalize` は既存文書だけを対象にできます。カタログなしでは個票の完了条件をチェック表にし、人が成果物を確定します。`bootstrap-finalize` は frontmatter から辿る kata 一式も確定対象です。`cross-deliverable-dedup` は成果物群を扱うためカタログが必要です。
+
+`bootstrap` は初期整備用です。既に信頼できる kata が揃っている成果物の通常改訂には `fully-guided` を使います。
+
+### 3.8. kataを直す
+
+**こんなとき:** 成果物ではなく、作り方・手順・例・雛形そのものを改善したいとき。
+
+| 直す kata | `approach`             |
+| --------- | ---------------------- |
+| rulebook  | `rulebook-maintenance` |
+| recipe    | `recipe-maintenance`   |
+| sample    | `sample-maintenance`   |
+| template  | `template-maintenance` |
+
+```bash
+# チャット:「rulebook <kata-doc-id> を見直す todo を起票して、agent に任せて」
+npx specdojo register add \
+  --project <project-id> \
+  --type todo \
+  --title "成果物の作成ルールを見直す" \
+  --topic maintain-rulebook \
+  --difficulty hard \
+  --approach rulebook-maintenance \
+  --target <kata-doc-id>
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree
+```
+
+ほかの kata を直す場合は、表に従って `--approach` を置き換えます。`--target` には文書索引で解決でき、approach の種別と一致する kata の doc id を 1 件だけ指定します。
+
+### 3.9. 既存成果物からkataを新しく作る
+
+**こんなとき:** 成果物は既にあり、その実績を手本に rulebook など 1 種類の kata だけを新しく作りたいとき。
+
+```bash
+# チャット:「成果物 <deliverable-doc-id> を手本に <kata-id> の rulebook を新しく作る todo を起票して、agent に任せて」
+npx specdojo register add \
+  --project <project-id> \
+  --type todo \
+  --title "既存成果物からrulebookを作る" \
+  --topic author-rulebook \
+  --difficulty hard \
+  --approach rulebook-authoring \
+  --target <kata-authority>:<name>-rulebook \
+  --source <deliverable-doc-id>
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree
+```
+
+`--target` は新しい kata ID、`--source` は任意の読み取り専用の手本です。`--source` は繰り返し指定でき、文書索引の doc id、プロジェクトリポジトリの相対パス、`repos` に宣言した `<repo>:<path>` を受け付けます。パスにはファイル、ディレクトリ、`*.md` などの glob を書けます。たとえば `--source docs/ja/lessons/01-chase/README.md` や `--source 'coderdojo-lessons:lessons/**/*.md'` の形です。カタログがない project でも使えますが、手本が見つからない場合と展開後に 100 ファイルを超える場合は停止します。互換性のため、2 個目以降の `--target` も手本として引き続き受け付けます。
+
+成果物も型もまだない初期立ち上げには `bootstrap` を使います。手本なしで kata だけを作る場合は `--source` を省略します。recipe / sample / template では `approach` と ID の末尾を同じ種類へ置き換えます。手本がカタログ成果物で該当参照が `undecided` または未記入の場合だけ参照を新しい kata ID へ更新し、カタログ外とプロダクトリポジトリの手本は変更しません。
+
+### 3.10. 統合後にreviewのagentへ確かめさせる
+
+**こんなとき:** worktree の成果を統合した後、完了条件・result・差分・検証結果を別の review agent に照合させたいとき。
+
+```bash
+# チャット:「todo または issue <PJR-ID> を worktree で実行し、統合後の review まで任せて」
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --post-review
+```
+
+`--post-review` は worktree 実行でだけ使えます。todo と issue は判定が `complete` または `complete-with-findings` なら自動 close され、`incomplete` なら `waiting` に戻ります。question、decision、および SpecDojo 自身のコードを変えた項目は自動 close されません。
+
+### 3.11. 夜の間に流す
+
+**こんなとき:** 人が内容と完了条件を確認した todo・issue だけを、夜間に worktree と post-review 付きでまとめて流したいとき。
+
+```bash
+# チャット:「todo または issue <PJR-ID> を夜間実行してよい印に更新して」
+npx specdojo register update \
+  --project <project-id> \
+  --id <PJR-ID> \
+  --autopilot approved \
+  --commit
+
+# チャット:「<project-id> の承認済み項目を、最大10件、並列2件で夜間実行して」
+npx specdojo orchestrator night \
+  --project <project-id> \
+  --max-items 10 \
+  --parallel 2 \
+  --max-consecutive-failures 2
+```
+
+夜間 queue に入るのは `autopilot: approved` の付いた `open` の todo と issue だけです。まず対象を確認する場合は、`orchestrator night` に `--dry-run` を付けます。朝の報告には close、`waiting`、失敗した項目がまとめられます。
+
+### 3.12. 止まった項目を再開する
+
+**こんなとき:** register の worktree 実行が agent、検証、reporter、統合の途中で止まり、残っている成果を生かして続けるか、破棄して最初からやり直したいとき。
+
+```bash
+# チャット:「<PJR-ID> を止まった段から再開して」
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --resume
+
+# チャット:「<PJR-ID> は親検証の失敗を直すため、executor から再開して」
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --resume \
+  --resume-from executor
+
+# チャット:「<PJR-ID> の残っている worktree を破棄し、最初からやり直して」
+npx specdojo exec run \
+  --project <project-id> \
+  --register <PJR-ID> \
+  --worktree \
+  --force-restart
+```
+
+| 指定                     | 使い分け                                                             |
+| ------------------------ | -------------------------------------------------------------------- |
+| `--resume`               | checkpoint が示す executor、reporter、統合の段から再開する           |
+| `--resume-from executor` | reporter から再開可能だが、成果物を executor に直させる必要がある    |
+| `--force-restart`        | 再開用 worktree と未統合の成果を破棄して、項目全体を最初から実行する |
+
+`--force-restart` は未統合の成果を破棄します。先に evidence と agent のログを確認し、再利用しないと判断した場合だけ指定します。
+
+### 3.13. 別のproject・別のリポジトリへ起票する
+
+**こんなとき:** 作業中の気づきが別 project の責務であり、その project の登録簿と統合ブランチへ、起票元との関係を残して渡したいとき。
+
+同じリポジトリ内の別 project には、対象 project と起票元を project 修飾 ID で指定します。
+
+```bash
+# チャット:「prj-0001:PJR-AB12 から派生した todo を prj-0002 へ起票して commit して」
+npx specdojo register add \
+  --project prj-0002 \
+  --type todo \
+  --title "共通 API の変更を追跡する" \
+  --topic shared-api-change \
+  --from prj-0001:PJR-AB12 \
+  --commit
+```
+
+別リポジトリの場合は、呼び出し元の `.specdojo/specdojo.config.json` のトップレベルへ相手を宣言します。
+
+```json
+{
+  "external_projects": {
+    "customer": {
+      "path": "../customer-specdojo",
+      "project_id": "prj-0002"
+    }
+  }
+}
+```
+
+宣言した別名を `--project` に使い、相手側にある起票元は `<別名>:PJR-XXXX` で指定します。
+
+```bash
+# チャット:「外部 project customer の PJR-AB12 から派生した todo を、customer へ起票して commit して」
+npx specdojo register add \
+  --project customer \
+  --type todo \
+  --title "相手側で追跡する" \
+  --topic remote-follow-up \
+  --from customer:PJR-AB12 \
+  --commit
+```
+
+どちらも別 project への起票では `--commit` が必須です。別リポジトリでは、相手に SpecDojo 0.4.2 以上と対象 project の統合ブランチが必要です。push は行わず、close などの状態遷移は対象 project の作業ツリーで行います。
+
+### 3.14. issueからdecision、epic、成果物カタログ・Scheduleへ進む
+
+プロジェクト立ち上げ時に、問題、判断、実施作業がまだ混在している場合は、次の順で具体化します。register が起点と完了の判断を持ち、途中の進み具合は schedule が持ちます。
+
+```text
+issue（何が問題か）
+  -> decision（何を対象とするか）
+  -> epic（track の仕事を起票する）
+  -> 子 todo（成果物カタログや strategy を作成する）
+  -> schedule（成果物タスクの実行と進捗）
+  -> epic を完了する（人が判断）
+```
+
+```bash
+# チャット:「issue『初期スコープと必要成果物が未確定』を起票して」
 npx specdojo register add \
   --project <project-id> \
   --type issue \
   --title "初期スコープと必要成果物が未確定" \
   --topic clarify-initial-scope
 
-# 2. 選択肢と決定を記録する
-# チャット:「decision を起票して。タイトルは『初期スコープと対象成果物を決定する』、個票あり、topic は decide-initial-scope」
+# チャット:「decision『初期スコープと対象成果物を決定する』を起票して」
 npx specdojo register add \
   --project <project-id> \
   --type decision \
   --title "初期スコープと対象成果物を決定する" \
   --topic decide-initial-scope
 
-# 3. 決定内容を実行可能な作業にする
-# チャット:「高優先度の todo を起票して。タイトルは『プロジェクト定義の成果物カタログを作成する』、個票あり、topic は create-project-definition-catalog」
+# チャット:「launch トラックの epic を起票して」
+npx specdojo register add \
+  --project <project-id> \
+  --type epic \
+  --track launch \
+  --title "プロジェクト定義の仕様整備" \
+  --topic project-definition
+
+# チャット:「epic から子 todo『成果物カタログを作成する』を起票して」
 npx specdojo register add \
   --project <project-id> \
   --type todo \
-  --priority high \
+  --from <epic-id> \
   --title "プロジェクト定義の成果物カタログを作成する" \
-  --topic create-project-definition-catalog
+  --topic create-project-definition-catalog \
+  --approach catalog-planning \
+  --target domain:project-definition
 ```
 
-`register add` の出力に表示された `PJR-XXXX` を控えます。すべての登録項目は、背景、選択肢、完了条件、結論などを記録する type 別の個票として生成されます。個票 Frontmatter が構造化フィールドの正本であり、一覧は個票から生成されます。成果物カタログを複数ドメインに分ける場合は、原則として `dct-<domain>.yaml` ごとに todo 個票を起票すると、対象と完了条件を追跡しやすくなります。
+issue の調査結果を decision の選択肢へ、decision の結論を track の `epic` とその子 todo へ引き継ぎます。decision は人が確定します。issue や子 todo は provider 未設定でも `exec plan --project <project-id> --register <PJR-ID>` で計画を確認でき、agent 設定後は `exec run --project <project-id> --register <PJR-ID> --worktree` で実行できます（`epic` 自体は実行対象外です）。
 
-agent の run と並行して記帳し、その変更だけを commit まで完了させる場合は `register add` や状態遷移コマンドへ `--commit` を付けます。同じ project の `register lifecycle` 枠が空くまで待って記帳・一覧再生成・commit を行うため、別の run の記帳・統合と競合しません。対象の個票や event に既存の未 commit 変更がある場合は、混在を避けるため書き込み前に停止します。
+すべての登録項目には type 別の個票が作られ、個票 Frontmatter が構造化フィールドの正本になります。個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。成果物カタログ作成の todo は、次章で `dct-<domain>.yaml` を作成・検証した後に完了させます。todo の完了により `catalog_status` が `primary` と導出され、strategy 作成と Schedule への展開（`schedule build --track launch`）が可能になります。成果物タスクの途中の進捗は schedule の依存グラフで管理し、登録簿に個々の成果物タスクを二重管理しません。トラック完了時に人が `epic` を close します。
 
-| type       | 記録する内容                           | 完了状態  | agent実行                                  |
-| ---------- | -------------------------------------- | --------- | ------------------------------------------ |
-| `issue`    | 発生している問題、影響、原因、対応結果 | `done`    | `exec run --register` で対応できる         |
-| `decision` | 判断の背景、選択肢、決定内容、決定理由 | `decided` | 対象外。人が判断して `register close` する |
-| `todo`     | 実施内容、完了条件、作業結果           | `done`    | `exec run --register` で対応できる         |
+## 4. 発展: 成果物カタログからscheduleへ展開する
 
-### 3.3. 判断を確定してカタログ作成へ進む
-
-issue に人が着手し、個票へ問題、影響、原因、対応方針を記入して完了させます。
-
-```bash
-# チャット:「issue <issue-id> に着手して」
-npx specdojo register start --project <project-id> --id <issue-id>
-
-# issue 個票を編集して調査結果を記録する
-
-# チャット:「issue <issue-id> を『問題、影響、対応方針を整理』で完了して」
-npx specdojo register close \
-  --project <project-id> \
-  --id <issue-id> \
-  --conclusion "問題、影響、対応方針を整理"
-```
-
-issue の結論を基に、decision 個票へ選択肢、決定内容、理由を記入します。decision は agent の実行対象ではないため、人が判断して完了させます。
-
-```bash
-# チャット:「decision <decision-id> に着手して」
-npx specdojo register start --project <project-id> --id <decision-id>
-
-# decision 個票を編集して判断内容を記録する
-
-# チャット:「decision <decision-id> を『採用するスコープと成果物を決定』で完了して」
-npx specdojo register close \
-  --project <project-id> \
-  --id <decision-id> \
-  --conclusion "採用するスコープと成果物を決定"
-```
-
-provider 未設定でも、`issue` や `todo` から生成される exec plan を確認できます。
-
-```bash
-# チャット:「issue または todo <issue-or-todo-id> の実行計画を作って」
-npx specdojo exec plan --project <project-id> --register <issue-or-todo-id>
-```
-
-agent 設定が完了している場合は、同じ登録項目を実行できます。成功後は `review` になるため、人が result と成果物を確認して `register close` します。
-
-```bash
-# チャット:「issue または todo <issue-or-todo-id> を agent に実行させて」
-npx specdojo exec run --project <project-id> --register <issue-or-todo-id>
-```
-
-個票内の `_TODO_` を解消してから `register close` すると、個票の文書状態も `ready` になります。基本手順では、成果物カタログ作成の todo を `open` のまま残し、`成果物カタログからscheduleへ展開する` で `dct-<domain>.yaml` を作成・検証した後に完了させます。登録簿は立ち上げ時の課題・判断・作業履歴、成果物カタログは合意後の管理対象成果物の正本です。同じ計画済み作業を register と schedule の両方で継続管理しません。
-
-## 4. 成果物カタログからscheduleへ展開する
-
-この経路では、成果物カタログ（`dct-<domain>.yaml`）とトラック戦略（`sch-strategy-<track>.yaml`）から Schedule を生成し、依存関係に従ってタスクを実行します。
+この経路では、epic の子 todo から成果物カタログ（`dct-<domain>.yaml`）とトラック戦略（`sch-strategy-<track>.yaml`）を作成して Schedule を生成し、依存関係に従ってタスクを実行します。
 
 ### 4.1. 成果物カタログを作成する
 
@@ -689,7 +1040,7 @@ npx specdojo exec run --project <project-id> --plan <execution_path>/exec/plans/
 
 ここまでで、register による立ち上げ整理から、成果物カタログ、Schedule、1タスクの完了までの Quick Start は終了です。以降の worktree 隔離実行と routine は、agent 設定後に試す任意の発展手順です。
 
-## 5. （発展）worktreeで1タスクを隔離実行する
+## 5. 発展: worktreeで1タスクを隔離実行する
 
 前節「1タスクを実行する」は human・in-place の経路でした。agent に成果物を作らせる場合は、変更を git worktree に隔離して実行し、成功時に現在ブランチへ merge back できます。この経路は agent・provider の設定が前提です。先に [exec設定ガイド](exec-config-guide.md) に従って `.specdojo/agent-members.yaml` の agent と `.specdojo/exec-defaults.yaml` を用意し、`execution: agent` のフェーズを持つ strategy で `schedule build` / `exec refresh` まで済ませておきます。
 
@@ -710,7 +1061,7 @@ npx specdojo exec run --project <project-id> --auto --parallel 5
 
 各段階（prepare → agent → commit → merge → remove）を人が確認しながら進める場合は [exec worktree運用ガイド](exec-worktree-guide.md)、project `develop`・feature・exec のブランチ全体運用は [ブランチワークフローガイド](branch-workflow-guide.md)、自動・並列実行の運用は [Schedule実行運用ガイド](schedule-operation-guide.md) を参照してください。
 
-## 6. routineで定期実行する
+## 6. 発展: routineで定期実行する
 
 この経路では、動作確認済みの Job を `rtn-*.yaml` に定義した間隔で起動します。Job は schedule または register のagent実行を決定論的なコマンドで呼び出します。routine は任意の発展手順です。先に [exec設定ガイド](exec-config-guide.md) に従ってagentを設定し、次のような open かつ高優先度のtodoを用意します。
 

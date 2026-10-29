@@ -1,0 +1,114 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.5 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZG0A
+
+ ❯ tests/src/exec/register-plan-escape.test.ts (32 tests | 1 failed) 6323ms
+     × approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる 5591ms
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-25T02:58:19.665Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-25T02:57:20.193Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-25T02:57:20.469Z.
+fallback reporter complete
+Updated ticket status → ready: /tmp/specdojo-ticket-1rI64g/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-0nAWv6/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-REPqQl/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-zVjm8C/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-BprNjF/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-NQ2TwU/pjr-0001-topic.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+before
+  
+  
+docs/selected.md
+Wrote agent stdout: /tmp/specdojo-agent-command-uoqBuf/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-2DH2gf/outputs/partial.txt
+Would move 1 agent member(s) from /tmp/specdojo-members-0IHWvT/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-0IHWvT/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-0IHWvT/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-0IHWvT/.specdojo/agent-members.yaml
+
+ Test Files  1 failed | 146 passed (147)
+      Tests  1 failed | 2462 passed (2463)
+   Start at  11:57:03
+   Duration  47.08s (transform 3.89s, setup 670ms, import 26.50s, tests 43.88s, environment 9ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+reporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+problem
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/src/exec/register-plan-escape.test.ts:467:3
+    465|   });
+    466|
+    467|   it("approach の有無によらず、共通の規約は参照パスと要点だけを本文に載せる", async () => {
+       |   ^
+    468|     const referencePath = "docs/ja/specdojo/exec-templates/xep-common-…
+    469|     const plainOutPath = path.join(dir, "plan-plain.md");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

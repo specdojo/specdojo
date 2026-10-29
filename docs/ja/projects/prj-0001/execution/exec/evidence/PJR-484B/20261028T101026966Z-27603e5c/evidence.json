@@ -1,0 +1,1464 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-484B",
+  "run_id": "20261028T101026966Z-27603e5c",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-28T10:11:28.064Z",
+    "completed_at": "2026-10-28T10:24:18.633Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-484b.yaml",
+      "status": "MM"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-484b-deliverable-type-declaration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/atc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/atc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bac-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bdd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bds-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bes-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bes-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bps-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/br-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cld-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cnd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cop-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cop-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cpd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cpd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cstd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cxd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dec-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dmd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dmd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/etc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/etc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-api-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-file-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-business-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-data-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-interface-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-operations-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-test-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/itc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/itc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/mip-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/mm-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/mtp-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ntp-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opr-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/otp-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/otp-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-members-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-organization-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-plan-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-raci-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-roles-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-charter-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-comparison-of-alternatives-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-scope-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sac-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sch-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sf-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sf-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sld-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tml-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsp-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/uis-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/utc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/utc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/atc-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/atc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/bac-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/bds-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/bes-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/bes-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ccd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdsd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cld-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cnd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cop-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cop-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cpd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cxd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/dmd-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/dmd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/etc-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/etc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-file-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/itc-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/itc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/mtp-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-availability-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-integrity-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-maintainability-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-operations-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-performance-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-reliability-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-security-safety-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-usability-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ntp-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/opd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/opr-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/otp-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/otp-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sac-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sf-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sf-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sld-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/stc-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/stc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sysd-critical-flows-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sysd-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/tsp-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/uis-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/utc-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/utc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-frontmatter-ajv2020.cjs",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/deliverable-type.cjs",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-lint/deliverable-type.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "CHANGELOG.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-484b-deliverable-type-declaration.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/atc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/atc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bac-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bdd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bds-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bes-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bes-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/bps-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/br-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cdsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cld-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cnd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cop-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cop-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cpd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cpd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cstd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/cxd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dct-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dec-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dmd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/dmd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/etc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/etc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/gl-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-api-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-file-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-business-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-data-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-interface-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-operations-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/imp-test-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/itc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/itc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/mip-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/mm-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/mtp-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-availability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-integrity-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-maintainability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-operations-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-performance-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-reliability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-security-safety-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/nfr-usability-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/ntp-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opr-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/opr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/otp-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/otp-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pjr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-change-request-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-communication-plan-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-issue-log-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-members-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-organization-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-plan-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-quality-management-plan-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-raci-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-risk-register-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pm-roles-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/pr-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-assumptions-constraints-dependencies-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-charter-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-comparison-of-alternatives-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-issues-and-approach-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-overview-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-scope-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-stakeholder-register-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/prj-success-criteria-and-acceptance-criteria-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sac-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sch-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sf-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sf-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sld-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-mermaid-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/stsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-critical-flows-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-cross-cutting-policy-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/sysd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tml-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/trc-requirements-to-specs-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/trc-requirements-to-tests-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsd-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsd-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/tsp-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/uis-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/utc-index-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/rulebooks/utc-rulebook.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/atc-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/atc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/bac-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/bds-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/bes-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/bes-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ccd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cdsd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cld-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cnd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cop-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cop-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cpd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/cxd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/dmd-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/dmd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/etc-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/etc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ifx-file-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/itc-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/itc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/mtp-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-availability-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-integrity-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-maintainability-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-operations-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-performance-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-reliability-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-security-safety-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/nfr-usability-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/ntp-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/opd-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/opr-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/otp-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/otp-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sac-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sf-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sf-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sld-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/stc-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/stc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sysd-critical-flows-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sysd-cross-cutting-policy-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/sysd-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/tsp-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/uis-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/utc-index-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/samples/utc-sample.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/document-metadata-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/standards/rulebook-authoring-standard.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/specdojo/schemas/v1/rulebook-frontmatter.schema.yaml",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/remark-frontmatter-ajv2020.cjs",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-lint/src/deliverable-type.cjs",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-lint/deliverable-type.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 167,
+    "summary": "CHANGELOG.md                                       |   6 +\n .../pjr-484b-deliverable-type-declaration.md       | 155 ++++++++++++++++++++-\n docs/ja/specdojo/rulebooks/atc-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/atc-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/bac-rulebook.md         |   9 +-\n docs/ja/specdojo/rulebooks/bdd-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/bds-rulebook.md         |   7 +-\n docs/ja/specdojo/rulebooks/bes-index-rulebook.md   |  15 +-\n docs/ja/specdojo/rulebooks/bes-rulebook.md         |   7 +-\n docs/ja/specdojo/rulebooks/bps-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/br-rulebook.md          |   1 +\n docs/ja/specdojo/rulebooks/ccd-mermaid-rulebook.md |   1 +\n .../ja/specdojo/rulebooks/cdfd-mermaid-rulebook.md |   1 +\n .../specdojo/rulebooks/cdfd-overview-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/cdfd-rulebook.md        |   1 +\n docs/ja/specdojo/rulebooks/cdfd-uc-rulebook.md     |   1 +\n docs/ja/specdojo/rulebooks/cdsd-rulebook.md        |   5 +-\n docs/ja/specdojo/rulebooks/cld-rulebook.md         |   3 +-\n docs/ja/specdojo/rulebooks/cnd-mermaid-rulebook.md |   1 +\n docs/ja/specdojo/rulebooks/cnd-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/cop-index-rulebook.md   |   3 +-\n docs/ja/specdojo/rulebooks/cop-rulebook.md         |   5 +-\n docs/ja/specdojo/rulebooks/cpd-mermaid-rulebook.md |   1 +\n docs/ja/specdojo/rulebooks/cpd-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/cstd-rulebook.md        |   1 +\n docs/ja/specdojo/rulebooks/cxd-mermaid-rulebook.md |   1 +\n docs/ja/specdojo/rulebooks/cxd-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/dct-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/dct-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/dec-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/dmd-index-rulebook.md   |   3 +-\n docs/ja/specdojo/rulebooks/dmd-rulebook.md         |   3 +-\n docs/ja/specdojo/rulebooks/etc-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/etc-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/gl-rulebook.md          |   1 +\n docs/ja/specdojo/rulebooks/ifd-mermaid-rulebook.md |   1 +\n docs/ja/specdojo/rulebooks/ifx-api-rulebook.md     |   1 +\n docs/ja/specdojo/rulebooks/ifx-cmd-rulebook.md     |   1 +\n docs/ja/specdojo/rulebooks/ifx-file-rulebook.md    |   3 +-\n docs/ja/specdojo/rulebooks/ifx-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/ifx-msg-rulebook.md     |   1 +\n .../ja/specdojo/rulebooks/imp-business-rulebook.md |   1 +\n docs/ja/specdojo/rulebooks/imp-data-rulebook.md    |   1 +\n .../specdojo/rulebooks/imp-interface-rulebook.md   |   1 +\n .../specdojo/rulebooks/imp-operations-rulebook.md  |   1 +\n docs/ja/specdojo/rulebooks/imp-test-rulebook.md    |   1 +\n docs/ja/specdojo/rulebooks/itc-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/itc-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/mip-index-rulebook.md   |   3 +-\n docs/ja/specdojo/rulebooks/mm-rulebook.md          |   1 +\n docs/ja/specdojo/rulebooks/mtp-rulebook.md         |   7 +-\n .../rulebooks/nfr-availability-rulebook.md         |  17 +--\n docs/ja/specdojo/rulebooks/nfr-index-rulebook.md   |  19 +--\n .../specdojo/rulebooks/nfr-integrity-rulebook.md   |  17 +--\n .../rulebooks/nfr-maintainability-rulebook.md      |  17 +--\n .../specdojo/rulebooks/nfr-operations-rulebook.md  |  17 +--\n .../specdojo/rulebooks/nfr-performance-rulebook.md |  17 +--\n .../specdojo/rulebooks/nfr-reliability-rulebook.md |  19 +--\n .../rulebooks/nfr-security-safety-rulebook.md      |  17 +--\n .../specdojo/rulebooks/nfr-usability-rulebook.md   |  17 +--\n docs/ja/specdojo/rulebooks/ntp-rulebook.md         |  13 +-\n docs/ja/specdojo/rulebooks/opd-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/opd-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/opr-index-rulebook.md   |   1 +\n docs/ja/specdojo/rulebooks/opr-rulebook.md         |   1 +\n docs/ja/specdojo/rulebooks/otp-index-rulebook.m…"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "xargs -d '\\n' npx prettier --write < tmp/pjr-484b-format-files.txt",
+      "status": "passed",
+      "summary": "変更対象 166 件を整形。後続の追記も対象限定で再整形済み。"
+    },
+    {
+      "source": "executor",
+      "command": "node --check packages/docs-lint/src/deliverable-type.cjs",
+      "status": "passed",
+      "summary": "照合処理の構文確認に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --check packages/docs-lint/src/remark-frontmatter-ajv2020.cjs",
+      "status": "passed",
+      "summary": "frontmatter plugin の構文確認に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "終了コード 0。未作成成果物への既存警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "終了コード 0。登録簿の派生ビュー生成に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-484B/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-484B/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-484B/src/shared/specdojo-config.ts\n  1220:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-484B\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.7 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-484B/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-484B/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.7 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-484B\n\nRate limit detected for pinned agent pinned. Waiting until 2026-10-28T10:44:12.389Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-28T10:43:12.831Z.\nfallback complete\nresult-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-comm\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "final_message": "schema、107 件の rulebook 宣言、Markdown sample 50 件、lint 照合、単体テスト、標準文書・CHANGELOG・個票を更新しました。指定の 7 検査は親 runner が実行します。",
+  "completion_status": "complete",
+  "handoff": [
+    "`deliverable_type` を必須にし、成果物 schema の `$defs.deliverableType` を分類の正本として参照しました。107 件の割り当てと理由は個票の対応結果に記録済みです。",
+    "index は内容で分類しました。影響調査とトレーサビリティは管理報告・管理ビューなので `project`。MIP は管理計画なので `project`、DMD は `data`、COP/OTP は `operations`、MTP/NTP は `test`、CCD/CSTD は `data` としました。",
+    "照合は主 rulebook の宣言を使い、`includes` はたどりません。テンプレートは `frontmatter_template.specdojo` を比較します。完全 ID で解決し、同じ ID のローカル文書を優先します。参照不明・曖昧・宣言欠落はエラーです。",
+    "YAML データと生成マーカーを持つ YAML 表示用ページは対象外です。PJR-0D0T で宣言に合わせて移行し、YAML 対象 rulebook 本文の旧 type 指定も追従してください。",
+    "カタログ検証は成功しました。未作成成果物に対する既存の `based_on` 検証警告は残っています。親 runner の 7 検査の結果を evidence/result へ追記してください。result ファイルと登録簿の状態項目は編集していません。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-484B/20261028T101026966Z-27603e5c/executor.log",
+      "bytes": 2545,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-484B/20261028T101026966Z-27603e5c/parent-validation-attempt-1-test-unit.log",
+      "bytes": 5633,
+      "truncated": false
+    }
+  ]
+}

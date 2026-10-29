@@ -16,11 +16,18 @@ export type SchedulerStrategy = "critical-first" | "fifo";
 // cross-deliverable-dedup は明示した成果物群を横断して正本を選び、重複を要約と参照へ置換する。
 // finalize は human が成果物のみを最終確認して status を ready へ確定する進め方、
 // bootstrap-finalize は bootstrap と対になり、成果物と参考資料一式をまとめて確定する進め方。
+// catalog-planning / strategy-planning は register の domain / track 単位で計画を生成する。
 export const APPROACHES = [
   "fully-guided",
   "recipe-guided",
   "freeform",
   "bootstrap",
+  "catalog-planning",
+  "strategy-planning",
+  "rulebook-authoring",
+  "recipe-authoring",
+  "sample-authoring",
+  "template-authoring",
   "retrofit",
   "cross-deliverable-dedup",
   "rulebook-maintenance",

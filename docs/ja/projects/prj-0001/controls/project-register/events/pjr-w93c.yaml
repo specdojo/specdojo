@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_72835fec4f9c45abac99bb9bfefba10e
+  ts: "2026-10-21T13:17:35Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 別の project の登録簿へ起票できるようにする
+    - field: description
+      from: ""
+      to: project ごとに統合ブランチと作業ツリーが分かれているため、ある project の作業ツリーから別の project の todo などを起票できず、--from で別の project の項目も指せない。register add --project で相手の project の統合ブランチへ直接記帳し、project 付きの --from を使えるようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-21"
+    - field: due
+      from: ""
+      to: _TODO_
+- v: 1
+  id: reg_f6f975abc972476eaa74de3a8adaf6ae
+  ts: "2026-10-21T13:26:13Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_72835fec4f9c45abac99bb9bfefba10e
+- v: 1
+  id: reg_1db81ff7dfe34752875124e1753c7552
+  ts: "2026-10-21T13:41:34Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: lint-md"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: lint-md"
+  previous_event_id: reg_f6f975abc972476eaa74de3a8adaf6ae
+- v: 1
+  id: reg_2dfc70b930df4d3582e35c47077c2aec
+  ts: "2026-10-21T14:14:39Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: lint-md"
+      to: "-"
+  previous_event_id: reg_1db81ff7dfe34752875124e1753c7552
+- v: 1
+  id: reg_b4c3ba005c144de18fd63f129d969bd4
+  ts: "2026-10-21T14:22:13Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_2dfc70b930df4d3582e35c47077c2aec
+- v: 1
+  id: reg_759723f131de4d028e283b396a8d9e67
+  ts: "2026-10-21T14:31:15Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・統合テスト・親の検証を確かめ、prj-0002 から止まる条件を試し、統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-21"
+    - field: conclusion
+      from: "-"
+      to: 別の project の作業ツリーから register add --project `<id>` --commit で、相手の統合ブランチ（integration_branch、既定は project/`<id>`/develop）へ記帳できるようにした。相手のブランチを開いた作業ツリーがなければ一時的な worktree を使う。--commit なし、相手の未 commit の変更、ブランチがない場合、別の project への状態遷移は書き込み前に止める。--from は project 付きで別の project の項目を指せる
+  previous_event_id: reg_b4c3ba005c144de18fd63f129d969bd4

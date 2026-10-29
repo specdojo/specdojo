@@ -1,0 +1,14 @@
+衝突回避を実装しました。
+
+- 乱数を2バイトから4バイトへ拡張。
+- 衝突時は連番を付与。event は排他的に新規作成。
+- 時刻・乱数を固定した決定的な回帰テストを追加。
+- 旧形式との読み取り互換を維持。
+- 個票、ライフサイクルガイド、CHANGELOG を更新。
+- result は後段 reporter のため未編集です。
+
+親 runner が lint、型検査、単体・統合テスト、schema 検証を実施します。
+
+<specdojo_executor_evidence>
+{"final_message":"plan・アーカイブ・event の名前衝突を連番で回避し、決定的な回帰テストと関連文書を更新した。","validations":[{"command":"npx prettier --write CHANGELOG.md docs/ja/projects/prj-0001/controls/project-register/pjr-cnnt-plan-stem-random-collision.md docs/ja/specdojo/guides/plan-result-lifecycle-guide.md src/exec/events.ts src/exec/plans-core.ts src/exec/plans-storage.ts tests/src/exec/deliverable.test.ts tests/src/exec/events.test.ts tests/src/exec/plans.test.ts tests/src/exec/run/inplace.test.ts","status":"passed","summary":"変更したコード、テスト、文書はすべて整形済み。"},{"command":"node --import tsx src/specdojo.ts register build","status":"passed","summary":"登録簿の生成処理が成功した。"},{"command":"node --import tsx tools/catalog-validate-if-configured.mjs","status":"passed","summary":"catalog 検証は既存の参照先欠落 warning のみで正常終了した。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーはない。"},{"command":"specdojo exec run --project prj-0001 --register PJR-JSEY","status":"requires_human","summary":"統合後の実環境で runner の smoke test を1回実施する。"}]}
+</specdojo_executor_evidence>

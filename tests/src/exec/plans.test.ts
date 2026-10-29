@@ -56,7 +56,7 @@ describe("ownerRoleFields", () => {
   it("owner 未設定の場合は全フィールドを MISSING にする", () => {
     const actual = ownerRoleFields(undefined, roleMapOf([]), vpMapOf([]));
 
-    expect(actual).toEqual({ label: "_MISSING_", note: "_MISSING_", viewpoints: "_MISSING_" });
+    expect(actual).toEqual({ label: "_MISSING_", note: "_MISSING_", viewpoints: "- _MISSING_" });
   });
 
   it("owner の責務（project_note）と該当 role の観点を値として返す", () => {
@@ -87,11 +87,11 @@ describe("ownerRoleFields", () => {
     expect(actual.viewpoints).toContain("- 目的・スコープとの整合:");
   });
 
-  it("該当 role の観点が無い場合は viewpoints を MISSING にする", () => {
+  it("該当 role の観点が無い場合は viewpoints を MISSING の箇条書き 1 項目にする", () => {
     const roles = roleMapOf([{ code: "DEV", name: "Developer", project_note: "note" }]);
     const actual = ownerRoleFields("DEV", roles, vpMapOf(PO_VIEWPOINTS));
 
-    expect(actual.viewpoints).toBe("_MISSING_");
+    expect(actual.viewpoints).toBe("- _MISSING_");
   });
 });
 
@@ -156,19 +156,32 @@ describe("deliverableDocId", () => {
 });
 
 describe("buildInPlaceStem / stemFromPlanPath", () => {
-  it("builds a stem prefixed by the slug and unique across calls", () => {
-    const a = buildInPlaceStem("prj-overview");
-    const b = buildInPlaceStem("prj-overview");
+  it("uses a sequence fallback when the slug, second, and random suffix collide", () => {
+    const dependencies = {
+      now: () => "2026-10-22T12:34:56Z",
+      randomHex: (bytes: number) => {
+        expect(bytes).toBe(4);
+        return "0123abcd";
+      },
+    };
 
-    expect(a.startsWith("prj-overview-")).toBe(true);
-    // Two generations of the same slug must not collide (UTC + random suffix).
-    expect(a).not.toBe(b);
+    const a = buildInPlaceStem("prj-overview", dependencies);
+    const b = buildInPlaceStem("prj-overview", dependencies);
+
+    expect(a).toBe("prj-overview-20261022T123456Z-0123abcd");
+    expect(b).toBe("prj-overview-20261022T123456Z-0123abcd-1");
   });
 
-  it("recovers the stem from a plan path (round-trips with the plan file name)", () => {
-    const stem = buildInPlaceStem("overview");
+  it("recovers both the new and existing stem formats from a plan path", () => {
+    const stem = buildInPlaceStem("overview", {
+      now: () => "2026-10-22T12:34:56Z",
+      randomHex: () => "89abcdef",
+    });
 
     expect(stemFromPlanPath(`/repo/exec/plans/${stem}-plan.md`)).toBe(stem);
+    expect(stemFromPlanPath("overview-20261022T123456Z-ab12-plan.md")).toBe(
+      "overview-20261022T123456Z-ab12",
+    );
     expect(stemFromPlanPath("prj-overview-result-plan.md")).toBe("prj-overview-result");
   });
 });
@@ -191,19 +204,23 @@ describe("parsePlanTaskIdentity", () => {
     ].join("\n");
   }
 
-  it.each(["bootstrap", "retrofit", "finalize", "bootstrap-finalize", "fully-guided"])(
-    "approach %s を frontmatter から復元する",
-    (approach) => {
-      const identity = parsePlanTaskIdentity(planWithApproach(approach));
+  it.each([
+    "bootstrap",
+    "rulebook-authoring",
+    "retrofit",
+    "finalize",
+    "bootstrap-finalize",
+    "fully-guided",
+  ])("approach %s を frontmatter から復元する", (approach) => {
+    const identity = parsePlanTaskIdentity(planWithApproach(approach));
 
-      expect(identity).toEqual({
-        taskId: "T-TEST-overview-010",
-        mode: "edit",
-        projectId: "test",
-        approach,
-      });
-    },
-  );
+    expect(identity).toEqual({
+      taskId: "T-TEST-overview-010",
+      mode: "edit",
+      projectId: "test",
+      approach,
+    });
+  });
 
   it("未知の approach は無視して identity のみ復元する", () => {
     const identity = parsePlanTaskIdentity(planWithApproach("unknown-approach"));
@@ -578,11 +595,9 @@ describe("review plan templates", () => {
       const source = readFileSync(path, "utf8");
       const formatted = await format(source, { parser: "markdown" });
 
-      expect(formatted, template).toContain(
-        "| --- | ------ | ------------ | -------- |\n_DONE_CRITERIA_ROWS_",
-      );
+      expect(formatted, template).toContain("| --- | --- | --- | --- |\n_DONE_CRITERIA_ROWS_");
       expect(formatted, template).not.toContain(
-        "| --- | ------ | ------------ | -------- |\n\n_DONE_CRITERIA_ROWS_",
+        "| --- | --- | --- | --- |\n\n_DONE_CRITERIA_ROWS_",
       );
     }
   });
@@ -868,6 +883,33 @@ describe("generateSinglePlan", () => {
       // Sibling plan and index are untouched (single-task generation must not wipe them).
       expect(readFileSync(join(plansDir, "T-TEST-overview-099-plan.md"), "utf8")).toBe("keep me\n");
       expect(readFileSync(join(plansDir, "index.md"), "utf8")).toBe("# existing index\n");
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("authoring approach は target 契約を表せない schedule plan では拒否する", async () => {
+    const root = mkdtempSync(join(tmpdir(), "specdojo-authoring-schedule-"));
+    const catalogPath = join(root, "catalog");
+    try {
+      writeCatalog(catalogPath);
+      await expect(
+        generateSinglePlan({
+          executionPath: join(root, "execution"),
+          projectId: "test",
+          catalogPath,
+          task: {
+            id: "T-TEST-overview-025",
+            local_id: "overview",
+            name: "rulebook authoring",
+            mode: "edit",
+            approach: "rulebook-authoring",
+            schedule_file: "sch-track-test.yaml",
+            fifo_rank: 0,
+            critical_first_rank: 0,
+          },
+        }),
+      ).rejects.toThrow(/register-only/);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }
@@ -1183,8 +1225,8 @@ describe("generateSinglePlan", () => {
       });
 
       const plan = readFileSync(outPath, "utf8");
-      expect(plan).toContain("| --- | ------ | ------------ | -------- |\n| DC-001 |");
-      expect(plan).not.toContain("| --- | ------ | ------------ | -------- |\n\n| DC-001 |");
+      expect(plan).toContain("| --- | --- | --- | --- |\n| DC-001 |");
+      expect(plan).not.toContain("| --- | --- | --- | --- |\n\n| DC-001 |");
       expect(plan).toContain("### プロジェクトコンテキスト");
       expect(plan).toContain("- [[test:prj-overview]]");
       // review は grade の評価結果を入力にする。評価対象と対象種別を plan に展開する。

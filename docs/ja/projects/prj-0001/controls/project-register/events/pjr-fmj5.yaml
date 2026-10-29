@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_36b1dc8973a443b49f411729a8fab8ce
+  ts: "2026-10-28T21:40:56Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.5.0 を公開する
+    - field: description
+      from: ""
+      to: 0.4.7 以降の変更（成果物 type の移行という破壊的変更を含む）を v0.5.0 として検証し、main へ昇格して npm に公開する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: BA
+    - field: registered
+      from: ""
+      to: "2026-10-29"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_df5cd5ba26614eddb9a3e75354141fce
+  ts: "2026-10-28T22:11:45Z"
+  action: update
+  actor: specdojo-orchestrator
+  from_status: open
+  to_status: open
+  reason: 0.5.0 の試用で見つかった MD013 の問題を公開前に直すため
+  changes:
+    - field: depends_on
+      from: "-"
+      to: '["PJR-0QW0"]'
+  previous_event_id: reg_36b1dc8973a443b49f411729a8fab8ce

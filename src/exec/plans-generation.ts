@@ -9,6 +9,8 @@ import type { CriteriaItem } from "../catalog/types.js";
 import type { ReviewViewpoint } from "../review/types.js";
 import type { RoleDefinition } from "./role-types.js";
 import type { ReviewGradeOutcome } from "../review/grade.js";
+import { isAuthoringApproach, type AuthoringKind } from "../kata/authoring.js";
+import { isPlanningApproach } from "../register/planning.js";
 import {
   MISSING,
   applicableReviewCriteria,
@@ -63,6 +65,7 @@ function buildEditPlanMarkdown(
     origin?: TaskOrigin;
     targets?: readonly string[];
     refs?: KataRefs;
+    authoring?: AuthoringPlanFields;
     additionalConditions?: string;
   },
 ): string {
@@ -101,7 +104,9 @@ function buildEditPlanMarkdown(
     _DELIVERABLE_DEPENDS_ON_: deliverableDependsOn(deliverable, projectId, catalogPath),
     _PROJECT_CONTEXT_: projectContextSection(projectContext, deliverable, task.approach, projectId),
     _DELIVERABLE_OVERVIEW_: deliverableOverview(deliverable),
-    _IMPLEMENTATION_EVIDENCE_: implementationEvidence(deliverable),
+    _IMPLEMENTATION_EVIDENCE_: deliverable?.catalogless
+      ? "個票に指定された実装のパスを読み取り専用の調査入力とする。パスが未指定なら実装反映の前に個票へ明記する。"
+      : implementationEvidence(deliverable),
     _DELIVERABLE_PATH_: deliverablePath(deliverable),
     _RESULT_REF_: resultRef,
     _RULEBOOK_REF_: refs.rulebook,
@@ -119,7 +124,9 @@ function buildEditPlanMarkdown(
     _OWNER_ROLE_LABEL_: ownerRole.label,
     _OWNER_ROLE_NOTE_: ownerRole.note,
     _OWNER_ROLE_VIEWPOINTS_: ownerRole.viewpoints,
-    _DONE_CRITERIA_GOALS_: doneCriteriaGoals(criteria, task.owner),
+    _DONE_CRITERIA_GOALS_: deliverable?.catalogless
+      ? "カタログの `done_criteria` はない。個票の完了条件と rulebook を完了基準とする。"
+      : doneCriteriaGoals(criteria, task.owner),
     _DONE_CRITERIA_CHECKLIST_: doneCriteriaChecklist(criteria),
     _DONE_CRITERIA_ITEMS_: doneCriteriaItems(criteria),
     _GRADE_FINDINGS_: gradeFindingsText(
@@ -132,13 +139,43 @@ function buildEditPlanMarkdown(
       crossDeliverables,
       catalogPath,
     ),
+    _AUTHORING_KATA_ID_: planOverrides?.authoring?.id ?? MISSING,
+    _AUTHORING_KATA_KIND_: planOverrides?.authoring?.kind ?? MISSING,
+    _AUTHORING_KATA_PATH_: planOverrides?.authoring?.path ?? MISSING,
+    _AUTHORING_STANDARD_ID_: planOverrides?.authoring?.standardId ?? MISSING,
+    _AUTHORING_STANDARD_PATH_: planOverrides?.authoring?.standardPath ?? MISSING,
+    _AUTHORING_EXEMPLARS_:
+      planOverrides?.authoring?.exemplars
+        .map(
+          (example) =>
+            `- \`${example.id}\`: ${example.name}（\`${example.path}\`、${example.catalog ? "現在の参照" : "参照更新"}: \`${example.currentReference}\`）`,
+        )
+        .join("\n") || "- なし（kata だけを新規作成する）",
   };
-  const body = expandTemplate(template, values);
+  const effectiveTemplate = deliverable?.catalogless
+    ? template
+        .split("\n")
+        .filter(
+          (line) =>
+            !(["recipe", "sample", "template"] as const).some(
+              (kind) => refs[kind] === MISSING && line.includes(`_${kind.toUpperCase()}_REF_`),
+            ),
+        )
+        .join("\n")
+    : template;
+  let body = expandTemplate(effectiveTemplate, values);
+  if (deliverable?.catalogless && task.approach === "retrofit") {
+    body = body.replace("成果物カタログの `evidence_refs` から展開した", "個票に明記する");
+  }
   if (!planOverrides?.additionalConditions) return body;
   const section = [
     "## 個票の追加完了条件",
     "",
-    "成果物カタログの `done_criteria` に加え、登録簿の個票が定める次の条件も満たす。",
+    isPlanningApproach(task.approach)
+      ? "次の生成手順・完了条件と、個票が定める追加条件を満たす。"
+      : deliverable?.catalogless
+        ? "個票が定める次の条件と rulebook を満たす。"
+        : "成果物カタログの `done_criteria` に加え、登録簿の個票が定める次の条件も満たす。",
     "",
     planOverrides.additionalConditions.trim(),
     "",
@@ -237,6 +274,21 @@ type PlanGenContext = {
   reviewGradeOutcome?: ReviewGradeOutcome;
 };
 
+export type AuthoringPlanFields = {
+  id: string;
+  kind: AuthoringKind;
+  path: string;
+  standardId: string;
+  standardPath: string;
+  exemplars: Array<{
+    id: string;
+    name: string;
+    path: string;
+    currentReference: string;
+    catalog: boolean;
+  }>;
+};
+
 async function writeTaskPlan(
   ctx: PlanGenContext,
   task: PlanTask,
@@ -247,10 +299,19 @@ async function writeTaskPlan(
     origin?: TaskOrigin;
     targets?: readonly string[];
     refs?: KataRefs;
+    authoring?: AuthoringPlanFields;
     additionalConditions?: string;
   },
 ): Promise<string> {
   const mode: TaskMode = task.mode ?? "edit";
+  if (
+    (isAuthoringApproach(task.approach) || isPlanningApproach(task.approach)) &&
+    override?.origin !== "register"
+  ) {
+    throw new Error(
+      `Approach ${task.approach} is register-only because schedule targets cannot express its target contract`,
+    );
+  }
   const localId = task.local_id;
   const targetLocalIds = [...new Set(task.target_local_ids ?? [])];
   const crossDeliverables = new Map<string, DeliverableInfo>();
@@ -276,7 +337,11 @@ async function writeTaskPlan(
     );
   }
   const planTask: PlanTask = { ...task, mode };
-  if (task.approach === "retrofit" && implementationEvidence(deliverable) === MISSING) {
+  if (
+    task.approach === "retrofit" &&
+    !deliverable?.catalogless &&
+    implementationEvidence(deliverable) === MISSING
+  ) {
     throw new Error(
       `Task ${task.id} uses approach: retrofit but the target deliverable has no evidence_refs.`,
     );
@@ -405,6 +470,7 @@ export async function generateRegisterApproachPlan(opts: {
   targets: readonly string[];
   deliverable?: DeliverableInfo | null;
   refs?: KataRefs;
+  authoring?: AuthoringPlanFields;
   additionalConditions: string;
   outPath?: string;
   stem: string;
@@ -427,6 +493,7 @@ export async function generateRegisterApproachPlan(opts: {
     origin: "register",
     targets: opts.targets,
     ...(opts.refs ? { refs: opts.refs } : {}),
+    ...(opts.authoring ? { authoring: opts.authoring } : {}),
     additionalConditions: opts.additionalConditions,
     ...(opts.outPath ? { outPath: opts.outPath } : {}),
     stem: opts.stem,

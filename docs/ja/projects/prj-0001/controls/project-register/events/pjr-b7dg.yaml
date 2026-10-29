@@ -90,3 +90,38 @@
       from: "agent exited with non-zero code: 外出し後の `grade` による比較（finding の記録）が sandbox の承認待ちにより実行できず、プランの完了条件を満たせていないため。"
       to: grade による外出し前後の比較は agent を起動するため、codex の sandbox では実行できない。比較の実行者（orchestrator など）を決めてから再開する
   previous_event_id: reg_39042ca1d7234f7f9ee6f84787ed604a
+- v: 1
+  id: reg_972104c9af55442ea1053d138bba5d54
+  ts: "2026-10-28T09:37:51Z"
+  action: review
+  actor: specdojo-orchestrator
+  from_status: waiting
+  to_status: review
+  reason: grade の比較を記録し、残りは sample の作り直し（PJR-2W38）の扱いの判断のみとなったため
+  changes:
+    - field: status
+      from: waiting
+      to: review
+    - field: block_reason
+      from: grade による外出し前後の比較は agent を起動するため、codex の sandbox では実行できない。比較の実行者（orchestrator など）を決めてから再開する
+      to: "-"
+  previous_event_id: reg_33fe9b9c4e544e81ba860954dab92e8e
+- v: 1
+  id: reg_ce453c7d52994979bd396af87b851918
+  ts: "2026-10-28T09:42:45Z"
+  action: close
+  actor: indie
+  from_status: review
+  to_status: done
+  reason: 利用者が、grade の比較を終えた時点で close し、sample の作り直しは PJR-2W38 で扱う推奨案を承認したため
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-28"
+    - field: conclusion
+      from: "-"
+      to: 削除した例の有無を 50 件判定し、欠ける 43 件の rulebook は例を復元した。grade の外出し前後の比較では 2 観点に明確な差はなかった（評価条件は前後で異なる）。雛形の sample の作り直しは PJR-2W38 から必要なときに起票する
+  previous_event_id: reg_972104c9af55442ea1053d138bba5d54

@@ -4,6 +4,7 @@ id: specdojo:ifx-index-sample
 type: api
 title: 外部システムIF一覧(main)
 status: draft
+rulebook: specdojo:ifx-index-rulebook
 supersedes: []
 
 interfaces:

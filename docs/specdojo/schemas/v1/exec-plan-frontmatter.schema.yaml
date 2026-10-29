@@ -110,12 +110,13 @@ properties:
           minLength: 1
         minItems: 1
         description: >
-          Doc ids of the documents this task targets, each resolvable via the doc index.
-          The first entry is the target deliverable (project-qualified doc id,
-          <project-id>:<local_id>). Subsequent entries are reference materials
-          (rulebook/recipe/sample/template doc ids) the approach may modify or confirm
-          (bootstrap, bootstrap-finalize, *-maintenance). Unresolvable reference
-          materials are omitted.
+          Document IDs, or domain:<id> / track:<id> for register planning approaches. Existing documents are resolvable via the
+          doc index. For deliverable work, the first entry is the target deliverable and subsequent
+          entries are reference materials the approach may modify or confirm. For *-authoring
+          register tasks, the entry is an intentionally not-yet-existing kata id; read-only
+          exemplars are carried in the register item's sources and rendered as paths in the plan
+          body. Plans created before sources was introduced may retain exemplar doc ids after the
+          first target. Unresolvable reference materials are omitted.
 
       paths:
         type: array

@@ -1,0 +1,32 @@
+レビュー結果: **verdict 案は `complete-with-findings`** です。Run（`succeeded`）は完了しており、選ばれた 7 件はすべて `passed` / `pass` でした。統合を止める事項はありません。ただし、評価結果に minor finding が 1 件あり、スコアにも偏りが見られます。成果物、Job Run の出力、result には一切手を加えていません。
+
+**確認したこと**
+- **差分の範囲**: `bc0bbf72a..3721280a4` の差分は 14 ファイルで、Job Run の出力だけです。内訳は評価結果 7 件、Run JSON 1 件、plan・result・evidence 一式 6 件です。評価対象の `docs/ja/specdojo` 配下に変更はありません。
+- **記録どうしの整合**: Run JSON の `state: succeeded`、`exit_code` 0、evidence の executor・reporter の `succeeded`、空の stderr は互いに一致しています。stdout の集計は `selected=7 processed=7 completed_now=7 incomplete=0 exhausted=0` です。
+- **Job 固有の確認事項**:
+  - 終了コード 75（rate limit）や中断による未完了の段はありません。
+  - `failed` の段はありません。
+  - Run は `partial` ではありません。
+  - `retry_exhausted` の文書はありません。
+- **評価結果の鮮度**: kata 全体に対して `grade list` を `--changed-only`、`--incomplete`、`--rubric-outdated`、`--ungraded`、`--dependency-changed` で実行し、`grade state --exhausted` も実行しました。すべて出力なし・rc=0 です。verdict を決める直前にも同じ確認をし直し、変化はありませんでした。このため `grade-stale`、`grade-unavailable`、`changed-during-review` には当たりません。
+- **評価結果の変化**: 7 件とも `content_hash` は変わらず、評価基準が `grade-rubric-v1` から `v2` に変わっています。評価した agent は `flash-high-executor` で、results.tsv にある `agy-expert-executor` はその別名として登録されています。
+
+| 文書 | score の変化 | finding |
+| --- | --- | --- |
+| prj-comparison-of-alternatives-template | 94 → 100 | 0 |
+| prj-issues-and-approach-template | 96 → 98 | 1 |
+| prj-scope-template | 84 → 100 | 0 |
+| ほか 4 件 | 100 のまま | 0 |
+
+**Findings（完了は妨げない）**
+1. **minor finding が 1 件残っています。** 対象は `prj-issues-and-approach-template` の 59 行目で、ルールは `vp-qe-kata-conformance` です。内容は、各項目の先頭に `_TODO_:` または `_UNDECIDED` を付けるようガイドラインに追記すること、というものです。前回の評価から引き継がれた指摘で、文書側の改善として扱えばよいと考えます。
+2. **スコアが満点に偏っています。** 7 件中 6 件が 100 点で、全文書・全観点が level 4 です。特に `prj-scope-template` は本文が変わっていないのに、84 点から 100 点に上がりました。旧評価で level 3 だった観点がすべて level 4 になっています。評価基準を v2 に変えたことと、評価する agent が `codex-expert-executor` から変わったことが重なった結果と見られます。ここは評価設定の見直し候補として、人による確認をお勧めします。このレビューでは評価のやり直しはしていません。
+3. **Job Run の result の表記が不正確です（軽微）。** 「Runは完全な状態（`complete`）」と書かれていますが、実際の Run の状態は `succeeded` です。判断に影響はありません。
+
+**確認できなかった範囲**
+- 評価の生ログ（`logs/grade/runs/per-document/JBR-grade-kata-2c32d9d98320/`）と pipeline state ファイルの中身は見ていません。results.tsv は stdout に出力された分だけを確認しました。
+- スコアが上がった原因が評価基準の変更なのか、評価 agent の違いなのかは切り分けていません。
+
+<specdojo_executor_evidence>
+{"final_message":"verdict 案: complete-with-findings。Run（state `succeeded`、終了コード 0、stderr 空）では選ばれた 7 件すべてが stage1 `passed` / `pass` で、rate limit・`failed`・partial・`retry_exhausted` はない。差分 `bc0bbf72a..3721280a4`（14 ファイル）は Job Run の出力（評価結果 7 件、Run JSON、plan・result・evidence）だけで、`docs/ja/specdojo` 配下に変更はない。鮮度確認（`grade list` の `--changed-only` / `--incomplete` / `--rubric-outdated` / `--ungraded` / `--dependency-changed`、`grade state --exhausted`）はいずれも出力なしで、verdict 確定の直前にもやり直した。7 件とも `content_hash` は変わらず、評価基準が `grade-rubric-v1` から v2 になり、`graded_by` は `flash-high-executor`（`agy-expert-executor` はその別名）。Findings: (1) `prj-issues-and-approach-template` の 59 行目に minor finding が 1 件（`vp-qe-kata-conformance`、`_TODO_:` / `_UNDECIDED` ラベル付与の追記。前回から継続）。(2) スコアが満点に偏る（7 件中 6 件が 100、全観点 level 4。`prj-scope-template` は本文が変わらないまま 84→100）。評価基準 v2 への変更と評価 agent の変更が重なっており、評価設定の見直しを人が確認するよう推奨。(3) Job Run の result に「Runは完全な状態（`complete`）」とあるが、実際の状態は `succeeded`（軽微）。確認できなかった範囲: `logs/grade/runs/per-document/JBR-grade-kata-2c32d9d98320/` の生ログと pipeline state ファイルの中身、およびスコア上昇の原因（評価基準と評価 agent のどちらか）の切り分け。","validations":[{"command":"git diff --stat bc0bbf72adfb92c83fd9efb6a12b07839c2cb0df..3721280a46924d62c09d57c5362984ea6dd7e044 && git diff --name-status bc0bbf72adfb92c83fd9efb6a12b07839c2cb0df..3721280a46924d62c09d57c5362984ea6dd7e044","status":"passed","summary":"14 ファイル。すべて Job Run の出力（評価結果 7 件、Run JSON、plan・result・evidence）で、対象外の変更はない"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --changed-only","status":"passed","summary":"出力なし（rc=0）。評価結果は最新。verdict 確定の直前にもやり直した"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --incomplete","status":"passed","summary":"出力なし（rc=0）。評価パイプラインに未完了はない"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なし（rc=0）。`retry_exhausted` の文書はない"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --rubric-outdated","status":"passed","summary":"出力なし（rc=0）"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --ungraded","status":"passed","summary":"出力なし（rc=0）"},{"command":"node dist/specdojo.js grade list --target kata --project prj-0001 --dependency-changed","status":"passed","summary":"出力なし（rc=0）"}]}
+</specdojo_executor_evidence>

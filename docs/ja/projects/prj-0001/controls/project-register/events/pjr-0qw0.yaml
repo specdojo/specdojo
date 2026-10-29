@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_461a59e0beb144ff88526892e2bcac21
+  ts: "2026-10-28T22:11:05Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: markdownlint の設定がない利用リポジトリで result の commit 前検査が MD013 で統合を止める
+    - field: description
+      from: ""
+      to: docs-lint を入れた利用リポジトリでは markdownlint の既定設定（MD013）が効き、日本語の result が必ず統合前に止まる。設定がなくても SpecDojo の規則で検査し、init が設定を作るようにする
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-29"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-FMJ5"]'
+- v: 1
+  id: reg_378015c4603b479ab1fe1e277e5a2dfa
+  ts: "2026-10-28T22:12:05Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_461a59e0beb144ff88526892e2bcac21
+- v: 1
+  id: reg_36c51ec00fc8462cadcf9867f99f1e30
+  ts: "2026-10-28T22:35:14Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_378015c4603b479ab1fe1e277e5a2dfa
+- v: 1
+  id: reg_2391efbd80e64e209aac40a003041b83
+  ts: "2026-10-28T22:49:08Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分・個票・result と、配布物の試用で完了条件を確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: "-"
+      to: 設定がない場合は result の commit 前検査に SpecDojo の基本規則（MD013・MD024・MD033・MD036・MD041・MD060 を無効）を使い、既存設定を優先する。init と config init は .markdownlint.yaml を上書きせずに生成する。空のリポジトリで init の生成と、設定なしでの exec run --register の review までの通過を確認した
+  previous_event_id: reg_36c51ec00fc8462cadcf9867f99f1e30

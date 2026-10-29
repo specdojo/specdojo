@@ -1,0 +1,133 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.7 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-0D0T
+
+Updated ticket status → ready: /tmp/specdojo-ticket-FCNoDf/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-UYQnRw/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-czkVeZ/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-io0en9/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-PCki6F/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-vyDnhA/pjr-0001-topic.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: slidev=yes
+before
+  
+  
+docs/selected.md
+Would move 1 agent member(s) from /tmp/specdojo-members-JcKn5t/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-JcKn5t/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-JcKn5t/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-JcKn5t/.specdojo/agent-members.yaml
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+[dry-run] docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader status=pending
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/other-rulebook.md actor=actual-grader
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+resumed complete: docs/ja/specdojo/rulebooks/example-rulebook.md
+graded: docs/ja/specdojo/rulebooks/example-rulebook.md actor=actual-grader
+graded: ../product/document.md actor=actual-grader
+graded: ../api-checkout/document.md actor=actual-grader
+graded: ../web-checkout/document.md actor=actual-grader
+resumed complete: ../api-checkout/document.md
+graded: document.md actor=actual-grader
+resumed complete: ../web-checkout/document.md
+resumed complete: ../api-checkout/document.md
+resumed complete: document.md
+resumed complete: ../web-checkout/document.md
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-28T11:31:18.141Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-28T11:30:18.391Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-28T11:30:18.600Z.
+fallback reporter complete
+ ❯ tests/packages/docs-lint/yaml-deliverable-type.test.ts (15 tests | 1 failed) 7878ms
+     × matches every bundled YAML sample against its rulebook 6751ms
+Wrote agent stdout: /tmp/specdojo-agent-command-bLEazj/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-OTCAsW/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 158 passed (159)
+      Tests  1 failed | 2719 passed (2720)
+   Start at  20:29:38
+   Duration  55.88s (transform 3.18s, setup 627ms, import 23.62s, tests 66.79s, environment 10ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/packages/docs-lint/yaml-deliverable-type.test.ts > YAML deliverable metadata > matches every bundled YAML sample against its rulebook
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ tests/packages/docs-lint/yaml-deliverable-type.test.ts:114:3
+    112|   });
+    113|
+    114|   it("matches every bundled YAML sample against its rulebook", () => {
+       |   ^
+    115|     const root = process.cwd();
+    116|     const files = [
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

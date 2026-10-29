@@ -1,0 +1,11 @@
+個票の「対応結果」の表に 1 行追記しました。変更したのはこの個票だけです。
+
+追記した行は「2026-10-24 18:58 / PJR-ZV60 / sonnet-executor」です。日時は `TZ=Asia/Tokyo` で取った実行時刻です。
+
+対象の分割を PJR-ZV60 にしたのは、個票の完了条件にある一覧の末尾が PJR-ZV60 で、直前の確認の対象に加えたコミットでも PJR-ZV60 が追加されていたからです。ただし、PJR-ZV60 が `review` か `done` になっているかは確認できていません。登録簿 `pjr-index.md` がこの worktree に無く、状態を読めなかったためです。
+
+lint や test などの親の検証は、親 runner が実行します。executor 側では検証コマンドを実行していません。
+
+<specdojo_executor_evidence>
+{"final_message":"個票 pjr-jsey-exec-run-split-smoke.md の対応結果の表へ 1 行追記した（2026-10-24 18:58 / PJR-ZV60 / sonnet-executor）。他のファイルは変更していない。PJR-ZV60 の状態（review または done）は、登録簿がこの worktree に無く確認できていない。","validations":[{"command":"npm run lint:md","status":"not_run","summary":"親 runner が allowlist の検証として実行する。"}]}
+</specdojo_executor_evidence>

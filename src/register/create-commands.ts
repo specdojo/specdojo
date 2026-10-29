@@ -6,6 +6,7 @@ import { APPROACHES, type Approach } from "../shared/agent-types.js";
 import { appendRegisterEvent, buildRegisterEvent, registerEventFilePath } from "./events.js";
 import { nowUtcTimestamp } from "./date.js";
 import {
+  readRegisterItemContent,
   CELL_NONE,
   CELL_TODO,
   REMOVE_REGISTER_ITEM_FIELD,
@@ -19,7 +20,11 @@ import {
 import { resolveSpecdojoTemplatePath } from "../docs/template-resolution.js";
 import type { RegisterAddFields, RegisterCommandDependencies } from "./command-types.js";
 import { validateRegisterApproachTargetsForProject } from "./approach.js";
+import { normalizeDependsOn, validateRegisterDependencies } from "./dependency.js";
 import { normalizeDerivedFrom, validateDerivedFrom } from "./derivation.js";
+import { delegateExternalRegisterAdd } from "./external-project.js";
+import { validateRegisterTrack } from "./epic.js";
+import { isAuthoringApproach } from "../kata/authoring.js";
 
 function collectTarget(value: string, previous: string[] = []): string[] {
   return [...previous, value];
@@ -34,6 +39,21 @@ function normalizedTargets(values: string[] | undefined): string[] | undefined {
   }
   if (targets.length === 0) throw new Error("--target must contain a document id");
   return targets;
+}
+
+function normalizedSources(
+  values: string[] | undefined,
+  allowRemove = false,
+): string[] | undefined {
+  if (values === undefined) return undefined;
+  const sources = [...new Set(values.map((value) => value.trim()).filter(Boolean))];
+  if (sources.includes("-")) {
+    if (!allowRemove) throw new Error("--source - is only valid with register update");
+    if (sources.length !== 1) throw new Error("--source - cannot be combined with other sources");
+    return undefined;
+  }
+  if (sources.length === 0) throw new Error("--source must contain a reference");
+  return sources;
 }
 
 export function registerCreateCommands(
@@ -92,6 +112,7 @@ export function registerCreateCommands(
   const addCmd = reg.command("add").description("Add a new item to pjr-index.md");
   addProjectOption(addCmd);
   addCmd.requiredOption("--type <type>", `Item type: ${VALID_TYPES.join(" | ")}`);
+  addCmd.option("--track <track>", "Track governed by an epic (required for epic)");
   addCmd.requiredOption("--title <title>", "Short title for the item");
   addCmd.option("--description <text>", "Description shown in the list", "_TODO_");
   addCmd.option("--priority <priority>", `Priority: ${VALID_PRIORITIES.join(" | ")}`, "medium");
@@ -109,15 +130,27 @@ export function registerCreateCommands(
     "-",
   );
   addCmd.option("--conclusion <text>", "Conclusion or resolution summary", "-");
+  addCmd.option("--target-path <path>", "Repository-relative deliverable file path");
+  addCmd.option("--target-rulebook <doc-id>", "Deliverable rulebook id (new id for bootstrap)");
   addCmd.option("--approach <approach>", `Execution approach: ${APPROACHES.join(" | ")}`);
   addCmd.option(
-    "--target <doc-id>",
-    "Target document id (repeatable; approach requires exactly one)",
+    "--target <target>",
+    "Document id, domain:<id> for catalog-planning, or track:<id> for strategy-planning (repeatable)",
+    collectTarget,
+  );
+  addCmd.option(
+    "--source <ref>",
+    "Read-only exemplar for *-authoring (repeatable: doc id, path, or <repo>:<path>)",
     collectTarget,
   );
   addCmd.option(
     "--from <item-id>",
     "Register item this item derives from (repeatable)",
+    collectTarget,
+  );
+  addCmd.option(
+    "--depends-on <item-id>",
+    "Predecessor item ID (repeatable; use - to remove)",
     collectTarget,
   );
   addCmd.option("--id <id>", "Display ID (e.g., PJR-0061); auto-incremented if omitted");
@@ -131,6 +164,12 @@ export function registerCreateCommands(
   addCmd.option("--dry-run", "Print the generated item file without writing", false);
   addRegisterCommitOptions(addCmd);
   addCmd.action(async (opts) => {
+    try {
+      if (delegateExternalRegisterAdd(opts)) return;
+    } catch (error) {
+      printCommandError(error);
+      return;
+    }
     await runRegisterMutation("add", opts, ({ paths, assertCommitTargetsClean }) => {
       const explicitTopic = opts.topic?.trim();
       const topic = explicitTopic || slugify(opts.title);
@@ -155,15 +194,31 @@ export function registerCreateCommands(
       if (opts.target?.some((target: string) => target.trim() === "-")) {
         throw new Error("--target - is only valid with register update");
       }
-      const targets = normalizedTargets(opts.target);
+      const rawTargets = normalizedTargets(opts.target);
+      const authoring = isAuthoringApproach(opts.approach);
+      const legacySources = authoring ? (rawTargets ?? []).slice(1) : [];
+      const targets = authoring ? rawTargets?.slice(0, 1) : rawTargets;
+      const explicitSources = normalizedSources(opts.source);
+      const sources =
+        legacySources.length > 0 || explicitSources
+          ? [...new Set([...legacySources, ...(explicitSources ?? [])])]
+          : undefined;
       validateRegisterApproachTargetsForProject({
         projectId: paths.projectId,
         ...(opts.approach !== undefined ? { approach: opts.approach } : {}),
-        ...(targets !== undefined ? { targets } : {}),
-        validateTargetsWithoutApproach: opts.target !== undefined,
+        ...(opts.targetPath !== undefined ? { targetPath: opts.targetPath.trim() } : {}),
+        ...(opts.targetRulebook !== undefined
+          ? { targetRulebook: opts.targetRulebook.trim() }
+          : {}),
+        ...(rawTargets !== undefined ? { targets: rawTargets } : {}),
+        ...(explicitSources !== undefined ? { sources: explicitSources } : {}),
+        validateTargetsWithoutApproach: opts.target !== undefined || opts.source !== undefined,
       });
 
+      const track = opts.track?.trim();
+      validateRegisterTrack(paths.projectId, opts.type, track);
       const fields: RegisterAddFields = {
+        ...(track !== undefined ? { track } : {}),
         type: opts.type,
         title: opts.title,
         description: opts.description,
@@ -177,6 +232,11 @@ export function registerCreateCommands(
         conclusion: opts.conclusion,
         ...(opts.approach !== undefined ? { approach: opts.approach as Approach } : {}),
         ...(targets !== undefined ? { targets } : {}),
+        ...(opts.targetPath !== undefined ? { targetPath: opts.targetPath.trim() } : {}),
+        ...(opts.targetRulebook !== undefined
+          ? { targetRulebook: opts.targetRulebook.trim() }
+          : {}),
+        ...(sources !== undefined ? { sources } : {}),
       };
       const templatePath = resolveSpecdojoTemplatePath(`pjr-${opts.type}-template.md`);
 
@@ -193,6 +253,7 @@ export function registerCreateCommands(
         derivedFrom,
       });
       if (derivedFrom !== undefined) fields.derivedFrom = derivedFrom;
+      fields.dependsOn = normalizeDependsOn(opts.dependsOn);
 
       const ticketPath = join(paths.projectRegisterPath, ticketFilename);
       const content = buildRegisterItemContent({
@@ -202,6 +263,9 @@ export function registerCreateCommands(
         fields,
         templatePath,
       });
+      const dependencyItem = readRegisterItemContent(content, ticketFilename)?.item;
+      if (!dependencyItem) throw new Error(`Failed to read item ${displayId}`);
+      validateRegisterDependencies(paths, dependencyItem);
       const addEvent = buildRegisterEvent({
         afterContent: content,
         filename: ticketFilename,
@@ -271,6 +335,7 @@ export function registerUpdateCommand(
   const updateCmd = reg.command("update").description("Update fields of a register item");
   addProjectOption(updateCmd);
   updateCmd.requiredOption("--id <id>", "Item ID (PJR-XXXX)");
+  updateCmd.option("--track <track>", "Replace the track governed by an epic");
   updateCmd.option("--title <title>", "Update title");
   updateCmd.option("--description <text>", "Update description");
   updateCmd.option("--priority <priority>", `Update priority: ${VALID_PRIORITIES.join(" | ")}`);
@@ -286,18 +351,33 @@ export function registerUpdateCommand(
     "--autopilot <approval>",
     "Night orchestrator approval: approved, or - to revoke",
   );
+  updateCmd.option("--target-path <path>", "Replace deliverable path; use - to remove");
+  updateCmd.option(
+    "--target-rulebook <doc-id>",
+    "Replace deliverable rulebook id; use - to remove",
+  );
   updateCmd.option(
     "--approach <approach>",
     `Update execution approach (${APPROACHES.join(" | ")}; use - to remove)`,
   );
   updateCmd.option(
-    "--target <doc-id>",
-    "Replace target document ids (repeatable; use - to remove)",
+    "--target <target>",
+    "Replace target document ids (repeatable; legacy authoring exemplars may follow; use - to remove)",
+    collectTarget,
+  );
+  updateCmd.option(
+    "--source <ref>",
+    "Replace read-only *-authoring exemplars (repeatable; use - to remove)",
     collectTarget,
   );
   updateCmd.option(
     "--from <item-id>",
     "Replace source register item IDs (repeatable; use - to remove)",
+    collectTarget,
+  );
+  updateCmd.option(
+    "--depends-on <item-id>",
+    "Replace predecessor IDs (repeatable; use - to remove)",
     collectTarget,
   );
   updateCmd.option(
@@ -315,6 +395,7 @@ export function registerUpdateCommand(
       const item = view.item;
 
       const hasUpdates = [
+        "track",
         "title",
         "description",
         "priority",
@@ -326,12 +407,16 @@ export function registerUpdateCommand(
         "autopilot",
         "approach",
         "target",
+        "source",
+        "targetPath",
+        "targetRulebook",
         "from",
+        "dependsOn",
         "topic",
       ].some((key) => opts[key] !== undefined);
       if (!hasUpdates) {
         throw new Error(
-          "At least one field option must be specified (--title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --from, --topic)",
+          "At least one field option must be specified (--track, --title, --description, --priority, --difficulty, --owner, --due, --conclusion, --block-reason, --autopilot, --approach, --target, --source, --from, --depends-on, --topic)",
         );
       }
 
@@ -394,13 +479,55 @@ export function registerUpdateCommand(
               autopilot:
                 opts.autopilot === "-" ? REMOVE_REGISTER_ITEM_FIELD : ("approved" as const),
             };
+      const nextTargetPath =
+        opts.targetPath === undefined
+          ? item.targetPath
+          : opts.targetPath.trim() === "-"
+            ? undefined
+            : opts.targetPath.trim();
+      const nextTargetRulebook =
+        opts.targetRulebook === undefined
+          ? item.targetRulebook
+          : opts.targetRulebook.trim() === "-"
+            ? undefined
+            : opts.targetRulebook.trim();
       const nextApproach =
         opts.approach === undefined
           ? item.approach
           : opts.approach.trim() === "-"
             ? undefined
             : opts.approach.trim();
-      const nextTargets = opts.target === undefined ? item.targets : normalizedTargets(opts.target);
+      const authoring = isAuthoringApproach(nextApproach);
+      const providedTargets =
+        opts.target === undefined ? undefined : normalizedTargets(opts.target);
+      const providedLegacySources = authoring ? (providedTargets ?? []).slice(1) : [];
+      const nextTargets =
+        opts.target === undefined
+          ? authoring
+            ? item.targets?.slice(0, 1)
+            : item.targets
+          : authoring
+            ? providedTargets?.slice(0, 1)
+            : providedTargets;
+      const existingSources = [
+        ...(isAuthoringApproach(item.approach) ? (item.targets ?? []).slice(1) : []),
+        ...(item.sources ?? []),
+      ];
+      const explicitSources =
+        opts.source === undefined ? undefined : normalizedSources(opts.source, true);
+      const nextSources = authoring
+        ? opts.source !== undefined
+          ? [...new Set([...providedLegacySources, ...(explicitSources ?? [])])]
+          : providedLegacySources.length > 0
+            ? [...new Set(providedLegacySources)]
+            : [...new Set(existingSources)]
+        : opts.source !== undefined
+          ? explicitSources
+          : item.sources;
+      const normalizedNextSources = nextSources && nextSources.length > 0 ? nextSources : undefined;
+      const nextDependsOn =
+        opts.dependsOn === undefined ? item.dependsOn : normalizeDependsOn(opts.dependsOn);
+      validateRegisterDependencies(paths, { ...item, dependsOn: nextDependsOn });
       const nextDerivedFrom =
         opts.from === undefined
           ? item.derivedFrom
@@ -410,13 +537,38 @@ export function registerUpdateCommand(
         itemId: item.id,
         derivedFrom: nextDerivedFrom,
       });
-      validateRegisterApproachTargetsForProject({
-        projectId: paths.projectId,
-        ...(nextApproach !== undefined ? { approach: nextApproach } : {}),
-        ...(nextTargets !== undefined ? { targets: nextTargets } : {}),
-        validateTargetsWithoutApproach: opts.target !== undefined,
-      });
+      if (
+        opts.approach !== undefined ||
+        opts.target !== undefined ||
+        opts.source !== undefined ||
+        opts.targetPath !== undefined ||
+        opts.targetRulebook !== undefined
+      ) {
+        validateRegisterApproachTargetsForProject({
+          projectId: paths.projectId,
+          ...(nextTargetPath !== undefined ? { targetPath: nextTargetPath } : {}),
+          ...(nextTargetRulebook !== undefined ? { targetRulebook: nextTargetRulebook } : {}),
+          ...(nextApproach !== undefined ? { approach: nextApproach } : {}),
+          ...(nextTargets !== undefined ? { targets: nextTargets } : {}),
+          ...(normalizedNextSources !== undefined ? { sources: normalizedNextSources } : {}),
+          validateTargetsWithoutApproach: opts.target !== undefined || opts.source !== undefined,
+        });
+      }
+      const shouldUpdateTargets =
+        opts.target !== undefined ||
+        (authoring && opts.source !== undefined && (item.targets?.length ?? 0) > 1);
+      const shouldUpdateSources =
+        opts.source !== undefined || (authoring && providedLegacySources.length > 0);
       const approachTargetUpdates: RegisterItemFieldUpdates = {
+        ...(opts.dependsOn !== undefined
+          ? { depends_on: nextDependsOn ?? REMOVE_REGISTER_ITEM_FIELD }
+          : {}),
+        ...(opts.targetPath !== undefined
+          ? { target_path: nextTargetPath ?? REMOVE_REGISTER_ITEM_FIELD }
+          : {}),
+        ...(opts.targetRulebook !== undefined
+          ? { target_rulebook: nextTargetRulebook ?? REMOVE_REGISTER_ITEM_FIELD }
+          : {}),
         ...(opts.difficulty !== undefined
           ? {
               difficulty: opts.difficulty === "-" ? REMOVE_REGISTER_ITEM_FIELD : opts.difficulty,
@@ -427,9 +579,14 @@ export function registerUpdateCommand(
               approach: nextApproach === undefined ? REMOVE_REGISTER_ITEM_FIELD : nextApproach,
             }
           : {}),
-        ...(opts.target !== undefined
+        ...(shouldUpdateTargets
           ? {
               targets: nextTargets ?? REMOVE_REGISTER_ITEM_FIELD,
+            }
+          : {}),
+        ...(shouldUpdateSources
+          ? {
+              sources: normalizedNextSources ?? REMOVE_REGISTER_ITEM_FIELD,
             }
           : {}),
         ...(opts.from !== undefined
@@ -439,8 +596,11 @@ export function registerUpdateCommand(
           : {}),
       };
 
+      const track = opts.track === undefined ? item.track : opts.track.trim();
+      validateRegisterTrack(paths.projectId, item.type, track);
       const updated: PjrItem = {
         ...item,
+        ...(track !== undefined ? { track } : {}),
         ...(opts.title !== undefined ? { title: opts.title } : {}),
         ...(opts.description !== undefined ? { description: opts.description } : {}),
         ...(opts.priority !== undefined ? { priority: opts.priority } : {}),
@@ -456,17 +616,33 @@ export function registerUpdateCommand(
         if (opts.autopilot === "-") delete updated.autopilot;
         else updated.autopilot = "approved";
       }
+      if (opts.targetPath !== undefined) {
+        if (nextTargetPath === undefined) delete updated.targetPath;
+        else updated.targetPath = nextTargetPath;
+      }
+      if (opts.targetRulebook !== undefined) {
+        if (nextTargetRulebook === undefined) delete updated.targetRulebook;
+        else updated.targetRulebook = nextTargetRulebook;
+      }
       if (opts.approach !== undefined) {
         if (nextApproach === undefined) delete updated.approach;
         else updated.approach = nextApproach as Approach;
       }
-      if (opts.target !== undefined) {
+      if (shouldUpdateTargets) {
         if (nextTargets === undefined) delete updated.targets;
         else updated.targets = nextTargets;
+      }
+      if (shouldUpdateSources) {
+        if (normalizedNextSources === undefined) delete updated.sources;
+        else updated.sources = normalizedNextSources;
       }
       if (opts.from !== undefined) {
         if (nextDerivedFrom === undefined) delete updated.derivedFrom;
         else updated.derivedFrom = nextDerivedFrom;
+      }
+      if (opts.dependsOn !== undefined) {
+        if (nextDependsOn === undefined) delete updated.dependsOn;
+        else updated.dependsOn = nextDependsOn;
       }
       const currentTopic = view.ticketFilename
         ? ticketTopicFromFilename(opts.id, view.ticketFilename)

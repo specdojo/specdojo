@@ -9,6 +9,7 @@ x-spec-meta:
   id: specdojo:ifx-api-sample
   type: api
   status: draft
+  rulebook: specdojo:ifx-api-rulebook
   based_on: []
 
 servers:

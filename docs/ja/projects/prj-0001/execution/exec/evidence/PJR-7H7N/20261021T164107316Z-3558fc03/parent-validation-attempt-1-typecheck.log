@@ -1,0 +1,14 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.1 typecheck
+> tsc -b --noEmit
+
+tests/src/shared/lefthook-scaffold.test.ts(92,14): error TS2304: Cannot find name 'existsSync'.
+tests/src/shared/lefthook-scaffold.test.ts(121,14): error TS2304: Cannot find name 'existsSync'.
+
+
+--- stderr ---

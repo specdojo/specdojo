@@ -4,9 +4,18 @@ import { collectResolvedDeliverables, loadCatalogDocs } from "../catalog/build.j
 import { resolveBasePath } from "../catalog/paths.js";
 import { collectDocIndexEntries } from "../docs/doc-index.js";
 import { readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
-import { getProjectCatalogPath, loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
+import {
+  getProjectCatalogPath,
+  loadConfig,
+  specdojoRootDir,
+  type SpecDojoProjectConfig,
+} from "../shared/specdojo-config.js";
 import { APPROACHES, type Approach } from "../shared/agent-types.js";
 import { load } from "../shared/yaml.js";
+import { assertAuthorableKataId, authoredKataExists, authoringKind } from "../kata/authoring.js";
+import { CATALOG_LESS_APPROACHES, resolveRegisterDeliverableTarget } from "./deliverable-target.js";
+import { resolveAuthoringSources } from "./authoring-sources.js";
+import { isPlanningApproach, validatePlanningTarget } from "./planning.js";
 
 const MAINTENANCE_TARGET_KIND: Partial<Record<Approach, string>> = {
   "rulebook-maintenance": "rulebook",
@@ -80,6 +89,10 @@ export type RegisterApproachValidationOptions = {
   catalogPath?: string;
   approach?: string;
   targets?: readonly string[];
+  sources?: readonly string[];
+  targetPath?: string;
+  targetRulebook?: string;
+  project?: SpecDojoProjectConfig;
   validateTargetsWithoutApproach?: boolean;
 };
 
@@ -89,6 +102,7 @@ export type RegisterApproachValidationOptions = {
 export function validateRegisterApproachTargets(opts: RegisterApproachValidationOptions): void {
   const approachText = opts.approach?.trim();
   const targets = [...new Set((opts.targets ?? []).map((target) => target.trim()).filter(Boolean))];
+  const sources = [...new Set((opts.sources ?? []).map((source) => source.trim()).filter(Boolean))];
   let approach: Approach | undefined;
 
   if (approachText !== undefined) {
@@ -98,15 +112,43 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
       );
     }
     approach = approachText as Approach;
-    if (targets.length !== 1) {
+    const kind = authoringKind(approach);
+    if (!kind && targets.length !== 1) {
       throw new Error(
         `Approach "${approach}" requires exactly one --target doc id (received ${targets.length})`,
       );
     }
+    if (kind && targets.length < 1) {
+      throw new Error(`Approach "${approach}" requires the new kata id as the first --target`);
+    }
+  }
+
+  if (
+    (opts.targetPath !== undefined || opts.targetRulebook !== undefined) &&
+    (!approach || !CATALOG_LESS_APPROACHES.includes(approach))
+  ) {
+    throw new Error("--target-path and --target-rulebook require a supported deliverable approach");
+  }
+
+  if (sources.length > 0 && !authoringKind(approach)) {
+    throw new Error("--source is only valid with a *-authoring approach");
   }
 
   if (!approach && !opts.validateTargetsWithoutApproach) return;
   if (targets.length === 0) return;
+
+  if (isPlanningApproach(approach)) {
+    validatePlanningTarget({
+      repoRoot: opts.repoRoot,
+      approach,
+      target: targets[0],
+      project:
+        opts.project ??
+        loadConfig(opts.repoRoot).config?.projects[opts.projectId] ??
+        (opts.catalogPath ? { catalog_path: opts.catalogPath } : {}),
+    });
+    return;
+  }
 
   const entries = collectDocIndexEntries(resolve(opts.repoRoot, "docs"), opts.repoRoot);
   if (!approach) {
@@ -118,6 +160,26 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
     return;
   }
 
+  const authoringTargetKind = authoringKind(approach);
+  if (authoringTargetKind) {
+    const [kataId, ...legacySources] = targets;
+    if (!kataId) {
+      throw new Error(`Approach "${approach}" requires the new kata id as the first --target`);
+    }
+    assertAuthorableKataId(kataId, authoringTargetKind, opts.repoRoot);
+    if (entries[kataId] || authoredKataExists(kataId, opts.repoRoot)) {
+      throw new Error(
+        `Kata id ${kataId} already exists; use ${authoringTargetKind}-maintenance instead`,
+      );
+    }
+    const sourceRefs = [...new Set([...legacySources, ...sources])];
+    if (sourceRefs.length === 0) return;
+    const project =
+      opts.project ?? loadConfig(opts.repoRoot).config?.projects[opts.projectId] ?? {};
+    resolveAuthoringSources({ repoRoot: opts.repoRoot, project, sources: sourceRefs });
+    return;
+  }
+
   const expectedKind = MAINTENANCE_TARGET_KIND[approach];
   const [targetId] = targets;
   if (expectedKind) {
@@ -125,12 +187,35 @@ export function validateRegisterApproachTargets(opts: RegisterApproachValidation
     if (!indexedPath) {
       throw new Error(`Target document id is not resolvable via the document index: ${targetId}`);
     }
+    // sample は見本にする成果物の type を持つため、種類は ID の命名で判定する。
+    if (expectedKind === "sample") {
+      if (!targetId.endsWith("-sample")) {
+        throw new Error(
+          `Approach "${approach}" requires a sample document target with an id ending in -sample: ${targetId}`,
+        );
+      }
+      return;
+    }
     const actualKind = targetDocumentType(resolvedIndexPath(opts.repoRoot, indexedPath));
     if (actualKind !== expectedKind) {
       throw new Error(
         `Approach "${approach}" requires a ${expectedKind} document target, but ${targetId} has type "${actualKind ?? "unknown"}"`,
       );
     }
+    return;
+  }
+
+  if (CATALOG_LESS_APPROACHES.includes(approach)) {
+    if (
+      opts.catalogPath &&
+      !catalogDeliverableDocIds(opts.catalogPath, opts.repoRoot, opts.projectId).has(targetId) &&
+      !(opts.targetPath && opts.targetRulebook)
+    ) {
+      throw new Error(
+        `Approach "${approach}" requires a deliverable document from the project catalog, but ${targetId} is not a catalog deliverable`,
+      );
+    }
+    resolveRegisterDeliverableTarget({ ...opts, approach, targetId });
     return;
   }
 
@@ -155,6 +240,9 @@ export function validateRegisterApproachTargetsForProject(opts: {
   projectId: string;
   approach?: string;
   targets?: readonly string[];
+  sources?: readonly string[];
+  targetPath?: string;
+  targetRulebook?: string;
   validateTargetsWithoutApproach?: boolean;
 }): void {
   const repoRoot = specdojoRootDir();
@@ -170,6 +258,10 @@ export function validateRegisterApproachTargetsForProject(opts: {
     ...(catalogPath ? { catalogPath: resolve(repoRoot, catalogPath) } : {}),
     ...(opts.approach !== undefined ? { approach: opts.approach } : {}),
     ...(opts.targets !== undefined ? { targets: opts.targets } : {}),
+    ...(opts.sources !== undefined ? { sources: opts.sources } : {}),
+    project,
+    ...(opts.targetPath !== undefined ? { targetPath: opts.targetPath } : {}),
+    ...(opts.targetRulebook !== undefined ? { targetRulebook: opts.targetRulebook } : {}),
     ...(opts.validateTargetsWithoutApproach !== undefined
       ? { validateTargetsWithoutApproach: opts.validateTargetsWithoutApproach }
       : {}),

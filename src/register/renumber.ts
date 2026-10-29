@@ -98,7 +98,7 @@ export function renumberTicketContent(
 }
 
 // 他文書からの参照リンク（wikilink `[[<docId>|...]]`）と
-// exec plan / result の `targets` に含まれる doc id を新しい doc id へ置き換える。
+// exec plan / result の `targets` と個票の `sources` に含まれる doc id を新しい doc id へ置き換える。
 export function renumberReferences(
   content: string,
   fromDocId: string,
@@ -108,7 +108,7 @@ export function renumberReferences(
   return { content: content.split(fromDocId).join(toDocId), changed: true };
 }
 
-// `derived_from` は文書 ID ではなく表示 ID を保持するため、通常の wikilink / targets の
+// `derived_from` は文書 ID ではなく表示 ID を保持するため、通常の wikilink / targets / sources の
 // 置換とは分けて frontmatter の配列だけを更新する。同一 project の短縮形と、別 project
 // から参照する project 修飾形の両方を対象にする。
 function renumberDerivedFromReferences(
@@ -119,12 +119,12 @@ function renumberDerivedFromReferences(
   toId: string,
 ): { content: string; changed: boolean } {
   const parsed = readRegisterItemContent(content, filename);
-  if (!parsed?.item.derivedFrom) return { content, changed: false };
+  if (!parsed) return { content, changed: false };
   const docId = readSpecdojoFields(content).id;
   const referencingProjectId =
     typeof docId === "string" && docId.includes(":") ? docId.split(":", 1)[0] : undefined;
   let changed = false;
-  const derivedFrom = parsed.item.derivedFrom.map((ref) => {
+  const rewrite = (ref: string): string => {
     if (referencingProjectId === sourceProjectId && ref === fromId) {
       changed = true;
       return toId;
@@ -134,9 +134,17 @@ function renumberDerivedFromReferences(
       return `${sourceProjectId}:${toId}`;
     }
     return ref;
-  });
+  };
+  const derivedFrom = parsed.item.derivedFrom?.map(rewrite);
+  const dependsOn = parsed.item.dependsOn?.map(rewrite);
   return changed
-    ? { content: applyRegisterItemFields(content, { derived_from: derivedFrom }), changed }
+    ? {
+        content: applyRegisterItemFields(content, {
+          ...(derivedFrom ? { derived_from: derivedFrom } : {}),
+          ...(dependsOn ? { depends_on: dependsOn } : {}),
+        }),
+        changed,
+      }
     : { content, changed };
 }
 
@@ -363,7 +371,7 @@ export function planRenumber(paths: RegisterPaths, fromId: string, toId: string)
     writes.push({ path: paths.pjrIndexPath, content: newIndexContent });
   }
 
-  // 参照リンク・targets・derived_from の付け替え（doc id を持つ個票がある場合のみ）。
+  // 参照リンク・targets・sources・derived_from の付け替え（doc id を持つ個票がある場合のみ）。
   if (fromDocId && toDocId) {
     const root = specdojoRootDir();
     const referenceFiles = findMarkdownReferenceFiles(root);

@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:cdfd-sample
-  type: sample
+  type: flow
   status: ready
   rulebook: specdojo:cdfd-rulebook
   based_on:

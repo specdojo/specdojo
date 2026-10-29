@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:sysd-critical-flows-rulebook
   type: rulebook
+  deliverable_type: architecture
   status: draft
   sample: specdojo:sysd-critical-flows-sample
 ---
@@ -66,7 +67,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 
 | ---------- | ----------------------------------------------- | ---- |
 | id | SYSD-CF ID（推奨: `sysd-critical-flows`） | ○ |
-| type | `architecture` など共通スキーマで許容される種別 | ○ |
+| type | `architecture` 固定 | ○ |
 | title | システム設計: 重要フロー | ○ |
 | status | `draft` / `ready` / `deprecated` | ○ |
 | based_on | 根拠となる仕様ID（ID配列。未指定は `[]` 可） | 任意 |

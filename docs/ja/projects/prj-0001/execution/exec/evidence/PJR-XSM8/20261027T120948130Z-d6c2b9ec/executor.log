@@ -1,0 +1,64 @@
+<specdojo_executor_evidence>
+{
+  "completion_status": "complete",
+  "final_message": "sample-maintenance を ID 末尾 -sample による判定へ修正。回帰テスト、規約5文書、sample5件、スキーマの互換性コメント、CHANGELOG、個票を更新した。CLI経路とスキーマ互換性の確認は成功。指定のテスト・lintは親runnerに委ね、resultは編集していない。",
+  "handoff": [
+    "CSTD の現行 rulebook には推奨 Frontmatter 表がなく、旧指定の domain は現行スキーマに存在しないため、移行先 STSD の data を採用した。個票に根拠を記録済み。レビューで確認する。",
+    "範囲外の src/docs/yaml-pages.ts:32,90 は表示ページに type: sample を付与し、tests/src/docs/yaml-pages.test.ts:28,81 が同じ値を期待する。生成済み samples/generated/*.md と旧 type の kata テスト fixture も変更していない。個票に記録済み。表示用メタ情報の扱いは別項目で検討する。",
+    "[upsert-sample](.agents/skills/upsert-sample/SKILL.md) が参照する .github/instructions/sample.instructions.md は「npm run docs:build でエラーがない」を求める。ただし同コマンドは本executorで禁止された索引生成を含むため、ホスト側で確認する。",
+    "統合後は pm-orchestrator-playbook.md の5.1に従い、PJR-JSEYでregister変更の動作確認を行う。指定された親検証の結果と本報告をreporter/runnerがresultへ反映する。"
+  ],
+  "validations": [
+    {
+      "command": "npx prettier --write CHANGELOG.md src/register/approach.ts tests/src/register/approach.test.ts tests/src/register/commands.test.ts tests/src/exec/register-plan-escape.test.ts docs/ja/specdojo/standards/document-metadata-standard.md docs/ja/specdojo/standards/sample-authoring-standard.md docs/ja/specdojo/standards/id-and-file-naming-standard.md docs/ja/specdojo/guides/practice-system-composition-guide.md docs/ja/specdojo/references/command-reference.md docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml docs/ja/specdojo/samples/cdfd-sample.md docs/ja/specdojo/samples/cdfd-uc-sample.md docs/ja/specdojo/samples/cstd-sample.md docs/ja/specdojo/samples/prj-stakeholder-register-sample.md docs/ja/specdojo/samples/stsd-sample.md docs/ja/projects/prj-0001/controls/project-register/pjr-xsm8-sample-maintenance-target-kind.md",
+      "status": "passed",
+      "summary": "変更した17ファイルを整形した。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register add --project prj-0001 --type todo --title 'TSD sample の見直し検証' --topic xsm8-tsd-smoke --approach sample-maintenance --target specdojo:tsd-sample --dry-run",
+      "status": "passed",
+      "summary": "実際のTSD sampleを対象に起票のdry-runが成功した。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register add --project prj-0001 --type todo --title 'TSD index sample の見直し検証' --topic xsm8-tsd-index-smoke --approach sample-maintenance --target specdojo:tsd-index-sample --dry-run",
+      "status": "passed",
+      "summary": "実際のTSD index sampleを対象に起票のdry-runが成功した。"
+    },
+    {
+      "command": "node --import tsx tmp/pjr-xsm8-smoke.mjs",
+      "status": "passed",
+      "summary": "一時プロジェクトでCLIの引数解析を通し、TSD2件と利用者authorityの旧typeについてadd・update・plan生成を確認。誤対象の拒否と個票・イベントの不変も確認した。一時ファイルは削除済み。"
+    },
+    {
+      "command": "node --import tsx tmp/pjr-xsm8-schema.mjs",
+      "status": "passed",
+      "summary": "スキーマをコンパイルし、変更したsample5件の新typeと旧type: sampleの双方が適合することを確認。一時ファイルは削除済み。"
+    },
+    {
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml --data tmp/pjr-xsm8-legacy-sample.yaml",
+      "status": "passed",
+      "summary": "利用者authorityのtype: sampleが検証を通過した。一時データは削除済み。"
+    },
+    {
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "カタログ検証成功。未作成成果物に対する既存の `based_on` 警告あり、エラーなし。"
+    },
+    {
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の派生ビュー生成が成功した。"
+    },
+    {
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "差分の空白エラーなし。"
+    },
+    {
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "内部で禁止された文書索引生成を実行するため、ホスト側で確認が必要。"
+    }
+  ]
+}
+</specdojo_executor_evidence>

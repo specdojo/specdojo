@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { load } from "js-yaml";
 import { resolveCatalogPath } from "../../../src/catalog/catalog.js";
 import {
   registerConfigCommands,
@@ -28,6 +29,30 @@ afterEach(() => {
 });
 
 describe("config onboarding commands", () => {
+  it.each([
+    ".markdownlint.yaml",
+    ".markdownlint.yml",
+    ".markdownlint.json",
+    ".markdownlint.jsonc",
+    ".markdownlintrc",
+    ".markdownlint-cli2.yaml",
+  ])("keeps existing %s when config init is repeated", async (filename) => {
+    const repo = mkdtempSync(join(tmpdir(), "specdojo-config-existing-markdownlint-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+    try {
+      mkdirSync(join(repo, ".git"));
+      process.chdir(repo);
+      const original = '{"MD013":true}\n';
+      writeFileSync(join(repo, filename), original);
+      await runConfigCommand(["init"]);
+      await runConfigCommand(["init"]);
+      expect(readFileSync(join(repo, filename), "utf8")).toBe(original);
+      expect(existsSync(join(repo, ".markdownlint.yaml"))).toBe(filename === ".markdownlint.yaml");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
   it("creates a register-ready config in an empty directory and prints the next steps", async () => {
     const repo = mkdtempSync(join(tmpdir(), "specdojo-config-init-"));
     const output: string[] = [];
@@ -65,6 +90,14 @@ describe("config onboarding commands", () => {
       expect(output.join("")).toContain(SPECDOJO_CONFIG_REFERENCE_URL);
       expect(output.join("")).toContain('declare it under "repos"');
       expect(output.join("")).toContain("app1:<path>");
+      expect(load(readFileSync(join(repo, ".markdownlint.yaml"), "utf8"))).toEqual({
+        MD013: false,
+        MD024: false,
+        MD033: false,
+        MD036: false,
+        MD041: false,
+        MD060: false,
+      });
 
       expect(() => resolveCatalogPath({ project: "prj-0001" })).toThrow(
         SPECDOJO_CONFIG_REFERENCE_URL,
@@ -84,10 +117,63 @@ describe("config onboarding commands", () => {
       await runConfigCommand(["scaffold", "--provider", "codex"]);
 
       expect(existsSync(join(repo, ".codex", "agents", "codex-executor.toml"))).toBe(true);
+      expect(existsSync(join(repo, ".prettierrc"))).toBe(false);
+      expect(existsSync(join(repo, ".markdownlintignore"))).toBe(false);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
   });
+
+  it.each([false, true])(
+    "scaffolds Slidev through config and keeps settings (lefthook: %s)",
+    async (lefthook) => {
+      const repo = mkdtempSync(join(tmpdir(), "specdojo-config-slidev-"));
+      const output: string[] = [];
+      vi.spyOn(process.stdout, "write").mockImplementation((chunk) => {
+        output.push(String(chunk));
+        return true;
+      });
+      try {
+        mkdirSync(join(repo, ".git"));
+        writeFileSync(join(repo, "package.json"), '{"name":"fixture"}\n');
+        process.chdir(repo);
+        if (lefthook) {
+          await runConfigCommand(["init"]);
+          // Follow the documented YAML -> rc migration before enabling CLI2 overrides.
+          const rules = load(readFileSync(join(repo, ".markdownlint.yaml"), "utf8"));
+          writeFileSync(join(repo, ".markdownlintrc"), `${JSON.stringify(rules)}\n`);
+          rmSync(join(repo, ".markdownlint.yaml"));
+        }
+        const flags = lefthook ? ["--slidev", "--lefthook"] : ["--slidev"];
+        await runConfigCommand(["scaffold", ...flags, "--dry-run"]);
+        expect(existsSync(join(repo, ".prettierrc"))).toBe(false);
+        expect(existsSync(join(repo, ".markdownlintrc"))).toBe(lefthook);
+        expect(existsSync(join(repo, ".markdownlint-cli2.yaml"))).toBe(false);
+        expect(readFileSync(join(repo, "package.json"), "utf8")).toBe('{"name":"fixture"}\n');
+
+        await runConfigCommand(["scaffold", ...flags]);
+        expect(existsSync(join(repo, ".prettierrc"))).toBe(true);
+        expect(readFileSync(join(repo, "package.json"), "utf8")).toContain('"@slidev/cli"');
+        expect(load(readFileSync(join(repo, ".markdownlint-cli2.yaml"), "utf8"))).toMatchObject({
+          config: { extends: ".markdownlintrc" },
+          overrides: [{ combine: "merge", config: { MD025: false } }],
+        });
+        writeFileSync(join(repo, ".prettierrc"), '{"tabWidth":4}\n');
+        writeFileSync(join(repo, ".markdownlintignore"), "custom/\n");
+        writeFileSync(join(repo, ".markdownlintrc"), '{"MD013":true}\n');
+        const cli2 = 'overrides:\n  - filter: ["**/*.md"]\n    config: {MD025: true}\n';
+        writeFileSync(join(repo, ".markdownlint-cli2.yaml"), cli2);
+        await runConfigCommand(["scaffold", ...flags, "--force"]);
+        expect(readFileSync(join(repo, ".prettierrc"), "utf8")).toBe('{"tabWidth":4}\n');
+        expect(readFileSync(join(repo, ".markdownlintignore"), "utf8")).toBe("custom/\n");
+        expect(readFileSync(join(repo, ".markdownlintrc"), "utf8")).toBe('{"MD013":true}\n');
+        expect(readFileSync(join(repo, ".markdownlint-cli2.yaml"), "utf8")).toBe(cli2);
+        expect(output.join("")).toContain("Merge the overrides above manually");
+      } finally {
+        rmSync(repo, { recursive: true, force: true });
+      }
+    },
+  );
 
   it("scaffolds agent member snippets with the protected registry name and guidance", async () => {
     const repo = mkdtempSync(join(tmpdir(), "specdojo-config-scaffold-"));
@@ -109,6 +195,42 @@ describe("config onboarding commands", () => {
       expect(existsSync(join(repo, ".github", "agents", "specdojo-orchestrator.md"))).toBe(true);
       expect(output.join("")).toContain("Written: .specdojo/copilot/agent-members-snippet.yaml");
       expect(output.join("")).toContain("Define agent members in .specdojo/agent-members.yaml");
+    } finally {
+      rmSync(repo, { recursive: true, force: true });
+    }
+  });
+
+  it("scaffolds lefthook files through the config command", async () => {
+    const repo = mkdtempSync(join(tmpdir(), "specdojo-config-lefthook-"));
+    vi.spyOn(process.stdout, "write").mockImplementation(() => true);
+
+    try {
+      mkdirSync(join(repo, ".git"));
+      mkdirSync(join(repo, ".specdojo"));
+      writeFileSync(
+        join(repo, ".specdojo/specdojo.config.json"),
+        `${JSON.stringify(
+          {
+            version: 1,
+            current_project: "prj-0001",
+            projects: {
+              "prj-0001": {
+                base_path: "docs/ja/projects/prj-0001",
+                project_register_path: "controls/project-register",
+              },
+            },
+          },
+          null,
+          2,
+        )}\n`,
+        "utf8",
+      );
+      writeFileSync(join(repo, "package.json"), '{"name":"fixture","scripts":{}}\n', "utf8");
+      process.chdir(repo);
+      await runConfigCommand(["scaffold", "--lefthook"]);
+
+      expect(existsSync(join(repo, "lefthook.yml"))).toBe(true);
+      expect(existsSync(join(repo, "tools/specdojo-pre-commit.mjs"))).toBe(true);
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
@@ -166,6 +288,11 @@ describe("config init .gitignore", () => {
       expect(output.join("")).toContain("Skipped (already present): node_modules/");
       expect(output.join("")).toContain("Skipped (already present): docs/**/generated/*");
       expect(output.join("")).not.toContain("git rm -r --cached");
+      rmSync(join(repo, ".markdownlint.yaml"));
+      await runConfigCommand(["init"]);
+      expect(load(readFileSync(join(repo, ".markdownlint.yaml"), "utf8"))).toMatchObject({
+        MD013: false,
+      });
     } finally {
       rmSync(repo, { recursive: true, force: true });
     }
@@ -182,6 +309,8 @@ describe("config init .gitignore", () => {
 
       expect(existsSync(join(repo, ".gitignore"))).toBe(false);
       expect(existsSync(join(repo, ".specdojo", "specdojo.config.json"))).toBe(false);
+      expect(existsSync(join(repo, ".markdownlint.yaml"))).toBe(false);
+      expect(output.join("")).toContain("[dry-run] would write: .markdownlint.yaml");
       expect(output.join("")).toContain("Would add: node_modules/");
       expect(output.join("")).toContain("Would add: docs/**/generated/*");
     } finally {

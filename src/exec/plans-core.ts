@@ -1,3 +1,15 @@
+import {
+  deliverableDocId,
+  loadPlanCatalogDocs as loadCatalogDocs,
+} from "../catalog/document-target.js";
+import type { DeliverableInfo, ResolvedDeliverable } from "../catalog/document-target.js";
+export {
+  deliverableDocId,
+  resolveDeliverableByDocId,
+  loadPlanCatalogDocs as loadCatalogDocs,
+} from "../catalog/document-target.js";
+export type { DeliverableInfo, ResolvedDeliverable } from "../catalog/document-target.js";
+
 import { existsSync, readFileSync } from "node:fs";
 import { basename, join, relative, resolve } from "node:path";
 import { load } from "../shared/yaml.js";
@@ -6,7 +18,7 @@ import { kataDirsForKinds, resolveIncludedRulebooks, resolveKataRefs } from "../
 import type { KataRefs } from "../kata/kata.js";
 import { resolveBasePath, resolveDeliverablePath } from "../catalog/paths.js";
 import { isDctPlanFileName } from "../catalog/plan.js";
-import { buildSpecdojoFrontmatter, readSpecdojoNamespace } from "../docs/frontmatter-namespace.js";
+import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
 import { qualifyPracticeId, SPECDOJO_PRACTICE_AUTHORITY } from "../shared/practice-id.js";
 import { MISSING } from "../shared/plan-templates.js";
 export {
@@ -22,34 +34,44 @@ import type { Approach, ExecPlanMeta, ReadyTaskView, TaskMode } from "./types.js
 import type { CriteriaItem, DctDeliverableItem, DctDoc, DctSection } from "../catalog/types.js";
 import type { ReviewViewpoint } from "../review/types.js";
 import type { RoleDefinition, RolesDoc } from "./role-types.js";
-import {
-  gradeFindingDisplayMessage,
-  gradeResultPathForDocument,
-  readGradeResultForDocument,
-} from "../shared/grade-result.js";
+import { gradeResultPathForDocument, readGradeResultForDocument } from "../shared/grade-result.js";
 import { renderReviewGradeSummary, reviewGradeFreshness } from "../review/grade.js";
 import type { ReviewGradeOutcome, ReviewGradeTarget } from "../review/grade.js";
+import { planGradeFindingText } from "./plans-grade-findings.js";
 
 // Internal types
 // ---------------------------------------------------------------------------
 
 export type PlanTask = ReadyTaskView & { mode: TaskMode };
 
-export type DeliverableInfo = {
-  deliverable: DctDeliverableItem;
-  resolvedPath: string;
-};
-
 export function execDocId(projectId: string, prefix: "xep" | "xrp", localBase: string): string {
   const localId = `${prefix}-${localBase.toLowerCase()}`;
   return projectId ? `${projectId}:${localId}` : localId;
 }
 
-// In-place plan/result share one unique stem (`<slug>-<UTC>-<rand>`) so each run keeps a
-// distinct file and id (no doc-index collision) and the result name is derivable from the
-// plan. Mirrors the done/ archive naming convention (tsForFilenameUtc + randomHex).
-export function buildInPlaceStem(slug: string): string {
-  return `${slug}-${tsForFilenameUtc(nowUtcIsoSeconds())}-${randomHex(2)}`;
+const issuedInPlaceStems = new Set<string>();
+
+// In-place plan/result share one unique stem (`<slug>-<UTC>-<rand>[-<sequence>]`) so each
+// run keeps a distinct file and id (no doc-index collision) and the result name is derivable
+// from the plan. The sequence is only used if the random source repeats within this process.
+export function buildInPlaceStem(
+  slug: string,
+  dependencies: {
+    now?: () => string;
+    randomHex?: (bytes: number) => string;
+  } = {},
+): string {
+  const now = dependencies.now ?? nowUtcIsoSeconds;
+  const makeRandomHex = dependencies.randomHex ?? randomHex;
+  const base = `${slug}-${tsForFilenameUtc(now())}-${makeRandomHex(4)}`;
+  let stem = base;
+  let sequence = 1;
+  while (issuedInPlaceStems.has(stem)) {
+    stem = `${base}-${sequence}`;
+    sequence += 1;
+  }
+  issuedInPlaceStems.add(stem);
+  return stem;
 }
 
 // Recover the shared stem from a plan path: `.../exec/plans/<stem>-plan.md` → `<stem>`.
@@ -107,37 +129,6 @@ export function findDeliverableInfo(catalogPath: string, localId: string): Deliv
   return null;
 }
 
-export type ResolvedDeliverable = {
-  domain: string;
-  localId: string;
-  // Filename slug for ad-hoc plans. `local_id` is unique project-wide (catalog
-  // validate warns otherwise), so the bare local_id is used.
-  slug: string;
-  info: DeliverableInfo;
-};
-
-export function loadCatalogDocs(catalogPath: string): DctDoc[] {
-  if (!catalogPath || !existsSync(catalogPath)) return [];
-  // Catalog scans walk subdirectories, so agent judgment plans (plans/dct-plan-*.yaml)
-  // must be excluded; they share the dct- prefix but carry no catalog structure.
-  const files = listFilesRecursive(catalogPath)
-    .filter((f) => {
-      const name = f.split("/").pop() ?? "";
-      return /^dct-.+\.ya?ml$/i.test(name) && !isDctPlanFileName(name);
-    })
-    .sort();
-
-  const docs: DctDoc[] = [];
-  for (const filePath of files) {
-    try {
-      docs.push(load(readFileSync(filePath, "utf8")) as DctDoc);
-    } catch {
-      continue;
-    }
-  }
-  return docs;
-}
-
 function resolvedDeliverablesInCatalog(catalogPath: string): ResolvedDeliverable[] {
   const deliverables: ResolvedDeliverable[] = [];
   const visit = (sections: DctSection[], parentBase: string, domain: string): void => {
@@ -163,36 +154,23 @@ function resolvedDeliverablesInCatalog(catalogPath: string): ResolvedDeliverable
   return deliverables;
 }
 
-// Register targets use document IDs rather than schedule local_ids. Resolve the document ID
-// back to its catalog entry so register-originated approach plans can share schedule rendering.
-export function resolveDeliverableByDocId(
+/** Resolve a project-repository-relative file path to its catalog entry, if any. */
+export function findDeliverableByPath(
   catalogPath: string,
-  projectId: string,
-  targetId: string,
-): ResolvedDeliverable {
-  const matches = resolvedDeliverablesInCatalog(catalogPath).filter((target) => {
-    const docId = deliverableDocId(
-      projectId,
-      target.info.deliverable.local_id,
-      target.info.resolvedPath,
-    );
-    return (
-      targetId === docId ||
-      targetId === target.localId ||
-      targetId === qualifiedDocId(projectId, target.localId)
-    );
-  });
-  if (matches.length === 0) {
-    throw new Error(`catalog deliverable target not found for document id: ${targetId}`);
-  }
+  targetPath: string,
+): ResolvedDeliverable | null {
+  const normalized = targetPath.replaceAll("\\", "/").replace(/^\/+/, "");
+  const matches = resolvedDeliverablesInCatalog(catalogPath).filter(
+    (target) => target.info.resolvedPath.replaceAll("\\", "/").replace(/^\/+/, "") === normalized,
+  );
   if (matches.length > 1) {
     throw new Error(
-      `ambiguous catalog deliverable target for document id ${targetId}: ${matches
+      `ambiguous catalog deliverable target for path ${targetPath}: ${matches
         .map((match) => match.localId)
         .join(", ")}`,
     );
   }
-  return matches[0];
+  return matches[0] ?? null;
 }
 
 // A kata may be declared by zero, one, or several deliverables. Only a unique declaration is
@@ -306,10 +284,7 @@ export function gradeFindingsText(projectId: string, targetPath: string): string
     const result = readGradeResultForDocument({ documentPath: targetPath, project: projectId });
     if (!result || result.findings.length === 0) return "- なし";
     return result.findings
-      .map(
-        (finding) =>
-          `- ${finding.id} [${finding.severity}/${finding.rule}; line=${finding.line}; anchor=${JSON.stringify(finding.anchor)}]: ${gradeFindingDisplayMessage(finding)}`,
-      )
+      .map((finding) => `- ${finding.id} ${planGradeFindingText(finding)}`)
       .join("\n");
   } catch {
     return "- なし";
@@ -330,7 +305,8 @@ export function gradeFindingTargetPath(
 
 // grade の --target。実践の型メンテナンス系は実践の型そのものを評価対象にする。
 export function gradeTargetKind(approach: Approach | undefined): "kata" | "deliverable" {
-  return approach === "rulebook-maintenance" ||
+  return approach?.endsWith("-authoring") ||
+    approach === "rulebook-maintenance" ||
     approach === "recipe-maintenance" ||
     approach === "sample-maintenance" ||
     approach === "template-maintenance"
@@ -387,7 +363,7 @@ export function gradeResultRef(projectId: string, subjectPath: string): string {
 // 既存文書の編集、宣言済みパスへの新規作成、前提確認が必要な状態を推測せず判別できる。
 export function kataRefState(refPath: string): "existing" | "missing" | "unresolved" {
   if (refPath === MISSING) return "unresolved";
-  return existsSync(join(specdojoRootDir(), refPath)) ? "existing" : "missing";
+  return existsSync(resolve(specdojoRootDir(), refPath)) ? "existing" : "missing";
 }
 
 // 対象成果物の depends_on を、依存先 doc の [[id]] 参照の入れ子リストで提示する。
@@ -413,6 +389,10 @@ export function deliverableDependsOn(
 
 const PROJECT_CONTEXT_EXCLUDED_APPROACHES = new Set<Approach>([
   "cross-deliverable-dedup",
+  "rulebook-authoring",
+  "recipe-authoring",
+  "sample-authoring",
+  "template-authoring",
   "rulebook-maintenance",
   "recipe-maintenance",
   "sample-maintenance",
@@ -537,6 +517,10 @@ function refDocIdFromPath(refPath: string): string {
 // approach ごとに、成果物に加えて変更・確定の対象になる実践の型の種別。
 const TARGET_REF_KINDS: Partial<Record<Approach, readonly (keyof KataRefs)[]>> = {
   bootstrap: ["rulebook", "recipe", "sample", "template"],
+  "rulebook-authoring": ["rulebook"],
+  "recipe-authoring": ["recipe"],
+  "sample-authoring": ["sample"],
+  "template-authoring": ["template"],
   "bootstrap-finalize": ["rulebook", "recipe", "sample", "template"],
   "rulebook-maintenance": ["rulebook"],
   "recipe-maintenance": ["recipe"],
@@ -546,31 +530,6 @@ const TARGET_REF_KINDS: Partial<Record<Approach, readonly (keyof KataRefs)[]>> =
 
 function qualifiedDocId(projectId: string, localId: string): string {
   return projectId ? `${projectId}:${localId}` : localId;
-}
-
-// 成果物の doc id は、既存文書では frontmatter を正本とする。author 前など文書が
-// 未作成の場合は配置規約に従い、product 配下だけをローカル ID、projects 配下を含む
-// その他の配置を従来どおり project 修飾 ID とする。
-export function deliverableDocId(
-  projectId: string,
-  localId: string,
-  resolvedPath: string | undefined,
-): string {
-  if (resolvedPath) {
-    const absolutePath = resolve(specdojoRootDir(), resolvedPath);
-    if (existsSync(absolutePath)) {
-      try {
-        const id = readSpecdojoNamespace(readFileSync(absolutePath, "utf8")).id;
-        if (typeof id === "string" && id.trim()) return id.trim();
-      } catch {
-        // 読み取り不能・不正 frontmatter は配置によるフォールバックへ進む。
-      }
-    }
-
-    const normalizedPath = resolvedPath.replaceAll("\\", "/").replace(/^\/+/, "");
-    if (/^docs\/[a-z]{2}\/product(?:\/|$)/.test(normalizedPath)) return localId;
-  }
-  return qualifiedDocId(projectId, localId);
 }
 
 // タスクが対象とする文書の doc id リスト。先頭は対象成果物（配置に対応する doc id）、
@@ -775,6 +734,8 @@ export function finalizeResultSectionsForDeliverable(
 
 // owner ロール視点の記述ガイドを構成するデータ値。prose ラベルや見出しは
 // テンプレート側（言語別 docs/<lang>/.../exec-templates）に置き、ここでは値のみを供給する。
+const MISSING_VIEWPOINTS = `- ${MISSING}`;
+
 export type OwnerRoleFields = {
   // owner の Role code（role 名が pm-roles.yaml にあれば `code（name）` 形式）。
   label: string;
@@ -787,6 +748,8 @@ export type OwnerRoleFields = {
 // owner の Role code から、pm-roles.yaml の責務（project_note）と
 // pm-review-viewpoints.yaml の該当 role 観点を取り出す。owner 未設定や情報欠落時は
 // 他のプレースホルダと同様に MISSING を返し、表示構造はテンプレート側に委ねる。
+// ただし viewpoints はテンプレートで単独の段落に置かれるため、欠落時も箇条書きの
+// 1 項目（`- _MISSING_`）にする。強調だけの段落は markdownlint MD036 に違反する（PJR-SS72）。
 export function ownerRoleFields(
   owner: string | undefined,
   roleMap: Map<string, RoleDefinition>,
@@ -794,7 +757,7 @@ export function ownerRoleFields(
   rulebook?: string,
 ): OwnerRoleFields {
   if (!owner) {
-    return { label: MISSING, note: MISSING, viewpoints: MISSING };
+    return { label: MISSING, note: MISSING, viewpoints: MISSING_VIEWPOINTS };
   }
 
   const role = roleMap.get(owner);
@@ -808,7 +771,7 @@ export function ownerRoleFields(
   const viewpoints =
     roleViewpoints.length > 0
       ? roleViewpoints.map((vp) => `- ${vp.title}: ${vp.check}`).join("\n")
-      : MISSING;
+      : MISSING_VIEWPOINTS;
 
   return { label, note, viewpoints };
 }

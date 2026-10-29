@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
-import { extname, isAbsolute, join, relative, resolve } from "node:path";
+import { existsSync, readFileSync, realpathSync } from "node:fs";
+import { dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
 import { load } from "../shared/yaml.js";
 import { collectResolvedDeliverables, loadCatalogDocs } from "../catalog/build.js";
 import { isTrashedPath, resolveBasePath } from "../catalog/paths.js";
@@ -18,7 +18,7 @@ import {
   type GradeTarget,
   type MarkdownDocument,
 } from "./core.js";
-import { resolveViewpointsDoc } from "../review/plan.js";
+import { commonViewpointsPath, resolveViewpointsDoc } from "../review/plan.js";
 import type { GradeRubric, ReviewViewpointsDoc } from "../review/types.js";
 import {
   assertValidActor,
@@ -29,6 +29,7 @@ import {
   getProjectViewpointsPath,
   loadConfig,
   resolveAgentMember,
+  resolveRepoRoot,
   specdojoRootDir,
   type MemberRoster,
   type SpecDojoProjectConfig,
@@ -50,8 +51,7 @@ export function resolveProject(projectOption?: string): {
 export function loadViewpoints(projectOption?: string): ReviewViewpointsDoc {
   const { project } = resolveProject(projectOption);
   const path = getProjectViewpointsPath(project);
-  if (!path) throw new Error("viewpoints_path is required for grade");
-  return resolveViewpointsDoc(resolve(specdojoRootDir(), path));
+  return resolveViewpointsDoc(path ? resolve(specdojoRootDir(), path) : commonViewpointsPath());
 }
 
 // 対象探索は観点定義が無いプロジェクトでも動かす。その場合は突き合わせ先を持たない扱いにする。
@@ -60,7 +60,8 @@ export function loadViewpointsIfConfigured(
   rootDir: string,
 ): ReviewViewpointsDoc | undefined {
   const path = getProjectViewpointsPath(resolveProject(projectOption).project);
-  if (!path || !existsSync(resolve(rootDir, path))) return undefined;
+  if (!path) return resolveViewpointsDoc(commonViewpointsPath());
+  if (!existsSync(resolve(rootDir, path))) return undefined;
   return resolveViewpointsDoc(resolve(rootDir, path));
 }
 
@@ -163,8 +164,9 @@ export function loadKataReferences(): KataReference[] {
 export function resolveGradeReferencePathsFromCatalog(
   path: string,
   catalog: KataReference[],
+  project?: string,
 ): string[] {
-  const target = resolveSafeMarkdownPath(path);
+  const target = resolveSafeMarkdownPath(path, specdojoRootDir(), project);
   const targetDocument = parseMarkdown(readFileSync(target, "utf8"), repoRelativePath(target));
   const targetMetadata = targetDocument.data.specdojo as Record<string, unknown>;
   const targetId = typeof targetMetadata.id === "string" ? targetMetadata.id.trim() : "";
@@ -220,9 +222,10 @@ export type GradeReferenceExample = {
 export function parseGradeReferenceExample(
   path: string,
   target: GradeTarget,
+  project?: string,
 ): GradeReferenceExample | null {
   try {
-    const absolute = resolveSafeMarkdownPath(path);
+    const absolute = resolveSafeMarkdownPath(path, specdojoRootDir(), project);
     const document = parseMarkdown(readFileSync(absolute, "utf8"), repoRelativePath(absolute));
     const metadata = document.data.specdojo as Record<string, unknown>;
     return {
@@ -238,10 +241,11 @@ export function parseGradeReferenceExample(
 export function selectGradeReferenceExampleFromCatalog(opts: {
   target: GradeTarget;
   path: string;
+  project?: string;
   candidates: GradeReferenceExample[];
   random?: () => number;
 }): string | undefined {
-  const target = resolveSafeMarkdownPath(opts.path);
+  const target = resolveSafeMarkdownPath(opts.path, specdojoRootDir(), opts.project);
   const targetDocument = parseMarkdown(readFileSync(target, "utf8"), repoRelativePath(target));
   const targetMetadata = targetDocument.data.specdojo as Record<string, unknown>;
   const family = gradeReferenceExampleFamily(opts.target, target, targetMetadata);
@@ -269,37 +273,64 @@ export function selectGradeReferenceExampleFromCatalog(opts: {
 export function selectGradeReferenceExample(opts: {
   target: GradeTarget;
   path: string;
+  project?: string;
   candidates: string[];
   random?: () => number;
 }): string | undefined {
   return selectGradeReferenceExampleFromCatalog({
     ...opts,
     candidates: opts.candidates.flatMap((candidate) => {
-      const parsed = parseGradeReferenceExample(candidate, opts.target);
+      const parsed = parseGradeReferenceExample(candidate, opts.target, opts.project);
       return parsed ? [parsed] : [];
     }),
   });
 }
 
-export function resolveSafeMarkdownPath(input: string, root = specdojoRootDir()): string {
+export function resolveSafeMarkdownPath(
+  input: string,
+  root = specdojoRootDir(),
+  projectOption?: string,
+): string {
   const absolute = resolve(root, input);
-  const rel = relativePathFromRoot(absolute, root);
-  if (rel.startsWith("../") || isAbsolute(rel))
-    throw new Error(`Path is outside repository: ${input}`);
+  const inside = (base: string, path: string): boolean => {
+    const rel = relative(base, path);
+    return (
+      rel !== ".." &&
+      !rel.startsWith(`..${process.platform === "win32" ? "\\" : "/"}`) &&
+      !isAbsolute(rel)
+    );
+  };
+  const roots = [root];
+  if (!inside(root, absolute)) {
+    const { config } = loadConfig(root);
+    const projectId =
+      projectOption ?? config?.current_project ?? Object.keys(config?.projects ?? {})[0];
+    const project = projectId ? config?.projects[projectId] : undefined;
+    for (const repo of project?.repos ?? []) roots.push(resolveRepoRoot(root, repo));
+  }
+  if (!roots.some((base) => inside(base, absolute)))
+    throw new Error(`Path is outside repository or declared project.repos: ${input}`);
   if (extname(absolute).toLowerCase() !== ".md") {
     throw new Error(`${input}: grade currently writes inline findings only for Markdown`);
   }
   if (!existsSync(absolute)) throw new Error(`Document not found: ${input}`);
+  if (!roots.some((base) => existsSync(base) && inside(realpathSync(base), realpathSync(absolute))))
+    throw new Error(`Path is outside repository or declared project.repos: ${input}`);
   return absolute;
 }
 
 export function resolveSafeRepositoryPath(input: string, option: string): string {
   const root = specdojoRootDir();
   const absolute = resolve(root, input);
-  const rel = relative(root, absolute);
-  if (rel.startsWith("../") || isAbsolute(rel)) {
+  const rel = relativePathFromRoot(absolute, root);
+  if (rel === ".." || rel.startsWith("../") || isAbsolute(rel)) {
     throw new Error(`${option} must be inside the repository`);
   }
+  let ancestor = absolute;
+  while (!existsSync(ancestor)) ancestor = dirname(ancestor);
+  const realRelative = relativePathFromRoot(realpathSync(ancestor), realpathSync(root));
+  if (realRelative === ".." || realRelative.startsWith("../") || isAbsolute(realRelative))
+    throw new Error(`${option} must be inside the repository`);
   return absolute;
 }
 
@@ -347,6 +378,7 @@ export function loadDeliverableCatalog(
       if (isTrashedPath(item.resolvedPath)) continue;
       const path = resolve(root, item.resolvedPath);
       if (!existsSync(path) || entries.has(path)) continue;
+      resolveSafeMarkdownPath(path, root, projectOption);
       entries.set(path, {
         path,
         localId: item.item.local_id,
@@ -374,7 +406,7 @@ export function resolveDeliverableDoneCriteria(
   const catalog = loadDeliverableCatalog(projectOption);
   const result = new Map<string, GradeDoneCriterion[]>();
   for (const path of paths) {
-    const entry = catalog.get(resolveSafeMarkdownPath(path));
+    const entry = catalog.get(resolveSafeMarkdownPath(path, specdojoRootDir(), projectOption));
     if (entry && entry.doneCriteria.length > 0) {
       result.set(repoRelativePath(entry.path), entry.doneCriteria);
     }
@@ -564,7 +596,7 @@ export function resolveGradeSourceHashes(
   },
   rootDir = specdojoRootDir(),
 ): Record<string, string> {
-  const absolute = resolveSafeMarkdownPath(opts.path, rootDir);
+  const absolute = resolveSafeMarkdownPath(opts.path, rootDir, opts.project);
   const document = parseMarkdown(
     readFileSync(absolute, "utf8"),
     relativePathFromRoot(absolute, rootDir),

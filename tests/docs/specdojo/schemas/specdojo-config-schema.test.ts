@@ -62,6 +62,44 @@ describe("specdojo-config.schema.yaml", () => {
     expect(valid).toBe(true);
   });
 
+  it.each(["merge", "branch-only"])("accepts product integration_strategy %s", (strategy) => {
+    expect(
+      validate(
+        configWithRepos([{ name: "app1", path: "../app1", integration_strategy: strategy }]),
+      ),
+    ).toBe(true);
+  });
+
+  it.each(["squash", "", null, false, 1, {}])(
+    "rejects product integration_strategy %j",
+    (strategy) => {
+      expect(
+        validate(
+          configWithRepos([{ name: "app1", path: "../app1", integration_strategy: strategy }]),
+        ),
+      ).toBe(false);
+    },
+  );
+
+  it("accepts a repository-wide kata authority and rejects invalid or reserved values", () => {
+    expect(validate({ version: 1, kata_authority: "customer-docs", projects: {} })).toBe(true);
+    for (const kataAuthority of ["Customer_Docs", "prj-example", "specdojo"]) {
+      expect(validate({ version: 1, kata_authority: kataAuthority, projects: {} })).toBe(false);
+    }
+  });
+
+  it("accepts a project integration branch and rejects a blank value", () => {
+    expect(
+      validate({
+        version: 1,
+        projects: { "prj-0001": { integration_branch: "project/custom/develop" } },
+      }),
+    ).toBe(true);
+    expect(validate({ version: 1, projects: { "prj-0001": { integration_branch: " " } } })).toBe(
+      false,
+    );
+  });
+
   it("accepts project-specific parent validations with product repository assignments", () => {
     const valid = validate({
       version: 1,
@@ -102,6 +140,47 @@ describe("specdojo-config.schema.yaml", () => {
             },
           },
         },
+      }),
+    ).toBe(false);
+  });
+
+  it("accepts exclusions alongside additions and accepts an empty exclusion list", () => {
+    for (const exclusions of [
+      [],
+      ["test-unit", "test-integration", { id: "typecheck", repo: "project" }],
+      [{ id: "typecheck", repo: "specdojo-lp" }],
+    ]) {
+      expect(
+        validate({
+          version: 1,
+          projects: {
+            "prj-0002": {
+              run: {
+                parent_validations_exclude: exclusions,
+                parent_validations: [{ id: "typecheck", repo: "specdojo-lp" }],
+              },
+            },
+          },
+        }),
+      ).toBe(true);
+    }
+  });
+
+  it.each(
+    [
+      null,
+      "test-unit",
+      ["arbitrary-command"],
+      ["test-unit", "test-unit"],
+      [{ id: "test-unit" }],
+      [{ id: "typecheck", repo: "App1" }],
+      [{ id: "typecheck", repo: "project", command: "npm run evil" }],
+    ].map((exclusions) => ({ exclusions })),
+  )("rejects invalid exclusion entries: %j", ({ exclusions }) => {
+    expect(
+      validate({
+        version: 1,
+        projects: { "prj-0002": { run: { parent_validations_exclude: exclusions } } },
       }),
     ).toBe(false);
   });

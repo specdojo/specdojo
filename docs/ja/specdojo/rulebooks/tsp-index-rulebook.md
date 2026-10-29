@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:tsp-index-rulebook
   type: rulebook
+  deliverable_type: test
   status: draft
   recipe: undecided
   sample: specdojo:tsp-index-sample

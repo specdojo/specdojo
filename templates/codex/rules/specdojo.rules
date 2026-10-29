@@ -1,0 +1,48 @@
+# The Dev Container keeps GitHub CLI credentials in a named volume. Keep remote
+# repository mutations under the user's direct control, even when credentials are
+# visible to Codex.
+prefix_rule(
+    pattern = [["git", "/usr/bin/git", "/usr/local/bin/git"], "push"],
+    decision = "forbidden",
+    justification = "SpecDojo agents must hand git push back to the user.",
+    match = [
+        "git push",
+        "git push origin main",
+        "git push --force-with-lease origin feature/example",
+        "/usr/bin/git push origin main",
+    ],
+    not_match = ["git status"],
+)
+
+prefix_rule(
+    pattern = [["gh", "/usr/bin/gh", "/usr/local/bin/gh"]],
+    decision = "forbidden",
+    justification = "GitHub CLI access is reserved for the user because the Dev Container shares its credentials with agents.",
+    match = [
+        "gh pr view 123",
+        "gh pr create --title example --body example",
+        "gh pr merge 123",
+        "gh pr close 123",
+        "gh release create v1.0.0",
+        "gh repo delete owner/repo",
+        "gh api --method POST repos/owner/repo/issues",
+        "/usr/bin/gh pr create --title example --body example",
+    ],
+    not_match = ["git status"],
+)
+
+prefix_rule(
+    pattern = ["env", ["git", "/usr/bin/git", "/usr/local/bin/git"], "push"],
+    decision = "forbidden",
+    justification = "SpecDojo agents must hand git push back to the user.",
+    match = ["env git push origin main", "env /usr/bin/git push origin main"],
+    not_match = ["env git status"],
+)
+
+prefix_rule(
+    pattern = ["env", ["gh", "/usr/bin/gh", "/usr/local/bin/gh"]],
+    decision = "forbidden",
+    justification = "GitHub CLI access is reserved for the user because the Dev Container shares its credentials with agents.",
+    match = ["env gh pr view 123", "env /usr/bin/gh pr create --title example --body example"],
+    not_match = ["env git status"],
+)

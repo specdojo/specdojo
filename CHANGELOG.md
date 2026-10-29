@@ -2,6 +2,150 @@
 
 SpecDojo の利用者に影響する変更を記録します。
 
+## [0.5.0] - 2026-10-29
+
+同梱パッケージは `@specdojo/docs-lint` 0.3.0 と `@specdojo/docs-site` 0.3.0 を同時に公開します。docs-lint 0.3.0 は、rulebook の `deliverable_type` と成果物の `type` の照合、YAML 成果物の旧 type のエラー化（下記の破壊的変更の PJR-484B・PJR-0D0T）を含みます。下記の移行手順の検査には docs-lint 0.3.0 が必要です。docs-site 0.3.0 は、生成物の `.vitepress/` への集約（PJR-9ZN5）と、Mermaid の構文エラーで生成を止めない変更（PJR-N9JC）を含みます。
+
+### 破壊的変更
+
+成果物の `type` を rulebook の宣言と照合するようにし、宣言と違う値や旧値は移行期間なしでエラーになります。次の順で移行してください。詳細は下記の各項目を参照してください。
+
+1. `specdojo` を 0.5.0、`@specdojo/docs-lint` を 0.3.0 に更新する（docs-site を使う場合は `@specdojo/docs-site` も 0.3.0 に更新する）。
+2. eject した rulebook に `specdojo.deliverable_type` を追加する。
+3. Markdown 成果物・sample・テンプレートの生成物 Frontmatter の `type` を宣言値に書き換え、`lint:fm` を通す。
+4. YAML 成果物の旧 type（`domain` / `command` / `message`）を置き換え、`validate:schema:yaml` を通す。
+5. `specdojo yaml-pages build` で表示ページを再生成する。
+
+- 成果物の `type` に `requirement`（機能・非機能要件・受入基準）と `glossary`（用語集）を追加し、`project` はプロジェクトの管理文書に限定しました。各 rulebook の `specdojo.deliverable_type` を必須とし、Markdown 成果物・sample・テンプレートの生成物 Frontmatter と `lint:fm` で照合します（PJR-484B）。
+- 既存の rulebook には、扱う成果物の `type` を `specdojo.deliverable_type` として追加してください。次に、その rulebook を参照する成果物・sample の `specdojo.type` と、テンプレートの `specdojo.frontmatter_template.specdojo.type` を宣言値に書き換えてください。テンプレート自身の `specdojo.type` は `template` のままにします。`lint:fm` を実行し、エラーに表示される宣言値にそろえてください。移行期間は設けず、従来の `project` や `sample` も宣言と違えばエラーにします。
+- YAML 成果物も rulebook の宣言と照合します（PJR-0D0T）。既存の bdd は `type: domain` を `data`、ifx-cmd は `command` を `api`、ifx-msg の `x-spec-meta.type` は `message` を `api` に変更してください。gl には `type: glossary` と `rulebook: specdojo:gl-rulebook` を追加し、OpenAPI / AsyncAPI の `x-spec-meta` と IF 一覧にも対応する `rulebook` を記載してください。YAML テンプレートの `metadata_template.type` も宣言値に合わせ、自身の `type: template` は維持します。`npm run validate:schema:yaml` を実行し、エラーに示された置き換え先へ修正してください。旧値は即時エラーとなり、`specdojo-schema: none` / `validate=false` でもメタ情報は検証します。最後に `specdojo yaml-pages build` で表示ページを再生成してください。表示ページは元 YAML の `type` を引き継ぎます。
+
+### 追加機能
+
+- `repos[].integration_strategy` に `branch-only` を指定すると、プロダクトをローカルで merge せず、commit 済みの exec branch を残してプロダクト側の PR レビューへ渡せるようにしました。既定は従来どおり `merge` です。成功後は worktree を撤去し、プロジェクト側は `review` へ進んで result に未統合・branch 名・trace key を記録します。push と PR 作成は行いません（PJR-EXH2）。
+
+- register の子 todo からカタログの判定・生成を行う `catalog-planning` と、scope・intent の宣言から strategy・track を生成する `strategy-planning` を追加しました。対象は `domain:<domain>` / `track:<track>` で指定します。`timeline build` と strategy 生成は、カタログ作成 todo の完了から `catalog_status` を導き、手書き計画との差を警告します（PJR-WAGY）。
+
+- register に track ごとの仕事を管理する `epic` type と個票テンプレートを追加しました。`add` / `update --track` で担当 track を記録・検証し、`--from` でつないだ子項目と状態を epic 別ビューに表示します。epic 自体は `exec run --register`・filter・夜間 queue の実行対象から外し、完了は子項目と schedule を材料に人が判断します（PJR-B4Y4）。
+
+- 登録項目の実行順序を `depends_on` と `register add` / `update --depends-on` で指定できるようにしました。参照先・自己参照・循環を検証し、先行項目が `done` / `decided` になるまで直接実行を停止、sweep・夜間 queue を理由付きでスキップします。一覧の依存列と後続項目の逆引きビューも追加しました（PJR-6RVJ）。
+
+### 変更
+
+- 配布するオーケストレーターの指示（`templates/` の各環境向け）の type の表に `epic` を加え、track を指定して起票し、子 todo へ分解し、epic 自体は実行しない扱いを書き足しました。
+- 配布するオーケストレーターの指示に、`--depends-on` で順番のある項目の先行を記録し、`--from` の由来とは区別する扱いを書き足しました。
+- `@specdojo/docs-site` が生成するファイルを `.vitepress/` の下にまとめました。Mermaid の SVG と manifest は `.vitepress/mermaid/`、kata のステージングは `.vitepress/kata-staging/` に出力し、ビルド結果には SVG だけを含めます。利用者の `public/` は変更しません。package 同梱の文書は `/ja/specdojo/...` で公開し、eject 済みの文書は利用リポジトリ側を優先します。`config init` が生成する `.gitignore` に `/.vitepress/dist/`・`/.vitepress/cache/`・`/.vitepress/mermaid/`・`/.vitepress/kata-staging/` を追加しました。旧配置の `public/mermaid/` と `specdojo-kata-staging/` は自動では削除しないため、不要になったら削除してください（PJR-9ZN5）。
+- 技術領域別の TSD を作成する `specdojo:tsd-recipe` を追加し、`tsd-rulebook` から参照するようにしました。一冊・分冊の判断、採用値と未決事項の整理、段階的な動作確認、秘密情報の扱いを作業順に辿れます（PJR-05GN）。
+- `specdojo:tsd-sample` を新しい `tsd-rulebook` に合わせて見直しました。駄菓子屋きぬや販売管理システムのデータベース詳細定義（PostgreSQL / Prisma）を題材とし、対象環境・前提条件、採用設定、導入手順、動作確認、制約・トラブルシュートを満たす完成例に再構成しました（PJR-EVAE）。
+- `specdojo:tsd-index-sample` を新しい `tsd-index-rulebook` に合わせて見直しました。技術スタック一覧に版・正本と適用範囲の列を設け、開発・検証・文書化・運用の技術区分と必須・任意の区別を追加し、詳細 TSD サンプルへのリンクを整備しました（PJR-9SXH）。
+- sample の `type` は見本にする成果物の種類とし、sample の識別は `id` とファイル名の `-sample` で行う原則を明文化しました。同梱 sample 5 件の `type` を揃え、既存の `type: sample` は互換性のためスキーマで許容します（PJR-XSM8）。
+
+### 不具合修正
+
+- markdownlint の設定がない利用リポジトリで、result の commit 前検査が日本語の長い行（MD013）を拒否する問題を修正しました。設定がない場合は SpecDojo の基本規則を使い、既存設定は優先します。通常の `init` と `config init` は不足する `.markdownlint.yaml` を上書きせずに生成します（PJR-0QW0）。
+- plan に展開する grade の finding の `anchor` と本文を、バッククォートを含む場合も壊れないインラインコードで囲むようにしました。引用元に Markdown リンクがあっても、生成した plan が `validate:history-links` に失敗しません（PJR-H988）。
+- `@specdojo/docs-site` の Mermaid 図に構文エラーがあっても、`dev` は対象文書とエラーを警告してほかの図とページの生成を続けるようにしました。`build` と `mermaid` は全図を処理し、失敗した図をまとめて報告してから失敗します。失敗した図の SVG を cache に残さず、修正後の変更検知で再生成します（PJR-N9JC）。
+- `register add` / `update` の `sample-maintenance` が成果物の `type` を持つ sample を拒否する問題を修正しました。索引で対象を解決し、`id` の末尾 `-sample` で判定します（PJR-XSM8）。
+- `project.repos` の文書の grade 結果を `results/<repo 名>/<文書 ID>.yaml` に分離し、別リポジトリの同じ ID による上書きと前回結果の誤参照を修正しました。plan・apply・run の再開・dashboard なども同じ配置を使い、本リポジトリの既存結果の保存先は維持します（PJR-8NWR）。
+
+## [0.4.7] - 2026-10-26
+
+### 追加機能
+
+- カタログのない project でも、既存文書の索引・frontmatter、または個票の `--target-path`・`--target-rulebook` から成果物の approach plan を作れるようにしました。`fully-guided` などの kata 不足は起票時に検証し、`bootstrap` の未作成 kata と `finalize` 系の個票からのチェック表にも対応します。`cross-deliverable-dedup` は引き続きカタログが必要です（PJR-6WQY）。
+
+- `projects.<id>.run.parent_validations_exclude` で、共有 `exec-defaults.yaml` の親検証から ID と実行先が一致する検証を project ごとに除外できるようにしました。除外後に既存の `parent_validations` を追記し、指定のない project の検証は維持します。未知の ID、共有一覧にない組の除外、重複する組は agent 起動前にエラーになります（PJR-P14M）。
+
+- npm package に `specdojo grade run` を追加しました。文書の選択、評価 plan、名簿に基づく agent 実行、marker の機械変換とサイドカー反映を単段で実行し、同じ `--run-id` で未完了の文書だけを再開します。`--by` の別名は実体名で記録し、`--dry-run` で選択と actor を確認できます（PJR-K87Y）。
+
+### 不具合修正
+
+- review 前の grade を CLI 本体で実行し、開発用の `tools/grade/run-per-document.sh` への依存を解消しました。宣言済み `project.repos` の相対パスを grade で扱い、grade 結果・完了条件サイドカーを worktree 分岐前の checkpoint に含めます。`exec scaffold --project` の共通観点を `defaults/` から解決し、観点未設定時は同梱定義を使います。review plan の完了条件表を MD060 に適合させました（PJR-K87Y）。
+- OpenCode の scaffold でローカル Ollama の接続・モデル設定を含む `opencode.json`（provider: `ollama-local`）をリポジトリ直下に配置するようにしました。配布する名簿の雛形・agent 定義・接続設定のモデル指定を整合させ、Gemma および Qwen は文脈長 64k を確保するローカル派生タグ（`*-mlx-work-64k`）を標準としました。派生タグ作成手順、接続先設定手順、既存環境の修正手順を OpenCode テンプレートの README および設定ガイドに追記しました（PJR-MB92）。
+- `devcontainer scaffold` で生成する `devcontainer.json` の雛形に `shutdownAction: "none"` を追加し、VS Code などのクライアント切断時にコンテナが停止しないようにしました。既存環境の修正手順を常時稼働ホスト運用ガイドに追記しました（PJR-TVGA）。
+
+## [0.4.6] - 2026-10-25
+
+### 追加機能
+
+- `init --slidev` と `config scaffold --slidev` で、Slidev 本体・Prettier plugin と kata 用の整形・markdownlint 除外設定を追加できるようにしました。既存設定・依存は保持し、追加内容を表示します。`init` の Dev Container preset が `full` の場合は Slidev 導入を既定で選び、`--no-slidev` で解除できます。`full` の VS Code 拡張に `antfu.slidev` を追加しました（PJR-84F7）。
+
+### 変更
+
+- 同梱のオーケストレーターの本文で、register の完了条件の記録の書き先を「個票の対応結果」と報告の `handoff` にし、close の前に result だけでなく個票の対応結果も確かめるようにしました（PJR-R1FB）。
+- `specdojo init --exec` が書く agent の名簿の雛形を、GPT-6 の系統と normal・expert の 2 段にそろえました。codex の normal は `gpt-6-luna` の `luna-executor`・`luna-review-executor`・`luna-reporter`、expert は `gpt-6.1-sol` の `sol-executor`・`sol-review-executor` です。claude には expert の `opus-executor`・`opus-review-executor` を加えました。別名 `claude-expert-executor`・`claude-expert-review-executor`・`codex-expert-executor`・`codex-expert-review-executor` を加え、`codex-executor` などの既存の別名は `luna-*` を指します。振り分けの表（`routing`）は hard を expert の別名、medium と easy と reporter を normal の別名にします。`init` と `config scaffold` が加える codex の起動スクリプトは `orch:sol`（`gpt-6.1-sol`）と `orch:luna`（`gpt-6-luna`）になり、`orch:terra` は作りません（PJR-9482）。
+- 配布する `templates/codex/agents/*.toml` のモデルを名簿の雛形と同じ GPT-6 の系統へ引き上げました。`codex-executor`・`codex-review-executor` は `gpt-6-luna`（`medium`）、`codex-expert-executor`・`codex-expert-review-executor` は `gpt-6.1-sol`（`high`）、`specdojo-orchestrator` は `gpt-6.1-sol`（`medium`）です。既存の `.codex/agents/*.toml` は上書きされないため、移行する場合は `specdojo config scaffold --provider codex --force` で再配置するか、各ファイルの `model` を手動で書き換えます（PJR-EVAQ）。
+- 既存の `.specdojo/agent-members.yaml`・`.specdojo/exec-defaults.yaml`・`package.json` は書き換えません。新しい名前へそろえる場合は、名簿の `terra-*` を `luna-*`（`model: gpt-6-luna`）へ、`sol-*` の `model` を `gpt-6.1-sol` へ変え、`aliases` の向き先を合わせます。`package.json` の `orch:terra` は `orch:luna`（`-m gpt-6-luna`）へ、`orch:sol` は `-m gpt-6.1-sol` へ手で直します。手順は exec 設定ガイドの `agent の名簿の 2 段構成と移行` にあります。
+
+### 不具合修正
+
+- 登録簿に項目が 1 件もないとき、`register build` が生成する担当者別と状態別の派生ビューの空の章で空行が連続し、markdownlint の `MD012` に当たる問題を直しました。項目のない章には「該当なし」を書きます。項目がある場合の生成物は変わりません（PJR-ZG0A）。
+- `init --lefthook` と `config scaffold --lefthook` の基本設定を `.markdownlintrc` に変更し、これを読み込む `.markdownlint-cli2.yaml` も生成するようにしました。VS Code で CLI2 のファイル別 overrides が効き、`--slidev` は kata の glob に Slidev 用の規則を当てます。commit hook と result 検査は markdownlint-cli を使い続けます。既存設定は保持し、追加例と移行手順を案内します（PJR-50YH）。
+- executor の報告に省略可能な `completion_status`（`complete` / `incomplete`）を追加しました。未完了を申告した register 項目は終了コード 0 でも `waiting` となり、理由と残作業、worktree を保持して統合を止めます。`--resume --resume-from executor` で再開でき、欄のない既存報告は従来どおり扱います（PJR-XTE6）。
+- `kata list`・`kata status` の kata 候補と `kata eject` の ID 選択を `.md`・`.mdx`・`.yaml`・`.yml`・`.json` にそろえ、同名 CSS などを別の kata として扱わないようにしました。`kata eject`・`kata install --all` は同名の付属ファイルと同名ディレクトリ内の画像などもコピーし、`--dry-run`・`--force` をファイルごとに適用します。付属ファイルだけの差分も親 kata の `modified` に含めます（PJR-6HS2）。
+- `register update` で approach・target・source を変更しない場合、記録済みの組み合わせを再検証しないようにしました。authoring の kata が作成された後も、担当・期限・優先度などの更新を続けられます。approach 関連の値を変更する場合と `register add` では従来どおり検証します（PJR-JJBY）。
+- executor の報告に省略可能な `handoff`（申し送り）を追加し、reporter の処理後に runner が edit result の申し送りへ確実に転記するようにしました。register の plan も、result への記載を求める完了条件を個票の対応結果と報告の `handoff` に記録するようにしました。`handoff` のない既存の報告も引き続き受け付けます（PJR-R1FB）。
+- `external_projects` で SpecDojo 自身のリポジトリへ起票できるようにしました。相手に `node_modules/.bin/specdojo` がなく、`package.json` の `name` が `specdojo` の場合は `node <相手>/dist/specdojo.js` を使います。未ビルドの場合は `npm run build` を案内して停止します（PJR-PM2R）。
+- 着手の checkpoint・待ち状態の記帳・統合の commit が hook で失敗したとき、空白を含む step 名（`lint Markdown documentation` など）でも、成功した Prettier の step ではなく、失敗印の付いた step と最初の error の行を要約するようにしました。checkpoint の失敗要約を補足説明より前に置き、`block_reason` にも原因を残します（PJR-68KR）。
+- owner の role に当てはまるレビュー観点がないとき（カタログや `pm-roles.yaml`・`pm-review-viewpoints.yaml` がない project など）、edit plan のレビュー観点の欄を `_MISSING_` だけの段落ではなく箇条書きの 1 項目（`- _MISSING_`）にしました。`rulebook-maintenance` などの kata の見直しの plan が、着手の checkpoint の commit で hook の markdownlint（MD036）に止められていました（PJR-SS72）。
+
+## [0.4.5] - 2026-10-24
+
+### 追加機能
+
+- kata authoring の手本を `register add` / `register update` の繰り返し可能な `--source` で指定できるようにしました。文書索引の doc id、プロジェクトリポジトリのファイル・ディレクトリ・glob、`repos` で宣言したプロダクトリポジトリの `<repo>:<path>` を使え、カタログがない project でも authoring plan を生成できます（PJR-ZV60）。
+
+## [0.4.4] - 2026-10-24
+
+### 変更
+
+- 利用者が作る kata の配置を `docs/ja/kata/<種類>s/` から `docs/ja/specdojo/<種類>s/<kata_authority>/` へ変更しました。0.4.4 のあいだは旧配置も警告付きで読み、新旧に同じ ID がある場合は新配置を優先します（PJR-EKRW）。
+
+### 不具合修正
+
+- `init --catalog small` が生成する、成果物がまだない領域の空の `groups` を `catalog build`・`catalog validate`・`specdojo build` が受理するようにしました。`groups` の省略や配列以外の値は引き続きエラーにします（PJR-C95G）。
+- `register build` が生成する登録簿一覧・派生ビュー・PM ログで、自由記述セルの素の HTTP(S) URL を autolink にするようにしました。全角の括弧や句読点、半角の閉じ括弧は URL の外へ残し、既存の autolink・Markdown link・コードスパンは保持するため、markdownlint（MD034）で止まりません（PJR-4J4A）。
+- 同梱のオーケストレーターの本文の冒頭に、この文書そのものが指示の全体であり、同じ名前の Skill や agent の定義のファイルを別に探さないことを加えました。codex で起動したときに、存在しない `SKILL.md` を読もうとして警告が出ていました（PJR-YYSD）。
+
+## [0.4.3] - 2026-10-23
+
+### 追加機能
+
+- 既存成果物を手本に kata だけを新規作成する `rulebook-authoring` / `recipe-authoring` / `sample-authoring` / `template-authoring` approach を追加しました。利用者の kata はリポジトリ単位の `kata_authority` と `docs/ja/kata/` 配置で同梱 kata から分離し、手本の未決参照は同じ実行で新しい ID へ更新します（PJR-CT6G）。
+- Dev Container の preset に、provider の CLI と最低限だけを入れる `minimal` と、推奨構成に開発ツール・Ollama 接続・cron を加える `full` を追加しました。`specdojo init` では `minimal` / `recommended` / `full` を選択でき、既定は従来どおり `recommended`、従来の `none` は `minimal` の別名として利用できます（PJR-47S6）。
+- Dev Container の推奨 preset に GitHub CLI（`gh`）を加え、コンテナ内で行ったログインをリポジトリ別の名前付き volume に保存するようにしました。ホストの認証情報はマウントせず、自動ログインもしません。共有された認証を agent が使ってリモートを書き換えないよう、Claude Code・Codex・OpenCode・Antigravity の配布権限では `git push` と `gh` の書き込みを拒否します。pipeline executor と reporter は全 `gh` を拒否し、Claude Code と OpenCode の対話型オーケストレーターだけは専用権限で読み取りを許可します（PJR-ZH7Q）。
+- `specdojo.config.json` の `external_projects` で別リポジトリの project を別名付きで宣言し、`register add --project <別名> --commit` から相手にインストールされた SpecDojo へ起票を委譲できるようにしました。`--from <別名>:PJR-XXXX` は相手の実 project ID へ変換し、`orchestrator launch` は宣言した外部リポジトリにも編集許可を付けます（PJR-5B42）。
+
+### 変更
+
+- ドキュメントサイトの Mermaid 12 で既定のレイアウトを Dagre から ELK へ切り替え、複雑な図を層状・直角配線で描くようにしました。日本語と絵文字のフォントを描画環境へ揃え、図中の絵文字が欠けないようにしました。文書編集ガイドには、辺が多い図の分割、中心へ矢印を集める `architecture` 図、格子状に並べる `block` 図の書き方を追加しました（PJR-QF45）。
+
+### 文書
+
+- Quick Start ガイドを register のユースケース別の実行例を中心に組み替え、`difficulty` と approach、統合後 review、夜間実行、再開、別 project への起票を「こんなとき」「チャットでの頼み方」「コマンド」の順で追加しました。成果物カタログ、Schedule、worktree、routine は発展手順として後段にまとめました（PJR-98SQ）。
+
+## [0.4.2] - 2026-10-22
+
+### 追加機能
+
+- `specdojo init --lefthook` と `specdojo config scaffold --lefthook` で、利用リポジトリ向けの `lefthook.yml`、SpecDojo 文書向けの markdownlint 設定と agent 定義の除外、依存なしの入口スクリプトを生成できるようにしました。pre-commit は staged の Markdown・YAML に対する Prettier、Markdown に対する markdownlint、設定済みパスの変更に対する `register build`・`catalog validate` を実行します。既存ファイル・npm script・依存は上書きせず、package への追加内容を先に表示します（PJR-7H7N）。
+- 別 project の作業ツリーから `register add --project <project-id> --commit` を実行し、対象 project の統合ブランチへ直接起票できるようにしました。統合ブランチは project の `integration_branch` で指定でき、省略時は `project/<project-id>/develop` です。project 修飾した `--from` は参照先 project の統合ブランチから存在を確認します（PJR-W93C）。
+
+### 変更
+
+- ドキュメントサイトでは exec の plan / result をページ生成の対象から外し、実行記録一覧などからのリンクを GitHub 上の正本へ置き換えるようにしました。元の実行記録と dead link 検査は維持したまま、ページ数とビルド時のメモリ使用量を削減します（PJR-98P8）。
+- `templates/init-agent-members.yaml` で配布する OpenCode の `gemma-reporter` の既定モデルを 26b（`ollama-local/gemma4:26b`）にし、`gemma-executor`・`gemma-review-executor` および対話型オーケストレーターのモデル名からローカル固有のタグ（`-mlx-work-64k`）を除いて利用者が `ollama pull` で取得できるタグ名（`ollama-local/gemma4:31b`）に改めました。また `templates/opencode/README.md` に文脈長拡張のための Modelfile 手順と既存名簿の書き換え案内を追記しました（PJR-2ASZ）。
+
+### 不具合修正
+
+- plan / result の stem、アーカイブ済み plan、実行 event の乱数部分を2バイトから4バイトへ広げ、同じ slug・UTC秒・乱数が重複した場合は連番で別名にするようにしました。event は排他的な新規作成で既存履歴を上書きせず、旧形式の plan 名も引き続き読み取れます（PJR-CNNT）。
+- `templates/lefthook/tools/specdojo-pre-commit.mjs` で、commit したファイルが `.markdownlintignore` や `.prettierignore` で除外されて検査対象がなくなった場合に、markdownlint や Prettier を呼ばずに成功で終えるようにしました。除外ファイルのみを commit したときに markdownlint の使い方の説明（Usage）が出力される問題を解消します（PJR-62T2）。
+- `register build` が生成する登録簿一覧・派生ビュー・PM ログで、自由記述セルのアスタリスクとアンダースコアをエスケープするようにしました。既存のコードスパンとエスケープ済みの記号は保持し、`orch:*` のような記述が複数ある場合も markdownlint（MD037）で止まりません（PJR-6SQH）。
+
+### 文書
+
+- `templates/opencode/README.md` に、Mac の Apple シリコン向けに Ollama の公式 mlx 版（`gemma4:26b-mlx`・`gemma4:31b-mlx`）を利用する場合の指定方法と Modelfile での文脈拡張の案内を追記しました（PJR-STB4）。
+
 ## [0.4.1] - 2026-10-21
 
 ### 追加機能

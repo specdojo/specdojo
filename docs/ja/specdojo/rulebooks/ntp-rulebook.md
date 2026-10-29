@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:ntp-rulebook
   type: rulebook
+  deliverable_type: test
   status: draft
   sample: specdojo:ntp-sample
 ---
@@ -30,12 +31,12 @@ Migration Test Plan Documentation Rules
 
 ## 4. 推奨 Frontmatter 項目
 
-| 項目     | 値                                                | 必須 |
-| -------- | ------------------------------------------------- | ---- |
-| id       | 一意なID                                          | ○    |
-| type     | project / spec / test / architecture / operations | ○    |
-| status   | draft / ready / deprecated                        | ○    |
-| rulebook | `ntp-rulebook`                                    | 任意 |
+| 項目     | 値                         | 必須 |
+| -------- | -------------------------- | ---- |
+| id       | 一意なID                   | ○    |
+| type     | `test` 固定                | ○    |
+| status   | draft / ready / deprecated | ○    |
+| rulebook | `ntp-rulebook`             | 任意 |
 
 ## 5. 本文構成（標準テンプレ）
 

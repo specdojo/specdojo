@@ -32,3 +32,48 @@
     - field: due
       from: ""
       to: _TODO_
+- v: 1
+  id: reg_694a4f4ea8ad41c8a67135bbfa50e23c
+  ts: "2026-10-21T15:46:56Z"
+  action: start
+  actor: flash-high-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9d44e99b4c63451f94bfe921db370062
+- v: 1
+  id: reg_3dd6f6eec287431fa7e4b23ad5201c72
+  ts: "2026-10-21T16:09:27Z"
+  action: review
+  actor: flash-high-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_694a4f4ea8ad41c8a67135bbfa50e23c
+- v: 1
+  id: reg_c7c2de3137fb4c5d8aec967f0e0cee84
+  ts: "2026-10-21T22:48:10Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 調査の推奨の案を利用者（indie）の承認で PJR-98P8 として実装し、オーケストレーターがビルドを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: plan と result をドキュメントサイトのビルド対象から外し、リンクを GitHub のファイル表示へ置き換えた（PJR-98P8）。手元の docs:build がメモリの上限を広げずに約 113 秒で通る
+  previous_event_id: reg_3dd6f6eec287431fa7e4b23ad5201c72

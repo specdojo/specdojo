@@ -59,7 +59,8 @@ export function registerProjectMergeMessage(params: {
 export type ProductIntegrationTrace = {
   repo: string;
   integrationBranch: string;
-  state: ProductMergeState;
+  execBranch: string;
+  state: ProductMergeState | "branch-only";
   // 統合先が実装変更を含んだ直後の commit（runner が作った merge commit）。変更なしは null。
   commit: string | null;
   // merge commit の subject から分かる PR 参照（例: `#123`）。分からなければ null。
@@ -93,11 +94,13 @@ function pullRequestOf(repoRoot: string, commit: string): string | null {
 /** Integration snapshot of one product repository, read from the Git state after integration. */
 export function productIntegrationTrace(product: ProductWorktree): ProductIntegrationTrace {
   const integrationBranch = productIntegrationTarget(product);
-  const state = productMergeState(product);
+  const state =
+    product.integrationStrategy === "branch-only" ? "branch-only" : productMergeState(product);
   const commit = state === "merged" ? integrationCommitOf(product, integrationBranch) : null;
   return {
     repo: product.name,
     integrationBranch,
+    execBranch: product.branch,
     state,
     commit,
     pullRequest: commit ? pullRequestOf(product.repoRoot, commit) : null,
@@ -115,6 +118,8 @@ function traceRows(
     `\`${key}\``,
     `\`${trace.repo}\``,
     `\`${trace.integrationBranch}\``,
+    `\`${trace.execBranch}\``,
+    trace.state,
     trace.pullRequest ?? NOT_APPLICABLE,
     trace.commit
       ? `\`${trace.commit}\``
@@ -147,16 +152,26 @@ export function renderResultTraceBody(params: {
   recordedAt: string;
 }): string {
   const table = renderTable(
-    ["trace key", "repository", "integration branch", "PR", "commit snapshot", "recorded at"],
+    [
+      "trace key",
+      "repository",
+      "integration branch",
+      "exec branch",
+      "state",
+      "PR",
+      "commit snapshot",
+      "recorded at",
+    ],
     traceRows(params.traceKey, params.traces, params.recordedAt),
   );
   // PJR-9KST: result は利用側プロジェクトの markdownlint 設定で検査され、既定の MD013（80 文字）が
   // 効くことがある。説明文は文ごとに改行して短く保ち、行長を内容で決められない表だけ MD013 を外す。
   return [
-    "runner がプロダクトリポジトリを統合した後に記録した、統合先の commit snapshot です。",
+    "runner がプロダクトリポジトリの処理後に記録した状態と、統合先の commit snapshot です。",
     "プロジェクトリポジトリの統合は、この result を含む merge commit で確認します。",
     `その merge commit には \`Refs: ${params.traceKey}\` を付けます。`,
-    "PR が `not applicable` の行は、runner がローカルで統合し PR を経由していません。",
+    "`branch-only` の行は未統合です。exec branch を保持し、push と PR 作成はプロダクト側で行います。",
+    "PR が `not applicable` の行では、runner は PR を作成していません。",
     "",
     "<!-- markdownlint-disable MD013 -->",
     "",

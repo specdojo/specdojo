@@ -115,6 +115,46 @@ describe("toCell — 表セルのエスケープと正規化", () => {
     expect(toCell("[[prj-0001:pjr-bhmh|PJR-BHMH]]")).toBe("[[prj-0001:pjr-bhmh\\|PJR-BHMH]]");
   });
 
+  it("コードスパン外の `*` と `_` をエスケープする", () => {
+    expect(toCell("orch:* と orch:*:work、token_ と _next")).toBe(
+      "orch:\\* と orch:\\*:work、token\\_ と \\_next",
+    );
+  });
+
+  it("コードスパンと既にエスケープ済みの強調記号を保持する", () => {
+    const value = "`orch:*` と ``token_*``、orch:\\* と token\\_";
+
+    expect(toCell(value)).toBe(value);
+    expect(toCell(toCell(value))).toBe(value);
+  });
+
+  it("文中の素の HTTP(S) URL を末尾の全角・半角の句読点や閉じ括弧を除いて囲む", () => {
+    const value =
+      "（homepage は https://specdojo.org）。詳細は https://example.com/path?q=1、" +
+      "補足 (https://example.com/docs)。";
+
+    expect(toCell(value)).toBe(
+      "（homepage は <https://specdojo.org>）。詳細は <https://example.com/path?q=1>、" +
+        "補足 (<https://example.com/docs>)。",
+    );
+  });
+
+  it("autolink・Markdown link・コードスパンの URL を変えず URL 内の強調記号も保持する", () => {
+    const value =
+      "<https://example.com/a_b> [site](https://example.com/a_b) " +
+      "[https://example.com/a_b] `https://example.com/a_b`";
+
+    expect(toCell(value)).toBe(value);
+    expect(toCell(toCell(value))).toBe(value);
+  });
+
+  it("URL の囲みを再適用しても結果が変わらない", () => {
+    const once = toCell("文中 https://example.com/a_b と末尾 https://specdojo.org。");
+
+    expect(once).toBe("文中 <https://example.com/a_b> と末尾 <https://specdojo.org>。");
+    expect(toCell(once)).toBe(once);
+  });
+
   it("文字列以外が渡された場合は空文字を返す", () => {
     expect(toCell(undefined as unknown as string)).toBe("");
   });
@@ -180,6 +220,20 @@ describe("readRegisterItemContent — 個票からの一覧行の導出", () => 
     );
 
     expect(parsed?.item.targets).toEqual(["prj-0001:cdfd-overview", "prj-0001:cdfd-check"]);
+  });
+
+  it("個票の authoring sources を読み取る", () => {
+    const parsed = readRegisterItemContent(
+      buildItemFile([
+        ...MIGRATED_FIELDS,
+        "sources:",
+        "  - docs/ja/examples/*.md",
+        "  - product:lessons/",
+      ]),
+      "pjr-ab12-inventory-seed.md",
+    );
+
+    expect(parsed?.item.sources).toEqual(["docs/ja/examples/*.md", "product:lessons/"]);
   });
 
   it("個票の approach を読み取る", () => {
@@ -403,7 +457,7 @@ describe("register-item-frontmatter schema — enum 検証", () => {
     expect(schema.$defs.Approach.enum).toEqual([...APPROACHES]);
   });
 
-  it("approach がある場合は targets を 1 件だけ要求する", () => {
+  it("通常の approach は target 1 件、authoring は新規 id と複数の手本を受け付ける", () => {
     const validator = buildValidator(
       "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
     );
@@ -422,33 +476,58 @@ describe("register-item-frontmatter schema — enum 検証", () => {
     expect(validator({ specdojo: base })).toBe(false);
     expect(validator({ specdojo: { ...base, targets: ["doc-a", "doc-b"] } })).toBe(false);
     expect(validator({ specdojo: { ...base, targets: ["doc-a"] } })).toBe(true);
-  });
-
-  it("derived_from は project 内 ID と project 修飾 ID の配列だけを受け付ける", () => {
-    const validator = buildValidator(
-      "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
-    );
-    const base = {
-      id: "prj-0001:pjr-ab12-inventory-seed",
-      type: "project",
-      status: "draft",
-      rulebook: "specdojo:pjr-rulebook",
-      part_of: ["prj-0001:pjr-index"],
-      item_type: "todo",
-      item_status: "open",
-      priority: "medium",
-    };
-
     expect(
       validator({
-        specdojo: { ...base, derived_from: ["PJR-CD34", "prj-0002:PJR-EF56"] },
+        specdojo: {
+          ...base,
+          approach: "rulebook-authoring",
+          targets: ["customer:new-rulebook", "doc-a", "doc-b"],
+        },
       }),
     ).toBe(true);
-    expect(validator({ specdojo: { ...base, derived_from: ["PJR-CD34", "PJR-CD34"] } })).toBe(
+    expect(
+      validator({
+        specdojo: {
+          ...base,
+          approach: "rulebook-authoring",
+          targets: ["customer:new-rulebook"],
+          sources: ["doc-a", "product:docs/*.md"],
+        },
+      }),
+    ).toBe(true);
+    expect(validator({ specdojo: { ...base, targets: ["doc-a"], sources: ["doc-b"] } })).toBe(
       false,
     );
-    expect(validator({ specdojo: { ...base, derived_from: ["pjr-cd34"] } })).toBe(false);
   });
+
+  it.each(["derived_from", "depends_on"])(
+    "%s は project 内 ID と project 修飾 ID の配列だけを受け付ける",
+    (field) => {
+      const validator = buildValidator(
+        "docs/specdojo/schemas/v1/register-item-frontmatter.schema.yaml",
+      );
+      const base = {
+        id: "prj-0001:pjr-ab12-inventory-seed",
+        type: "project",
+        status: "draft",
+        rulebook: "specdojo:pjr-rulebook",
+        part_of: ["prj-0001:pjr-index"],
+        item_type: "todo",
+        item_status: "open",
+        priority: "medium",
+      };
+
+      expect(
+        validator({
+          specdojo: { ...base, [field]: ["PJR-CD34", "prj-0002:PJR-EF56"] },
+        }),
+      ).toBe(true);
+      expect(validator({ specdojo: { ...base, [field]: ["PJR-CD34", "PJR-CD34"] } })).toBe(false);
+      expect(validator({ specdojo: { ...base, [field]: ["pjr-cd34"] } })).toBe(false);
+      expect(validator({ specdojo: { ...base, [field]: [] } })).toBe(false);
+      expect(validator({ specdojo: { ...base, [field]: "PJR-CD34" } })).toBe(false);
+    },
+  );
 
   it("autopilot は approved だけを受け付ける", () => {
     const validator = buildValidator(

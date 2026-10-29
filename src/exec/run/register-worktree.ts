@@ -1,3 +1,5 @@
+import { registerDependencyBlockReason } from "../../register/dependency.js";
+import { gradeCheckpointPaths } from "../grade-checkpoint.js";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { qualifyTaskId, randomHex } from "../shared.js";
@@ -48,6 +50,7 @@ import {
 } from "../repo-trace.js";
 import { pipelineStateLocation, readPipelineState } from "../pipeline-state.js";
 import { findResumableRegisterRun } from "../register-resume.js";
+import { isAuthoringApproach } from "../../kata/authoring.js";
 import {
   resolvePinnedRateLimitRunOptions,
   rateLimitRecoveryReason,
@@ -551,6 +554,16 @@ export async function runSingleRegisterItemWorktree(
   const { projectId, schedulePath, executionPath, repoRoot, worktreeBase } = context;
   const wtContext = { repoRoot, schedulePath, executionPath };
   const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+  const dependencyReason = registerDependencyBlockReason(registerPaths, item);
+  if (dependencyReason)
+    return {
+      id: item.id,
+      title: item.title,
+      outcome: "skipped",
+      transition: "none",
+      commit: "skipped",
+      reason: dependencyReason,
+    };
   // 状態遷移の書き込み先（登録項目の正本）。commit 対象に必ず含める。
   const ticketPath = ticketPathFromItem(item, registerPaths.projectRegisterPath);
   requireRunnableRegisterItem(item);
@@ -594,6 +607,18 @@ export async function runSingleRegisterItemWorktree(
       }
     | RegisterItemSummary
   > => {
+    // Recheck after acquiring the lifecycle lock: dependencies may change while waiting.
+    const current = resolveRegisterRunTarget(projectId, pjrId);
+    const reason = registerDependencyBlockReason(current.registerPaths, current.item);
+    if (reason)
+      return {
+        id: item.id,
+        title: item.title,
+        outcome: "skipped",
+        transition: "none",
+        commit: "skipped",
+        reason,
+      };
     // executor が成功した run の worktree を、全体再実行が破棄しないよう保護する。
     // discardStaleExecWorktree は worktree と exec ブランチを強制削除するため、未コミットの
     // executor 成果が失われる。この場合は何も壊さずに中断し、再開か明示的な破棄を促す。
@@ -636,7 +661,9 @@ export async function runSingleRegisterItemWorktree(
       startedAt: new Date().toISOString(),
       stem,
       ...(item.approach ? { approach: item.approach } : {}),
-      ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
+      ...(item.targets && item.targets.length > 0
+        ? { targets: isAuthoringApproach(item.approach) ? item.targets.slice(0, 1) : item.targets }
+        : {}),
     });
     const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 
@@ -655,7 +682,10 @@ export async function runSingleRegisterItemWorktree(
       ticketPath,
       supersededPaths,
     );
-    const checkpointPaths = checkpointRel.map((rel) => resolve(repoRoot, rel));
+    const checkpointPaths = [
+      ...checkpointRel.map((rel) => resolve(repoRoot, rel)),
+      ...gradeCheckpointPaths({ repoRoot, executionPath }),
+    ];
     const checkpointFailureLogPath = pipelineRunId
       ? integrateLogPath(
           pipelineStateLocation({
@@ -728,6 +758,7 @@ export async function runSingleRegisterItemWorktree(
   let stderr = "";
   // pipeline 実行のみ run state を持つ。統合段の記録先として Phase 3 へ渡す。
   let pipelineStatePath: string | undefined;
+  let pipelineBlockReason: string | undefined;
   let transitionReason: string | undefined;
   let completionActor = actor;
   if (pipelineAgents) {
@@ -773,6 +804,7 @@ export async function runSingleRegisterItemWorktree(
     });
     agentResult = pipelineOutcome.runResult;
     stderr = pipelineOutcome.blockReason ?? "";
+    pipelineBlockReason = pipelineOutcome.blockReason;
     pipelineStatePath = resolve(worktree.path, pipelineOutcome.stateRef);
     transitionReason = rateLimitRecoveryReason(pipelineOutcome.rateLimitEvents) || undefined;
   } else {
@@ -813,6 +845,7 @@ export async function runSingleRegisterItemWorktree(
       actor: completionActor,
       bookkeepingPaths,
       pipelineStatePath,
+      runnerBlockReason: pipelineBlockReason,
       transitionReason,
     });
 

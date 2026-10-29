@@ -75,35 +75,39 @@ flowchart LR
 
 ### 2.4. Schedule着手可能トラックの判定
 
-`catalog_status: primary` のトラックを `schedule_ready_tracks` として `timeline.json` へ列挙します。これは Schedule 展開（`schedule build --track <track>`）を開始してよいトラックの一覧です。
+`timeline build` は `project_register_path` がある場合、`catalog-planning` の todo を domain ごとに読み、`done` が 1 件でもあればその domain を `primary` と導出します（対象 todo がない domain は手書き値を保持）。対象ドメインがすべて `primary` に達したトラックを `schedule_ready_tracks` として `timeline.json` へ列挙します。これは Schedule 展開（`schedule build --track <track>`）を開始してよいトラックの一覧です。
 
 ## 3. 運用タイミング
 
-`timeline build` は一度だけ実行するコマンドではなく、`tml-index.yaml` を更新するたびに再実行する運用コマンドです。
+`timeline build` は一度だけ実行するコマンドではなく、トラックの定義や register の状態変化に合わせて再実行する運用コマンドです。register の `epic` 起票から、子 todo によるカタログ・strategy 作成、Schedule への展開、完了判断までの流れは次のとおりです。
 
 ```mermaid
 flowchart TD
-    A["人間がtml-index.yamlを更新<br/>（トラック追加・順序見直し・catalog_status変更）"] --> B["specdojo timeline build"]
-    B --> C{"catalog-scaffold.mdに<br/>対象があるか"}
-    C -->|"あり"| P["specdojo catalog plan prompt / scaffold --domain <domain><br/>（agent判定→dct-plan-<domain>.yaml）"]
-    P --> D["specdojo catalog scaffold --domain <domain>"]
-    D --> E["成果物カタログをdraft→primaryへ完成させる"]
-    C -->|"なし"| E
-    E --> F["tml-index.yamlのcatalog_statusをprimaryへ更新"]
-    F --> B
-    B --> G{"schedule_ready_tracksに<br/>該当トラックがあるか"}
-    G -->|"あり"| H["specdojo schedule build --track <track>"]
+    A["人間がtml-index.yamlを定義<br/>（トラック順序・並行可否・依存関係）"] --> B["specdojo timeline build"]
+    B --> C["register で track の epic を起票<br/>（register add --type epic --track &lt;track&gt;）"]
+    C --> D["子 todo で成果物カタログを作成<br/>（approach: catalog-planning）"]
+    D --> E["カタログ完成後、子 todo を close<br/>（register close --id &lt;todo-id&gt;）"]
+    E --> F["specdojo timeline build<br/>（register から catalog_status を導出）"]
+    F --> G{"schedule_ready_tracks に<br/>該当トラックがあるか"}
+    G -->|"あり"| H["子 todo で strategy を作成<br/>（approach: strategy-planning）"]
+    H --> I["specdojo schedule build --track &lt;track&gt;<br/>（sch-track 生成・Schedule へ展開）"]
+    I --> J["schedule でタスクを実行<br/>（exec run --track / --auto）"]
+    J --> K["トラック完了後、epic を close<br/>（人が完了を判断）"]
     G -->|"なし"| A
 ```
 
 代表的な更新契機は次のとおりです。
 
-| 更新契機                                                          | 実施すること                                                                     |
-| ----------------------------------------------------------------- | -------------------------------------------------------------------------------- |
-| 新しいトラックを追加する                                          | `tml-index.yaml` にトラックを追加し `timeline build` を再実行する                |
-| 成果物カタログの `draft` → `primary` 完成に伴い着手順序を確定する | `tml-index.yaml` の `catalog_status` を更新し `timeline build` を再実行する      |
-| 着手順の見直し（並行化・順序入れ替え）が必要になる                | `order` / `parallel_group` / `depends_on` を更新し `timeline build` を再実行する |
-| トラックの Schedule 展開前の最終確認                              | `timeline build` を実行し `schedule_ready_tracks` に対象が含まれることを確認する |
+| 更新契機                              | 実施すること                                                                                                               |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| トラックの追加・順序計画              | `tml-index.yaml` にトラックを追加・更新し `timeline build` を実行する                                                      |
+| track の epic 起票                    | `register add --type epic --track <track>` で業務の起点となる epic を起票する                                              |
+| 成果物カタログの計画・作成            | epic の子 todo（`--approach catalog-planning --target domain:<domain>`）で判定・生成を進め、検証後に `register close` する |
+| `catalog_status` の反映と着手可能判定 | `timeline build` を再実行する（register の todo 完了から `primary` が自動導出され、`schedule_ready_tracks` に反映される）  |
+| トラック戦略・Schedule の生成         | epic の子 todo（`--approach strategy-planning --target track:<track>`）で strategy 生成と `schedule build --track` を行う  |
+| Schedule の実行と epic の完了         | schedule でタスクを実行し、途中の進み具合を確認したうえで人が epic を `register close` する                                |
+
+`timeline build` は register の個票から `catalog-planning` の todo を集めて `catalog_status` を導出します。カタログ作成の todo が `done` なら `primary`、着手中（`in-progress` / `waiting` / `review`）なら `draft`、`open` だけなら `not_started` と判定します。人間が書く計画である `tml-index.yaml` の手書き値は書き換えずに保持し、手書きの値と食い違うときは警告します。
 
 ### 3.1. 既にSchedule展開済みのトラックの扱い
 
@@ -115,23 +119,23 @@ flowchart TD
 
 `catalog-scaffold.md` が示すドメインは、テンプレートに何が必要かが決まっていても、そのドメインで実際に何件の成果物インスタンスが要るかまでは決まっていません。この判定を agent に任せ、結果を機械可読な `dct-plan-<domain>.yaml` として残します。責務は次のとおり分担します。
 
-| 段階         | 担当                                | 出力                                                       |
-| ------------ | ----------------------------------- | ---------------------------------------------------------- |
-| 着手対象提示 | Timeline（`timeline build`）        | `catalog-scaffold.md`（未作成カタログのドメイン一覧）      |
-| 意味判断     | agent（`catalog plan`）             | `dct-plan-<domain>.yaml`（インスタンス・根拠・未確定事項） |
-| 構造生成     | コード（`catalog scaffold --plan`） | `dct-<domain>.yaml`                                        |
-| 状態更新     | 人間                                | `tml-index.yaml` の `catalog_status`                       |
+| 段階         | 担当                                | 出力                                                                              |
+| ------------ | ----------------------------------- | --------------------------------------------------------------------------------- |
+| 着手対象提示 | Timeline（`timeline build`）        | `catalog-scaffold.md`（未作成カタログのドメイン一覧）                             |
+| 意味判断     | agent（`catalog plan`）             | `dct-plan-<domain>.yaml`（インスタンス・根拠・未確定事項）                        |
+| 構造生成     | コード（`catalog scaffold --plan`） | `dct-<domain>.yaml`                                                               |
+| 状態更新     | register の todo 完了               | `timeline build` が導出する `catalog_status`（`tml-index.yaml` の値は保持・警告） |
 
 - agent は成果物インスタンスの要否、placeholder 値、採用しない候補、未確定事項の整理だけを担当します。ID・パス・`groups`・`done_criteria` の組み立てと schema 適合はコード側の責務です。
 - 判定は Timeline が着手対象として示したドメインに限定し、入力は data-flow を中心とした上流成果物と、既存カタログがある場合はその基準線に限定します。
-- 判定計画が保存されても `catalog_status` は自動では変わりません。`primary` への昇格は、生成された成果物カタログを人間が確認してから `tml-index.yaml` を更新します。
+- 判定計画が保存されても `catalog_status` は自動では変わりません。カタログ作成の todo（`catalog-planning`）を完了（`register close`）し、`timeline build` を再実行することで `catalog_status` が `primary` と導出されます。
 - 再判定時は既存の判定計画を無条件に置き換えず、差分をレビューしてから `--force` で更新します。
 - 判定後は `catalog scaffold --plan --dry-run --domain <domain>` で差分を確認し、問題がなければ `--plan` で生成します。物理分割 domain は同じ `domain` の全 template から分割 DCT をまとめて生成します。
-- 生成成功だけでは `catalog_status` を変更しません。生成 DCT を人間が確認した後に `primary` へ更新し、`timeline build` を再実行します。
+- 生成成功後は生成 DCT を確認・検証した後にカタログ作成の todo を close し、`timeline build` を再実行して `primary` の導出を確定します。
 
 ### 3.3. Schedule strategy 生成への引き渡し
 
-カタログを確認した後は、Timeline の track と `domains` が新規 strategy の scope 解決に使われます。strategy に scope と成果物別 `approach_rules` を宣言した後、`schedule strategy generate` が facts と grade から approach を導出して標準 profile へ展開します。
+カタログ作成の todo を完了した後は、Timeline の track と `domains` が新規 strategy の scope 解決に使われます。epic の子 todo（`--approach strategy-planning --target track:<track>`）で strategy に scope と成果物別 `approach_rules` を宣言した後、`schedule strategy generate` が facts と grade から approach を導出して標準 profile へ展開し、`schedule build --track <track>` で Schedule を生成します。
 
 ```text
 tml-index.yaml + dct-*.yaml
@@ -152,9 +156,9 @@ tml-index.yaml + dct-*.yaml
 
 ## 5. アンチパターン
 
-| アンチパターン                                                    | 問題                                                                             | 対策                                                                                                                                                        |
-| ----------------------------------------------------------------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `catalog_status` を更新しないまま成果物カタログを完成させる       | `timeline build` の `schedule_ready_tracks` が実態とずれ、着手可能判定に使えない | 成果物カタログを `primary` にした時点で `tml-index.yaml` も同時に更新する                                                                                   |
-| `parallel_group` を安易に共通ラベルへ寄せる                       | 実際には並行させてはいけないトラックまで並行候補に見えてしまう                   | 並行させてよい理由が同じトラックだけを同じ `parallel_group` にする（[タイムライン作成ルール](../rulebooks/tml-rulebook.md) の `order` と `parallel_group`） |
-| Timeline に実行実績（完了日・進捗率）を書き戻す                   | 計画と実績の区別がつかなくなり、`sch-milestones.yaml` と情報が二重化する         | 実績は `sch-milestones.yaml` と `generated/` に任せ、Timeline は計画のみを保持する                                                                          |
-| `timeline build` の生成物（`timeline-order.md` 等）を直接編集する | 次回 `timeline build` 実行時に上書きされ、編集内容が失われる                     | 変更したい内容は `tml-index.yaml` に反映してから `timeline build` を再実行する                                                                              |
+| アンチパターン                                                    | 問題                                                                                   | 対策                                                                                                                                                        |
+| ----------------------------------------------------------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| カタログ作成の todo を close しないまま放置する                   | `timeline build` が `catalog_status` を `primary` と導出できず、着手可能判定が進まない | カタログ完成と検証後に `register close` で todo を完了させ、`timeline build` で最新状態を導出する                                                           |
+| `parallel_group` を安易に共通ラベルへ寄せる                       | 実際には並行させてはいけないトラックまで並行候補に見えてしまう                         | 並行させてよい理由が同じトラックだけを同じ `parallel_group` にする（[タイムライン作成ルール](../rulebooks/tml-rulebook.md) の `order` と `parallel_group`） |
+| Timeline に実行実績（完了日・進捗率）を書き戻す                   | 計画と実績の区別がつかなくなり、`sch-milestones.yaml` と情報が二重化する               | 実績は `sch-milestones.yaml` と `generated/` に任せ、Timeline は計画のみを保持する                                                                          |
+| `timeline build` の生成物（`timeline-order.md` 等）を直接編集する | 次回 `timeline build` 実行時に上書きされ、編集内容が失われる                           | 変更したい内容は `tml-index.yaml` に反映してから `timeline build` を再実行する                                                                              |

@@ -23,6 +23,7 @@ export type RegisterItemView = {
 
 export type RegisterAddFields = {
   type: string;
+  track?: string;
   title: string;
   description: string;
   priority: string;
@@ -35,7 +36,11 @@ export type RegisterAddFields = {
   conclusion: string;
   approach?: Approach;
   targets?: string[];
+  sources?: string[];
+  targetPath?: string;
+  targetRulebook?: string;
   derivedFrom?: string[];
+  dependsOn?: string[];
 };
 
 export type BuildScope = "register" | "controls" | "all";

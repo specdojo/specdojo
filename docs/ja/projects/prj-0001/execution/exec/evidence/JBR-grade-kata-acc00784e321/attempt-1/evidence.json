@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "task_id": "JBR-grade-kata-acc00784e321",
+  "run_id": "attempt-1",
+  "stage": {
+    "role": "executor",
+    "actor": "specdojo-runner",
+    "status": "succeeded",
+    "started_at": "2026-10-27T20:01:03.784Z",
+    "completed_at": "2026-10-27T20:26:18.776Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cdfd-uc-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.cstd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.prj-stakeholder-register-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.stsd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-index-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-index-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-rulebook.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-sample.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/grade/results/specdojo.tsd-recipe.yaml",
+      "status": "??"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/execution/jobs/runs/JBR-grade-kata-acc00784e321.json",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 11,
+    "summary": ".../grade/results/specdojo.cdfd-sample.yaml        |   6 +-\n .../grade/results/specdojo.cdfd-uc-sample.yaml     |   6 +-\n .../grade/results/specdojo.cstd-sample.yaml        |   6 +-\n .../specdojo.prj-stakeholder-register-sample.yaml  |   6 +-\n .../grade/results/specdojo.stsd-sample.yaml        |   4 +-\n .../grade/results/specdojo.tsd-index-rulebook.yaml |  28 +-\n .../grade/results/specdojo.tsd-index-sample.yaml   |  53 ++--\n .../grade/results/specdojo.tsd-rulebook.yaml       |  31 +-\n .../grade/results/specdojo.tsd-sample.yaml         | 313 ++++-----------------\n 9 files changed, 110 insertions(+), 343 deletions(-)"
+  },
+  "validations": [
+    {
+      "id": "job-command",
+      "source": "runner",
+      "command": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-acc00784e321 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-acc00784e321/…",
+      "status": "passed",
+      "summary": "exit 0"
+    }
+  ],
+  "final_message": "Runner command exit 0.",
+  "command": {
+    "shell": "/bin/sh -eu",
+    "value": "if npm run build; then\n  :\nelse\n  build_status=$?\n  printf 'grade prerequisite build failed: exit_code=%s\\n' \"$build_status\" >&2\n  exit 1\nfi\nif tools/grade/run-per-document.sh --run-id JBR-grade-kata-acc00784e321 --stages 1 --stage-1-executor agy-expert-executor --kind all --limit 15 --dependency-changed=true --rulebook-changed=true --unreviewed=true --changed-only=true --ungraded=true --incomplete=true --rubric-outdated=true; then\n  cat logs/grade/runs/per-document/JBR-grade-kata-acc00784e321/results.tsv\nelse\n  grade_status=$?\n  cat logs/grade/runs/per-document/JBR-grade-kata-acc00784e321/results.tsv\n  if [ \"$grade_status\" -eq 2 ]; then\n    printf 'grade pipeline partial: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-acc00784e321' \"$grade_status\" >&2\n  else\n    printf 'grade pipeline failed: run_id=%s exit_code=%s\\n' 'JBR-grade-kata-acc00784e321' \"$grade_status\" >&2\n  fi\n  exit \"$grade_status\"\nfi",
+    "exit_code": 0,
+    "stdout_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-acc00784e321/attempt-1/command.stdout.log",
+    "stderr_ref": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-acc00784e321/attempt-1/command.stderr.log",
+    "stdout": "\n> specdojo@0.4.7 build\n> node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\" && tsc -p tsconfig.build.json && node -e \"require('node:fs').chmodSync('dist/specdojo.js', 0o755)\"\n\nrun_id=JBR-grade-kata-acc00784e321 project=prj-0001 target=kata kind=all changed_only=true ungraded=true incomplete=true rubric_outdated=true embed_documents=false max_stage_failures=3 stages=1 documents=10 exhausted=0 work_dir=logs/grade/runs/per-document/JBR-grade-kata-acc00784e321\nstage=1 executor=agy-expert-executor reporter=machine reference=none\ntranslation_by=gemma26-translator\ndocument start: docs/ja/specdojo/recipes/tsd-recipe.md\ndocument complete: docs/ja/specdojo/recipes/tsd-recipe.md\ndocument start: docs/ja/specdojo/rulebooks/tsd-index-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/tsd-index-rulebook.md\ndocument start: docs/ja/specdojo/rulebooks/tsd-rulebook.md\ndocument complete: docs/ja/specdojo/rulebooks/tsd-rulebook.md\ndocument start: docs/ja/specdojo/samples/cdfd-sample.md\ndocument complete: docs/ja/specdojo/samples/cdfd-sample.md\ndocument start: docs/ja/specdojo/samples/cdfd-uc-sample.md\ndocument complete: docs/ja/specdojo/samples/cdfd-uc-sample.md\ndocument start: docs/ja/specdojo/samples/cstd-sample.md\ndocument complete: docs/ja/specdojo/samples/cstd-sample.md\ndocument start: docs/ja/specdojo/samples/prj-stakeholder-register-sample.md\ndocument complete: docs/ja/specdojo/samples/prj-stakeholder-register-sample.md\ndocument start: docs/ja/specdojo/samples/stsd-sample.md\ndocument complete: docs/ja/specdojo/samples/stsd-sample.md\ndocument start: docs/ja/specdojo/samples/tsd-index-sample.md\ndocument complete: docs/ja/specdojo/samples/tsd-index-sample.md\ndocument start: docs/ja/specdojo/samples/tsd-sample.md\ndocument complete: docs/ja/specdojo/samples/tsd-sample.md\ngrade pipeline complete: selected=10 processed=10 completed_now=10 incomplete=0 exhausted=0 results=logs/grade/runs/per-document/JBR-grade-kata-acc00784e321/results.tsv\nrecorded_at\tdocument\tstage\tstatus\tduration_seconds\tverdict\tscore\tfindings\texecutor\treporter\treference\tconsecutive_failures\tmax_failures\n2026-10-27T20:03:22Z\tdocs/ja/specdojo/recipes/tsd-recipe.md\t1\tpassed\t128\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-27T20:05:16Z\tdocs/ja/specdojo/rulebooks/tsd-index-rulebook.md\t1\tpassed\t112\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-27T20:07:41Z\tdocs/ja/specdojo/rulebooks/tsd-rulebook.md\t1\tpassed\t143\tpass\t100\t1\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-27T20:11:46Z\tdocs/ja/specdojo/samples/cdfd-sample.md\t1\tpassed\t243\tpass\t95\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-27T20:13:56Z\tdocs/ja/specdojo/samples/cdfd-uc-sample.md\t1\tpassed\t128\tpass\t94\t3\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-27T20:17:34Z\tdocs/ja/specdojo/samples/cstd-sample.md\t1\tpassed\t217\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-27T20:20:32Z\tdocs/ja/specdojo/samples/prj-stakeholder-register-sample.md\t1\tpassed\t176\tneeds-work\t76\t13\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-27T20:22:33Z\tdocs/ja/specdojo/samples/stsd-sample.md\t1\tpassed\t119\tpass\t95\t2\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-27T20:24:01Z\tdocs/ja/specdojo/samples/tsd-index-sample.md\t1\tpassed\t86\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n2026-10-27T20:26:17Z\tdocs/ja/specdojo/samples/tsd-sample.md\t1\tpassed\t134\tpass\t100\t0\tagy-expert-executor\tmachine\tnone\t\t\n",
+    "stderr": ""
+  },
+  "log_refs": [
+    {
+      "kind": "command-stdout",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-acc00784e321/attempt-1/command.stdout.log",
+      "bytes": 3363,
+      "truncated": false
+    },
+    {
+      "kind": "command-stderr",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/JBR-grade-kata-acc00784e321/attempt-1/command.stderr.log",
+      "bytes": 0,
+      "truncated": false
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.1 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-7H7N
+
+Updated ticket status → ready: /tmp/specdojo-ticket-WTDaYV/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-MfNCAI/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-syjpb9/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-MGFdFX/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-rwVo8U/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-N6svlz/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Would move 1 agent member(s) from /tmp/specdojo-members-LoDlmI/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-LoDlmI/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-LoDlmI/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-LoDlmI/.specdojo/agent-members.yaml
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-21T16:49:14.973Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-21T16:48:15.262Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-21T16:48:15.548Z.
+fallback reporter complete
+ ❯ tests/src/shared/lefthook-scaffold.test.ts (4 tests | 1 failed) 13ms
+     × does not overwrite files or existing package entries without force 6ms
+Wrote agent stdout: /tmp/specdojo-agent-command-98ai4G/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-as3Owg/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  1 failed | 139 passed (140)
+      Tests  1 failed | 2294 passed (2295)
+   Start at  01:47:48
+   Duration  43.66s (transform 2.73s, setup 567ms, import 19.35s, tests 48.77s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/shared/lefthook-scaffold.test.ts > lefthook scaffold > does not overwrite files or existing package entries without force
+ReferenceError: existsSync is not defined
+ ❯ tests/src/shared/lefthook-scaffold.test.ts:92:7
+     90|       expect(readFileSync(join(repoRoot, "lefthook.yml"), "utf8")).toB…
+     91|       expect(readFileSync(join(repoRoot, "tools/install-lefthook.mjs")…
+     92|       expect(existsSync(join(repoRoot, ".markdownlint.jsonc"))).toBe(f…
+       |       ^
+     93|       expect(readFileSync(join(repoRoot, ".markdownlint.yaml"), "utf8"…
+     94|       expect(readFileSync(join(repoRoot, ".markdownlintignore"), "utf8…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

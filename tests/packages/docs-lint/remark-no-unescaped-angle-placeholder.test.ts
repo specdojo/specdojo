@@ -1,14 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { glob } from "tinyglobby";
 import { remark } from "remark";
 import remarkFrontmatter from "remark-frontmatter";
 import remarkGfm from "remark-gfm";
 import remarkNoUnescapedAnglePlaceholder from "../../../packages/docs-lint/src/remark-no-unescaped-angle-placeholder.js";
-
-const repoRoot = path.resolve(fileURLToPath(new URL(".", import.meta.url)), "../../..");
 
 function createProcessor() {
   return remark()
@@ -142,25 +136,40 @@ describe("remarkNoUnescapedAnglePlaceholder", () => {
   });
 });
 
-describe("remarkNoUnescapedAnglePlaceholder against the real docs tree", () => {
-  it("produces no false positives on the existing docs/ markdown", async () => {
-    const files = await glob("docs/**/*.md", {
-      cwd: repoRoot,
-      absolute: true,
-      expandDirectories: false,
-      // executor 実行中に scaffold される plan/result は runner 管理であり、対象成果物ではない。
-      ignore: ["docs/**/execution/exec/{plans,results}/**"],
-    });
+describe("remarkNoUnescapedAnglePlaceholder with representative document syntax", () => {
+  it("produces no false positives when frontmatter, tables, HTML and code coexist", async () => {
+    // docs 全体の検査は lint:fm が担う。単体テストは文書が増えても一定の入力で確認する。
+    const markdown = [
+      "---",
+      "specdojo:",
+      "  id: prj-test:example",
+      '  conclusion: "`dct-<domain>.yaml` を生成する"',
+      "---",
+      "",
+      "# 文書",
+      "",
+      "<!-- コメント -->",
+      "",
+      "| 対象 | 説明 |",
+      "| --- | --- |",
+      "| `prefix-<term>-suffix` | 一行目<br>二行目 |",
+      "",
+      "<details><summary>詳細</summary>",
+      "",
+      "参照: <https://example.com> / [[prj-test:overview|概要]]。",
+      "",
+      "```text",
+      "path/to/<lang>/pjr-0001-<topic>.md",
+      "```",
+      "",
+      "```mermaid",
+      'flowchart LR; A["成果物<br/>文書"] --> B["plan"]',
+      "```",
+      "",
+      "</details>",
+      "",
+    ].join("\n");
 
-    const violations: string[] = [];
-    for (const absPath of files) {
-      const markdown = await readFile(absPath, "utf8");
-      const file = await createProcessor().process({ value: markdown, path: absPath });
-      for (const message of file.messages) {
-        violations.push(`${path.relative(repoRoot, absPath)}: ${message.reason}`);
-      }
-    }
-
-    expect(violations).toEqual([]);
-  }, 30_000);
+    expect(await lint(markdown)).toEqual([]);
+  });
 });

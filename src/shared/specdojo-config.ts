@@ -8,6 +8,9 @@ import type { ValidateFunction } from "ajv";
 import type { AgentStageRole, SchedulerStrategy, TaskMode } from "./agent-types.js";
 import { runProviderScaffold, specdojoPackageRootDir } from "./provider-scaffold.js";
 import { runWorkspaceScaffold } from "./workspace-scaffold.js";
+import { runLefthookScaffold } from "./lefthook-scaffold.js";
+import { ensureMarkdownlintConfig } from "./markdownlint-config.js";
+import { runSlidevScaffold, SLIDEV_KATA_PATTERNS } from "./slidev-scaffold.js";
 import {
   ensureGitignore,
   formatGitignoreReport,
@@ -21,6 +24,8 @@ export type SpecDojoRunConfig = {
   agent_config?: string;
   /** Parent-runner validations appended to pipeline.parent_validations from exec_defaults. */
   parent_validations?: Array<string | { id: string; repo: string }>;
+  /** Remove matching ID/repository pairs from exec_defaults before appending parent_validations. */
+  parent_validations_exclude?: Array<string | { id: string; repo: string }>;
   worktree_base?: string;
   /**
    * IANA time zone name used to compute the pjr-index registration date (登録日) and completion
@@ -45,6 +50,8 @@ export type SpecDojoProjectConfig = {
    * applied consistently.
    */
   base_path?: string;
+  /** Branch that receives direct project-register commits. */
+  integration_branch?: string;
   catalog_path?: string;
   schedule_path?: string;
   execution_path?: string;
@@ -82,7 +89,17 @@ export type SpecDojoRepoConfig = {
   path: string;
   /** Branch exec integrates into. Omit to use the repository's current branch. */
   integration_branch?: string;
+  /** Local merge commit (default), or retain the exec branch for product-side PR review. */
+  integration_strategy?: "merge" | "branch-only";
   setup?: SpecDojoRepoSetup;
+};
+
+/** A project register hosted by another repository and addressed locally by an alias. */
+export type SpecDojoExternalProjectConfig = {
+  /** Repository root, relative to the SpecDojo root. */
+  path: string;
+  /** Project id understood by the SpecDojo installation in the external repository. */
+  project_id: string;
 };
 
 export const REPO_NAME_PATTERN = /^[a-z0-9-]+$/;
@@ -254,12 +271,66 @@ export function resolveRegisterActor(actor: string, roster: MemberRoster | null)
 export type SpecDojoConfig = {
   version: 1;
   current_project?: string;
+  /** Repository-wide authority used by locally authored kata. */
+  kata_authority?: string;
   /** Repository-wide protected agent registry. Must stay under .specdojo/. */
   agent_members_path?: string;
   projects: Record<string, SpecDojoProjectConfig>;
+  /** External project registers delegated to the SpecDojo installation in another repository. */
+  external_projects?: Record<string, SpecDojoExternalProjectConfig>;
 };
 
 export const DEFAULT_AGENT_MEMBERS_PATH = ".specdojo/agent-members.yaml";
+
+export const KATA_AUTHORITY_PATTERN = /^(?!prj-)(?!specdojo$)[a-z][a-z0-9-]*$/;
+
+function repositoryIdentityRoot(rootDir: string): string {
+  const root = resolve(rootDir);
+  const dotGit = join(root, ".git");
+  if (!existsSync(dotGit) || statSync(dotGit).isDirectory()) return root;
+  const gitdirLine = readTextFileOrNull(dotGit)
+    ?.split(/\r?\n/)
+    .find((line) => line.startsWith("gitdir:"));
+  if (!gitdirLine) return root;
+  const gitdir = resolve(root, gitdirLine.slice("gitdir:".length).trim()).replaceAll("\\", "/");
+  const marker = "/.git/worktrees/";
+  const markerIndex = gitdir.lastIndexOf(marker);
+  return markerIndex >= 0 ? gitdir.slice(0, markerIndex) : root;
+}
+
+export function defaultKataAuthority(rootDir: string = specdojoRootDir()): string {
+  const directoryName = basename(repositoryIdentityRoot(rootDir));
+  const normalized = directoryName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  const withLetterPrefix = /^[a-z]/.test(normalized) ? normalized : `repo-${normalized}`;
+  const withoutReservedAuthority =
+    withLetterPrefix === "specdojo" || withLetterPrefix.startsWith("prj-")
+      ? `repo-${withLetterPrefix}`
+      : withLetterPrefix;
+  return KATA_AUTHORITY_PATTERN.test(withoutReservedAuthority)
+    ? withoutReservedAuthority
+    : "repository";
+}
+
+export function getKataAuthority(
+  config: SpecDojoConfig | null,
+  rootDir: string = specdojoRootDir(),
+): string {
+  return config?.kata_authority?.trim() || defaultKataAuthority(rootDir);
+}
+
+export function isSpecdojoSourceRepository(rootDir: string = specdojoRootDir()): boolean {
+  try {
+    const pkg = JSON.parse(readFileSync(join(rootDir, "package.json"), "utf8")) as {
+      name?: unknown;
+    };
+    return pkg.name === "specdojo" && existsSync(join(rootDir, "src", "specdojo.ts"));
+  } catch {
+    return false;
+  }
+}
 
 type AgentMemberRoster = {
   version: number;
@@ -385,8 +456,83 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
-const REPO_KEYS = new Set(["name", "path", "integration_branch", "setup"]);
+const REPO_KEYS = new Set(["name", "path", "integration_branch", "integration_strategy", "setup"]);
 const REPO_SETUP_KEYS = new Set(["install", "build"]);
+const EXTERNAL_PROJECT_KEYS = new Set(["path", "project_id"]);
+
+export type ResolvedExternalProject = SpecDojoExternalProjectConfig & {
+  alias: string;
+  repoRoot: string;
+};
+
+/** Resolve a configured external-project repository from the SpecDojo root. */
+export function resolveExternalProjectRoot(
+  rootDir: string,
+  project: Pick<SpecDojoExternalProjectConfig, "path">,
+): string {
+  return resolve(rootDir, project.path);
+}
+
+/** Return external projects in configuration order with absolute repository roots. */
+export function resolveExternalProjects(
+  rootDir: string,
+  config: Pick<SpecDojoConfig, "external_projects">,
+): ResolvedExternalProject[] {
+  return Object.entries(config.external_projects ?? {}).map(([alias, project]) => ({
+    alias,
+    ...project,
+    repoRoot: resolveExternalProjectRoot(rootDir, project),
+  }));
+}
+
+/** Validate top-level `external_projects` declarations. */
+export function validateExternalProjects(
+  externalProjects: unknown,
+  projectIds: readonly string[],
+  rootDir: string,
+): string[] {
+  if (externalProjects === undefined) return [];
+  if (!isRecord(externalProjects)) return ["external_projects must be an object"];
+
+  const errors: string[] = [];
+  for (const [alias, value] of Object.entries(externalProjects)) {
+    const at = `external_projects.${alias}`;
+    if (!REPO_NAME_PATTERN.test(alias)) {
+      errors.push(
+        `external project alias ${JSON.stringify(alias)} must match ${String(REPO_NAME_PATTERN)}`,
+      );
+    }
+    if (projectIds.includes(alias)) {
+      errors.push(`${at} collides with local project id "${alias}"`);
+    }
+    if (!isRecord(value)) {
+      errors.push(`${at} must be an object with path and project_id`);
+      continue;
+    }
+    for (const key of Object.keys(value).sort()) {
+      if (!EXTERNAL_PROJECT_KEYS.has(key)) errors.push(`${at}: unknown key "${key}"`);
+    }
+
+    const path = value.path;
+    if (typeof path !== "string" || path.trim().length === 0) {
+      errors.push(`${at}.path must be a non-empty string`);
+    } else if (isAbsolute(path)) {
+      errors.push(`${at}.path must be relative to the SpecDojo root (got absolute "${path}")`);
+    } else {
+      const absolutePath = resolve(rootDir, path);
+      if (!existsSync(absolutePath)) {
+        errors.push(`${at}.path "${path}" does not exist (resolved to ${absolutePath})`);
+      } else if (!statSync(absolutePath).isDirectory()) {
+        errors.push(`${at}.path "${path}" is not a directory (resolved to ${absolutePath})`);
+      }
+    }
+
+    if (typeof value.project_id !== "string" || value.project_id.trim().length === 0) {
+      errors.push(`${at}.project_id must be a non-empty string`);
+    }
+  }
+  return errors;
+}
 
 /**
  * Validate `projects.<projectId>.repos`. Returns one message per problem (empty when valid) so
@@ -463,6 +609,14 @@ export function validateProjectRepos(
       !isOmittedOrNonEmptyString(repo.integration_branch)
     ) {
       errors.push(`${at}.integration_branch must be a non-empty string when present`);
+    }
+
+    if (
+      repo.integration_strategy !== undefined &&
+      repo.integration_strategy !== "merge" &&
+      repo.integration_strategy !== "branch-only"
+    ) {
+      errors.push(`${at}.integration_strategy must be "merge" or "branch-only" when present`);
     }
 
     const setup = repo.setup;
@@ -774,12 +928,14 @@ function isValidProjectConfig(project: unknown): project is SpecDojoProjectConfi
   const candidate = project as {
     schedule_path?: unknown;
     execution_path?: unknown;
+    integration_branch?: unknown;
     project_context?: unknown;
   };
   // 省略は既定値へ解決するため許容する。ただし指定したうえでの空文字は、設定漏れと
   // 意図的な省略を区別できないため引き続き不正として扱う。
   if (!isOmittedOrNonEmptyString(candidate.schedule_path)) return false;
   if (!isOmittedOrNonEmptyString(candidate.execution_path)) return false;
+  if (!isOmittedOrNonEmptyString(candidate.integration_branch)) return false;
   if (
     candidate.project_context !== undefined &&
     (!Array.isArray(candidate.project_context) ||
@@ -816,11 +972,21 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
     assertProtectedAgentMembersPath(parsed.agent_members_path, configPath);
   }
 
+  if (
+    parsed.kata_authority !== undefined &&
+    (typeof parsed.kata_authority !== "string" ||
+      !KATA_AUTHORITY_PATTERN.test(parsed.kata_authority))
+  ) {
+    throw new Error(
+      `Invalid .specdojo/specdojo.config.json: kata_authority must match ${KATA_AUTHORITY_PATTERN}`,
+    );
+  }
+
   for (const [projectId, project] of Object.entries(parsed.projects)) {
     if (!isValidProjectConfig(project)) {
       throw new Error(
         `Invalid .specdojo/specdojo.config.json: projects.${projectId} must omit ` +
-          `schedule_path/execution_path or set them to non-empty strings, ` +
+          `schedule_path/execution_path/integration_branch or set them to non-empty strings, ` +
           `and project_context must be a string[] when present`,
       );
     }
@@ -833,10 +999,16 @@ export function loadConfig(configRootDir: string = specdojoRootDir()): ConfigLoa
     .flatMap((projectId) =>
       validateProjectRepos(projectId, parsed.projects[projectId], projectIds, rootDir),
     );
-  if (repoErrors.length > 0) {
+  const externalProjectErrors = validateExternalProjects(
+    parsed.external_projects,
+    projectIds,
+    rootDir,
+  );
+  const configErrors = [...repoErrors, ...externalProjectErrors];
+  if (configErrors.length > 0) {
     throw new Error(
       `Invalid .specdojo/specdojo.config.json (${configPath}):\n` +
-        repoErrors.map((message) => `  - ${message}`).join("\n"),
+        configErrors.map((message) => `  - ${message}`).join("\n"),
     );
   }
 
@@ -887,12 +1059,17 @@ export function registerConfigCommands(program: Command): void {
     .command("init")
     .description(
       "Create .specdojo/specdojo.config.json template (does not overwrite existing) " +
-        "and add the lines excluding specdojo outputs to .gitignore",
+        "and initialize .gitignore and markdownlint settings",
     )
-    .option("--dry-run", "Show the planned config and .gitignore lines without writing", false)
+    .option(
+      "--dry-run",
+      "Show the planned config, .gitignore and markdownlint settings without writing",
+      false,
+    )
     .action((opts: { dryRun?: boolean }) => {
       const dryRun = !!opts.dryRun;
       const { configPath, config } = loadConfig();
+      ensureMarkdownlintConfig(specdojoRootDir(), dryRun);
       if (config) {
         process.stdout.write(`Already exists: ${configPath}\n`);
         writeGitignoreForConfig(config, dryRun);
@@ -949,7 +1126,7 @@ export function registerConfigCommands(program: Command): void {
 
   cfg
     .command("scaffold")
-    .description("Scaffold agent/settings templates for a provider or VS Code multi-root workspace")
+    .description("Scaffold provider settings, a VS Code multi-root workspace, Git hooks, or Slidev")
     .option(
       "--provider <name>",
       "Provider template to copy (antigravity|claude|codex|copilot|opencode)",
@@ -959,6 +1136,8 @@ export function registerConfigCommands(program: Command): void {
       "Generate VS Code multi-root workspace (<project-id>.code-workspace) from repos config",
       false,
     )
+    .option("--lefthook", "Generate pre-commit hooks for SpecDojo repositories", false)
+    .option("--slidev", "Set up Slidev and formatting for kata", false)
     .option(
       "--project <id>",
       "Target project ID for workspace scaffolding (defaults to current_project)",
@@ -972,8 +1151,10 @@ export function registerConfigCommands(program: Command): void {
     )
     .action(async (opts) => {
       try {
-        if (!opts.provider && !opts.workspace) {
-          throw new Error("Specify --provider <name> or --workspace to scaffold.");
+        if (!opts.provider && !opts.workspace && !opts.lefthook && !opts.slidev) {
+          throw new Error(
+            "Specify --provider <name>, --workspace, --lefthook, or --slidev to scaffold.",
+          );
         }
         if (opts.global && !opts.provider) {
           throw new Error("--global requires --provider antigravity");
@@ -994,6 +1175,23 @@ export function registerConfigCommands(program: Command): void {
             force: !!opts.force,
             dryRun: !!opts.dryRun,
           });
+        }
+        if (opts.lefthook) {
+          const { configPath, config } = loadConfig();
+          if (!config) {
+            throw new Error(`No config found: ${configPath}. Run specdojo config init first.`);
+          }
+          await runLefthookScaffold({
+            packageRoot: specdojoPackageRootDir(),
+            repoRoot: specdojoRootDir(),
+            config,
+            slidevKataPatterns: opts.slidev ? SLIDEV_KATA_PATTERNS : [],
+            force: !!opts.force,
+            dryRun: !!opts.dryRun,
+          });
+        }
+        if (opts.slidev) {
+          await runSlidevScaffold({ repoRoot: specdojoRootDir(), dryRun: !!opts.dryRun });
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);

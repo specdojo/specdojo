@@ -2,8 +2,8 @@
 id: sysd-github-copilot-agent-settings-grade-criteria
 document: sysd-github-copilot-agent-settings
 path: docs/ja/product/040-system-design/sysd-github-copilot-agent-settings.md
-graded_at: "2026-10-10T16:22:20.604Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-22T16:11:06.270Z"
+graded_by: flash-high-executor
 content_hash: 3e7cc787e2b9c1e0978b891463416a1c906e896afd4bf7fcbde48f85303427fb
 summary:
   satisfied: 1
@@ -16,14 +16,16 @@ criteria:
       - BA
     viewpoint: vp-ba-requirements-completeness
     status: unsatisfied
-    reason: GitHub Copilot を採用する業務上の要求、採用理由、代替 provider との選択条件が示されていない。
+    reason: >-
+      Business requirements, adoption rationale, and selection criteria compared to alternative providers are not
+      described.
   - id: DC-002
     text: 設計方針を承認できること
     roles:
       - PO
     viewpoint: vp-po-decision-readiness
     status: unsatisfied
-    reason: 運用検証の完了条件・解除基準が定義されていない。
+    reason: Completion criteria and release conditions for operational verification and disabled members are not defined.
   - id: DC-003
     text: 技術的制約・依存関係が識別できること
     roles:
@@ -36,11 +38,11 @@ criteria:
       - QE
     viewpoint: vp-qe-verifiability
     status: unsatisfied
-    reason: 制約ごとの検証方法、期待結果、テストへの参照が定義されていない。
+    reason: Verification methods, expected results, and test references for constraints are not defined.
   - id: DC-005
     text: 実装の基礎として参照できること
     roles:
       - DEV
     viewpoint: vp-dev-implementation-readiness
     status: unsatisfied
-    reason: 記載されている member 名やコマンドが現行構成と一致していない。
+    reason: Described member nicknames, pipeline stages, and command examples do not match the current architecture.

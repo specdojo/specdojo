@@ -199,6 +199,65 @@ groups:
 });
 
 describe("runGenerate — テンプレートがある成果物", () => {
+  it("利用者 authority の rulebook と template を authority サブディレクトリから解決する", () => {
+    mkdirSync(path.join(fx.repoRoot, ".specdojo"), { recursive: true });
+    mkdirSync(path.join(fx.repoRoot, "docs/ja/specdojo/rulebooks/customer"), {
+      recursive: true,
+    });
+    mkdirSync(path.join(fx.repoRoot, "docs/ja/specdojo/templates/customer"), {
+      recursive: true,
+    });
+    writeFileSync(
+      path.join(fx.repoRoot, ".specdojo/specdojo.config.json"),
+      JSON.stringify({ version: 1, kata_authority: "customer", projects: {} }),
+      "utf8",
+    );
+    writeCatalog(
+      fx,
+      CATALOG_ONE_WORK_MD.replace("specdojo:prj-charter-rulebook", "customer:prj-charter-rulebook"),
+    );
+    writeFileSync(
+      path.join(fx.repoRoot, "docs/ja/specdojo/rulebooks/customer/prj-charter-rulebook.md"),
+      [
+        "---",
+        "specdojo:",
+        "  id: customer:prj-charter-rulebook",
+        "  type: rulebook",
+        "  status: draft",
+        "  template: customer:prj-charter-template",
+        "---",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+    writeFileSync(
+      path.join(fx.repoRoot, "docs/ja/specdojo/templates/customer/prj-charter-template.md"),
+      [
+        "---",
+        "specdojo:",
+        "  id: customer:prj-charter-template",
+        "  type: template",
+        "  status: draft",
+        "  frontmatter_template:",
+        "    specdojo:",
+        "      id: _PROJECT_ID_:prj-charter",
+        "      type: project",
+        "      status: draft",
+        "      rulebook: customer:prj-charter-rulebook",
+        "---",
+        "",
+        "# Customer charter",
+        "",
+      ].join("\n"),
+      "utf8",
+    );
+
+    const result = run(fx);
+
+    expect(result.errors).toEqual([]);
+    expect(readFileSync(outPath(fx, "prj-charter.md"), "utf8")).toContain("# Customer charter");
+  });
+
   it("Markdown テンプレートを平坦化し _PROJECT_ID_ を置換、記入プレースホルダは残す", () => {
     writeCatalog(fx, CATALOG_ONE_WORK_MD);
     writeRulebook(fx, "prj-charter", "specdojo:prj-charter-template");

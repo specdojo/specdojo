@@ -86,6 +86,12 @@ import {
 } from "./agent.js";
 import { gradeBeforeReviewPlan } from "./schedule-prepare.js";
 import { pipelineRecoveryMeta, spawnBlock, spawnClaim, spawnComplete } from "./mode-shared.js";
+import {
+  configuredProductCheckouts,
+  productRepoEnvironment,
+  withoutInheritedRepoEnvironment,
+  withAgentExtraRoots,
+} from "../task-repos.js";
 
 // Resolve the agent command and the actor for an in-place run, ignoring task state. Unlike the
 // worktree flow, this never requires the task to be claimable. The actor is derived the same way
@@ -201,19 +207,29 @@ export async function spawnAgentInPlace(
   schedulePath: string,
   executionPath: string,
   resultPath?: string,
+  provider?: AgentProvider,
 ): Promise<number> {
   const protectedConfigBefore = captureAgentProtectedConfigSnapshot(cwd);
   const gitStateBefore = captureAgentGitStateSnapshot(cwd);
-  const child = spawn(command, {
-    cwd,
-    env: {
-      ...gitEnvironment(),
-      SPECDOJO_SCHEDULE_PATH: schedulePath,
-      SPECDOJO_EXECUTION_PATH: executionPath,
+  const products = configuredProductCheckouts(schedulePath);
+  const child = spawn(
+    withAgentExtraRoots(
+      command,
+      provider,
+      products.map((product) => product.path),
+    ),
+    {
+      cwd,
+      env: {
+        ...withoutInheritedRepoEnvironment(gitEnvironment()),
+        SPECDOJO_SCHEDULE_PATH: schedulePath,
+        SPECDOJO_EXECUTION_PATH: executionPath,
+        ...productRepoEnvironment(cwd, products),
+      },
+      shell: true,
+      stdio: ["pipe", "inherit", "inherit"],
     },
-    shell: true,
-    stdio: ["pipe", "inherit", "inherit"],
-  });
+  );
   // executeAgent と同じ理由で、stdin を読まないコマンドの EPIPE は無視する。
   child.stdin.on("error", () => undefined);
   child.stdin.end(prompt);
@@ -701,6 +717,7 @@ export async function runInPlaceMode(opts: RunOpts): Promise<void> {
       schedulePath,
       executionPath,
       resultPath,
+      provider,
     );
   }
 

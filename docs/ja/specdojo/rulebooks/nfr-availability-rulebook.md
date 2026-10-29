@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:nfr-availability-rulebook
   type: rulebook
+  deliverable_type: requirement
   status: draft
   recipe: undecided
   sample: specdojo:nfr-availability-sample
@@ -50,13 +51,13 @@ Non-Functional Requirements Availability Documentation Rules
 
 Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schemas/v1/deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml) / [document-metadata-standard.md](../standards/document-metadata-standard.md)）。
 
-| 項目    | 説明                                | 必須 |
-| ------- | ----------------------------------- | ---- |
-| id      | `nfr-availability`                  | ○    |
-| type    | `architecture` など共通スキーマ準拠 | ○    |
-| title   | 非機能要件: 可用性                  | ○    |
-| status  | `draft` / `ready` / `deprecated`    | ○    |
-| part_of | `nfr-index`                         | 任意 |
+| 項目    | 説明                             | 必須 |
+| ------- | -------------------------------- | ---- |
+| id      | `nfr-availability`               | ○    |
+| type    | `requirement` 固定               | ○    |
+| title   | 非機能要件: 可用性               | ○    |
+| status  | `draft` / `ready` / `deprecated` | ○    |
+| part_of | `nfr-index`                      | 任意 |
 
 ### 4.2. 推奨ルール
 
@@ -122,7 +123,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 ```yaml
 ---
 id: nfr-availability
-type: architecture
+type: requirement
 title: 非機能要件: 可用性
 status: draft
 part_of: [nfr-index]

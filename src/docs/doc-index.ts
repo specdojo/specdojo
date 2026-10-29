@@ -7,6 +7,7 @@ import {
   specdojoReferencePath,
   type SpecdojoResolutionRoots,
 } from "./template-resolution.js";
+import { parsePracticeId } from "../shared/practice-id.js";
 
 export interface DocIndex {
   version: number;
@@ -464,6 +465,14 @@ export function collectDocIndex(
           locales.has("ja") ? "ja" : undefined,
         );
       }
+    }
+  }
+  for (const id of packageCollector.keys()) {
+    try {
+      const authority = parsePracticeId(id).authority;
+      if (authority && authority !== "specdojo") packageCollector.delete(id);
+    } catch {
+      packageCollector.delete(id);
     }
   }
   assertNoDuplicateIds(packageCollector);

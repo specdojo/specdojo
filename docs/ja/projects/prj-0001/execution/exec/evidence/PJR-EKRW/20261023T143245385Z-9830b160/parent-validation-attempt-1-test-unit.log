@@ -1,0 +1,111 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.3 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-EKRW
+
+ ❯ tests/src/exec/register-plan-escape.test.ts (24 tests | 1 failed) 4998ms
+     × kata maintenance approach は指定した kata id を直接の編集対象にする 12ms
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-23T14:40:37.915Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-23T14:39:38.227Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-23T14:39:38.492Z.
+fallback reporter complete
+Updated ticket status → ready: /tmp/specdojo-ticket-sqOo95/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-kgQIDQ/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-0lqOSR/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-SPfeBN/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-8SIc3E/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-33sTVB/pjr-0001-topic.md
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+before
+  
+  
+docs/selected.md
+Wrote agent stdout: /tmp/specdojo-agent-command-EN8PQr/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-f7GL4n/outputs/partial.txt
+Would move 1 agent member(s) from /tmp/specdojo-members-XWkx28/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-XWkx28/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-XWkx28/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-XWkx28/.specdojo/agent-members.yaml
+
+ Test Files  1 failed | 143 passed (144)
+      Tests  1 failed | 2345 passed (2346)
+   Start at  23:39:15
+   Duration  47.37s (transform 3.09s, setup 585ms, import 21.53s, tests 53.84s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+reporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+problem
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > kata maintenance approach は指定した kata id を直接の編集対象にする
+Error: Target document id is not resolvable via the document index: prj-test:test-rulebook
+ ❯ validateRegisterApproachTargets src/register/approach.ts:164:13
+    162|     const indexedPath = entries[targetId];
+    163|     if (!indexedPath) {
+    164|       throw new Error(`Target document id is not resolvable via the do…
+       |             ^
+    165|     }
+    166|     const actualKind = targetDocumentType(resolvedIndexPath(opts.repoR…
+ ❯ generateRegisterPlan src/exec/register.ts:451:5
+ ❯ tests/src/exec/register-plan-escape.test.ts:454:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

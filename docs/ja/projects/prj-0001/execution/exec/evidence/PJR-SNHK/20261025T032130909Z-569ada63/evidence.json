@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-SNHK",
+  "run_id": "20261025T032130909Z-569ada63",
+  "stage": {
+    "role": "executor",
+    "actor": "sonnet-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-25T03:22:29.871Z",
+    "completed_at": "2026-10-25T03:23:35.496Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-snhk-flaky-plan-escape-test.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "M"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-snhk-flaky-plan-escape-test.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/exec/register-plan-escape.test.ts",
+      "status": "M"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 2,
+    "summary": ".../pjr-snhk-flaky-plan-escape-test.md             |  7 ++-\n tests/src/exec/register-plan-escape.test.ts        | 66 ++++++++++++----------\n 2 files changed, 42 insertions(+), 31 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npx vitest run tests/src/exec/register-plan-escape.test.ts",
+      "status": "passed",
+      "summary": "32 件すべて通過"
+    },
+    {
+      "source": "executor",
+      "command": "npx prettier --write tests/src/exec/register-plan-escape.test.ts docs/ja/projects/prj-0001/controls/project-register/pjr-snhk-flaky-plan-escape-test.md",
+      "status": "passed",
+      "summary": "整形済み"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SNHK/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SNHK/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SNHK/src/shared/specdojo-config.ts\n  1219:1  warning  File has too many lines (1095). Maximum allowed is 1000  max-lines\n\n✖ 35 problems (0 errors, 35 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SNHK\n\nWritten: .devcontainer/devcontainer.json\nWritten: .devcontainer/post-create.sh\nWritten: .devcontainer/remote-host/specdojo-tmux.sh.sample\nWritten: .devcontainer/remote-host/ssh-config.sample\nNext steps:\n  1. Commit the scaffolded files.\n  2. Open this directory in a Dev Container (VS Code or compatible editor).\n  3. Rem\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.5 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SNHK/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SNHK/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.5 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.5 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-SNHK\n\nUpdated ticket status → ready: /tmp/specdojo-ticket-6Hx0xE/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-uz1tcH/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-98sBel/pjr-0001-topic.md\nUpdated ticket status → ready: /tmp/specdojo-ticket-xkap6X/pjr-0001-topic.md\nWarning: PJR-0001 ticket ha\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nreporter failedproblem\nWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED"
+    }
+  ],
+  "final_message": "register-plan-escape の共通の規約の test に限って timeout を 30 秒へ広げ、理由をコメントに記載した。遅い原因は approach あり（カタログ付き）の 2 回目の generateRegisterPlan（約 1.5 秒）と推測し、個票の対応結果に記録した。src/ と設定全体の testTimeout は変更していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "原因: 1 回目（approach なし）の generateRegisterPlan は約 60ms、2 回目（カタログ付き approach あり）が約 1.5 秒。この test は SPECDOJO_PACKAGE_ROOT を設定しないため、実 repo の文書の読み込みと初回の変換が負荷時に 6.5 秒まで伸びる原因と推測する。src/ 側の内訳は未特定で、test のためだけには src/ を変えていない。",
+    "対応: 該当 test に限って timeout を 30_000ms に広げ、理由を直前のコメントに記載した。設定全体の testTimeout は変えていない。",
+    "残課題: 2 回目の generateRegisterPlan が遅い src/ 側の内訳は未調査。必要なら別項目にする。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-SNHK/20261025T032130909Z-569ada63/executor.log",
+      "bytes": 2978,
+      "truncated": false
+    }
+  ]
+}

@@ -2,6 +2,7 @@
 specdojo:
   id: specdojo:sysd-index-rulebook
   type: rulebook
+  deliverable_type: architecture
   status: draft
   recipe: not-needed
   sample: specdojo:sysd-index-sample
@@ -63,7 +64,7 @@ Frontmatter は共通スキーマに従います（参照: [docs/specdojo/schema
 | 項目       | 説明                                                   | 必須 |
 | ---------- | ------------------------------------------------------ | ---- |
 | id         | SYSD ID（推奨: `sysd-index`）                          | ○    |
-| type       | `architecture` など、共通スキーマで許容される種別      | ○    |
+| type       | `architecture` 固定                                    | ○    |
 | title      | システム設計: 全体構成（リンク集）など対象が分かる名称 | ○    |
 | status     | `draft` / `ready` / `deprecated`                       | ○    |
 | based_on   | 根拠となる仕様ID（ID配列。未指定は `[]` 可）           | 任意 |

@@ -5,9 +5,9 @@ path: docs/ja/product/030-architecture/020-infrastructure/tsd-index.md
 target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
-score: 59
-graded_at: "2026-10-10T16:06:45.424Z"
-graded_by: agy-expert-executor
+score: 71
+graded_at: "2026-10-28T16:15:14.872Z"
+graded_by: flash-high-executor
 content_hash: 865c78a040e444d78e0098701fe700d905bd94693ef7e0124d1d580c6ff48ed3
 source_hashes:
   catalog-entry: e78ad55f23ff4f9a502d6f215ec1cb5c04e0338b4ade6f5079c516f4bb58f232
@@ -18,30 +18,30 @@ source_hashes:
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
 categories:
   purpose:
-    score: 63
-  operations:
     score: 75
+  operations:
+    score: 81
   planning:
     score: 100
   business:
-    score: 42
+    score: 58
   consistency:
-    score: 25
+    score: 50
   architecture:
-    score: 63
+    score: 75
   usability:
     score: 94
   implementation:
-    score: 63
+    score: 75
   quality:
-    score: 44
+    score: 56
 viewpoints:
   vp-po-purpose-alignment:
     level: 4
     score: 100
   vp-po-decision-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-po-publication-accountability:
     level: 4
     score: 100
@@ -55,41 +55,41 @@ viewpoints:
     level: 4
     score: 100
   vp-ba-business-value:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-requirements-completeness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ba-stakeholder-clarity:
     level: 3
     score: 75
   vp-arc-cross-document-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-technical-constraints:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-arc-conciseness:
     level: 4
     score: 100
   vp-dev-implementation-readiness:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-dev-change-impact:
     level: 4
     score: 100
   vp-dev-testability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-done-criteria:
     level: 1
     score: 25
   vp-qe-verifiability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-qe-omissions-consistency:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ux-readability:
     level: 4
     score: 100
@@ -103,8 +103,8 @@ viewpoints:
     level: 3
     score: 75
   vp-ops-operability:
-    level: 1
-    score: 25
+    level: 2
+    score: 50
   vp-ops-agent-boundary:
     level: 4
     score: 100
@@ -219,8 +219,8 @@ findings:
   - id: F013
     severity: minor
     rule: vp-ux-user-flow
-    line: 39
-    anchor: ""
+    line: 36
+    anchor: optional dependency にせず、文書サイトを構築する環境だけが明示導入する。
     message: CLI・検証ツール群と文書サイト技術について詳細文書または設定正本への導線がなく、利用者が選定根拠や設定情報へ進めません。
     message_ja: CLI・検証ツール群と文書サイト技術について詳細文書または設定正本への導線がなく、利用者が選定根拠や設定情報へ進めません。
   - id: F014

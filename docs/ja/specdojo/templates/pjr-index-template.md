@@ -27,8 +27,8 @@ Project Register
 ## 1. 登録項目一覧
 
 <!-- prettier-ignore -->
-| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 登録日 | 期限 | 完了日 | 結論 | 個票 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ID | ステータス | タイトル | 説明 | 分類 | 優先度 | 担当 | 登録日 | 期限 | 完了日 | 結論 | 個票 | `depends_on` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 ## 2. 派生ビュー
 
@@ -41,6 +41,8 @@ Project Register
 - [[pjr-views-by-priority|台帳ビュー（優先度別）]]
 - [[pjr-views-by-owner|台帳ビュー（担当者別）]]
 - [[pjr-derived-items|登録項目の派生関係]]
+- [[_PROJECT_ID_:pjr-dependent-items|登録項目の実行依存]]
+- [[_PROJECT_ID_:pjr-epic-items|epic ごとの子項目]]
 
 ### 2.2. controls 全体の派生管理ビュー
 

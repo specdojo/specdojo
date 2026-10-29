@@ -1,3 +1,4 @@
+import { registerDependencyBlockReason } from "../../register/dependency.js";
 import { existsSync, readFileSync } from "node:fs";
 import { basename } from "node:path";
 import {
@@ -51,6 +52,8 @@ import { expandPromptRefs } from "./agent.js";
 import { runAgentPipeline } from "./agent-pipeline.js";
 import { spawnAgentInPlace } from "./in-place.js";
 import { commitSubject, repoRelativePath, spawnSelf } from "./mode-shared.js";
+import { isAuthoringApproach } from "../../kata/authoring.js";
+import { configuredProductCheckouts } from "../task-repos.js";
 
 // CLI choices are the highest-priority layer. A difficulty route only supplies omitted stage and
 // recovery options; without a matching route the historical priority-based selection is kept.
@@ -406,6 +409,16 @@ export async function runSingleRegisterItem(
 ): Promise<RegisterItemSummary> {
   const { projectId, schedulePath, executionPath, repoRoot } = context;
   const { registerPaths, item } = resolveRegisterRunTarget(projectId, pjrId);
+  const dependencyReason = registerDependencyBlockReason(registerPaths, item);
+  if (dependencyReason)
+    return {
+      id: item.id,
+      title: item.title,
+      outcome: "skipped",
+      transition: "none",
+      commit: "skipped",
+      reason: dependencyReason,
+    };
   // 状態遷移の書き込み先（登録項目の正本）。commit 対象に必ず含める。
   const ticketPath = ticketPathFromItem(item, registerPaths.projectRegisterPath);
   requireRunnableRegisterItem(item);
@@ -419,6 +432,9 @@ export async function runSingleRegisterItem(
   const { command, actor } = pipelineAgents
     ? { command: pipelineAgents.executor.command, actor: pipelineAgents.executor.actor }
     : resolveRegisterCommand(item, context.roster, opts, context.execDefaults);
+  const resolvedProvider = pipelineAgents
+    ? pipelineAgents.executor.provider
+    : resolveAgentMember(context.roster, actor)?.provider;
   const stem = buildInPlaceStem(pjrId.toLowerCase());
 
   // ID単位 commit のため、この項目が変更を生じる前の作業ツリー状態を記録する。
@@ -454,7 +470,9 @@ export async function runSingleRegisterItem(
     startedAt: new Date().toISOString(),
     stem,
     ...(item.approach ? { approach: item.approach } : {}),
-    ...(item.targets && item.targets.length > 0 ? { targets: item.targets } : {}),
+    ...(item.targets && item.targets.length > 0
+      ? { targets: isAuthoringApproach(item.approach) ? item.targets.slice(0, 1) : item.targets }
+      : {}),
   });
   const resultScaffold = readResultFrontmatterSnapshot(resultPath);
 
@@ -485,6 +503,7 @@ export async function runSingleRegisterItem(
       resultPath,
       registerPaths: registerReporterManagedPaths(registerPaths),
       execDefaults: context.execDefaults,
+      productWorktrees: configuredProductCheckouts(schedulePath),
       providerConcurrencyGate: context.providerConcurrencyGate,
       executorRateLimitOptions: opts.executorBy
         ? resolvePinnedRateLimitRunOptions(
@@ -522,6 +541,7 @@ export async function runSingleRegisterItem(
       schedulePath,
       executionPath,
       resultPath,
+      resolvedProvider,
     );
   }
 

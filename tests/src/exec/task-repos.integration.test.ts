@@ -798,10 +798,12 @@ describe("multi-repository task worktrees", () => {
     const result = readFileSync(resultPath, "utf8");
     expect(result).toContain("## 2. トレーサビリティ\n");
     expect(result).toMatch(
-      new RegExp(`\\| \`app1\` +\\| \`${target}\` +\\| not applicable \\| \`${mergeCommit}\``),
+      new RegExp(
+        `\\| \`app1\` +\\| \`${target}\` +\\| \`${app1!.branch}\` +\\| merged +\\| not applicable \\| \`${mergeCommit}\``,
+      ),
     );
     expect(result).toMatch(
-      /\| `app2` +\| `release` +\| not applicable \| not applicable \(no changes\)/,
+      /\| `app2` +\| `release` +\| `exec\/[^`]+` +\| unchanged +\| not applicable \| not applicable \(no changes\)/,
     );
   });
 
@@ -867,6 +869,129 @@ describe("multi-repository task worktrees", () => {
     // productMergeBlockers does not block because tmp/ is excluded and root files were committed
     const blockers = productMergeBlockers(app1!);
     expect(blockers).toEqual([]);
+  });
+
+  it("commits branch-only products, merges other products, records the handoff and retains the branch after cleanup", () => {
+    const fixture = setup();
+    fixture.products[0]!.integrationStrategy = "branch-only";
+    const worktree = prepare(fixture);
+    const [app1, app2] = worktree.repos!;
+    expect(app1!.integrationStrategy).toBe("branch-only");
+    const target = productIntegrationTarget(app1!);
+    const originalTarget = git(app1!.repoRoot, "rev-parse", target);
+    writeFile(join(app1!.path, "feature.txt"), "awaiting product-side review\n");
+    writeFile(join(app2!.path, "feature.txt"), "local merge\n");
+    const message = withCommitTrailers("exec(register PJR-EXH2): product changes", [
+      refsTrailer("prj-0001", "PJR-EXH2"),
+    ]);
+    expect(
+      commitProductWorktrees({ worktree, message }).map((outcome) => outcome.committed),
+    ).toEqual([true, true]);
+    const branchTip = git(app1!.path, "rev-parse", "HEAD");
+    const states = new Map<string, string>();
+    integrateFixture(fixture, worktree, (repo, patch) => {
+      if (patch.status) states.set(repo, patch.status);
+    });
+    expect(Object.fromEntries(states)).toEqual({
+      app1: "branch-only",
+      app2: "merged",
+      project: "merged",
+    });
+    expect(git(app1!.repoRoot, "rev-parse", target)).toBe(originalTarget);
+    expect(gitResult(app1!.repoRoot, ["cat-file", "-e", `${target}:feature.txt`]).status).not.toBe(
+      0,
+    );
+    expect(git(app1!.path, "log", "-1", "--format=%B")).toContain("Refs: prj-0001:PJR-EXH2");
+    expect(git(app2!.repoRoot, "show", "release:feature.txt")).toBe("local merge");
+
+    const trace = productIntegrationTrace(app1!);
+    expect(trace).toMatchObject({
+      state: "branch-only",
+      execBranch: app1!.branch,
+      commit: null,
+      pullRequest: null,
+    });
+    const resultPath = join(fixture.parent, "result.md");
+    writeFile(resultPath, "# Edit Result\n\n## 1. 実施内容\n\n- done\n");
+    recordResultTrace({ resultPath, traceKey: "prj-0001:PJR-EXH2", traces: [trace] });
+    const result = readFileSync(resultPath, "utf8");
+    expect(result).toContain("`prj-0001:PJR-EXH2`");
+    expect(result).toContain(`\`${app1!.branch}\``);
+    expect(result).toContain("not applicable (not integrated)");
+
+    removeWorktree({ context: fixture.context, worktree, taskId: TASK_ID, deleteBranch: true });
+    expect(existsSync(worktree.path)).toBe(false);
+    expect(existsSync(app1!.path)).toBe(false);
+    expect(branchExists(app1!.repoRoot, app1!.branch)).toBe(true);
+    expect(git(app1!.repoRoot, "rev-parse", app1!.branch)).toBe(branchTip);
+    expect(branchExists(app2!.repoRoot, app2!.branch)).toBe(false);
+    pruneOrphanedProductExecBranches({ products: fixture.products, projectId: "prj-0001" });
+    expect(branchExists(app1!.repoRoot, app1!.branch)).toBe(true);
+    expect(() =>
+      discardStaleExecWorktree({
+        context: fixture.context,
+        worktreeTaskId: WORKTREE_TASK_ID,
+        products: fixture.products,
+      }),
+    ).toThrow(/retained exec branch.*already exists/);
+    expect(git(app1!.repoRoot, "rev-parse", app1!.branch)).toBe(branchTip);
+  });
+
+  it("allows conflicting branch-only changes without modifying either branch on resume", () => {
+    const fixture = setup();
+    fixture.products[0]!.integrationStrategy = "branch-only";
+    const worktree = prepare(fixture);
+    const app1 = worktree.repos![0]!;
+    writeFile(join(app1.path, "README.md"), "product review edit\n");
+    commitProductWorktrees({ worktree, message: "product edit" });
+    writeFile(join(app1.repoRoot, "README.md"), "target edit\n");
+    git(app1.repoRoot, "add", "README.md");
+    git(app1.repoRoot, "commit", "-m", "target changed");
+    const target = git(app1.repoRoot, "rev-parse", "HEAD");
+    const tip = git(app1.path, "rev-parse", "HEAD");
+    const synced = syncTaskWorktreesWithIntegrationTargets({
+      worktree,
+      projectTarget: git(fixture.repo, "branch", "--show-current"),
+      message: "sync",
+    });
+    expect(synced[0]).toMatchObject({
+      repo: "app1",
+      status: "skipped",
+      detail: "product-side review (branch-only)",
+    });
+    expect(productMergeBlockers(app1)).toEqual([]);
+    const removeHook = rejectMergeCommit(fixture.repo);
+    expect(() => integrateFixture(fixture, worktree)).toThrow(
+      /project:.*intentional merge failure/,
+    );
+    expect(git(app1.path, "rev-parse", "HEAD")).toBe(tip);
+    expect(git(app1.repoRoot, "rev-parse", "HEAD")).toBe(target);
+    removeHook();
+    integrateFixture(fixture, worktree);
+    expect(git(app1.path, "rev-parse", "HEAD")).toBe(tip);
+    expect(git(app1.repoRoot, "rev-parse", "HEAD")).toBe(target);
+    // Uncommitted work still prevents completion and cleanup even in branch-only mode.
+    writeFile(join(app1.path, "uncommitted.txt"), "keep this work\n");
+    expect(productMergeBlockers(app1)[0]?.message).toMatch(/uncommitted changes/);
+    expect(() =>
+      removeWorktree({ context: fixture.context, worktree, taskId: TASK_ID, deleteBranch: true }),
+    ).toThrow(/uncommitted changes/);
+    expect(existsSync(worktree.path)).toBe(true);
+    expect(branchExists(app1.repoRoot, app1.branch)).toBe(true);
+  });
+
+  it("retains an unchanged branch-only product branch too", () => {
+    const fixture = setup();
+    fixture.products[0]!.integrationStrategy = "branch-only";
+    const worktree = prepare(fixture);
+    const app1 = worktree.repos![0]!;
+    const statuses = new Map<string, string>();
+    integrateFixture(fixture, worktree, (repo, patch) => {
+      if (patch.status) statuses.set(repo, patch.status);
+    });
+    expect(statuses.get("app1")).toBe("branch-only");
+    removeWorktree({ context: fixture.context, worktree, taskId: TASK_ID, deleteBranch: true });
+    expect(branchExists(app1.repoRoot, app1.branch)).toBe(true);
   });
 
   it("integrates into the branch given by --integration-branch instead of the configured one", () => {

@@ -746,6 +746,8 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
         join(paths.generatedPath, "pjr-views-by-priority.md"),
         join(paths.generatedPath, "pjr-views-by-owner.md"),
         join(paths.generatedPath, "pjr-derived-items.md"),
+        join(paths.generatedPath, "pjr-dependent-items.md"),
+        join(paths.generatedPath, "pjr-epic-items.md"),
       ]);
       expect(existsSync(paths.pjrIndexPath)).toBe(false);
     });
@@ -786,6 +788,27 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
     });
   });
 
+  it("depends_on を一覧に表示し、先行から後続を逆引きできる", () => {
+    withRegisterDir((paths, dir) => {
+      writeTwoTickets(dir);
+      const path = join(dir, "pjr-zz99-topic.md");
+      writeFileSync(
+        path,
+        readFileSync(path, "utf8").replace(
+          "  item_status: open",
+          "  item_status: open\n  depends_on: [PJR-AB12]",
+        ),
+      );
+      const views = generateDerivedViewFiles(paths, "register");
+      const index = findView(views, "pjr-index.md");
+      const row = index.split("\n").find((line) => line.startsWith("| PJR-ZZ99"))!;
+      expect(parseTableCells(row)[12]).toBe("PJR-AB12");
+      expect(findView(views, "pjr-dependent-items.md")).toContain(
+        "| [PJR-AB12](../pjr-ab12-topic.md) | [PJR-ZZ99](../pjr-zz99-topic.md) | todo | open |",
+      );
+    });
+  });
+
   it("全表セルの山括弧をコード化し、既存コードスパンを二重化しない", () => {
     withRegisterDir((paths, dir) => {
       writeFileSync(
@@ -802,7 +825,12 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
 
       const views = generateDerivedViewFiles(paths, "register");
       // 派生関係ビューは `derived_from` のある項目だけを載せるため、この個票は現れない。
-      for (const view of views.filter((view) => !view.path.endsWith("pjr-derived-items.md"))) {
+      for (const view of views.filter(
+        (view) =>
+          !view.path.endsWith("pjr-derived-items.md") &&
+          !view.path.endsWith("pjr-dependent-items.md") &&
+          !view.path.endsWith("pjr-epic-items.md"),
+      )) {
         expect(view.content).toContain("`prefix-<term>-suffix`");
         expect(view.content).toContain("`Array<string>`");
         expect(view.content).toContain("`role-<name>`");
@@ -843,12 +871,122 @@ describe("generateDerivedViewFiles — 個票を入力とする生成ビュー",
       const rows = indexContent.split("\n").filter((line) => line.startsWith("| PJR-"));
       expect(rows).toHaveLength(1);
       const cells = parseTableCells(rows[0]);
-      expect(cells).toHaveLength(12);
+      expect(cells).toHaveLength(13);
       expect(cells[2]).toBe("タイトルに \\| を含む");
       expect(cells[3]).toBe("説明文の 1 行目。 説明文の 2 行目 \\| 補足。");
       expect(cells[10]).toBe("stop\\|wait\\|fallback で 処理する");
 
       // 個票の本文や frontmatter は変更されていないこと（表示時のみエスケープ）
+      expect(readFileSync(ticketPath, "utf8")).toBe(originalContent);
+    });
+  });
+
+  it("強調記号を含む自由記述から生成した一覧・派生ビュー・PM ログが MD037 を満たす", () => {
+    withRegisterDir((paths, dir) => {
+      writeFileSync(
+        join(dir, "pjr-cd34-source.md"),
+        buildTicket("PJR-CD34", "起票元", [
+          "item_status: open",
+          "priority: medium",
+          "owner: DEV",
+          'registered_at: "2026-08-01T12:00:00Z"',
+        ]),
+        "utf8",
+      );
+      const ticketPath = join(dir, "pjr-ab12-topic.md");
+      const originalContent = buildTicket("PJR-AB12", "orch:* と orch:*:work", [
+        "item_status: done",
+        "priority: high",
+        "owner: DEV",
+        'registered_at: "2026-08-02T12:00:00Z"',
+        'completed_at: "2026-08-03T12:00:00Z"',
+        "derived_from:",
+        "  - PJR-CD34",
+        'conclusion: "done_* と done_*:work を反映"',
+      ])
+        .replace("  item_type: todo", "  item_type: issue")
+        .replace("個票本文の説明。", "token_ と _next を確認し、`kept_*` は保持する。");
+      writeFileSync(ticketPath, originalContent, "utf8");
+
+      const views = generateDerivedViewFiles(paths, "all");
+      for (const view of views) {
+        const errors = markdownlintErrors(view.content) as Array<{ ruleNames: string[] }>;
+        const md037Errors = errors.filter((error) => error.ruleNames.includes("MD037"));
+        expect(md037Errors, view.path).toEqual([]);
+      }
+
+      for (const fileName of [
+        "pjr-index.md",
+        "pjr-views-by-status.md",
+        "pjr-views-by-priority.md",
+        "pjr-views-by-owner.md",
+        "pjr-derived-items.md",
+        "pm-issue-log.md",
+      ]) {
+        expect(findView(views, fileName)).toContain("orch:\\* と orch:\\*:work");
+      }
+      expect(findView(views, "pjr-index.md")).toContain(
+        "token\\_ と \\_next を確認し、`kept_*` は保持する。",
+      );
+
+      // 個票の本文や frontmatter は変更されていないこと（表示時のみエスケープ）
+      expect(readFileSync(ticketPath, "utf8")).toBe(originalContent);
+    });
+  });
+
+  it("素の URL を含む自由記述から生成した一覧・派生ビュー・PM ログが MD034 を満たす", () => {
+    withRegisterDir((paths, dir) => {
+      writeFileSync(
+        join(dir, "pjr-cd34-source.md"),
+        buildTicket("PJR-CD34", "起票元", [
+          "item_status: open",
+          "priority: medium",
+          "owner: DEV",
+          'registered_at: "2026-08-01T12:00:00Z"',
+        ]),
+        "utf8",
+      );
+      const ticketPath = join(dir, "pjr-ab12-topic.md");
+      const originalContent = buildTicket("PJR-AB12", "homepage は https://specdojo.org", [
+        "item_status: done",
+        "priority: high",
+        "owner: DEV",
+        'registered_at: "2026-08-02T12:00:00Z"',
+        'completed_at: "2026-08-03T12:00:00Z"',
+        "derived_from:",
+        "  - PJR-CD34",
+        'conclusion: "文中の https://example.com/a_b と <https://example.com/kept> を確認"',
+      ])
+        .replace("  item_type: todo", "  item_type: issue")
+        .replace("個票本文の説明。", "（homepage は https://specdojo.org）。");
+      writeFileSync(ticketPath, originalContent, "utf8");
+
+      const views = generateDerivedViewFiles(paths, "all");
+      for (const view of views) {
+        const errors = markdownlintErrors(view.content) as Array<{ ruleNames: string[] }>;
+        const md034Errors = errors.filter((error) => error.ruleNames.includes("MD034"));
+        expect(md034Errors, view.path).toEqual([]);
+      }
+
+      for (const fileName of [
+        "pjr-index.md",
+        "pjr-views-by-status.md",
+        "pjr-views-by-priority.md",
+        "pjr-views-by-owner.md",
+        "pm-issue-log.md",
+      ]) {
+        const content = findView(views, fileName);
+        expect(content).toContain("homepage は <https://specdojo.org>");
+        expect(content).toContain("（homepage は <https://specdojo.org>）。");
+        expect(content).toContain(
+          "文中の <https://example.com/a_b> と <https://example.com/kept> を確認",
+        );
+      }
+      expect(findView(views, "pjr-derived-items.md")).toContain(
+        "homepage は <https://specdojo.org>",
+      );
+
+      // 個票の本文や frontmatter は変更されていないこと（表示時のみ autolink 化）
       expect(readFileSync(ticketPath, "utf8")).toBe(originalContent);
     });
   });
@@ -928,10 +1066,12 @@ describe("renumberTicketContent — 個票本文の再採番", () => {
   });
 });
 
-describe("renumberReferences — 参照リンク・targets の doc id 置換", () => {
-  it("wikilink と targets に含まれる doc id を置き換え、changed を返す", () => {
+describe("renumberReferences — 参照リンク・targets・sources の doc id 置換", () => {
+  it("wikilink と targets・sources に含まれる doc id を置き換え、changed を返す", () => {
     const content = [
       "targets:",
+      "  - prj-0001:pjr-0137-register-id-uniqueness",
+      "sources:",
       "  - prj-0001:pjr-0137-register-id-uniqueness",
       "",
       "詳細は [[prj-0001:pjr-0137-register-id-uniqueness|一意性]] を参照。",
@@ -1042,7 +1182,7 @@ describe("planRenumber / renumberPjrItem — 再採番の一括更新", () => {
         ticketBody("PJR-AB12")
           .replace(
             "  id: prj-0001:pjr-0137-register-id-uniqueness",
-            "  id: prj-0001:pjr-ab12-dependent-item\n  derived_from:\n    - PJR-0137",
+            "  id: prj-0001:pjr-ab12-dependent-item\n  derived_from:\n    - PJR-0137\n  depends_on:\n    - PJR-0137\n    - prj-0001:PJR-0137",
           )
           .replace("pjr-indexの重複ID検知と再採番", "派生項目"),
         "utf8",
@@ -1069,6 +1209,9 @@ describe("planRenumber / renumberPjrItem — 再採番の一括更新", () => {
       expect(planWrite?.content).toContain("- prj-0001:pjr-0140-register-id-uniqueness");
       const dependentWrite = plan.writes.find((w) => w.path === dependentPath);
       expect(dependentWrite?.content).toContain("  derived_from:\n    - PJR-0140");
+      expect(dependentWrite?.content).toContain(
+        "  depends_on:\n    - PJR-0140\n    - prj-0001:PJR-0140",
+      );
     });
   });
 

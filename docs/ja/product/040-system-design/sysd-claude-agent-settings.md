@@ -49,6 +49,7 @@ repo-root/
 ├─ .specdojo/
 │  └─ claude/
 │     ├─ settings.edit.json           # edit executor 用権限
+│     ├─ settings.orchestrator.json   # 対話型 orchestrator 用権限
 │     ├─ settings.review.json         # review executor 用権限
 │     └─ settings.report.json         # reporter 用の読み取り専用権限
 ├─ .claude/
@@ -130,6 +131,8 @@ export ANTHROPIC_API_KEY=sk-ant-...
 | `maxTurns`       | -    | エージェントの最大ターン数                                                                                                                             |
 
 member は全員 `stage_role`（`executor` / `reporter`）を持つ pipeline 構成とし、単体で edit/review を完結する legacy 構成は使わない。`stage_role: executor` は成果物の編集・検証だけを行い result を更新せず、`stage_role: reporter` は executor の evidence から構造化 result を作るだけでファイルへは一切書き込まない（Edit/Write ツールを持たない）。executor の edit/review と reporter の report は、起動時の `--settings` プロファイルで権限を分離する。
+
+対話型 orchestrator は pipeline member ではないため、`.specdojo/claude/settings.orchestrator.json` を使う。executor 用の `settings.edit.json` は親 runner・hook・CI・agent 設定などの保護対象を編集できないため、利用者の承認後に設定を変更する orchestrator へ流用しない。orchestrator 用設定は編集対象を制限せず、`git push` と GitHub CLI の書き込み操作だけを deny する。`gh pr view`・`gh pr list`・`gh run list`・`gh run view`・`gh release view` などの読み取りは allow する。
 
 ### 8.2. `claude-executor.md`
 

@@ -1,7 +1,7 @@
 ---
 specdojo:
   id: specdojo:sf-sample
-  type: project
+  type: requirement
   status: draft
   rulebook: specdojo:sf-rulebook
 ---

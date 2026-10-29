@@ -348,8 +348,9 @@ export function generatePjrId(
 
 export function formatTableRow(item: PjrDisplayItem): string {
   // frontmatter・本文由来を問わず、表へ展開する全セルを同じ規則で無害化する。
-  // 列区切りの `|` と改行をエスケープし、山括弧プレースホルダをインラインコード化する。
-  // 既存コードスパンは変換処理が保持するため、再生成しても二重に囲まれない。
+  // 列区切りの `|`、強調記号、改行をエスケープし、素の URL を autolink、山括弧
+  // プレースホルダをインラインコード化する。既存の Markdown 記法は変換処理が保持するため、
+  // 再生成しても二重に囲まれない。
   const cells = [
     item.id,
     item.status,
@@ -363,6 +364,7 @@ export function formatTableRow(item: PjrDisplayItem): string {
     item.completed,
     item.conclusion,
     item.ticket,
+    item.dependsOn?.join(", ") || CELL_NONE,
   ]
     .map(toCell)
     .map(inlineCodeAnglePlaceholders);
@@ -525,6 +527,7 @@ export function buildRegisterItemContent(opts: {
       title: opts.fields.title,
       description: opts.fields.description,
       type: opts.fields.type,
+      ...(opts.fields.track ? { track: opts.fields.track } : {}),
       priority: opts.fields.priority,
       ...(opts.fields.difficulty ? { difficulty: opts.fields.difficulty } : {}),
       owner: opts.fields.owner,
@@ -535,7 +538,11 @@ export function buildRegisterItemContent(opts: {
       ticket: "-",
       ...(opts.fields.approach ? { approach: opts.fields.approach } : {}),
       ...(opts.fields.targets ? { targets: opts.fields.targets } : {}),
+      ...(opts.fields.targetPath ? { targetPath: opts.fields.targetPath } : {}),
+      ...(opts.fields.targetRulebook ? { targetRulebook: opts.fields.targetRulebook } : {}),
+      ...(opts.fields.sources ? { sources: opts.fields.sources } : {}),
       ...(opts.fields.derivedFrom ? { derivedFrom: opts.fields.derivedFrom } : {}),
+      ...(opts.fields.dependsOn ? { dependsOn: opts.fields.dependsOn } : {}),
     }),
   );
 }

@@ -1,5 +1,9 @@
+import {
+  resolveRegisterDeliverableTarget,
+  type RegisterDeliverableTarget,
+} from "../register/deliverable-target.js";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join, relative, resolve } from "node:path";
+import { basename, extname, join, relative, resolve } from "node:path";
 import {
   findRegisterItem,
   loadRegisterItems,
@@ -21,11 +25,19 @@ import {
 import { generateRegisterApproachPlan } from "./plans-generation.js";
 import {
   findUniqueDeliverableForKataTarget,
+  findDeliverableByPath,
   resolveDeliverableByDocId,
   type DeliverableInfo,
 } from "./plans-core.js";
 import { collectDocIndexEntries } from "../docs/doc-index.js";
-import { resolveKataRefs, type KataRefs } from "../kata/kata.js";
+import { loadRulebookRefs, resolveKataRefs, type KataRefs } from "../kata/kata.js";
+import {
+  authoredKataPath,
+  authoringKind,
+  authoringStandardId,
+  authoringStandardPath,
+} from "../kata/authoring.js";
+import { validateRegisterApproachTargets } from "../register/approach.js";
 import { buildSpecdojoFrontmatter } from "../docs/frontmatter-namespace.js";
 import {
   escapeMarkdownInline,
@@ -34,14 +46,21 @@ import {
   stripTerminalControlSequences,
 } from "./shared.js";
 import { formatMarkdownFile } from "./format.js";
-import { specdojoRootDir } from "../shared/specdojo-config.js";
+import { loadConfig, specdojoRootDir } from "../shared/specdojo-config.js";
+import {
+  resolveAuthoringSources,
+  type ResolvedAuthoringSource,
+} from "../register/authoring-sources.js";
+import { repoEnvironmentVariableName } from "./task-repos.js";
+import { isPlanningApproach } from "../register/planning.js";
+import { planningPlanFields } from "./plans-planning.js";
 
 // ---------------------------------------------------------------------------
 // Item category
 // ---------------------------------------------------------------------------
 
 // 登録項目の実行区分。edit は成果物・実装を変更する対応、investigate は調査して
-// 結論案を result に記録する対応（decision / note は実行対象外）。
+// 結論案を result に記録する対応（epic / decision / note は実行対象外）。
 export type RegisterTaskCategory = "edit" | "investigate";
 
 const EDIT_TYPES: ReadonlySet<string> = new Set(["todo", "issue", "change-request"]);
@@ -424,6 +443,81 @@ function indexedDocumentPath(targetId: string): string {
   return relative(repoRoot, resolve(repoRoot, withoutLine)).replace(/\\/g, "/");
 }
 
+function authoringSourcePlanPath(source: ResolvedAuthoringSource): string {
+  return source.repo ? `$${repoEnvironmentVariableName(source.repo)}/${source.path}` : source.path;
+}
+
+function catalogSource(
+  catalogPath: string | undefined,
+  projectId: string,
+  source: ResolvedAuthoringSource,
+): ReturnType<typeof resolveDeliverableByDocId> | null {
+  if (!catalogPath || source.repo) return null;
+  if (source.documentId) {
+    try {
+      return resolveDeliverableByDocId(catalogPath, projectId, source.documentId);
+    } catch (error) {
+      if (
+        error instanceof Error &&
+        error.message.startsWith("catalog deliverable target not found")
+      ) {
+        return null;
+      }
+      throw error;
+    }
+  }
+  return findDeliverableByPath(catalogPath, source.path);
+}
+
+function cataloglessPlanFields(
+  resolved: RegisterDeliverableTarget,
+  item: PjrItem,
+  targetId: string,
+  ticketPath: string | null,
+): { targets: string[]; conditions: string } {
+  let targets = [targetId];
+  let conditionsText = "";
+  if (resolved.catalogless) {
+    conditionsText =
+      "カタログの `done_criteria` はない。個票の完了条件と rulebook を完了基準とする。";
+    if (item.approach === "bootstrap") {
+      targets = [targetId, ...(resolved.kataIds ?? [])];
+      conditionsText += `\n\n成果物の frontmatter に \`specdojo.id: ${targetId}\` と \`specdojo.rulebook: ${resolved.info.deliverable.rulebook}\` を記入する。未作成の kata は次の ID とパスで整備し、recipe・sample・template の ID を rulebook frontmatter に宣言する。不要な型は作らず \`not-needed\` と宣言する。\n\n`;
+      conditionsText += (resolved.kataIds ?? [])
+        .map((id, index) => {
+          const kind = (["rulebook", "recipe", "sample", "template"] as const)[index];
+          return `- \`${id}\`: \`${kind ? resolved.refs?.[kind] : ""}\`（未作成 / missing）`;
+        })
+        .join("\n");
+    } else {
+      conditionsText += `\n\n成果物の frontmatter に \`specdojo.id: ${targetId}\` と \`specdojo.rulebook: ${resolved.info.deliverable.rulebook}\` を維持・記入する。`;
+    }
+    if (item.approach === "finalize" || item.approach === "bootstrap-finalize") {
+      if (item.approach === "bootstrap-finalize") targets = [targetId, ...(resolved.kataIds ?? [])];
+      const conditions = registerCompletionConditions(item, ticketPath);
+      const checklist = conditions
+        .split(/\r?\n/)
+        .filter((line) => line.trim())
+        .map((line) => {
+          const text = line.replace(/^\s*(?:[-*+]\s+(?:\[[ xX]\]\s*)?|\d+\.\s*)/, "");
+          return `- [ ] ${text}`;
+        })
+        .join("\n");
+      conditionsText += `\n\n### 人による確定のチェック表\n\n${checklist}\n\n### 確定対象\n\n- [ ] 成果物: \`${resolved.info.resolvedPath}\``;
+      if (item.approach === "bootstrap-finalize") {
+        conditionsText +=
+          "\n" +
+          (resolved.kataTargets ?? [])
+            .map(({ id, path }) => `- [ ] \`${id}\`: \`${path}\`（frontmatter から辿った kata）`)
+            .join("\n");
+      }
+      conditionsText +=
+        "\n\n人が各条件と確定対象を確認する。agent は成果物の `status` を `ready` へ変更しない。";
+    }
+  }
+  return { targets, conditions: conditionsText };
+}
+
 export async function generateRegisterPlan(opts: {
   executionPath: string;
   projectId: string;
@@ -441,16 +535,96 @@ export async function generateRegisterPlan(opts: {
   const ticketPath = ticketPathFromItem(item, opts.registerPaths.projectRegisterPath);
 
   if (item.approach) {
+    validateRegisterApproachTargets({
+      repoRoot: specdojoRootDir(),
+      projectId: opts.projectId,
+      ...(opts.catalogPath ? { catalogPath: opts.catalogPath } : {}),
+      approach: item.approach,
+      targets: item.targets,
+      sources: item.sources,
+      targetPath: item.targetPath,
+      targetRulebook: item.targetRulebook,
+    });
     const [targetId] = item.targets ?? [];
-    if (!targetId || (item.targets?.length ?? 0) !== 1) {
-      throw new Error(`Register item ${item.id} approach requires exactly one target document id.`);
-    }
+    if (!targetId) throw new Error(`Register item ${item.id} approach requires a target.`);
+    const newKataKind = authoringKind(item.approach);
     const maintenanceKind = MAINTENANCE_TARGET_KIND[
       item.approach as keyof typeof MAINTENANCE_TARGET_KIND
     ] as keyof KataRefs | undefined;
     let deliverable: DeliverableInfo | null = null;
     let refs: KataRefs | undefined;
-    if (maintenanceKind) {
+    let cataloglessConditions = "";
+    let planTargets = [targetId];
+    let authoring: Parameters<typeof generateRegisterApproachPlan>[0]["authoring"];
+    if (isPlanningApproach(item.approach)) {
+      const project = loadConfig(specdojoRootDir()).config?.projects[opts.projectId] ?? {};
+      const fields = planningPlanFields({
+        repoRoot: specdojoRootDir(),
+        projectId: opts.projectId,
+        project,
+        catalogPath: opts.catalogPath ?? "",
+        approach: item.approach,
+        target: targetId,
+      });
+      refs = fields.refs;
+      cataloglessConditions = fields.conditions;
+    } else if (newKataKind) {
+      const sourceRefs = [...(item.targets ?? []).slice(1), ...(item.sources ?? [])];
+      const project = loadConfig(specdojoRootDir()).config?.projects[opts.projectId] ?? {};
+      const resolvedSources = resolveAuthoringSources({
+        repoRoot: specdojoRootDir(),
+        project,
+        sources: sourceRefs,
+      });
+      const examples = resolvedSources.map((source) => {
+        const catalogEntry = catalogSource(opts.catalogPath, opts.projectId, source);
+        const resolved = catalogEntry?.info;
+        const rulebookId = resolved?.deliverable.rulebook;
+        let currentReference: string;
+        if (!resolved) {
+          currentReference = "カタログ外のため参照の付け替え対象外";
+        } else if (newKataKind === "rulebook") {
+          currentReference = rulebookId ?? "未記入";
+        } else if (
+          !rulebookId ||
+          rulebookId === "undecided" ||
+          rulebookId === "not-needed" ||
+          rulebookId === "none"
+        ) {
+          currentReference = `rulebook が ${rulebookId ?? "未記入"} のため参照を更新できない`;
+        } else {
+          const declaredReference = loadRulebookRefs(rulebookId)[newKataKind];
+          currentReference = Array.isArray(declaredReference)
+            ? declaredReference.join(", ")
+            : (declaredReference ?? "未記入");
+        }
+        const planPath = authoringSourcePlanPath(source);
+        return {
+          id: source.documentId ?? (source.repo ? `${source.repo}:${source.path}` : source.path),
+          name: resolved?.deliverable.name ?? basename(source.path),
+          path: planPath,
+          currentReference,
+          catalog: resolved !== undefined,
+        };
+      });
+      const exemplarExtension = extname(examples[0]?.path ?? "").slice(1);
+      const authoredExtension =
+        (newKataKind === "sample" || newKataKind === "template") &&
+        (exemplarExtension === "yaml" || exemplarExtension === "json")
+          ? exemplarExtension
+          : "md";
+      const kataPath = authoredKataPath(targetId, newKataKind, authoredExtension);
+      refs = { rulebook: MISSING, recipe: MISSING, sample: MISSING, template: MISSING };
+      refs[newKataKind] = kataPath;
+      authoring = {
+        id: targetId,
+        kind: newKataKind,
+        path: kataPath,
+        standardId: authoringStandardId(newKataKind),
+        standardPath: authoringStandardPath(newKataKind),
+        exemplars: examples,
+      };
+    } else if (maintenanceKind) {
       deliverable = opts.catalogPath
         ? findUniqueDeliverableForKataTarget(opts.catalogPath, targetId, maintenanceKind)
         : null;
@@ -459,12 +633,20 @@ export async function generateRegisterPlan(opts: {
         : { rulebook: MISSING, recipe: MISSING, sample: MISSING, template: MISSING };
       refs = { ...refs, [maintenanceKind]: indexedDocumentPath(targetId) };
     } else {
-      if (!opts.catalogPath) {
-        throw new Error(
-          `Register item ${item.id} approach requires catalog_path to resolve ${targetId}.`,
-        );
-      }
-      deliverable = resolveDeliverableByDocId(opts.catalogPath, opts.projectId, targetId).info;
+      const resolved = resolveRegisterDeliverableTarget({
+        repoRoot: specdojoRootDir(),
+        projectId: opts.projectId,
+        catalogPath: opts.catalogPath,
+        approach: item.approach,
+        targetId,
+        targetPath: item.targetPath,
+        targetRulebook: item.targetRulebook,
+      });
+      deliverable = resolved.info;
+      refs = resolved.refs;
+      const fields = cataloglessPlanFields(resolved, item, targetId, ticketPath);
+      planTargets = fields.targets;
+      cataloglessConditions = fields.conditions;
     }
 
     const planPath = await generateRegisterApproachPlan({
@@ -479,10 +661,12 @@ export async function generateRegisterPlan(opts: {
       description: item.description,
       ...(item.owner && item.owner !== "-" && item.owner !== "_TODO_" ? { owner: item.owner } : {}),
       approach: item.approach,
-      targets: item.targets ?? [],
+      targets: planTargets,
       deliverable,
       ...(refs ? { refs } : {}),
+      ...(authoring ? { authoring } : {}),
       additionalConditions: [
+        cataloglessConditions,
         registerCompletionConditions(item, ticketPath),
         registerAutopilotConstraints(item),
       ]

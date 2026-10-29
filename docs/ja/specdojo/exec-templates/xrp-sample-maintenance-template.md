@@ -34,8 +34,8 @@ _GRADE_SUMMARY_
 <!-- markdownlint-disable MD055 MD056 -->
 
 <!-- prettier-ignore-start -->
-| ID  | ロール | viewpoint_id | 完了条件 |
-| --- | ------ | ------------ | -------- |
+| ID | ロール | `viewpoint_id` | 完了条件 |
+| --- | --- | --- | --- |
 _DONE_CRITERIA_ROWS_
 <!-- prettier-ignore-end -->
 

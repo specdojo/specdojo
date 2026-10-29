@@ -31,7 +31,10 @@ afterEach(() => {
   }
 });
 
-async function createScaffoldFixture(providers: string[] = []): Promise<ScaffoldFixture> {
+async function createScaffoldFixture(
+  providers: string[] = [],
+  preset?: string,
+): Promise<ScaffoldFixture> {
   const root = mkdtempSync(join(tmpdir(), "specdojo-devcontainer-scripts-"));
   tempDirs.push(root);
   const home = join(root, "home");
@@ -42,6 +45,7 @@ async function createScaffoldFixture(providers: string[] = []): Promise<Scaffold
   await runDevcontainerScaffold({
     packageRoot: PACKAGE_ROOT,
     repoRoot: repo,
+    preset,
     providers,
     editors: [],
     ollama: false,
@@ -287,7 +291,10 @@ exit 0`,
   });
 
   it("passes bash syntax checks for both generated scripts", async () => {
-    const fixture = await createScaffoldFixture(["claude", "codex", "opencode", "antigravity"]);
+    const fixture = await createScaffoldFixture(
+      ["claude", "codex", "opencode", "antigravity"],
+      "full",
+    );
 
     for (const script of [fixture.postCreateScript, fixture.tmuxScript]) {
       const result = spawnSync("/bin/bash", ["-n", script], { encoding: "utf8" });
@@ -303,7 +310,10 @@ exit 0`,
   it.skipIf(!shellcheckAvailable)(
     "passes shellcheck for both generated scripts when shellcheck is installed",
     async () => {
-      const fixture = await createScaffoldFixture(["claude", "codex", "opencode", "antigravity"]);
+      const fixture = await createScaffoldFixture(
+        ["claude", "codex", "opencode", "antigravity"],
+        "full",
+      );
 
       for (const script of [fixture.postCreateScript, fixture.tmuxScript]) {
         const result = spawnSync("shellcheck", [script], { encoding: "utf8" });

@@ -1,0 +1,12 @@
+空の `groups: []` を正常なカタログとして受理するよう修正しました。
+
+- 未指定・非配列の `groups` は引き続きエラー。
+- 空カタログの build、`init --catalog small` 直後の build 回帰テストを追加。
+- [個票](/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-C95G/docs/ja/projects/prj-0001/controls/project-register/pjr-c95g-catalog-empty-groups-build.md)・rulebook・CHANGELOG を更新。
+- schema は既に空配列を許可していたため変更なし。
+- カタログ検査は成功。既存の欠落文書に関する警告のみです。
+- 単体・統合テスト等は指示どおり親 runner の検証に委ねています。
+
+<specdojo_executor_evidence>
+{"final_message":"空の groups を受理し、不正形を拒否する実装と回帰テスト、関連文書を更新した。","validations":[{"command":"npx prettier --write src/catalog/build.ts tests/src/catalog/build.test.ts tests/src/catalog/merge.test.ts tests/src/commands/build.integration.test.ts docs/ja/specdojo/rulebooks/dct-rulebook.md docs/ja/projects/prj-0001/controls/project-register/pjr-c95g-catalog-empty-groups-build.md CHANGELOG.md","status":"passed","summary":"変更した TypeScript・Markdown 7ファイルを整形した。"},{"command":"node --import tsx src/specdojo.ts catalog validate --project prj-0001","status":"passed","summary":"全カタログと索引が検査を通過した。既存の成果物未作成に関する警告のみ。"},{"command":"git diff --check","status":"passed","summary":"差分に空白エラーがないことを確認した。"}]}
+</specdojo_executor_evidence>

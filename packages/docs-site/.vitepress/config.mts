@@ -11,26 +11,29 @@ import {
   FLATTENED_GROUP_TEXTS,
 } from "./sidebar-config";
 import type { SidebarItem } from "./sidebar-config";
-import type { Plugin } from "vite";
+import { mermaidSvgId } from "../src/gen-mermaid-svg";
 import {
-  generateMermaidSvgs,
-  generateMermaidSvgsForFile,
-  mermaidSvgId,
-  shouldGenerateMermaidForFile,
-} from "../src/gen-mermaid-svg";
-import {
-  KATA_STAGING_DIR_NAME,
   STAGED_PACKAGE_DEAD_LINK_PATTERNS,
   stageBundledKata,
   toSiteDocIndexEntry,
 } from "./kata-staging";
 import { scanLocaleSidebar } from "./locale-sidebar";
+import { mermaidAssets } from "./mermaid-assets";
+import { mermaidSvgAutoGenerate } from "./mermaid-auto-generate";
+import { resolveExecRecordWikilink, rewriteExecRecordMarkdownHref } from "./exec-record-links";
 import * as path from "path";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 
 const WORKSPACE_ROOT = path.resolve(process.env.SPECDOJO_DOCS_ROOT ?? process.cwd());
 const CONTENT_ROOT = path.join(WORKSPACE_ROOT, "docs");
-const MERMAID_OUT_DIR = path.join(WORKSPACE_ROOT, "public", "mermaid");
+const MERMAID_OUT_DIR = path.join(WORKSPACE_ROOT, ".vitepress", "mermaid");
+
+// サイトから除外した exec の plan / result は、リポジトリ上の正本へリンクする。
+// URL の組み立て元をここに集約し、Markdown 本文や doc-index には GitHub 固有値を持たせない。
+const GITHUB_SOURCE = {
+  repositoryUrl: "https://github.com/specdojo/specdojo",
+  branch: "main",
+} as const;
 
 // package 参照中の kata をページ走査より前にステージングへ複製する。
 // VitePress は設定の読み込み後にページを走査するため、build / dev の両方でここが先に動く。
@@ -40,9 +43,7 @@ if (kataStaging.packageRoot) {
     `[kata] staged ${kataStaging.staged} file(s) from ${kataStaging.packageRoot} (ejected: ${kataStaging.ejected})`,
   );
 }
-const KATA_STAGING_CONTENT_ROOT = kataStaging.stagingRoot
-  ? path.join(kataStaging.stagingRoot, "docs")
-  : undefined;
+const SITE_CONTENT_ROOT = path.join(kataStaging.stagingRoot, "docs");
 
 // [[id]] wikilink index — loaded once at build/dev startup
 function loadDocIndex(workspaceRoot: string): Record<string, string> {
@@ -272,106 +273,6 @@ const specdojoItems = {
 
 // GitHub Pages の公開パス: https://specdojo.github.io/specdojo/
 const base = "/specdojo/";
-
-const mermaidSvgAutoGenerate = (): Plugin => {
-  let timer: NodeJS.Timeout | undefined;
-  let running = false;
-  let pending = false;
-  const pendingFiles = new Set<string>();
-  let isSsrBuild = false;
-
-  const run = (reason: string) => {
-    if (running) {
-      pending = true;
-      return;
-    }
-
-    running = true;
-    try {
-      if (pendingFiles.size > 0) {
-        const files = [...pendingFiles];
-        pendingFiles.clear();
-        console.log(`[mermaid] generating svgs for ${files.length} file(s) (${reason})`);
-        for (const file of files) {
-          try {
-            generateMermaidSvgsForFile(file, {
-              rootDir: CONTENT_ROOT,
-              outDir: MERMAID_OUT_DIR,
-            });
-          } catch (error) {
-            console.error(`[mermaid] failed to generate SVGs for ${file}`, error);
-          }
-        }
-      } else {
-        console.log(`[mermaid] generating svgs (${reason})`);
-        generateMermaidSvgs({
-          rootDir: CONTENT_ROOT,
-          outDir: MERMAID_OUT_DIR,
-          additionalRootDirs: KATA_STAGING_CONTENT_ROOT ? [KATA_STAGING_CONTENT_ROOT] : [],
-        });
-      }
-    } finally {
-      running = false;
-      if (pending) {
-        pending = false;
-        run("pending");
-      }
-    }
-  };
-
-  const schedule = (reason: string, delayMs = 250) => {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(() => run(reason), delayMs);
-  };
-
-  const scheduleFile = (file: string, reason: string, delayMs = 250) => {
-    pendingFiles.add(file);
-    schedule(reason, delayMs);
-  };
-
-  const shouldHandle = (file: string): boolean => {
-    return shouldGenerateMermaidForFile(file, CONTENT_ROOT);
-  };
-
-  return {
-    name: "mermaid-svg-auto-generate",
-
-    configResolved(config) {
-      // VitePress build は client build と SSR build を連続実行するため、
-      // buildStart が2回呼ばれる。SVG生成は1回で十分なので SSR 側はスキップする。
-      isSsrBuild = Boolean(config.build?.ssr);
-    },
-
-    buildStart() {
-      if (isSsrBuild) return;
-      run("buildStart");
-    },
-
-    configureServer(server) {
-      schedule("startup", 0);
-
-      server.watcher.on("add", (file) => {
-        if (!shouldHandle(file)) return;
-        scheduleFile(file, "md:add");
-      });
-
-      server.watcher.on("unlink", (file) => {
-        if (!shouldHandle(file)) return;
-        scheduleFile(file, "md:unlink");
-      });
-    },
-
-    handleHotUpdate(ctx) {
-      if (!shouldHandle(ctx.file)) return;
-
-      // Markdown の再描画より先に SVG を用意したいので同期的に実行
-      pendingFiles.add(ctx.file);
-      run("hotUpdate");
-      ctx.server.ws.send({ type: "full-reload" });
-      return [];
-    },
-  };
-};
 
 /**
  * 追加したいロケールはここに足すだけでOK
@@ -918,20 +819,16 @@ export default defineConfig({
   description: "Documentation for SpecDojo",
   base,
 
-  // VitePress の設定は分離 package に置き、閲覧対象は呼び出し元 workspace とする。
-  srcDir: WORKSPACE_ROOT,
+  // `.vitepress/**` を workspace から走査せず、docs と同梱文書を重ねたツリーだけを走査する。
+  srcDir: kataStaging.stagingRoot,
   // ビルド結果と cache は package の中（node_modules 配下）ではなく、閲覧対象の workspace 側へ置く。
   // package の中に置くと利用者が出力を見つけにくく、npm ci で消え、package を共有する
   // 複数 workspace の出力が混ざる。置き場所は VitePress の既定と同じ <workspace>/.vitepress/ とする。
   outDir: path.join(WORKSPACE_ROOT, ".vitepress", "dist"),
   cacheDir: path.join(WORKSPACE_ROOT, ".vitepress", "cache"),
 
-  // srcDir は呼び出し元 workspace とする。
-  // サイトに含めるのは workspace の docs/ 配下の Markdown のみとし、
-  // リポジトリ直下の README 等やローカル作業用ディレクトリは除外する。
-  // logs/ は agent 実行時の plan / 応答を蓄える。VitePress の走査対象にすると、
-  // 未知タグを含む agent 出力が Vue のコンパイルを壊す。
-  // .vitepress/ は上記のビルド結果と cache の置き場所であり、ページとして走査しない。
+  // 閲覧用ツリーには docs/ だけを置く。出力・cache・利用者の設定はツリーの外にあり、
+  // ページ走査に入らない。exec の plan / result は引き続き公開対象から外す。
   srcExclude: [
     "*.md",
     ".vitepress/**",
@@ -940,6 +837,8 @@ export default defineConfig({
     "templates/**",
     "logs/**",
     "packages/**",
+    "docs/**/execution/exec/plans/**",
+    "docs/**/execution/exec/results/**",
   ],
 
   // サイト設定（サイドバーを含む）とページのハッシュ表は、既定では全ページの HTML へ
@@ -962,12 +861,11 @@ export default defineConfig({
     "docs/index.md": "index.md",
     "docs/ja/:rest*": "ja/:rest*",
     "docs/en/:rest*": "en/:rest*",
-    [`${KATA_STAGING_DIR_NAME}/docs/ja/:rest*`]: "ja/:rest*",
   },
 
   // ステージングした package 文書から SpecDojo 開発リポジトリ固有の文書へのリンクだけを許容する。
   // ステージングしていない（SpecDojo 自身のリポジトリなど）場合は従来どおり全 dead link を検出する。
-  ...(KATA_STAGING_CONTENT_ROOT ? { ignoreDeadLinks: [...STAGED_PACKAGE_DEAD_LINK_PATTERNS] } : {}),
+  ...(kataStaging.staged > 0 ? { ignoreDeadLinks: [...STAGED_PACKAGE_DEAD_LINK_PATTERNS] } : {}),
 
   themeConfig: {
     // ビルド時に生成したインデックスでブラウザ内検索を行う（外部サービス不要）
@@ -1098,23 +996,48 @@ export default defineConfig({
         return `<code v-pre>${content}</code>`;
       };
 
+      // srcExclude した plan / result への Markdown リンクは、元文書を書き換えず
+      // GitHub のファイル表示へ付け替える。外部 URL 化により dead link 検査も維持できる。
+      const defaultLinkOpen = md.renderer.rules.link_open;
+      md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+        const token = tokens[idx];
+        const href = token.attrGet("href");
+        const currentRelPath = (env as { relativePath?: string } | undefined)?.relativePath;
+        if (href && currentRelPath) {
+          token.attrSet("href", rewriteExecRecordMarkdownHref(href, currentRelPath, GITHUB_SOURCE));
+        }
+        return defaultLinkOpen
+          ? defaultLinkOpen(tokens, idx, options, env, self)
+          : self.renderToken(tokens, idx, options);
+      };
+
       const defaultFence = md.renderer.rules.fence;
 
       md.renderer.rules.fence = (tokens, idx, options, env, self) => {
         const token = tokens[idx];
         const info = (token.info || "").trim();
 
+        // srcDir の切り替え後も、@/src/... など利用側のコードスニペットを解決する。
+        const snippet = token as typeof token & { src?: string[] };
+        if (snippet.src?.[0]) {
+          const relative = path.relative(kataStaging.stagingRoot, snippet.src[0]);
+          const original = path.join(WORKSPACE_ROOT, relative);
+          if (!relative.startsWith("..") && !path.isAbsolute(relative) && existsSync(original)) {
+            snippet.src[0] = original;
+          }
+        }
+
         if (info === "mermaid") {
           const code = token.content.trim();
           // 生成側と同じキー（mermaid-cli の版・設定・コード）で SVG 名を求める
           const id = mermaidSvgId(code);
-          const src = `/mermaid/${id}.svg`;
+          const src = `${base}mermaid/${id}.svg`;
 
           // 800x800 を超える場合はスクロールさせるためのラッパーを用意
           // 具体的な判定は CSS / JS 側で行う想定（ここではクラスだけ付与）
           return `
               <p class="mermaid-container">
-                <img src="${src}" alt="mermaid diagram" loading="lazy" class="mermaid-image">
+                <img :src="'${src}'" alt="mermaid diagram" loading="lazy" class="mermaid-image">
               </p>\n`;
         }
 
@@ -1141,7 +1064,14 @@ export default defineConfig({
 
         if (!silent) {
           const entry = docIndex[id];
-          if (entry) {
+          const execRecordLink = resolveExecRecordWikilink(inner, docIndex, GITHUB_SOURCE);
+          if (execRecordLink) {
+            let token = state.push("link_open", "a", 1);
+            token.attrSet("href", execRecordLink.href);
+            token = state.push("text", "", 0);
+            token.content = execRecordLink.displayText;
+            state.push("link_close", "a", -1);
+          } else if (entry) {
             const entryPath = stripEntryLineSuffix(entry);
 
             // YAML は表示用生成ページがあればそちらへ付け替える（なければ元パスのまま）。
@@ -1184,7 +1114,15 @@ export default defineConfig({
 
   vite: {
     publicDir: path.join(WORKSPACE_ROOT, "public"),
-    plugins: [mermaidSvgAutoGenerate()],
+    plugins: [
+      mermaidSvgAutoGenerate({
+        rootDir: SITE_CONTENT_ROOT,
+        outDir: MERMAID_OUT_DIR,
+        contentRoot: CONTENT_ROOT,
+        syncFile: (file) => kataStaging.syncFile(file),
+      }),
+      mermaidAssets(MERMAID_OUT_DIR, base),
+    ],
     build: {
       // 最大のチャンクはローカル検索インデックス（@localSearchIndex*）で、
       // 検索モーダルを開いたときだけ動的 import される遅延ロード対象。

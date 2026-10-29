@@ -68,6 +68,11 @@ const featureDirectionRules = [
     forbidden: "catalog",
     feature: "docs",
   },
+  {
+    files: ["src/schedule/**/*.ts"],
+    forbidden: "dashboard",
+    feature: "schedule",
+  },
 ];
 
 export default tseslint.config(
@@ -135,7 +140,7 @@ export default tseslint.config(
     },
   },
 
-  // Direction rules between feature pairs to prevent cycles (PJR-QQKY / PJR-WSET).
+  // Direction rules between feature pairs to prevent cycles (PJR-QQKY / PJR-WSET / PJR-Q4CD).
   ...featureDirectionRules.map(({ files, forbidden, feature }) => ({
     files,
     rules: {

@@ -1,0 +1,105 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_322c0cfa36374824af8654cd966a0ec6
+  ts: "2026-10-24T23:23:17Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: kata のディレクトリにある付属のファイルが、別の kata として一覧に出る
+    - field: description
+      from: ""
+      to: kata list と kata status は kata のディレクトリのファイルをすべて kata として数えるため、sample に付けた CSS などの付属のファイルが、ファイル名を ID とする別の kata（status では package-missing）として表示される。
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: "2026-10-31"
+- v: 1
+  id: reg_43b55bc3292043b285a971e3c23f541d
+  ts: "2026-10-25T01:05:13Z"
+  action: start
+  actor: luna-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_322c0cfa36374824af8654cd966a0ec6
+- v: 1
+  id: reg_f613bf93e8f84d368ddd20d7aa616b9e
+  ts: "2026-10-25T01:14:38Z"
+  action: review
+  actor: luna-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_43b55bc3292043b285a971e3c23f541d
+- v: 1
+  id: reg_cdf4627b710846a8b0389dfced31b131
+  ts: "2026-10-25T01:20:07Z"
+  action: start
+  actor: sol-executor
+  from_status: review
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: review
+      to: in-progress
+  previous_event_id: reg_f613bf93e8f84d368ddd20d7aa616b9e
+- v: 1
+  id: reg_839a45600bc24d46aa691ebb7f25935c
+  ts: "2026-10-25T01:32:20Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_cdf4627b710846a8b0389dfced31b131
+- v: 1
+  id: reg_05df038c79284b09beb87703ffc0233f
+  ts: "2026-10-25T01:34:37Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 空のリポジトリで付属の CSS が一覧と kata status に出ないことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: ID を持つ形式のファイルだけを kata として数え、同じ名前のファイルとディレクトリを付属のファイルとして eject で一緒に写すようにした
+  previous_event_id: reg_839a45600bc24d46aa691ebb7f25935c

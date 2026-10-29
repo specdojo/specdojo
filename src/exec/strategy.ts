@@ -99,6 +99,12 @@ function isApproach(value: unknown): value is Approach {
     value === "recipe-guided" ||
     value === "freeform" ||
     value === "bootstrap" ||
+    value === "catalog-planning" ||
+    value === "strategy-planning" ||
+    value === "rulebook-authoring" ||
+    value === "recipe-authoring" ||
+    value === "sample-authoring" ||
+    value === "template-authoring" ||
     value === "retrofit" ||
     value === "cross-deliverable-dedup" ||
     value === "rulebook-maintenance" ||

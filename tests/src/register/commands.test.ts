@@ -20,6 +20,7 @@ const REGISTER_REL = "docs/ja/projects/prj-0001/controls/project-register";
 const CONFIG = {
   version: 1,
   current_project: "prj-0001",
+  kata_authority: "customer",
   projects: {
     "prj-0001": {
       base_path: "docs/ja/projects/prj-0001",
@@ -291,6 +292,205 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     process.exitCode = undefined;
   });
 
+  it("epic を track 付きで起票・更新・close し、子ビューと履歴を生成する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "epic",
+        "--title",
+        "track の仕事",
+        "--track",
+        "business",
+      ]);
+      const path = join(registerDir, "pjr-ab12-epic.md");
+      expect(readFileSync(path, "utf8")).toContain("track: business");
+      await runRegister(["update", "--id", "PJR-AB12", "--track", "implementation"]);
+      expect(readFileSync(path, "utf8")).toContain("track: implementation");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "track",
+        from: "business",
+        to: "implementation",
+      });
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--id",
+        "PJR-CD12",
+        "--topic",
+        "child",
+        "--title",
+        "子の作業",
+        "--from",
+        "PJR-AB12",
+      ]);
+      const externalRegisterDir = join(root, "docs/ja/projects/prj-0002/controls/project-register");
+      mkdirSync(externalRegisterDir, { recursive: true });
+      writeFileSync(
+        join(root, ".specdojo/specdojo.config.json"),
+        JSON.stringify({
+          ...CONFIG,
+          projects: {
+            ...CONFIG.projects,
+            "prj-0002": {
+              base_path: "docs/ja/projects/prj-0002",
+              project_register_path: "controls/project-register",
+            },
+          },
+        }),
+      );
+      writeFileSync(
+        join(externalRegisterDir, "pjr-ef12-topic.md"),
+        buildTicket("PJR-EF12", [
+          "item_status: waiting",
+          "priority: medium",
+          "derived_from: [prj-0001:PJR-AB12]",
+        ]).replace("prj-0001:", "prj-0002:"),
+      );
+      await runRegister(["build"]);
+      expect(process.exitCode).toBeUndefined();
+      const epicView = readFileSync(join(registerDir, "generated/pjr-epic-items.md"), "utf8");
+      expect(epicView).toContain("prj-0002:PJR-EF12");
+      expect(epicView).toContain("| todo | waiting |");
+      expect(readFileSync(join(registerDir, "generated/pjr-epic-items.md"), "utf8")).toContain(
+        "| todo | open | 子の作業 |",
+      );
+      await runRegister(["close", "--id", "PJR-AB12", "--conclusion", "人が完了を確認"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(path, "utf8")).toContain("item_status: done");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)).toMatchObject({
+        action: "close",
+        to_status: "done",
+      });
+    });
+  });
+
+  it.each(["reject", "defer"])("epic の %s と reopen を記帳できる", async (command) => {
+    await withRepo(async ({ registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "epic",
+        "--title",
+        "track の仕事",
+        "--track",
+        "business",
+      ]);
+      await runRegister([command, "--id", "PJR-AB12"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.to_status).toBe(
+        command === "reject" ? "rejected" : "deferred",
+      );
+      await runRegister(["reopen", "--id", "PJR-AB12"]);
+      expect(process.exitCode).toBeUndefined();
+      expect(readFileSync(join(registerDir, "pjr-ab12-epic.md"), "utf8")).toContain(
+        "item_status: open",
+      );
+    });
+  });
+
+  it("epic の track 必須と type 制約を、書き込み前に検証する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      for (const args of [[], ["--track", "-"], ["--track", "Bad Track"]]) {
+        process.exitCode = undefined;
+        await runRegister([
+          "add",
+          "--type",
+          "epic",
+          "--id",
+          "PJR-AB12",
+          "--topic",
+          "epic",
+          "--title",
+          "x",
+          ...args,
+        ]);
+        expect(process.exitCode).toBe(1);
+        expect(existsSync(join(registerDir, "pjr-ab12-epic.md"))).toBe(false);
+      }
+      process.exitCode = undefined;
+      await runRegister(["add", "--type", "todo", "--title", "x", "--track", "business"]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.flat().join("")).toContain("only valid for epic");
+    });
+  });
+
+  it("tml-index の定義を add / update / build で検証し、削除・未定義 track を拒否する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      const timelineDir = join(root, "docs/ja/projects/prj-0001/custom-timeline");
+      mkdirSync(timelineDir, { recursive: true });
+      const config = structuredClone(CONFIG);
+      Object.assign(config.projects["prj-0001"], { timeline_path: "custom-timeline" });
+      writeFileSync(join(root, ".specdojo/specdojo.config.json"), JSON.stringify(config));
+      const timelinePath = join(timelineDir, "tml-index.yaml");
+      writeFileSync(
+        timelinePath,
+        "project_id: prj-0001\ntracks:\n  - track: business\n    domains: [business]\n    catalog_status: draft\n    order: 1\n    depends_on: []\n",
+      );
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "epic",
+        "--title",
+        "x",
+        "--track",
+        "unknown",
+      ]);
+      expect(process.exitCode).toBe(1);
+      expect(existsSync(join(registerDir, "pjr-ab12-epic.md"))).toBe(false);
+      process.exitCode = undefined;
+      await runRegister([
+        "add",
+        "--type",
+        "epic",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "epic",
+        "--title",
+        "x",
+        "--track",
+        "business",
+      ]);
+      expect(process.exitCode).toBeUndefined();
+      const ticketPath = join(registerDir, "pjr-ab12-epic.md");
+      const before = readFileSync(ticketPath, "utf8");
+      for (const track of ["unknown", "-"]) {
+        process.exitCode = undefined;
+        await runRegister(["update", "--id", "PJR-AB12", "--track", track]);
+        expect(process.exitCode).toBe(1);
+        expect(readFileSync(ticketPath, "utf8")).toBe(before);
+      }
+      process.exitCode = undefined;
+      writeFileSync(
+        timelinePath,
+        readFileSync(timelinePath, "utf8").replace("track: business", "track: renamed"),
+      );
+      await runRegister(["build"]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.flat().join("")).toContain('Undefined epic track "business"');
+    });
+  });
+
   it("scaffold は generated 配下の一覧を作成し、追跡対象の参照ページは作らない", async () => {
     await withRepo(async ({ registerDir }) => {
       vi.spyOn(process.stdout, "write").mockReturnValue(true);
@@ -429,6 +629,86 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it.each(["project", "sample"])(
+    "add / update は type: %s の sample を保守対象にでき、誤った対象では記帳しない",
+    async (type) => {
+      await withRepo(async ({ root, registerDir }) => {
+        writeApproachTargets(root);
+        const sampleDir = join(root, "docs/ja/kata/samples");
+        mkdirSync(sampleDir, { recursive: true });
+        writeFileSync(
+          join(sampleDir, "example-sample.md"),
+          `---\nspecdojo:\n  id: customer:example-sample\n  type: ${type}\n  status: draft\n  rulebook: none\n---\n\n# Sample\n`,
+          "utf8",
+        );
+        vi.spyOn(process.stdout, "write").mockReturnValue(true);
+        const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+        const addArgs = [
+          "add",
+          "--type",
+          "todo",
+          "--title",
+          "sample を直す",
+          "--topic",
+          "edit-sample",
+          "--id",
+          "PJR-AB12",
+          "--approach",
+          "sample-maintenance",
+          "--target",
+          "customer:example-sample",
+        ];
+        const ticketPath = join(registerDir, "pjr-ab12-edit-sample.md");
+
+        await runRegister([...addArgs, "--dry-run"]);
+        expect(process.exitCode).not.toBe(1);
+        expect(existsSync(ticketPath)).toBe(false);
+        await runRegister(addArgs);
+        expect(process.exitCode).not.toBe(1);
+        expect(readFileSync(ticketPath, "utf8")).toContain("  approach: sample-maintenance");
+
+        await runRegister([
+          "update",
+          "--id",
+          "PJR-AB12",
+          "--approach",
+          "rulebook-maintenance",
+          "--target",
+          "specdojo:example-rulebook",
+        ]);
+        expect(process.exitCode).not.toBe(1);
+        await runRegister([
+          "update",
+          "--id",
+          "PJR-AB12",
+          "--approach",
+          "sample-maintenance",
+          "--target",
+          "customer:example-sample",
+        ]);
+        expect(process.exitCode).not.toBe(1);
+        const before = readFileSync(ticketPath, "utf8");
+        const eventsBefore = readEvents(registerDir, "PJR-AB12");
+        expect(before).toContain("  targets:\n    - customer:example-sample");
+
+        await runRegister(["update", "--id", "PJR-AB12", "--target", "deliverable-doc"]);
+        expect(process.exitCode).toBe(1);
+        expect(readFileSync(ticketPath, "utf8")).toBe(before);
+        expect(readEvents(registerDir, "PJR-AB12")).toEqual(eventsBefore);
+
+        process.exitCode = undefined;
+        const invalidAddArgs = addArgs.map((arg) => (arg === "PJR-AB12" ? "PJR-CD34" : arg));
+        await runRegister([...invalidAddArgs.slice(0, -1), "specdojo:example-rulebook"]);
+        expect(process.exitCode).toBe(1);
+        expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+          "requires a sample document target",
+        );
+        expect(existsSync(join(registerDir, "pjr-cd34-edit-sample.md"))).toBe(false);
+        expect(readEvents(registerDir, "PJR-AB12")).toEqual(eventsBefore);
+      });
+    },
+  );
+
   it("add は DCT にある未作成成果物の doc id を target にできる", async () => {
     await withRepo(async ({ root, registerDir }) => {
       writeApproachTargets(root);
@@ -526,6 +806,115 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("depends_on を add/update で置換・削除し、event と history に記録する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      for (const id of ["PJR-CD34", "PJR-EF56"]) {
+        const filename = `${id.toLowerCase()}-topic.md`;
+        const content = buildTicket(id, ["item_status: open", "priority: high"]);
+        writeFileSync(join(registerDir, filename), content);
+        writeInitialEvent(registerDir, id, filename, content);
+      }
+      const stdout = vi.spyOn(process.stdout, "write").mockReturnValue(true);
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "順序あり",
+        "--topic",
+        "dependent",
+        "--id",
+        "PJR-AB12",
+        "--depends-on",
+        "PJR-CD34",
+        "--depends-on",
+        "PJR-EF56",
+      ]);
+      const ticketPath = join(registerDir, "pjr-ab12-dependent.md");
+      expect(readFileSync(ticketPath, "utf8")).toContain(
+        "  depends_on:\n    - PJR-CD34\n    - PJR-EF56",
+      );
+      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toContainEqual({
+        field: "depends_on",
+        from: "",
+        to: '["PJR-CD34","PJR-EF56"]',
+      });
+      await runRegister(["update", "--id", "PJR-AB12", "--depends-on", "PJR-EF56"]);
+      await runRegister(["update", "--id", "PJR-AB12", "--depends-on", "-"]);
+      expect(readFileSync(ticketPath, "utf8")).not.toContain("depends_on:");
+      expect(readEvents(registerDir, "PJR-AB12").at(-1)?.changes).toContainEqual({
+        field: "depends_on",
+        from: '["PJR-EF56"]',
+        to: "-",
+      });
+      await runRegister(["build"]);
+      expect(process.exitCode).toBeUndefined();
+      stdout.mockClear();
+      await runRegister(["history", "--id", "PJR-AB12"]);
+      expect(stdout.mock.calls.flat().join("")).toContain("depends_on");
+    });
+  });
+
+  it.each([
+    ["PJR-ZZ99", "Depends-on item not found"],
+    ["PJR-AB12", "cannot depend on itself"],
+  ])("不正な --depends-on %s を書き込み前に拒否する", async (ref, message) => {
+    await withRepo(async ({ registerDir }) => {
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "依存",
+        "--id",
+        "PJR-AB12",
+        "--topic",
+        "dependency",
+        "--depends-on",
+        ref,
+      ]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.flat().join("")).toContain(message);
+      expect(existsSync(join(registerDir, "pjr-ab12-dependency.md"))).toBe(false);
+      expect(existsSync(registerEventFilePath(registerDir, "PJR-AB12"))).toBe(false);
+    });
+  });
+
+  it("循環する update を拒否し、手編集の循環も build で拒否する", async () => {
+    await withRepo(async ({ registerDir }) => {
+      for (const id of ["PJR-AB12", "PJR-CD34"]) {
+        const filename = `${id.toLowerCase()}-topic.md`;
+        const content = buildTicket(id, [
+          "item_status: open",
+          "priority: high",
+          ...(id === "PJR-AB12" ? ["depends_on: [PJR-CD34]"] : []),
+        ]);
+        writeFileSync(join(registerDir, filename), content);
+        writeInitialEvent(registerDir, id, filename, content);
+      }
+      const path = join(registerDir, "pjr-cd34-topic.md");
+      const before = readFileSync(path, "utf8");
+      const eventsBefore = readFileSync(registerEventFilePath(registerDir, "PJR-CD34"), "utf8");
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      await runRegister(["update", "--id", "PJR-CD34", "--depends-on", "PJR-AB12"]);
+      expect(process.exitCode).toBe(1);
+      expect(readFileSync(path, "utf8")).toBe(before);
+      expect(readFileSync(registerEventFilePath(registerDir, "PJR-CD34"), "utf8")).toBe(
+        eventsBefore,
+      );
+      writeFileSync(
+        path,
+        before.replace("  item_status: open", "  item_status: open\n  depends_on: [PJR-AB12]"),
+      );
+      process.exitCode = undefined;
+      stderr.mockClear();
+      await runRegister(["build"]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.flat().join("")).toContain("depends_on cycle");
+    });
+  });
+
   it("add は存在しない --from と自己参照を拒否する", async () => {
     await withRepo(async ({ registerDir }) => {
       const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
@@ -598,6 +987,46 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
         "requires a rulebook document target",
       );
       expect(existsSync(join(registerDir, "pjr-ab12-wrong-target.md"))).toBe(false);
+    });
+  });
+
+  it("add は --source と互換の追加 --target を sources に記録する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      writeApproachTargets(root);
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "add",
+        "--type",
+        "todo",
+        "--title",
+        "rulebook を作る",
+        "--topic",
+        "author-rulebook",
+        "--id",
+        "PJR-AB12",
+        "--approach",
+        "rulebook-authoring",
+        "--target",
+        "customer:payment-rulebook",
+        "--target",
+        "deliverable-doc",
+        "--source",
+        "docs/ja/product/*.md",
+      ]);
+
+      const ticket = readFileSync(join(registerDir, "pjr-ab12-author-rulebook.md"), "utf8");
+      expect(ticket).toContain("  targets:\n    - customer:payment-rulebook");
+      expect(ticket).toContain("  sources:\n    - deliverable-doc\n    - docs/ja/product/*.md");
+      expect(readEvents(registerDir, "PJR-AB12")[0].changes).toEqual(
+        expect.arrayContaining([
+          {
+            field: "sources",
+            from: "",
+            to: '["deliverable-doc","docs/ja/product/*.md"]',
+          },
+        ]),
+      );
     });
   });
 
@@ -1260,6 +1689,89 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
     });
   });
 
+  it("update は authoring の sources を置換し、旧 target 手本を正規化する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      writeApproachTargets(root);
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: open",
+          "priority: high",
+          "approach: rulebook-authoring",
+          "targets:",
+          "  - customer:payment-rulebook",
+          "  - deliverable-doc",
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister(["update", "--id", "PJR-AB12", "--source", "docs/ja/product/*.md"]);
+
+      const changed = readFileSync(ticketPath, "utf8");
+      expect(changed).toContain("  targets:\n    - customer:payment-rulebook");
+      expect(changed).not.toContain("    - deliverable-doc");
+      expect(changed).toContain("  sources:\n    - docs/ja/product/*.md");
+    });
+  });
+
+  it("既存 authoring kata があっても通常項目の update は通し、approach 関連の変更は検証する", async () => {
+    await withRepo(async ({ root, registerDir }) => {
+      const ticketPath = join(registerDir, "pjr-ab12-topic.md");
+      const kataDir = join(root, "docs/ja/specdojo/templates/customer");
+      mkdirSync(kataDir, { recursive: true });
+      writeFileSync(
+        join(kataDir, "existing.md"),
+        [
+          "---",
+          "specdojo:",
+          "  id: customer:existing-template",
+          "  type: template",
+          "  status: draft",
+          "---",
+          "",
+          "# Existing",
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      writeFileSync(
+        ticketPath,
+        buildTicket("PJR-AB12", [
+          "item_status: open",
+          "priority: high",
+          "approach: template-authoring",
+          "targets:",
+          "  - customer:existing-template",
+        ]),
+        "utf8",
+      );
+      vi.spyOn(process.stdout, "write").mockReturnValue(true);
+
+      await runRegister([
+        "update",
+        "--id",
+        "PJR-AB12",
+        "--owner",
+        "BA",
+        "--due",
+        "2026-10-31",
+        "--priority",
+        "low",
+      ]);
+      expect(readFileSync(ticketPath, "utf8")).toContain("  owner: BA");
+      expect(readFileSync(ticketPath, "utf8")).toContain('  due_on: "2026-10-31"');
+
+      const stderr = vi.spyOn(process.stderr, "write").mockReturnValue(true);
+      await runRegister(["update", "--id", "PJR-AB12", "--source", "docs/ja/product/*.md"]);
+      expect(process.exitCode).toBe(1);
+      expect(stderr.mock.calls.map((call) => String(call[0])).join("")).toContain(
+        "Kata id customer:existing-template already exists",
+      );
+    });
+  });
+
   it("update は derived_from を変更・削除できる", async () => {
     await withRepo(async ({ registerDir }) => {
       for (const id of ["PJR-AB12", "PJR-CD34", "PJR-EF56"]) {
@@ -1604,7 +2116,7 @@ describe("register CLI — 個票 frontmatter への読み書き", () => {
 
       // 一覧に出る暦日は移行前後で変わらない。
       const views = readFileSync(join(registerDir, "generated/pjr-index.md"), "utf8");
-      expect(views).toContain("| ARC | 2026-08-01 | _TODO_ | 2026-08-05 |");
+      expect(views).toContain("| ARC | 2026-08-01 | \\_TODO\\_ | 2026-08-05 |");
     });
   });
 

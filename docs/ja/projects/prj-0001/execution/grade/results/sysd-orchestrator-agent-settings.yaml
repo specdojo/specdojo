@@ -6,14 +6,14 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 65
-graded_at: "2026-10-11T16:42:13.616Z"
-graded_by: agy-expert-executor
-content_hash: 029f906e70c15e4479ff656f777c5ab42041abfc0e52e85fb5ca532cdcd4d97d
+graded_at: "2026-10-24T16:04:19.894Z"
+graded_by: flash-high-executor
+content_hash: 5bc67c61dcffba892c7f87ed038e2c5a3ee3ae47a4e1d9319fdf83492a33ad53
 source_hashes:
   catalog-entry: 0b2bb9de403e71d839ae0c4e92022d0dd078dc8bb24e52518333df0d5ce3da1c
   deliverable:pm-organization: 4ceed43757793b87d06884c9a04241b3bb5fbbfe6c7aa08e503a53e95b09055b
   deliverable:pm-raci: ab7147b8df8a593d395865f4ee74fdb1f86ebac84fabb22e47aef24fd474dd28
-  dependency:sysd-agent-settings: fcdb84f4ffd29a2119ae5aab0a3195a97a33b2e7cdc70c794e5e61ad2dee48c9
+  dependency:sysd-agent-settings: af8e76f0c11605c8a3a4f3e7b64434c5c0fa3afe15f59bae5803433cc29fc0ca
   members: b7c50808ef9d4b9fbf321dd9f0128b0bdea1c6ae9eea3e93f61861ac36d76152
   roles: f9c37aca1c19fd766eb333c947191a407d4c059145e255ffa17961e6297b2841
   schedule: be3b071086395fc70c8f1c28ba148a08c4d29bcce1b38a0bb7a3bdafd35a43a3
@@ -168,7 +168,9 @@ findings:
     severity: major
     rule: vp-pm-control-reporting
     line: 118
-    anchor: "- frontier モデルは Claude が `opus`、Codex が `gpt-5.6-sol` に対応する。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使う。"
+    anchor: >-
+      - Claude Code の `--worktree` はブランチを `worktree-<name>`、配置を `.claude/worktrees/<name>` に固定し、他の CLI
+      と命名・配置を統一できないため使用しない。
     message: Antigravity の欠落、OpenCode 権限不整合、機能検証不足を課題・リスク・変更要求として管理する PJR 転記候補、報告先、担当 Role code がない。
     message_ja: Antigravity の欠落、OpenCode 権限不整合、機能検証不足を課題・リスク・変更要求として管理する PJR 転記候補、報告先、担当 Role code がない。
   - id: F006
@@ -255,7 +257,7 @@ findings:
     severity: major
     rule: vp-dev-change-impact
     line: 120
-    anchor: "## 7. 保守"
+    anchor: ""
     message: >-
       実際の同期処理が更新・検証する `templates/*`、`templates/antigravity/orchestrator.md`、`npm run orchestrator:sync` が変更影響に含まれず、SSOT
       変更時の配布物更新範囲を識別できない。
@@ -266,7 +268,9 @@ findings:
     severity: major
     rule: vp-dev-testability
     line: 118
-    anchor: "- frontier モデルは Claude が `opus`、Codex が `gpt-5.6-sol` に対応する。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使う。"
+    anchor: >-
+      - Claude Code の `--worktree` はブランチを `worktree-<name>`、配置を `.claude/worktrees/<name>` に固定し、他の CLI
+      と命名・配置を統一できないため使用しない。
     message: 本文同期以外について、承認前の状態変更禁止、OpenCode 権限、project 解決順序、各 `orch:*` 起動を確認するテスト参照・実行コマンド・期待結果・失敗時対応がない。
     message_ja: 本文同期以外について、承認前の状態変更禁止、OpenCode 権限、project 解決順序、各 `orch:*` 起動を確認するテスト参照・実行コマンド・期待結果・失敗時対応がない。
   - id: F016
@@ -282,14 +286,18 @@ findings:
     severity: major
     rule: vp-qe-done-criteria
     line: 118
-    anchor: "- frontier モデルは Claude が `opus`、Codex が `gpt-5.6-sol` に対応する。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使う。"
+    anchor: >-
+      - Claude Code の `--worktree` はブランチを `worktree-<name>`、配置を `.claude/worktrees/<name>` に固定し、他の CLI
+      と命名・配置を統一できないため使用しない。
     message: 保守章の同期検証は本文のバイト一致しか保証せず、承認フロー・権限・project解決・起動・worktree動作の検証根拠がないためDC-004を充足していない。
     message_ja: 保守章の同期検証は本文のバイト一致しか保証せず、承認フロー・権限・project解決・起動・worktree動作の検証根拠がないためDC-004を充足していない。
   - id: F018
     severity: major
     rule: vp-qe-verifiability
     line: 118
-    anchor: "- frontier モデルは Claude が `opus`、Codex が `gpt-5.6-sol` に対応する。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使う。"
+    anchor: >-
+      - Claude Code の `--worktree` はブランチを `worktree-<name>`、配置を `.claude/worktrees/<name>` に固定し、他の CLI
+      と命名・配置を統一できないため使用しない。
     message: >-
       `npm run lint:orchestrator-sync`
       は本文一致のみを検査しており、承認前の状態変更禁止、OpenCode権限、project解決順序、npm起動、worktree作成・再利用をpass/fail判定する検証項目またはテスト参照がない。
@@ -307,14 +315,18 @@ findings:
     severity: minor
     rule: vp-qe-omissions-consistency
     line: 118
-    anchor: "- frontier モデルは Claude が `opus`、Codex が `gpt-5.6-sol` に対応する。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使う。"
+    anchor: >-
+      - Claude Code の `--worktree` はブランチを `worktree-<name>`、配置を `.claude/worktrees/<name>` に固定し、他の CLI
+      と命名・配置を統一できないため使用しない。
     message: 検証観点・関連文書の節がなく、`sysd-index`、横断ルール、必要な重要フロー、テスト設計、OPD・OPRへの導線が明示されていない。
     message_ja: 検証観点・関連文書の節がなく、`sysd-index`、横断ルール、必要な重要フロー、テスト設計、OPD・OPRへの導線が明示されていない。
   - id: F021
     severity: major
     rule: vp-ops-release-readiness
     line: 118
-    anchor: "- frontier モデルは Claude が `opus`、Codex が `gpt-5.6-sol` に対応する。通常運用はそれぞれ既定の `sonnet` / `gpt-5.6-terra` を使う。"
+    anchor: >-
+      - Claude Code の `--worktree` はブランチを `worktree-<name>`、配置を `.claude/worktrees/<name>` に固定し、他の CLI
+      と命名・配置を統一できないため使用しない。
     message: Antigravity 欠落と OpenCode 権限不整合が残る draft に対し、ready 昇格条件、未解決指摘一覧、承認者、公開前の機能確認が定義されていない。
     message_ja: Antigravity 欠落と OpenCode 権限不整合が残る draft に対し、ready 昇格条件、未解決指摘一覧、承認者、公開前の機能確認が定義されていない。
   - id: F022

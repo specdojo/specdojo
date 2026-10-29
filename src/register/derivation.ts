@@ -1,13 +1,20 @@
 import { existsSync } from "node:fs";
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
+import { gitOutput, gitResult } from "../shared/git.js";
 import {
   getProjectRegisterPath,
   loadConfig,
   specdojoRootDir,
   type SpecDojoConfig,
 } from "../shared/specdojo-config.js";
-import { loadRegisterItemDocs, PJR_ID_RE, type PjrItem } from "./item.js";
+import {
+  displayIdFromTicketFilename,
+  loadRegisterItemDocs,
+  PJR_ID_RE,
+  type PjrItem,
+} from "./item.js";
 import type { RegisterItemView, RegisterPaths } from "./command-types.js";
+import { resolveProjectIntegrationBranch } from "./cross-project.js";
 
 const QUALIFIED_REGISTER_ITEM_REF_RE = /^([a-z][a-z0-9-]*):(PJR-[0-9ABCDEFGHJKMNPQRSTVWXYZ]{4})$/;
 
@@ -47,13 +54,42 @@ export function normalizeDerivedFrom(
   return refs;
 }
 
-function configuredItemIds(config: SpecDojoConfig, projectId: string): Set<string> | undefined {
+function configuredItemIds(
+  config: SpecDojoConfig,
+  projectId: string,
+  currentProjectId: string,
+): Set<string> {
   const project = config.projects[projectId];
-  if (!project) return undefined;
+  if (!project) throw new Error(`Cannot verify derived_from item: unknown project ${projectId}`);
   const registerPath = getProjectRegisterPath(project);
   if (!registerPath) {
     throw new Error(
       `Cannot verify derived_from item in configured project ${projectId}: project_register_path is not set`,
+    );
+  }
+  if (projectId !== currentProjectId) {
+    const repoRoot = specdojoRootDir();
+    const branch = resolveProjectIntegrationBranch(projectId, project);
+    const exists = gitResult(repoRoot, ["show-ref", "--verify", "--quiet", `refs/heads/${branch}`]);
+    if (exists.status !== 0) {
+      throw new Error(
+        `Cannot verify derived_from item in project ${projectId}: ` +
+          `integration branch does not exist locally: ${branch}`,
+      );
+    }
+    const files = gitOutput(repoRoot, [
+      "ls-tree",
+      "-r",
+      "--name-only",
+      branch,
+      "--",
+      registerPath.replaceAll("\\", "/"),
+    ]);
+    return new Set(
+      files
+        .split(/\r?\n/)
+        .map((path) => displayIdFromTicketFilename(basename(path)))
+        .filter((id): id is string => id !== undefined),
     );
   }
   const absolutePath = resolve(specdojoRootDir(), registerPath);
@@ -77,11 +113,9 @@ function validateDerivedFromWithConfig(
     if (parsed.projectId === opts.projectId && parsed.itemId === opts.itemId) {
       throw new Error(`Item ${opts.itemId} cannot derive from itself`);
     }
-    if (!config.projects[parsed.projectId]) continue;
-
     let ids = idsByProject.get(parsed.projectId);
     if (!idsByProject.has(parsed.projectId)) {
-      ids = configuredItemIds(config, parsed.projectId);
+      ids = configuredItemIds(config, parsed.projectId, opts.projectId);
       idsByProject.set(parsed.projectId, ids);
     }
     if (!ids?.has(parsed.itemId)) {
@@ -174,6 +208,7 @@ function configuredExternalRegisterDirectories(paths: RegisterPaths): Array<{
 export function collectDerivedRegisterRelations(
   paths: RegisterPaths,
   currentItems: readonly RegisterItemView[],
+  relationField: "derivedFrom" | "dependsOn" = "derivedFrom",
 ): DerivedRegisterRelation[] {
   const relations: DerivedRegisterRelation[] = [];
   const collect = (
@@ -181,7 +216,7 @@ export function collectDerivedRegisterRelations(
     items: ReadonlyArray<{ item: PjrItem; ticketPath: string }>,
   ): void => {
     for (const item of items) {
-      for (const ref of item.item.derivedFrom ?? []) {
+      for (const ref of item.item[relationField] ?? []) {
         const source = parseRegisterItemRef(ref, projectId);
         if (!source || source.projectId !== paths.projectId) continue;
         relations.push({

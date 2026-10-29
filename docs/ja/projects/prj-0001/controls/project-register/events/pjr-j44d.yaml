@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_014312ffc2f04263891a908e95ad5c67
+  ts: "2026-10-24T22:18:16Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 本リポジトリの文書を丸ごと使う単体テストが時間切れで毎回落ちる
+    - field: description
+      from: ""
+      to: doc-index.test.ts の登録簿の参照の解決のテストが docs を丸ごと一時のディレクトリへコピーして索引を作るため、文書が増えて単独でも 24 秒かかり上限の 20 秒を超える。register-plan-escape.test.ts の成果物の approach のテストも 5〜15 秒かかり上限の 5 秒の前後にある。develop の test-unit が毎回失敗し、すべての run の親の検証が止まる
+    - field: type
+      from: ""
+      to: issue
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-25"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-68KR"]'
+- v: 1
+  id: reg_6c0455e7503f4f589f78c280d3c78785
+  ts: "2026-10-24T22:19:02Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_014312ffc2f04263891a908e95ad5c67
+- v: 1
+  id: reg_6d5e3cc439714845a2a13b52b7dd111a
+  ts: "2026-10-24T22:28:14Z"
+  action: wait
+  actor: sol-executor
+  from_status: in-progress
+  to_status: waiting
+  reason: "agent exited with non-zero code: parent validation failed: test-unit"
+  changes:
+    - field: status
+      from: in-progress
+      to: waiting
+    - field: block_reason
+      from: "-"
+      to: "agent exited with non-zero code: parent validation failed: test-unit"
+  previous_event_id: reg_6c0455e7503f4f589f78c280d3c78785
+- v: 1
+  id: reg_048a659bccd949b399b028242460701b
+  ts: "2026-10-24T22:28:55Z"
+  action: start
+  actor: sol-executor
+  from_status: waiting
+  to_status: in-progress
+  reason: executor resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "agent exited with non-zero code: parent validation failed: test-unit"
+      to: "-"
+  previous_event_id: reg_6d5e3cc439714845a2a13b52b7dd111a
+- v: 1
+  id: reg_31d3e15822234a4387b0dd32e69ef4c3
+  ts: "2026-10-24T22:36:34Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_048a659bccd949b399b028242460701b
+- v: 1
+  id: reg_f1ef885f8b524a4cb1d1259e24f92fab
+  ts: "2026-10-24T22:37:38Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが、2 つのテストのファイルの 60 件が 5.9 秒で通ること（直す前は 1 件で 24 秒）と、親の検証の test-unit が通ったことを確かめた
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-25"
+    - field: conclusion
+      from: "-"
+      to: doc-index.test.ts の登録簿の参照のテストを、本リポジトリの docs の丸ごとのコピーから 3 文書の fixture に、register-plan-escape.test.ts の成果物の approach のテストを一時のリポジトリと最小のテンプレートに、remark の山括弧の検査のテストを固定の入力に置き換えた。製品のコードと時間の上限は変えていない
+  previous_event_id: reg_31d3e15822234a4387b0dd32e69ef4c3

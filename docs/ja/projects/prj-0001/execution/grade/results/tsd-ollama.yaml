@@ -6,8 +6,8 @@ target: deliverable
 rubric: grade-rubric-v2
 verdict: needs-work
 score: 63
-graded_at: "2026-10-11T16:14:13.052Z"
-graded_by: agy-expert-executor
+graded_at: "2026-10-28T16:21:07.322Z"
+graded_by: flash-high-executor
 content_hash: 4a4215fc57910ea677d1c754cb5b5930ee23e6a62834f968d2c5797bea7564da
 source_hashes:
   catalog-entry: 16f308b73256cfd46420fdc48757f6c85ba2ce3dca70991344c49e12f7397ebd
@@ -310,7 +310,7 @@ findings:
       「最終判断・難しい設計レビュー」の担当を Claude Code / Codex とする記述は `prj-overview` と `pm-raci`
       の人間最終責任に反するため、Agentは提案・レビュー支援に限定し人間の承認gateを明記する必要がある。
 done_criteria:
-  satisfied: 0
+  satisfied: 1
   total: 5
   unsatisfied:
     DC-001:
@@ -321,6 +321,4 @@ done_criteria:
       - ARC
     DC-004:
       - QE
-    DC-005:
-      - DEV
   detail_ref: tsd-ollama-grade-criteria

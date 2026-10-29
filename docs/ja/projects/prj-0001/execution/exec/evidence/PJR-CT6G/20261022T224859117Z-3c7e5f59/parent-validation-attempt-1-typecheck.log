@@ -1,0 +1,16 @@
+parent validation: typecheck
+exit code: 2
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.2 typecheck
+> tsc -b --noEmit
+
+src/catalog/generate.ts(205,7): error TS2304: Cannot find name 'repoRoot'.
+src/catalog/generate.ts(215,5): error TS2304: Cannot find name 'repoRoot'.
+src/catalog/generate.ts(205,7): error TS2304: Cannot find name 'repoRoot'.
+src/catalog/generate.ts(215,5): error TS2304: Cannot find name 'repoRoot'.
+
+
+--- stderr ---

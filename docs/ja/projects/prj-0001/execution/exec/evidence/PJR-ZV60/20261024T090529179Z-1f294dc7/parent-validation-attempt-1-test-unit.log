@@ -1,0 +1,176 @@
+parent validation: test-unit
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.4 test:unit
+> vitest run --config vitest.unit.config.ts
+
+
+ RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-ZV60
+
+ ❯ tests/src/register/commands.test.ts (61 tests | 1 failed) 3311ms
+     × update は approach と target を変更・削除できる 376ms
+Updated ticket status → ready: /tmp/specdojo-ticket-tYV10q/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-Jy3cAo/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-tb3RzH/pjr-0001-topic.md
+Updated ticket status → ready: /tmp/specdojo-ticket-AOGuX7/pjr-0001-topic.md
+Warning: PJR-0001 ticket has unresolved _TODO_; kept as draft (not promoted to ready): /tmp/specdojo-ticket-vmfReM/pjr-0001-topic.md
+Updated ticket status → deprecated: /tmp/specdojo-ticket-N3e4Qh/pjr-0001-topic.md
+before
+  
+  
+docs/selected.md
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: devcontainer-preset=recommended
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Using default: project
+Using default: name
+Using default: nickname
+Using default: display-name
+Using default: provider
+Using default: register=yes
+Using default: exec=no
+Using default: catalog=none
+Using default: lefthook=no
+Would move 1 agent member(s) from /tmp/specdojo-members-I1ngLW/project/pm-members.yaml
+Would write 1 agent member(s) to /tmp/specdojo-members-I1ngLW/.specdojo/agent-members.yaml
+Moved 1 agent member(s) from /tmp/specdojo-members-I1ngLW/project/pm-members.yaml
+Wrote 1 agent member(s) to /tmp/specdojo-members-I1ngLW/.specdojo/agent-members.yaml
+ ❯ tests/src/exec/register-plan-escape.test.ts (24 tests | 2 failed) 5240ms
+     × kata authoring approach は新規 id、配置、標準、手本、参照更新条件を plan に載せる 15ms
+     × recipe authoring は手本 rulebook の not-needed を未判断として扱わない 16ms
+Rate limit detected for pinned agent pinned. Waiting until 2026-10-24T09:22:11.970Z before resuming the same stage.
+resumed
+Rate limit detected for pinned agent primary. Falling back to fallback at 2026-10-24T09:21:12.348Z.
+fallback complete
+Connection error detected for pinned agent primary-reporter. Falling back to fallback-reporter at 2026-10-24T09:21:12.603Z.
+fallback reporter complete
+Wrote agent stdout: /tmp/specdojo-agent-command-ksptc2/outputs/response.txt
+Wrote agent stdout: /tmp/specdojo-agent-command-sR7US1/outputs/partial.txt
+result-markdownlint: result execution/exec/results/TASK-result.md not found; skipped pre-commit lint
+
+ Test Files  2 failed | 142 passed (144)
+      Tests  3 failed | 2352 passed (2355)
+   Start at  18:20:41
+   Duration  47.50s (transform 3.19s, setup 602ms, import 18.89s, tests 56.49s, environment 7ms)
+
+
+
+--- stderr ---
+error: unknown option '--reserve'
+error: unknown option '--local'
+error: unknown option '--strict-sync'
+error: unknown option '--integration-branch'
+error: unknown option '--integration-worktree'
+reporter failedproblem
+WARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.
+rate limit; retry-after: 60 seconds
+rate limit
+Cannot connect to API: ECONNREFUSED
+ECONNREFUSED
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > kata authoring approach は新規 id、配置、標準、手本、参照更新条件を plan に載せる
+Error: Authoring source document id is not resolvable via the document index: prj-test:overview
+ ❯ indexedDocumentPath src/register/authoring-sources.ts:98:11
+     96|   const indexed = collectDocIndexEntries(resolve(repoRoot, "docs"), re…
+     97|   if (!indexed) {
+     98|     throw new Error(
+       |           ^
+     99|       `Authoring source document id is not resolvable via the document…
+    100|     );
+ ❯ resolveAuthoringSources src/register/authoring-sources.ts:160:13
+ ❯ validateRegisterApproachTargets src/register/approach.ts:155:5
+ ❯ generateRegisterPlan src/exec/register.ts:483:5
+ ❯ tests/src/exec/register-plan-escape.test.ts:490:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/src/exec/register-plan-escape.test.ts > generateRegisterPlan の Markdown 安全性 > recipe authoring は手本 rulebook の not-needed を未判断として扱わない
+Error: Authoring source document id is not resolvable via the document index: prj-test:overview
+ ❯ indexedDocumentPath src/register/authoring-sources.ts:98:11
+     96|   const indexed = collectDocIndexEntries(resolve(repoRoot, "docs"), re…
+     97|   if (!indexed) {
+     98|     throw new Error(
+       |           ^
+     99|       `Authoring source document id is not resolvable via the document…
+    100|     );
+ ❯ resolveAuthoringSources src/register/authoring-sources.ts:160:13
+ ❯ validateRegisterApproachTargets src/register/approach.ts:155:5
+ ❯ generateRegisterPlan src/exec/register.ts:483:5
+ ❯ tests/src/exec/register-plan-escape.test.ts:536:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/src/register/commands.test.ts > register CLI — 個票 frontmatter への読み書き > update は approach と target を変更・削除できる
+AssertionError: expected '---\nspecdojo:\n  id: prj-0001:pjr-ab…' not to contain '  targets:'
+
+- Expected
++ Received
+
++ ---
++ specdojo:
++   id: prj-0001:pjr-ab12-topic
++   type: project
++   status: draft
++   rulebook: specdojo:pjr-rulebook
++   part_of:
++     - prj-0001:pjr-index
++   item_type: todo
++   item_status: open
++   priority: high
+    targets:
++     - specdojo:example-rulebook
++ ---
++
++ # PJR-AB12 在庫初期値を決める
++
++ ## 1. 概要
++
++ 個票本文の説明。
++
++ ## 2. 完了条件
++
++ - 初期値が決まっている。
++
+
+ ❯ tests/src/register/commands.test.ts:1300:27
+    1298|       const removed = readFileSync(ticketPath, "utf8");
+    1299|       expect(removed).not.toContain("  approach:");
+    1300|       expect(removed).not.toContain("  targets:");
+       |                           ^
+    1301|     });
+    1302|   });
+ ❯ tests/src/register/commands.test.ts:274:7
+ ❯ tests/src/register/commands.test.ts:1268:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+

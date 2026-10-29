@@ -1,15 +1,6 @@
 import { describe, expect, it } from "vitest";
-import {
-  copyFileSync,
-  cpSync,
-  existsSync,
-  mkdirSync,
-  mkdtempSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
-import { basename, join } from "node:path";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { globSync } from "tinyglobby";
 import {
@@ -558,9 +549,29 @@ describe("buildDocIndex", () => {
         "package-rulebook.md",
       );
       const guidePath = join(packageRoot, "docs", "ja", "specdojo", "guides", "package-guide.md");
+      const variantPath = join(
+        packageRoot,
+        "docs",
+        "ja",
+        "specdojo",
+        "rulebooks",
+        "customer",
+        "variant-rulebook.md",
+      );
+      const repositoryKataPath = join(
+        repoRoot,
+        "docs",
+        "ja",
+        "specdojo",
+        "rulebooks",
+        "customer",
+        "repository-rulebook.md",
+      );
       mkdirSync(docsRoot, { recursive: true });
       mkdirSync(join(rulebookPath, ".."), { recursive: true });
       mkdirSync(join(guidePath, ".."), { recursive: true });
+      mkdirSync(join(variantPath, ".."), { recursive: true });
+      mkdirSync(join(repositoryKataPath, ".."), { recursive: true });
       writeFileSync(
         rulebookPath,
         "---\nspecdojo:\n  id: specdojo:package-rulebook\n  type: rulebook\n  status: ready\n---\n",
@@ -569,6 +580,16 @@ describe("buildDocIndex", () => {
       writeFileSync(
         guidePath,
         "---\nspecdojo:\n  id: specdojo:package-guide\n  type: guide\n  status: ready\n---\n",
+        "utf8",
+      );
+      writeFileSync(
+        variantPath,
+        "---\nspecdojo:\n  id: customer:variant-rulebook\n  type: rulebook\n  status: ready\n---\n",
+        "utf8",
+      );
+      writeFileSync(
+        repositoryKataPath,
+        "---\nspecdojo:\n  id: customer:repository-rulebook\n  type: rulebook\n  status: draft\n---\n",
         "utf8",
       );
 
@@ -581,6 +602,10 @@ describe("buildDocIndex", () => {
         "node_modules/specdojo/docs/ja/specdojo/rulebooks/package-rulebook.md",
       );
       expect(lookupDocIndex("specdojo:package-guide", outputPath)).toBeUndefined();
+      expect(lookupDocIndex("customer:variant-rulebook", outputPath)).toBeUndefined();
+      expect(lookupDocIndex("customer:repository-rulebook", outputPath)).toBe(
+        "docs/ja/specdojo/rulebooks/customer/repository-rulebook.md",
+      );
       expect(lookupDocIndex("specdojo:missing-rulebook", outputPath)).toBeUndefined();
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
@@ -660,23 +685,35 @@ describe("buildDocIndex", () => {
 
 describe("prj-0001 project register references", () => {
   it("個票の part_of と pjr-index wikilink が生成された登録台帳へ解決する", () => {
-    const sourceRoot = process.cwd();
     const repoRoot = mkdtempSync(join(tmpdir(), "specdojo-register-refs-"));
     const indexPath = join(repoRoot, ".specdojo", "doc-index.json");
     const registerId = "prj-0001:pjr-index";
 
     try {
-      // hook の register/index build と共有生成物を読み書きしないよう、追跡対象の docs だけを
-      // fixture へ複製し、検査に必要な登録簿 index を fixture 内で用意する。
-      cpSync(join(sourceRoot, "docs"), join(repoRoot, "docs"), {
-        recursive: true,
-        filter: (path) => basename(path) !== "generated",
-      });
-      mkdirSync(join(repoRoot, ".specdojo"), { recursive: true });
-      const sourceIndexConfig = join(sourceRoot, ".specdojo", "index-config.yaml");
-      if (existsSync(sourceIndexConfig)) {
-        copyFileSync(sourceIndexConfig, join(repoRoot, ".specdojo", "index-config.yaml"));
-      }
+      // 実リポジトリの文書量や hook の共有生成物に依存しない、最小の登録簿を用意する。
+      const registerDir = join(repoRoot, "docs/ja/projects/prj-0001/controls/project-register");
+      mkdirSync(registerDir, { recursive: true });
+      writeFileSync(
+        join(registerDir, "pjr-test-reference.md"),
+        [
+          "---",
+          "specdojo:",
+          "  id: prj-0001:pjr-test-reference",
+          "  type: project",
+          "  status: draft",
+          "  part_of:",
+          `    - ${registerId}`,
+          "---",
+          "",
+          "# Test issue",
+          "",
+          `[[${registerId}]]`,
+          "",
+        ].join("\n"),
+        "utf8",
+      );
+      const guidePath = join(repoRoot, "docs/ja/register-guide.md");
+      writeFileSync(guidePath, `# Register guide\n\n[[${registerId}|登録簿]]\n`, "utf8");
       const generatedRegisterDir = join(
         repoRoot,
         "docs",
@@ -721,10 +758,12 @@ describe("prj-0001 project register references", () => {
         for (const id of partOf) {
           if (typeof id !== "string") continue;
           partOfReferenceCount++;
-          expect(lookupDocIndex(id, indexPath), `${file}: unresolved part_of ${id}`).toBeDefined();
+          expect(lookupDocIndex(id, indexPath), `${file}: unresolved part_of ${id}`).toBe(
+            expectedPath,
+          );
         }
       }
-      expect(partOfReferenceCount).toBeGreaterThan(0);
+      expect(partOfReferenceCount).toBe(1);
 
       const markdownFiles = globSync("docs/**/*.md", {
         cwd: repoRoot,
@@ -743,7 +782,12 @@ describe("prj-0001 project register references", () => {
           );
         }
       }
-      expect(wikilinkReferenceCount).toBeGreaterThan(0);
+      expect(wikilinkReferenceCount).toBe(2);
+      // 索引のパスは repo 相対、Markdown のリンク先はサイトルート相対になる。
+      expect(replaceDocIndexRefs(readFileSync(guidePath, "utf8"), indexPath)).toEqual({
+        content: `# Register guide\n\n[登録簿](/${expectedPath})\n`,
+        missingIds: [],
+      });
     } finally {
       rmSync(repoRoot, { recursive: true, force: true });
     }

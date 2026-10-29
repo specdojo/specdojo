@@ -16,7 +16,7 @@ Markdown の Frontmatter と YAML・JSON の構造化メタデータに関する
 - 共通原則: Frontmatter を持つすべての Markdown ドキュメント
 - 独立 YAML データファイル向け規約: SpecDojo スキーマ（`docs/specdojo/schemas/v1/`）を持つ YAML 成果物（`dct-*.yaml` / `pm-*.yaml` / `sch-*.yaml` / `bdd-*.yaml` など）
 - JSON データファイル向け規約: SpecDojo が管理する JSON 文書、実行イベント、設定、インデックス、生成物
-- 成果物向け詳細規約: `project` / `flow` / `rule` / `data` / `ui` / `api` / `architecture` / `test` / `operations` / `template` / `sample`
+- 成果物向け詳細規約: `project` / `requirement` / `glossary` / `flow` / `rule` / `data` / `ui` / `api` / `architecture` / `test` / `operations` / `template`
 - 成果物スキーマ: [deliverable-frontmatter.schema.yaml](../../../specdojo/schemas/v1/deliverable-frontmatter.schema.yaml)
 
 `rulebook` / `recipe` / `guide` / `reference` / `standard` / `philosophy` は専用スキーマを持つため、成果物向け詳細規約の対象外とします。それぞれの追加規約は次を正本とします。
@@ -36,6 +36,31 @@ Markdown の Frontmatter と YAML・JSON の構造化メタデータに関する
 - `id` は共通スキーマの `idRef` に従い、`^[a-z0-9][a-z0-9-:]*$` に一致させる。
 - npm package が所有する型（Kata）の文書の `id` は `<authority>:<local-id>` とし、SpecDojo core は `specdojo:` を使用する。これは Frontmatter の親キー `specdojo:` とは別に、ID値の所有元を表す namespace である。
 - `type` は各ドキュメント種別のスキーマに定義された値を使用する。
+- 成果物の `type` は次の意味で選び、準拠する rulebook の `specdojo.deliverable_type` を正本とする。index も扱う内容と同じ分類にする。
+
+| 値             | 意味                                                                         |
+| -------------- | ---------------------------------------------------------------------------- |
+| `project`      | プロジェクトの計画・体制・登録簿・進捗・管理ビュー（prj・pm・dct・tml など） |
+| `requirement`  | システム機能、業務イベントの要求、非機能要件、業務・システムの受入基準       |
+| `glossary`     | 用語と定義を管理する用語集                                                   |
+| `flow`         | 業務フロー・プロセス・概念データフロー                                       |
+| `rule`         | 業務の判断条件・規則                                                         |
+| `data`         | データ構造・概念モデル・状態・保管・データ移行設計                           |
+| `ui`           | 画面・帳票の仕様                                                             |
+| `api`          | API・コマンド・ファイル・メッセージなど外部 I/F の契約                       |
+| `architecture` | システム構成・設計・技術選定                                                 |
+| `test`         | テスト戦略・設計・ケース・実施計画                                           |
+| `operations`   | 運用設計・手順・本番切替・運用移管                                           |
+
+- `project` をプロダクト仕様の受け皿にしない。sample は見本にする成果物の `type` を使い、`id` とファイル名の `-sample` で識別する。`template` はテンプレート自身の種別であり、生成物の種別ではない。
+- `lint:fm` の frontmatter 検査では、Markdown 成果物・sample の `specdojo.type` と、テンプレートの `specdojo.frontmatter_template.specdojo.type` をそれぞれの `rulebook` の宣言と照合する。宣言と異なる値（従来の `project` や `sample` を含む）は即時エラーとし、宣言された置き換え先を表示する。`rulebook: none` は照合対象外とする。
+- 照合は主 rulebook の宣言を使い、`includes` はたどらない。rulebook は完全 ID で解決し、同じ ID のローカル文書を同梱文書より優先する。解決不能・曖昧・宣言欠落は検査エラーとする。未修飾 ID は一意に解決できる場合のみ許容する。
+- `validate:schema:yaml`（`yaml-schema --modeline`）と `validate:schema:file` は、YAML 成果物・sample のトップレベルまたは `x-spec-meta` の `type` と、テンプレートの `metadata_template.type` を主 rulebook の宣言と照合する。`specdojo-schema: none` / `validate=false` は構造の検証だけを省略し、メタ情報の照合は省略しない。平坦な YAML catalog テンプレートは生成物のメタ情報雛形を持たないため、その `type: template` は照合しない。
+- YAML メタ情報の旧値 `domain` / `command` / `message` は `rulebook: none` の場合もエラーとし、それぞれ `data` / `api` / `api` への置き換えを表示する。本文中のデータ型や CloudEvents のイベント種別は対象外とする。
+- YAML の表示用ページ（`generated/` 配下）は元 YAML のトップレベルまたは `x-spec-meta` の `type` を引き継ぐ。配置パスから分類を補わず、欠落も補完しない。生成ページも `lint:fm` の宣言照合対象とする。ただし、ジョブ定義・評価記録など `type` を持たない YAML の表示用ページは成果物 Frontmatter を付けずに生成する。これらの表示ページは Markdown の Frontmatter 必須原則の対象外とし、正本 YAML の構造・メタ情報は対応する schema と YAML 検証を正本とする。
+- 成果物として成り立つ文書の `type` は、中身の種類（`project` / `flow` / `data` など）を表す。成果物として成り立たない実践の型（rulebook / recipe / template など）の `type` は、その役割を表す。
+- sample は完成した成果物の最小例であり、Markdown・YAML・JSON とも、`type` には見本にする成果物の type を書く。sample であることは `id` とファイル名の `-sample`、`samples/` への配置、対応 rulebook の `sample` 宣言で表す。
+- sample のメタ情報と本文は成果物と同じ形式にし、文書索引で実物の成果物と衝突しないよう `id` を区別する。既存の `type: sample` は schema 上の互換値として保持するが、新規作成・更新では使用しない。rulebook を持つ Markdown・YAML sample は宣言との照合でエラーになるため、宣言された成果物の type へ移行する。
 - `status` は `draft` / `ready` / `deprecated` のいずれかとする。
 - ドキュメント名は Frontmatter ではなく本文先頭の H1 に記述する。
 - `specdojo:` 名前空間の対象は Markdown Frontmatter のみとする。独立 YAML データファイル（`dct-*.yaml` / `pm-*.yaml` / `sch-*.yaml` など）は Markdown ではなく他ツールとの同居も無いため、名前空間化せずトップレベルに項目を置く。
@@ -126,7 +151,7 @@ specdojo:
 - `rulebook` を必須とし、準拠する rulebook の ID を指定する。該当する rulebook がない場合のみ `none` を許可する（成果物の必須項目と同じ制約）。
 - YAML catalog テンプレート（`dct-*-template.yaml`）では、`title` / `rulebook` は生成物側フィールドとして生成物の値を平坦に記述する（テンプレート自身のメタ情報と生成物 Frontmatter の分離を参照）。それ以外のテンプレート（`*-template.yaml`）では、`title` はテンプレート自身の名前を実値で記述し、生成物のメタ情報は `metadata_template` に記述する（本標準 `生成物メタ情報雛形（metadata_template）`）。
 - 上記以外の項目（`based_on` / `supersedes` / `version` / `project_id` など）の許可項目と型は各スキーマを正本とする。
-- OpenAPI / AsyncAPI など外部標準形式の YAML（`ifx-*` 等）は本規約の対象外とし、`info.title` や `x-spec-meta` など各形式の慣行に従う。
+- OpenAPI / AsyncAPI など外部標準形式の YAML（`ifx-*` 等）は配置について各形式の慣行に従い、表題は `info.title`、`id` / `type` / `status` / `rulebook` は `x-spec-meta` に置く。`type` は主 rulebook の宣言と照合する。
 
 ```yaml
 id: prj-0001:pm-roles
@@ -251,7 +276,7 @@ specdojo:
 
 ### 6.2. 継続品質評価（`grade`）
 
-Markdown 文書の最新の継続品質評価は、プロジェクトの `<execution_path>/grade/results/<doc-id>.yaml` にサイドカーとして記録します。成果物の Frontmatter と本文には grade や finding を書き込みません。サイドカーは最新状態のスナップショットであり、`specdojo grade apply` は文書 ID ごとの同じファイルを冪等に上書きします。履歴は Job Run と evidence、合意形成は review result が担います。成果物の現在品質を参照するときは、サイドカーの `content_hash` が現在のファイル全体と一致することを確認します。
+Markdown 文書の最新の継続品質評価は、プロジェクトの `<execution_path>/grade/results/` 配下にサイドカーとして記録します。本リポジトリの文書は `<doc-id>.yaml`、`project.repos` に宣言したリポジトリの文書は `<repo 名>/<doc-id>.yaml` に保存し、`<repo 名>` には `repos[].name`、ファイル名には文書 ID の `:` を `.` に置き換えた値を使います。成果物の Frontmatter と本文には grade や finding を書き込みません。サイドカーは最新状態のスナップショットであり、`specdojo grade apply` は同じリポジトリ・文書 ID のファイルを冪等に上書きします。履歴は Job Run と evidence、合意形成は review result が担います。成果物の現在品質を参照するときは、サイドカーの `content_hash` が現在のファイル全体と一致することを確認します。
 
 | 項目                | 意味                                                                                 |
 | ------------------- | ------------------------------------------------------------------------------------ |

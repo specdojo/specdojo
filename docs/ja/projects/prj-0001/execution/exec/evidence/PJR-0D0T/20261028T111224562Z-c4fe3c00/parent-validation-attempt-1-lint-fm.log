@@ -1,0 +1,235 @@
+parent validation: lint-fm
+exit code: 1
+timed out: no
+
+--- stdout ---
+
+> specdojo@0.4.7 lint:fm
+> node packages/docs-lint/bin/specdojo-docs-lint.js remark "docs/**/*.{md,mdx}" --quiet --frail
+
+
+
+--- stderr ---
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/bps-deliverable-evaluation-e8ef6378e7-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/bps-task-completion-d17c24e4f4-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-action-96f0bab377-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-agent-config-operation-7b25e34545-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-catalog-planning-713da80155-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-check-de77e19930-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-deprecation-8b91a1b905-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-derived-content-f01cc9b09e-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-do-96363482bc-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-init-4faa3ec7f6-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-multi-project-a66c0a6bdf-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-onboarding-61a4d6c9ef-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-orchestrator-0888f9bb68-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-overview-4f5ff02b38-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-plan-53594c9748-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-register-lifecycle-84e4c24a97-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-uc-deliverable-20176468f7-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdfd-uc-register-7fa05372dd-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdsd-execution-225183781b-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdsd-planning-c998e41655-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/cdsd-sharing-20fb2f3b70-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/opr-agent-cli-update-beb291d74a-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/pm-communication-plan-6a68d585dc-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/pm-organization-3bb06d1a82-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/pm-plan-1817063f8a-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/pm-quality-management-plan-2f81d713a1-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/pm-raci-16266dee97-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/prj-assumptions-constraints-dependencies-04a3c0d40b-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/prj-charter-e502ad9760-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/prj-comparison-of-alternatives-b69b62192a-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/prj-issues-and-approach-6ef704f034-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/prj-overview-0cce063d8f-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/prj-scope-b521ba27f3-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/prj-stakeholder-register-dd42317729-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/prj-success-criteria-and-acceptance-criteria-11b049ad8a-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/stsd-register-entry-461ba77e06-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/stsd-routine-run-72deff80c2-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-agent-settings-2403b993e9-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-antigravity-agent-settings-e0daf68b06-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-claude-agent-settings-f502b91867-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-codex-agent-settings-209779c515-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-critical-flows-a985cc0d3a-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-cross-cutting-policy-bd811cf36f-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-github-copilot-agent-settings-caeaa1d83f-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-index-920a4c50dc-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-job-execution-f206c7f9d3-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-opencode-agent-settings-7921b7f527-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/sysd-orchestrator-agent-settings-b1c21895d4-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/tsd-home-mac-dev-server-39e4cdf49b-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/tsd-home-mac-dev-server-usage-cd996e0bcb-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/tsd-index-f8017f063b-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/tsd-ollama-1333c3ab83-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/tsd-ollama-opencode-9fe49a1fb7-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/tsd-omlx-f7cad9fd9b-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/execution/grade/criteria/generated/tsd-omlx-opencode-824c965487-done-criteria.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/jobs/generated/job-exec-auto.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/jobs/generated/job-exec-cycle.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/jobs/generated/job-exec-resume.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/jobs/generated/job-grade-deliverable.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/jobs/generated/job-grade-kata.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/jobs/generated/job-night-approved-register.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/jobs/generated/job-register-sweep.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/jobs/generated/job-translate-updated-docs.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/jobs/generated/job-weekly-report.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/routines/generated/rtn-daily-register-sweep.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/routines/generated/rtn-dashboard-refresh.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/routines/generated/rtn-exec-cycle.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/routines/generated/rtn-exec-limit-resume.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/routines/generated/rtn-grade-deliverable-recheck.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/routines/generated/rtn-grade-kata.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/routines/generated/rtn-grade-recheck.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/routines/generated/rtn-night-approved-register.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/routines/generated/rtn-translate-updated-docs.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[4m[33mdocs/ja/projects/prj-0001/routines/generated/rtn-weekly-report.md[39m[24m
+ [33mwarning[39m [1mFrontmatter schema error (required): must have required property 'type'[22m frontmatter-schema-2020
+
+[33m⚠[39m 74 warnings

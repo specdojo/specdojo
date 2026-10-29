@@ -1,0 +1,56 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_e0ca03e53c974b699c4546469afba986
+  ts: "2026-10-28T22:17:20Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: 成果物の文脈の渡し方と draft approach を定める
+    - field: description
+      from: ""
+      to: 雛形→人が文脈を記入→draft（調査して下書き）→fully-guided（整理）→finalize の流れとし、文脈は成果物内の \_CONTEXT\_、個票の入力（--input）、カタログの brief で渡す
+    - field: type
+      from: ""
+      to: decision
+    - field: priority
+      from: ""
+      to: high
+    - field: owner
+      from: ""
+      to: _TODO_
+    - field: registered
+      from: ""
+      to: "2026-10-29"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-166T"]'
+- v: 1
+  id: reg_d8c7d14738ba457ea3a043e47bcaa855
+  ts: "2026-10-28T22:18:20Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: decided
+  reason: 対話で利用者が推奨案と --input の維持を決定
+  changes:
+    - field: status
+      from: open
+      to: decided
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: "-"
+      to: 1-C と 2-B を採用。雛形→人が文脈を記入→draft→fully-guided→finalize とし、文脈は成果物内の _CONTEXT_、個票の入力（--input）、カタログの brief で渡す
+  previous_event_id: reg_e0ca03e53c974b699c4546469afba986

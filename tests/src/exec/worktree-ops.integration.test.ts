@@ -41,6 +41,7 @@ import {
   type RegisterEventV1,
 } from "../../../src/register/events.js";
 import { readSpecdojoFields } from "../../../src/register/item.js";
+import { gradeCheckpointPaths } from "../../../src/exec/grade-checkpoint.js";
 
 const ENV_KEYS = ["SPECDOJO_PROJECT", "SPECDOJO_SCHEDULE_PATH", "SPECDOJO_EXECUTION_PATH"];
 const originalEnv = Object.fromEntries(ENV_KEYS.map((key) => [key, process.env[key]]));
@@ -201,7 +202,12 @@ function prepare(
     context: fixture.context,
     worktreeTaskId,
     base: fixture.worktreeBase,
-    checkpointPaths: [planPath, resultPath, claimEventPath],
+    checkpointPaths: [
+      planPath,
+      resultPath,
+      claimEventPath,
+      ...gradeCheckpointPaths(fixture.context),
+    ],
     commitMessage: `exec(${taskId}): prepare execution`,
     failureLogPath,
   });
@@ -225,6 +231,7 @@ function mergeIntoRoot(
       join(fixture.executionPath, "exec", "plans", `${taskId}-plan.md`),
       join(fixture.executionPath, "exec", "results", `${taskId}-result.md`),
       join(fixture.executionPath, "exec", "events", `20260613T000000Z_agent_${taskId}_claim.json`),
+      ...gradeCheckpointPaths(fixture.context),
     ],
   });
 }
@@ -325,6 +332,44 @@ describe("exec worktree ops", () => {
     expect(failureLog).toContain("api_key=[REDACTED]");
     expect(failureLog).toContain("Test Files  1 failed | 120 passed (121)");
     expect(failureLog).not.toContain("raw-checkpoint-secret");
+  });
+
+  it("carries grade result and criteria through checkpoint, update and merge", () => {
+    const fixture = setupRepository();
+    const paths = ["execution/grade/results/doc.yaml", "execution/grade/criteria/doc.yaml"];
+    for (const path of paths) writeFile(join(fixture.repo, path), "grade: before\n");
+    writeFile(join(fixture.repo, "execution/grade/generated/ignored.json"), "{}\n");
+    const worktree = prepare(fixture, "GRADE");
+    for (const path of paths) {
+      expect(git(worktree.path, "show", `HEAD:${path}`)).toBe("grade: before");
+      writeFile(join(worktree.path, path), "grade: after\n");
+    }
+    expect(existsSync(join(worktree.path, "execution/grade/generated/ignored.json"))).toBe(false);
+    commitWorktreeChanges({ context: fixture.context, worktree, taskId: "GRADE" });
+    mergeIntoRoot(fixture, worktree, "GRADE");
+    for (const path of paths)
+      expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: after\n");
+  });
+
+  it("preserves a newer root grade instead of discarding it during merge", () => {
+    const fixture = setupRepository();
+    const path = "execution/grade/results/doc.yaml";
+    writeFile(join(fixture.repo, path), "grade: checkpoint\n");
+    const worktree = prepare(fixture, "GRADE-NEWER");
+    writeFile(join(fixture.repo, path), "grade: newer\n");
+    expect(() => mergeIntoRoot(fixture, worktree, "GRADE-NEWER")).toThrow(
+      /Grade sidecar changed after checkpoint/,
+    );
+    expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: newer\n");
+  });
+
+  it("keeps an unrelated root grade created after branching while merging the task", () => {
+    const fixture = setupRepository();
+    const worktree = prepare(fixture, "GRADE-UNRELATED");
+    const path = "execution/grade/results/other-doc.yaml";
+    writeFile(join(fixture.repo, path), "grade: independent\n");
+    mergeIntoRoot(fixture, worktree, "GRADE-UNRELATED");
+    expect(readFileSync(join(fixture.repo, path), "utf8")).toBe("grade: independent\n");
   });
 
   it("checkpoints, commits, and merges a task so its deliverable lands on root", () => {

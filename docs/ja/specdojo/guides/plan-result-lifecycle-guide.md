@@ -94,6 +94,8 @@ exec/results/<stem>-result.md
 2. `--task <task-id>` がある場合は、`<stem> = <task-id>` とします。
 3. task identity がない場合は、`<slug>-<UTC>-<rand>` のユニーク名を採番します。
 
+`<rand>` は4バイト（16進8桁）です。同じプロセス内で slug・UTC秒・乱数がすべて重複した場合は、`<rand>-1`、`<rand>-2` のように連番を加えます。plan path から stem を読む処理は stem 全体を連結キーとして扱うため、従来の16進4桁の名前と連番付きの名前をどちらも読み取れます。
+
 これにより、task 実行は固定名で扱い、schedule 非依存の実行は実行ごとの証跡を残せます。
 
 ### 2.4. deliverable指定の解決
@@ -143,7 +145,9 @@ plan の構造と生成規則は schema・本ガイド・各テンプレート�
 
 `approach` が指定されていれば `xep-fully-guided-template.md`、`xep-recipe-guided-template.md`、`xep-freeform-template.md`、`xep-retrofit-template.md`、`xep-rulebook-maintenance-template.md` のような approach 別テンプレートを優先します。該当テンプレートが存在しない場合は標準テンプレートにフォールバックします。
 
-`approach: retrofit` では、対象成果物の DCT エントリに宣言された `evidence_refs` を edit / review plan の「実装エビデンス」へ展開します。`evidence_refs` がない場合は plan 生成をエラーにします。実装エビデンスは調査入力であり、frontmatter の `targets` には追加しません。実行者は実際に参照したパス、抽出した現在動作、成果物との一致・乖離、未確認範囲を result に記録します。
+register のカタログなしの成果物 plan は、個票の `target_path`・`target_rulebook` または既存文書の索引と frontmatter から対象を解決します。カタログの `done_criteria` がないことを明記し、個票の完了条件と rulebook を使います。`bootstrap` は未作成 kata の ID・パスと参照宣言の指示、`finalize`・`bootstrap-finalize` は既存成果物の確認チェック表と確定対象を plan に載せます。実 agent は `status: ready` への昇格を行いません。対象と起票の条件は [[specdojo:command-reference]] を参照してください。
+
+`approach: retrofit` では、対象成果物の DCT エントリに宣言された `evidence_refs` を edit / review plan の「実装エビデンス」へ展開します。カタログ経由で `evidence_refs` がない場合は plan 生成をエラーにします。カタログなしでは実装の調査パスを個票に明記して調査入力とします。実装エビデンスは調査入力であり、frontmatter の `targets` には追加しません。実行者は実際に参照したパス、抽出した現在動作、成果物との一致・乖離、未確認範囲を result に記録します。
 
 実践の型の扱いは [実践の進め方ガイド](ryu-guide.md) を参照します。
 
@@ -199,10 +203,10 @@ specdojo exec archive --project <project-id> --task <task-id>
 | 軽量実行（状態追跡なし）        | `exec archive` で明示的に移動する |
 | `exec run --archive-on-success` | 成功時に移動する                  |
 
-固定名 plan を `done/` へ移動する場合は、UTC タイムスタンプと短い乱数を付けて衝突を避けます。
+固定名 plan を `done/` へ移動する場合は、UTC タイムスタンプと4バイトの乱数を付けます。同じ名前が既にある場合は、既存ファイルを上書きせず末尾に連番を加えます。
 
 ```text
-exec/plans/done/<slug>-<UTC>-<rand>-plan.md
+exec/plans/done/<slug>-<UTC>-<rand>[-<sequence>]-plan.md
 ```
 
 不要な plan は `done/` へ移動せず削除してもかまいません。plan は catalog と schedule から再生成でき、result が記録として残るためです。

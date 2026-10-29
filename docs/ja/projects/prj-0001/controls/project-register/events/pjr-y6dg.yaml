@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_c7440d8db9db49869f9c1fe0c07e9bfc
+  ts: "2026-10-22T22:19:18Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: v0.4.3 を公開する
+    - field: description
+      from: ""
+      to: v0.4.3 の範囲（5B42・ZH7Q・47S6・98SQ・QF45）を main へ昇格し、specdojo 0.4.3 を npm に公開する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: high
+    - field: difficulty
+      from: ""
+      to: medium
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-23"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-BF76"]'
+- v: 1
+  id: reg_947cf4710b714bcd9afd12ac66649ffe
+  ts: "2026-10-23T12:28:15Z"
+  action: close
+  actor: indie
+  from_status: open
+  to_status: done
+  reason: 利用者（indie）が PR のマージ・タグの push・npm stage の承認を行い、オーケストレーターが公開された版と workflow の結果を確かめた
+  changes:
+    - field: status
+      from: open
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-23"
+    - field: conclusion
+      from: "-"
+      to: "specdojo 0.4.3 を npm に公開した（latest、homepage は https://specdojo.org）。PR #19 を merge commit で main へ取り込み、v0.4.3 のタグで npm の公開と GitHub Pages の更新が通った。npm から入れた 0.4.3 で init（Dev Container と lefthook）と最初の commit、起票を確かめた"
+  previous_event_id: reg_c7440d8db9db49869f9c1fe0c07e9bfc

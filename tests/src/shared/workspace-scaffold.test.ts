@@ -255,7 +255,7 @@ describe("runWorkspaceScaffold", () => {
 });
 
 describe("config scaffold CLI command", () => {
-  it("fails if neither --provider nor --workspace is specified", async () => {
+  it("fails if no scaffold option is specified", async () => {
     const tempDir = mkdtempSync(join(tmpdir(), "ws-scaffold-cli-"));
     const stderr: string[] = [];
     vi.spyOn(process.stderr, "write").mockImplementation((chunk) => {
@@ -267,7 +267,9 @@ describe("config scaffold CLI command", () => {
       process.chdir(tempDir);
       await runConfigCommand(["scaffold"]);
       expect(process.exitCode).toBe(1);
-      expect(stderr.join("")).toContain("Specify --provider <name> or --workspace to scaffold.");
+      expect(stderr.join("")).toContain(
+        "Specify --provider <name>, --workspace, --lefthook, or --slidev to scaffold.",
+      );
     } finally {
       rmSync(tempDir, { recursive: true, force: true });
     }

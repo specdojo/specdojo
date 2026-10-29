@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "task_id": "PJR-9ZN5",
+  "run_id": "20261026T135830352Z-a2a5acaf",
+  "stage": {
+    "role": "executor",
+    "actor": "sol-executor",
+    "status": "succeeded",
+    "started_at": "2026-10-26T13:58:30.352Z",
+    "completed_at": "2026-10-26T14:01:40.063Z",
+    "exit_code": 0,
+    "attempts": 1
+  },
+  "changes": [
+    {
+      "path": ".gitignore",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/events/pjr-9zn5.yaml",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress.md",
+      "status": "M"
+    },
+    {
+      "path": "docs/ja/specdojo/guides/docs-editing-guide.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/kata-staging.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/README.md",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/src/gen-mermaid-svg.ts",
+      "status": "M"
+    },
+    {
+      "path": "src/shared/specdojo-gitignore.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/gen-mermaid-svg.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/kata-staging.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-gitignore.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "packages/docs-site/.vitepress/mermaid-assets.ts",
+      "status": "??"
+    },
+    {
+      "path": "tests/packages/docs-site/mermaid-assets.test.ts",
+      "status": "??"
+    }
+  ],
+  "attempt_changes": [
+    {
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress.md",
+      "status": "M"
+    },
+    {
+      "path": "tests/src/shared/specdojo-gitignore.test.ts",
+      "status": "M"
+    },
+    {
+      "path": "tests/packages/docs-site/mermaid-assets.test.ts",
+      "status": "??"
+    }
+  ],
+  "diff_summary": {
+    "files_changed": 14,
+    "summary": ".gitignore                                         |  6 +-\n .../controls/project-register/events/pjr-9zn5.yaml | 16 ++++++\n ...ate-docs-site-generated-dirs-under-vitepress.md |  4 +-\n docs/ja/specdojo/guides/docs-editing-guide.md      | 15 ++++-\n packages/docs-site/.vitepress/config.mts           | 57 +++++++++++--------\n packages/docs-site/.vitepress/kata-staging.ts      | 57 +++++++++++++------\n packages/docs-site/README.md                       | 28 +++++++---\n packages/docs-site/src/gen-mermaid-svg.ts          |  2 +-\n src/shared/specdojo-gitignore.ts                   |  4 ++\n tests/packages/docs-site/gen-mermaid-svg.test.ts   | 31 ++++++++++-\n tests/packages/docs-site/kata-staging.test.ts      | 64 +++++++++++++++++++++-\n tests/src/shared/specdojo-gitignore.test.ts        | 35 ++++++++++++\n 12 files changed, 262 insertions(+), 57 deletions(-)"
+  },
+  "validations": [
+    {
+      "source": "executor",
+      "command": "npm --prefix packages/docs-site run typecheck",
+      "status": "passed",
+      "summary": "docs-site の型検査に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run check:src-imports",
+      "status": "passed",
+      "summary": "実行時 import の依存宣言検査に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx tools/catalog-validate-if-configured.mjs",
+      "status": "passed",
+      "summary": "catalog 検査に成功。既存の未作成成果物に関する警告あり。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links",
+      "status": "passed",
+      "summary": "全体の履歴リンク検査に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:history-links -- --data docs/ja/projects/prj-0001/controls/project-register/pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress.md",
+      "status": "passed",
+      "summary": "最終更新後の個票の履歴リンク検査に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run validate:schema:file -- --schema docs/specdojo/schemas/v1/register-events.schema.yaml --data docs/ja/projects/prj-0001/controls/project-register/events/pjr-9zn5.yaml",
+      "status": "passed",
+      "summary": "runner が追記したイベントの schema 検査に成功。executor はイベントを編集していない。"
+    },
+    {
+      "source": "executor",
+      "command": "node --import tsx src/specdojo.ts register build",
+      "status": "passed",
+      "summary": "登録簿の生成ビューを再生成した。正本の一覧とステータスは変更していない。"
+    },
+    {
+      "source": "executor",
+      "command": "npx --no-install prettier --write docs/ja/projects/prj-0001/controls/project-register/pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress.md docs/ja/specdojo/guides/docs-editing-guide.md packages/docs-site/README.md packages/docs-site/.vitepress/config.mts packages/docs-site/.vitepress/kata-staging.ts packages/docs-site/.vitepress/mermaid-assets.ts packages/docs-site/src/gen-mermaid-svg.ts src/shared/specdojo-gitignore.ts tests/packages/docs-site/gen-mermaid-svg.test.ts tests/packages…",
+      "status": "passed",
+      "summary": "変更成果物の整形に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "git diff --check",
+      "status": "passed",
+      "summary": "累積差分の空白検査に成功。"
+    },
+    {
+      "source": "executor",
+      "command": "npm run docs:build",
+      "status": "requires_human",
+      "summary": "前回確認で Chromium 起動が sandbox 制約により停止。ホストで実描画を含むビルド確認が必要。"
+    },
+    {
+      "source": "executor",
+      "command": "npx specdojo-docs-site dev .",
+      "status": "requires_human",
+      "summary": "通常導入した空の利用リポジトリで実行する。前回は HTTP 待受が sandbox の listen EPERM で停止したため、ホストで公開 URL と文書更新を確認する。"
+    },
+    {
+      "id": "lint-ts",
+      "source": "runner",
+      "command": "npm run lint:ts",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:ts\n> eslint 'src/**/*.ts' 'tests/**/*.ts' 'packages/docs-lint/src/**/*.ts' 'tools/e2e/**/*.ts'\n\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9ZN5/src/catalog/catalog.ts\n  304:8  warning  Function 'registerCatalogCommands' has too many lines (204). Maximum allowed is 200      max-lines-per-function\n  539:1  warning  Function 'registerCatalogPlanCommands' has too many lines (217). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo\n… output omitted …\n). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9ZN5/src/schedule/strategy-generate-document.ts\n  85:8  warning  Function 'buildStrategyDocument' has too many lines (273). Maximum allowed is 200  max-lines-per-function\n\n/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9ZN5/src/shared/specdojo-config.ts\n  1220:1  warning  File has too many lines (1096). Maximum allowed is 1000  max-lines\n\n✖ 37 problems (0 errors, 37 warnings)"
+    },
+    {
+      "id": "lint-fm",
+      "source": "runner",
+      "command": "npm run lint:fm",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:fm\n> node packages/docs-lint/bin/specdojo-docs-lint.js remark \"docs/**/*.{md,mdx}\" --quiet --frail"
+    },
+    {
+      "id": "lint-md",
+      "source": "runner",
+      "command": "npm run lint:md",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 lint:md\n> node packages/docs-lint/bin/specdojo-docs-lint.js markdownlint '**/*.md'"
+    },
+    {
+      "id": "test-integration",
+      "source": "runner",
+      "command": "npm run test:integration",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:integration\n> vitest run --config vitest.integration.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9ZN5\n\nWritten: lefthook.yml\nPlanned markdownlint base (.markdownlintrc):\n{\n  \"MD013\": false,\n  \"MD024\": false,\n  \"MD033\": false,\n  \"MD036\": false,\n  \"MD041\": false,\n  \"MD060\": false\n}\nPlanned markdownlint-cli2 configuration (.markdownlint-cli2.yaml):\nconfig:\n  extends: .markdownlintrc\nWritten: .markdownlintrc\nWritten: .markdo\n… output omitted …\n-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)\nInvalid register item files:\npjr-ab12-pipeline-test.md: PJR-AB12 must match frontmatter id \"test:pjr-ab12-topic\" (expected *:pjr-ab12-pipeline-test)"
+    },
+    {
+      "id": "validate-schema",
+      "source": "runner",
+      "command": "npm run validate:schema",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 validate:schema\n> npm run validate:schema:yaml && npm run validate:schema:job-run && npm run validate:schema:grade-pipeline && npm run validate:schema:rulebook-enums && npm run validate:schema:glossary\n\n\n> specdojo@0.4.7 validate:schema:yaml\n> node packages/docs-lint/bin/specdojo-docs-lint.js yaml-schema --modeline\n\ndocs/ja/specdojo/samples/ifx-api-sample.yaml: schema none (external-openapi)\ndocs/ja/specdojo/samples/ifx-index-sample.yaml: schema none (not-imple\n… output omitted …\nebook-schema-enums\n\ndocs/ja/specdojo/rulebooks/pm-members-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9ZN5/docs/specdojo/schemas/v1/pm-members.schema.yaml)\ndocs/ja/specdojo/rulebooks/pm-roles-rulebook.md: enum coverage valid (/workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9ZN5/docs/specdojo/schemas/v1/pm-roles.schema.yaml)\n\n> specdojo@0.4.7 validate:schema:glossary\n> node packages/docs-lint/bin/specdojo-docs-lint.js glossary-references"
+    },
+    {
+      "id": "typecheck",
+      "source": "runner",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 typecheck\n> tsc -b --noEmit"
+    },
+    {
+      "id": "test-unit",
+      "source": "runner",
+      "command": "npm run test:unit",
+      "status": "passed",
+      "summary": "exit 0: > specdojo@0.4.7 test:unit\n> vitest run --config vitest.unit.config.ts\n\n\n RUN  v4.1.11 /workspaces/specdojo-workspace/worktrees/prj-0001-PJR-9ZN5\n\nRate limit detected for pinned agent pinned. Waiting until 2026-10-26T21:01:58.245Z before resuming the same stage.\nresumed\nRate limit detected for pinned agent primary. Falling back to fallback at 2026-10-26T21:00:58.631Z.\nfallback complete\nConnection error detected for pinned agent primary-reporter. Falling back to fallback-reporte\n… output omitted …\nnknown option '--reserve'\nerror: unknown option '--local'\nerror: unknown option '--strict-sync'\nerror: unknown option '--integration-branch'\nerror: unknown option '--integration-worktree'\nrate limit; retry-after: 60 seconds\nrate limit\nCannot connect to API: ECONNREFUSED\nECONNREFUSED\nreporter failedWARN:  domain 'data-flow' already has a catalog: docs/ja/projects/prj-0001/010-deliverables-catalog/dct-data-flow.yaml. Treat it as a baseline and review the diff before regenerating.\nproblem"
+    }
+  ],
+  "target_coverage": [
+    {
+      "target": ".gitignore",
+      "status": "changed",
+      "path": ".gitignore",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/projects/prj-0001/controls/project-register/pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress.md",
+      "status": "changed",
+      "path": "docs/ja/projects/prj-0001/controls/project-register/pjr-9zn5-consolidate-docs-site-generated-dirs-under-vitepress.md",
+      "reason": ""
+    },
+    {
+      "target": "docs/ja/specdojo/guides/docs-editing-guide.md",
+      "status": "changed",
+      "path": "docs/ja/specdojo/guides/docs-editing-guide.md",
+      "reason": ""
+    },
+    {
+      "target": "packages/docs-site/.vitepress/config.mts",
+      "status": "changed",
+      "path": "packages/docs-site/.vitepress/config.mts",
+      "reason": ""
+    },
+    {
+      "target": "packages/docs-site/.vitepress/kata-staging.ts",
+      "status": "changed",
+      "path": "packages/docs-site/.vitepress/kata-staging.ts",
+      "reason": ""
+    },
+    {
+      "target": "packages/docs-site/README.md",
+      "status": "changed",
+      "path": "packages/docs-site/README.md",
+      "reason": ""
+    },
+    {
+      "target": "packages/docs-site/src/gen-mermaid-svg.ts",
+      "status": "changed",
+      "path": "packages/docs-site/src/gen-mermaid-svg.ts",
+      "reason": ""
+    },
+    {
+      "target": "src/shared/specdojo-gitignore.ts",
+      "status": "changed",
+      "path": "src/shared/specdojo-gitignore.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/packages/docs-site/gen-mermaid-svg.test.ts",
+      "status": "changed",
+      "path": "tests/packages/docs-site/gen-mermaid-svg.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/packages/docs-site/kata-staging.test.ts",
+      "status": "changed",
+      "path": "tests/packages/docs-site/kata-staging.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/src/shared/specdojo-gitignore.test.ts",
+      "status": "changed",
+      "path": "tests/src/shared/specdojo-gitignore.test.ts",
+      "reason": ""
+    },
+    {
+      "target": "packages/docs-site/.vitepress/mermaid-assets.ts",
+      "status": "changed",
+      "path": "packages/docs-site/.vitepress/mermaid-assets.ts",
+      "reason": ""
+    },
+    {
+      "target": "tests/packages/docs-site/mermaid-assets.test.ts",
+      "status": "changed",
+      "path": "tests/packages/docs-site/mermaid-assets.test.ts",
+      "reason": ""
+    }
+  ],
+  "final_message": "生成先・静的配信・案内・gitignore の累積変更を確認し、前回の lint エラー5件と Git 環境隔離違反2件の原因を修正した。個票へ再開対応を記録済み。result は編集していない。",
+  "completion_status": "complete",
+  "handoff": [
+    "配信方式と理由: `.vitepress/kata-staging/docs/` に利用側 docs と同梱文書を重ね、ステージング自体を VitePress の `srcDir` にした。workspace から走査すると `.vitepress/**` の除外で同梱ページが欠けるため。この方式で既存の rewrites と `/ja/specdojo/...` を維持し、出力・cache・利用者設定をページ走査から外す。個票にも記録済み。",
+    "ホスト確認: 前回の検証では Chromium 起動が Operation not permitted、dev の HTTP 待受が listen EPERM で停止した。ホストで `npm run docs:build`、および tarball を通常導入した空の利用リポジトリの build・dev・mermaid を実行し、実 SVG 描画、HTTP 取得、文書更新を確認する。前回の依存共有・既知 SVG を使った限定的な配布物確認は通常導入の代替ではない。",
+    "保護設定の変更案: ルート package.json の `docs:rebuild:mermaid` を `rm -f .vitepress/mermaid/*.svg && npm run docs:build:mermaid` に変更する。executor は保護設定を編集していない。個票にも記録済み。",
+    "前回失敗した lint と unit test を含む指定7検査は親 runner に委ねた。`npm run check` の重複実行は避け、残りの依存宣言・catalog・履歴リンク検査を実行して成功した。"
+  ],
+  "log_refs": [
+    {
+      "kind": "agent-output-excerpt",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-9ZN5/20261026T135830352Z-a2a5acaf/executor.log",
+      "bytes": 7162,
+      "truncated": false
+    },
+    {
+      "kind": "parent-validation-output",
+      "path": "docs/ja/projects/prj-0001/execution/exec/evidence/PJR-9ZN5/20261026T135830352Z-a2a5acaf/parent-validation-attempt-1-test-unit.log",
+      "bytes": 5267,
+      "truncated": false
+    }
+  ]
+}

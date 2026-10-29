@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=../../../../../../specdojo/schemas/v1/register-events.schema.yaml
+- v: 1
+  id: reg_9e363492067d4c7aa6b456f8d6989be0
+  ts: "2026-10-21T22:08:54Z"
+  action: add
+  actor: specdojo-orchestrator
+  from_status: null
+  to_status: open
+  reason: item added
+  changes:
+    - field: status
+      from: ""
+      to: open
+    - field: title
+      from: ""
+      to: schedule から dashboard への import を外し、3 機能をまたぐ循環をほどく
+    - field: description
+      from: ""
+      to: PJR-T30J で、schedule → dashboard → exec → schedule と schedule → dashboard → routine → exec → schedule の 2 組の循環が見つかった。どちらも schedule/strategy-generate-scope.ts から dashboard/timeline-build.ts への import 1 か所を通るため、これを外して 2 組をほどき、依存の向きを ESLint で検査する
+    - field: type
+      from: ""
+      to: todo
+    - field: priority
+      from: ""
+      to: medium
+    - field: difficulty
+      from: ""
+      to: hard
+    - field: owner
+      from: ""
+      to: DEV
+    - field: registered
+      from: ""
+      to: "2026-10-22"
+    - field: due
+      from: ""
+      to: _TODO_
+    - field: derived_from
+      from: ""
+      to: '["PJR-T30J"]'
+- v: 1
+  id: reg_0d5b5f94bc4c4c4abce43c38df6f0c10
+  ts: "2026-10-21T22:26:39Z"
+  action: start
+  actor: sol-executor
+  from_status: open
+  to_status: in-progress
+  reason: work started
+  changes:
+    - field: status
+      from: open
+      to: in-progress
+  previous_event_id: reg_9e363492067d4c7aa6b456f8d6989be0
+- v: 1
+  id: reg_0d784221568d4dbb95ea126c062e3a78
+  ts: "2026-10-21T22:43:18Z"
+  action: review
+  actor: sol-executor
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_0d5b5f94bc4c4c4abce43c38df6f0c10
+- v: 1
+  id: reg_db570ee7cb664a20b64b681350640049
+  ts: "2026-10-21T23:27:51Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: オーケストレーターが差分・親の検証を確かめ、統合後の runner の動作を PJR-JSEY で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-22"
+    - field: conclusion
+      from: "-"
+      to: schedule と dashboard が共有する Timeline index とカタログの探索を src/shared へ移し、schedule から dashboard への import をなくした。3 機能以上をまたぐ循環は 0 組になり、schedule は dashboard を import しない向きを ESLint で検査する
+  previous_event_id: reg_0d784221568d4dbb95ea126c062e3a78

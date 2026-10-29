@@ -1,0 +1,39 @@
+レビューの結論は `complete-with-findings` です。Run はすべての段を終え、出力も統合して問題ありません。評価した文書には指摘が6件（major 3、minor 3）残っていますが、Job Run の完了を妨げるものではありません。
+
+**評価結果が最新かどうか**
+- 評価対象は `docs/ja/specdojo/rulebooks/pjr-rulebook.md`、評価種別は `kata` です。
+- `grade list --changed-only` と `grade list --incomplete` を最初に実行し、verdict を決める直前にもう一度実行しました。2回とも出力はなく、評価結果は最新で、未完了の段もありません。
+- `grade state --exhausted` の出力もなく、`retry_exhausted` の文書はありません。
+
+**差分の範囲（完了条件1）**
+- 実行前 commit（`e990c447`）から出力 commit（`5ebc395d`）までに変わったのは8ファイルです。内訳は Run の evidence 4件、plan、result、Run JSON、評価結果ファイル（`grade/results/specdojo.pjr-rulebook.yaml`）の更新1件です。
+- `docs/ja/specdojo/` 配下の成果物本文は変わっていません。Job Run 以外の変更は入っていません。
+
+**記録どうしの整合（完了条件2）**
+- Run JSON の状態は `succeeded` で、終了コードは 0、stderr は空です。
+- stdout には `selected=1 processed=1 completed_now=1 incomplete=0 exhausted=0` と出ています。
+- `results.tsv` に記録されたのは1行で、段は `passed`、verdict は `needs-work`、score は 82、指摘は6件です。
+- 評価結果ファイルの verdict、score、指摘件数はこの記録と一致します。
+- 終了コード75、`failed` の段、`partial`、中断は、どれも見当たりませんでした。
+
+**評価結果の変化（完了条件3）**
+- 前回の評価（10-20）以降に、対象文書が f0929ffd0 で更新されていました。そのため `content_hash` と `graded_at` が更新されています。
+- verdict、score、指摘の本文は前回と同じで、指摘の位置を示す anchor が3件変わっただけです。
+- 評価結果ファイルの `graded_by` は `flash-high-executor` で、実行したのは `agy-expert-executor` です。名前は違いますが、`.specdojo/agent-members.yaml` で `agy-expert-executor` は `flash-high-executor` の別名と定義されています。`resolveGradeActor` がこの別名を正式名に変換して記録する仕組みなので、正常です。
+
+**指摘と改善指示**
+- 処理した文書は1件だけなので、verdict や score の分布から評価設定の偏りは判断できません。
+- 指摘 F001（anchor は `pjr-views-by-status` の表の行）と、109行目付近の指摘（anchor はイベント項目の行）は、指摘の本文と anchor の内容が対応していないように見えます。review では評価をやり直さないため、ここでは記録だけにとどめます。必要であれば次の評価で anchor が正しいかを確認してください。
+- Job Run の result には実際と食い違う記述が2点ありますが、統合を妨げるものではありません。
+  - 変更ファイルに Run JSON の行数を「+61」と書いていますが、実際の差分は +64 です。
+  - evidence.json の `changes` に評価結果ファイルと Run JSON の2件しかなく、`diff_summary` も評価結果ファイル1件分だけを数えています。
+
+**確認できなかった範囲**
+- `logs/grade/runs/per-document/JBR-grade-kata-62391cd0b9f3/` 以下の実ファイルは commit されていないため、`results.tsv` は stdout に記録された内容でだけ確認しました。
+- agent が出力した marker の中身と、`grade apply` のログは見ていません。
+
+成果物、Job Run の出力、result は変更していません。
+
+<specdojo_executor_evidence>
+{"completion_status":"complete","final_message":"verdict 候補: complete-with-findings。Run は succeeded（終了コード 0、stderr 空、selected=1 processed=1 completed_now=1 incomplete=0 exhausted=0）。差分（e990c447..5ebc395d）は Job Run の出力8ファイル（evidence 4、plan、result、Run JSON、評価結果ファイル grade/results/specdojo.pjr-rulebook.yaml の更新）だけで、成果物本文は変わっていない。評価対象 docs/ja/specdojo/rulebooks/pjr-rulebook.md に対する grade list --changed-only と --incomplete は最初と verdict 直前のどちらも出力なしで、評価結果は最新。grade state --exhausted も出力なし。評価結果: verdict needs-work、score 82、finding_counts は major 3 / minor 3。前回から変わったのは `content_hash`、`graded_at`、anchor 3件だけ（文書が f0929ffd0 で更新されたことによる再評価）。`graded_by` が flash-high-executor なのは、agent-members.yaml で agy-expert-executor が flash-high-executor の別名（`alias_of`）と定義されているためで、正常。failed の段、終了コード75、partial、`retry_exhausted` はない。偏りは1件だけなので判断できない。改善指示: (1) F001 と、109行目付近の anchor を持つ指摘は、本文と anchor が対応していないように見えるので、次の評価で anchor が正しいかを確認する（review では評価をやり直さない）。(2) Job Run result の Run JSON の行数（+61、実際は +64）と、evidence.json の `changes` / `diff_summary` が一部の変更しか数えていない点は、統合を妨げない。確認できなかった範囲: logs/grade/runs/per-document/JBR-grade-kata-62391cd0b9f3/ 以下の実ファイル（commit されていないため、results.tsv は stdout の記録でだけ確認）、agent marker の中身と grade apply のログ。","handoff":["review verdict 候補: complete-with-findings（Run は succeeded。評価結果は最新。finding は major 3 / minor 3 で、評価した文書の品質に関するものであり、Job Run の完了を妨げない）","次の評価で F001 などの anchor と finding 本文が対応しているかを確認する（review では評価をやり直していない）","Job Run result の Run JSON 行数（+61、実際は +64）と、evidence の changes / diff_summary が一部しか数えていない点は、記録上の軽微な食い違い"],"validations":[{"command":"git diff --stat / --name-status e990c447b0e08927b801d8913e81c2282510dbc5..5ebc395d83a2abc65297a29abffd6f4fb21b23f4","status":"passed","summary":"8 files: Job Run の evidence、plan、result、Run JSON、評価結果ファイル grade/results/specdojo.pjr-rulebook.yaml だけ。対象外の変更はない"},{"command":"node dist/specdojo.js grade list --target kata --path docs/ja/specdojo/rulebooks/pjr-rulebook.md --changed-only","status":"passed","summary":"出力なし（初回、verdict 直前のどちらも）で、評価結果は最新"},{"command":"node dist/specdojo.js grade list --target kata --path docs/ja/specdojo/rulebooks/pjr-rulebook.md --incomplete","status":"passed","summary":"出力なしで、評価パイプラインに未完了の段はない"},{"command":"node dist/specdojo.js grade state --target kata --project prj-0001 --exhausted","status":"passed","summary":"出力なしで、retry_exhausted の文書はない"}]}
+</specdojo_executor_evidence>

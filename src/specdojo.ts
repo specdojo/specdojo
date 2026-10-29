@@ -19,6 +19,7 @@ import { registerYamlPagesCommands } from "./docs/yaml-pages-command.js";
 import { registerDashboardCommands } from "./dashboard/dashboard.js";
 import { registerGradeCommand } from "./grade/grade.js";
 import { registerAgentCommands } from "./commands/agent.js";
+import { resolveGradingPlanActor, runAgentPlan } from "./exec/agent-plan.js";
 import { registerKataCommands } from "./kata/command.js";
 import { registerDevcontainerCommands } from "./devcontainer/command.js";
 import { registerInitCommand } from "./commands/init.js";
@@ -66,7 +67,10 @@ async function main(): Promise<void> {
   registerBuildCommand(program);
   registerYamlPagesCommands(program);
   registerDashboardCommands(program);
-  registerGradeCommand(program);
+  registerGradeCommand(program, {
+    resolveActor: resolveGradingPlanActor,
+    executePlan: runAgentPlan,
+  });
   registerAgentCommands(program);
   registerKataCommands(program);
   registerDevcontainerCommands(program);
