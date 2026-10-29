@@ -2832,3 +2832,32 @@
       from: "-"
       to: "parent validation failed: lint-fm"
   previous_event_id: reg_64503e2729fa45b89716f8437d9cc190
+- v: 1
+  id: reg_d35c5d18a2624e97856376fa86ed0c8e
+  ts: "2026-10-29T11:15:52Z"
+  action: start
+  actor: gemma26-reporter
+  from_status: waiting
+  to_status: in-progress
+  reason: reporter resumed
+  changes:
+    - field: status
+      from: waiting
+      to: in-progress
+    - field: block_reason
+      from: "parent validation failed: lint-fm"
+      to: "-"
+  previous_event_id: reg_c7531797657e49d1aac505d6d95b7ecd
+- v: 1
+  id: reg_a4ebddf9ca2047848886c2234cc68f05
+  ts: "2026-10-29T11:25:33Z"
+  action: review
+  actor: gemma26-reporter
+  from_status: in-progress
+  to_status: review
+  reason: ready for review
+  changes:
+    - field: status
+      from: in-progress
+      to: review
+  previous_event_id: reg_d35c5d18a2624e97856376fa86ed0c8e
