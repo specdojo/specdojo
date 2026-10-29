@@ -8,6 +8,8 @@ SpecDojo の利用者に影響する変更を記録します。
 
 ### 追加機能
 
+- schedule に `draft` profile を追加しました。`strategy-planning` で `intent: draft-with-context` を宣言すると、雛形作成・文脈記入（human）→ draft → refine → review → finalize（human）を生成します。human は claim / complete で記録し、文脈記入用の result に雛形作成と `_CONTEXT_:` の案内を表示します（PJR-E45K）。
+
 - `register add` / `update` に繰り返し指定できる `--input` を追加しました。対話で得た前提を個票の `入力` 節と event に記録し、register 経由の plan へ完了条件とは別に渡します。update は一覧置換、`--input -` は全削除です（PJR-6DD7）。
 
 - 成果物内の文脈の目印 `_CONTEXT_:` を定めました。`draft` で反映した指示を result に記録し、`fully-guided` では未反映の指示を論点として残します。finalize の確認と文書 lint で残りを検出し、lint は `ready` で error、それ以外で warning とします（PJR-JRSY）。
@@ -16,6 +18,8 @@ SpecDojo の利用者に影響する変更を記録します。
 - 成果物カタログ（dct）の成果物に `brief` を追加しました。成果物の外から継続して渡す前提（技術スタックや制約など）を記載でき、schedule の task の plan および register 経由の plan に「前提」として反映します。`brief` が無い場合は plan に載せません。複数成果物で共有する場合は YAML アンカーを利用できます（PJR-YKMA）。
 
 ### 変更
+
+- strategy の `guided-pass`（草案作成）の approach を `fully-guided` から `draft` に変更しました。型がそろった未作成成果物を、文脈の記入がなくても template から下書きできます。調査・選定の委任がない範囲は保留し、後続の refine で `fully-guided` による磨き込みを行います。既存 strategy へは再生成時に反映されます（PJR-E45K）。
 
 - `@specdojo/docs-lint` の `_CONTEXT_:` の検出において、`status: ready` 以外の文書では warning ではなく情報（info）として報告するように変更しました。下書き時に `_CONTEXT_:` を残したまま実行しても `--frail` 付きの `npm run lint:fm` が失敗せず、親の検証を妨げません。`status: ready` の文書では従来どおり error として失敗させます（PJR-D0GB）。
 

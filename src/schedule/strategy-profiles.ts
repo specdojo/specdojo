@@ -32,8 +32,6 @@ export type StrategyProfile = {
 
 type StrategyProfileApproach = Exclude<
   Approach,
-  // The scaffold/context/draft profile is supplied by a follow-up task; explicit phases accept draft.
-  | "draft"
   | "catalog-planning"
   | "strategy-planning"
   | "rulebook-authoring"
@@ -97,6 +95,21 @@ export const STRATEGY_PHASE_SETS: Record<string, StrategyPhaseDefinition[]> = {
         "無条件に合わせず result に記録する。",
     },
   ],
+  "context-pass": [
+    {
+      id: "context",
+      name: "雛形作成・文脈の記入",
+      task_suffix: "010",
+      duration_days: 0.25,
+      execution: "human",
+      mode: "edit",
+      approach: "draft",
+      description:
+        "人が exec claim で着手を記録し、deliverable scaffold --project <project-id> --dct <catalog> で" +
+        "雛形を作成する。既存成果物は上書きせず、本文に `_CONTEXT_:` を付けて固定前提、制約、調査・選定を" +
+        "任せる範囲を記入する。result に対象と記入内容を記録し、exec complete で draft へ渡す。",
+    },
+  ],
   "guided-pass": [
     {
       id: "draft",
@@ -105,7 +118,7 @@ export const STRATEGY_PHASE_SETS: Record<string, StrategyPhaseDefinition[]> = {
       duration_days: 0.5,
       execution: "agent",
       mode: "edit",
-      approach: "fully-guided",
+      approach: "draft",
       pipeline: NORMAL_PIPELINE,
       description:
         "必要と宣言され、整備済みの rulebook / recipe / sample / template に沿って草案を作成する。" +
@@ -212,6 +225,7 @@ export const STRATEGY_PHASE_SETS: Record<string, StrategyPhaseDefinition[]> = {
 export const PHASE_SET_ORDER: string[] = [
   "bootstrap-pass",
   "retrofit-pass",
+  "context-pass",
   "guided-pass",
   "recipe-guided-pass",
   "freeform-pass",
@@ -255,6 +269,11 @@ export const STRATEGY_PROFILES: Record<StrategyProfileApproach, StrategyProfile>
   "fully-guided": {
     approach: "fully-guided",
     phase_sets: ["guided-pass", "refine-pass", "review-pass", "finalize-pass"],
+    finalize_approach: "finalize",
+  },
+  draft: {
+    approach: "draft",
+    phase_sets: ["context-pass", "guided-pass", "refine-pass", "review-pass", "finalize-pass"],
     finalize_approach: "finalize",
   },
   "recipe-guided": {

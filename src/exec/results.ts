@@ -124,9 +124,19 @@ function execResultDocId(projectId: string, mode: TaskMode, localBase: string): 
   return projectId ? `${projectId}:${localId}` : localId;
 }
 
-// approach が finalize 系なら xer-human-<approach>-template.md を優先し、無ければ
-// mode 別の標準テンプレートへフォールバックする（plan 側の human × approach 解決と対称）。
-function loadResultTemplate(mode: TaskMode, approach: Approach | undefined): string {
+// Human draft results guide scaffold/context entry; finalize results guide confirmation.
+// Other approaches use their specialized result or the standard mode template.
+function loadResultTemplate(
+  mode: TaskMode,
+  approach: Approach | undefined,
+  execution?: "agent" | "human",
+): string {
+  if (mode === "edit" && execution === "human" && approach === "draft") {
+    return readFileSync(
+      resolveSpecdojoPath("docs/ja/specdojo/exec-templates/xer-human-draft-template.md"),
+      "utf8",
+    );
+  }
   if (mode === "edit" && approach === "cross-deliverable-dedup") {
     const crossDeliverablePath = resolveSpecdojoPathIfExists(
       "docs/ja/specdojo/exec-templates/xer-cross-deliverable-dedup-template.md",
@@ -235,7 +245,7 @@ export async function scaffoldResult(opts: {
   const resultsDir = join(executionPath, "exec", "results");
   if (!existsSync(resultsDir)) mkdirSync(resultsDir, { recursive: true });
 
-  const template = loadResultTemplate(mode, approach);
+  const template = loadResultTemplate(mode, approach, opts.execution);
 
   const meta: ExecResultMeta = {
     id: execResultDocId(projectId, mode, stem),
