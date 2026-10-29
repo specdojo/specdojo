@@ -2,15 +2,17 @@
 specdojo:
   id: prj-0001:pjr-sc8t-deliverable-type-index-cache
   type: project
-  status: draft
+  status: ready
   rulebook: specdojo:pjr-rulebook
   part_of:
     - prj-0001:pjr-index
   item_type: todo
-  item_status: review
+  item_status: done
   priority: high
   difficulty: easy
   registered_at: "2026-10-29T13:15:19Z"
+  completed_at: "2026-10-29T13:58:49Z"
+  conclusion: deliverable_type の照合で rulebook の一覧をワークスペースごとに 1 回だけ作るようにし、lint:fm が 421 秒から 25 秒になった。docs-lint 0.3.1 の hotfix を main から用意した
   derived_from:
     - PJR-484B
 ---

@@ -99,3 +99,22 @@
       from: in-progress
       to: review
   previous_event_id: reg_be6a6043cd9e487dbb133c7848c4aea1
+- v: 1
+  id: reg_9211cc88ea3c468889b4aacf25ec648a
+  ts: "2026-10-29T13:58:49Z"
+  action: close
+  actor: specdojo-orchestrator
+  from_status: review
+  to_status: done
+  reason: 差分と lint:fm の実測、JSEY の動作確認で確認した
+  changes:
+    - field: status
+      from: review
+      to: done
+    - field: completed
+      from: "-"
+      to: "2026-10-29"
+    - field: conclusion
+      from: "-"
+      to: deliverable_type の照合で rulebook の一覧をワークスペースごとに 1 回だけ作るようにし、lint:fm が 421 秒から 25 秒になった。docs-lint 0.3.1 の hotfix を main から用意した
+  previous_event_id: reg_630421b99fca4aeba70a1bc1969cf5a4
